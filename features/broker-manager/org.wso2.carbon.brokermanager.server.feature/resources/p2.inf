@@ -1,0 +1,5 @@
+instructions.configure = \
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/features/org.wso2.carbon.brokermanager.server_${feature.version}/conf/broker-manager-config.xml,target:${installFolder}/../conf/broker-manager-config.xml,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/features/org.wso2.carbon.brokermanager.server_${feature.version}/conf/broker-manager-config.xsd,target:${installFolder}/../conf/broker-manager-config.xsd,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/features/org.wso2.carbon.brokermanager.server_${feature.version}/conf);
+

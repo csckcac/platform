@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  ~  Copyright (c) 2005-2008, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  ~
+  -->
+
+<!DOCTYPE html
+   PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" >
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <title>
+      WSO2 Governance Registry - Guide for Versioning
+    </title>
+    <link href="css/greg-docs.css" rel="stylesheet"/>
+    <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+  </head>
+  <body xml:lang="en">
+<h1>WSO2 Governance Registry - Guide for Versioning</h1>
+<h2>Table of Contents</h2>
+
+<ul>
+
+<li>
+<a href="#overview">Overview</a>
+</li>
+<li>
+<a href="#ui-version">User Interface for Versioning</a>
+<ul>
+<li>
+<a href="#create-checkpoint">Create Checkpoint</a>
+</li>
+<li>
+<a href="#view-versions">View Versions</a>
+</li>
+<li>
+<a href="#preview-version">Preview a Version</a>
+</li>
+<li>
+<a href="#restore-version">Restore a Version</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#configure">Configuring Versioning</a>
+</li>
+</ul>
+
+<h2 id="overview">Overview</h2>
+<p>
+In the Governance Registry, the resources can be versioned along with its properties and associated community features. 
+By default resources (non-collections) are auto versioned so it create a version (a checkpoint) for each update you do to that
+resource. You can later view a preview or restore to a previous version easily.
+</p>
+
+
+<h2 id="ui-version">User Interface for Versioning</h2>
+<p>
+In the Registry Browser You can view versions of each resource, preview or restore a particular version.
+</p>
+<p><img src="../images/metadata.png" width="743px"/></p>
+<p>Figure 1: The resources information panel (Where the create checkpoint and view versions links are shown).</p>
+
+<h3 id="create-checkpoint">Create Checkpoint</h3>
+<p>
+You can create a checkpoint of the currently viewing resource by clicking the 'Create Checkpoint' link. It will acknowledge you when it is finished creating
+the checkpoint.
+</p>
+<p><img src="../images/created-checkpoint.png" width="492px"/></p>
+<p>Figure 2: Acknowledgment after creating the checkpoint</p>
+
+
+<h3 id="view-versions">View Versions</h3>
+<p>
+You can view the versions of the current resources by clicking the 'View Version' link.
+</p>
+<p><img src="../images/view-versions.png" width="754px"/></p>
+<p>Figure 3: View Versions</p>
+
+
+<h3 id="preview-version">Preview a Version</h3>
+<p>
+You can preview a version by clicking the 'Details' link for the corresponding version in the 'View Versions' page. (Shown in Figure2).
+</p>
+
+
+<h3 id="restore-version">Restore a Version</h3>
+<p>
+You can restore a resource to a older revision by clicking the 'Restore' link against the corresponding version in the 'View Versions' page. (Shown in Figure2).
+</p>
+
+<h2 id="configure">Configuring Versioning</h2>
+<p>
+You can configure how the versioning should behave in your governance registry. These configurations are in the registry.xml and covered in the Registry Configuration Section.
+<ul>
+<li>
+<a href="registry_config.html#static-config">Configuring whether to version properties and community features</a>
+</li>
+<li>
+<a href="registry_config.html#version-resource-config">Configure whether the resources should be auto-versioned (which is by default turned 'On').</a>
+</li>
+</ul>
+</p>
+</body>
+</html>

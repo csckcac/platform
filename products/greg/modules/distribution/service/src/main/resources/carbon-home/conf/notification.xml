@@ -1,0 +1,6 @@
+<!-- configure the notifications -->
+<Notifications>
+    <enabled>true</enabled>
+    <host>http://localhost/feed.xml?product={product}&amp;build={build}&amp;instance={instance.id}&amp;tenant={tenant}</host>
+</Notifications>
+

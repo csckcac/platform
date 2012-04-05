@@ -1,0 +1,3 @@
+<brokerTypes xmlns="http://wso2.org/carbon/broker">
+    <brokerType class="org.wso2.carbon.broker.core.internal.brokers.ws.WSBrokerTypeFactory"/>
+</brokerTypes>

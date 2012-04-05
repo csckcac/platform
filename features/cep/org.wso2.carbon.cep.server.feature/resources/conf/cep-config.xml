@@ -1,0 +1,4 @@
+<cepConfiguration xmlns="http://wso2.org/carbon/cep">
+    <buckets>
+    </buckets>
+</cepConfiguration>

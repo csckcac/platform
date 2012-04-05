@@ -1,0 +1,354 @@
+
+This product is licensed by WSO2 Inc. under Apache License 2.0. The license
+can be downloaded from the following locations:
+        http://www.apache.org/licenses/LICENSE-2.0.html
+        http://www.apache.org/licenses/LICENSE-2.0.txt
+
+This product also contains software under different licenses. This table below
+all the contained libraries (jar files) and the license under which they are
+provided to you.
+
+At the bottom of this file is a table that shows what each license indicated
+below is and where the actual text of the license can be found.
+
+Name                                                        Type           License
+-------------------------------------------------------------------------------------
+activation-1.1.jar                                          jar            sunbinary
+ant-1.7.0.jar                                               jar            apache2
+ant-launcher-1.7.0.jar                                      jar            apache2
+aopalliance-1.0.jar                                         jar            apache2
+axis2-clustering-1.4.1-wso2.jar                             jar            apache2
+axis2-jaxws-1.4.1-wso2.jar                                  jar            apache2
+axis2-jaxws-api-1.4.1-wso2.jar                              jar            sunbinary
+axis2-jws-api-1.4.1-wso2.jar                                jar            sunbinary
+axis2-saaj-1.4.1-wso2.jar                                   jar            apache2
+axis2-saaj-api-1.4.1-wso2.jar                               jar            sunbinary
+catalina-5.5.23.jar                                         jar            apache2
+catalina-optional-5.5.23.jar                                jar            apache2
+commons-el-1.0.jar                                          jar            apache2
+commons-logging-1.1.1.jar                                   jar            apache2
+commons-modeler-1.1.jar                                     jar            apache2
+dom4j-1.6.1.jar                                             jar            bsd
+icu4j-2.6.1.jar                                             jar            icu
+jasper-compiler-5.5.23.jar                                  jar            apache2
+jasper-compiler-jdt-5.5.23.jar                              jar            apache2
+jasper-runtime-5.5.23.jar                                   jar            apache2
+jaxb-api-2.1.jar                                            jar            apache2
+jaxb-impl-2.1.6.jar                                         jar            cddl1
+jaxb-xjc-2.1.6.jar                                          jar            cddl1
+jsp-api-2.0.jar                                             jar            sunbinary
+jsp-api-5.5.23.jar                                          jar            sunbinary
+juli-6.0.16.jar                                             jar            apache2
+mex-1.41-impl.jar                                           jar            apache2
+naming-factory-dbcp-5.5.23.jar                              jar            apache2
+org.apache.felix.framework-1.0.3.jar                        jar            apache2
+org.wso2.carbon.bridge-4.0.0.jar                              jar            apache2
+org.wso2.carbon.core.installer-4.0.0.jar                      jar            apache2
+org.wso2.carbon.server-4.0.0.jar                              jar            apache2
+servlet-api-2.4.jar                                         jar            sunbinary
+servlet-api-5.5.23.jar                                      jar            sunbinary
+servlets-default-5.5.23.jar                                 jar            apache2
+smack-2.2.1.jar                                             jar            apache2
+stax-api-1.0-2.jar                                          jar            sunbinary
+tomcat-apr-5.5.23.jar                                       jar            apache2
+tomcat-coyote-5.5.23.jar                                    jar            apache2
+tomcat-http-5.5.23.jar                                      jar            apache2
+tomcat-util-5.5.23.jar                                      jar            apache2
+tribes-6.0.16.jar                                           jar            apache2
+wrapper-3.2.3.jar                                           jar            mit
+xml-resolver-1.2.jar                                        jar            apache2
+xom-1.0.jar                                                 jar            apache2
+avalon-framework-4.1.3.jar                                  jarinbundle    apache2
+bcprov-jdk15-132.jar                                        jarinbundle    bouncy
+commons-beanutils-1.7.0.jar                                 jarinbundle    apache2
+commons-collections-3.1.jar                                 jarinbundle    apache2
+commons-digester-1.8.jar                                    jarinbundle    apache2
+commons-discovery-0.2.jar                                   jarinbundle    apache2
+jericho-html-2.4.jar                                        jarinbundle    epl1
+log4j-1.2.12.jar                                            jarinbundle    apache2
+logkit-1.0.1.jar                                            jarinbundle    apache2
+naming-factory-5.5.23.jar                                   jarinbundle    apache2
+naming-resources-5.5.23.jar                                 jarinbundle    apache2
+wstx-asl-3.2.4.jar                                          jarinbundle    apache2
+xmlbeans-2.3.0.jar                                          jarinbundle    apache2
+axis2-transport-base-0.5.wso2.jar                           bundle         apache2
+axis2-transport-jms-0.5.wso2.jar                            bundle         apache2
+javax.servlet.jsp-2.0.0.v200706191603.jar                   bundle         sunbinary
+org.apache.commons.el-1.0.0.v200706111724.jar               bundle         apache2
+org.apache.jasper-5.5.17.v200706111724.jar                  bundle         apache2
+org.apache.synapse.module-1.2.wso2v1.jar                    bundle         apache2
+org.eclipse.equinox.common_3.3.0.v20070426.jar              bundle         epl1
+org.eclipse.equinox.http.helper-1.0.0.jar                   bundle         epl1
+org.eclipse.equinox.http.registry_1.0.1.R33x_v20071231.jar  bundle         epl1
+org.eclipse.equinox.http.servlet-1.0.1.R33x_v20070816.jar   bundle         epl1
+org.eclipse.equinox.jsp.jasper-1.0.1.R33x_v20070816.jar     bundle         epl1
+org.eclipse.equinox.registry_3.3.1.R33x_v20070802.jar       bundle         epl1
+org.eclipse.osgi.services_3.1.200.v20070605.jar             bundle         epl1
+org.eclipse.osgi_3.3.2.R33x_v20080105.jar                   bundle         epl1
+org.eclipse.update.configurator_3.2.100.v20070322.jar       bundle         epl1
+org.wso2.carbon.abdera-0.4.0.jar                            bundle         apache2
+org.wso2.carbon.ajaxtags-1.3-beta-rc7.jar                   bundle         apache2
+org.wso2.carbon.annogen-0.1.0.jar                           bundle         apache2
+org.wso2.carbon.ant-1.7.0.jar                               bundle         apache2
+org.wso2.carbon.authenticator-0.7.jar                       bundle         apache2
+org.wso2.carbon.axiom-1.2.7.jar                             bundle         apache2
+org.wso2.carbon.axis-1.4.jar                                bundle         apache2
+org.wso2.carbon.axis2-1.4.1-wso2.jar                        bundle         apache2
+org.wso2.carbon.backport.util.concurrent-3.1.jar            bundle         ccpd
+org.wso2.carbon.bndmgt-4.0.0.jar                              bundle         apache2
+org.wso2.carbon.bsf-3.0-beta2.jar                           bundle         apache2
+org.wso2.carbon.caching-4.0.0.jar                             bundle         apache2
+org.wso2.carbon.caching.ui-4.0.0.jar                          bundle         apache2
+org.wso2.carbon.commons.codec-1.3.jar                       bundle         apache2
+org.wso2.carbon.commons.collections-3.1.jar                 bundle         apache2
+org.wso2.carbon.commons.dbcp-1.2.2.jar                      bundle         apache2
+org.wso2.carbon.commons.fileupload-1.2.jar                  bundle         apache2
+org.wso2.carbon.commons.httpclient-3.1.jar                  bundle         apache2
+org.wso2.carbon.commons.io-1.4.jar                          bundle         apache2
+org.wso2.carbon.commons.lang-2.3.jar                        bundle         apache2
+org.wso2.carbon.commons.pool-1.3.jar                        bundle         apache2
+org.wso2.carbon.commons.vfs-1.0.jar                         bundle         apache2
+org.wso2.carbon.compass.project-2.0.1.jar                   bundle         apache2
+org.wso2.carbon.core-4.0.0.jar                                bundle         apache2
+org.wso2.carbon.core.services-4.0.0.jar                       bundle         apache2
+org.wso2.carbon.datasource-4.0.0.jar                          bundle         apache2
+org.wso2.carbon.datasource.ui-4.0.0.jar                       bundle         apache2
+org.wso2.carbon.derby-10.3.2.1.jar                          bundle         apache2
+org.wso2.carbon.ehcache-4.0.0.0.jar                           bundle         apache2
+org.wso2.carbon.endpoint-4.0.0.jar                            bundle         apache2
+org.wso2.carbon.endpoint.ui-4.0.0.jar                         bundle         apache2
+org.wso2.carbon.eventing-4.0.0.jar                            bundle         apache2
+org.wso2.carbon.eventing.core-4.0.0.jar                       bundle         apache2
+org.wso2.carbon.eventing.eventsource-4.0.0.jar                bundle         apache2
+org.wso2.carbon.eventing.eventsource.ui-4.0.0.jar             bundle         apache2
+org.wso2.carbon.eventing.impl-4.0.0.jar                       bundle         apache2
+org.wso2.carbon.eventing.savan-1.0.wso2v1.jar               bundle         apache2
+org.wso2.carbon.eventing.ui-4.0.0.jar                         bundle         apache2
+org.wso2.carbon.geronimo.jms.1.1.spec-1.1.jar               bundle         apache2
+org.wso2.carbon.geronimo.jta.1.1.spec-1.1.jar               jar            apache2
+org.wso2.carbon.hsqldb-1.8.0.7.jar                          bundle         hsqldb
+org.wso2.carbon.http.bridge-4.0.0.jar                         bundle         apache2
+org.wso2.carbon.httpcore-4.0-beta1.jar                      bundle         apache2
+org.wso2.carbon.httpcore.nio-4.0-beta1.jar                  bundle         apache2
+org.wso2.carbon.i18n-4.0.0.jar                                bundle         apache2
+org.wso2.carbon.jakarta.taglibs-1.1.2.jar                   bundle         apache2
+org.wso2.carbon.js-1.6R5.jar                                bundle         mpl11
+org.wso2.carbon.localentry-4.0.0.jar                          bundle         apache2
+org.wso2.carbon.localentry.ui-4.0.0.jar                       bundle         apache2
+org.wso2.carbon.logging-4.0.0.jar                             bundle         apache2
+org.wso2.carbon.logging.admin.ui-4.0.0.jar                    bundle         apache2
+org.wso2.carbon.logging.service-4.0.0.jar                     bundle         apache2
+org.wso2.carbon.logging.view.ui-4.0.0.jar                     bundle         apache2
+org.wso2.carbon.mediation.configadmin-4.0.0.jar               bundle         apache2
+org.wso2.carbon.mediation.configadmin.ui-4.0.0.jar            bundle         apache2
+org.wso2.carbon.mediation.registry-4.0.0.jar                  bundle         apache2
+org.wso2.carbon.mediation.statistics-4.0.0.jar                bundle         apache2
+org.wso2.carbon.mediation.statistics.ui-4.0.0.jar             bundle         apache2
+org.wso2.carbon.mediation.tracer-4.0.0.jar                    bundle         apache2
+org.wso2.carbon.mediation.tracer.ui-4.0.0.jar                 bundle         apache2
+org.wso2.carbon.mediator.aggregate-4.0.0.jar                  bundle         apache2
+org.wso2.carbon.mediator.aggregate.ui-4.0.0.jar               bundle         apache2
+org.wso2.carbon.mediator.cache-4.0.0.jar                      bundle         apache2
+org.wso2.carbon.mediator.cache.ui-4.0.0.jar                   bundle         apache2
+org.wso2.carbon.mediator.callout-4.0.0.jar                    bundle         apache2
+org.wso2.carbon.mediator.callout.ui-4.0.0.jar                 bundle         apache2
+org.wso2.carbon.mediator.clazz-4.0.0.jar                      bundle         apache2
+org.wso2.carbon.mediator.clazz.ui-4.0.0.jar                   bundle         apache2
+org.wso2.carbon.mediator.clone-4.0.0.jar                      bundle         apache2
+org.wso2.carbon.mediator.clone.ui-4.0.0.jar                   bundle         apache2
+org.wso2.carbon.mediator.command-4.0.0.jar                    bundle         apache2
+org.wso2.carbon.mediator.command.ui-4.0.0.jar                 bundle         apache2
+org.wso2.carbon.mediator.dblookup-4.0.0.jar                   bundle         apache2
+org.wso2.carbon.mediator.dblookup.ui-4.0.0.jar                bundle         apache2
+org.wso2.carbon.mediator.dbreport-4.0.0.jar                   bundle         apache2
+org.wso2.carbon.mediator.dbreport.ui-4.0.0.jar                bundle         apache2
+org.wso2.carbon.mediator.drop-4.0.0.jar                       bundle         apache2
+org.wso2.carbon.mediator.drop.ui-4.0.0.jar                    bundle         apache2
+org.wso2.carbon.mediator.event-4.0.0.jar                      bundle         apache2
+org.wso2.carbon.mediator.event.ui-4.0.0.jar                   bundle         apache2
+org.wso2.carbon.mediator.fault-4.0.0.jar                      bundle         apache2
+org.wso2.carbon.mediator.fault.ui-4.0.0.jar                   bundle         apache2
+org.wso2.carbon.mediator.filter-4.0.0.jar                     bundle         apache2
+org.wso2.carbon.mediator.filter.ui-4.0.0.jar                  bundle         apache2
+org.wso2.carbon.mediator.header-4.0.0.jar                     bundle         apache2
+org.wso2.carbon.mediator.header.ui-4.0.0.jar                  bundle         apache2
+org.wso2.carbon.mediator.in-4.0.0.jar                         bundle         apache2
+org.wso2.carbon.mediator.in.ui-4.0.0.jar                      bundle         apache2
+org.wso2.carbon.mediator.iterate-4.0.0.jar                    bundle         apache2
+org.wso2.carbon.mediator.iterate.ui-4.0.0.jar                 bundle         apache2
+org.wso2.carbon.mediator.log-4.0.0.jar                        bundle         apache2
+org.wso2.carbon.mediator.log.ui-4.0.0.jar                     bundle         apache2
+org.wso2.carbon.mediator.out-4.0.0.jar                        bundle         apache2
+org.wso2.carbon.mediator.out.ui-4.0.0.jar                     bundle         apache2
+org.wso2.carbon.mediator.property-4.0.0.jar                   bundle         apache2
+org.wso2.carbon.mediator.property.ui-4.0.0.jar                bundle         apache2
+org.wso2.carbon.mediator.rmsequence-4.0.0.jar                 bundle         apache2
+org.wso2.carbon.mediator.rmsequence.ui-4.0.0.jar              bundle         apache2
+org.wso2.carbon.mediator.router-4.0.0.jar                     bundle         apache2
+org.wso2.carbon.mediator.router.impl-4.0.0.jar                bundle         apache2
+org.wso2.carbon.mediator.router.ui-4.0.0.jar                  bundle         apache2
+org.wso2.carbon.mediator.script-4.0.0.jar                     bundle         apache2
+org.wso2.carbon.mediator.script.ui-4.0.0.jar                  bundle         apache2
+org.wso2.carbon.mediator.send-4.0.0.jar                       bundle         apache2
+org.wso2.carbon.mediator.send.ui-4.0.0.jar                    bundle         apache2
+org.wso2.carbon.mediator.sequence-4.0.0.jar                   bundle         apache2
+org.wso2.carbon.mediator.sequence.ui-4.0.0.jar                bundle         apache2
+org.wso2.carbon.mediator.service-4.0.0.jar                    bundle         apache2
+org.wso2.carbon.mediator.spring-4.0.0.jar                     bundle         apache2
+org.wso2.carbon.mediator.spring.ui-4.0.0.jar                  bundle         apache2
+org.wso2.carbon.mediator.switch-4.0.0.jar                     bundle         apache2
+org.wso2.carbon.mediator.switch.ui-4.0.0.jar                  bundle         apache2
+org.wso2.carbon.mediator.target-4.0.0.jar                     bundle         apache2
+org.wso2.carbon.mediator.target.ui-4.0.0.jar                  bundle         apache2
+org.wso2.carbon.mediator.throttle-4.0.0.jar                   bundle         apache2
+org.wso2.carbon.mediator.throttle.ui-4.0.0.jar                bundle         apache2
+org.wso2.carbon.mediator.transaction-4.0.0.jar                bundle         apache2
+org.wso2.carbon.mediator.transaction.ui-4.0.0.jar             bundle         apache2
+org.wso2.carbon.mediator.validate-4.0.0.jar                   bundle         apache2
+org.wso2.carbon.mediator.validate.ui-4.0.0.jar                bundle         apache2
+org.wso2.carbon.mediator.xquery-4.0.0.jar                     bundle         apache2
+org.wso2.carbon.mediator.xquery.ui-4.0.0.jar                  bundle         apache2
+org.wso2.carbon.mediator.xslt-4.0.0.jar                       bundle         apache2
+org.wso2.carbon.mediator.xslt.ui-4.0.0.jar                    bundle         apache2
+org.wso2.carbon.module.mgt-4.0.0.jar                          bundle         apache2
+org.wso2.carbon.module.mgt.ui-4.0.0.jar                       bundle         apache2
+org.wso2.carbon.neethi-2.0.4.jar                            bundle         apache2
+org.wso2.carbon.operation.mgt-4.0.0.jar                       bundle         apache2
+org.wso2.carbon.operation.mgt.ui-4.0.0.jar                    bundle         apache2
+org.wso2.carbon.policyeditor-4.0.0.jar                        bundle         apache2
+org.wso2.carbon.policyeditor.ui-4.0.0.jar                     bundle         apache2
+org.wso2.carbon.proxyadmin-4.0.0.jar                          bundle         apache2
+org.wso2.carbon.proxyadmin.ui-4.0.0.jar                       bundle         apache2
+org.wso2.carbon.quartz-1.6.0.jar                            bundle         apache2
+org.wso2.carbon.registry.app-4.0.0.jar                        bundle         apache2
+org.wso2.carbon.registry.core-4.0.0.jar                       bundle         apache2
+org.wso2.carbon.registry.mgt.ui.info-4.0.0.jar                bundle         apache2
+org.wso2.carbon.registry.mgt.ui.lifecycles-4.0.0.jar          bundle         apache2
+org.wso2.carbon.registry.mgt.ui.properties-4.0.0.jar          bundle         apache2
+org.wso2.carbon.registry.mgt.ui.relations-4.0.0.jar           bundle         apache2
+org.wso2.carbon.registry.mgt.ui.resources-4.0.0.jar           bundle         apache2
+org.wso2.carbon.registry.mgt.ui.search-4.0.0.jar              bundle         apache2
+org.wso2.carbon.registry.ui.common-4.0.0.jar                  bundle         apache2
+org.wso2.carbon.registry.ui.info-4.0.0.jar                    bundle         apache2
+org.wso2.carbon.registry.ui.lifecycles-4.0.0.jar              bundle         apache2
+org.wso2.carbon.registry.ui.properties-4.0.0.jar              bundle         apache2
+org.wso2.carbon.registry.ui.relations-4.0.0.jar               bundle         apache2
+org.wso2.carbon.registry.ui.resources-4.0.0.jar               bundle         apache2
+org.wso2.carbon.registry.ui.search-4.0.0.jar                  bundle         apache2
+org.wso2.carbon.rm-4.0.0.jar                                  bundle         apache2
+org.wso2.carbon.rm.ui-4.0.0.jar                               bundle         apache2
+org.wso2.carbon.saxon-8.9.jar                               bundle         mpl10
+org.wso2.carbon.security.mgt-4.0.0.jar                        bundle         apache2
+org.wso2.carbon.security.mgt.ui-4.0.0.jar                     bundle         apache2
+org.wso2.carbon.security.policy-4.0.0.jar                     bundle         apache2
+org.wso2.carbon.security.rahas-4.0.0.jar                      bundle         apache2
+org.wso2.carbon.security.rampart-4.0.0.jar                    bundle         apache2
+org.wso2.carbon.sequences-4.0.0.jar                           bundle         apache2
+org.wso2.carbon.sequences.ui-4.0.0.jar                        bundle         apache2
+org.wso2.carbon.server.admin-4.0.0.jar                        bundle         apache2
+org.wso2.carbon.server.admin.ui-4.0.0.jar                     bundle         apache2
+org.wso2.carbon.service.mgt-4.0.0.jar                         bundle         apache2
+org.wso2.carbon.service.mgt.ui-4.0.0.jar                      bundle         apache2
+org.wso2.carbon.spring.framework-2.5.1.jar                  bundle         apache2
+org.wso2.carbon.sso.consumer-4.0.0.jar                        bundle         apache2
+org.wso2.carbon.startup-4.0.0.jar                             bundle         apache2
+org.wso2.carbon.statistics-4.0.0.jar                          bundle         apache2
+org.wso2.carbon.statistics.ui-4.0.0.jar                       bundle         apache2
+org.wso2.carbon.stax.impl-1.0.1.jar                         bundle         apache2
+org.wso2.carbon.task-4.0.0.jar                                bundle         apache2
+org.wso2.carbon.task.ui-4.0.0.jar                             bundle         apache2
+org.wso2.carbon.throttle-4.0.0.jar                            bundle         apache2
+org.wso2.carbon.throttle.ui-4.0.0.jar                         bundle         apache2
+org.wso2.carbon.tiles-2.0.5.jar                             bundle         apache2
+org.wso2.carbon.tracer-4.0.0.jar                              bundle         apache2
+org.wso2.carbon.tracer.ui-4.0.0.jar                           bundle         apache2
+org.wso2.carbon.transport.fix-4.0.0.jar                       bundle         apache2
+org.wso2.carbon.transport.fix.ui-4.0.0.jar                    bundle         apache2
+org.wso2.carbon.transport.http-4.0.0.jar                      bundle         apache2
+org.wso2.carbon.transport.http.ui-4.0.0.jar                   bundle         apache2
+org.wso2.carbon.transport.https-4.0.0.jar                     bundle         apache2
+org.wso2.carbon.transport.https.ui-4.0.0.jar                  bundle         apache2
+org.wso2.carbon.transport.jms-4.0.0.jar                       bundle         apache2
+org.wso2.carbon.transport.jms.ui-4.0.0.jar                    bundle         apache2
+org.wso2.carbon.transport.mail-4.0.0.jar                      bundle         apache2
+org.wso2.carbon.transport.mail.ui-4.0.0.jar                   bundle         apache2
+org.wso2.carbon.transport.mgt-4.0.0.jar                       bundle         apache2
+org.wso2.carbon.transport.mgt.ui-4.0.0.jar                    bundle         apache2
+org.wso2.carbon.transport.vfs-4.0.0.jar                       bundle         apache2
+org.wso2.carbon.transport.vfs.ui-4.0.0.jar                    bundle         apache2
+org.wso2.carbon.tribes-6.0.16.jar                           bundle         apache2
+org.wso2.carbon.tryit-4.0.0.jar                               bundle         apache2
+org.wso2.carbon.tryit.ui-4.0.0.jar                            bundle         apache2
+org.wso2.carbon.ui-4.0.0.jar                                  bundle         apache2
+org.wso2.carbon.ui.menu.general-4.0.0.jar                     bundle         apache2
+org.wso2.carbon.ui.menu.registry-4.0.0.jar                    bundle         apache2
+org.wso2.carbon.ui.menu.tools-4.0.0.jar                       bundle         apache2
+org.wso2.carbon.user.core-4.0.0.jar                           bundle         apache2
+org.wso2.carbon.user.mgt-4.0.0.jar                            bundle         apache2
+org.wso2.carbon.user.mgt.ui-4.0.0.jar                         bundle         apache2
+org.wso2.carbon.utils-4.0.0.jar                               bundle         apache2
+org.wso2.carbon.viewflows-4.0.0.jar                           bundle         apache2
+org.wso2.carbon.viewflows.ui-4.0.0.jar                        bundle         apache2
+org.wso2.carbon.woden-1.0M8.jar                             bundle         apache2
+org.wso2.carbon.wsdl4j-1.6.2.jar                            bundle         apache2
+org.wso2.carbon.wss4j-4.0.0.4.jar                             bundle         apache2
+org.wso2.carbon.xalan-2.7.0.jar                             bundle         apache2
+org.wso2.carbon.xerces-2.8.1.jar                            bundle         apache2
+org.wso2.carbon.xkms-4.0.0.jar                                bundle         apache2
+org.wso2.carbon.xml.apis-1.3.04.jar                         bundle         apache2
+org.wso2.carbon.xmlbeans-2.3.0.jar                          bundle         apache2
+org.wso2.carbon.xmlschema-1.4.2.jar                         bundle         apache2
+org.wso2.esb.core-2.0.jar                                   bundle         apache2
+org.wso2.esb.samples-2.0.jar                                bundle         apache2
+org.wso2.esb.styles-2.0.jar                                 bundle         apache2
+org.wso2.mediator.router-4.0.0.jar                            bundle         apache2
+synapse-core-1.2.wso2v1.jar                                 bundle         apache2
+synapse-extensions-1.2.wso2v1.jar                           bundle         apache2
+synapse-tasks-1.2.wso2v1.jar                                bundle         apache2
+synapse-transports-1.2.wso2v1.jar                           bundle         apache2
+synapse-commons-1.2.wso2v1.jar                              bundle         apache2
+janino.wso2-2.5.15.wso2v1.jar                               bundle         new bsd
+
+
+The license types used by the above libraries and their information is given below:
+
+Type           Description
+-------------------------------------------------------------------------------------
+apache2        Apache License Version 2.0
+               http://www.apache.org/licenses/LICENSE-2.0.html
+               http://www.apache.org/licenses/LICENSE-2.0.txt
+
+bouncy         Bouncy Castle License
+               http://www.bouncycastle.org/licence.html
+
+bsd            Berkeley License
+               http://www.opensource.org/licenses/bsd-license.php
+
+new bsd        http://janino.net/javadoc/org/codehaus/janino/doc-files/new_bsd_license.txt
+
+ccpd           Creative Commons Public Domain
+               http://creativecommons.org/licenses/publicdomain
+
+cddl1          Common Development and Distribution License
+               http://www.opensource.org/licenses/cddl1.php
+
+epl1           Eclipse Public License
+               http://www.eclipse.org/legal/epl-v10.html
+
+hsqldb         HSQLDB License
+               http://hsqldb.org/web/hsqlLicense.html
+
+icu            ICU License
+               http://source.icu-project.org/repos/icu/icu/trunk/license.html
+
+mit            MIT License
+               http://www.opensource.org/licenses/mit-license.php
+
+mpl10          Mozilla Public License 1.0
+               http://www.mozilla.org/MPL/
+
+mpl11          Mozilla Public License 1.0
+               http://www.mozilla.org/MPL/MPL-1.1.html
+
+sunbinary      Binary Code License Agreement
+               https://cds.sun.com/is-bin/INTERSHOP.enfinity/WFS/CDS-CDS_Developer-Site/en_US/-/USD/ViewLicense-Start?LicenseUUID=mtrACUFBzm4AAAEYkcI5AXh_&ProductUUID=zFnACUFBlVoAAAEYhxc5AXt.

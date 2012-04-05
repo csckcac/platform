@@ -1,0 +1,106 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+
+    <parent>
+        <groupId>org.wso2.carbon</groupId>
+        <artifactId>platform-parent</artifactId>
+        <version>4.0.0-SNAPSHOT</version>
+        <relativePath>../parent/pom.xml</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>carbon-dependents</artifactId>
+    <packaging>pom</packaging>
+    <name>WSO2 Carbon - Platform Dependent Projects</name>
+    <description>WSO2 Carbon Platform dependent projects</description>
+    <url>http://wso2.org</url>
+
+    <build>
+        <plugins>
+            <plugin> 
+		<groupId>org.jvnet.maven.incrementalbuild</groupId> 
+		<artifactId>incremental-build-plugin</artifactId>
+		<version>1.3</version>
+		<executions> 
+		    <execution> 
+		        <goals> 
+			    <goal>incremental-build</goal>
+			</goals>
+		    </execution> 
+		</executions> 
+	    </plugin>
+        </plugins>
+    </build>
+
+            <modules>
+                <module>cassandra</module>
+                <module>cassandra-jdbc/1.0.5-wso2v1</module>
+                <module>commons-vfs/2.0-wso2v3</module>
+                <module>commons/balana</module>
+                <module>commons/caching</module>
+		<module>commons/ciphertool</module>
+		<module>commons/eventing</module>
+		<module>commons/pwprovider</module>
+		<module>commons/siddhi</module>
+		<module>commons/throttle</module>
+		<module>commons/wsdl-validator</module>
+                <module>commons/xfer</module>
+                <module>commons/xkms</module>
+                <module>e4ximpl</module>
+                <module>hector</module>
+                <!--module>httpcore-nio/4.1.3-wso2v2/</module-->
+                <module>oauth</module>
+                <module>ode</module>
+                <!--module>openjpa</module-->
+                <module>qpid/0.12-wso2v1</module>
+                <module>rampart/1.6.1-wso2v4</module>
+                <module>sandesha/1.6.1-wso2v1/</module>
+                <!--module>shindig</module-->
+                <module>svnclient</module>
+		<module>synapse/2.1.0-wso2v6</module>
+		<module>thrift</module>
+		<module>webharvest</module>	
+		<module>andes</module>
+		<module>closure-js-plugin</module>
+		<!-- orbit/modules -->
+                <module>orbit/cassandra</module>
+                <module>orbit/cassandra-jdbc</module>
+                <module>orbit/commons-vfs</module>
+                <module>orbit/hector</module>
+                <module>orbit/libthrift/0.5.wso2v1</module>
+                <module>orbit/libthrift/0.6.1.wso2v1</module>
+		<module>orbit/libthrift/0.7.wso2v1</module>
+		<module>orbit/libthrift/0.8.0.wso2v1</module>
+		<module>orbit/mvel2</module>
+                <module>orbit/ode</module>
+                <module>orbit/qpid</module>
+                <module>orbit/qpid-client</module>
+                <module>orbit/rampart-core</module>
+                <module>orbit/rampart-policy</module>
+                <module>orbit/rampart-trust</module>
+                <!--module>orbit/shindig</module-->
+		<module>orbit/siddhi</module>
+                <module>orbit/webharvest</module>
+                <module>orbit/wsdl-validator</module>
+                <module>orbit/xkms</module>
+		<module>orbit/andes</module>
+	     </modules>
+   <dependencyManagement>
+	<dependencies>
+		<dependency>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.framework</artifactId>
+                <version>1.0.3</version>
+            </dependency>
+	</dependencies>
+   </dependencyManagement>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<axis2.version>1.6.1-wso2v5</axis2.version>
+    </properties>
+
+</project>
+

@@ -1,0 +1,23 @@
+<module name="wso2bamactivitypublisher" class="org.wso2.carbon.bam.data.publisher.activity.service.modules.ActivityIDModule">
+	<InFlow>
+		<handler name="ActivityInHandler"
+			class="org.wso2.carbon.bam.data.publisher.activity.service.modules.ActivityInHandler">
+			<order phaseFirst="true" phase="OpPhase" />
+		</handler>
+		<handler name="XPathLookupHandler"
+			class="org.wso2.carbon.bam.data.publisher.activity.service.modules.XPathLookupHandler">
+			<order phase="OpPhase" phaseLast="true" />
+		</handler>
+		</InFlow>
+		<OutFlow>
+		<handler name="ActivityOutHandler"
+			class="org.wso2.carbon.bam.data.publisher.activity.service.modules.ActivityOutHandler">
+			<order phase="OpPhase" phaseLast="true"/>
+		</handler>
+		<handler name="XPathLookupHandler"
+			class="org.wso2.carbon.bam.data.publisher.activity.service.modules.XPathLookupHandler">
+			<order phaseFirst="true" phase="OpPhase"  />
+		</handler>
+		</OutFlow>
+	<parameter name="adminModule" locked="true">true</parameter>
+</module>

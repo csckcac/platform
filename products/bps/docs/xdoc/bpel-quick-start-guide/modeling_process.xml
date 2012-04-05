@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>@product.name@ - Quick-Start Guide -</title>
+        <link href="../css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+        <h1>Quick-Start Guide - Modeling a Process</h1>
+        <p>This guide will explain the initial step for modeling a BPEL process. Refer this <a href="http://wso2.org/library/tutorials/2011/04/using-carbon-studio-model-wsbpel-process-using-bpel-editor">article</a> to get more informative idea on how to model a BPEL process via Carbon Studio. Major steps in modeling a business process are.</p>
+        <br />
+        <ul>
+            <li>Creating the Carbon Application Project (in this example, Carbon Application Project
+                name is <strong>WS_NumberAdderCarbon</strong>)
+            </li>
+            <li>Creating a new BPEL Work-flow Project as a new Carbon Artifact under the created
+                Carbon Application Project (in this example, BPEL Work-flow Project name is<strong>
+                    BPELNumberAdder</strong>)
+            </li>
+            <li>Creating the BPEL 2.0 process under the created BPEL Work-flow Project (in this
+                example, BPEL process name is <strong>AdderProcess</strong>)
+            </li>
+        </ul>
+        <br />
+        <ol>
+            <li>
+                <p>Open eclipse IDE. Go to<strong> File -> new -> Other</strong> (see Figure 1)</p>
+                <p><br /><img src="../images/bpel-quick-start-guide/add_new_project_from_menu.png" alt="Adding a new project"/>
+                <br/>Figure 1<br/></p>
+            </li>
+
+            <li>
+                <p>From the dialog window select <strong>Carbon Application project</strong>
+                    and click <strong>Next</strong>(see Figure 2).
+                </p>
+                <p> <br />
+                    <img src="../images/bpel-quick-start-guide/carbon_application_wizard.png" alt="Carbon Application wizard"/>
+                    <br/>Figure 2<br/>
+                </p>
+            </li>
+            <li>
+                <p>Give a name to the Carbon Application project. Here I'm giving the carbon
+                    Application project name as <strong>WS_NumberAdderCarbon</strong>. Then click
+                    <strong>Finish</strong>. (See Figure 3)
+                </p>
+                <p> <br />
+                    <img src="../images/bpel-quick-start-guide/new_carbon_application_project_dialog.png" alt="New Carbon Application Project Dialog"/>
+                    <br/>Figure 3<br />
+                </p>
+                <p><b>Note:</b><i> Eclipse will prompt you to "<strong>root-artifact.xml</strong>"
+                    automatically. (If not, open it from
+                    <strong>Project Explore</strong>
+                    window)</i>
+                </p>
+                <p> <br />
+                    <img src="../images/bpel-quick-start-guide/root_artifact_xml_page.png" alt="Root Artifact XML Page"/>
+                    <br/>Figure 4 <br />
+                </p>
+            </li>
+            <li>
+                <p>Let's create a new BPEL project. Click on "<strong>Create new Artifact</strong>"
+                    (figure 4) and select "<strong>BPEL WorkFlow</strong>" (Figure 5). In the opened
+                    dialog (Figure 6) click on "<strong>New BPEL Project</strong>".
+                </p>
+                <p><br /><img src="../images/bpel-quick-start-guide/new_artifact_options.png" alt="New Artifact Options"/><br/>Figure 5<br/></p>
+                <p><img src="../images/bpel-quick-start-guide/new_bpel_workflow_wizard.png" alt="New BPEL Workflow wizard"/><br/>Figure 6<br /></p>
+            </li>
+            <li>It will show dialog box (Figure 7). Give a name to the BPEL project. Here give the
+                project name as <strong>BPELNumberAdder</strong>.
+            </li>
+            <br />
+            <li>
+                <p>Then click Finish to close the wizard and again click finish to close the New
+                    BPEL
+                    workflow dialog. Now you can see the newly created BPEL project appears in
+                    Project
+                    explore window.
+                </p>
+                <p> <br />
+                    <img src="../images/bpel-quick-start-guide/new_bpel_project_wizard.png" alt="New BPEL project wizard"/>
+                    <br/>Figure 7<br/>
+                </p>
+                <p>Now there's an already created BPEL project. Now-onwards we are going to create
+                    our BPEL process.
+                </p>
+            </li>
+            <br />
+            <li>
+                <p>Let's create a BPEL process file. For that
+                    <strong>right-click</strong>
+                    on BPEL project "<strong>BPELNumberAdder</strong>" form the "<strong>Project
+                        Explore</strong>".
+                </p>
+                <p><b>Note:</b> <i>If you expand the
+                    <strong>WS_NumberAdderCarbon</strong>
+                    project folder in the
+                    <strong>Project Explore</strong>
+                    window, you can see another folder called <strong>BPELNumberAdder</strong>. This
+                    is an instance of our <strong>BPELNumberAdder</strong> Project. Both are linked in
+                    together. In Other words all changes which are done to the<strong>
+                        BPELNumberAdder</strong> project, automatically applied to the <strong>
+                        BPELNumberAdder</strong> folder of the <strong>WS_NumberAdderCarbon</strong>.
+                    Here the <strong>BPELNumberAdder</strong> project is used for BPEL process
+                    development. </i>
+                </p>
+            </li>
+            <br />
+            <li>
+                <p>Then go to <strong>New -> Other</strong>. It will show a Wizard (Figure 8). From
+                    the wizard, select "<strong>New BPEL process File</strong>" which is under the
+                    <strong>BPEL 2.0</strong>. Then click <strong>Next</strong>.
+                </p>
+                <p><br /><img src="../images/bpel-quick-start-guide/new_bpel_process_file_wizard.png" alt="New BPEL Process File wizard"/><br/>Figure 8<br /></p>
+            </li>
+            <li>
+                <p>In next dialog (Figure 9), it will ask for a name for BPEL process, a namespace,
+                    and a template. Here I am giving the Process name as "<strong>AdderProcess</strong>" and namespace as "<strong>http://NumberAdder.com</strong>". The process which we are going to create
+                    is a synchronous process. So select template as<strong>Synchronous BPEL process</strong>. Then click <strong>Finish</strong>.
+                </p>
+                <p><br /><img src="../images/bpel-quick-start-guide/new_bpel_process_file_metadata.png" alt="BPEL process metadata"/><br/>Figure 9<br/></p>
+                <p><b>Note:</b><i> It will automatically generate <strong>AdderProcessArtifacts.wsdl</strong>
+                    and <strong>AdderProcess.bpel</strong>. If we look at the folder structure of the
+                    BPEL process, we can easily figure out these two files. (Figure 10) </i>
+                </p>
+                <p><br /><img src="../images/bpel-quick-start-guide/bpel_project_structure.png" alt="BPEL project structure"/><br/>Figure 10<br /></p>
+            </li>
+            <li>
+                <p>Open the
+                    <strong>AdderProcess.bpel</strong> file from the <strong>Project Explore</strong>
+                    window. Here you can see the template for our business process. The BPEL editor
+                    automatically generates <strong>receiveInput</strong> and <strong>replyOutput</strong> activities. (Figure 11) Also it will generate partnerLink and variables used in
+                    these two activities.
+                </p>
+                <p><br /><img src="../images/bpel-quick-start-guide/bpel_modeling_ide.png" alt="BPEL modeling IDE"/><br/>Figure 11<br /></p>
+            </li>
+        </ol>
+    </body>
+</html>

@@ -1,0 +1,26 @@
+package org.wso2.carbon.cep.fusion;
+
+import java.util.Map;
+import java.util.HashMap;
+
+global org.wso2.carbon.cep.fusion.listener.FusionEventListener fusionListener;
+
+declare Map
+    @role( event )
+end
+
+rule InvokeIBM
+
+when
+    $stockQuote : Map($symbol : this["symbol"], $stockPrice : this["price"], this["picked"] != "true") over window:time(2m) from entry-point "test";
+    $average : Double() from accumulate(Map(this["symbol"] == $symbol,$price : this["price"]) over window:time(2m) from entry-point "test" , average( $price));
+    eval((Double)$stockPrice > $average * 1.1);
+then
+    $stockQuote.put("picked","true");
+    update($stockQuote);
+    Map $fastMovingStock = new HashMap();
+    $fastMovingStock.put("price",$stockPrice);
+    $fastMovingStock.put("symbol",$symbol);
+    $fastMovingStock.put("average",$average);
+    fusionListener.onEvent($fastMovingStock);
+end

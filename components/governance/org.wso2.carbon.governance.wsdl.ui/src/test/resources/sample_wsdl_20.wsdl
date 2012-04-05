@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<description xmlns="http://www.w3.org/ns/wsdl"
+	xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+	xmlns:tns="http://www.example.org/sample/"
+	targetNamespace="http://www.example.org/sample/">
+
+	<types>
+		<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="http://www.example.org/sample/">
+			<xsd:element name="GetPriceRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="ProductType"
+							type="xsd:string" />
+						<xsd:element name="ItemNo" type="xsd:int" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="GetPriceResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="Price" type="xsd:float" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="QueryItemRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="ProductName"
+							type="xsd:string" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="QueryResult">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="ProductID" type="xsd:int" />
+						<xsd:element name="manufacuterDate"
+							type="xsd:dateTime" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+	</types>
+	<interface name="MyServicePort">
+		<operation name="GetPrice"
+			pattern="http://www.w3.org/ns/wsdl/in-out">
+			<input element="tns:GetPriceRequest" />
+			<output element="tns:GetPriceResponse" />
+		</operation>
+		<operation name="QueryItem"
+			pattern="http://www.w3.org/ns/wsdl/in-out">
+			<input element="tns:QueryItemRequest" />
+			<output element="tns:QueryResult" />
+		</operation>
+	</interface>
+	<binding xmlns:ns_1="http://www.w3.org/ns/wsdl/soap"
+		name="MyServiceBinding" interface="tns:MyServicePort"
+		type="http://www.w3.org/ns/wsdl/soap" ns_1:version="1.1"
+		ns_1:protocol="http://www.w3.org/2006/01/soap11/bindings/HTTP/">
+		<operation ref="tns:GetPrice"
+			ns_1:action="http://www.example.org/sample/GetPrice" />
+		<operation ref="tns:QueryItem"
+			ns_1:action="http://www.example.org/sample/QueryItem" />
+	</binding>
+	<service name="MyService" interface="tns:MyServicePort">
+		<endpoint name="MyServicePort" binding="tns:MyServiceBinding"
+			address="http://localhost/samples/wsdl_mode/wsdl_20_service.php" />
+	</service>
+</description>

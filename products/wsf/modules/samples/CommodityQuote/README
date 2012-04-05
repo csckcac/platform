@@ -1,0 +1,27 @@
+WSO2 WSF/Java
+=============
+
+Sample : CommodityQuote Client
+==============================
+
+This is a client which can invoke the CommodityQuote service sample which comes with the WSO2
+Application Server. This sample demonstrates how to write clients for Web Services using different
+quality of service options like WS-Security, WS-ReliableMessaging etc.
+
+If you want to run the sample, you have to host the CommodityQuote service in a running WSO2
+AppServer instance. There are different options to achieve that.
+
+1. Download WSO2 AppServer and deploy the service.
+2. Create a tenant in WSO2 Cloud infrastructure (Stratos) and deploy the service in AppServer
+   cloud service.
+3. Deploy the service in WSO2 AppServer AMI.
+
+After deploying the service using one of the above options, use the following steps to run the
+client.
+
+1. Run "ant" on WSF_HOME/samples/CommodityQuote directory.
+2. Run "sh run-client.sh -help" for help on various available options.
+
+If you want more details on this and like to understand more on security and RM scenarios, please
+download the WSO2 Application Server Documentation Distribution and refer to the CommodityQuote
+sample document.

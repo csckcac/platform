@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<Module>
+    <ModulePrefs title="My Portfolio" author="Manoj Marathe" author_email="manoj.marathe@gmail.com"
+                 render_inline="optional"
+                 description="Maintain your own portfolio. Supports all major Stock Exchanges. Refreshes on its own based on set interval"
+                 scrolling="true" author_location="Pune, India" height="300" category="Finance"
+                 thumbnail="http://manoj.marathe.googlepages.com/stkscreen-tb.png"
+                 screenshot="http://manoj.marathe.googlepages.com/stkscreen.png"/>
+    <UserPref name="s0" display_name="Symbol(1)" default_value="NTPC.NS"/>
+    <UserPref name="n0" display_name="Shares(1)" default_value="30"/>
+    <UserPref name="p0" display_name="Price(1)" default_value="75.9"/>
+    <UserPref name="s1" display_name="Symbol(2)" default_value="532418.BO"/>
+    <UserPref name="n1" display_name="Shares(2)" default_value="100"/>
+    <UserPref name="p1" display_name="Price(2)" default_value="85.95"/>
+    <UserPref name="s2" display_name="Symbol(3)" default_value=""/>
+    <UserPref name="n2" display_name="Shares(3)" default_value="0"/>
+    <UserPref name="p2" display_name="Price(3)" default_value="0"/>
+    <UserPref name="s3" display_name="Symbol(4)" default_value=""/>
+    <UserPref name="n3" display_name="Shares(4)" default_value="0"/>
+    <UserPref name="p3" display_name="Price(4)" default_value="0"/>
+    <UserPref name="s4" display_name="Symbol(5)" default_value=""/>
+    <UserPref name="n4" display_name="Shares(5)" default_value="0"/>
+    <UserPref name="p4" display_name="Price(5)" default_value="0"/>
+    <UserPref name="s5" display_name="Symbol(6)" default_value=""/>
+    <UserPref name="n5" display_name="Shares(6)" default_value="0"/>
+    <UserPref name="p5" display_name="Price(6)" default_value="0"/>
+    <UserPref name="s6" display_name="Symbol(7)" default_value=""/>
+    <UserPref name="n6" display_name="Shares(7)" default_value="0"/>
+    <UserPref name="p6" display_name="Price(7)" default_value="0"/>
+    <UserPref name="s7" display_name="Symbol(8)" default_value=""/>
+    <UserPref name="n7" display_name="Shares(8)" default_value="0"/>
+    <UserPref name="p7" display_name="Price(8)" default_value="0"/>
+    <UserPref name="s8" display_name="Symbol(9)" default_value=""/>
+    <UserPref name="n8" display_name="Shares(9)" default_value="0"/>
+    <UserPref name="p8" display_name="Price(9)" default_value="0"/>
+    <UserPref name="s9" display_name="Symbol(10)" default_value=""/>
+    <UserPref name="n9" display_name="Shares(10)" default_value="0"/>
+    <UserPref name="p9" display_name="Price(10)" default_value="0"/>
+    <UserPref name="s10" display_name="Symbol(11)" default_value=""/>
+    <UserPref name="n10" display_name="Shares(11)" default_value="0"/>
+    <UserPref name="p10" display_name="Price(11)" default_value="0"/>
+    <UserPref name="s11" display_name="Symbol(12)" default_value=""/>
+    <UserPref name="n11" display_name="Shares(12)" default_value="0"/>
+    <UserPref name="p11" display_name="Price(12)" default_value="0"/>
+    <UserPref name="s12" display_name="Symbol(13)" default_value=""/>
+    <UserPref name="n12" display_name="Shares(13)" default_value="0"/>
+    <UserPref name="p12" display_name="Price(13)" default_value="0"/>
+    <UserPref name="s13" display_name="Symbol(14)" default_value=""/>
+    <UserPref name="n13" display_name="Shares(14)" default_value="0"/>
+    <UserPref name="p13" display_name="Price(14)" default_value="0"/>
+    <UserPref name="s14" display_name="Symbol(15)" default_value=""/>
+    <UserPref name="n14" display_name="Shares(15)" default_value="0"/>
+    <UserPref name="p14" display_name="Price(15)" default_value="0"/>
+    <UserPref name="s15" display_name="Symbol(16)" default_value=""/>
+    <UserPref name="n15" display_name="Shares(16)" default_value="0"/>
+    <UserPref name="p15" display_name="Price(16)" default_value="0"/>
+    <UserPref name="s16" display_name="Symbol(17)" default_value=""/>
+    <UserPref name="n16" display_name="Shares(17)" default_value="0"/>
+    <UserPref name="p16" display_name="Price(17)" default_value="0"/>
+    <UserPref name="s17" display_name="Symbol(18)" default_value=""/>
+    <UserPref name="n17" display_name="Shares(18)" default_value="0"/>
+    <UserPref name="p17" display_name="Price(18)" default_value="0"/>
+    <UserPref name="s18" display_name="Symbol(19)" default_value=""/>
+    <UserPref name="n18" display_name="Shares(19)" default_value="0"/>
+    <UserPref name="p18" display_name="Price(19)" default_value="0"/>
+    <UserPref name="s19" display_name="Symbol(20)" default_value=""/>
+    <UserPref name="n19" display_name="Shares(20)" default_value="0"/>
+    <UserPref name="p19" display_name="Price(20)" default_value="0"/>
+    <UserPref name="interval" display_name="Refresh time" default_value="30" datatype="enum">
+        <EnumValue value="5" display_value="5 sec"/>
+        <EnumValue value="30" display_value="30 sec"/>
+        <EnumValue value="60" display_value="1 min"/>
+        <EnumValue value="900" display_value="15 min"/>
+    </UserPref>
+
+    <Content type="html">
+        <![CDATA[
+ 
+<HEAD>
+<link href="http://manoj.marathe.googlepages.com/styles.css" rel="stylesheet" type="text/css" />
+<SCRIPT type="text/javascript" language="javascript">
+var timer;
+var newDiv = null;
+var prefs = new _IG_Prefs(__MODULE_ID__);
+var _numStocks = 20;
+
+function roundNumber(numberField) {
+    if(isNaN(numberField)) { return '-'; }
+	var rnum = numberField;
+	var rlength = 2; // The number of decimal places to round to
+	if (rnum > 8191 && rnum < 10485) {
+		rnum = rnum-5000;
+		var newnumber = Math.round(rnum*Math.pow(10,rlength))/Math.pow(10,rlength);
+		newnumber = newnumber+5000;
+	} else {
+		var newnumber = Math.round(rnum*Math.pow(10,rlength))/Math.pow(10,rlength);
+	}
+	return newnumber;
+}
+//http://quote.yahoo.com/d/quotes.csv?s=%5ebsesn+%5ensei+532418.BO+ASHOKLEY.NS+GPIL.NS+530005.BO+MLL.NS+NTPC.NS+TTML.NS&f=nvl1'
+function init()
+{
+	//Create a div in which we will be rendering table
+	newDiv = document.createElement("div");
+	document.body.appendChild(newDiv);
+	get_stockdetails();
+}
+
+function CommaFormatted(volume)
+{
+	var delimiter = ","; // replace comma if desired
+	var a = volume;//.split('.',2)
+	if(isNaN(volume)) { return '-'; }
+	var i = parseFloat(volume);
+	i = Math.abs(i);
+	var n = new String(i);
+	var a = [];
+	while(n.length > 3)
+	{
+		var nn = n.substr(n.length-3);
+		a.unshift(nn);
+		n = n.substr(0,n.length-3);
+	}
+	if(n.length > 0) { a.unshift(n); }
+	volume = a.join(delimiter);
+	return volume;
+}
+
+
+function get_stockdetails()
+{
+	var arrStock = new Array(_numStocks-1);
+	var arrShares = new Array(_numStocks-1);
+	var arrPrice = new Array(_numStocks-1);
+	var arrCurrPrice = new Array(_numStocks-1);
+	var isConfigured = false;
+	var surl = "http://finance.yahoo.com/d?s=";
+	var confStocks = 0;
+	var quotes = "";
+
+	//get user settings
+	for (i=0; i<_numStocks; i++){
+		arrStock[i] = prefs.getString("s" + i);
+		arrShares[i] = parseFloat(prefs.getString("n" + i));
+		arrPrice[i] = parseFloat(prefs.getString("p" + i));
+		arrCurrPrice[i] = 0;
+		if (arrStock[i] !='' && arrStock[i]!=null &&  
+			arrShares[i] !=0 && arrShares[i] != null) {
+			quotes += _esc(arrStock[i]);
+			isConfigured = true;
+			quotes += '+';
+			confStocks++;
+		}
+	}
+	
+	if (confStocks > 0) { 
+	   surl += _esc(quotes)+"&f=nl1vgh&random="+ Math.random();
+      _IG_FetchContent(surl, _IG_Callback(processResult));
+    }
+	
+	function processResult(str) {
+		//Just a temporary div, later this will be assigned to newDiv.
+		var responseText = str;
+		 var shtml = "<div>";
+		 if (responseText == null || responseText == "") {
+			 shtml += "<i><font size='3'>Service is temporarily unavailable. </font></i></div>";
+			 newDiv.innerHTML = shtml;
+			 timer = setTimeout( 'get_stockdetails()', 5000 ) ;
+			 return;
+		 }
+
+
+		 //Lets create table & headers for the same.
+
+		 shtml += "<table id='mytable'>";
+		 shtml += "<tr><th scope='col' >Script Name</th>";
+		 shtml += "<th scope='col' >Qty</th>"
+		 shtml += "<th scope='col' >Buy Price</th>"
+		 shtml += "<th scope='col' >Mkt Price</th>"
+ 		 shtml += "<th scope='col' >Vol</th>"
+  		 shtml += "<th scope='col' >Day Low</th>"
+  		 shtml += "<th scope='col' >Day High</th>"
+		 shtml += "<th scope='col' >Profit / Loss</th></tr>"
+
+		 // Lets replace \n by commas because we will be getting multiple records
+		 var tmp1 = responseText.replace(new RegExp( "\\n", "g" ), ",");
+
+		 //Replace any double quotes; that looks ugly
+		 var tmp2 = tmp1.replace(new RegExp( "\"", "g" ),"");
+
+		 // Use the split function to extract substrings separated by comma 
+		 // delimiters.
+		 var contacts = tmp2.split(",");
+
+		 //Process array of extracted substrings.
+		 var rec = 0;
+		 var total_profit = 0;
+		 var pct_prof = 0;
+		 var invest = 0;
+		 var mktvalue = 0;
+		 var col = 0;
+		 for (var i = 0; i < contacts.length ; i++) {
+		   switch(col) 
+		   {
+				case 0 : //Script name, Qty, Buy Price
+					if (rec%2 == 0) {
+						shtml += "<tr><th scope='row' class='specalt'>";
+					} else {
+						shtml += "<tr><th scope='row' class='spec'>";
+					}
+					shtml += "<a href='http://in.finance.yahoo.com/q?s=" + arrStock[rec] + "' target='_blank'>" + contacts[i] + "</a></th>"; 
+					shtml += "<td class='alt'>" + arrShares[rec] + "</td>";
+					shtml += "<td class='alt'>" + arrPrice[rec] + "</td>";
+					invest = invest + roundNumber(parseFloat(arrPrice[rec]) * parseFloat(arrShares[rec]));
+					col++;
+					break;
+				case 1 : //Mkt Price
+		   			arrCurrPrice[rec] = roundNumber(parseFloat(contacts[i]));
+					shtml += "<td class='alt'>" + arrCurrPrice[rec] + "</td>"; 
+					col++;
+					break;
+				case 2 : //Volume
+					shtml += "<td class='alt'>" + CommaFormatted(contacts[i]) + "</td>"; 
+					col++;
+					break;
+				case 3 : //Day Low
+   				    shtml += "<td class='alt'>" + roundNumber(parseFloat(contacts[i])) + "</td>"; 
+					col++;
+					break;
+				case 4 : //Day High & Profit
+				    shtml += "<td class='alt'>" + roundNumber(parseFloat(contacts[i])) + "</td>"; 
+					currVal = roundNumber(parseFloat(arrShares[rec] * arrCurrPrice[rec]));
+					mktvalue = mktvalue + roundNumber(currVal);
+					earnVal = roundNumber(currVal - roundNumber(parseFloat(arrShares[rec]) * parseFloat(arrPrice[rec])));
+					total_profit = roundNumber(total_profit + earnVal);
+					if (earnVal < 0) {
+					   shtml += "<td class='negalt'>";						
+					} else {
+					   shtml += "<td class='alt'>";
+					}
+					shtml += earnVal + "<br>[" + roundNumber((arrCurrPrice[rec] - arrPrice[rec]) * 100/arrPrice[rec]) + "%]</td></tr>"; 
+					col = 0;
+     		        rec++;
+					break;
+
+		   }
+
+		   
+		   if (rec >= confStocks)
+			    break; 
+		
+		} //end of for
+
+		shtml += "</table><table><tr><td class='alt'>Total Investment:<br>"+ roundNumber(invest) + " </td>";
+		shtml += "<td class='alt'>Total Market Value:<br>"+ roundNumber(mktvalue) + " </td>";
+
+		if (total_profit < 0)
+			shtml += "<td class='negalt'>Total Loss: <br>" + total_profit + "  [" + roundNumber(total_profit * 100/invest) + "%]</td>";
+		else
+			shtml += "<td class='alt'>Total Profit: <br>" + total_profit +  "  [" + roundNumber(total_profit * 100/invest) + "%]</td>";
+		
+		shtml += "</tr></table></div>";
+		// Output html in div.
+		newDiv.innerHTML = shtml;
+		
+		var interval = prefs.getInt('interval');
+
+		timer = setTimeout( 'get_stockdetails()', parseFloat(interval * 1000) ) ;
+    }
+}
+
+</SCRIPT>
+</HEAD>
+<BODY  style="border:none" onload="init();">
+<basefont size="3">
+	<p align="left" color="blue">Edit and add your Portfolio details. Use <a href='http://in.finance.yahoo.com/l'> Yahoo Finance!  </a> for Symbol lookup.  <br>Set the refresh frequency. Note : Prices may be delayed by few minutes. 
+	
+     </p>
+</BODY>
+  ]]>
+    </Content>
+</Module>

@@ -1,0 +1,169 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<assembly>
+    <!--<id>bin</id>-->
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>wso2wsfjava-${pom.version}/lib</outputDirectory>
+            <includes>
+                <!--axis2 dependencies-->
+                <include>org.apache.axis2:axis2-jaxbri:jar</include>
+                <include>org.apache.axis2:axis2-jibx:jar</include>
+                <include>org.apache.axis2:axis2-json:jar</include>
+                <include>org.apache.axis2:axis2-transport-jms:jar</include>
+                <include>org.apache.axis2:mex:jar:impl</include>
+                <include>org.apache.axis2.wso2:axis2:jar</include>
+
+                <include>org.apache.xmlbeans:xmlbeans:jar</include>
+                <include>org.apache.ws.commons.axiom.wso2:axiom:jar</include>
+
+                <!--jaxws related-->
+                <include>org.apache.geronimo.specs:geronimo-jaxws_2.1_spec:jar</include>
+                <include>org.apache.geronimo.specs:geronimo-annotation_1.0_spec:jar</include>
+                <include>org.apache.geronimo.specs:geronimo-ws-metadata_2.0_spec:jar</include>
+                <include>com.sun.xml.bind:jaxb-xjc:jar</include>
+                <include>com.sun.xml.bind:jaxb-impl:jar</include>
+                <include>javax.xml.bind:jaxb-api:jar</include>
+
+                <include>commons-codec:commons-codec:jar</include>
+                <include>commons-dbcp:commons-dbcp:jar</include>
+                <include>commons-fileupload:commons-fileupload:jar</include>
+                <include>commons-httpclient:commons-httpclient:jar</include>
+                <include>commons-lang:commons-lang:jar</include>
+                <include>commons-logging:commons-logging:jar</include>
+                <include>commons-pool:commons-pool:jar</include>
+
+                <include>org.jibx:jibx-bind:jar</include>
+                <include>org.jibx:jibx-run:jar</include>
+                <include>org.apache.httpcomponents:httpcore:jar</include>
+
+                <!--rampart dependencies-->
+                <include>org.apache.rampart.wso2:rampart-core:jar</include>
+                <include>org.apache.rampart.wso2:rampart-trust:jar</include>
+                <include>org.apache.rampart.wso2:rampart-policy:jar</include>
+                <include>org.apache.ws.security.wso2:wss4j:jar</include>
+
+                <include>opensaml.wso2:opensaml2:jar</include>
+                <include>backport-util-concurrent:backport-util-concurrent:jar</include>
+                <include>org.apache.bcel:bcel:jar</include>
+                <include>bouncycastle:bcprov-jdk15:jar</include>
+
+                <!--sandesha2 dependencies-->
+                <include>org.apache.sandesha2:sandesha2-core:jar</include>
+                <include>org.apache.sandesha2:sandesha2-policy:jar</include>
+                <include>org.apache.sandesha2:sandesha2-rampart-integration:jar</include>
+                <include>org.apache.sandesha2:sandesha2-persistence:jar</include>
+
+                <include>org.apache.ws.savan.wso2:savan-core:jar</include>
+
+                <include>org.apache.woden.wso2:woden:jar</include>
+                <include>org.apache.geronimo.specs:geronimo-jta_1.1_spec:jar</include>
+                <include>log4j:log4j:jar</include>
+                <include>wsdl4j:wsdl4j:jar</include>
+                <include>org.apache.neethi:neethi:jar</include>
+                <include>org.wso2.xkms:xkms:jar</include>
+                <include>org.apache.ws.commons.schema:XmlSchema:jar</include>
+                <include>org.codehaus.jettison:jettison:jar</include>
+                <include>commons-io:commons-io:jar</include>
+                <include>org.wso2.mex:wso2mex:jar</include>
+                <include>org.wso2.xfer:wso2xfer:jar</include>
+                <include>org.wso2.securevault:org.wso2.securevault:jar</include>
+
+                <include>org.wso2.carbon:org.wso2.carbon.utils:jar</include>
+            </includes>
+        </dependencySet>
+
+        <dependencySet>
+            <outputDirectory>wso2wsfjava-${pom.version}/lib/endorsed</outputDirectory>
+            <includes>
+                <include>xerces.wso2:xercesImpl:jar</include>
+                <include>xalan.wso2:xalan:jar</include>
+                <!--<include>xml-apis.wso2:xml-apis:jar</include>-->
+            </includes>
+        </dependencySet>
+
+        <dependencySet>
+            <outputDirectory>wso2wsfjava-${pom.version}/repository/modules</outputDirectory>
+            <includes>
+                <include>org.apache.axis2:addressing:mar</include>
+                <include>org.apache.rampart:rampart:mar</include>
+                <include>org.apache.rampart:rahas:mar</include>
+                <include>org.apache.sandesha2:sandesha2:mar</include>
+                <include>org.wso2.mex:wso2mex:mar</include>
+                <include>org.wso2.xfer:wso2xfer:mar</include>
+            </includes>
+        </dependencySet>
+    </dependencySets>
+
+    <fileSets>
+
+        <!-- copy resources -->
+        <fileSet>
+            <directory>resources</directory>
+            <outputDirectory>wso2wsfjava-${pom.version}/resources</outputDirectory>
+        </fileSet>
+
+        <!--  copying samples -->
+        <fileSet>
+            <directory>../samples</directory>
+            <outputDirectory>wso2wsfjava-${pom.version}/samples</outputDirectory>
+            <excludes>
+                <exclude>target/**</exclude>
+                <exclude>**/**.sh</exclude>
+                <exclude>**/pom.xml</exclude>
+            </excludes>
+        </fileSet>
+
+        <!-- copy executables in samples with execute permissions -->
+        <fileSet>
+            <directory>../samples</directory>
+            <outputDirectory>wso2wsfjava-${pom.version}/samples</outputDirectory>
+            <includes>
+                <include>**/**.sh</include>
+            </includes>
+            <fileMode>755</fileMode>
+        </fileSet>
+
+    </fileSets>
+
+    <files>
+        <file>
+            <source>README.txt</source>
+            <outputDirectory>wso2wsfjava-${pom.version}</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>LICENSE.txt</source>
+            <outputDirectory>wso2wsfjava-${pom.version}</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>release-notes.html</source>
+            <outputDirectory>wso2wsfjava-${pom.version}</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+    </files>
+
+</assembly>

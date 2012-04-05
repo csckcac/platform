@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+ ~ Copyright (c) 2009-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ Licensed under the Apache License, Version 2.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~      http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>org.wso2.carbon</groupId>
+        <artifactId>mediation-features</artifactId>
+        <version>4.0.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>template-features</artifactId>
+    <packaging>pom</packaging>
+    <name>WSO2 Carbon - Template Feature Aggregator Module</name>
+    <url>http://wso2.org</url>
+
+    <modules>
+        <module>mediation-template</module>
+        <!--<module>endpoint-template</module>--> 
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            
+        </dependencies>
+    </dependencyManagement>
+
+    <properties>
+        <!-- carbon component version in all mashup features -->
+        <wso2carbon.component.version.mashup>${wso2carbon.version}
+        </wso2carbon.component.version.mashup>
+        <!-- carbon core version in all mashup features -->
+        <wso2carbon.core.version.mashup>${wso2carbon.version}</wso2carbon.core.version.mashup>
+        <!-- p2-plugin version in all mashup features -->
+        <p2-plugin.version.mashup>${carbon.p2.plugin.version}</p2-plugin.version.mashup>
+        <json.version.mashup>1.6.1.wso2v1</json.version.mashup>
+        <jml.version.mashup>1.0.0.b3-wso2v1</jml.version.mashup>
+        <smack.version.mashup>3.0.4.wso2v1</smack.version.mashup>
+        <socks.version.mashup>1.01.0.wso2v1</socks.version.mashup>
+        <joscar.version.mashup>2007.11.10.wso2v1</joscar.version.mashup>
+        <axiom.e4x.version.mashup>2.0.0</axiom.e4x.version.mashup>
+        <rhino.version.mashup>1.7.0.R1-wso2v2</rhino.version.mashup>
+        <jdom.version.mashup>1.0.0.wso2v1</jdom.version.mashup>
+        <rome.version.mashup>0.9.0.wso2v1</rome.version.mashup>
+        <jettison.version.mashup>1.0.1.wso2v1</jettison.version.mashup>
+        <webharvest.version.mashup>2.0.0.wso2v1</webharvest.version.mashup>
+        <bsh.version.mashup>1.3.0.wso2v1</bsh.version.mashup>
+        <htmlcleaner.version.mashup>2.1.0.wso2v1</htmlcleaner.version.mashup>
+        <abdera-extensions.version.mashup>0.4.0.wso2v2</abdera-extensions.version.mashup>
+        <rampart.version.mashup>1.6.1.wso2v1</rampart.version.mashup>
+        <saxon.version.mashup>8.9.0.wso2v1</saxon.version.mashup>
+        <geronimo.version.mashup>1.0.1.wso2v1</geronimo.version.mashup>
+        <wss4j.version.mashup>1.5.11.wso2v1</wss4j.version.mashup>
+        <cindy.version.mashup>2.4.4.wso2v1</cindy.version.mashup>
+        <jena.wso2.version>1.0.0.wso2v1</jena.wso2.version>
+	<neethi.version.mashup>2.0.4.wso2v3</neethi.version.mashup>
+    </properties>
+
+</project>
+

@@ -1,0 +1,13 @@
+<div class="simple_overlay" id="mainLoginBox">
+
+        <div><h2>Login</h2></div>
+
+        <form id="mainLoginForm">
+            <div><label>Username:</label><br/><input type="text" id="name" name="name" placeholder="username"/></div>
+            <div><label>Password:</label><br/><input type="password" id="pass" name="pass" placeholder="password"/></div>
+            <div>
+                <input type="submit" class="button" value="Login" id="mainLoginBox_OK"/>
+            </div>
+        </form>
+
+</div>

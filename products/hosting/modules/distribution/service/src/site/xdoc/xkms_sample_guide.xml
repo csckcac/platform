@@ -1,0 +1,136 @@
+<!--
+  ~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+<body>
+<h1>XKMS Sample Guide</h1>
+
+<h2>INTRODUCTION</h2>
+
+<p>This sample demonstrates how to register a client-side generated (or 
+server-side generated) key pair, how to send a reissue request to a XKMS server 
+for an issued certificate asking for its credentials to be changed, how to recover a
+server generated key pair, how to locate a certificate and how to validate a 
+certificate.</p>
+
+<h2>HOW TO BUILD THE SAMPLE</h2>
+
+<p>XKMS sample is located in the samples directory which is in WSO2 AppServer the root
+directory.</p> 
+
+<h3>Prerequisites</h3>
+<p>To build the samples you will need the Apache Ant build tool</p>
+
+<h3>Follow these steps:</h3>
+<ol>
+	<li>Start WSO2 AppServer</li>
+	<li>In another terminal, change directory to XKMS sample directory</li>
+	<pre>e.g. cd C:\wso2appserver-2.1\samples\XKMS</pre>
+	<li>Type ant and press enter</li>
+	<pre>e.g. C:\wso2appserver-x.x\samples\XKMS>ant</pre>
+</ol>
+
+
+<h2>HOW TO CONFIGURE SERVICES</h2>
+<p>To configure the XKMS service, follow the following 
+steps</p>
+
+<ol>
+	<li>Sign in to AppServer</li>
+	<li>Click on the List link in the Service column, in the Manage section, on the left hand side pannel</li>
+	<li>Select XKMS from Service Groups table of Deployed Services list</li>
+	<li>Click on Parameters link on Quality of Service Configuration table</li>
+	<li>Change/update the following parameter values</li>
+	<pre>
+		<table><thead><tr><td>Parameter Name</td><td>Value</td></tr></thead>
+		<tbody>
+		<tr>
+			<td>org.wso2.xkms2.service.crypto.persistence.enabled</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>org.wso2.xkms2.service.crypto.authen.code</td>
+			<td>secret</td>
+		</tr>
+		<tr>
+			<td>org.wso2.xkms2.service.crypto.keystore.password</td>
+			<td>password</td>
+		</tr>
+		<tr>
+			<td>org.wso2.xkms2.service.crypto.default.expriy.interval</td>
+			<td>365</td>
+		</tr>
+		<tr>
+			<td>org.wso2.xkms2.service.crypto.default.private.key.password</td>
+			<td>password</td>
+		</tr>
+		<tr>
+			<td>org.wso2.xkms2.service.crypto.keystore.location</td>
+			<td>keystore.jks</td>
+		</tr>
+		
+		<tr>
+			<td>org.wso2.xkms2.service.crypto.issuer.cert.aliase</td>
+			<td>alice</td>
+		</tr>
+		<tr>
+			<td>org.wso2.xkms2.service.crypto.issuer.key.password</td>
+			<td>password</td>
+		</tr>
+		<tr>	
+			<td>org.wso2.xkms2.service.crypto.server.cert.aliase</td>
+			<td>bob</td>
+		</tr>
+		<tr>
+			<td>org.wso2.xkms2.service.crypto.server.key.password</td>
+			<td>password</td>
+		</tr>
+		</tbody>
+		</table>
+	</pre>
+</ol>
+
+<h2>RUNNING THE CLIENT</h2>
+<p>
+The sample clients will access keystore.jks, which is a Java key store, to retrieve 
+any required key information. e.g. The Reissue service demo will use the certificate 
+with the alias "bob" and send it to the server with new credentials asking it 
+to reissue the certificate.</p>
+
+<p>Run the XKMS service demo application to see how to use client applications 
+to access the XKMS service</p>
+
+<ol>
+	<li>Switch to XKMS sample directory in terminal</li>
+	<li>Run run-client.bat (or run-client.sh if you are in Linux platform)</li>
+	<li>Enter the number of the demo you want to run</li>
+	<pre>
+		[1] Run Registration Servcie Demo (1)
+		[2] Run Registration Servcie Demo (2)
+		[3] Run Reissue Service Demo
+		[4] Run Recovery Service Demo
+		[5] Run Locate Service Demo
+		[6] Run Validate Service Demo
+		[7] Exit
+		Enter your choice :
+		1
+	</pre>
+	<li>The results will be printed on the screen</li>
+</ol>
+</body>
+</html>

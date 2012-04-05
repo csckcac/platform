@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>@product.name@ - Sample Guide - Pick</title>
+        <link href="../css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+        <h1>Sample Guide - Pick</h1>
+        <h3>Table of Content</h3>
+        <ul>
+            <li><a href="#objective">Objective</a></li>
+            <li><a href="#prerequisites">Prerequisites</a></li>
+            <li><a href="#overallIdea">Overall Idea</a></li>
+        </ul>
+
+        <br />
+        <h3><a name="objective">Objective</a></h3>
+        <p>
+            &lt;pick/&gt; can be used for event based execution. Inside &lt;pick/&gt;, we can define
+            activities to be executed when there is an event or a set of events occur. These events
+            can be defined in &lt;onMessage/&gt; or &lt;onAlarm/&gt;. &lt;onMessage/&gt; is used to
+            define events based on arrival of a message. &lt;onAlarm/&gt; is used to define events
+            based on specific time point or time interval. &lt;pick/&gt; activity should include at
+            least one &lt;onMessage/&gt; element while &lt;onAlarm/&gt; is optional. Additionally
+            user have to define a correlation set and refer it in each event in-order to determine
+            the correct execution path.
+        </p>
+        <p>
+            eg - Let's take PickProcess.bpel in TestPickOneWay.zip (sample is located at our<a
+                href="http://svn.wso2.org/repos/wso2/branches/carbon/3.2.0/products/bps/2.1.0/modules/samples/product/src/main/resources/bpel/2.0/">
+            sample repository</a>.)
+        </p>
+        <p>
+            This bpel process can be invoked by 5 operations. Those operations are dealDeck,
+            pickSpade, pickClub, pickHeart and pickDiamond.
+        </p>
+        <p>eg -</p>
+        <ul>
+            <li><pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>receive</span> <span style='color:#274796; '>operation</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>dealDeck</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>partnerLink</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>IncomingLink</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>variable</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>deckRequest</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>createInstance</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>yes</span><span style='color:#0000e6; '>"</span> ...<span style='color:#a65700; '>/></span></pre></li>
+            <li><pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>onMessage</span> <span style='color:#274796; '>operation</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>pickSpade</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>partnerLink</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>IncomingLink</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>variable</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>spadeRequest</span><span style='color:#0000e6; '>"</span> ...<span style='color:#a65700; '>/></span></pre></li>
+            <li><pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>onMessage</span> <span style='color:#274796; '>operation</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>pickClub</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>partnerLink</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>IncomingLink</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>variable</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>clubRequest</span><span style='color:#0000e6; '>"</span> ...<span style='color:#a65700; '>/></span></pre></li>
+            <li><pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>onMessage</span> <span style='color:#274796; '>operation</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>pickHeart</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>partnerLink</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>IncomingLink</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>variable</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>heartRequest</span><span style='color:#0000e6; '>"</span> ...<span style='color:#a65700; '>/></span></pre></li>
+            <li><pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>onMessage</span> <span style='color:#274796; '>operation</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>pickDiamond</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>partnerLink</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>IncomingLink</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>variable</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>diamondRequest</span><span style='color:#0000e6; '>"</span> ...<span style='color:#a65700; '>/></span></pre></li>
+        </ul>
+        <p>So once one of these operations is executed, the bpel process is invoked. But only
+            "dealDeck" operation can create an instance of this process as its createInstance
+            attribute is set to "yes". If one of the other operations are executed, a job will be
+            queued until an instance is created. So once an instance is created, the queued job will
+            be triggered.
+        </p>
+        <br />
+        <h3><a name="prerequisites">Prerequisites</a></h3>
+        <ul>
+            <li>Log in into BPS server admin console.</li>
+            <li>Under Business Processes -&gt; Add BPEL.</li>
+            <li>Upload the TestPickOneWay.zip , (all samples are located at our <a href="http://svn.wso2.org/repos/wso2/branches/carbon/3.2.0/products/bps/2.1.0/modules/samples/product/src/main/resources/bpel/2.0/">sample repository</a>.)</li>
+            <li>Under the Business Processes -&gt; Processes.</li>
+            <li>Under the WSDL details widget -&gt; Create instance</li>
+        </ul>
+        <br />
+        <h3><a name="overallIdea">Overall Idea</a></h3>
+        <p>
+            refer TestPickOneWay.zip
+        </p>
+        <ul>
+            <li>Defining correlation set.
+
+                <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>correlationSets</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>correlationSet</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>CorrelationByDeck</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>properties</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>srvns:<b>deck</b></span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>correlationSets</span><span style='color:#a65700; '>></span>
+</pre>
+                
+                <p>This property is defined at PickService.wsdl as follows.</p>
+                
+                <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>vprop</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>property</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '><b>deck</b></span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>type</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>xsd:token</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+<span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>vprop</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>propertyAlias</span> <span style='color:#274796; '>messageType</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>tns:dealDeckRequest</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>part</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>parameters</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>propertyName</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>tns:<b>deck</b></span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>vprop</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>query</span><span style='color:#a65700; '>></span>tns:<b>Deck</b><span style='color:#a65700; '>&lt;/</span><span style='color:#666616; '>vprop</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>query</span><span style='color:#a65700; '>></span>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#666616; '>vprop</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>propertyAlias</span><span style='color:#a65700; '>></span>
+</pre>
+
+                <p>Here the property points to a particular message element which is called &lt;Deck/&gt;
+                    in the <code>dealDeckRequest</code> message type.
+                </p>
+                
+                <p>eg - <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>dealDeck</span><span style='color:#a65700; '>></span>
+    <b><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>Deck</span><span style='color:#a65700; '>></span><span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>Deck</span><span style='color:#a65700; '>></span></b>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>dealDeck</span><span style='color:#a65700; '>></span>
+</pre></p>
+            </li>
+            <li>So once a message of the type <code>dealDeckRequest</code> is received, an instance of
+                correlation set will be created based on the value of the element &lt;Deck/&gt;.
+            </li>
+            <li>In this sample, when a
+                <code>dealDeckRequest</code>
+                message is received a process instance is
+                created due to<code>createInstance="yes"</code>. As well a correlation set instance
+                is also
+                created due to<code>initiate="yes"</code>.
+                
+                <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>receive</span> <span style='color:#274796; '>operation</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>dealDeck</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>partnerLink</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>IncomingLink</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>variable</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>deckRequest</span><span style='color:#0000e6; '>"</span>
+         <span style='color:#274796; '>createInstance</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>yes</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>correlations</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>correlation</span> <span style='color:#274796; '>initiate</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>yes</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>set</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>CorrelationByDeck</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+    <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>correlations</span><span style='color:#a65700; '>></span>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>receive</span><span style='color:#a65700; '>></span>
+</pre>
+            </li>
+            <li>Suppose there's a incoming message for a operation defined in &lt;onMessage&gt;. So
+                once the message is received to the process, it'll be verified with correlation set
+                instance. If there's an existing process instance, which is compliant with the
+                correlation set instance, then the instance will execute the particular set of
+                activities defined.
+            </li>
+            <li>If the incoming message's operation is "pickSpade", and the partnerLink is
+                "IncomingLink" , and the incoming message is compliant with the correlation set
+                instance of the process instance, following activities are executed.
+                <br/>
+                <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>onMessage</span> <span style='color:#274796; '>operation</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>pickSpade</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>partnerLink</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>IncomingLink</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>variable</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>spadeRequest</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>correlations</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>correlation</span> <span style='color:#274796; '>initiate</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>no</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>set</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>CorrelationByDeck</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+    <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>correlations</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>sequence</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>assign</span><span style='color:#a65700; '>></span>
+            <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>copy</span><span style='color:#a65700; '>></span>
+                <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>from</span><span style='color:#a65700; '>></span>
+                    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>literal</span><span style='color:#a65700; '>></span>
+                        <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>pickSpadeResponse</span> <span style='color:#666616; '>xmlns</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#666616; '>http</span><span style='color:#800080; '>:</span><span style='color:#800000; font-weight:bold; '>//</span><span style='color:#5555dd; '>www.stark.com</span><span style='color:#40015a; '>/PickService</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+                            <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>Deck</span><span style='color:#a65700; '>/></span>
+                        <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>pickSpadeResponse</span><span style='color:#a65700; '>></span>
+                    <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>literal</span><span style='color:#a65700; '>></span>
+                <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>from</span><span style='color:#a65700; '>></span>
+                <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>to</span> <span style='color:#274796; '>variable</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>spadeResponse</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>part</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>parameters</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+            <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>copy</span><span style='color:#a65700; '>></span>
+            <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>copy</span><span style='color:#a65700; '>></span>
+                <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>from</span><span style='color:#a65700; '>></span>bpel:getVariableProperty("spadeRequest", "srvns:deck")<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>from</span><span style='color:#a65700; '>></span>
+                <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>to</span><span style='color:#a65700; '>></span>$spadeResponse.parameters/srvns:Deck<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>to</span><span style='color:#a65700; '>></span>
+            <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>copy</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>assign</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>reply</span> <span style='color:#274796; '>operation</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>pickSpade</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>partnerLink</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>IncomingLink</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>variable</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>spadeResponse</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+    <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>sequence</span><span style='color:#a65700; '>></span>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>onMessage</span><span style='color:#a65700; '>></span>
+</pre>
+            </li>
+        </ul>
+    </body>
+</html>

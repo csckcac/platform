@@ -1,0 +1,257 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+pageEncoding="UTF-8"%>
+    <%@ taglib uri="http://wso2.org/jaggery/bsftags"
+    prefix="js" %>
+        <js:import file = "controllers/registryOps.jss" />
+        <!doctype html>
+            <!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+            <!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+            <!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+            <!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+            <!-- Consider adding an manifest.appcache: h5bp.com/d/Offline -->
+            <!--[if gt IE 8]><!-->
+            <html class="no-js" lang="en"> <!--<![endif]-->
+                <head>
+                    <js:script>
+                    registryOps.put();
+                    </js:script>
+                    <script src="/gadgets/js/container.js?c=1&container=default"></script>
+                    <script type="text/javascript" language="javascript">
+                    function toggleContent(a) {
+                        // Get the DOM reference
+                        var contentId = document.getElementById(a);
+                        // Toggle
+                        contentId.style.display == "block" ? contentId.style.display = "none" :
+                        contentId.style.display = "block";
+                        }
+                    </script>
+                    <meta charset="utf-8">
+
+                        <!-- Use the .htaccess and remove these lines to avoid edge case issues.
+                     More info: h5bp.com/b/378 -->
+                        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+                            <title></title>
+                            <meta name="description" content="">
+                                <meta name="author" content="">
+
+                                    <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+                                    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+                                        <!-- Place favicon.ico and apple-touch-icon.png in the root directory: mathiasbynens.be/notes/touch-icons -->
+
+                                        <!-- CSS: implied media=all -->
+                                        <!-- CSS concatenated and minified via ant build script-->
+                                        <link rel="stylesheet" href="font/stylesheet.css">
+                                            <link rel="stylesheet" href="css/style.css">
+
+                                                <!-- end CSS-->
+
+                                                <!-- More ideas for your <head> here: h5bp.com/d/head-Tips -->
+
+                                                <!-- All JavaScript at the bottom, except for Modernizr / Respond.
+                                       Modernizr enables HTML5 elements & feature detects; Respond is a polyfill for min/max-width CSS3 Media Queries
+                                       For optimal performance, use a custom Modernizr build: www.modernizr.com/download/ -->
+                                                <script src="js/libs/modernizr-2.0.6.min.js"></script>
+
+
+                                            </head>
+
+                                            <body>
+                                                <div id="topbar" >
+                                                    <nav>
+                                                        <li>
+                                                            <a href="#">me</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">activity</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#" class="active">custom page</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Documents</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Groups</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">Friends</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">More</a>
+                                                        </li>
+                                                    </nav>
+
+                                                    <div id="user_bar">
+                                                        <a href="#">
+                                                            <img src="images/avatar_thumb.png" class="thumb" />
+                                                        </a>
+                                                        <span id="username">Emilio Vasquez</span>
+                                                        <a href="#" onclick="toggleContent('settings_menu');">
+                                                            <img src="images/settings_icon.png"  />
+                                                        </a>
+                                                    </div>
+                                                    <!-- /userbar -->
+                                                    <div id="settings_menu">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="#">
+                                                                    <img src="images/settings_other.png" width="16" height="16" alt="">Settings</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">
+                                                                        <img src="images/logout_png.png" width="16" height="16"  alt=""/>
+                                                                    Log Out</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <!-- /settings -->
+
+                                                    </div>
+                                                    <div id="container">
+                                                        <header>
+                                                            <h2>This is A Custom Page</h2>
+                                                        </header>
+
+                                                        <div id="main" role="main">
+
+                                                            <div id="sector1" class="embedable">
+
+
+                                                                <js:gadget
+								gadgetId="1" 
+                                                                gadgetUrl="http://nuwanbando.com/ig/ngeo_vid.xml"
+                                                                gadgetTitle="WSO2 Stream"
+                                                                />
+
+
+                                                                <div class="gadget" id="google_search">
+
+                                                                    <div class="gadget_title">WSO2 Feed</div>
+                                                                    <div class="controls">
+                                                                        <a href="#">
+                                                                            <img src="images/gad_settings.png" onclick="toggleContent('google_search_set');" alt="" />
+                                                                        </a>
+                                                                        <a href="#">
+                                                                            <img src="images/gad_maximize.png" alt="" />
+                                                                        </a>
+                                                                        <a href="#">
+                                                                            <img src="images/gad_close.png" alt="" />
+                                                                        </a>
+                                                                        <ul id="google_search_set" class="gad_settings" onclick="toggleContent('google_search_set');">
+                                                                            <li>
+                                                                                <a href="#">maximize this</a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a href="#">Remove</a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a href="#">About this gadget</a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+
+                                                                    <div style="clear:both;"></div>
+
+
+                                                                    <div id="blog_gadget_frame" class="blog_gadget_frame"></div>
+                                                                </div>
+                                                                <a id="various1" href="#inline" class="addable_area" >Add a Gadget here</a>
+
+                                                            </div>
+                                                            <!-- /embed sector -->
+
+                                                            <div id="static">
+                                                                <h1>Static Content</h1>
+
+                                                                <ul id="menu">
+                                                                    <li>This Page</li>
+                                                                    <li>Some other Page</li>
+                                                                    <li>Some other Page</li>
+                                                                    <li>Some other Page</li>
+                                                                </ul>
+
+                                                                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</p>
+
+                                                                <img src="images/lockpic.jpg" alt="" />
+
+                                                            </div>
+                                                            <!-- /static -->
+
+                                                        </div>
+                                                        <!--/main -->
+
+
+                                                        <div style="clear:both;"></div>
+
+                                                        <footer>
+
+                                                        </footer>
+                                                    </div>
+                                                    <!--! end of #container -->
+                                                    <div style="display:none;">
+                                                        <div id="inline">
+
+                                                            <img src="images/popup.png" alt=""  />
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- JavaScript at the bottom for fast page loading -->
+
+                                                    <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
+                                                    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+
+                                                    <script type="text/javascript" src="fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+                                                    <script type="text/javascript" src="fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+                                                    <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox-1.3.4.css" media="screen" />
+                                                    <!-- scripts concatenated and minified via ant build script-->
+                                                    <script defer src="js/plugins.js"></script>
+                                                    <script defer src="js/script.js"></script>
+                                                    <!-- end scripts-->
+
+
+                                                    <script type="text/javascript">
+                                                    $(document).ready(function() {
+                                                        $("#various3").fancybox({
+                                                            'width'                : '75%',
+                                                            'height'            : '75%',
+                                                            'autoScale'            : false,
+                                                            'transitionIn'        : 'none',
+                                                            'transitionOut'        : 'none',
+                                                            'type'                : 'inline'
+                                                        });
+
+                                                    $("#various1").fancybox({
+                                                        'titlePosition'        : 'inside',
+                                                        'transitionIn'        : 'none',
+                                                        'transitionOut'        : 'none'
+                                                        });
+
+
+                                                    });
+
+                                                    var myGadgetUrl = "<js:expression>registryOps.get()</js:expression>";
+                                                    var elem = document.getElementById("blog_gadget_frame");
+                                                    var gadget = myGadgetUrl;
+                                                    var container = new osapi.container.Container();
+                                                    var site = container.newGadgetSite(elem);
+
+                                                    var userPrefsObject = {
+                                                        feed_url: 'http://soa-platform.blogspot.com/feeds/posts/default/',
+                                                        num_entries: '10',
+                                                        };
+                                                    var renderParams = { userPrefs: userPrefsObject };
+                                                    container.navigateGadget(site, gadget, {}, renderParams);
+
+                                                    </script>
+
+                                                    <!-- Prompt IE 6 users to install Chrome Frame. Remove this if you want to support IE 6.
+                                                   chromium.org/developers/how-tos/chrome-frame-getting-started -->
+                                                    <!--[if lt IE 7 ]>
+                                                      <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+                                                      <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+                                                    <![endif]-->
+
+                                                </body>
+                                            </html>

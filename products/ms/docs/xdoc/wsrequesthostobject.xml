@@ -1,0 +1,602 @@
+<!--
+~ Copyright 2005-2008 WSO2, Inc. (http://wso2.com)
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <link href="css/mashup-docs.css" rel="stylesheet" type="text/css" media="all"/>
+        <link type="text/css" rel="stylesheet" href="css/SyntaxHighlighter.css" media="all"/><script language="javascript" src="js/shCore.js"></script><script language="javascript" src="js/shBrushJScript.js"></script><script language="javascript" src="js/shBrushJava.js"></script><script language="javascript" src="js/shBrushSql.js"></script><script language="javascript" src="js/shBrushXml.js"></script>
+    </head>
+    <body>
+        <div id="main-content">
+            <h1>WSRequest Host Object</h1>
+            <h2>1.0 Introduction</h2>
+            <p>The WSO2 Mashup Server automatically generates stubs to
+                simplify the consumption of the Web Services it hosts. But if you're
+                consuming a service from somewhere else, we don't yet provide the same
+                level of ease. Instead of a stub which hides some of the details of
+                exercising an operation, you must use the WSRequest object directly to
+                formulate the messages.
+            </p>
+            <p>The WSRequest object is similar to the XMLHTTPRequest object.
+                It's usage typically involves specifying the endpoint address and
+                setting up options on how to frame the message, invoking the operation
+                with a specific XML payload, and then checking and extracting
+                information from the result.
+            </p>
+            <h3>1.1 Example</h3>
+            <pre name="code" class="js">
+                function invokeGetVersion(){
+                    var version = new WSRequest();
+
+                    var options = new Array();
+                    options.useSOAP = 1.2;
+                    options.useWSA = 1.0;
+                    options.action = "urn:getVersion";
+
+                    var payload = null;
+                    var result;
+
+                    try {
+                        version.open(options,"http://localhost:7762/services/system/version", false);
+                        version.send(payload);
+                        result = version.responseE4X;
+                    } catch (e) {
+                        system.log(e.toString(),"error");
+                        return e.toString();
+                    }
+                    return result;
+                }
+            </pre>
+
+            <h2>2.0 WSRequest Object</h2>
+            <h3>2.1 WSRequest Interface</h3>
+            <pre name="code" class="js">
+                {
+                    property EventListener
+                    onreadystatechange;
+                    property unsigned short readyState;
+                    function void open ( object options | String httpMethod, String url [, boolean async [, String username[, String password]]]);
+                    function void send ( XML payload | XMLString payload ); // To be used when the open method of WSRequest is used
+                    function void openWSDL ( String wsdlURL, &#65279;boolean async, [Object options,[QName serviceName, [String endpointName]]]);
+                    function void send ( String operationName | QName operationName, XML payload | XMLString payload ); //To be used when the openWSDL method of WSRequest is used
+                    readonly property String responseText;
+                    readonly property Document responseXML;
+                    readonly property XML responseE4X;
+                    readonly property WebServiceError error;
+                }
+            </pre>
+            <h3>2.2 API Documentation</h3>
+            <table style="margin-left: 0.5in; border-collapse: collapse;" class="MsoTableGrid" border="1"
+                   cellpadding="5" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td>Member</td>
+                        <td>Description</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">function
+                                void open ( object options | String
+                                httpMethod, String url [, boolean async
+                                [, String username [, String password]]])
+                            </span>
+                        </td>
+                        <td>This method prepares the WSRequest object to invoke a
+                            Web service. It accepts the following parameters:
+                            <br/>
+                            <ul>
+                                <li><em>options (array)</em>: an array of
+                                    options for formulating the message. These options correspond
+                                    to the message framing required by the service as documented in the
+                                    service's WSDL and/or documentation.
+                                </li>
+                            </ul>
+                            <div style="margin-left: 40px;">The following is a
+                                list of supported options
+                            </div>
+                            <ul>
+                                <li>useSOAP - Specify the SOAP version to be used or whether not to use SOAP. Supported
+                                    values are "1.1" | "1.2" | "false"
+                                </li>
+                                <li>HTTPMethod - The HTTP method to be used. Supported
+                                    values are "GET" | "POST" | "PUT" | "DELETE"
+                                </li>
+                                <li>useWSA - Weather WS-Addressing needs to be used.
+                                    Supported
+                                    values are "1.0" | "submission" | "true". If the version of
+                                    WS-Addressing is specified and useWSA is set to true the "1.0" version
+                                    is used.
+                                </li>
+                            </ul>
+                            <div style="margin-left: 80px;">When WS-Addressing
+                                is been used the following options will also be processed
+                            </div>
+
+                            <ul>
+                                <li>action - Will be used as the wsa:to value. Can be
+                                    used to specify to address that the message will be sent to.
+                                </li>
+                                <li>from - Will be used as the
+                                    wsa:from value. Can be used to specify the address the request
+                                    was sent from.
+                                </li>
+                                <li>replyTo -
+                                    Will be used as the wsa:replyTo value. Can be used to specify the
+                                    address the response should be sent to.
+                                </li>
+                                <li>faultTo - Will be
+                                    used as the wsa:faultTo value. Can be used to specify the address a
+                                    fault should be sent to.
+                                </li>
+                            </ul>
+                            <ul>
+                                <li>action - If useWSA is false will be used as the
+                                    SOAPAction.
+                                </li>
+                                <li>mep - Allows you to control the Message Exchange Pattern for an
+                                    invocation. Supported values are in-only (need to send a request and do
+                                    not care about the response) and in-out (request - response). Defaults
+                                    to in-out.
+                                </li>
+                                <li>username - This will be used as the username to invoke the service with HTTP
+                                    Basic Authentication enabled.
+                                </li>
+                                <li>password - This will be used as the password to
+                                    invoke the service with HTTP Basic Authentication
+                                    enabled.
+                                </li>
+                                <li>HTTPLocation - Used to specify the URL pattern of
+                                    the operation been invoked. Refer http://wso2.org/library/3715 for
+                                    details.
+                                </li>
+                                <li>HTTPLocationIgnoreUncited - Specifies weather
+                                    parameters not cited in the HTTPLocation should be ignored.
+                                </li>
+                                <li>HTTPQueryParameterSeparator - Specifies the query
+                                    parameter seperator to be used. Defaults to &amp;.
+                                </li>
+                                <li>HTTPInputSerialization
+                                    - Specifies the message format of the request. The Mashup Server can be
+                                    extended to support custom serialization. The following are supported
+                                    by this distribution. application/x-www-form-urlencoded,
+                                    multipart/form-data, application/json, application/json/badgerfish,
+                                    application/soap+xml, text/xml, application/xml
+                                </li>
+                                <li>HTTPContentEncoding - Used to speficy the
+                                    content-encoding of the request. Supported values are "gzip" |
+                                    "compress" 
+
+                		</li>
+                                <li>rampart - This property is used to specify rampart configurations for to be used with the service policies. The object pointed by "rampart" key should be in the following format.
+				<pre>
+{
+    user : "admin", //username for to use UT and other scenarios
+    userPassword : "admin", //in UT, this is the user password, else private key
+    keyPassword : "client",
+    userCertAlias : "client",
+    stsAlias : "sts",
+    encryptionUser : "server",
+    timestampTTL : "10000",
+    timestampMaxSkew : "10",
+    timestampPrecisionInMilliseconds : "100",
+    signatureCrypto : {
+        type : "jks", //keystore type
+        file : "client.jks", //keystore file relative to resource folder
+        password : "client", //keystore password
+        enableCryptoCaching : true,
+        cacheRefreshInterval : 3000
+    },
+    encryptionCrypto : {
+        type : "jks",
+        file : "client.jks",
+        password : "client",
+        enableCryptoCaching : true,
+        cacheRefreshInterval : 3000
+    },
+    decryptionCrypto : {
+        type : "jks",
+        file : "client.jks",
+        password : "client"
+    },
+    stsCrypto : {
+        type : "jks",
+        file : "client.jks",
+        password : "client"
+    },
+    kerberosConfig : {
+        /**
+        "key" : "value" properties, you can also use ${resources.dir} 
+        in property values
+        */
+        "client.principal.name" : "client",
+        "client.principal.password" : "client",
+        "service.principal.name" : "service",
+        "java.security.auth.login.config" : "jassconfig",
+        "javax.security.auth.useSubjectCredsOnly" : "true",
+        "kdc.des.aes.factor" : "4",
+        "java.security.krb5.conf" : "/home/ruchira/wso2/conf"
+    }
+}
+</pre>
+
+                		</li>
+                <li>policy - This property is used to specify a custome policy. An XML object should be assigned. You can use ${resources.dir} in keystore paths and Kerberos configurations to get the path of the resources directory. i.e. When you specify a path to a keystore in your resources directory, you can use this. Then it will be replaced with the correct path at the server.</li>
+				<li>HTTPHeaders - Used to specify custom HTTP headers to be send with the request. This should be an array of elements. The value for this property should be in the following format. Both name and value properties should be strings.
+				<pre>options["HTTPHeaders"] = [ { name : "HEADER1", value : "VALUE1"}, { name : "HEADER2", value : "VALUE2"}, .....]; </pre>
+
+                		</li>
+				<li>
+                  SOAPHeaders - Used to specify custom SOAP headers to be send along with the SOAP message. This should be an array of elements. You can specify a header as an XML object or just as an object in the following structure. valueObject could be either a string or an XML object
+                  <pre>options["HTTPHeaders"] = [
+    &lt;MyHeader1 xmlns="http://example.com"&gt;headerValue&lt;/MyHeader1&gt;,
+    ...................................
+    {qName : new QName("http://example.com", "MyHeader2"), value : valueObject},
+    ................................... 
+]; </pre>
+                		</li>
+                            </ul>
+                            <ul>
+                                <li><em>httpMethod</em>(string): the
+                                    httpMethod to be used when the operation is invoked.
+                                </li>
+                                <li><em>url</em>(string): a URL
+                                    representing where to send the message.
+                                    <br/>
+                                </li>
+                                <li>
+                                    <em>async</em>
+                                    (boolean): a boolean flag
+                                    representing whether the operation should be invoked asynchrounously or
+                                    not. Defaults to true.
+                                </li>
+                                <li>username - This will be used as the username to invoke the service with HTTP
+                                    Basic Authentication enabled.
+                                </li>
+                                <li>password - This will be used as the password to
+                                    invoke the service with HTTP Basic Authentication
+                                    enabled.
+                                </li>
+                            </ul>
+                            To be specific here are the various ways which the open fucntion can be
+                            used in
+                            <br/>
+                            <ul>
+                                <li>open(httpMethod, url, async);</li>
+                                <li>open(options, url, async);</li>
+                                <li>open(httpMethod, url, username);</li>
+                                <li>open(options, url, username);</li>
+                                <li>open(httpMethod, url, username, password);</li>
+                                <li>open(options, url, username, password);</li>
+                                <li>open(httpMethod, url, async, username);</li>
+                                <li>open(options, url, async, username);
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold;">function void send
+                            ( XML
+                            payload | XMLString payload )
+                        </td>
+                        <td>This method invokes the Web service with the requested
+                            payload. To be used when the WSRequest object was configured using the
+                            open method.
+                            <br/>
+                            <ul>
+                                <li><em>payload</em>: an XML object or a
+                                    string containing the XML source for the request.
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold;">function void
+                            openWSDL ( String wsdlURL, &#65279;boolean async, [Object options,[QName
+                            serviceName, [String endpointName]]])
+                        </td>
+                        <td>This
+                            method can be used to invoke a external web service which advertices a
+                            WSDL. Using this method had many advantages over using the open method.
+                            <br/>
+                            <ol>
+                                <li>The user does not need to know how to frame the
+                                    request.
+                                    i.e. Whcih SOAP version to use? What should be the request be sent to?
+                                    How do I configure WS-Security? and so on
+                                </li>
+                                <li>Can be used to invoke services that are secured using
+                                    WS-Security
+                                </li>
+                            </ol>
+                            This method acceps the following parameters
+                            <br/>
+                            <ul>
+                                <li>
+                                    <span style="font-style: italic;">wsdlURL</span>
+                                    (string) - The url at which the WSDL is available at. Currently
+                                    supports WSDL 1.1
+                                </li>
+                                <li>
+                                    <em>async</em>
+                                    (boolean): A boolean flag
+                                    representing whether the operation should be invoked asynchrounously or
+                                    not.
+                                </li>
+                                <li><em>options (array)</em>: An array of
+                                    options needed to parse in information to invoke secured services.
+                                </li>
+                            </ul>
+                            <div style="margin-left: 40px;">The following is a
+                                list of supported options
+                                <br/>
+                            </div>
+                            <ul>
+                                <li>username
+                                    - Used to specify the username if the service needs a
+                                    username token to carry out any WS-Security related
+                                    operations.
+                                </li>
+                                <li>password
+                                    - Used to specify the password if the service needs a password
+                                    token to carry out any WS-Security related operations.
+                                </li>
+                                <li>encryptionUser
+                                    - Used to specify the alias of the certificate to use in Encryption if
+                                    the service needs the request to be encrypted.
+                                </li>
+                                <li>mep - Allows you to control the Message Exchange Pattern for an
+                                    invocation. Supported values are in-only (need to send a request and do
+                                    not care about the response) and in-out (request - response). Defaults
+                                    to in-out.
+                                </li>
+                            </ul>
+                            <ul>
+                                <li>
+                                    <span style="font-style: italic;">serviceName
+                                        (QName)
+                                    </span>
+                                    - The QName of the service to be invoked. Could be usefull if the WSDL
+                                    has multiple services. If not specified the ffirst service in the WSDL
+                                    is used.
+                                </li>
+                                <li>
+                                    <span style="font-style: italic;">endpointName
+                                        (String)
+                                    </span>
+                                    - The name of the endpoint to use wehn invoking the service. Could be
+                                    usefull if the service has multiple endpoints and you prefer to use a
+                                    particular one. If not specified the first SOAP endpoint is used.
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold;">function void send (
+                            String
+                            operationName | QName operationName, XML payload | XMLString
+                            payload )
+                        </td>
+                        <td>This method invokes the specified operation of the Web
+                            service with the requested
+                            payload. To be used when the WSRequest object was configured using the
+                            openWSDL method.
+                            <br/>
+                            <ul>
+                                <li><span style="font-style: italic;">operationName
+                                    (String</span>) - The name of the operation to be invoked
+                                    <em></em>
+                                </li>
+                                <li>
+                                    <em>payload</em>
+                                    : an XML object or a
+                                    string containing the XML source for the request.
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold;">property
+                            EventListener
+                            onreadystatechange
+                        </td>
+                        <td>This property can be set to a function object, which
+                            is invoked when the state of an asynchronous request changes (e.g. the
+                            request completes).
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold;">property unsigned
+                            short readyState
+                        </td>
+                        <td>The current state of the object, which can be one of
+                            the following values:
+                            <br/>
+                            <ul>
+                                <li>0: The object has not been initialized by calling the
+                                    open() method.
+                                    <br/>
+                                </li>
+                                <li>1: The object has been initialized successfully, but
+                                    the send() method has not been called.
+                                    <br/>
+                                </li>
+                                <li>2: The request is pending
+                                    <br/>
+                                </li>
+                                <li>3: The request is partially complete (some data has
+                                    been received, and may be available in the responseText property.
+                                    <br/>
+                                </li>
+                                <li>4: The request is complete, all data has been
+                                    received.
+                                    <br/>
+                                    Of these, typically only the last (readyState == 4) is used.
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold;">readonly property
+                            Document responseXML
+                        </td>
+                        <td>The parsed XML message representing the response from
+                            the service. (Currently this is same as responseE4X, but this will be
+                            fixed to return a DOM document in the future versions)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold;">readonly property
+                            XML responseE4X
+                        </td>
+                        <td>The parsed E4X XML message representing the response
+                            from the service.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold;">readonly property
+                            String responseText
+                        </td>
+                        <td>The raw text representing the XML (or non-XML)
+                            response. If the responseXML property is empty, you can check
+                            the responseText property to see if a non-XML response was received.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold;">readonly property
+                            WebServiceError error
+                        </td>
+                        <td>When an asynchronous operation failed to complete
+                            successfully (including internal errors, or protocol errors such as
+                            SOAP faults) the error property is a WebServiceError object
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>3.0 Example Usage</h2>
+            <h3>2.1 Calling Services in a asynchronous manner</h3>
+            Its
+            important to note that when a service is called in the manner below
+            (assynchronously) the thread will return to the caller immidiatly (Even
+            before the result of the web service invocation is received).
+            <pre name="code" class="js">
+                // Demonstrates calling the getVersion operation of the version service in a asynchronous manner using the open method
+                function invokeGetVersionAsync() {
+                    var version = new WSRequest();
+                    version.onreadystatechange = function() {
+                        handleResponse(version);
+                    };
+
+                    var options = new Array();
+                    options.useSOAP = 1.2;
+                    options.useWSA = 1.0;
+                    options.action = "urn:getVersion";
+
+                    var payload = null;
+                    var result;
+                    try {
+                        version.open(options,"http://localhost:9443/services/admin/version", true);
+                        version.send(payload);
+                    } catch (e) {
+                        system.log(e.toString(),"error");
+                        return e.toString();
+                    }
+                    return "Invoked getVersion in a asynchronous manner";
+                }
+
+                handleResponse.visible=false;   
+                function handleResponse(version){
+                    if (version.readyState == 4) {
+                        system.log(version.responseText);
+                    }
+                }
+            </pre>
+
+            <br/>
+            <pre name="code" class="js">
+                // Demonstrates calling the getVersion operation of the version service in a asynchronous manner using the openWSDL method
+                function invokeGetVersionAsync() {
+                    var request = new WSRequest();
+                    request.onreadystatechange = function() {
+                        handleResponse(request);
+                    };
+                    request.openWSDL("http://localhost:9443/services/admin/version?wsdl",true);
+                    request.send("getVersion",null);
+                    return "Invoked getVersion in a asynchronous manner";
+                }
+
+                handleResponse.visible=false;
+                function handleResponse(version){
+                    if (version.readyState == 4) {
+                        system.log(version.responseText);
+                    }
+                }
+            </pre>
+
+            <h3>2.1 Calling Services which are secured using WS-Security</h3>
+            Calling
+            secured services using the WSO2 Mashup Server is simple. The client
+            given below can handle sevaral security scenarios provided that the
+            proper certificate provisioning has taken place.
+            <pre name="code" class="js">
+                // Demonstrates calling the getVersion operation of the version service. This client will work for most
+                // WS-Security scenarios (Works for all the scenarios the Mashup Server ships)
+                function invokeGetVersion() {
+                    var request = new WSRequest();
+                    var options = new Array();
+                    options["rampart"] = {
+                        "username" : "ruchira",
+                        "userPassword" : "ruchira",
+                        "encryptionUser" : "versionCert"
+                    };
+                    var service = new QName("http://services.mashup.wso2.org/version","version");
+                    request.openWSDL("http://localhost:9443/services/admin/version?wsdl", false, options, service, "SecureSOAP11Endpoint");
+                    request.send("getVersion",null);           
+                    return request.responseXML;
+                }
+            </pre>
+            <h2>4.0 References</h2>
+            <ul>
+                <li>
+                    <span class="nobr">
+                        <a href="http://www.wso2.org/wiki/pages/createpage.action?spaceKey=mashup&amp;title=wsrequest_specification&amp;linkCreation=true&amp;fromPageId=888"
+                           title="Create Page: wsrequest_specification" class="createlink">wsrequest_specification
+                        </a>
+                    </span>
+                </li>
+                <li>
+                    <a href="apidocs/org/wso2/mashup/hostobjects/wsrequest/WSRequestHostImpl.html">JavaDoc
+                        for the WSRequest host Object
+                    </a>
+                </li>
+                <li>
+                    <a href="apidocs/org/wso2/mashup/hostobjects/wsrequest/WSRequestCallBack.html">JavaDoc
+                        for the WSRequestCallBack host Object
+                    </a>
+                </li>
+                <li>
+                    <a href="apidocs/org/wso2/mashup/hostobjects/wsrequest/WebServiceErrorHostObject.html">JavaDoc
+                        for the WebServiceErrorHostObject host Object
+                    </a>
+                </li>
+            </ul>
+        </div><script language="javascript">
+            dp.SyntaxHighlighter.BloggerMode();
+            dp.SyntaxHighlighter.HighlightAll('code');
+        </script>
+    </body>
+</html>

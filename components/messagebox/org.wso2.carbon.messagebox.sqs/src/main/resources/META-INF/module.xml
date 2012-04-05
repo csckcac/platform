@@ -1,0 +1,16 @@
+<module name="sqsAuthentication">
+    <InFlow>
+        <handler name="sqsAuthenticationHandler"
+                 class="org.wso2.carbon.messagebox.sqs.internal.module.AuthenticationHandler">
+            <order phase="Security" />
+        </handler>
+       <handler name="SQSActionBasedDispatcher"
+                 class="org.wso2.carbon.messagebox.sqs.internal.dispatcher.SQSActionBasedDispatcher">
+            <order phase="Security" After="sqsAuthenticationHandler"/>
+        </handler>
+        <handler name="SQSRestBasedHandler"
+                 class="org.wso2.carbon.messagebox.sqs.internal.dispatcher.SQSRestBasedHandler">
+            <order phase="Security" After="SQSActionBasedDispatcher"/>
+        </handler>
+    </InFlow>
+</module>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  ~  Copyright (c) 2005-2008, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  ~
+  -->
+
+<!DOCTYPE html
+   PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" >
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <title>
+      WSO2 Governance Registry - External Articles
+    </title>
+    <link href="css/greg-docs.css" rel="stylesheet"/>
+    <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+  </head>
+  <body xml:lang="en">
+    [ <a href="docs_index.html"> Documentation Index </a> ]
+    <h1>
+      External Articles on WSO2 Governance Registry
+    </h1>
+    <p>
+<strong>Extending the Registry</strong>
+<ul>
+<li>
+<a href="http://wso2.org/library/articles/extending-wso2-registry-handlers">Extending WSO2 Registry with Handlers</a>
+</li>
+<li>
+<a href="http://wso2.org/library/knowledge-base/configuring-built-filters-wso2-governance-registry">Configuring Built-in Filters in WSO2 Governance Registry </a>
+</li>
+<li>
+<a href="http://wso2.org/library/tutorials/lifecycles-aspects-wso2-governance-registry">Lifecycles and Aspects with WSO2 Governance Registry</a>
+</li>
+</ul>
+<strong>Installation and Deployment</strong>
+<ul>
+<li>
+<a href="http://wso2.org/library/tutorials/installation-guide-common-platform-all-wso2-products">Installation Guide - Common Platform For All WSO2 Products</a>
+</li>
+<li>
+<a href="http://wso2.org/library/tutorials/2010/04/sharing-registry-space-across-multiple-product-instances">Sharing Registry space across Multiple Product Instances</a>
+</li>
+<li>
+<a href="http://wso2.org/library/knowledge-base/wso2-governance-registry-3-0-1-installation-jboss-5-0-oracle-10g">WSO2 Governance Registry 3.0.1 deployment on JBoss 5.1.0 GA with Oracle 10g</a>
+</li>
+</ul>
+<strong>Configuring the Registry</strong>
+<ul>
+<li>
+<a href="http://wso2.org/library/knowledge-base/configure-locations-where-you-store-wsdls-schemas-policies-wso2-governance-registry">Configuration for Storing WSDLs, Schemas and Policies in the WSO2 Governance Registry</a>
+</li>
+<li>
+<a href="http://wso2.org/library/tutorials/learning-registry-xml">Learning registry.xml</a>
+</li>
+</ul>
+<strong>Governance</strong>
+<ul>
+<li>
+<a href="http://wso2.org/library/articles/service-governance-wso2-registry-v1-1">Service Governance with WSO2 Registry v1.1</a>
+</li>
+<li>
+<a href="http://wso2.org/library/articles/soa-governance-wso2-registry-v1-1">SOA Governance with WSO2 Registry v3.0.0</a>
+</li>
+<li>
+<a href="http://wso2.org/library/knowledge-base/uploading-schemas-imports-local-filesystem-wso2-governance-registry">Uploading Schemas with Imports from Local Filesystem into the WSO2 Governance Registry</a>
+</li>
+<li>
+<a href="http://wso2.org/library/articles/eventing-notifications-wso2-governance-registry">Eventing and Notifications with WSO2 Governance Registry</a>
+</li>
+<li>
+<a href="http://wso2.org/library/podcasts/podcast-soa-governance-wso2-governance-registry-v3.0.0-release">Podcast: SOA Governance and the WSO2 Governance Registry v3.0.0 Release</a>
+</li>
+<li>
+<a href="http://wso2.org/library/webinars/upcoming-webinar-effective-soa-governance-wso2-governance-registry">Webinar: Effective SOA Governance with the WSO2 Governance Registry</a>
+</li>
+</ul>
+<strong>Lifecycle Management</strong>
+<ul>
+<li>
+<a href="http://soa.sys-con.com/node/597097">WSO2 Adds Out-of-the-Box Support for SOA Lifecycle Management</a>
+</li>
+<li>
+<a href="http://wso2.org/library/articles/wso2-governance-registry-life-cycles-vs-forresters-8-major-soa-requirements">WSO2 Governance Registry Lifecycles vs Forrester's 8 Major SOA Requirements</a>
+</li>
+<li>
+<a href="http://wso2.org/library/knowledge-base/2010/04/clientside-scripting-lifecycles-governance-registry">Client-side Scripting for Lifecycles in Governance Registry</a>
+</li>
+</ul>
+</p> 
+
+    <h2>
+      WSO2 Governance Registry in the Cloud
+    </h2>
+    <p>
+<ul>
+<li>
+<a href="http://wso2.org/library/presentations/webinar-soa-governance-cloud">Webinar: SOA Governance in the Cloud</a>
+</li>
+<li>
+<a href="http://wso2.org/library/tutorials/getting-started-wso2-governance-as-a-service">Getting Started with WSO2 Governance as a Service</a>
+</li>
+<li>
+<a href="http://wso2.org/library/knowledge-base/faqs-governance-service">FAQs of Governance as a Service</a>
+</li>
+<li>
+<a href="http://wso2.org/library/tutorials/operating-wso2-amazon-ec2-cloud-instances-command-line">Operating WSO2 Amazon EC2 Cloud instances from command line</a>
+</li>
+</ul>
+</p>
+
+    <h2>
+      Other External Content
+    </h2>
+    <p>
+<ul>
+<li>
+<a href="http://wso2.org/library/articles/clustering-landscape-wso2-stack">Clustering Landscape for WSO2 Stack</a>
+</li>
+<li>
+<a href="http://wso2.org/library/webinars/wso2-synergies-esb-registry">WSO2 Synergies: ESB and Registry</a>
+</li>
+<li>
+<a href="http://wso2.org/library/knowledge-base/wso2-esb-registry">WSO2 Enterprise Service Bus and WSO2 Governance Registry Integration</a>
+</li>
+<li>
+<a href="http://wso2.org/library/podcasts/podcast-soa-summer-school-soa-governance">Podcast: SOA Summer School - SOA Governance</a>
+</li>
+<li>
+<a href="http://wso2.org/library/presentations/presentation-wso2-technology-platform-q2-2009">Presentation: WSO2's technology platform as of Q2 2009</a>
+</li>
+<li>
+<a href="http://wso2.org/library/presentations/presentation-SOA-Workshop-Colombo-September-2009-soa-governance">SOA Governance - Presentation at SOA Workshop, Colombo, Sri Lanka</a>
+</li>
+<li>
+<a href="http://wso2.org/library/3777">Open Source Competition - Mule Galaxy vs WSO2 Registry</a>
+</li>
+</ul>
+</p>   
+  </body>
+</html>

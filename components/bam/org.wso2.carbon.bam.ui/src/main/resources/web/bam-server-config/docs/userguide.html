@@ -1,0 +1,70 @@
+<!--
+  ~ Copyright 2010 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <title>BAM Server Configuration - User Guide</title>
+    <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all"/>
+</head>
+<body>
+<h1>Configure BAM Server</h1>
+
+<h2>Data Retention Period</h2>
+
+<p>
+    This field specifies for how long the data should be kept in BAM data tables. The default value is 1 day
+    (denoted by <code>1d</code>). Data will be removed from BAM data tables while summary generation as specified by
+    this field.
+</p>
+<p>
+    The value of this field should be an integer followed by a character; either <strong>h</strong>, <strong>d</strong>,
+    or <strong>m</strong>.
+</p>
+<p>
+    These characters specify the time range as follows: <br/>
+    <strong>h</strong>- hour <br/>
+    <strong>d</strong>- day <br/>
+    <strong>m</strong>- month <br/>
+</p>
+
+<p>
+    For example:<br/>
+    <strong>1h</strong> means last hour's data should be retained.<br/>
+    <strong>2d</strong> means last two days' data should be retained.<br/>
+    <strong>6m</strong> means last six months' data should be retained.<br/>
+</p>
+
+<h2>Data Archival Period</h2>
+
+<p>
+    This field specifies for how long the data should be kept in BAM_MESSAGE_DATA table before being archived to BAM_MESSAGE_DATA_ARCHIVE table. The default value is 1 day
+    (denoted by <code>1d</code>).
+</p>
+<p>
+    The value of this field should be an integer followed by a character; either <strong>d</strong>,
+    or <strong>m</strong>.
+</p>
+<p>
+    These characters specify the time range as follows: <br/>
+    <strong>d</strong>- day <br/>
+    <strong>m</strong>- month <br/>
+</p>
+
+</body>
+</html>

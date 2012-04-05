@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  ~  Copyright (c) 2005-2010, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>org.wso2.carbon</groupId>
+        <artifactId>carbon-products</artifactId>
+        <version>3.2.0</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.wso2.css</groupId>
+    <artifactId>css-parent</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.1</version>
+    <name>WSO2 CSS - Aggregator Module</name>
+    <url>http://wso2.com/products/</url>
+    <description>WSO2 CSS</description>
+
+    <licenses>
+        <license>
+            <name>Apache License Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+
+    <modules>
+        <module>modules/p2-profile</module>
+        <module>modules/distribution</module>
+    </modules>
+
+    <scm>
+        <connection>scm:svn:http://svn.wso2.org/repos/wso2/branches/carbon/3.2.0/products/css/1.0.1</connection>
+        <developerConnection>scm:svn:https://svn.wso2.org/repos/wso2/branches/carbon/3.2.1/products/css/1.0.1</developerConnection>
+    </scm>
+
+    <repositories>
+        <repository>
+            <id>wso2-nexus</id>
+            <name>WSO2 internal Repository</name>
+            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>fail</checksumPolicy>
+            </releases>
+        </repository>
+        <!--moved to nexus
+
+        <repository>
+            <id>wso2-maven2-repository-snapshot</id>
+            <url>http://dist.wso2.org/snapshots/maven2</url>
+        </repository>
+        <repository>
+            <id>wso2-maven2-repository</id>
+            <url>http://dist.wso2.org/maven2</url>
+        </repository>
+
+        -->
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>wso2-maven2-repository</id>
+            <url>http://dist.wso2.org/maven2</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <distributionManagement>
+        <repository>
+            <id>wso2-maven2-repository</id>
+            <name>WSO2 Maven2 Repository</name>
+            <url>scp://dist.wso2.org/home/httpd/dist.wso2.org/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>wso2-maven2-snapshot-repository</id>
+            <name>WSO2 Maven2 Snapshot Repository</name>
+            <url>scp://dist.wso2.org/home/httpd/dist.wso2.org/snapshots/maven2/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <profiles>
+        <profile>
+            <id>signed-build</id>
+            <activation>
+                <property>
+                    <name>sign</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.0-alpha-3</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <organization>
+        <name>WSO2 Inc</name>
+        <url>http://wso2.com</url>
+    </organization>
+
+    <issueManagement>
+        <system>JIRA</system>
+        <url>https://wso2.org/jira/browse/CARBON</url>
+    </issueManagement>
+
+    <properties>
+        <carbon.platform.patch.version.321>3.2.1</carbon.platform.patch.version.321>
+        <carbon.platform.patch.version.322>3.2.2</carbon.platform.patch.version.322>
+        <carbon.product.version>1.0.1</carbon.product.version>
+        <carbon.version>3.2.0</carbon.version>
+    </properties>
+
+</project>

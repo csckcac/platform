@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+
+<property>
+  <name>mapred.job.tracker</name>
+  <value>localhost:54311</value>
+  <description>The host and port that the MapReduce job tracker runs
+  at.  If "local", then jobs are run in-process as a single map
+  and reduce task.
+  </description>
+</property>
+<property>
+  <name>mapred.system.dir</name>
+  <value>/tmp/hadoop/mapred/system</value>
+</property>
+<!-- JobTracker security configs -->
+<property>
+  <name>mapreduce.jobtracker.kerberos.principal</name>
+  <value>mapred/node0@WSO2.ORG</value>
+</property>
+<property>
+  <name>mapreduce.jobtracker.kerberos.https.principal</name>
+  <value>host/node0@WSO2.ORG</value>
+</property>
+<property>
+  <name>mapreduce.jobtracker.keytab.file</name>
+  <value>/home/wathsala/Downloads/hadoop-0.20.203.0/conf/mapred.keytab</value> <!--path to the MapReduce keytab -->
+</property>
+
+<!-- TaskTracker security configs -->
+<property>
+  <name>mapreduce.tasktracker.kerberos.principal</name>
+  <value>mapred/node0@WSO2.ORG</value>
+</property>
+<property>
+  <name>mapreduce.tasktracker.kerberos.https.principal</name>
+  <value>host/node0@WSO2.ORG</value>
+</property>
+<property>
+  <name>mapreduce.tasktracker.keytab.file</name>
+  <value>/home/wathsala/Downloads/hadoop-0.20.203.0/conf/mapred.keytab</value> <!--path to the MapReduce keytab -->
+</property>
+
+<!-- TaskController settings -->
+<property>
+  <name>mapred.task.tracker.task-controller</name>
+  <value>org.apache.hadoop.mapred.LinuxTaskController</value>
+</property>
+<property>
+  <name>mapreduce.tasktracker.group</name>
+  <value>wathsala</value>
+</property>
+<property>
+  <name>mapred.local.dir</name>
+  <value>/tmp/hadoop/mapred/local</value>
+</property>
+<property>
+  <name>hadoop.log.dir</name>
+  <value>/tmp/tasktracker</value>
+</property>
+
+<!-- Carbon taskcontroller user -->
+<property>
+  <name>mapred.tasktracker.carbon.proxy.user</name>
+  <value>wathsala</value>
+  <description>The task-controller will run as this user overiding the 
+  provided carbon user. Reason is that carbon users are not real Unix/Win32 users.</description>
+</property>
+<property>
+  <name>hadoop.job.history.user.location</name>
+  <value>none</value>
+  <description>When carbon proxy user is set dissable hadoop.job.history.user.location by setting it to none. 
+        User job history will still be stored in the JobTrackers log directory. If this is used TaskTracker 
+        will try to write job history to map reduce program output direcoty inside /user/${mapred.tasktracker.carbon.proxy.user} 
+        which will fail and incorrect in the first place.
+  </description>
+</property>
+</configuration>
+

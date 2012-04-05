@@ -1,0 +1,27 @@
+
+<div id="purchased-service-list">
+    <div id="detailViewTabs" class="service-store-tabs">
+        <a name="overview" onclick="renderServices(services)" class="tab">APIs</a>
+        <a name="purchased"  class="tab selected">My Subscriptions</a>
+    </div>
+    <div style="clear:both"></div>
+    <div class="services">
+        <div class="template-wrapper">
+            <div class="list-item template tmpl-service">
+                <div class="list-item-top">
+                    <a class="thumbnaillink" href="#" ><img class="thumbnail" src="images/service-default.png" /></a>
+                    <a class="service-name" href="#">ServiceName</a>
+                    <div class="company-name">Provider</div>
+                    <div class="rating">
+                        <img class="tmpl-star" src="images/start0.png"/>
+                    </div>
+                    <div style="clear:both"></div>
+                </div>
+
+            </div>
+            <div class="tmpl-clear" style="clear:both"></div>
+        </div>
+    </div>
+    <div class="element-wrapper"></div>
+    <div style="clear: both;"></div>
+</div>

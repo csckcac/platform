@@ -1,0 +1,70 @@
+<pre style="line-height: 100%;font-family:monospace;background-color:#ffffff; border-width:0.01mm; border-color:#000000; border-style:solid;padding:4px;font-size:10pt;"><span style="background-color:#efefef;">&lt;?</span><span style="color:#000080;background-color:#efefef;">xml version="1.0"</span><span style="background-color:#efefef;">?&gt;
+</span><span style="color:#808080;background-color:#ffffff;">&lt;!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--&gt;
+</span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">jsp:root</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">xmlns:jsp=</span><span style="color:#008000;background-color:#efefef;">"http://java.sun.com/JSP/Page"
+</span><span style="background-color:#efefef;">  </span><span style="color:#0000ff;background-color:#efefef;">version=</span><span style="color:#008000;background-color:#efefef;">"1.2"</span><span style="background-color:#efefef;">&gt;
+&lt;</span><span style="color:#000080;background-color:#efefef;">jsp:directive.page</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">contentType=</span><span style="color:#008000;background-color:#efefef;">"text/html"</span><span style="background-color:#efefef;">/&gt;
+&lt;</span><span style="color:#000080;background-color:#efefef;">jsp:directive.page</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">import=</span><span style="color:#008000;background-color:#efefef;">"java.util.Date, java.util.Locale"</span><span style="background-color:#efefef;">/&gt;
+&lt;</span><span style="color:#000080;background-color:#efefef;">jsp:directive.page</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">import=</span><span style="color:#008000;background-color:#efefef;">"java.text.*"</span><span style="background-color:#efefef;">/&gt;
+
+&lt;</span><span style="color:#000080;background-color:#efefef;">jsp:declaration</span><span style="background-color:#efefef;">&gt;
+</span><span style="background-color:#ffffff;">  String getDateTimeStr(Locale l) {
+    DateFormat df = SimpleDateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, l);
+    return df.format(new Date());
+  }
+</span><span style="background-color:#efefef;">&lt;/</span><span style="color:#000080;background-color:#efefef;">jsp:declaration</span><span style="background-color:#efefef;">&gt;
+
+&lt;</span><span style="color:#000080;background-color:#efefef;">html</span><span style="background-color:#efefef;">&gt;
+&lt;</span><span style="color:#000080;background-color:#efefef;">head</span><span style="background-color:#efefef;">&gt;
+</span><span style="background-color:#ffffff;">  </span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">title</span><span style="background-color:#efefef;">&gt;</span><span style="background-color:#ffffff;">Example JSP in XML format</span><span style="background-color:#efefef;">&lt;/</span><span style="color:#000080;background-color:#efefef;">title</span><span style="background-color:#efefef;">&gt;
+&lt;/</span><span style="color:#000080;background-color:#efefef;">head</span><span style="background-color:#efefef;">&gt;
+
+&lt;</span><span style="color:#000080;background-color:#efefef;">body</span><span style="background-color:#efefef;">&gt;
+</span><span style="background-color:#ffffff;">This is the output of a simple JSP using XML format.
+</span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">br</span><span style="background-color:#efefef;"> /&gt;
+
+&lt;</span><span style="color:#000080;background-color:#efefef;">div</span><span style="background-color:#efefef;">&gt;</span><span style="background-color:#ffffff;">Use a jsp:scriptlet to loop from 1 to 10: </span><span style="background-color:#efefef;">&lt;/</span><span style="color:#000080;background-color:#efefef;">div</span><span style="background-color:#efefef;">&gt;
+&lt;</span><span style="color:#000080;background-color:#efefef;">jsp:scriptlet</span><span style="background-color:#efefef;">&gt;
+</span><span style="background-color:#ffffff;">// Note we need to declare CDATA because we don't escape the less than symbol
+&lt;![CDATA[
+  for (int i = 1; i&lt;=10; i++) {
+    out.println(i);
+    if (i &lt; 10) {
+      out.println(", ");
+    }
+  }
+]]&gt;
+</span><span style="background-color:#efefef;">&lt;/</span><span style="color:#000080;background-color:#efefef;">jsp:scriptlet</span><span style="background-color:#efefef;">&gt;
+
+</span><span style="color:#808080;background-color:#ffffff;">&lt;!-- Because I omit br's end tag, declare it as CDATA --&gt;
+</span><span style="background-color:#ffffff;">&lt;![CDATA[
+  </span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">br</span><span style="background-color:#efefef;">&gt;&lt;</span><span style="color:#000080;background-color:#efefef;">br</span><span style="background-color:#efefef;">&gt;
+</span><span style="background-color:#ffffff;">]]&gt;
+
+</span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">div</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">align=</span><span style="color:#008000;background-color:#efefef;">"left"</span><span style="background-color:#efefef;">&gt;
+</span><span style="background-color:#ffffff;">  Use a jsp:expression to write the date and time in the browser's locale:
+  </span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">jsp:expression</span><span style="background-color:#efefef;">&gt;</span><span style="background-color:#ffffff;">getDateTimeStr(request.getLocale())</span><span style="background-color:#efefef;">&lt;/</span><span style="color:#000080;background-color:#efefef;">jsp:expression</span><span style="background-color:#efefef;">&gt;
+&lt;/</span><span style="color:#000080;background-color:#efefef;">div</span><span style="background-color:#efefef;">&gt;
+
+
+&lt;</span><span style="color:#000080;background-color:#efefef;">jsp:text</span><span style="background-color:#efefef;">&gt;
+</span><span style="background-color:#ffffff;">  </span><span style="color:#0000ff;background-color:#ffffff;">&lt;</span><span style="background-color:#ffffff;">p</span><span style="color:#0000ff;background-color:#ffffff;">&gt;</span><span style="background-color:#ffffff;">This sentence is enclosed in a jsp:text element.</span><span style="color:#0000ff;background-color:#ffffff;">&lt;</span><span style="background-color:#ffffff;">/p</span><span style="color:#0000ff;background-color:#ffffff;">&gt;
+</span><span style="background-color:#efefef;">&lt;/</span><span style="color:#000080;background-color:#efefef;">jsp:text</span><span style="background-color:#efefef;">&gt;
+
+&lt;/</span><span style="color:#000080;background-color:#efefef;">body</span><span style="background-color:#efefef;">&gt;
+&lt;/</span><span style="color:#000080;background-color:#efefef;">html</span><span style="background-color:#efefef;">&gt;
+&lt;/</span><span style="color:#000080;background-color:#efefef;">jsp:root</span><span style="background-color:#efefef;">&gt;</span></pre>

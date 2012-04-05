@@ -1,0 +1,382 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>org.wso2.carbon</groupId>
+        <artifactId>platform-parent</artifactId>
+        <version>4.0.0-SNAPSHOT</version>
+	<relativePath>../parent/pom.xml</relativePath>
+    </parent>
+    
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>carbon-products</artifactId>
+    <packaging>pom</packaging>
+    <name>WSO2 Carbon - Products</name>
+    <description>WSO2 Carbon plafrom based products</description>
+    <url>http://wso2.org</url>
+
+
+      <profiles>
+        <!-- WSO2 Identity Server product profile  -->
+        <profile>
+            <id>product-is</id>
+            <activation>
+                <property>
+                    <name>product</name>
+                    <value>is</value>
+                </property>
+            </activation>
+            <modules>
+		<module>integration/security-verifier</module>
+                <module>is</module>
+           </modules>
+        </profile>
+        <!-- WSO2 Enterprise Service Bus profile  -->
+        <profile>
+            <id>product-esb</id>
+            <activation>
+                <property>
+                    <name>product</name>
+                    <value>esb</value>
+                </property>
+            </activation>
+            <modules>
+		<module>integration/security-verifier</module>
+                <module>esb</module>
+           </modules>
+        </profile>
+       <!-- WSO2 Application Server profile  -->
+        <profile>
+            <id>product-as</id>
+            <activation>
+                <property>
+                    <name>product</name>
+                    <value>as</value>
+                </property>
+            </activation>
+            <modules>
+		<module>integration/security-verifier</module>
+                <module>as</module>
+           </modules>
+        </profile>
+        <!-- WSO2 Governence Registry profile  -->
+        <profile>
+            <id>product-greg</id>
+            <activation>
+                <property>
+                    <name>product</name>
+                    <value>greg</value>
+                </property>
+            </activation>
+            <modules>
+		<module>integration/security-verifier</module>
+                <module>greg</module>
+           </modules>
+        </profile>
+         <!-- WSO2 Data Services Server profile  -->
+        <profile>
+            <id>product-dss</id>
+            <activation>
+                <property>
+                    <name>product</name>
+                    <value>dss</value>
+                </property>
+            </activation>
+            <modules>
+		<module>integration/security-verifier</module>
+                <module>dss</module>
+           </modules>
+        </profile>
+         <!-- WSO2 Business Activity Monitoring Server profile  -->
+        <profile>
+            <id>product-bam2</id>
+            <activation>
+                <property>
+                    <name>product</name>
+                    <value>bam2</value>
+                </property>
+            </activation>
+            <modules>
+		<module>integration/security-verifier</module>
+                <module>bam2</module>
+           </modules>
+        </profile>
+         <!-- WSO2 Complex Event Processing Server profile  -->
+        <profile>
+            <id>product-cep</id>
+            <activation>
+                <property>
+                    <name>product</name>
+                    <value>cep</value>
+                </property>
+            </activation>
+            <modules>
+		<module>integration/security-verifier</module>
+                <module>cep</module>
+           </modules>
+        </profile>
+        <!-- WSO2 Business Process Server profile  -->
+        <profile>
+            <id>product-bps</id>
+            <activation>
+                <property>
+                    <name>product</name>
+                    <value>bps</value>
+                </property>
+            </activation>
+            <modules>
+		<module>integration/security-verifier</module>
+                <module>bps</module>
+           </modules>
+        </profile>
+         <!-- WSO2 Business Rules Server profile  -->
+        <profile>
+            <id>product-brs</id>
+            <activation>
+                <property>
+                    <name>product</name>
+                    <value>brs</value>
+                </property>
+            </activation>
+            <modules>
+		<module>integration/security-verifier</module>
+                <module>brs</module>
+           </modules>
+        </profile>
+         <!-- WSO2 Message Broker profile  -->
+        <profile>
+            <id>product-mb</id>
+            <activation>
+                <property>
+                    <name>product</name>
+                    <value>mb</value>
+                </property>
+            </activation>
+            <modules>
+		<module>integration/security-verifier</module>
+                <module>mb</module>
+           </modules>
+        </profile>
+	<!-- WSO2 Stratos Manager profile  -->
+        <profile>
+            <id>product-manager</id>
+            <activation>
+                <property>
+                    <name>product</name>
+                    <value>manager</value>
+                </property>
+            </activation>
+            <modules>
+		<module>integration/security-verifier</module>
+                <module>manager</module>
+           </modules>
+        </profile>
+        <!-- WSO2 Load Balancer profile  -->
+        <profile>
+            <id>product-lb</id>
+            <activation>
+                <property>
+                    <name>product</name>
+                    <value>lb</value>
+                </property>
+            </activation>
+            <modules>
+		<module>integration/security-verifier</module>
+                <module>lb</module>
+           </modules>
+        </profile>
+        <!-- WSO2 Cloud Services Gateway Server profile  -->
+        <profile>
+            <id>product-csg</id>
+            <activation>
+                <property>
+                    <name>product</name>
+                    <value>csg</value>
+                </property>
+            </activation>
+            <modules>
+		<module>integration/security-verifier</module>
+                <module>csg</module>
+           </modules>
+        </profile>
+         <!-- WSO2 Gadget Server profile  -->
+        <profile>
+            <id>product-gs</id>
+            <activation>
+                <property>
+                    <name>product</name>
+                    <value>gs</value>
+                </property>
+            </activation>
+            <modules>
+		<module>integration/security-verifier</module>
+                <module>gs</module>
+           </modules>
+        </profile>
+         <!-- WSO2 Gadget Server profile  -->
+        <profile>
+            <id>product-ms</id>
+            <activation>
+                <property>
+                    <name>product</name>
+                    <value>ms</value>
+                </property>
+            </activation>
+            <modules>
+		<module>integration/security-verifier</module>
+                <module>ms</module>
+           </modules>
+        </profile>
+	<!--WSO2 API-MGT profile -->
+
+	<profile>
+            <id>product-apimgt</id>
+            <activation>
+                <property>
+                    <name>product</name>
+                    <value>apimgt</value>
+                </property>
+            </activation>
+            <modules>
+                <module>integration/security-verifier</module>
+                <module>apimgt</module>
+           </modules>
+        </profile>
+		
+		<!-- WSO2 Jaggery profile  -->
+		<profile>
+			<id>product-jaggery</id>
+			<activation>
+				<property>
+					<name>product</name>
+					<value>jaggery</value>
+				</property>
+			</activation>
+			<modules>
+				<!--<module>integration/security-verifier</module>-->
+				<module>jaggery</module>
+		   </modules>
+		</profile>
+
+        <!-- WSO2 All products  -->
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+             <modules>
+            <module>integration/security-verifier</module>
+            <module>greg</module>
+            <module>is</module>
+            <module>ms</module>
+            <module>dss</module>
+            <module>bam2</module>
+            <module>esb</module>
+			<module>cep</module>
+            <module>bps</module>
+            <module>brs</module>
+            <module>as</module>
+            <module>mb</module>	
+            <module>manager</module>	
+            <module>lb</module>	
+            <module>wsf</module>
+            <module>csg</module>
+            <!--module>apimgt</module-->
+			<module>jaggery</module>
+			<module>gs</module>
+        </modules>
+	    <build>
+	        <plugins>
+	            <plugin>
+	                <groupId>org.codehaus.mojo</groupId>
+	                <artifactId>build-helper-maven-plugin</artifactId>
+	                <version>1.7</version> 
+	            </plugin>
+	            <plugin>
+	               <groupId>org.apache.maven.plugins</groupId>
+	               <artifactId>maven-compiler-plugin</artifactId>
+	               <version>2.3.2</version> 
+	            </plugin>
+	            <plugin>
+	               <groupId>org.apache.maven.plugins</groupId>
+	               <artifactId>maven-surefire-plugin</artifactId>
+	               <version>2.12</version> 
+	            </plugin>
+	            <plugin>
+	               <groupId>org.apache.maven.plugins</groupId>
+	               <artifactId>maven-clean-plugin</artifactId>
+	               <version>2.4.1</version> 
+	            </plugin>
+	            <plugin>
+	               <groupId>org.apache.maven.plugins</groupId>
+	               <artifactId>maven-jar-plugin</artifactId>
+	               <version>2.4</version> 
+	            </plugin>
+	            <plugin>
+	               <groupId>org.apache.maven.plugins</groupId>
+	               <artifactId>maven-checkstyle-plugin</artifactId>
+	               <version>2.9.1</version>
+	            </plugin>
+	        </plugins>
+	    </build>
+
+    <reporting>
+        <plugins>
+            <!--plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.7.1</version>
+            </plugin-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.4</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.3</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>2.5</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.9.1</version>
+            </plugin>
+        </plugins>
+    </reporting>
+
+        </profile>
+     </profiles>
+
+       
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	
+	<!-- version properties -->
+	<wso2carbon.version>${carbon.platform.version}</wso2carbon.version>	
+	<wso2carbon.version.caching>${wso2carbon.version}</wso2carbon.version.caching>
+	<apache.derby.wso2.version>10.3.2.1wso2v1</apache.derby.wso2.version>
+	<hibernate.wso2.version>3.2.5.ga-wso2v1</hibernate.wso2.version>
+	<bcel.wso2.version>5.2.0.wso2v1</bcel.wso2.version>
+	<asm.wso2.version>1.5.3.wso2v1</asm.wso2.version>
+	<cglib.wso2.version>2.1.3.wso2v1</cglib.wso2.version>
+	<axis2.jibx.wso2.version>1.6.1.wso2v1</axis2.jibx.wso2.version>
+	<jibx.wso2.version>1.2.1.wso2v1</jibx.wso2.version>
+	<axis2.jaxb.wso2.version>1.6.1.wso2v1</axis2.jaxb.wso2.version>
+	<jaxb.wso2.version>2.1.7.wso2v1</jaxb.wso2.version>	
+    </properties>
+
+</project>
+

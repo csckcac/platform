@@ -1,0 +1,305 @@
+<!--
+~ Copyright 2005-2008 WSO2, Inc. (http://wso2.com)
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <link href="css/mashup-docs.css" rel="stylesheet" type="text/css" media="all"/>
+        <link type="text/css" rel="stylesheet" href="css/SyntaxHighlighter.css" media="all"/>
+        <script language="javascript" src="js/shCore.js"></script>
+        <script language="javascript" src="js/shBrushJScript.js"></script>
+        <script language="javascript" src="js/shBrushJava.js"></script>
+        <script language="javascript" src="js/shBrushSql.js"></script>
+        <script language="javascript" src="js/shBrushXml.js"></script>
+    </head>
+    <body>
+        <div id="main-content">
+            <h1>HttpClient Host Object</h1>
+            <h2>1.0 Introduction</h2>
+			<p>
+			When a mashup is being created, we might need to get some content from an external URL. 
+			Although you can achieve this using WSRequest hostobject, HttpClient hostobject will make 
+			things easier and configurable. The functionality of HttpClient hostobject is somewhat similar 
+			to the Apache HttpClient. Its usage involves specifying a method and url minimumly and do an 
+			HTTP GET, POST, PUT or DELETE to that url. Further more, using extra configurable options, you can set
+			</p>
+			<ul>
+				<li>Content to be sent</li> 
+				<li>Url parameters</li>
+				<li>Content type and Charset</li>
+				<li>HTTP headers</li>
+				<li>Cookies</li>
+				<li>Basic, NTLM and Digest authentication for Server and Proxy</li>
+				<li>Connection Timeout</li>
+				<li>Cookie Policy</li>
+				<li>Redirect Handling</li>
+			</ul>
+            <h3>1.1 Example</h3>
+            <pre name="code" class="js">
+function searchGoogle(query) {
+	var client = new HttpClient();
+	var content = [ 
+		{ name : "q", value : "query" }, 
+		{ name : "btnG", value : "Google Search" }, 
+		{ name : "hl", value : "en" }, 
+		{ name : "source", value : "hp" } 
+	];
+	var params = {	
+		followRedirect : true
+	};
+
+	var code = client.executeMethod("GET", "http://google.com/search", content, params);
+	if(code == 200) {
+		return "&lt;success&gt;" + client.response + "&lt;/success&gt;";
+	} else {
+		return "&lt;failure&gt;&lt;code&gt;" + code + "&lt;/code&gt;&lt;statusText&gt;" + client.statusText + "&lt;/statusText&gt;&lt;/failure&gt;";
+	}
+}
+            </pre>
+
+            <h2>2.0 HttpClient Object</h2>
+            <h3>2.1 HttpClient Interface</h3>
+            <pre name="code" class="js">
+{
+	property array authSchemePriority;
+	property object credentials;
+	property object proxyCredentials;
+	property object host;
+	property array cookies;
+	readonly array responseHeaders;
+	readonly property String response;
+	readonly property String statusText;
+	function int executeMethod( String method, String url, String content | object content, object params, object headers );
+	function void releaseConnection();
+}
+            </pre>
+            <h3>2.2 API Documentation</h3>
+            <table style="margin-left: 0.5in; border-collapse: collapse;" class="MsoTableGrid" border="1"
+                   cellpadding="5" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td>Member</td>
+                        <td>Description</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">
+								function int executeMethod( 
+									String method, 
+									String url [, 
+									String content | object content [,
+									object params [, 
+									object headers]]]);
+                            </span>
+                        </td>
+                        <td>This method executes the specified method on the given url using other configurations set by the mashup. 
+							It returns the status code returned by the server and accepts the following parameters:
+                            <br/>
+                            <ul>
+                                <li><em>method (String)</em>: This is the string representation of HTTP method to be executed. 
+									This supports "GET", "POST", "PUT" and "DELETE" for the value of this parameter.
+                                </li>
+                            </ul>
+							<ul>
+                                <li><em>url (String)</em>: This is the url string which is used to sent the request by HttpClient. 
+									It can be an absolute url or a relative url. If it is a relative url, then the host, port and 
+									protocol should specified using client.host property. 
+                                </li>
+                            </ul>
+							<ul>
+                                <li><em>[optional]content (String | object)</em>: This is the content to which needs to be sent to the server. 
+									It can be just a string or name-value pair object as below.
+									<pre>
+content = {
+	param1 : "value1",
+	param2 : "value2",
+	...... 
+}
+									</pre>
+                                </li>
+                            </ul>
+							<ul>
+                                <li><em>[optional]params (object)</em>: This is an object with parameters to be set with HttpClient. You can set 
+									following parameters there for further customization.
+									<pre>
+params = {	
+	cookiePolicy : String, // one of "compatibility" | "netscape" | 
+						   //"rfc2109" | "rfc2965" | "ignoreCookies" | "default"
+	timeout : int, // Socket timeout in milliseconds E.g. 30000
+	doAuthentication : boolean,  // true | false,
+	followRedirect : boolean, // true | false,
+	contentChunked : boolean, // true | false,
+	primeetiveAuth : boolean, // true | false,
+	contentType : String, // E.g. "application/x-www-form-urlencoded",
+	charset : String // E.g. "iso-8859-5"
+};
+									</pre>
+                                </li>
+                            </ul>
+							<ul>
+                                <li><em>[optional]headers (array)</em>: These are the headers which need to be sent along with the request. 
+										This is an array of name-value pair objects as below.
+									<pre>
+headers = [
+	{ name : "Accept-Language", value : "en" },
+	{ name : "	Cache-Control", value : "no-cache" },
+	...... 
+];
+									</pre>
+                                </li>
+                            </ul>
+						</td>
+                    </tr>
+
+					<tr>
+                        <td>
+                            <span style="font-weight: bold;">
+								function void releaseConnection();
+                            </span>
+                        </td>
+                        <td>This function releases any resouces associated with the HttpClient object and should be called when 
+							you finished accessing of the Host Object.
+							<br/>
+							<ul>
+								<li>
+								client.releaseConnection();
+								</li>
+							</ul>
+						</td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span style="font-weight: bold;">
+								readonly property array responseHeaders
+                            </span>
+                        </td>
+                        <td>This property contains an array of headers in the response as below.
+                            <br/>
+							<pre>
+[
+	{ name : "Accept-Language", value : "en" },
+	{ name : "	Cache-Control", value : "no-cache" },
+	...... 
+]
+							</pre>
+						</td>
+                    </tr>
+
+					<tr>
+                        <td>
+                            <span style="font-weight: bold;">
+								readonly property String statusText
+                            </span>
+                        </td>
+                        <td>This property contains the status text (or "reason phrase") associated with response
+						</td>
+                    </tr>
+
+					<tr>
+                        <td>
+                            <span style="font-weight: bold;">
+								property array authSchemePriority
+                            </span>
+                        </td>
+                        <td>This property should be set with an array which contains the authentication schemes to be used with 
+							the HttpClient in the order of their priority. HttpClient hostobject supports "BASIC", "NTLM" 
+							and "DIGEST" schemes only. If this property has not been set, the BASIC authentication scheme will 
+							be used by default.
+                            <br/>
+							<pre>
+client.authSchemePriority = ["NTLM", "BASIC"];
+							</pre>
+						</td>
+                    </tr>
+
+					<tr>
+                        <td>
+                            <span style="font-weight: bold;">
+								property array cookies
+                            </span>
+                        </td>
+                        <td>This property can be used to set/get an array of cookies which needs to be set with HttpClient hostobject or currently contain in the hostobject.
+							A cookies array is in the following format.
+                            <br/>
+							<pre>
+client.cookies = [
+	{ domain : ".wso2.com", name : "myCookie", value : "ADCFE113450593", path : "/", age : 20000, secure : true},
+	......
+	......
+];
+							</pre>
+						</td>
+                    </tr>
+
+					<tr>
+                        <td>
+                            <span style="font-weight: bold;">
+								property object credentials
+                            </span>
+                        </td>
+                        <td>This property can be used to set the credentials which needs to authenticate the server. This credentials object should be in the following format.
+                            <br/>
+							<pre>
+client.credentials = {
+	scope : { host : "www.wso2.com", port : 80, realm : "web", scheme : "basic"},
+	credentials : { username : "ruchira", password : "ruchira"}
+};
+							</pre>
+						</td>
+                    </tr>
+
+					<tr>
+                        <td>
+                            <span style="font-weight: bold;">
+								property object proxyCredentials
+                            </span>
+                        </td>
+                        <td>This property can be used to set the credentials which needs to authenticate the proxy server if there any. This proxyCredentials 
+							object should be in the following format.
+                            <br/>
+							<pre>
+client.proxyCredentials = {
+	scope : { host : "www.wso2.com", port : 80, realm : "web", scheme : "basic"},
+	credentials : { username : "ruchira", password : "ruchira"}
+};
+							</pre>
+						</td>
+                    </tr>
+
+					<tr>
+                        <td>
+                            <span style="font-weight: bold;">
+								property object host
+                            </span>
+                        </td>
+                        <td>This property can be used to set host configuration for the HttpClient hostobject which will be then used when you are executing 
+							a method using a relative url. This host propery should be in the following format.
+                            <br/>
+							<pre>
+client.host = { host : "www.wso2.com", port : 80, protocol : "https"};
+							</pre>
+						</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <script language="javascript">
+            dp.SyntaxHighlighter.BloggerMode();
+            dp.SyntaxHighlighter.HighlightAll('code');
+        </script>
+    </body>
+</html>

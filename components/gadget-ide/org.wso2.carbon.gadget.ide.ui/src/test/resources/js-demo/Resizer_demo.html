@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Demo for ImageTabRenderer.js</title>
+        <script src="../../../main/js/lib/closure-library/closure/goog/base.js"></script>
+        <link href="css/Resizer.css" rel="stylesheet">
+        <link href="css/UIEditor.css" rel="stylesheet">
+        <link href="css/TextBox.css" rel="stylesheet">
+        <script>
+            goog.require('gadgetide.ui.Resizer');
+            goog.require('gadgetide.uielement.TextBox');
+            goog.require('gadgetide.ui.UIEditor');
+            goog.require('goog.dom');
+            goog.require('goog.math.Rect');
+        </script>
+    </head>
+    <body>
+    <div id="demoBox" style=" width: 400px;
+                                 height: 400px;
+                                 background-color:#eeffff;
+                                 font:12px/18px 'Lucida Grande','Lucida Sans Unicode',Helvetica,Arial,Verdana,sans-serif;">
+        <div id="uiEditor" style="width: 100%; height: 100%;">
+        </div>
+    </div>
+    <script>
+        var textBox = new gadgetide.uielement.TextBox();
+        var uiEditor = new gadgetide.ui.UIEditor();
+        uiEditor.render(goog.dom.getElement('uiEditor'));
+        var resizer = new gadgetide.ui.Resizer();
+        uiEditor.addChild(resizer,true);
+        resizer.setBounds(new goog.math.Rect(40,40,100,100));
+        resizer.addChild(textBox,true /*render*/)
+    </script>
+    </body>
+
+</html>
+

@@ -1,0 +1,11 @@
+1.0.5
+ * relocated project to Apache Extras (Google Code).
+ * add Issue #5 restructure directory to support Maven lifecycle as well as Ant lifecycle
+ * fix Issue #4 - error in CResltset#getColumn(int index) where index was not being "one-based".
+
+
+1.0.4
+ * improve JDBC spec compliance (CASSANDRA-2720, 2754, 3052, 3089)
+ * cooperate with other jdbc drivers (CASSANDRA-2842)
+ * fix unbox-to-NPE with null primitives (CASSANDRA-2956)
+ * add BigDecimal support (CASSANDRA-3153)

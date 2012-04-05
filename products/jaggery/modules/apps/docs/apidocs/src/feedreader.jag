@@ -1,0 +1,8 @@
+    <%
+    var reader = new FeedReader();
+     
+    //returns a Feed object
+    var feed = reader.get("http://feeds.bbci.co.uk/news/rss.xml");
+     
+    print(feed.feedType);
+    %>

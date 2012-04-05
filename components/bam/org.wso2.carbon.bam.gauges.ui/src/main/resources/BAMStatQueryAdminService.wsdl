@@ -1,0 +1,616 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://services.listservice.bam.carbon.wso2.org" xmlns:ax28="http://data.querycache.services.listservice.bam.carbon.wso2.org/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:ax210="http://util.bam.carbon.wso2.org/xsd" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.listservice.bam.carbon.wso2.org">
+    <wsdl:documentation>BAMStatQueryAdminService</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://data.querycache.services.listservice.bam.carbon.wso2.org/xsd">
+            <xs:complexType name="Stat">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="avgResponseTime" type="xs:int" />
+                    <xs:element minOccurs="0" name="faultCount" type="xs:int" />
+                    <xs:element minOccurs="0" name="maxResponseTime" type="xs:int" />
+                    <xs:element minOccurs="0" name="minResponseTime" type="xs:int" />
+                    <xs:element minOccurs="0" name="requestCount" type="xs:int" />
+                    <xs:element minOccurs="0" name="responseCount" type="xs:int" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="MediationFaultStat">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="categoryName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="faultCategoryId" type="xs:int" />
+                    <xs:element minOccurs="0" name="faultCount" type="xs:int" />
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="MediationFaultStatList">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="categoryName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="faultCount" type="xs:int" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="faultList" nillable="true" type="ax28:MediationFaultStat" />
+                    <xs:element minOccurs="0" name="first" nillable="true" type="ax28:MediationFaultStat" />
+                    <xs:element minOccurs="0" name="simpleFaultStat" nillable="true" type="ax28:MediationFaultStat" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax211="http://services.listservice.bam.carbon.wso2.org" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://util.bam.carbon.wso2.org/xsd">
+            <xs:import namespace="http://services.listservice.bam.carbon.wso2.org" />
+            <xs:complexType name="BAMException">
+                <xs:complexContent>
+                    <xs:extension base="ns:Exception">
+                        <xs:sequence />
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax29="http://data.querycache.services.listservice.bam.carbon.wso2.org/xsd" xmlns:ax212="http://util.bam.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.listservice.bam.carbon.wso2.org">
+            <xs:import namespace="http://data.querycache.services.listservice.bam.carbon.wso2.org/xsd" />
+            <xs:import namespace="http://util.bam.carbon.wso2.org/xsd" />
+            <xs:element name="getServiceRealTimeStat">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="categoryType" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="categoryId" type="xs:int" />
+                        <xs:element minOccurs="0" name="cacheId" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceRealTimeStatResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax29:Stat" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMediationSubFaultStat">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="categoryType" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="categoryId" type="xs:int" />
+                        <xs:element minOccurs="0" name="subName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="cacheId" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMediationSubFaultStatResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax29:MediationFaultStat" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMediationRealTimeSubStat">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="categoryType" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="categoryId" type="xs:int" />
+                        <xs:element minOccurs="0" name="subName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="cacheId" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMediationRealTimeSubStatResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax29:Stat" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMediationRealTimeSubFaultCategoryStat">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="categoryType" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="categoryId" type="xs:int" />
+                        <xs:element minOccurs="0" name="faultId" type="xs:int" />
+                        <xs:element minOccurs="0" name="subName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="cacheId" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMediationRealTimeSubFaultCategoryStatResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax29:MediationFaultStat" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMediationRealTimeStat">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="categoryType" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="categoryId" type="xs:int" />
+                        <xs:element minOccurs="0" name="cacheId" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMediationRealTimeStatResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax29:Stat" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Exception" nillable="true" type="xs:anyType" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="BAMException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="BAMException" nillable="true" type="ax212:BAMException" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMediationRealTimeFaultStat_temp">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="categoryType" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="serverId" type="xs:int" />
+                        <xs:element minOccurs="0" name="mediationName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="cacheId" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMediationRealTimeFaultStat_tempResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax29:MediationFaultStatList" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMediationRealTimeFaultStat">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="categoryType" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="categoryId" type="xs:int" />
+                        <xs:element minOccurs="0" name="cacheId" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMediationRealTimeFaultStatResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax29:MediationFaultStat" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMediationRealTimeFaultCategoryStat_temp">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="categoryType" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="serverId" type="xs:int" />
+                        <xs:element minOccurs="0" name="mediationName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="faultName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="cacheId" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMediationRealTimeFaultCategoryStat_tempResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax29:MediationFaultStat" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMediationRealTimeFaultCategoryStat">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="categoryType" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="serverId" type="xs:int" />
+                        <xs:element minOccurs="0" name="categoryId" type="xs:int" />
+                        <xs:element minOccurs="0" name="faultId" type="xs:int" />
+                        <xs:element minOccurs="0" name="cacheId" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMediationRealTimeFaultCategoryStatResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax29:MediationFaultStatList" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getMediationRealTimeFaultStatRequest">
+        <wsdl:part name="parameters" element="ns:getMediationRealTimeFaultStat" />
+    </wsdl:message>
+    <wsdl:message name="getMediationRealTimeFaultStatResponse">
+        <wsdl:part name="parameters" element="ns:getMediationRealTimeFaultStatResponse" />
+    </wsdl:message>
+    <wsdl:message name="BAMException">
+        <wsdl:part name="parameters" element="ns:BAMException" />
+    </wsdl:message>
+    <wsdl:message name="getMediationRealTimeStatRequest">
+        <wsdl:part name="parameters" element="ns:getMediationRealTimeStat" />
+    </wsdl:message>
+    <wsdl:message name="getMediationRealTimeStatResponse">
+        <wsdl:part name="parameters" element="ns:getMediationRealTimeStatResponse" />
+    </wsdl:message>
+    <wsdl:message name="getMediationRealTimeSubStatRequest">
+        <wsdl:part name="parameters" element="ns:getMediationRealTimeSubStat" />
+    </wsdl:message>
+    <wsdl:message name="getMediationRealTimeSubStatResponse">
+        <wsdl:part name="parameters" element="ns:getMediationRealTimeSubStatResponse" />
+    </wsdl:message>
+    <wsdl:message name="getMediationRealTimeSubFaultCategoryStatRequest">
+        <wsdl:part name="parameters" element="ns:getMediationRealTimeSubFaultCategoryStat" />
+    </wsdl:message>
+    <wsdl:message name="getMediationRealTimeSubFaultCategoryStatResponse">
+        <wsdl:part name="parameters" element="ns:getMediationRealTimeSubFaultCategoryStatResponse" />
+    </wsdl:message>
+    <wsdl:message name="getMediationRealTimeFaultStat_tempRequest">
+        <wsdl:part name="parameters" element="ns:getMediationRealTimeFaultStat_temp" />
+    </wsdl:message>
+    <wsdl:message name="getMediationRealTimeFaultStat_tempResponse">
+        <wsdl:part name="parameters" element="ns:getMediationRealTimeFaultStat_tempResponse" />
+    </wsdl:message>
+    <wsdl:message name="getMediationRealTimeFaultCategoryStat_tempRequest">
+        <wsdl:part name="parameters" element="ns:getMediationRealTimeFaultCategoryStat_temp" />
+    </wsdl:message>
+    <wsdl:message name="getMediationRealTimeFaultCategoryStat_tempResponse">
+        <wsdl:part name="parameters" element="ns:getMediationRealTimeFaultCategoryStat_tempResponse" />
+    </wsdl:message>
+    <wsdl:message name="getServiceRealTimeStatRequest">
+        <wsdl:part name="parameters" element="ns:getServiceRealTimeStat" />
+    </wsdl:message>
+    <wsdl:message name="getServiceRealTimeStatResponse">
+        <wsdl:part name="parameters" element="ns:getServiceRealTimeStatResponse" />
+    </wsdl:message>
+    <wsdl:message name="getMediationRealTimeFaultCategoryStatRequest">
+        <wsdl:part name="parameters" element="ns:getMediationRealTimeFaultCategoryStat" />
+    </wsdl:message>
+    <wsdl:message name="getMediationRealTimeFaultCategoryStatResponse">
+        <wsdl:part name="parameters" element="ns:getMediationRealTimeFaultCategoryStatResponse" />
+    </wsdl:message>
+    <wsdl:message name="getMediationSubFaultStatRequest">
+        <wsdl:part name="parameters" element="ns:getMediationSubFaultStat" />
+    </wsdl:message>
+    <wsdl:message name="getMediationSubFaultStatResponse">
+        <wsdl:part name="parameters" element="ns:getMediationSubFaultStatResponse" />
+    </wsdl:message>
+    <wsdl:portType name="BAMStatQueryAdminServicePortType">
+        <wsdl:operation name="getMediationRealTimeFaultStat">
+            <wsdl:input message="ns:getMediationRealTimeFaultStatRequest" wsaw:Action="urn:getMediationRealTimeFaultStat" />
+            <wsdl:output message="ns:getMediationRealTimeFaultStatResponse" wsaw:Action="urn:getMediationRealTimeFaultStatResponse" />
+            <wsdl:fault message="ns:BAMException" name="BAMException" wsaw:Action="urn:getMediationRealTimeFaultStatBAMException" />
+        </wsdl:operation>
+        <wsdl:operation name="getMediationRealTimeStat">
+            <wsdl:input message="ns:getMediationRealTimeStatRequest" wsaw:Action="urn:getMediationRealTimeStat" />
+            <wsdl:output message="ns:getMediationRealTimeStatResponse" wsaw:Action="urn:getMediationRealTimeStatResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getMediationRealTimeSubStat">
+            <wsdl:input message="ns:getMediationRealTimeSubStatRequest" wsaw:Action="urn:getMediationRealTimeSubStat" />
+            <wsdl:output message="ns:getMediationRealTimeSubStatResponse" wsaw:Action="urn:getMediationRealTimeSubStatResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getMediationRealTimeSubFaultCategoryStat">
+            <wsdl:input message="ns:getMediationRealTimeSubFaultCategoryStatRequest" wsaw:Action="urn:getMediationRealTimeSubFaultCategoryStat" />
+            <wsdl:output message="ns:getMediationRealTimeSubFaultCategoryStatResponse" wsaw:Action="urn:getMediationRealTimeSubFaultCategoryStatResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getMediationRealTimeFaultStat_temp">
+            <wsdl:input message="ns:getMediationRealTimeFaultStat_tempRequest" wsaw:Action="urn:getMediationRealTimeFaultStat_temp" />
+            <wsdl:output message="ns:getMediationRealTimeFaultStat_tempResponse" wsaw:Action="urn:getMediationRealTimeFaultStat_tempResponse" />
+            <wsdl:fault message="ns:BAMException" name="BAMException" wsaw:Action="urn:getMediationRealTimeFaultStat_tempBAMException" />
+        </wsdl:operation>
+        <wsdl:operation name="getMediationRealTimeFaultCategoryStat_temp">
+            <wsdl:input message="ns:getMediationRealTimeFaultCategoryStat_tempRequest" wsaw:Action="urn:getMediationRealTimeFaultCategoryStat_temp" />
+            <wsdl:output message="ns:getMediationRealTimeFaultCategoryStat_tempResponse" wsaw:Action="urn:getMediationRealTimeFaultCategoryStat_tempResponse" />
+            <wsdl:fault message="ns:BAMException" name="BAMException" wsaw:Action="urn:getMediationRealTimeFaultCategoryStat_tempBAMException" />
+        </wsdl:operation>
+        <wsdl:operation name="getServiceRealTimeStat">
+            <wsdl:input message="ns:getServiceRealTimeStatRequest" wsaw:Action="urn:getServiceRealTimeStat" />
+            <wsdl:output message="ns:getServiceRealTimeStatResponse" wsaw:Action="urn:getServiceRealTimeStatResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getMediationRealTimeFaultCategoryStat">
+            <wsdl:input message="ns:getMediationRealTimeFaultCategoryStatRequest" wsaw:Action="urn:getMediationRealTimeFaultCategoryStat" />
+            <wsdl:output message="ns:getMediationRealTimeFaultCategoryStatResponse" wsaw:Action="urn:getMediationRealTimeFaultCategoryStatResponse" />
+            <wsdl:fault message="ns:BAMException" name="BAMException" wsaw:Action="urn:getMediationRealTimeFaultCategoryStatBAMException" />
+        </wsdl:operation>
+        <wsdl:operation name="getMediationSubFaultStat">
+            <wsdl:input message="ns:getMediationSubFaultStatRequest" wsaw:Action="urn:getMediationSubFaultStat" />
+            <wsdl:output message="ns:getMediationSubFaultStatResponse" wsaw:Action="urn:getMediationSubFaultStatResponse" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="BAMStatQueryAdminServiceSoap11Binding" type="ns:BAMStatQueryAdminServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="getMediationRealTimeFaultStat">
+            <soap:operation soapAction="urn:getMediationRealTimeFaultStat" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BAMException">
+                <soap:fault use="literal" name="BAMException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getMediationRealTimeStat">
+            <soap:operation soapAction="urn:getMediationRealTimeStat" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMediationRealTimeSubStat">
+            <soap:operation soapAction="urn:getMediationRealTimeSubStat" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMediationRealTimeSubFaultCategoryStat">
+            <soap:operation soapAction="urn:getMediationRealTimeSubFaultCategoryStat" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMediationRealTimeFaultStat_temp">
+            <soap:operation soapAction="urn:getMediationRealTimeFaultStat_temp" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BAMException">
+                <soap:fault use="literal" name="BAMException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceRealTimeStat">
+            <soap:operation soapAction="urn:getServiceRealTimeStat" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMediationRealTimeFaultCategoryStat_temp">
+            <soap:operation soapAction="urn:getMediationRealTimeFaultCategoryStat_temp" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BAMException">
+                <soap:fault use="literal" name="BAMException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getMediationRealTimeFaultCategoryStat">
+            <soap:operation soapAction="urn:getMediationRealTimeFaultCategoryStat" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BAMException">
+                <soap:fault use="literal" name="BAMException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getMediationSubFaultStat">
+            <soap:operation soapAction="urn:getMediationSubFaultStat" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="BAMStatQueryAdminServiceSoap12Binding" type="ns:BAMStatQueryAdminServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="getMediationRealTimeFaultStat">
+            <soap12:operation soapAction="urn:getMediationRealTimeFaultStat" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BAMException">
+                <soap12:fault use="literal" name="BAMException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getMediationRealTimeStat">
+            <soap12:operation soapAction="urn:getMediationRealTimeStat" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMediationRealTimeSubStat">
+            <soap12:operation soapAction="urn:getMediationRealTimeSubStat" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMediationRealTimeSubFaultCategoryStat">
+            <soap12:operation soapAction="urn:getMediationRealTimeSubFaultCategoryStat" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMediationRealTimeFaultStat_temp">
+            <soap12:operation soapAction="urn:getMediationRealTimeFaultStat_temp" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BAMException">
+                <soap12:fault use="literal" name="BAMException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceRealTimeStat">
+            <soap12:operation soapAction="urn:getServiceRealTimeStat" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMediationRealTimeFaultCategoryStat_temp">
+            <soap12:operation soapAction="urn:getMediationRealTimeFaultCategoryStat_temp" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BAMException">
+                <soap12:fault use="literal" name="BAMException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getMediationRealTimeFaultCategoryStat">
+            <soap12:operation soapAction="urn:getMediationRealTimeFaultCategoryStat" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BAMException">
+                <soap12:fault use="literal" name="BAMException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getMediationSubFaultStat">
+            <soap12:operation soapAction="urn:getMediationSubFaultStat" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="BAMStatQueryAdminServiceHttpBinding" type="ns:BAMStatQueryAdminServicePortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="getMediationRealTimeFaultStat">
+            <http:operation location="getMediationRealTimeFaultStat" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getMediationRealTimeFaultStat" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getMediationRealTimeFaultStat" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMediationRealTimeStat">
+            <http:operation location="getMediationRealTimeStat" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getMediationRealTimeStat" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getMediationRealTimeStat" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMediationRealTimeSubStat">
+            <http:operation location="getMediationRealTimeSubStat" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getMediationRealTimeSubStat" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getMediationRealTimeSubStat" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMediationRealTimeSubFaultCategoryStat">
+            <http:operation location="getMediationRealTimeSubFaultCategoryStat" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getMediationRealTimeSubFaultCategoryStat" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getMediationRealTimeSubFaultCategoryStat" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMediationRealTimeFaultStat_temp">
+            <http:operation location="getMediationRealTimeFaultStat_temp" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getMediationRealTimeFaultStat_temp" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getMediationRealTimeFaultStat_temp" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceRealTimeStat">
+            <http:operation location="getServiceRealTimeStat" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getServiceRealTimeStat" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getServiceRealTimeStat" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMediationRealTimeFaultCategoryStat_temp">
+            <http:operation location="getMediationRealTimeFaultCategoryStat_temp" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getMediationRealTimeFaultCategoryStat_temp" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getMediationRealTimeFaultCategoryStat_temp" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMediationRealTimeFaultCategoryStat">
+            <http:operation location="getMediationRealTimeFaultCategoryStat" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getMediationRealTimeFaultCategoryStat" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getMediationRealTimeFaultCategoryStat" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMediationSubFaultStat">
+            <http:operation location="getMediationSubFaultStat" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getMediationSubFaultStat" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getMediationSubFaultStat" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="BAMStatQueryAdminService">
+        <wsdl:port name="BAMStatQueryAdminServiceHttpsSoap11Endpoint" binding="ns:BAMStatQueryAdminServiceSoap11Binding">
+            <soap:address location="https://10.100.1.119:9444/bam/services/BAMStatQueryAdminService.BAMStatQueryAdminServiceHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="BAMStatQueryAdminServiceHttpsSoap12Endpoint" binding="ns:BAMStatQueryAdminServiceSoap12Binding">
+            <soap12:address location="https://10.100.1.119:9444/bam/services/BAMStatQueryAdminService.BAMStatQueryAdminServiceHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="BAMStatQueryAdminServiceHttpsEndpoint" binding="ns:BAMStatQueryAdminServiceHttpBinding">
+            <http:address location="https://10.100.1.119:9444/bam/services/BAMStatQueryAdminService.BAMStatQueryAdminServiceHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

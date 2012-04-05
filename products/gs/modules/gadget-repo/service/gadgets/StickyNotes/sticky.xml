@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+  <ModulePrefs title="Sticky Notes"
+               directory_title="Sticky Notes"
+               description="Sticky Notes"
+               render_inline="optional"
+               author="Sophia B."
+               author_email="sophia.feedback+sticky+201011241@gmail.com"
+               author_affiliation="Google Inc."
+               author_location="Mountain View, CA"
+               singleton="false"
+               category="tools">
+  <Locale messages="http://www.google.com/ig/modules/sticky_content/sticky_en.xml"/>
+  <Locale lang="ar" messages="http://www.google.com/ig/modules/sticky_content/sticky_ar.xml"
+          language_direction="rtl"/>
+  <Locale lang="bg" messages="http://www.google.com/ig/modules/sticky_content/sticky_bg.xml"/>
+  <Locale lang="ca" messages="http://www.google.com/ig/modules/sticky_content/sticky_ca.xml"/>
+  <Locale lang="da" messages="http://www.google.com/ig/modules/sticky_content/sticky_da.xml"/>
+  <Locale lang="de" messages="http://www.google.com/ig/modules/sticky_content/sticky_de.xml"/>
+  <Locale lang="el" messages="http://www.google.com/ig/modules/sticky_content/sticky_el.xml"/>
+
+  <Locale lang="en" messages="http://www.google.com/ig/modules/sticky_content/sticky_en.xml"/>
+  <Locale lang="es" messages="http://www.google.com/ig/modules/sticky_content/sticky_es.xml"/>
+  <Locale lang="et" messages="http://www.google.com/ig/modules/sticky_content/sticky_et.xml"/>
+  <Locale lang="fi" messages="http://www.google.com/ig/modules/sticky_content/sticky_fi.xml"/>
+  <Locale lang="fr" messages="http://www.google.com/ig/modules/sticky_content/sticky_fr.xml"/>
+  <Locale lang="hi" messages="http://www.google.com/ig/modules/sticky_content/sticky_hi.xml"/>
+  <Locale lang="hr" messages="http://www.google.com/ig/modules/sticky_content/sticky_hr.xml"/>
+  <Locale lang="hu" messages="http://www.google.com/ig/modules/sticky_content/sticky_hu.xml"/>
+  <Locale lang="hy" messages="http://www.google.com/ig/modules/sticky_content/sticky_hy.xml"/>
+
+  <Locale lang="id" messages="http://www.google.com/ig/modules/sticky_content/sticky_id.xml"/>
+  <Locale lang="is" messages="http://www.google.com/ig/modules/sticky_content/sticky_is.xml"/>
+  <Locale lang="it" messages="http://www.google.com/ig/modules/sticky_content/sticky_it.xml"/>
+  <Locale lang="ja" messages="http://www.google.com/ig/modules/sticky_content/sticky_ja.xml"/>
+  <Locale lang="ko" messages="http://www.google.com/ig/modules/sticky_content/sticky_ko.xml"/>
+  <Locale lang="lt" messages="http://www.google.com/ig/modules/sticky_content/sticky_lt.xml"/>
+  <Locale lang="lv" messages="http://www.google.com/ig/modules/sticky_content/sticky_lv.xml"/>
+  <Locale lang="ms" messages="http://www.google.com/ig/modules/sticky_content/sticky_ms.xml"/>
+  <Locale lang="nl" messages="http://www.google.com/ig/modules/sticky_content/sticky_nl.xml"/>
+
+  <Locale lang="no" messages="http://www.google.com/ig/modules/sticky_content/sticky_no.xml"/>
+  <Locale lang="pl" messages="http://www.google.com/ig/modules/sticky_content/sticky_pl.xml"/>
+  <Locale lang="pt-BR" messages="http://www.google.com/ig/modules/sticky_content/sticky_pt-br.xml"/>
+  <Locale lang="ro" messages="http://www.google.com/ig/modules/sticky_content/sticky_ro.xml"/>
+  <Locale lang="ru" messages="http://www.google.com/ig/modules/sticky_content/sticky_ru.xml"/>
+  <Locale lang="sk" messages="http://www.google.com/ig/modules/sticky_content/sticky_sk.xml"/>
+  <Locale lang="sl" messages="http://www.google.com/ig/modules/sticky_content/sticky_sl.xml"/>
+  <Locale lang="sr" messages="http://www.google.com/ig/modules/sticky_content/sticky_sr.xml"/>
+  <Locale lang="sv" messages="http://www.google.com/ig/modules/sticky_content/sticky_sv.xml"/>
+
+  <Locale lang="th" messages="http://www.google.com/ig/modules/sticky_content/sticky_th.xml"/>
+  <Locale lang="tl" messages="http://www.google.com/ig/modules/sticky_content/sticky_tl.xml"/>
+  <Locale lang="tr" messages="http://www.google.com/ig/modules/sticky_content/sticky_tr.xml"/>
+  <Locale lang="uk" messages="http://www.google.com/ig/modules/sticky_content/sticky_uk.xml"/>
+  <Locale lang="zh-CN" messages="http://www.google.com/ig/modules/sticky_content/sticky_zh-cn.xml"/>
+  <Locale lang="zh-tw" messages="http://www.google.com/ig/modules/sticky_content/sticky_zh-tw.xml"/>
+  <Require feature="setprefs" />
+  <Icon>http://www.google.com/images/icons/notepad-16.gif</Icon>
+
+</ModulePrefs>
+<UserPref name="title" display_name="__MSG_title__" required="false"
+          default_value="__MSG_sticky__"/>
+  <UserPref name="bgcolor" display_name="__MSG_background_color__"
+            default_value="#ffffcc" datatype="enum">
+    <EnumValue display_value="__MSG_yellow__" value="#ffffcc"/>
+    <EnumValue display_value="__MSG_blue__" value="#e5ecf9"/>
+    <EnumValue display_value="__MSG_white__" value="white"/>
+    <EnumValue display_value="__MSG_green__" value="#e0eee0"/>
+    <EnumValue display_value="__MSG_pink__" value="#fff0f5"/>
+    <EnumValue display_value="__MSG_orange__" value="#fff5ee"/>
+  </UserPref>
+
+  <UserPref name="textcolor" display_name="__MSG_text_color__"
+            default_value="black" datatype="enum">
+    <EnumValue display_value ="__MSG_black__" value="Black"/>
+    <EnumValue display_value="__MSG_blue__" value="blue"/>
+    <EnumValue display_value="__MSG_green__" value="green"/>
+    <EnumValue display_value="__MSG_red__" value="red"/>
+    <EnumValue display_value="__MSG_pink__" value="#ff007f"/>
+    <EnumValue display_value="__MSG_orange__" value="#ff3300"/>
+  </UserPref>
+  <UserPref name="stickydata" default_value="" datatype="hidden" />
+
+  <Content type="html">
+    <![CDATA[
+<style>#stickyText__MODULE_ID__{font-size:12px;overflow:hidden;padding-__BIDI_END_EDGE__:5px;padding-__BIDI_START_EDGE__:5px;font-family:courier;width:100%;letter-spacing:0;line-height:14px;border-style:none}b.rtop__MODULE_ID__,b.rbottom__MODULE_ID__{display:block;background-color:#fff}b.rtop__MODULE_ID__ b,b.rbottom__MODULE_ID__ b{display:block;height:1px;overflow:hidden}b.r1__MODULE_ID__{margin:0 5px}b.r2__MODULE_ID__{margin:0 3px}b.r3__MODULE_ID__{margin:0 2px}b.rtop__MODULE_ID__ b.r4__MODULE_ID__,b.rbottom__MODULE_ID__ b.r4__MODULE_ID__{margin:0 1px;height:2px}</style>
+<script>function loadStyleSheet(a,c){if(!document.getElementById(a)){var b=document.createElement("style");b.id=a;b.setAttribute("type","text/css");if(b.styleSheet)b.styleSheet.cssText=c;else b.appendChild(document.createTextNode(c));document.getElementsByTagName("head")[0].appendChild(b)}}var prefs__MODULE_ID__=null;
+function loadSticky__MODULE_ID__(){prefs__MODULE_ID__=new _IG_Prefs(__MODULE_ID__);var a=prefs__MODULE_ID__.getString("bgcolor").replace(/[^a-zA-Z0-9#]/g,""),c=prefs__MODULE_ID__.getString("textcolor").replace(/[^a-zA-Z0-9#]/g,"");_gel("stickyDiv__MODULE_ID__").style.backgroundColor=a;_gel("stickyText__MODULE_ID__").style.backgroundColor=a;_gel("stickyText__MODULE_ID__").style.color=c;c=document.getElementById("stickyDiv__MODULE_ID__").getElementsByTagName("b");for(var b in c){var d=c[b];if(d.className&&
+d.className.match(/r[1-4]__MODULE_ID__/))d.style.backgroundColor=a}a=prefs__MODULE_ID__.getString("stickydata");if(a=="")a="__MSG_click_sticky__";_gel("stickyText__MODULE_ID__").value=a;setCols__MODULE_ID__();_IG_AddDOMEventHandler(window,"resize",setCols__MODULE_ID__)}function saveSticky__MODULE_ID__(){var a=_gel("stickyText__MODULE_ID__").value;prefs__MODULE_ID__.set("stickydata",a)}
+function setCols__MODULE_ID__(){var a=_gel("stickyText__MODULE_ID__");a.setAttribute("cols",Math.floor(a.clientWidth/7));setRows__MODULE_ID__()}function setRows__MODULE_ID__(){var a=_gel("stickyText__MODULE_ID__"),c=a.cols,b=a.value;b=b.replace(/\r\n?/,"\n");for(var d=2,e=0,f=0;f<b.length;f++){var g=b.charAt(f);e++;if(g=="\n"||e==c){d++;e=0}}a.setAttribute("rows",d);a.style.height=d*14+"px"}
+_IG_RegisterOnloadHandler(function(){loadStyleSheet("sticky_gadget_style_sheet","        #stickyText__MODULE_ID__ {          font-size: 12px;          overflow:hidden;          padding-__BIDI_END_EDGE__:5px;          padding-__BIDI_START_EDGE__:5px;          font-family: courier;          width:100%;          letter-spacing:0;          line-height:14px;          border-style:none;        }        b.rtop__MODULE_ID__, b.rbottom__MODULE_ID__ {          display: block;          background-color: #FFF;        }        b.rtop__MODULE_ID__ b, b.rbottom__MODULE_ID__ b {          display: block;          height: 1px;          overflow: hidden;        }        b.r1__MODULE_ID__ {          margin: 0 5px;        }        b.r2__MODULE_ID__ {          margin: 0 3px;        }        b.r3__MODULE_ID__ {          margin: 0 2px;        }        b.rtop__MODULE_ID__ b.r4__MODULE_ID__,            b.rbottom__MODULE_ID__ b.r4__MODULE_ID__ {          margin: 0 1px;          height: 2px;        }");loadSticky__MODULE_ID__();
+_IG_RegisterMaximizeHandler(__MODULE_ID__,loadSticky__MODULE_ID__)});</script>
+<font size=1px><br /></font>
+<div id=stickyDiv__MODULE_ID__>
+<b class=rtop__MODULE_ID__>
+<b class=r1__MODULE_ID__></b>
+<b class=r2__MODULE_ID__></b>
+<b class=r3__MODULE_ID__></b>
+<b class=r4__MODULE_ID__></b>
+</b>
+<textarea id=stickyText__MODULE_ID__ onblur=saveSticky__MODULE_ID__() onkeyup=setRows__MODULE_ID__() onmouseout=saveSticky__MODULE_ID__()></textarea>
+<b class=rbottom__MODULE_ID__>
+<b class=r4__MODULE_ID__></b>
+<b class=r3__MODULE_ID__></b>
+<b class=r2__MODULE_ID__></b>
+<b class=r1__MODULE_ID__></b>
+</b>
+</div>
+]]>
+  </Content>
+</Module>
+

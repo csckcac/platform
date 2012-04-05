@@ -1,0 +1,300 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <title>Governance Registry Service Metadata - User Guide</title>
+  <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all" />
+</head>
+
+<body>
+<h1>Governance Registry Service Metadata</h1>
+<ul>
+    <li><a href="#serviceui">How to Configure the Service UI</a></li>
+    <li><a href="#metadata">Adding Service Metadata</a></li>
+    <li><a href="#policy">Add Policy</a></li>
+    <li><a href="#wsdl">Add WSDL</a></li>
+    <li><a href="#schema">Add Schema</a></li>
+</ul>
+<a name="serviceui"></a>
+      <h2> Documentation for new Dynamic UI for Add Service</h2>
+    <p>
+We are allowing users to get required information about a service by simply changing the given UI by changing XML configuration.
+We are generating the current Add Service UI by reading an XML which can be edited.
+You can simply edit the configuration XML by clicking Configuration->Service link in right menu of Governance Registry.
+User should aware of all the defined XML elements and attributes. Please refer the element descriptions to find the required elements for your changes. 
+    </p>
+
+<h2>Element table</h2>
+
+<p>This is the element which create HTML table for you all the required fields should be defined inside table element.
+    Table has a mandatory element name which will be displayed as the heading of the table.</p>
+
+Ex:   &lt;table name="Overview"&gt;&lt;/table&gt;
+
+
+    <img src="images/heading.png" width="742px"/>;
+
+
+
+<h2>Element subheading</h2>
+
+<p>This elements specifies the required headings for the table, so this is obviously always a child element of table elements.
+    Most often you have two column table so you will be having two headings. If you are having more than two columns in your table
+    you have to specify the number of columns by giving a new attribute columns including the value as the number of columns.
+     </p>
+    <p>
+    &lt;table name="Contacts"&gt;
+        		&lt;subheading&gt;
+            		&lt;heading&gt;Contact Type&lt;/heading&gt;
+			&lt;heading&gt;Contact Name/Organization Name&lt;/heading&gt;
+        		&lt;/subheading&gt;
+	&lt;/table&gt;
+	
+    </p>
+    <p><img src="images/heading-1.png" width="742px"/></p>
+ <p>This subheading is not mandatory and only if you have to add subheadings you can add them as below.</p>
+    <p>
+&lt;table name="Doc Links" columns=3&gt;
+        &lt;subheading&gt;
+          &lt;heading&gt;Document Type&lt;/heading&gt;
+	&lt;heading&gt;URL&lt;/heading&gt;
+	&lt;heading&gt;Comment&lt;/heading&gt;
+        &lt;/subheading&gt;
+&lt;/table&gt;
+
+ </p>
+    <p><img src="images/heading-2.png" width="742px"/></p>
+        <p>
+At the above example you can see that column number is not 2 and you have to specify the column number using attribute
+name columns. This will create three columns and add those subheading in to the table.
+if you are using more than two columns we are not printing the field name in front of the HTML field.
+So if there are more than two you can get a table only containing the required fields but we are not printing the name as usual.
+Ex:    </p>
+    <p>
+&lt;table name="Doc Links" columns="3"&gt;
+        &lt;subheading&gt;
+            &lt;heading&gt;Document Type&lt;/heading&gt;
+	&lt;heading&gt;URL&lt;/heading&gt;
+	&lt;heading&gt;Comment&lt;/heading&gt;
+        &lt;/subheading&gt;
+        &lt;field type="text"&gt;
+            &lt;name&gt;Document Type&lt;/name&gt;
+        &lt;/field&gt;
+        &lt;field type="text"&gt;
+            &lt;name&gt;URL&lt;/name&gt;
+        &lt;/field&gt;
+        &lt;field type="text-area"&gt;
+            &lt;name&gt;Document Comment&lt;/name&gt;
+        &lt;/field&gt;
+        &lt;field type="text" skip="true"&gt;
+            &lt;name&gt;Document Type1&lt;/name&gt;
+        &lt;/field&gt;
+        &lt;field type="text" skip="true"&gt;
+            &lt;name&gt;URL1&lt;/name&gt;
+        &lt;/field&gt;
+
+&lt;/table&gt;
+
+    </p>
+   <h2>Element  field</h2>
+<p>This is the element which specifically defined a particular field. This field can be a text field drop-down list text a
+    rea or our own field called option-text. Option text field is an identified useful single field which contains drop-down with a text field.
+Ex: </p>
+    <p><img src="images/heading-3.png" width="742px"/></p>
+<p>
+    This contains a drop-down list and a text field, so if you want to add an element like this you can simply specify the field type as option-text.
+    Field element can have couple of attributes and there's only one mandatory attribute for field element which is type. type specifies the field
+    type which can be text,option, text-area, option-text.
+</p>
+    <h2>Element  name as child of field</h2>
+<p>
+Instead of having mandatory type attribute field element should have another child element called name to specify the name and to display at the beginning of the field.
+Ex: Here's an example of a field element which creates a text field.
+</p>
+       <p>
+    &lt;field type="text"&gt;
+            	&lt;name&gt;Name&lt;/name&gt;
+ 	&lt;/field&gt;
+          </p>
+<p>After you add this element under a table element you will be able to generate a text field like this.</p>
+    <p><img src="images/heading-4.png" width="742px"/></p>
+<p>
+    You shouldn't use same name  value for same type of field in a single table element.
+If you are adding a field with the type option or option-text you have to specify the set of values you want to add in to drop-down list.
+Ex: Here's an example of an option field which generate a drop down list with given values.
+</p>
+    <p>
+    &lt;field type="options"&gt;
+            &lt;name&gt;States&lt;/name&gt;
+            &lt;values&gt;
+                &lt;value&gt;Created&lt;/value&gt;
+	    &lt;value&gt;Tested&lt;/value&gt;
+	    &lt;value&gt;Deployed&lt;/value&gt;
+	   &lt;value&gt;Deprecated&lt;/value&gt;
+            &lt;/values&gt;
+        &lt;/field&gt;
+       </p>
+    <p><img src="images/heading-5.png" width="742px"/></p>
+ <p>Example for option-text field, in here are having a drop-down and a text field but you only have to specify the type as option-text
+     and give the value set and this will create the appropriate drop-down list and the text field.</p>
+    <p>
+    &lt;field type="option-text"&gt;
+            &lt;name&gt;Contact&lt;/name&gt;
+            &lt;values&gt;
+                &lt;value&gt;Technical Owner&lt;/value&gt;&lt;value&gt;Business Owner&lt;/value&gt;
+            &lt;/values&gt;
+        &lt;/field&gt;
+       </p>
+    <p><img src="images/heading-3.png" width="742px"/></p>
+<p>
+  If your field is a mandatory field you have to add a new attribute required and set the value as true.
+    Default value is false for required attribute and you don't have to specify it for all the fields.
+    If you put required as true the form will show an error box during submission if the field is not filled.
+Ex: This is the same example by adding required true.
+           </p>
+    <p>
+        &lt;field type="text" required=true&gt;
+            	&lt;name&gt;Name&lt;/name&gt;
+ 	&lt;/field&gt;
+       </p>
+    <p><img src="images/heading-6.png" width="742px"/></p>
+<h2>Attribute maxoccurs</h2>
+<p>There's an attribute maxoccurs which you can use only with field type option-text. We are reading only
+    one value of this attribute which is unbounded. You can use this feature when you want add different
+    number of fields (option-text) and allow users to add those fields dynamically by clicking add link.
+    When you specify a particular option-text field with maxoccurs=unbounded we are only displaying link
+    to add option-text fields with appropriate drop-down values and text field.
+    </p>
+    <p>
+Ex:
+
+   &lt;table name="EndPoints"&gt;
+        &lt;subheading&gt;
+            &lt;heading&gt;Environments&lt;/heading&gt;
+	&lt;heading&gt;URL&lt;/heading&gt;
+        &lt;/subheading&gt;
+        &lt;field type="option-text" maxoccurs="unbounded"&gt;
+            &lt;name&gt;EndPoint&lt;/name&gt;
+            &lt;values&gt;
+                &lt;value&gt;Unknown&lt;/value&gt;
+	    &lt;value&gt;Dev&lt;/value&gt;
+	    &lt;value&gt;QA&lt;/value&gt;
+                &lt;value&gt;Test&lt;/value&gt;
+            &lt;/values&gt;
+        &lt;/field&gt;
+    &lt;/table&gt;
+       </p>
+       <p>
+This is a normal option-text field with attribute maxoccurs set to unbounded. So with this configuration we are displaying something like following.
+</p>
+    <p><img src="images/heading-7.png" width="742px"/></p>
+<p>
+  So users can click on  Add EndPoint link and add required number of endpoints. As you can see the sub headers are printed after the
+    Add EndPoint link and if you are having more than two sub headers you shouldn't use maxoccurs unbounded field in that table
+    (This is a limitation in the current implementation).
+ Ex:
+</p>
+    <p><img src="images/heading-8.png" width="742px"/></p>
+
+<a name="metadata"></a>
+    <h2>How to Add Service Metadata to Registry</h2>
+<p>
+WSO2 Governance Registry is providing complete Service Metadata Management features with Release 3.0.0 to do a better governance in
+ your SOA system. In the new left panel there are set of operations supported in order to manage service metadata efficiently.
+</p>
+
+<p>We are providing two main operations to manage service metadata in order to do a better governance in users SOA(Service Oriented Architecture) system.</p>
+<li>Importing required Service metadata as Registry resource</li>
+<li>Managing imported Registry Resources</li>
+<p>
+Users can add it's service details in different ways like importing complete set of service details, importing WSDL of set of services in the SOA system,
+ importing Schema's or Policies of set of services in the SOA system. Importing service details can be done using the upper part of the metadata menu which
+ contains the links  Add-&gt;Service, Add-Policy, Add-&gt;WSDL, Add-&gt;Schema.
+</p>
+
+<h2>Add Service</h2>
+<p>
+This service import method is preferred when user doesn't have a proper description about the service with a WSDL but we provide a field
+to import WSDL in to Governance Registry. When user click on Add Service link user will be given a form to fill. Important thing in this 
+form is user can simply reconfigure the default configuration.
+</p>
+<p><img src="images/add_service.png" width="742px"/></p>
+<p>Figure 1: Adding Service </p>
+
+<h3>Configuring &quot;Add Service&quot; UI</h3>
+<p>
+User can configure the set of drop down lists which suit to users SOA system. This can be done by changing the current configuration by 
+editing the content of set of resources in /governance/configuration/. There are set of resources as displayed in Figure 3 which you can 
+browse and edit the XML content of the resource.</p>
+<p><img src="images/configure_service.png" width="492px"/></p>
+<p>Figure 2: Configuring the Service</p>
+<p>                                        
+Ex: 
+Default configuration have drop down list for Service states with the fields of Created Tested Deployed and Deprecated. If user wants to
+add a new Service  in to this drop down list you have to add a new XML element like this in to the XML content  of the resource 
+/governance/configuration/states
+</p>
+<a>
+   &lt;states&gt;Designed&lt;states&gt;
+</a>
+<p>
+After adding new XML element save the content and to find the change, go to add service UI and see the states drop down. Likewise users 
+can configure all the drop downs in the add service UI.Likewise users can configure all the drop downs in the add service UI.
+</p>
+<p>
+In Add Service UI there are set of fields to fill and service name and service Namespace are mandatory. Most of the fields are obvious 
+service informations and if you want to add a WSDL URL you can add it but the information from the WSDL will not be display when you go
+to edit these information. So we prefer you to use add-&gt;WSDL if you have a WSDL in the given resource. And you can add any number of
+endpoints to the given service by clicking add endpoint link and if user try to add more and more endpoints without filling previously 
+added endpoint new endpoint will not be displayed.
+</p>
+<p>
+After successfully adding a new Service user will be directed to newly added resource location which constructed based on the service
+Namespace which user shouldn't concern about. After direction user can see a resource with the given service name and if user give already
+exist service name service import operation will fail.
+</p>
+<a name="policy"></a>
+<h2>Add Policy</h2>
+
+<p>User can add Policy by traversing to the add Policy link. This form contains fields, policy URL and policy name. Governance Registry will automatically suggest a name for the policy once the URL is entered. Policy will be imported as a resource in to the Governance Registry. Successful import will redirect in to  a page which list all the imported policies. </p>
+<a name="wsdl"></a>
+<h2>Add WSDL </h2>
+<p>
+If a WSDL URL is available and you need to import service information to the Governance Registry you can use the &quot;Add WSDL&quot; option provided with the Governance Registry.  Once the URL is provided to the UI, a name is automatically suggested for the resource in Governance Registry. When we import the given WSDL we are extracting certain number of details like service name, service namespaces and service endpoints and
+import the given WSDL as a resource and import a service resource which is very similar to the resource we are creating when user add a service 
+using add service UI. So user can go to that resource and edit the rest of the information user couldn't import through WSDL import operation,
+like Authentication Platform, Authentication Mechanism etc.</p>
+<h3><img src="images/add_wsdl.png" width="743px"/></h3>
+<p>Figure 3: Adding WSDL</p>
+<h3>Validation</h3>
+<p>WSO2 Governance Registry performs WS-I, WSDL validations on the wsdl provided once importing is done. The result is displayed under &quot;properties&quot; section of the imported WSDL resource. </p>
+<p><img src="images/validation.png" width="492px"/></p>
+<p>Figure 4: WSDL validation</p>
+<a name="schema"></a>
+<h2>Add Schema</h2>
+<p>
+Like WSDL importing Governance Registry allow users to add Schema in to registry using add Schema UI. User have to give the schema location in
+to Schema URL and Schema name will be filling very similar in Add WSDL and Add Policy forms. Successful schema import will redirect in to 
+currently available imported schema listing page.</p>
+<h3>Validation</h3>
+<p>Similar to WSDLs, WSO2 Governance Registry performs Schema validations on the wsdl provided once importing is done. The result is displayed under &quot;properties&quot; section of the imported Schema resource. </p>
+<p></p>
+</body>
+
+</html>

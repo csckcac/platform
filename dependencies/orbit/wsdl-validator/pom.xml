@@ -1,0 +1,165 @@
+<!--
+ ~ Copyright (c) 2005-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+
+    <parent>
+        <groupId>org.wso2.carbon</groupId>
+        <artifactId>carbon-dependents</artifactId>
+        <version>4.0.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+   </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.wso2.wsdl.validator.wso2</groupId>
+    <artifactId>wsdl-validator</artifactId>
+    <packaging>bundle</packaging>
+    <name>wsdl-validator.wso2</name>
+    <version>${wsdl-validator.version}.wso2v1</version>
+    <description>
+        org.wso2.wsdl-validator. This bundle will export packages from wsdl-validator.jar
+    </description>
+    <url>http://wso2.org</url>
+
+    <dependencies>
+        <!--<dependency>
+            <groupId>eclipse</groupId>
+            <artifactId>validateutility</artifactId>
+            <version>0.95</version>
+        </dependency>
+
+        --><dependency>
+            <groupId>org.wso2.wsdl.validator</groupId>
+            <artifactId>wsdl-validator</artifactId>
+            <version>${wsdl-validator.version}</version>
+            <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.eclipse.wst.command</groupId>
+                    <artifactId>env</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.core</groupId>
+                    <artifactId>runtime</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.core</groupId>
+                    <artifactId>resources</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.core</groupId>
+                    <artifactId>commands</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.emf</groupId>
+                    <artifactId>common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.emf</groupId>
+                    <artifactId>ecore</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.xsd</groupId>
+                    <artifactId>xsd</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.ant</groupId>
+                    <artifactId>ant</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>wsdl4j</groupId>
+                    <artifactId>wsdl4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-codec</groupId>
+                    <artifactId>commons-codec</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.emf.ecore</groupId>
+                    <artifactId>xmi</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.core</groupId>
+                    <artifactId>expressions</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.osgi</groupId>
+                    <artifactId>util</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>uddi</groupId>
+            <artifactId>uddi4j</artifactId>
+            <version>1.0.1</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j</artifactId>
+            <version>3.8</version>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-Version>${project.version}</Bundle-Version>
+                        <Bundle-Name>${project.artifactId}</Bundle-Name>
+                        <Bundle-Vendor>WSO2 Inc</Bundle-Vendor>
+                        <Bundle-Description>${pom.description}</Bundle-Description>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Export-Package>
+                            org.eclipse.wst.*,
+                        </Export-Package>
+                        <Import-Package>
+                            !org.eclipse.*,
+                            *;resolution:=optional
+                        </Import-Package>
+                        <DynamicImport-Package>*</DynamicImport-Package>
+			<!-- [IMPORTANT] Include-Resource should not contain white spaces or line breaks. If contains, recursive resource inclusion occurs. Correct syntax is similar to the following and every one should stricly follow this.-->
+                        <Include-Resource>@wsdl-validator-1.2.0-SNAPSHOT.jar!/*.properties,@wsdl-validator-1.2.0-SNAPSHOT.jar!/exsd/**,@wsdl-validator-1.2.0-SNAPSHOT.jar!/model/**</Include-Resource>
+                        <Embed-Dependency>
+                            uddi4j|icu4j|runtime;inline=false;
+                        </Embed-Dependency>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <properties>
+        <wsdl-validator.version>1.2.0-SNAPSHOT</wsdl-validator.version>
+    </properties>
+
+</project>

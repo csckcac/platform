@@ -1,0 +1,274 @@
+<!--
+~ Copyright 2005-2008 WSO2, Inc. (http://wso2.com)
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <link href="css/mashup-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body style="direction: ltr;">
+
+        <div id="main-content">
+            <h1>Data Services</h1>
+
+            <p>This document provides information and instructions on creating data
+                services on the WSO2 Mashup Server.
+            </p>
+
+            <p>Data Services allows you to expose data in your relational databases
+                through web services as XML. The database query to XML mapping is done
+                declaratively using an XML configuration file by the user, without doing any
+                coding. You can write the XML configuration yourself, or use the Data Service
+                Wizard in the Mashup Server management console to create Data Service
+                configurations. You can use insert, select, update and delete (CRUD)
+                statements, stored procedures and most of the DDL statements in SQL
+                statements. The result of the query is transformed in to XML format with the
+                user specified structure and is accessible through a Web service operation. A
+                Data service configuration is stored as an XML file with the extension .dbs
+                in your scripts directory.
+            </p>
+
+            <h1>Creating a Data Service</h1>
+            The following instructions show you how to create a RDMBS Data Service using
+            the wizard in the WSO2 Mashup Server. Please refer to the links in the 'further
+            reading' section for details on creating other type of data services.
+            <br/>
+            <ul>
+                <li>Log in to the WSO2 Mashup Server</li>
+                <li>Go to Management Tasks -&gt; Create a new Data Service</li>
+                <li>Data Service wizard will appear.</li>
+            </ul>
+            Right side of the screen will show a preview of the generated Data Service
+            configuration XML.
+            <br/>
+            <br/>
+            <h2>Data Service Step 1</h2>
+
+            <h3>Configuration</h3>
+            Enter Database connection details including driver class, JDBC URL, username
+            and password. The JDBC driver should be available in the WSAS_HOME/lib
+            directory.
+            <br/>
+            <br/>
+            <h2>Data Service - Step 2</h2>
+
+            <h3>Queries</h3>
+            Displays already defined queries
+
+            <h3>SQL Query/Stored Procedure Configuration</h3>
+            Enter the SQL statement with a unique query ID. Query ID is used to bind the
+            query with Web service operations.
+
+            <h3>Input Mappings</h3>
+            Enter input parameters with their types. Parameters can be given at runtime
+            to customize the query results. For example, the SQL query can be given as
+            'select customer_id, name, city from customers where customer_id = ?' Then
+            Input Mapping 'Name' parameter can be sent as an argument when calling the
+            Web service operation.
+
+            <h3>Result to Output Mapping</h3>
+            This section defines the output query results to XML mapping details. For
+            example database query result column 'column_name' should be mapped in to an
+            element 'element-name' in the XML. This is done by element name to column
+            name mapping pairs. Grouping element name is the parent element of the
+            results XML. Row name is the parent element of each query result row.
+            <br/>
+            <strong>Output mapping syntax:</strong>
+
+            <p class="Code">&lt;grouping-element-name&gt;
+                <br/>
+                &lt;row-name&gt;
+                <br/>
+                &lt;element-name-1&gt;column 1 value&lt;/element-name-1&gt;
+                <br/>
+                &lt;element-name-2&gt;column 2 value&lt;/element-name-2&gt;
+                <br/>
+                &lt;/row-name&gt;
+                <br/>
+                &lt;row-name&gt;
+                <br/>
+                &lt;element-name-1&gt;column 1 value&lt;/element-name-1&gt;
+                <br/>
+                &lt;element-name-2&gt;column 2 value&lt;/element-name-2&gt;
+                <br/>
+                &lt;row-name&gt;
+                <br/>
+                &lt;/grouping-element-name&gt;
+                <br/>
+            </p>
+            <br/>
+            <h2>Data Service - Step 3</h2>
+
+            <h3>Operations</h3>
+            Displays already defined Web service operation to query mappings
+
+            <h3>Add/Edit Operation</h3>
+            Enter mappings between Web service operations and queries. This will bind the
+            Web service operations with previously defined SQL queries. You can navigate
+            back and forth between the wizard pages by clicking on 'Back' and 'Next'
+            respectively. Right side of the screen will show a preview of the Data
+            Service configuration XML.
+            <br/>
+            <br/>
+
+            <h1>Modifying a Data Service</h1>
+            <ul>
+                <li>Log in to the WSO2 Mashup Server</li>
+                <li>Select the data service from the list of mashups</li>
+                <li>Click on 'Edit this mashup (Data Service)'</li>
+                <li>Data Service wizard will appear.</li>
+            </ul>
+
+            <h1>Deleting a Data Service</h1>
+            <ul>
+                <li>Log in to the WSO2 Mashup Server</li>
+                <li>Select the data service from the list of mashups</li>
+                <li>Click on the 'Delete this mashup' link and confirm deletion.</li>
+            </ul>
+
+            <h2>Sample Data Service configuration</h2>
+            A sample Data Service configuration XML is shown below.
+
+            <p class="Code">&lt;data name="sales"&gt;
+                <br/>
+                &lt;config&gt;
+                <br/>
+                &lt;property
+                name="org.wso2.ws.dataservice.driver"&gt;com.mysql.jdbc.Driver&lt;/property&gt;
+                <br/>
+                &lt;property
+                name="org.wso2.ws.dataservice.protocol"&gt;jdbc:mysql://server1:3306/sales&lt;/property&gt;
+                <br/>
+                &lt;property name="org.wso2.ws.dataservice.user"&gt;wsas&lt;/property&gt;
+                <br/>
+                &lt;property
+                name="org.wso2.ws.dataservice.password"&gt;wsas&lt;/property&gt;
+                <br/>
+                &lt;/config&gt;
+                <br/>
+                &lt;operation name="getCustomers"&gt;
+                <br/>
+                &lt;call-query href="getCustomersQuery"/&gt;
+                <br/>
+                &lt;/operation&gt;
+                <br/>
+                &lt;operation name="getCustomerById"&gt;
+                <br/>
+                &lt;call-query href="getCustomerByIdQuery"&gt;
+                <br/>
+                &lt;with-param name="customer_id" query-param="customer_id"/&gt;
+                <br/>
+                &lt;/call-query&gt;
+                <br/>
+                &lt;/operation&gt;
+                <br/>
+                &lt;query id="getCustomersQuery"&gt;
+                <br/>
+                &lt;sql&gt;select customer_id, name, city from customers&lt;/sql&gt;
+                <br/>
+                &lt;result element="customers" rowName="customer"&gt;
+                <br/>
+                &lt;element name="customer_id" column="customer_id"/&gt;
+                <br/>
+                &lt;element name="name" column="name"/&gt;
+                <br/>
+                &lt;element name="city" column="city"/&gt;
+                <br/>
+                &lt;/result&gt;
+                <br/>
+                &lt;/query&gt;
+                <br/>
+                &lt;query id="getCustomerByIdQuery"&gt;
+                <br/>
+                &lt;param name="customer_id" sqlType="INTEGER"/&gt;
+                <br/>
+                &lt;sql&gt;select customer_id, name, city from customers where customer_id
+                =?&lt;/sql&gt;
+                <br/>
+                &lt;result element="customers" rowName="customer"&gt;
+                <br/>
+                &lt;element name="customer_id" column="customer_id"/&gt;
+                <br/>
+                &lt;element name="name" column="name"/&gt;
+                <br/>
+                &lt;element name="city" column="city"/&gt;
+                <br/>
+                &lt;/result&gt;
+                <br/>
+                &lt;/query&gt;
+                <br/>
+                &lt;/data&gt;
+            </p>
+
+            <h2>Sample output XML</h2>
+            After deploying this Data Service, 'sales' Web service will have
+            'getCustomers' and 'getCustomerById' operations. 'getCustomers' operation
+            will return query results as shown below.
+
+            <p class="Code">&lt;customers&gt;
+                <br/>
+                &lt;customer&gt;
+                <br/>
+                &lt;customer_id&gt;10&lt;customer_id&gt;
+                <br/>
+                &lt;name&gt;Peter&lt;/name&gt;
+                <br/>
+                &lt;city&gt;London&lt;/city&gt;
+                <br/>
+                &lt;/customer&gt;
+                <br/>
+                &lt;customer&gt;
+                <br/>
+                &lt;customer_id&gt;11&lt;customer_id&gt;
+                <br/>
+                &lt;name&gt;Mark&lt;/name&gt;
+                <br/>
+                &lt;city&gt;New York&lt;/city&gt;
+                <br/>
+                &lt;/customer&gt;
+                <br/>
+                &lt;customer&gt;
+                <br/>
+                &lt;customer_id&gt;12&lt;customer_id&gt;
+                <br/>
+                &lt;name&gt;Jane&lt;/name&gt;
+                <br/>
+                &lt;city&gt;San Jose&lt;/city&gt;
+                <br/>
+                &lt;/customer&gt;
+                <br/>
+                &lt;/customers&gt;
+                <br/>
+            </p>
+            <br/>
+            <h1>Further Reading</h1>
+            The Data Services documentation linked below provides detailed instructions on creating data services for
+            RDBMS, Excel and CSV data sources.
+            <ul>
+                <li>
+                    <a href="rdbms_data_service_guide.html">RDBMS data Source</a>
+                </li>
+                <li>
+                    <a href="csv_data_service_guide.html">CSV data Source</a>
+                </li>
+                <li>
+                    <a href="excel_data_service_guide.html">Excel data Source</a>
+                </li>
+            </ul>
+
+        </div>
+    </body>
+</html>

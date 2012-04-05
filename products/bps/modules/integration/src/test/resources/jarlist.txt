@@ -1,0 +1,7 @@
+repository/components/plugins/org.wso2.carbon.bpel-3.2.0.SNAPSHOT.jar
+repository/components/plugins/batik-1.7.0.wso2v1.jar
+repository/components/plugins/ode-1.3.5.SNAPSHOTwso2v2.jar
+repository/components/plugins/org.apache.openjpa.openjpa-osgi-2.0.0.wso2v1.jar
+repository/components/plugins/org.wso2.carbon.application.mgt.bpel-3.2.0.SNAPSHOT.jar
+repository/components/plugins/org.wso2.carbon.bpel.stub-3.2.0.SNAPSHOT.jar
+repository/components/plugins/org.wso2.carbon.bpel.skeleton-3.2.0.SNAPSHOT.jar

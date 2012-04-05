@@ -1,0 +1,44 @@
+<html>
+<head><title>Email Form</title></head>
+<body>
+<FORM action="controllers/email.jss" method="POST" enctype="application/x-www-form-urlencoded">
+    <TABLE BORDER="0" CELLSPACING="0" CELLPADDING="4" WIDTH="90%">
+        <TR>
+            <TD width="30%">
+                <DIV align="right">
+                    <B>To (Email):</B>
+                </DIV>
+            </TD>
+            <TD width="70%">
+                <INPUT type="text" name="to" size="20" id="to">
+            </TD>
+        </TR>
+        <TR>
+            <TD>
+                <DIV align="right"><B>Subject:</B></DIV>
+            </TD>
+            <TD>
+                <INPUT type="text" name="sub" size="20" id="sub">
+            </TD>
+        </TR>
+        <TR>
+            <TD>
+                <DIV align="right">
+                    <B>Comment:</B>
+                </DIV>
+            </TD>
+            <TD><TEXTAREA name="cont" cols="30" wrap="virtual" rows="4" id="cont">
+            </TEXTAREA>
+            </TD>
+        </TR>
+        <TR>
+            <TD>&nbsp;</TD>
+            <TD>
+                <INPUT type="submit" name="submit" value="Submit">
+                <INPUT type="reset" name="reset" value="Reset">
+            </TD>
+        </TR>
+    </TABLE>
+</FORM>
+</body>
+</html>

@@ -1,0 +1,4 @@
+<%
+var version = post("http://localhost:9763/services/Version");
+print(version);
+%>

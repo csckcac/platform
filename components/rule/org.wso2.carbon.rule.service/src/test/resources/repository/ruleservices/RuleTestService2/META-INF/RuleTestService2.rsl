@@ -1,0 +1,63 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements. See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership. The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied. See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<ruleService name="RuleTestService2">
+    <description>RuleTestService2</description>
+    <ruleset>
+        <x><![CDATA[
+           package RoutingRules2;
+
+           import org.wso2.carbon.rule.samples.Result;
+           import org.wso2.carbon.rule.samples.Symbol;
+           global java.lang.String source
+
+           rule InvokeIBM
+
+           when
+           $symbol : Symbol( symbol == "IBM" )
+           then
+           Result result = new Result();
+           result.setSymbol("WSO2");
+           result.setPrice(925.2193664813152);
+           insert(result);
+           end
+
+           rule InvokeSUN
+
+           when
+           $symbol : Symbol( symbol == "SUN" )
+           then
+           $symbol.setSymbol("MSFT");
+           end
+           ]]>
+        </x>
+    </ruleset>
+    <operation name="getQuote">
+        <with-param type="org.wso2.carbon.rule.samples.Symbol"/>
+        <result>
+            <element type="org.wso2.carbon.rule.samples.Result"/>
+        </result>
+    </operation>
+    <operation name="getQuote2">
+        <with-param type="org.wso2.carbon.rule.samples.Symbol"/>
+        <result>
+            <element type="org.wso2.carbon.rule.samples.Symbol"/>
+        </result>
+    </operation>
+</ruleService>

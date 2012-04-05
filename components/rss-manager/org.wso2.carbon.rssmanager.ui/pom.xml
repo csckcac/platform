@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>org.wso2.carbon</groupId>
+        <artifactId>rss-manager</artifactId>
+        <version>4.0.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.wso2.carbon</groupId>
+    <artifactId>org.wso2.carbon.rssmanager.ui</artifactId>
+    <packaging>bundle</packaging>
+    <name>WSO2 Carbon - RSS Manager UI Bundle</name>
+    <description>WSO2 Carbon - RSS Manager UI Bundle</description>
+    <url>http://wso2.org</url>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Name>${project.artifactId}</Bundle-Name>
+                        <Bundle-Version>${project.version}</Bundle-Version>
+                        <Export-Package>
+                            org.wso2.carbon.rssmanager.ui.*
+                        </Export-Package>
+                        <Import-Package>
+                            org.apache.axis2.*;
+                            version="${axis2.osgi.version.range}",
+                            org.apache.axiom.*;
+                            version="${axiom.osgi.version.range}",
+                            javax.servlet.*;version="2.4.0",
+                            javax.xml.namespace.*;version="0.0.0",
+                            *;resolution:=optional,
+                            !org.wso2.carbon.rssmanager.ui.i18n,
+                            org.wso2.carbon.rssmanager.ui.*;version="${carbon.platform.package.export.version}",
+                            org.wso2.carbon.dbconsole.ui.*
+                        </Import-Package>
+                        <Carbon-Component>UIBundle</Carbon-Component>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ui</artifactId>
+            <version>${carbon.platform.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.axis2.wso2</groupId>
+            <artifactId>axis2</artifactId>
+            <version>${axis2.osgi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.rssmanager.stub</artifactId>
+            <version>${carbon.platform.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.rssmanager.common</artifactId>
+            <version>${carbon.platform.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>

@@ -1,0 +1,13 @@
+<brokerManagerConfiguration xmlns="http://wso2.org/carbon/brokermanager">
+
+    <!--
+    <brokerConfiguraton name="localBroker" type="local"/>
+
+    <brokerConfiguraton name="wsEventServer" type="ws-event">
+         <property name="uri">https://localhost:9444/services/EventBrokerService</property>
+         <property name="username">admin</property>
+         <property name="password">admin</property>
+    </brokerConfiguraton>
+    -->
+
+</brokerManagerConfiguration>

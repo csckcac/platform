@@ -1,0 +1,207 @@
+<!--
+~ Copyright 2005-2008 WSO2, Inc. (http://wso2.com)
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <link href="css/mashup-docs.css" rel="stylesheet" type="text/css" media="all"/>
+        <link type="text/css" rel="stylesheet" href="css/SyntaxHighlighter.css" media="all"/>
+        <script language="javascript" src="js/shCore.js"></script>
+        <script language="javascript" src="js/shBrushJScript.js"></script>
+        <script language="javascript" src="js/shBrushJava.js"></script>
+        <script language="javascript" src="js/shBrushSql.js"></script>
+        <script language="javascript" src="js/shBrushXml.js"></script>
+    </head>
+    <body>
+        <div id="main-content">
+            <h1>IM Host Object</h1>
+
+            <h2>1.0 Introduction</h2>
+
+            <p>The IM object allows users to send out Instant Messages from
+                there
+                mashups. It helps you notify users of certain events and acts
+                as a brigde between mashups and users. Supported IM protocols are MSN,
+                AIM, ICQ, Jabber and Yahoo.
+            </p>
+
+            <p>Note : The Mashup Server does not ship the library used by the
+                yahoo protocol. If you wish to use the Yahoo protocol, please download
+                the
+                <a target="_top" href="https://sourceforge.net/project/showfiles.php?group_id=76691">ymsg
+                    (Yahoo Instant Messager and Chat protocols)
+                </a>
+                library from and
+                add it to the lib directory of the Mashup Server. Please note that this
+                would need a restart of the server.
+            </p>
+
+            <h3>1.1 Example</h3>
+
+            <pre name="code" class="js">
+                function IMExample() {
+                    var im = new IM("msn");
+                    im.login("username@hotmail.com","password");
+                    im.sendMessage("sendTo@hotmail.com","Hi, This was sent from the WSO2 Mashup Server!");
+                    im.disconnect();
+                }
+            </pre>
+
+            <h2>2.0 IM Object</h2>
+
+            <h3>2.1 IM Object Constructor</h3>
+
+            <p>The IM Object which has a single constructor taken in the
+                protocol to be used as an argument to it. Supported values are "msn",
+                "aim", "icq", "jabber" and "yahoo".
+            </p>
+
+            <h3>2.2 IM login method</h3>
+                <p>By passing needed account details as below into the login mothod, user can successfully login.
+                </p>
+
+                <pre name="code" class="js">
+                    var im = new IM("msn");
+                    im.login("username@hotmail.com","password");
+                </pre>
+
+            <h3>2.3 API Documentation</h3>
+
+
+            <table style="margin-left: 0.5in; border-collapse: collapse;" class="MsoTableGrid" border="1"
+                   cellpadding="5" cellspacing="0">
+
+                <tbody>
+
+                    <tr>
+
+                        <td>Member</td>
+
+                        <td>Description</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>
+                            <b>void login</b>
+                            <span style="font-weight: bold;">(String username, String password)</span>
+                        </td>
+
+                        <td>Uses the username and password as credentials to log the user
+                            into the IM server. When the jabber protocol is used the username
+                            should be of the form username@jabberServer.
+                            <br/>
+                            <span style="font-style: italic;">im.login(username, password);</span>
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>
+                            <span style="font-weight: bold;">void sendMessage(String to, String message)</span>
+                        </td>
+
+                        <td>Sends the IM to the specified user.
+                            <br/>
+                            <span style="font-style: italic;">
+                                im.sendMessage(
+                            </span>
+                            <a style="font-style: italic;" class="moz-txt-link-rfc2396E"
+                               href="mailto:keithgchapman@gmail.com">"sendTo@hotmail.com"
+                            </a>
+                            <span style="font-style: italic;">,"Hi,
+                                This was sent from the WSO2 Mashup Server!");
+                            </span>
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>
+                            <span style="font-weight: bold;">void disconnect()</span>
+                        </td>
+
+                        <td>Logs the user out of the IM server.
+                            <br/>
+                            Note: The AIM and ICQ protocols does not allow users to log in and out
+                            frequently. In such a situation these two protocols block the user for
+                            a breif time (Around 10 Minutes).
+                            <br/>
+                            <span style="font-style: italic;">im.disconnect();</span>
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <h2>3.0 Using the IM object in conjection with the session object</h2>
+            <p>
+                If you expect your mashup to send out IMs frequestly it may not be
+                optimal to login each time you need to send a message. Such situations
+                can be combated by using the IM object in conjunction with the session
+                object. The following is an example of such a usage.
+            </p>
+
+
+            <pre name="code" class="js">
+                this.scope="application";
+                function login(){
+                    var im = new IM("msn");
+                    im.login("username@hotmail.com","password");
+                    session.put("im", im);
+                }
+
+                sendMessage.outputType="string";
+                function sendMessage(){
+                    var im = session.get("im");
+                    if (im != null) {
+                        im.sendMessage("sendTo@hotmail.com","Hi, This was sent from the WSO2 Mashup Server!");
+                        return "Message succesfullt sent";
+                    }
+                    return "Message not sent";
+                }
+
+                function disconnect() {
+                    var im = session.get("im");
+                    if (im != null) {
+                        im.disconnect();
+                    }
+                }
+            </pre>
+
+            <h2>4.0 References</h2>
+
+            <ul>
+
+                <li>
+                    <a href="apidocs/org/wso2/mashup/hostobjects/im/IM.html">JavaDoc
+                        for the IM host Object
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+        <script language="javascript">
+            dp.SyntaxHighlighter.BloggerMode();
+            dp.SyntaxHighlighter.HighlightAll('code');
+        </script>
+    </body>
+</html>

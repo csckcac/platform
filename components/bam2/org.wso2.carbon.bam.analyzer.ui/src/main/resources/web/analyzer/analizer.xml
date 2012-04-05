@@ -1,0 +1,34 @@
+<analyzerConfiguration>
+    <analyzerSequence name="workflowSummarizer">
+        <frequencyInSecs>60</frequencyInSecs>
+        <trigger cron="1 * * * * ? *"/>
+        <analyzers>
+            <get name="WorkFlowId">
+                <index name="workFlowId" start="" end=""/>
+                <granularity index="timeStamp" type="hour"/>
+
+            </get>
+            <lookup name="Event"/>
+            <aggregate>
+                <measure name="RequestCount" aggregationType="SUM"/>
+                <measure name="ResponseCount" aggregationType="SUM"/>
+                <measure name="MaximumResponseTime" aggregationType="AVG"/>   
+            </aggregate>
+            <put name="WorkflowResult" dataSource="allKeys"/>
+            <log/>
+
+            <get name="WorkflowResult">
+                <index name="workFlowId" start="" end=""/>
+                <groupBy index="workFlowId"/>
+            </get>
+            <aggregate>
+                <measure name="RequestCount" aggregationType="CUMULATIVE"/>
+                <measure name="ResponseCount" aggregationType="CUMULATIVE"/>
+                <measure name="MaximumResponseTime" aggregationType="AVG"/>
+            </aggregate>
+            <put name="WorkflowAccumilator" dataSource="allKeys"/>
+            <log/>
+            <analyzer class="org.wso2.carbon.bam.analyzer.test.SummaryAnalyzer2"/>
+        </analyzers>
+    </analyzerSequence>
+</analyzerConfiguration>

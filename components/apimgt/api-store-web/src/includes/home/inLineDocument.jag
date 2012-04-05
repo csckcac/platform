@@ -1,0 +1,34 @@
+<html>
+<head>
+<title>Documentation</title>
+              
+<script type="text/javascript" src="../../js/lib/jquery-1.7.1.min.js"></script>
+                       
+
+<script type="text/javascript" src="../../js/serviceStoreApp.js"></script>
+<script type="text/javascript" src="../../js/util.js"></script>
+<script type="text/javascript">
+var apiName = '<%=request.getParameter("apiName")%>';
+var apiProvider = '<%=request.getParameter("apiProvider")%>';
+var apiVersion = '<%=request.getParameter("version")%>';
+var docName = '<%=request.getParameter("docName")%>';
+ServiceStoreApp.currentApiProvider = apiProvider;
+ServiceStoreApp.currentAPIName=apiName;
+ServiceStoreApp.currentApiVersion=apiVersion;
+ServiceStoreApp.currentDocName=docName;
+</script>
+<script type="text/javascript" src="../../js/document/initInline.js"></script>
+<title>InLine Document</title>
+</head>
+<body>
+
+<div id="apiDeatils">  
+<h2>Document</h2>
+
+</div>
+<div id="inlineDoc">
+</div>
+<br>
+
+</body>
+</html>

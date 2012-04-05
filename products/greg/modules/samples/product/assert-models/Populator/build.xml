@@ -1,0 +1,180 @@
+<project name="org.wso2.carbon.registry.samples.populator" default="help" basedir=".">
+    <property name="registry.home" value="/home/eranda/Desktop/wso2greg-4.0.0-SNAPSHOT"/>
+    <property name="class.dir" value="target/classes"/>
+    <property name="people.dir" value="../PeopleModel"/>
+    <property name="process.dir" value="../BusinessProcessModel"/>
+    <property name="test.plan.dir" value="../TestPlanModel"/>
+    <property name="application.dir" value="../ApplicationModel"/>
+    <property name="project.dir" value="../ProjectModel"/>
+    <target name="help">
+        <echo/>
+    </target>
+    <property name="version" value="4.0.0-SNAPSHOT"/>
+
+    <target name="compile" depends="init" description="Compile all Java">
+        <javac srcdir="src" destdir="${class.dir}">
+            <classpath refid="javac.classpath"/>
+        </javac>
+    </target>
+
+    <target name="run-people" depends="jar">
+        <java classname="org.wso2.carbon.registry.samples.populator.Main" classpathref="javac.classpath"
+              fork="true">
+            <sysproperty key="carbon.home"  value="${registry.home}"/>
+            <arg value="-ch" />
+            <arg value="${registry.home}"/>
+            <arg value="-h"/>
+            <arg value="localhost"/>
+            <arg value="-p" />
+            <arg value="9443"/>
+            <arg value="-u" />
+            <arg value="admin"/>
+            <arg value="-pw" />
+            <arg value="admin"/>
+            <arg value="-l" />
+            <arg value="${people.dir}"/>
+        </java>
+    </target>
+
+    <target name="run-process" depends="jar-process, jar">
+        <java classname="org.wso2.carbon.registry.samples.populator.Main" classpathref="javac.classpath"
+              fork="true">
+            <sysproperty key="carbon.home"  value="${registry.home}"/>
+            <arg value="-ch" />
+            <arg value="${registry.home}"/>
+            <arg value="-h"/>
+            <arg value="localhost"/>
+            <arg value="-p" />
+            <arg value="9443"/>
+            <arg value="-u" />
+            <arg value="admin"/>
+            <arg value="-pw" />
+            <arg value="admin"/>
+            <arg value="-l" />
+            <arg value="${process.dir}"/>
+        </java>
+    </target>
+
+    <target name="jar-process" depends="clean-process, compile-process">
+        <jar jarfile="${process.dir}/target/org.wso2.carbon.registry.samples.handler.process-${version}.jar">
+            <fileset dir="${process.dir}/target/classes">
+                <include name="**/*.class"/>
+            </fileset>
+        </jar>
+    </target>
+
+    <target name="clean-process">
+        <delete dir="${process.dir}/target" quiet="true"/>
+        <delete dir="${process.dir}/target/classes" quiet="true"/>
+    </target>
+
+     <target name="compile-process" depends="init-process" description="Compile all Java">
+        <javac srcdir="${process.dir}/src" destdir="${process.dir}/target/classes">
+            <classpath refid="javac.classpath"/>
+        </javac>
+    </target>
+
+    <target name="init-process">
+        <mkdir dir="${process.dir}/target/classes"/>
+        <path id="javac.classpath">
+            <fileset dir="${registry.home}/repository/lib">
+                <include name="**/*.jar"/>
+            </fileset>
+            <fileset dir="${registry.home}/bin">
+                <include name="*.jar"/>
+            </fileset>
+             <fileset dir="${registry.home}/repository/components/plugins">
+                <include name="*.jar" />
+            </fileset>
+        </path>
+    </target>
+
+    <target name="run-test-plan" depends="jar">
+        <java classname="org.wso2.carbon.registry.samples.populator.Main" classpathref="javac.classpath"
+              fork="true">
+            <sysproperty key="carbon.home"  value="${registry.home}"/>
+            <arg value="-ch" />
+            <arg value="${registry.home}"/>
+            <arg value="-h"/>
+            <arg value="localhost"/>
+            <arg value="-p" />
+            <arg value="9443"/>
+            <arg value="-u" />
+            <arg value="admin"/>
+            <arg value="-pw" />
+            <arg value="admin"/>
+            <arg value="-l" />
+            <arg value="${test.plan.dir}"/>
+        </java>
+    </target>
+
+
+    <target name="run-application" depends="jar">
+        <java classname="org.wso2.carbon.registry.samples.populator.Main" classpathref="javac.classpath"
+              fork="true">
+            <sysproperty key="carbon.home"  value="${registry.home}"/>
+            <arg value="-ch" />
+            <arg value="${registry.home}"/>
+            <arg value="-h"/>
+            <arg value="localhost"/>
+            <arg value="-p" />
+            <arg value="9443"/>
+            <arg value="-u" />
+            <arg value="admin"/>
+            <arg value="-pw" />
+            <arg value="admin"/>
+            <arg value="-l" />
+            <arg value="${application.dir}"/>
+        </java>
+    </target>
+
+    <target name="run-project" depends="jar">
+        <java classname="org.wso2.carbon.registry.samples.populator.Main" classpathref="javac.classpath"
+              fork="true">
+            <sysproperty key="carbon.home"  value="${registry.home}"/>
+            <arg value="-ch" />
+            <arg value="${registry.home}"/>
+            <arg value="-h"/>
+            <arg value="localhost"/>
+            <arg value="-p" />
+            <arg value="9443"/>
+            <arg value="-u" />
+            <arg value="admin"/>
+            <arg value="-pw" />
+            <arg value="admin"/>
+            <arg value="-l" />
+            <arg value="${project.dir}"/>
+        </java>
+    </target>
+
+    <target name="init">
+        <mkdir dir="${class.dir}"/>
+        <path id="javac.classpath">
+            <pathelement path="${class.dir}"/>
+            <fileset dir="${registry.home}/repository/lib">
+                <include name="**/*.jar"/>
+            </fileset>
+            <fileset dir="${registry.home}/bin">
+                <include name="*.jar"/>
+            </fileset>
+             <fileset dir="${registry.home}/repository/components/plugins">
+                <include name="*.jar" />
+            </fileset>
+        </path>
+    </target>
+
+    <target name="clean">
+        <delete dir="target" quiet="true"/>
+        <delete dir="${class.dir}" quiet="true"/>
+    </target>
+
+    <target name="jar" depends="clean, compile">
+        <jar jarfile="target/${ant.project.name}-${version}.jar">
+            <fileset dir="target/classes">
+                <include name="**/*.class"/>
+            </fileset>
+        </jar>
+        <copy file="target/${ant.project.name}-${version}.jar" todir="dist" overwrite="true" />
+    </target>
+
+</project>

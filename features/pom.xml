@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ ~ Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ Licensed under the Apache License, Version 2.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~      http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>org.wso2.carbon</groupId>
+        <artifactId>platform-parent</artifactId>
+        <version>4.0.0-SNAPSHOT</version>
+        <relativePath>../parent/pom.xml</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>carbon-features</artifactId>
+    <packaging>pom</packaging>
+    <name>WSO2 Carbon - Features Aggregator Module</name>
+    <url>http://wso2.org</url>
+
+    <licenses>
+        <license>
+            <name>Apache License Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+
+    <organization>
+        <name>WSO2 Inc</name>
+        <url>http://wso2.org</url>
+    </organization>
+
+    <modules>
+        <module>admin-mgt</module>
+        <module>captcha-mgt</module>
+        <module>service-mgt</module>
+        <module>security-mgt</module>
+        <module>logging-mgt</module>
+        <module>transport-mgt</module>
+        <module>message-flows</module>
+        <module>rm</module>
+        <module>synapse</module>
+        <module>soap-tracer</module>
+        <module>rule</module>
+        <module>xkms</module>
+        <module>caching</module>
+        <module>module-mgt</module>
+        <module>axis2-repo-mgt</module>
+        <module>service-hosting</module>
+        <module>sts</module>
+        <module>throttle</module>
+        <module>system-statistics</module>
+        <module>transport-statistics</module>
+        <module>data-sources</module>
+        <module>mediation-initializer</module>
+        <module>mediation-statistics</module>
+        <module>mediation-tracer</module>
+        <module>mediation</module>
+        <!--module>eventing</module-->
+        <module>event</module>
+        <module>synapse-config-admin</module>
+        <module>synapse-artifact-uploader</module>
+        <module>scheduled-tasks</module>
+        <module>endpoints</module>
+        <module>localentry</module>
+        <module>sequence-editor</module>
+        <module>proxyadmin</module>
+        <module>cluster-mgt</module>
+        <module>dashboard</module>
+        <module>registry</module>
+        <module>ws-discovery</module>
+        <module>mashup</module>
+        <module>bam</module>
+        <module>bam-data-publishers</module>
+        <module>reporting</module>
+        <module>priority-mediation</module>
+        <module>multiple-instance</module>
+        <module>message-relay</module>
+        <module>mediators</module>
+        <module>profile-management</module>
+        <module>claim-management</module>
+        <module>identity</module>
+        <module>humantask</module>
+        <module>bpel</module>
+        <module>authenticators</module>
+        <module>gadgets</module>
+        <module>tryit</module>
+        <module>xfer</module>
+        <module>mex</module>
+        <module>webapp-mgt</module>
+        <module>jaxws-webapp-mgt</module>
+        <module>application-mgt</module>
+        <module>application-deployers</module>
+        <module>remote-usermgt</module>
+        <module>wsdl-tools</module>
+        <module>transports</module>
+        <module>messagebox</module>
+        <module>qpid</module>
+		<module>agent</module>
+        <module>data-services</module>
+        <module>ldap-server-manager</module>
+        <module>ldap-server</module>
+        <module>broker</module>
+        <module>broker-manager</module>
+        <module>cep</module>
+        <module>cassandra</module>
+        <module>stratos</module>
+        <module>unified-endpoint</module>
+        <module>csg</module>
+        <module>dbconsole</module>
+        <module>issue-tracker</module>
+        <module>deployment-synchronizer</module>
+        <module>ec2-client</module>
+        <module>esb-mediation</module>
+        <module>rss-manager</module>
+        <module>coordination</module>
+        <module>ntask</module>
+        <module>transaction-manager</module>
+        <module>rest-api</module>
+		<module>jaggery</module>
+        <!--module>apimgt</module-->
+		<module>andes</module>
+	<module>data-agents</module>
+	<module>bam2</module>
+	<module>gadget-ide</module>
+        <!-- Add new features above. You should also include your newly-added-feature/s in features/repository/pom.xml  -->
+    </modules>
+    <build>
+        <plugins>
+            <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-resources-plugin</artifactId>
+               <version>2.5</version> 
+            </plugin>
+        </plugins>
+    </build>
+
+
+    <scm>
+        <connection>
+            scm:svn:https://wso2.org/repos/wso2/trunk/carbon/components
+        </connection>
+        <developerConnection>
+            scm:svn:https://wso2.org/repos/wso2/trunk/carbon/components
+        </developerConnection>
+    </scm>
+
+    <properties>
+        <wso2carbon.version>4.0.0-SNAPSHOT</wso2carbon.version>
+        <service.mgt.version>${wso2carbon.version}</service.mgt.version>
+        <registry.core.feature.version>${wso2carbon.version}</registry.core.feature.version>
+        <registry.social.feature.version>${wso2carbon.version}</registry.social.feature.version>
+        <identity.user.profile.feature.version>${wso2carbon.version}
+        </identity.user.profile.feature.version>
+        <event.core.feature.version>${wso2carbon.version}</event.core.feature.version>
+        <governance.metadata.feature.version>${wso2carbon.version}
+        </governance.metadata.feature.version>
+        <security.mgt.feature.version>${wso2carbon.version}</security.mgt.feature.version>
+        <identity.core.feature.version>${wso2carbon.version}</identity.core.feature.version>
+
+        <mediation.initializer.feature.version>${wso2carbon.version}
+        </mediation.initializer.feature.version>
+        <transport.mgt.feature.version>${wso2carbon.version}</transport.mgt.feature.version>
+        <endpoint.feature.version>${wso2carbon.version}</endpoint.feature.version>
+        <scheduled.task.feature.version>${wso2carbon.version}</scheduled.task.feature.version>
+        <datasources.feature.version>${wso2carbon.version}</datasources.feature.version>
+        <sequence.feature.version>${wso2carbon.version}</sequence.feature.version>
+        <governance.metadata.feature.version>${wso2carbon.version}
+        </governance.metadata.feature.version>
+        <discovery.core.feature.version>${wso2carbon.version}</discovery.core.feature.version>
+        <dashboard.gadgetrepopopulator.feature.version>${wso2carbon.version}
+        </dashboard.gadgetrepopopulator.feature.version>
+        <registry.extensions.feature.version>${wso2carbon.version}
+        </registry.extensions.feature.version>
+        <openid4java.wso2.version>0.9.6.wso2v1</openid4java.wso2.version>
+        <smack.wso2.version>3.0.4.wso2v1</smack.wso2.version>
+        <smackx.wso2.version>3.0.4.wso2v1</smackx.wso2.version>
+        <gdata-core.wso2.version>1.0.0.wso2v1</gdata-core.wso2.version>
+        <sun-xacml.wso2.version>2.0.1.wso2v1</sun-xacml.wso2.version>
+        <opensaml.wso2.version>1.1.0.wso2v1</opensaml.wso2.version>
+        <opensaml2.wso2.version>2.4.1.wso2v1</opensaml2.wso2.version>
+        <commons-httpclient.wso2.version>3.1.0.wso2v1</commons-httpclient.wso2.version>
+        <httpcomponents-httpclient.wso2.version>4.1.1-wso2v1
+        </httpcomponents-httpclient.wso2.version>
+        <httpcomponents-httpcore.wso2.version>4.1.0-wso2v1</httpcomponents-httpcore.wso2.version>
+        <google.step2.wso2.version>1.0.wso2v1</google.step2.wso2.version>
+        <google.guice.wso2.version>3.0.wso2v1</google.guice.wso2.version>
+        <jdom.wso2.version>1.0.0.wso2v1</jdom.wso2.version>
+        <synapse.version>2.1.0-wso2v6</synapse.version>
+        <scxml.version>0.9.0.wso2v1</scxml.version>
+        <wsdl.validator.version>1.2.0-SNAPSHOT.wso2v1</wsdl.validator.version>
+        <zookeeper.wso2.version>3.3.4.wso2v1</zookeeper.wso2.version>
+        <quartz2.wso2.version>2.1.1.wso2v1</quartz2.wso2.version>
+        <google.guava.wso2.version>11.0.1.wso2v1</google.guava.wso2.version>
+    </properties>
+
+</project>

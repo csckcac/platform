@@ -1,0 +1,4 @@
+instructions.configure = \
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/features/org.wso2.carbon.coordination.core_${feature.version}/conf/coordination-client-config.xml,target:${installFolder}/../conf/advanced/coordination-client-config.xml,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/features/org.wso2.carbon.coordination.core_${feature.version}/conf);
+

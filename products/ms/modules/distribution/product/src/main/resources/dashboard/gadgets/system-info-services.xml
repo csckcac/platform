@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<Module>
+	<ModulePrefs title="System Information - Services" height="300"
+		description="Displays the information pertaining to deployed services" author="Hiranya Jayathilaka"
+		author_email="hiranya@wso2.com" author_affiliation="WSO2"
+		author_location="Colombo, Sri Lanka">
+		<Require feature="setprefs"/>
+		<Require feature="tabs"/>
+		<Require feature="dynamic-height"/>
+		<Require feature="views"/>
+	</ModulePrefs>
+    <UserPref name="interval" display_name="Refresh interval (ms)"
+		default_value="6000" datatype="int"></UserPref>
+	<Content type="html" view="default">
+    <![CDATA[
+    <html>
+    <head>
+    <style type="text/css">
+                table#serverTable {
+                    display: none !important;
+                }
+                table#userTable {
+                    display: none !important;
+                }
+                table#vmTable {
+                    display: none !important;
+                }
+                table#registryTable {
+                    display: none !important;
+                }
+                p {
+                    display: none;
+                }
+            </style>
+            <link rel="stylesheet" type="text/css" href="css/gadgets.css"/>
+    </head>
+    <body>
+		<div id="systemInfoDiv">
+		    <p>&nbsp;</p>
+            <div id="result">Loading...</div>
+            <script type="text/javascript" src="js/jquery.js"></script>
+            <script type="text/javascript" src="js/gadget-utils.js"></script>
+            <script type="text/javascript">
+                var frontendURL = getFrontendURL(location.href);
+                jQuery.noConflict();
+                function refreshStats() {
+                    var url = getFrontendURL(location.href) + '/carbon/statistics/system_stats_ajaxprocessor.jsp';
+                    var data = null;
+                    try {
+                        jQuery.ajax({
+                            url: frontendURL + "/carbon/admin/jsp/session-validate.jsp",
+                            type: "GET",
+                            dataType: "html",
+                            data: data,
+                            complete: function(res, status){
+                                if (res.responseText.search(/----valid----/) != -1) {
+                                    jQuery("#result").load(url, null, function (responseText, status, XMLHttpRequest) {
+                                        if (status != "success") {
+                                            stopRefreshStats();
+                                        }
+                                        var table = document.getElementById('serviceSummaryTable');
+                                        document.getElementById('result').innerHTML = table.parentNode.innerHTML; 
+                                        gadgets.window.adjustHeight();
+                                    });
+                                } else {
+                                    stopRefreshStats();
+                                }
+                            }
+                        });
+                    } catch (e) {
+                    } // ignored
+                }
+                function stopRefreshStats() {
+                    if (refresh) {
+                        clearInterval(refresh);
+                    }
+                }
+                try {
+                    var prefs = new gadgets.Prefs();
+                    var interval = prefs.getInt('interval');
+                    if (interval == '') {
+                        interval = 6000;
+                    }
+                    jQuery(document).ready(function() {
+                        refreshStats();
+                        if (document.getElementById('systemInfoDiv').style.display == '') {
+                            refresh = setInterval("refreshStats()", interval);
+                        }
+                    });
+                } catch (e) {
+                } // ignored
+            </script>
+        </div>
+        </body>
+    </html>
+	]]>
+	</Content>
+</Module>

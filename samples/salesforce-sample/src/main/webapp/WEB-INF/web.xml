@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         id="WebApp_ID" version="3.0">
+    <context-param>
+        <param-name>configPath</param-name>
+        <param-value>WEB-INF/credentials.xml</param-value>
+    </context-param>
+    <context-param>
+        <param-name>defaultUsername</param-name>
+        <param-value>sumedhas@wso2.com</param-value>
+    </context-param>
+    <context-param>
+        <param-name>defaultPassword</param-name>
+        <param-value>wso2generalrnWh25A8I1mN1AkjR7b43YBdW</param-value>
+    </context-param>
+    <servlet>
+        <display-name>SalesforceApp</display-name>
+        <servlet-name>SalesForceLoginServlet</servlet-name>
+        <servlet-class>org.wso2.salesforce.webapp.servlet.SalesForceLoginServlet</servlet-class>
+
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SalesForceLoginServlet</servlet-name>
+        <url-pattern>/SalesForceLoginServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <display-name>GoogleServiceProviderServlet</display-name>
+        <servlet-name>GoogleServiceProviderServlet</servlet-name>
+        <servlet-class>org.wso2.salesforce.webapp.servlet.GoogleServiceProviderServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GoogleServiceProviderServlet</servlet-name>
+        <url-pattern>/GoogleServiceProviderServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <display-name>OTLoginServlet</display-name>
+        <servlet-name>OTLoginServlet</servlet-name>
+        <servlet-class>org.wso2.salesforce.webapp.servlet.OTLoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>OTLoginServlet</servlet-name>
+        <url-pattern>/OTLoginServlet</url-pattern>
+    </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>login.jsp</welcome-file>
+    </welcome-file-list>
+
+    <!--<filter>-->
+        <!--<filter-name>SessionFilter</filter-name>-->
+        <!--<filter-class>-->
+            <!--org.wso2.salesforce.webapp.servlet.SessionFilter-->
+        <!--</filter-class>-->
+        <!--<init-param>-->
+            <!--<param-name>avoid-urls</param-name>-->
+            <!--<param-value>login.jsp</param-value>-->
+        <!--</init-param>-->
+    <!--</filter>-->
+    <!--<filter-mapping>-->
+        <!--<filter-name>SessionFilter</filter-name>-->
+        <!--<url-pattern>/*</url-pattern>-->
+    <!--</filter-mapping>-->
+
+    <!--<security-constraint>-->
+    <!--<web-resource-collection>-->
+    <!--<web-resource-name>salesforce-webapp</web-resource-name>-->
+    <!--<description>Entire Application</description>-->
+    <!--<url-pattern>/salesforce/*</url-pattern>-->
+    <!--</web-resource-collection>-->
+
+    <!--<user-data-constraint>-->
+    <!--<transport-guarantee>CONFIDENTIAL</transport-guarantee>-->
+    <!--</user-data-constraint>-->
+    <!--</security-constraint>-->
+
+    <!--<login-config>-->
+    <!--<auth-method>FORM</auth-method>-->
+    <!--<realm-name>Form-Based Authentication Area</realm-name>-->
+    <!--<form-login-config>-->
+    <!--<form-login-page>/login.jsp</form-login-page>-->
+    <!--<form-error-page>/login.jsp</form-error-page>-->
+    <!--</form-login-config>-->
+    <!--</login-config>-->
+
+    <!--<security-constraint>-->
+             <!--<display-name>SecurityConstraint</display-name>-->
+            <!--<web-resource-collection>-->
+                  <!--<web-resource-name>WRCollection</web-resource-name>-->
+                 <!--<url-pattern>/salesforce/*</url-pattern>-->
+         <!--</web-resource-collection>-->
+            <!--<auth-constraint>-->
+                  <!--<role-name>TutorialUser</role-name>-->
+            <!--</auth-constraint>-->
+            <!--<user-data-constraint>-->
+                <!--<transport-guarantee>CONFIDENTIAL</transport-guarantee>-->
+            <!--</user-data-constraint>-->
+       <!--</security-constraint>-->
+      <!--<login-config>-->
+            <!--<auth-method>FORM</auth-method>-->
+         <!--<form-login-config>-->
+                  <!--<form-login-page>/login.jsp</form-login-page>-->
+                 <!--<form-error-page>/login.jsp</form-error-page>-->
+          <!--</form-login-config>-->
+     <!--</login-config>-->
+     <!--<security-role>-->
+        <!--<role-name>TutorialUser</role-name>-->
+    <!--</security-role>-->
+</web-app>

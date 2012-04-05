@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>@product.name@ - Extensions - Iterable ForEach</title>
+        <link href="../css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+         <h1>Iterable ForEach</h1>
+         <ul>
+            <li><a href="#IterableForEach-Introduction">Introduction</a></li>
+            <li><a href="#IterableForEach-ProcessingMultipleBranchesForEach">Processing Multiple Branches - ForEach</a></li>
+        </ul>
+        <br />
+        <h2>
+            <a name="IterableForEach-Introduction"></a>
+            Introduction
+        </h2>
+        <p>
+            This extension simplifies a common usage pattern in which forEach is used to iterate over a selected
+            sequence of nodes. The common use case involves selecting a sequence of nodes, storing it in a scope
+            variable, and using forEach to iterate over that sequence, using the current counter value to extract and
+            operate on the indexed value from the sequence. This extension captures the pattern in a form that's easier
+            to author and debug, by replacing counter with iterator and eliminating the use of temporary variables.
+        </p>
+        <br />
+        <h2>
+            <a name="IterableForEach-ProcessingMultipleBranchesForEach"></a>
+            Processing Multiple Branches - ForEach
+        </h2>
+        <p>
+            The &lt;forEach&gt; activity will execute its contained &lt;scope&gt; activity exactly M times where M is
+            the number of items in the &lt;sequenceValue&gt;.
+        </p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;forEach</span> <span style="color: #000066;">rangeName</span>=<span style="color: #ff0000;">&quot;BPELVariableName&quot;</span> <span style="color: #000066;">parallel</span>=<span style="color: #ff0000;">&quot;yes|no&quot;</span></span>
+<span style="color: #009900;">   standard-attributes<span style="color: #000000; font-weight: bold;">&gt;</span></span>
+   standard-elements
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;sequenceValue</span> <span style="color: #000066;">expressionLanguage</span>=<span style="color: #ff0000;">&quot;anyURI&quot;</span>? <span style="color: #000066;">instanceOf</span>=<span style="color: #ff0000;">&quot;sequenceType&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+      unsigned-integer-expression
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/sequenceValue<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;completionCondition<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>?
+      <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;branches</span> <span style="color: #000066;">expressionLanguage</span>=<span style="color: #ff0000;">&quot;anyURI&quot;</span>?</span>
+<span style="color: #009900;">         <span style="color: #000066;">successfulBranchesOnly</span>=<span style="color: #ff0000;">&quot;yes|no&quot;</span><span style="color: #000000; font-weight: bold;">?&gt;</span></span>?
+         unsigned-integer-expression
+      <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/branches<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/completionCondition<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;scope</span> ...<span style="color: #000000; font-weight: bold;">&gt;</span></span>...<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/scope<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/forEach<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        </pre>
+        <p>
+            When the &lt;forEach&gt; activity is started, the expression in &lt;sequenceValue&gt; is evaluated. Once
+            that value is returned it remains constant for the lifespan of the activity. That expressions MUST return a
+            sequence of items (meaning it comprises nodes, texts or atomic values), where each item can be validated to
+            be the type specified by the instanceOf attribute. If that expression does not return a valid sequence value,
+            a bpel:invalidExpressionValue fault will be thrown
+            (see <a href="http://docs.oasis-open.org/wsbpel/2.0/OS/wsbpel-v2.0-OS.html#_Toc164738497">section 8.3. Expressions</a>).
+            If the &lt;sequenceValue&gt; is empty, then the child &lt;scope&gt; activity MUST NOT be performed and the
+            &lt;forEach&gt; activity is complete.
+        </p>
+        <p>
+            The child activity of a &lt;forEach&gt; MUST be a &lt;scope&gt; activity. The &lt;forEach&gt; construct
+            introduces an implicit range variable, and also introduces dynamic parallelism (i.e. having parallel branches
+            of which number is not known ahead of time). The &lt;scope&gt; activity provides a well-defined scope
+            snapshot semantic and a way to name the dynamic parallel work for compensation purposes (see scope snapshot
+            description in section 12.4.2. Process State Usage in Compensation Handlers).
+        </p>
+        <p>
+            If the value of the parallel attribute is no then the activity is a serial &lt;forEach&gt;. The enclosed
+            &lt;scope&gt; activity MUST be executed M times, each instance starting only after the previous repetition
+            is complete. If premature termination occurs such as due to a fault, or the completion condition evaluates
+            to true, then this M requirement does not apply. During each repetition, a variable of type specified by the
+            instanceOf attribute is implicitly declared in the &lt;forEach&gt; activity's child &lt;scope&gt;. This
+            implicit variable has the name specified in the rangeVariableName attribute. The first iteration of the
+            scope will see the range variable initialized to the first item in &lt;sequenceValue&gt;. The next iteration
+            will cause the range variable to be initialized to the second item in &lt;sequenceValue&gt;. Each subsequent
+            iteration will move the range variable to the next item in the sequence until the final iteration where the
+            range will be set to the last item in &lt;sequenceValue&gt;. The range variable is local to the enclosed
+            &lt;scope&gt; and although its value can be changed during an iteration, that value will be lost at the end
+            of each iteration. Therefore, the range variable value will not affect the value of the next iteration's range.
+        </p>
+        <p>
+            If the value of the parallel attribute is yes then the activity is a parallel &lt;forEach&gt;. The enclosed
+            &lt;scope&gt; activity MUST be concurrently executed M times. In essence an implicit &lt;flow&gt; is
+            dynamically created with M copies of the &lt;forEach&gt;'s enclosed &lt;scope&gt; activity as children. Each
+            copy of the &lt;scope&gt; activity will have the same range variable declared in the same manner as specified
+            for serial &lt;forEach&gt;. Each instance's range variable MUST be uniquely initialized in parallel to one
+            of the item values starting with first and up to and including the last item in &lt;sequenceValue&gt;, as a
+            part of &lt;scope&gt; instantiation.
+        </p>
+        <p>
+            If a variable of the same name as the value of the rangeName attribute is declared explicitly in the
+            enclosed scope, it would be considered a case of duplicate variable declaration and MUST be reported as an
+            error during static analysis.
+        </p>
+        <p>
+            The &lt;forEach&gt; activity without a &lt;completionCondition&gt; completes when all of its child
+            &lt;scope&gt;'s have completed. The &lt;completionCondition&gt; element is optionally specified to prevent
+            some of the children from executing (in the serial case), or to force early termination of some of the
+            children (in the parallel case).
+        </p>
+        <p>
+            The &lt;branches&gt; element represents an unsigned-integer expression
+            (see <a href="http://docs.oasis-open.org/wsbpel/2.0/OS/wsbpel-v2.0-OS.html#_Ref136686477">section 8.3.4. Unsigned Integer Expressions</a>)
+            used to define a completion condition of the "at least N out of M" form. The actual value B of the expression
+            is calculated once, at the beginning of the &lt;forEach&gt; activity. It will not change as the result of
+            the &lt;forEach&gt; activity's execution. At the end of execution of each directly enclosed &lt;scope&gt;
+            activity, the number of completed children is compared to B, the value of the &lt;branches&gt; expression.
+            If at least B children have completed, the &lt;completionCondition&gt; is triggered: No further children will
+            be started, and currently running children will be terminated (see
+            <a href="http://docs.oasis-open.org/wsbpel/2.0/OS/wsbpel-v2.0-OS.html#_Toc164738528">section 12.6 Termination Handlers</a>).
+            Note that enforcing the semantic of "exactly N out of M" in parallel &lt;forEach&gt; would involve a race
+            condition, and is therefore not specified.
+        </p>
+        <p>
+            When the completion condition B is calculated, if its value is larger than the number of directly enclosed
+            activities M, then the standard bpel:invalidBranchCondition fault MUST be thrown. Both B and M may be
+            constant expressions, and in such cases, static analysis SHOULD reject processes where it can be detected
+            that B is greater than M.
+        </p>
+        <p>
+            The &lt;branches&gt; element has an optional successfulBranchesOnly attribute with the default value of no.
+            If the value of successfulBranchesOnly is no, all &lt;scope&gt;'s which have completed (successfully or
+            unsuccessfully) MUST be counted. If successfulBranchesOnly is yes, only &lt;scope&gt;'s which have completed
+            successfully MUST be counted.
+        </p>
+        <p>
+            The &lt;completionCondition&gt; is evaluated each time a directly enclosed &lt;scope&gt; activity completes.
+            If the &lt;completionCondition&gt; evaluates to true, the &lt;forEach&gt; activity completes:
+        </p>
+        <ul>
+            <li>When the &lt;completionCondition&gt; is fulfilled for a parallel &lt;forEach&gt; activity, all still
+                running directly enclosed &lt;scope&gt; activities MUST be terminated (see <a href="http://docs.oasis-open.org/wsbpel/2.0/OS/wsbpel-v2.0-OS.html#_Toc164738528">section 12.6 Termination Handlers</a>).</li>
+            <li>When the &lt;completionCondition&gt; is fulfilled for a serial &lt;forEach&gt; activity, further child
+                &lt;scope&gt;'s MUST NOT be instantiated, and the &lt;forEach&gt; activity completes.</li>
+        </ul>
+        <p>
+            If upon completion of a directly enclosed &lt;scope&gt; activity, it can be determined that the
+            &lt;completionCondition&gt; can never be true, the standard bpel:completionConditionFailure fault MUST be
+            thrown.
+        </p>
+        <p>
+            When a &lt;completionCondition&gt; does not have any sub-elements or attributes understood by the
+            WS-BPEL processor, it MUST be treated as if the &lt;completionCondition&gt; does not exist.
+        </p>
+    </body>
+</html>

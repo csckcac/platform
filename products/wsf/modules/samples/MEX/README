@@ -1,0 +1,34 @@
+WSO2 WSF/Java
+=============
+
+Sample : MEX Client
+===================
+
+This is a client which can invoke the MEX service sample which comes with the WSO2
+Application Server. This sample demonstrates how to write a client to invoke a Web Service using
+WS-MetadataExchange standards.
+
+If you want to run the sample, you have to host the MEX service in a running WSO2
+AppServer instance. There are different options to achieve that.
+
+1. Download WSO2 AppServer and deploy the service.
+2. Create a tenant in WSO2 Cloud infrastructure (Stratos) and deploy the service in AppServer
+   cloud service.
+3. Deploy the service in WSO2 AppServer AMI.
+
+
+Running the client
+==================
+
+1. Run "ant" on WSF_HOME/samples/MEX directory.
+2. Use the script run-client.sh or run-client.bat file to invoke the client.
+
+   ex: ./run-client.sh
+
+   Following optional parameters can be used when running the client
+
+	-e	    : Endpoint URL of the service
+	-help	: For Help
+
+If you want more details on how to deploy the service etc, please download the WSO2 Application
+Server Documentation Distribution and refer to the MEX sample document.

@@ -1,0 +1,89 @@
+
+This product is licensed by WSO2 Inc. under Apache License 2.0. The license
+can be downloaded from the following locations:
+	http://www.apache.org/licenses/LICENSE-2.0.html
+	http://www.apache.org/licenses/LICENSE-2.0.txt
+
+This product also contains software under different licenses. This table below
+all the contained libraries (jar files) and the license under which they are 
+provided to you.
+
+At the bottom of this file is a table that shows what each license indicated
+below is and where the actual text of the license can be found.
+
+Name                                                                            Type           License   
+---------------------------------------------------------------------------------------------------------
+axiom-1.2.11.wso2v1.jar                                                         bundle         apache2   
+axis2-1.6.1.wso2v1.jar                                                          bundle         apache2   
+axis2-jaxbri-1.6.1-wso2v1.jar                                                   bundle         apache2   
+axis2-jibx-1.6.1-wso2v1.jar                                                     bundle         apache2   
+axis2-json-1.6.1-wso2v1.jar                                                     bundle         apache2   
+axis2-transport-jms-1.1.0-wso2v4.jar                                            bundle         apache2   
+backport-util-concurrent-3.1.jar                                                jar            apache2   
+bcel-5.2.jar                                                                    jar            apache2   
+bcprov-jdk15-132.jar                                                            jar            mit   
+bcprov-jdk15-132.jar                                                            jarinbundle    bouncy    
+commons-codec-1.3.jar                                                           jar            apache2   
+commons-dbcp-1.2.2.jar                                                          jar            apache2   
+commons-fileupload-1.2.jar                                                      jar            apache2   
+commons-httpclient-3.1.jar                                                      jar            apache2   
+commons-io-2.0.jar                                                              bundle         apache2   
+commons-lang-2.3.jar                                                            jar            apache2   
+commons-logging-1.1.1.jar                                                       jar            apache2   
+commons-pool-1.5.jar                                                            bundle         apache2   
+geronimo-annotation_1.0_spec-1.1.jar                                            jar            apache2   
+geronimo-jaxws_2.1_spec-1.0.jar                                                 bundle         apache2   
+geronimo-jta_1.1_spec-1.1.jar                                                   jar            apache2   
+geronimo-ws-metadata_2.0_spec-1.1.2.jar                                         bundle         apache2   
+httpcore-4.1-alpha1.jar                                                         jar            apache2   
+jaxb-api-2.1.jar                                                                jar            apache2   
+jaxb-impl-2.1.7.jar                                                             jar            cddl1     
+jaxb-xjc-2.1.7.jar                                                              jar            cddl1     
+jettison-1.1.jar                                                                bundle         apache2   
+jibx-bind-1.2.1.jar                                                             jar            apache2   
+jibx-run-1.2.1.jar                                                              jar            apache2   
+log4j-1.2.13.jar                                                                jar            apache2   
+mex-1.6.1-wso2v1-impl.jar                                                       bundle         apache2   
+neethi-2.0.4-wso2v2.jar                                                         bundle         apache2   
+opensaml-1.1.406.jar                                                            jarinbundle    apache2   
+opensaml-2.2.3.jar                                                              jarinbundle    apache2   
+opensaml2-2.0.0.alpha1-wso2v1.jar                                               bundle         apache2   
+openws-1.2.2.jar                                                                jarinbundle    apache2   
+org.wso2.carbon.utils-3.2.0.jar                                                 bundle         apache2   
+org.wso2.securevault-1.0.0.jar                                                  bundle         apache2   
+rampart-core-1.6.1.wso2v1.jar                                                   bundle         apache2   
+rampart-policy-1.6.1.wso2v1.jar                                                 bundle         apache2   
+rampart-trust-1.6.1.wso2v1.jar                                                  bundle         apache2   
+sandesha2-core-1.6.1-wso2v1.jar                                                 bundle         apache2   
+sandesha2-persistence-1.6.1-wso2v1.jar                                          bundle         apache2   
+sandesha2-policy-1.6.1-wso2v1.jar                                               bundle         apache2   
+sandesha2-rampart-integration-1.6.1-wso2v1.jar                                  bundle         apache2   
+savan-core-1.1.0-wso2v1.jar                                                     bundle         apache2   
+slf4j-log4j12-1.4.3.jar                                                         jarinbundle    apache2   
+woden-1.0.0.M8-wso2v1.jar                                                       bundle         apache2   
+wsdl4j-1.6.2-wso2v2.jar                                                         bundle         cpl1      
+wso2mex-2.2.jar                                                                 jar            apache2   
+wso2xfer-3.2.0.jar                                                              jar            apache2   
+wss4j-1.5.11.wso2v1.jar                                                         bundle         apache2   
+xalan-2.7.0.wso2v1.jar                                                          bundle         apache2   
+xercesImpl-2.8.1.wso2v2.jar                                                     bundle         apache2   
+xkms-2.5.jar                                                                    jar            apache2   
+xmlbeans-2.3.0.jar                                                              jarinbundle    apache2   
+xmlbeans-2.3.0.jar                                                              jar            apache2   
+XmlSchema-1.4.7-wso2v1.jar                                                      bundle         apache2   
+xmltooling-1.2.0.jar                                                            jarinbundle    apache2   
+
+
+
+The license types used by the above libraries and their information is given below:
+
+cpl1           Common Public License 1.0
+               http://www.eclipse.org/legal/cpl-v10.html
+apache2        Apache License Version 2.0
+               http://www.apache.org/licenses/LICENSE-2.0.html
+cddl1          Common Development and Distribution License
+               http://www.opensource.org/licenses/cddl1.php
+bouncy         Bouncy Castle License
+               http://www.bouncycastle.org/licence.html
+mit            MIT License
+               http://www.opensource.org/licenses/mit-license.php

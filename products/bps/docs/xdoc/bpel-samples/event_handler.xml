@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>@product.name@ - Sample Guide - Event Handler</title>
+        <link href="../css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+        <h1>Sample Guide - Event Handler</h1>
+        <h3>Table of Content</h3>
+        <ul>
+            <li><a href="#objective">Objective</a></li>
+            <li><a href="#prerequisites">Prerequisites</a></li>
+            <li><a href="#overallIdea">Overall Idea</a></li>
+        </ul>
+
+        <br />
+        <h3><a name="objective">Objective</a></h3>
+	
+	<p>
+Event handlers are part of the process definitions and they can be defined at either the scope (local) or process (global) levels and they remain active as long as their enclosing scope or process remains active. Event Handlers define how the process will deal with events that occur independently of the process itself. An Event Handler's event is triggered when a defined event occurs, either a message event or an alarm event. The message events are triggered by an incoming message, whereas Alarms are triggered by either a deadline or duration.
+
+A definition of an event handler has two parts:
+<ul>
+<li>Conditions under which an event handler is to be invoked. It defines the type of the event handler.</li>
+	<ol>
+	<li> An onEvent event handler handles the occurrence of an external message event. This is the invocation of an operation.</li>
+	<li> An onAlarm event handler handles the expiration of a timeout.</li></ol>
+<li>Actions the event handler has to take. It defines the implementation of the event handler or the business logic.</li></ul>	
+An event handler is statically enforced to contain at least one &lt;onEvent&gt; or &lt;onAlarm&gt; element. The portType attribute on &lt;onEvent&gt; is optional. If the portType attribute is included, the value of the portType attribute must match with the portType value implied by the value of the partnerLink's myRole attribute. All instances of &lt;onEvent&gt; must use exactly one of messageType, element or &lt;fromParts&gt;.
+The activity enclosed within &lt;onEvent&gt; and &lt;onAlarm&gt; must be a &lt;scope&gt;.
+        </p>
+
+        <br />
+        <h3><a name="prerequisites">Prerequisites</a></h3>
+
+        <ul>
+            <li>Log in into BPS server admin console.</li>
+            <li>Under Business Processes -&gt; Add BPEL.</li>
+            <li>Upload the SampleEventHandler.zip, (located at <a href="https://svn.wso2.org/repos/wso2/trunk/carbon/products/bps/modules/samples/product/src/main/resources/bpel/2.0/SampleEventHandlers/">sample repository</a>.)</li>
+            <li>Under the Business Processes -&gt; Processes.</li>
+            <li>Under the WSDL details widget -&gt; Create instance</li>
+        </ul>
+        <br />
+        <h3><a name="overallIdea">Overall Idea</a></h3>
+
+<p>
+A sample Event Handler Syntax has shown below.
+</p>
+
+<pre style='color:#000000;background:#ffffff;'>
+<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '><b>eventHandlers</b></span><span style='color:#a65700; '>&gt;</span>?
+	<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>!-- Note: There must be at least one onEvent or onAlarm. --</span><span style='color:#a65700; '>&gt;</span>
+	<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>onEvent partnerLink="NCName" portType="QName"? operation="NCName"
+			( messageType="QName" | element="QName" )?
+			variable="BPELVariableName"? messageExchange="NCName"?</span><span style='color:#a65700; '>&gt;</span>*
+		<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>correlations</span><span style='color:#a65700; '>&gt;</span>?
+			<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>correlation set="NCName" initiate="yes|join|no"? </span><span style='color:#a65700; '>/&gt;</span>+
+		<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>correlations</span><span style='color:#a65700; '>&gt;</span>
+		<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>fromParts</span><span style='color:#a65700; '>&gt;</span>?
+			<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>fromPart part="NCName" toVariable="BPELVariableName" </span><span style='color:#a65700; '>/&gt;</span>+
+		<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>fromParts</span><span style='color:#a65700; '>&gt;</span>
+		<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>scope ...</span><span style='color:#a65700; '>&gt;</span>...<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>scope</span><span style='color:#a65700; '>&gt;</span>
+	<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>onEvent</span><span style='color:#a65700; '>&gt;</span>
+	<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>onAlarm</span><span style='color:#a65700; '>&gt;</span>*
+		( <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>for expressionLanguage="anyURI"?</span><span style='color:#a65700; '>&gt;</span>duration-expr<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>for</span><span style='color:#a65700; '>&gt;</span> |
+		<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>until expressionLanguage="anyURI"?</span><span style='color:#a65700; '>&gt;</span>deadline-expr<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>until</span><span style='color:#a65700; '>&gt;</span> )?
+		<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>repeatEvery expressionLanguage="anyURI"?</span><span style='color:#a65700; '>&gt;</span>duration-expr
+		<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>repeatEvery</span><span style='color:#a65700; '>&gt;</span>?
+		<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>scope ...</span><span style='color:#a65700; '>&gt;</span>...<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>scope</span><span style='color:#a65700; '>&gt;</span>
+	<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>onAlarm</span><span style='color:#a65700; '>&gt;</span>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '><b>eventHandlers</b></span><span style='color:#a65700; '>&gt;</span>
+
+</pre>
+
+<p>It has an onEvent definition section and an onAlarm definition section. It is required to have either an OnMessage or an OnAlarm defined for an Event Handler. The Event Handler section can have a Correlation Set as the Event Handler is part of the conversation with one of our partners and the Correlation Set will continue to maintain the ongoing conversation&#39;s integrity. The onEvent section is followed by an &#34;onAlarm&#34; activity definition. The OnAlarm can be based on either a duration (eg: wait for 2 hours) or a deadline (eg: wait until 2 PM) and has an optional &#34;repeatEvery&#34; setting which allows a duration alarm to reset after being triggered.
+</p>
+
+</body>
+</html>

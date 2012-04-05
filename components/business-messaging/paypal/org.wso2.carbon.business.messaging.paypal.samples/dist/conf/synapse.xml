@@ -1,0 +1,79 @@
+<!--
+  ~  Copyright (c) 2005-2008, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  ~
+  -->
+
+<definitions xmlns="http://ws.apache.org/ns/synapse">
+
+    <registry provider="org.wso2.carbon.mediation.registry.WSO2Registry">
+        <!--all resources loaded from the URL registry would be cached for this number of milli seconds -->
+        <parameter name="cachableDuration">15000</parameter>
+    </registry>
+	
+    <localEntry key="service_url">https://api.sandbox.paypal.com/2.0/</localEntry>
+
+	<proxy name="PayPalProxy">
+	  
+		<target>
+			<inSequence>
+				<paypal>
+					<credentials namespace="urn:ebay:apis:eBLBaseComponents" ns-prefix="urn1" >
+						<username  xpath="//ns:Username"  xmlns:ns="http://wso2.services.samples"/>
+						<password  xpath="//ns:Password"  xmlns:ns="http://wso2.services.samples"/>
+						<signature xpath="//ns:Signature" xmlns:ns="http://wso2.services.samples"/>
+					</credentials>
+					<operation name="GetBalanceReq" >
+						<input-wrapper name="GetBalanceRequest" namespace="urn:ebay:api:PayPalAPI" ns-prefix="urn" />
+						<inputs>
+							<input name="Version" namespace="urn:ebay:apis:eBLBaseComponents" ns-prefix="urn1" 
+							       source-xpath="//ns:Version" xmlns:ns="http://wso2.services.samples"/>
+						</inputs>
+						<outputs>
+						
+						<output source-xpath="//ns2:GetBalanceResponse" target-xpath="//soapenv:Body" 
+									xmlns:ns2="urn:ebay:api:PayPalAPI"  xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"/>		
+						</outputs>
+					</operation>
+				</paypal>
+				<log level="full" />
+				<property name="RESPONSE" value="true" action="set"/>
+				<header name="To" action="remove"/>
+				<send/>
+			</inSequence>
+		</target>
+	</proxy>
+	
+    <sequence name="main">
+        <in>
+            <!-- Log all messages passing through -->
+            <log level="full"/>
+
+            <!-- ensure that the default configuration only sends if it is one of samples -->
+            <!-- Otherwise Synapse would be an open proxy by default (BAD!)               -->
+            <filter source="get-property('To')" regex="http://localhost:9000.*">
+                <!-- Send the messages where they have been sent (i.e. implicit "To" EPR) -->
+                <send/>
+            </filter>
+        </in>
+        <out>
+            <send/>
+        </out>
+    </sequence>
+    <sequence name="fault">
+        <log/>
+    </sequence>
+</definitions>

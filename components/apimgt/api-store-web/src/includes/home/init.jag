@@ -1,0 +1,57 @@
+<%
+include("/services/registryAPI.jag");
+
+var user = getUser();
+var username = null;
+if (user.data && user.data.username) {
+    username = user.data.username;
+} else {
+    var result = login("public", "public");
+    if (result.error == "false") {
+        username = "public";
+        //response.addHeader("Set-Cookie", result.data.cookie);
+    }
+}
+username = username ? "\"" + username + "\"" : null;
+
+var services = getAllPublishedAPIs();
+if(!services.error) {
+    services = stringify(services);
+} else {
+    services = null;
+}
+
+var topRated = getTopRatedAPIs('5');
+if (!topRated.error) {
+	log("TopRated Log");
+    topRated = stringify(topRated);
+} else {
+    topRated = null;
+}
+
+var recentlyAdded = getRecentlyAddedAPIs('5');
+if (!recentlyAdded.error) {
+    recentlyAdded = stringify(recentlyAdded);
+} else {
+    recentlyAdded = null;
+}
+
+var tagCloud = getAllTags();
+if (!tagCloud.error) {
+    tagCloud = stringify(tagCloud);
+} else {
+    tagCloud = null;
+}
+
+
+%>
+
+var username = <%=username%>;
+var services = <%=services%>;
+
+
+var tagCloud = <%=tagCloud%>;
+var recentlyAdded = <%=recentlyAdded%>;
+var topRated = <%=topRated%>;
+var activePage = "servicesList";
+var activeTag;

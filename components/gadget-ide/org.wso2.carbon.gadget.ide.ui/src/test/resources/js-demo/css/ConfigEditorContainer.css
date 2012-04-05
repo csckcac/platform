@@ -1,0 +1,12 @@
+.gide-configcontainer-terminalout{
+    float: right;
+    width: 49%;
+}
+.gide-configcontainer-terminalin{
+    float: left;
+    width: 49%;
+}
+.gide-configcontainer-terminalend{
+    clear: both;
+}
+

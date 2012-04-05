@@ -1,0 +1,103 @@
+/*
+*  Copyright (c) 2005-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*
+*  WSO2 Inc. licenses this file to you under the Apache License,
+*  Version 2.0 (the "License"); you may not use this file except
+*  in compliance with the License.
+*  You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing,
+* software distributed under the License is distributed on an
+* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+* KIND, either express or implied.  See the License for the
+* specific language governing permissions and limitations
+* under the License.
+*/
+package org.wso2.carbon.hdfs.datanode;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hdfs.server.datanode.DataNode;
+import org.wso2.carbon.utils.ServerConstants;
+
+import java.io.File;
+
+/**
+ * Start/Stop HDFS Data Node
+ */
+public class HDFSDataNode {
+
+    private static Log log = LogFactory.getLog(HDFSDataNode.class);
+
+    private static final String CORE_SITE_XML = "core-site.xml";
+    private static final String HDFS_DEFAULT_XML = "hdfs-default.xml";
+    private static final String HDFS_SITE_XML = "hdfs-site.xml";
+    private static final String HADOOP_POLICY_XML = "hadoop-policy.xml";
+
+    private Thread thread;
+
+    public HDFSDataNode() {
+        Configuration conf = new Configuration(false);
+        String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
+
+        String hadoopCoreSiteConf = carbonHome + File.separator + "repository" + File.separator +
+                                    "conf" + File.separator + "advanced" + File.separator + CORE_SITE_XML;
+        String hdfsCoreDefaultConf = carbonHome + File.separator + "repository" + File.separator +
+                                  "conf" + File.separator + "advanced" + File.separator + HDFS_DEFAULT_XML;
+        String hdfsCoreSiteConf = carbonHome + File.separator + "repository" + File.separator +
+                                  "conf" + File.separator + "advanced" + File.separator + HDFS_SITE_XML;
+        String hadoopPolicyConf = carbonHome + File.separator + "repository" + File.separator +
+                                  "conf" + File.separator + "advanced" + File.separator + HADOOP_POLICY_XML;
+
+        conf.addResource(new Path(hadoopCoreSiteConf));
+        conf.addResource(new Path(hdfsCoreDefaultConf));
+        conf.addResource(new Path(hdfsCoreSiteConf));
+        conf.addResource(new Path(hadoopPolicyConf));
+
+        try {
+            DataNode datanode = DataNode.createDataNode(null, conf, null);
+            DataNode.runDatanodeDaemon(datanode);
+        } catch (Throwable e) {
+            log.error(e);
+            //System.exit(-1);
+        }
+    }
+
+    /**
+     * Starts the Hadoop Data Node
+     */
+    public void start() {
+        thread = new Thread(new Runnable() {
+            public void run() {
+                if (log.isDebugEnabled()) {
+                    log.debug("Activating the Hadoop Data Node");
+                }
+                new HDFSDataNode();
+            }
+        }, "HadoopDataController");
+        try {
+            Thread.sleep(30000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        thread.start();
+
+    }
+
+    /**
+     * Stops the Hadoop Data Node
+     */
+    public void shutdown() {
+        if (log.isDebugEnabled()) {
+            log.debug("Deactivating the Hadoop Data Node");
+        }
+        try {
+            thread.join();
+        } catch (InterruptedException ignored) {
+        }
+    }
+}

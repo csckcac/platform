@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>@product.name@ - Extensions - External Variables</title>
+        <link href="../css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+        <h1>External Variables</h1>
+
+        <ul>
+            <li><a href="#ExternalVariables-DeclaringExternalVariablesintheProcessDefinition">Declaring External Variables in the Process Definition</a></li>
+            <li><a href="#ExternalVariables-IncompleteKeys">Incomplete Keys</a></li>
+            <li><a href="#ExternalVariables-JDBCMapping">JDBC Mapping</a></li>
+        </ul>
+        <br />
+        <h2>
+            <a name="ExternalVariables-DeclaringExternalVariablesintheProcessDefinition"></a>
+            Declaring External Variables in the Process Definition
+        </h2>
+
+        <p>
+            <b>NOTE: </b>External variables are only available in @product.name@ 1.1.x
+        </p>
+        <p>
+            Syntax:
+        </p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;scope<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;variables</span> <span style="color: #000066;">xmlns:xvar</span>=<span style="color: #ff0000;">&quot; http://ode.apache.org/externalVariables&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+     <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;variable</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;ext-var-name&quot;</span> <span style="color: #000066;">element</span>=<span style="color: #ff0000;">&quot;ext-var-type&quot;</span> <span style="color: #000066;">xvar:id</span>=<span style="color: #ff0000;">&quot;ext-var-id&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;xvar:key-map</span> <span style="color: #000066;">key</span>=<span style="color: #ff0000;">&quot;key-id&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>*
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;expression<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>key-expression<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/expression<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/xvar:key-map<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+     <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/variable<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/variables<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/scope<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        </pre>
+        <p>
+            External variables are declared in the &lt;variables&gt; section of the &lt;scope&gt; element, just like
+            normal variables. However, unlike regular variables, external variables must specify the additional xvar:id
+            attribute. This attribute identifies the variable as an external variable and links the external variable's
+            declaration to the external variable's configuration in the deployment descriptor.
+        </p>
+        <p>
+            In addition to this attribute, an external variable may also define a set of key mappings by nesting xvar:key-map
+            elements within the declaration. The key mappings are a collection of name-expression pairs that is used to
+            create a composite key (identity) for the external variable. This composite key is used to retrieve the
+            correct "instance" of the variable from the underlying storage. The key mappings are BPEL expressions
+            ( i.e. XPath expressions) that are evaluated once, at the time that the scope is instantiated. Therefore,
+            the "identity" of an external variable is determined during scope creation, and cannot be changed by the
+            process (for qualifications see Incomplete Keys below).
+        </p>
+        <p>
+            Finally, any external variables must be of an "element" type, with a schema conforming to the requirements
+            of the underlying storage mechanism.
+        </p>
+        <p>
+            Consider the following example:
+        </p>
+        <pre class="xml" style="font-family:monospace;">.
+.
+.
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;scope<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;variables<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;variable</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;customer&quot;</span> <span style="color: #000066;">element</span>=<span style="color: #ff0000;">&quot;myns:CustomerElement&quot;</span> <span style="color: #000066;">xvar:id</span>=<span style="color: #ff0000;">&quot;customer1&quot;</span> <span style="color: #000000; font-weight: bold;">&gt;</span></span>
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;xvar:key-map</span> <span style="color: #000066;">key</span>=<span style="color: #ff0000;">&quot;customer-id&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+       <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;expression<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>$order/customerid<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/expression<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/xvar:key-map<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/variables<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/scope<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+.
+.
+.
+        </pre>
+        <p>
+            In the above, the "customer" variable is an external variable. The key for the external variable is derived
+            from the value of the customerid element in the "order" variable. Note that the "order" variable must be
+            declared in a scope above the scope declaring the "customer" external variable, otherwise it would not be
+            possible to resolve the identify of the "customer" variable. In this scenario, the external variable can be
+            "read" even if it was never assigned to in the process.
+        </p>
+        <br />
+        <h2>
+            <a name="ExternalVariables-IncompleteKeys"></a>
+            Incomplete Keys
+        </h2>
+
+        <p>
+            It is not required that the full identity of the external variable be resolved at scope creation. For
+            example, an external variable may correspond to a database row where the identity is generated by the
+            database during an insert operation. In such a scenario the key mapping can be omitted, and the identity of
+            the external variable will be unknown until the variable is assigned to. Any attempt to access the variable
+            before the first assignment will result in an uninitialized variable fault. In general it is possible to
+            specify external variables where some portions of the identity are determined using the key mappings and
+            some using some other (implementation-specific) mechanism. In any case, if when the variable is read, the
+            key is incomplete an initialised variable fault will result.
+        </p>
+        <br />
+        <h2>
+            <a name="ExternalVariables-JDBCMapping"></a>
+            JDBC Mapping
+        </h2>
+        <p>
+            <a href="bpel_external-variables_jdbc_mapping.html">External Variables - JDBC Mapping</a>
+        </p>
+    </body>
+</html>

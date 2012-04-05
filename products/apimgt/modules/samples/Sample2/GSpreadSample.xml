@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api xmlns="http://ws.apache.org/ns/synapse" name="GSpreadSample" context="/gs">
+       <resource methods="GET" uri-template="/customers">
+            <inSequence>
+                <property name="REST_URL_POSTFIX" scope="axis2" action="remove"/>
+                <send>
+                    <endpoint name="customer_search">
+                        <address uri="http://data.stratoslive.wso2.com/services/t/apimanagertest.com/GSpreadSample/getCustomers"/>
+                    </endpoint>
+                </send>
+            </inSequence>
+            <outSequence>
+                <send/>
+            </outSequence>
+        </resource>
+        <handlers>
+            <handler class="org.wso2.carbon.api.handler.throttle.RestAPIThrottleHandler">
+                <property name="id" value="B"/>
+                <property name="policyKey" value="conf:/BasicMediatorThrottle_policy.xml"/>
+            </handler>
+        </handlers>
+</api>
+

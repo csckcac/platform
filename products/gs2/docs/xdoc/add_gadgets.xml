@@ -1,0 +1,66 @@
+<!--
+  ~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <body>
+        <p>[<a href="http://wso2.org/downloads/gadget-server">Download</a>]
+            | [<a href="index_docs.html">Documentation Home</a>] | [<a href="release_notes.html">Release Note</a>]
+        </p>
+        <div id="main-content">
+        <h1>Adding Gadgets to the Portal</h1>
+        <p>Gadget addition has two flavours, adding gadgets to an anonymous user's portal and adding gadgets to signed-in user's portal.
+        </p>
+        <h2>Gadgets by an anonymous user</h2>
+        <p>For
+an anonymous user, gadget addition has a few limitations. The user will
+not be able to browse the gadget repository and he/she will not be able
+to add gadgets from urls. The gadgets that can be added by the
+anonymous user are defined by the portal administrator. <br />
+            <br />
+            <img alt="ann-portal" src="images/ann-portal-add-gadget.png" />
+        </p>
+        <h2>Adding gadgets to a signed-in user's portal</h2>
+        <p>The signed in user has two options when adding gadgets to the portal page.
+            <br />
+            <ol>
+                <li>Add gadgets using a <span style="font-style: italic;">URL</span>.<br />
+</li>
+                <li>Add gadgets via the <span style="font-style: italic;">Enterprise Gadget Repository</span>.<br />
+</li>
+            </ol>
+        </p>
+        <a name="url" />
+        <h3>Adding gadgets using a <span style="font-style: italic;">URL</span></h3>
+        <p>Any gadget written according to the <span style="font-style: italic;">Google Gadgets Specification</span> and publicly accessible via an HTTP
+            url can be added to the WSO2 Gadget Server portal by entering its URL.
+            <br />
+            <br />
+            <img alt="ann-portal" src="images/add-url.png" />
+        </p>
+        <a name="repo_add" />
+        <h3>Add gadgets via the <span style="font-style: italic;">Enterprise Gadget Repository</span>.</h3>
+        <p>Users can add gadgets from the repository, which are added by the administrator. Each gadget can be rated
+            and commented on by the users.
+            <br />
+            <br />
+            <img alt="ann-portal" src="images/gadget-repo.png" />
+            <br />
+            <br />
+            <img alt="ann-portal" src="images/gadget-page.png" />
+        </p>
+        </div>
+    </body>
+</html>

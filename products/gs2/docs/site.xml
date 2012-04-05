@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<project name="WSO2 Gadget Server">
+    <body>
+        <links>
+            <item name="Axis2/Java" href="http://ws.apache.org/axis2"/>
+            <item name="Axiom" href="http://ws.apache.org/commons/axiom/index.html"/>
+            <item name="Rampart" href="http://ws.apache.org/rampart/index.html"/>
+            <item name="Sandesha2" href="http://ws.apache.org/sandesha/sandesha2/index.html"/>
+            <item name="Neethi" href="http://ws.apache.org/commons/neethi/index.html"/>
+            <item name="Apache WS" href="http://ws.apache.org"/>
+            <item name="Apache	" href="http://www.apache.org"/>
+        </links>
+
+        <menu name="WSO2 Gadget Server 1.3.0">
+            <item name="Release Notes" href="release_notes.html"/>
+            <item name="Contents" href="index_docs.html"/>
+            <item name="Home" href="index.html"/>
+        </menu>
+
+        <menu name="Downloads">
+            <item name="Releases" href="http://wso2.org/downloads/gadget-server"/>
+        </menu>
+
+        <menu name="Documentation">
+            <item name="Installation Guide" href="installation_guide.html"/>
+            <item name="Build From Source" href="installation_src.html"/>
+        </menu>
+
+        <menu name="Administrative Tasks">
+            <item name="User and Portal Permissions" href="permission.html"/>
+            <item name="Gadget Repository" href="gadget_repo.html"/>
+	    <item name="Role Based Gadgets" href="role_based_gadgets.html"/>
+            <item name="Gadget Archive Deployment" href="gadget_archive_deployment.html"/>
+        </menu>
+
+        <menu name="Portal User Tasks">
+            <item name="User Registration" href="user_reg.html">
+                <item name="Username / Password Based" href="user_reg.html#unpw"/>
+                <item name="OpenID based" href="user_reg.html#openid"/>
+                <item name="Inforcard Based" href="user_reg.html#infocard"/>
+            </item>
+            <item name="Anonymous Mode" href="anoynimous_mode.html"/>
+            <item name="Signed-In Mode" href="signedin_mode.html"/>
+            <item name="Adding Gadgets to Portal" href="add_gadgets.html">
+                <item name="Via URL" href="add_gadgets.html#url"/>
+                <item name="Via Repository" href="add_gadgets.html#repo_add"/>
+            </item>
+            <item name="Organizing the Portal" href="org_portal.html">
+		<item name="Managing Portal Themes" href="org_portal.html#theme"/>
+                <item name="Configuring Gadgets" href="org_portal.html#gconf"/>
+                <item name="Tabs/Custom Layouts/ Cloning" href="org_portal.html#tabs"/>
+                <item name="Moving / Coping Gadget" href="org_portal.html#cp-mv"/>
+                <item name="Finding Gadget Details" href="org_portal.html#about"/>
+            </item>
+	 
+               
+        </menu>
+
+        <menu name="Gadget Authoring">
+            <item name="Hello World Gadget" href="gadget_authoring.html#hello"/>
+	    <item name="SOAP Request Gadget" href="gadget_authoring.html#SOAP"/>
+	    <item name="OAuth Support" href="gadget_authoring.html#OAuth"/>
+	    <item name="Inter Gadget Communication" href="gadget_authoring.html#igc"/>
+            <item name="Gadget Spec" href="gadget_authoring.html#gSpec"/>
+            <item name="API Reference" href="gadget_authoring.html#gApi"/>
+        </menu>
+
+        <menu name="Get Involved" ref="overview.html">
+            <item name="Checkout the Source" href="source-repository.html"/>
+            <item name="Mailing Lists" href="mail-lists.html"/>
+        </menu>
+
+        <menu name="Project Information">
+            <item name="License"
+                  href="http://www.apache.org/licenses/LICENSE-2.0.html"/>
+        </menu>
+
+        <menu name="Other References">            
+            <item name="WSO2 Oxygen Tank Library" href="http://wso2.org/library/gadget"/>
+            <item name="Gadget Server Community Forum" href="http://wso2.org/forum/966"/>
+        </menu>
+    </body>
+</project>

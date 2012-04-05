@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+        <title>
+            @product.name@ - WS-BPEL Compliance
+        </title>
+        <link href="css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body xml:lang="en">
+        <h1>
+            WS-BPEL 2.0 Specification Compliance
+        </h1>
+        <p>This page provides information on @product.name@'s compliance to the final WS-BPEL 2.0 specification released by
+            OASIS.
+        </p>
+        <h2>Variables</h2>
+        <h3>Initialization</h3>
+        <p>Variable initialization using in-line from-spec is fully supported. (<a
+                href="http://docs.oasis-open.org/wsbpel/2.0/OS/wsbpel-v2.0-OS.html#_Toc164738495">WS-BPEL 2.0 Section
+            8.1</a>)
+        </p>
+        <h3>External Variables</h3>
+        <p>In addition to regular variables that are managed by the engine according to the BPEL specification, Ode adds
+            support for variables whose content is stored externally yet transparently accessible from the engine. See
+            External Variables for more information. <!--TODO: External variable test and doc. -->
+        </p>
+        <h2>Activities</h2>
+        <p>Divergences from the
+            <a
+                    href="http://docs.oasis-open.org/wsbpel/2.0/OS/wsbpel-v2.0-OS.html">WS-BPEL 2.0
+                specification
+            </a>
+            for each standard BPEL activity is described under this section.
+        </p>
+        <h3>&lt;receive&gt;</h3>
+        <p>There are several major issues with support for the &lt;receive&gt; activity.</p>
+
+        <p>@product.name@ does not yet support the &lt;fromPart&gt; syntax. Therefore, the variable attribute must be used.
+            Furthermore, only message variables can be referenced with the variable attribute, whereas the
+            <a
+                    href="http://docs.oasis-open.org/wsbpel/2.0/OS/wsbpel-v2.0-OS.html">specification
+            </a>
+            permits referencing of an element-typed variable if the WSDL for the request message contains a single
+            element-typed part.
+        </p>
+
+        <p>Multiple start activities as described in section <a
+                href="http://docs.oasis-open.org/wsbpel/2.0/OS/wsbpel-v2.0-OS.html#_Toc164738506">10.4</a>, and
+            <a href="http://docs.oasis-open.org/wsbpel/2.0/OS/wsbpel-v2.0-OS.html#_Toc164738541">15.4</a>
+            of the <a
+                    href="http://docs.oasis-open.org/wsbpel/2.0/OS/wsbpel-v2.0-OS.html">specification</a>) are
+            not officially
+            supported. This precludes the use of initiate="join".
+        </p>
+
+        <p>@product.name@ does not provide the ordering guarantees described in section
+            <a
+                    href="http://docs.oasis-open.org/wsbpel/2.0/OS/wsbpel-v2.0-OS.html#_Toc164738506">10.4
+            </a>
+            of the<a
+                    href="http://docs.oasis-open.org/wsbpel/2.0/OS/wsbpel-v2.0-OS.html"> specification</a>.
+            Also, it
+            does
+            not enforce the ordering requirements described in the same section. Hence, the BPEL code
+        </p>
+        <pre xml:space="preserve">
+            &lt;flow&gt;
+            &lt;receive ... createInstance="yes" /&gt;
+            &lt;assign ... /&gt;
+            &lt;/flow&gt;
+        </pre>
+        <p>is illegal according to the BPEL specification, but allowed by @product.name@.</p>
+        <p>The specification defines two standard faults ? bpel:conflictingRequest and bpel:conflictingReceive ? to deal
+            with two similar error conditions relating to multiple outstanding requests on a single
+            partner-link/operation/messageExchange tuple. @product.name@ does not distinguish between these two conditions and
+            conflictingReceive is thrown whenever either of the conditions occurs. That is to say, in certain cases a
+            conflictingReceive indicates a conflictingRequest, and conflictingRequest is never thrown.
+        </p>
+        <p>Finally, the validate attribute, if present is ignored: @product.name@ currently provides no variable
+            validation.
+        </p>
+        <h3>&lt;reply&gt;</h3>
+        <p>The conformance issues with the &lt;reply&gt; activity mirror those of the &lt;receive&gt; activity as
+            described above: the &lt;toPart&gt; syntax is not supported, and variable attributes must reference
+            message-typed variables.
+        </p>
+        <h3>&lt;invoke&gt;</h3>
+        <p>Again, as in the &lt;receive&gt; and &lt;reply&gt; activities, the &lt;toPart&gt; and &lt;fromPart&gt;
+            syntax are not supported. Similarly, the inputVariable and outputVariable attributes must reference
+            message-typed variables. Here too, the validate attribute is ignored.
+        </p>
+        <h3>&lt;<a href="bpel_assign.html">assign</a>&gt;</h3>
+        <p>The WS-BPEL 2.0 specification requires the &lt;<a href="bpel_assign.html">assign</a>&gt; activity to be atomic. Currently in @product.name@, each
+            &lt;copy&gt;
+            is atomic.
+        </p>
+        <p>The specification also provides for validating variables at the end of an assignment using the validate
+            attribute. @product.name@ does not support this. This means that the bpel:invalidVariables fault is never thrown
+            by an
+            &lt;assign&gt; activity.
+        </p>
+        <p>Inline assignment as part of the variable declaration isn't currently supported.</p>
+        <p>Ode currently uses the expressionLanguage attribute to determine the language used in assignments instead of
+            using the queryLanguage attribute.
+        </p>
+        <p>There are no other known divergences from the specification relating to the &lt;assign&gt; activity that
+            would prevent the execution of valid BPEL assignments. @product.name@ provides certain (non-standard) extensions
+            to the
+            &lt;assign&gt; activity that do not conform to the specification's requirements for assignment extensions.
+            Consult the reference page for the &lt;assign&gt; activity for further details regarding non-standard
+            extensions.
+        </p>
+        <h3>&lt;throw&gt;</h3>
+        <p>The &lt;throw&gt; activity is fully compliant with the specification.</p>
+
+        <h3>&lt;exit&gt;</h3>
+        <p>The &lt;exit&gt; activity is fully compliant with the specification.</p>
+
+        <h3>&lt;wait&gt;</h3>
+        <p>The &lt;wait&gt; activity is fully compliant with the specification.</p>
+
+        <h3>&lt;empty&gt;</h3>
+        <p>The &lt;empty&gt; activity is fully compliant with the specification.</p>
+
+        <h3>&lt;sequence&gt;</h3>
+        <p>The &lt;sequence&gt; activity is fully compliant with the specification.</p>
+
+        <h3>&lt;if&gt;</h3>
+        <p>The &lt;if&gt; activity is fully compliant with the specification.</p>
+
+        <h3>&lt;while&gt;</h3>
+        <p>The &lt;while&gt; activity is fully compliant with the specification.</p>
+
+        <h3>&lt;repeatUntil&gt;</h3>
+        <p>The &lt;repeatUntil&gt; activity is fully compliant with the specification.</p>
+
+        <h3>&lt;forEach&gt;</h3>
+        <p>The &lt;forEach&gt; activity is fully compliant with the specification. @product.name@ supports both sequential and
+            parallel for-each semantics.
+        </p>
+
+        <h3>&lt;pick&gt;</h3>
+        <p>The &lt;pick&gt; activity has the same issues as the &lt;receive&gt; activity.</p>
+
+        <h3>&lt;flow&gt;</h3>
+        <p>The &lt;flow&gt; activity is fully compliant with the specification.</p>
+
+        <h3>&lt;scope&gt;</h3>
+        <p>Isolated scopes are implemented in ODE trunk and hence will be available with @product.name@ 1.1.0</p>
+
+        <h3>&lt;compensate&gt;</h3>
+        <p>The &lt;compensate&gt; activity is not compliant with the specification. In @product.name@, this activity has the
+            same
+            effect and syntax as &lt;compensateScope&gt;. In addition, the scope attribute may be used in place of the
+            target attribute with the same effect; and @product.name@ expects one of these attributes must be specified.
+        </p>
+
+        <h3>&lt;compensateScope&gt;</h3>
+        <p>The &lt;compensateScope&gt; activity is fully compliant with the specification.</p>
+
+        <h3>&lt;rethrow&gt;</h3>
+        <p>The &lt;rethrow&gt; activity is fully compliant with the specification.</p>
+
+        <h3>&lt;validate&gt;</h3>
+        <p>The &lt;validate&gt; activity is not implemented by @product.name@. Processescontaining such activities will cause
+            a compilation failure.
+        </p>
+
+        <h3>&lt;extensionActivity&gt;</h3>
+        <p>Activity extension is fully supported in @product.name@.</p>
+
+    </body>
+</html>

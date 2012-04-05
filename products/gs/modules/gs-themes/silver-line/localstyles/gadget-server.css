@@ -1,0 +1,567 @@
+html {
+    padding: 0px;
+    margin: 0px;
+    height: 100%;
+}
+
+/* Begin body area background image and colour change */
+body {
+    background-image: url(../images/mainBg.jpg);
+    background-repeat: repeat-x;
+    background-position: left top;
+    background-color: #367682;
+    margin: 0px;
+    padding: 10px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+/* End body area background image and colour change */
+
+div#middle {
+   background-color: #FFFFFF !important;
+   width: 100%;
+   height: 100%;
+}
+
+div#middle div#workArea {
+   background-color: #FFFFFF !important;
+   padding: 0px;
+   width: 100%;
+}
+
+a.icon-link {
+   background-image: url(../images/default-menu-icon.gif);
+   background-repeat: no-repeat;
+   background-position: left top;
+   font-size: 13px;
+   padding-left: 20px;
+   line-height: 17px;
+   height: 17px;
+   float: left;
+   position: relative;
+   margin-left: 10px;
+   margin-top: 5px;
+   margin-bottom: 3px;
+   white-space: nowrap;
+   cursor:pointer;
+}
+
+/* Begin logo area background image and colour change */
+div#link-panel {
+   background-image: url(../images/logoBg.jpg);
+   background-repeat: repeat-x;
+   background-position: left top;
+   background-color: #FFFFFF;
+   height: 43px;
+   margin-bottom: 5px;
+   padding-top: 15px;
+   *padding-bottom: 10px;
+}
+/* End logo area background image and colour change */
+
+/* Begin logo change */
+div#link-panel div.left-logo {
+   background-image: url(../images/gs-header-logo.gif);
+   background-repeat: no-repeat;
+   background-position: left top;
+   float: left;
+   height: 32px;
+   margin-left: 15px;
+   width: 179px;
+}
+/* End logo change */
+
+div#link-panel div.left-logo a.header-home {
+   display: block;
+}
+
+div#link-panel div.left-logo a.header-home img {
+   display: block;
+}
+
+div#link-panel div.right-links {
+   clear: both;
+   float: right;
+   height: 25px;
+   margin-right: 10px;
+   padding-top: 5px;
+   width: 400px;
+}
+
+div#link-panel ul {
+   float: right;
+   list-style-image: none;
+   list-style-position: outside;
+   list-style-type: none;
+   margin-top: 7px;
+   margin-right: 10px;
+   padding: 0;
+}
+
+div#link-panel ul li {
+   float: left;
+   margin: 0;
+   padding: 0 5px;
+   position: relative;
+}
+
+/* Begin changing the background image or colour of the container of top links in box format */
+.gadgets-top-links {
+   background-color: #A4BBBF;
+   background-position: left top;
+   border: 1px solid #E4ECED;
+   height: 30px !important;
+   *height: 35px !important;
+   list-style-image: none;
+   list-style-position: outside;
+   list-style-type: none;
+   padding-top: 3px;
+}
+/* End changing the background image or colour of the container of top links in box format */
+
+/* Begin changing the background image or colour of the top link boxes */
+.gadgets-top-links li {
+   background-image: url(../images/mainTabsBg.jpg);
+   height: 27px;
+   float: left;
+   margin-left: 3px;
+   padding-right: 10px;
+}
+/* End changing the background image or colour of the top link boxes */
+
+/* Begin changing the background image or colour of the tab area */
+#tabmenu {
+   background-image: url(../images/tabsBg.jpg);
+   background-repeat: no-repeat;
+   background-position: left top;
+   background-color: #D7E2E7;
+   border-bottom: 1px solid #666666;
+   color: #000000;
+   padding: 25px 0 0 10px !important;
+   margin: 0 !important;
+   z-index: 1;
+}
+/* End changing the background image or colour of the tab area */
+
+table {
+   border: 0 none;
+   font-size: 12px;
+   margin: 0;
+   padding: 0;
+}
+
+#columns {
+   padding-left: 12px !important;
+   padding-top: 12px !important;
+}
+
+#columns tr td {
+   border: 0 !important;
+   margin: 0 !important;
+}
+
+.gadgets-gadget-chrome {
+   border: 1px solid #CCCCCC;
+   cursor: move;
+   margin: 10px !important;
+   height: auto !important;
+   width: auto !important;
+   *width: 100% !important;
+}
+
+.gadgets-gadget-content {
+   height: auto !important;
+   padding-left: 10px !important;
+   padding-right: 10px !important;
+   padding-bottom: 10px !important;
+}
+
+#page {
+   margin-top: 16px;
+   margin-left: 16px;
+   width: auto;
+   *width: 100%;
+}
+
+.section {
+   float: left;
+   width: 33%;
+   height: 100% !important;
+}
+
+.sectionTop {
+   width: auto;
+   *width: 100%;
+   margin-top: 10px;
+   *margin-top: -10px;
+}
+
+.lineitem {
+   margin-bottom: 20px !important;
+   cursor: move;
+}
+
+#tabmenu a.active {
+   background: #FFFFFF none repeat scroll 0;
+   border-bottom: 2px solid #FFFFFF !important;
+   color: #586B74;
+}
+
+#tabmenu a.active:hover {
+   background: #FFFFFF !important;
+   color: #F47B20 !important;
+}
+
+div#workArea table.styledLeft {
+   border-collapse: collapse;
+   margin-left: 7px;
+   margin-top: 7px;
+   margin-bottom: 7px;
+   width: 99%;
+}
+
+/* Begin applying colours to the background of footer area */
+div.footer-content {
+   background-color: #9BB5B9;
+   height: 27px;
+   width: 100%;
+   border-top: 5px solid #D7E2E7;
+   *padding-bottom: 5px;
+}
+/* End applying colours to the background of footer area */
+
+div.footer-content div.copyright {
+   color: #FFFFFF;
+   float: left;
+   margin-left: 10px;
+   padding-top: 6px;
+}
+
+div#workArea div.gadgetInfo {
+   padding: 35px;
+}
+
+.gadgetImage {
+   border: 1px solid #D7D7D7;
+   background-color: #FFFFFF;
+   padding: 3px;
+}
+
+.gadgetDescriptionArea {
+   padding-left: 12px;
+   padding-right: 12px;
+   background-image: url(../images/gadgetDescriptionBg.jpg);
+   background-repeat: repeat-x;
+   background-position: left top;
+   height: 150px;
+}
+
+div.gadgetInfo div.GadgetHeading {
+   margin-top: 7px;
+   font-size: 19px;
+   font-weight: bold;
+}
+
+div.gadgetInfo div.GadgetDescription {
+   margin-top: 14px;
+   line-height: 19px;
+}
+
+div#workArea table.styledLeft tbody tr td {
+   padding-bottom: 4px;
+   padding-left: 8px !important;
+   padding-right: 4px !important;
+   padding-top: 4px;
+   vertical-align: middle !important;
+   line-height: 19px;
+}
+
+.tableEvenRow {
+   background-color: #F5F5F5 !important;
+}
+
+div#workArea div.formset {
+   padding-left: 35px;
+   padding-top: 5px;
+   padding-bottom: 10px;
+   width: 600px;
+}
+
+div#workArea div.formset form fieldset {
+   border: 1px solid #D7D7D7;
+   width: 550px;
+   margin: 0;
+   padding: 15px;
+}
+
+div#workArea div.formset form fieldset legend {
+   font-size: 12px;
+   color: #111111;
+}
+
+.form-item {
+   margin-bottom: 15px;
+   margin-top: 15px;
+}
+
+.form-item label {
+   display: block;
+}
+
+div#workArea div.pagination {
+   float: right;
+   margin-right: 10px;
+}
+
+a.pageLinks {
+   color: #111111;
+   text-decoration: underline;
+}
+
+a.pageLinks:hover {
+   color: #F47B20;
+   text-decoration: underline;
+}
+
+a.pageLinks:active {
+   color: #111111;
+   font-weight: bold;
+   text-decoration: none;
+}
+
+.gadgets-title-bar {
+   *margin-top: 5px !important;
+}
+
+div#workArea table.gadgetList {
+   border-bottom: 1px solid #EAEAEA;
+   border-collapse: separate;
+   padding: 3px;
+   margin-bottom: 7px;
+}
+
+.rating-text{
+   float: left;
+   font-weight: normal;
+   font-size: 12px;
+   margin-right: 6px;
+}
+
+div#workArea table.gadgetComments {
+   border-collapse: collapse;
+   margin-bottom: 7px;
+   margin-left: 7px;
+   margin-top: 7px;
+   width: 99%;
+}
+
+div#workArea table.gadgetComments thead th {
+   background-image: url(../images/table-header.gif);
+   background-position: left bottom;
+   background-repeat: repeat-x;
+   border: 1px solid #CCCCCC;
+   font-weight: normal;
+   height: 22px;
+   line-height: 20px;
+   margin-bottom: 5px;
+   padding-left: 8px;
+}
+
+div#workArea table.gadgetComments tbody tr td {
+   border: 1px solid #CCCCCC;
+   line-height: 19px;
+   padding-bottom: 4px;
+   padding-left: 8px !important;
+   padding-right: 4px !important;
+   padding-top: 4px;
+   vertical-align: middle !important;
+}
+
+div#workArea table.gadgetComments tbody tr td div.delete {
+   float: right;
+}
+
+.block-hover{
+   border: 1px dashed #CCCCCC;
+   height: 200px;
+}
+
+/* Begin changing the background image or colour of the default gadgets area */
+div#newGadgetsPane {
+   background-image: url(../images/defaultGadgetsBg.jpg);
+   background-position: left top;
+   background-repeat: repeat-x;
+}
+/* End changing the background image or colour of the default gadgets area */
+
+div#newGadgetsPane table.defaultGadgets {
+   border-collapse: collapse;
+   margin-bottom: 7px;
+   margin-left: 10px;
+   margin-top: 7px;
+   width: 99%;
+}
+
+div#middle div#loginbox {
+   background-image: url(../images/infoCardBg.jpg);
+   background-position: left top;
+   background-repeat: repeat-x;
+   border: 1px solid #BCBEC0;
+   background-color: #F2F2F2;
+   margin: 35px;
+   padding: 20px;
+}
+
+div#middle div#mainLogin {
+   background-image: url(../images/infoCardBg.jpg);
+   background-position: left top;
+   background-repeat: repeat-x;
+   border: 1px solid #BCBEC0;
+   background-color: #F2F2F2;
+   margin-bottom: 20px;
+   padding: 20px;
+   *width: 100%;
+}
+
+div#mainLogin {
+   text-align: center;
+}
+
+div#mainLogin table {
+   margin: auto;
+   *margin: 0;
+}
+
+div#mainLogin table tr td {
+   padding: 3px;
+}
+
+.ui-sortable-helper {
+   width: 31% !important;
+   *width: 96% !important;
+}
+
+div#middle div#loginContent {
+   background-color: #FFFFFF;
+   margin: auto;
+   width: 970px;
+}
+
+div#loginContent div#left {
+   float: left;
+   margin-right: 36px;
+   width: 624px;
+}
+
+div#loginContent div#right {
+   float: left;
+   padding-bottom: 0;
+   width: 300px;
+   margin-top: 64px;
+   *margin-top: 59px;
+}
+
+div#left div.loginPageImage {
+   background-image: url(../images/loginPageImage.jpg);
+   background-position: center;
+   background-repeat: no-repeat;
+   height: 684px;
+   margin-left: 0;
+   width: 624px;
+}
+
+div.loginPageImage div#platformBlog {
+   float: left;
+   height: 130px;
+   padding-left: 10px;
+   padding-right: 10px;
+   padding-top: 10px;
+   margin-top: 100px;
+   width: 280px;
+}
+
+div.loginPageImage div#projectPage {
+   float: left;
+   height: 130px;
+   margin-left: 24px;
+   *margin-left: 64px;
+   padding-left: 10px;
+   padding-right: 10px;
+   padding-top: 10px;
+   margin-top: 100px;
+   text-align: right;
+   width: 280px;
+}
+
+div.loginPageImage div#wso2Carbon {
+   float: left;
+   height: 130px;
+   margin-top: 20px;
+   padding-left: 10px;
+   padding-right: 10px;
+   padding-top: 10px;
+   margin-top: 190px;
+   width: 280px;
+}
+
+div.loginPageImage div#developerPortal {
+   float: left;
+   height: 130px;
+   margin-left: 24px;
+   *margin-left: 64px;
+   margin-top: 20px;
+   padding-left: 10px;
+   padding-right: 10px;
+   padding-top: 10px;
+   margin-top: 190px;
+   text-align: right;
+   width: 280px;
+}
+
+div.loginPageImage h3 {
+   font-size: 14px !important;
+   margin-bottom: 8px;
+   margin-top: 0;
+}
+
+div.loginPageImage p {
+   font-size: 12px;
+   margin-bottom: 8px;
+   margin-top: 0;
+}
+
+div.loginPageImage span.readMore {
+   font-size: 11px;
+   margin-top: 0;
+}
+
+.gadgets-gadget-title-bar {
+   line-height: 18px !important;
+   *margin-top: 2px !important;
+}
+
+.gadgets-gadget-title {
+   float: none !important;
+}
+
+.gadgets-gadget-title-button {
+   margin-right: 2px;
+}
+.gadget-ropo-cell-1 {
+    background-color:#A4BBBF;
+}
+.gadget-ropo-cell-3{
+    background-color:#A4BBBF;
+}
+h2.trigger{
+    background-color:#A4BBBF;
+}
+h2.trigger a{
+    color:#fff;
+}
+.gadgets-top-links a.icon-link{
+    color:#fff;       
+}
+.users-strip{
+background-image: url(../images/user-strip.png);
+}

@@ -1,0 +1,580 @@
+import org.wso2.carbon.throttling.manager.dataobjects.*;
+import org.wso2.carbon.billing.mgt.dataobjects.*;
+import org.wso2.carbon.stratos.common.constants.*;
+
+// free users restrictions
+rule restrictFreeUsers
+when
+ $package: MultitenancyPackage(name == "multitenancy-free")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataInt(ThrottlingDataEntryConstants.USERS_COUNT)  >= 5 &&
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_ADD_USER_ACTION, true, 
+            "You can add at most 5 users. Upgrade the subscription to add more users.");
+
+end
+
+rule restrictFreeDataVolume
+when
+ $package: MultitenancyPackage(name == "multitenancy-free")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.TENANT_CAPACITY) > (10 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_IN_DATA_ACTION, true, 
+            "You can add resource only size less than 10Mb. Upgrade the subscription to add larger resources.");
+end
+
+rule restrictFreeServiceIncomingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-free")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.SERVICE_INCOMING_BANDWIDTH) > (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_SERVICE_IN_BANDWIDTH_ACTION, true, 
+            "You can use maximum service bandwidth of 5Mb Please update usage plan.");
+end
+
+rule restrictFreeServiceOutgoingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-free")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.SERVICE_OUTGOING_BANDWIDTH) > (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_SERVICE_OUT_BANDWIDTH_ACTION, true, 
+            "service outgoing Limit Exceeded.You can use maximum service bandwidth of 5Mb Please update usage plan.");
+end
+
+rule restrictFreeWebappIncomingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-free")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.WEBAPP_INCOMING_BANDWIDTH) >= (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_WEBAPP_IN_BANDWIDTH_ACTION, true, 
+            "web app Limit Exceeded. You can use maximum webapp bandwidth of 5Mb Please update usage plan.");
+end
+
+rule restrictFreeWebappOutgoingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-free")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.WEBAPP_OUTGOING_BANDWIDTH) >= (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_WEBAPP_OUT_BANDWIDTH_ACTION, true, 
+            "web app Limit Exceeded.You can use maximum webapp bandwidth of 5Mb Please update usage plan.");
+end
+
+
+rule unsetRestrictFreeUsers
+when
+
+ $package: MultitenancyPackage(name == "multitenancy-free")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataInt(ThrottlingDataEntryConstants.USERS_COUNT)  < 5 &&
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_ADD_USER_ACTION, false, null);
+
+end
+
+
+rule unsetRestrictFreeDataVolume
+when
+ $package: MultitenancyPackage(name == "multitenancy-free")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.TENANT_CAPACITY) <= (10 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_IN_DATA_ACTION, false, null);
+end
+
+rule unsetRestrictFreeServiceIncomingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-free")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.SERVICE_INCOMING_BANDWIDTH) < (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_SERVICE_IN_BANDWIDTH_ACTION,false,null);
+end
+
+rule unsetRestrictFreeServiceOutgoingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-free")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.SERVICE_OUTGOING_BANDWIDTH) < (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_SERVICE_OUT_BANDWIDTH_ACTION,false,null);
+end
+
+rule unsetRestrictFreeWebappIncomingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-free")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.WEBAPP_INCOMING_BANDWIDTH) < (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_WEBAPP_IN_BANDWIDTH_ACTION,false,null);
+end
+
+rule unsetRestrictFreeWebappOutgoingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-free")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants. WEBAPP_OUTGOING_BANDWIDTH) < (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_WEBAPP_OUT_BANDWIDTH_ACTION,false,null);
+end
+
+// small users restrictions
+
+rule restrictSmallUsers
+when
+ $package: MultitenancyPackage(name == "multitenancy-small")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataInt(ThrottlingDataEntryConstants.USERS_COUNT)  >= 10 &&
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_ADD_USER_ACTION, true, 
+            "You can add at most 10 users. Upgrade the subscription to add more users.");
+
+end
+
+rule restrictSmallDataVolume
+when
+ $package: MultitenancyPackage(name == "multitenancy-small")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.TENANT_CAPACITY) > (25 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_IN_DATA_ACTION, true, 
+            "You can add resource only size less than 25Mb. Upgrade the subscription to add larger resources.");
+end
+
+rule restrictSmallServiceIncomingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-small")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.SERVICE_INCOMING_BANDWIDTH) > (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_SERVICE_IN_BANDWIDTH_ACTION, true, 
+            "You can use maximum service bandwidth of 5Mb Please update usage plan.");
+end
+
+rule restrictSmallServiceOutgoingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-small")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.SERVICE_OUTGOING_BANDWIDTH) > (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_SERVICE_OUT_BANDWIDTH_ACTION, true, 
+            "service outgoing Limit Exceeded. You can use maximum service bandwidth of 5Mb Please update usage plan.");
+end
+
+rule restrictSmallWebappIncomingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-small")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.WEBAPP_INCOMING_BANDWIDTH) >= (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_WEBAPP_IN_BANDWIDTH_ACTION, true, 
+            "web app Limit Exceeded. You can use maximum webapp bandwidth of 5Mb Please update usage plan.");
+end
+
+rule restrictSmallWebappOutgoingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-small")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.WEBAPP_OUTGOING_BANDWIDTH) >= (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_WEBAPP_OUT_BANDWIDTH_ACTION, true, 
+            "web app Limit Exceeded.You can use maximum webapp bandwidth of 5Mb Please update usage plan.");
+end
+
+
+rule unsetRestrictSmallUsers
+when
+ $package: MultitenancyPackage(name == "multitenancy-small")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataInt(ThrottlingDataEntryConstants.USERS_COUNT)  < 10 &&
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_ADD_USER_ACTION, false, null);
+
+end
+
+rule unsetRestrictSmallDataVolume
+when
+ $package: MultitenancyPackage(name == "multitenancy-small")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.TENANT_CAPACITY) <= (25 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_IN_DATA_ACTION, false, null);
+end
+
+rule unsetRestrictSmallServiceIncomingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-small")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.SERVICE_INCOMING_BANDWIDTH) < (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_SERVICE_IN_BANDWIDTH_ACTION,false,null);
+end
+
+rule unsetRestrictSmallServiceOutgoingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-small")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.SERVICE_OUTGOING_BANDWIDTH) < (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_SERVICE_OUT_BANDWIDTH_ACTION,false,null);
+end
+
+rule unsetRestrictSmallWebappIncomingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-small")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.WEBAPP_INCOMING_BANDWIDTH) < (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_WEBAPP_IN_BANDWIDTH_ACTION,false,null);
+end
+
+rule unsetRestrictSmallWebappOutgoingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-small")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants. WEBAPP_OUTGOING_BANDWIDTH) < (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_WEBAPP_OUT_BANDWIDTH_ACTION,false,null);
+end
+
+
+// medium users restrictions
+
+rule restrictMediumUsers
+when
+ $package: MultitenancyPackage(name == "multitenancy-medium")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataInt(ThrottlingDataEntryConstants.USERS_COUNT)  >= 20 &&
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_ADD_USER_ACTION, true, 
+            "You can add at most 20 users. Upgrade the subscription to add more users.");
+
+end
+
+rule restrictMediumDataVolume
+when
+ $package: MultitenancyPackage(name == "multitenancy-medium")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.TENANT_CAPACITY) > (100 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_IN_DATA_ACTION, true, 
+            "You can add resource only size less than 100Mb. Upgrade the subscription to add larger resources.");
+end
+
+rule restrictMediumServiceIncomingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-medium")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.SERVICE_INCOMING_BANDWIDTH) > (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_SERVICE_IN_BANDWIDTH_ACTION, true, 
+            "You can use maximum service bandwidth of 5Mb Please update usage plan.");
+end
+
+rule restrictMediumServiceOutgoingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-medium")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.SERVICE_OUTGOING_BANDWIDTH) > (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_SERVICE_OUT_BANDWIDTH_ACTION, true, 
+            "service outgoing Limit Exceeded. You can use maximum service bandwidth of 5Mb Please update usage plan.");
+end
+
+rule restrictMediumWebappIncomingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-medium")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.WEBAPP_INCOMING_BANDWIDTH) >= (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_WEBAPP_IN_BANDWIDTH_ACTION, true, 
+            "web app Limit Exceeded.You can use maximum webapp bandwidth of 5Mb Please update usage plan.");
+end
+
+rule restrictMediumWebappOutgoingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-medium")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.WEBAPP_OUTGOING_BANDWIDTH) >= (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_WEBAPP_OUT_BANDWIDTH_ACTION, true, 
+            "web app Limit Exceeded.You can use maximum webapp bandwidth of 5Mb Please update usage plan.");
+end
+
+
+rule unsetRestrictMediumUsers
+when
+ $package: MultitenancyPackage(name == "multitenancy-medium")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataInt(ThrottlingDataEntryConstants.USERS_COUNT) < 20 &&
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_ADD_USER_ACTION, false, null);
+
+end
+
+
+rule unsetRestrictMediumDataVolume
+when
+ $package: MultitenancyPackage(name == "multitenancy-medium")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.TENANT_CAPACITY) <= (100 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_IN_DATA_ACTION, false, null);
+end
+
+rule unsetRestrictMediumServiceIncomingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-medium")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.SERVICE_INCOMING_BANDWIDTH) < (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_SERVICE_IN_BANDWIDTH_ACTION,false,null);
+end
+
+rule unsetRestrictMediumServiceOutgoingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-medium")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.SERVICE_OUTGOING_BANDWIDTH) < (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_SERVICE_OUT_BANDWIDTH_ACTION,false,null);
+end
+
+rule unsetRestrictMediumWebappIncomingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-medium")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.WEBAPP_INCOMING_BANDWIDTH) < (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_WEBAPP_IN_BANDWIDTH_ACTION,false,null);
+end
+
+rule unsetRestrictMediumWebappOutgoingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-medium")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants. WEBAPP_OUTGOING_BANDWIDTH) < (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_WEBAPP_OUT_BANDWIDTH_ACTION,false,null);
+end
+
+// large users restrictions
+
+rule restrictLargeUsers
+when
+ $package: MultitenancyPackage(name == "multitenancy-large")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataInt(ThrottlingDataEntryConstants.USERS_COUNT)  >= 50 &&
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_ADD_USER_ACTION, true, 
+            "You can add at most 20 users. Upgrade the subscription to add more users.");
+
+end
+
+rule restrictLargeDataVolume
+when
+ $package: MultitenancyPackage(name == "multitenancy-large")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.TENANT_CAPACITY) > (200 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_IN_DATA_ACTION, true, 
+            "You can add resource only size less than 100Mb. Upgrade the subscription to add larger resources.");
+end
+
+rule unsetRestrictLargeUsers
+when
+ $package: MultitenancyPackage(name == "multitenancy-large")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataInt(ThrottlingDataEntryConstants.USERS_COUNT) < 50 &&
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_ADD_USER_ACTION, false, null);
+
+end
+
+
+rule unsetRestrictLargeDataVolume
+when
+ $package: MultitenancyPackage(name == "multitenancy-large")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.TENANT_CAPACITY) <= (200 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_IN_DATA_ACTION, false, null);
+end
+
+rule unsetRestrictLargeServiceIncomingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-large")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.SERVICE_INCOMING_BANDWIDTH) < (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_SERVICE_IN_BANDWIDTH_ACTION,false,null);
+end
+
+rule unsetRestrictLargeServiceOutgoingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-large")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.SERVICE_OUTGOING_BANDWIDTH) < (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_SERVICE_OUT_BANDWIDTH_ACTION,false,null);
+end
+
+rule unsetRestrictLargeWebappIncomingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-large")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants.WEBAPP_INCOMING_BANDWIDTH) < (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_WEBAPP_IN_BANDWIDTH_ACTION,false,null);
+end
+
+rule unsetRestrictLargeWebappOutgoingBandwidth
+when
+ $package: MultitenancyPackage(name == "multitenancy-large")
+ $dataContext : ThrottlingDataContext()
+ eval($dataContext.getDataLong(ThrottlingDataEntryConstants. WEBAPP_OUTGOING_BANDWIDTH) < (5 * 1024 * 1024) && 
+            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
+
+then
+ ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setTenantBlocked(StratosConstants.THROTTLING_WEBAPP_OUT_BANDWIDTH_ACTION,false,null);
+end

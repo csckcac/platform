@@ -1,0 +1,739 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://services.ide.gadget.carbon.wso2.org" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.ide.gadget.carbon.wso2.org">
+    <wsdl:documentation>GadgetIDEAdmin</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ns="http://org.apache.axis2/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+            <xs:element name="GadgetIDEAdminException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GadgetIDEAdminException" nillable="true" type="ns1:Exception"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="saveTempSettings">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="settings" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="saveTempSettingsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listGeneratedFiles">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listGeneratedFilesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getTableNames">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="dataSourceName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getTableNamesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getStub">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="uri" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getStubResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOperations">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="uri" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="endpoint" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOperationsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOperationSig">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="uri" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="endpoint" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="operation" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOperationSigResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getGeneratedFile">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="fileName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getGeneratedFileResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getEndpoints">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="uri" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getEndpointsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getDataSourceNames">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getDataSourceNamesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="generateCode">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="generateCodeResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="executeSQL">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="dataSourceName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="sql" nillable="true" type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="parameters" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="executeSQLResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:anyType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deploy">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="gadgetXmlName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deployResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="deployRequest">
+        <wsdl:part name="parameters" element="ns1:deploy"/>
+    </wsdl:message>
+    <wsdl:message name="deployResponse">
+        <wsdl:part name="parameters" element="ns1:deployResponse"/>
+    </wsdl:message>
+    <wsdl:message name="GadgetIDEAdminException">
+        <wsdl:part name="parameters" element="ns1:GadgetIDEAdminException"/>
+    </wsdl:message>
+    <wsdl:message name="getStubRequest">
+        <wsdl:part name="parameters" element="ns1:getStub"/>
+    </wsdl:message>
+    <wsdl:message name="getStubResponse">
+        <wsdl:part name="parameters" element="ns1:getStubResponse"/>
+    </wsdl:message>
+    <wsdl:message name="generateCodeRequest">
+        <wsdl:part name="parameters" element="ns1:generateCode"/>
+    </wsdl:message>
+    <wsdl:message name="generateCodeResponse">
+        <wsdl:part name="parameters" element="ns1:generateCodeResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getEndpointsRequest">
+        <wsdl:part name="parameters" element="ns1:getEndpoints"/>
+    </wsdl:message>
+    <wsdl:message name="getEndpointsResponse">
+        <wsdl:part name="parameters" element="ns1:getEndpointsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getOperationsRequest">
+        <wsdl:part name="parameters" element="ns1:getOperations"/>
+    </wsdl:message>
+    <wsdl:message name="getOperationsResponse">
+        <wsdl:part name="parameters" element="ns1:getOperationsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getDataSourceNamesRequest">
+        <wsdl:part name="parameters" element="ns1:getDataSourceNames"/>
+    </wsdl:message>
+    <wsdl:message name="getDataSourceNamesResponse">
+        <wsdl:part name="parameters" element="ns1:getDataSourceNamesResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getOperationSigRequest">
+        <wsdl:part name="parameters" element="ns1:getOperationSig"/>
+    </wsdl:message>
+    <wsdl:message name="getOperationSigResponse">
+        <wsdl:part name="parameters" element="ns1:getOperationSigResponse"/>
+    </wsdl:message>
+    <wsdl:message name="saveTempSettingsRequest">
+        <wsdl:part name="parameters" element="ns1:saveTempSettings"/>
+    </wsdl:message>
+    <wsdl:message name="saveTempSettingsResponse">
+        <wsdl:part name="parameters" element="ns1:saveTempSettingsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getGeneratedFileRequest">
+        <wsdl:part name="parameters" element="ns1:getGeneratedFile"/>
+    </wsdl:message>
+    <wsdl:message name="getGeneratedFileResponse">
+        <wsdl:part name="parameters" element="ns1:getGeneratedFileResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getTableNamesRequest">
+        <wsdl:part name="parameters" element="ns1:getTableNames"/>
+    </wsdl:message>
+    <wsdl:message name="getTableNamesResponse">
+        <wsdl:part name="parameters" element="ns1:getTableNamesResponse"/>
+    </wsdl:message>
+    <wsdl:message name="listGeneratedFilesRequest">
+        <wsdl:part name="parameters" element="ns1:listGeneratedFiles"/>
+    </wsdl:message>
+    <wsdl:message name="listGeneratedFilesResponse">
+        <wsdl:part name="parameters" element="ns1:listGeneratedFilesResponse"/>
+    </wsdl:message>
+    <wsdl:message name="executeSQLRequest">
+        <wsdl:part name="parameters" element="ns1:executeSQL"/>
+    </wsdl:message>
+    <wsdl:message name="executeSQLResponse">
+        <wsdl:part name="parameters" element="ns1:executeSQLResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="GadgetIDEAdminPortType">
+        <wsdl:operation name="deploy">
+            <wsdl:input message="tns:deployRequest" wsaw:Action="urn:deploy"/>
+            <wsdl:output message="tns:deployResponse" wsaw:Action="urn:deployResponse"/>
+            <wsdl:fault message="tns:GadgetIDEAdminException" name="GadgetIDEAdminException" wsaw:Action="urn:deployGadgetIDEAdminException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getStub">
+            <wsdl:input message="tns:getStubRequest" wsaw:Action="urn:getStub"/>
+            <wsdl:output message="tns:getStubResponse" wsaw:Action="urn:getStubResponse"/>
+            <wsdl:fault message="tns:GadgetIDEAdminException" name="GadgetIDEAdminException" wsaw:Action="urn:getStubGadgetIDEAdminException"/>
+        </wsdl:operation>
+        <wsdl:operation name="generateCode">
+            <wsdl:input message="tns:generateCodeRequest" wsaw:Action="urn:generateCode"/>
+            <wsdl:output message="tns:generateCodeResponse" wsaw:Action="urn:generateCodeResponse"/>
+            <wsdl:fault message="tns:GadgetIDEAdminException" name="GadgetIDEAdminException" wsaw:Action="urn:generateCodeGadgetIDEAdminException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getEndpoints">
+            <wsdl:input message="tns:getEndpointsRequest" wsaw:Action="urn:getEndpoints"/>
+            <wsdl:output message="tns:getEndpointsResponse" wsaw:Action="urn:getEndpointsResponse"/>
+            <wsdl:fault message="tns:GadgetIDEAdminException" name="GadgetIDEAdminException" wsaw:Action="urn:getEndpointsGadgetIDEAdminException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getOperations">
+            <wsdl:input message="tns:getOperationsRequest" wsaw:Action="urn:getOperations"/>
+            <wsdl:output message="tns:getOperationsResponse" wsaw:Action="urn:getOperationsResponse"/>
+            <wsdl:fault message="tns:GadgetIDEAdminException" name="GadgetIDEAdminException" wsaw:Action="urn:getOperationsGadgetIDEAdminException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getDataSourceNames">
+            <wsdl:input message="tns:getDataSourceNamesRequest" wsaw:Action="urn:getDataSourceNames"/>
+            <wsdl:output message="tns:getDataSourceNamesResponse" wsaw:Action="urn:getDataSourceNamesResponse"/>
+            <wsdl:fault message="tns:GadgetIDEAdminException" name="GadgetIDEAdminException" wsaw:Action="urn:getDataSourceNamesGadgetIDEAdminException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationSig">
+            <wsdl:input message="tns:getOperationSigRequest" wsaw:Action="urn:getOperationSig"/>
+            <wsdl:output message="tns:getOperationSigResponse" wsaw:Action="urn:getOperationSigResponse"/>
+            <wsdl:fault message="tns:GadgetIDEAdminException" name="GadgetIDEAdminException" wsaw:Action="urn:getOperationSigGadgetIDEAdminException"/>
+        </wsdl:operation>
+        <wsdl:operation name="saveTempSettings">
+            <wsdl:input message="tns:saveTempSettingsRequest" wsaw:Action="urn:saveTempSettings"/>
+            <wsdl:output message="tns:saveTempSettingsResponse" wsaw:Action="urn:saveTempSettingsResponse"/>
+            <wsdl:fault message="tns:GadgetIDEAdminException" name="GadgetIDEAdminException" wsaw:Action="urn:saveTempSettingsGadgetIDEAdminException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getGeneratedFile">
+            <wsdl:input message="tns:getGeneratedFileRequest" wsaw:Action="urn:getGeneratedFile"/>
+            <wsdl:output message="tns:getGeneratedFileResponse" wsaw:Action="urn:getGeneratedFileResponse"/>
+            <wsdl:fault message="tns:GadgetIDEAdminException" name="GadgetIDEAdminException" wsaw:Action="urn:getGeneratedFileGadgetIDEAdminException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getTableNames">
+            <wsdl:input message="tns:getTableNamesRequest" wsaw:Action="urn:getTableNames"/>
+            <wsdl:output message="tns:getTableNamesResponse" wsaw:Action="urn:getTableNamesResponse"/>
+            <wsdl:fault message="tns:GadgetIDEAdminException" name="GadgetIDEAdminException" wsaw:Action="urn:getTableNamesGadgetIDEAdminException"/>
+        </wsdl:operation>
+        <wsdl:operation name="listGeneratedFiles">
+            <wsdl:input message="tns:listGeneratedFilesRequest" wsaw:Action="urn:listGeneratedFiles"/>
+            <wsdl:output message="tns:listGeneratedFilesResponse" wsaw:Action="urn:listGeneratedFilesResponse"/>
+            <wsdl:fault message="tns:GadgetIDEAdminException" name="GadgetIDEAdminException" wsaw:Action="urn:listGeneratedFilesGadgetIDEAdminException"/>
+        </wsdl:operation>
+        <wsdl:operation name="executeSQL">
+            <wsdl:input message="tns:executeSQLRequest" wsaw:Action="urn:executeSQL"/>
+            <wsdl:output message="tns:executeSQLResponse" wsaw:Action="urn:executeSQLResponse"/>
+            <wsdl:fault message="tns:GadgetIDEAdminException" name="GadgetIDEAdminException" wsaw:Action="urn:executeSQLGadgetIDEAdminException"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="GadgetIDEAdminSoap11Binding" type="tns:GadgetIDEAdminPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="deploy">
+            <soap:operation soapAction="urn:deploy" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GadgetIDEAdminException">
+                <soap:fault use="literal" name="GadgetIDEAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getStub">
+            <soap:operation soapAction="urn:getStub" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GadgetIDEAdminException">
+                <soap:fault use="literal" name="GadgetIDEAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="generateCode">
+            <soap:operation soapAction="urn:generateCode" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GadgetIDEAdminException">
+                <soap:fault use="literal" name="GadgetIDEAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getEndpoints">
+            <soap:operation soapAction="urn:getEndpoints" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GadgetIDEAdminException">
+                <soap:fault use="literal" name="GadgetIDEAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getDataSourceNames">
+            <soap:operation soapAction="urn:getDataSourceNames" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GadgetIDEAdminException">
+                <soap:fault use="literal" name="GadgetIDEAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getOperations">
+            <soap:operation soapAction="urn:getOperations" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GadgetIDEAdminException">
+                <soap:fault use="literal" name="GadgetIDEAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationSig">
+            <soap:operation soapAction="urn:getOperationSig" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GadgetIDEAdminException">
+                <soap:fault use="literal" name="GadgetIDEAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="saveTempSettings">
+            <soap:operation soapAction="urn:saveTempSettings" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GadgetIDEAdminException">
+                <soap:fault use="literal" name="GadgetIDEAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getGeneratedFile">
+            <soap:operation soapAction="urn:getGeneratedFile" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GadgetIDEAdminException">
+                <soap:fault use="literal" name="GadgetIDEAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getTableNames">
+            <soap:operation soapAction="urn:getTableNames" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GadgetIDEAdminException">
+                <soap:fault use="literal" name="GadgetIDEAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listGeneratedFiles">
+            <soap:operation soapAction="urn:listGeneratedFiles" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GadgetIDEAdminException">
+                <soap:fault use="literal" name="GadgetIDEAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="executeSQL">
+            <soap:operation soapAction="urn:executeSQL" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GadgetIDEAdminException">
+                <soap:fault use="literal" name="GadgetIDEAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="GadgetIDEAdminSoap12Binding" type="tns:GadgetIDEAdminPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="deploy">
+            <soap12:operation soapAction="urn:deploy" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GadgetIDEAdminException">
+                <soap12:fault use="literal" name="GadgetIDEAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getStub">
+            <soap12:operation soapAction="urn:getStub" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GadgetIDEAdminException">
+                <soap12:fault use="literal" name="GadgetIDEAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="generateCode">
+            <soap12:operation soapAction="urn:generateCode" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GadgetIDEAdminException">
+                <soap12:fault use="literal" name="GadgetIDEAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getEndpoints">
+            <soap12:operation soapAction="urn:getEndpoints" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GadgetIDEAdminException">
+                <soap12:fault use="literal" name="GadgetIDEAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getDataSourceNames">
+            <soap12:operation soapAction="urn:getDataSourceNames" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GadgetIDEAdminException">
+                <soap12:fault use="literal" name="GadgetIDEAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getOperations">
+            <soap12:operation soapAction="urn:getOperations" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GadgetIDEAdminException">
+                <soap12:fault use="literal" name="GadgetIDEAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationSig">
+            <soap12:operation soapAction="urn:getOperationSig" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GadgetIDEAdminException">
+                <soap12:fault use="literal" name="GadgetIDEAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="saveTempSettings">
+            <soap12:operation soapAction="urn:saveTempSettings" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GadgetIDEAdminException">
+                <soap12:fault use="literal" name="GadgetIDEAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getGeneratedFile">
+            <soap12:operation soapAction="urn:getGeneratedFile" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GadgetIDEAdminException">
+                <soap12:fault use="literal" name="GadgetIDEAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getTableNames">
+            <soap12:operation soapAction="urn:getTableNames" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GadgetIDEAdminException">
+                <soap12:fault use="literal" name="GadgetIDEAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listGeneratedFiles">
+            <soap12:operation soapAction="urn:listGeneratedFiles" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GadgetIDEAdminException">
+                <soap12:fault use="literal" name="GadgetIDEAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="executeSQL">
+            <soap12:operation soapAction="urn:executeSQL" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="GadgetIDEAdminException">
+                <soap12:fault use="literal" name="GadgetIDEAdminException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="GadgetIDEAdminHttpBinding" type="tns:GadgetIDEAdminPortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="deploy">
+            <http:operation location="deploy"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getStub">
+            <http:operation location="getStub"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="generateCode">
+            <http:operation location="generateCode"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getEndpoints">
+            <http:operation location="getEndpoints"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getDataSourceNames">
+            <http:operation location="getDataSourceNames"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperations">
+            <http:operation location="getOperations"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationSig">
+            <http:operation location="getOperationSig"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="saveTempSettings">
+            <http:operation location="saveTempSettings"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getGeneratedFile">
+            <http:operation location="getGeneratedFile"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getTableNames">
+            <http:operation location="getTableNames"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listGeneratedFiles">
+            <http:operation location="listGeneratedFiles"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="executeSQL">
+            <http:operation location="executeSQL"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="GadgetIDEAdmin">
+        <wsdl:port name="GadgetIDEAdminHttpsSoap11Endpoint" binding="tns:GadgetIDEAdminSoap11Binding">
+            <soap:address location="https://127.0.0.1:9443/services/GadgetIDEAdmin.GadgetIDEAdminHttpsSoap11Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="GadgetIDEAdminHttpsSoap12Endpoint" binding="tns:GadgetIDEAdminSoap12Binding">
+            <soap12:address location="https://127.0.0.1:9443/services/GadgetIDEAdmin.GadgetIDEAdminHttpsSoap12Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="GadgetIDEAdminHttpsEndpoint" binding="tns:GadgetIDEAdminHttpBinding">
+            <http:address location="https://127.0.0.1:9443/services/GadgetIDEAdmin.GadgetIDEAdminHttpsEndpoint/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

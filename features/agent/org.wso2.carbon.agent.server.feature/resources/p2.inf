@@ -1,0 +1,5 @@
+instructions.configure = \
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/features/org.wso2.carbon.agent.server_${feature.version}/conf/agent-config.xml,target:${installFolder}/../conf/agent-config.xml,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/features/org.wso2.carbon.agent.server_${feature.version}/conf/agent-server-config.xml,target:${installFolder}/../conf/agent-server-config.xml,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/features/org.wso2.carbon.agent.server_${feature.version}/conf);
+

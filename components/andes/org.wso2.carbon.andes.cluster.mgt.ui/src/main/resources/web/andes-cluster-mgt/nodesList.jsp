@@ -1,0 +1,240 @@
+<%@ page import="org.apache.axis2.context.ConfigurationContext" %>
+<%@ page import="org.wso2.carbon.andes.cluster.mgt.ui.ClusterManagerClient" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="carbon" uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" %>
+<%@ page import="org.wso2.carbon.CarbonConstants" %>
+
+<%@ page import="org.wso2.carbon.andes.mgt.stub.types.carbon.NodeDetail" %>
+<%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
+<%@ page import="org.wso2.carbon.utils.ServerConstants" %>
+<%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
+<%@ page import="org.wso2.carbon.andes.mgt.stub.AndesManagerServiceClusterMgtAdminException" %>
+
+
+<fmt:bundle basename="org.wso2.carbon.andes.cluster.mgt.ui.i18n.Resources">
+<carbon:jsi18n
+        resourceBundle="org.wso2.carbon.andes.cluster.mgt.ui.i18n.Resources"
+        request="<%=request%>"/>
+
+<script type="text/javascript" src="../admin/js/breadcrumbs.js"></script>
+<script type="text/javascript" src="../admin/js/cookies.js"></script>
+<script type="text/javascript" src="../admin/js/main.js"></script>
+<link rel="stylesheet" href="../styles/dsxmleditor.css"/>
+<link rel="stylesheet" href="../styles/tree-styles.css"/>
+
+<%
+    String serverURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
+    ConfigurationContext configContext =
+            (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
+    String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
+
+    ClusterManagerClient client;
+    String cassandraConnection = "";
+    String zookeeperConnection = "";
+
+    try {
+        client = new ClusterManagerClient(configContext, serverURL, cookie);
+        //client.initialize();
+        //client.refreshAllNodes();
+        cassandraConnection = client.getCassandraConnection();
+        zookeeperConnection = client.getZookeeperConnection();
+    } catch (Exception e) {
+        CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request, e);
+%>
+
+%>
+<script type="text/javascript">
+    location.href = "../admin/error.jsp";
+    alert("error");
+</script>
+<%
+        return;
+    }
+
+%>
+
+<script type="text/javascript">
+
+    function updateThroughput(hostName, index) {
+        jQuery.ajax({
+            url:'nodeUpdateQueries.jsp?hostName=' + hostName,
+            success:function(data) {
+                jQuery('#throughPutCell' + index).html($('#nodeThroughput', data));
+            }
+        });
+    }
+
+    function updateNumOfTopicsAndQueues(hostName, index) {
+        jQuery.ajax({
+            url:'nodeUpdateQueries.jsp?hostName=' + hostName,
+            success:function(data) {
+                jQuery('#queueLinkCell' + index).html($('#nodeQueues', data));
+                jQuery('#topicLinkCell' + index).html($('#nodeTopics', data));
+            }
+        });
+    }
+
+    function updateMemoryUsage(hostName, index) {
+        jQuery.ajax({
+            url:'nodeUpdateQueries.jsp?hostName=' + hostName,
+            success:function(data) {
+                jQuery('#memoryUsageCell' + index).html($('#memoryUsage', data));
+            }
+        });
+    }
+
+
+</script>
+
+<carbon:breadcrumb
+            label="nodes.list"
+        resourceBundle="org.wso2.carbon.andes.cluster.mgt.ui.i18n.Resources"
+        topPage="false"
+        request="<%=request%>"/>
+
+<div id="middle">
+    <h2>Cluster Management- WSO2 Message Broker</h2>
+
+    <div id="workArea">
+        <%
+            NodeDetail[] nodeDetailArray;
+            int totalNodeCount = client.getNumOfNodes();
+            int nodeCountPerPage = 20;
+            int pageNumber = 0;
+            String pageNumberAsStr = request.getParameter("pageNumber");
+            if (pageNumberAsStr != null) {
+                pageNumber = Integer.parseInt(pageNumberAsStr);
+            }
+            int numberOfPages = (int) Math.ceil(((float) totalNodeCount) / nodeCountPerPage);
+            try {
+                nodeDetailArray = client.getAllNodeDetail(pageNumber * nodeCountPerPage, nodeCountPerPage);
+                if (nodeDetailArray == null || nodeDetailArray.length == 0) {
+        %>
+        <fmt:message key='no.nodes.available'/>
+        <%
+        } else {
+        %>
+        <input type="hidden" name="pageNumber" value="<%=pageNumber%>"/>
+        <carbon:paginator pageNumber="<%=pageNumber%>" numberOfPages="<%=numberOfPages%>"
+                          page="nodesList.jsp" pageNumberParameterName="pageNumber"
+                          resourceBundle="org.wso2.carbon.andes.cluster.mgt.ui.i18n.Resources"
+                          prevKey="prev" nextKey="next"
+                          parameters="<%="test"%>"/>
+
+        <table style="width:60%" class="styledLeft">
+            <thead>
+            <tr>
+                <th width=60%><I><fmt:message key='cassandra.connection'/></I></th>
+                <th><I><%=cassandraConnection%>
+                </I></th>
+            </tr>
+            </thead>
+        </table>
+        <br>
+        <br>
+        <table style="width:60%" class="styledLeft">
+            <thead>
+            <tr>
+                <th width=60%><I><fmt:message key='zookeeper.connection'/></I></th>
+                <th><I><%=zookeeperConnection%>
+                </I></th>
+            </tr>
+            </thead>
+        </table>
+        <br>
+        <br>
+        <br>
+        <table class="styledLeft">
+            <thead>
+            <tr>
+                <th rowspan="2"><fmt:message key='node.host'/></th>
+                <th rowspan="2"><fmt:message key='node.ip'/></th>
+                <th rowspan="2"><fmt:message key='node.zookeeperID'/></th>
+                <th colspan="3" align="middle"><fmt:message key='node.messaging'/></th>
+                <th rowspan="2" colspan="2"><fmt:message key='node.throughput'/></th>
+                <th rowspan="2" colspan="2"><fmt:message key='node.memoryUsage'/></th>
+                <th rowspan="2" style="width:150px;"><fmt:message key='operations'/></th>
+            </tr>
+            <tr>
+                <th><fmt:message key='node.queues'/></th>
+                <th><fmt:message key='node.topics'/></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <%
+                int index = 0;
+                for (NodeDetail aNodeDetail : nodeDetailArray) {
+                    if (aNodeDetail != null) {
+                        String nodeId = aNodeDetail.getNodeId();
+                        String hostName = aNodeDetail.getHostName();
+                        String IPAddress = aNodeDetail.getIpAddress();
+                        String ZookeeperID = aNodeDetail.getZookeeperID();
+                        index++;
+
+            %>
+            <tr>
+                <td>
+                    <%=hostName%>
+                </td>
+                <td>
+                    <%=IPAddress %>
+                </td>
+                <td>
+                    <%=ZookeeperID %>
+                </td>
+                <td align="right">
+                    <a href="queue_List.jsp?hostName=<%=hostName%>&IPAddress=<%=IPAddress%>"><abbr
+                            id="queueLinkCell<%=index%>"><%=aNodeDetail.getNumOfQueues() %>
+                    </abbr>
+                    </a>
+                </td>
+                <td align="right">
+                    <a href="topic_List.jsp?hostName=<%=hostName%>&IPAddress=<%=IPAddress%>"><abbr
+                            id="topicLinkCell<%=index%>"><%=aNodeDetail.getNumOfTopics() %>
+                    </abbr>
+                    </a>
+                </td>
+                <td>
+                    <a style="background-image: url(images/refresh.gif);"
+                       class="icon-link" onclick="updateNumOfTopicsAndQueues('<%=hostName%>','<%=index%>')"></a>
+                </td>
+                <td align="right" id="throughPutCell<%=index%>">
+                    <%=aNodeDetail.getThroughput() %>
+                </td>
+                <td>
+                    <a style="background-image: url(images/refresh.gif);"
+                       class="icon-link" onclick="updateThroughput('<%=hostName%>','<%=index%>')"></a>
+                </td>
+                <td align="right" id="memoryUsageCell">
+                    <%=aNodeDetail.getMemoryUsage() %>
+                </td>
+                <td>
+                    <a style="background-image: url(images/refresh.gif);"
+                       class="icon-link" onclick="updateMemoryUsage('<%=hostName%>','<%=index%>')"></a>
+                </td>
+                <td>
+                    <a style="background-image: url(images/restart.png);"
+                       class="icon-link" onclick="doRestart('<%=nodeId%>')">Restart</a>
+                </td>
+            </tr>
+            <%
+                    }
+                }
+            %>
+            </tbody>
+        </table>
+        <%
+            }
+        } catch (Exception e) {
+        %>
+        <script type="text/javascript">CARBON.showErrorDialog('Failed with BE.<%=e%>');</script>
+        <%
+                return;
+            } %>
+
+    </div>
+</div>
+
+</fmt:bundle>

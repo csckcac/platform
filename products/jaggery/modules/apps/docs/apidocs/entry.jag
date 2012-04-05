@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Jaggery - Delicious Javascript</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+        }
+    </style>
+    <link href="../css/prettify.css" rel="stylesheet">
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="../images/favicon.ico">
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72"
+          href="../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114"
+          href="../images/apple-touch-icon-114x114.png">
+</head>
+
+<body>
+
+<%
+include('/includes/topnavi.jag');
+%>
+
+<div class="container-fluid" style="width: 960px; margin: auto;">
+<div class="row">
+    <div class="span16">
+        <div class="page-header">
+            <h1>
+                Documentation
+                <small>API documentation for Jaggery.js</small>
+            </h1>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+<div class="span4">
+    <div class="well">
+        <%
+        include('/includes/navi.jag');
+        %>
+
+    </div>
+
+</div>
+<div class="span12">
+<div class="content" id="atomFeed" name="atomFeed">
+    <h3>Entry</h3>
+
+        <pre class="prettyprint linenums">
+&lt%
+var reader = new FeedReader();
+var feed = new Feed();
+feed = reader.get("http://ruchirawageesha.blogspot.com/feeds/posts/default");
+
+//returns an Entry Object
+var entry = feed.getEntries()[0];
+
+print(entry.title);
+%&gt
+</pre>
+    <%
+    var reqCode = '&lt%'
+    + '\n var reader = new FeedReader();'
+    + '\n var feed = new Feed();'
+    + '\n feed = reader.get("http://ruchirawageesha.blogspot.com/feeds/posts/default");'
+    + '\n var entry = feed.getEntries()[0];'
+    + '\n print(entry.title);'
+    + '\n %&gt';
+
+    var codeSnip = encodeURIComponent(reqCode);
+    var urlString = '../tryitframe.jag?code='+codeSnip;
+
+    include('/includes/tryit_but.jag');
+    %>
+
+    <div id="pageLinks">
+                <a class="navilink" href="#overview">Overview</a>
+                <a class="navilink" href="#members">Members</a>
+                <a class="navilink" href="#operations">Operations</a>
+                </div>
+                 <section id="overview">
+                     <h4>Overview</h4>
+                      <p class="description">Entry object is the container for entries returned by an AtomFeed or Feed</p>
+                     </section>
+
+    <section id="members">
+        <h4>Members</h4>
+
+        <table class="clsStd members-table">
+            <tbody>
+            <tr>
+                <th>Member</th>
+                <th>Type</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>author</td>
+                <td>String </td>
+                <td>The author of this entry.</td>
+            </tr>
+            <tr>
+                <td>category</td>
+                <td>String </td>
+                <td>The category of this entry.</td>
+            </tr>
+            <tr>
+                <td>content</td>
+                <td>String </td>
+                <td>The content of this entry.</td>
+            </tr>
+            <tr>
+                <td>contributor</td>
+                <td>String </td>
+                <td>The contributor of this entry.</td>
+            </tr>
+            <tr>
+                <td>id</td>
+                <td>String </td>
+                <td>The id of this entry.</td>
+            </tr>
+            <tr>
+                <td>link</td>
+                <td>String[] </td>
+                <td>The location(s) of this entry.</td>
+            </tr>
+            <tr>
+                <td>published</td>
+                <td>String </td>
+                <td>The date this entry was published.</td>
+            </tr>
+            <tr>
+                <td>rights</td>
+                <td>String </td>
+                <td>The rights associated with this entry.</td>
+            </tr>
+            <tr>
+                <td>summary</td>
+                <td>String </td>
+                <td>The summary of this entry.</td>
+            </tr>
+            <tr>
+                <td>title</td>
+                <td>String </td>
+                <td>The title of this entry.</td>
+            </tr>
+            <tr>
+                <td>updated</td>
+                <td>String </td>
+                <td>The date this entry was updated.</td>
+            </tr>
+            <tr>
+                <td>XML</td>
+                <td>XML </td>
+                <td>Returns the E4X XML contents of this AtomEntry.</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+
+
+</div>
+<br>
+</div>
+
+</div>
+<%
+include('/includes/footer.jag');
+%>
+
+</div>
+
+<!-- /container -->
+<%
+include('/includes/scripts.jag')
+%>
+<script>
+
+    $(document).ready(function () {
+        $('#entry').toggleClass('active')
+        $('#docs').addClass('active')
+    })
+</script>
+</body>
+</html>

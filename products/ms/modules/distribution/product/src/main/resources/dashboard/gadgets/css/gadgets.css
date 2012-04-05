@@ -1,0 +1,30 @@
+td, th, p {
+    font-size:8pt;
+}
+
+h1, h2, h3, h4, h5, h6, p, pre, blockquote, ol, dl, address {
+    margin:0 0 0;
+    padding:0 0 0;
+}
+
+thead th {
+    background-image:url(../images/table-header.gif);
+    background-position:left bottom;
+    background-repeat:repeat-x;
+    border:1px solid #CCCCCC;
+    font-weight:normal;
+    height:22px;
+    line-height:20px;
+    margin-bottom:5px;
+    padding-left:8px;
+}
+
+tbody tr {
+    background-color:#EFECF5;
+    border:1px solid #CCCCCC;
+    font-weight:normal;
+    height:22px;
+    line-height:20px;
+    margin-bottom:5px;
+    padding-left:8px;
+}

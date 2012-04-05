@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+        <title>
+            @product.name@ v@product.version@ - Issue Tracking
+        </title>
+        <link href="css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body xml:lang="en">
+        <h1>
+            WSO2 Business Process Server (BPS) Issue Tracking
+        </h1>
+
+        <p>
+            @product.name@ is developed on top of the revolutionary WSO2 Carbon platform. To get an overall
+            idea on the issue management of the @product.name@, you might need to have a look at the
+            Carbon platform issue tracking as well.
+        </p>
+        <h2>Overview</h2>
+
+        <p>This project uses
+        <a class="externalLink" href="http://www.atlassian.com/software/jira">Jira</a> a J2EE-based,
+        issue tracking and project management application.</p>
+
+        <h2>Issue Tracking of the BPS Product</h2>
+        <p>Issues, bugs, and feature requests for the <a href="http://wso2.org/projects/bps">
+            @product.name@ product</a> should be submitted to the
+            following issue tracking system.</p>
+        <div class="source">
+            <a class="externalLink" href="http://wso2.org/jira/browse/BPS">http://wso2.org/jira/browse/BPS</a>
+        </div>
+        <h2>Issue Tracking of the Carbon Platform</h2>
+        <p>Issues, bugs, and feature requests for the <a href="http://wso2.org/projects/carbon">
+            WSO2 Carbon platform</a> should be submitted to the following issue tracking system.</p>
+        <div class="source">
+            <a class="externalLink" href="http://wso2.org/jira/browse/CARBON">http://wso2.org/jira/browse/CARBON</a>
+        </div>
+
+    </body>
+</html>

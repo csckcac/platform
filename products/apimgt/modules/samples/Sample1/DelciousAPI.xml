@@ -1,0 +1,35 @@
+<api xmlns="http://ws.apache.org/ns/synapse"  name="DelciousAPI" context="/deli">		
+        <resource methods="GET" url-mapping="/tags/get">
+            <inSequence>
+                <property name="REST_URL_POSTFIX" scope="axis2" action="remove"/>
+                <send>
+                    <endpoint name="Delicious">
+                        <address uri="https://api.del.icio.us/v1/tags/get"/>
+                    </endpoint>
+                </send>
+            </inSequence>
+            <outSequence>
+                <send/>
+            </outSequence>
+        </resource>
+        <resource methods="GET" uri-template="/posts/get">
+            <inSequence>
+		<property name="REST_URL_POSTFIX" scope="axis2" action="remove"/>
+                <send>
+                    <endpoint name="Delicious">
+                        <address uri="https://api.del.icio.us/v1/posts/get"/>
+                    </endpoint>
+                </send>
+            </inSequence>
+            <outSequence>
+                <send/>
+            </outSequence>
+        </resource>
+        <handlers>
+            <handler class="org.wso2.carbon.api.handler.throttle.RestAPIThrottleHandler">
+                <property name="id" value="A"/>
+                <property name="policyKey" value="conf:/BasicMediatorThrottle_policy.xml"/>
+            </handler>
+        </handlers>
+</api>
+

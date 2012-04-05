@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  ~  Copyright (c) 2005-2008, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  ~
+  -->
+
+<!DOCTYPE html
+   PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" >
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <title>
+      WSO2 Governance Registry - Guide for Webdav Mounting Support 
+    </title>
+    <link href="css/greg-docs.css" rel="stylesheet"/>
+    <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+  </head>
+  <body xml:lang="en">
+<h1>WSO2 Governance Registry - Guide for Webdav Mounting Support</h1>
+<h2>Table of Contents</h2>
+
+<ul>
+	<li>
+		<a href="#overview">Overview</a>
+	</li>
+	<li>
+		<a href="#on-linux">On Linux/Ubuntu</a>
+		<ul>
+			<li>
+				<a href="#installing-client">Installing Webdav client</a>
+			</li>
+			<li>
+				<a href="#configure_davfs">How to configure davfs2 in your local file system</a>
+			</li>
+			<li>
+				<a href="#mounting">How to mount Registry to your local file system</a>
+			</li>
+		</ul>
+	</li>
+	<li>
+		<a href="#on-windows">On Windows XP, Vista and Win7</a>
+		<ul>
+			<li>	
+				<a href="#enable-net-dis-win">Enable network discovery</a>
+				<ul>
+					<li>
+						<a href="#enable-net-dis-win-xp-vista">Windows XP and Vista</a>
+					</li>
+					<li>
+						<a href="#enable-net-dis-win-7">Windows 7</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="#mounting-win">How to mount Registry to your local file system</a>
+			</li>
+		</ul>
+	</li>
+</ul>
+
+<h2 id="overview">Overview</h2>
+<p>
+Webdav is a very popular way to mount the remote file system to your machine and keep it synchronized with the remote file system. So with Governance Registry Webdav support
+we are allowing users to mount Registry resources in to your local file system and keep up to date with the Registry resources.
+</p>
+
+<h2 id="on-linux">On Linux/Ubuntu</h2>
+<h3 id="installing-client">Installing Webdav client</h3>
+<p>
+Before using webdav support with Governance Registry you need to install webdav client to your local machine based on your operating system.
+Ex: If you are an Ubuntu user you can install devfs2 by running the following command</p>
+
+<p><strong>sudo apt-get install davfs2</strong></p>
+
+<h3 id="configure_davfs">How to configure davfs2 in your local file system</h3>
+<p>
+Add the follwoing entries into davfs2.conf file. There is a system wide configuration file /etc/davfs2/davfs2.conf and user configuration files ~/.davfs2/davfs2.conf. When mount.davfs is invoked by root, only the system wide configuration file is read. When invoked by an ordinary user, the user configuration file is read in addition, and the user configuration takes precedence over the system wide configuration.
+</p>
+<pre>
+    use_locks 0
+    drop_weak_etags 1
+    allow_cookie 1
+</pre>
+      <p><strong>Imortant Note</strong>: Without these settings, WebDAV may not function as expected.</p>
+
+<h3 id="mounting">How to mount Registry to your local file system</h3>
+<p>
+Use following steps to mount the complete Registry root in to your file system (/mnt/webdav directory) if you are a Linux User.
+</p>
+
+<ol>
+<li>Create a directory /mnt/webdav1 in your system.</li>
+<li>sudo mount -t davfs https://localhost:9443/registry/resourcewebdav /mnt/webdav1/</li>
+<li>During the mounting process give the username/password of a user who has read permission in to Registry root.</li>
+<li>This will mount complete GREG root to your directory created in /mnt/webdav1</li>
+</ol>
+<h2 id="on-windows">On Windows XP, Vista and Win7</h2>
+<p>
+Microsoft WebDAV client is called WebDAV Mini Redirector and allows one to map a WebDAV location to a Drive letter.
+</p>
+<h3 id="enable-net-dis-win">Enable network discovery</h3>
+<p>By default, Windows Firewall blocks network discovery (formerly called UPnP technology), but you can enable it.
+</p>
+<h4 id="enable-net-dis-win-xp-vista">Windows XP and Vista</h4>
+<p>Open <strong>Network and Sharing Center</strong> by clicking the <b>Start</b> button , clicking <b>Control Panel</b>, clicking <b>Network and Internet</b>, and then clicking <b>Network and Sharing Center</b>.
+If network discovery is off, click the arrow button ‌ to expand the section.
+Click <b>Turn on network discovery</b>, and then click <b>Apply</b>.
+If you are prompted for an administrator password or confirmation, type the password or provide confirmation.
+</p>
+<h4 id="enable-net-dis-win-7">Windows 7</h4>
+<p>Open <b>Advanced sharing settings</b> by clicking the <b>Start</b> button , and then clicking <b>Control Panel</b>.
+In the search box, type network, click <b>Network and Sharing Center</b>, and then, in the left pane, click <b>Change advanced sharing settings</b>.
+</p>
+<h3 id="mounting-win">How to mount Registry to your local file system</h3>
+<p>
+Use following steps to mount the complete Registry root in to your file system.
+</p>
+
+<ol>
+<li>Right click on <b>My Computer</b> and select <b>Map Network Drive</b>.</li>
+<li>In the Folder "entry field", enter the URL(https://localhost:9443/registry/resourcewebdav), and click <b>Finish</b>.</li>
+<li>Enter your username and password of a user who has read permission in to Registry root in the authentication box that appears.</li>
+<li>This will mount complete GREG root as a network drive.</li>
+</ol>
+</body>
+</html>

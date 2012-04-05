@@ -1,0 +1,35 @@
+<pre style="line-height: 100%;font-family:monospace;background-color:#ffffff; border-width:0.01mm; border-color:#000000; border-style:solid;padding:4px;font-size:10pt;"><span style="background-color:#edffed;">&lt;!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--&gt;
+&lt;%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;JSP 2.0 Examples - Hello World Using a Tag File&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;JSP 2.0 Examples - Hello World Using a Tag File&lt;/h1&gt;
+    &lt;hr&gt;
+    &lt;p&gt;This JSP page invokes a custom tag that simply echos "Hello, World!"
+    The custom tag is generated from a tag file in the /WEB-INF/tags
+    directory.&lt;/p&gt;
+    &lt;p&gt;Notice that we did not need to write a TLD for this tag.  We just
+    created /WEB-INF/tags/helloWorld.tag, imported it using the taglib
+    directive, and used it!&lt;/p&gt;
+    &lt;br&gt;
+    &lt;b&gt;&lt;u&gt;Result:&lt;/u&gt;&lt;/b&gt;
+    &lt;tags:helloWorld/&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</span></pre>

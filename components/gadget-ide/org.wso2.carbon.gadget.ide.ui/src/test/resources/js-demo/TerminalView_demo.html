@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+    <title>Demo for Terminal</title>
+    <link href="../../../main/js/lib/closure-library/closure/goog/css/common.css" rel="stylesheet">
+    <link href="../../../main/resources/css/WireIt.css" rel="stylesheet">
+    <link href="css/TerminalView.css" rel="stylesheet">
+    <script src="../../../main/js/lib/closure-library/closure/goog/base.js"></script>
+    <script src="../../../main/resources/js/wireit/utilities.js"></script>
+    <script src="../../../main/resources/js/wireit/excanvas.js"></script>
+    <script src="../../../main/resources/js/wireit/wireit.js"></script>
+    <script>
+        goog.require('gadgetide.ui.TerminalView');
+    </script>
+</head>
+<body>
+<div id="demoBox" style=" height: 600px;
+                             width: 800px;
+                             background-color:#eeffff;
+                             box-shadow: 2px 0 120px 0 rgba(54, 54, 54, 0.15) inset;
+                             padding: 40px;
+                             font:12px/18px 'Lucida Grande','Lucida Sans Unicode',Helvetica,Arial,Verdana,sans-serif;
+                              ">
+
+    <div id="lbox" class="goog-inline-block"></div>
+    <div id="rbox" class="goog-inline-block"></div>
+</div>
+<script>
+
+    var dsSchema = {
+        "p:getStudentsResponse": {
+            "@xmlns": {
+                "p": "http://mgt.student.carbon.wso2.org"
+            },
+            "ax23:return": {
+                "@multiple": "true",
+                "@xmlns": {
+                    "p": "http://mgt.student.carbon.wso2.org",
+                    "ax23": "http://mgt.student.carbon.wso2.org"
+                },
+                "xs:age": {
+                    "@multiple": "false",
+                    "@xmlns": {
+                        "p": "http://mgt.student.carbon.wso2.org",
+                        "ax23": "http://mgt.student.carbon.wso2.org",
+                        "xs": "http://data.mgt.student.carbon.wso2.org/xsd"
+                    },
+                    "$": "?"
+                },
+                "name": {
+                    "@multiple": "false",
+                    "@xmlns": {
+                        "p": "http://mgt.student.carbon.wso2.org",
+                        "$": "http://data.mgt.student.carbon.wso2.org/xsd"
+                    },
+                    "firstName": {
+                        "@xmlns": {
+                            "p": "http://mgt.student.carbon.wso2.org",
+                            "$": "http://data.mgt.student.carbon.wso2.org/xsd"
+                        },
+                        "$": "?"
+                    },
+                    "lastName": {
+                        "@multiple": "false",
+                        "@xmlns": {
+                            "p": "http://mgt.student.carbon.wso2.org",
+                            "$": "http://data.mgt.student.carbon.wso2.org/xsd"
+                        },
+                        "$": "?"
+                    }
+                }
+            }
+        }
+    };
+
+    var tree = gadgetide.schema.parseDataFieldTree(dsSchema);
+
+    var lBoxDiv = goog.dom.getElement('lbox');
+    var dataSourceView1 = new gadgetide.ui.TerminalView(tree, false /* is Input */);
+    dataSourceView1.render(lBoxDiv);
+
+    var rBoxDiv = goog.dom.getElement('rbox');
+    var dataSourceView2 = new gadgetide.ui.TerminalView(tree, true /* is Input */);
+    dataSourceView2.render(rBoxDiv);
+
+</script>
+</body>
+
+</html>
+

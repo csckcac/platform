@@ -1,0 +1,291 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:ns="http://services.editor.gadget.carbon.wso2.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ax2104="http://exceptions.core.registry.carbon.wso2.org/xsd" targetNamespace="http://services.editor.gadget.carbon.wso2.org">
+    <wsdl:documentation>GadgetEditorService</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ax2105="http://services.editor.gadget.carbon.wso2.org" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://exceptions.core.registry.carbon.wso2.org/xsd">
+            <xs:import namespace="http://services.editor.gadget.carbon.wso2.org" />
+            <xs:complexType name="RegistryException">
+                <xs:complexContent>
+                    <xs:extension base="ns:Exception">
+                        <xs:sequence />
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax2106="http://exceptions.core.registry.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.editor.gadget.carbon.wso2.org">
+            <xs:import namespace="http://exceptions.core.registry.carbon.wso2.org/xsd" />
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Exception" nillable="true" type="xs:anyType" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="RegistryException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="RegistryException" nillable="true" type="ax2104:RegistryException" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="saveGadget">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="location" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="content" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="saveGadgetResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="openGadget">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="location" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="openGadgetResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="isResourceExist">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="path" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="isResourceExistResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getImmediateChildResources">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="path" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getImmediateChildResourcesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getImmediateChildResourcesRequest">
+        <wsdl:part name="parameters" element="ns:getImmediateChildResources" />
+    </wsdl:message>
+    <wsdl:message name="getImmediateChildResourcesResponse">
+        <wsdl:part name="parameters" element="ns:getImmediateChildResourcesResponse" />
+    </wsdl:message>
+    <wsdl:message name="isResourceExistRequest">
+        <wsdl:part name="parameters" element="ns:isResourceExist" />
+    </wsdl:message>
+    <wsdl:message name="isResourceExistResponse">
+        <wsdl:part name="parameters" element="ns:isResourceExistResponse" />
+    </wsdl:message>
+    <wsdl:message name="openGadgetRequest">
+        <wsdl:part name="parameters" element="ns:openGadget" />
+    </wsdl:message>
+    <wsdl:message name="openGadgetResponse">
+        <wsdl:part name="parameters" element="ns:openGadgetResponse" />
+    </wsdl:message>
+    <wsdl:message name="RegistryException">
+        <wsdl:part name="parameters" element="ns:RegistryException" />
+    </wsdl:message>
+    <wsdl:message name="saveGadgetRequest">
+        <wsdl:part name="parameters" element="ns:saveGadget" />
+    </wsdl:message>
+    <wsdl:message name="saveGadgetResponse">
+        <wsdl:part name="parameters" element="ns:saveGadgetResponse" />
+    </wsdl:message>
+    <wsdl:portType name="GadgetEditorServicePortType">
+        <wsdl:operation name="getImmediateChildResources">
+            <wsdl:input message="ns:getImmediateChildResourcesRequest" wsaw:Action="urn:getImmediateChildResources" />
+            <wsdl:output message="ns:getImmediateChildResourcesResponse" wsaw:Action="urn:getImmediateChildResourcesResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="isResourceExist">
+            <wsdl:input message="ns:isResourceExistRequest" wsaw:Action="urn:isResourceExist" />
+            <wsdl:output message="ns:isResourceExistResponse" wsaw:Action="urn:isResourceExistResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="openGadget">
+            <wsdl:input message="ns:openGadgetRequest" wsaw:Action="urn:openGadget" />
+            <wsdl:output message="ns:openGadgetResponse" wsaw:Action="urn:openGadgetResponse" />
+            <wsdl:fault message="ns:RegistryException" name="RegistryException" wsaw:Action="urn:openGadgetRegistryException" />
+        </wsdl:operation>
+        <wsdl:operation name="saveGadget">
+            <wsdl:input message="ns:saveGadgetRequest" wsaw:Action="urn:saveGadget" />
+            <wsdl:output message="ns:saveGadgetResponse" wsaw:Action="urn:saveGadgetResponse" />
+            <wsdl:fault message="ns:RegistryException" name="RegistryException" wsaw:Action="urn:saveGadgetRegistryException" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="GadgetEditorServiceSoap11Binding" type="ns:GadgetEditorServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="getImmediateChildResources">
+            <soap:operation soapAction="urn:getImmediateChildResources" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="openGadget">
+            <soap:operation soapAction="urn:openGadget" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="RegistryException">
+                <soap:fault use="literal" name="RegistryException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="isResourceExist">
+            <soap:operation soapAction="urn:isResourceExist" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="saveGadget">
+            <soap:operation soapAction="urn:saveGadget" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="RegistryException">
+                <soap:fault use="literal" name="RegistryException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="GadgetEditorServiceSoap12Binding" type="ns:GadgetEditorServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="getImmediateChildResources">
+            <soap12:operation soapAction="urn:getImmediateChildResources" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="openGadget">
+            <soap12:operation soapAction="urn:openGadget" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="RegistryException">
+                <soap12:fault use="literal" name="RegistryException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="isResourceExist">
+            <soap12:operation soapAction="urn:isResourceExist" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="saveGadget">
+            <soap12:operation soapAction="urn:saveGadget" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="RegistryException">
+                <soap12:fault use="literal" name="RegistryException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="GadgetEditorServiceHttpBinding" type="ns:GadgetEditorServicePortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="getImmediateChildResources">
+            <http:operation location="getImmediateChildResources" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getImmediateChildResources" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getImmediateChildResources" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="openGadget">
+            <http:operation location="openGadget" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="openGadget" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="openGadget" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="isResourceExist">
+            <http:operation location="isResourceExist" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="isResourceExist" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="isResourceExist" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="saveGadget">
+            <http:operation location="saveGadget" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="saveGadget" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="saveGadget" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="GadgetEditorService">
+        <wsdl:port name="GadgetEditorServiceHttpsSoap11Endpoint" binding="ns:GadgetEditorServiceSoap11Binding">
+            <soap:address location="https://10.201.195.99:9443/services/GadgetEditorService.GadgetEditorServiceHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="GadgetEditorServiceHttpsSoap12Endpoint" binding="ns:GadgetEditorServiceSoap12Binding">
+            <soap12:address location="https://10.201.195.99:9443/services/GadgetEditorService.GadgetEditorServiceHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="GadgetEditorServiceHttpsEndpoint" binding="ns:GadgetEditorServiceHttpBinding">
+            <http:address location="https://10.201.195.99:9443/services/GadgetEditorService.GadgetEditorServiceHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,509 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://internal.admin.messagebox.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ax2189="http://internal.admin.messagebox.carbon.wso2.org/xsd" xmlns:ax2187="http://exception.internal.admin.messagebox.carbon.wso2.org/xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://internal.admin.messagebox.carbon.wso2.org">
+    <wsdl:documentation>QueueManagerAdminService</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ax2190="http://internal.admin.messagebox.carbon.wso2.org/xsd" xmlns:ax2188="http://exception.internal.admin.messagebox.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://internal.admin.messagebox.carbon.wso2.org">
+            <xs:import namespace="http://exception.internal.admin.messagebox.carbon.wso2.org/xsd" />
+            <xs:import namespace="http://internal.admin.messagebox.carbon.wso2.org/xsd" />
+            <xs:element name="QueueManagerAdminServiceMessageBoxAdminException">
+                <xs:complexType>
+                    <xs:sequence>
+
+                        <xs:element minOccurs="0" name="MessageBoxAdminException" nillable="true" type="ax2188:MessageBoxAdminException" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateUserPermissions">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="queueName" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="adminQueueUserPermissions" nillable="true" type="ax2190:QueueUserPermissionBean" />
+
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateRolePermissions">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="queueName" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="adminQueueRolePermissions" nillable="true" type="ax2190:QueueRolePermissionBean" />
+                    </xs:sequence>
+
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getQueuesCount">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getQueuesCountResponse">
+                <xs:complexType>
+
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getQueueUserPermissions">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="qName" nillable="true" type="xs:string" />
+
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getQueueUserPermissionsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2190:QueueUserPermissionBean" />
+                    </xs:sequence>
+                </xs:complexType>
+
+            </xs:element>
+            <xs:element name="getQueueRolePermissions">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="qName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getQueueRolePermissionsResponse">
+
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2190:QueueRolePermissionBean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllQueues">
+                <xs:complexType>
+                    <xs:sequence>
+
+                        <xs:element minOccurs="0" name="startingIndex" type="xs:int" />
+                        <xs:element minOccurs="0" name="maxQueueCount" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllQueuesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2190:Queue" />
+
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteQueue">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="queueName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+
+            </xs:element>
+            <xs:element name="addQueue">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="queueName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://exception.internal.admin.messagebox.carbon.wso2.org/xsd">
+            <xs:complexType name="MessageBoxAdminException">
+                <xs:all>
+                    <xs:element minOccurs="0" name="errorMessage" nillable="true" type="xs:string" />
+                </xs:all>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://internal.admin.messagebox.carbon.wso2.org/xsd">
+            <xs:complexType name="QueueUserPermissionBean">
+
+                <xs:all>
+                    <xs:element minOccurs="0" name="allowedToConsume" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="allowedToPublish" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string" />
+                </xs:all>
+            </xs:complexType>
+            <xs:complexType name="QueueRolePermissionBean">
+                <xs:all>
+                    <xs:element minOccurs="0" name="allowedToConsume" type="xs:boolean" />
+
+                    <xs:element minOccurs="0" name="allowedToPublish" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string" />
+                </xs:all>
+            </xs:complexType>
+            <xs:complexType name="Queue">
+                <xs:all>
+                    <xs:element minOccurs="0" name="createdFrom" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="createdTime" nillable="true" type="xs:dateTime" />
+                    <xs:element minOccurs="0" name="messageCount" type="xs:int" />
+
+                    <xs:element minOccurs="0" name="queueDepth" type="xs:long" />
+                    <xs:element minOccurs="0" name="queueName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="updatedTime" nillable="true" type="xs:dateTime" />
+                </xs:all>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getAllQueuesRequest">
+        <wsdl:part name="parameters" element="ns:getAllQueues" />
+
+    </wsdl:message>
+    <wsdl:message name="getAllQueuesResponse">
+        <wsdl:part name="parameters" element="ns:getAllQueuesResponse" />
+    </wsdl:message>
+    <wsdl:message name="QueueManagerAdminServiceMessageBoxAdminException">
+        <wsdl:part name="parameters" element="ns:QueueManagerAdminServiceMessageBoxAdminException" />
+    </wsdl:message>
+    <wsdl:message name="getQueueRolePermissionsRequest">
+        <wsdl:part name="parameters" element="ns:getQueueRolePermissions" />
+
+    </wsdl:message>
+    <wsdl:message name="getQueueRolePermissionsResponse">
+        <wsdl:part name="parameters" element="ns:getQueueRolePermissionsResponse" />
+    </wsdl:message>
+    <wsdl:message name="getQueueUserPermissionsRequest">
+        <wsdl:part name="parameters" element="ns:getQueueUserPermissions" />
+    </wsdl:message>
+    <wsdl:message name="getQueueUserPermissionsResponse">
+        <wsdl:part name="parameters" element="ns:getQueueUserPermissionsResponse" />
+
+    </wsdl:message>
+    <wsdl:message name="deleteQueueRequest">
+        <wsdl:part name="parameters" element="ns:deleteQueue" />
+    </wsdl:message>
+    <wsdl:message name="updateUserPermissionsRequest">
+        <wsdl:part name="parameters" element="ns:updateUserPermissions" />
+    </wsdl:message>
+    <wsdl:message name="addQueueRequest">
+        <wsdl:part name="parameters" element="ns:addQueue" />
+
+    </wsdl:message>
+    <wsdl:message name="updateRolePermissionsRequest">
+        <wsdl:part name="parameters" element="ns:updateRolePermissions" />
+    </wsdl:message>
+    <wsdl:message name="getQueuesCountRequest">
+        <wsdl:part name="parameters" element="ns:getQueuesCount" />
+    </wsdl:message>
+    <wsdl:message name="getQueuesCountResponse">
+        <wsdl:part name="parameters" element="ns:getQueuesCountResponse" />
+
+    </wsdl:message>
+    <wsdl:portType name="QueueManagerAdminServicePortType">
+        <wsdl:operation name="getAllQueues">
+            <wsdl:input message="ns:getAllQueuesRequest" wsaw:Action="urn:getAllQueues" />
+            <wsdl:output message="ns:getAllQueuesResponse" wsaw:Action="urn:getAllQueuesResponse" />
+            <wsdl:fault message="ns:QueueManagerAdminServiceMessageBoxAdminException" name="QueueManagerAdminServiceMessageBoxAdminException" wsaw:Action="urn:getAllQueuesQueueManagerAdminServiceMessageBoxAdminException" />
+        </wsdl:operation>
+        <wsdl:operation name="getQueueRolePermissions">
+            <wsdl:input message="ns:getQueueRolePermissionsRequest" wsaw:Action="urn:getQueueRolePermissions" />
+
+            <wsdl:output message="ns:getQueueRolePermissionsResponse" wsaw:Action="urn:getQueueRolePermissionsResponse" />
+            <wsdl:fault message="ns:QueueManagerAdminServiceMessageBoxAdminException" name="QueueManagerAdminServiceMessageBoxAdminException" wsaw:Action="urn:getQueueRolePermissionsQueueManagerAdminServiceMessageBoxAdminException" />
+        </wsdl:operation>
+        <wsdl:operation name="getQueueUserPermissions">
+            <wsdl:input message="ns:getQueueUserPermissionsRequest" wsaw:Action="urn:getQueueUserPermissions" />
+            <wsdl:output message="ns:getQueueUserPermissionsResponse" wsaw:Action="urn:getQueueUserPermissionsResponse" />
+            <wsdl:fault message="ns:QueueManagerAdminServiceMessageBoxAdminException" name="QueueManagerAdminServiceMessageBoxAdminException" wsaw:Action="urn:getQueueUserPermissionsQueueManagerAdminServiceMessageBoxAdminException" />
+        </wsdl:operation>
+        <wsdl:operation name="deleteQueue">
+
+            <wsdl:input message="ns:deleteQueueRequest" wsaw:Action="urn:deleteQueue" />
+            <wsdl:fault message="ns:QueueManagerAdminServiceMessageBoxAdminException" name="QueueManagerAdminServiceMessageBoxAdminException" wsaw:Action="urn:deleteQueueQueueManagerAdminServiceMessageBoxAdminException" />
+        </wsdl:operation>
+        <wsdl:operation name="updateUserPermissions">
+            <wsdl:input message="ns:updateUserPermissionsRequest" wsaw:Action="urn:updateUserPermissions" />
+            <wsdl:fault message="ns:QueueManagerAdminServiceMessageBoxAdminException" name="QueueManagerAdminServiceMessageBoxAdminException" wsaw:Action="urn:updateUserPermissionsQueueManagerAdminServiceMessageBoxAdminException" />
+        </wsdl:operation>
+        <wsdl:operation name="addQueue">
+            <wsdl:input message="ns:addQueueRequest" wsaw:Action="urn:addQueue" />
+
+            <wsdl:fault message="ns:QueueManagerAdminServiceMessageBoxAdminException" name="QueueManagerAdminServiceMessageBoxAdminException" wsaw:Action="urn:addQueueQueueManagerAdminServiceMessageBoxAdminException" />
+        </wsdl:operation>
+        <wsdl:operation name="updateRolePermissions">
+            <wsdl:input message="ns:updateRolePermissionsRequest" wsaw:Action="urn:updateRolePermissions" />
+            <wsdl:fault message="ns:QueueManagerAdminServiceMessageBoxAdminException" name="QueueManagerAdminServiceMessageBoxAdminException" wsaw:Action="urn:updateRolePermissionsQueueManagerAdminServiceMessageBoxAdminException" />
+        </wsdl:operation>
+        <wsdl:operation name="getQueuesCount">
+            <wsdl:input message="ns:getQueuesCountRequest" wsaw:Action="urn:getQueuesCount" />
+            <wsdl:output message="ns:getQueuesCountResponse" wsaw:Action="urn:getQueuesCountResponse" />
+
+            <wsdl:fault message="ns:QueueManagerAdminServiceMessageBoxAdminException" name="QueueManagerAdminServiceMessageBoxAdminException" wsaw:Action="urn:getQueuesCountQueueManagerAdminServiceMessageBoxAdminException" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="QueueManagerAdminServiceSoap11Binding" type="ns:QueueManagerAdminServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="getAllQueues">
+            <soap:operation soapAction="urn:getAllQueues" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="QueueManagerAdminServiceMessageBoxAdminException">
+                <soap:fault use="literal" name="QueueManagerAdminServiceMessageBoxAdminException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getQueueUserPermissions">
+
+            <soap:operation soapAction="urn:getQueueUserPermissions" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="QueueManagerAdminServiceMessageBoxAdminException">
+                <soap:fault use="literal" name="QueueManagerAdminServiceMessageBoxAdminException" />
+
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getQueueRolePermissions">
+            <soap:operation soapAction="urn:getQueueRolePermissions" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+
+            </wsdl:output>
+            <wsdl:fault name="QueueManagerAdminServiceMessageBoxAdminException">
+                <soap:fault use="literal" name="QueueManagerAdminServiceMessageBoxAdminException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteQueue">
+            <soap:operation soapAction="urn:deleteQueue" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+
+            </wsdl:input>
+            <wsdl:fault name="QueueManagerAdminServiceMessageBoxAdminException">
+                <soap:fault use="literal" name="QueueManagerAdminServiceMessageBoxAdminException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateUserPermissions">
+            <soap:operation soapAction="urn:updateUserPermissions" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+
+            </wsdl:input>
+            <wsdl:fault name="QueueManagerAdminServiceMessageBoxAdminException">
+                <soap:fault use="literal" name="QueueManagerAdminServiceMessageBoxAdminException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addQueue">
+            <soap:operation soapAction="urn:addQueue" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+
+            </wsdl:input>
+            <wsdl:fault name="QueueManagerAdminServiceMessageBoxAdminException">
+                <soap:fault use="literal" name="QueueManagerAdminServiceMessageBoxAdminException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateRolePermissions">
+            <soap:operation soapAction="urn:updateRolePermissions" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+
+            </wsdl:input>
+            <wsdl:fault name="QueueManagerAdminServiceMessageBoxAdminException">
+                <soap:fault use="literal" name="QueueManagerAdminServiceMessageBoxAdminException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getQueuesCount">
+            <soap:operation soapAction="urn:getQueuesCount" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="QueueManagerAdminServiceMessageBoxAdminException">
+                <soap:fault use="literal" name="QueueManagerAdminServiceMessageBoxAdminException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:binding name="QueueManagerAdminServiceSoap12Binding" type="ns:QueueManagerAdminServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="getAllQueues">
+            <soap12:operation soapAction="urn:getAllQueues" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+
+            </wsdl:output>
+            <wsdl:fault name="QueueManagerAdminServiceMessageBoxAdminException">
+                <soap12:fault use="literal" name="QueueManagerAdminServiceMessageBoxAdminException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getQueueUserPermissions">
+            <soap12:operation soapAction="urn:getQueueUserPermissions" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="QueueManagerAdminServiceMessageBoxAdminException">
+                <soap12:fault use="literal" name="QueueManagerAdminServiceMessageBoxAdminException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getQueueRolePermissions">
+
+            <soap12:operation soapAction="urn:getQueueRolePermissions" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="QueueManagerAdminServiceMessageBoxAdminException">
+                <soap12:fault use="literal" name="QueueManagerAdminServiceMessageBoxAdminException" />
+
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteQueue">
+            <soap12:operation soapAction="urn:deleteQueue" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="QueueManagerAdminServiceMessageBoxAdminException">
+                <soap12:fault use="literal" name="QueueManagerAdminServiceMessageBoxAdminException" />
+
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateUserPermissions">
+            <soap12:operation soapAction="urn:updateUserPermissions" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="QueueManagerAdminServiceMessageBoxAdminException">
+                <soap12:fault use="literal" name="QueueManagerAdminServiceMessageBoxAdminException" />
+
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addQueue">
+            <soap12:operation soapAction="urn:addQueue" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="QueueManagerAdminServiceMessageBoxAdminException">
+                <soap12:fault use="literal" name="QueueManagerAdminServiceMessageBoxAdminException" />
+
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateRolePermissions">
+            <soap12:operation soapAction="urn:updateRolePermissions" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="QueueManagerAdminServiceMessageBoxAdminException">
+                <soap12:fault use="literal" name="QueueManagerAdminServiceMessageBoxAdminException" />
+
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getQueuesCount">
+            <soap12:operation soapAction="urn:getQueuesCount" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+
+            </wsdl:output>
+            <wsdl:fault name="QueueManagerAdminServiceMessageBoxAdminException">
+                <soap12:fault use="literal" name="QueueManagerAdminServiceMessageBoxAdminException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="QueueManagerAdminServiceHttpBinding" type="ns:QueueManagerAdminServicePortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="getAllQueues">
+
+            <http:operation location="getAllQueues" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getQueueUserPermissions">
+
+            <http:operation location="getQueueUserPermissions" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getQueueRolePermissions">
+
+            <http:operation location="getQueueRolePermissions" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteQueue">
+
+            <http:operation location="deleteQueue" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="updateUserPermissions">
+            <http:operation location="updateUserPermissions" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addQueue">
+            <http:operation location="addQueue" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="updateRolePermissions">
+
+            <http:operation location="updateRolePermissions" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getQueuesCount">
+            <http:operation location="getQueuesCount" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="QueueManagerAdminService">
+        <wsdl:port name="QueueManagerAdminServiceHttpsSoap11Endpoint" binding="ns:QueueManagerAdminServiceSoap11Binding">
+            <soap:address location="https://10.215.174.38:9443/services/QueueManagerAdminService.QueueManagerAdminServiceHttpsSoap11Endpoint/" />
+
+        </wsdl:port>
+        <wsdl:port name="QueueManagerAdminServiceHttpsSoap12Endpoint" binding="ns:QueueManagerAdminServiceSoap12Binding">
+            <soap12:address location="https://10.215.174.38:9443/services/QueueManagerAdminService.QueueManagerAdminServiceHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="QueueManagerAdminServiceHttpsEndpoint" binding="ns:QueueManagerAdminServiceHttpBinding">
+            <http:address location="https://10.215.174.38:9443/services/QueueManagerAdminService.QueueManagerAdminServiceHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

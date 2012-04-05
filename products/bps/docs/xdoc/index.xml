@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>
+            Welcome to WSO2 Business Process Server (BPS) v@product.version@
+        </title>
+        <link href="css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body xml:lang="en">
+        <h1>
+            Welcome to WSO2 Business Process Server (BPS) v@product.version@
+        </h1>
+        <p>
+            WSO2 Business Process Server (BPS) is an easy-to-use Open Source Business Process Server that executes
+            business processes written following WS-BPEL standard. WS-BPEL is emerging as the de-facto standard for
+            composing multiple synchronous and asynchronous web services into collaborative and transactional process
+            flows which increase the flexibility and agility of your Service Oriented Architecture. @product.name@ is powered
+            by
+            <a href="http://ode.apache.org">Apache ODE</a>
+            and available under
+	    <a href="http://www.apache.org/licenses/LICENSE-2.0.html">
+	    Apache Software License
+            v2.0</a>. @product.name@ provides a complete Web based graphical console to deploy, manage and monitor business
+            process and process instances.
+        </p>
+        <p>
+            @product.name@ is developed on top of the revolutionary Carbon platform (Middleware a' la carte), and is based on
+            the OSGi framework to achieve the better modularity for you SOA. Carbon platform contains lots of new
+            features and many other optional components that can be used to customize or enhance the functionalities
+            provided by BPS to suits you SOA needs. In addition to installing optional components you can uninstall
+            unwanted features without any trouble.
+        </p>
+        <p>
+            You can download the distribution from
+            <a href="http://wso2.org/downloads/bps">Project Download Page</a>
+            and give it a try.
+        </p>
+
+        <h2>Getting Started With @product.name@ v@product.version@</h2>
+        <p>It's really easy to get started with @product.name@. No complex configurations, just download, install and deploy
+            your processes.
+        </p>
+        <ol>
+            <li>
+                <a href="http://wso2.org/downloads/bps">Download</a>
+                and install @product.name@ @product.version@.
+            </li>
+            <li>Read through the <a href="docs_index.html">documentation</a>.
+            </li>
+            <li>Try out the samples comes with @product.name@.</li>
+            <li>For high level feature list look at the release notes.</li>
+            <li>Join developer mailing list and correspond with the developers directly.</li>
+            <li>Joing user mailing list.</li>
+            <li>Use
+                <a href="http://wso2.org/forum/886">WSO2 Business Process Server discussion forum</a>
+                to raise your questions.
+            </li>
+            <li>Report any issues or enhancement requests at public
+                <a href="https://wso2.org/jira/browse/CARBON">JIRA.</a>
+            </li>
+        </ol>
+
+        <h2>What's new in @product.name@ @product.version@</h2>
+        <ul>
+            <li>Performance improvements in XPath evaluations.</li>
+            <li>Clustering support for BPEL engine.</li>
+            <li>Improved Try-it tool.</li>
+            <li>WSO2 Carbon integration layer for Apache ODE with multi-tenancy support.
+                <ul>
+                    <li>
+                        Current integration layer is the first phase of supporting native multi-tenancy in BPEL engine.
+                        And this will further allows us to increase the utilization of features provided by
+                        WSO2 Carbon platform.
+                    </li>
+                </ul>
+            </li>
+            <li>Patched Apache ODE 1.3.4 as BPEL engine.
+                <ul>
+                    <li>
+                        Apache ODE 1.3.4 contains various stability fixes to and improvements to BPEL engine. We have
+                        patched Apache ODE 1.3.4 to support BPEL extensions and have done various other fixes which are
+                        specific to WSO2 Carbon integration.
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </body>
+</html>

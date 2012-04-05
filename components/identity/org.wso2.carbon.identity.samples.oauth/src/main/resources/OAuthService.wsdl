@@ -1,0 +1,192 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:axis2="http://oauth.identity.carbon.wso2.org" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ax227="http://dto.oauth.identity.carbon.wso2.org/xsd" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://oauth.identity.carbon.wso2.org">
+    <wsdl:documentation>OAuthService</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ax228="http://dto.oauth.identity.carbon.wso2.org/xsd" xmlns:ns="http://org.apache.axis2/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+            <xs:import namespace="http://dto.oauth.identity.carbon.wso2.org/xsd" />
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element name="Exception" nillable="true" type="xs:anyType" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="Exception">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Exception" nillable="true" type="ns:Exception" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="validateAuthenticationRequest">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="oauthConsumer" nillable="true" type="ax227:OAuthConsumerDTO" />
+                        <xs:element name="shortLivedToken" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="validateAuthenticationRequestResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="isOAuthConsumerValid">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="oauthConsumer" nillable="true" type="ax227:OAuthConsumerDTO" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="isOAuthConsumerValidResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://dto.oauth.identity.carbon.wso2.org/xsd">
+            <xs:complexType name="OAuthConsumerDTO">
+                <xs:sequence>
+                    <xs:element name="baseString" nillable="true" type="xs:string" />
+                    <xs:element name="httpMethod" nillable="true" type="xs:string" />
+                    <xs:element name="oauthConsumerKey" nillable="true" type="xs:string" />
+                    <xs:element name="oauthNonce" nillable="true" type="xs:string" />
+                    <xs:element name="oauthSignature" nillable="true" type="xs:string" />
+                    <xs:element name="oauthSignatureMethod" nillable="true" type="xs:string" />
+                    <xs:element name="oauthTimeStamp" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="isOAuthConsumerValidRequest">
+        <wsdl:part name="parameters" element="ns1:isOAuthConsumerValid" />
+    </wsdl:message>
+    <wsdl:message name="isOAuthConsumerValidResponse">
+        <wsdl:part name="parameters" element="ns1:isOAuthConsumerValidResponse" />
+    </wsdl:message>
+    <wsdl:message name="Exception">
+        <wsdl:part name="parameters" element="ns1:Exception" />
+    </wsdl:message>
+    <wsdl:message name="validateAuthenticationRequestRequest">
+        <wsdl:part name="parameters" element="ns1:validateAuthenticationRequest" />
+    </wsdl:message>
+    <wsdl:message name="validateAuthenticationRequestResponse">
+        <wsdl:part name="parameters" element="ns1:validateAuthenticationRequestResponse" />
+    </wsdl:message>
+    <wsdl:portType name="OAuthServicePortType">
+        <wsdl:operation name="isOAuthConsumerValid">
+            <wsdl:input message="axis2:isOAuthConsumerValidRequest" wsaw:Action="urn:isOAuthConsumerValid" />
+            <wsdl:output message="axis2:isOAuthConsumerValidResponse" wsaw:Action="urn:isOAuthConsumerValidResponse" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:isOAuthConsumerValidException" />
+        </wsdl:operation>
+        <wsdl:operation name="validateAuthenticationRequest">
+            <wsdl:input message="axis2:validateAuthenticationRequestRequest" wsaw:Action="urn:validateAuthenticationRequest" />
+            <wsdl:output message="axis2:validateAuthenticationRequestResponse" wsaw:Action="urn:validateAuthenticationRequestResponse" />
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:validateAuthenticationRequestException" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="OAuthServiceSoap11Binding" type="axis2:OAuthServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="isOAuthConsumerValid">
+            <soap:operation soapAction="urn:isOAuthConsumerValid" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="validateAuthenticationRequest">
+            <soap:operation soapAction="urn:validateAuthenticationRequest" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="OAuthServiceSoap12Binding" type="axis2:OAuthServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="isOAuthConsumerValid">
+            <soap12:operation soapAction="urn:isOAuthConsumerValid" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="validateAuthenticationRequest">
+            <soap12:operation soapAction="urn:validateAuthenticationRequest" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="OAuthServiceHttpBinding" type="axis2:OAuthServicePortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="isOAuthConsumerValid">
+            <http:operation location="isOAuthConsumerValid" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="isOAuthConsumerValid" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="isOAuthConsumerValid" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="validateAuthenticationRequest">
+            <http:operation location="validateAuthenticationRequest" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="validateAuthenticationRequest" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="validateAuthenticationRequest" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="OAuthService">
+        <wsdl:port name="OAuthServiceHttpsSoap11Endpoint" binding="axis2:OAuthServiceSoap11Binding">
+            <soap:address location="https://localhost:9443/services/OAuthService.OAuthServiceHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="OAuthServiceHttpsSoap12Endpoint" binding="axis2:OAuthServiceSoap12Binding">
+            <soap12:address location="https://localhost:9443/services/OAuthService.OAuthServiceHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="OAuthServiceHttpsEndpoint" binding="axis2:OAuthServiceHttpBinding">
+            <http:address location="https://localhost:9443/services/OAuthService.OAuthServiceHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Jaggery - Delicious Javascript</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+        }
+    </style>
+    <link href="../css/prettify.css" rel="stylesheet">
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="../images/favicon.ico">
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72"
+          href="../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114"
+          href="../images/apple-touch-icon-114x114.png">
+</head>
+
+<body>
+
+<%
+include('/includes/topnavi.jag');
+%>
+
+<div class="container-fluid" style="width: 960px; margin: auto;">
+    <div class="row">
+        <div class="span16">
+            <div class="page-header">
+                <h1>
+                    Documentation
+                    <small>API documentation for Jaggery.js</small>
+                </h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="span4">
+            <div class="well">
+<%
+include('/includes/navi.jag');
+%>
+            </div>
+
+        </div>
+        <div class="span12">
+            <div class="content" id="print" name="print">
+                <h3>require()</h3>
+                <br/>
+<pre class="prettyprint linenums">
+&lt;%
+var core = require("CORE");
+core.log("Required the module");
+
+function myFunc() {
+    var ws = require("WS");
+    var client = new ws.WSRequest();
+    core.log("Required within a function");
+}
+%&gt;
+</pre>
+                <div id="pageLinks">
+                    <a class="navilink" href="#overview">Overview</a>
+                    <a class="navilink" href="#members">Members</a>
+                    <a class="navilink" href="#operations">Operations</a>
+                </div>
+
+                <section id="overview">
+                    <h4>Overview</h4>
+
+                    <p class="description">In-built function <code>require()</code> allows to get a reference for any
+                        available Jaggery module. Adding a Jaggery module is detailed <a href="modules.jag">here</a>.
+                        </p>
+                </section>
+
+                <section id="operations">
+                    <h4>Operations</h4>
+                    <table class="clsStd operations-table">
+                        <tbody>
+                        <tr>
+                            <th>Operation</th>
+                            <th>Returns</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><code>require()</code></td>
+                            <td>Object</td>
+                            <td>
+<pre class="prettyprint">
+var module = require("MODULE_NAME");
+</pre>
+                                Returns a module object with keyed references to all methods and objects of the module.
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+            <!-- /print div -->
+            <br>
+            <br>
+        </div>
+
+    </div>
+<%
+include('/includes/footer.jag');
+%>
+
+</div>
+
+<!-- /container -->
+<%
+include('/includes/scripts.jag')
+%>
+
+<script>$(function () {
+    prettyPrint();
+});
+$(document).ready(function () {
+    $('#require').toggleClass('active')
+    $('#docs').addClass('active')
+})
+</script>
+</body>
+</html>

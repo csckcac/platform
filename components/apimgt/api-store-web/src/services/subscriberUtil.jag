@@ -1,0 +1,61 @@
+<%
+function getPurchasedFunc(){
+        var apiObject=new APIStore(1);
+        var purchasedServices =  new Array();
+        var servicesout=  new Array();
+        purchasedServices=apiObject.getSubscribedAPIs();
+        for (var i = 0; i < purchasedServices.length ; i++){
+        var elem = {
+        name:purchasedServices[i].name,
+        rating:purchasedServices[i].rating,
+        path:purchasedServices[i].path,
+        author:purchasedServices[i].author,
+        purchased:purchasedServices[i].purchased,
+        description:purchasedServices[i].description,
+        supportForumURL:purchasedServices[i].supportForumURL,
+        namespace:purchasedServices[i].namespace,
+        thumbURL:purchasedServices[i].thumbURL,
+        canDelete:purchasedServices[i].canDelete,
+        version:purchasedServices[i].version
+        };
+servicesout.push(elem);
+
+}
+return {
+        error:false,
+        services:servicesout
+        };
+}
+
+
+function getDataJSON(result, successMsg, errorMsg) {
+        if (result.error) {
+        return {
+        error:true,
+        message:errorMsg,
+        data:null
+        };
+}
+var data = {};
+for (var key in result) {
+        if (result.hasOwnProperty(key)) {
+        if (key == "error") {
+        continue;
+        }
+data[key] = result[key];
+}
+}
+return {
+        error:false,
+        message:successMsg,
+        data:data
+        };
+}
+
+
+
+
+
+
+
+%>

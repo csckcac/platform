@@ -1,0 +1,47 @@
+<!--
+  ~  Licensed to the Apache Software Foundation (ASF) under one
+  ~  or more contributor license agreements.  See the NOTICE file
+  ~  distributed with this work for additional information
+  ~  regarding copyright ownership.  The ASF licenses this file
+  ~  to you under the Apache License, Version 2.0 (the
+  ~  "License"); you may not use this file except in compliance
+  ~  with the License.  You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~   * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+       "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <title>Welcome to WSO2 Identity Server v2.0.0!</title>
+    <link href="css/is-docs.css" rel="stylesheet"/>
+   </head>
+<body>
+
+<h2>Sample Relying Party</h2>
+
+<p>WSO2 Identity Solution has a in-build Java Relying Party Application that uses Information Card, OpenID Information Card and OpenID login. It is a simple JSP site, where information card login is enabled using a servlet filter. This sample relying party accepts tokens issued by Sample Idp.</p>
+
+<p>The sample also demonstrates how you can can add OpenID support to your web application under following areas</p>
+
+<ul>
+<il>OpenID Information Card support</il>
+<il>OpenID Simple Registrartion support</il>
+<il>OpenID Attribute Exchange support</il>
+<il>OpenID PAPE support</il>
+</ul>
+
+<p>Start the Identity Solution application. Obtain a managed card from <a href="idp_sample.html">Sample Idp</a> and point your browser to "https://localhost:12433/javarp". Clicking on the link "Login with your InfoCard" will give you pop up the Identity Selector.</p>
+
+<p>Code for this sample is available in the source distribution under "modules/samples/servlet-filter"</p>
+
+</body>
+</html>

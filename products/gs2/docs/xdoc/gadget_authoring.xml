@@ -1,0 +1,241 @@
+<!--
+  ~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <link media="all" href="css/SyntaxHighlighter.css" rel="stylesheet" type="text/css" />
+        <script src="js/shCore.js" language="javascript" />
+        <script src="js/shBrushJScript.js" language="javascript" />
+        <script src="js/shBrushJava.js" language="javascript" />
+        <script src="js/shBrushSql.js" language="javascript" />
+        <script src="js/shBrushXml.js" language="javascript" />
+    </head>
+    <body>
+        <p>[<a href="http://wso2.org/downloads/gadget-server">Download</a>]
+            | [<a href="index_docs.html">Documentation Home</a>] | [<a href="release_notes.html">Release Note</a>]
+        </p>
+        <div id="main-content">
+            <h2>Gadget Authoring</h2>
+            <p>Authoring a gadget is a simple process with a short learning curve. With some amount of xml, HTML and
+                JavaScript knowledge a normal user can start writing gadgets with ease.
+            </p>
+            <h2>What is a Gadget</h2>
+            <p>As
+mentioned above a gadget is a combination of HTML, XML and Javascript.
+It can contain many dynamic behaviors and those are simply implemented
+with Javascript code. The Gadget API provides building blocks to create
+comprehensive gadgets with greater value.</p>
+             <a name="hello" />
+            <h2>Hello World Gadget</h2>
+            <p>A <span style="font-style: italic;">HelloWorld</span> gadget code snippet is given below.</p>
+            <pre class="xml" name="code">
+                &lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+                &lt;Module&gt;
+                &lt;ModulePrefs title="hello world example"/&gt;
+                &lt;Content type="html"&gt;
+                &lt;![CDATA[
+                Hello, world!
+                ]]&gt;
+                &lt;/Content&gt;
+                &lt;/Module&gt;
+            </pre>
+            <h2>Notable Syntax in HelloWorld Code</h2>
+            <ul>
+                <li>Gadgets are specified in XML. The first line is the standard way to start an XML file. This must be
+                    the first line in the file.
+                </li>
+                <li>The
+                    <strong>&lt;Module&gt;</strong>
+                    tag indicates that this XML file contains a gadget.
+                </li>
+                <li>The
+                    <strong>&lt;ModulePrefs&gt;</strong>
+                    tag contains information about the gadget such as its title, description, author, and other optional
+                    features.
+                </li>
+                <li>The line
+                    <strong>&lt;Content type="html"&gt;</strong>
+                    indicates that the gadget's content type is HTML.
+                </li>
+                <li>
+                    <strong>&lt;![CDATA[ ...insert HTML here... ]]&gt;</strong>
+                    is used to enclose HTML when a gadget's content type is html.
+                    It tells the gadget parser that the text within the CDATA section should not be treated as XML. The
+                    CDATA section typically contains HTML and JavaScript.
+                </li>
+                <li>
+                    <strong>&lt;/Content&gt;</strong>
+                    signifies the end of the Content section.
+                </li>
+                <li>
+                    <strong>&lt;/Module&gt;</strong>
+                    signifies the end of the gadget definition.
+                </li>
+
+            </ul>
+		 <a name="SOAP" />
+            <h2>SOAP Request Gadget</h2>
+            <p>This gadget allows a gadget author to invoke a SOAP Web Service, without cross domain restrictions from his gadget's Javasript. The  SOAP web service need to be startup before deploying such a gadget in gadget server. A <span style="font-style: italic;">SOAPRequest</span> gadget code snippet is given below.</p>
+            <pre class="xml" name="code">
+                &lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+                &lt;Module&gt;
+                &lt;ModulePrefs title="hello world example"&gt;
+                &lt;Require feature="wso2"/&gt;
+                &lt;/ModulePrefs&gt;
+                &lt;Content type="html"&gt;
+                &lt;![CDATA[
+                &lt;div id=response-disp&gt;&lt;/div&gt;
+      
+          		&lt;script&gt;
+          		function doSOAPCall(){
+          			var endpoint = "http://localhost:9763/services/HelloService";
+          			var payload = ' &lt;p:greet xmlns:p="http://www.wso2.org/types"&gt; &lt;name&gt;SOAP Request &lt;/name&gt; &lt;/p:greet&gt;';
+          			var operation = "urn:greet";
+          			document.getElementById("response-disp").innerHTML = wso2.io.makeSOAPRequest(endpoint, operation, payload);
+          		}
+          		gadgets.util.registerOnLoadHandler(doSOAPCall);
+            	&lt;/script&gt; 
+                ]]&gt;
+                &lt;/Content&gt;
+                &lt;/Module&gt;
+            </pre>
+            <h2>Notable Syntax in HelloWorld Code</h2>
+            <ul>
+                <li>Gadgets are specified in XML. The first line is the standard way to start an XML file. This must be
+                    the first line in the file.
+                </li>
+                <li>The
+                    <strong>&lt;Module&gt;</strong>
+                    tag indicates that this XML file contains a gadget.
+                </li>
+                <li>The
+                    <strong>&lt;ModulePrefs&gt;</strong>
+                    tag contains information about the gadget such as its title, description, author, and other optional
+                    features.
+                </li>
+		<Li>The 
+		 <strong>&lt;Require feature="wso2" &gt;</strong> is used to inform the gadget container that this gadget needs an extra feature to invoke function. This type of features are pre-written Javascript code, which will be loaded to the gadget on demand by the gadget container.In this code,it'll required to import the feature 'wso2', inorder to make SOAP request from the gadget.
+              </Li>  
+                <li>The line
+                    <strong>&lt;Content type="html"&gt;</strong>
+                    indicates that the gadget's content type is HTML.
+                </li>
+                <li>
+                    <strong>&lt;![CDATA[ ...insert HTML here... ]]&gt;</strong>
+                    is used to enclose HTML when a gadget's content type is html.
+                    It tells the gadget parser that the text within the CDATA section should not be treated as XML. The
+                    CDATA section typically contains HTML and JavaScript.
+                </li>
+		<li>
+                    <strong>JavaScript 'doSOAPCall' function </strong>defines three parameters required to invoke makeSOAPRequest function such as endpoint(Url of SOAP service ),payload and operation.Then by using "wso2.io.makeSOAPRequest(endpoint, operation, payload)" method,SOAP service end point is invoked.Finally the response from the invoked SOAP service end point will be displayed inside the gadget.
+                    
+                </li>
+		
+               <li>
+                    <strong>&lt;/Content&gt;</strong>
+                    signifies the end of the Content section.
+                </li>
+                <li>
+                    <strong>&lt;/Module&gt;</strong>
+                    signifies the end of the gadget definition.
+                </li>
+		
+              
+		
+
+            </ul>
+ <a name="OAuth" />
+            <h2>OAuth Support</h2>
+            <p>OAuth support for WSO2 gadgets facilitates allowing signed-in users to access private data from a hosting service to a consumer gadget. 
+Simply this feature allows to communicate with gadget users' services using the OAuth protocol. <br />You can get  more information about writing an OAuth gadget from <a href="http://code.google.com/apis/gadgets/docs/oauth.html">here.</a>
+ <br />
+Following example shows how the OAuth support works for gadgets in WSO2 gadget server.First create a new consumer from Admin console and add OAuth information such as consumer service,consumer key,etc.
+	    <br />
+            <br />
+            <img alt="OAuth" src="images/OAuth-add-info.png" />
+            <br />
+            <br />
+Then deploy the implemented consumer gadget in the gadget repository and add it in to the portal.Following shows such a consumer gadget which  retrieves portal signed-in user's google account contacts data through the Google Data API .
+	    <br />
+            <br />
+            <img alt="OAuthGadget" src="images/OAuth-gadget.png" />
+	 <br />
+            <br />
+After click on the link displayed as 'Personalize this gadget' in the gadget it will direct to the following page.
+ 	    <br />
+            <br />
+            <img alt="OAuthGadgetNext" src="images/OAuth-gadget_click.png" />
+	    <br />
+            <br />
+To retrieve back user's personal contacts data to the gadget you have to click on 'Grant Access' button.
+	    <br />
+            <br />
+            <img alt="OAuthGadgetNext" src="images/OAuth-gadget_click1.png" />
+ 	   <br />
+            <br />
+Then the consumer gadget displays as follow.Click on the displayed link on it.
+	    <br />
+            <br />
+            <img alt="OAuthGadgetNext" src="images/OAuth-gadget_click2.png" />
+	    <br />
+            <br />
+Finally the google account contact details of signed-in user displays in the consumer gadget.
+	    <br />
+            <br />
+            <img alt="OAuthGadgetNext" src="images/OAuth-gadget_click3.png" />
+            </p>
+            
+         <a name="igc" />
+            <h2>Inter Gadget Communication</h2>
+            <p>This feature provides the communication between gadgets while running in the portal.<br /><span style="font-style: italic;" >Inter Gadget Communication</span> has facilitated with the help of publisher and subscriber gadgets.You can find more information about
+inter gadget communication
+                <a href="http://wso2.org/library/articles/2010/03/wso2-gadget-server-inter-gadget-communication-pubsub">here.</a>
+            </p>
+             <a name="gSpec" />
+            <h2>Gadget Specification</h2>
+            <p>The <span style="font-style: italic;">Google Gadgets Specification</span> describes how the gadgets should be written and rendered in a gadget
+                container. The WSO2 Gadget server is fully compliant
+                with <span style="font-style: italic;">Google Gadget Specification</span> which is now adopted in sites such as Hi5 and Orkut. You can find more information about
+                the specification
+                <a href="http://code.google.com/apis/gadgets/docs/spec.html">here</a>
+            </p>
+             <a name="gApi" />
+            <h2>Gadget API</h2>
+            <p>The Gadget API is the same as the Google Gadget API, hence users and developers get the advantage of reusing any Google
+                gadget in the WSO2 Gadget server.
+                When authoring new gadgets for the gadget server it is advised to refer to the new API (gadgets.*).
+                However the WSO2 Gadget server do support
+                both the new (gadgets.*) and legacy APIs.<br />
+</p>
+<p>A comprehensive user guide for the Gadget API can be found
+                <a href="http://code.google.com/apis/gadgets/docs/overview.html">here.</a></p>
+<p><span style="font-weight: bold; font-style: italic;">Note:</span>
+Certain portal specific features implemented by the portal providers
+only such as Google Finance for instance are not supported in the WSO2
+Gadget Server. These are proprietory gadget features and are not part
+of the Google Gadget Specification.<br />
+<br />
+
+            </p>
+
+
+            <script language="javascript">
+                dp.SyntaxHighlighter.BloggerMode();
+                dp.SyntaxHighlighter.HighlightAll('code');
+            </script>
+        </div>
+    </body>
+</html>

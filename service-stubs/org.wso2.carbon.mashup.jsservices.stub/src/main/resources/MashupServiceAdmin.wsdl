@@ -1,0 +1,373 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://admin.jsservices.mashup.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax298="http://carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://admin.jsservices.mashup.carbon.wso2.org">
+    <wsdl:documentation>MashupServiceAdmin</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://carbon.wso2.org/xsd">
+            <xs:complexType name="CarbonException">
+                <xs:sequence />
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax299="http://carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://admin.jsservices.mashup.carbon.wso2.org">
+
+            <xs:import namespace="http://carbon.wso2.org/xsd" />
+            <xs:element name="CarbonException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="CarbonException" nillable="true" type="ax298:CarbonException" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="saveMashupServiceSource">
+
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="type" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="contents" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="saveMashupServiceSourceResponse">
+
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMashupServiceContentAsString">
+                <xs:complexType>
+                    <xs:sequence>
+
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMashupServiceContentAsStringResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getBackendHttpPortResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="doesServicesExists">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="serviceNames" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="doesServicesExistsResponse">
+                <xs:complexType>
+
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="doesServiceExists">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceName" nillable="true" type="xs:string" />
+
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="doesServiceExistsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="doesServicesExistsRequest">
+        <wsdl:part name="parameters" element="ns:doesServicesExists" />
+    </wsdl:message>
+    <wsdl:message name="doesServicesExistsResponse">
+        <wsdl:part name="parameters" element="ns:doesServicesExistsResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="CarbonException">
+        <wsdl:part name="parameters" element="ns:CarbonException" />
+    </wsdl:message>
+    <wsdl:message name="doesServiceExistsRequest">
+        <wsdl:part name="parameters" element="ns:doesServiceExists" />
+    </wsdl:message>
+    <wsdl:message name="doesServiceExistsResponse">
+        <wsdl:part name="parameters" element="ns:doesServiceExistsResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="getBackendHttpPortRequest" />
+    <wsdl:message name="getBackendHttpPortResponse">
+        <wsdl:part name="parameters" element="ns:getBackendHttpPortResponse" />
+    </wsdl:message>
+    <wsdl:message name="getMashupServiceContentAsStringRequest">
+        <wsdl:part name="parameters" element="ns:getMashupServiceContentAsString" />
+    </wsdl:message>
+    <wsdl:message name="getMashupServiceContentAsStringResponse">
+        <wsdl:part name="parameters" element="ns:getMashupServiceContentAsStringResponse" />
+
+    </wsdl:message>
+    <wsdl:message name="saveMashupServiceSourceRequest">
+        <wsdl:part name="parameters" element="ns:saveMashupServiceSource" />
+    </wsdl:message>
+    <wsdl:message name="saveMashupServiceSourceResponse">
+        <wsdl:part name="parameters" element="ns:saveMashupServiceSourceResponse" />
+    </wsdl:message>
+    <wsdl:portType name="MashupServiceAdminPortType">
+        <wsdl:operation name="doesServicesExists">
+
+            <wsdl:input message="ns:doesServicesExistsRequest" wsaw:Action="urn:doesServicesExists" />
+            <wsdl:output message="ns:doesServicesExistsResponse" wsaw:Action="urn:doesServicesExistsResponse" />
+            <wsdl:fault message="ns:CarbonException" name="CarbonException" wsaw:Action="urn:doesServicesExistsCarbonException" />
+        </wsdl:operation>
+        <wsdl:operation name="doesServiceExists">
+            <wsdl:input message="ns:doesServiceExistsRequest" wsaw:Action="urn:doesServiceExists" />
+            <wsdl:output message="ns:doesServiceExistsResponse" wsaw:Action="urn:doesServiceExistsResponse" />
+            <wsdl:fault message="ns:CarbonException" name="CarbonException" wsaw:Action="urn:doesServiceExistsCarbonException" />
+        </wsdl:operation>
+
+        <wsdl:operation name="getBackendHttpPort">
+            <wsdl:input message="ns:getBackendHttpPortRequest" wsaw:Action="urn:getBackendHttpPort" />
+            <wsdl:output message="ns:getBackendHttpPortResponse" wsaw:Action="urn:getBackendHttpPortResponse" />
+            <wsdl:fault message="ns:CarbonException" name="CarbonException" wsaw:Action="urn:getBackendHttpPortCarbonException" />
+        </wsdl:operation>
+        <wsdl:operation name="getMashupServiceContentAsString">
+            <wsdl:input message="ns:getMashupServiceContentAsStringRequest" wsaw:Action="urn:getMashupServiceContentAsString" />
+            <wsdl:output message="ns:getMashupServiceContentAsStringResponse" wsaw:Action="urn:getMashupServiceContentAsStringResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="saveMashupServiceSource">
+            <wsdl:input message="ns:saveMashupServiceSourceRequest" wsaw:Action="urn:saveMashupServiceSource" />
+            <wsdl:output message="ns:saveMashupServiceSourceResponse" wsaw:Action="urn:saveMashupServiceSourceResponse" />
+            <wsdl:fault message="ns:CarbonException" name="CarbonException" wsaw:Action="urn:saveMashupServiceSourceCarbonException" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="MashupServiceAdminSoap11Binding" type="ns:MashupServiceAdminPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="doesServicesExists">
+
+            <soap:operation soapAction="urn:doesServicesExists" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="CarbonException">
+                <soap:fault use="literal" name="CarbonException" />
+
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="doesServiceExists">
+            <soap:operation soapAction="urn:doesServiceExists" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+
+            </wsdl:output>
+            <wsdl:fault name="CarbonException">
+                <soap:fault use="literal" name="CarbonException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getBackendHttpPort">
+            <soap:operation soapAction="urn:getBackendHttpPort" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="CarbonException">
+                <soap:fault use="literal" name="CarbonException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getMashupServiceContentAsString">
+
+            <soap:operation soapAction="urn:getMashupServiceContentAsString" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="saveMashupServiceSource">
+
+            <soap:operation soapAction="urn:saveMashupServiceSource" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="CarbonException">
+                <soap:fault use="literal" name="CarbonException" />
+
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="MashupServiceAdminSoap12Binding" type="ns:MashupServiceAdminPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="doesServicesExists">
+            <soap12:operation soapAction="urn:doesServicesExists" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="CarbonException">
+                <soap12:fault use="literal" name="CarbonException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="doesServiceExists">
+
+            <soap12:operation soapAction="urn:doesServiceExists" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="CarbonException">
+                <soap12:fault use="literal" name="CarbonException" />
+
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getBackendHttpPort">
+            <soap12:operation soapAction="urn:getBackendHttpPort" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+
+            </wsdl:output>
+            <wsdl:fault name="CarbonException">
+                <soap12:fault use="literal" name="CarbonException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getMashupServiceContentAsString">
+            <soap12:operation soapAction="urn:getMashupServiceContentAsString" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="saveMashupServiceSource">
+            <soap12:operation soapAction="urn:saveMashupServiceSource" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="CarbonException">
+                <soap12:fault use="literal" name="CarbonException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:binding name="MashupServiceAdminHttpBinding" type="ns:MashupServiceAdminPortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="doesServicesExists">
+            <http:operation location="doesServicesExists" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="doesServiceExists">
+            <http:operation location="doesServiceExists" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getBackendHttpPort">
+            <http:operation location="getBackendHttpPort" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMashupServiceContentAsString">
+            <http:operation location="getMashupServiceContentAsString" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="saveMashupServiceSource">
+            <http:operation location="saveMashupServiceSource" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="MashupServiceAdmin">
+        <wsdl:port name="MashupServiceAdminHttpsSoap11Endpoint" binding="ns:MashupServiceAdminSoap11Binding">
+            <soap:address location="https://175.157.66.31:9443/services/MashupServiceAdmin.MashupServiceAdminHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="MashupServiceAdminHttpsSoap12Endpoint" binding="ns:MashupServiceAdminSoap12Binding">
+            <soap12:address location="https://175.157.66.31:9443/services/MashupServiceAdmin.MashupServiceAdminHttpsSoap12Endpoint/" />
+
+        </wsdl:port>
+        <wsdl:port name="MashupServiceAdminHttpsEndpoint" binding="ns:MashupServiceAdminHttpBinding">
+            <http:address location="https://175.157.66.31:9443/services/MashupServiceAdmin.MashupServiceAdminHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

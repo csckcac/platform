@@ -1,0 +1,104 @@
+<!--
+  ~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <body>
+        <p>[<a
+                href="http://wso2.com/products/data-services-server/">Download</a>]
+            | [<a href="index_docs.html">Documentation Home</a>] | [<a
+                    href="release_notes.html">Release Note</a>]
+        </p>
+<h1>Secure Passwords in DataService Configuration</h1>
+<p><b>Introduction</b> 
+</p>
+<p><a href="http://wso2.com/products/data-services-server/">WSO2 Data
+Services Server</a> provides the feature to secure passwords fields
+using the Secure Vault functionality. Users can encript their
+passwords using tokens instead of the actual password inside the data
+service configuration file and decript the actual password using
+password provider class. This example will guide you how to secure
+your password for a relational database. 
+</p>
+<p><b>Step 1 - Creating the password provider</b> 
+</p>
+<p>To embed the encryption/description logic you need to write your
+own PasswordProvider class. Following example uses a simple
+PasswordProvider class to demonstrate how a PasswordProvider can be
+used. 
+</p>
+<p>Sample PasswordProvider Class 
+</p>
+<p>
+<pre>package org.wso2.test.passwordProvider.secretResolver;
+
+import org.apache.synapse.securevault.secret.SecretCallback;
+import org.apache.synapse.securevault.secret.SecretCallbackHandler;
+import org.apache.synapse.securevault.secret.SingleSecretCallback;
+
+public class DefaultSecretProvider implements SecretCallbackHandler {
+        
+        @Override
+        public void handle(SecretCallback[] secretCallBack) {
+                //for each token set the secret to wso2ds
+                // you can give your own logic to encript the password
+            for(int i = 0; i&lt; secretCallBack.length; i++){      
+                        ((SingleSecretCallback) secretCallBack[i]).setSecret(&quot;wso2ds&quot;);
+                }
+        }        
+}</pre >
+</p>
+<p>The class file of the Password Provider should be archived as a jar
+file according to the package structure and placed inside
+CARBON_HOME/repository/components/lib folder. 
+</p>
+<p><b>Step 2 - Edit Data Service</b> 
+</p>
+<p>In order to configure the password provider, you need to edit the
+data service and under Data Service Service Details you can give the
+Password Manager details. For the password provider field you need to
+give the class name along with package structure. When securing the
+passwords tokens can be used, tokens represents the password field.
+You can give more than one token inside tokens fields in comma
+separated manner.<br />Password Provider :-
+org.wso2.test.passwordProvider.secretResolver.DefaultSecretProvider.</p>
+<p><img alt="DS" src="images/user-guide/secure-vault/step1.png" />
+</p>
+<p>Figure 1: Configuring Password Provider</p>
+<p><b>Step 3 - Configure Data Source</b> 
+</p>
+<p>Once the password manager is configured, you can replace your
+actual password by the given token in password manager. 
+</p>
+<p><img alt="DS" src="images/user-guide/secure-vault/step2.png" />
+</p>
+<p>Figure 2: Configure Data Source</p>
+<p>After data source configuration is done click on Finish to
+re-deploy the service. You can invoke your service using try it to
+test the service. 
+</p>
+<p><img alt="DS" src="images/user-guide/secure-vault/step2.1.png" />
+</p>
+<p>Figure 3: Invoke the Service</p>
+<p>You can click on &quot;Edit Data Service (XML Edit)&quot; and view
+the created data service as a XML. 
+</p>
+<p><img alt="DS" src="images/user-guide/secure-vault/step3.png" />
+</p>
+<p>Figure 7: Edit Data Service</p>
+    </body>
+</html>

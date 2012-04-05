@@ -1,0 +1,148 @@
+<!doctype html>
+<html>
+<head>
+<h1>API Store</h1>
+<script src="js/lib/jquery-1.7.1.min.js"></script>
+<script src="js/serviceStoreAppTest.js"></script>
+<script src="js/util.js"></script>
+<script type="text/javascript">
+	$(document).ready(
+			function() {
+				$("#rateResource .button").click(
+						function() {
+							ServiceStoreApp.call("rateResource", "&path="
+									+ $("#rateResource .path").val()
+									+ "&rating="
+									+ $("#rateResource .rating").val());
+						});
+
+				$("#addComment .button").click(
+						function() {
+							ServiceStoreApp.call("addComment", "&path="
+									+ $("#addComment .path").val()
+									+ "&comment="
+									+ $("#addComment .comment").val());
+						});
+
+				$("#getComments .button").click(
+						function() {
+							ServiceStoreApp.call("getComments", "&path="
+									+ $("#getComments .path").val());
+						});
+
+				$("#getReviews .button").click(
+						function() {
+							ServiceStoreApp.call("getReviews", "&path="
+									+ $("#getReviews .path").val());
+						});
+
+				$("#application .button").click(
+						function() {
+							ServiceStoreApp.call("getServicesForApplication",
+									"&application="
+											+ $("#application .app").val());
+						});
+
+			});
+</script>
+</head>
+
+
+</body>
+<form>
+
+	<label>Name :</label><input type="text" id="name" name="name" /> <br />
+	<label>Password:</label><input type="password" id="pass" name="pass" />
+	<br /> <input type="button" class="button" value="Login"
+		onclick="ServiceStoreApp.login('')" /> <br /> <input type="button"
+		class="button" value="logout" onclick="ServiceStoreApp.ask('logout')" />
+
+	<div id="controls">
+		<input type="button" class="button" value="Show Access Token"
+			onclick="ServiceStoreApp.ask('getUser')" /> <br> <input
+			type="button" class="button" value="ListServices"
+			onclick="ServiceStoreApp.ask('getServices')" /> <input type="button"
+			class="button" value="ListApplication"
+			onclick="ServiceStoreApp.ask('getApplications')" /> <br /> <input
+			type="button" class="button" value="ListTopRateServices"
+			onclick="ServiceStoreApp.ask('getTopRatedServices')" /> <br /> <input
+			type="button" class="button" value="ListTags"
+			onclick="ServiceStoreApp.ask('getTagCloud')" /> <br /> <input
+			type="button" class="button" value="ListRecentlyAddedServices"
+			onclick="ServiceStoreApp.ask('getRecentlyAddedServices')" /> <br />
+		<label>Service Path : </label><input type="text" id="path" name="path" />
+		<label>Service Name : </label><input type="text" name="sname"
+			id="sname" /> <br /> <input type="button" class="button"
+			value="GetRating" onclick="ServiceStoreApp.ask('getRatings')" /> <input
+			type="button" class="button" value="GetAverageRating"
+			onclick="ServiceStoreApp.ask('getAverageRating')" /> <input
+			type="button" class="button" value="GetDescription"
+			onclick="ServiceStoreApp.ask('getDescription')" />
+			<input type="text" id="type" name="type" />
+			 <input
+			type="button" class="button" value="GetAssociations"
+			onclick="ServiceStoreApp.call('getAssociations','&path=' + $('#path').val() + '&type=' + $('#type').val())" /> 
+			
+			<input
+			type="button" class="button" value="GetAuthor"
+			onclick="ServiceStoreApp.ask('getAuthor')" /> <input type="button"
+			class="button" value="GetTags"
+			onclick="ServiceStoreApp.ask('getTags')" /> <input type="button"
+			class="button" value="Purchase Service"
+			onclick="ServiceStoreApp.call('purchaseService', '&path=' + $('#path').val() + '&serviceName=' + $('#sname').val())" />
+		<input type="button" class="button" value="GetMyPurchases"
+			onclick="ServiceStoreApp.ask('getPurchases')" /> 
+			<br /><br />
+			<input type="text" id="resourcePath" name="resourcePath" /> <input
+			type="button" class="button" value="GetResourceTextContent"
+			onclick="ServiceStoreApp.call('getResourceTextContent','&path=' + $('#resourcePath').val() )" /> 
+			
+			<input
+			type="button" class="button" value="GetDocContent"
+			onclick="ServiceStoreApp.call('getDocContent','&path=' + $('#resourcePath').val() )" /> 
+			<br /> <br /> <label>Search
+			String : </label><input type="text" id="searchString" name="searchString" />
+		<input type="button" class="button" value="Search"
+			onclick="ServiceStoreApp.call('searchServiceByName', '&name=' + $('#searchString').val())" />
+		<input type="button" class="button" value="GetSearchKeys"
+			onclick="ServiceStoreApp.ask('getSearchKeys')" />
+		<br /> <label>Tag : </label><input type="text" id="tagString"
+			name="tagString" /> <input type="button" class="button"
+			value="Search"
+			onclick="ServiceStoreApp.call('searchServiceByTag', '&tag=' + $('#tagString').val())" />
+		<input type="button" class="button" value="logout"
+			onclick="ServiceStoreApp.ask('logout')" />
+		<div id="rateResource">
+			Rating<input class="rating" type="text" /> Path<input class="path"
+				type="text" />
+			<button class="button" type="button">Add Rating</button>
+		</div>
+
+		<div id="addComment">
+			Comment
+			<textarea class="comment" cols="5" rows="5"></textarea>
+			Path<input class="path" type="text" />
+			<button class="button" type="button">Add Comment</button>
+		</div>
+
+		<div id="getComments">
+			Path<input class="path" type="text" />
+			<button class="button" type="button">Get Comments</button>
+		</div>
+
+		<div id="getReviews">
+			Path<input class="path" type="text" />
+			<button class="button" type="button">Get Reviews</button>
+		</div>
+		<div id="application">
+			Applicatioin<input class="app" type="text" />
+			<button class="button" type="button">GetServicesForApplication</button>
+		</div>
+
+	</div>
+</form>
+
+<div id="response" name="response" class="response"></div>
+
+</body>
+</html>

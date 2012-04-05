@@ -1,0 +1,13 @@
+<%
+
+var path;
+var action = request.getParameter("action");
+
+include("subscriberAPI.jag");
+
+if (action != null) {
+    if (action == "getPurchases") {
+            print(getPurchases());
+        }  }
+
+       %>

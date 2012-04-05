@@ -1,0 +1,270 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<assembly>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+        <fileSet>
+            <directory>target/wso2carbon-core-${carbon.version}</directory>
+            <outputDirectory>wso2dataservices-${pom.version}</outputDirectory>
+            <excludes>
+                <exclude>**/native/*</exclude>
+                <exclude>**/*.sh</exclude>
+                <exclude>**/wso2server.bat</exclude>
+                <exclude>**/repository/deployment/server/axis2services/echo/**</exclude>
+                <exclude>**/repository/deployment/server/axis2services/version/**</exclude>
+                <exclude>**/pom.xml</exclude>
+                <exclude>**/version.txt</exclude>
+                <exclude>**/README*</exclude>
+                <exclude>**/carbon.xml</exclude>
+                <exclude>**/axis2/axis2.xml</exclude>
+                <exclude>**/wrapper.conf</exclude>
+                <exclude>**/ciphertool.bat</exclude>
+                <exclude>**/INSTALL.txt</exclude>
+                <exclude>**/LICENSE.txt</exclude>
+                <exclude>**/release-notes.html</exclude>
+                <!--<exclude>**/repository/conf/tomcat/catalina-server.xml</exclude> -->
+                <exclude>**/lib/tomcat/conf/context.xml</exclude>
+               <!-- <exclude>**/repository/components/plugins/geronimo-jta*</exclude> -->
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>target/wso2carbon-core-${carbon.version}</directory>
+            <outputDirectory>wso2dataservices-${pom.version}</outputDirectory>
+            <excludes>
+                <exclude>**/daemon.sh</exclude>
+                <exclude>**/wso2server.bat</exclude>
+                <exclude>**/ciphertool.sh</exclude>
+            </excludes>
+            <includes>
+                <include>**/*.sh</include>
+                <include>**/native/*</include>
+            </includes>
+            <fileMode>755</fileMode>
+        </fileSet>
+
+        <!--  copying samples -->
+        <fileSet>
+            <directory>../../samples/product</directory>
+            <outputDirectory>wso2dataservices-${pom.version}/samples</outputDirectory>
+            <excludes>
+                <exclude>**/**.sh</exclude>
+                <exclude>**/pom.xml</exclude>
+            </excludes>
+        </fileSet>
+
+        <!-- copy executables in samples with execute permissions -->
+        <fileSet>
+            <directory>../../samples/product</directory>
+            <outputDirectory>wso2dataservices-${pom.version}/samples</outputDirectory>
+            <includes>
+                <include>**/**.sh</include>
+            </includes>
+            <fileMode>755</fileMode>
+        </fileSet>
+
+        <!-- copy documentation -->
+        <fileSet>
+            <directory>target/site</directory>
+            <outputDirectory>wso2dataservices-${pom.version}/docs</outputDirectory>
+            <fileMode>755</fileMode>
+        </fileSet>
+
+
+        <!-- copy sample database -->
+        <fileSet>
+            <directory>target/samples/database</directory>
+            <outputDirectory>wso2dataservices-${pom.version}/samples/database</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+
+        <!-- deploying samples - should not be deployed by default when product is build-->
+        <!--
+        <fileSet>
+            <directory>../../samples/product/shopping_cart/dbs</directory>
+            <outputDirectory>wso2dataservices-${pom.version}/repository/deployment/server/dataservices</outputDirectory>
+            <includes>
+                <include>ShoppingCartDS.dbs</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../../samples/product/dbs/rdbms</directory>
+            <outputDirectory>wso2dataservices-${pom.version}/repository/deployment/server/dataservices</outputDirectory>
+            <includes>
+                <include>RDBMSSample.dbs</include>
+                <include>RDBMSSample_services.xml</include>
+                <include>ResourcesSample.dbs</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../../samples/product/dbs/excel</directory>
+            <outputDirectory>wso2dataservices-${pom.version}/repository/deployment/server/dataservices</outputDirectory>
+            <includes>
+                <include>ExcelSampleService.dbs</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../../samples/product/dbs/csv</directory>
+            <outputDirectory>wso2dataservices-${pom.version}/repository/deployment/server/dataservices</outputDirectory>
+            <includes>
+                <include>CSVSampleService.dbs</include>
+            </includes>
+        </fileSet>
+        -->
+        <!-- Google Spreadsheet sample should not be deployed by default. This creates start up errors if spreadsheet becomes unaccessible. -->
+        <!--
+        <fileSet>
+            <directory>../../samples/product/dbs/gspread</directory>
+            <outputDirectory>wso2dataservices-${pom.version}/repository/deployment/server/dataservices</outputDirectory>
+            <includes>
+                <include>GSpreadSample.dbs</include>
+            </includes>
+        </fileSet>
+        -->
+        <!-- dashboard specific files -->
+        <!--fileSet>
+            <directory>src/resources/carbon-home/resources/dashboard</directory>
+            <outputDirectory>wso2dataservices-${pom.version}/resources/dashboard</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet-->
+
+        <fileSet>
+           <directory>../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/</directory>
+           <outputDirectory>wso2dataservices-${pom.version}/repository/conf/advanced</outputDirectory>
+           <includes>
+               	<include>**/qpid-config.xml</include>
+                <include>**/qpid-jmxremote.access</include>
+                <include>**/qpid-virtualhosts.xml</include>
+                <include>**/coordination-client-config.xml</include>
+                <include>**/zoo.cfg</include>		
+           </includes>
+        </fileSet>
+
+    </fileSets>
+
+    <dependencySets>
+		<dependencySet>
+			<outputDirectory>wso2dataservices-${pom.version}/repository/deployment/client/modules</outputDirectory>
+			<includes>
+				<include>org.apache.rampart:rampart:mar</include>
+			</includes>
+		</dependencySet>
+    </dependencySets>
+
+    <files>
+        <file>
+            <source>INSTALL.txt</source>
+            <outputDirectory>wso2dataservices-${pom.version}</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>README.txt</source>
+            <outputDirectory>wso2dataservices-${pom.version}</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>LICENSE.txt</source>
+            <outputDirectory>wso2dataservices-${pom.version}</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>release-notes.html</source>
+            <outputDirectory>wso2dataservices-${pom.version}</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-${carbon.version}/bin/README.txt</source>
+            <outputDirectory>wso2dataservices-${pom.version}/bin/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-${carbon.version}/bin/version.txt</source>
+            <outputDirectory>wso2dataservices-${pom.version}/bin/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-${carbon.version}/repository/conf/carbon.xml</source>
+            <outputDirectory>wso2dataservices-${pom.version}/repository/conf/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-${carbon.version}/repository/conf/axis2/axis2.xml</source>
+            <outputDirectory>wso2dataservices-${pom.version}/repository/conf/axis2/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-${carbon.version}/bin/wso2server.bat</source>
+            <outputDirectory>wso2dataservices-${pom.version}/bin/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-${carbon.version}/repository/conf/wrapper.conf</source>
+            <outputDirectory>wso2dataservices-${pom.version}/repository/conf/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-${carbon.version}/bin/daemon.sh</source>
+            <outputDirectory>wso2dataservices-${pom.version}/bin/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+	<!-- Including event-broker.xml file -->
+	<file>
+            <source>../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/conf/event-broker.xml</source>
+            <outputDirectory>wso2dataservices-${pom.version}/repository/conf</outputDirectory>
+        </file>
+	
+        <!--<file>
+            <source>target/sources/wso2-carbon-components-${carbon.version}-src/org.wso2.carbon.transport.jms-sources-java-source/src/main/resources/jms-transports.xml</source>
+            <outputDirectory>wso2dataservices-${pom.version}/conf/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/sources/wso2-carbon-components-${carbon.version}-src/org.wso2.carbon.transport.mail-sources-java-source/src/main/resources/mailto-transports.xml</source>
+            <outputDirectory>wso2dataservices-${pom.version}/conf/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>-->
+
+        <!--<file>
+            <source>src/conf/catalina-server.xml</source>
+            <outputDirectory>wso2dataservices-${pom.version}/repository/tomcat/conf</outputDirectory>
+            <destName>catalina-server.xml</destName>
+        </file>
+        <file>
+            <source>src/conf/context.xml</source>
+            <outputDirectory>wso2dataservices-${pom.version}/lib/tomcat/conf</outputDirectory>
+            <destName>context.xml</destName> 
+        </file>-->
+    </files>
+</assembly>

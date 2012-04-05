@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>@product.name@ - Sample Guide - Compensation Handler</title>
+        <link href="../css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+        <h1>Sample Guide - Compensation Handler</h1>
+        <h3>Table of Content</h3>
+        <ul>
+            <li><a href="#objective">Objective</a></li>
+            <li><a href="#prerequisites">Prerequisites</a></li>
+            <li><a href="#overallIdea">Overall Idea</a></li>
+        </ul>
+
+        <br />
+        <h3><a name="objective">Objective</a></h3>
+	
+	<p>Reversing the effects of a service invocation in a case of a later failure is meant as compensation.
+	The act of undoing any actions that were performed by a successfully completed compensatable activity because of an exception that occurred elsewhere in a workflow is meant as compansation handling. It is represented using &lt;compensationHandler/&gt; construct.
+        </p>
+        <br />
+        <h3><a name="prerequisites">Prerequisites</a></h3>
+
+        <ul>
+            <li>Log in into BPS server admin console.</li>
+            <li>Under Business Processes -&gt; Add BPEL.</li>
+            <li>Upload the FlightReservationProcess.zip, (located at <a href="https://svn.wso2.org/repos/wso2/trunk/carbon/products/bps/modules/samples/product/src/main/resources/bpel/2.0/SampleCompensationHandlers/">sample repository</a>.)</li>
+            <li>Under the Business Processes -&gt; Processes.</li>
+            <li>Under the WSDL details widget -&gt; Create instance</li>
+        </ul>
+        <br />
+        <h3><a name="overallIdea">Overall Idea</a></h3>
+
+	<p>The following application does two things. First, it books an airline ticket and then it books a hotel. If the hotel booking fails, then the airline booking should be cancelled.
+
+The business process can be shown as below.</p>
+    <pre style='color:#000000;background:#ffffff;'>
+
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '><b>process</b></span><span style='color:#a65700; '>&gt;</span>
+
+    	<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>faultHandlers</span><span style='color:#a65700; '>&gt;</span>
+    		<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>catch name="BookHotelFault"</span><span style='color:#a65700; '>&gt;</span>
+    			<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>!--Since the hotel booking failed, cancel the airline booking by calling the compensation handler of the scope that did the airline booking--</span><span style='color:#a65700; '>&gt;</span>
+    			<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>compensateScope scope="BookAirlineTktScope"</span><span style='color:#a65700; '>/&gt;</span>
+
+    			<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>!--Notify that the booking failed---</span><span style='color:#a65700; '>&gt;</span>
+    			<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>reply name="SendBookingFailedReply"</span><span style='color:#a65700; '>&gt;</span>
+    		<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>catch</span><span style='color:#a65700; '>&gt;</span>
+    	<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>faultHandlers</span><span style='color:#a65700; '>&gt;</span>
+
+    	<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>receive name="DoBooking"</span><span style='color:#a65700; '>/&gt;</span>
+
+    	<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>scope name="A"</span><span style='color:#a65700; '>&gt;</span>
+    		<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>compensationHandler</span><span style='color:#a65700; '>&gt;</span>
+    			<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>!--Cancel the airline booking--</span><span style='color:#a65700; '>&gt;</span>
+    			<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>invoke name="CancelAirlineTkt"</span><span style='color:#a65700; '>/&gt;</span>
+    		<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>compensationHandler</span><span style='color:#a65700; '>&gt;</span>
+
+    		<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>!--Book airline ticket--</span><span style='color:#a65700; '>&gt;</span>
+    		<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>invoke name="BookAirlineTkt"</span><span style='color:#a65700; '>/&gt;</span>
+    	<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>scope</span><span style='color:#a65700; '>&gt;</span>
+   
+    	<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>scope name="B"</span><span style='color:#a65700; '>&gt;</span>
+    		<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>!--Book hotel--</span><span style='color:#a65700; '>&gt;</span>
+    		<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>invoke name="BookHotel"</span><span style='color:#a65700; '>/&gt;</span>
+    	<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>scope</span><span style='color:#a65700; '>&gt;</span>
+
+    	<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>!--Both bookings are successful. Notify--</span><span style='color:#a65700; '>&gt;</span>
+    	<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>reply name="SendBookingSuccessReply"</span><span style='color:#a65700; '>/&gt;</span>
+
+<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '><b>process</b></span><span style='color:#a65700; '>&gt;</span>  
+</pre>
+
+        <p>At A's scope, does the airline booking. At B's scope, does the hotel booking. The hotel booking may fail which happens when the invoke "BookAirlineTkt" fails and throws a fault "BookHotelFault". This fault is caught by the catch in the process's fault handler. Since the hotel booking failed, we need to cancel the airline booking. Therefore, at the catch block we call the compensation handler of scope A, which has the logic to cancel the airline booking. &lt;compensateScope&gt; activity is used to specify this. So, when the catch executes &lt;compensateScope&gt;, it calls the scope A's compensation handler which in turn invokes the webservice to cancel the airline booking.
+        </p>
+    </body>
+</html>

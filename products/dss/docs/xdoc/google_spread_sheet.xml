@@ -1,0 +1,144 @@
+<!--
+  ~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <body>
+        <p>[<a
+                href="http://wso2.com/products/data-services-server/">Download</a>]
+            | [<a href="index_docs.html">Documentation Home</a>] | [<a
+                    href="release_notes.html">Release Note</a>]
+        </p>
+        <p>
+            <b>Introduction</b>
+        </p>
+        <hr/>
+        <p>WSO2 Data Services Server provides the capability of exposing data from Google spread
+            sheets.
+            You can use either private or public google spread sheets as the data source.
+        </p>
+        <p>
+            <b>Sample Google Spread Sheet</b>
+        </p>
+        <hr/>
+        <p>Following is a sample spread sheet which is hosted in
+            <a href="https://spreadsheets.google.com/ccc?key=0Av5bU8aVtFjPdElrUVN3VmZlRkoyM1ZzVlE1MzdtbXc&amp;hl=en">
+                https://spreadsheets.google.com/ccc?key=0Av5bU8aVtFjPdElrUVN3VmZlRkoyM1ZzVlE1MzdtbXc&amp;hl=en
+            </a>
+        </p>
+        <br/>
+        <img alt="DS" src="images/ds-wizard/google/step0.png"/>
+        <p>Figure 1: Sample google spread sheet</p>
+        <br/>
+        <p>
+            <b>Step 1: Start by giving a name</b>
+        </p>
+        <hr/>
+        <p>Lets begin to create the data service by clicking on "Create" link in left menu under
+            Services/Add/Data Service. We will name the data service as "GoogleSpreadSheet" and
+            click
+            on "Next" to enter the details for the data source.
+        </p>
+        <br/>
+        <img alt="DS" src="images/ds-wizard/google/step1.png"/>
+        <p>Figure 2: Create data google spread sheet data service</p>
+        <br/>
+        <p>
+            <b>Step 2: Enter details about your Google Spread Sheet</b>
+        </p>
+        <hr/>
+        <p>After giving a data source id select the data source type as Google Spread Sheet and
+            enter
+            the url for the sheet. If the spread sheet is Private you have to enter the user name
+            and
+            the password for the sheet. Click on "Save" once you done with entering the details.
+        </p>
+        <br/>
+        <img alt="DS" src="images/ds-wizard/google/step2.png"/>
+        <p>Figure 3: Configure data service</p>
+        <br/>
+        <p>
+            <b>Step 3: Enter google spread sheet and query details using which values will be
+                extracted.
+            </b>
+        </p>
+        <hr/>
+        <p>Click on "Add New Query" to enter a new query. Lets name the query as "getCustomers" and
+            select the data source which we created in the previous step. Enter the worksheet
+            details
+            and configure how the response look like.
+        </p>
+        <br/>
+        <img alt="DS" src="images/ds-wizard/google/step3.1.png"/>
+        <p>Figure 4: Add querry</p>
+        <br/>
+        <p>
+            <b>Step 4: Configure how the response should look like.</b>
+        </p>
+        <hr/>
+        <p>Lets create customer Number as element and customer name and city as attributes. Click on
+            "Mian Configuration" once you enter the output mappings and "Save" the query details.
+        </p>
+        <br/>
+        <img alt="DS" src="images/ds-wizard/google/step3.2.png"/>
+        <p>Figure 5: Response configuration</p>
+        <br/>
+        <p>Once you add a query, it will be listed as follows.</p>
+        <br/>
+        <img alt="DS" src="images/ds-wizard/google/step4.png"/>
+        <p>Figure 6: View querry</p>
+        <br/>
+        <p>
+            <b>Step 6: Create an operation</b>
+        </p>
+        <hr/>
+        <p>Add a new operation and select the created query. Save the created operation.</p>
+        <br/>
+        <img alt="DS" src="images/ds-wizard/google/step4.1.png"/>
+        <p>Figure 6: Add operation</p>
+        <br/>
+
+        <p>Existing operations will be listed as follows. Click on "Finish".</p>
+        <br/>
+        <img alt="DS" src="images/ds-wizard/google/step4.2.png"/>
+        <p>Figure 7: View operations</p>
+        <br/>
+
+        <p>
+            <b>Step 8: Service deployed</b>
+        </p>
+        <hr/>
+        <p>You can find the deployed service under Deployed services list.</p>
+        <br/>
+        <img alt="DS" src="images/ds-wizard/google/step5.png"/>
+        <p>Figure 8: Deployed services</p>
+        <br/>
+
+        <p>
+            <b>Step 9: Try your service</b>
+        </p>
+        <hr/>
+        <p>Simplest way to invoke and check your created service is using "Try It" option provided
+            in the service list. Click on "Try It" link and invoke the service by clicking on the
+            "getCustomers" button.
+        </p>
+        <br/>
+        <img alt="DS" src="images/ds-wizard/google/step6.png"/>
+        <p>Figure 9: Invoke service using Try-it</p>
+        <br/>
+    </body>
+</html>

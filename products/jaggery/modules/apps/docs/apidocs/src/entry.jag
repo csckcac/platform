@@ -1,0 +1,10 @@
+    <%
+    var reader = new FeedReader();
+    var feed = new Feed();
+    feed = reader.get("http://ruchirawageesha.blogspot.com/feeds/posts/default");
+     
+    //returns an Entry Object
+    var entry = feed.getEntries()[0];
+     
+    print(entry.title);
+    %>

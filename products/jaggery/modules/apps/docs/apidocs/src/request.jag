@@ -1,0 +1,7 @@
+<%
+    print("&lthtml&gt&ltbody&gt");
+    print("Method : " + request.method + "&ltbr/&gt");
+    print("Protocol : " + request.protocol + "&ltbr/&gt");
+    print("User-Agent : " + request.getHeader("User-Agent"));
+    print("&lt/body&gt&lt/html&gt");
+%>

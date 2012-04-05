@@ -1,0 +1,111 @@
+.placeholderClass{
+    color:#ccc;
+}
+#tabs ul li{
+    /* webkit */
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#cdd6e3), to(#ffffff));
+    /* mozilla - FF3.6+ */
+    background-image: -moz-linear-gradient(top, #cdd6e3 0%, #ffffff 100%);
+    /* IE 5.5 - 7 */
+    filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColor=0, endColorStr=#cdd6e3);
+    /* IE8 */
+    -ms-filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColor=0, endColoStr=#cdd6e3);
+
+    padding: 5px 8px 3px;
+    color: #fff;
+    text-decoration: none;
+    line-height: 1;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+
+    border-bottom: none;
+    height:20px;
+    margin-right:5px;
+    border-top:solid 1px #b2ccdd;
+    border-left:solid 1px #b2ccdd;
+    border-right:solid 1px #b2ccdd;
+    float:left;
+    list-style:none;
+}
+#tabs ul li a{
+    color:#00608f;
+    padding:2px;
+    font-size:12px;
+}
+#tabs ul li.ui-tabs-selected{
+    background-image:none;
+    background-color:#fff;
+}
+#tabs ul li.ui-tabs-selected a{
+    color:#000;
+}
+#workArea{
+    border-top:solid 1px #b2ccdd;
+    padding-bottom:0px;
+}
+.carbonFormTable{
+    color:#555;
+    width:100%;
+    padding-left:10px;
+}
+.carbonFormTable td{
+    vertical-align:top;
+    font-size:12px;
+}
+.carbonFormTable input[type=text]{
+     /* webkit */
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#ffffff));
+    /* mozilla - FF3.6+ */
+    background-image: -moz-linear-gradient(top, #f2f2f2 0%, #ffffff 100%);
+    /* IE 5.5 - 7 */
+    filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorStr=#f2f2f2ff, endColorStr=#ffffffff);
+    /* IE8 */
+    -ms-filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorStr=#f2f2f2ff, endColoStr=#ffffffff);
+
+    background-repeat:repeat-x;
+    border:1px solid #58697d;
+    min-width: 230px;
+    height:20px;
+    color:#333333;
+    padding:3px;
+    margin-right:4px;
+    margin-bottom:8px;
+    font-family:tahoma, arial, sans-serif;
+}
+.leftCol-small{
+    width:100px;
+}
+.buttonRow{
+    padding:10px;
+    /* webkit */
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#f2f2f2), to(#ffffff));
+    /* mozilla - FF3.6+ */
+    background-image: -moz-linear-gradient(top, #f2f2f2 0%, #ffffff 100%);
+    /* IE 5.5 - 7 */
+    filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorStr=#f2f2f2ff, endColorStr=#ffffffff);
+    /* IE8 */
+    -ms-filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorStr=#f2f2f2ff, endColoStr=#ffffffff);
+    
+    border:solid 1px #b8c9d0;
+    text-align:right;
+}
+.ui-tabs .ui-tabs-panel{
+    padding:0px;
+}
+.togglebleTitle{
+    background:transparent url(../images/arrowDownUp.png) no-repeat left -20px;
+    text-indent:20px;   
+    text-align:left;
+    border-bottom:dotted 1px #ccc; 
+    padding-bottom:5px;
+}
+.contentHidden{
+   background:transparent url(../images/arrowDownUp.png) no-repeat left 5px !important; 
+}
+.sectionSeperator{
+    color:#545454;
+    text-transform:uppercase;
+    cursor:pointer;
+}

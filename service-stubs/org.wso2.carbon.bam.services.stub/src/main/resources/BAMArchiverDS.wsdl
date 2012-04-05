@@ -1,0 +1,278 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://ws.wso2.org/dataservice"
+                  xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+                  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ns0="http://bam.carbon.wso2.org"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+                  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+                  targetNamespace="http://ws.wso2.org/dataservice">
+    <wsdl:documentation/>
+    <wsdl:types>
+        <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+                   targetNamespace="http://bam.carbon.wso2.org">
+            <xs:element name="getLatestArchiveTimeStamp">
+                <xs:complexType/>
+            </xs:element>
+            <xs:element name="archiveTimes" type="ns0:archiveTimes"/>
+            <xs:complexType name="archiveTimes">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="archiveTime" type="ns0:archiveTime"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="archiveTime">
+                <xs:sequence>
+                    <xs:element name="archiveTime" nillable="true" type="xs:dateTime"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="getMessageArchiveData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="startTimestamp" nillable="true" type="xs:dateTime"/>
+                        <xs:element name="endTimestamp" nillable="true" type="xs:dateTime"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="archiveDatas" type="ns0:archiveDatas"/>
+            <xs:complexType name="archiveDatas">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="archiveData" type="ns0:archiveData"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="archiveData">
+                <xs:sequence>
+                    <xs:element name="messageId" nillable="true" type="xs:string"/>
+                    <xs:element name="activityId" nillable="true" type="xs:string"/>
+                    <xs:element name="timestamp" nillable="true" type="xs:string"/>
+                    <xs:element name="direction" nillable="true" type="xs:string"/>
+                    <xs:element name="message" nillable="true" type="xs:string"/>
+                    <xs:element name="ipAddress" nillable="true" type="xs:string"/>
+                    <xs:element name="status" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+                   targetNamespace="http://ws.wso2.org/dataservice">
+            <xs:element name="archiveMessageData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="messageId" nillable="true" type="xs:int"/>
+                        <xs:element name="activityId" nillable="true" type="xs:int"/>
+                        <xs:element name="timeStamp" nillable="true" type="xs:dateTime"/>
+                        <xs:element name="direction" nillable="true" type="xs:string"/>
+                        <xs:element name="message" nillable="true" type="xs:string"/>
+                        <xs:element name="ipAddress" nillable="true" type="xs:string"/>
+                        <xs:element name="status" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="removePrimaryMessageData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="startTimestamp" nillable="true" type="xs:dateTime"/>
+                        <xs:element name="endTimestamp" nillable="true" type="xs:dateTime"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="DataServiceFault" type="xs:string"/>
+            <xs:element name="DataServiceAnyElement">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:any/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getMessageArchiveDataRequest">
+        <wsdl:part name="parameters" element="ns0:getMessageArchiveData"/>
+    </wsdl:message>
+    <wsdl:message name="getMessageArchiveDataResponse">
+        <wsdl:part name="parameters" element="ns0:archiveDatas"/>
+    </wsdl:message>
+    <wsdl:message name="DataServiceFault">
+        <wsdl:part name="parameters" element="ns1:DataServiceFault"/>
+    </wsdl:message>
+    <wsdl:message name="getLatestArchiveTimeStampRequest">
+        <wsdl:part name="parameters" element="ns0:getLatestArchiveTimeStamp"/>
+    </wsdl:message>
+    <wsdl:message name="getLatestArchiveTimeStampResponse">
+        <wsdl:part name="parameters" element="ns0:archiveTimes"/>
+    </wsdl:message>
+    <wsdl:message name="removePrimaryMessageDataRequest">
+        <wsdl:part name="parameters" element="ns1:removePrimaryMessageData"/>
+    </wsdl:message>
+    <wsdl:message name="archiveMessageDataRequest">
+        <wsdl:part name="parameters" element="ns1:archiveMessageData"/>
+    </wsdl:message>
+    <wsdl:portType name="BAMArchiverDSPortType">
+        <wsdl:operation name="getMessageArchiveData">
+            <wsdl:documentation/>
+            <wsdl:input message="ns1:getMessageArchiveDataRequest" wsaw:Action="urn:getMessageArchiveData"/>
+            <wsdl:output message="ns1:getMessageArchiveDataResponse" wsaw:Action="urn:getMessageArchiveDataResponse"/>
+            <wsdl:fault message="ns1:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:getMessageArchiveDataDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="getLatestArchiveTimeStamp">
+            <wsdl:documentation/>
+            <wsdl:input message="ns1:getLatestArchiveTimeStampRequest" wsaw:Action="urn:getLatestArchiveTimeStamp"/>
+            <wsdl:output message="ns1:getLatestArchiveTimeStampResponse"
+                         wsaw:Action="urn:getLatestArchiveTimeStampResponse"/>
+            <wsdl:fault message="ns1:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:getLatestArchiveTimeStampDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="removePrimaryMessageData">
+            <wsdl:documentation/>
+            <wsdl:input message="ns1:removePrimaryMessageDataRequest" wsaw:Action="urn:removePrimaryMessageData"/>
+            <wsdl:fault message="ns1:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:removePrimaryMessageDataDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="archiveMessageData">
+            <wsdl:documentation/>
+            <wsdl:input message="ns1:archiveMessageDataRequest" wsaw:Action="urn:archiveMessageData"/>
+            <wsdl:fault message="ns1:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:archiveMessageDataDataServiceFault"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="BAMArchiverDSSOAP11Binding" type="ns1:BAMArchiverDSPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getMessageArchiveData">
+            <soap:operation soapAction="urn:getMessageArchiveData" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getLatestArchiveTimeStamp">
+            <soap:operation soapAction="urn:getLatestArchiveTimeStamp" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="removePrimaryMessageData">
+            <soap:operation soapAction="urn:removePrimaryMessageData" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="archiveMessageData">
+            <soap:operation soapAction="urn:archiveMessageData" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="BAMArchiverDSSOAP12Binding" type="ns1:BAMArchiverDSPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getMessageArchiveData">
+            <soap12:operation soapAction="urn:getMessageArchiveData" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getLatestArchiveTimeStamp">
+            <soap12:operation soapAction="urn:getLatestArchiveTimeStamp" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="removePrimaryMessageData">
+            <soap12:operation soapAction="urn:removePrimaryMessageData" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="archiveMessageData">
+            <soap12:operation soapAction="urn:archiveMessageData" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="BAMArchiverDSHttpBinding" type="ns1:BAMArchiverDSPortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="getMessageArchiveData">
+            <http:operation location="getMessageArchiveData"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getLatestArchiveTimeStamp">
+            <http:operation location="getLatestArchiveTimeStamp"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="removePrimaryMessageData">
+            <http:operation location="removePrimaryMessageData"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="archiveMessageData">
+            <http:operation location="archiveMessageData"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="BAMArchiverDS">
+        <wsdl:port name="SOAP11Endpoint" binding="ns1:BAMArchiverDSSOAP11Binding">
+            <soap:address location="http://10.215.97.235:9763/services/BAMArchiverDS.SOAP11Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="SecureSOAP11Endpoint" binding="ns1:BAMArchiverDSSOAP11Binding">
+            <soap:address location="https://10.215.97.235:9443/services/BAMArchiverDS.SecureSOAP11Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="SecureSOAP12Endpoint" binding="ns1:BAMArchiverDSSOAP12Binding">
+            <soap12:address location="https://10.215.97.235:9443/services/BAMArchiverDS.SecureSOAP12Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="SOAP12Endpoint" binding="ns1:BAMArchiverDSSOAP12Binding">
+            <soap12:address location="http://10.215.97.235:9763/services/BAMArchiverDS.SOAP12Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="HTTPEndpoint" binding="ns1:BAMArchiverDSHttpBinding">
+            <http:address location="http://10.215.97.235:9763/services/BAMArchiverDS.HTTPEndpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="SecureHTTPEndpoint" binding="ns1:BAMArchiverDSHttpBinding">
+            <http:address location="https://10.215.97.235:9443/services/BAMArchiverDS.SecureHTTPEndpoint/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

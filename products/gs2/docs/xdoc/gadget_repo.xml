@@ -1,0 +1,64 @@
+<!--
+  ~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <body>
+        <p>[<a href="http://wso2.org/downloads/gs">Download</a>]
+            | [<a href="index_docs.html">Documentation Home</a>] | [<a href="release_notes.html">Release Note</a>]
+        </p>
+        <div id="main-content">
+            <h1>Gadget Repository</h1>
+            <p>The Gadget Repository enables gadget server administrators to manage portal gadgets.
+                The administrators can add new gadgets, modify them and make default gadgets for newly registered users.'Add new gadgets' can be done in four ways.<br/>
+		<li>Using gadget URL-This option can be used to add a gadget from a http gadget repository location where the gadget stored.</li>
+		<li>Using gadget file path-This option can be used to add a gadget by uploading its xml file.</li>
+		<li>Using gadget zip file path-This option can be used to add a gadget by uploading it as a zip file.</li>
+		<li>Using gadget registry path-This option can be used to add a gadget from registry by browsing registry and selecting the required gadget.</li>
+ 
+            </p>
+            <h2>Add new gadget to the repository</h2>
+            <li><h3>Using Gadget URL</h3></li>
+            <p>
+            	<img alt="add gadget" src="images/add_gadget_repo_URL.png" space="preserve" xmlns="http://www.w3.org/1999/xhtml" />
+            </p>
+            <li><h3>Using File Path</h3></li>
+            <p>
+            	<img alt="add gadget" src="images/add_gadget_repo_FilePath.png" space="preserve" xmlns="http://www.w3.org/1999/xhtml" />
+            </p>
+            <li><h3>Using Registry Path</h3></li>
+            <p>
+            	<img alt="add gadget" src="images/add_gadget_repo_RegistryPath.png" space="preserve" xmlns="http://www.w3.org/1999/xhtml" />
+            </p>
+            <li><h3>Using Zip File</h3></li>
+            <p>
+            	<img alt="add gadget" src="images/add_gadget_repo_ZipPath.png" space="preserve" xmlns="http://www.w3.org/1999/xhtml" />
+            </p>
+            <h2>Modify / Delete gadget from the repository</h2>
+            <p>
+                <img alt="modify" src="images/mod_delete_gadget.png" space="preserve" xmlns="http://www.w3.org/1999/xhtml" />
+            </p>
+            <h2>A Default Gadget (for anonymous user / registered user)</h2>
+            <p>
+                Making a gadget a default, is an administrative task.
+                The administrator can decide which gadgets should be displayed to a newly registered in user.
+                This feature is available for both anonymous and registered user modes.
+                <br /><br />
+                <img alt="modify" src="images/make_default.png" space="preserve" xmlns="http://www.w3.org/1999/xhtml" />
+            </p>
+        </div>
+
+    </body>
+</html>

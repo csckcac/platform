@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>@product.name@ - Extensions - Activity Failure and Recovery</title>
+        <link href="../css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+
+        <h1>Activity Failure and Recovery</h1>
+
+        <ul>
+            <li><a href="#ExtensionActivities-BPELExtensibility">BPEL Extensibility</a>
+                <ul>
+                    <li><a href="#ExtensionActivities-ExtensionActivities">Extension Activities</a></li>
+                    <li><a href="#ExtensionActivities-ExtensibleAssignOperations">Extensible Assign Operations</a></li>
+                </ul>
+            </li>
+            <li><a href="#ExtensionActivities-UsingBPELExtensibilityWSO2BPS">Using BPEL Extensibility in @product.name@</a>
+                <ul>
+                    <li><a href="#ExtensionActivities-InstallationOfExtensions">Installation of extensions</a></li>
+                </ul>
+            </li>
+            <li><a href="#ExtensionActivities-DevelopingExtensionBundles">Developing Extension Bundles</a></li>
+        </ul>
+        <br />
+        <h2>
+            <a name="ExtensionActivities-BPELExtensibility"></a>
+            BPEL Extensibility
+        </h2>
+
+        <p>
+            Since BPEL 2.0, it is possible to extend the language by user-defined activities and custom variable
+            assignment mechanisms. @product.name@ (>= 1.1.0) supports these extensibility mechanisms and provides a plug-in
+            architecture that allows for registering third-party extensions.
+        </p>
+        <p>
+            BPEL extensions must be declared for use in the process preamble to tell the engine which extensions must be
+            available and which are optional. This can be done by adding an &lt;extension&gt; element to your BPEL
+            process model:
+        </p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;bpel:process...<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;bpel:extensions<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;bpel:extension</span> <span style="color: #000066;">namespace</span>=<span style="color: #ff0000;">&quot;#extension-namespace#&quot;</span> </span>
+<span style="color: #009900;">                        <span style="color: #000066;">mustUnderstand</span>=<span style="color: #ff0000;">&quot;#yes|no#&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/bpel:extensions<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+
+...
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/bpel:process<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+
+        </pre>
+
+        <p>
+            This snippet declares the given extension namespace and tells the engine what to do if no extension bundle
+            is registered for this namespace. If mustUnderstand is yes and no extension bundle is registered the engine
+            complains during the deployment of the process model and refuses the execution of the process model. If
+            mustUnderstand is no, the engine logs a warning but continuous with deployment and execution. Unregistered
+            extension activities are then executed like an &lt;empty&gt; activity.
+        </p>
+        <ul>
+            <li><a name="ExtensionActivities-ExtensionActivities"></a>
+            Extension Activities
+
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;extensionActivity<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;anyElementQName</span> standard-attributes<span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        standard-elements
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/anyElementQName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/extensionActivity<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        </pre>
+            </li>
+        </ul>
+
+        <ul>
+            <li><a name="ExtensionActivities-ExtensibleAssignOperations"></a>
+            Extensible Assign Operations
+
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;assign</span> <span style="color: #000066;">validate</span>=<span style="color: #ff0000;">&quot;yes|no&quot;</span>? standard-attributes<span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    standard-elements
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;extensionAssignOperation<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        assign-element-of-other-namespace
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/extensionAssignOperation<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        </pre>
+            </li>
+        </ul>
+        <br />
+        <h2>
+            <a name="ExtensionActivities-UsingBPELExtensibilityWSO2BPS"></a>
+            Using BPEL Extensibility in @product.name@
+        </h2>
+
+        <p>
+            <b>Warning: @product.name@ version</b><br/>
+            BPEL extensions are only available in @product.name@ 1.1.x.
+        </p>
+        <p>
+            In @product.name@, extension activities and extension assign operations are grouped into so called Extension
+            Bundles. Extension bundles are associated with an extension namespace and may provide several Extension
+            Operations. Extension operations are the actual implementations of extension code and can be used for both,
+            extension activities and extension assign operations.
+        </p>
+
+        <h3>
+            <a name="ExtensionActivities-InstallationOfExtensions"></a>
+            Installation of Extensions
+        </h3>
+
+        <p>
+            Copy the extension jar to BPS_HOME/repository/components/lib directory. Then add a configuration entry to
+            bps.xml in BPS_HOME/conf directory.
+        </p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;bps</span> <span style="color: #000066;">xmlns</span>=<span style="color: #ff0000;">&quot;http://wso2.org/bps/config&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+  ...
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;extensionBundles<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;runtimes<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+           <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;runtime<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>org.wso2.bps.samples.extension<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/runtime<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/runtimes<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;validators<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+           <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;validator<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>class name of the validator<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/validator<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/validators<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/extensionBundles<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+   ...
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/bps<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+        <br />
+        <h2>
+            <a name="ExtensionActivities-DevelopingExtensionBundles"></a>
+            Developing Extension Bundles
+        </h2>
+
+        <p>
+            You can find a sample extension implementation <a href="http://svn.wso2.org/repos/wso2/branches/carbon/3.2.0/products/bps/2.1.0/modules/samples/product/bpel-extension/src/main/java/org/wso2/bps/samples/extension/">here</a>.
+        </p>
+
+    </body>
+</html>

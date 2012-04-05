@@ -1,0 +1,77 @@
+<cepConfiguration xmlns="http://wso2.org/carbon/cep">
+    <!-- set of buckets to process the cep events -->
+    <buckets>
+
+        <bucket name="addStatisticsFusion" engineProvider="DroolsFusionCEPRuntime">
+
+            <description>BAMServiceStatisticsDataCEPServiceBucket</description>
+            <input topic="inputTopic" brokerName="wsEventServer" >
+                <tupleMapping stream="ServiceStatisticsDataEvent" eventClass="Tuple">
+                    <property name="symbol"
+                              dataType="payload"
+                              type="java.lang.String"/>
+                    <property name="price"
+                              dataType="payload"
+                              type="java.lang.Double"/>
+                    <property name="volume"
+                              dataType="payload"
+                              type="java.lang.Integer"/>
+                </tupleMapping>
+                <xmlMapping stream="ServiceStatisticsDataEvent">
+                    <xpathDefinition prefix="statdata"
+                                     namespace="http://wso2.org/ns/2009/09/bam/service/statistics/data"/>
+                    <property name="requestCount"
+                              xpath="//statdata:ServiceStatisticsData/statdata:RequestCount"
+                              type="java.lang.Integer"/>
+                    <property name="responseCount"
+                              xpath="//statdata:ServiceStatisticsData/statdata:ResponseCount"
+                              type="java.lang.Integer"/>
+                    <property name="serviceName"
+                              xpath="//statdata:ServiceStatisticsData/statdata:ServiceName"
+                              type="java.lang.String"/>
+                    <property name="faultCount"
+                              xpath="//statdata:ServiceStatisticsData/statdata:FaultCount"
+                              type="java.lang.Integer"/>
+                </xmlMapping>
+            </input>
+
+            <query name="testesperquery">
+                <expression type="inline" listenerName="fusionListener"><![CDATA[
+                        package org.wso2.carbon.cep.demo.bam;
+                        import java.util.HashMap;
+                        global org.wso2.carbon.cep.fusion.listener.FusionEventListener fusionListener;
+                        declare HashMap
+                           @role( event )
+                        end
+                        rule Statistics
+                        when
+                           serviceStatisticsData : HashMap(this["requestCount"] > 5) over window:time( 2m ) from entry-point ServiceStatisticsDataEvent;
+                        then
+                          fusionListener.onEvent(serviceStatisticsData);
+                end]]></expression>
+                <output topic="statisticsPublishTopic" brokerName="wsEventServer">
+                    <xmlMapping >
+                        <x:ServiceStatisticsData
+                                xmlns:x="http://wso2.org/ns/2009/09/bam/service/statistics/data"
+                                responseCount="{responseCount}">
+                            <x:RequestCount>{requestCount}</x:RequestCount>
+                            <x:MaximumResponseTime serviceName="{serviceName}">
+                                <x:FaultCount>{faultCount}</x:FaultCount>
+                            </x:MaximumResponseTime>
+                        </x:ServiceStatisticsData>
+                    </xmlMapping>
+                    <tupleMapping>
+                        <metaData>
+                            <property name="symbol"/>
+                        </metaData>
+                        <correlationData></correlationData>
+                        <payloadData>
+                            <property name="price"/>
+                            <property name="volume"/>
+                        </payloadData>
+                    </tupleMapping>
+                </output>
+            </query>
+        </bucket>
+    </buckets>
+</cepConfiguration>

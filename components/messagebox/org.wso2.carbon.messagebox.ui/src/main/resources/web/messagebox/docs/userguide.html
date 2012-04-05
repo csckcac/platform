@@ -1,0 +1,112 @@
+<!--
+  ~ Copyright 2008 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"></meta>
+    <title>Message Boxes(SQS) - User Guide</title>
+    <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all"/>
+</head>
+
+<body style="font-family: Times New Roman,Times,serif; font-size: 12pt;">
+<h1>Message Boxes(SQS)</h1>
+
+<h2>Access Keys</h2>
+
+<p><img alt="" src="../images/accessKeys.png"/></p>
+
+<p>Figure 1: Access Keys</p>
+
+<p>Message Boxes are providing Simple Queue Service(SQS). In SQS, Each user must have access keys.
+   There are two access keys namely, Access Key Id and Secret Access Key. In each requests to SQS
+   service, the request is signed with secret access key. And the access key id is included as a
+   request parameter.</p>
+
+<p>To get your access keys, you need to login to Message Broker product and access via Manage>Access
+   Keys menu.</p>
+
+<h2>Create Message Box</h2>
+
+<p><img alt="" src="../images/addMessageBox.png"/></p>
+
+<p>Figure 2: Create Message Box</p>
+
+<p>Message boxes can be added with a name and a default visibility time out value.Message box name
+   should contain only alpha numeric characters and no white spaces allowed. </p>
+
+<p>In SQS, When a message is received by a user, that message is unaccessible for a specified time
+   duration, and this message is not visible for other users till that specified time duration is
+   over. If the message received user did not delete the message in that time duration, the message
+   is visible for other users. This time duration is named as visibility timeout. When the message
+   box is created, a default value for visibility timeout is set. This is named as default
+   visibility timeout value.</p>
+
+<p>When the message box is created with a suitable name and default visibility timeout value in
+   seconds, available message box list is shown.</p>
+
+<h2>List Message Boxes</h2>
+
+<p><img alt="" src="../images/listMessageBoxes.png"/></p>
+
+<p>Figure 3: Message Boxes List</p>
+
+<p>All the accessible message boxes are listed in message box list page. Message box can be shared
+   with other users, and shared users are shown too. Number of messages in the message box is
+   given.This number is the addition of retrievable messages and retrieved messages. URL of message
+   box is used to access message box with various SQS operations.</p>
+
+<p>Message box can be deleted and viewed in list view page as available operations.</p>
+
+<h2>View Message Box</h2>
+
+<p><img alt="" src="../images/viewMessageBox.png"/></p>
+
+<p>Figure 4: View Message Box</p>
+
+<p>View message box page contains three main sections namely retrievable messages, retrieved
+   messages and permissions.</p>
+<ul>
+    <li>Retrievable messages</li>
+    <p>Messages can be sent to the message box. These messages can be retrieved if no one has
+       retrieved. The retrievable messages are listed in this section.</p>
+    <li>Retrieved messages</li>
+    <p>Messages can be retrieved with a visibility timeout value. The retrived messages are locked
+       for retrieved timeout period. User can delete retrieved messages during this timeout period.
+       If message is deleted, it is not available to any user. But if the retrieved message is not
+       deleted, it will be appear in retrievable message area when the visibility timeout is
+       over</p>
+    <li>Permissions</li>
+    <P>Message box can be shared with other users. There are five operations which can be allowed
+       for others. A label for each permission is generated. That label is used to remove these
+       allowed permissions. </P>
+
+</ul>
+
+<p>There are set of operations in SQS API where user can access this service with SOAP requests.
+   Change visibility timeout operation is not provided in management console.</p>
+
+
+<h2>External References:</h2>
+<ul>
+    <li><a href="http://aws.amazon.com/archives/Amazon-SQS/2317">AWS SQS</a>
+    </li>
+    <li><a href="http://queue.amazonaws.com/doc/2009-02-01/QueueService.wsdl">SQS WSDL</a>
+    </li>
+
+</ul>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<analyzerSequence name="UserSummarizer">
+    <trigger cron="1 * * * * ? *"/>
+    <analyzers>
+        <get name="BASE" batchSize="3"/>
+        <extract>
+            <field from='in_message_body' name='user' xpath='//m:placeOrder/m:order/x:userId'>
+                <namespace prefix='m' uri='http://order.sample'/>
+                <namespace prefix='x' uri='http://order.sample/xsd'/>
+            </field>
+        </extract>
+        <groupBy>
+            <field name='user'/>
+        </groupBy>
+        <drop type="column">
+            <fieldSet>
+                <field name="bam_activity_id"/>
+                <field name="in_message_body"/>
+                <field name="correlationKey1"/>
+                <field name="correlationKey2"/>
+                <field name="correlationKey3"/>
+                <field name="metaKey1"/>
+                <field name="metaKey2"/>
+                <field name="metaKey3"/>
+                <field name="timestamp"/>
+            </fieldSet>
+        </drop>
+        <aggregate>
+            <measure name="request_count" aggregationType="SUM"/>
+            <measure name="response_count" aggregationType="SUM"/>
+            <measure name="response_time" aggregationType="AVG"/>
+        </aggregate>
+        <put name="userSummary" dataSourceType="CASSANDRA">
+            <onExist>
+                <aggregate>
+                    <measure name="request_count" aggregationType="SUM"/>
+                    <measure name="response_count" aggregationType="SUM"/>
+                    <measure name="response_time" aggregationType="AVG"/>
+                </aggregate>
+            </onExist>
+        </put>
+        <get name="userSummary"/>
+        <log/>
+    </analyzers>
+</analyzerSequence>

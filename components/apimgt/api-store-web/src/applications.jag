@@ -1,0 +1,38 @@
+<div class="service-store-tabs">
+    <a name="overview" class="tab selected">Application</a>
+</div>
+<div id="applications-list" class="content-box">
+
+
+
+
+
+
+    <div id="applications">
+        <div id="new-application">
+            <form class="form-horizontal">
+
+                  <div class="control-group">
+                    <label class="control-label" for="input01">Application name</label>
+                    <div class="controls">
+                      <input type="text" class="input-xlarge" id="application-name"/>
+                    </div>
+                  </div>
+
+
+                  <div class="form-actions">
+                      <button type="button" class="button" id="save-application">Save</button>
+                  </div>
+
+              </form>
+
+        </div>
+        <div id="existing-applications">
+
+            <table class="table-apistore">
+                <tbody id="application-list">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

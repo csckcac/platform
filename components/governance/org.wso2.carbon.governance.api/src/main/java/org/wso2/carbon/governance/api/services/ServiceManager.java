@@ -1,0 +1,208 @@
+/*
+ * Copyright (c) 2008, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.wso2.carbon.governance.api.services;
+
+import org.apache.axiom.om.OMElement;
+import org.wso2.carbon.governance.api.common.GovernanceArtifactManager;
+import org.wso2.carbon.governance.api.common.dataobjects.GovernanceArtifact;
+import org.wso2.carbon.governance.api.exception.GovernanceException;
+import org.wso2.carbon.governance.api.services.dataobjects.Service;
+import org.wso2.carbon.governance.api.util.GovernanceConstants;
+import org.wso2.carbon.governance.api.util.GovernanceUtils;
+import org.wso2.carbon.registry.core.Association;
+import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.extensions.utils.CommonUtil;
+
+import javax.xml.namespace.QName;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * This provides the management functionality for service artifacts stored on the registry.
+ */
+public class ServiceManager {
+    private GovernanceArtifactManager manager;
+    private Registry registry;
+    /**
+     * Constructor accepting an instance of the registry to use.
+     *
+     * @param registry the instance of the registry.
+     */
+    public ServiceManager(Registry registry) {
+        this(registry, GovernanceConstants.SERVICE_MEDIA_TYPE);
+
+    }
+
+    /**
+     * Constructor accepting an instance of the registry, and also details on the type of manager.
+     *
+     * @param registry  the instance of the registry.
+     * @param mediaType the media type of resources being saved or fetched.
+     */
+    protected ServiceManager(Registry registry, String mediaType) {
+        this.manager = new GovernanceArtifactManager(
+                registry, mediaType,
+                GovernanceConstants.SERVICE_NAME_ATTRIBUTE,
+                GovernanceConstants.SERVICE_NAMESPACE_ATTRIBUTE,
+                GovernanceConstants.SERVICE_ELEMENT_ROOT,
+                 GovernanceConstants.SERVICE_ELEMENT_NAMESPACE, "/@{name}", new Association[0]);
+        this.registry = registry;
+
+    }
+
+    /**
+     * Creates a new service artifact from the given qualified name.
+     *
+     * @param qName the qualified name of this service.
+     *
+     * @return the artifact added.
+     * @throws GovernanceException if the operation failed.
+     */
+    public Service newService(QName qName) throws GovernanceException {
+        Service service = new Service(manager.newGovernanceArtifact()) {};
+        service.setQName(qName);
+        return service;
+    }
+
+    /**
+     * Creates a new service artifact from the given content.
+     *
+     * @param content the service content.
+     *
+     * @return the artifact added.
+     * @throws GovernanceException if the operation failed.
+     */
+    public Service newService(OMElement content) throws GovernanceException {
+        Service service = new Service(manager.newGovernanceArtifact(content)) {};
+        String serviceName = CommonUtil.getServiceName(content);
+        String serviceNamespace = CommonUtil.getServiceNamespace(content);
+        if (serviceName != null && !serviceName.equals("")) {
+            service.setQName(new QName(serviceNamespace, serviceName));
+        }
+        return service;
+    }
+
+    /**
+     * Adds the given service artifact to the registry.
+     *
+     * @param service the service artifact.
+     *
+     * @throws GovernanceException if the operation failed.
+     */
+    public void addService(Service service) throws GovernanceException {
+        manager.addGovernanceArtifact(service);
+//            GovernanceUtils.writeOwnerAssociations(registry, service);
+//            GovernanceUtils.writeConsumerAssociations(registry, service);
+    }
+
+    /**
+     * Updates the given service artifact on the registry.
+     *
+     * @param service the service artifact.
+     *
+     * @throws GovernanceException if the operation failed.
+     */
+    public void updateService(Service service) throws GovernanceException {
+        manager.updateGovernanceArtifact(service);
+    }
+
+    /**
+     * Fetches the given service artifact on the registry.
+     *
+     * @param serviceId the identifier of the service artifact.
+     *
+     * @return the service artifact.
+     * @throws GovernanceException if the operation failed.
+     */
+    public Service getService(String serviceId) throws GovernanceException {
+        GovernanceArtifact governanceArtifact = manager.getGovernanceArtifact(serviceId);
+        if (governanceArtifact == null) {
+            return null;
+        }
+        return new Service(governanceArtifact) {};
+    }
+
+    /**
+     * Removes the given service artifact from the registry.
+     *
+     * @param serviceId the identifier of the service artifact.
+     *
+     * @throws GovernanceException if the operation failed.
+     */
+    public void removeService(String serviceId) throws GovernanceException {
+        manager.removeGovernanceArtifact(serviceId);
+    }
+
+    /**
+     * Finds all service artifacts matching the given filter criteria.
+     *
+     * @param criteria the filter criteria to be matched.
+     *
+     * @return the service artifacts that match.
+     * @throws GovernanceException if the operation failed.
+     */
+    public Service[] findServices(ServiceFilter criteria) throws GovernanceException {
+        List<Service> services = new ArrayList<Service>();
+        for (Service service : getAllServices()) {
+            if (service != null) {
+                if (criteria.matches(service)) {
+                    services.add(service);
+                }
+            }
+        }
+        return services.toArray(new Service[services.size()]);
+    }
+         /**
+     * Finds all the service path and used to list services
+     *
+     * @return all the service paths
+     * @throws GovernanceException if the operation failed
+     */
+    public String[] getAllServicePaths() throws GovernanceException {
+        return GovernanceUtils.getResultPaths(registry,
+                GovernanceConstants.SERVICE_MEDIA_TYPE);
+    }
+
+    /**
+     * Finds all service artifacts on the registry.
+     *
+     * @return all service artifacts on the registry.
+     * @throws GovernanceException if the operation failed.
+     */
+    public Service[] getAllServices() throws GovernanceException {
+        return getServices(manager.getAllGovernanceArtifacts());
+    }
+
+    // Method to obtain services from governance artifacts.
+    private Service[] getServices(GovernanceArtifact[] governanceArtifacts) {
+        List<Service> services = new ArrayList<Service>(governanceArtifacts.length);
+        for (GovernanceArtifact governanceArtifact : governanceArtifacts) {
+            services.add(new Service(governanceArtifact) {});
+        }
+        return services.toArray(new Service[services.size()]);
+    }
+
+    /**
+     * Finds all identifiers of the service artifacts on the registry.
+     *
+     * @return an array of identifiers of the service artifacts.
+     * @throws GovernanceException if the operation failed.
+     */
+    public String[] getAllServiceIds() throws GovernanceException {
+        return manager.getAllGovernanceArtifactIds();
+    }
+
+}

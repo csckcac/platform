@@ -1,0 +1,24 @@
+<div id="home">
+<h2>My APIs</h2>
+
+<form class="well form-search">
+    <input type="text" id="apiSearch" class="input-medium search-query" placeholder="Filter APIs">
+    <button type="button" class="btn btn-primary" onClick="apiProviderApp.searchAPIs()">Search</button>
+</form>
+<ul class="thumbnails" style="display:none;">
+    <li class="span2">
+        <div class="thumbnail">
+            <a href=""><img class="thumb" src="" alt=""></a>
+            <h5><a href="" class="label label-info"></a></h5>
+            <div><a href="?place=api-details&tab=users"><span id="noOfUsers">12 Users</a></div>
+            <!--span>Up Time: 90%</span-->
+            <p class="status"></p>
+        </div>
+                </li> </ul>
+        <div class="element-wrapper"><span class="loading"></span>
+        <ul class="thumbnails"></ul></div>
+
+<div class="pagination" id="pagination">
+    <ul></ul>
+</div>
+</div>

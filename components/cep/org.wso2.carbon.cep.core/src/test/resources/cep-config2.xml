@@ -1,0 +1,148 @@
+<cepConfiguration xmlns="http://wso2.org/carbon/cep">
+    <!-- details of the Back end runtime provider can be esper or fusion -->
+
+    <!-- set of buckets to process the cep events -->
+    <buckets>
+        <!--<bucket name="StockQuoteAnalyzer" engineProvider="esperEngineProvider">-->
+        <!--<description>This bucket analyzes stock quotes and trigger an event if there is an-->
+        <!--increase of the last traded amount by 10 % with regards to the average traded price.-->
+        <!--</description>-->
+        <!--<input topic="AllStockQuotes" brokerProxy="">-->
+        <!--<mapping stream="AllStockQuoteStream">-->
+        <!--<xpathDefinition prefix="quotedata"-->
+        <!--namespace="http://ws.cdyne.com/"/>-->
+        <!--<property name="stockSymbol"-->
+        <!--xpath="//quotedata:StockQuoteEvent/quotedata:StockSymbol"-->
+        <!--type="java.lang.String"/>-->
+        <!--<property name="lastTradeAmount"-->
+        <!--xpath="//quotedata:StockQuoteEvent/quotedata:LastTradeAmount"-->
+        <!--type="java.lang.Double"/>-->
+        <!--<property name="stockChange"-->
+        <!--xpath="//quotedata:StockQuoteEvent/quotedata:StockChange"-->
+        <!--type="java.lang.Double"/>-->
+        <!--<property name="openAmount"-->
+        <!--xpath="//quotedata:StockQuoteEvent/quotedata:OpenAmount"-->
+        <!--type="java.lang.Double"/>-->
+        <!--<property name="dayHigh" xpath="//quotedata:StockQuoteEvent/quotedata:DayHigh"-->
+        <!--type="java.lang.Double"/>-->
+        <!--<property name="dayLow" xpath="//quotedata:StockQuoteEvent/quotedata:DayLow"-->
+        <!--type="java.lang.Double"/>-->
+        <!--<property name="stockVolume"-->
+        <!--xpath="//quotedata:StockQuoteEvent/quotedata:StockVolume"-->
+        <!--type="java.lang.Long"/>-->
+        <!--<property name="prevCls" xpath="//quotedata:StockQuoteEvent/quotedata:PrevCls"-->
+        <!--type="java.lang.Double"/>-->
+        <!--<property name="companyName"-->
+        <!--xpath="//quotedata:StockQuoteEvent/quotedata:CompanyName"-->
+        <!--type="java.lang.String"/>-->
+        <!--</mapping>-->
+        <!--</input>-->
+
+        <!--<query>-->
+        <!--<expression>select * from AllStockQuoteStream.win:length(5) having lastTradeAmount >-->
+        <!--(avg(lastTradeAmount)*1.1)-->
+        <!--</expression>-->
+        <!--<output topic="expensiveStockQuotes">-->
+        <!--<xmlmapping>-->
+        <!--<quotedata:StockQuoteDataEvent-->
+        <!--xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"-->
+        <!--xmlns:xsd="http://www.w3.org/2001/XMLSchema"-->
+        <!--xmlns:quotedata="http://ws.cdyne.com/">-->
+        <!--<quotedata:StockSymbol>{stockSymbol}</quotedata:StockSymbol>-->
+        <!--<quotedata:LastTradeAmount>{lastTradeAmount}</quotedata:LastTradeAmount>-->
+        <!--<quotedata:StockChange>{stockChange}</quotedata:StockChange>-->
+        <!--<quotedata:OpenAmount>{openAmount}</quotedata:OpenAmount>-->
+        <!--<quotedata:DayHigh>{dayHigh}</quotedata:DayHigh>-->
+        <!--<quotedata:DayLow>{dayLow}</quotedata:DayLow>-->
+        <!--<quotedata:StockVolume>{stockVolume}</quotedata:StockVolume>-->
+        <!--<quotedata:PrevCls>{prevCls}</quotedata:PrevCls>-->
+        <!--<quotedata:CompanyName>{companyName}</quotedata:CompanyName>-->
+        <!--</quotedata:StockQuoteDataEvent>-->
+
+        <!--</xmlmapping>-->
+        <!--</output>-->
+        <!--</query>-->
+        <!--</bucket>-->
+        <bucket name="addStatisticsEsper" engineProvider="esperEngineProvider">
+            <description>BAMServiceStatisticsDataCEPServiceBucket</description>
+            <input topic="inputTopic" brokerName="wsEventServerProxy">
+                <xmlMapping stream="ServiceStatisticsDataEvent">
+                    <xpathDefinition prefix="statdata"
+                                     namespace="http://wso2.org/ns/2009/09/bam/service/statistics/data"/>
+                    <property name="requestCount"
+                              xpath="//statdata:ServiceStatisticsData/statdata:RequestCount"
+                              type="java.lang.Integer"/>
+                    <property name="responseCount"
+                              xpath="//statdata:ServiceStatisticsData/statdata:ResponseCount"
+                              type="java.lang.Integer"/>
+                    <property name="serviceName"
+                              xpath="//statdata:ServiceStatisticsData/statdata:ServiceName"
+                              type="java.lang.String"/>
+                    <property name="faultCount"
+                              xpath="//statdata:ServiceStatisticsData/statdata:FaultCount"
+                              type="java.lang.Integer"/>
+                </xmlMapping>
+                <hashMapMapping>
+
+                </hashMapMapping>
+                
+            </input>
+
+            <query name="testesperquery">
+                <expression type="online">select * from ServiceStatisticsDataEvent.win:length(5) having requestCount > 2</expression>
+                <output topic="statisticsPublishTopic" brokerName="wsEventServerProxy">
+                    <elementMapping documentElement="ServiceStatisticsData"
+                                    namespace="http://wso2.org/ns/2009/09/bam/service/statistics/data">
+                        <property name="requestCount" xmlFieldName="ReqestCount"
+                                  xmlFieldType="element"/>
+                        <property name="responseCount" xmlFieldName="ResponseCount"
+                                  xmlFieldType="attribute"/>
+                    </elementMapping>
+                    <xmlMapping>
+                        <x:ServiceStatisticsData
+                                xmlns:x="http://wso2.org/ns/2009/09/bam/service/statistics/data"
+                                responseCount="{responseCount}">
+                            <x:RequestCount>{requestCount}</x:RequestCount>
+                            <x:MaximumResponseTime serviceName="{serviceName}">
+                                <x:FaultCount>{faultCount}</x:FaultCount>
+                            </x:MaximumResponseTime>
+                        </x:ServiceStatisticsData>
+
+                    </xmlMapping>
+                </output>
+            </query>
+        </bucket>
+        <!--bucket name="Bucket_test_1" engineProvider="esperEngineProvider">
+            <description>BAMServiceStatisticsDataCEPServiceBucket</description>
+            <input topic="testInputTopic">
+                <mapping stream="testStream">
+                    <xpathDefinition prefix="statdata"
+                                     namespace="http://wso2.org/ns/2009/09/bam/service/statistics/data"/>
+                    <property name="minimumResponseTime" xpath="//statdata:ServiceStatisticsData/statdata:MinimumResponseTime"
+                              type="java.lang.Double"/>
+                    <property name="maximumResponseTime" xpath="//statdata:ServiceStatisticsData/statdata:MaximumResponseTime"
+                              type="java.lang.Double"/>
+                </mapping>
+            </input>
+
+            <query>
+                <expression>select * from testStream.win:length(5) having avg(maximumResponseTime) > 100
+                </expression>
+                <output topic="testOutputTopic">
+                    <elementmapping documentElement="ServiceStatisticsData"
+                                    namespace="http://wso2.org/ns/2009/09/bam/service/statistics/data">
+                        <property name="minimumResponseTime" xmlFieldName="MinimumResponseTime" xmlFieldType="element"/>
+                        <property name="maximumResponseTime" xmlFieldName="MaximumResponseTime" xmlFieldType="attribute"/>
+                    </elementmapping>
+                   <xmlmapping>
+                        <x:ServiceStatisticsData
+                                xmlns:x="http://wso2.org/ns/2009/09/bam/service/statistics/data"
+                                minimumResponseTime="{minimumResponseTime}">
+                            <x:MaximumResponseTime>{maximumResponseTime}</x:MaximumResponseTime>
+                        </x:ServiceStatisticsData>
+                    </xmlmapping>
+                </output>
+            </query>
+        </bucket-->
+    </buckets>
+</cepConfiguration>

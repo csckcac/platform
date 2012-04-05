@@ -1,0 +1,245 @@
+<!--
+ ~ Copyright (c) 2005-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Registry Resources - User Guide</title>
+  <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all" />
+</head>
+
+<body>
+<h1>Registry Resources</h1>
+
+<p>The WSO2 Registry is a repository that stores resources in a structured way.
+Here are some of the features provided by the registry interface. </p>
+<ul>
+  <li>Provides the facility to organize resources into collections. (Similar
+    to how you organize files in directories.) </li>
+  <li>Keeps multiple versions of resources </li>
+  <li>Manages social aspects such as rating of resources </li>
+  <li>AtomPub interfaces to publish, view and manage resources from remote or
+    non-Java clients </li>
+</ul>
+
+<h2>Registry User Interface</h2>
+<p>In the navigator, under Registry, click <strong>Resources</strong>.</p>
+
+<p><img src="images/registry.png" width="743px"/></p>
+
+<p>Figure 1 : Registry User Interface </p>
+
+<h2>Components of Registry User Interface</h2>
+<ul>
+  <li><a href="#Breadcrumb">Breadcrumb</a>:- Shows the current directory
+    hierarchy  </li>
+  <li><a href="#Meta">Meta Data</a>:- Shows meta data for the
+    resource/collection </li>
+  <li><a href="#Properties">Properties</a>:- Shows properties for the
+    resource/collection </li>
+  <li><a href="#Content">Content</a>:- Shows the contents of the
+    resource/collection  </li>
+</ul>
+
+<p></p>
+
+<h3><a name="Breadcrumb" id="Breadcrumb">Resource Breadcrumb</a></h3>
+
+<p>Use the breadcrumb to navigate backward in the current branch of the
+directory path, by clicking on a directory name in the breadcrumb. Note
+that you can access the root of the directory path by clicking the Home
+icon in the breadcrumb. </p>
+
+<p><img src="images/breadcrumb.png" width="743px"/></p>
+
+<p>Figure 2: The Breadcrumb </p>
+
+<h3><a name="Meta" id="Meta">Meta Data Panel</a></h3>
+
+<p>The meta data panel displays the following properties of the resource
+or the collection </p>
+<ul>
+  <li>Created Time and Author </li>
+  <li>Last Updated Time and Author </li>
+  <li>Media Type </li>
+  <li>URL for the permanent link </li>
+  <li>Versions of the resource </li>
+  <li>Description about the resource/collection. </li>
+</ul>
+
+<p></p>
+
+<p><img src="images/metadata.png" width="492px"/></p>
+
+<p>Figure 3 : The meta data panel </p>
+
+<h3><a name="Properties" id="Properties">Properties Panel</a></h3>
+
+<p>This panel displays the properties of the currently selected resource
+or collection. New properties can be added, while existing properties can
+be edited or deleted.</p>
+
+<p><img src="images/properties.png" width="492px"/></p>
+
+<p>Figure 4 : The properties panel </p>
+
+<h3><a name="Content" id="Content">Content Panel</a></h3>
+
+<p>If the currently selected entity is a collection, the Content Panel
+shows the child entries under that collection. It provides details of each
+entry. An entry can be either another collection or a resource. </p>
+<ul>
+  <li>Name - Click to access the content of this entry </li>
+  <li>Created Date </li>
+  <li>Author </li>
+  <li>Ratings</li>
+  <li>The link to the Atom feed </li>
+</ul>
+
+<p><img src="images/entries.png" width="492px"/></p>
+
+<p>Figure 5 : View of Directory Entries </p>
+
+<p>If the currently selected entity is a resource, the Content panel
+provides a user interface through which you can display, edit upload, and
+download the content.</p>
+<p><img src="images/content.png" width="492px"/></p>
+<p>Figure 6 : View of the Content </p>
+
+
+<h2>Symbolic Links and Remote Links</h2>
+
+<p>Symbolic links and Remote links can be created in a similar way to adding a normal resource.
+Add resource drop down list contains options to add symbolic and remote links.</p>
+
+<p><img src="images/add_symlink.png" width="492px"/></p>
+<p>Figure 7 : Add Symbolic Link </p>
+
+<p>When adding a symbolic link, you have to provide a name for the link and the path of an existing
+resource or collection which is being linked. It creates a link to the particular resource.
+The created symbolic link is shown by an icon with an arrow in the entries panel.</p>
+
+<p><img src="images/symlink.png" width="492px"/></p>
+<p>Figure 8 : Symbolic Link</p>
+
+<p>Adding a Remote link is much similar to adding a symbolic link. You can mount a collection in a
+remotely deployed registry instance to your registry instance by adding a remote link. You can
+provide a name for the remote link in the name field, and choose the instance to which you are going
+to mount (Please refer the registry user guide to see how to configure the remote instances in
+registry.xml). You can give the path of the remote collection which you need to mount for the path
+field, or else the root collection will be mounted. </p>
+
+<p><img src="images/add_remotelink.png" width="492px"/></p>
+<p>Figure 9 : Add Remote Link</p>
+
+<p>After mounting the remote collection you can access and work on that collection from your local
+instance.</p>
+
+
+<h2>Media Types</h2>
+
+<p>
+Each collection or resource that you create and store on the repository has an associated media
+type. However, you also have the option to leave this unspecified enforcing the default media type.
+There are two main ways in which you can configure media types for resources.
+</p>
+
+<p>
+The first method is by means of a one-time configuration which can be done by modifying the
+<strong>mime.types</strong> file found in the server configuration directory. This can be done just
+once before the initial start-up of the server.
+</p>
+
+<p>
+The second method is to configure the media types via the server administration console. For
+collections the first method does not apply, and the only available mechanism is to configure the
+media types via the server administration console.
+</p>
+
+<p>
+Initially the system will contain the media types defined in the <strong>mime.types</strong> file
+will be available for resources and a set of default media types will be available for collections.
+</p>
+
+<p>
+Managing media types for resources can be done via the server administration console, by editing the
+properties of the <strong>/_system/config/repository/components/org.wso2.carbon.governance/media-types/index</strong> collection. This collection contains two
+resources, <strong>collection</strong> and <strong>custom.ui</strong>. To manage media types of
+collections and custom user interfaces, you need to edit the properties of these two resources.
+</p>
+
+<p><img src="images/edit_mime_types.png" width="492px"/></p>
+<p>Figure 10 : Editing Media Types</p>
+
+
+<h2>Optional Portlets</h2>
+
+<h3>Adding Subscriptions</h3>
+
+<p>The <strong>Subscriptions</strong> portlet allows you to add subscriptions to resources and
+collections. Clicking <strong>Add Subscription</strong> brings up a form which allows users to
+create new subscriptions. If you already have any subscriptions, they will be listed in a table
+displayed within this portlet.</p>
+
+<p><img src="images/add_subscription.png" width="340px" /></p>
+
+<p>Figure 11: Add Subscriptions</p>
+
+
+<p>Once a subscription has been added, you are also allowed to delete
+subscriptions (or unsubscribe), by clicking on the relevant <strong>Delete</strong> link.</p>
+
+<p><img src="images/manage_notifications.png" width="340px" /></p>
+
+<p>Figure 12: Manage Notifications</p>
+
+<p>Adding a subscription involves selecting the event type and the notification method. The event
+types supported by default are as follows:</p>
+
+<ul>
+  <li>Check LC Item   - Represents an event that fires when a item is checked in a lifecycle
+  check-list.</li>
+  <li>Uncheck LC Item - Represents an event that fires when a item is unchecked in a lifecycle
+  check-list.</li>
+  <li>Create Child    - Represents an event of creating a resource (or collection) within an
+  existing collection.</li>
+  <li>Delete Child    - Represents an event of deleting a resource (or collection) within an
+  existing collection.</li>
+  <li>Delete          - Represents an event of deleting a resource (or collection).</li>
+  <li>Create LC       - Represents an event of creating a lifecycle.</li>
+  <li>Delete LC       - Represents an event of deleting a lifecycle.</li>
+  <li>Change LC State - Represents an event of changing a lifecycle state.</li>
+  <li>Update          - Represents an event of updating a resource or collection.</li>
+</ul>
+
+<p>Please note that some of these events may not be available for certain types resources and
+collections. We support a variety of notification methods as well.</p>
+
+<ul>
+  <li>E-mail          - Any valid e-mail address.</li>
+  <li>HTML/Plain-Text - An endpoint accepting HTML or text content.</li>
+  <li>SOAP            - An endpoint accepting notifications as a SOAP message.</li>
+  <li>User Profile    - A valid user's profile. Notifications will be sent to the e-mail address
+  specified on the user's default profile.</li>
+</ul>
+
+<p>Based on the notification method you select, you may be required to provide additional
+information, such as the e-mail address to use of the name of the user of whom the profile will be
+used. Having done this step, you will have to click on the <strong>Subscribe</strong> button to add
+a subscription (see Figure above).</p>
+</body>
+</html>

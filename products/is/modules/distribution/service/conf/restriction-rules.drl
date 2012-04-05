@@ -1,0 +1,121 @@
+import org.wso2.stratos.metering.dataobjects.*;
+import org.wso2.stratos.billing.mgt.dataobjects.*
+
+// free users restrictions
+rule restrictFreeUsers
+when
+ $package: MultitenancyPackage(name == "multitenancy-free")
+ $dataContext : MeteringDataContext(usersCount >= 2 && multitenancyPackage == $package)
+
+then
+ MeteringAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setBlockTenantAddUsers(true);
+ validation.setBlockTenantAddUsersMsg("You can add at most 2 users. Upgrade the subscription to add more users.");
+
+end
+
+rule restrictFreeDataVolume
+when
+ $package: MultitenancyPackage(name == "multitenancy-free")
+ $dataContext : MeteringDataContext(userCapacity > (10 * 1024 * 1024) && multitenancyPackage == $package)
+
+then
+ MeteringAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setBlockTenantAddUsers(true);
+ validation.setBlockTenantAddUsersMsg("You can add resource only size less than 10Mb. Upgrade the subscription to add larger resources.");
+ validation.setPersistValidationInfo(false);
+end
+
+rule unsetRestrictFreeUsers
+when
+
+ $package: MultitenancyPackage(name == "multitenancy-free")
+ $dataContext : MeteringDataContext(usersCount < 2 && multitenancyPackage == $package)
+
+then
+ MeteringAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setBlockTenantAddUsers(false);
+ validation.setBlockTenantAddUsersMsg(null);
+
+end
+
+// small users restrictions
+
+rule restrictSmallUsers
+when
+ $package: MultitenancyPackage(name == "multitenancy-small")
+ $dataContext : MeteringDataContext(usersCount >= 5 && multitenancyPackage != null && multitenancyPackage == $package)
+
+then
+
+ MeteringAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setBlockTenantAddUsers(true);
+ validation.setBlockTenantAddUsersMsg("You can add at most 5 users. Upgrade the subscription to add more users.");
+
+end
+
+rule restrictSmallDataVolume
+when
+ $package: MultitenancyPackage(name == "multitenancy-small")
+ $dataContext : MeteringDataContext(userCapacity > (25 * 1024 * 1024) && multitenancyPackage == $package)
+
+then
+ MeteringAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setBlockTenantAddUsers(true);
+ validation.setBlockTenantAddUsersMsg("You can add resource only size less than 25Mb. Upgrade the subscription to add larger resources.");
+ validation.setPersistValidationInfo(false);
+end
+
+rule unsetRestrictSmallUsers
+when
+ $package: MultitenancyPackage(name == "multitenancy-small")
+ $dataContext : MeteringDataContext(usersCount < 5 && multitenancyPackage != null && multitenancyPackage == $package)
+
+then
+
+ MeteringAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setBlockTenantAddUsers(false);
+ validation.setBlockTenantAddUsersMsg(null);
+
+end
+
+// medium users restrictions
+
+rule restrictMediumUsers
+when
+ $package: MultitenancyPackage(name == "multitenancy-medium")
+ $dataContext : MeteringDataContext(usersCount >= 20 && multitenancyPackage != null && multitenancyPackage == $package)
+
+then
+
+ MeteringAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setBlockTenantAddUsers(true);
+ validation.setBlockTenantAddUsersMsg("You can add at most 20 users. Upgrade the subscription to add more users.");
+
+end
+
+rule restrictMediumDataVolume
+when
+ $package: MultitenancyPackage(name == "multitenancy-medium")
+ $dataContext : MeteringDataContext(userCapacity > (100 * 1024 * 1024) && multitenancyPackage == $package)
+
+then
+ MeteringAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setBlockTenantAddUsers(true);
+ validation.setBlockTenantAddUsersMsg("You can add resource only size less than 25Mb. Upgrade the subscription to add larger resources.");
+ validation.setPersistValidationInfo(false);
+end
+
+rule unsetRestrictMediumUsers
+when
+ $package: MultitenancyPackage(name == "multitenancy-medium")
+ $dataContext : MeteringDataContext(usersCount < 20 && multitenancyPackage != null && multitenancyPackage == $package)
+
+then
+
+ MeteringAccessValidation validation = $dataContext.getAccessValidation();
+ validation.setBlockTenantAddUsers(false);
+ validation.setBlockTenantAddUsersMsg(null);
+
+end
+

@@ -1,0 +1,73 @@
+<!--
+  ~ Copyright 2008 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"></meta>
+    <title>Broker Management - User Guide</title>
+    <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all"/>
+</head>
+
+<body style="font-family: Times New Roman,Times,serif; font-size: 12pt;">
+<h1>Broker Management</h1>
+
+<h2>Create New Broker</h2>
+
+<P>There are three broker types available to create such as Local, WS-Event and JMS-Qpid.</P>
+<ul>
+    <li>
+        <h2>Create Local Broker</h2>
+
+        <p><img alt="" src="../images/localBroker.png"/></p>
+
+        <p>Figure 1: Create Local Broker</p>
+
+        <p>To create a local broker, only the broker name is required.</p>
+    </li>
+    <li>
+        <h2>Create WS-Event Broker</h2>
+
+        <p><img alt="" src="../images/wsEventBroker.png"/></p>
+
+        <p>Figure 2: Create WS-Event Broker</p>
+
+        <p>To create a ws-event broker, add the Event broker service URI in URI field.</p>
+    </li>
+    <li>
+        <h2>Create JMS-Qpid Broker</h2>
+
+        <p><img alt="" src="../images/jmsBroker.png"/></p>
+
+        <p>Figure 3: Create JMS-Qpid Broker</p>
+
+        <p>To create a jms-qpid broker, set the properties as in the image. Virtual host name can be
+           found in virtualhosts.xml file located in $CARBON_HOME/repository/conf/advanced/. These
+           parameters are used to get a TCP connection to the broker.</p>
+    </li>
+</ul>
+
+<h2>List Brokers</h2>
+
+<p><img alt="" src="../images/listBrokers.png"/></p>
+
+<p>Figure 4: List Brokers</p>
+
+<p>All the created brokers are listed and can be deleted.</p>
+
+
+</body>
+</html>

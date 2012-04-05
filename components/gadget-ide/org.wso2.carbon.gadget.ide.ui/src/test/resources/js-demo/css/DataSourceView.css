@@ -1,0 +1,75 @@
+.gide-dsview {
+    background-color: rgba(0, 0, 0, 0.03);
+    width: 200px;
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 0 -1px 0 #FFFFFF inset, 0 1px 1px #CDCFD0 inset;
+    padding: 10px;
+    color: #354D4D;
+    text-shadow: 0 1px 0 #FFFFFF;
+}
+.gide-dfview-content{
+    padding-left: 6px;
+}
+.gide-dfview-icon-mid{
+    background-image: -moz-linear-gradient(center bottom , #D1D8DB 7%, #DEE6E9 54%);
+    box-shadow: 0 1px 0 0 #FFFFFF, 1px 1px 1px rgba(0, 0, 0, 0.16) inset;
+    height: 12px;
+    margin-bottom: -2px;
+    width: 10px;
+}
+.gide-dfview-righticon .gide-dfview-icon-mid{
+    border-radius: 0 30px 30px 0;
+}
+.gide-dfview-lefticon .gide-dfview-icon-mid{
+    border-radius: 30px 0 0 30px;
+}
+.gide-dfview-icon-end{
+    background-image: -moz-linear-gradient(center bottom , #D1D8DB 7%, #DEE6E9 54%);
+    box-shadow: 0 1px 0 0 #FFFFFF, 1px 1px 1px rgba(0, 0, 0, 0.16) inset;
+    height: 12px;
+    margin-bottom: -2px;
+    width: 20px;
+}
+.gide-dfview-righticon .gide-dfview-icon-end{
+    border-radius: 30px 0 0 30px;
+}
+.gide-dfview-lefticon .gide-dfview-icon-end{
+    border-radius: 0 30px 30px 0;
+}
+
+.gide-dfview-name {
+    padding: 0 10px;
+}
+
+.gide-dfview-tab {
+    width: 8px;
+}
+
+.gide-dfview-right .gide-dfview-name {
+    float: right;
+}
+
+.gide-dfview-right .gide-dfview-icon {
+    float: right;
+}
+
+.gide-dfview-right .gide-dfview-tab {
+    float: right;
+}
+
+.gide-dfview {
+    height: 19px;
+}
+
+.gide-dfview-left .gide-dfview-icon {
+    float: left;
+}
+
+.gide-dfview-left .gide-dfview-name {
+    float: left;
+}
+
+.gide-dfview-left .gide-dfview-tab {
+    float: left;
+}
+

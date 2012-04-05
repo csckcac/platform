@@ -1,0 +1,103 @@
+<!--
+~ Copyright 2005-2008 WSO2, Inc. (http://wso2.com)
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link href="css/mashup-docs.css" rel="stylesheet" type="text/css" media="all"/>
+</head>
+<body>
+
+<div id="main-content">
+<h1>Creating a Data Service using an Excel Data Source</h1>
+
+<p>This document describes the steps to be followed when using the Data
+Service Creation Wizard with an Excel data source.</p>
+<br/>
+
+
+<h2>Step 1</h2>
+
+<p>In the Configuration box, enter a name for the new Data Service and from
+the Data Source dropdown, select Excel(97-2003). A popup window will open up.
+Here, Enter the url or file system path to the xls file.</p>
+
+<p><img alt="Excel Step 1" src="images/ds_excel_step1.png" width="1010"
+height="391"/></p>
+
+<p>Click OK, to confirm the file path and click next.</p>
+<br/>
+
+
+<h2>Step 2</h2>
+
+<p>Click on New Query to create a new query for you data service. You will be
+presented with the Add New Query popup window.</p>
+<img alt="Step 2 Query" src="images/ds_excel_step2.png" width="609"
+height="492"/><br/>
+<br/>
+
+
+<h2>Step 3</h2>
+
+<p>Click the Add New Output Mapping button to define mappings for the query
+output.</p>
+
+<p><img alt="Output Mapping" src="images/ds_excel_step3.png" width="1207"
+height="703"/></p>
+
+<p>Click OK on the popup windows to go back to the Queries panel. Click Next.
+</p>
+<br/>
+
+
+<h2>Step 4</h2>
+
+<p>In the next panel, click on Add New Operation to define operations for the
+data service. </p>
+
+<p><img alt="Step 4" src="images/ds_excel_step4.png" width="608"
+height="233"/></p>
+
+<p>In the popup window, the Query dropdown will list the queries you defined
+in the previous step. You can map them to operations here. Click Finish when
+done.</p>
+<img alt="Step 5 Finish" src="images/ds_excel_step5.png" width="999"
+height="741"/><br/>
+<br/>
+
+
+<h2>Step 5</h2>
+
+<p>Your new data service will now be included in the list of Mashups on your
+server.</p>
+
+<p><img alt="List" src="images/ds_excel_step5_list.png" width="692"
+height="83"/></p>
+
+<p>You can access the mashup page for this service and use
+<strong>tryIt</strong> to try the operation you defined.</p>
+
+<p><img alt="Output" src="images/ds_excel_step6.png" width="712"
+height="807"/></p>
+</div>
+
+<p></p>
+
+<div id="main-content1">
+</div>
+</body>
+</html>

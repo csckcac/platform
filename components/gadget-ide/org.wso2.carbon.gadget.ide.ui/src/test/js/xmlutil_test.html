@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+<head>
+    <title>Unit Test for Graph.js</title>
+    <script src="../../main/js/lib/closure-library/closure/goog/base.js"></script>
+    <script>
+        goog.require('goog.testing.jsunit');
+        goog.require('gadgetide.client.util');
+    </script>
+    <script language="javascript">
+        var j2x = gadgetide.client.util.json2XML;
+        var testArray = function() {
+            assertEquals(
+                    'should convert json array to XML sequence'
+                    ,j2x({root:{arr:[1,2,3,'foo']}}),
+                    '<root><arr>1</arr><arr>2</arr><arr>3</arr><arr>foo</arr></root>')
+        };
+    </script>
+</head>
+<body>
+</body>
+</html>
+

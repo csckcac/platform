@@ -1,0 +1,33 @@
+package org.wso2con.feedback.db;
+
+public class SQLConstants {
+
+	public static final String GET_FEEDBAK = "select * from WC_FEEDBACK, WC_USER where WC_FEEDBACK.WC_USER_ID=WC_USER.WC_ID AND WC_USER.WC_USER_NAME=?";
+
+	public static final String INSERT_USER = "insert into WC_USER(WC_USER_NAME) values(?)";
+
+	public static final String GET_USER = "select WC_ID from WC_USER where WC_USER_NAME=?";
+
+	public static final String GET_USER_NAME = "select WC_USER_NAME from WC_USER where WC_ID=?";
+
+	public static final String INSERT_FEEDBAK = "insert into WC_FEEDBACK(WC_Q_ID, WC_USER_ID, WC_SESSION_ID, WC_RATING, WC_COMMENT) values(?,(select WC_ID from WC_USER where WC_USER_NAME=?),?,?,?)";
+
+	public static final String UPDATE_FEEDBAK = "update WC_FEEDBACK set WC_RATING=?, WC_COMMENT=? where WC_Q_ID=? and WC_SESSION_ID=? and WC_USER_ID=(select WC_ID from WC_USER where WC_USER_NAME=?)";
+
+	public static final String ADD_QUESTION = "insert into WC_QUESTION(WC_Q_ID, WC_SESSION_ID, WC_TEXT, WC_TYPE) values (?,?,?,?)";
+
+	public static final String UPDATE_QUESTION = "update WC_QUESTION set WC_TEXT=?, WC_TYPE=? where WC_Q_ID=? and WC_SESSION_ID=?";
+
+	public static final String DELETE_QUESTION = "delete from WC_QUESTION where WC_Q_ID=? and WC_SESSION_ID=?";
+
+	public static final String GET_QUESTIONS_BY_SESSION = "select * from WC_QUESTION where WC_SESSION_ID=?";
+
+	public static final String GET_QUESTIONS = "select * from WC_QUESTION";
+
+	public static final String GET_SESSIONS = "select * from WC_SESSION ORDER BY WC_DATE";
+
+	public static final String GET_FEEDBACK_RESULTS = "SELECT  WC_USER_NAME,WC_SESSION.WC_TEXT AS SESSION,WC_QUESTION.WC_TEXT AS QUESTION, WC_FEEDBACK.WC_RATING,WC_FEEDBACK.WC_COMMENT FROM WC_FEEDBACK LEFT JOIN WC_SESSION ON(WC_FEEDBACK.WC_SESSION_ID = WC_SESSION.WC_ID) LEFT JOIN WC_QUESTION ON (WC_FEEDBACK.WC_Q_ID = WC_QUESTION.WC_ID) LEFT JOIN WC_USER ON(WC_FEEDBACK.WC_USER_ID = WC_USER.WC_ID) WHERE WC_FEEDBACK.WC_SESSION_ID = ?";
+	
+	public static final String GET_OVERALL_FEEDBACK_RESULTS = "SELECT  WC_USER_NAME,WC_SESSION.WC_TEXT AS SESSION,WC_QUESTION.WC_TEXT AS QUESTION, WC_FEEDBACK.WC_RATING,WC_FEEDBACK.WC_COMMENT FROM WC_FEEDBACK LEFT JOIN WC_SESSION ON(WC_FEEDBACK.WC_SESSION_ID = WC_SESSION.WC_ID) LEFT JOIN WC_QUESTION ON (WC_FEEDBACK.WC_Q_ID = WC_QUESTION.WC_Q_ID) LEFT JOIN WC_USER ON(WC_FEEDBACK.WC_USER_ID = WC_USER.WC_ID) WHERE WC_FEEDBACK.WC_SESSION_ID = ?";
+
+}

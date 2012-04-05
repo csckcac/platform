@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+<head>
+    <title>Unit Test for schema.js</title>
+    <script src="../../main/js/lib/closure-library/closure/goog/base.js"></script>
+    <script>
+        goog.require('goog.testing.jsunit');
+        goog.require('gadgetide.schema');
+    </script>
+    <script language="javascript">
+        /** @type {gadgetide.schema.DSSchema} */
+        var dsSchema = {
+            "p:getStudentsResponse": {
+                "@xmlns": {
+                    "p": "http://mgt.student.carbon.wso2.org"
+                },
+                "ax23:return": {
+                    "@multiple": "true",
+                    "@xmlns": {
+                        "p": "http://mgt.student.carbon.wso2.org",
+                        "ax23": "http://mgt.student.carbon.wso2.org"
+                    },
+                    "xs:age": {
+                        "@multiple": "false",
+                        "@xmlns": {
+                            "p": "http://mgt.student.carbon.wso2.org",
+                            "ax23": "http://mgt.student.carbon.wso2.org",
+                            "xs": "http://data.mgt.student.carbon.wso2.org/xsd"
+                        },
+                        "$": "?"
+                    },
+                    "name": {
+                        "@multiple": "false",
+                        "@xmlns": {
+                            "p": "http://mgt.student.carbon.wso2.org",
+                            "$": "http://data.mgt.student.carbon.wso2.org/xsd"
+                        },
+                        "firstName": {
+                            "@xmlns": {
+                                "p": "http://mgt.student.carbon.wso2.org",
+                                "$": "http://data.mgt.student.carbon.wso2.org/xsd"
+                            },
+                            "$": "?"
+                        },
+                        "lastName": {
+                            "@multiple": "false",
+                            "@xmlns": {
+                                "p": "http://mgt.student.carbon.wso2.org",
+                                "$": "http://data.mgt.student.carbon.wso2.org/xsd"
+                            },
+                            "$": "?"
+                        }
+                    }
+                }
+            }
+        };
+        var data = {
+            "p:getStudentsResponse": {
+                "@xmlns": {
+                    "p": "http://mgt.student.carbon.wso2.org"
+                },
+                "ax23:return": {
+                    "@xmlns": {
+                        "p": "http://mgt.student.carbon.wso2.org",
+                        "ax23": "http://mgt.student.carbon.wso2.org"
+                    },
+                    "xs:age": {
+                        "@xmlns": {
+                            "p": "http://mgt.student.carbon.wso2.org",
+                            "ax23": "http://mgt.student.carbon.wso2.org",
+                            "xs": "http://data.mgt.student.carbon.wso2.org/xsd"
+                        },
+                        "$": 24
+                    },
+                    "name": {
+                        "@xmlns": {
+                            "p": "http://mgt.student.carbon.wso2.org",
+                            "$": "http://data.mgt.student.carbon.wso2.org/xsd"
+                        },
+                        "firstName": {
+                            "@xmlns": {
+                                "p": "http://mgt.student.carbon.wso2.org",
+                                "$": "http://data.mgt.student.carbon.wso2.org/xsd"
+                            },
+                            "$": "fish"
+                        },
+                        "lastName": {
+                            "@xmlns": {
+                                "p": "http://mgt.student.carbon.wso2.org",
+                                "$": "http://data.mgt.student.carbon.wso2.org/xsd"
+                            },
+                            "$": "catcher"
+                        }
+                    }
+                }
+            }
+        };
+
+        var exName0 = {localpart:'getStudentsResponse',namespace:'http://mgt.student.carbon.wso2.org'};
+        var exName1 = {localpart:"return",namespace:"http://mgt.student.carbon.wso2.org"};
+        var exName2 = {localpart:"age",namespace:"http://data.mgt.student.carbon.wso2.org/xsd"};
+
+
+        var path0 = [ exName0, exName1 ];
+        var path1 = [ exName1, exName2 ];
+        var pathFull = [exName0,exName1,exName2];
+
+
+        var testFilterPath = function(){
+            gadgetide.schema.filterPath(gadgetide.schema.parseDataField(dsSchema,pathFull),data);
+            //TODO:
+        };
+
+        var testMakePath = function(){
+            var obj = {};
+            var filterd = gadgetide.schema.makePath(gadgetide.schema.parseDataField(dsSchema,pathFull),obj);
+            //TODO:
+        };
+
+
+
+        var _FragmentSelection = function() {
+
+            var fragment0 = gadgetide.schema.getFragment(dsSchema);
+            fragment0 = gadgetide.schema.getFragment(fragment0, path0);
+            fragment0 = gadgetide.schema.getFragment(fragment0, path1);
+            assertNotNullNorUndefined('there should be a fragment by this path',fragment0);
+
+            var fragment1 = gadgetide.schema.getFragment(dsSchema, pathFull);
+            assertNotNullNorUndefined('there should be a fragment by this path',fragment1);
+
+            assertObjectEquals('fragment selection must be associative', fragment0,fragment1);
+        };
+
+
+        var _ChildrenIteration = function() {
+            var childNames = [];
+            gadgetide.schema.forEachChild(dsSchema,path0,function(d){
+                console.log(gadgetide.schema.getExpandedName(d).localName);
+            });
+        };
+    </script>
+</head>
+<body>
+</body>
+</html>

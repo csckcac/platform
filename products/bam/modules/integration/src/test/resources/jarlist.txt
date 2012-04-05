@@ -1,0 +1,7 @@
+repository/components/plugins/org.wso2.carbon.bam.cep-3.2.0.SNAPSHOT.jar
+repository/components/plugins/org.wso2.carbon.bam.common-3.2.0.SNAPSHOT.jar
+repository/components/plugins/org.wso2.carbon.bam.core-3.2.0.SNAPSHOT.jar
+repository/components/plugins/org.wso2.carbon.bam.util-3.2.0.SNAPSHOT.jar
+repository/components/plugins/org.wso2.carbon.event.client-3.2.0.SNAPSHOT.jar
+
+

@@ -1,0 +1,262 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<assembly>
+    <!--<id>bin</id>-->
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+
+    <fileSets>
+        <fileSet>
+            <directory>target/wso2carbon-core-${carbon.platform.version}</directory>
+            <outputDirectory>wso2as-${pom.version}</outputDirectory>
+            <excludes>
+                <exclude>**/native/*</exclude>
+                <exclude>**/*.sh</exclude>
+                <exclude>**/wso2server.bat</exclude>
+                <exclude>**/axis2services/sample01.aar</exclude>
+                <exclude>**/axis2services/echo/**</exclude>
+                <exclude>**/axis2services/version/**</exclude>
+                <exclude>**/pom.xml</exclude>
+                <exclude>**/version.txt</exclude>
+                <exclude>**/README*</exclude>
+                <exclude>**/LICENSE.txt</exclude>
+                <exclude>**/INSTALL.txt</exclude>
+                <exclude>**/release-notes.html</exclude>
+                <exclude>**/carbon.xml</exclude>
+                <exclude>**/axis2/axis2.xml</exclude>
+                <exclude>**/wrapper.conf</exclude>                  
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>target/wso2carbon-core-${carbon.platform.version}</directory>
+            <outputDirectory>wso2as-${pom.version}</outputDirectory>
+            <excludes>
+                <exclude>**/daemon.sh</exclude>
+                <exclude>**/wso2server.bat</exclude>
+            </excludes>
+            <includes>
+                <include>**/*.sh</include>
+                <include>**/native/*</include>
+            </includes>
+            <fileMode>755</fileMode>
+        </fileSet>
+
+        <!--  copying samples -->
+        <fileSet>
+            <directory>../../samples/product</directory>
+            <outputDirectory>wso2as-${pom.version}/samples</outputDirectory>
+            <excludes>
+                <exclude>**/**.sh</exclude>
+                <exclude>**/pom.xml</exclude>
+                <exclude>**/target/**</exclude>
+                <exclude>**/Jaxws-Jaxrs/**</exclude>
+            </excludes>
+        </fileSet>
+
+        <!--  copying JAX-WS/JAX-RS samples with pom.xml files-->
+        <fileSet>
+            <directory>../../samples/product/Jaxws-Jaxrs</directory>
+            <outputDirectory>wso2as-${pom.version}/samples/Jaxws-Jaxrs</outputDirectory>
+            <excludes>
+                <exclude>**/**.sh</exclude>
+                <exclude>**/target/**</exclude>
+            </excludes>
+        </fileSet>
+
+        <!--  copying default samples into repository-->
+        <fileSet>
+            <directory>../../samples/product/HelloWorld/target/repository/services</directory>
+            <outputDirectory>wso2as-${pom.version}/repository/deployment/server/axis2services</outputDirectory>
+            <includes>
+                <include>**/**.aar</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../../samples/common/webapp/target</directory>
+            <outputDirectory>wso2as-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>**/**.war</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../../samples/product/HelloWorldWebapp/target</directory>
+            <outputDirectory>wso2as-${pom.version}/samples/HelloWorldWebapp</outputDirectory>
+            <includes>
+                <include>*.war</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../../samples/product/TomcatWebApps/GenericJavaBeanResource/target</directory>
+            <outputDirectory>wso2as-${pom.version}/samples/TomcatWebApps/GenericJavaBeanResource</outputDirectory>
+            <includes>
+                <include>*.war</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../../samples/product/TomcatWebApps/JDBCDataSource/target</directory>
+            <outputDirectory>wso2as-${pom.version}/samples/TomcatWebApps/JDBCDataSource</outputDirectory>
+            <includes>
+                <include>*.war</include>
+            </includes>
+        </fileSet>
+
+        <!-- copy executables in samples with execute permissions -->
+        <fileSet>
+            <directory>../../samples/product</directory>
+            <outputDirectory>wso2as-${pom.version}/samples</outputDirectory>
+            <includes>
+                <include>**/**.sh</include>
+            </includes>
+            <fileMode>755</fileMode>
+        </fileSet>
+
+        <!--copying qpid config files -->
+        <fileSet>
+            <directory>
+                ../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/conf/advanced/
+            </directory>
+            <outputDirectory>wso2as-${pom.version}/repository/conf/advanced
+            </outputDirectory>
+            <includes>
+                <include>**/qpid-config.xml</include>
+                <include>**/qpid-jmxremote.access</include>
+                <include>**/qpid-virtualhosts.xml</include>
+                <include>**/coordination-client-config.xml</include>
+                <include>**/zoo.cfg</include>		
+            </includes>
+        </fileSet>
+
+        <!--copying Kerberos conf files -->
+        <fileSet>
+            <directory>
+                ../../p2-profile-gen/product/target/wso2carbon-core-${wso2carbon.version}/repository/conf/
+            </directory>
+            <outputDirectory>wso2as-${pom.version}/repository/conf</outputDirectory>
+            <includes>
+                <include>**/krb5.conf</include>
+                <include>**/jaas.conf</include>
+            </includes>
+        </fileSet>
+
+        <!--Copy WS RM DB Scripts -->
+        <fileSet>
+            <directory>wsrm-dbscripts</directory>
+            <outputDirectory>wso2as-${pom.version}/dbscripts/wsrm-dbscripts</outputDirectory>
+            <fileMode>755</fileMode>
+        </fileSet>
+
+    </fileSets>
+
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>wso2as-${pom.version}/repository/lib</outputDirectory>
+            <includes>
+                <include>bouncycastle:bcprov-jdk15:jar</include>
+                <include>org.hibernate.wso2:hibernate:jar</include>
+            </includes>
+        </dependencySet>
+        <dependencySet>
+            <outputDirectory>wso2as-${pom.version}/repository/deployment/client/modules</outputDirectory>
+            <includes>
+                <include>org.apache.rampart:rampart:mar</include>
+            </includes>
+        </dependencySet>
+    </dependencySets>
+
+    <files>
+        <!-- copying event broker config file -->
+        <file>
+            <source>../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/conf/event-broker.xml
+            </source>
+            <outputDirectory>wso2as-${pom.version}/repository/conf/</outputDirectory>
+        </file>
+	
+        <file>
+            <source>INSTALL.txt</source>
+            <outputDirectory>wso2as-${pom.version}</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>README.txt</source>
+            <outputDirectory>wso2as-${pom.version}</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>LICENSE.txt</source>
+            <outputDirectory>wso2as-${pom.version}</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>release-notes.html</source>
+            <outputDirectory>wso2as-${pom.version}</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-${carbon.platform.version}/bin/README.txt</source>
+            <outputDirectory>wso2as-${pom.version}/bin/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-${carbon.platform.version}/bin/version.txt</source>
+            <outputDirectory>wso2as-${pom.version}/bin/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-${carbon.platform.version}/repository/conf/carbon.xml</source>
+            <outputDirectory>wso2as-${pom.version}/repository/conf/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-${carbon.platform.version}/repository/conf/axis2/axis2.xml</source>
+            <outputDirectory>wso2as-${pom.version}/repository/conf/axis2</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-${carbon.platform.version}/repository/conf/README</source>
+            <outputDirectory>wso2as-${pom.version}/repository/conf/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-${carbon.platform.version}/bin/wso2server.bat</source>
+            <outputDirectory>wso2as-${pom.version}/bin/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-${carbon.platform.version}/repository/conf/wrapper.conf</source>
+            <outputDirectory>wso2as-${pom.version}/repository/conf/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-${carbon.platform.version}/bin/daemon.sh</source>
+            <outputDirectory>wso2as-${pom.version}/bin/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+    </files>
+</assembly>

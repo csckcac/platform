@@ -1,0 +1,69 @@
+<pre style="line-height: 100%;font-family:monospace;background-color:#ffffff; border-width:0.01mm; border-color:#000000; border-style:solid;padding:4px;font-size:10pt;"><span style="color:#808080;background-color:#ffffff;">&lt;!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+
+  Number Guess Game
+  Written by Jason Hunter, CTO, K&A Software
+  http://www.servlets.com
+--&gt;
+
+</span><span style="background-color:#ffffff;">&lt;%@ page import = "num.NumberGuessBean" %&gt;
+
+</span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">jsp:useBean</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">id=</span><span style="color:#008000;background-color:#efefef;">"numguess"</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">class=</span><span style="color:#008000;background-color:#efefef;">"num.NumberGuessBean"</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">scope=</span><span style="color:#008000;background-color:#efefef;">"session"</span><span style="background-color:#efefef;">/&gt;
+&lt;</span><span style="color:#000080;background-color:#efefef;">jsp:setProperty</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">name=</span><span style="color:#008000;background-color:#efefef;">"numguess"</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">property=</span><span style="color:#008000;background-color:#efefef;">"*"</span><span style="background-color:#efefef;">/&gt;
+
+&lt;</span><span style="color:#000080;background-color:#efefef;">html</span><span style="background-color:#efefef;">&gt;
+&lt;</span><span style="color:#000080;background-color:#efefef;">head</span><span style="background-color:#efefef;">&gt;&lt;</span><span style="color:#000080;background-color:#efefef;">title</span><span style="background-color:#efefef;">&gt;</span><span style="background-color:#ffffff;">Number Guess</span><span style="background-color:#efefef;">&lt;/</span><span style="color:#000080;background-color:#efefef;">title</span><span style="background-color:#efefef;">&gt;&lt;/</span><span style="color:#000080;background-color:#efefef;">head</span><span style="background-color:#efefef;">&gt;
+&lt;</span><span style="color:#000080;background-color:#efefef;">body</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">bgcolor=</span><span style="color:#008000;background-color:#efefef;">"white"</span><span style="background-color:#efefef;">&gt;
+&lt;</span><span style="color:#000080;background-color:#efefef;">font</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">size=</span><span style="color:#008000;background-color:#efefef;">4</span><span style="background-color:#efefef;">&gt;
+
+</span><span style="background-color:#ffffff;">&lt;% if (numguess.getSuccess()) { %&gt;
+
+  Congratulations!  You got it.
+  And after just &lt;%= numguess.getNumGuesses() %&gt; tries.</span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">p</span><span style="background-color:#efefef;">&gt;
+
+</span><span style="background-color:#ffffff;">  &lt;% numguess.reset(); %&gt;
+
+  Care to </span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">a</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">href=</span><span style="color:#008000;background-color:#efefef;">"numguess.jsp"</span><span style="background-color:#efefef;">&gt;</span><span style="background-color:#ffffff;">try again</span><span style="background-color:#efefef;">&lt;/</span><span style="color:#000080;background-color:#efefef;">a</span><span style="background-color:#efefef;">&gt;</span><span style="background-color:#ffffff;">?
+
+&lt;% } else if (numguess.getNumGuesses() == 0) { %&gt;
+
+  Welcome to the Number Guess game.</span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">p</span><span style="background-color:#efefef;">&gt;
+
+</span><span style="background-color:#ffffff;">  I'm thinking of a number between 1 and 100.</span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">p</span><span style="background-color:#efefef;">&gt;
+
+</span><span style="background-color:#ffffff;">  </span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">form</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">method=</span><span style="color:#008000;background-color:#efefef;">get</span><span style="background-color:#efefef;">&gt;
+</span><span style="background-color:#ffffff;">  What's your guess? </span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">input</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">type=</span><span style="color:#008000;background-color:#efefef;">text</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">name=</span><span style="color:#008000;background-color:#efefef;">guess</span><span style="background-color:#efefef;">&gt;
+</span><span style="background-color:#ffffff;">  </span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">input</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">type=</span><span style="color:#008000;background-color:#efefef;">submit</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">value=</span><span style="color:#008000;background-color:#efefef;">"Submit"</span><span style="background-color:#efefef;">&gt;
+</span><span style="background-color:#ffffff;">  </span><span style="background-color:#efefef;">&lt;/</span><span style="color:#000080;background-color:#efefef;">form</span><span style="background-color:#efefef;">&gt;
+
+</span><span style="background-color:#ffffff;">&lt;% } else { %&gt;
+
+  Good guess, but nope.  Try </span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">b</span><span style="background-color:#efefef;">&gt;</span><span style="background-color:#ffffff;">&lt;%= numguess.getHint() %&gt;</span><span style="background-color:#efefef;">&lt;/</span><span style="color:#000080;background-color:#efefef;">b</span><span style="background-color:#efefef;">&gt;</span><span style="background-color:#ffffff;">.
+
+  You have made &lt;%= numguess.getNumGuesses() %&gt; guesses.</span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">p</span><span style="background-color:#efefef;">&gt;
+
+</span><span style="background-color:#ffffff;">  I'm thinking of a number between 1 and 100.</span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">p</span><span style="background-color:#efefef;">&gt;
+
+</span><span style="background-color:#ffffff;">  </span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">form</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">method=</span><span style="color:#008000;background-color:#efefef;">get</span><span style="background-color:#efefef;">&gt;
+</span><span style="background-color:#ffffff;">  What's your guess? </span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">input</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">type=</span><span style="color:#008000;background-color:#efefef;">text</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">name=</span><span style="color:#008000;background-color:#efefef;">guess</span><span style="background-color:#efefef;">&gt;
+</span><span style="background-color:#ffffff;">  </span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">input</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">type=</span><span style="color:#008000;background-color:#efefef;">submit</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">value=</span><span style="color:#008000;background-color:#efefef;">"Submit"</span><span style="background-color:#efefef;">&gt;
+</span><span style="background-color:#ffffff;">  </span><span style="background-color:#efefef;">&lt;/</span><span style="color:#000080;background-color:#efefef;">form</span><span style="background-color:#efefef;">&gt;
+
+</span><span style="background-color:#ffffff;">&lt;% } %&gt;
+
+</span><span style="background-color:#efefef;">&lt;/</span><span style="color:#000080;background-color:#efefef;">font</span><span style="background-color:#efefef;">&gt;
+&lt;/</span><span style="color:#000080;background-color:#efefef;">body</span><span style="background-color:#efefef;">&gt;
+&lt;/</span><span style="color:#000080;background-color:#efefef;">html</span><span style="background-color:#efefef;">&gt;</span></pre>

@@ -1,0 +1,47 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<pre style="line-height: 100%;font-family:monospace;background-color:#ffffff; border-width:0.01mm; border-color:#000000; border-style:solid;padding:4px;font-size:10pt;"><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">tags:xhtmlbasic</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">xmlns:tags=</span><span style="color:#008000;background-color:#efefef;">"urn:jsptagdir:/WEB-INF/tags"
+</span><span style="background-color:#efefef;">                 </span><span style="color:#0000ff;background-color:#efefef;">xmlns:jsp=</span><span style="color:#008000;background-color:#efefef;">"http://java.sun.com/JSP/Page"
+</span><span style="background-color:#efefef;">                 </span><span style="color:#0000ff;background-color:#efefef;">xmlns:fmt=</span><span style="color:#008000;background-color:#efefef;">"http://java.sun.com/jsp/jstl/fmt"
+</span><span style="background-color:#efefef;">         </span><span style="color:#0000ff;background-color:#efefef;">xmlns=</span><span style="color:#008000;background-color:#efefef;">"http://www.w3.org/1999/xhtml"</span><span style="background-color:#efefef;">&gt;
+</span><span style="background-color:#ffffff;">  </span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">jsp:directive.page</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">contentType=</span><span style="color:#008000;background-color:#efefef;">"text/html"</span><span style="background-color:#efefef;"> /&gt;
+</span><span style="background-color:#ffffff;">  </span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">head</span><span style="background-color:#efefef;">&gt;
+</span><span style="background-color:#ffffff;">    </span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">title</span><span style="background-color:#efefef;">&gt;</span><span style="background-color:#ffffff;">JSPX - XHTML Basic Example</span><span style="background-color:#efefef;">&lt;/</span><span style="color:#000080;background-color:#efefef;">title</span><span style="background-color:#efefef;">&gt;
+</span><span style="background-color:#ffffff;">  </span><span style="background-color:#efefef;">&lt;/</span><span style="color:#000080;background-color:#efefef;">head</span><span style="background-color:#efefef;">&gt;
+</span><span style="background-color:#ffffff;">  </span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">body</span><span style="background-color:#efefef;">&gt;
+</span><span style="background-color:#ffffff;">    </span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">h1</span><span style="background-color:#efefef;">&gt;</span><span style="background-color:#ffffff;">JSPX - XHTML Basic Example</span><span style="background-color:#efefef;">&lt;/</span><span style="color:#000080;background-color:#efefef;">h1</span><span style="background-color:#efefef;">&gt;
+</span><span style="background-color:#ffffff;">    </span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">hr</span><span style="background-color:#efefef;">/&gt;
+</span><span style="background-color:#ffffff;">    This example illustrates how to use JSPX to produce an XHTML basic
+    document suitable for use with mobile phones, televisions,
+    PDAs, vending machines, pagers, car navigation systems,
+    mobile game machines, digital book readers, smart watches, etc.
+    </span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">p</span><span style="background-color:#efefef;">/&gt;
+</span><span style="background-color:#ffffff;">    JSPX lets you create dynamic documents in a pure XML syntax compatible
+    with existing XML tools.  The XML syntax in JSP 1.2 was awkward and
+    required </span><span style="color:#0000ff;background-color:#ffffff;">&amp;</span><span style="background-color:#ffffff;">lt;jsp:root</span><span style="color:#0000ff;background-color:#ffffff;">&amp;</span><span style="background-color:#ffffff;">gt; to be the root element of the document.
+    This is no longer the case in JSP 2.0.
+    </span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">p</span><span style="background-color:#efefef;">/&gt;
+</span><span style="background-color:#ffffff;">    This particular example uses a tag file to produce the DOCTYPE and
+    namespace declarations to make the output of this page a valid XHTML
+    Basic document.
+    </span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">p</span><span style="background-color:#efefef;">/&gt;
+</span><span style="background-color:#ffffff;">    Just to prove this is live, here's some dynamic content:
+    </span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">jsp:useBean</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">id=</span><span style="color:#008000;background-color:#efefef;">"now"</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">class=</span><span style="color:#008000;background-color:#efefef;">"java.util.Date"</span><span style="background-color:#efefef;"> /&gt;
+</span><span style="background-color:#ffffff;">    </span><span style="background-color:#efefef;">&lt;</span><span style="color:#000080;background-color:#efefef;">fmt:formatDate</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">value=</span><span style="color:#008000;background-color:#efefef;">"${now}"</span><span style="background-color:#efefef;"> </span><span style="color:#0000ff;background-color:#efefef;">pattern=</span><span style="color:#008000;background-color:#efefef;">"MMMM d, yyyy, H:mm:ss"</span><span style="background-color:#efefef;">/&gt;
+</span><span style="background-color:#ffffff;">  </span><span style="background-color:#efefef;">&lt;/</span><span style="color:#000080;background-color:#efefef;">body</span><span style="background-color:#efefef;">&gt;
+&lt;/</span><span style="color:#000080;background-color:#efefef;">tags:xhtmlbasic</span><span style="background-color:#efefef;">&gt;</span></pre>

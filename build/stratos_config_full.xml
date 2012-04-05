@@ -1,0 +1,1876 @@
+<?xml version="1.0"?>
+<stratos_config>
+    <common>
+        <user-mgt>
+            <Realm>
+                <Configuration>
+                    <Property name="url">jdbc:mysql://localhost:3306/userstore?autoReconnect=true</Property>
+                    <Property name="userName">userstore</Property>
+                    <Property name="password">password</Property>
+                    <Property name="driverName">com.mysql.jdbc.Driver</Property>
+                    <Property name="maxActive">50</Property>
+                    <Property name="maxWait">360000</Property>
+                    <Property name="minIdle">5</Property>
+                    <Property name="MultiTenantRealmConfigBuilder">org.wso2.carbon.user.core.config.multitenancy.SimpleRealmConfigBuilder</Property>
+                </Configuration>
+            </Realm>
+        </user-mgt>
+
+        <axis2_client>
+            <transportSender name="http"
+                             class="org.apache.axis2.transport.http.CommonsHTTPTransportSender">
+                <parameter name="PROTOCOL">HTTP/1.1</parameter>
+                <parameter name="Transfer-Encoding">chunked</parameter>
+                <parameter name="SO_TIMEOUT">500000</parameter>
+                <parameter name="CONNECTION_TIMEOUT">60000</parameter>
+            </transportSender>
+            <transportSender name="https"
+                             class="org.apache.axis2.transport.http.CommonsHTTPTransportSender">
+                <parameter name="PROTOCOL">HTTP/1.1</parameter>
+                <parameter name="Transfer-Encoding">chunked</parameter>
+                <parameter name="SO_TIMEOUT">500000</parameter>
+                <parameter name="CONNECTION_TIMEOUT">60000</parameter>
+            </transportSender>
+        </axis2_client>
+
+        <broker-config>
+            <eventStream name="RegistryEventBroker">
+                <notificationManager class="org.wso2.carbon.event.broker.CarbonNotificationManager">
+                    <parameter name="maxQueuedRequests">10000</parameter>
+                </notificationManager>
+            </eventStream>
+        </broker-config>
+        <cache>
+            <configuration>
+                <clustering>
+                    <enabled>true</enabled>
+                    <clusterName>wso2carbon1</clusterName>
+                </clustering>
+                <ec2>
+                    <configFile>${carbon.home}/repository/conf/jgroups-s3_ping-aws.xml</configFile>
+                </ec2>
+                <cacheMode>replicated</cacheMode>
+                <sync>false</sync>
+                <l1>
+                    <enabled>true</enabled>
+                    <lifespan>60000</lifespan>
+                </l1>
+            </configuration>
+        </cache>
+
+        <jgroups-s3_ping-aws>
+            <S3_PING secret_access_key="jO/4yP80+HWFtw5Fg6OIC6+we6Lj5uItE8oQ7PJf" access_key="AKIAJH3N4GRLPMBXJQIA"
+                location="distributed-cache"/>
+        </jgroups-s3_ping-aws>
+
+        <cloud-services-desc>
+            <cloudService name="WSO2 Stratos Manager">
+                <link>https://stratoslive.wso2.com</link>
+            </cloudService>
+            <cloudService name="WSO2 Stratos Governance" default="true">
+                <label>Stratos Governance</label>
+                <link>https://governance.cloud-test.wso2.com:9445</link>
+                <description>Governance in the cloud.</description>
+                <icon>
+                    https://cloud-test.wso2.com:9443/cloud-services-icons/governance.gif
+                </icon>
+                <productPageURL>http://wso2.com/products/governance-registry/</productPageURL>
+            </cloudService>
+            <cloudService name="WSO2 Stratos Identity" default="true">
+                <label>Stratos Identity</label>
+                <link>https://identity.cloud-test.wso2.com:9444</link>
+                <icon>
+                    https://cloud-test.wso2.com:9443/cloud-services-icons/identity.gif
+                </icon>
+                <description>Identity in the cloud.</description>
+                <productPageURL>http://wso2.com/products/identity-server</productPageURL>
+            </cloudService>
+        </cloud-services-desc>
+
+        <identity>
+            <OpenIDServerUrl>https://identity.cloud-test.wso2.com:9444/openidserver</OpenIDServerUrl>
+            <OpenIDUserPattern>https://identity.cloud-test.wso2.com:9444/openid/</OpenIDUserPattern>
+            <RequestClaimsFromIdP>true</RequestClaimsFromIdP>
+
+            <SSOService>
+                <IdentityProviderURL>https://cloud-test.wso2.com:9443/samlsso</IdentityProviderURL>
+            </SSOService>
+        </identity>
+
+        <throttling-agent-config>
+            <parameters>
+                <parameter name="managerServiceUrl">https://cloud-test.wso2.com/services/</parameter>
+                <parameter name="userName">admin</parameter>
+                <parameter name="password">admin</parameter>
+            </parameters>
+        </throttling-agent-config>
+
+        <mgt-transports>
+            <transport name="http" class="org.wso2.carbon.server.transports.http.HttpTransport">
+                <parameter name="maxHttpHeaderSize">8192</parameter>
+                <parameter name="acceptorThreadCount">200</parameter>
+                <parameter name="maxThreads">1000</parameter>
+                <parameter name="minSpareThreads">250</parameter>
+                <parameter name="disableUploadTimeout">false</parameter>
+                <parameter name="connectionUploadTimeout">120000</parameter>
+                <parameter name="maxKeepAliveRequests">500</parameter>
+                <parameter name="acceptCount">400</parameter>
+            </transport>
+            <transport name="https" class="org.wso2.carbon.server.transports.http.HttpTransport">
+                <parameter name="maxHttpHeaderSize">8192</parameter>
+                <parameter name="acceptorThreadCount">200</parameter>
+                <parameter name="maxThreads">1000</parameter>
+                <parameter name="minSpareThreads">250</parameter>
+                <parameter name="enableLookups">false</parameter>
+                <parameter name="disableUploadTimeout">false</parameter>
+                <parameter name="connectionUploadTimeout">120000</parameter>
+                <parameter name="maxKeepAliveRequests">500</parameter>
+                <parameter name="acceptCount">400</parameter>
+            </transport>
+        </mgt-transports>
+    </common>
+    
+    <manager>
+        <carbon>
+            <HostName>cloud-test.wso2.com</HostName>
+            <ServerURL>https://stratoslive.wso2.com:${carbon.management.port}${carbon.context}/services/</ServerURL>
+            <BamServerURL>https://bam.cloud-test.wso2.com:9447/services/</BamServerURL>
+
+            <FileUploadConfig>
+                <TotalFileSizeLimit>100</TotalFileSizeLimit>
+            </FileUploadConfig>
+            <Ports>
+                <Offset>0</Offset>
+                <ServletTransports>
+                    <HTTPS>9443</HTTPS>
+                    <HTTP>9763</HTTP>
+                </ServletTransports>
+            </Ports>
+        </carbon>
+
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Priority>10</Priority>
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Manager</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://cloud-test.wso2.com:9443/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:mysql://localhost:3306/stratos_db</url>
+                <userName>root</userName>
+                <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+            </dbConfig>
+
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/stratos_db?autoReconnect=true</url>
+                <userName>root</userName>
+                <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+                <validationQuery>SELECT 1</validationQuery>
+            </dbConfig>
+
+            <remoteInstance url="https://governance.stratoslive.wso2.com">
+                <id>governance</id>
+                <dbConfig>governance</dbConfig>
+                <readOnly>false</readOnly>
+                <registryRoot>/</registryRoot>
+                <enableCache>true</enableCache>
+            </remoteInstance>
+
+            <mount path="/_system/governance" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/governance</targetPath>
+            </mount>
+            <mount path="/_system/config" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/manager_config</targetPath>
+            </mount>
+        </registry>
+
+        <axis2>
+            <transportSender name="mailto" class="org.apache.axis2.transport.mail.MailTransportSender">
+                  <parameter name="mail.smtp.host">test.wso2.com</parameter>
+                  <parameter name="mail.smtp.port">25</parameter>
+                  <parameter name="mail.smtp.starttls.enable">false</parameter>
+                  <parameter name="mail.smtp.auth">false</parameter>
+                  <parameter name="mail.smtp.user">noreply@wso2.com</parameter>
+                  <parameter name="mail.smtp.password">pass</parameter>
+                  <parameter name="mail.smtp.from">cloud-noreply@wso2.com</parameter>
+            </transportSender>
+      
+            <clustering class="org.apache.axis2.clustering.tribes.TribesClusteringAgent" enable="true">
+                <parameter name="membershipScheme">wka</parameter>
+                <parameter name="domain">wso2.manager.domain</parameter>  
+                <parameter name="synchronizeAll">true</parameter>
+                <members>
+                    <member>
+                        <hostName>50.19.113.41</hostName>
+                        <port>4000</port>
+                    </member>
+                </members>
+                <stateManager class="org.apache.axis2.clustering.state.DefaultStateManager"
+                    enable="false">
+                </stateManager> 
+            </clustering>
+        </axis2>
+        
+        <billing-config>
+            <dbConfig>
+                <url>jdbc:mysql://localhost:3306/stratos_db?autoReconnect=true</url>
+                <userName>root</userName>
+                <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+                <maxActive>80</maxActive>
+                <maxWait>60000</maxWait>
+                <minIdle>5</minIdle>
+                <validationQuery>SELECT 1</validationQuery>
+            </dbConfig>
+            <tasks>
+                <task id="multitenancyScheduledTask">
+                    <schedule scheduleHelperClass="org.wso2.carbon.billing.core.scheduler.scheduleHelpers.MonthlyScheduleHelper">
+                        <parameter name="dayToTriggerOn">25</parameter>
+                        <parameter name="hourToTriggerOn">23</parameter>
+                        <parameter name="minuteToTriggerOn">30</parameter>
+                        <parameter name="timeZone">GMT-8:00</parameter>
+                        <!--cron format: second minute hour dayOfTheMonth Month DayOfWeek-->
+                        <parameter name="cron">0 30 23 25 * ?</parameter>
+                    </schedule>
+                </task>
+            </tasks>
+        </billing-config>
+
+        <tenant-reg-agent>
+            <tenantRegListenerServers>
+                <server>
+                    <!-- governance -->
+                    <serverUrl>https://governance.stratoslive.wso2.com/services/</serverUrl>
+                    <userName>admin</userName>
+                    <password>password</password>        
+                </server>
+                <server>
+                    <!-- identity -->
+                    <serverUrl>https://identity.stratoslive.wso2.com/services/</serverUrl>
+                    <userName>admin</userName>
+                    <password>password</password>        
+                </server>
+                <server>
+                    <!-- gadget -->
+                    <serverUrl>https://gadget.stratoslive.wso2.com/services/</serverUrl>
+                    <userName>admin</userName>
+                    <password>password</password>        
+                </server>
+                <server>
+                    <!-- app server -->
+                    <serverUrl>https://appserver.stratoslive.wso2.com/services/</serverUrl>
+                    <userName>admin</userName>
+                    <password>password</password>        
+                </server>
+                <server>
+                    <!-- mashup server -->
+                    <serverUrl>https://mashup.stratoslive.wso2.com/services/</serverUrl>
+                    <userName>admin</userName>
+                    <password>password</password>        
+                </server>
+                <!-- bam -->
+                <server>
+                    <serverUrl>https://monitor.stratoslive.wso2.com/services/</serverUrl>
+                    <userName>admin</userName>
+                    <password>password</password>        
+                </server>
+                <!-- brs -->
+                <server>
+                    <serverUrl>https://rule.stratoslive.wso2.com/services/</serverUrl>
+                    <userName>admin</userName>
+                    <password>password</password>        
+                </server>
+                <!-- esb -->
+                <server>
+                    <serverUrl>https://esb.stratoslive.wso2.com/services/</serverUrl>
+                    <userName>admin</userName>
+                    <password>password</password>        
+                </server>
+                <!-- dss -->
+                <server>
+                    <serverUrl>https://data.stratoslive.wso2.com/services/</serverUrl>
+                    <userName>admin</userName>
+                    <password>password</password>        
+                </server>
+                <!-- bps -->
+                <server>
+                    <serverUrl>https://process.stratoslive.wso2.com/services/</serverUrl>
+                    <userName>admin</userName>
+                    <password>password</password>        
+                </server>
+                <server>
+                    <serverUrl>https://cep.stratoslive.wso2.com/services/</serverUrl>
+                    <userName>admin</userName>
+                    <password>password</password>        
+                </server>
+                <server>
+                    <serverUrl>https://messaging.stratoslive.wso2.com/services/</serverUrl>
+                    <userName>admin</userName>
+                    <password>password</password>        
+                </server>
+            </tenantRegListenerServers>
+        </tenant-reg-agent>
+
+        <stratos>
+            <NotificationEmail>stratoslive-group@wso2.com</NotificationEmail>
+            <FinanceNotificationEmail>stratoslive-finance-group@wso2.com</FinanceNotificationEmail>
+            <PaypalUrl>https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&amp;token=</PaypalUrl>
+            <PaypalAPIUsername>username</PaypalAPIUsername>
+            <PaypalAPIPassword>password</PaypalAPIPassword>
+            <PaypalAPISignature>signature</PaypalAPISignature>
+        </stratos>
+
+        <bam>
+            <summaryGeneration>
+                <initial-delay>-1</initial-delay>
+                <interval>-1</interval>
+                <taskBreakDownLength>100</taskBreakDownLength>
+                <sleepTimeBetweenTasks>100</sleepTimeBetweenTasks>
+            </summaryGeneration>
+        </bam>
+
+        <datasources name="stratos_ds,bam_datasource">
+            <providerPort>2200</providerPort>
+            <icFactory>com.sun.jndi.rmi.registry.RegistryContextFactory</icFactory>
+
+            <!--MySql datasource configuration-->
+            <stratos_ds>
+                <registry>JNDI</registry>
+                <type>BasicDataSource</type>
+                <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+                <url>jdbc:mysql://localhost:3306/governance?autoReconnect=true</url>
+                <username>registry</username>
+                <password>root</password>
+                <dsName>stratos_ds</dsName>
+                <maxActive>200</maxActive>
+                <minIdle>5</minIdle>
+                <maxWait>360000</maxWait>
+                <autoCommit>false</autoCommit>
+            </stratos_ds>
+            <bam_datasource>
+                <registry>JNDI</registry>
+                <type>BasicDataSource</type>
+                <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+                <url>jdbc:mysql://localhost:3306/stratos_db?autoReconnect=true</url>
+                <username>root</username>
+                <password>root</password>
+                <dsName>bam_datasource</dsName>
+                <maxActive>200</maxActive>
+                <minIdle>5</minIdle>
+                <maxWait>360000</maxWait>
+                <autoCommit>false</autoCommit>
+            </bam_datasource>
+        </datasources>
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+    </manager>
+
+    <identity>
+        <carbon>
+            <HostName>identity.cloud-test.wso2.com</HostName>
+            <ServerURL>https://identity.cloud-test.wso2.com:9444/services/</ServerURL>
+            <BamServerURL>https://bam.cloud-test.wso2.com:9447/services/</BamServerURL>
+
+            <FileUploadConfig>
+                <TotalFileSizeLimit>100</TotalFileSizeLimit>
+            </FileUploadConfig>
+            <Ports>
+                <Offset>1</Offset>
+                <ServletTransports>
+                    <HTTPS>443</HTTPS>
+                    <HTTP>80</HTTP>
+                </ServletTransports>
+            </Ports>
+        </carbon>
+        
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Priority>10</Priority>
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Identity</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://cloud-test.wso2.com:9443/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:h2:H2_DATABASE_ABSOLUTE_PATH/repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE</url>
+                <userName>wso2carbon</userName>
+                <password>wso2carbon</password>
+                <driverName>org.h2.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+            </dbConfig>
+
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/governance?autoReconnect=true</url>
+                <userName>root</userName>
+                <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+                <validationQuery>SELECT 1</validationQuery>
+            </dbConfig>
+
+            <remoteInstance url="https://governance.stratoslive.wso2.com">
+                <id>governance</id>
+                <dbConfig>governance</dbConfig>
+                <readOnly>false</readOnly>
+                <registryRoot>/</registryRoot>
+                <enableCache>true</enableCache>
+            </remoteInstance>
+
+            <mount path="/_system/governance" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/governance</targetPath>
+            </mount>
+            <mount path="/_system/config" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/manager_config</targetPath>
+            </mount>
+        </registry>
+
+        <axis2>
+            <clustering class="org.apache.axis2.clustering.tribes.TribesClusteringAgent" enable="true">
+                <parameter name="membershipScheme">wka</parameter>
+                <parameter name="domain">wso2.manager.domain</parameter>  
+                <parameter name="synchronizeAll">true</parameter>
+                <members>
+                    <member>
+                        <hostName>50.19.113.41</hostName>
+                        <port>4000</port>
+                    </member>
+                </members>
+                <stateManager class="org.apache.axis2.clustering.state.DefaultStateManager"
+                    enable="false">
+                </stateManager> 
+            </clustering>
+        </axis2>
+
+        <sso-idp-config>
+            <LoginPageBannerBaseURL>http://wso2.com/product-ads/stratos/wso2cloud/</LoginPageBannerBaseURL>
+            <TenantRegistrationPage>https://cloud.example.com/carbon/tenant-register/select_domain.jsp</TenantRegistrationPage>
+            <ServiceProviders>
+               <ServiceProvider>
+                   <Issuer>WSO2 Stratos Identity</Issuer>
+                   <AssertionConsumerService>https://identity.example.com/acs</AssertionConsumerService>
+               </ServiceProvider>
+               <ServiceProvider>
+                   <Issuer>WSO2 Stratos Governance</Issuer>
+                   <AssertionConsumerService>https://governance.example.com/acs</AssertionConsumerService>
+               </ServiceProvider>
+               <ServiceProvider>
+                   <Issuer>WSO2 Stratos Manager</Issuer>
+                   <AssertionConsumerService>https://cloud.example.com/acs</AssertionConsumerService>
+               </ServiceProvider>
+               <ServiceProvider>
+                   <Issuer>WSO2 Stratos Mashup Server</Issuer>
+                   <AssertionConsumerService>https://mashup.example.com/acs</AssertionConsumerService>
+               </ServiceProvider>
+               <ServiceProvider>
+                   <Issuer>WSO2 Stratos Gadgets</Issuer>
+                   <AssertionConsumerService>https://gadget.example.com/acs</AssertionConsumerService>
+               </ServiceProvider>
+               <ServiceProvider>
+                   <Issuer>WSO2 Stratos Application Server</Issuer>
+                   <AssertionConsumerService>https://appserver.example.com/acs</AssertionConsumerService>
+               </ServiceProvider>
+                <ServiceProvider>
+                    <Issuer>WSO2 Stratos Business Activity Monitor</Issuer>
+                    <AssertionConsumerService>https://monitor.stratoslive.wso2.com/acs</AssertionConsumerService>
+                    <CustomLoginPage>stratos-bam/login_ajaxprocessor.jsp</CustomLoginPage>
+                </ServiceProvider>
+                <ServiceProvider>
+                    <Issuer>WSO2 Stratos Business Rules Server</Issuer>
+                    <AssertionConsumerService>https://rule.stratoslive.wso2.com/acs</AssertionConsumerService>
+                    <CustomLoginPage>stratos-brs/login_ajaxprocessor.jsp</CustomLoginPage>
+                </ServiceProvider>
+                <ServiceProvider>
+                    <Issuer>WSO2 Stratos Enterprise Service Bus</Issuer>
+                    <AssertionConsumerService>https://esb.stratoslive.wso2.com/acs</AssertionConsumerService>
+                    <CustomLoginPage>stratos-esb/login_ajaxprocessor.jsp</CustomLoginPage>
+                </ServiceProvider>
+                <ServiceProvider>
+                    <Issuer>WSO2 Stratos Data Services Server</Issuer>
+                    <AssertionConsumerService>https://data.stratoslive.wso2.com/acs</AssertionConsumerService>
+                    <CustomLoginPage>stratos-dss/login_ajaxprocessor.jsp</CustomLoginPage>
+                </ServiceProvider>
+                <ServiceProvider>
+                    <Issuer>WSO2 Stratos Complex Event Processing Server</Issuer>
+                    <AssertionConsumerService>https://cep.stratoslive.wso2.com/acs</AssertionConsumerService>
+                    <CustomLoginPage>stratos-cep/login_ajaxprocessor.jsp</CustomLoginPage>
+                </ServiceProvider>
+                <ServiceProvider>
+                    <Issuer>WSO2 Stratos Message Broker</Issuer>
+                    <AssertionConsumerService>https://messaging.stratoslive.wso2.com/acs</AssertionConsumerService>
+                    <CustomLoginPage>stratos-mb/login_ajaxprocessor.jsp</CustomLoginPage>
+                </ServiceProvider>
+                <ServiceProvider>
+                    <Issuer>WSO2 Stratos Business Process Server</Issuer>
+                    <AssertionConsumerService>https://process.stratoslive.wso2.com/acs</AssertionConsumerService>
+                    <CustomLoginPage>stratos-bps/login_ajaxprocessor.jsp</CustomLoginPage>
+                </ServiceProvider>
+
+            </ServiceProviders>
+        </sso-idp-config>
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+    </identity>
+
+
+    <governance>
+        <carbon>
+            <HostName>stratoslive.wso2.com</HostName>
+            <ServerURL>https://stratoslive.wso2.com${carbon.context}/services/</ServerURL>
+            <BamServerURL>https://monitor.stratoslive.wso2.com/services/</BamServerURL>
+
+            <FileUploadConfig>
+                <TotalFileSizeLimit>100</TotalFileSizeLimit>
+            </FileUploadConfig>
+            <Ports>
+                <Offset>0</Offset>
+                <ServletTransports>
+                    <HTTPS>443</HTTPS>
+                    <HTTP>80</HTTP>
+                </ServletTransports>
+            </Ports>
+        </carbon>
+        
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Priority>10</Priority>
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Manager</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://identity.stratoslive.wso2.com/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:h2:H2_DATABASE_ABSOLUTE_PATH/repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE</url>
+                <userName>wso2carbon</userName>
+                <password>wso2carbon</password>
+                <driverName>org.h2.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+            </dbConfig>
+
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/governance?autoReconnect=true</url>
+                <userName>root</userName>
+                        <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+                <validationQuery>SELECT 1</validationQuery>
+            </dbConfig>
+
+            <remoteInstance url="https://governance.stratoslive.wso2.com">
+                <id>governance</id>
+                <dbConfig>governance</dbConfig>
+                <readOnly>false</readOnly>
+                <registryRoot>/</registryRoot>
+                <enableCache>true</enableCache>
+            </remoteInstance>
+
+            <mount path="/_system/governance" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/governance</targetPath>
+            </mount>
+            <mount path="/_system/config" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/manager_config</targetPath>
+            </mount>
+        </registry>
+
+        <axis2>
+            <transportSender name="mailto" class="org.apache.axis2.transport.mail.MailTransportSender">
+                  <parameter name="mail.smtp.host">test.wso2.com</parameter>
+                  <parameter name="mail.smtp.port">25</parameter>
+                  <parameter name="mail.smtp.starttls.enable">false</parameter>
+                  <parameter name="mail.smtp.auth">false</parameter>
+                  <parameter name="mail.smtp.user">noreply@wso2.com</parameter>
+                  <parameter name="mail.smtp.password">pass</parameter>
+                  <parameter name="mail.smtp.from">cloud-noreply@wso2.com</parameter>
+            </transportSender>
+
+            <clustering class="org.apache.axis2.clustering.tribes.TribesClusteringAgent" enable="true">
+                <parameter name="membershipScheme">wka</parameter>
+                <parameter name="domain">wso2.manager.domain</parameter>  
+                <parameter name="synchronizeAll">true</parameter>
+                <members>
+                    <member>
+                        <hostName>50.19.113.41</hostName>
+                        <port>4000</port>
+                    </member>
+                </members>
+                <stateManager class="org.apache.axis2.clustering.state.DefaultStateManager"
+                    enable="false">
+                </stateManager> 
+            </clustering>
+        </axis2>
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+    </governance>
+    
+    <appserver>
+        <carbon>
+            <HostName>stratoslive.wso2.com</HostName>
+            <ServerURL>https://stratoslive.wso2.com${carbon.context}/services/</ServerURL>
+            <BamServerURL>https://monitor.stratoslive.wso2.com/services/</BamServerURL>
+
+            <FileUploadConfig>
+                <TotalFileSizeLimit>100</TotalFileSizeLimit>
+            </FileUploadConfig>
+            <Ports>
+                <Offset>0</Offset>
+                <ServletTransports>
+                    <HTTPS>443</HTTPS>
+                    <HTTP>80</HTTP>
+                </ServletTransports>
+            </Ports>
+
+            <DeploymentSynchronizer>
+                <Enabled>true</Enabled>
+                <AutoCommit>true</AutoCommit>
+                <AutoCheckout>true</AutoCheckout>
+                <!--<AutoSyncPeriod>60000</AutoSyncPeriod>
+                <UseEventing>true</UseEventing>-->
+                <PoolSize>20</PoolSize>
+            </DeploymentSynchronizer>
+        </carbon>
+        
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Priority>10</Priority>
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Manager</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://identity.stratoslive.wso2.com/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:h2:H2_DATABASE_ABSOLUTE_PATH/repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE</url>
+                <userName>wso2carbon</userName>
+                <password>wso2carbon</password>
+                <driverName>org.h2.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+            </dbConfig>
+
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/governance?autoReconnect=true</url>
+                <userName>root</userName>
+                        <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+                <validationQuery>SELECT 1</validationQuery>
+            </dbConfig>
+
+            <remoteInstance url="https://governance.stratoslive.wso2.com">
+                <id>governance</id>
+                <dbConfig>governance</dbConfig>
+                <readOnly>false</readOnly>
+                <registryRoot>/</registryRoot>
+                <enableCache>true</enableCache>
+            </remoteInstance>
+
+            <mount path="/_system/governance" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/governance</targetPath>
+            </mount>
+            <mount path="/_system/config" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/manager_config</targetPath>
+            </mount>
+        </registry>
+
+        <axis2>
+            <clustering class="org.apache.axis2.clustering.tribes.TribesClusteringAgent" enable="true">
+                <parameter name="membershipScheme">wka</parameter>
+                <parameter name="domain">wso2.manager.domain</parameter>  
+                <parameter name="synchronizeAll">true</parameter>
+                <members>
+                    <member>
+                        <hostName>50.19.113.41</hostName>
+                        <port>4000</port>
+                    </member>
+                </members>
+                <stateManager class="org.apache.axis2.clustering.state.DefaultStateManager"
+                    enable="false">
+                </stateManager> 
+            </clustering>
+        </axis2>
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+    </appserver>
+
+    <bam>
+        <carbon>
+            <HostName>stratoslive.wso2.com</HostName>
+            <ServerURL>https://stratoslive.wso2.com${carbon.context}/services/</ServerURL>
+            <BamServerURL>https://monitor.stratoslive.wso2.com/services/</BamServerURL>
+
+            <FileUploadConfig>
+                <TotalFileSizeLimit>100</TotalFileSizeLimit>
+            </FileUploadConfig>
+            <Ports>
+                <Offset>0</Offset>
+                <ServletTransports>
+                    <HTTPS>443</HTTPS>
+                    <HTTP>80</HTTP>
+                </ServletTransports>
+            </Ports>
+
+            <DeploymentSynchronizer>
+                <Enabled>true</Enabled>
+                <AutoCommit>true</AutoCommit>
+                <AutoCheckout>true</AutoCheckout>
+                <!--<AutoSyncPeriod>60000</AutoSyncPeriod>
+                <UseEventing>true</UseEventing>-->
+                <PoolSize>20</PoolSize>
+            </DeploymentSynchronizer>
+        </carbon>
+        
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Priority>10</Priority>
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Manager</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://identity.stratoslive.wso2.com/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:h2:H2_DATABASE_ABSOLUTE_PATH/repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE</url>
+                <userName>wso2carbon</userName>
+                <password>wso2carbon</password>
+                <driverName>org.h2.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+            </dbConfig>
+
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/governance?autoReconnect=true</url>
+                <userName>root</userName>
+                        <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+                <validationQuery>SELECT 1</validationQuery>
+            </dbConfig>
+
+            <remoteInstance url="https://governance.stratoslive.wso2.com">
+                <id>governance</id>
+                <dbConfig>governance</dbConfig>
+                <readOnly>false</readOnly>
+                <registryRoot>/</registryRoot>
+                <enableCache>true</enableCache>
+            </remoteInstance>
+
+            <mount path="/_system/governance" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/governance</targetPath>
+            </mount>
+            <mount path="/_system/config" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/manager_config</targetPath>
+            </mount>
+        </registry>
+
+        <axis2>
+            <clustering class="org.apache.axis2.clustering.tribes.TribesClusteringAgent" enable="true">
+                <parameter name="membershipScheme">wka</parameter>
+                <parameter name="domain">wso2.manager.domain</parameter>  
+                <parameter name="synchronizeAll">true</parameter>
+                <members>
+                    <member>
+                        <hostName>50.19.113.41</hostName>
+                        <port>4000</port>
+                    </member>
+                </members>
+                <stateManager class="org.apache.axis2.clustering.state.DefaultStateManager"
+                    enable="false">
+                </stateManager> 
+            </clustering>
+        </axis2>
+        <bam>
+            <summaryGeneration>
+                <initial-delay>-1</initial-delay>
+                <interval>-1</interval>
+                <taskBreakDownLength>100</taskBreakDownLength>
+                <sleepTimeBetweenTasks>100</sleepTimeBetweenTasks>
+            </summaryGeneration>
+        </bam>
+        <datasources name="bam_datasource">
+            <providerPort>2200</providerPort>
+            <icFactory>com.sun.jndi.rmi.registry.RegistryContextFactory</icFactory>
+
+            <!--MySql datasource configuration-->
+            <bam_datasource>
+                <registry>JNDI</registry>
+                <type>BasicDataSource</type>
+                <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+                <url>jdbc:mysql://localhost:3306/billing?autoReconnect=true</url>
+                <username>billing</username>
+                <password>password</password>
+                <dsName>bam_datasource</dsName>
+                <maxActive>200</maxActive>
+                <maxIdle>5</maxIdle>
+                <maxWait>360000</maxWait>
+                <autoCommit>false</autoCommit>
+            </bam_datasource>
+        </datasources>
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+    </bam>
+
+    <bps>
+        <carbon>
+            <HostName>stratoslive.wso2.com</HostName>
+            <ServerURL>https://stratoslive.wso2.com${carbon.context}/services/</ServerURL>
+            <BamServerURL>https://monitor.stratoslive.wso2.com/services/</BamServerURL>
+
+            <FileUploadConfig>
+                <TotalFileSizeLimit>100</TotalFileSizeLimit>
+            </FileUploadConfig>
+            <Ports>
+                <Offset>0</Offset>
+                <ServletTransports>
+                    <HTTPS>443</HTTPS>
+                    <HTTP>80</HTTP>
+                </ServletTransports>
+            </Ports>
+
+            <DeploymentSynchronizer>
+                <Enabled>true</Enabled>
+                <AutoCommit>true</AutoCommit>
+                <AutoCheckout>true</AutoCheckout>
+                <!--<AutoSyncPeriod>60000</AutoSyncPeriod>
+                <UseEventing>true</UseEventing>-->
+                <PoolSize>20</PoolSize>
+            </DeploymentSynchronizer>
+        </carbon>
+        
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Priority>10</Priority>
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Manager</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://identity.stratoslive.wso2.com/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:h2:H2_DATABASE_ABSOLUTE_PATH/repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE</url>
+                <userName>wso2carbon</userName>
+                <password>wso2carbon</password>
+                <driverName>org.h2.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+            </dbConfig>
+
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/governance?autoReconnect=true</url>
+                <userName>root</userName>
+                        <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+                <validationQuery>SELECT 1</validationQuery>
+            </dbConfig>
+
+            <remoteInstance url="https://governance.stratoslive.wso2.com">
+                <id>governance</id>
+                <dbConfig>governance</dbConfig>
+                <readOnly>false</readOnly>
+                <registryRoot>/</registryRoot>
+                <enableCache>true</enableCache>
+            </remoteInstance>
+
+            <mount path="/_system/governance" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/governance</targetPath>
+            </mount>
+            <mount path="/_system/config" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/manager_config</targetPath>
+            </mount>
+        </registry>
+
+        <axis2>
+            <clustering class="org.apache.axis2.clustering.tribes.TribesClusteringAgent" enable="true">
+                <parameter name="membershipScheme">wka</parameter>
+                <parameter name="domain">wso2.manager.domain</parameter>  
+                <parameter name="synchronizeAll">true</parameter>
+                <members>
+                    <member>
+                        <hostName>50.19.113.41</hostName>
+                        <port>4000</port>
+                    </member>
+                </members>
+                <stateManager class="org.apache.axis2.clustering.state.DefaultStateManager"
+                    enable="false">
+                </stateManager> 
+            </clustering>
+            
+            <SOAPRoleConfiguration isUltimateReceiver="false"><role>superTenant</role></SOAPRoleConfiguration>
+        </axis2>
+        <bps>
+            <DataBaseConfig mode="EXTERNAL">
+                <!-- Data source configuration. Use data sources created in data sources component. -->
+                <DataSource name="bpsds">
+                <JNDI contextFactory="com.sun.jndi.rmi.registry.RegistryContextFactory" providerURL="rmi://localhost:2199"/>
+                </DataSource>
+            </DataBaseConfig>
+            
+            <MultithreadedHttpConnectionManagerConfig>
+                <maxConnectionsPerHost value="10"/>
+                <maxTotalConnections value="100"/>
+            </MultithreadedHttpConnectionManagerConfig>
+        </bps>
+
+        <datasources name="bpsds">
+            <providerPort>2200</providerPort>
+            <icFactory>com.sun.jndi.rmi.registry.RegistryContextFactory</icFactory>
+
+            <!--MySql datasource configuration-->
+            <bpsds>
+                <registry>JNDI</registry>
+                <type>BasicDataSource</type>
+                <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+                <url>jdbc:mysql://localhost:3306/billing?autoReconnect=true</url>
+                <username>bps</username>
+                <password>password</password>
+                <dsName>bpsds</dsName>
+                <maxActive>200</maxActive>
+                <maxIdle>10</maxIdle>
+                <maxWait>360000</maxWait>
+                <autoCommit>false</autoCommit>
+            </bpsds>
+        </datasources>
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+    </bps>
+
+    <dss>
+        <carbon>
+            <HostName>stratoslive.wso2.com</HostName>
+            <ServerURL>https://stratoslive.wso2.com${carbon.context}/services/</ServerURL>
+            <BamServerURL>https://monitor.stratoslive.wso2.com/services/</BamServerURL>
+
+            <FileUploadConfig>
+                <TotalFileSizeLimit>100</TotalFileSizeLimit>
+            </FileUploadConfig>
+            <Ports>
+                <Offset>0</Offset>
+                <ServletTransports>
+                    <HTTPS>443</HTTPS>
+                    <HTTP>80</HTTP>
+                </ServletTransports>
+            </Ports>
+
+            <DeploymentSynchronizer>
+                <Enabled>true</Enabled>
+                <AutoCommit>true</AutoCommit>
+                <AutoCheckout>true</AutoCheckout>
+                <!--<AutoSyncPeriod>60000</AutoSyncPeriod>
+                <UseEventing>true</UseEventing>-->
+                <PoolSize>20</PoolSize>
+            </DeploymentSynchronizer>
+        </carbon>
+        
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Priority>10</Priority>
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Manager</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://identity.stratoslive.wso2.com/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:h2:H2_DATABASE_ABSOLUTE_PATH/repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE</url>
+                <userName>wso2carbon</userName>
+                <password>wso2carbon</password>
+                <driverName>org.h2.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+            </dbConfig>
+
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/governance?autoReconnect=true</url>
+                <userName>root</userName>
+                        <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+                <validationQuery>SELECT 1</validationQuery>
+            </dbConfig>
+
+            <remoteInstance url="https://governance.stratoslive.wso2.com">
+                <id>governance</id>
+                <dbConfig>governance</dbConfig>
+                <readOnly>false</readOnly>
+                <registryRoot>/</registryRoot>
+                <enableCache>true</enableCache>
+            </remoteInstance>
+
+            <mount path="/_system/governance" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/governance</targetPath>
+            </mount>
+            <mount path="/_system/config" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/manager_config</targetPath>
+            </mount>
+        </registry>
+
+        <axis2>
+            <clustering class="org.apache.axis2.clustering.tribes.TribesClusteringAgent" enable="true">
+                <parameter name="membershipScheme">wka</parameter>
+                <parameter name="domain">wso2.manager.domain</parameter>  
+                <parameter name="synchronizeAll">true</parameter>
+                <members>
+                    <member>
+                        <hostName>50.19.113.41</hostName>
+                        <port>4000</port>
+                    </member>
+                </members>
+                <stateManager class="org.apache.axis2.clustering.state.DefaultStateManager"
+                    enable="false">
+                </stateManager> 
+            </clustering>
+        </axis2>
+        <wso2-rss>
+            <wso2-rss-instances>
+              <wso2-rss-instance>
+                  <name>WSO2 RSS1</name>
+                  <server-url>jdbc:mysql://localhost:3306/rss_db?autoReconnect=true</server-url>
+                  <dbms-type>MYSQL</dbms-type>
+                  <admin-username>rss</admin-username>
+                  <admin-password>rss</admin-password>
+                  <server-category>RDS</server-category>
+              </wso2-rss-instance>
+            </wso2-rss-instances>
+        </wso2-rss>
+        <cassandra-auth>
+            <EPR>https://localhost:9443/services/CassandraSharedKeyPublisher</EPR>
+            <User>cassandra</User>
+            <Password>css</Password>
+        </cassandra-auth>
+
+        <cassandra-component>
+            <Cluster>
+                <Name>ClusterOne</Name>
+                <DefaultPort>9160</DefaultPort>
+                <Nodes>css0.stratoslive.wso2.com:9160</Nodes>
+                <AutoDiscovery disable="false" delay="1000"/>
+            </Cluster>
+        </cassandra-component> 
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+    </dss>
+
+    <esb>
+        <carbon>
+            <HostName>stratoslive.wso2.com</HostName>
+            <ServerURL>https://stratoslive.wso2.com${carbon.context}/services/</ServerURL>
+            <BamServerURL>https://monitor.stratoslive.wso2.com/services/</BamServerURL>
+
+            <FileUploadConfig>
+                <TotalFileSizeLimit>100</TotalFileSizeLimit>
+            </FileUploadConfig>
+            <Ports>
+                <Offset>0</Offset>
+                <ServletTransports>
+                    <HTTPS>443</HTTPS>
+                    <HTTP>80</HTTP>
+                </ServletTransports>
+            </Ports>
+
+            <DeploymentSynchronizer>
+                <Enabled>true</Enabled>
+                <AutoCommit>true</AutoCommit>
+                <AutoCheckout>true</AutoCheckout>
+                <!--<AutoSyncPeriod>60000</AutoSyncPeriod>
+                <UseEventing>true</UseEventing>-->
+                <PoolSize>20</PoolSize>
+            </DeploymentSynchronizer>
+        </carbon>
+        
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Priority>10</Priority>
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Manager</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://identity.stratoslive.wso2.com/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:h2:H2_DATABASE_ABSOLUTE_PATH/repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE</url>
+                <userName>wso2carbon</userName>
+                <password>wso2carbon</password>
+                <driverName>org.h2.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+            </dbConfig>
+
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/governance?autoReconnect=true</url>
+                <userName>root</userName>
+                        <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+                <validationQuery>SELECT 1</validationQuery>
+            </dbConfig>
+
+            <remoteInstance url="https://governance.stratoslive.wso2.com">
+                <id>governance</id>
+                <dbConfig>governance</dbConfig>
+                <readOnly>false</readOnly>
+                <registryRoot>/</registryRoot>
+                <enableCache>true</enableCache>
+            </remoteInstance>
+
+            <mount path="/_system/governance" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/governance</targetPath>
+            </mount>
+            <mount path="/_system/config" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/manager_config</targetPath>
+            </mount>
+        </registry>
+
+        <axis2>
+            <clustering class="org.apache.axis2.clustering.tribes.TribesClusteringAgent" enable="true">
+                <parameter name="membershipScheme">wka</parameter>
+                <parameter name="domain">wso2.manager.domain</parameter>  
+                <parameter name="synchronizeAll">true</parameter>
+                <members>
+                    <member>
+                        <hostName>50.19.113.41</hostName>
+                        <port>4000</port>
+                    </member>
+                </members>
+                <stateManager class="org.apache.axis2.clustering.state.DefaultStateManager"
+                    enable="false">
+                </stateManager> 
+            </clustering>
+        </axis2>
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+    </esb>
+
+    <brs>
+        <carbon>
+            <HostName>stratoslive.wso2.com</HostName>
+            <ServerURL>https://stratoslive.wso2.com${carbon.context}/services/</ServerURL>
+            <BamServerURL>https://monitor.stratoslive.wso2.com/services/</BamServerURL>
+
+            <FileUploadConfig>
+                <TotalFileSizeLimit>100</TotalFileSizeLimit>
+            </FileUploadConfig>
+            <Ports>
+                <Offset>0</Offset>
+                <ServletTransports>
+                    <HTTPS>443</HTTPS>
+                    <HTTP>80</HTTP>
+                </ServletTransports>
+            </Ports>
+
+            <DeploymentSynchronizer>
+                <Enabled>true</Enabled>
+                <AutoCommit>true</AutoCommit>
+                <AutoCheckout>true</AutoCheckout>
+                <!--<AutoSyncPeriod>60000</AutoSyncPeriod>
+                <UseEventing>true</UseEventing>-->
+                <PoolSize>20</PoolSize>
+            </DeploymentSynchronizer>
+        </carbon>
+        
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Priority>10</Priority>
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Manager</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://identity.stratoslive.wso2.com/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:h2:H2_DATABASE_ABSOLUTE_PATH/repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE</url>
+                <userName>wso2carbon</userName>
+                <password>wso2carbon</password>
+                <driverName>org.h2.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+            </dbConfig>
+
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/governance?autoReconnect=true</url>
+                <userName>root</userName>
+                        <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+                <validationQuery>SELECT 1</validationQuery>
+            </dbConfig>
+
+            <remoteInstance url="https://governance.stratoslive.wso2.com">
+                <id>governance</id>
+                <dbConfig>governance</dbConfig>
+                <readOnly>false</readOnly>
+                <registryRoot>/</registryRoot>
+                <enableCache>true</enableCache>
+            </remoteInstance>
+
+            <mount path="/_system/governance" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/governance</targetPath>
+            </mount>
+            <mount path="/_system/config" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/manager_config</targetPath>
+            </mount>
+        </registry>
+
+        <axis2>
+            <clustering class="org.apache.axis2.clustering.tribes.TribesClusteringAgent" enable="true">
+                <parameter name="membershipScheme">wka</parameter>
+                <parameter name="domain">wso2.manager.domain</parameter>  
+                <parameter name="synchronizeAll">true</parameter>
+                <members>
+                    <member>
+                        <hostName>50.19.113.41</hostName>
+                        <port>4000</port>
+                    </member>
+                </members>
+                <stateManager class="org.apache.axis2.clustering.state.DefaultStateManager"
+                    enable="false">
+                </stateManager> 
+            </clustering>
+        </axis2>
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+    </brs>
+
+    <mashup>
+        <carbon>
+            <HostName>stratoslive.wso2.com</HostName>
+            <ServerURL>https://stratoslive.wso2.com${carbon.context}/services/</ServerURL>
+            <BamServerURL>https://monitor.stratoslive.wso2.com/services/</BamServerURL>
+
+            <FileUploadConfig>
+                <TotalFileSizeLimit>100</TotalFileSizeLimit>
+            </FileUploadConfig>
+            <Ports>
+                <Offset>0</Offset>
+                <ServletTransports>
+                    <HTTPS>443</HTTPS>
+                    <HTTP>80</HTTP>
+                </ServletTransports>
+            </Ports>
+
+            <DeploymentSynchronizer>
+                <Enabled>true</Enabled>
+                <AutoCommit>true</AutoCommit>
+                <AutoCheckout>true</AutoCheckout>
+                <!--<AutoSyncPeriod>60000</AutoSyncPeriod>
+                <UseEventing>true</UseEventing>-->
+                <PoolSize>20</PoolSize>
+            </DeploymentSynchronizer>
+        </carbon>
+        
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Priority>10</Priority>
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Manager</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://identity.stratoslive.wso2.com/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:h2:H2_DATABASE_ABSOLUTE_PATH/repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE</url>
+                <userName>wso2carbon</userName>
+                <password>wso2carbon</password>
+                <driverName>org.h2.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+            </dbConfig>
+
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/governance?autoReconnect=true</url>
+                <userName>root</userName>
+                        <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+                <validationQuery>SELECT 1</validationQuery>
+            </dbConfig>
+
+            <remoteInstance url="https://governance.stratoslive.wso2.com">
+                <id>governance</id>
+                <dbConfig>governance</dbConfig>
+                <readOnly>false</readOnly>
+                <registryRoot>/</registryRoot>
+                <enableCache>true</enableCache>
+            </remoteInstance>
+
+            <mount path="/_system/governance" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/governance</targetPath>
+            </mount>
+            <mount path="/_system/config" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/manager_config</targetPath>
+            </mount>
+        </registry>
+
+        <axis2>
+            <clustering class="org.apache.axis2.clustering.tribes.TribesClusteringAgent" enable="true">
+                <parameter name="membershipScheme">wka</parameter>
+                <parameter name="domain">wso2.manager.domain</parameter>  
+                <parameter name="synchronizeAll">true</parameter>
+                <members>
+                    <member>
+                        <hostName>50.19.113.41</hostName>
+                        <port>4000</port>
+                    </member>
+                </members>
+                <stateManager class="org.apache.axis2.clustering.state.DefaultStateManager"
+                    enable="false">
+                </stateManager> 
+            </clustering>
+        </axis2>
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+    </mashup>
+
+    <mb>
+        <carbon>
+            <HostName>stratoslive.wso2.com</HostName>
+            <ServerURL>https://stratoslive.wso2.com${carbon.context}/services/</ServerURL>
+            <BamServerURL>https://monitor.stratoslive.wso2.com/services/</BamServerURL>
+
+            <FileUploadConfig>
+                <TotalFileSizeLimit>100</TotalFileSizeLimit>
+            </FileUploadConfig>
+            <Ports>
+                <Offset>0</Offset>
+                <ServletTransports>
+                    <HTTPS>443</HTTPS>
+                    <HTTP>80</HTTP>
+                </ServletTransports>
+            </Ports>
+
+            <DeploymentSynchronizer>
+                <Enabled>true</Enabled>
+                <AutoCommit>true</AutoCommit>
+                <AutoCheckout>true</AutoCheckout>
+                <!--<AutoSyncPeriod>60000</AutoSyncPeriod>
+                <UseEventing>true</UseEventing>-->
+                <PoolSize>20</PoolSize>
+            </DeploymentSynchronizer>
+        </carbon>
+        
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Priority>10</Priority>
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Manager</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://identity.stratoslive.wso2.com/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:h2:H2_DATABASE_ABSOLUTE_PATH/repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE</url>
+                <userName>wso2carbon</userName>
+                <password>wso2carbon</password>
+                <driverName>org.h2.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+            </dbConfig>
+
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/governance?autoReconnect=true</url>
+                <userName>root</userName>
+                        <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+                <validationQuery>SELECT 1</validationQuery>
+            </dbConfig>
+
+            <remoteInstance url="https://governance.stratoslive.wso2.com">
+                <id>governance</id>
+                <dbConfig>governance</dbConfig>
+                <readOnly>false</readOnly>
+                <registryRoot>/</registryRoot>
+                <enableCache>true</enableCache>
+            </remoteInstance>
+
+            <mount path="/_system/governance" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/governance</targetPath>
+            </mount>
+            <mount path="/_system/config" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/manager_config</targetPath>
+            </mount>
+        </registry>
+
+        <axis2>
+            <clustering class="org.apache.axis2.clustering.tribes.TribesClusteringAgent" enable="true">
+                <parameter name="membershipScheme">wka</parameter>
+                <parameter name="domain">wso2.manager.domain</parameter>  
+                <parameter name="synchronizeAll">true</parameter>
+                <members>
+                    <member>
+                        <hostName>50.19.113.41</hostName>
+                        <port>4000</port>
+                    </member>
+                </members>
+                <stateManager class="org.apache.axis2.clustering.state.DefaultStateManager"
+                    enable="false">
+                </stateManager> 
+            </clustering>
+        </axis2>
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+    </mb>
+
+    <gs>
+        <carbon>
+            <HostName>stratoslive.wso2.com</HostName>
+            <ServerURL>https://stratoslive.wso2.com${carbon.context}/services/</ServerURL>
+            <BamServerURL>https://monitor.stratoslive.wso2.com/services/</BamServerURL>
+
+            <FileUploadConfig>
+                <TotalFileSizeLimit>100</TotalFileSizeLimit>
+            </FileUploadConfig>
+            <Ports>
+                <Offset>0</Offset>
+                <ServletTransports>
+                    <HTTPS>443</HTTPS>
+                    <HTTP>80</HTTP>
+                </ServletTransports>
+            </Ports>
+
+            <DeploymentSynchronizer>
+                <Enabled>true</Enabled>
+                <AutoCommit>true</AutoCommit>
+                <AutoCheckout>true</AutoCheckout>
+                <!--<AutoSyncPeriod>60000</AutoSyncPeriod>
+                <UseEventing>true</UseEventing>-->
+                <PoolSize>20</PoolSize>
+            </DeploymentSynchronizer>
+        </carbon>
+        
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Priority>10</Priority>
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Manager</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://identity.stratoslive.wso2.com/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:h2:H2_DATABASE_ABSOLUTE_PATH/repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE</url>
+                <userName>wso2carbon</userName>
+                <password>wso2carbon</password>
+                <driverName>org.h2.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+            </dbConfig>
+
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/governance?autoReconnect=true</url>
+                <userName>root</userName>
+                        <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+                <validationQuery>SELECT 1</validationQuery>
+            </dbConfig>
+
+            <remoteInstance url="https://governance.stratoslive.wso2.com">
+                <id>governance</id>
+                <dbConfig>governance</dbConfig>
+                <readOnly>false</readOnly>
+                <registryRoot>/</registryRoot>
+                <enableCache>true</enableCache>
+            </remoteInstance>
+
+            <mount path="/_system/governance" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/governance</targetPath>
+            </mount>
+            <mount path="/_system/config" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/manager_config</targetPath>
+            </mount>
+        </registry>
+
+        <axis2>
+            <clustering class="org.apache.axis2.clustering.tribes.TribesClusteringAgent" enable="true">
+                <parameter name="membershipScheme">wka</parameter>
+                <parameter name="domain">wso2.manager.domain</parameter>  
+                <parameter name="synchronizeAll">true</parameter>
+                <members>
+                    <member>
+                        <hostName>50.19.113.41</hostName>
+                        <port>4000</port>
+                    </member>
+                </members>
+                <stateManager class="org.apache.axis2.clustering.state.DefaultStateManager"
+                    enable="false">
+                </stateManager> 
+            </clustering>
+        </axis2>
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+    </gs>
+
+    <cep>
+        <carbon>
+            <HostName>stratoslive.wso2.com</HostName>
+            <ServerURL>https://stratoslive.wso2.com${carbon.context}/services/</ServerURL>
+            <BamServerURL>https://monitor.stratoslive.wso2.com/services/</BamServerURL>
+
+            <FileUploadConfig>
+                <TotalFileSizeLimit>100</TotalFileSizeLimit>
+            </FileUploadConfig>
+            <Ports>
+                <Offset>0</Offset>
+                <ServletTransports>
+                    <HTTPS>443</HTTPS>
+                    <HTTP>80</HTTP>
+                </ServletTransports>
+            </Ports>
+
+            <DeploymentSynchronizer>
+                <Enabled>true</Enabled>
+                <AutoCommit>true</AutoCommit>
+                <AutoCheckout>true</AutoCheckout>
+                <!--<AutoSyncPeriod>60000</AutoSyncPeriod>
+                <UseEventing>true</UseEventing>-->
+                <PoolSize>20</PoolSize>
+            </DeploymentSynchronizer>
+        </carbon>
+        
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Priority>10</Priority>
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Manager</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://identity.stratoslive.wso2.com/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:h2:H2_DATABASE_ABSOLUTE_PATH/repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE</url>
+                <userName>wso2carbon</userName>
+                <password>wso2carbon</password>
+                <driverName>org.h2.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+            </dbConfig>
+
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/governance?autoReconnect=true</url>
+                <userName>root</userName>
+                        <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+                <validationQuery>SELECT 1</validationQuery>
+            </dbConfig>
+
+            <remoteInstance url="https://governance.stratoslive.wso2.com">
+                <id>governance</id>
+                <dbConfig>governance</dbConfig>
+                <readOnly>false</readOnly>
+                <registryRoot>/</registryRoot>
+                <enableCache>true</enableCache>
+            </remoteInstance>
+
+            <mount path="/_system/governance" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/governance</targetPath>
+            </mount>
+            <mount path="/_system/config" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/manager_config</targetPath>
+            </mount>
+        </registry>
+
+        <axis2>
+            <clustering class="org.apache.axis2.clustering.tribes.TribesClusteringAgent" enable="true">
+                <parameter name="membershipScheme">wka</parameter>
+                <parameter name="domain">wso2.manager.domain</parameter>  
+                <parameter name="synchronizeAll">true</parameter>
+                <members>
+                    <member>
+                        <hostName>50.19.113.41</hostName>
+                        <port>4000</port>
+                    </member>
+                </members>
+                <stateManager class="org.apache.axis2.clustering.state.DefaultStateManager"
+                    enable="false">
+                </stateManager> 
+            </clustering>
+        </axis2>
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+    </cep>
+
+    <summarizer>
+        <carbon>
+            <HostName>stratoslive.wso2.com</HostName>
+            <ServerURL>https://stratoslive.wso2.com${carbon.context}/services/</ServerURL>
+            <BamServerURL>https://monitor.stratoslive.wso2.com/services/</BamServerURL>
+
+            <FileUploadConfig>
+                <TotalFileSizeLimit>100</TotalFileSizeLimit>
+            </FileUploadConfig>
+            <Ports>
+                <Offset>0</Offset>
+                <ServletTransports>
+                    <HTTPS>443</HTTPS>
+                    <HTTP>80</HTTP>
+                </ServletTransports>
+            </Ports>
+
+            <DeploymentSynchronizer>
+                <Enabled>true</Enabled>
+                <AutoCommit>true</AutoCommit>
+                <AutoCheckout>true</AutoCheckout>
+                <!--<AutoSyncPeriod>60000</AutoSyncPeriod>
+                <UseEventing>true</UseEventing>-->
+                <PoolSize>20</PoolSize>
+            </DeploymentSynchronizer>
+        </carbon>
+        
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Priority>10</Priority>
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Manager</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://identity.stratoslive.wso2.com/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:h2:H2_DATABASE_ABSOLUTE_PATH/repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE</url>
+                <userName>wso2carbon</userName>
+                <password>wso2carbon</password>
+                <driverName>org.h2.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+            </dbConfig>
+
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/governance?autoReconnect=true</url>
+                <userName>root</userName>
+                        <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+                <validationQuery>SELECT 1</validationQuery>
+            </dbConfig>
+
+            <remoteInstance url="https://governance.stratoslive.wso2.com">
+                <id>governance</id>
+                <dbConfig>governance</dbConfig>
+                <readOnly>false</readOnly>
+                <registryRoot>/</registryRoot>
+                <enableCache>true</enableCache>
+            </remoteInstance>
+
+            <mount path="/_system/governance" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/governance</targetPath>
+            </mount>
+            <mount path="/_system/config" overwrite="virtual">
+                <instanceId>governance</instanceId>
+                <targetPath>/_system/manager_config</targetPath>
+            </mount>
+        </registry>
+
+        <axis2>
+            <clustering class="org.apache.axis2.clustering.tribes.TribesClusteringAgent" enable="true">
+                <parameter name="membershipScheme">wka</parameter>
+                <parameter name="domain">wso2.manager.domain</parameter>  
+                <parameter name="synchronizeAll">true</parameter>
+                <members>
+                    <member>
+                        <hostName>50.19.113.41</hostName>
+                        <port>4000</port>
+                    </member>
+                </members>
+                <stateManager class="org.apache.axis2.clustering.state.DefaultStateManager"
+                    enable="false">
+                </stateManager> 
+            </clustering>
+        </axis2>
+        <bam>
+            <summaryGeneration>
+                <initial-delay>-1</initial-delay>
+                <interval>-1</interval>
+                <taskBreakDownLength>100</taskBreakDownLength>
+                <sleepTimeBetweenTasks>100</sleepTimeBetweenTasks>
+            </summaryGeneration>
+        </bam>
+    </summarizer>
+
+</stratos_config>

@@ -1,0 +1,75 @@
+<html>
+<head>
+<script src="js/lib/jquery-1.7.1.min.js"></script>
+<script src="js/serviceStoreAppTest.js"></script>
+<script src="js/util.js"></script>
+<script type="text/javascript"></script>
+<h1>API Store</h1>
+</head>
+<body>
+	<div id="controller" name="controller" class="controller">
+		<input type="button" class="button" value="getTopRatedAPIs"
+			onclick="ServiceStoreApp.call('getTopRatedAPIs','&limit='+ $('#limit').val() +'')" /> 
+				<input type="button" class="button" value="getRecentlyAddedAPIs"
+			onclick="ServiceStoreApp.call('getRecentlyAddedAPIs','&limit='+ $('#limit').val() +'')" />			 
+			<input
+			type="text" id="limit" placeholder="limit"  size="3"/><input
+			type="button" class="button" value="listProvidersNames"
+			onclick="ServiceStoreApp.ask('listProvidersNames')" /> 
+			<input
+			type="button" class="button" value="listApplications"
+			onclick="ServiceStoreApp.ask('listApplications')" />
+			<input
+			type="button" class="button" value="getAllPublishedAPIs"
+			onclick="ServiceStoreApp.ask('getAllPublishedAPIs')" />
+			<br><input
+			type="button" class="button" value="getAllTags"
+			onclick="ServiceStoreApp.ask('getAllTags')" />
+			<input
+			type="button" class="button" value="getUser"
+			onclick="ServiceStoreApp.ask('getUser')" />
+			
+			<input
+			type="text" id="searchTerm" placeholder="searchTerm"  size="10"/>
+			<input
+			type="text" id="searchType" placeholder="searchType"  size="10"/>
+			<input type="button" class="button" value="searchAPI"
+			onclick="ServiceStoreApp.call('searchAPI','&searchTerm='+ $('#searchTerm').val() +'')" />
+			
+			<input type="button" class="button" value="searchAPIbyType"
+			onclick="ServiceStoreApp.call('searchAPIbyType','&searchTerm='+ $('#searchTerm').val() +'&searchType='+ $('#searchType').val() +'')" />
+			
+			
+			<input type="button" class="button" value="getAPIsWithTag"
+			onclick="ServiceStoreApp.call('getAPIsWithTag','&tag='+ $('#searchTerm').val() +'')" />
+			<br>
+			
+			<input type="text" id="providerName" placeholder="providerName"  size="10"/>
+			<input type="text" id="apiName" placeholder="apiName"  size="10"/>
+			<input type="text" id="version" placeholder="version"  size="10"/>
+			<input type="button" class="button" value="getAllDocumentation"
+			onclick="ServiceStoreApp.call('getAllDocumentation','&providerName='+ $('#providerName').val() +'&apiName='+ $('#apiName').val() + '&version='+ $('#version').val() +'')" />
+		
+		<input type="button" class="button" value="getAllSample"
+			onclick="ServiceStoreApp.call('getAllSample','&providerName='+ $('#providerName').val() +'&apiName='+ $('#apiName').val() + '&version='+ $('#version').val() +'')" />
+		
+		
+		<input type="button" class="button" value="getAPI"
+			onclick="ServiceStoreApp.call('getAPI','&providerName='+ $('#providerName').val() +'&apiName='+ $('#apiName').val() + '&version='+ $('#version').val() +'')" />
+
+<input type="button" class="button" value="getAPIDescription"
+			onclick="ServiceStoreApp.call('getAPIDescription','&providerName='+ $('#providerName').val() +'&apiName='+ $('#apiName').val() + '&version='+ $('#version').val() +'')" />
+<input type="button" class="button" value="getAPIComments"
+			onclick="ServiceStoreApp.call('getAPIComments','&providerName='+ $('#providerName').val() +'&apiName='+ $('#apiName').val() + '&version='+ $('#version').val() +'')" />
+
+<br>
+<input type="text" id="comment" placeholder="comment"  size="15"/>
+<input type="button" class="button" value="addAPIComment"
+			onclick="ServiceStoreApp.call('addAPIComment','&providerName='+ $('#providerName').val() +'&apiName='+ $('#apiName').val() + '&version='+ $('#version').val() + '&comment='+ $('#comment').val()  +'')" />
+
+	</div>
+	<br><br>
+	<h3>Results</h3>
+	<div id="response" name="response" class="response"></div>
+</body>
+<form>

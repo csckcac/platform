@@ -1,0 +1,230 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+<!--
+~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+  
+  <meta http-equiv="content-type" content="">
+  <title>WSO2 Mashup Server ${mashup_version} Release Notes</title>
+
+  
+  
+  <link href="./tools/cmd/css/mashup-dist-doc.css" rel="stylesheet" type="text/css" media="all">
+
+</head><body style="direction: ltr;">
+<h1>WSO2 Mashup Server ${mashup_version} Release Notes</h1>
+
+<span style="font-style: italic;">${buildNumber} </span><br>
+
+<br>
+
+&nbsp;<br>
+
+<strong><i>"Create, deploy, and consume Web services Mashups in the simplest
+fashion."</i></strong>
+<br>
+
+&nbsp;<br>
+
+The
+WSO2 Mashup Server is a powerful yet simple and quick way to tailor
+Web-based information to the personal needs of individuals and
+organizations.&nbsp;It is a platform for acquiring data from a variety
+of sources including Web&nbsp;Services, HTML pages, feeds and data
+sources, and process and combine it&nbsp;with&nbsp;other data using
+JavaScript with E4X XML extensions. The result is then&nbsp;exposed as
+a new Web service with rich metadata and artifacts to simplify&nbsp;the
+creation of rich user interfaces.&nbsp;<br>
+
+&nbsp;<br>
+
+WSO2 Mashup Server is released under the Apache License v2.0
+<br>
+
+&nbsp;<br>
+
+Check out the project home page at <a href="http://www.wso2.org/projects/mashup">http://www.wso2.org/projects/mashup</a>
+for additional information.&nbsp;&nbsp; &nbsp;<br>
+
+&nbsp;&nbsp;<br>
+
+<h2>Features of WSO2 Mashup Server<br>
+</h2>
+
+<ul>
+
+  <li>Hosting of mashup services written using JavaScript with E4X XML
+extensions </li>
+  <ul>
+    <li>&nbsp;Simple file based deployment model </li>
+  </ul>
+  <li>&nbsp;JavaScript annotations to configure the deployed services </li>
+  <li>&nbsp;Auto generation of metadata and runtime resources for the
+deployed mashups </li>
+  <ul>
+    <li>JavaScript stubs that simplify client access to the mashup
+service </li>
+  </ul>
+  <ul>
+    <li>Code templates for developing rich HTML or Google Gadget
+interfaces </li>
+  </ul>
+  <ul>
+    <li>TryIt functionality to invoke the mashup service through a web
+browser </li>
+  </ul>
+  <ul>
+    <li>WSDL 1.1/WSDL 2.0/XSD documents to describe the mashup service </li>
+  </ul>
+  <ul>
+    <li>API documentation&nbsp; </li>
+  </ul>
+  <li>Ability to bundle a custom user interface for the mashups </li>
+  <li>Many useful Javascript Host objects that can be used when writing
+mashups </li>
+  <ul>
+    <li>WSRequest: invoke Web services from mashup services </li>
+  </ul>
+  <ul>
+    <li>File: File storage/manipulation functionality </li>
+  </ul>
+  <ul>
+    <li>System: Set of system specific utility functions </li>
+  </ul>
+  <ul>
+    <li>Session: Ability to share objects across different service
+invocations </li>
+  </ul>
+  <ul>
+    <li>Scraper: Extract data from HTML pages and present in XML
+format&nbsp; </li>
+  </ul>
+  <ul>
+    <li>APPClient: Atom Publishing Protocol client to retrieve/publish
+Atom feeds with APP servers </li>
+    <li>Feed: A generic set of host objects to transparently read and
+create Atom and RSS feeds </li>
+    <li>Request: Ability get information regarding a request received</li>
+    <li>HttpClient: A hostobject equvalent with Apache HttpClient,
+which help you to do HTTP related stuff<br>
+    </li>
+  </ul>
+  <li>Support for recurring and longer-running tasks </li>
+  <li>Support for service lifecycles </li>
+  <li>Ability to secure hosted mashups using a set of commonly used
+security&nbsp;
+scenarios</li>
+  <li>Management console to easily manage the mashups</li>
+  <li>Equinox P2 based provisioning support - extend your Mashup Server instance
+by installing new P2 features. See
+https://wso2.org/wiki/display/carbon/p2-based-provisioning-support</li>
+  <li>User based mashup deployment model</li>
+  <li>Ability to upload mashups with it's resources as a zip</li>
+</ul>
+
+
+<h2>Project Resources</h2>
+
+<ul>
+
+  <li><strong>Home page : </strong><a href="http://wso2.com/products/mashup-server">http://wso2.com/products/mashup-server</a></li>
+  <li><strong>Library : </strong><a href="http://wso2.org/library/mashup">http://wso2.org/library/mashup</a></li>
+  <li><strong>Wiki : </strong><a href="http://wso2.org/wiki/display/mashup">http://wso2.org/wiki/display/mashup</a></li>
+  <li><strong>JIRA-Issue Tracker : </strong><a href="https://wso2.org/jira/browse/MASHUP">https://wso2.org/jira/browse/MASHUP</a></li>
+  <li><strong>QA Artifacts : </strong> <br>
+Wiki : <a href="http://wso2.org/wiki/display/mashup/Quality+Assurance">http://wso2.org/wiki/display/mashup/Quality+Assurance</a>
+    <br>
+SVN : <a href="http://wso2.org/repos/wso2/trunk/commons/qa/mashup">http://wso2.org/repos/wso2/trunk/commons/qa/mashup</a></li>
+</ul>
+
+<h2>Installation and Running</h2>
+
+<ol>
+
+  <li>Extract the downloaded zip file</li>
+  <li>Run the wso2server.sh or wso2server.bat file in the /bin directory</li>
+  <li>Once the server starts, point your Web browser to
+https://localhost:9443/carbon/</li>
+  <li>For more information, see the Installation Guide</li>
+</ol>
+
+<h2>Issues Fixed in This Release</h2>
+
+<ul>  
+<li><a href="https://wso2.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10536">WSO2
+Mashup Server</a></li> 
+<li><a href="https://wso2.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10542">Mashup
+Components of the WSO2 Carbon Platform</a></li> 
+</ul>
+
+<h2>Known Issues</h2>
+
+<ul> 
+<li><a href="https://wso2.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10537">WSO2
+Mashup Server</a></li> 
+<li><a href="https://wso2.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10538">Mashup
+Components of the WSO2 Carbon Platform</a></li> 
+</ul> 
+
+<h2>Reporting Problems<br>
+</h2>
+
+Issues can be reported using the public JIRA available at&nbsp;<a href="https://wso2.org/jira/browse/MASHUP">https://wso2.org/jira/browse/MASHUP</a>&nbsp;
+&nbsp;<br>
+
+<h2>Contact us<br>
+</h2>
+
+WSO2 Mashup Server developers can be contacted via mailing lists:
+<br>
+
+<ul>
+
+  <li>For Users: <a href="mailto:mashup-user@wso2.org">mashup-user@wso2.org</a>
+  </li>
+  <li>For Developers: <a href="mailto:carbon-dev@wso2.org">carbon-dev@wso2.org</a>&nbsp;
+  </li>
+</ul>
+
+Alternatively, questions can also be raised in the WSO2 Mashup Server
+forum: <a href="http://www.wso2.org/forum/226">http://www.wso2.org/forum/226</a>.
+<span style="font-weight: bold;"><br>
+</span>
+<h2>Support</h2>
+
+<p>We are committed to ensuring that your enterprise middleware
+deployment is completely supported from evaluation to production. Our
+unique approach ensures that all support leverages our open development
+methodology and is provided by the very same engineers who build the
+technology.</p>
+
+<p>For more details and to take advantage of this unique opportunity
+please visit <a href="http://wso2.com/support/">http://wso2.com/support/</a></p>
+
+<p>For more information about WSO2 Mashup Server please see <a href="http://wso2.com/products/mashup-server">http://wso2.com/products/mashup-server</a>
+. Visit the WSO2 Oxygen Tank developer portal for additional resources.</p>
+
+<p>Thank you for your interest in WSO2 Mashup Server. <br>
+</p>
+
+
+<span style="font-style: italic;">- <span style="font-weight: bold;">The WSO2 Mashup Server </span></span><strong style="font-weight: bold;"><em>Development Team</em></strong><br>
+
+&nbsp;<br>
+
+&nbsp;<br>
+
+&nbsp;
+</body></html>

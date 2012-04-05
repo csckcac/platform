@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>@product.name@ - BPEL Extensions</title>
+        <link href="../css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+        <h1>BPEL Extensions</h1>
+        <p>[
+            <a href="docs_index.html">Documentation Index</a>
+            ]
+        </p>
+
+        <p>
+            @product.name@ extends the WS-BPEL in areas that are not covered by the WS-BPEL specification.
+            This page details these extensions.
+        </p>
+        <br />
+        <h2>
+            Table of Contents
+        </h2>
+
+        <div class="toc">
+            <ul>
+                <!--<li><a href="bpel_extension_implicit_correlations.html"> Implicit Correlations</a></li>-->
+                <li><a href="bpel_extension_activity_failure_and_recovery.html"> Activity Failure and Recovery</a></li>
+                <li><a href="bpel_extension_extension_activities.html"> Extension Activities and Extensible Assign Operations</a></li>
+                <li><a href="bpel_extension_xpath_extensions.html"> XPath Extensions</a></li>
+                <!--li><a href="#BPELExtensions-ExternalVariables"> External Variables</a></li>
+                <li><a href="#BPELExtensions-HeadersHandling"> Headers Handling</a></li>
+                <li><a href="#BPELExtensions-RESTfulBPEL%252CPartI"> RESTful BPEL, Part I</a></li>
+                <li><a href="#BPELExtensions-RESTfulBPEL%252CPartII"> RESTful BPEL, Part II</a></li-->
+                <li><a href="bpel_extension_iterable_foreach.html"> Iterable ForEach</a></li>
+
+                <li><a href="bpel_extension_flexible_assign.html"> Flexible Assigns</a></li>
+                <!--li><a href="#BPELExtensions-ProcessContexts"> Process Contexts</a></li-->
+            </ul>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,69 @@
+package org.wso2.carbon.jaggery.core.manager;
+
+import org.mozilla.javascript.ScriptableObject;
+import org.wso2.carbon.scriptengine.engine.RhinoEngine;
+
+import java.io.OutputStream;
+import java.util.Stack;
+
+public class JaggeryContext {
+    private int environment = 0;
+    private String tenantId = null;
+    private RhinoEngine engine = null;
+    private ScriptableObject scope = null;
+    private OutputStream outputStream = null;
+    private CommonManager manager = null;
+    private Stack<String> includesCallstack = new Stack<String>();
+
+    public int getEnvironment() {
+        return environment;
+    }
+
+    public void setEnvironment(int environment) {
+        this.environment = environment;
+    }
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
+
+    public RhinoEngine getEngine() {
+        return engine;
+    }
+
+    public void setEngine(RhinoEngine engine) {
+        this.engine = engine;
+    }
+
+    public ScriptableObject getScope() {
+        return scope;
+    }
+
+    public void setScope(ScriptableObject scope) {
+        this.scope = scope;
+    }
+
+    public OutputStream getOutputStream() {
+        return outputStream;
+    }
+
+    public void setOutputStream(OutputStream outputStream) {
+        this.outputStream = outputStream;
+    }
+
+    public CommonManager getManager() {
+        return manager;
+    }
+
+    public void setManager(CommonManager manager) {
+        this.manager = manager;
+    }
+
+    public Stack<String> getIncludesCallstack() {
+        return includesCallstack;
+    }
+}

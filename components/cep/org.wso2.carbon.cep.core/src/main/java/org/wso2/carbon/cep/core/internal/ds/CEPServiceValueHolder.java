@@ -1,0 +1,117 @@
+/*
+ * Copyright 2004,2005 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.wso2.carbon.cep.core.internal.ds;
+
+import org.apache.axiom.om.OMElement;
+import org.wso2.carbon.broker.core.BrokerService;
+import org.wso2.carbon.brokermanager.core.BrokerManagerService;
+import org.wso2.carbon.cep.core.internal.CEPService;
+import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.service.RegistryService;
+import org.wso2.carbon.utils.ConfigurationContextService;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * class to keep the other osgi services temporarily
+ */
+public class CEPServiceValueHolder {
+
+    private static BrokerService brokerService;
+
+    private static BrokerManagerService brokerManagerService;
+
+    private static RegistryService registryService;
+
+    private static CEPServiceValueHolder cepServiceValueHolder;
+
+    private static ConfigurationContextService configurationContextService;
+
+    private static CEPService cepService;
+
+    private List<OMElement> unDeployedBuckets = new ArrayList<OMElement>();
+
+
+    public static CEPServiceValueHolder getInstance() {
+        if (cepServiceValueHolder == null) {
+            cepServiceValueHolder = new CEPServiceValueHolder();
+        }
+        return cepServiceValueHolder;
+    }
+
+    public BrokerService getBrokerService() {
+        return brokerService;
+    }
+
+    public void registerBrokerService(BrokerService brokerService) {
+        CEPServiceValueHolder.brokerService = brokerService;
+    }
+
+    public void unsetBrokerService() {
+        CEPServiceValueHolder.brokerService = null;
+    }
+
+    public void setBrokerManagerService(BrokerManagerService brokerManagerService) {
+        CEPServiceValueHolder.brokerManagerService = brokerManagerService;
+    }
+
+    public void unsetBrokerManagerService() {
+        CEPServiceValueHolder.brokerManagerService = null;
+    }
+
+    public BrokerManagerService getBrokerManagerService() {
+        return brokerManagerService;
+    }
+
+    public Registry getRegistry(int tenantId) throws RegistryException {
+        return registryService.getConfigSystemRegistry(tenantId);
+    }
+
+    public void setRegistryService(RegistryService registryService) {
+        CEPServiceValueHolder.registryService = registryService;
+    }
+
+    public void unsetRegistryService() {
+        CEPServiceValueHolder.registryService = null;
+    }
+
+    public void registerConfigurationContextService(ConfigurationContextService configurationContextService) {
+        CEPServiceValueHolder.configurationContextService = configurationContextService;
+    }
+
+    public static ConfigurationContextService getConfigurationContextService() {
+        return configurationContextService;
+    }
+
+    public static CEPService getCepService() {
+        return cepService;
+    }
+
+    public static void setCepService(CEPService cepService) {
+        CEPServiceValueHolder.cepService = cepService;
+    }
+
+    public List<OMElement> getUnDeployedBuckets() {
+        return unDeployedBuckets;
+    }
+
+    public void setUnDeployedBuckets(List<OMElement> unDeployedBuckets) {
+        this.unDeployedBuckets = unDeployedBuckets;
+    }
+}

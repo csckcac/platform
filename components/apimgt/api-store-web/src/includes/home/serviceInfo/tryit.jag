@@ -1,0 +1,5 @@
+<div id="tryit">
+    <div class="new-window"><a id="tryit-external-link" href="#" target="_blank">Open Tryit separately</a></div>
+    <div style="clear:both"></div>
+    <iframe id="tryit-frame" src=""></iframe>
+</div>

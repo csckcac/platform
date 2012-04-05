@@ -1,0 +1,307 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>org.wso2.identity</groupId>
+    	<artifactId>identity-server-distribution-parent</artifactId>
+        <version>4.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>wso2stratos-is</artifactId>
+    <packaging>jar</packaging>
+    <version>1.1.0-SNAPSHOT</version>
+    <name>WSO2 Cloud Identity - Distribution</name>
+    <url></url>
+    <description>WSO2 Cloud Identity : Distribution</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.rampart</groupId>
+            <artifactId>rampart</artifactId>
+            <type>mar</type>
+            <version>${rampart.mar.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.0-alpha-4</version>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <id>unpack-wso2carbon</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon</groupId>
+                                    <artifactId>wso2carbon-core</artifactId>
+                                    <version>${carbon.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>target</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                    <execution>
+                        <id>extract-docs-from-components</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <property name="tempdir" value="target/docs-temp"/>
+                                <mkdir dir="${tempdir}"/>
+                                <unzip dest="${tempdir}">
+                                    <fileset dir="target">
+                                        <include name="${project.artifactId}-${project.version}.zip"/>
+                                    </fileset>
+                                </unzip>
+
+                                <replace
+                                        file="target/wso2carbon-core-${carbon.version}/repository/conf/carbon.xml"
+                                        token="${product.name}" value="WSO2 Stratos Identity"/>
+                                <replace
+                                        file="target/wso2carbon-core-${carbon.version}/repository/conf/carbon.xml"
+                                        token="&lt;ServerURL&gt;https://${carbon.local.ip}"
+                                        value="&lt;ServerURL&gt;https://localhost"/>
+                                <replace
+                                        file="target/wso2carbon-core-${carbon.version}/repository/conf/carbon.xml"
+                                        token="&lt;!--HostName&gt;www.wso2.org&lt;/HostName--&gt;"
+                                        value="&lt;HostName&gt;localhost&lt;/HostName&gt;"/>
+
+                                <copy
+                                        todir="target/wso2carbon-core-${carbon.version}/repository/components/"
+                                        overwrite="false">
+                                    <fileset
+                                            dir="${tempdir}/${project.artifactId}-${project.version}/repository/components/">
+                                    </fileset>
+                                </copy>
+                                <copy
+                                        todir="target/wso2carbon-core-${carbon.version}/repository/deployment/client/modules"
+                                        overwrite="false">
+                                    <fileset
+                                            dir="${tempdir}/${project.artifactId}-${project.version}/repository/deployment/client/modules">
+                                    </fileset>
+                                </copy>
+                                <delete file="target/${project.artifactId}-${project.version}.zip"/>
+                                <delete dir="${tempdir}"/>
+                                <mkdir dir="${tempdir}"/>
+                                <unzip dest="${tempdir}">
+                                    <fileset
+                                            dir="target/wso2carbon-core-${carbon.version}/repository/components/plugins/">
+                                        <include name="*.ui*.jar"/>
+                                    </fileset>
+                                </unzip>
+                                <move todir="${tempdir}/web/" includeemptydirs="false">
+                                    <fileset dir="${tempdir}/web/">
+                                        <exclude name="**/yui/**"/>
+                                        <exclude name="**/ajax/**"/>
+                                        <exclude name="**/WEB-INF/**"/>
+                                        <exclude name="**/editarea/**"/>
+                                        <exclude name="**/codepress/**"/>
+                                        <include name="**/*.html"/>
+                                    </fileset>
+                                    <mapper type="glob" from="*.html" to="*.xml"/>
+                                </move>
+                                <copy todir="src/site/xdoc" overwrite="false"
+                                      includeemptydirs="false">
+                                    <fileset dir="${tempdir}/web">
+                                        <exclude name="**/yui/**"/>
+                                        <exclude name="**/ajax/**"/>
+                                        <exclude name="**/WEB-INF/**"/>
+                                        <exclude name="**/*.html"/>
+                                        <exclude name="**/*.js"/>
+                                        <exclude name="**/*.jsp"/>
+                                        <exclude name="**/*.xsl"/>
+                                        <exclude name="*.*"/>
+                                    </fileset>
+                                </copy>
+                                <copy todir="src/site" overwrite="false" includeemptydirs="false">
+                                    <fileset dir="../../../modules/documentation/service/src/site">
+                                    </fileset>
+                                </copy>
+                                <copy todir="src/site" overwrite="true" includeemptydirs="false">
+                                    <fileset dir="../../../modules/documentation/service/src/site">
+                                        <exclude name="**/images/*.*"/>
+                                    </fileset>
+                                    <filterset>
+                                        <filter token="buildNumber" value="${buildNumber}"/>
+                                    </filterset>
+                                </copy>
+                                <copy todir="target/site/" overwrite="false" includeemptydirs="false">
+                                    <fileset dir="src/site/xdoc/">
+                                        <include name="**/images/*.*"/>
+                                    </fileset>
+                                </copy>
+                                <delete dir="${tempdir}"/>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>finalize</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <delete dir="target/archive-tmp"/>
+                                <delete dir="target/dependency-maven-plugin-markers"/>
+                                <delete dir="target/maven-archiver"/>
+                                <delete dir="target/wso2carbon-core-${carbon.version}"/>
+                                <delete file="target/${project.artifactId}-${project.version}.jar"/>
+                                <delete dir="target/sources"/>
+                                <delete dir="target/site"/>
+                                <delete dir="src/site"/>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                        <reportPlugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.4</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>index</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+                        </reportPlugins>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <id>--------create-documentation-module----</id>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy_components</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>attached</goal>
+                        </goals>
+                        <configuration>
+                            <filters>
+                                <filter>${basedir}/src/assembly/filter.properties</filter>
+                            </filters>
+                            <descriptors>
+                                <descriptor>src/assembly/dist.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>dist</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attached</goal>
+                        </goals>
+                        <configuration>
+                            <filters>
+                                <filter>${basedir}/src/assembly/filter.properties</filter>
+                            </filters>
+                            <descriptors>
+                                <descriptor>src/assembly/bin.xml</descriptor>
+                                <descriptor>src/assembly/src.xml</descriptor>
+                                <descriptor>src/assembly/docs.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>maven-buildnumber-plugin</artifactId>
+                <version>0.9.4</version>
+                <configuration>
+                    <format>{0,date,dd MMM yyyy}</format>
+                    <items>
+                        <item>timestamp</item>
+                    </items>
+                    <doCheck>false</doCheck>
+                    <doUpdate>false</doUpdate>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+        </plugins>
+    </build>
+    <!--reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>index</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting-->
+</project>

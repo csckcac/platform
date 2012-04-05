@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="classic" pageWidth="780" pageHeight="842" columnWidth="720" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<field name="task" class="java.lang.String"/>
+	<field name="timeStamp" class="java.lang.String"/>
+	<field name="operation" class="java.lang.String"/>
+	<field name="timeRange" class="java.lang.String"/>
+	<field name="serverURL" class="java.lang.String"/>
+	<field name="request" class="java.lang.String"/>
+	<field name="fault" class="java.lang.String"/>
+	<field name="avgTime" class="java.lang.String"/>
+	<field name="maxTime" class="java.lang.String"/>
+	<field name="minTime" class="java.lang.String"/>
+	<field name="statType" class="java.lang.String"/>
+	<group name="operation">
+		<groupExpression><![CDATA[$F{operation}]]></groupExpression>
+		<groupHeader>
+			<band height="16" splitType="Stretch">
+				<rectangle>
+					<reportElement key="rectangle-5" x="0" y="0" width="720" height="15" forecolor="#ACBC88" backcolor="#B5D07A"/>
+				</rectangle>
+				<textField>
+					<reportElement x="0" y="1" width="262" height="15" forecolor="#080606"/>
+					<textElement textAlignment="Center">
+						<font size="12" isBold="true" isItalic="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{operation}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band splitType="Stretch"/>
+		</groupFooter>
+	</group>
+	<group name="task">
+		<groupExpression><![CDATA[$F{task}]]></groupExpression>
+		<groupHeader>
+			<band height="16" splitType="Stretch">
+				<rectangle>
+					<reportElement key="rectangle-5" stretchType="RelativeToBandHeight" x="0" y="0" width="720" height="15" forecolor="#ACBC88" backcolor="#859C52"/>
+				</rectangle>
+				<textField isStretchWithOverflow="true">
+					<reportElement x="0" y="1" width="721" height="15" forecolor="#080606"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12" isBold="true" isItalic="false" isUnderline="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{task}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band splitType="Stretch"/>
+		</groupFooter>
+	</group>
+	<group name="timeStamp">
+		<groupExpression><![CDATA[$F{timeStamp}]]></groupExpression>
+		<groupHeader>
+			<band height="16" splitType="Stretch">
+				<rectangle>
+					<reportElement key="rectangle-5" stretchType="RelativeToBandHeight" x="0" y="0" width="720" height="15" forecolor="#B5D07A" backcolor="#B5D07A"/>
+				</rectangle>
+				<textField isStretchWithOverflow="true">
+					<reportElement x="264" y="1" width="457" height="15" forecolor="#080606"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{timeStamp}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band splitType="Stretch"/>
+		</groupFooter>
+	</group>
+	<group name="statType">
+		<groupExpression><![CDATA[$F{statType}]]></groupExpression>
+		<groupHeader>
+			<band height="16" splitType="Stretch">
+				<rectangle>
+					<reportElement key="rectangle-6" x="0" y="0" width="720" height="15" forecolor="#C9F2F8" backcolor="#C9F2F8">
+						<printWhenExpression><![CDATA[new Boolean(($V{REPORT_COUNT}.intValue() % 2 == 0))]]></printWhenExpression>
+					</reportElement>
+				</rectangle>
+				<rectangle>
+					<reportElement key="rectangle-7" x="0" y="0" width="720" height="15" forecolor="#E7EFEF" backcolor="#E7EFEF">
+						<printWhenExpression><![CDATA[new Boolean(($V{REPORT_COUNT}.intValue() % 2 == 1))]]></printWhenExpression>
+					</reportElement>
+				</rectangle>
+				<textField isBlankWhenNull="true">
+					<reportElement x="264" y="1" width="124" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{statType}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="388" y="1" width="110" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{avgTime}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="498" y="1" width="114" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{maxTime}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="612" y="1" width="108" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{minTime}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band splitType="Stretch"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="33" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="25" splitType="Stretch">
+			<rectangle>
+				<reportElement key="rectangle-3" x="0" y="1" width="720" height="23" forecolor="#000000" backcolor="#E7EFFA"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="3" width="720" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mediation Summary - Response Times]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<rectangle>
+				<reportElement key="rectangle-4" x="0" y="1" width="720" height="20" forecolor="#E7EFEF" backcolor="#E7EFEF"/>
+			</rectangle>
+			<staticText>
+				<reportElement key="staticText-2" x="498" y="3" width="114" height="19"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Max Time]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-3" x="612" y="3" width="109" height="19"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Min Time]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-4" x="388" y="3" width="110" height="19"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Avg Time]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-6" x="262" y="3" width="126" height="19"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TimeStamp]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="3" width="264" height="19"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{timeRange}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="22" splitType="Stretch">
+			<rectangle radius="0">
+				<reportElement key="rectangle-2" mode="Opaque" x="0" y="2" width="720" height="20" forecolor="#000000" backcolor="#688468"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="272" y="2" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="352" y="2" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEE, d MMM yyyy HH:mm:ss Z">
+				<reportElement x="0" y="2" width="185" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="395" splitType="Stretch">
+			<lineChart>
+				<chart renderType="draw" theme="default">
+					<reportElement key="element-3" positionType="Float" stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="0" y="19" width="721" height="363" forecolor="#856969" backcolor="#E8A6A6"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend textColor="#000000" backgroundColor="#FFFFFF" position="Bottom"/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA["In Avg Time"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{timeStamp}]]></categoryExpression>
+						<valueExpression><![CDATA[new Double($F{avgTime})]]></valueExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["In Max Time"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{timeStamp}]]></categoryExpression>
+						<valueExpression><![CDATA[new Double($F{maxTime})]]></valueExpression>
+					</categorySeries>
+					<categorySeries>
+						<seriesExpression><![CDATA["In Min Time"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{timeStamp}]]></categoryExpression>
+						<valueExpression><![CDATA[new Double($F{minTime})]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<linePlot>
+					<plot backgroundAlpha="1.0" labelRotation="90.0"/>
+					<categoryAxisFormat labelRotation="90.0">
+						<axisFormat labelColor="#090404" tickLabelColor="#060404" axisLineColor="#856969">
+							<labelFont/>
+							<tickLabelFont>
+								<font size="8"/>
+							</tickLabelFont>
+						</axisFormat>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat tickLabelColor="#030303" axisLineColor="#856969">
+							<labelFont/>
+							<tickLabelFont/>
+						</axisFormat>
+					</valueAxisFormat>
+				</linePlot>
+			</lineChart>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,35 @@
+<div class="row-fluid">
+    <div class="span2">
+        <% include("/includes/provider/apiDetailsInfo.jag"); %>
+    </div>
+    <div class="span10">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Last Accessed</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="userList">
+            </tbody>
+        </table>
+        <div class="pagination">
+            <ul>
+                <li><a href="#">Prev</a></li>
+                <li class="active">
+                    <a href="#">1</a>
+                </li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">Next</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Row -->
+
+
+

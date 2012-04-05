@@ -1,0 +1,442 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:axis2="http://services.listservice.bam.carbon.wso2.org" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ax2126="http://dto.mgt.bam.carbon.wso2.org/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ax2123="http://util.bam.carbon.wso2.org/xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.listservice.bam.carbon.wso2.org">
+    <wsdl:documentation>BAMListAdminService</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ax2125="http://util.bam.carbon.wso2.org/xsd" xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax2127="http://dto.mgt.bam.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+            <xs:import namespace="http://util.bam.carbon.wso2.org/xsd" />
+            <xs:import namespace="http://dto.mgt.bam.carbon.wso2.org/xsd" />
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Exception" nillable="true" type="xs:anyType" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="BAMException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="BAMException" nillable="true" type="ax2123:BAMException" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceList">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serverID" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceListResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2126:ServiceDTO" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServerListResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2126:MonitoredServerDTO" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOperationList">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="serviceId" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOperationListResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2126:OperationDTO" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMessageListForActivity">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="activityID" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMessageListForActivityResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2126:MessageDTO" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMessageListResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2126:MessageDTO" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getActivityListResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2126:ActivityDTO" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://dto.mgt.bam.carbon.wso2.org/xsd">
+            <xs:complexType name="ServiceDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="ID" type="xs:int" />
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="MonitoredServerDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="active" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="category" type="xs:int" />
+                    <xs:element minOccurs="0" name="description" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="password" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="pollingInterval" type="xs:long" />
+                    <xs:element minOccurs="0" name="serverId" type="xs:int" />
+                    <xs:element minOccurs="0" name="serverType" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="serverURL" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="subscriptionID" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="tenantId" type="xs:int" />
+                    <xs:element minOccurs="0" name="username" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="OperationDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="id" type="xs:int" />
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="MessageDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="ID" type="xs:int" />
+                    <xs:element minOccurs="0" name="IPAddress" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="activityID" type="xs:int" />
+                    <xs:element minOccurs="0" name="messageID" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="operationID" type="xs:int" />
+                    <xs:element minOccurs="0" name="timeStamp" nillable="true" type="xs:dateTime" />
+                    <xs:element minOccurs="0" name="userAgent" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ActivityDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="activityID" type="xs:int" />
+                    <xs:element minOccurs="0" name="description" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="userDefinedID" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax2124="http://org.apache.axis2/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://util.bam.carbon.wso2.org/xsd">
+            <xs:import namespace="http://org.apache.axis2/xsd" />
+            <xs:complexType name="BAMException">
+                <xs:complexContent>
+                    <xs:extension base="ns1:Exception">
+                        <xs:sequence />
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getActivityListRequest" />
+    <wsdl:message name="getActivityListResponse">
+        <wsdl:part name="parameters" element="ns1:getActivityListResponse" />
+    </wsdl:message>
+    <wsdl:message name="BAMException">
+        <wsdl:part name="parameters" element="ns1:BAMException" />
+    </wsdl:message>
+    <wsdl:message name="getOperationListRequest">
+        <wsdl:part name="parameters" element="ns1:getOperationList" />
+    </wsdl:message>
+    <wsdl:message name="getOperationListResponse">
+        <wsdl:part name="parameters" element="ns1:getOperationListResponse" />
+    </wsdl:message>
+    <wsdl:message name="getMessageListRequest" />
+    <wsdl:message name="getMessageListResponse">
+        <wsdl:part name="parameters" element="ns1:getMessageListResponse" />
+    </wsdl:message>
+    <wsdl:message name="getServerListRequest" />
+    <wsdl:message name="getServerListResponse">
+        <wsdl:part name="parameters" element="ns1:getServerListResponse" />
+    </wsdl:message>
+    <wsdl:message name="getServiceListRequest">
+        <wsdl:part name="parameters" element="ns1:getServiceList" />
+    </wsdl:message>
+    <wsdl:message name="getServiceListResponse">
+        <wsdl:part name="parameters" element="ns1:getServiceListResponse" />
+    </wsdl:message>
+    <wsdl:message name="getMessageListForActivityRequest">
+        <wsdl:part name="parameters" element="ns1:getMessageListForActivity" />
+    </wsdl:message>
+    <wsdl:message name="getMessageListForActivityResponse">
+        <wsdl:part name="parameters" element="ns1:getMessageListForActivityResponse" />
+    </wsdl:message>
+    <wsdl:portType name="BAMListAdminServicePortType">
+        <wsdl:operation name="getActivityList">
+            <wsdl:input message="axis2:getActivityListRequest" wsaw:Action="urn:getActivityList" />
+            <wsdl:output message="axis2:getActivityListResponse" wsaw:Action="urn:getActivityListResponse" />
+            <wsdl:fault message="axis2:BAMException" name="BAMException" wsaw:Action="urn:getActivityListBAMException" />
+        </wsdl:operation>
+        <wsdl:operation name="getOperationList">
+            <wsdl:input message="axis2:getOperationListRequest" wsaw:Action="urn:getOperationList" />
+            <wsdl:output message="axis2:getOperationListResponse" wsaw:Action="urn:getOperationListResponse" />
+            <wsdl:fault message="axis2:BAMException" name="BAMException" wsaw:Action="urn:getOperationListBAMException" />
+        </wsdl:operation>
+        <wsdl:operation name="getMessageList">
+            <wsdl:input message="axis2:getMessageListRequest" wsaw:Action="urn:getMessageList" />
+            <wsdl:output message="axis2:getMessageListResponse" wsaw:Action="urn:getMessageListResponse" />
+            <wsdl:fault message="axis2:BAMException" name="BAMException" wsaw:Action="urn:getMessageListBAMException" />
+        </wsdl:operation>
+        <wsdl:operation name="getServerList">
+            <wsdl:input message="axis2:getServerListRequest" wsaw:Action="urn:getServerList" />
+            <wsdl:output message="axis2:getServerListResponse" wsaw:Action="urn:getServerListResponse" />
+            <wsdl:fault message="axis2:BAMException" name="BAMException" wsaw:Action="urn:getServerListBAMException" />
+        </wsdl:operation>
+        <wsdl:operation name="getServiceList">
+            <wsdl:input message="axis2:getServiceListRequest" wsaw:Action="urn:getServiceList" />
+            <wsdl:output message="axis2:getServiceListResponse" wsaw:Action="urn:getServiceListResponse" />
+            <wsdl:fault message="axis2:BAMException" name="BAMException" wsaw:Action="urn:getServiceListBAMException" />
+        </wsdl:operation>
+        <wsdl:operation name="getMessageListForActivity">
+            <wsdl:input message="axis2:getMessageListForActivityRequest" wsaw:Action="urn:getMessageListForActivity" />
+            <wsdl:output message="axis2:getMessageListForActivityResponse" wsaw:Action="urn:getMessageListForActivityResponse" />
+            <wsdl:fault message="axis2:BAMException" name="BAMException" wsaw:Action="urn:getMessageListForActivityBAMException" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="BAMListAdminServiceSoap11Binding" type="axis2:BAMListAdminServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="getOperationList">
+            <soap:operation soapAction="urn:getOperationList" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BAMException">
+                <soap:fault use="literal" name="BAMException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getActivityList">
+            <soap:operation soapAction="urn:getActivityList" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BAMException">
+                <soap:fault use="literal" name="BAMException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getMessageList">
+            <soap:operation soapAction="urn:getMessageList" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BAMException">
+                <soap:fault use="literal" name="BAMException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServerList">
+            <soap:operation soapAction="urn:getServerList" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BAMException">
+                <soap:fault use="literal" name="BAMException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceList">
+            <soap:operation soapAction="urn:getServiceList" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BAMException">
+                <soap:fault use="literal" name="BAMException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getMessageListForActivity">
+            <soap:operation soapAction="urn:getMessageListForActivity" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BAMException">
+                <soap:fault use="literal" name="BAMException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="BAMListAdminServiceSoap12Binding" type="axis2:BAMListAdminServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="getOperationList">
+            <soap12:operation soapAction="urn:getOperationList" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BAMException">
+                <soap12:fault use="literal" name="BAMException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getActivityList">
+            <soap12:operation soapAction="urn:getActivityList" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BAMException">
+                <soap12:fault use="literal" name="BAMException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getMessageList">
+            <soap12:operation soapAction="urn:getMessageList" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BAMException">
+                <soap12:fault use="literal" name="BAMException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServerList">
+            <soap12:operation soapAction="urn:getServerList" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BAMException">
+                <soap12:fault use="literal" name="BAMException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceList">
+            <soap12:operation soapAction="urn:getServiceList" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BAMException">
+                <soap12:fault use="literal" name="BAMException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getMessageListForActivity">
+            <soap12:operation soapAction="urn:getMessageListForActivity" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BAMException">
+                <soap12:fault use="literal" name="BAMException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="BAMListAdminServiceHttpBinding" type="axis2:BAMListAdminServicePortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="getOperationList">
+            <http:operation location="getOperationList" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getOperationList" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getOperationList" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getActivityList">
+            <http:operation location="getActivityList" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getActivityList" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getActivityList" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMessageList">
+            <http:operation location="getMessageList" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getMessageList" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getMessageList" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServerList">
+            <http:operation location="getServerList" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getServerList" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getServerList" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceList">
+            <http:operation location="getServiceList" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getServiceList" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getServiceList" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMessageListForActivity">
+            <http:operation location="getMessageListForActivity" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="getMessageListForActivity" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getMessageListForActivity" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="BAMListAdminService">
+        <wsdl:port name="BAMListAdminServiceHttpsSoap11Endpoint" binding="axis2:BAMListAdminServiceSoap11Binding">
+            <soap:address location="https://10.100.1.143:9443/services/BAMListAdminService.BAMListAdminServiceHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="BAMListAdminServiceHttpsSoap12Endpoint" binding="axis2:BAMListAdminServiceSoap12Binding">
+            <soap12:address location="https://10.100.1.143:9443/services/BAMListAdminService.BAMListAdminServiceHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="BAMListAdminServiceHttpsEndpoint" binding="axis2:BAMListAdminServiceHttpBinding">
+            <http:address location="https://10.100.1.143:9443/services/BAMListAdminService.BAMListAdminServiceHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

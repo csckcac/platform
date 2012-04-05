@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  ~  Copyright (c) 2009, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  -->
+
+<component xmlns="http://products.wso2.org/carbon">
+    <menus>
+        <menu>
+            <id>messagebox_menu</id>
+            <i18n-key>Messagebox</i18n-key>
+            <i18n-bundle>org.wso2.carbon.messagebox.ui.i18n.Resources</i18n-bundle>
+            <parent-menu>manage_menu</parent-menu>
+            <link>#</link>
+            <region>region1</region>
+            <order>32</order>
+            <style-class>home</style-class>
+            <icon>../messagebox/images/message_boxes.gif</icon>
+            <require-permission>/permission/admin/login</require-permission>
+        </menu>
+        <menu>
+            <id>messagebox_secretId_menu</id>
+            <i18n-key>Messagebox.secretId</i18n-key>
+            <i18n-bundle>org.wso2.carbon.messagebox.ui.i18n.Resources</i18n-bundle>
+            <parent-menu>messagebox_menu</parent-menu>
+            <link>../messagebox/sqs_secret_id.jsp</link>
+            <region>region1</region>
+            <order>5</order>
+            <style-class>manage</style-class>
+            <icon>../messagebox/images/access_keys.gif</icon>
+            <require-permission>/permission/admin/login</require-permission>
+        </menu>
+        <menu>
+            <id>messagebox_list_menu</id>
+            <i18n-key>Messagebox.list</i18n-key>
+            <i18n-bundle>org.wso2.carbon.messagebox.ui.i18n.Resources</i18n-bundle>
+            <parent-menu>messagebox_menu</parent-menu>
+            <link>../messagebox/messagebox_list.jsp</link>
+            <region>region1</region>
+            <order>10</order>
+            <style-class>manage</style-class>
+            <icon>../messagebox/images/list.gif</icon>
+            <require-permission>/permission/admin/login</require-permission>
+        </menu>
+        <menu>
+            <id>messagebox_add_menu</id>
+            <i18n-key>messagebox.add</i18n-key>
+            <i18n-bundle>org.wso2.carbon.messagebox.ui.i18n.Resources</i18n-bundle>
+            <parent-menu>messagebox_menu</parent-menu>
+            <link>../messagebox/add_messagebox.jsp</link>
+            <region>region1</region>
+            <order>15</order>
+            <style-class>manage</style-class>
+            <icon>../messagebox/images/add.gif</icon>
+            <require-permission>/permission/admin/login</require-permission>
+        </menu>
+
+        <menu>
+            <id>queues_menu</id>
+            <i18n-key>Queues</i18n-key>
+            <i18n-bundle>org.wso2.carbon.event.ui.i18n.Resources</i18n-bundle>
+            <parent-menu>manage_menu</parent-menu>
+            <link>#</link>
+            <region>region1</region>
+            <order>33</order>
+            <style-class>home</style-class>
+            <icon>../queues/images/queues.gif</icon>
+            <require-permission>/permission/admin/login</require-permission>
+        </menu>
+        <menu>
+            <id>queues_list_menu</id>
+            <i18n-key>List</i18n-key>
+            <i18n-bundle>org.wso2.carbon.event.ui.i18n.Resources</i18n-bundle>
+            <parent-menu>queues_menu</parent-menu>
+            <link>../queues/queues.jsp</link>
+            <region>region1</region>
+            <order>41</order>
+            <style-class>home</style-class>
+            <icon>../queues/images/list.gif</icon>
+        </menu>
+        <menu>
+            <id>queues_add_menu</id>
+            <i18n-key>add</i18n-key>
+            <i18n-bundle>org.wso2.carbon.event.ui.i18n.Resources</i18n-bundle>
+            <parent-menu>queues_menu</parent-menu>
+            <link>../queues/queue_add.jsp</link>
+            <region>region1</region>
+            <order>45</order>
+            <style-class>home</style-class>
+            <icon>../queues/images/add.gif</icon>
+        </menu>
+        <menu>
+            <id>qpid_configuration_menu</id>
+            <i18n-key>Qpid Configurations</i18n-key>
+            <i18n-bundle>org.wso2.carbon.messagebox.ui.i18n.Resources</i18n-bundle>
+            <parent-menu>configure_menu</parent-menu>
+            <link>../qpid/qpid_configurations.jsp</link>
+            <region>region1</region>
+            <order>10</order>
+            <style-class>home</style-class>
+            <icon>../qpid/images/qpid.png</icon>
+            <require-permission>/permission/admin/login</require-permission>
+        </menu>
+    </menus>
+</component>

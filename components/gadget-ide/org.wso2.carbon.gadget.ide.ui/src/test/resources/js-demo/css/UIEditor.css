@@ -1,0 +1,22 @@
+.gide-uieidt {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: white;
+}
+
+.gide-uieidt-content {
+    position: relative;
+}
+
+.gide-uieidt-border {
+    border: 1px solid black;
+    display: block;
+}
+
+.gide-uieidt-corner{
+    background-image:url("../image/resize_corner.png");
+    height: 16px;
+    width: 16px;
+    position: relative;
+}

@@ -1,0 +1,54 @@
+<pre style="line-height: 100%;font-family:monospace;background-color:#ffffff; border-width:0.01mm; border-color:#000000; border-style:solid;padding:4px;font-size:10pt;"><span style="color:#808080;background-color:#ffffff;">/*
+* Licensed to the Apache Software Foundation (ASF) under one or more
+* contributor license agreements.  See the NOTICE file distributed with
+* this work for additional information regarding copyright ownership.
+* The ASF licenses this file to You under the Apache License, Version 2.0
+* (the "License"); you may not use this file except in compliance with
+* the License.  You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+
+</span><span style="color:#000080;background-color:#ffffff;">package</span><span style="background-color:#ffffff;"> jsp2.examples.simpletag;
+
+</span><span style="color:#000080;background-color:#ffffff;">import</span><span style="background-color:#ffffff;"> javax.servlet.jsp.JspException;
+</span><span style="color:#000080;background-color:#ffffff;">import</span><span style="background-color:#ffffff;"> javax.servlet.jsp.JspWriter;
+</span><span style="color:#000080;background-color:#ffffff;">import</span><span style="background-color:#ffffff;"> javax.servlet.jsp.tagext.SimpleTagSupport;
+</span><span style="color:#000080;background-color:#ffffff;">import</span><span style="background-color:#ffffff;"> javax.servlet.jsp.tagext.DynamicAttributes;
+</span><span style="color:#000080;background-color:#ffffff;">import</span><span style="background-color:#ffffff;"> java.util.ArrayList;
+</span><span style="color:#000080;background-color:#ffffff;">import</span><span style="background-color:#ffffff;"> java.io.IOException;
+
+</span><span style="color:#008000;background-color:#ffffff;">/**
+ * SimpleTag handler that echoes all its attributes
+ */
+</span><span style="color:#000080;background-color:#ffffff;">public</span><span style="background-color:#ffffff;"> </span><span style="color:#000080;background-color:#ffffff;">class</span><span style="background-color:#ffffff;"> EchoAttributesTag
+    </span><span style="color:#000080;background-color:#ffffff;">extends</span><span style="background-color:#ffffff;"> SimpleTagSupport
+    </span><span style="color:#000080;background-color:#ffffff;">implements</span><span style="background-color:#ffffff;"> DynamicAttributes
+{
+    </span><span style="color:#000080;background-color:#ffffff;">private</span><span style="background-color:#ffffff;"> ArrayList </span><span style="color:#660e7a;background-color:#ffffff;">keys </span><span style="background-color:#ffffff;">= </span><span style="color:#000080;background-color:#ffffff;">new</span><span style="background-color:#ffffff;"> ArrayList();
+    </span><span style="color:#000080;background-color:#ffffff;">private</span><span style="background-color:#ffffff;"> ArrayList </span><span style="color:#660e7a;background-color:#ffffff;">values </span><span style="background-color:#ffffff;">= </span><span style="color:#000080;background-color:#ffffff;">new</span><span style="background-color:#ffffff;"> ArrayList();
+
+    </span><span style="color:#000080;background-color:#ffffff;">public</span><span style="background-color:#ffffff;"> </span><span style="color:#000080;background-color:#ffffff;">void</span><span style="background-color:#ffffff;"> doTag() </span><span style="color:#000080;background-color:#ffffff;">throws</span><span style="background-color:#ffffff;"> JspException, IOException {
+    JspWriter out = getJspContext().getOut();
+    </span><span style="color:#000080;background-color:#ffffff;">for</span><span style="background-color:#ffffff;">( </span><span style="color:#000080;background-color:#ffffff;">int</span><span style="background-color:#ffffff;"> i = </span><span style="color:#0000ff;background-color:#ffffff;">0</span><span style="background-color:#ffffff;">; i &lt; </span><span style="color:#660e7a;background-color:#ffffff;">keys.</span><span style="background-color:#ffffff;">size(); i++ ) {
+        String key = (String)</span><span style="color:#660e7a;background-color:#ffffff;">keys.</span><span style="background-color:#ffffff;">get( i );
+        Object value = </span><span style="color:#660e7a;background-color:#ffffff;">values.</span><span style="background-color:#ffffff;">get( i );
+        out.println( </span><span style="color:#008000;background-color:#ffffff;">"&lt;li&gt;"</span><span style="background-color:#ffffff;"> + key + </span><span style="color:#008000;background-color:#ffffff;">" = "</span><span style="background-color:#ffffff;"> + value + </span><span style="color:#008000;background-color:#ffffff;">"&lt;/li&gt;"</span><span style="background-color:#ffffff;"> );
+        }
+    }
+
+    </span><span style="color:#000080;background-color:#ffffff;">public</span><span style="background-color:#ffffff;"> </span><span style="color:#000080;background-color:#ffffff;">void</span><span style="background-color:#ffffff;"> setDynamicAttribute( String uri, String localName,
+    Object value )
+    </span><span style="color:#000080;background-color:#ffffff;">throws</span><span style="background-color:#ffffff;"> JspException
+    {
+    </span><span style="color:#660e7a;background-color:#ffffff;">keys.</span><span style="background-color:#ffffff;">add( localName );
+    </span><span style="color:#660e7a;background-color:#ffffff;">values.</span><span style="background-color:#ffffff;">add( value );
+    }
+}</span></pre>

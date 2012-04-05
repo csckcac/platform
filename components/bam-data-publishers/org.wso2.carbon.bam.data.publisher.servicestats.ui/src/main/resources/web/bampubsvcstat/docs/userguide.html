@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"/>
+  <title>BAM Service Statistics Publisher Configuration Help - User Guide</title>
+  <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all" />
+</head>
+
+<body>
+
+<div id="middle">
+<h1 id="Monitor1">BAM Service Statistics Publisher Configuration</h1>
+<p>
+Using this configuration user interface, eventing can be enabled or disabled at global level, as well as the three threshold values be set. If eventing is disabled, no events will be fired at all. If eventing is enabled, events will be fired based on the threshold values being satisfied. These events will be captured by BAM server and datas will be saved at the BAM database.<br/>
+The key three threshold values, which user need to set, are:
+</p>
+<ul>
+  <li>System request count threshold </li>
+  <li>Service request count threshold </li>
+  <li>Operation Request Count Threshold </li>
+</ul>
+<p><img alt="" src="images/datapublisher_wsas.png" height="317" width="928"/></p>
+
+<p>Figure 1: Data Publisher Configuration</p>
+
+
+<h2>Defining Threshold Values</h2>
+
+<p><b>System request count threshold </b></p>
+<p>An event will be fired with system wide data, when the difference between the system request count at which the last event was fired and the current system request count becomes greater than this threshold value. The system here refers to the WSO2 WSAS instance with which the service data publisher is deployed. </p>
+
+<p><b>Service request count threshold </b></p>
+<p>An event will be fired with service data, when the difference between the request count for a service at which the last event was fired for the service and the current request count for that service, becomes greater than this threshold value. The threshold value applies to all services hosted with the WSO2 WSAS instance in general. This threshold cannot be configured for individual services to have different values. While this may sound as a limitation, it guards against potential performance hits in checking for the service name and service specific threshold for each service invocation. Hence, it is by design that this threshold is common for all services hosted with a WSO2 WSAS instance. </p>
+
+<p><b>Operation Request Count Threshold </b></p>
+<p>An event will be fired when the difference between the request count for an operation at which the last event was fired for that operation and the current request count for that operation becomes greater than this threshold value. Like in the case of service request count threshold, operation request count threshold is common for all operations of all services, and cannot be configured to have different values for individual operations. </p>
+
+<p>
+All the threshold values are set to '2' by default. User could change the threshold values based on his need and click 'update' to make system to fire the events in new threshold values.
+</p>
+
+<p>
+ <b>Note:-</b>
+<ul>
+<li>The system request count should be equal to the sum of all service request counts. Also, system request count should be equal to the sum of all operation request counts. </li>
+<li>The request counts of for a service should be equal to the sum of request counts for all operations in that service.. </li>
+<li>User can disable firing events at each level, <i>by providing zero or a negative</i> value as the threshold.</li>
+</ul>
+</p>
+</div>
+</body>
+</html>

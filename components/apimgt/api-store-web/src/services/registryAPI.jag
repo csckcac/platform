@@ -1,0 +1,263 @@
+<%
+
+include("/services/registryUtil.jag");
+
+function login(username, password) {
+    var remoteAddress = "localhost";
+    var user = getUserFunc();
+    if (user.username != null) {
+        if(user.username != "public") {
+            return getDataJSON({error:true}, null, "A user already logged in, please signout first");
+        } else {
+            logoutFunc();
+        }
+    }
+    //if logic fails, we relogin using public username
+    var result = loginFunc(username, password, remoteAddress);
+    if(result.error) {
+        result = loginFunc("public", "public", remoteAddress);
+        result.error = true;
+    }
+    delete result.cookie;
+    return getDataJSON(result, "Login successful for user " + username,
+            "Error while authenticating user : " + username + " at " + remoteAddress);
+}
+
+function logout() {
+    var result = logoutFunc();
+    login("public", "public");
+    return getDataJSON(result, "User logged out", null);
+}
+
+function getServices() {
+    return getDataJSON(getServicesFunc(), null, "Error while listing services");
+}
+
+function getTopRatedServices() {
+    return getDataJSON(getTopRatedServicesFunc(), null, "Error while listing top rated services");
+}
+
+function getRecentlyAddedServices() {
+    return getDataJSON(getRecentlyAddedServicesFunc(), null, "Error while listing top rated services");
+}
+
+function getDescription(path) {
+    return getDataJSON(getDescriptionFunc(path, "all"), null, "Error while getting service description");
+}
+
+function getKey(api, version, provider, application) {
+    return getDataJSON(getKeyFunc(api, version, provider, application, getUserFunc().username), null, "Error while getting API Key");
+}
+
+function getAuthor(path) {
+    return getDataJSON(getDescriptionFunc(path, "author"), null, "Error while getting service author");
+}
+
+function getUser() {
+    return getDataJSON(getUserFunc(), null, "Error while getting logged in user");
+}
+
+function getRating(path) {
+    return getDataJSON(getRatingFunc(path), null, "Error while getting service description");
+}
+
+function getAverageRating(path) {
+    return getDataJSON(getAverageRatingFunc(path), null, "Error while getting Avg rating");
+}
+
+function getTags(path) {
+    return getDataJSON(getTagsFunc(path), null, "Error while getting service description");
+}
+
+function getTagCloud() {
+    return getDataJSON(getTagCloudFunc(), null, "Error while getting tag cloud");
+}
+
+function purchaseService(serviceName, servicePath) {
+    var username = getUserFunc().username;
+    if(username == "public") {
+        return getDataJSON({
+            error:true,
+            purchased:false
+        }, null, "In order to purchase a service, you need to login first");
+    }
+    return getDataJSON(purchaseServiceFunc(serviceName, servicePath, username), null, "Error purchasing the service");
+}
+
+function uninstallService(serviceName, servicePath) {
+    var username = getUserFunc().username;
+    if(username == "public") {
+        return getDataJSON({
+            error:true,
+            purchased:false
+        }, null, "In order to uninstall a service, you need to login first");
+    }
+    return getDataJSON(uninstallServiceFunc(serviceName, servicePath, username), null, "Error uninstalling the service");
+}
+
+function createResource(path) {
+    return getDataJSON(createResourceFunc(path), null, "Error creating the resource");
+}
+
+function createAssociation(source, target) {
+    return getDataJSON(createAssociationFunc(source, target), null, "Error creating association");
+}
+
+function getPurchases() {
+    var username = getUserFunc().username;
+    return getDataJSON(getPurchasesFunc(username), null, "Error getting purchases");
+}
+function getApplications() {
+    return getDataJSON(getApplicationsFunc(getUserFunc().username), null, "Error getting applications");
+}
+function addApplication(name) {
+    return getDataJSON(addApplicationFunc(name, getUserFunc().username), null, "Error inserting application");
+}
+function getAssociations(path,type) {
+    return getDataJSON(getAssociationsFunc(path,type), null, "Error getting associations");
+}
+
+function getAllDocContent(path) {
+    return getDataJSON(getAllDocContentFunc(path), null, "Error getting all documentations");
+}
+function getAllSamplesContent(path) {
+    return getDataJSON(getAllSamplesContentFunc(path), null, "Error getting all documentations");
+}
+function getResourceTextContent(path) {
+    return getDataJSON(getResourceTextContentFunc(path), null, "Error getting content in text");
+}
+function getDocContent(path) {
+    return getDataJSON(getDocContentFunc(path), null, "Error getting doc content in text");
+}
+function getSampleContent(path) {
+    return getDataJSON(getSampleContentFunc(path), null, "Error getting sample content in text");
+}
+function getServicesForApplication(applicationName) {
+    return getDataJSON(getServicesForApplicationFunc(applicationName), null, "Error getting Service on Application");
+}
+
+function getApplicationProperty(applicationName,pro) {
+    return getDataJSON(getApplicationPropertyFunc(applicationName,pro), null, "Error getting Property on Application");
+}
+
+
+function searchService(key, param) {
+    return getDataJSON(searchServiceFunc(key, param), null, "Error getting search results");
+}
+
+function rateResource(path, rating) {
+    return getDataJSON(rateResourceFunc(path, rating), "Resource rated successfully", "Error rating the resource");
+}
+
+function addComment(path, comment) {
+    return getDataJSON(addCommentFunc(path, comment), "Comment added successfully", "Error adding the comment");
+}
+
+function getComments(path) {
+    return getDataJSON(getCommentsFunc(path), null, "Error getting comments");
+}
+
+function getReviews(path) {
+    return getDataJSON(getReviewsFunc(path), null, "Error getting reviews");
+}
+
+function getResourceContent(path) {
+    return getDataJSON(getResourceContentFunc(path), null, "Error while listing services");
+}
+
+function getSearchKeys() {
+    return getDataJSON(getSearchKeysFunc(), null, "Error while listing services");
+}
+
+function getTryit(path) {
+    return getDataJSON(getTryit(path), null, "Error while generating Tryit");
+}
+
+//Calling Host Object Functions
+function getAllPublishedAPIs() {
+    return getDataJSON(getAllPublishedAPIsFunc(), null, "Error while listing All Published APIs");
+}
+function getTopRatedAPIs(limit) {
+    return getDataJSON(getTopRatedAPIsFunc(limit), null, "Error while listing TOP rated APIs");
+}
+function listProvidersNames() {
+    return getDataJSON(listProvidersNamesFunc(limit), null, "Error while listing Providers Names");
+}
+function listApplications() {
+    return getDataJSON(listApplicationsFunc(), null, "Error while listing Applications");
+}
+function getRecentlyAddedAPIs(limit) {
+    return getDataJSON(getRecentlyAddedAPIsFunc(limit), null, "Error while listing Recently Added APIs");
+}
+
+function searchAPI(search) {
+    return getDataJSON(searchAPIFunc(search), null, "Error while searching APIs");
+}
+
+function searchAPIbyType(search,searchType) {
+    return getDataJSON(searchAPIbyTypeFunc(search,searchType), null, "Error while searching APIs by Type");
+}
+function getAPIsWithTag(tag) {
+    return getDataJSON(getAPIsWithTagFunc(tag), null, "Error while searching APIs with tags");
+}
+function getAllTags() {
+    return getDataJSON(getAllTagsFunc(), null, "Error while listing All Tags");
+}
+
+function getAllDocumentation(providerName, apiName,version) {
+    return getDataJSON(getAllDocumentationFunc(providerName, apiName,version), null, "Error while listing All Documentation");
+}
+
+function getAllSample(providerName, apiName,version) {
+    return getDataJSON(getAllSampleFunc(providerName, apiName,version), null, "Error while listing All Sample");
+}
+function getAPI(providerName, apiName,version) {
+    return getDataJSON(getAPIFunc(providerName, apiName,version), null, "Error while getting a API");
+}
+
+function getAPIComments(providerName, apiName,version) {	
+    return getDataJSON(getAPICommentsFunc(providerName, apiName,version), null, "Error while getting a API's Comments");
+}
+
+function addAPIComment(providerName, apiName,version,comment) {	
+    return getDataJSON(addAPICommentFunc(providerName, apiName,version,comment), null, "Error while adding a API's Comments");
+}
+
+function getDescription(path) {
+    return getDataJSON(getDescriptionFunc(path), null, "Error while getting service description");
+}
+
+function getAPIDescription(name,version,provider) {
+    return getDataJSON(getAPIDescriptionFunc(name,version,provider), null, "Error while getting service description");
+}
+
+function addSubscription(providerName, apiName, version, applicationId) {
+    return getDataJSON(addSubscriptionFunc(providerName, apiName, version, applicationId, getUserFunc().username), null, "Error while adding Subscriber");
+}
+
+function removeSubscriber(providerName, apiName, version, application) {
+    return getDataJSON(removeSubscriberFunc(providerName, apiName, version, application, getUserFunc().username), null, "Error while removing Subscriber");
+}
+
+function getAPIKey(providerName, apiName,version,apiContext,username,password,endurl, application) {
+    return getDataJSON(getAPIKeyFunc(providerName, apiName,version,apiContext,username,password,endurl, application), null, "Error while getting  API Key");
+}
+
+function rateAPI(providerName, apiName,version,rate) {
+    return getDataJSON(rateAPIFunc(providerName, apiName,version,rate), null, "Error while Rating API");
+}
+
+function getSubscriptions(providerName, apiName,version) {
+    return getDataJSON(getSubscriptionsFunc(providerName, apiName,version, getUserFunc().username), null, "Error while getting subscriptions");
+}
+
+function getAllSubscriptions() {
+    return getDataJSON(getAllSubscriptionsFunc(getUserFunc().username), null, "Error while getting subscriptions");
+}
+function getInlineContent(apiName,version,docName,apiProvider) {
+	log('version '+version);
+    return getDataJSON(getInlineContentFunc(apiName,version,docName,apiProvider), null, "Error while getting Inline Content");
+}
+//end Host Object functions 
+
+%>

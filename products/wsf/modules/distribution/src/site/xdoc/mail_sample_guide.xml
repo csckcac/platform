@@ -1,0 +1,120 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+    <body>
+        <h1>Mail Transport Sample Guide</h1>
+
+        <h2>Introduction</h2>
+        <p>
+            This sample demonstrates how you can use the Mail transport in WSO2 WSF to invoke
+            Web Services. Client sends the message to a mail box in a mail server and the service
+            listens to that mail box and receives the message.
+        </p>
+        
+        <h2>Configuration</h2>
+        <p>
+            Before deploying a service which uses the mail transport, you have to enable transports 
+            for receiving and sending messages in the axis.xml file.</p>
+        
+        <p>Mail transport Sender</p>
+        <div class="source">
+            <pre>
+                &lt;transportSender name="mailto" class="org.apache.axis2.transport.mail.MailTransportSender"&gt;
+                    &lt;parameter name="mail.smtp.from"&gt;synapse.demo.0@gmail.com&lt;/parameter&gt;
+                    &lt;parameter name="mail.smtp.user"&gt;synapse.demo.0&lt;/parameter&gt;
+                    &lt;parameter name="mail.smtp.password"&gt;mailpassword&lt;/parameter&gt;
+                    &lt;parameter name="mail.smtp.host"&gt;smtp.gmail.com&lt;/parameter&gt;
+
+                    &lt;parameter name="mail.smtp.port"&gt;587&lt;/parameter&gt;
+                    &lt;parameter name="mail.smtp.starttls.enable"&gt;true&lt;/parameter&gt;
+                    &lt;parameter name="mail.smtp.auth"&gt;true&lt;/parameter&gt;
+                &lt;/transportSender&gt;
+            </pre>
+        </div>
+        
+        <p>Mail transport Receiver</p>
+        <div class="source">
+            <pre>
+                &lt;transportReceiver name="mailto" class="org.apache.axis2.transport.mail.MailTransportListener"&gt;
+
+                &lt;/transportReceiver&gt;
+            </pre>
+        </div>
+        
+        <p>The services.xml of the service should contain the following parameters to receive
+            messages through the mail transport.</p>
+        <div class="source">
+            <pre>
+                &lt;parameter name="transport.mail.Address"&gt;synapse.demo.1@gmail.com&lt;/parameter&gt;
+                &lt;parameter name="transport.mail.Protocol"&gt;pop3&lt;/parameter&gt;
+                &lt;parameter name="transport.PollInterval"&gt;5&lt;/parameter&gt;
+                &lt;parameter name="mail.pop3.host"&gt;pop.gmail.com&lt;/parameter&gt;
+                &lt;parameter name="mail.pop3.port"&gt;995&lt;/parameter&gt;
+                &lt;parameter name="mail.pop3.user"&gt;synapse.demo.1&lt;/parameter&gt;
+                &lt;parameter name="mail.pop3.password"&gt;mailpassword&lt;/parameter&gt;
+
+                &lt;parameter name="mail.pop3.socketFactory.class"&gt;javax.net.ssl.SSLSocketFactory&lt;/parameter&gt;
+                &lt;parameter name="mail.pop3.socketFactory.fallback"&gt;false&lt;/parameter&gt;
+                &lt;parameter name="mail.pop3.socketFactory.port"&gt;995&lt;/parameter&gt;
+                &lt;parameter name="transport.mail.ContentType"&gt;text/xml&lt;/parameter&gt;
+            </pre>
+        </div>
+
+        <p>You have to set the following parameters to your ServiceClient to receive messages, if
+            your service has In-Out operations.</p>
+
+        <div class="source">
+            <pre>
+                serviceClient.getAxisService().addParameter("transport.mail.Address", "synapse.demo.0@gmail.com");
+                serviceClient.getAxisService().addParameter("transport.mail.Protocol", "pop3");
+                serviceClient.getAxisService().addParameter("transport.PollInterval", "5");
+                serviceClient.getAxisService().addParameter("mail.pop3.host", "pop.gmail.com");
+                serviceClient.getAxisService().addParameter("mail.pop3.user", "synapse.demo.0");
+                serviceClient.getAxisService().addParameter("mail.pop3.password", "mailpassword");
+                serviceClient.getAxisService().addParameter("mail.pop3.port", "995");
+
+                serviceClient.getAxisService().addParameter("mail.pop3.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+                serviceClient.getAxisService().addParameter("mail.pop3.socketFactory.fallback", "false");
+                serviceClient.getAxisService().addParameter("mail.pop3.socketFactory.port", "995");
+                serviceClient.getAxisService().addParameter("transport.mail.ContentType", "text/xml");
+            </pre>
+        </div>
+
+        <p>Your client axis2.xml file also should contain the above menstioned transport receiver
+            and sender as explained above.</p>
+
+        <p><strong>NOTE: </strong>You can see how above configurations are used in the sample by
+            going through the source code and configuration files provided under
+            samples/Mail.</p>
+
+        <h2>Hosting the Service</h2>
+        <p>
+            To host the service, please download WSO2 Application Server and refer to Mail
+            sample.
+        </p>
+
+        <h2>Running the Client</h2>
+        <p>
+            To run the sample client for the service, go to samples/Mail directory and type:
+            <pre>sh run-client.sh</pre></p>
+        <p>Check the server console and you'll see the message printed from the service on receipt
+            of the message.</p>
+    </body>
+</html>

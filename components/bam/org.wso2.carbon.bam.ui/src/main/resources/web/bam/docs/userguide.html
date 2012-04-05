@@ -1,0 +1,281 @@
+<!--
+  ~ Copyright 2009 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <title>Server Monitoring - User Guide</title>
+    <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all"/>
+</head>
+<body>
+<h1>Monitored Server Configuration</h1>
+
+<h2>Adding a server</h2>
+
+<p>Server addition is driven by three types of data collection
+    methods.</p>
+
+<ol type="1"><li><h3>Polling</h3>
+		    WSO2 BAM will poll the server being monitored on a periodic basis. In the
+            current implementation the polling interval is one minute and is not
+            configurable.
+        </li>
+<li><h3>Eventing</h3>
+		    WSO2 BAM will subscribe to the events published by the server being
+            monitored. Event publication is done using WS-Eventing specification. Note that
+            for this method to work, the server being added must have a publisher endpoint.
+            There are two types of publishers, service data publisher for WSO2 WSAS,
+            mediation data publisher for WSO2 ESB that are available as independent components that can be used to
+            publish data from those respective server types. See the
+            <a href="http://wso2.org/project/bam/java/1.0.0/docs/data_publishers.html">documentation on data
+            publishers</a> for more details on data publishers.
+        </li>
+
+<li><h3>Generic</h3>
+		    WSO2 BAM will neither poll nor subscribe to the server being monitored. The
+            server can publish data to WSO2 BAM, using user defined data event publisher.
+            This type of a server is useful, when it is desired to store data that does not
+            fall into server data or mediation data categories.
+        </li>
+        <li>
+            <h3>JMX</h3>
+        <p>
+		    WSO2 BAM is able to collect data of MBeans(JMX enabled applications). Currently WSO2 BAM
+		    collects WSO2 ESB's MBean's attributes and values.<br/>
+		    <b>Note: There is no visualization(gadgets) part available in this release</b>
+        </p>
+		</li>
+</ol>
+
+
+<h2>
+    Adding a server for polling data
+</h2>
+
+<p><img src="images/bam-server-add-polling.png" alt="WSO2 BAM Polling Servers"/></p>
+
+<p>
+    For this you have to select
+    Polling as the statistics collection method.
+</p>
+
+<p>
+    WSO2 WSAS instances can be
+    monitored using data polling mechanism. The versions of WSO2 WSAS supported
+    with this model include 3.0.0 and upwards.
+</p>
+
+<p>
+    You can enter the server URL
+    in the following format
+</p>
+
+<p><pre><i>https://[host IP | host name]:[port]</i></pre></p>
+
+<p>
+    For example:
+</p>
+
+<p>
+    <pre><i>https://127.0.0.1:9443</i></pre>
+
+    or
+
+    <pre><i>https://localhost:9443</i></pre>
+</p>
+
+<p>
+    <b>Note:</b> If you are running
+    both WSO2 WSAS and WSO2 BAM on the same server, you MUST run one of the servers
+    with a web context name other than root context. See the following document on
+    how to <a href="https://www.wso2.org/wiki/display/carbon/same+host+as+standalone+servers+2.0" class="externalLink">
+    set a web context with a WSO2 Carbon based servers</a>.
+</p>
+
+<p>
+    If you are running WSO2 WSAS
+    with a Web context, then you have to provide the server URL with the context
+    name.
+</p>
+
+<p>
+    <pre><i>https://[host IP | host name]:[port]/[context name]</i></pre>
+</p>
+
+<p>
+    For e.g. if <i><b>wsas</b></i> is the web
+    context name in use
+</p>
+
+<p>
+    <pre><i>https://127.0.0.1:9443/wsas</i></pre>
+
+    or
+
+    <pre><i>https://localhost:9443/wsas</i></pre>
+</p>
+
+<p>
+    When you select the data
+    collection method to be polling, the type of statistics that can be collected
+    is limited to Service. This is because, with polling model, in the current
+    implementation of WSO2 BAM, we only support pulling data from WSO2 WSAS. In other
+    words, polling mediation or message level data is not supported.
+</p>
+
+<p>
+    Since the polling model uses
+    the statistics administrative service on WSO2 WSAS server, a user name and
+    password with administrative privileges on the WSO2 WSAS server instance is
+    also required to add a server to be polled.
+</p>
+
+<p>
+    You can also provide a
+    description of the server being added, which could be useful in your future
+    references to the monitored server.
+</p>
+
+<h2>
+
+    Adding a server for
+    subscribing for events
+</h2>
+
+<p><img src="images/bam-server-add-eventing.png" alt="WSO2 BAM Eventing Servers"/></p>
+
+<p>
+    For this, you have to select
+    <b>Eventing</b> as the statistics collection method. Like in the case of polling, you
+    can provide the server URL using the format
+</p>
+
+<p>
+    <pre><i>https://[host IP | host name]:[port]&lt;/[web context name]&gt;</i></pre>
+</p>
+
+<p>
+    Also, note that, if you have
+    set the <i>HostName</i> setting in the carbon.xml file of the server being added, you
+    must use that host name, and not the server IP, when adding the server as
+    server URL. If you have not set <i>HostName</i> setting in carbon.xml file of the
+    server being added, then you must use the IP address of the server being added,
+    in place of the host name. To make sure that you can keep on monitoring the
+    server irrespective of IP changes, due to relocation of a server instance that
+    is being monitored with WSO2 BAM, it is advised that you use the <i>HostName</i>
+
+    setting in carbon.xml configuration file of the server being monitored and use
+    the host name instead of the IP when adding the server to be
+    monitored with WSO2 BAM.
+</p>
+
+<p>
+    The eventing model supports
+    Service data and Mediation data.
+</p>
+
+<p>
+    Service data can be
+    collected from service data publishers deployed with WSO2 WSAS instances.
+</p>
+
+<p>
+    Mediation data can be
+    collected from mediation data publishers deployed with WSO2 ESB instances. Note
+    that you have to provide nhttps transport port (default 8243), and not the
+    management console https port (default 9443), when adding a WSO2 ESB instance.
+</p>
+<p>
+    The corresponding event
+    message subscribing endpoints are built into WSO2 BAM and will work out of the
+    box. However, you have to ensure that the data publishers are deployed with the
+    server being added so that they can publish the data using WS-Eventing. Data
+    publishers are shipped as separate components, and you can find more information
+    on how to install them in <a href="http://wso2.org/project/bam/java/1.0.0/docs/data_publishers.html">data publishers documentation</a>.
+</p>
+
+<p>
+    You can also provide a
+    description of the server being added, which could be useful in your future
+    references to the monitored server.
+</p>
+
+<h2>
+    Adding a generic server
+</h2>
+
+<p><img src="images/bam-server-add-generic.png" alt="WSO2 BAM Generic Servers"/></p>
+
+<p>
+    For this, you have to select
+    Generic as the data collection method. Once you select Generic, you will have
+    to provide only the server URL and server description. The URL will not be
+    validated for this case. When you are publishing data to WSO2 BAM against a Generic
+    server, all you have to do is to use the server URL given as the data source.
+    See documentation on <a href="http://wso2.org/project/bam/java/1.0.0/docs/data_publishers.html">data publishers</a> for more information.
+</p>
+<h2>
+            Adding a JMX server
+ </h2>
+ <p>
+            <img src="images/bam-server-add-jmx.png" alt="WSO2 BAM JMX Servers" title="WSO2 BAM JMX Servers"/>
+</p>
+
+<p>
+            For this, you have to select
+            'JMX' as the data collection method. Once you select JMX, you will have
+            to provide server URL,user name,password and server description. The URL will not be
+            validated for this case.
+            eg:- In WSO2 ESB's conf/carbon.xml enable the JMX server port(which is disabled by default).
+            Add the JMX server url as
+            <i>jmx:rmi:///jndi/rmi://10.100.1.143:9999/server</i>(user can see the jmx server url in ESB server console)
+ </p>
+
+<h2>
+    List Monitored Servers
+</h2>
+
+<p><img src="images/bam-monitored-servers.png" alt="WSO2 BAM Generic Servers"/></p>
+
+<p>
+    The monitored server details
+    page list the server URL, statistics collection method, statistics type, active/inactive
+    status and the description for each server. Based on the current server status,
+    you will be able to either <strong>activate</strong> or <strong>deactivate</strong> a monitored server. In the
+    active state, data for the server would be collected, using the corresponding
+    statistics collection method, and in the inactive state, no current data would be
+    collected. Note that, in the current implementation of WSO2 BAM, it is not
+    allowed to delete a server, from the management console. This was done purposely,
+    to guard against deleting valuable historical data, collected over time, for a
+    server. Note that, with BAM, even though a server might not be used any more,
+    the data collected against that server would be useful with analytics. Hence,
+    rather than deleting, you can retire a server by deactivating it. Even if you
+    happen to use a given server for a different set of services, over time, it is
+    perfectly fine to use the same server instance in WSO2 BAM, as it captures data
+    along with time dimension.
+</p>
+
+<p>
+    If it is absolutely
+    necessary to delete a server instance, then it is advised that you do this at
+    the database layer directly.
+</p>
+
+
+</body>
+</html>

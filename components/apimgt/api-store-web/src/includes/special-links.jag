@@ -1,0 +1,66 @@
+<div class="service-store-tabs">
+    <a name="topCharts" class="tab selected">Top Charts</a>
+    <a name="categories" class="tab">Categories</a>
+</div>
+<div style="clear:both"></div>
+<div class="content-box" >
+    <div class="title">Top Rated</div>
+    <div id="topelementList">
+    <div class="list-items">
+        <div class="list-items-number">1</div>
+        <div class="list-items-content">
+            <a class="list-items-item-name">ScheduleManager</a>
+            <a class="list-items-item-detail">Provider:Zenith</a>
+        </div>
+    </div>
+    <div style="clear:both"></div>
+    <hr class="line-seperator"/>
+    <div class="list-items">
+        <div class="list-items-number">2</div>
+        <div class="list-items-content">
+            <a class="list-items-item-name">GroupComm</a>
+            <a class="list-items-item-detail">Provider:Flex</a>
+        </div>
+    </div>
+    <div style="clear:both"></div>
+    <hr class="line-seperator"/>
+    <div class="list-items">
+        <div class="list-items-number">3</div>
+        <div class="list-items-content">
+            <a class="list-items-item-name">SunshineWeather</a>
+            <a class="list-items-item-detail">Provider:Oppl</a>
+        </div>
+    </div>
+    <div style="clear:both"></div>
+    <hr class="line-seperator"/>
+    <div class="list-items">
+        <div class="list-items-number">4</div>
+        <div class="list-items-content">
+            <a class="list-items-item-name">LockerService</a>
+            <a class="list-items-item-detail">Provider:Aviv</a>
+        </div>
+    </div>
+    <div style="clear:both"></div>
+</div>
+
+    <div class="title">Recently Added</div>
+    <div id="recelementList">
+    <div class="list-items">
+        <div class="list-items-box"><img src="images/list-item.png" alt=""></div>
+        <div class="list-items-content">
+            <a class="list-items-item-name">Provider:Oppl</a>
+            <a class="list-items-item-detail">Provider:Zenith</a>
+        </div>
+    </div>
+    <div style="clear:both"></div>
+    <hr class="line-seperator"/>
+    <div class="list-items">
+        <div class="list-items-box"><img src="images/list-item.png" alt=""></div>        
+        <div class="list-items-content">
+            <a class="list-items-item-name">LockerService</a>
+            <a class="list-items-item-detail">Provider:Aviv</a>
+        </div>
+    </div>
+    <div style="clear:both"></div>
+</div>
+</div>

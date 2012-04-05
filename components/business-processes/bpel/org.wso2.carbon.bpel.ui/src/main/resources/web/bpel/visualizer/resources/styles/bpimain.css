@@ -1,0 +1,210 @@
+/*
+   Copyright 2010 Gregor Latuske
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+*/
+
+@CHARSET "ISO-8859-1";
+
+div#bpi-body {
+	text-align: center;
+	font-size: 0.9em;
+	font-family: Tahoma;
+	color: #000000;
+	margin: 15px;
+	padding: 0;
+}
+
+div#bpi-body * .left {
+	text-align: left;
+}
+
+div#bpi-body * .right {
+	text-align: right;
+}
+
+div#bpi-body * .center {
+	text-align: center;
+}
+
+div#bpi-body * .middle {
+	vertical-align: middle;
+}
+
+div#bpi-body * .white {
+	background-color: #FFFFFF;
+}
+
+div#bpi-body * .light-orange {
+	background-color: #FEF7F3;
+}
+
+div#bpi-body * .orange {
+	/*background-color: #F36E4A;*/
+    background-color: transparent;
+}
+
+div#bpi-body * a:link {
+	color: #000000;
+}
+
+div#bpi-body * a:visited {
+	color: #000000;
+}
+
+div#bpi-body * a:hover {
+	color: transparent;
+}
+
+div#bpi-body * a:active {
+	/*color: #F36E4A;*/
+	color: transparent;
+}
+
+div#bpi-body * span.header {
+	font-weight: bold;
+}
+
+div#bpi-body * table {
+	background-color: #FFFFFF;
+	width: 1000px;
+	margin: 15px auto;
+	border-collapse: collapse;
+	border: 1px solid #000000;
+}
+
+div#bpi-body * th {
+	text-align: left;
+	padding: 5px;
+}
+
+div#bpi-body * th[scope=col] {
+	background-color: #FFFFFF;
+	border-top: 1px solid #000000;
+}
+
+div#bpi-body * tr.hover:hover {
+	background-color: #FFFAC0;
+}
+
+div#bpi-body * td {
+	text-align: left;
+	padding: 5px;
+	border-collapse: collapse;
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+
+div#bpi-body * tfoot {
+	/*background-color: #F36E4A;*/
+	background-color: transparent;
+}
+
+
+div#bpi-body * table.inner {
+	width: 100%;
+	margin: 0;
+	border: 0;
+}
+
+div#bpi-body * td.inner {
+	padding: 0;
+	border: 0;
+}
+
+div#bpi-body * table.adjuster {
+	width: 100%;
+	margin: 0;
+	border: 0;
+}
+
+div#bpi-body * td.adjuster-left {
+	width: 50%;
+	padding-top: 0;
+	padding-bottom: 0;
+	padding-left: 0;
+	padding-right: 2px;
+	border: 0;
+	vertical-align: top;
+}
+
+div#bpi-body * td.adjuster-right {
+	width: 50%;
+	padding-top: 0;
+	padding-bottom: 0;
+	padding-left: 2px;
+	padding-right: 0;
+	border: 0;
+	vertical-align: top;
+}
+
+div#bpi-body * table.adjuster-inner {
+	width: 100%;
+	margin: 5px auto;
+}
+
+div#bpi-body * img {
+	background-color: transparent;
+	width: 16px;
+	height: 16px;
+	margin: 2px;
+	border: 0;
+	vertical-align: middle;
+}
+
+div#bpi-body * img.border {
+	background-color: #FFFFFF;
+	border: 1px outset #000000;
+}
+
+div#bpi-body * input[type="submit"] {
+	font-size: 1.0em;
+	font-weight: bold;
+	background-color: #FFD999;
+	margin: 2px;
+	border: 1px solid #000000;
+	width: 10em;
+}
+
+div#bpi-body * input[type="button"] {
+	font-size: 1.0em;
+	font-weight: bold;
+	background-color: #FFD999;
+	margin: 2px;
+	border: 1px solid #000000;
+	width: 10em;
+}
+
+div#bpi-body * input[type="text"],input[type="checkbox"],select {
+	font-size: 0.9em;
+	font-weight: bold;
+	background-color: #FFFFFF;
+	margin: 2px;
+	margin-left: 4px;
+	margin-right: 4px;
+	border: 1px solid #000000;
+	vertical-align: middle;
+}
+
+div#bpi-body * select {
+	font-weight: bold;
+	background-color: #FFFFFF;
+}
+
+div#bpi-body * select[multiple="multiple"] {
+	width: 15em;
+}
+
+div#bpi-body * input.page {
+	text-align: center;
+	width: 2em;
+}

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+        <title>@product.name@ - Sample Guide - IF</title>
+        <link href="../css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+        <h1>Sample Guide - IF</h1>
+        <h3>Table of Content</h3>
+        <ul>
+            <li>
+                <a href="#objective">Objective</a>
+            </li>
+            <li>
+                <a href="#prerequisites">Prerequisites</a>
+            </li>
+            <li>
+                <a href="#overallIdea">Overall Idea</a>
+            </li>
+        </ul>
+
+        <br />
+        <h3>
+            <a name="objective">Objective</a>
+        </h3>
+        <p>Shows how to use <code>&lt;if/&gt;</code> construct to implement where user need to verify a logical
+            condition.
+        </p>
+        <br />
+        <h3>
+            <a name="prerequisites">Prerequisites</a>
+        </h3>
+        <ul>
+            <li>Log in into BPS server admin console.</li>
+            <li>Under Business Processes -&gt; Add BPEL.</li>
+            <li>Upload the TestIf.zip , (all samples are located at our <a href="http://svn.wso2.org/repos/wso2/branches/carbon/3.2.0/products/bps/2.1.0/modules/samples/product/src/main/resources/bpel/2.0/">sample repository</a>.)</li>
+            <li>Under the Business Processes -&gt; Processes.</li>
+            <li>Under the WSDL details widget -&gt; Create instance</li>
+        </ul>
+        <br />
+        <h3>
+            <a name="overallIdea">Overall Idea</a>
+        </h3>
+        <p>BPEL If-Else activity executes the process based on the condition defined in &lt;condition/&gt;. Comparing to pick activity, if-else activity depend on a logical condition rather on an event.</p>                               
+        <pre xml:space="preserve"><code><b>&lt;if&gt;</b>
+    <b>&lt;condition&gt;number($tmpVar)=number(2)&lt;/condition&gt;</b>
+    &lt;assign name=&quot;assignError&quot;&gt;
+        &lt;copy&gt;
+            &lt;from&gt;
+                &lt;literal&gt;Worked&lt;/literal&gt;
+            &lt;/from&gt;
+            &lt;to variable=&quot;myVar&quot; part=&quot;TestPart&quot;/&gt;
+        &lt;/copy&gt;
+    &lt;/assign&gt;
+    <b>&lt;else&gt;</b>
+        &lt;assign name=&quot;assignZut&quot;&gt;
+            &lt;copy&gt;
+                &lt;from&gt;
+                    &lt;literal&gt;Failed&lt;/literal&gt;
+                &lt;/from&gt;
+                &lt;to variable=&quot;myVar&quot; part=&quot;TestPart&quot;/&gt;
+            &lt;/copy&gt;
+        &lt;/assign&gt;
+    <b>&lt;/else&gt;
+&lt;/if&gt;</b></code></pre>
+
+        <p>
+            <code>&lt;condition/&gt;</code> inside <code>&lt;if/&gt;</code> is used to implement the logical condition.
+            Normally a XPath expression is used. <code>&lt;else/&gt;</code> is used to implement false case.
+        </p>
+
+        <p>
+            In the above example, value of <code>tmpVar</code> variable, is converted to a number and it's
+            checked against 2. <code>&lt;condition&gt;number($tmpVar)=number(2)&lt;/condition&gt;</code>
+        </p>
+
+        <p>
+            Based on the <code>tmpVar</code> value, <code>"TestPart"</code> element value in myVar variable will be <code>"Worked"</code>
+            or <code>"Failed"</code>.
+        </p>
+
+        <p> <br />
+            <b>Note</b><i> - Apache ODE runtime has default support for <code>http://www.w3.org/TR/xpath/</code>, where
+            the <code>number($var)</code> is defined.  </i>
+        </p>
+    </body>
+</html>

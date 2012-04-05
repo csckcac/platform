@@ -1,0 +1,32 @@
+<bamConfiguration>
+    <CFIndexes>
+        <ColumnFamily name="Event" defaultCF="true">
+            <granularity>none</granularity>
+            <!--<rowKey>timeStamp+serverAddress</rowKey>-->
+	    <rowKey>
+		<part name="timeStamp"/>
+		<part name="serverAddress" storeIndex="true"/>
+	    </rowKey>
+        </ColumnFamily>
+        <ColumnFamily name="WorkFlowId_NodeId">
+            <granularity>hour</granularity>
+            <!--<rowKey>workFlowId+nodeId+timeStamp</rowKey>-->
+	    <rowKey>
+		<part name="workFlowId" storeIndex="true"/>
+		<part name="nodeId" storeIndex="true"/>
+		<part name="timeStamp"/>
+	    </rowKey>
+            <indexRowKey>allKeys</indexRowKey>
+        </ColumnFamily>
+        <ColumnFamily name="WorkFlowId_ActivityId">
+            <granularity>hour</granularity>
+            <!--<rowKey>workFlowId+activityId+timeStamp</rowKey>-->
+	    <rowKey>
+		<part name="workFlowId" storeIndex="true"/>
+		<part name="activityId" storeIndex="true"/>
+		<part name="timeStamp"/>
+	    </rowKey>
+            <indexRowKey>allKeys</indexRowKey>
+        </ColumnFamily>
+    </CFIndexes>
+</bamConfiguration>

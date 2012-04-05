@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<artifactType type="application/vnd.wso2-api+xml" shortName="api" singularLabel="Api" pluralLabel="APIs" hasNamespace="false" iconSet="7">
+	<storagePath>/apimgt/applicationdata/provider/@{overview_provider}/@{overview_name}/@{overview_version}/api</storagePath>
+	<nameAttribute>overview_name</nameAttribute>
+	<ui>
+        <list>
+            <column name="Provider">
+                <data type="path" value="overview_provider" href="@{storagePath}"/>
+            </column>
+            <column name="Name">
+                <data type="path" value="overview_name" href="@{storagePath}"/>
+            </column>
+            <column name="Version">
+                <data type="path" value="overview_version" href="@{storagePath}"/>
+            </column>
+        </list>
+	</ui>
+	<content>
+    <table name="Overview">
+        <field type="text" required="true">
+            <name>Provider</name>
+        </field>
+        <field type="text" required="true">
+            <name>Name</name>
+        </field>
+        <field type="text" required="true">
+            <name>Context</name>
+        </field>
+        <field type="text" required="true">
+            <name>Version</name>
+        </field>
+        <field type="text-area">
+            <name>Description</name>
+        </field>
+        <field type="text"  path="true" url="true">
+            <name>Endpoint URL</name>
+        </field>
+        <field type="text">
+            <name>WSDL</name>
+        </field> 
+        <field type="text">
+            <name>Tags</name>
+        </field>
+        <field type="text">
+            <name>Thumbnail</name>
+        </field>
+        <field type="options">
+            <name label="IsLatest">Is Latest</name>
+            <values>
+                <value>false</value>
+                <value>true</value>
+            </values>
+        </field>
+        <field type="options">
+            <name label="Tier Availability">Tier Availability</name>
+            <values>
+                <value>Gold</value>
+                <value>Silver</value>
+                <value>Other</value>
+            </values>
+        </field>
+        <field type="text" required="true">
+            <name>Status</name>
+        </field>
+    </table>
+    <table name="UriTemplates">            
+        <subheading>                
+	    <heading>Method</heading>
+	    <heading>Template</heading>
+	</subheading>            
+	<field type="option-text" maxoccurs="unbounded">                
+	    <name>Test</name>                
+	    <values>
+		<value>GET</value>
+		<value>PUT</value>
+		<value>POST</value>
+		<value>DELETE</value>
+                <value>HEAD</value>
+            </values>
+        </field>
+    </table>
+</content>
+	
+</artifactType>
+

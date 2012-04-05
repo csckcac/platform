@@ -1,0 +1,413 @@
+<!--
+ ~ Copyright (c) 2005-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+
+    <parent>
+        <groupId>org.wso2.carbon</groupId>
+        <artifactId>wso2carbon-feature</artifactId>
+        <version>2.0.2</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>wso2carbon-distribution-feature</artifactId>
+    <packaging>pom</packaging>
+    <url>http://wso2.org</url>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.eclipse.osgi</groupId>
+                <artifactId>org.eclipse.osgi</artifactId>
+                <version>3.5.0.v20090520</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.osgi</groupId>
+                <artifactId>org.eclipse.osgi.services</artifactId>
+                <version>3.2.0.v20090520-1800</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.common</artifactId>
+                <version>3.5.0.v20090520-1800</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.simpleconfigurator</artifactId>
+                <version>1.0.100.v20090520-1905</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.util</artifactId>
+                <version>1.0.100.v20090520-1800</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.ds</artifactId>
+                <version>1.1.0.v20090520-1800</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.launcher</artifactId>
+                <version>1.0.200.v20090520</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.http.servlet</artifactId>
+                <version>1.0.200.v20090520-1800-wso2v1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.http.helper</artifactId>
+                <version>1.0.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.jsp.jasper</artifactId>
+                <version>1.0.200.v20090520-1800</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>javax.servlet.jsp</artifactId>
+                <version>2.0.0.v200806031607</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.apache.jasper</artifactId>
+                <version>5.5.17.v200806031609</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.apache.commons.el</artifactId>
+                <version>1.0.0.v200806031608</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.apache.commons.logging</artifactId>
+                <version>1.0.4.v200706111724</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.apache.log4j</artifactId>
+                <version>1.2.13.v200706111418</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.jsp.jstl</artifactId>
+                <version>1.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+                <version>2.4</version>
+            </dependency>
+        
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.app</artifactId>
+                <version>1.2.0.v20090520-1800</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.concurrent</artifactId>
+                <version>1.0.0.v20090520-1800</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.frameworkadmin</artifactId>
+                <version>1.0.100.v20090520-1905</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.frameworkadmin.equinox</artifactId>
+                <version>1.0.100.v20090520-1905</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.p2.artifact.repository</artifactId>
+                <version>1.0.100.v20090520-1905-wso2v1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.p2.console</artifactId>
+                <version>1.0.100.v20090520-1905-wso2v1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.p2.core</artifactId>
+                <version>1.0.100.v20090520-1905</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.p2.director</artifactId>
+                <version>1.0.100.v20090520-1905</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.p2.director.app</artifactId>
+                <version>1.0.100.v20090521-1912</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.p2.directorywatcher</artifactId>
+                <version>1.0.100.v20090520-1905</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.p2.engine</artifactId>
+                <version>1.0.100.v20090520-1905</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.p2.exemplarysetup</artifactId>
+                <version>1.0.100.v20090520-1905</version>
+            </dependency>
+
+             <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.p2.extensionlocation</artifactId>
+                <version>1.0.100.v20090520-1905</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.p2.garbagecollector</artifactId>
+                <version>1.0.100.v20090520-1905</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.p2.jarprocessor</artifactId>
+                <version>1.0.100.v20090520-1905</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.p2.metadata.generator</artifactId>
+                <version>1.0.100.v20090520-1905</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.p2.metadata</artifactId>
+                <version>1.0.100.v20090520-1905</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.p2.metadata.repository</artifactId>
+                <version>1.0.100.v20090520-1905</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.p2.reconciler.dropins</artifactId>
+                <version>1.0.100.v20090520-1905</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.p2.publisher</artifactId>
+                <version>1.0.0.v20090521-1912</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.p2.repository.tools</artifactId>
+                <version>1.0.0.v20090520-1905</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.p2.repository</artifactId>
+                <version>1.0.0.v20090520-1905</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.p2.touchpoint.eclipse</artifactId>
+                <version>1.0.100.v20090520-1905-wso2v1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.p2.touchpoint.natives</artifactId>
+                <version>1.0.100.v20090520-1905</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.p2.updatechecker</artifactId>
+                <version>1.1.0.v20090520-1905</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.preferences</artifactId>
+                <version>3.2.300.v20090520-1800</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.registry</artifactId>
+                <version>3.4.100.v20090520-1800</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.security</artifactId>
+                <version>1.0.100.v20090520-1800</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.simpleconfigurator.manipulator</artifactId>
+                <version>1.0.100.v20090520-1905</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.p2.updatesite</artifactId>
+                <version>1.0.100.v20090520-1905</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.core</groupId>
+                <artifactId>org.eclipse.core.commands</artifactId>
+                <version>3.5.0.I20090429-1800</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.core</groupId>
+                <artifactId>org.eclipse.core.contenttype</artifactId>
+                <version>3.4.0.v20090429-1800</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.core</groupId>
+                <artifactId>org.eclipse.core.expressions</artifactId>
+                <version>3.4.100.v20090429-1800</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.core</groupId>
+                <artifactId>org.eclipse.core.jobs</artifactId>
+                <version>3.4.100.v20090429-1800</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.core</groupId>
+                <artifactId>org.eclipse.core.net</artifactId>
+                <version>1.2.0.I20090522-1010</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.core</groupId>
+                <artifactId>org.eclipse.core.runtime</artifactId>
+                <version>3.5.0.v20090429-1800</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.core</groupId>
+                <artifactId>org.eclipse.core.runtime.compatibility.auth</artifactId>
+                <version>3.2.100.v20090413</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.ecf</groupId>
+                <artifactId>org.eclipse.ecf</artifactId>
+                <version>3.0.0.v20090520-0800</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.ecf</groupId>
+                <artifactId>org.eclipse.ecf.filetransfer</artifactId>
+                <version>3.0.0.v20090520-0800</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.ecf</groupId>
+                <artifactId>org.eclipse.ecf.identity</artifactId>
+                <version>3.0.0.v20090520-0800</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.ecf</groupId>
+                <artifactId>org.eclipse.ecf.provider.filetransfer</artifactId>
+                <version>3.0.0.v20090520-0800</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse</groupId>
+                <artifactId>org.sat4j.core</artifactId>
+                <version>2.1.0.v20090520</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse</groupId>
+                <artifactId>org.sat4j.pb</artifactId>
+                <version>2.1.0.v20090520</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse</groupId>
+                <artifactId>com.ibm.icu</artifactId>
+                <version>4.0.1.v20090415</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>    
+    <modules>
+        <module>org.wso2.carbon.core.server.feature.distribution</module>
+    </modules>
+    <properties>
+        <carbon.version>2.0.2</carbon.version>
+	    <wsas.version>3.1.2</wsas.version>
+	    <esb.version>2.1.2</esb.version>
+	    <is.version>2.0.2</is.version>
+	    <greg.version>3.0.2</greg.version>
+	    <synapse.version>1.3.0.wso2v3</synapse.version>						
+    </properties>
+</project>

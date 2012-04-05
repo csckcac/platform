@@ -1,0 +1,92 @@
+<!--
+  ~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <body>
+        <p>[<a href="http://wso2.org/downloads/gadget-server">Download</a>]
+            | [<a href="index_docs.html">Documentation Home</a>] | [<a href="release_notes.html">Release Note</a>]
+        </p>
+
+        <h1>Documentation Index</h1>
+        <strong>Installation and user guides</strong>
+        <ul>
+            <li>
+                <a href="installation_guide.html">Installation Guide</a>
+                - Provides an
+                overview of installing WSO2 Gadget Server in
+                standalone mode.
+            </li>
+            <li>
+                <a href="installation_src.html">WSO2 Gadget Server Source Distribution</a>
+                -
+                Provides instructions on how to build the WSO2 Gadget Server using the source
+                distribution.
+            </li>
+        </ul>
+        <strong>Administration Guides</strong>
+        <ul>
+            <li>
+                <a href="permission.html">User and Portal Permissions</a>
+                -
+                Describes the permision model for the users and the portal
+            </li> 
+<li>
+                <a href="gadget_repo.html">Enterprise Gadget Repository</a>
+                -
+                Describes the use of the Gadget Repository.
+            </li>      
+
+
+	</ul>
+
+        <p>
+            <strong>WSO2 Gadget Server - Portal</strong>
+        </p>
+        <ul>
+            <li>
+                <a href="user_reg.html">User Registration</a>
+                - Provides instructions on how a user can register to use the portal. Three mechanisms are documented.
+            </li>
+            <li>
+                <a href="add_gadgets.html">Adding Gadgets to the Portal</a>
+                - Provides instructions on how to add new gadgets to the repository and portal.
+            </li>
+            <li>
+                <a href="org_portal.html">Organizing the Portal</a>
+                - Provides information about organising gadgets in the portal.
+            </li>
+        </ul>
+
+<p>
+            <strong>Gadget Authoring</strong>
+        </p>
+        <ul>
+            <li>
+                <a href="gadget_authoring.html#hello">A Hello World Gadget</a>
+                - Provides instructions on how to write a simple gadget.
+            </li>
+            <li>
+                <a href="gadget_authoring.html#gSpec">The Google Gadget Specification</a>
+                - Provides instructions on how to add new gadgets to the repository and portal.
+            </li>
+            <li>
+                <a href="gadget_authoring.html#gApi">API Reference for gadget authors</a>
+                - Provides a documentation about Google Gadgets API.
+            </li>
+        </ul>
+
+    </body>
+</html>

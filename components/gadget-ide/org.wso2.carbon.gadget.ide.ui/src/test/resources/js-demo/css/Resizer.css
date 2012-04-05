@@ -1,0 +1,31 @@
+.gide-resizer{
+    position: absolute;
+}
+.gide-resizer-border{
+    position: absolute;
+    border: 1px solid #F0F0F0;
+}
+.gide-resizer-selected .gide-resizer-border{
+    border: 1px dashed;
+}
+.gide-resizer-selected .gide-resizer-handlers div{
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    border-radius: 2px;
+    border: 1px solid #CCCCCC;
+    background: #EEEEEE;
+}
+.gide-resizer-mover{
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    border-radius: 2px;
+    border: 1px solid #AAEEAA;
+    background: #DDFFDD;
+}
+
+.gide-resizer-content{
+    overflow: auto;
+    position: absolute;
+}

@@ -1,0 +1,542 @@
+/* reset */
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre,
+form, fieldset, input, p, blockquote, table, th, td, embed, object {
+    padding: 0;
+    margin: 0;
+}
+
+/* fix styles*/
+body {
+    background: #212A2A;
+    font: 12px/18px 'Lucida Grande', 'Lucida Sans Unicode', Helvetica, Arial, Verdana, sans-serif;
+}
+
+.gide-head {
+    height: 50px;
+    text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.25);
+    color: #A5D2D5;
+}
+
+.gide-head-left-1 {
+    width: 120px;
+    float: left;
+    font-size: 30px;
+    background: -moz-linear-gradient(center top, #5D7678, #425455) repeat scroll 0 0 transparent;
+    border-radius: 0 0 8px 0;
+    height: 36px;
+    line-height: 36px;
+}
+
+.gide-head-left-2 {
+    height: 24px;
+    line-height: 24px;
+    font-size: 20px;
+    background: -moz-linear-gradient(center top, #5D7678, #4B5F61) repeat scroll 0 0 transparent
+}
+
+.gide-head-left-n-inner {
+    padding-left: 20px;
+}
+
+.gide-settings-div{
+    background: none repeat scroll 0 0 #8FB4B8;
+    border: 1px solid #425455;
+    border-radius: 3px 3px 3px 3px;
+    cursor: default;
+    padding: 4px;
+    text-align: center;
+
+}
+
+.gide-settings-panel{
+    background: none repeat scroll 0 0 #8FB4B8;
+    border: 1px solid #425455;
+    border-radius: 3px 3px 3px 3px;
+    cursor: default;
+    padding: 4px;
+    margin-top: 10px;
+}
+
+.gide-settings-input{
+    margin-left: 80px;
+}
+
+#publishButtonDiv{
+    float: right;
+    margin-top: 6px;
+    line-height: 14px;
+}
+
+#publishNameText{
+    width: 100%;
+}
+
+.gide-settings-label{
+    float: left;
+}
+
+.gide-settings-title{
+    text-align: center;
+    font-size:12px;
+}
+
+.gide-clear{
+    clear: both;
+}
+
+#itemsDiv {
+    background: #749395;
+    height: 90%;
+    overflow: auto;
+}
+
+#settingsDiv {
+    background: #749395;
+    height: 90%;
+}
+
+#settingsInnerDiv{
+    padding: 10px;
+}
+
+#designEditDiv {
+    float: left;
+    width: 65%;
+}
+
+#specEditDiv {
+    float: left;
+    width: 35%;
+}
+
+#sideDiv {
+    height: 90%;
+    background: #F0F8F9;
+}
+
+#layerDiv {
+    height: 90%;
+}
+
+#uiEditDiv {
+    height: 90%;
+}
+
+.WireIt-Layer {
+    background: #F0F8F9;
+    /*box-shadow: 2px 0 120px 0 rgba(54, 54, 54, 0.15) inset;*/
+}
+
+/* from ConfigEditor.css */
+.gide-config-editor-input input {
+    color: #666666;
+    border: 1px solid #CCCCCC;
+    border-radius: 3px;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1) inset;
+    width: 100%;
+    height: 20px;
+}
+
+.gide-config-editor-input {
+    height: 23px;
+    margin: 0 10px;
+}
+
+.gide-config-editor-input select {
+    width: 100%;
+}
+
+.gide-config-editor-label {
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.698);
+    height: 23px;
+}
+
+.gide-config-editor-button {
+    height: 23px;
+    line-height: 12px;
+}
+
+.gide-config-editor-input-block {
+    width: 75%;
+}
+
+.gide-config-editor-loader {
+    height: 23px;
+}
+
+.gide-config-editor-loader-loading {
+    background: url("../image/loading.png") no-repeat;
+}
+
+
+/* from ConfigEditorContainer.css */
+.gide-configcontainer-terminalout{
+    float: right;
+    width: 49%;
+}
+.gide-configcontainer-terminalin{
+    float: left;
+    width: 49%;
+}
+.gide-configcontainer-terminalend{
+    clear: both;
+}
+
+/* from WSDLConfigEditor.css */
+.wsdl-config-editor {
+    width: 400px;
+}
+
+
+
+.gide-config-editor-resize-hack {
+    margin-top: -19px;
+}
+
+/* from CassandraEditor.css */
+.gide-cass-editor {
+    width: 400px;
+}
+
+.gide-cass-editor-buttonDiv{
+  float: right;
+}
+
+.gide-cass-editor-row{
+    margin-left: 40px;
+    margin-bottom: 10px;
+}
+.gide-cass-editor-row input{
+    border: 1px solid #CCCCCC;
+    border-radius: 3px 3px 3px 3px;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1) inset;
+    color: #666666;
+    height: 20px;
+    width: 88%;
+}
+
+.gide-cass-editor-min{
+    float: right;
+    line-height: 10px;
+}
+
+
+/* from goog/css/common.css */
+.goog-inline-block {
+    position: relative;
+    display: -moz-inline-box; /* Ignored by FF3 and later. */
+    display: inline-block;
+}
+
+* html .goog-inline-block {
+    display: inline;
+}
+
+*:first-child+html .goog-inline-block {
+    display: inline;
+}
+
+/* from goog/css/button.css */
+.goog-css3-button {
+    margin: 0 2px;
+    padding: 3px 6px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+    cursor: default;
+    outline: none;
+    font-family: Arial, sans-serif;
+    color: #000;
+    border: 1px solid #bbb;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    background: -webkit-gradient(linear, 0% 40%, 0% 70%, from(#f9f9f9), to(#e3e3e3));
+    background: -moz-linear-gradient(top, #f9f9f9, #e3e3e3);
+}
+
+.goog-css3-button-hover {
+    border-color: #939393 !important;
+}
+
+.goog-css3-button-focused {
+    border-color: #444;
+}
+
+.goog-css3-button-active, .goog-css3-button-open {
+    border-color: #444 !important;
+    background: -webkit-gradient(linear, 0% 40%, 0% 70%, from(#e3e3e3), to(#f9f9f9));
+    background: -moz-linear-gradient(top, #e3e3e3, #f9f9f9);
+}
+
+.goog-css3-button-disabled {
+    color: #888;
+}
+
+.goog-css3-button-primary {
+    font-weight: bold;
+}
+
+.goog-css3-button-collapse-right {
+    margin-right: 0 !important;
+    border-right: 1px solid #bbb;
+    -webkit-border-top-right-radius: 0px;
+    -webkit-border-bottom-right-radius: 0px;
+    -moz-border-radius-topright: 0px;
+    -moz-border-radius-bottomright: 0px;
+}
+
+.goog-css3-button-collapse-left {
+    border-left: 1px solid #f9f9f9;
+    margin-left: 0 !important;
+    -webkit-border-top-left-radius: 0px;
+    -webkit-border-bottom-left-radius: 0px;
+    -moz-border-radius-topleft: 0px;
+    -moz-border-radius-bottomleft: 0px;
+}
+
+/* from SidePanel.css*/
+.gide-item-col {
+    background: -moz-linear-gradient(center bottom, #E6E8EB 0%, #EFF1F4 100%) repeat scroll 0 0 transparent;
+    border-bottom: 1px solid #B2B2B2;
+    border-top: 1px solid white;
+    cursor: default;
+    height: 19px;
+    padding: 3px 4px;
+    color: #5D6774;
+    font-family: Arial;
+    font-size: 11px;
+    font-weight: bold;
+    text-shadow: 0 1px 0 #FFFFFF;
+}
+
+.gide-side {
+    border: 1px solid #ACB1B7;
+}
+
+.gide-item-cap {
+    background: -moz-linear-gradient(center bottom, #F5F5F5 0%, #FFFFFF 100%) repeat scroll 0 0 transparent;
+    height: 12px;
+    line-height: 8px;
+    padding: 20px 5px;
+    border-bottom: 1px solid #B2B2B2;
+}
+
+.gide-item-cap-hover {
+    background: -moz-linear-gradient(center bottom, #F9F9F9 0%, #FFFFFF 100%) repeat scroll 0 0 transparent;
+}
+
+/* form ImageTabRenderer.css */
+
+.gide-tab {
+    float: left;
+    background: -moz-linear-gradient(center top, #A5D2D5, #749395) repeat scroll 0 0 transparent;
+    padding: 1px 8px 3px;
+    margin-left: 2px;
+    text-shadow: 0 1px 0 #C0C0FF;
+    font-weight: bold;
+
+    border-radius: 5px 5px 0 0;
+}
+
+.gide-tab-hover {
+    color: #555555;
+}
+
+.gide-tab-selected {
+    background: -moz-linear-gradient(center top, #F0F8F9, #A5D2D5) repeat scroll 0 0 transparent;
+    text-shadow: 0 1px 0 #FFFFFF;
+}
+
+.gide-tab-bar-top {
+    border-bottom: 3px solid #A5D2D5;
+}
+
+.gide-tab-bar-top:after {
+    clear: both;
+    content: " ";
+    display: block;
+    height: 0;
+    visibility: hidden;
+}
+
+.gide-tab-bar-clear {
+    clear: both;
+    height: 0;
+    overflow: hidden;
+}
+
+/* form UIEditor.css */
+.gide-uieidt {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: #f5f5f5;
+    /*
+    this make FF slow
+    box-shadow: 2px 0 120px 0 rgba(54, 54, 54, 0.15) inset;*/
+}
+
+.gide-uieidt-content {
+    background: white;
+    position: relative;
+}
+
+.gide-uieidt-border {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    border: 1px solid #CCCCCC;
+    display: block;
+}
+
+.gide-uieidt-title {
+    background: -moz-linear-gradient(center top, #FFFFFF, #DDDDDD) repeat scroll 0 0 transparent;
+    font-family: "Lucida Grande", "Lucida Sans", "Microsoft Sans Serif", "Lucida Sans Unicode", "Verdana", "Sans-serif", "trebuchet ms";
+    font-weight: bold;
+    border-bottom: 2px solid #CCCCCC;
+    color: #111111;
+    font-weight: normal;
+    height: 22px;
+    line-height: 20px;
+    padding-left: 5px;
+    padding-top: 2px;
+}
+
+.gide-uieidt-corner{
+    background-image:url("../image/resize_corner.png");
+    height: 16px;
+    width: 16px;
+    position: relative;
+}
+
+/* from TerminalView.css*/
+.gide-tmview {
+    background-color: rgba(0, 0, 0, 0.03);
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 0 -1px 0 #FFFFFF inset, 0 1px 1px #CDCFD0 inset;
+    padding: 10px;
+    color: #354D4D;
+    text-shadow: 0 1px 0 #FFFFFF;
+}
+
+.gide-tfview-name {
+    padding: 0 10px;
+}
+
+.gide-tfview-tab {
+    width: 8px;
+}
+
+.gide-tfview-right .gide-tfview-name {
+    float: right;
+}
+
+.gide-tfview-icon {
+    height: 19px;
+    width: 40px;
+}
+
+.gide-tfview-right .gide-tfview-icon {
+    float: right;
+}
+
+.gide-tfview-right .gide-tfview-tab {
+    float: right;
+}
+
+.gide-tfview {
+    height: 19px;
+}
+
+.gide-tfview-left .gide-tfview-icon {
+    float: left;
+}
+
+.gide-tfview-left .gide-tfview-name {
+    float: left;
+}
+
+.gide-tfview-left .gide-tfview-tab {
+    float: left;
+}
+
+/* TODO: move to appopreate file */
+.gide-configcontainer-empty {
+    color: #BBBBBB;
+}
+
+/*from Resizer.css*/
+
+.gide-resizer {
+    position: absolute;
+}
+
+.gide-resizer-border {
+    position: absolute;
+    border: 1px solid #F0F0F0;
+}
+
+.gide-resizer-selected .gide-resizer-border {
+    border: 1px dashed;
+}
+
+.gide-resizer-selected .gide-resizer-handlers div {
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    border-radius: 2px;
+    border: 1px solid #CCCCCC;
+    background: #EEEEEE;
+}
+
+.gide-resizer-mover {
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    border-radius: 2px;
+    border: 1px solid #AAEEAA;
+    background: #DDFFDD;
+}
+
+.gide-resizer-content {
+    overflow: auto;
+    position: absolute;
+}
+
+/* from SpecTable.css */
+
+.gide-table {
+    background: white;
+    height: 100%;
+}
+
+.gide-table-cell {
+    width: 50%;
+}
+
+.gide-table-headerCell {
+    border: 1px solid white;
+    border-right-color: #BFBFBF;
+    border-bottom-color: #BFBFBF;
+    height: 15px;
+    padding: 2px 4px 1px 3px;
+    background: -moz-linear-gradient(center bottom, #E5E5E5 0%, #F8F8F8 100%) repeat scroll 0 0 transparent;
+    color: #333333;
+}
+
+.gide-table-valCell {
+    height: 24px;
+    line-height: 25px;
+    padding: 2px 4px 1px 3px;
+    border-bottom: 1px solid #DDDDDD;
+}
+
+.gide-tcell-input {
+    width: 100%;
+    height: 100%;
+    border: 0 none;
+}
+
+
+
+

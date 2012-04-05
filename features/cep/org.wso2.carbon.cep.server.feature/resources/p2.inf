@@ -1,0 +1,5 @@
+instructions.configure = \
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/features/org.wso2.carbon.cep.server_${feature.version}/conf/cep-config.xml,target:${installFolder}/../conf/cep-config.xml,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/features/org.wso2.carbon.cep.server_${feature.version}/conf/cep-config.xsd,target:${installFolder}/../conf/cep-config.xsd,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/features/org.wso2.carbon.cep.server_${feature.version}/conf);
+

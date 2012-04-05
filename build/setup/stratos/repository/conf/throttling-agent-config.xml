@@ -1,0 +1,7 @@
+<throttlingAgentConfig xmlns="http://wso2.com/carbon/multitenancy/throttling/agent/config">
+    <parameters>
+        <parameter name="managerServiceUrl">https://cloud-test.wso2.com/services/</parameter>
+        <parameter name="userName">admin</parameter>
+        <parameter name="password">admin</parameter>
+    </parameters>
+</throttlingAgentConfig>

@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+<head>
+    <title>Unit Test for Tree.js</title>
+    <script src="../../main/js/lib/closure-library/closure/goog/base.js"></script>
+    <script>
+        goog.require('goog.testing.jsunit');
+        goog.require('gadgetide.datasource.Graph');
+        goog.require('gadgetide.datasource.Tree');
+        goog.require('gadgetide.datasource.TreeFactory');
+    </script>
+    <script language="javascript">
+
+        var MockDelegator = function(id) {
+            this.id = id
+        };
+        MockDelegator.prototype.toString = function() {
+            return "D[" + this.id + "]";
+        };
+        var MockField = function(id) {
+            this.id = id
+        };
+        MockField.prototype.path = [{localpart:"root"},{localpart:"text"}];
+        MockField.prototype.toString = function() {
+            return "F[" + this.id + "]";
+        };
+        //make 100 pairs of Delegators.
+        var units = [];
+        for (i = 0; i < 100; i++) {
+            var m1 = new MockDelegator(i);
+            var f1 = new MockField(i);
+            units[i] = [m1,f1];
+        }
+        var link = function(graph, links) {
+            for (var i = 0; i < links.length; i++) {
+                var l = links[i];
+                var a = l[0], b = l[1];
+                graph.add(units[a][0], units[a][1], units[b][0], units[b][1]);
+            }
+        };
+
+
+        var graph0;
+        var setUp = function() {
+            graph0 = new gadgetide.datasource.Graph();
+            /*
+             * 1 -> 2 \
+             *         --> 0 -> 6
+             * 3 -> 4 /    ^          7 -> 10
+             *      |      |
+             *      \      |
+             *       > 5 ->8 <- 9
+             */
+            var links = [
+                [1,2],
+                [2,0],
+                [0,6],
+                [8,0],
+                [5,8],
+                [4,5],
+                [3,4],
+                [4,0],
+                [9,8],
+                [7,10]
+            ];
+            link(graph0, links);
+
+        };
+
+
+        var testSize = function() {
+            var tree = gadgetide.datasource.TreeFactory.createFromSingleRoot(graph0, units[0][0]);
+            assertEquals("D[0] should have 8 dependencies including itself", tree.getSize(), 8)
+        };
+
+        var testSatisfiedBy = function() {
+            var tree = gadgetide.datasource.TreeFactory.createFromSingleRoot(graph0, units[0][0]);
+            var done = new Array(tree.getSize());
+            done[tree.getIndex(units[4][0])] = true;
+            done[tree.getIndex(units[8][0])] = true;
+            done[tree.getIndex(units[2][0])] = true;
+
+            /* here,
+             *     tree.satisfiedBy(units[2][0],done)
+             * means
+             *     if 4,8 are done, and 2 is just complected, what's next?
+             */
+            assertElementsEquals("0 should be satisfied", tree.satisfiedBy(units[2][0], done), [units[0][0]])
+        };
+
+        var testForkedSatisfiedBy = function() {
+            var graph1 = new gadgetide.datasource.Graph();
+            /*
+             * 1 ---
+             *       \
+             *         -----> 2 , 4 --> 8
+             *       /
+             * 3 ----
+             */
+            var links = [
+                [1,2],
+                [1,4],
+                [3,2],
+                [3,4],
+                [2,8],
+                [4,8]
+            ];
+            link(graph1, links);
+
+            var tree = gadgetide.datasource.TreeFactory.createFromSingleRoot(graph1, units[8][0]);
+            var done = new Array(tree.getSize());
+            done[tree.getIndex(units[1][0])] = true;
+            done[tree.getIndex(units[3][0])] = true;
+            assertSameElements("both 2,4 should be satisfied", tree.satisfiedBy(units[3][0], done), [units[4][0],units[2][0]])
+        }
+
+        var testGetInputFor = function() {
+            var graph1 = new gadgetide.datasource.Graph();
+            /*
+             * 1 ---
+             *   a   \ x
+             *        v
+             *        0 <----- 2
+             *      z ^  y    b
+             *       /
+             * 3 ----
+             *   c
+             */
+
+            var f1to0 = new MockField(200);
+            f1to0.path = [{localpart:"root"},{localpart:"a"}];
+            var f2to0 = new MockField(201);
+            f2to0.path = [{localpart:"roof"},{localpart:"yahtzee"},{localpart:"b"}];
+            var f3to0 = new MockField(202);
+            f3to0.path = [{localpart:"ok"},{localpart:"c"}];
+
+            var f1of0 = new MockField(203);
+            f1of0.path = [{localpart:"root"},{localpart:"deep"},{localpart:"x"}];
+            var f2of0 = new MockField(204);
+            f2of0.path = [{localpart:"root"},{localpart:"y"}];
+            var f3of0 = new MockField(205);
+            f3of0.path = [{localpart:"root"},{localpart:"z"}];
+
+            graph1.add(units[1][0], f1to0, units[0][0], f1of0);
+            graph1.add(units[2][0], f2to0, units[0][0], f2of0);
+            graph1.add(units[3][0], f3to0, units[0][0], f3of0);
+
+            var tree = gadgetide.datasource.TreeFactory.createFromSingleRoot(graph1, units[0][0]);
+            var data = new Array(tree.getSize());
+            data[tree.getIndex(units[1][0])] = {root:{ a:{$:1} }};
+            data[tree.getIndex(units[2][0])] = {roof:{ yahtzee:{b:{$:2}} }};
+            data[tree.getIndex(units[3][0])] = {ok:{ c:{$:3} }};
+
+            //TODO: test with namespaces
+            assertObjectEquals("should yield expected object structure",
+                    {"root":{"@xmlns":{},"deep":{"@xmlns":{},"x":{"@xmlns":{},"$":1}},"y":{"@xmlns":{},"$":2},"z":{"@xmlns":{},"$":3}}},
+                    tree.getInputFor(units[0][0], data));
+        }
+
+    </script>
+</head>
+<body>
+</body>
+</html>
+

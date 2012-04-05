@@ -1,0 +1,133 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://webseal.authenticator.identity.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax237="http://common.core.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://webseal.authenticator.identity.carbon.wso2.org">
+    <wsdl:documentation>WebSealAuthenticator</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ax238="http://webseal.authenticator.identity.carbon.wso2.org" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://common.core.carbon.wso2.org/xsd">
+            <xs:import namespace="http://webseal.authenticator.identity.carbon.wso2.org" />
+            <xs:complexType name="AuthenticationException">
+                <xs:complexContent>
+                    <xs:extension base="ax238:Exception">
+                        <xs:sequence />
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax239="http://common.core.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://webseal.authenticator.identity.carbon.wso2.org">
+            <xs:import namespace="http://common.core.carbon.wso2.org/xsd" />
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Exception" nillable="true" type="xs:anyType" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="AuthenticationException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="AuthenticationException" nillable="true" type="ax237:AuthenticationException" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="loginWithDelegation">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="username" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="password" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="authenticatedUser" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="remoteAddress" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="loginWithDelegationResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="loginWithDelegationRequest">
+        <wsdl:part name="parameters" element="ns:loginWithDelegation" />
+    </wsdl:message>
+    <wsdl:message name="loginWithDelegationResponse">
+        <wsdl:part name="parameters" element="ns:loginWithDelegationResponse" />
+    </wsdl:message>
+    <wsdl:message name="AuthenticationException">
+        <wsdl:part name="parameters" element="ns:AuthenticationException" />
+    </wsdl:message>
+    <wsdl:portType name="WebSealAuthenticatorPortType">
+        <wsdl:operation name="loginWithDelegation">
+            <wsdl:input message="ns:loginWithDelegationRequest" wsaw:Action="urn:loginWithDelegation" />
+            <wsdl:output message="ns:loginWithDelegationResponse" wsaw:Action="urn:loginWithDelegationResponse" />
+            <wsdl:fault message="ns:AuthenticationException" name="AuthenticationException" wsaw:Action="urn:loginWithDelegationAuthenticationException" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="WebSealAuthenticatorSoap11Binding" type="ns:WebSealAuthenticatorPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="loginWithDelegation">
+            <soap:operation soapAction="urn:loginWithDelegation" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="AuthenticationException">
+                <soap:fault use="literal" name="AuthenticationException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="WebSealAuthenticatorSoap12Binding" type="ns:WebSealAuthenticatorPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="loginWithDelegation">
+            <soap12:operation soapAction="urn:loginWithDelegation" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="AuthenticationException">
+                <soap12:fault use="literal" name="AuthenticationException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="WebSealAuthenticatorHttpBinding" type="ns:WebSealAuthenticatorPortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="loginWithDelegation">
+            <http:operation location="loginWithDelegation" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="loginWithDelegation" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="loginWithDelegation" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="WebSealAuthenticator">
+        <wsdl:port name="WebSealAuthenticatorHttpsSoap11Endpoint" binding="ns:WebSealAuthenticatorSoap11Binding">
+            <soap:address location="https://192.168.1.100:9443/services/WebSealAuthenticator.WebSealAuthenticatorHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="WebSealAuthenticatorHttpsSoap12Endpoint" binding="ns:WebSealAuthenticatorSoap12Binding">
+            <soap12:address location="https://192.168.1.100:9443/services/WebSealAuthenticator.WebSealAuthenticatorHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="WebSealAuthenticatorHttpsEndpoint" binding="ns:WebSealAuthenticatorHttpBinding">
+            <http:address location="https://192.168.1.100:9443/services/WebSealAuthenticator.WebSealAuthenticatorHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

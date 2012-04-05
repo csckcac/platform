@@ -1,0 +1,124 @@
+Changes by version:
+===================
+0.7.0 stands for cassandra's 0.7.0 version.
+-22 stands for hector's version
+
+Versions above 0.7.0-17 work well with cassandra's 0.7.* (after 0.7.0-beta2)
+
+0.7.0-23
+========
+Initial import of BToddB's hector-object-mapper as object-mapper module
+Object mapper ported over to JPA annotations and EntityManager (very redimentary support)
+Fix issue with createKeyspace requiring additional column info
+Massive changes to pom structure courtesy of Stephen Connolly to facilitate inclusion into maven central repository. 
+Small tweaks to HConnectionManager courtesy of Benoit Perroud
+Collection conversions in AbstractSerializer use the size of the provided collection for initialization. Patch courtesy of Benoit Perroud. 
+Treat HUnavailableException the same as HTimeoutException
+
+0.7.0-22
+========
+Fix issue with LeastActiveBalancingPolicy that favoured same host repeatedly
+Define ClockResolution as an Interface to allow client to define their own implementations
+Added TimeUUID support (me.prettyprint.cassandra.utils.TimeUUIDUtils)
+Added updateColumnFamily to Cluster 
+Shorterm fix for catching InvalidRequestException and handling it correctly for a bootstraping node
+
+
+0.7.0-21
+========
+CassandraHostConfigurator is now serializable
+Split the project to hector-core
+Added removeCassandraHost on HConnectionManager for graceful shutdown of a pool
+Configuration of load balancing policy is now done on CassandraHostConfigurator
+KnownHosts and per-pool stats are once again available via JMX
+Minor logging tweaks to make logging levels more appropriate
+Added overloaded version of createColumn (contributed by Michael Moores)
+
+
+0.7.0-20
+========
+Added authentication support (contributed by Jim Ancona)
+Cleaner abstraction for schema modifications (contributed by Peter Harrison)
+- ddl package added
+- wrapper classes and interfaces for abstracting protocol
+RangeSlicesQuery now supports setRowCount for limiting results to a number of rows
+
+
+0.7.0-19
+========
+Fix issue http://github.com/rantav/hector/issues#issue/74 with fix suggested by Patricio Echague
+CassandraHostRetry service will retry downed hosts in a background thread at the interval specified on CassandraHostConfigurator (on by default at 30sec interval)
+Refactoring of the connection pooling innards to fix epic race condition on failover. This includes but is not limited to:
+- Removal of classes effectively matching the pattern CassandraClient* from the service package
+- Command is gone. It was no longer needed and was more confusing than anything else
+- Pooling logic has been stress tested by a neutral third party (no, really!)
+Upgrade to thrift 0.5 to match Cassandra (it caught us by surprise as well). 
+The system_rename_* methods were removed matching removal of such in Thrift API
+Microsecond level granularity is now the default
+NodeAutoDiscoverService will periodically look for new hosts on the ring and add them (off by default)
+
+
+0.7.0-17
+========
+Add CountQuery, SuperCountQuery and SubCountQuery
+Move all the API stuff to me.prettyprint.hector.api.*. Extract interfaces and prepare the ground for more avro good.
+ - Move all the queries and extract their interfaces
+ - Rename KeyspaceOperator and extract a Keyspace interface from it
+Rename a few exceptions to begin with HSomething so they are hard to unintentionally mix with their thrift doubles.
+Bug fixes:
+ CassandraClientPoolByHostImpl can throw NoSuchElementException 
+ KeyspaceImpl.toString returns super.toString()
+ API V2 has no means of getting all columns from a row.
+ KeyspaceOperator throws NPE that masks real exceptions
+ Timestamp (and Clock in 0.7.0) are not set on HColumn in the constructor
+ Friendlier API and spring integration
+ Error in failover - incorrect operation when borrowClient throws an 
+ batchMutate doesn't work with null predicate in deletion. Cannot batch-delete rows.
+ getSuperColumn() does not return null
+ KeyspaceImpl.getSuperColumn() should use cassandra.get() and not cassandra.get_slice()
+
+
+
+0.6.0-15
+========
+Add a few more public settings to pass over to GenericObjectPool: lifo, minEvictableIdleTimeMillis and timeBetweenEvictionRunsMillis (contributed by B. Todd Burruss)
+Remove some unused meta calls from CassandraClient, such as getConfigFile and getStringProperty
+Make the calls of other meta API go through CassandraCluster and by that use an improved version of them in thrift and failover (http://github.com/rantav/hector/issues#issue/11 and http://github.com/rantav/hector/issues#issue/7 and http://github.com/rantav/hector/issues#issue/29)
+Add an exception hierarchy to wrap transport and general cassandra API exceptions http://github.com/rantav/hector/issues#issue/32
+Make HectorException extend RuntimeException
+Add the port number to be part of the cassandra host identifier so that many cassandra instances can be connected from a single hector client, http://github.com/rantav/hector/issues/issue/37/#comment_278773
+Fix bogus doubly locked initialization in CassandraClientPoolFactory
+Fix http://github.com/rantav/hector/issues/issue/48 KeyspaceImpl.getSuperColumn() should use cassandra.get() and not cassandra.get_slice()
+Allow CassandraClientPool to provide settings from CassandraHostConfigurator to new hosts if it was configured from such. http://github.com/rantav/hector/issues/issue/47
+Fix http://github.com/rantav/hector/issues#issue/50 getSuperColumn() does not return null
+New and fancy API. We call this API v2 beta b/c we want to collect feedback from the commumnity before finalizing it
+
+
+0.6.0-14
+========
+Add getRangeSuperSlices http://github.com/rantav/hector/issues/#issue/38
+Add Command.execute that accepts a configurable FailoverPolicy
+Improve maven build file
+
+0.6.0-13
+========
+Fix duplicate host entries and two connection pools to the same host http://github.com/rantav/hector/issues/closed#issue/37
+Make loading hectorLog4j.xml optional, controlled by system property com.prettyprint.cassandra.load_hector_log4j http://github.com/rantav/hector/issues/closed#issue/36
+Fix - JMX counter NumActive isn't reporting a correct num http://github.com/rantav/hector/issues/closed#issue/33
+Chagne the name of the perf4 logger to be me.prettyprint.hector.TimingLogger
+Fix duplicate releases of clients when failing over to next host and connection leaking (no bug, was introduced by recent refactors)
+Improve failover - if the current host isn't in the list of known hosts, just failover to any random known host, don't give up
+Fix perf4j logger name so perf stats will actually work
+added overloaded remove for user specified timestamps
+Add @deprecated to getRangeSlice
+Add CassandraClientPool.getMbean
+Make Keyspace.createTimestamp public
+Change default DEFAULT_MAX_IDLE to -1
+
+0.6.0-12
+========
+Timestampes are currently in milliseconds, should be microseconds http://github.com/rantav/hector/issues/closed#issue/28
+getPackage() MAY return a null at JmxMonitor constructor. http://github.com/rantav/hector/issues/closed#issue/26
+Change default consistency level to QUORUM from DCQUOROM http://github.com/rantav/hector/issues#issue/30
+
+

@@ -1,0 +1,9 @@
+<div class="notification" id="notification">
+    <div class="title">News</div>
+    <ul>
+        <li class="template">
+            <a class="news-title">ServiceFoo got hosted on new tera server....</a>
+            <div class="date">15/01/2011</div>
+        </li>
+    </ul>
+</div>

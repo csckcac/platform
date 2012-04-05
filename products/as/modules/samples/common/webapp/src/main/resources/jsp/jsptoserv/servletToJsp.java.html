@@ -1,0 +1,32 @@
+<pre style="line-height: 100%;font-family:monospace;background-color:#ffffff; border-width:0.01mm; border-color:#000000; border-style:solid;padding:4px;font-size:10pt;"><span style="color:#808080;background-color:#ffffff;">/*
+* Licensed to the Apache Software Foundation (ASF) under one or more
+* contributor license agreements.  See the NOTICE file distributed with
+* this work for additional information regarding copyright ownership.
+* The ASF licenses this file to You under the Apache License, Version 2.0
+* (the "License"); you may not use this file except in compliance with
+* the License.  You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+</span><span style="color:#000080;background-color:#ffffff;">import</span><span style="background-color:#ffffff;"> javax.servlet.http.*;
+
+</span><span style="color:#000080;background-color:#ffffff;">public</span><span style="background-color:#ffffff;"> </span><span style="color:#000080;background-color:#ffffff;">class</span><span style="background-color:#ffffff;"> servletToJsp </span><span style="color:#000080;background-color:#ffffff;">extends</span><span style="background-color:#ffffff;"> HttpServlet {
+
+    </span><span style="color:#000080;background-color:#ffffff;">public</span><span style="background-color:#ffffff;"> </span><span style="color:#000080;background-color:#ffffff;">void</span><span style="background-color:#ffffff;"> doGet (HttpServletRequest request,
+               HttpServletResponse response) {
+
+    </span><span style="color:#000080;background-color:#ffffff;">try</span><span style="background-color:#ffffff;"> {
+        </span><span style="color:#808080;background-color:#ffffff;">// Set the attribute and Forward to hello.jsp
+</span><span style="background-color:#ffffff;">        request.setAttribute (</span><span style="color:#008000;background-color:#ffffff;">"servletName"</span><span style="background-color:#ffffff;">, </span><span style="color:#008000;background-color:#ffffff;">"servletToJsp"</span><span style="background-color:#ffffff;">);
+        getServletConfig().getServletContext().getRequestDispatcher(</span><span style="color:#008000;background-color:#ffffff;">"/jsp/jsptoserv/hello.jsp"</span><span style="background-color:#ffffff;">).forward(request, response);
+    } </span><span style="color:#000080;background-color:#ffffff;">catch</span><span style="background-color:#ffffff;"> (Exception ex) {
+        ex.printStackTrace ();
+    }
+    }
+}</span></pre>

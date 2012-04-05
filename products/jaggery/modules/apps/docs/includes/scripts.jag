@@ -1,0 +1,26 @@
+<script type="text/javascript" src="/docs/js/jquery-1.7.1.min.js"></script>
+<script src="/docs/js/google-code-prettify/prettify.js"></script>
+<script>$(function () { prettyPrint(); })</script>
+<script src="/docs/js/bootstrap-modal.js"></script>
+<script src="/docs/js/bootstrap-alerts.js"></script>
+<script src=/docs/js/bootstrap-twipsy.js"></script>
+<script src="/docs/js/bootstrap-popover.js"></script>
+<script src="/docs/js/bootstrap-dropdown.js"></script>
+<script src="/docs/js/bootstrap-scrollspy.js"></script>
+<script src="/docs/js/bootstrap-tabs.js"></script>
+<script src="/docs/js/bootstrap-buttons.js"></script>
+<script src="/docs/js/waypoints.js"></script>
+<script type="text/javascript">
+
+	$('#pageLinks').waypoint(function(event, direction) {
+   if (direction === 'down') {
+     $('#footer-navbar').addClass('visible');
+	 // do this on the way down
+   }
+   else {
+	$('#footer-navbar').toggleClass('visible');
+      // do this on the way back up through the waypoint
+   }
+});
+    $('#pageLinks').focus();
+	</script>

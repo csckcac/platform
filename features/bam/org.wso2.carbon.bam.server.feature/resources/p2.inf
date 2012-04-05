@@ -1,0 +1,8 @@
+instructions.configure = \
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/features/org.wso2.carbon.bam.server_${feature.version}/conf/datasources.properties,target:${installFolder}/../conf/datasources.properties,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/features/org.wso2.carbon.bam.server_${feature.version}/conf/bam.xml,target:${installFolder}/../conf/bam.xml,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.unzip(source:${installFolder}/features/org.wso2.carbon.bam.server_${feature.version}/conf/dashboard.zip,target:${installFolder}/../resources/dashboard);\
+org.eclipse.equinox.p2.touchpoint.natives.unzip(source:${installFolder}/features/org.wso2.carbon.bam.server_${feature.version}/conf/dataservices.zip,target:${installFolder}/../deployment/server/dataservices);\
+org.eclipse.equinox.p2.touchpoint.natives.unzip(source:${installFolder}/features/org.wso2.carbon.bam.server_${feature.version}/conf/sql.zip,target:${installFolder}/../../dbscripts/bam);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/features/org.wso2.carbon.bam.server_${feature.version}/conf);
+

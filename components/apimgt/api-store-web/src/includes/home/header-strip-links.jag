@@ -1,0 +1,30 @@
+<div class="container_16">
+    <div class="grid_3">
+        <a class="logo">
+            <img src="images/logo.png" border="0"/>
+        </a>
+    </div>
+    <div class="grid_9">
+        <ul class="main-menu">
+            <li><a href="index.jag" >APIs</a></li>
+            <li><a href="#" onclick="loadApplicationUI()">Applications</a></li>
+            <li><a href="#" onclick="loadAllSubscriptionsUI()">My Subscriptions</a></li>
+        </ul>
+    </div>
+    <div class="grid_4 sub-menu">
+        <ul id="login-links">
+            <li><a class="login-link" onclick="ServiceStoreApp.showLogin()">Login</a></li>
+            <li><a>Help</a></li>
+        </ul>
+        <ul id="logout-links" style="display:none">
+            <li><a class="login-link" onclick="ServiceStoreApp.logout()">Logout</a></li>
+            <li><a>Help</a></li>
+            <li><a class="user-name" id="userName"></a></li>
+        </ul>
+        <div style="clear:both"></div>
+        <div class="welcome-message">Welcome to Service Store</div>
+    </div>
+    <div id="login-box" class="grid_16">
+            <% include("/includes/home/login-box.jag"); %>
+        </div>
+</div>

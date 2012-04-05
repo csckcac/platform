@@ -1,0 +1,242 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ax2356="http://beans.monitor.status.carbon.wso2.org/xsd" xmlns:ns="http://services.monitor.status.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.monitor.status.carbon.wso2.org">
+    <wsdl:documentation>HealthMonitorService</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ax2357="http://beans.monitor.status.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.monitor.status.carbon.wso2.org">
+            <xs:import namespace="http://beans.monitor.status.carbon.wso2.org/xsd" />
+            <xs:element name="HealthMonitorServiceException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="HealthMonitorServiceException" nillable="true" type="ns:Exception" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="getServiceStatus">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="ServiceName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceStatusResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2357:ServiceStateInfoBean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllServiceStatus">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllServiceStatusResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2357:ServiceStateInfoBean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllServiceStateDetail">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllServiceStateDetailResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2357:ServiceStateDetailInfoBean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://beans.monitor.status.carbon.wso2.org/xsd">
+            <xs:complexType name="ServiceStateInfoBean">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="date" type="xs:long" />
+                    <xs:element minOccurs="0" name="service" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="serviceID" type="xs:int" />
+                    <xs:element minOccurs="0" name="serviceState" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ServiceStateDetailInfoBean">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="detailLoggedTime" type="xs:long" />
+                    <xs:element minOccurs="0" name="service" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="serviceStateDetail" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="stateLoggedTime" type="xs:long" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getServiceStatusRequest">
+        <wsdl:part name="parameters" element="ns:getServiceStatus" />
+    </wsdl:message>
+    <wsdl:message name="getServiceStatusResponse">
+        <wsdl:part name="parameters" element="ns:getServiceStatusResponse" />
+    </wsdl:message>
+    <wsdl:message name="HealthMonitorServiceException">
+        <wsdl:part name="parameters" element="ns:HealthMonitorServiceException" />
+    </wsdl:message>
+    <wsdl:message name="getAllServiceStateDetailRequest">
+        <wsdl:part name="parameters" element="ns:getAllServiceStateDetail" />
+    </wsdl:message>
+    <wsdl:message name="getAllServiceStateDetailResponse">
+        <wsdl:part name="parameters" element="ns:getAllServiceStateDetailResponse" />
+    </wsdl:message>
+    <wsdl:message name="getAllServiceStatusRequest">
+        <wsdl:part name="parameters" element="ns:getAllServiceStatus" />
+    </wsdl:message>
+    <wsdl:message name="getAllServiceStatusResponse">
+        <wsdl:part name="parameters" element="ns:getAllServiceStatusResponse" />
+    </wsdl:message>
+    <wsdl:portType name="HealthMonitorServicePortType">
+        <wsdl:operation name="getServiceStatus">
+            <wsdl:input message="ns:getServiceStatusRequest" wsaw:Action="urn:getServiceStatus" />
+            <wsdl:output message="ns:getServiceStatusResponse" wsaw:Action="urn:getServiceStatusResponse" />
+            <wsdl:fault message="ns:HealthMonitorServiceException" name="HealthMonitorServiceException" wsaw:Action="urn:getServiceStatusHealthMonitorServiceException" />
+        </wsdl:operation>
+        <wsdl:operation name="getAllServiceStateDetail">
+            <wsdl:input message="ns:getAllServiceStateDetailRequest" wsaw:Action="urn:getAllServiceStateDetail" />
+            <wsdl:output message="ns:getAllServiceStateDetailResponse" wsaw:Action="urn:getAllServiceStateDetailResponse" />
+            <wsdl:fault message="ns:HealthMonitorServiceException" name="HealthMonitorServiceException" wsaw:Action="urn:getAllServiceStateDetailHealthMonitorServiceException" />
+        </wsdl:operation>
+        <wsdl:operation name="getAllServiceStatus">
+            <wsdl:input message="ns:getAllServiceStatusRequest" wsaw:Action="urn:getAllServiceStatus" />
+            <wsdl:output message="ns:getAllServiceStatusResponse" wsaw:Action="urn:getAllServiceStatusResponse" />
+            <wsdl:fault message="ns:HealthMonitorServiceException" name="HealthMonitorServiceException" wsaw:Action="urn:getAllServiceStatusHealthMonitorServiceException" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="HealthMonitorServiceSoap11Binding" type="ns:HealthMonitorServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="getServiceStatus">
+            <soap:operation soapAction="urn:getServiceStatus" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="HealthMonitorServiceException">
+                <soap:fault use="literal" name="HealthMonitorServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllServiceStateDetail">
+            <soap:operation soapAction="urn:getAllServiceStateDetail" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="HealthMonitorServiceException">
+                <soap:fault use="literal" name="HealthMonitorServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllServiceStatus">
+            <soap:operation soapAction="urn:getAllServiceStatus" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="HealthMonitorServiceException">
+                <soap:fault use="literal" name="HealthMonitorServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="HealthMonitorServiceSoap12Binding" type="ns:HealthMonitorServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="getServiceStatus">
+            <soap12:operation soapAction="urn:getServiceStatus" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="HealthMonitorServiceException">
+                <soap12:fault use="literal" name="HealthMonitorServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllServiceStateDetail">
+            <soap12:operation soapAction="urn:getAllServiceStateDetail" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="HealthMonitorServiceException">
+                <soap12:fault use="literal" name="HealthMonitorServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllServiceStatus">
+            <soap12:operation soapAction="urn:getAllServiceStatus" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="HealthMonitorServiceException">
+                <soap12:fault use="literal" name="HealthMonitorServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="HealthMonitorServiceHttpBinding" type="ns:HealthMonitorServicePortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="getServiceStatus">
+            <http:operation location="getServiceStatus" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAllServiceStateDetail">
+            <http:operation location="getAllServiceStateDetail" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAllServiceStatus">
+            <http:operation location="getAllServiceStatus" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="HealthMonitorService">
+        <wsdl:port name="HealthMonitorServiceHttpSoap11Endpoint" binding="ns:HealthMonitorServiceSoap11Binding">
+            <soap:address location="http://10.200.2.106:9763/services/HealthMonitorService.HealthMonitorServiceHttpSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="HealthMonitorServiceHttpsSoap11Endpoint" binding="ns:HealthMonitorServiceSoap11Binding">
+            <soap:address location="https://10.200.2.106:9443/services/HealthMonitorService.HealthMonitorServiceHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="HealthMonitorServiceHttpSoap12Endpoint" binding="ns:HealthMonitorServiceSoap12Binding">
+            <soap12:address location="http://10.200.2.106:9763/services/HealthMonitorService.HealthMonitorServiceHttpSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="HealthMonitorServiceHttpsSoap12Endpoint" binding="ns:HealthMonitorServiceSoap12Binding">
+            <soap12:address location="https://10.200.2.106:9443/services/HealthMonitorService.HealthMonitorServiceHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="HealthMonitorServiceHttpsEndpoint" binding="ns:HealthMonitorServiceHttpBinding">
+            <http:address location="https://10.200.2.106:9443/services/HealthMonitorService.HealthMonitorServiceHttpsEndpoint/" />
+        </wsdl:port>
+        <wsdl:port name="HealthMonitorServiceHttpEndpoint" binding="ns:HealthMonitorServiceHttpBinding">
+            <http:address location="http://10.200.2.106:9763/services/HealthMonitorService.HealthMonitorServiceHttpEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

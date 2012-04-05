@@ -1,0 +1,34 @@
+<analyzerSequence name="APISummarySequence">
+   <trigger cron="1 * * * * ? *"/>
+   <analyzers>
+      <get name="BASEEnriched" batchSize="1000">
+      </get>
+      <groupBy>
+         <field name="api"/>
+      </groupBy>
+      <drop type="column">
+         <fieldSet>
+            <field name="consumerKey"/>
+            <field name="context"/>
+            <field name="resource"/>
+            <field name="method"/>
+            <field name="version"/>
+            <field name="user"/>
+	    <field name="requestTime"/>
+	    <field name="response"/>
+	    <field name="responseTime"/>
+	    <field name="serviceTime"/>
+         </fieldSet>
+      </drop>
+      <aggregate>
+         <measure name="request" aggregationType="SUM"/>
+      </aggregate>
+      <put name="APISummary" dataSourceType="CASSANDRA">
+         <onExist>
+            <aggregate>
+               <measure name="request" aggregationType="SUM"/>
+            </aggregate>
+         </onExist>
+      </put>
+   </analyzers>
+</analyzerSequence>

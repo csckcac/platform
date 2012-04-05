@@ -1,0 +1,710 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://mgt.profiles.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax2141="http://dto.mgt.profiles.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ax2139="http://mgt.profiles.carbon.wso2.org/xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://mgt.profiles.carbon.wso2.org">
+    <wsdl:documentation>ProfileAdminService</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://dto.mgt.profiles.carbon.wso2.org/xsd">
+            <xs:complexType name="ClaimConfigurationDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="behavior" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="claimUri" nillable="true" type="xs:string" />
+                </xs:sequence>
+
+            </xs:complexType>
+            <xs:complexType name="DialectDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="dialectUri" nillable="true" type="xs:string" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="profileConfigurations" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="AvailableProfileConfigurationDTO">
+                <xs:sequence>
+
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="dialects" nillable="true" type="ax2141:DialectDTO" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="DetailedProfileConfigurationDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="dialect" nillable="true" type="xs:string" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="profileConfiguartions" nillable="true" type="ax2141:ProfileConfigurationDTO" />
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="ProfileConfigurationDTO">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="claimConfiguration" nillable="true" type="ax2141:ClaimConfigurationDTO" />
+                    <xs:element minOccurs="0" name="configurationName" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://mgt.profiles.carbon.wso2.org/xsd">
+            <xs:complexType name="ProfileManagementException">
+
+                <xs:sequence />
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax2142="http://dto.mgt.profiles.carbon.wso2.org/xsd" xmlns:ax2140="http://mgt.profiles.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://mgt.profiles.carbon.wso2.org">
+            <xs:import namespace="http://mgt.profiles.carbon.wso2.org/xsd" />
+            <xs:import namespace="http://dto.mgt.profiles.carbon.wso2.org/xsd" />
+            <xs:element name="ProfileManagementException">
+                <xs:complexType>
+                    <xs:sequence>
+
+                        <xs:element minOccurs="0" name="ProfileManagementException" nillable="true" type="ax2140:ProfileManagementException" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateClaimMappingBehavior">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="profileName" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="claimsConfiguration" nillable="true" type="ax2142:ClaimConfigurationDTO" />
+
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="isAddProfileEnabledResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+
+            </xs:element>
+            <xs:element name="getProfileConfiguration">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="dialect" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="profileConfig" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="getProfileConfigurationResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2142:ClaimConfigurationDTO" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getDialectsForUserStoreResponse">
+                <xs:complexType>
+
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2142:DialectDTO" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getDialectsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2142:DialectDTO" />
+
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getClaimConfigurations">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="dialect" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+
+            </xs:element>
+            <xs:element name="getClaimConfigurationsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2142:ClaimConfigurationDTO" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllAvailableProfileConfiguraionsForUserStore">
+
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userStore" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllAvailableProfileConfiguraionsForUserStoreResponse">
+                <xs:complexType>
+                    <xs:sequence>
+
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2142:AvailableProfileConfigurationDTO" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllAvailableProfileConfiguraionsForDialect">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="dialect" nillable="true" type="xs:string" />
+                    </xs:sequence>
+
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllAvailableProfileConfiguraionsForDialectResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2142:DetailedProfileConfigurationDTO" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="getAllAvailableProfileConfiguraionsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2142:AvailableProfileConfigurationDTO" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteProfileConfiguraiton">
+                <xs:complexType>
+
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="dialect" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="profileName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addProfile">
+                <xs:complexType>
+                    <xs:sequence>
+
+                        <xs:element minOccurs="0" name="profileName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="dialectName" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="claimsConfiguration" nillable="true" type="ax2142:ClaimConfigurationDTO" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="isAddProfileEnabledRequest" />
+
+    <wsdl:message name="isAddProfileEnabledResponse">
+        <wsdl:part name="parameters" element="ns:isAddProfileEnabledResponse" />
+    </wsdl:message>
+    <wsdl:message name="ProfileManagementException">
+        <wsdl:part name="parameters" element="ns:ProfileManagementException" />
+    </wsdl:message>
+    <wsdl:message name="getProfileConfigurationRequest">
+        <wsdl:part name="parameters" element="ns:getProfileConfiguration" />
+    </wsdl:message>
+
+    <wsdl:message name="getProfileConfigurationResponse">
+        <wsdl:part name="parameters" element="ns:getProfileConfigurationResponse" />
+    </wsdl:message>
+    <wsdl:message name="updateClaimMappingBehaviorRequest">
+        <wsdl:part name="parameters" element="ns:updateClaimMappingBehavior" />
+    </wsdl:message>
+    <wsdl:message name="addProfileRequest">
+        <wsdl:part name="parameters" element="ns:addProfile" />
+    </wsdl:message>
+
+    <wsdl:message name="getAllAvailableProfileConfiguraionsRequest" />
+    <wsdl:message name="getAllAvailableProfileConfiguraionsResponse">
+        <wsdl:part name="parameters" element="ns:getAllAvailableProfileConfiguraionsResponse" />
+    </wsdl:message>
+    <wsdl:message name="getClaimConfigurationsRequest">
+        <wsdl:part name="parameters" element="ns:getClaimConfigurations" />
+    </wsdl:message>
+    <wsdl:message name="getClaimConfigurationsResponse">
+        <wsdl:part name="parameters" element="ns:getClaimConfigurationsResponse" />
+
+    </wsdl:message>
+    <wsdl:message name="getDialectsRequest" />
+    <wsdl:message name="getDialectsResponse">
+        <wsdl:part name="parameters" element="ns:getDialectsResponse" />
+    </wsdl:message>
+    <wsdl:message name="getAllAvailableProfileConfiguraionsForUserStoreRequest">
+        <wsdl:part name="parameters" element="ns:getAllAvailableProfileConfiguraionsForUserStore" />
+    </wsdl:message>
+    <wsdl:message name="getAllAvailableProfileConfiguraionsForUserStoreResponse">
+
+        <wsdl:part name="parameters" element="ns:getAllAvailableProfileConfiguraionsForUserStoreResponse" />
+    </wsdl:message>
+    <wsdl:message name="getDialectsForUserStoreRequest" />
+    <wsdl:message name="getDialectsForUserStoreResponse">
+        <wsdl:part name="parameters" element="ns:getDialectsForUserStoreResponse" />
+    </wsdl:message>
+    <wsdl:message name="deleteProfileConfiguraitonRequest">
+        <wsdl:part name="parameters" element="ns:deleteProfileConfiguraiton" />
+    </wsdl:message>
+
+    <wsdl:message name="getAllAvailableProfileConfiguraionsForDialectRequest">
+        <wsdl:part name="parameters" element="ns:getAllAvailableProfileConfiguraionsForDialect" />
+    </wsdl:message>
+    <wsdl:message name="getAllAvailableProfileConfiguraionsForDialectResponse">
+        <wsdl:part name="parameters" element="ns:getAllAvailableProfileConfiguraionsForDialectResponse" />
+    </wsdl:message>
+    <wsdl:portType name="ProfileAdminServicePortType">
+        <wsdl:operation name="isAddProfileEnabled">
+            <wsdl:input message="ns:isAddProfileEnabledRequest" wsaw:Action="urn:isAddProfileEnabled" />
+
+            <wsdl:output message="ns:isAddProfileEnabledResponse" wsaw:Action="urn:isAddProfileEnabledResponse" />
+            <wsdl:fault message="ns:ProfileManagementException" name="ProfileManagementException" wsaw:Action="urn:isAddProfileEnabledProfileManagementException" />
+        </wsdl:operation>
+        <wsdl:operation name="getProfileConfiguration">
+            <wsdl:input message="ns:getProfileConfigurationRequest" wsaw:Action="urn:getProfileConfiguration" />
+            <wsdl:output message="ns:getProfileConfigurationResponse" wsaw:Action="urn:getProfileConfigurationResponse" />
+            <wsdl:fault message="ns:ProfileManagementException" name="ProfileManagementException" wsaw:Action="urn:getProfileConfigurationProfileManagementException" />
+        </wsdl:operation>
+        <wsdl:operation name="updateClaimMappingBehavior">
+
+            <wsdl:input message="ns:updateClaimMappingBehaviorRequest" wsaw:Action="urn:updateClaimMappingBehavior" />
+            <wsdl:fault message="ns:ProfileManagementException" name="ProfileManagementException" wsaw:Action="urn:updateClaimMappingBehaviorProfileManagementException" />
+        </wsdl:operation>
+        <wsdl:operation name="addProfile">
+            <wsdl:input message="ns:addProfileRequest" wsaw:Action="urn:addProfile" />
+            <wsdl:fault message="ns:ProfileManagementException" name="ProfileManagementException" wsaw:Action="urn:addProfileProfileManagementException" />
+        </wsdl:operation>
+        <wsdl:operation name="getAllAvailableProfileConfiguraions">
+            <wsdl:input message="ns:getAllAvailableProfileConfiguraionsRequest" wsaw:Action="urn:getAllAvailableProfileConfiguraions" />
+
+            <wsdl:output message="ns:getAllAvailableProfileConfiguraionsResponse" wsaw:Action="urn:getAllAvailableProfileConfiguraionsResponse" />
+            <wsdl:fault message="ns:ProfileManagementException" name="ProfileManagementException" wsaw:Action="urn:getAllAvailableProfileConfiguraionsProfileManagementException" />
+        </wsdl:operation>
+        <wsdl:operation name="getClaimConfigurations">
+            <wsdl:input message="ns:getClaimConfigurationsRequest" wsaw:Action="urn:getClaimConfigurations" />
+            <wsdl:output message="ns:getClaimConfigurationsResponse" wsaw:Action="urn:getClaimConfigurationsResponse" />
+            <wsdl:fault message="ns:ProfileManagementException" name="ProfileManagementException" wsaw:Action="urn:getClaimConfigurationsProfileManagementException" />
+        </wsdl:operation>
+        <wsdl:operation name="getDialects">
+
+            <wsdl:input message="ns:getDialectsRequest" wsaw:Action="urn:getDialects" />
+            <wsdl:output message="ns:getDialectsResponse" wsaw:Action="urn:getDialectsResponse" />
+            <wsdl:fault message="ns:ProfileManagementException" name="ProfileManagementException" wsaw:Action="urn:getDialectsProfileManagementException" />
+        </wsdl:operation>
+        <wsdl:operation name="getAllAvailableProfileConfiguraionsForUserStore">
+            <wsdl:input message="ns:getAllAvailableProfileConfiguraionsForUserStoreRequest" wsaw:Action="urn:getAllAvailableProfileConfiguraionsForUserStore" />
+            <wsdl:output message="ns:getAllAvailableProfileConfiguraionsForUserStoreResponse" wsaw:Action="urn:getAllAvailableProfileConfiguraionsForUserStoreResponse" />
+            <wsdl:fault message="ns:ProfileManagementException" name="ProfileManagementException" wsaw:Action="urn:getAllAvailableProfileConfiguraionsForUserStoreProfileManagementException" />
+        </wsdl:operation>
+
+        <wsdl:operation name="getDialectsForUserStore">
+            <wsdl:input message="ns:getDialectsForUserStoreRequest" wsaw:Action="urn:getDialectsForUserStore" />
+            <wsdl:output message="ns:getDialectsForUserStoreResponse" wsaw:Action="urn:getDialectsForUserStoreResponse" />
+            <wsdl:fault message="ns:ProfileManagementException" name="ProfileManagementException" wsaw:Action="urn:getDialectsForUserStoreProfileManagementException" />
+        </wsdl:operation>
+        <wsdl:operation name="deleteProfileConfiguraiton">
+            <wsdl:input message="ns:deleteProfileConfiguraitonRequest" wsaw:Action="urn:deleteProfileConfiguraiton" />
+            <wsdl:fault message="ns:ProfileManagementException" name="ProfileManagementException" wsaw:Action="urn:deleteProfileConfiguraitonProfileManagementException" />
+        </wsdl:operation>
+
+        <wsdl:operation name="getAllAvailableProfileConfiguraionsForDialect">
+            <wsdl:input message="ns:getAllAvailableProfileConfiguraionsForDialectRequest" wsaw:Action="urn:getAllAvailableProfileConfiguraionsForDialect" />
+            <wsdl:output message="ns:getAllAvailableProfileConfiguraionsForDialectResponse" wsaw:Action="urn:getAllAvailableProfileConfiguraionsForDialectResponse" />
+            <wsdl:fault message="ns:ProfileManagementException" name="ProfileManagementException" wsaw:Action="urn:getAllAvailableProfileConfiguraionsForDialectProfileManagementException" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="ProfileAdminServiceSoap11Binding" type="ns:ProfileAdminServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="isAddProfileEnabled">
+
+            <soap:operation soapAction="urn:isAddProfileEnabled" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ProfileManagementException">
+                <soap:fault use="literal" name="ProfileManagementException" />
+
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getProfileConfiguration">
+            <soap:operation soapAction="urn:getProfileConfiguration" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+
+            </wsdl:output>
+            <wsdl:fault name="ProfileManagementException">
+                <soap:fault use="literal" name="ProfileManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateClaimMappingBehavior">
+            <soap:operation soapAction="urn:updateClaimMappingBehavior" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+
+            </wsdl:input>
+            <wsdl:fault name="ProfileManagementException">
+                <soap:fault use="literal" name="ProfileManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllAvailableProfileConfiguraions">
+            <soap:operation soapAction="urn:getAllAvailableProfileConfiguraions" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ProfileManagementException">
+                <soap:fault use="literal" name="ProfileManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addProfile">
+
+            <soap:operation soapAction="urn:addProfile" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="ProfileManagementException">
+                <soap:fault use="literal" name="ProfileManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getClaimConfigurations">
+
+            <soap:operation soapAction="urn:getClaimConfigurations" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ProfileManagementException">
+                <soap:fault use="literal" name="ProfileManagementException" />
+
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getDialects">
+            <soap:operation soapAction="urn:getDialects" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+
+            </wsdl:output>
+            <wsdl:fault name="ProfileManagementException">
+                <soap:fault use="literal" name="ProfileManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllAvailableProfileConfiguraionsForUserStore">
+            <soap:operation soapAction="urn:getAllAvailableProfileConfiguraionsForUserStore" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ProfileManagementException">
+                <soap:fault use="literal" name="ProfileManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getDialectsForUserStore">
+
+            <soap:operation soapAction="urn:getDialectsForUserStore" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ProfileManagementException">
+                <soap:fault use="literal" name="ProfileManagementException" />
+
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteProfileConfiguraiton">
+            <soap:operation soapAction="urn:deleteProfileConfiguraiton" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="ProfileManagementException">
+                <soap:fault use="literal" name="ProfileManagementException" />
+
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllAvailableProfileConfiguraionsForDialect">
+            <soap:operation soapAction="urn:getAllAvailableProfileConfiguraionsForDialect" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+
+            </wsdl:output>
+            <wsdl:fault name="ProfileManagementException">
+                <soap:fault use="literal" name="ProfileManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="ProfileAdminServiceSoap12Binding" type="ns:ProfileAdminServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="isAddProfileEnabled">
+
+            <soap12:operation soapAction="urn:isAddProfileEnabled" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ProfileManagementException">
+                <soap12:fault use="literal" name="ProfileManagementException" />
+
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getProfileConfiguration">
+            <soap12:operation soapAction="urn:getProfileConfiguration" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+
+            </wsdl:output>
+            <wsdl:fault name="ProfileManagementException">
+                <soap12:fault use="literal" name="ProfileManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateClaimMappingBehavior">
+            <soap12:operation soapAction="urn:updateClaimMappingBehavior" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+
+            </wsdl:input>
+            <wsdl:fault name="ProfileManagementException">
+                <soap12:fault use="literal" name="ProfileManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllAvailableProfileConfiguraions">
+            <soap12:operation soapAction="urn:getAllAvailableProfileConfiguraions" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ProfileManagementException">
+                <soap12:fault use="literal" name="ProfileManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addProfile">
+
+            <soap12:operation soapAction="urn:addProfile" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="ProfileManagementException">
+                <soap12:fault use="literal" name="ProfileManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getClaimConfigurations">
+
+            <soap12:operation soapAction="urn:getClaimConfigurations" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ProfileManagementException">
+                <soap12:fault use="literal" name="ProfileManagementException" />
+
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getDialects">
+            <soap12:operation soapAction="urn:getDialects" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+
+            </wsdl:output>
+            <wsdl:fault name="ProfileManagementException">
+                <soap12:fault use="literal" name="ProfileManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllAvailableProfileConfiguraionsForUserStore">
+            <soap12:operation soapAction="urn:getAllAvailableProfileConfiguraionsForUserStore" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ProfileManagementException">
+                <soap12:fault use="literal" name="ProfileManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getDialectsForUserStore">
+
+            <soap12:operation soapAction="urn:getDialectsForUserStore" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="ProfileManagementException">
+                <soap12:fault use="literal" name="ProfileManagementException" />
+
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteProfileConfiguraiton">
+            <soap12:operation soapAction="urn:deleteProfileConfiguraiton" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="ProfileManagementException">
+                <soap12:fault use="literal" name="ProfileManagementException" />
+
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllAvailableProfileConfiguraionsForDialect">
+            <soap12:operation soapAction="urn:getAllAvailableProfileConfiguraionsForDialect" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+
+            </wsdl:output>
+            <wsdl:fault name="ProfileManagementException">
+                <soap12:fault use="literal" name="ProfileManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="ProfileAdminServiceHttpBinding" type="ns:ProfileAdminServicePortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="isAddProfileEnabled">
+
+            <http:operation location="isAddProfileEnabled" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getProfileConfiguration">
+
+            <http:operation location="getProfileConfiguration" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateClaimMappingBehavior">
+
+            <http:operation location="updateClaimMappingBehavior" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getAllAvailableProfileConfiguraions">
+            <http:operation location="getAllAvailableProfileConfiguraions" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addProfile">
+            <http:operation location="addProfile" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getClaimConfigurations">
+            <http:operation location="getClaimConfigurations" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getDialects">
+            <http:operation location="getDialects" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAllAvailableProfileConfiguraionsForUserStore">
+            <http:operation location="getAllAvailableProfileConfiguraionsForUserStore" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getDialectsForUserStore">
+            <http:operation location="getDialectsForUserStore" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteProfileConfiguraiton">
+            <http:operation location="deleteProfileConfiguraiton" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getAllAvailableProfileConfiguraionsForDialect">
+
+            <http:operation location="getAllAvailableProfileConfiguraionsForDialect" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="ProfileAdminService">
+        <wsdl:port name="ProfileAdminServiceHttpsSoap11Endpoint" binding="ns:ProfileAdminServiceSoap11Binding">
+            <soap:address location="https://localhost:9443/services/ProfileAdminService.ProfileAdminServiceHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="ProfileAdminServiceHttpsSoap12Endpoint" binding="ns:ProfileAdminServiceSoap12Binding">
+            <soap12:address location="https://localhost:9443/services/ProfileAdminService.ProfileAdminServiceHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="ProfileAdminServiceHttpsEndpoint" binding="ns:ProfileAdminServiceHttpBinding">
+            <http:address location="https://localhost:9443/services/ProfileAdminService.ProfileAdminServiceHttpsEndpoint/" />
+
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

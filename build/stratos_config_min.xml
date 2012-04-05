@@ -1,0 +1,755 @@
+<?xml version="1.0"?>
+<stratos_config>
+    <common>
+        <user-mgt>
+            <Realm>
+                <Configuration>
+                    <Property name="url">jdbc:mysql://localhost:3306/userstore?autoReconnect=true</Property>
+                    <Property name="userName">userstore</Property>
+                    <Property name="password">password</Property>
+                    <Property name="driverName">com.mysql.jdbc.Driver</Property>
+                </Configuration>
+            </Realm>
+        </user-mgt>
+
+        <identity>
+            <OpenIDServerUrl>https://identity.cloud-test.wso2.com:9444/openidserver</OpenIDServerUrl>
+            <OpenIDUserPattern>https://identity.cloud-test.wso2.com:9444/openid/</OpenIDUserPattern>
+            <SSOService>
+                <IdentityProviderURL>https://cloud-test.wso2.com:9443/samlsso</IdentityProviderURL>
+            </SSOService>
+        </identity>
+
+        <throttling-agent-config>
+            <parameters>
+                <parameter name="managerServiceUrl">https://cloud-test.wso2.com/services/</parameter>
+                <parameter name="userName">admin</parameter>
+                <parameter name="password">admin</parameter>
+            </parameters>
+        </throttling-agent-config>
+    </common>
+    
+    <manager>
+        <carbon>
+            <HostName>cloud-test.wso2.com</HostName>
+ 	    <ServerURL>https://cloud-test.wso2.com:9443/services/</ServerURL>
+            <BamServerURL>https://monitor.cloud-test.wso2.com:9447/services/</BamServerURL>
+        </carbon>
+
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Manager</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://cloud-test.wso2.com:9443/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:mysql://localhost:3306/manager_registry</url>
+                <userName>root</userName>
+                <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+            </dbConfig>
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/registry?autoReconnect=true</url>
+                <userName>root</userName>
+                <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+            </dbConfig>
+        </registry>
+
+        <axis2>
+            <transportSender name="mailto" class="org.apache.axis2.transport.mail.MailTransportSender">
+                  <parameter name="mail.smtp.host">test.wso2.com</parameter>
+                  <parameter name="mail.smtp.port">25</parameter>
+                  <parameter name="mail.smtp.starttls.enable">false</parameter>
+                  <parameter name="mail.smtp.auth">false</parameter>
+                  <parameter name="mail.smtp.user">noreply@wso2.com</parameter>
+                  <parameter name="mail.smtp.password">test</parameter>
+                  <parameter name="mail.smtp.from">cloud-noreply@wso2.com</parameter>
+            </transportSender>
+        </axis2>
+        
+        <billing-config>
+            <dbConfig>
+                <url>jdbc:mysql://localhost:3306/billing?autoReconnect=true</url>
+                <userName>root</userName>
+                <password>root</password>
+            </dbConfig>
+        </billing-config>
+
+        <stratos>
+            <NotificationEmail>sanjaya@wso2.com</NotificationEmail>
+        </stratos>
+
+        <datasources name="stratos_ds,bam_datasource">
+            <!--MySql datasource configuration-->
+            <bam_datasource>
+                <url>jdbc:mysql://localhost:3306/billing?autoReconnect=true</url>
+                <username>root</username>
+                <password>root</password>
+            </bam_datasource>
+        </datasources>
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+    </manager>
+
+    <identity>
+        <carbon>
+            <HostName>identity.cloud-test.wso2.com</HostName>
+            <!--<ServerURL>https://identity.cloud-test.wso2.com:9444/services/</ServerURL> -->
+            <BamServerURL>https://monitor.cloud-test.wso2.com:9447/services/</BamServerURL>
+
+            <Ports>
+                <Offset>1</Offset> <!-- Don't change this if you don't know what you are doing -->
+            </Ports>
+        </carbon>
+     
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Identity</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://cloud-test.wso2.com:9443/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:mysql://localhost:3306/identity_registry</url>
+                <userName>wso2carbon</userName>
+                <password>wso2carbon</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+            </dbConfig>
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/registry?autoReconnect=true</url>
+                <userName>root</userName>
+                <password>password</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+            </dbConfig>
+        </registry>
+
+        <axis2>
+        </axis2>
+
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+    </identity>
+
+
+    <governance>
+        <carbon>
+            <HostName>governance.cloud-test.wso2.com</HostName>
+            <BamServerURL>https://monitor.cloud-test.wso2.com:9447/services/</BamServerURL>
+
+            <Ports>
+                <Offset>2</Offset> <!-- Don't change this if you don't know what you are doing -->
+
+            </Ports>
+        </carbon>
+        
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Governance</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://cloud-test.wso2.com:9443/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:mysql://localhost:3306/registry</url>
+                <userName>wso2carbon</userName>
+                <password>wso2carbon</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+            </dbConfig>
+
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/registry?autoReconnect=true</url>
+                <userName>root</userName>
+                <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+            </dbConfig>
+        </registry>
+
+        <axis2>
+            <transportSender name="mailto" class="org.apache.axis2.transport.mail.MailTransportSender">
+                  <parameter name="mail.smtp.host">test.wso2.com</parameter>
+                  <parameter name="mail.smtp.port">25</parameter>
+                  <parameter name="mail.smtp.starttls.enable">false</parameter>
+                  <parameter name="mail.smtp.auth">false</parameter>
+                  <parameter name="mail.smtp.user">noreply@wso2.com</parameter>
+                  <parameter name="mail.smtp.password">pass</parameter>
+                  <parameter name="mail.smtp.from">cloud-noreply@wso2.com</parameter>
+            </transportSender>
+
+        </axis2>
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+    </governance>
+
+    <appserver>
+        <carbon>
+            <HostName>appserver.cloud-test.wso2.com</HostName>
+            <BamServerURL>https://monitor.cloud-test.wso2.com:9447/services/</BamServerURL>
+
+            <Ports>
+                <Offset>3</Offset> <!-- Don't change this if you don't know what you are doing -->
+            </Ports>
+        </carbon>
+        
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Application Server</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://cloud-test.wso2.com:9443/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:mysql://localhost:3306/appserver_registry</url>
+                <userName>wso2carbon</userName>
+                <password>wso2carbon</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+            </dbConfig>
+
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/registry?autoReconnect=true</url>
+                <userName>root</userName>
+                <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+            </dbConfig>
+        </registry>
+
+        <axis2>
+        </axis2>
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+    </appserver>
+
+    <bam>
+        <carbon>
+            <HostName>monitor.cloud-test.wso2.com</HostName>
+            <BamServerURL>https://monitor.cloud-test.wso2.com:9447/services/</BamServerURL>
+
+            <Ports>
+                <Offset>4</Offset> <!-- Don't change this if you don't know what you are doing -->
+            </Ports>
+        </carbon>
+        
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Business Activity Monitor</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://cloud-test.wso2.com:9443/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:mysql://localhost:3306/bam_registry</url>
+                <userName>wso2carbon</userName>
+                <password>wso2carbon</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+            </dbConfig>
+
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/registry?autoReconnect=true</url>
+                <userName>root</userName>
+                <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+            </dbConfig>
+        </registry>
+
+        <axis2>
+        </axis2>
+        <datasources name="bam_datasource">
+            <providerPort>2200</providerPort>
+            <icFactory>com.sun.jndi.rmi.registry.RegistryContextFactory</icFactory>
+
+            <!--MySql datasource configuration-->
+            <bam_datasource>
+                <registry>JNDI</registry>
+                <type>BasicDataSource</type>
+                <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+                <url>jdbc:mysql://localhost:3306/billing</url>
+                <username>root</username>
+                <password>root</password>
+                <dsName>bam_datasource</dsName>
+            </bam_datasource>
+        </datasources>
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+
+    </bam>
+
+    <bps>
+        <carbon>
+            <HostName>process.cloud-test.wso2.com</HostName>
+            <BamServerURL>https://monitor.cloud-test.wso2.com:9447/services/</BamServerURL>
+
+            <Ports>
+                <Offset>6</Offset> <!-- Don't change this if you don't know what you are doing -->
+            </Ports>
+        </carbon>
+        
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Business Process Server</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://cloud-test.wso2.com:9443/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:mysql://localhost:3306/bps_registry</url>
+                <userName>wso2carbon</userName>
+                <password>wso2carbon</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+            </dbConfig>
+
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/registry?autoReconnect=true</url>
+                <userName>root</userName>
+                <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+            </dbConfig>
+        </registry>
+
+        <axis2>
+        </axis2>
+        <bps>
+            <DataBaseConfig mode="EXTERNAL">
+                <!-- Data source configuration. Use data sources created in data sources component. -->
+                <DataSource name="bpsds">
+                <JNDI contextFactory="com.sun.jndi.rmi.registry.RegistryContextFactory" providerURL="rmi://localhost:2201"/>
+                </DataSource>
+            </DataBaseConfig>
+            
+        </bps>
+
+        <datasources name="bpsds">
+            <providerPort>2201</providerPort>
+            <icFactory>com.sun.jndi.rmi.registry.RegistryContextFactory</icFactory>
+
+            <!--MySql datasource configuration-->
+            <bpsds>
+                <registry>JNDI</registry>
+                <type>BasicDataSource</type>
+                <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+                <url>jdbc:mysql://localhost:3306/bps?autoReconnect=true</url>
+                <username>bps</username>
+                <password>password</password>
+                <dsName>bpsds</dsName>
+                <maxActive>200</maxActive>
+                <maxIdle>10</maxIdle>
+                <maxWait>360000</maxWait>
+                <autoCommit>false</autoCommit>
+            </bpsds>
+        </datasources>
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+    </bps>
+
+    <dss>
+        <carbon>
+            <HostName>data.cloud-test.wso2.com</HostName>
+            <BamServerURL>https://monitor.cloud-test.wso2.com:9447/services/</BamServerURL>
+
+            <Ports>
+                <Offset>5</Offset> <!-- Don't change this if you don't know what you are doing -->
+            </Ports>
+        </carbon>
+        
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Data Services Server</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://cloud-test.wso2.com:9443/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:mysql://localhost:3306/dss_registry</url>
+                <userName>wso2carbon</userName>
+                <password>wso2carbon</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+            </dbConfig>
+
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/registry?autoReconnect=true</url>
+                <userName>root</userName>
+                <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+            </dbConfig>
+        </registry>
+
+        <wso2-rss>
+            <wso2-rss-instances>
+              <wso2-rss-instance>
+                  <name>WSO2 RSS1</name>
+                  <server-url>jdbc:mysql://localhost:3306/rss_db?autoReconnect=true</server-url>
+                  <dbms-type>MYSQL</dbms-type>
+                  <admin-username>rss</admin-username>
+                  <admin-password>rss</admin-password>
+                  <server-category>RDS</server-category>
+              </wso2-rss-instance>
+            </wso2-rss-instances>
+        </wso2-rss>
+        <cassandra-auth>
+            <EPR>https://localhost:9443/services/CassandraSharedKeyPublisher</EPR>
+            <User>cassandra</User>
+            <Password>css</Password>
+        </cassandra-auth>
+
+        <cassandra-component>
+            <Cluster>
+                <Name>ClusterOne</Name>
+                <DefaultPort>9160</DefaultPort>
+                <Nodes>css_node:port</Nodes>
+                <AutoDiscovery disable="false" delay="1000"/>
+            </Cluster>
+        </cassandra-component> 
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+    </dss>
+
+    <esb>
+        <carbon>
+            <HostName>esb.cloud-test.wso2.com</HostName>
+            <BamServerURL>https://monitor.cloud-test.wso2.com:9447/services/</BamServerURL>
+
+            <Ports>
+                <Offset>9</Offset> <!-- Don't change this if you don't know what you are doing -->
+            </Ports>
+        </carbon>
+        
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Enterprise Service Bus</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://cloud-test.wso2.com:9443/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:mysql://localhost:3306/esb_registry</url>
+                <userName>wso2carbon</userName>
+                <password>wso2carbon</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+            </dbConfig>
+
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/registry?autoReconnect=true</url>
+                <userName>root</userName>
+                <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+            </dbConfig>
+        </registry>
+
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+    </esb>
+
+    <brs>
+        <carbon>
+            <HostName>rule.cloud-test.wso2.com</HostName>
+            <BamServerURL>https://monitor.cloud-test.wso2.com:9447/services/</BamServerURL>
+
+            <Ports>
+                <Offset>7</Offset> <!-- Don't change this if you don't know what you are doing -->
+            </Ports>
+        </carbon>
+        
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Business Rules Server</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://cloud-test.wso2.com:9443/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:mysql://localhost:3306/brs_registry</url>
+                <userName>wso2carbon</userName>
+                <password>wso2carbon</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+            </dbConfig>
+
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/registry?autoReconnect=true</url>
+                <userName>root</userName>
+                <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+            </dbConfig>
+        </registry>
+
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+    </brs>
+
+    <mashup>
+        <carbon>
+            <HostName>mashup.cloud-test.wso2.com</HostName>
+            <BamServerURL>https://monitor.cloud-test.wso2.com:9447/services/</BamServerURL>
+
+            <Ports>
+                <Offset>12</Offset> <!-- Don't change this if you don't know what you are doing -->
+            </Ports>
+        </carbon>
+        
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Mashup Server</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://cloud-test.wso2.com:9443/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:mysql://localhost:3306/mashup_registry</url>
+                <userName>wso2carbon</userName>
+                <password>wso2carbon</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+            </dbConfig>
+
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/registry?autoReconnect=true</url>
+                <userName>root</userName>
+                <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+            </dbConfig>
+        </registry>
+
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+    </mashup>
+
+    <mb>
+        <carbon>
+            <HostName>messaging.cloud-test.wso2.com</HostName>
+            <BamServerURL>https://monitor.cloud-test.wso2.com:9447/services/</BamServerURL>
+
+            <Ports>
+                <Offset>11</Offset> <!-- Don't change this if you don't know what you are doing -->
+            </Ports>
+        </carbon>
+        
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Message Broker</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://cloud-test.wso2.com:9443/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+    
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:mysql://localhost:3306/mb_registry</url>
+                <userName>wso2carbon</userName>
+                <password>wso2carbon</password>
+                <driverName>org.h2.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+            </dbConfig>
+
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/registry?autoReconnect=true</url>
+                <userName>root</userName>
+                        <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+                <validationQuery>SELECT 1</validationQuery>
+            </dbConfig>
+        </registry>
+        <axis2>
+        </axis2>
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+    </mb>
+
+    <gs>
+        <carbon>
+            <HostName>gadget.cloud-test.wso2.com</HostName>
+            <BamServerURL>https://monitor.cloud-test.wso2.com:9447/services/</BamServerURL>
+
+            <Ports>
+                <Offset>10</Offset> <!-- Don't change this if you don't know what you are doing -->
+            </Ports>
+        </carbon>
+        
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Gadgets</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://cloud-test.wso2.com:9443/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:mysql://localhost:3306/gadget_registry</url>
+                <userName>wso2carbon</userName>
+                <password>wso2carbon</password>
+                <driverName>org.h2.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+            </dbConfig>
+      
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/registry?autoReconnect=true</url>
+                <userName>root</userName>
+                        <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+                <maxActive>150</maxActive>
+                <maxWait>360000</maxWait>
+                <minIdle>5</minIdle>
+                <validationQuery>SELECT 1</validationQuery>
+            </dbConfig>
+        </registry>
+        <axis2>
+        </axis2>
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+    </gs>
+
+    <cep>
+        <carbon>
+            <HostName>cep.cloud-test.wso2.com</HostName>
+            <BamServerURL>https://monitor.cloud-test.wso2.com:9447/services/</BamServerURL>
+
+            <Ports>
+                <Offset>8</Offset> <!-- Don't change this if you don't know what you are doing -->
+            </Ports>
+        </carbon>
+        
+        <authenticators>
+            <Authenticator name="SAML2SSOAuthenticator">
+                <Config>
+                    <Parameter name="LoginPage">/carbon/tenant-login/login_ajaxprocessor.jsp</Parameter>
+                    <Parameter name="ServiceProviderID">WSO2 Stratos Complex Event Processing Server</Parameter>
+                    <Parameter name="IdentityProviderSSOServiceURL">https://cloud-test.wso2.com:9443/samlsso</Parameter>
+                </Config>
+            </Authenticator>
+        </authenticators>
+
+        <registry>
+            <dbConfig name="wso2registry">
+                <url>jdbc:mysql://localhost:3306/cep_registry</url>
+                <userName>wso2carbon</userName>
+                <password>wso2carbon</password>
+                <driverName>org.h2.Driver</driverName>
+            </dbConfig>
+
+            <dbConfig name="governance">
+                <url>jdbc:mysql://localhost:3306/registry?autoReconnect=true</url>
+                <userName>root</userName>
+                <password>root</password>
+                <driverName>com.mysql.jdbc.Driver</driverName>
+            </dbConfig>
+        </registry>
+        <axis2>
+        </axis2>
+        <jmx>
+            <StartRMIServer>false</StartRMIServer>
+        </jmx>
+        <wso2server>
+            <xms>256m</xms>
+            <xmx>512m</xmx>
+        </wso2server>
+    </cep>
+</stratos_config>

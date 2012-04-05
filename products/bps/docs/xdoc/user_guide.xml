@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>@product.name@ - User Guide</title>
+        <link href="css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+        <p>[
+            <a href="docs_index.html">Documentation Index</a>
+            ]
+        </p>
+        <h1>
+            WSO2 Business Process Server (BPS) User Guide
+        </h1>
+
+        <p>
+            The User Guide describes how to configure the @product.name@ using the
+            Web based management console. The WSO2 Management Console has been tested
+            on the Mozilla Firefox 2.0, 3.0.x and Internet Explorer 6.0, 7.0 Web Browsers.
+        </p>
+
+        <h2>
+            Table of Contents
+        </h2>
+
+        <div class="toc">
+            <ul>
+                <li><a href="#Installing">Installing WSO2 Business Process Server (BPS)</a></li>
+                <li><a href="#Using">Using WSO2 Business Process Server (BPS)</a>
+                    <ul>
+                        <li><a href="#Using-ProcessDeployment">Process Deployment</a>
+                            <ul>
+                                <li><a href="#ProcessDeployment-Deploying-Process-in-WSO2_BPS">Deploying a Process in @product.name@</a></li>
+                                <li><a href="#ProcessDeployment-Deployment-Descriptor">Deployment Descriptor</a></li>
+                                <li><a href="#ProcessDeployment-Formal-Definition">Formal Definition</a>
+                                    <ul>
+                                        <li><a href="#ProcessDeployment-Examples">Examples</a></li>
+                                        <li><a href="#ProcessDeployment-Additional-Settings">Additional Settings</a>
+                                            <ul>
+                                                <li><a href="#ProcessDeployment-Add-Set-In-memory-execution">In memory execution</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li><a href="#ProcessDeployment-Undeploying-Process-in-WSO2_BPS">Undeploying a Process in @product.name@</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#HumanTaskDeployment">Human Task Deployment</a>
+                            <ul>
+                                <li><a href="#HumanTaskDeployment-Deploying-HumanTask-in-WSO2_BPS">Deploying a Human Task in @product.name@</a></li>
+                                <!--li><a href="#HumanTaskDeployment-Task-Configuration">Human Task Configuration</a>
+                                    <ul>
+                                        <li><a href="#HumanTaskDeployment-Examples">Examples</a></li>
+                                    </ul>
+                                </li-->
+                            </ul>
+                        </li>
+                        <li><a href="#Managing-BPEL-processes">Managing BPEL processes</a></li>
+                        <li><a href="#Managing-BPEL-process-instances">Managing BPEL process instances</a></li>
+                        <li><a href="#QoS-for-BPEL-processes">QoS for BPEL processes</a></li>
+                        <li><a href="#Securing-BPEL-processes">Securing BPEL processes</a></li>
+                        <li><a href="#Invoking-secured-partner-services">Invoking secured partner services</a></li>
+
+                        <li><a href="#Using-Versioning">Versioning</a></li>
+                        <li><a href="#Using-Management-API">Management API</a></li>
+                        <!--li><a href="#Using-Specification">Specification</a></li-->
+
+                    </ul>
+                </li>
+                <!--li><a href="#HowTo">How To</a></li-->
+            </ul>
+        </div>
+
+        <h2> <a name="Installing"></a>
+            Installing @product.name@
+        </h2>
+
+        <p>
+            Please refer the
+            <a href="installation_guide.html">Installation Guide</a>
+            for details on how to install @product.name@.
+        </p>
+
+        <h2 id="Using">Using @product.name@</h2>
+
+        <h3 id="Using-ProcessDeployment">Process Deployment</h3>
+        <ul>
+            <li><a href="#ProcessDeployment-Deploying-Process-in-WSO2_BPS">Deploying a Process in @product.name@</a></li>
+            <li><a href="#ProcessDeployment-Deployment-Descriptor">Deployment Descriptor</a></li>
+            <li><a href="#ProcessDeployment-Formal-Definition">Formal Definition</a>
+                <ul>
+                    <li><a href="#ProcessDeployment-Examples">Examples</a></li>
+                    <li><a href="#ProcessDeployment-Additional-Settings">Additional Settings</a>
+                        <ul>
+                            <li><a href="#ProcessDeployment-Add-Set-In-memory-execution">In memory execution</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+        <h4 id="ProcessDeployment-Deploying-Process-in-WSO2_BPS">Deploying a Process in @product.name@</h4>
+
+        <p>
+            Each deployment is a zipped file with all relevant deployment artifacts. At the minimum it should contain the
+            deployment descriptor, one or more process definitions (BPEL), WSDL and XSDs. It may also contain other
+            files, such as SVGs or XSLs. The deployment descriptor is a file named deploy.xml (see the next paragraph
+            for its description).
+        </p>
+        <p>
+            During deployment, the process engine loads all documents from the deployment descriptor. Loading documents
+            allow it to reference processes, service and schema definitions using fully qualified names, and import
+            based on namespaces instead of locations.
+        </p>
+
+        <p>Two ways to deploy a process in @product.name@</p>
+        <ol>
+            <li>Using the @product.name@ Web Management Console
+            <br/>
+            <p>
+                Login to BPS Management Console by providing your credentials (default:- user:admin pass:admin). Go to <b>Add BPEL</b>
+                menu item under the <b>Business Process</b> section of the left pane of the Management Console. Browse and select
+                the zipped BPEL process. Upload the process.<br/>
+            </p>
+            <img src="images/bpel-user-guide/add_bpel.png" alt="Add BPEL"/>
+            </li>
+
+            <li>Manually copying the zipped process file
+            <br/>
+            <p>
+                To deploy manually, just copy the zipped process file containing your artifacts, to the
+                BPS_HOME/repository/deployment/server/bpel directory. In this case, you need to be aware of the structure
+                of the zipped process. The deployment discripter (i.e. deploy.xml file) should be in the root of the zip.
+            </p>
+            </li>
+        </ol>
+
+        <h4 id="ProcessDeployment-Deployment-Descriptor">Deployment Descriptor</h4>
+        <p>
+            To deploy your process in @product.name@, you need to create a simple deployment descriptor with basic information.
+            The deploy.xml file configures one or more processes to use specific services. For each process, deploy.xml
+            must supply binding information for partner links to concrete WSDL services. Every partner link used with a
+            &lt;receive&gt; activity must be matched with a &lt;provide&gt; element, and every partnerLink used in an
+            &lt;invoke&gt; activity must be matched with an &lt;invoke&gt; element in deploy.xml (unless that partnerLink
+            has initializePartnerRole="false").
+        </p>
+
+        <h4 id="ProcessDeployment-Formal-Definition">Formal Definition</h4>
+        <p>
+            The XML schema describing the deployment descriptor is available
+            <a href="http://svn.wso2.org/repos/wso2/branches/carbon/3.2.0/dependencies/ode/1.3.5-wso2v2/bpel-schemas/src/main/xsd/dd.xsd">here</a>.
+            The root element, deploy, contains a list of all deployed processes from the deployment directory:
+        </p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;deploy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+ <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;process</span> ...<span style="color: #000000; font-weight: bold;">&gt;</span></span>*
+ { other elements }
+ <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/process<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/deploy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+        <p>
+            Each process is identified by its qualified name and specifies bindings for provided and invoked services:
+        </p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;process</span> name = QName  fileName = String?  bpel11wsdlFileName = String? <span style="color: #000000; font-weight: bold;">&gt;</span></span>
+ (<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;provide<span style="color: #000000; font-weight: bold;">&gt;</span></span></span> | <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;invoke<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>)*
+ { other elements }
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/process<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+        <p>
+            Each process element must provide a name attribute with the qualified name of the process. Optionally, a
+            fileName attribute can be used to specify the location of the BPEL process definition (the .bpel file).
+            The fileName attribute does not need to be provided unless non-standard compilation options are used or the
+            bpel11wsdlFileName attribute is used to specify a WSDL document for a BPEL 1.1 process.
+        </p>
+        <p>
+            Each &lt;process&gt; element must enumerate the services provided by the process and bind each service to an
+            endpoint. This is done through &lt;provide&gt; elements which associates partnerLinks with endpoints:
+        </p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;provide</span> <span style="color: #000066;">partnerLink</span>=NCName<span style="color: #000000; font-weight: bold;">&gt;</span></span>
+  <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;service</span> name = QName port = NCName<span style="color: #000000; font-weight: bold;">?&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/provide<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+        <p>
+            Note, that only one partnerLink can be bound to any specified endpoint. The port attribute can be used to
+            select a particular endpoint from the service definition.
+        </p>
+
+        <h5 id="ProcessDeployment-Examples">Examples</h5>
+        <p>
+            A very simple process that would only be invoked would use a deploy.xml very similar to:
+        </p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;deploy</span> <span style="color: #000066;">xmlns</span>=<span style="color: #ff0000;">&quot;http://www.apache.org/ode/schemas/dd/2007/03&quot;</span> </span>
+<span style="color: #009900;">	<span style="color: #000066;">xmlns:pns</span>=<span style="color: #ff0000;">&quot;http://ode/bpel/unit-test&quot;</span> <span style="color: #000066;">xmlns:wns</span>=<span style="color: #ff0000;">&quot;http://ode/bpel/unit-test.wsdl&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+	<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;process</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;pns:HelloWorld2&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+		<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;active<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>true<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/active<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+		<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;provide</span> <span style="color: #000066;">partnerLink</span>=<span style="color: #ff0000;">&quot;helloPartnerLink&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+			<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;service</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;wns:HelloService&quot;</span> <span style="color: #000066;">port</span>=<span style="color: #ff0000;">&quot;HelloPort&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+		<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/provide<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+	<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/process<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/deploy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+        <p>
+            See the complete example <a href="http://svn.wso2.org/repos/wso2/branches/carbon/3.0.0/products/bps/modules/samples/src/main/resources/bpel/2.0/HelloWorld2.zip">here</a>.
+            A deployment including two processes would look like:
+        </p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;?xml</span> <span style="color: #000066;">version</span>=<span style="color: #ff0000;">&quot;1.0&quot;</span> <span style="color: #000066;">encoding</span>=<span style="color: #ff0000;">&quot;UTF-8&quot;</span><span style="color: #000000; font-weight: bold;">?&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;deploy</span> <span style="color: #000066;">xmlns</span>=<span style="color: #ff0000;">&quot;http://www.apache.org/ode/schemas/dd/2007/03&quot;</span> <span style="color: #000066;">xmlns:wns</span>=<span style="color: #ff0000;">&quot;http://wso2.org/bps/samples/LoanService&quot;</span> <span style="color: #000066;">xmlns:dins</span>=<span style="color: #ff0000;">&quot;http://wso2.org/bps/samples/DILoanService&quot;</span> <span style="color: #000066;">xmlns:xkns</span>=<span style="color: #ff0000;">&quot;http://wso2.org/bps/samples/XKLoanService&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+  <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;process</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;dins:DILoanService&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;active<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>true<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/active<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;provide</span> <span style="color: #000066;">partnerLink</span>=<span style="color: #ff0000;">&quot;LoanServicePL&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+      <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;service</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;wns:DILoanService&quot;</span> <span style="color: #000066;">port</span>=<span style="color: #ff0000;">&quot;LoanServicePort&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+	<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/provide<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+	<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;invoke</span> <span style="color: #000066;">partnerLink</span>=<span style="color: #ff0000;">&quot;LoanServicePL&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+		<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;service</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;wns:LoanServiceCallback&quot;</span> <span style="color: #000066;">port</span>=<span style="color: #ff0000;">&quot;LoanServiceCallbackPort&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/invoke<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+
+  <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/process<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+  <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;process</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;xkns:XKLoanService&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;active<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>true<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/active<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;provide</span> <span style="color: #000066;">partnerLink</span>=<span style="color: #ff0000;">&quot;XKLoanServicePL&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+		<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;service</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;wns:XKLoanService&quot;</span> <span style="color: #000066;">port</span>=<span style="color: #ff0000;">&quot;LoanServicePort&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+	<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/provide<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+	<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;invoke</span> <span style="color: #000066;">partnerLink</span>=<span style="color: #ff0000;">&quot;XKLoanServicePL&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+		<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;service</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;wns:LoanServiceCallback&quot;</span> <span style="color: #000066;">port</span>=<span style="color: #ff0000;">&quot;LoanServiceCallbackPort&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/invoke<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+
+  <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/process<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/deploy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+        <p>
+            See the complete example <a href="http://svn.wso2.org/repos/wso2/branches/carbon/3.0.0/products/bps/modules/samples/src/main/resources/bpel/2.0/LoanService/">here</a>.
+        </p>
+
+        <h5 id="ProcessDeployment-Additional-Settings">Additional Settings</h5>
+        <h6 id="ProcessDeployment-Add-Set-In-memory-execution">In memory execution</h6>
+        <p>
+            For performance purposes, you can define a process as being executed only in-memory. This greatly reduces
+            the amount of generated queries and puts far less load on your database. Both persistent and non-persistent
+            processes can cohabit in @product.name@. To declare a process as in-memory just add an in-memory element in your deploy.xml:
+        </p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;process</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;pns:HelloWorld2&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+	<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;in-memory<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>true<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/in-memory<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+	<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;provide</span> <span style="color: #000066;">partnerLink</span>=<span style="color: #ff0000;">&quot;helloPartnerLink&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+		<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;service</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;wns:HelloService&quot;</span> <span style="color: #000066;">port</span>=<span style="color: #ff0000;">&quot;HelloPort&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+	<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/provide<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/process<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+        <p>
+            Be aware that in-memory executions introduces many restrictions on your process and what it can do. The
+            instances of these processes cannot be queried by using the <a href="management_api.html">Management API</a>.
+            The process definition can only include one single receive activity (the one that will trigger the instance creation).
+        </p>
+
+        <h4 id="ProcessDeployment-Undeploying-Process-in-WSO2_BPS">Undeploying a Process in @product.name@</h4>
+
+        <p>There are two methods to undeploy a bpel package from @product.name@.</p>
+        <ol>
+            <li>From the <b>Deployed Packages</b> menu item under the <b>Business Processes</b> section of the left pane of the Management Console.
+            <br/>
+            <p>
+                Here the deployed packages list is visible with each entry has a certain action named "Undeploy" associated with it. Once the link is clicked the selected package will be 
+	        undeployed from the BPS_HOME/repository/deployment/server/bpel directory.<br />
+            </p>
+            <img src="images/bpel-user-guide/deployed_packages.png" alt="Deployed Packages Page"/>
+            </li>
+
+            <li>Manually removing the zipped process file
+            <br/>
+            <p>
+                The same result can be obtained by manually removing the bpel package from BPS_HOME/repository/deployment/server/bpel directory.
+            </p>
+            </li>
+        </ol>
+
+        <h3 id="HumanTaskDeployment">Human Task Deployment</h3>
+        <ul>
+            <li><a href="#HumanTaskDeployment-Deploying-HumanTask-in-WSO2_BPS">Deploying a Human Task in @product.name@</a></li>
+            <!--li><a href="#HumanTaskDeployment-Task-Configuration">Human Task Configuration</a>
+                <ul>
+                    <li><a href="#HumanTaskDeployment-Examples">Examples</a></li>
+                </ul>
+            </li-->
+        </ul>
+
+        <h4 id="HumanTaskDeployment-Deploying-HumanTask-in-WSO2_BPS">Deploying a Human Task in @product.name@</h4>
+        <p>
+            Each deployment is a zipped file with all relevant deployment artifacts. At the minimum it should contain the
+            human interaction definition - HI, human task configuration - hiconfig.xml, WSDL and XSDs.
+        </p>
+        <p>
+            Login to BPS Management Console by providing your credentials (default:- user:admin pass:admin). Go to <b>Add HI </b>
+            menu item under the <b>Human Task</b> section of the left pane of the Management Console. Browse and select
+            the zipped Human Task and upload it.
+        </p>
+
+        <!--h3 id="HumanTaskDeployment-Task-Configuration">Human Task Configuration</h3-->
+
+        <!-- Managing BPEL processes  -->
+                <p><br /></p>
+                <h3 id="Managing-BPEL-processes">Managing BPEL processes</h3>
+
+                <p>You can manage processes from <b>Manage/Processes</b> in the navigator.</p>
+                <p>In the navigator, under <b>Manage/Processes/List</b>, there is a list of deployed processes (See Figure 4).<br /></p>
+
+                <p><img src="images/bpel-user-guide/deployed_processes.png" alt="Deployed Processes page"/><br/>Figure 4<br /></p>
+                <p>You can select a process and go to <b>Process Information</b> page (See Figure 5) and manage it.</p>
+                <br />
+                <p><img src="images/bpel-user-guide/process_information.png" alt="Process Information page"/><br/>Figure 5<br /></p>
+                <p>You can view several information via <b>Process Information</b> page (See Figure 5). They are</p>
+                <ul>
+                    <li>Process Details
+                        <ul>
+                            <li>Process ID</li>
+                            <li>Version</li>
+                            <li>Status - You can activate or retire the process from here. Once the process is retired, can't create new instance of it.</li>
+                            <li>Deployed Date</li>
+                            <li>Total Instances</li>
+                            <li>Package Name</li>
+                        </ul>
+                    </li>
+                    <li>Instance Summary - Number of Instances vs. Status</li>
+                    <li>Quality of Service Configuration - Managing security, throttling, response caching etc.</li>
+                    <li>WSDL details - Service level information</li>
+                    <li>Process Definition - BPEL code for the process</li>
+                    <li>Process Visualization - Graphical workflow of the process</li>
+                </ul>
+
+                <!-- Managing BPEL process instances  -->
+                <p><br /></p>
+                <h3 id="Managing-BPEL-process-instances">Managing BPEL process instances</h3>
+
+                <p></p>
+                <p>You can manage processes from <b>Business Processes/Instances</b> in the navigator.</p>
+                <p>In the navigator, under <b>Business Processes/Instances</b>, there is a list of deployed processes (See Figure 6).</p>
+                <br />
+                <p><img src="images/bpel-user-guide/instance_created.png" alt="Instance List page"/><br/>Figure 6<br/></p>
+                <p>You can click an instance ID and go to <b>Instance Information</b> page (See Figure 6) and manage it.</p>
+                <br />
+                <p><img src="images/bpel-user-guide/instance_information.png" alt="Instance Information page"/><br/>Figure 7<br/></p>
+                <p>You can view several information via <b>Instance Information</b> page (See Figure 7). They are</p>
+                <ul>
+                    <li>Instance Details
+                        <ul>
+                            <li>Instance ID</li>
+                            <li>Process ID</li>
+                            <li>Status - State of the instance can be managed from here</li>
+                            <li>Date Started</li>
+                            <li>Last Active Date</li>
+                        </ul>
+                    </li>
+                    <li>Root Scope Information</li>
+                    <li>Variables - Current values of each variable created for the instance</li>
+                    <li>Activity Information - A list of activities with their status and other required information. If the instance is in active state and there are failed activities, they can be retried failed via the management console.</li>
+                </ul>
+
+                 <!-- QoS for BPEL processes  -->
+                <p><br /></p>
+                <h3 id="QoS-for-BPEL-processes">QoS for BPEL processes</h3>
+
+                <h4 id="Securing-BPEL-Process">Quality of Service(QoS) Configuration for BPEL processes</h4>
+                <p>Configuring Quality of Service(QoS) parameters like security, response caching etc. of a BPEL process is same as configuring QoS for any other service via WSO2 management console.
+                    But configuring QoS for a BPEL process can be differentiate in two ways.</p>
+                <ul>
+                    <li>QoS for the BPEL process</li>
+                    <li>QoS for the partner links which interact with the BPEL process</li>
+                </ul>
+                <br/>
+                <h5>QoS for the BPEL process</h5>
+                <p>In @product.name@ a BPEL process is exposed as a Web service. So once the process is deployed successfully, it will be listed out under <b>Manage/Web Services</b> in the navigator. So the process can be QoS configured via its <b>Service dashboard</b>. Service dashboard (See Figure 8) consists of a widget called <b>Quality of Service Configuration</b> to manage QoS.<br/></p>
+
+                <p><img src="images/bpel-user-guide/service_dashboard.png" alt="Service dashboard"/><br/>Figure 8<br/></p>
+                <p>Configuring security for the BPEL process is elaborated <a href="#Securing-BPEL-processes">here</a>.</p>
+
+                <br />
+                <h5>QoS for the partner links which interact with the BPEL process</h5>
+                <p>The partner links can be QoS configured via <b>Process Information</b> page (See Figure 9) for the deployed process under <b>Manage/Processes/List</b> in the navigator. You can select a partner link from <b>Partner Links</b> drop down list and configure QoS for each of them specifically.</p>
+                <br />
+                <p><img src="images/bpel-user-guide/process_information.png" alt="Process Information Page"/><br/>Figure 9<br/></p>
+                <p>Configuring security for partner links is elaborated <a href="#Securing-partner-links">here</a>.</p>
+
+
+                <!-- Securing BPEL processes  -->
+                <p><br /></p>
+                <h3 id="Securing-BPEL-processes">Securing BPEL processes</h3>
+
+                <p>Configuring Security for a BPEL process can be looked in two ways. They are</p>
+                <ul>
+                    <li>Securing for the BPEL process</li>
+                    <li>Securing for the partner links which interact with the BPEL process</li>
+                </ul>
+                <br />
+                <h4>Securing for the BPEL process</h4>
+                <p>In @product.name@ a BPEL process is exposed as a Web service. So once the process is deployed successfully, it will be listed out under <b>Manage/Web Services</b> in the navigator. So the process's security can be configured via a its <b>Service dashboard</b>. Service dashboard (See Figure 10) consists of a widget called <b>Quality of Service Configuration</b> to manage QoS. Refer "<a href="../securityconfig/docs/userguide.html">Adding Security Features</a>" for more information on available security features.<br/></p>
+                <p><img src="images/bpel-user-guide/service_dashboard.png" alt="Service dashboard"/><br/>Figure 10</p>
+                <br />
+                <h4 id="Securing-partner-links">Securing for the partner links which interact with the BPEL process</h4>
+                <p>The partner links' security can be configured via <b>Process Information</b> page (See Figure 11) for the deployed process under <b>Manage/Processes/List</b> in the navigator. You can select a partner link from <b>Partner Links</b> drop down list and configure security for each of them specifically. Refer "<a href="../securityconfig/docs/userguide.html">Adding Security Features</a>" for more information on available security features.<br /></p>
+                <p><img src="images/bpel-user-guide/process_information.png" alt="Process Information Page"/><br/>Figure 11<br /></p>
+
+
+                <!-- Invoking secured partner services  -->
+                <p><br /></p>
+                <h3 id="Invoking-secured-partner-services">Invoking secured partner services</h3>
+
+                <p>Invoking secured partner services is supported by @product.name@. Current release of BPS
+                    supports for partner services which are secured with WS-Security.
+                    To invoke secure services via a BPEL process, a user need to add few additional
+                    configuration files to BPEL process artifact. Then the required password callback
+                    handler, key-stores etc.
+                </p>
+                <ol>
+                    <li>Configure the unified endpoint with relevant policy for the secured service endpoint
+                        <p>To enable security to a particular service endpoint with the relevant security
+                            policy, two files need to be added to the BPEL process artifact. They are as
+                            follows.
+                        </p>
+                        <ul>
+                            <li>Unified endpoint configuration</li>
+                            <li>WS-Security policy</li>
+                        </ul>
+                        <p>Unified endpoint is the end-point configuration mechanism used in BPEL processes.
+                            A sample unified endpoint configuration is as follows.
+                        </p>
+
+                        <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>wsa</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>EndpointReference</span>
+                <span style='color:#666616; '>xmlns</span><span style='color:#800080; '>:</span><span style='color:#074726; '>xsi</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#666616; '>http</span><span style='color:#800080; '>:</span><span style='color:#800000; font-weight:bold; '>//</span><span style='color:#5555dd; '>www.w3.org</span><span style='color:#40015a; '>/2001/XMLSchema-instance</span><span style='color:#0000e6; '>"</span>
+                <span style='color:#666616; '>xsi</span><span style='color:#800080; '>:</span><span style='color:#074726; '>schemaLocation</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#666616; '>http</span><span style='color:#800080; '>:</span><span style='color:#800000; font-weight:bold; '>//</span><span style='color:#5555dd; '>www.w3schools.com</span><span style='color:#0000e6; '> </span><span style='color:#40015a; '>uep_schema.xsd</span><span style='color:#0000e6; '>"</span>
+                <span style='color:#666616; '>xmlns</span><span style='color:#800080; '>:</span><span style='color:#074726; '>wsa</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#666616; '>http</span><span style='color:#800080; '>:</span><span style='color:#800000; font-weight:bold; '>//</span><span style='color:#5555dd; '>www.w3.org</span><span style='color:#40015a; '>/2005/08/addressing</span><span style='color:#0000e6; '>"</span>
+                <span style='color:#666616; '>xmlns</span><span style='color:#800080; '>:</span><span style='color:#074726; '>wsdl11</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#666616; '>http</span><span style='color:#800080; '>:</span><span style='color:#800000; font-weight:bold; '>//</span><span style='color:#5555dd; '>schemas.xmlsoap.org</span><span style='color:#40015a; '>/wsdl/</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+            <span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>wsa</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>Address</span><span style='color:#a65700; '>></span>https://localhost:9443/services/SecurePartnerService1/<span style='color:#a65700; '>&lt;/</span><span style='color:#666616; '>wsa</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>Address</span><span style='color:#a65700; '>></span>
+            <span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>wsa</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>Metadata</span><span style='color:#a65700; '>></span>
+                <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>id</span><span style='color:#a65700; '>></span>SInvokeEPR<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>id</span><span style='color:#a65700; '>></span>
+                <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>qos</span><span style='color:#a65700; '>></span>
+                    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>enableAddressing</span> <span style='color:#274796; '>version</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>final</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>separateListener</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>true</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/&gt;</span>
+                <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>enableWsSec</span> <span style='color:#274796; '>policy</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>file:PolicySecurePartnerService01.xml</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/&gt;</span>
+                <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>qos</span><span style='color:#a65700; '>></span>
+            <span style='color:#a65700; '>&lt;/</span><span style='color:#666616; '>wsa</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>Metadata</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;/</span><span style='color:#666616; '>wsa</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>EndpointReference</span><span style='color:#a65700; '>></span>
+        </pre>
+
+                        <p>To invoke a secured partner service, relevant policy file should be mentioned and
+                            addressing module should be engaged. Refer &lt;qos/&gt;
+                            how it's configured. Then the relevant policy (in this case
+                            PolicySecurePartnerService01.xml) should be added to the BPEL process artifact
+                            in the correct relative path. You can find a sample process which invoke secured
+                            partner services based different security scenarios at [1].
+                        </p>
+
+                    </li>
+                    <li>Configuring password callback handlers or key-stores
+                        <p>In addition, the policy file added to the BPEL process artifact may refer
+                            key-stores, password callback handlers etc. So user need to add them in relevant
+                            places. Password callback handlers can be placed in
+                            $CARBON-DIR/repository/components/lib dir. Key-stores can be added into the file
+                            system as referred by the policy file (In the sample mentioned at [1], the
+                            location for client.jks is repository/resources/security/client.jks according to
+                            PolicySecurePartnerService01.xml).
+                        </p>
+                    </li>
+                </ol>
+                <p>[1] -
+                    <a href="https://svn.wso2.org/repos/wso2/trunk/carbon/products/bps/modules/samples/product/src/main/resources/bpel/2.0/SecurePartnerBPEL.zip">
+                        https://svn.wso2.org/repos/wso2/trunk/carbon/products/bps/modules/samples/product/src/main/resources/bpel/2.0/SecurePartnerBPEL.zip
+                    </a>
+                </p>
+
+        <h3 id="Using-Versioning">Versioning</h3>
+        <p>
+            If a package with existing package name is uploaded, all the processes in the package will be versioned.
+            In this case, all the old processes in the package will be retired while a new version will be be deployed.
+            Since there is only package level versioning, the new package should include all the processes defined
+            in the old package, eventhough you may only need to update a single process in that package.
+        </p>
+
+
+        <h3 id="Using-Management-API">Management API</h3>
+        <p>
+            Refer <a href="management_api.html">Management API</a> for more details.
+        </p>
+
+    </body>
+</html>

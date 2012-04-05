@@ -1,0 +1,13 @@
+    <%
+    var path = request.getParameter("filePath");
+    var file = new File(path);
+    file.openForReading();
+     
+    var message = "";
+     
+    while ((message = file.readLine()) != null) {
+    print(message);
+    }
+     
+    file.close();
+    %>

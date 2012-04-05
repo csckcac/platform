@@ -1,0 +1,16 @@
+package RoutingRules;
+
+import org.wso2.carbon.rule.samples.Result;
+import org.wso2.carbon.rule.samples.Symbol;
+global java.lang.String source
+
+rule InvokeIBM
+
+when
+$symbol : Symbol( symbol == "IBM" )
+then
+Result result = new Result();
+result.setSymbol("WSO2");
+result.setPrice(925.2193664813152);
+insert(result);
+end

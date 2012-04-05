@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<project
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+        xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>csg</artifactId>
+        <groupId>org.wso2.carbon</groupId>
+        <version>4.0.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>org.wso2.carbon</groupId>
+    <artifactId>org.wso2.carbon.cloud.csg.agent.ui</artifactId>
+    <name>CSG Agent UI component</name>
+    <packaging>bundle</packaging>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.core</artifactId>
+            <version>${wso2carbon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.cloud.csg.common</artifactId>
+            <version>${wso2carbon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.cloud.csg.agent.stub</artifactId>
+            <version>${wso2carbon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.service.mgt.ui</artifactId>
+            <version>${wso2carbon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.service.mgt.stub</artifactId>
+            <version>${wso2carbon.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Name>${project.artifactId}</Bundle-Name>
+                        <Carbon-Component>UIBundle</Carbon-Component>
+                        <Export-Package>
+                            org.wso2.carbon.cloud.csg.agent.ui.*;version="${wso2carbon.version}"
+                        </Export-Package>
+                        <Import-Package>
+                            org.wso2.carbon.cloud.csg.agent.stub.*;version="${carbon.platform.package.import.version.range}",
+                            *;resolution:=optional
+                        </Import-Package>
+                        <DynamicImport-Package>*</DynamicImport-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

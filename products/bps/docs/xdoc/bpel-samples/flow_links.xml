@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>@product.name@ - Sample Guide - Flow and Links</title>
+        <link href="../css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+        <h1>Sample Guide - Flow and Links</h1>
+        <h3>Table of Content</h3>
+        <ul>
+            <li><a href="#objective">Objective</a></li>
+            <li><a href="#prerequisites">Prerequisites</a></li>
+            <li><a href="#overallIdea">Overall Idea</a></li>
+        </ul>
+
+        <br />
+        <h3><a name="objective">Objective</a></h3>
+        <p>The activities defined inside &lt;flow/&gt; can be performed concurrently. But when there
+            are can be dependencies in-between those activities. &lt;links/&gt;, &lt;sources/&gt;
+            and &lt;targets/&gt; are used to define synchronization dependencies in-between those
+            activities.
+        </p>
+        <p>Let's understand what's meant by &lt;links/&gt;, &lt;sources/&gt; and &lt;targets/&gt;.</p>
+        <p>In the &lt;flow/&gt;, we define &lt;links/&gt; as follows. These link names can be
+            sources or targets of the activities inside &lt;flow/&gt;</p>
+        <p>eg -
+            <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>bpel</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>flow</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>EndlessRunningFlowOfPain</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>bpel</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>links</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>bpel</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>link</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '><b>transition1</b></span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+    <span style='color:#a65700; '>&lt;/</span><span style='color:#666616; '>bpel</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>links</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>bpel</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>sequence</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>Seq1</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>bpel</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>sources</span><span style='color:#a65700; '>></span>
+            <span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>bpel</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>source</span> <span style='color:#274796; '>linkName</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '><b>transition1</b></span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+        <span style='color:#a65700; '>&lt;/</span><span style='color:#666616; '>bpel</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>sources</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>bpel</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>empty</span><span style='color:#a65700; '>/></span>
+    <span style='color:#a65700; '>&lt;/</span><span style='color:#666616; '>bpel</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>sequence</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>bpel</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>if</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>IfDependOnSeq1</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>bpel</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>targets</span><span style='color:#a65700; '>></span>
+            <span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>bpel</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>target</span> <span style='color:#274796; '>linkName</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '><b>transition1</b></span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+        <span style='color:#a65700; '>&lt;/</span><span style='color:#666616; '>bpel</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>targets</span><span style='color:#a65700; '>></span>
+        .......
+    <span style='color:#a65700; '>&lt;/</span><span style='color:#666616; '>bpel</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>if</span><span style='color:#a65700; '>></span>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#666616; '>bpel</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>flow</span><span style='color:#a65700; '>></span>
+</pre>
+        </p>
+        <p>So using &lt;sources/&gt; and &lt;targets/&gt;, user can specify, <b>IfDependOnSeq1</b> activity
+            should be executed after <b>Seq1</b>.
+        </p>
+        <p>i.e <b>Source activity should be executed before Target activity</b></p>
+
+        <p> <br />
+            <b>Note</b> :<i>As well there are other optional constructs to mimic conditional behavior for the
+            &lt;source/&gt; and &lt;target/&gt;. They are </i>
+        </p>
+
+        <ul>
+            <li>&lt;transactionCondition/&gt;
+                <ul>
+                    <li>used in &lt;source/&gt;</li>
+                    <li>initialize a logical condition for the source link based on a logical condition.
+                    <p>eg - <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>invoke</span><span style='color:#a65700; '>...></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>sources</span><span style='color:#a65700; '>></span>
+     <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>source</span> <span style='color:#274796; '>linkName</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>Link1</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>transitionCondition</span><span style='color:#a65700; '>></span>
+           $tmpVar=1
+        <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>transitionCondition</span><span style='color:#a65700; '>></span>
+     <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>source</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>sources</span><span style='color:#a65700; '>></span>
+    ...    
+<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>invoke</span><span style='color:#a65700; '>></span>
+</pre></p>
+                    </li>
+                </ul>
+            </li>
+            <li>&lt;joinCondition/&gt;
+                <ul>
+                    <li>used in &lt;targets/&gt;</li>
+                    <li>evaluates a logical condition</li>
+                    <li>if the logical condition is true, then all the incoming sources for the defined &lt;target/&gt; should be true.</li>
+                    <li>if the logical condition is <code>false</code>, a <code>joinFailure</code> exception will be thrown
+                        (Unless the target activity hasn't <code>suppressJoinFailure=true</code>).
+                        <br/>
+                        <p>eg - <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>invoke</span><span style='color:#a65700; '>...></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>targets</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>joinCondition</span><span style='color:#a65700; '>></span>
+            $Link1 and $Link2
+        <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>joinCondition</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>target</span> <span style='color:#274796; '>linkName</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>Link1</span><span style='color:#0000e6; '>"</span> <span style='color:#a65700; '>/></span>
+        <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>target</span> <span style='color:#274796; '>linkName</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>Link2</span><span style='color:#0000e6; '>"</span> <span style='color:#a65700; '>/></span>
+    <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>targets</span><span style='color:#a65700; '>></span>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>invoke</span><span style='color:#a65700; '>></span>
+</pre></p>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <br />
+        <h3><a name="prerequisites">Prerequisites</a></h3>
+        <ul>
+            <li>Log in into BPS server admin console.</li>
+            <li>Under Business Processes -&gt; Add BPEL.</li>
+            <li>Upload the TestFlowLinks.zip , (all samples are located at our <a href="http://svn.wso2.org/repos/wso2/branches/carbon/3.2.0/products/bps/2.1.0/modules/samples/product/src/main/resources/bpel/2.0/">sample repository</a>.)</li>
+            <li>Under the Business Processes -&gt; Processes.</li>
+            <li>Under the WSDL details widget -&gt; Create instance</li>
+        </ul>
+        <br />
+        <h3><a name="overallIdea">Overall Idea</a></h3>
+        <p><img src="../images/bpel-samples/test_flow_links.jpg" alt="How flow links can be correlated"/></p>
+        <p>
+            <br/>
+            Refer - TestFlowLinks.zip</p>
+        <p>
+            <br/>
+            Here the sample tries to implement sequence of activities inside a &lt;flow/&gt;, where
+            there can be 3 execution paths based on the conditions defined in 2 and 5.
+            <br/>
+            Some of the possible execution paths are
+        </p>
+        <ul>
+            <li>If <code>TransitionResolver</code>'s if condition is <code>true</code> and <code>TransitionResolver2</code>'s if condition
+                is <code>true</code>
+                <br/>
+                <ul>
+                    <li>1 -&gt; 2 -&gt; 4 -&gt; 5 -&gt; 6 </li>
+                    <li>3</li>
+                </ul>
+                <br/>
+            </li>
+            <li>If <code>TransitionResolver</code>'s elseIf condition is <code>true</code> and <code>TransitionResolver2</code>'s if
+                condition is <code>true</code>
+                <br/>
+                <ul>
+                    <li>1 -&gt; 2 -&gt; 3 </li>
+                    <li>4 -&gt; 5 -&gt; 6</li>
+                </ul>
+                <br />
+            </li>
+            <li>If <code>TransitionResolver</code>/s if condition is <code>true</code> and <code>TransitionResolver2</code>'s if condition
+                is <code>false</code>
+                <br/>
+                <ul>
+                    <li>1 -&gt; 2 -&gt; 4 -&gt; 5 </li>
+                    <li>3</li>
+                    <li>6</li>
+                </ul>
+                <br />
+            </li>
+        </ul>
+    </body>
+</html>

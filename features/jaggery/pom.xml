@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ ~ Copyright (c) 2009-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ Licensed under the Apache License, Version 2.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~      http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>org.wso2.carbon</groupId>
+        <artifactId>carbon-features</artifactId>
+        <version>4.0.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>jaggery-feature</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>WSO2 Carbon - Jaggery Feature Aggregator Module</name>
+    <url>http://wso2.org</url>
+
+    <modules>
+        <module>org.wso2.carbon.jaggery.server.feature</module>
+        <module>org.wso2.carbon.jaggery.ui.feature</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.webapp.mgt.stub</artifactId>
+                <version>${wso2carbon.version.webapp.mgt}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.webapp.mgt</artifactId>
+                <version>${wso2carbon.version.webapp.mgt}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.jaggery.app.mgt.ui</artifactId>
+                <version>${wso2carbon.version.jaggery}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.jaggery.core</artifactId>
+                <version>${wso2carbon.version.jaggery}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.jaggery.deployer</artifactId>
+                <version>${wso2carbon.version.jaggery}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.jaggery.tools</artifactId>
+                <version>${wso2carbon.version.jaggery}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.wsf.javascript</groupId>
+                <artifactId>axiom-e4x</artifactId>
+                <version>2.0.0.SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpcore</artifactId>
+                <version>4.2-alpha2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpcore-nio</artifactId>
+                <version>4.2-alpha2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>org.eclipse.equinox.http.servlet</artifactId>
+                <version>1.0.200.v20090520-1800</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.ws.commons.axiom.wso2</groupId>
+                <artifactId>axiom</artifactId>
+                <version>1.2.11.wso2v1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.jettison</groupId>
+                <artifactId>jettison</artifactId>
+                <version>1.1</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+                <version>1.1.1</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>1.4</version>
+            </dependency>
+            <dependency>
+                <groupId>rhino</groupId>
+                <artifactId>js</artifactId>
+                <version>1.7R1</version>
+            </dependency>
+            <dependency>
+                <groupId>me.prettyprint</groupId>
+                <artifactId>hector-core</artifactId>
+                <version>0.7.0-23-wso2v1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>javax.servlet.jsp</artifactId>
+                <version>2.0.0.v200806031607</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-servlet_3.0_spec</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.json</groupId>
+                <artifactId>json</artifactId>
+                <version>20090211</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>jstl</artifactId>
+                <version>1.2</version>
+            </dependency>
+            <!-- STAX implementation used in WSAS -->
+            <dependency>
+                <groupId>org.apache.geronimo.specs.wso2</groupId>
+                <artifactId>geronimo-stax-api_1.0_spec</artifactId>
+                <version>${geronimo-stax-api.wso2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rampart.wso2</groupId>
+                <artifactId>rampart-policy</artifactId>
+                <version>${rampart.wso2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rampart.wso2</groupId>
+                <artifactId>rampart-trust</artifactId>
+                <version>${rampart.wso2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rampart.wso2</groupId>
+                <artifactId>rampart-core</artifactId>
+                <version>${rampart.wso2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.ws.security.wso2</groupId>
+                <artifactId>wss4j</artifactId>
+                <version>${wss4j.wso2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.axis2.wso2</groupId>
+                <artifactId>axis2</artifactId>
+                <version>${axis2.wso2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.addressing</artifactId>
+                <version>${wso2carbon.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-dbcp.wso2</groupId>
+                <artifactId>commons-dbcp</artifactId>
+                <version>1.4.0.wso2v1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.hostobjects.commons</artifactId>
+                <version>${hostobjects.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.utils</artifactId>
+                <version>${wso2carbon.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.hostobjects.xhr</artifactId>
+                <version>${hostobjects.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.hostobjects.atom</artifactId>
+                <version>${hostobjects.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.hostobjects.db</artifactId>
+                <version>${hostobjects.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.hostobjects.ws</artifactId>
+                <version>${hostobjects.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.hostobjects.feed</artifactId>
+                <version>${hostobjects.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.hostobjects.email</artifactId>
+                <version>${hostobjects.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.hostobjects.web</artifactId>
+                <version>${hostobjects.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.hostobjects.registry</artifactId>
+                <version>${hostobjects.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.hostobjects.file</artifactId>
+                <version>${hostobjects.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.hostobjects.stream</artifactId>
+                <version>${hostobjects.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.hostobjects.extra</artifactId>
+                <version>${hostobjects.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.hostobjects.xslt</artifactId>
+                <version>${hostobjects.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.hostobjects.scripts</artifactId>
+                <version>${hostobjects.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.hostobjects.uri</artifactId>
+                <version>${hostobjects.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.scriptengine</artifactId>
+                <version>${wso2carbon.version.jaggery}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
+    <properties>
+        <wso2carbon.version.jaggery>1.0.0-SNAPSHOT</wso2carbon.version.jaggery>
+        <jaggery.version>1.0.0-SNAPSHOT</jaggery.version>
+        <hostobjects.version>1.0.0-SNAPSHOT</hostobjects.version>
+        <geronimo-stax-api.wso2.version>1.0.1.wso2v1</geronimo-stax-api.wso2.version>
+        <rampart.wso2.version>1.6.1.wso2v2</rampart.wso2.version>
+        <wss4j.wso2.version>1.5.11.wso2v1</wss4j.wso2.version>
+        <axis2.wso2.version>1.6.1.wso2v4</axis2.wso2.version>
+        <axiom.e4x.version>2.0.0.SNAPSHOT</axiom.e4x.version>
+        <wso2carbon.version.webapp.mgt>4.0.0-SNAPSHOT</wso2carbon.version.webapp.mgt>
+    </properties>
+
+
+</project>

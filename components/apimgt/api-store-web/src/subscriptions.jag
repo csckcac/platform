@@ -1,0 +1,19 @@
+<div class="subscription-list" id="subscriptionList">
+    <div class="template-wrapper">
+        <div class="accordion-group tmpl-subscription">
+            <div class="accordion-heading">
+                <a class="accordion-toggle"></a>
+            </div>
+            <div class="accordion-body">
+                <div class="accordion-inner">
+                    <div class="application-api-listing tmpl-subscription-list">
+                        <a><img src="" alt="" /></a>
+                         <a class="service-name"></a>
+                        <div class="company-name"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="element-wrapper"></div>
+</div>

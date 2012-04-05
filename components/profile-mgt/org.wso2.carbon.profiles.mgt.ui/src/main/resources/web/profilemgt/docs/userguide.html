@@ -1,0 +1,54 @@
+<!--
+  ~ Copyright 2008 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"></meta>
+  <title>User Profile Management - User Guide</title>
+  <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all" />
+</head>
+
+<body style="font-family: Times New Roman,Times,serif; font-size: 12pt;">
+<h1>Profile Configuration Management</h1>
+
+<p>The Profile Configuration Management component of the WSO2 Carbon allows to add/modify and delete profile configuration. 
+The profile configuration controls how user's empty claim values behave in his profile.
+If a Claim in a user's profile is not given a value explicitly, then it is given a value based on the following configuration.</p>
+<ul>
+  <li>Inherited - This means retrieve the value of the corresponding claim in the default profile and use it. This is the default behavior.</li>
+  <li>Overridden - Leave the empty value as it is, don't try to retrieve it from anywhere else.</li>
+  <li>Hidden - Hide this claim in the profile.</li>
+</ul>
+<p><img alt="" src="../images/ProfileMgt.png" height="181" width="745"/></p>
+
+<p>Figure 1: User Profile Management</p>
+
+<p>Use the <strong>Add New Profile Configuration</strong> link to add new user accounts.</p>
+
+<p><b>Note:</b> The feature of adding new profile configuration is only supported with JDBC user store.
+                Since now the default user store of carbon is based on LDAP,
+                this feature is not supported by default.</p>
+
+<p>To delete profiles configuration use <strong>Delete</strong> link.
+Click on the profile name to add/edit profile configuration.</p>
+
+<p><img alt="" src="../images/EditProfile.png" height="443" width="485"/></p>
+
+<p>Figure 2: Add/Edit profile configuration</p>
+
+<p></p>
+</body>
+</html>

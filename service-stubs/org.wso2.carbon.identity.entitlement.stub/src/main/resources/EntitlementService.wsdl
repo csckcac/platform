@@ -1,0 +1,181 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://entitlement.identity.carbon.wso2.org" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://entitlement.identity.carbon.wso2.org">
+    <wsdl:documentation>EntitlementService</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ns="http://org.apache.axis2/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+            <xs:element name="EntitlementServiceException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="EntitlementServiceException" nillable="true" type="ns1:Exception" />
+                    </xs:sequence>
+
+                </xs:complexType>
+            </xs:element>
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="getDecisionByAttributes">
+                <xs:complexType>
+
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="subject" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="resource" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="action" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="environment" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getDecisionByAttributesResponse">
+
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getDecision">
+                <xs:complexType>
+                    <xs:sequence>
+
+                        <xs:element minOccurs="0" name="request" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getDecisionResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getDecisionRequest">
+        <wsdl:part name="parameters" element="ns1:getDecision" />
+    </wsdl:message>
+    <wsdl:message name="getDecisionResponse">
+        <wsdl:part name="parameters" element="ns1:getDecisionResponse" />
+
+    </wsdl:message>
+    <wsdl:message name="EntitlementServiceException">
+        <wsdl:part name="parameters" element="ns1:EntitlementServiceException" />
+    </wsdl:message>
+    <wsdl:message name="getDecisionByAttributesRequest">
+        <wsdl:part name="parameters" element="ns1:getDecisionByAttributes" />
+    </wsdl:message>
+    <wsdl:message name="getDecisionByAttributesResponse">
+        <wsdl:part name="parameters" element="ns1:getDecisionByAttributesResponse" />
+
+    </wsdl:message>
+    <wsdl:portType name="EntitlementServicePortType">
+        <wsdl:operation name="getDecision">
+            <wsdl:input message="tns:getDecisionRequest" wsaw:Action="urn:getDecision" />
+            <wsdl:output message="tns:getDecisionResponse" wsaw:Action="urn:getDecisionResponse" />
+            <wsdl:fault message="tns:EntitlementServiceException" name="EntitlementServiceException" wsaw:Action="urn:getDecisionEntitlementServiceException" />
+        </wsdl:operation>
+        <wsdl:operation name="getDecisionByAttributes">
+            <wsdl:input message="tns:getDecisionByAttributesRequest" wsaw:Action="urn:getDecisionByAttributes" />
+
+            <wsdl:output message="tns:getDecisionByAttributesResponse" wsaw:Action="urn:getDecisionByAttributesResponse" />
+            <wsdl:fault message="tns:EntitlementServiceException" name="EntitlementServiceException" wsaw:Action="urn:getDecisionByAttributesEntitlementServiceException" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="EntitlementServiceSoap11Binding" type="tns:EntitlementServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="getDecision">
+            <soap:operation soapAction="urn:getDecision" style="document" />
+            <wsdl:input>
+
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="EntitlementServiceException">
+                <soap:fault use="literal" name="EntitlementServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+
+        <wsdl:operation name="getDecisionByAttributes">
+            <soap:operation soapAction="urn:getDecisionByAttributes" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="EntitlementServiceException">
+
+                <soap:fault use="literal" name="EntitlementServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="EntitlementServiceSoap12Binding" type="tns:EntitlementServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="getDecision">
+            <soap12:operation soapAction="urn:getDecision" style="document" />
+            <wsdl:input>
+
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="EntitlementServiceException">
+                <soap12:fault use="literal" name="EntitlementServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+
+        <wsdl:operation name="getDecisionByAttributes">
+            <soap12:operation soapAction="urn:getDecisionByAttributes" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="EntitlementServiceException">
+
+                <soap12:fault use="literal" name="EntitlementServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="EntitlementServiceHttpBinding" type="tns:EntitlementServicePortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="getDecision">
+            <http:operation location="getDecision" />
+            <wsdl:input>
+
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getDecisionByAttributes">
+            <http:operation location="getDecisionByAttributes" />
+            <wsdl:input>
+
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="EntitlementService">
+        <wsdl:port name="EntitlementServiceHttpsSoap11Endpoint" binding="tns:EntitlementServiceSoap11Binding">
+
+            <soap:address location="https://localhost:9443/services/EntitlementService.EntitlementServiceHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="EntitlementServiceHttpsSoap12Endpoint" binding="tns:EntitlementServiceSoap12Binding">
+            <soap12:address location="https://localhost:9443/services/EntitlementService.EntitlementServiceHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="EntitlementServiceHttpsEndpoint" binding="tns:EntitlementServiceHttpBinding">
+            <http:address location="https://localhost:9443/services/EntitlementService.EntitlementServiceHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+
+</wsdl:definitions>

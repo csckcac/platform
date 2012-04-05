@@ -1,0 +1,268 @@
+body{
+background:white url(../images/repeater.png) repeat-x left top;
+padding:0px;
+margin:0px;
+
+border-collapse: collapse;
+border-spacing: 0;
+color: #333;
+font: 12px / 1.4 arial, FreeSans, Helvetica, sans-serif;
+}
+.textBox{
+width:40%;
+font-size:12px;	
+font-weight:bold;
+}
+.valueBox{
+width:70%;
+text-align:left;
+}
+.pageSizer{
+background:transparent url(../images/back.png) no-repeat 200px top;	
+padding-top:20px;
+position:absolute;
+width:980px;
+left:50%;
+margin-left:-490px;
+text-align:center;
+}
+.loginBox{
+width:500px;
+background-image: -webkit-gradient(linear, left top, left bottom, from(#eeeeee), to(#ffffff)); /* mozilla - FF3.6+ */
+background-image: -moz-linear-gradient(top, #eeeeee 0%, #ffffff 100%); /* IE 5.5 - 7 */
+filter: progid:DXImageTransform.Microsoft.gradient(gradientType = 0, startColorStr = #eeeeee, endColorStr = #ffffff); /* IE8 */
+-ms-filter: progid: DXImageTransform . Microsoft . gradient(gradientType = 0, startColorStr = #eeeeee, endColoStr = #ffffff);
+
+
+-moz-border-radius: 5px;
+border-radius: 5px;
+border: solid 1px #42728b;
+
+
+-moz-box-shadow: 10px 10px 5px #888;
+-webkit-box-shadow: 10px 10px 5px #888;
+box-shadow: 10px 10px 5px #888;
+
+height:auto;
+opacity:0.8;
+margin-left:240px;
+    *margin-left:0px;
+    _margin-left:0px;
+padding:10px;
+margin-bottom:20px;
+}
+.loginBox table{
+width:100%;
+}
+.loginBox table td{
+padding:6px 5px;
+text-align:left;	
+}
+.overrideClass{
+width:980px !important;
+margin-left:0px !important;
+min-height:50px;
+}
+.clear{
+clear:both;
+}
+.main-message {
+font-size: 14px;
+padding-left: 250px;
+width: 500px;
+line-height:20px;
+text-shadow:1px 1px #fff;
+}
+.main-message-override {
+width: 980px !important;
+margin-left:-240px !important;
+}
+.main-message h1{
+margin:5px 0px;
+line-height:30px;
+}
+.button, .button:visited {
+background: #222 url(overlay.png) repeat-x;
+display: inline-block;
+padding: 5px 10px 6px;
+color: #fff;
+text-decoration: none;
+-moz-border-radius: 6px;
+-webkit-border-radius: 6px;
+-moz-box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
+border-bottom: 1px solid rgba(0,0,0,0.25);
+position: relative;
+cursor: pointer
+}
+a{
+color:#285286;
+
+}
+.register-msg{
+font-size:12px;
+
+}
+.formTable{
+border-collapse:collapse;
+}
+.formTable tr td {
+border-bottom:solid 1px #999;
+vertical-align:top;
+}
+.formTable tr td.leftCell{
+width:60%;
+}
+.logoutButton{
+position:absolute;
+top:10px;
+right:10px
+}
+h2.mainTitle{
+text-shadow: 1px 1px #fff;
+}
+label.error{
+font-size:11px;
+text-indent:5px;
+color:red;
+padding-left:5px
+}
+/* Dialog box */
+
+#dialog-overlay {
+width:100%; 
+height:100%;
+
+filter:alpha(opacity=50); 
+-moz-opacity:0.5; 
+-khtml-opacity: 0.5; 
+opacity: 0.5; 
+background:#000; 
+position:absolute; 
+top:0; left:0; 
+z-index:3000; 
+display:none;
+}
+
+
+#dialog-box {
+
+-webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+-moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+
+-moz-border-radius: 5px;
+-webkit-border-radius: 5px;
+    border:solid 1px #444;
+
+background:#eee;
+width:328px; 
+
+position:absolute; 
+z-index:5000;
+
+display:none;
+}
+
+#dialog-box .dialog-content {
+text-align:left; 
+padding:10px; 
+margin:13px;
+color:#666; 
+font-family:arial;
+font-size:14px; 
+}
+
+a.button {
+margin:10px auto 0 auto;
+text-align:center;
+display: block;
+width:50px;
+padding: 5px 10px 6px;
+color: #fff;
+text-decoration: none;
+font-weight: bold;
+line-height: 1;
+
+background-color: #a4d771;
+
+-moz-border-radius: 5px;
+-webkit-border-radius: 5px;
+
+-moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+
+text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
+border-bottom: 1px solid rgba(0,0,0,0.25);
+position: relative;
+cursor: pointer;
+
+}
+
+a.button:hover {
+background-color: #c33100;  
+}
+
+#dialog-box .dialog-content p {
+font-weight:700; margin:0;
+}
+
+#dialog-box .dialog-content ul {
+margin:10px 0 10px 20px; 
+padding:0; 
+height:50px;
+}
+
+.footer {
+background-color: #F7F7F7;
+clear: both;
+padding: .5em 1em;
+text-align: center;
+}
+
+.poweredbymessage, .poweredbymessage a:link, .poweredbymessage a:visited, .grey, .smallgreyfooter, .smallgrey {
+color: #666;
+font-family: verdana, arial, helvetica, sans-serif;
+font-size: .9em;
+}
+
+table.dataTable,table.dataTable td, span,table.dataTable a {
+font-family:"Trebuchet MS", Verdana, Helvetica, Arial,sans-serif;
+font-size:12px;
+}
+table.dataTable{
+border-left:solid 1px #468aa6;
+border-top:solid 1px #468aa6;
+border-collapse:collapse;
+}
+table.dataTable th{
+background-image: -webkit-gradient(linear, left top, left bottom, from(#56aed2), to(#417f98)); /* mozilla - FF3.6+ */
+background-image: -moz-linear-gradient(top, #56aed2 0%, #417f98 100%); /* IE 5.5 - 7 */
+filter: progid:DXImageTransform.Microsoft.gradient(gradientType = 0, startColorStr = #56aed2, endColorStr = #417f98); /* IE8 */
+-ms-filter: progid: DXImageTransform . Microsoft . gradient(gradientType = 0, startColorStr = #56aed2, endColoStr = #417f98);
+
+color:#fff;
+font-size:11px;
+text-align:left;
+padding:3px;
+
+border-right:solid 1px #468aa6;
+border-bottom:solid 1px #468aa6;
+}
+table.dataTable td{
+border-right:solid 1px #468aa6;
+border-bottom:solid 1px #468aa6;
+margin:0px;
+padding:3px;
+}
+table.dataTable tr:nth-child(even) {background: #ccdde1}
+table.dataTable tr:nth-child(odd) {background: #FFF}
+
+.helpMessage{
+padding-bottom:5px;
+width:500px;
+margin-left:240px;
+    *margin-left:0px;
+    _margin-left:0px;
+line-height:25px;
+}

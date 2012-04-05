@@ -1,0 +1,44 @@
+<!--
+  ~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <body>
+        <p>[<a href="http://wso2.org/downloads/gadget-server">Download</a>]
+            | [<a href="index_docs.html">Documentation Home</a>] | [<a href="release_notes.html">Release Note</a>]
+        </p>
+        <div id="main-content">
+        <h1>Role Based Gadgets</h1>
+<p>This is a new feature provided for  gadget server users from WSO2 Gadget Server release 1.4.0 onwards.
+ <br /><br />
+Signed-in users have different roles.According to those roles,Gadget Server administrator has the priviledge of controlling users' accessability for viewing gadgets in the portal.This feature provides only for the gadgets stored in registry.
+ </p>
+            <h2>Set gadget permissions for  roles</h2>
+            <p>In the folowing example,there are two users called 'user1' and 'user2' having roles as developer1 and developer2.Administrator has allowed to read the gadget for the users having the role 'Developer1' while denying it for the users having the role 'Developer2'.
+<br /><br />
+                <img alt="add gadget permission" src="images/add_gadget_permission.png" space="preserve" xmlns="http://www.w3.org/1999/xhtml" />
+            </p>
+ <h2>Add role-based gadgets</h2>
+            <p>When 'user1' signed in to the gadget server,he could successfully add the above permission set gadget from the gadget repository to the portal.
+<br /><br />
+                <img alt="add gadget" src="images/add_gadget_user1.png" space="preserve" xmlns="http://www.w3.org/1999/xhtml" /></p>
+ <p>          
+But when 'user2' signed in to the gadget server and tried to add the above gadget,he will get an error message saying that he does not have enough permissions to add the  gadget.
+<br /><br />
+                <img alt="add gadget" src="images/add_gadget_user2.png" space="preserve" xmlns="http://www.w3.org/1999/xhtml" />
+            </p>
+</div>
+ </body>
+</html>

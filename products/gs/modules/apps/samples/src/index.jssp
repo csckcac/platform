@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Sample Jaggery web application</title>
+</head>
+<body>
+
+<%@ taglib uri="http://wso2.org/jaggery/bsftags" prefix="js" %>
+
+
+<js:script>
+	var s = "";
+	for(var i=0;i<9;i++){
+		for(var j=0;j<=i;j++){
+			s = s + "*";
+		}
+		s = s + "<br />";
+	}
+	function a(val){
+		return "This demonstrates a function "+val;
+	}
+</js:script>
+
+
+<h4>Conventional scripting which runs on the Client's browser</h4>
+
+<script type = "text/javascript">
+	var s = "";
+	for(var i=0;i<9;i++){
+		for(var j=0;j<=i;j++){
+					s = s + "*";
+		}
+		s = s + "<br />";
+	}
+	document.write(s +"<br />");
+	function a(val){
+		return "This demonstrates a function "+val;
+		}
+	document.write(a("call"));
+</script>
+
+<br />
+<hr />
+<h4>Jaggery script which runs in server</h4>
+
+<js:expression>s</js:expression>
+<br />
+<js:expression>a("call")</js:expression>
+
+<br/>
+<br/>
+<br/>
+
+<br />
+</body>
+</html>

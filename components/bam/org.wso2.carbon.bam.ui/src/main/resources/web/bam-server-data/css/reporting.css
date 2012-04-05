@@ -1,0 +1,36 @@
+.reportingType a {
+    cursor: pointer;
+    display: inline !important;
+    color:#2F7ABD;
+}
+.reportingType a img{
+    vertical-align:bottom;
+}
+.reportingType img {
+    margin-right: 5px;
+}
+
+.reportingType td {
+    padding-left: 10px;
+    border:none !important;
+    margin:0px !important;
+    padding-top:0px !important;
+    padding-bottom:0px !important;
+    padding-right:10px !important;
+    padding-left:10px !important;
+}
+
+.reportingType-Box {
+    background-color: #ececec;
+    border: solid 1px #919191;
+    padding: 0px;
+    width: 350px;
+}
+
+.reporting-sep {
+    font-weight: bold;
+    color: #ffffff;
+}
+.reporting-title{
+    font-weight:bold;
+}

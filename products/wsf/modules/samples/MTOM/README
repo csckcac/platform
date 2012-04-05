@@ -1,0 +1,36 @@
+WSO2 WSF/Java
+=============
+
+Sample : MTOM Client
+===================
+
+This is a client which can invoke the MTOM service sample which comes with the WSO2
+Application Server. This sample demonstrates how to write a client to invoke a Web Service using
+MTOM.
+
+If you want to run the sample, you have to host the MTOM service in a running WSO2
+AppServer instance. There are different options to achieve that.
+
+1. Download WSO2 AppServer and deploy the service.
+2. Create a tenant in WSO2 Cloud infrastructure (Stratos) and deploy the service in AppServer
+   cloud service.
+3. Deploy the service in WSO2 AppServer AMI.
+
+
+Running the client
+==================
+
+1. Run "ant" on WSF_HOME/samples/MTOM directory.
+2. Use the script run-client.sh or run-client.bat file to invoke the client.
+
+   Following parameters can be used when running the client
+
+	-file		: Full Path of the file that needs to be sent to the service (mandatory)
+	-fileName	: Name of file to be created at the server side (optional)
+	-e		    : Endpoint URL of the service (optional)
+	-help		: For Help
+
+   Ex : sh run-client.sh -file /tmp/wwe.jpg -fileName wrestling.jpg
+
+If you want more details on how to deploy the service etc, please download the WSO2 Application
+Server Documentation Distribution and refer to the MTOM sample document.

@@ -1,0 +1,40 @@
+Sample: Jibx
+============
+
+Introduction
+============
+
+This sample demonstrate a usage  of Jibx data binding that comes with Axis2. JiBX differs from the
+other data binding techniques supported by Axis2 in that it allows you to use your own Java data
+objects (as opposed to Java data objects generated from a schema definition). JiBX also provides a
+nicer form of unwrapped Web services interface than is supported by the other data binding techniques.
+ On the downside, JiBX requires more setup than the other data binding techniques - in particular, you
+ need to come up with a set of data classes and a binding definition in order to work with JiBX in Axis2.
+
+Building the Service
+====================
+
+To build the sample service, go to samples directory and type: "ant" 
+
+This will build LibraryService.aar in the target directory and copy it to the
+<CARBON_HOME>/repository/deployment/server/axis2services directory.
+
+The WSDL for this service should be viewable at:
+
+http://<host>:<port>/services/LibraryService?wsdl
+
+
+Running the Client
+==================
+
+To run the sample client for the service, go to samples directory and user either run-client.sh in Linux or
+run-client.bat in Windows. 
+
+Or else you can use AppServer features to generate the client stubs pointing to the wsdl and invoke the service with that
+Or invoke the service with Try-It 
+
+Help
+====
+Please contact appserver java user list (appserver-java-user@wso2.org), if you have any trouble running the sample.
+
+

@@ -1,0 +1,50 @@
+.gide-tmview {
+    background-color: rgba(0, 0, 0, 0.03);
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 0 -1px 0 #FFFFFF inset, 0 1px 1px #CDCFD0 inset;
+    padding: 10px;
+    color: #354D4D;
+    text-shadow: 0 1px 0 #FFFFFF;
+}
+
+.gide-tfview-name {
+    padding: 0 10px;
+}
+
+.gide-tfview-tab {
+    width: 8px;
+}
+
+.gide-tfview-right .gide-tfview-name {
+    float: right;
+}
+
+.gide-tfview-icon {
+    height: 19px;
+    width: 40px;
+}
+
+.gide-tfview-right .gide-tfview-icon {
+    float: right;
+}
+
+.gide-tfview-right .gide-tfview-tab {
+    float: right;
+}
+
+.gide-tfview {
+    height: 19px;
+}
+
+.gide-tfview-left .gide-tfview-icon {
+    float: left;
+}
+
+.gide-tfview-left .gide-tfview-name {
+    float: left;
+}
+
+.gide-tfview-left .gide-tfview-tab {
+    float: left;
+}
+

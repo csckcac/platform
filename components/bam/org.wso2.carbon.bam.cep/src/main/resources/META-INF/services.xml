@@ -1,0 +1,23 @@
+<serviceGroup>
+    <service name="BAMMessageReceiver"
+            targetNamespace="http://eventing.bam.carbon.wso2.org">
+            <transports>
+                <transport>https</transport>
+            </transports>
+            <description>
+                This is the abstract one of both service data and mediation receivers
+            </description>
+            <messageReceivers>
+                <messageReceiver mep="http://www.w3.org/2004/08/wsdl/in-only"
+                    class="org.wso2.carbon.bam.cep.BAMMessageReceiver" />
+                <messageReceiver mep="http://www.w3.org/2004/08/wsdl/in-out"
+                    class="org.wso2.carbon.bam.cep.BAMMessageReceiver" />
+            </messageReceivers>
+            <operation name="Publish" mep="http://www.w3.org/ns/wsdl/in-only">
+                <actionMapping>
+                    http://ws.apache.org/ws/2007/05/eventing-extended/Publish
+                </actionMapping>
+            </operation>
+        </service>
+    <parameter name="hiddenService" locked="true">true</parameter>
+</serviceGroup>

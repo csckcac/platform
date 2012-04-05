@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  ~  Copyright (c) 2005-2008, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  ~
+  -->
+
+<!DOCTYPE html
+   PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" >
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title> WSO2 Governance Registry - User Guide </title>
+<link href="../css/greg-docs.css" rel="stylesheet"/>
+<link href="../styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+</head>
+<body>
+[ <a href="../docs_index.html"> Documentation Index </a> ]
+<h1> WSO2 Governance Registry - User Guide </h1>
+
+<h2 id="governance_dashboard">Governance Dashboard</h2>    
+<p>
+The Governance Dashboard consists of a number of gadgets that provides a visual representation of various data present in the WSO2 Governance Registry.
+</p>
+<p>
+The functionality of each of these gadgets will be illustrated below under different sections.
+</p>
+<h3>The Impact Analysis Gadget</h3>
+
+<p>This gadget gives an impact analysis of various artifacts associated with web services. An overview of the associated schemas, WSDLs and policies are shown for each service. If a WSDL has associated schemas/policies, these dependencies are also shown in this gadget.</p>
+
+<p>The drop down list allows you to select any of the services present in the Governance Registry. When a service is selected all associated artifacts are displayed in a dependency tree. A click on any of the nodes on the tree opens the relevant resource.
+<br/>
+<br/>
+<img src="../images/gadgets-impact-analysis.png" alt="Impact Analysis Gadget"/>
+<br/>
+<br/>
+</p>
+
+<h3>The Resource Impact Gadget</h3>
+
+<p>This gadget shows the impact which any resource has to any other resources. An overview of the relations and the related resources are shown for a resource. 
+</p>
+        <p>
+            The text box allows you to enter a path of a resource. When the path is submitted, the respective associations and associated resources are shown as a dependency tree. A click on a respective node bring it into focus.
+            <br/>
+            <br/>
+<img src="../images/gadgets-resource-impact.png" alt="Resource Impact Gadget"/>            
+    <br/>
+<br/>
+        </p>
+   
+   
+ <h3>The Lifecycle Stage Monitor Gadget</h3>
+<p>The lifecycle gadget gives an accumulation of the number of services in each life cycle. A pie chart displays this through each life cycle.</p>
+
+<p>The drop down list allows you to select any lifecycle which has been associated with at least one service resource on the registry. For each selection a chart is shown giving the number of services in each lifecycle.</p>
+<br/>
+<br/>
+<img src="../images/gadgets-lifecycle-stage.png" alt="Lifecycle Stage Monitor Gadget"/>            
+
+<br/>
+<br/>
+</body>
+
+</html>

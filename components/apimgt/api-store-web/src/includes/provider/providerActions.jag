@@ -1,0 +1,17 @@
+<div class="provider-actions">
+        <div class="title">My APIs</div>
+        <div class="content-wrapper">
+        </div>
+        <div class="element-wrapper">
+            <div class="list-items">
+                <div class="list-items-box">
+                    <img alt="" src="images/list-item.png">
+                </div>
+                <div class="list-items-content">
+                    <a class="list-items-item-name">View My APIs</a>
+                    <a class="list-items-item-detail"></a>
+                </div>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+</div>

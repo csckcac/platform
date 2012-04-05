@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>@product.name@ - Extensions - Implicit Correlations</title>
+        <link href="../css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+
+        <h1>Implicit Correlations</h1>
+        <ul>
+            <li><a href="#ImplicitCorrelations-Introduction">Introduction</a></li>
+            <li><a href="#ImplicitCorrelations-ProcesstoProcessInteractionUseCase">Process to Process Interaction Use Case</a></li>
+            <li><a href="#ImplicitCorrelations-ProcesstoServiceInteractionUseCase">Process to Service Interaction Use Case</a></li>
+        </ul>
+        <br />
+        <h2>
+            <a name="ImplicitCorrelations-Introduction"></a>
+            Introduction
+        </h2>
+
+        <p>
+            BPEL process instances are stateful. Therefore, a client interacting with the BPEL engine must identify
+            the particular instance with which it intends to interact in all of its communications. The BPEL specification
+            defines a mechanism (correlation) which allows the process designer to specify which parts of an incoming
+            message (i.e. a message going from a client to the BPEL server) should be used to identify the target
+            process instance. Correlation is a powerful mechanism, however it is a bit complicated and relies on
+            "in-band" message data to associate a messages with a process instance.
+        </p>
+        <p>
+            To keep simple cases simple, @product.name@ provides an alternative correlation mechanism — implicit correlation
+            — that automatically handles correlation through "out-of-band" session identifiers. The mechanism is simple:
+            a unique session identifier is associated with every partner link instance. When a message is sent on
+            a partner link, the session identifier is sent along with the message. The recipient is then able to use
+            the received session identifier in subsequent communications with the process instance. Messages received
+            by the BPEL engine that have a session identifier are routed to the correct instance (and partner link)
+            by that session identifer.
+        </p>
+        <p>
+            There are two major use cases for the implicit correlation mechanism requiring different levels of
+            familiarity with the mechanism's details: process to process and process to service interactions.
+            The former case deals with situations where the @product.name@ BPEL process instance is communicating with another
+            @product.name@ process instance. The latter deals with situations where a @product.name@ BPEL process instance is
+            communicating with an external service.
+        </p>
+        <br />
+        <h2>
+            <a name="ImplicitCorrelations-ProcesstoProcessInteractionUseCase"></a>
+            Process to Process Interaction Use Case
+        </h2>
+
+        <p>
+            When an @product.name@ process needs to communicate with other @product.name@ processes, using implicit correlations is
+            quite simple. Simply omit the &lt;correlations&gt; element from the &lt;receive&gt;, &lt;pick&gt;, and
+            &lt;invoke&gt; activities. The following is an example showing one process (processA) starting another
+            (processB) and then being called back:
+        </p>
+
+        <ul>
+            <li>ProcessA</li>
+        </ul>
+        <pre class="xml" style="font-family:monospace;">            .
+            .
+            .
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;invoke</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;initiate&quot;</span> <span style="color: #000066;">partnerLink</span>=<span style="color: #ff0000;">&quot;responderPartnerLink&quot;</span> <span style="color: #000066;">portType</span>=<span style="color: #ff0000;">&quot;test:MSResponderPortType&quot;</span></span>
+            <span style="color: #009900;">        <span style="color: #000066;">operation</span>=<span style="color: #ff0000;">&quot;initiate&quot;</span> <span style="color: #000066;">inputVariable</span>=<span style="color: #ff0000;">&quot;dummy&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;receive</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;callback&quot;</span> <span style="color: #000066;">partnerLink</span>=<span style="color: #ff0000;">&quot;responderPartnerLink&quot;</span></span>
+            <span style="color: #009900;">         <span style="color: #000066;">portType</span>=<span style="color: #ff0000;">&quot;test:MSMainPortType&quot;</span> <span style="color: #000066;">operation</span>=<span style="color: #ff0000;">&quot;callback&quot;</span> <span style="color: #000066;">variable</span>=<span style="color: #ff0000;">&quot;dummy&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+            .
+            .
+            .
+        </pre>
+        <ul>
+            <li>ProcessB</li>
+        </ul>
+        <pre class="xml" style="font-family:monospace;">            .
+            .
+            .
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;receive</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;start&quot;</span> <span style="color: #000066;">partnerLink</span>=<span style="color: #ff0000;">&quot;mainPartnerLink&quot;</span> <span style="color: #000066;">variable</span>=<span style="color: #ff0000;">&quot;dummy&quot;</span></span>
+            <span style="color: #009900;">             <span style="color: #000066;">portType</span>=<span style="color: #ff0000;">&quot;resp:MSResponderPortType&quot;</span> <span style="color: #000066;">operation</span>=<span style="color: #ff0000;">&quot;initiate&quot;</span> <span style="color: #000066;">createInstance</span>=<span style="color: #ff0000;">&quot;yes&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;invoke</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;callback&quot;</span> <span style="color: #000066;">partnerLink</span>=<span style="color: #ff0000;">&quot;mainPartnerLink&quot;</span></span>
+            <span style="color: #009900;">           <span style="color: #000066;">portType</span>=<span style="color: #ff0000;">&quot;resp:MSMainPortType&quot;</span> <span style="color: #000066;">operation</span>=<span style="color: #ff0000;">&quot;callback&quot;</span> <span style="color: #000066;">inputVariable</span>=<span style="color: #ff0000;">&quot;dummy&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+            .
+            .
+            .
+        </pre>
+
+        <p>
+            In the above example, @product.name@ will use the implicit correlation mechanism because no explicit correlations
+            are specified. Communication between the two processes will reach the correct instance as long as the same
+            partner link is used.
+        </p>
+        <br />
+        <h2>
+            <a name="ImplicitCorrelations-ProcesstoServiceInteractionUseCase"></a>
+            Process to Service Interaction Use Case
+        </h2>
+        <p>
+            TODO
+        </p>
+
+    </body>
+</html>

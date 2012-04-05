@@ -1,0 +1,22 @@
+<div id="application-list" class="margin-override">
+    <div class="application">
+        <div class="template-wrapper">
+            <div class="list-item template tmpl-application">
+                <div class="list-item-top">
+                    <a class="thumbnaillink" href="#" ><img class="thumbnail" src="images/project-default.png" title="..."/></a>
+                    <div class="tmpl-clear" style="clear:both"></div>
+                    <a class="application-name" href="#">applicationName</a>
+                    <div class="company-name">Provider</div>
+                    <div class="rating">
+                        <img class="tmpl-star" src="images/start0.png"/>
+                    </div>
+                    <div style="clear:both"></div>
+                </div>
+                <a class="buy-button">Install</a>
+            </div>
+            <div class="tmpl-clear" style="clear:both"></div>
+        </div>
+    </div>
+    <div class="element-wrapper"></div>
+    <div style="clear: both;"></div>
+</div>

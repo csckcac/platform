@@ -1,0 +1,53 @@
+<%
+include("/services/registryAPI.jag");
+
+var user = getUser();
+var username = null;
+if (user.data && user.data.username) {
+    username = user.data.username;
+} else {
+    var result = login("public", "public");
+    if (result.error == "false") {
+        username = "public";
+        //response.addHeader("Set-Cookie", result.data.cookie);
+    }
+}
+username = username ? "\"" + username + "\"" : null;
+
+var services = getApplication();
+if(!services.error) {
+	log("services  ::"+services);
+    services = stringify(services);
+} else {
+    services = null;
+}
+
+var topRated = getTopRatedServices();
+if (!topRated.error) {
+    topRated = stringify(topRated);
+} else {
+    topRated = null;
+}
+
+var recentlyAdded = getRecentlyAddedServices();
+if (!recentlyAdded.error) {
+    recentlyAdded = stringify(recentlyAdded);
+} else {
+    recentlyAdded = null;
+}
+
+var tagCloud = getTagCloud();
+if (!tagCloud.error) {
+    tagCloud = stringify(tagCloud);
+} else {
+    tagCloud = null;
+}
+%>
+
+var username = <%=username%>;
+var services = <%=services%>;
+var tagCloud = <%=tagCloud%>;
+var recentlyAdded = <%=recentlyAdded%>;
+var topRated = <%=topRated%>;
+var activePage = "projectList";
+var activeTag;

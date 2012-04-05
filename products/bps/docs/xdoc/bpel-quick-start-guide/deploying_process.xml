@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>@product.name@ - Quick-Start Guide -</title>
+        <link href="../css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+        <h1>Quick-Start Guide - Deploying a Process</h1>
+        <br/>
+        <p>Once it's done with modeling the BPEL
+process, it can be deployed via Carbon Studio. Here the Carbon
+Application Project <strong>WS_NumberAdderCarbon </strong>which
+was created at "<a href="modeling_process.html">Modeling business processes</a>".</p>
+       <br/>
+        <ul>
+            <li>Creating @product.name@ server</li>
+            <li>Deploying the Carbon Application in @product.name@</li>
+        </ul>
+        <br/>
+        <ol>
+            <li>Right-click on the <strong>Servers
+                window</strong>. (If Server window not appearing in the Eclipse IDE,
+                go to <strong>Window -> Show View -> Servers</strong>). Then
+                select <strong>New -> Server</strong>.
+            </li>
+            <br />
+            <li>
+                <p>It will show "<strong>New Server</strong>" Window. From
+                the List expand the
+                <strong>WSO2</strong>
+                folder and Select "<strong>WSO2
+                Carbon 3.2 based server</strong>" and (Figure 1). If you need, you
+                can specify the Server name here. Here let's rename it as <strong>WSO2
+                BPS</strong>.</p>
+                <br/>
+                <p><b>Note:</b><i> The reason for using Carbon 3.2 based server is BPS 2.1.0 is based on Carbon 3.2.0.</i></p>
+
+                <p> <br />
+                    <img src="../images/bpel-quick-start-guide/add_new_server_wizard.png" alt="Add New Server Wizard"/>
+                    <br/>Figure 1<br/>
+                </p>
+            </li>
+            <li>
+                <p>Then have to set the <strong>CARBON_HOME</strong>. Click
+                    <strong>browse</strong> button and select the WSO2 Business process
+                    Server home folder. If you didn't have the
+                    <strong>@product.name@</strong>
+                    you can download it from<a
+                            href="http://wso2.com/products/business-process-server">
+                        http://wso2.com/products/business-process-server</a>. After
+                    selecting the
+                    <strong>CARBON_HOME</strong>
+                    Click <strong>Finish</strong>.
+                </p>
+                <br/>
+                <p><b>Note:</b><i> If you want to configure more setting of the Server like Service port, web
+                    Console port etc. click <strong>Next</strong> and configure them.</i>
+                </p>
+                <br/>
+                <p>After completing this step 3 the @product.name@ is added to Servers List. (See Figure
+                    2)
+                </p>
+                <p> <br />
+                    <img src="../images/bpel-quick-start-guide/server_console_view1.png"
+                         alt="Server Console View"/>
+                    <br/>Figure 2<br />
+                </p>
+            </li>
+            <li>
+                <p>Let's deploy our carbon application in @product.name@. Click on
+                    <strong>WS_NumberAdderCarbon</strong>
+                    project in Project
+                    Explore and Drag and drop it on Server. As you see in Figure 3 our Carbon
+                    project is added to the @product.name@ server.
+                </p>
+                <p><br />
+                    <img src="../images/bpel-quick-start-guide/server_console_view2.png"
+                         alt="Server console when the Carbon project added"/>
+                    <br/>Figure 3<br/>
+                </p>
+            </li>
+            <li>
+                To run the server right-click on
+                the server and select <strong>Start</strong>. In Console window, you
+                can see the server Process's log.
+            </li>
+            <br />
+            <li>
+                <p>It will automatically open the
+                    <strong>@product.name@ login page</strong>
+                    in your default web browser. Login into the server using <strong>admin
+                    </strong>as username and again <strong>admin</strong> as password.
+                </p>
+                
+                <p> <br />
+                    <img src="../images/bpel-quick-start-guide/bps_login_page.png" alt="BPS Login page"/>
+                    <br/>Figure 4<br/>
+                </p>
+            </li>
+            <li><p>After the login to the @product.name@, you will redirect to the
+                    @product.name@ home page. Click on the "<strong>processes</strong>"
+                    under the "<strong>Business processes</strong>". It will show
+                    the currently deployed processes.
+                </p>
+                <p><br />
+                    <img src="../images/bpel-quick-start-guide/process_list_page.png" alt="Process List Page"/>
+                    <br/>Figure 5<br />
+                </p>
+            </li>
+        </ol>
+        <p>Here you can see the AdderProcess is deployed in @product.name@. The Process ID generated as
+            {"Process NameSpace"} ProcessName-VersionNo
+        </p>
+    </body>
+</html>

@@ -1,0 +1,41 @@
+<analyzerSequence name="ClusterSummarizer">
+    <trigger cron="1 * * * * ? *"/>
+    <analyzers>
+        <get name="BASE" batchSize="1000">
+           <where index="ClusterStreamSelector">                                                                         
+             <range column="clusterStream" start="" end=""/>
+           </where>
+        </get> 
+        <groupBy>
+            <field name='dataCenter'/>
+            <field name='cluster'/>
+        </groupBy>
+        <drop type="column">
+            <fieldSet>
+                <field name="correlationKey1"/>
+                <field name="metaKey1"/>
+                <field name="timestamp"/>
+                <field name="ClusterStream"/>
+                <field name="timeStamp"/>
+            </fieldSet>
+        </drop>
+        <aggregate>
+            <measure name="request_count" aggregationType="SUM"/>
+            <measure name="response_count" aggregationType="SUM"/>
+            <measure name="fault_count" aggregationType="SUM"/>
+            <measure name="response_time" aggregationType="AVG"/>
+        </aggregate>
+        <put name="clusterSummary" dataSourceType="CASSANDRA">
+            <onExist>
+                <aggregate>
+                    <measure name="request_count" aggregationType="SUM"/>
+                    <measure name="response_count" aggregationType="SUM"/>
+            	    <measure name="fault_count" aggregationType="SUM"/>
+                    <measure name="response_time" aggregationType="AVG"/>
+                </aggregate>
+            </onExist>
+        </put>
+        <get name="clusterSummary"/>
+        <log/>
+    </analyzers>
+</analyzerSequence>

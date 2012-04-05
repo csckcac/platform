@@ -1,0 +1,39 @@
+<schema targetNamespace="http://wso2.org/carbon/brokermanager"
+        xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:tns="http://wso2.org/carbon/brokermanager"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified">
+
+    <element name="brokerManagerConfiguration">
+        <complexType>
+            <sequence>
+                <element name="brokerConfiguraton" type="tns:brokerConfiguratonType" minOccurs="0" maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
+    
+    <complexType name="brokerConfiguratonType">
+        <sequence>
+            <element name="property" type="tns:propertyType" minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
+        <attribute name="name" type="string" use="required"/>
+        <attribute name="type" type="tns:brokerType" use="required"/>
+    </complexType>
+    
+    <simpleType name="brokerType">
+        <restriction base="string">
+           <enumeration value="local"/>
+           <enumeration value="ws-event"/>
+           <enumeration value="jms-qpid"/>
+        </restriction>
+    </simpleType>
+
+    <complexType name="propertyType">
+        <complexContent>
+            <extension base="string">
+                <attribute name="name" type="string" use="required"/>
+            </extension>
+        </complexContent>
+    </complexType>
+
+</schema>

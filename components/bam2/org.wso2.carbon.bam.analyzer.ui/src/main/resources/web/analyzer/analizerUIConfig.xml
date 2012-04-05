@@ -1,0 +1,126 @@
+<!--
+About this
+-->
+<analyzerSequence validatePattern="{'nodeType':'root',
+                                    'atb':[{'name':'name','validation':'required',
+                                    'default':'workflowSummarizer'}],}">
+    <trigger validatePattern="{'nodeType':'rootElements',
+                                'repeat':1,
+                                'atb':[{'name':'cron','validation':'required','default':'1 * * * * ? *'},{'name':'count'},{'name':'interval'}]}"/>
+    <analyzers>
+        <get validatePattern="{'nodeType':'mainNode',
+                                'atb':[{'name':'name','validation':'required'},
+                                {'name':'batchSize','validation':'integer'}]}">
+            <where validatePattern="{'nodeType':'subNode',
+                                    'required':false,
+                                    'atb':[{'name':'index','validation':'required'}]}">
+                <range validatePattern="{'nodeType':'subNode',
+                                        'required':false,
+                                        'atb':[{'name':'column','validation':'required'},
+                                            {'name':'start','validation':'false'},
+                                            {'name':'end','validation':'false'}]}"/>
+            </where>
+
+
+        </get>
+        <lookup validatePattern="{'nodeType':'mainNode',
+                                'atb':[{'name':'name','validation':'required','default':'Event'}]}"/>
+        <aggregate validatePattern="{'nodeType':'mainNode',
+                                    'atb':[]}">
+            <measure validatePattern="{'nodeType':'subNode',
+            'atb':[{'name':'name','validation':'required'},
+            {'name':'aggregationType','validation':'required'}]}"/>
+        </aggregate>
+        <put validatePattern="{'nodeType':'mainNode',
+                            'atb':[{'name':'name','validation':'required','default':'WorkflowResult'},
+                            {'name':'dataSource','validation':'required','default':'CASSANDRA'}]}">
+            <onExist validatePattern="{'nodeType':'subNode',
+                                'atb':[]}">
+                <aggregate validatePattern="{'nodeType':'subNode',
+                                    'atb':[]}">
+                    <measure validatePattern="{'nodeType':'subNode',
+            'atb':[{'name':'name','validation':'required'},
+            {'name':'aggregationType','validation':'required'}]}"/>
+                </aggregate>
+
+            </onExist>
+        </put>
+
+        <log validatePattern="{'nodeType':'mainNode',
+                                'atb':[]}"/>
+        <orderBy validatePattern="{'nodeType':'mainNode',
+                                'atb':[{'name':'field','validation':'required','default':'timestamp'}]}"/>
+        <detectFault validatePattern="{'nodeType':'mainNode',
+                                'atb':[{'name':'errorFields','validation':'required','default':'bam_error_code,bam_error_message'},
+                                {'name':'currentSequenceIdentifier','validation':'required','default':'bam_current_sequence'}]}"/>
+        <index validatePattern="{'nodeType':'mainNode',
+                                'atb':[]}">
+            <ColumnFamily validatePattern="{'nodeType':'subNode',
+            'collapsible':true,
+            'hidden':true,
+            'atb':[{'name':'name','validation':'required','default':'Event','values':'Event,WorkFlowId_NodeId,WorkFlowId_ActivityId,WorkFlowId,NodeId'},
+            {'name':'defaultCF','validation':'required','default':'required'}]}">
+                <granularity validatePattern="{'nodeType':'subNode',
+                'repeat':2,
+                'atb':[],
+                'content':{'default':'none'}}"/>
+                <rowKey validatePattern="{'nodeType':'subNode',
+                'repeat':1,
+                'atb':[]}">
+                    <part validatePattern="{'nodeType':'subNode',
+                    'repeat':2,
+                    'atb':[{'name':'name','validation':'required','default':'timeStamp','values':'workFlowId,activityId,timeStamp'},
+                    {'name':'storeIndex','validation':'required','default':'required'}]}"/>
+                </rowKey>
+                <indexRowKey validatePattern="{'nodeType':'subNode',
+                'repeat':1,'
+                atb':[],
+                'content':{'default':'allKeys'}}"/>
+            </ColumnFamily>
+        </index>
+        <alert validatePattern="{'nodeType':'mainNode',
+        'atb':[{'name':'to'},{'name':'subject'}]}">
+            <fields validatePattern="{'nodeType':'subNode',
+            'repeat':1,'atb':[],'content':{'default':''}}"/>
+        </alert>
+        <extract validatePattern="{'nodeType':'mainNode',
+        'atb':[]}">
+            <field validatePattern="{'nodeType':'subNode',
+            'repeat':1,
+            'atb':[{'name':'from','validation':'required','default':'in_message_body','values':''},
+            {'name':'name','validation':'required','default':''},
+            {'name':'xpath','validation':'required','default':''}]}">
+                <namespace validatePattern="{'nodeType':'subNode',
+                'atb':[{'name':'prefix'},{'name':'uri'}]}"/>
+            </field>
+        </extract>
+        <groupBy validatePattern="{'nodeType':'mainNode',
+        'atb':[]}">
+            <field validatePattern="{'nodeType':'subNode',
+            'atb':[{'name':'name','validation':'required'}]}"/>
+            <time validatePattern="{'nodeType':'subNode',
+            'repeat':1,
+            'atb':[{'name':'name','validation':'required'},{'name':'granularity'}]}"/>
+        </groupBy>
+        <drop validatePattern="{'nodeType':'mainNode',
+        'overrideUI':'displayDrop',
+        'overrideSave':'saveDrop',
+        'atb':[{'name':'type'}]}">
+            <fieldSet validatePattern="{'nodeType':'subNode',
+                'atb':[{'name':'matchUsing','validation':'required'}]}">
+                <field validatePattern="{'nodeType':'subNode',
+                'atb':[{'name':'name','validation':'required'}]}"/>
+            </fieldSet>
+            <groupSet validatePattern="{'nodeType':'subNode',
+                'atb':[{'name':'name','validation':'required'}]}">
+                <group validatePattern="{'nodeType':'subNode',
+                'atb':[{'name':'name','validation':'required'}]}"/>
+            </groupSet>
+
+        </drop>
+        <root validatePattern="{'nodeType':'mainNode','atb':[]}"/>
+    </analyzers>
+</analyzerSequence>
+
+
+

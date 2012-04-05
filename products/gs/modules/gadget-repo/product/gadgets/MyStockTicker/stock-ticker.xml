@@ -1,0 +1,667 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<Module>
+    <ModulePrefs
+            title="Stock Ticker"
+            height="90"
+            width="300"
+            title_url="http://padmanijain.googlepages.com/ticker.html"
+            description="Live stock ticker, highly customizable. Real time quotes from Yahoo! Finance. Select your preferred indices and stocks and store it. Use symbols used by Yahoo! Finance."
+            author="Vineet Jain"
+            author_email="vi_ja@hotmail.com.com"
+            screenshot="http://padmanijain.googlepages.com/all.gif"
+            thumbnail="http://padmanijain.googlepages.com/ticker.gif"
+            author_location="Ottawa, ON, Canada."
+            author_affiliation="Cisco Systems.">
+        <Require feature="setprefs"/>
+    </ModulePrefs>
+    <UserPref name="NAMES" default_value="^DJI,^IXIC,CSCO" datatype="hidden"/>
+    <UserPref name="widgetwidth" default_value="500" datatype="hidden"/>
+    <UserPref name="delta" default_value="8" datatype="hidden"/>
+
+    <Content type="html">
+        <![CDATA[
+
+<style type="text/css">
+
+    A:link {color:blue}
+    A:visited {color:blue}
+
+    .stock_cell{
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: .8em;
+    border-width: 0px 0px 0px 0px;
+    border-style: solid;
+    border-color:black;
+    color:#0000ff;
+    vertical-align:middle;
+    position:relative;
+    }
+
+    .inner_cell{
+    height:30px;
+    border-width: 0px 0px 0px 0px;
+    border-style: solid;
+    border-color:black;
+    vertical-align:middle;
+    padding-top:5px;
+    }
+
+    .outer_cell{
+    width:300px;
+    height:35px;
+    overflow:hidden;
+    border-width:1px 0px 1px 0px;
+    border-style:solid;
+    border-color:gray;
+    background-image: url(http://padmanijain.googlepages.com/images.jpg);
+    background-repeat: repeat-x;
+    left:0px;
+    top:0px;
+    }
+
+    .smallInput {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: .7em;
+    background-color:#ffffff;
+    height:1.5em;
+    border: solid 1px gray;
+    }
+
+</style>
+
+<script language="JavaScript" type="text/javascript">
+
+var http = getHTTPObject();
+
+var prefs = new _IG_Prefs(__MODULE_ID__);
+var symbols = new Array();
+//symbols[0] = "^DJI";
+//symbols[1] = "^IXIC";
+//symbols[2] = "CSCO";
+var movetimeoutRecur  = -1;
+var movetimeout  = -1;
+var getExecTimeout  = -1;
+var TICK_WIDTH = 500;
+var DELTA = 10;
+
+
+function getHTTPObject () {
+    var xmlhttp;
+    /*@cc_on
+    @if (@_jscript_version >= 5)
+    try {
+        xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+    } catch (e) {
+        try {
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        } catch (E) {
+            xmlhttp = false;
+        }
+    }
+    @else
+    xmlhttp = false;
+    @end @*/
+
+    if (!xmlhttp && typeof XMLHttpRequest != 'undefined') {
+        try {
+            xmlhttp = new XMLHttpRequest();
+        } catch (e) {
+            xmlhttp = false;
+        }
+    }
+    return xmlhttp;
+}
+
+
+function getMyURL(){
+    var execCmdStart = "http://download.finance.yahoo.com/d/quotes.csv?s=";
+    execCmdStart = execCmdStart + encodeURI(symbols[0]);
+
+    for (var j = 1; j < symbols.length; j++) {
+        execCmdStart = execCmdStart + "+" + encodeURI(symbols[j]);
+    }
+    execCmdStart = execCmdStart + "&f=sl1d1t1c1&e=.csv" +
+    "&random=" + Math.floor((Math.random()*10000)+1);
+
+//    alert(execCmdStart);
+    return execCmdStart;
+}
+
+function getExecCmd1(){
+    var execCmdStart =getMyURL();
+    http.open('GET', execCmdStart);
+    http.onreadystatechange = handleExecCmdHttpResponse;
+    httpreqComplete = false;
+    http.send(null);
+}
+
+function handleExecCmdHttpResponse () {
+
+    if (http.readyState == 4 && http.status == 200) {
+        loadContent(http.responseText);
+        error = null;
+    }else if (http.readyState == 4 && http.status == 404) {
+        error = "Error getting data.";
+    }
+}
+
+
+
+function getExecCmd(){
+    try{
+        var execCmdStart =getMyURL();
+        //alert(execCmdStart);
+        _IG_FetchContent(execCmdStart, loadContent);
+    }catch(err){
+        alert(err);
+    }
+}
+
+function getExecCheckSymbol(arg1){
+    try{
+         var execCmdStart = "http://quote.yahoo.com/d/quotes.csv?s=";
+         execCmdStart = execCmdStart + encodeURI(arg1) + "&f=sl1d1t1c1&e=.csv";
+        //alert(execCmdStart);
+        _IG_FetchContent(execCmdStart, checkData);
+    }catch(err){
+        alert(err);
+    }
+}
+
+
+function checkData(data) {
+    var newSym = "";
+    try{
+        var lines = data.replace(/\r+\n/g, "\n").split("\n");
+        for (var j = 0; j < lines.length; j++) {
+            var line = lines[j].replace(/\"/g, "");
+            line = trim(line);
+            if(line.length == 0) continue;
+            var ws = line.split(',');
+            newSym = ws[0];
+            if(ws.length == 5){
+                var change = parseFloat(ws[4]);
+                if(!isNaN(change)){
+                     addEntryInArray(ws[0]);
+                     return;
+                }else{
+                   alert("The symbol "+newSym+" does not exist.");
+                   return;
+                }
+            }
+        }
+    }catch(err){
+        alert("The symbol "+newSym+" does not exist");
+    }
+}
+
+
+
+
+
+
+
+function trim(stringToTrim) {
+    return stringToTrim.replace(/^\s+|\s+$/g,"");
+}
+
+function loadContentMozilla(data) {
+    var s = "CSCO,26.00,4/10/2007,10:49am,-0.20" + "\n";
+    s = s + "MSFT,26.00,4/10/2007,10:49am,-0.20"+ "\n";
+    s = s + "MSFT,26.00,4/10/2007,10:49am,-0.20"+ "\n";
+    s = s + "MSFT,26.00,4/10/2007,10:49am,-0.20"+ "\n";
+    s = s + "MSFT,26.00,4/10/2007,10:49am,-0.20"+ "\n";
+    loadContent(s);
+}
+
+function loadContent(data) {
+    try{
+        //alert(data);
+        var g = document.getElementById('inner_container');
+        var lines = data.replace(/\r+\n/g, "\n").split("\n");
+
+        g.innerHTML="";
+
+        //g.style.width = ((lines.length-1) * 130) + 100;
+        //TICK_WIDTH = ((lines.length-1) * 130) + 100;
+        g.style.left = TICK_WIDTH + 'px';
+
+        var timeElem = document.getElementById('d1');
+
+        var len = 0;
+        for (var j = 0; j < lines.length; j++) {
+
+            var line = lines[j].replace(/\"/g, "");
+            line = trim(line);
+
+            if(line.length == 0) continue;
+
+            //alert(line);
+            var ws = line.split(',');
+            //alert(ws.length);
+            if(ws.length == 5){
+                var result = "<span class=\"stock_cell\">";
+
+                if(ws[0] == "^DJI"){
+                    ws[0] = "Dow";
+                }
+                if(ws[0] == "^IXIC"){
+                    ws[0] = "Nasdaq";
+                }
+                result = result + "<span style=\"font-weight:bold;\">" + ws[0] + "</span>"+
+                "<span style=\"font-size:.7em;vertical-align:sub;color:#000000\">" + ws[1] + "</span>";
+
+                var change = parseFloat(ws[4]);
+                if(change < 0 ) {
+                    result = result + "<img src=\"http://padmanijain.googlepages.com/down.gif\" align=\"bottom\">";
+                    result = result +  "<span style=\"font-size:.7em;color:#ff0000\">" + "(" +change + ")&nbsp;&nbsp;</span>"+ "</span>";
+                }else{
+                    result = result + "<img src=\"http://padmanijain.googlepages.com/up.gif\" align=\"bottom\">";
+                    result = result + "<span style=\"font-size:.7em;color:#339900\">" + "(" + change +  ")&nbsp;&nbsp;</span>"+ "</span>";
+                }
+                timeElem.innerHTML = ws[3] + " " + ws[2];
+//                alert(result);
+                var v = document.createElement('span');
+                v.innerHTML=result;
+                len = len + result.length;
+                g.appendChild(v);
+            }
+        }
+
+        var r1 = document.getElementById('s1s1');
+        r1.innerHTML = g.innerHTML;
+        setTimeout("start_move()", 1000)
+    }catch(err){
+    }
+}
+
+
+
+
+function move_up() {
+
+    if(move == false) return;
+    var c = document.getElementById('inner_container');
+    c.style.top = '0px';
+
+    var x1Str = c.style.left;
+    //        alert(x1Str);
+    x1Str = x1Str.replace("px", "");
+    var x1 = parseInt(x1Str);
+
+
+
+    var pos = x1;
+    var wStr = c.style.width;
+    wStr = wStr.replace("px", "");
+    var w = parseInt(wStr);
+
+
+    var n = w- (2*w);
+
+    if(pos > n){
+        pos = x1 - DELTA;
+    }else{
+        pos = TICK_WIDTH;
+    }
+
+
+    //        alert(pos);
+
+    c.style.left = pos + 'px';
+    if(movetimeout != -1) clearTimeout(movetimeout);
+    movetimeout = setTimeout("move_up()",200);
+
+}
+
+
+function start_move(){
+    if( move == true) return;
+    move = true;
+    if( movetimeout != -1) clearTimeout(movetimeout);
+
+
+    var r1 = document.getElementById('s1s1');
+    var r1Str = r1.clientWidth;
+     var tempWidth = parseInt(r1Str);
+
+    var g = document.getElementById('inner_container');
+    g.style.width = tempWidth;
+
+   // alert(TICK_WIDTH);
+    movetimeout  = setTimeout("move_up()",100);
+}
+
+function init() {
+
+    var tick = prefs.getString("widgetwidth");
+    TICK_WIDTH = parseInt(tick);
+    tick = prefs.getString("delta");
+    DELTA = parseInt(tick);
+
+    var args = prefs.getString("NAMES");
+    var ws = args.split(',');
+
+    for (var j = 0 ; j < ws.length; j++) {
+        symbols[j]  = ws[j];
+    }
+    var t = setTimeout("refresh_move()",10);
+    var g = document.getElementById('outer_container');
+    g.style.width = TICK_WIDTH;
+
+
+
+}
+
+function refresh_move(){
+    move = false;
+    if( movetimeout != -1) clearTimeout(movetimeout);
+    if( getExecTimeout != -1) clearTimeout(getExecTimeout);
+    if( movetimeoutRecur != -1) clearTimeout(movetimeoutRecur);
+
+    getExecTimeout = setTimeout("getExecCmd()",10);
+    //testing
+//    getExecTimeout = setTimeout("loadContentMozilla()",10);
+    movetimeoutRecur = setTimeout("refresh_move()",120000);
+}
+
+function fast_move(){
+   if( DELTA >= 32){
+   alert("Maximum scrolling speed reached.");
+   return;
+   }
+   DELTA = DELTA + 2;
+   prefs.set("delta", DELTA+"");
+
+}
+
+function slow_move(){
+   if( DELTA <= 2){
+   alert("Minimum scrolling speed reached.");
+   return;
+   }
+   DELTA = DELTA -2;
+   prefs.set("delta", DELTA+"");
+}
+
+function stop_move(){
+    move = false;
+    if( movetimeout != -1) clearTimeout(movetimeout);
+    if( getExecTimeout != -1) clearTimeout(getExecTimeout);
+    if( movetimeoutRecur != -1) clearTimeout(movetimeoutRecur);
+
+    movetimeoutRecur = -1;
+    movetimeout  = -1;
+    getExecTimeout  = -1;
+}
+
+function show_config(){
+    var c = document.getElementById('config');
+    c.style.display = 'block';
+    showAddEdit();
+}
+
+function close_config(){
+    var c = document.getElementById('config');
+    c.style.display = 'none';
+
+    storePreferencesNow();
+
+    refresh_move();
+}
+function del_config(){
+    var c = document.getElementById('delconfig');
+    c.style.display = 'block';
+    showDelete();
+}
+
+function close_delconfig(){
+    var c = document.getElementById('delconfig');
+    c.style.display = 'none';
+
+    storePreferencesNow();
+
+    refresh_move();
+}
+
+function storePreferencesNow(){
+    var str = symbols[0];
+
+    for (var j = 1; j < symbols.length; j++) {
+        str = str + "," +  symbols[j];
+    }
+
+    prefs.set("NAMES", str);
+}
+
+
+function getTimeStamp(){
+    var str="";
+    var currentTime = new Date();
+    var month = currentTime.getMonth() + 1;
+    var day = currentTime.getDate();
+    var year = currentTime.getFullYear();
+
+    var hours = currentTime.getHours();
+    var minutes = currentTime.getMinutes();
+    if (minutes < 10)
+    minutes = "0" + minutes;
+
+
+
+    if(hours > 11){
+        str = str + " " + hours + ":" + minutes + " " + "PM ";
+    } else {
+        str = str + " " + hours + ":" + minutes + " " + "AM ";
+    }
+    str = str + month + "/" + day + "/" + year;
+    return str;
+}
+
+
+function showDelete(){
+    //show the dialog
+    //populate the stuff
+    stop_move();
+
+    var box = document.getElementById("s2");
+    box.options.length = 0;
+
+    for (var j = 0 ; j < symbols.length; j++) {
+        box.options[j] = new Option(symbols[j], symbols[j], false);
+    }
+}
+
+
+function showAddEdit(){
+    //show the dialog
+    //populate the stuff
+    stop_move();
+
+    var box = document.getElementById("s2");
+    box.options.length = 0;
+
+    for (var j = 0 ; j < symbols.length; j++) {
+        box.options[j] = new Option(symbols[j], symbols[j], false);
+    }
+    var r1 = document.getElementById('queryvalueYTTag');
+    r1.focus();
+
+}
+
+function addEntry(){
+    var r1 = document.getElementById('queryvalueYTTag');
+    if(r1.value == null || r1.value.length == 0){
+        alert("Enter a symbol to be added.");
+        return;
+    }
+
+    var temp = r1.value.toUpperCase();
+    getExecCheckSymbol(temp);
+}
+
+function addEntryInArray(temp){
+    var r1 = document.getElementById('queryvalueYTTag');
+
+    symbols[symbols.length] = temp;
+    var box = document.getElementById("s2");
+    box.options[box.options.length] = new Option(temp, temp, false);
+    box.options[box.options.length-1].selected = true;
+    r1.value = "";
+}
+
+function deleteEntry(){
+    var box = document.getElementById("s2");
+    if(box.selectedIndex == -1){
+        alert("Select a symbol to be deleted.");
+        return;
+    }
+
+    if(box.options[box.selectedIndex].value == "^DJI" ||
+    box.options[box.selectedIndex].value == "^IXIC"){
+        alert(box.options[box.selectedIndex].value + " cannot be deleted.");
+        return;
+    }
+    box.options[box.selectedIndex] = null;
+
+    symbols = new Array();
+    //now populate the symobl
+    for (var j = 0 ; j < box.options.length; j++) {
+        symbols[j]  = box.options[j].value;
+        //      alert(box.options[j].value);
+    }
+}
+
+
+function keyAddEntry(e){
+    var key=e.keyCode || e.which;
+    if (key==13){
+        addEntry();
+    }
+}
+
+</script>
+
+
+<body onload="init();">
+
+
+
+    <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td align="right" colspan="2" style="font-size:.6em;">
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <div id="outer_container" class="outer_cell">
+                    <div id="inner_container" class="inner_cell" style="position:relative;">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td align="left" style="font-size:.6em;">
+
+                <a href='javascript:stop_move();'>Stop</a>&nbsp;&nbsp;
+                <a href='javascript:start_move();'>Play</a>&nbsp;&nbsp;
+                <!-- a href='javascript:refresh_move();'>Refresh now</a -->
+                <a href='javascript:show_config();'>Add</a>&nbsp;&nbsp;
+                <a href='javascript:del_config();'>Remove</a>&nbsp;&nbsp;
+
+                <a href='javascript:void(0);'><img src="http://padmanijain.googlepages.com/stockslow.jpg" border="0" onclick="slow_move();"alt="Scroll slower"/></a>&nbsp;
+                <a href='javascript:void(0);'><img src="http://padmanijain.googlepages.com/stockfast.jpg" border="0" onclick="fast_move();" alt="Scroll faster"/></a>
+                &nbsp;&nbsp;
+
+            </td>
+
+            <td align="right" style="font-size:.6em;">
+
+                <small><span id="d1"><script type="text/javascript">
+                    document.write(getTimeStamp());
+                    </script></span> </small>
+                </td>
+
+            </tr>
+        <tr>
+            <td colspan="2">
+                <div id="empty" style="height:60px;">
+                 </div>
+            </td>
+        </tr>
+
+        </table>
+
+
+        <div id="config" style="padding-bottom:2px;padding-left:4px;width:180px;background-color:#E1E9C3;position:absolute;display:none;left:60px;top:4px; border-width: 1px 1px 1px 1px;border-style: solid;border-color:#888888;z-index:1000;">
+            <table border="0" cellpadding="1" cellspacing="0">
+                <tr>
+                    <td align="left" style="font-size:.6em;">
+                        Use Yahoo! Finance
+                        <a href="http://finance.yahoo.com/lookup" target="_blank">symbols</a>.
+                        </td>
+                        <td align="right" valign="top">
+                        <a href="javascript:void(0);"><img src="http://padmanijain.googlepages.com/close.gif" border="0" onclick="close_config();"></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <INPUT class="smallInput" id="queryvalueYTTag" TYPE="text" style="width:140px;" value="" title="Enter symbol." onkeypress="keyAddEntry(event);">
+                        </td>
+                        <td align="left" style="font-size:.6em;">
+                            <a href='javascript:void(0)' onclick="addEntry();">Add</a>
+                        </td>
+                </tr>
+                            </table>
+                        </div>
+
+        <div id="delconfig" style="padding-left:4px;width:180px;background-color:#E1E9C3;position:absolute;display:none;left:60px;top:4px; border-width: 1px 1px 1px 1px;border-style: solid;border-color:#888888;z-index:1000;">
+            <table border="0" cellpadding="1" cellspacing="0">
+                <tr>
+                    <td align="left" style="font-size:.6em;">
+                        Select a symbol to delete.
+                        </td>
+                        <td align="right" valign="top">
+                        <a href="javascript:void(0);"><img src="http://padmanijain.googlepages.com/close.gif" border="0" onclick="close_delconfig();"></a>
+                    </td>
+                </tr>
+
+                        <tr>
+                            <td>
+                                <SELECT id="s2" size="3" style="background-color:#E1E9C3;width:140px;font-family: Verdana, Arial, Helvetica, sans-serif;font-size:.7em;">
+                                </SELECT>
+                            </td>
+
+                            <td align="left" style="font-size:.6em;">
+                                <a href='javascript:void(0)' onclick="deleteEntry();">Delete</a>
+                                </td>
+                            </tr>
+                            </table>
+                        </div>
+                        <br />
+
+                        <div id="s1s1" style="display:block;position:absolute;left:-20000px;top:160px;height:25px"></div>
+
+</body>
+
+        ]]>
+    </Content>
+</Module>

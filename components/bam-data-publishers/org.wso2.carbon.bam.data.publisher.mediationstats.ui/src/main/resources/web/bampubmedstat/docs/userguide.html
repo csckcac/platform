@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"/>
+  <title>BAM Service Statistics Publisher Configuration Help - User Guide</title>
+  <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all" />
+</head>
+
+<body>
+
+<div id="middle">
+<h1 id="Monitor1">BAM Mediation Statistics Publisher Configuration</h1>
+<p> 
+ Using this configuration user interface, eventing can be enabled or disabled at global level, as well as the three threshold values be set. If eventing is disabled, no events will be fired at all. If eventing is enabled, events will be fired based on the threshold values being satisfied.These events will be captured by BAM server and datas will be saved at the BAM database.<br/>
+The key three threshold values, which user need to set, are:
+</p>
+<ul>
+  <li>Sequence Request Count Threshold  </li>
+  <li>Proxy Request Count Threshold </li>
+  <li>Endpoint Request Count Threshold </li>
+</ul>
+<p><img alt="" src="images/datapublisher_esb.PNG" height="312" width="838"></p>
+
+<p>Figure 1: Data Publisher Configuration</p>
+
+ 
+<h2>Defining Threshold Values</h2>
+
+<p><b>Sequence Request Count Threshold  </b></p>
+<p>An event will be fired with sequence data, when the difference between the sequence request count at which the last event was fired and the current sequence request count becomes greater than this threshold value.  </p>
+
+<p><b>Proxy Request Count Threshold </b></p>
+<p>An event will be fired when the difference between the request count for a proxy service at which the last event was fired for that proxy service and the current request count for that proxy service becomes greater than this threshold value. </p>
+
+<p><b>Endpoint Request Count Threshold </b></p>
+<p>An event will be fired with endpoint data, when the difference between the request count for an endpoint at which the last event was fired for the endpoint and the current request count for that endpoint, becomes greater than this threshold value.</p>
+
+<p>
+All the threshold values are set to '2' by default. User could change the threshold values based on his need and click 'update' to make system to fire the events in new threshold values.
+</p>
+
+<p>
+ <b>Note:-</b> 
+<ul>
+<li>The threshold value for sequences applies to all sequences present with the WSO2 ESB instance in general. This threshold cannot be configured for individual sequences to have different values. </li>
+<li>Like in the case of sequence request count threshold, endpoint request count threshold and proxy service request count threshold are common for all endpoints and proxy services respectively, and cannot be configured to have different values for individual endpoints or proxy services. </li>
+<li>User can disable firing events at each level, <i>by providing zero or a negative</i> value as the threshold.</li>
+</p>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+-org.wso2.carbon.humantask.impl.*
+-org.wso2.carbon.humantask.types.*
+-org.wso2.carbon.humantask.types.impl.*
+-org.oasisOpen.docs.ns.bpel4People.wsHumantask.context.x200803.*
+-org.oasisOpen.docs.ns.bpel4People.wsHumantask.context.x200803.impl.*
+-org.oasisOpen.docs.ns.bpel4People.wsHumantask.policy.x200803.*
+-org.oasisOpen.docs.ns.bpel4People.wsHumantask.policy.x200803.impl.*
+-org.oasisOpen.docs.wss.x2004.x01.oasis200401WssWssecuritySecext10.*
+-org.oasisOpen.docs.wss.x2004.x01.oasis200401WssWssecuritySecext10.impl.*
+-org.oasisOpen.docs.wss.x2004.x01.oasis200401WssWssecurityUtility10.*
+-org.oasisOpen.docs.wss.x2004.x01.oasis200401WssWssecurityUtility10.impl.*
+-org.w3._2000._09.xmldsig_.*
+-org.w3.ns.wsPolicy.*
+-org.w3.ns.wsPolicy.impl.*
+-org.w3.x2000.x09.xmldsig.*
+-org.w3.x2000.x09.xmldsig.impl.*

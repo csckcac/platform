@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  ~  Copyright (c) 2005-2008, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  ~
+  -->
+
+<!DOCTYPE html
+   PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" >
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <title>
+      WSO2 Governance Registry - Setting up Database - OpenEdge
+    </title>
+    <link href="../css/greg-docs.css" rel="stylesheet"/>
+    <link href="../styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+  </head>
+  <body xml:lang="en">
+[ <a href="../docs_index.html"> Documentation Index </a> ]
+<h1>WSO2 Governance Registry - Setting up Database - OpenEdge</h1>
+
+<h2>Table of Contents</h2>
+
+<ul>
+<li>
+<a href="#prepare">Setup Database And The Database User</a>
+</li>
+<li>
+<a href="#conf">Setup Configuration Files</a>
+</li>
+<li>
+<a href="#drivers">Setup Drivers</a>
+</li>
+<li>
+<a href="#createdb">Create Database</a>
+
+<ul>
+<li>
+<a href="#autodb">Automatic Database Creation</a>
+</li>
+<li>
+<a href="#manualdb">Manual Database Creation</a>
+</li>
+</ul>
+</li>
+</ul>
+
+
+
+<h2 id="prepare">Setup Database And The Database User</h2>
+<ol>
+<li>
+Download and install OpenEdge in you computer, if it is not already done.</li>
+    <li>
+        <p>Go to the &lt;OE-installation-directory&gt;/bin folder and use the proenv script to setup the environment variables. After doing that add the &lt;OE-insallation-directory&gt;/java/prosp.jar to the CLASSPATH environment variable.
+        </p>
+</li>
+<li>
+        <p>
+        Create an empty database using the prodb script. This script creates a database by copying an existing database provided with the installation. 
+        </p>
+<p>
+prodb CARBON_DB &lt;OE-installation-directory&gt;/empty8
+</p>
+</li>
+<li>
+<p>
+Start the database using the proserve script. Provide the database name and a port as arguments to this script using the -db and -S parameters. 
+</p>
+<p>
+proserve -db CARBON_DB -S 6767
+</p>
+</li>
+<li>
+<p>
+Use the sqlexp script to start the default sql explorer that comes with the OpenEdge installation. Connect to the database that was created previously by using the -db and -S parameters.
+</p>
+<p>
+sqlexp -db CARBON_DB -S 6767
+</p>
+<p>
+Now use the following commands to create an user and grant the permissions to the database.
+</p>
+<pre>
+CREATE USER 'wso2carbon','wso2carbon';
+GRANT dba,resource TO 'wso2carbon';
+COMMIT;
+</pre>
+<p>
+Now logout from the sql explorer by typing exit.
+</p>
+</li>
+
+     
+</ol>
+<h2 id="conf">Setup Configuration Files</h2>
+<ol>
+<li>
+<p>
+Edit the registry.xml file (inside the $GREG_HOME/repository/conf directory) of the deployed registry instance as below. (note the highlighted configurations, You
+    may use your own database name, username and password).
+</p>
+<pre>
+    &lt;currentDBConfig&gt;OpenEdge&lt;/currentDBConfig&gt;
+    &lt;dbConfig name="OpenEdge"&gt;
+        &lt;url&gt;<strong>jdbc:datadirect:openedge://localhost:6767;databaseName=CARBON_DB</strong>&lt;/url&gt;
+        &lt;userName&gt;<strong>wso2carbon</strong>&lt;/userName&gt;
+        &lt;password&gt;<strong>wso2carbon</strong>&lt;/password&gt;
+        &lt;driverName&gt;<strong>com.ddtek.jdbc.openedge.OpenEdgeDriver</strong>&lt;/driverName&gt;
+        &lt;maxActive&gt;<strong>80</strong>&lt;/maxActive&gt;
+        &lt;maxWait&gt;<strong>60000</strong>&lt;/maxWait&gt;
+        &lt;minIdle&gt;<strong>5</strong>&lt;/minIdle&gt;
+    &lt;/dbConfig&gt;
+</pre>
+<p>
+Explanation of the database configuration options.
+</p>
+<ul>
+<li>
+url: The URL of the database</li>
+<li>
+userName: The name of the database user</li>
+<li>
+password: The password of the database user</li>
+<li>
+driverName: The class name of the database driver</li>
+<li>
+maxActive: The maximum number of active connections that can be allocated from this pool at the same time, or negative for no limit. 
+</li>
+<li>
+maxWait: The maximum number of milliseconds that the pool will wait (when there 
+    are no available connections) for a connection to be returned before throwing an 
+    exception, or &lt;= 0 to wait indefinitely. </li>
+<li>
+minIdle: The minimum number of active connections that can remain idle in the 
+    pool, without extra ones being created, or 0 to create none. </li>
+</ul>
+</li>
+  <li>
+    <p>
+      Edit the user-mgt.xml file (inside the $GREG_HOME/repository/conf directory) of the deployed instance as below. (note the highlighted configurations, You
+    may use your own database name, username and password).
+    </p>
+<pre>
+    &lt;Configuration&gt;
+        ...
+        &lt;Property name="url"&gt;<strong>jdbc:datadirect:openedge://localhost:6767;databaseName=CARBON_DB</strong>&lt;/Property&gt;
+        &lt;Property name="userName"&gt;<strong>wso2carbon</strong>&lt;/Property&gt;
+        &lt;Property name="password"&gt;<strong>wso2carbon</strong>&lt;/Property&gt;
+        &lt;Property name="driverName"&gt;<strong>com.ddtek.jdbc.openedge.OpenEdgeDriver</strong>&lt;/Property&gt;
+        &lt;Property name="maxActive"&gt;<strong>50</strong>&lt;/Property&gt;
+        &lt;Property name="maxWait"&gt;<strong>60000</strong>&lt;/Property&gt;
+        &lt;Property name="minIdle"&gt;<strong>5</strong>&lt;/Property&gt;
+    &lt;/Configuration&gt;
+</pre>
+  </li>
+</ol>
+
+<h2 id="drivers">Setup Drivers</h2>
+<ol> 
+
+<li><p> Copy the &lt;OE-insallation-directory&gt;/java/openedge.jar to the $GREG_HOME/repository/components/lib directory (Here $GREG_HOME refers to the directory where you run the WSO2 Governance Registry instance).</p>
+<p>
+<b>Note: </b>Remove old database driver from $GREG_HOME/repository/components/dropins ,when you upgrade the database driver.
+</p>
+</li>
+</ol>
+
+<h2 id="createdb">Create Database</h2>
+<h3 id="autodb">Automatic Database Creation</h3>
+<ol>
+  <li>
+    <p>
+      Next at the first time you start the registry, run with the -Dsetup option, so
+      it will create all the tables in given OpenEdge database.
+    </p>
+
+    <p>
+      wso2server.sh -Dsetup
+     </p>
+    <p>
+     wso2server.bat -Dsetup
+     </p>
+  </li>
+<li>
+You just configured WSO2 Governance Registry to run with OpenEdge database!
+</li>
+</ol>
+  
+<h3 id="manualdb">Manual Database Creation</h3>
+
+<ol>
+        <p>For creating the tables manually, the OpenEdge scripts for both registry and user manager (embedded inside the 
+    Registry) databases, provided with the WSO2 Governance Registry has to be modified. 
+       </p>
+<li>
+Make a backup of the $GREG_HOME/dbscripts/openedge.sql under the name of openedge_manual.sql
+</li>
+<li>
+Replace all the &quot;/&quot; symbols in the openedge_manual.sql script with the &quot;;&quot; symbol.
+</li>
+<li>
+<p>
+At the end of the openedge_manual.sql script add the following line and save the script.
+</p>
+<p>
+COMMIT;
+</p>
+</li>
+<li>
+<p>
+Run the modified script using the sql explorer
+</p>
+<p>
+sqlexp -db CARBON_DB -S 6767 -user wso2carbon -password wso2carbon &lt; $GREG_HOME/dbscripts/openedge_manual.sql
+</p>
+</li>
+    <li><p>start the wso2 registry instance.</p>
+        <p>
+            wso2server.sh
+        </p>
+        <p>
+          wso2server.bat
+        </p>
+
+        </li>
+</ol>
+</body>
+</html>

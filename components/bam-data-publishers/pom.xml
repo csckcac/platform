@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ ~ Copyright (c) 2009-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ Licensed under the Apache License, Version 2.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~      http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>org.wso2.carbon</groupId>
+        <artifactId>carbon-components</artifactId>
+        <version>4.0.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>bam-data-publishers</artifactId>
+    <packaging>pom</packaging>
+    <name>WSO2 Carbon - Business Activity Monitoring - Data Publishers Aggregator Module</name>
+    <url>http://wso2.org</url>
+
+            <modules>
+                <!--module>org.wso2.carbon.bam.service.data.publisher</module>
+                <module>org.wso2.carbon.bam.service.data.publisher.ui</module-->
+		<!--module>org.wso2.carbon.bam.mediationstats.data.publisher</module-->
+		<module>org.wso2.carbon.bam.data.publisher.servicestats</module>
+		<module>org.wso2.carbon.bam.data.publisher.servicestats.ui</module>
+                <module>org.wso2.carbon.bam.data.publisher.mediationstats</module>
+                <module>org.wso2.carbon.bam.data.publisher.mediationstats.ui</module>
+                <!--module>org.wso2.carbon.bam.data.publisher.clientstats</module-->
+                <module>org.wso2.carbon.bam.data.publisher.activity.mediation</module>
+                <module>org.wso2.carbon.bam.data.publisher.activity.mediation.ui</module>
+                <module>org.wso2.carbon.bam.data.publisher.activity.service</module>
+                <module>org.wso2.carbon.bam.data.publisher.activity.service.ui</module>
+		<module>org.wso2.carbon.bam.lwevent.core</module>
+                <!--module>org.wso2.carbon.bam.data.publisher.activity.mediator</module-->
+            </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.ui</artifactId>
+                <version>${wso2carbon.version.eventing}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.statistics</artifactId>
+                <version>${wso2carbon.version.eventing}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.axis2</groupId>
+                <artifactId>axis2-transport-mail</artifactId>
+                <version>${axis2-transports.version.bam-data-publishers}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.axis2</groupId>
+                <artifactId>axis2-transport-base</artifactId>
+                <version>${axis2-transports.version.bam-data-publishers}</version>
+            </dependency>
+<!--            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.event.api</artifactId>
+                <version>${wso2carbon.version.eventing}</version>
+            </dependency>-->
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.registry.core</artifactId>
+                <version>${wso2carbon.version.bam-data-publishers}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.registry.common</artifactId>
+                <version>${wso2carbon.version.bam-data-publishers}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.event.core</artifactId>
+                <version>${wso2carbon.version.bam-data-publishers}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.event.ws</artifactId>
+                <version>${wso2carbon.version.bam-data-publishers}</version>
+            </dependency>
+            <!--dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.event.broker</artifactId>
+                <version>${wso2carbon.version.bam-data-publishers}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.event.api</artifactId>
+                <version>${wso2carbon.version.bam-data-publishers}</version>
+            </dependency-->
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.email.verification</artifactId>
+                <version>${wso2carbon.version.bam-data-publishers}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.axis2.wso2</groupId>
+                <artifactId>axis2</artifactId>
+                <version>${axis2.wso2.version.bam-data-publishers}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.ws.commons.axiom</groupId>
+                <artifactId>axiom-api</artifactId>
+                <version>${axiom.version.bam-data-publishers}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.ws.commons.axiom</groupId>
+                <artifactId>axiom-impl</artifactId>
+                <version>${axiom.version.bam-data-publishers}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.utils</artifactId>
+                <version>${wso2carbon.version.bam-data-publishers}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.synapse</groupId>
+                <artifactId>synapse-core</artifactId>
+                <version>${synapse.version.bam-data-publishers}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.mediation.initializer</artifactId>
+                <version>${wso2carbon.version.bam-data-publishers}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.mediation.statistics</artifactId>
+                <version>${wso2carbon.version.bam-data-publishers}</version>
+            </dependency>
+	    <dependency>
+		<groupId>org.wso2.carbon</groupId>
+		<artifactId>org.wso2.carbon.base</artifactId>
+		<version>${wso2carbon.version.bam-data-publishers}</version>			
+            </dependency>
+         </dependencies>
+    </dependencyManagement>
+
+    <properties>
+        <wso2carbon.version.bam-data-publishers>${wso2carbon.version}</wso2carbon.version.bam-data-publishers>
+        <axis2.wso2.version.bam-data-publishers>${axis2.wso2.version}</axis2.wso2.version.bam-data-publishers>
+        <synapse.version.bam-data-publishers>${synapse.version}</synapse.version.bam-data-publishers>
+        <axis2.osgi.version.range.bam-data-publishers>${axis2.osgi.version.range}</axis2.osgi.version.range.bam-data-publishers>
+        <neethi.osgi.version.range.bam-data-publishers>${neethi.osgi.version.range}</neethi.osgi.version.range.bam-data-publishers>
+        <axis2-transports.version.bam-data-publishers>${axis2-transports.version}</axis2-transports.version.bam-data-publishers>
+        <wso2carbon.version.eventing>${wso2carbon.version}</wso2carbon.version.eventing>
+        <axiom.version.bam-data-publishers>${axiom.version}</axiom.version.bam-data-publishers>
+
+    </properties>
+    
+</project>
+

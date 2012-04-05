@@ -1,0 +1,368 @@
+<!--
+~ Copyright 2005-2008 WSO2, Inc. (http://wso2.com)
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <link href="css/mashup-docs.css" rel="stylesheet" type="text/css" media="all"/>
+        <link type="text/css" rel="stylesheet" href="css/SyntaxHighlighter.css" media="all"/>
+        <script language="javascript" src="js/shCore.js"></script>
+        <script language="javascript" src="js/shBrushJScript.js"></script>
+        <script language="javascript" src="js/shBrushJava.js"></script>
+        <script language="javascript" src="js/shBrushSql.js"></script>
+        <script language="javascript" src="js/shBrushXml.js"></script>
+    </head>
+    <body style="direction: ltr;">
+	<p>[<a
+                href="http://wso2.org/downloads/mashup">Download</a>]
+            | [<a href="index_docs.html">Documentation Home</a>] | [<a
+                    href="release_notes.html">Release Note</a>]
+        </p>
+        <div id="main-content">
+            <h1>Quick Start Guide</h1>
+
+            <p>The WSO2 Mashup Server allows you to acquire web based information from a
+                variety of sources such as Web Services, Web pages, Databases or Feeds,
+                combine it in interesting and useful ways before exposing the result again as
+                a Web Service or page, Feed or a Google gadget. Your Mashup can even interact
+                with users via e-mails, instant messages and desktop alerts. This guide and
+                an access to a Mashup Server should be all you need to start creating your own
+                personalized web services in minutes.
+            </p>
+
+            <h2>Getting Started</h2>
+
+            <p>Since you may be viewing this document on-line or in a local installation,
+                let me start off by stating that you can either setup a WSO2 Mashup Server
+                locally or register yourself at our
+                <a href="http://mooshup.com">community
+                    site
+                </a>
+                and start writing your Mashups.
+            </p>
+
+            <h3>Setting Up Locally</h3>
+
+            <p>If you've already got
+                <a
+                        href="http://java.sun.com/javase/downloads/index.jsp">Java
+                </a>
+                (Version 1.6.0_24
+                preferred) installed on your PC and an environment variable pointing to your
+                <a href="setting-java-home.html">Java Home</a>
+                defined, simply download the
+                <a
+                        href="http://wso2.org/downloads/mashup">Binary
+                    Distribution
+                </a>
+                of the Mashup Server, unzip it in a local folder and run the
+                wso2mashup batch file (on Windows) or shell script (on Linux) found in the
+                'bin' directory to get it running.
+            </p>
+
+            <h3>Confirming that the Server is Up</h3>
+
+            <p>If you unzipped a distribution, the console or log file will show you the
+                progress of the server startup.
+            </p>
+
+            <p>
+                <img alt="Console" src="images/console_out.png"/>
+            </p>
+
+            <p>Once the server has started, open up the admin console on your browser.
+                You can access
+                <a target="_blank"
+                   href="http://localhost:9443/carbon">http://localhost:9443/carbon
+                </a>
+                on the default http or https port
+                (typically 9763 and 9443) with IE or Firefox. You will see the provisioning
+                screen below on first startup.
+            </p>
+
+            <p>
+                <img alt="Provisioning" src="images/provisioning.png"/>
+            </p>
+
+            <h2><a name="newMashup"/>Creating Your First Mashup</h2>
+
+            <p>Use the "Create" or "Upload" option of the <strong>Manage > Services > Add > Javascript</strong> menu
+                to create your first mashup. You will be prompted for a name, and when
+                you click 'create' a basic mashup will be created for you and displayed in
+                the Mashup editor. Using "Upload" option, you can simply upload a mashup source file in .js
+                format which will be then deployed automatically.
+            </p>
+
+            <p>
+                <img alt="Prompt for Name" src="images/create_new.png"/>
+            </p>
+
+            <h3>Saving and Testing the Mashup</h3>
+
+            <p>The auto generated Mashup is a fully functional Javascript service. Like
+                any other 'hello world' program it does nothing useful, but proves that you
+                have everything in place to write a Mashup.
+            </p>
+
+            <p>
+                <img alt="Hello World in Editor" src="images/mash_editor_hellow.png"/>
+            </p>
+
+            <p>Use the <strong>'Save Changes'</strong> button and you will get back to the Service Listing page where your newly created
+                Mashup will be displayed(If the service is not listed, please refresh it after a few seconds).
+                <strong>'Apply Changes'</strong> button will save and deploy your service while your are in the editor page.
+            </p>
+
+            <p>
+                You can even design a Custom UI or a Google Gadget from this page. Using tabs at the
+                top of the editor page, you can shift among them. "Generate Template" button at the Custom UI
+                and Google Gadget tab will generate the initial template for both of them.
+            </p>
+
+            <p>
+                <img alt="My Mashups" src="images/my_mashups_hellow.png"/>
+            </p>
+
+            <p>Clicking on the name of the Mashup will take you to the Mashup
+                details page. By clicking on the <strong>"Try this service"</strong> link, you can access the Try it page for the
+                service.
+            </p>
+
+            <p>
+                <img alt="Mashup Details" src="images/helloworld_listing.png"/>
+            </p>
+
+            <p>Service specific configurations could be set or accessed in this page. You can get more details
+                <a href="service-mgt/docs/userguide.html">here</a>
+            </p>
+
+            <p>
+                <img alt="TryIt HelloW" src="images/helloworld_tryit_deft.png"/>
+            </p>
+
+            <p>If you get a response from the service when you try it, you've written your first mashup!
+            </p>
+
+            <h2>Adding the Interesting Bits</h2>
+
+            <p>Now that you've seen how easy it is to write a service, you can start on
+                getting it to actually do something. The next few sections will show you how
+                to perform some actions that you can use as building blocks when creating
+                your own mashups.
+            </p>
+
+            <h3>Scraping a Web Page</h3>
+
+            <p>While instructions for using the
+                <a href="scraperhostobject.html">Scraper host object</a>
+                are included in the
+                user guide, this section shows you how to create a configuration file using
+                the <strong>'Scraping Assistant'</strong>, which is a tool that will help you write a scraper
+                configuration. The basic steps you need to follow to create a configuration that
+                will get the contents of a web page as an XML document would be:
+            </p>
+
+            <p>1) Open up the Scraper Tool, which will give you an empty config which we
+                will fill up.
+            </p>
+
+            <p>
+                <img alt="Scraping Assistant"
+                     src="images/Scraping_Assistant_start.png"/>
+            </p>
+
+            <p>1) Add a line to retrieve a page available at a given URL, using the 'Add
+                HTTP request' menu option, which will insert the single line below into the
+                config and replace the url-to-fetch with the URL of the page you want to fetch.
+            </p>
+
+            <pre name="code" class="js">&lt;http url="url-to-fetch" method="post"/&gt;</pre>
+
+            <p>2) Add instructions to convert this HTML to XML, by selecting the previous
+                line and the using 'Convert HTML to XML' menu option, which will surrounding
+                the above statement with this pair of tags:
+            </p>
+
+            <pre name="code" class="js">
+                &lt;html-to-xml outputtype="pretty"&gt;&lt;/html-to-xml&gt;
+            </pre>
+
+            <p>3) Add instructions to put the result into a variable, which you can
+                access from your Javascript mashup, by using the 'Convert to Variable' menu
+                option with the existing code block selected. This will surround the existing
+                code with the following:
+            </p>
+
+            <pre name="code" class="js">
+                &lt;var-def name="variable-name"&gt;&lt;/var-def&gt;
+            </pre>
+
+            <p>Optionally, use a variable name that has some semantic value, to arrive at
+                a completed configuration as shown below.
+            </p>
+
+            <p>
+                <img alt="Finish" src="images/ScrapingAssistant_finish.png"/>
+            </p>
+
+            <p>4) Now you have a scraper configuration that you can use in a mashup.
+                Paste it into your script and use it as shown below:
+            </p>
+
+            <pre name="code" class="js">
+                function getString() {
+                    var config = &lt;config&gt;
+                                    &lt;var-def name="mashupSite"&gt;
+                                        &lt;html-to-xml outputtype="pretty"&gt;
+                                            &lt;http url="http://wso2.org/projects/mashup" method="post"/&gt;
+                                        &lt;/html-to-xml&gt;
+                                    &lt;/var-def&gt;
+                                &lt;/config&gt;
+                    var scraper = new Scraper(config);
+                    var result = scraper.response;
+                    return result;
+                }
+            </pre>
+
+            <p>Use 'tryit to' test the operation; you should see the page content
+                displayed as the response.
+            </p>
+
+            <p>
+                <img alt="Result" src="images/Scraping_Assistant_result.png"/>
+            </p>
+
+            <p>You can now modify your configuration to filter out the information you
+                don't need from this page, or use logic within your mashup itself to extract
+                the bits you need.
+            </p>
+
+
+            <h3>Accessing an External Web Service</h3>
+
+            <p>The easiest way to access a Web Service hosted externally would be to
+                generate a stub for this service and include it in your mashup.
+            </p>
+
+            <p>1) Open up the <strong>'JavaScript Stub Generator'</strong>, paste the URL to the WSDL of
+                the service you want to access in the correct input field, select the
+                environment you will use it in (E4X) and select 'Generate from URL' to have
+                the stub code generated for you as shown below.
+            </p>
+
+            <p>
+                <img alt="Stub Generator" src="images/Javascript_Stub_Generator.png"/>
+            </p>
+
+            <p>2) Create a new Mashup, say 'Currency' and save it. You will find a
+                Currency.resources directory created in your personal scripts directory.
+                Create a new text file here for the stub and paste the generated code in it.
+                Let's assume it 'convertor.stub.js'.
+            </p>
+
+            <p>3) Edit the mashup and include an import statement to bring in your stub.
+            </p>
+
+            <p>
+                <img src="images/Currency_source.png" alt=""/>
+            </p>
+            <p>4) Call the {service}.operation using the stub, to get the result shown
+                below:
+            </p>
+
+            <p>
+                <img alt="Tryit" src="images/Currency_service_tryit.png" width="705"
+                     height="148"/>
+            </p>
+
+            <h3>Reading a Feed</h3>
+
+            <p>1) With the three lines of code shown below, you can get all the entries
+                of a given feed into an array.
+            </p>
+
+            <pre name="code" class="js">
+                var feedReader = new FeedReader();
+                var myFeed = feedReader.get("feed-url");
+                var feedEntries = myFeed.getEntries();
+            </pre>
+
+            <p>2) This can then be processed in a simple for-next loop.</p>
+
+            <pre name="code" class="js">
+                this.serviceName = "FeedDemo";
+
+                feedTitles.inputTypes = { "feedURI" : "String" };
+                feedTitles.outputType = "String";
+                function feedTitles(feedURI) {
+                    var feedReader = new FeedReader();
+                    var myFeed = feedReader.get(feedURI);
+                    var feedEntries = myFeed.getEntries();
+                    var outString = "Titles";
+                    for(var entry in feedEntries) {
+                        outString += feedEntries[entry].title + "&lt;break/&gt;"
+                    }              
+                    return outString;
+                }
+            </pre>
+
+            <p>3) It will return the contents of the feed as a string</p>
+            <p>
+                <img src="images/TryIt_FeedDemo.png" alt=""/>
+            </p>
+            <p>That concludes the 'Quick Start Guide'. Please refer to mashup
+                articles on the <a href="http://wso2.org/library/mashup">Oxygen Tank</a>, in addition to the samples and
+                documentation
+                included with the product, for more on creating Mashups.
+            </p>
+
+            <p>
+                <strong>Note: </strong>getEntries()[n].link of Feed hostobject returns an array by default as it is used
+                for both atom(atom feed might have many links) and rss. 
+            </p>
+
+            <h2>Task Scheduling</h2>
+            <p>
+                Task Scheduling feature in Mashup Server gives you a much more flexibility in scheduling recurring jobs.
+                You can schedule any JavaScript function using system hostobject's setInterval() or setTimeout() method.
+                Each time those two methods are called, it creates a pending task which will be executed exactly at the
+                specified time or time interval. An admin user can see all the pending task and their details of
+                recurrence through Mashup Servers new Scheduled Task UI. Admins have the flexibility to delete or
+                re-schedule those task as needed from the UI.
+            </p>
+            <p>
+                There may be two type of scheduled task in a mashup.
+            </p>
+            <ul>
+                <li>A task which will be executed only once (using <strong>system.setTimeout()</strong>)</li>
+                <li>A task which will be executed specilfied number of times or infinitly with
+                    specified time interval(using <strong>system.setInterval()</strong>)</li>
+            </ul>
+
+	    <p>
+                <img alt="Result" src="images/sheduled_1.png"/>
+            </p>
+		<br/><br/>
+	    <p>
+                <img alt="Result2" src="images/sheduled_2.png"/>
+            </p>
+        </div>
+        <script language="javascript">
+            dp.SyntaxHighlighter.BloggerMode();
+            dp.SyntaxHighlighter.HighlightAll('code');
+        </script>
+    </body>
+</html>

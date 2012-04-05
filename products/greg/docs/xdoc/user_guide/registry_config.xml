@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  ~  Copyright (c) 2005-2008, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  ~
+  -->
+
+<!DOCTYPE html
+   PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" >
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title> WSO2 Governance Registry - User Guide </title>
+<link href="../css/greg-docs.css" rel="stylesheet"/>
+<link href="../styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+</head>
+<body>
+[ <a href="../docs_index.html"> Documentation Index </a> ]
+<h1> WSO2 Governance Registry - User Guide </h1>
+
+<h2 id="registry-config">Registry Configurations</h2>
+<p>
+The configurations for the registry is kept in the registry.xml which can be found inside the GREG_HOME/repository/conf/. You can configure various
+parameters of the registry in there. The following sub sections will describe these parameters in details. Note that in order to take effect these parameters,
+you have to restart the registry.
+</p>
+<h3 id="read-only-config">Configure Read-Only Registry</h3>
+<p>
+To run the registry in read-only mode set the 'readOnly' element to 'true'. Setting the read-only mode allows you to run an immutable instance of registry repository.
+</p>
+
+<h3 id="caching-config">Configure Registry Caching</h3>
+<p>
+To enable registry caching, set the 'enableCache' element to 'true'. Once caching is enabled, repetitive read operations will be executed against the cache instead of the database.
+</p>
+
+<h3 id="reg-root-config">Configure Registry Root</h3>
+<p>
+In here, you can specify the absolute path of the collection which you wish to use as the root of this registry instance.
+</p>
+
+<h3 id="db-config">Database Configurations</h3>
+<p>
+Database configurations for the registry is in the following schema.
+</p>
+
+<pre>
+
+    &lt;currentDBConfig&gt;wso2registry&lt;/currentDBConfig&gt;
+
+    &lt;dbConfig name="wso2registry"&gt;
+        &lt;url&gt;jdbc:h2:repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE&lt;/url&gt;
+        &lt;userName&gt;wso2carbon&lt;/userName&gt;
+        &lt;password&gt;wso2carbon&lt;/password&gt;
+        &lt;driverName&gt;org.h2.Driver&lt;/driverName&gt;
+        &lt;maxActive&gt;50&lt;/maxActive&gt;
+        &lt;maxWait&gt;60000&lt;/maxWait&gt;
+        &lt;minIdle&gt;5&lt;/minIdle&gt;
+    &lt;/dbConfig&gt;
+
+</pre>
+
+<p>
+<ul>
+<li>
+url: The URL of the database</li>
+<li>
+userName: The name of the database user</li>
+<li>
+password: The password of the database user</li>
+<li>
+driverName: The class name of the database driver</li>
+<li>
+maxActive: The maximum number of active connections that can be allocated from this pool at the same time, or negative for no limit. 
+</li>
+<li>
+maxWait: The maximum number of milliseconds that the pool will wait (when there 
+    are no available connections) for a connection to be returned before throwing an 
+    exception, or &lt;= 0 to wait indefinitely. </li>
+
+<li>
+minIdle: The minimum number of active connections that can remain idle in the 
+    pool, without extra ones being created, or 0 to create none. </li>
+</ul>
+</p>
+
+<p>
+Below are some of the optional configuration elements that can be specified on the registry.xml.
+</p>
+<p>
+<ul>
+<li>
+validationQuery: This is used to validate the DB connection to test whether its healthy 
+(ex:- 'SELECT 1' or 'SELECT 1 FROM DUAL' in Oracle).</li>
+</ul>
+</p>
+
+<p>
+In parallel you have to configure the user-mgt.xml in the same directory as registry.xml with the custom database settings.
+You can find the database configurations for the different databases in the respective installation guides.
+</p>
+<p>
+<ul>
+<li>
+<a href="../installation_guide/db_h2.html#conf_remote">H2 (Remote) Configurations</a>
+</li>
+<li>
+<a href="../installation_guide/db_h2.html#conf_embedded">H2 (Embedded) Configurations</a>
+</li>
+<li>
+<a href="../installation_guide/db_derby.html#conf_remote">Derby (Remote) Configurations</a>
+</li>
+<li>
+<a href="../installation_guide/db_derby.html#embedded">Derby (Embedded) Configurations</a>
+</li>
+<li>
+<a href="../installation_guide/db_mysql.html#conf">Mysql Configurations</a>
+</li>
+<li>
+<a href="../installation_guide/db_mssql.html#Setup-Conf">MSSql Configurations</a>
+</li>
+<li>
+<a href="../installation_guide/db_oracle.html#Setup-Conf">Oracle Configurations</a>
+</li>
+<li>
+<a href="../installation_guide/db_db2.html#Setup-Conf">DB2 Configurations</a>
+</li>
+</ul>
+</p>
+<h3 id="handler-config">Handler Configurations</h3>
+<p>
+You can use this to configure handlers and associate them with filters and custom properties.
+</p>
+<p>
+Example of handler configurations in registry.xml 
+</p>
+
+<pre>
+    &lt;handler class="org.wso2.carbon.registry.extensions.handlers.WSDLMediaTypeHandler"&gt;
+        &lt;property name="schemaLocationConfiguration" type="xml"&gt;
+            &lt;locationType&gt;absolute&lt;/locationType&gt;
+            &lt;location&gt;/governance/schemas/&lt;/location&gt;
+        &lt;/property&gt;
+        &lt;property name="wsdlLocationConfiguration" type="xml"&gt;
+            &lt;locationType&gt;absolute&lt;/locationType&gt;  &lt;!-- absolute or relative --&gt;
+            &lt;location&gt;/governance/wsdls/&lt;/location&gt;
+        &lt;/property&gt;
+        &lt;filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher"&gt;
+            &lt;property name="mediaType"&gt;application/wsdl+xml&lt;/property&gt;
+        &lt;/filter&gt;
+    &lt;/handler&gt;
+</pre>
+
+<p>
+Please have a look at the <a href="../developer_guide/extending_registry.html#handlers">Handler Developer Guide</a> for more details.
+</p>
+<h3 id="remote-instance-config">Remote Instance Configurations</h3>
+<p>
+In order to mount an external registry, you have to define the remote instance. This could use either
+the JDBC-based configuration or the Atom-based configuration model.
+</p>
+
+<p>
+<strong>JDBC-based configuration</strong>
+</p>
+<ul>
+<li>
+url: The URL of the remote instance.
+</li>
+<li>
+id: Remote instance id.
+</li>
+<li>
+dbConfig: The database configuration to use. Please note that this should not be the currentDBConfig
+</li>
+<li>
+readOnly: Whether the instance is read-only.
+</li>
+<li>
+enableCache: Whether caching is enabled for this instance.
+</li>
+<li>
+registryRoot: The root of the registry instance.
+</li>
+</ul>
+<p>
+Below is an example configuration of a remote instance.
+</p>
+<pre>
+    &lt;remoteInstance url="https://host:port/registry"&gt;
+        &lt;id&gt;instanceId&lt;/id&gt;
+        &lt;dbConfig&gt;h2-db&lt;/dbConfig&gt;
+        &lt;readOnly&gt;false&lt;/readOnly&gt;
+        &lt;registryRoot&gt;/&lt;/registryRoot&gt;
+    &lt;/remoteInstance&gt;
+</pre>
+
+<p>
+<strong>Atom-based configuration</strong>
+</p>
+<ul>
+<li>
+url: The URL of the remote instance.
+</li>
+<li>
+id: Remote instance id.
+</li>
+<li>
+username: Username of the remote registry login.
+</li>
+<li>
+password: Password of the remote registry login.
+</li>
+</ul>
+<p>
+Below is an example configuration of a remote instance.
+</p>
+<pre>
+    &lt;remoteInstance url="https://host:port/registry"&gt;
+        &lt;id&gt;instanceId&lt;/id&gt;
+        &lt;username&gt;username&lt;/username&gt;
+        &lt;password&gt;password&lt;/password&gt;
+    &lt;/remoteInstance&gt;
+</pre>
+
+<h3 id="mount-config">Mount Configurations</h3>
+<p>
+Once a remote instance has been defined a collection on the remote registry can be mounted to the
+local instance.
+</p>
+<ul>
+<li>
+path: The path to which the mount will be added to.
+</li>
+<li>
+overwrite (optional): Whether an existing collection at the given path would be overwritten or not.
+</li>
+<li>
+instanceId: Remote instance id.
+</li>
+<li>
+targetPath: The path on the remote registry.
+</li>
+</ul>
+<p>
+Here is an example configuration of a mount.
+</p>
+<pre>
+    &lt;mount path="/_system/config" overwrite="true|false|virtual"&gt;
+        &lt;instanceId&gt;instanceId&lt;/instanceId&gt;
+        &lt;targetPath&gt;/_system/nodes&lt;/targetPath&gt;
+    &lt;/mount&gt;
+</pre>
+
+<h3 id="static-config">Static (One-time) Configurations</h3>
+<p>
+You are suppose to change the static configuration section only before loading any data to the registry. (That is before the first start-up.)
+The following configurations are possible in this section.
+</p>
+<ul>
+<li>
+versioningProperties - Whether the properties are versioned when a snapshot is created. (Default is true).
+</li>
+<li>
+versioningComments - Whether the comments are versioned when a snapshot is created. (Default is true).
+</li>
+<li>
+versioningTags - Whether the tags are versioned when a snapshot is created. (Default is true).
+</li>
+<li>
+versioningRatings - Whether the ratings are versioned when a snapshot is created. (Default is true).
+</li>
+<li>
+versioningAssociations - Whether the associations are versioned when a snapshot is created. (Default is false).
+</li>
+</ul>
+
+<h3 id="version-resource-config">Configure Auto Versioning Resources</h3>
+<p>
+You can configure whether you want to auto-version the resources (non-collection) by setting 'versionResourcesOnChange' element to 'true'. In this configuration it will create
+a version for the resources whenever it is updated.
+</p>
+
+</body></html>

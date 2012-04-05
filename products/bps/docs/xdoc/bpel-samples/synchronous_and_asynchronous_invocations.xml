@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>@product.name@ - Sample Guide - Synchronous and Asynchronous Service Invocations</title>
+        <link href="../css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+        <h1>Sample Guide - Synchronous and Asynchronous Service Invocations</h1>
+        <h3>Table of Content</h3>
+        <ul>
+            <li><a href="#objective">Objective</a></li>
+            <li><a href="#prerequisites">Prerequisites</a></li>
+            <li><a href="#overallIdea">Overall Idea</a></li>
+        </ul>
+
+        <br />
+        <h3><a name="objective">Objective</a></h3>
+        <p>
+            Explain how synchronous and asynchronous interactions can be handled via BPEL.
+        </p>
+        <p>
+            Let's understand what's meant by synchronous and asynchronous in BPEL terms.
+            BPEL processes can also be categorized based on how it invokes an operation of a partner
+            service: synchronous and asynchronous. However, it is not possible to use both methods
+            when invoking a partner service's operation, as it is dependent on the type of partner
+            service operation also.
+        </p>
+        <p>
+            <i>Asynchronous interaction</i> - Suppose a BPEL process invokes a partner service. After this invokation of the partner
+            process, the BPEL process will continue to carry on with its execution process while
+            that partner service completes performing its operation. The BPEL process will receive a
+            response from the partner service, when the partner service is completed.
+        </p>
+        <p>
+            <i>Synchronous interaction</i> - Suppose a BPEL process invokes a partner service. The BPEL process then waits for the
+            partner service's operation to be completed, and responded. After receiving this
+            completion response from the partner service, the BPEL process will continue to carry on
+            its execution flow. This transmission does not apply for the In-Only operations defined
+            in the WSDL of the partner service.
+        </p>
+        <p>
+            Usually you'll use asynchronous services for long-lasting operations and synchronous
+            services for operations that return a result in a relatively short time. Typically, when
+            you use asynchronous Web services, the BPEL process too is asynchronous.
+        </p>
+        <p>
+            Let's take an example where there are both synchronous and asynchronous interactions.
+            Suppose a loan approval process, where the client request for a loan with required
+            documents. Then the service party first retrieve the customer information and his
+            history using
+            <code>CustomerInfo</code>
+            service, then the service party calculate the credit rate
+            using Credit rating service. Then service party finally send a request to
+            <code>DILoanService</code>
+            with previously retrieved the client history and the credit rating where the final
+            decision from
+            <code>DILoanService</code>
+            may take a longer time. So we invoke
+            <code>DILoanService</code>
+            asynchronously.
+        </p>
+        <p>
+            <img src="../images/bpel-samples/test_asynchronous.jpg" alt="Loan Approval Process"/>
+        </p>
+        <p>
+            So what's the difference between Asynchronous and Synchronous interactions?
+        </p>
+        <p>
+            Here when invoking a service asynchronously, we need to define two roles(<code>myRole</code> and
+            <code>partnerRole</code>) for the partner link. In a synchronous interaction only <code>partnerRole</code> is need
+            to be defined.
+        </p>
+        <p>
+            These roles which are defined in partner link type. And they maps to particular port
+            types.
+            A partner link type binds two port types; port type process offers(<code>myRole</code>)
+            to a partner
+            and port type partner offers(<code>partnerRole</code>) to a process. In the above
+            example
+            <code>DILoanService</code>
+            is invoked asynchronously and
+            <code>DILoanService</code>
+            has to provide a<code>portType</code>,
+            which defines the
+            <code>partnerRole</code>
+            and another
+            <code>portType</code>
+            which defines<code>myRole</code>.
+        </p>
+        <br />
+        <h3><a name="prerequisites">Prerequisites</a></h3>
+        <ul>
+            <li>Log in into BPS server admin console.</li>
+            <li>Under Business Processes -&gt; Add BPEL.</li>
+            <li>Upload the LoanProcess.zip , (all samples are located at our <a href="http://svn.wso2.org/repos/wso2/branches/carbon/3.2.0/products/bps/2.1.0/modules/samples/product/src/main/resources/bpel/2.0/">sample repository</a>.)</li>
+            <li>Under the Business Processes -&gt; Processes.</li>
+            <li>Under the WSDL details widget -&gt; Create instance</li>
+        </ul>
+        <br />
+        <h3><a name="overallIdea">Overall Idea</a></h3>
+        <p>
+            Refer LoanProcess.zip
+        </p>
+        <ul>
+            <li><h4>How synchronous interaction works.</h4>
+                <p>In LoanProcess.bpel,</p>
+                <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>invoke</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>InvokeCustomerInfo</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>partnerLink</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>CustomerInfoPL</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>operation</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>getCustomerSSN</span><span style='color:#0000e6; '>"</span>
+        <span style='color:#274796; '>portType</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>ns1:CustomerInfoPortType</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>inputVariable</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>customerInfoInput</span><span style='color:#0000e6; '>"</span>
+        <span style='color:#274796; '>outputVariable</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>customerInfoOutput</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+</pre>
+                <p>
+                    Synchronous interaction is pretty simple compared to asynchronous interaction
+                    where correlations need to be defined and &lt;receive/&gt; retrieves the
+                    response from the invoked service operation.
+                </p>
+                <p>
+                    To get a detailed view on how this done, refer
+                    http://wso2.org/library/articles/writing-simple-ws-bpel-process-wso2-bps-apache-ode#invoke-partner-service.
+                </p>
+            </li>
+            <li><h4>How asynchronous interaction works.</h4>
+                <p>In LoanService.bpel</p>
+                <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>invoke</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>Invoke</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>partnerLink</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>DILoanServicePL</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>operation</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>getLoanOffer</span><span style='color:#0000e6; '>"</span>
+        <span style='color:#274796; '>portType</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>ns2:LoanServicePortType</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>inputVariable</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>diLoanServiceRequest</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>receive</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>ReceiveDILoanService</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>createInstance</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>no</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>partnerLink</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>DILoanServicePL</span><span style='color:#0000e6; '>"</span>
+         <span style='color:#274796; '>operation</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>onLoanOffer</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>portType</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>ns2:LoanServiceCallbackPortType</span><span style='color:#0000e6; '>"</span>
+         <span style='color:#274796; '>variable</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>diLoanServiceResponse</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>correlations</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>correlation</span> <span style='color:#274796; '>set</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>correlator</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>initiate</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>no</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span><span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>correlation</span><span style='color:#a65700; '>></span>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>correlations</span><span style='color:#a65700; '>></span>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>receive</span><span style='color:#a65700; '>></span>
+</pre>
+                <p>
+                    In this interaction, two separate activities manage request sending and response
+                    retrieving from the external service. &lt;invoke/&gt; handles external service
+                    execution and &lt;receive/&gt; manages the service response.
+                </p>
+
+                <p>
+                    Let's figure out what's meant by each parameter.
+                </p>
+                <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>invoke</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>Invoke</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>partnerLink</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>DILoanServicePL</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>operation</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>getLoanOffer</span><span style='color:#0000e6; '>"</span>
+        <span style='color:#274796; '>portType</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>ns2:LoanServicePortType</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>inputVariable</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>diLoanServiceRequest</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+</pre>
+                <ul>
+                    <li><code>partnerLink="DILoanServicePL"</code>
+                        <p>This partner link is defined at &lt;partnerLinks/&gt; in the BPEL.
+</p>
+                        <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>partnerLinks</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>partnerLink</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>DILoanServicePL</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>partnerLinkType</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>ns2:LoanServicePT</span><span style='color:#0000e6; '>"</span>
+                 <span style='color:#274796; '>partnerRole</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>LoanServiceRole</span><span style='color:#0000e6; '>"</span>
+                 <span style='color:#274796; '>myRole</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>LoanServiceClientRole</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>partnerLinks</span><span style='color:#a65700; '>></span>
+</pre>
+                        <p>
+                            The two roles, are defined at <code>LoanServicePT</code> partner link type.
+                        </p>
+                        <p>eg - In LoanService.wsdl</p>
+                        <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>plnk</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>partnerLinkType</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>LoanServicePT</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>plnk</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>role</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>LoanServiceRole</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>portType</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>tns:LoanServicePortType</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>plnk</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>role</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>LoanServiceClientRole</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>portType</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>tns:LoanServiceCallbackPortType</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#666616; '>plnk</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>partnerLinkType</span><span style='color:#a65700; '>></span>
+</pre>
+                        <p>The assigned <code>portType</code> for each role is in-only portTypes which each
+                            provides the operation to handle the request or to send the response.
+                        </p>
+                        <p>In LoanService.wsdl</p>
+
+                        <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>portType</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>LoanServicePortType</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>operation</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>getLoanOffer</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>input</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>input</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>message</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>tns:getLoanOfferRequest</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+    <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>operation</span><span style='color:#a65700; '>></span>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>portType</span><span style='color:#a65700; '>></span>
+<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>portType</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>LoanServiceCallbackPortType</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>operation</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>onLoanOffer</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>input</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>input</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>message</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>tns:getLoanOfferResponse</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+    <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>operation</span><span style='color:#a65700; '>></span>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>portType</span><span style='color:#a65700; '>></span>
+</pre>
+                    </li>
+                    <li><code>operation="getLoanOffer"</code> &amp; <code>portType="ns2:LoanServicePortType"</code>
+                        <br/>
+                        <p>
+                            operation determines which operation to be invoked in the particular
+                            WSDL's <code>portType</code>, which was determined by <code>partnerLink</code> attribute
+                            previously.
+                        </p>
+                    </li>
+                    <br />
+                    <li>
+                        <code>inputVariable="diLoanServiceRequest"</code>
+                        <br/>
+                        <p>values of this attribute determines the incoming messages for the partner
+                            Web service. So the variable specified by the inputVariable attribute
+                            value must be compatible with the message type specified in the &lt;wsdl:input
+                            /&gt; element of the particular WSDL&#39;s operation.
+                        </p>
+                    </li>
+                </ul>
+
+                <p>
+                    As mentioned &lt;receive/&gt; manages the service response. Let's understand the
+                    functionality of each parameter and &lt;correlations/&gt;.
+                </p>
+                <p>
+                    eg - In LoanProcess.bpel
+                </p>
+                <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>receive</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>ReceiveDILoanService</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>createInstance</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>no</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>partnerLink</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>DILoanServicePL</span><span style='color:#0000e6; '>"</span>
+         <span style='color:#274796; '>operation</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>onLoanOffer</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>portType</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>ns2:LoanServiceCallbackPortType</span><span style='color:#0000e6; '>"</span>
+         <span style='color:#274796; '>variable</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>diLoanServiceResponse</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>correlations</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>correlation</span> <span style='color:#274796; '>set</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>correlator</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>initiate</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>no</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span><span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>correlation</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>correlations</span><span style='color:#a65700; '>></span>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>receive</span><span style='color:#a65700; '>></span>
+</pre>
+                <ul>
+                    <li><code>createInstance="no"</code>
+                        <br/>
+                        <p>determines whether to create a process instance when a message is received, or not.</p>
+                    </li>
+                    <br />
+                    <li>
+                        <code>partnerLink="DILoanServicePL"</code>
+                        <br/>
+                        <p>an essential attribute in a &lt;receive /&gt; element. This determines
+                            the WSDL&#39;s portType to be chosen based on the partnerLinkType
+                            attribute and the myRole attributes defined in the particular &lt;partnerLink
+                            /&gt; element.
+                        </p>
+                        <p>eg - In LoanService.bpel</p>
+
+                        <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>partnerLinks</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>partnerLink</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>DILoanServicePL</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>partnerLinkType</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>ns2:LoanServicePT</span><span style='color:#0000e6; '>"</span>
+                 <span style='color:#274796; '>partnerRole</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>LoanServiceRole</span><span style='color:#0000e6; '>"</span>
+                 <span style='color:#274796; '>myRole</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>LoanServiceClientRole</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>partnerLinks</span><span style='color:#a65700; '>></span>
+        .........
+<span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>receive</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>ReceiveDILoanService</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>createInstance</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>no</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>partnerLink</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>DILoanServicePL</span><span style='color:#0000e6; '>"</span>
+         <span style='color:#274796; '>operation</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>onLoanOffer</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>portType</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>ns2:LoanServiceCallbackPortType</span><span style='color:#0000e6; '>"</span>
+         <span style='color:#274796; '>variable</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>diLoanServiceResponse</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>correlations</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>correlation</span> <span style='color:#274796; '>set</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>correlator</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>initiate</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>no</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span><span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>correlation</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>correlations</span><span style='color:#a65700; '>></span>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>receive</span><span style='color:#a65700; '>></span>
+</pre>
+                    </li>
+                    <li>
+                        <code>operation="onLoanOffer"</code>
+                        and
+                        <code>portType="ns2:LoanServiceCallbackPortType"</code>
+                        <br/>
+                        <p>an essential attribute and determines which operation's message is the
+                            matching input message.
+                        </p>
+                    </li>
+                    <br />
+                    <li>
+                        <code>variable="diLoanServiceResponse"</code>
+                        <br/>
+                        <p>where the incoming message will be stored as a BPEL process variable for
+                            further manipulation in the BPEL process execution. This variable should
+                            be defined in a &lt;variable /&gt; inside &lt;variables /&gt; element.
+                        </p>
+                    </li>
+                    <br />
+                    <li>
+                        <code>&lt;correlation set=&quot;correlator&quot; initiate=&quot;no&quot;&gt;&lt;/correlation&gt;</code>
+                        <br/>
+                        <p>In asynchronous service invocation, correlation is compulsory to define,
+                            as it used to correlate the outgoing message from &lt;invoke/&gt; and
+                            incoming message to &lt;receive/&gt;. In this particular example,
+                            messages are correlated by CustomerID.
+                        </p>
+                        <p>eg - In LoanProcess.wsdl</p>
+                        <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>bpws</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>propertyAlias</span>
+        <span style='color:#274796; '>propertyName</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>tns:correlatorProp</span><span style='color:#0000e6; '>"</span>
+        <span style='color:#274796; '>messageType</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>ns1:getLoanOfferResponse</span><span style='color:#0000e6; '>"</span>
+        <span style='color:#274796; '>part</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>part</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>bpws</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>query</span><span style='color:#a65700; '>></span>/ns:CustomerInfo/ns:CustomerID<span style='color:#a65700; '>&lt;/</span><span style='color:#666616; '>bpws</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>query</span><span style='color:#a65700; '>></span>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#666616; '>bpws</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>propertyAlias</span><span style='color:#a65700; '>></span>
+</pre>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        
+    </body>
+</html>

@@ -1,0 +1,632 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <Module>
+  <ModulePrefs
+    title="__UP_companyname__ JIRA Issue Tracker"
+    height="630"
+    directory_title="JIRA Issue Tracking"
+    description="This gadget allows you to filter and search JIRA issues related to your desired company"
+    author="Pulasthi Supun Wickramasinghe"
+    author_email="pulasthirox911@gmail.com"
+    author_affiliation="WSO2"
+    author_location="Sri Lanka"
+  author_link="http://pulasthisupun.blogspot.com">
+    <Require feature="dynamic-height" />
+    <Require feature="tabs" />
+    <Require feature="setprefs" />
+  <Require feature="settitle"/>
+  </ModulePrefs>
+  <UserPref name="companyname" display_name="Company" default_value="WSO2"/>
+  <UserPref name="CompanyURL" display_name="JIRA URL" default_value="https://wso2.org" required="true"/>
+
+      <Content type="html"><![CDATA[
+    <head>
+  <link href="css/jquery-ui-1.8.10.custom.css" rel="stylesheet" type="text/css"/>
+  <link href="css/ui.selectmenu.css" rel="stylesheet" type="text/css"/>
+  <link href="css/jira-gadget.css" rel="stylesheet" type="text/css"/>
+  <script src="js/jquery-1.4.4.min.js"></script>
+  <script src="js/jquery-ui-1.8.10.custom.min.js"></script>
+  <script type="text/javascript" src="js/ui.selectmenu.js"></script>
+ </head>
+<body style="font-size:62.5%;font-family: 'Verdana,sans-serif';">
+<div id="issuelistdiv" name="issuelistidv">
+    <br/>
+    <div id="pagingdis" class="pagingdis"></div>
+    <div id="projectid">
+    </div>
+    <div id="searchdivinfo" class="summary"></div>
+    <div id="accordion">
+
+    </div>
+    <table width="100%">
+        <tr>
+            <td align="left" id="previousdiv"> <button id="previousa" class="alink" onclick="countdown()">&lt;&lt;previous</button>       </td>
+           <td align="right" id="nextdiv"><button id="nexta" class="alink" onclick="countup()">next&gt;&gt;</button>   </td>
+        </tr>
+    </table>
+
+
+</div>
+<div id="searchdiv" name="searchdiv">
+    <form name="searchform" id="searchform"  action="javascript:void(0);" >
+        <table class="table" width="100%">
+
+            <tbody>
+            <tr>
+                <td colspan="2" class="tableheader">Project Attributes</td>
+            </tr>
+            <tr>
+                <td>Project :</td>
+                <td id="projectlisttd">
+
+                </td>
+            </tr>
+            <tr>
+                <td>Issue Type:</td>
+                <td>
+                    <select name="issuetypes" class="searchcss" id="issuetypes" multiple="multiple" size="3">
+                        <option  value="">Any</option>
+                        <option  value="Bug">Bug</option>
+                        <option  value="Story">Story</option>
+                        <option  value="New+Feature">New Feature</option>
+                        <option  value="Task">Task</option>
+                        <option  value="Improvement">Improvement</option>
+                        <option  value="Wish">Wish</option>
+                        <option  value="Moderation">Moderation</option>
+                        <option  value="Security+Vulnerability">Security Vulnerability</option>
+                        <option  value="Epic">Epic</option>
+                    </select>
+
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="tableheader">Issue Attributes</td>
+            </tr>
+            <tr>
+                <td>Status :</td>
+                <td>
+                    <select name="status" id="status" multiple="multiple" class="searchcss" size="3">
+                        <option value="">Any</option>
+                        <option value="1" >Open</option>
+                        <option value="3" >In Progress</option>
+                        <option value="4" >Reopened</option>
+                        <option value="5">Resolved</option>
+                        <option value="6" >Closed</option>
+                        <option value="10000" >Postponed</option>
+                        <option value="10001">In Edit</option>
+                        <option value="10002" >In Technical Review</option>
+                        <option value="10003" >In Final Proof</option>
+                        <option value="10004" >Open for Technical Review</option>
+                        <option value="10005" >Open for Final Proof</option>
+                        <option value="10006">Open for Publishing</option>
+                        <option value="10007" >Approve</option>
+                        <option value="10008" >Open for Editorial Review</option>
+                        <option value="10009" >Rework</option>
+                        <option value="10010">Rework in Progress</option>
+                        <option value="10011" >Prepare for Publication</option>
+                        <option value="10012" >Prepare for Publication In Progress</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Resolutions :</td>
+                <td>
+                    <select name="resolution" id="resolution" multiple="multiple"  class="searchcss" size="3">
+                        <option value="">Any</option>
+                        <option value="-1">Unresolved</option>
+                        <option value="1">Fixed</option>
+                        <option value="2">Won't Fix</option>
+                        <option value="3">Duplicate</option>
+                        <option value="4">Incomplete</option>
+                        <option value="5">Cannot Reproduce</option>
+                        <option value="6">Not a bug</option>
+                        <option value="7">Invalid</option>
+                        <option value="8">Postponed</option>
+                        <option value="9">Published</option>
+                        <option value="10">Won't Publish</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Priorities :</td>
+                <td>
+                    <select name="priority" id="priority" multiple="multiple"  class="searchcss" size="4">
+                        <option value="">Any</option>
+                        <option value="1">Highest</option>
+                        <option value="2" >High</option>
+                        <option value="3" >Normal</option>
+                        <option value="4" >Low</option>
+                        <option value="5" >Lowest</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Reporter :</td>
+                <td><select name="reporterSelect" id="reporterSelect" class="searchcss" onchange="enabletextboxre(this.form)">
+                    <option selected="selected" value="" >Any User</option>
+                    <option value="issue_no_reporter" >No Reporter</option>
+                    <option value="specificuser" >Specify User</option>
+                    <option value="specificgroup" >Specify Group</option>
+                </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td><input disabled="disabled" style="background-color:#9E9E9E" name="reporter" id="reporter" class="searchcss" type="text">
+                </td>
+            </tr>
+            <tr>
+                <td>Assignee :</td>
+                <td>
+                    <select name="assigneeSelect" id="assigneeSelect"  class="searchcss" onchange="enabletextboxas(this.form)">
+                        <option selected="selected" value="" >Any User</option>
+                        <option value="unassigned" >Unassigned</option>
+                        <option value="specificuser" >Specify User</option>
+                        <option value="specificgroup" >Specify Group</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td> <input disabled="disabled" style="background-color:#9E9E9E" name="assignee" id="assignee" class="searchcss" type="text">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="tableheader">Text Search</td>
+            </tr>
+            <tr>
+                <td>Search Query:
+                </td>
+                <td> <input name="searchtext" id="searchtext" class="searchcss" type="text" value="">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td><input type="checkbox" name="search" value="summary" align="left"/> Summary
+                    <input type="checkbox" name="search" value="description" align="right"/> Description
+                </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td><input type="checkbox" name="search" value="comments" align="left"/> Comments
+                    <input type="checkbox" name="search" value="environment" align="right"/> Environment
+                </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td align="left"> <input type="submit" value="Search" name="search" class="alink" onclick="processSearch(this.form)">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+  
+   <script type="text/javascript">
+     var tabs = new _IG_Tabs(__MODULE_ID__, "IssueList");
+     var prefs = null;
+       function init() {
+          
+            prefs = new gadgets.Prefs();
+      var title = "" + prefs.getString("companyname") + " JIRA Issue Tracking";
+      gadgets.window.setTitle(title);
+            tabs.addTab("IssueList", "issuelistdiv",callback1);        
+            tabs.addTab("Search", "searchdiv",callback);  
+          processProjectList();
+            makeXMLRequest();
+      }
+    
+      function callback(tabId){
+       gadgets.window.adjustHeight();
+      }
+    function callback1(tabId){
+       gadgets.window.adjustHeight();
+      }
+      
+/*
+ * This method is to generate the required URL to retrieve the data that is needed to be displayed.
+ * The URL may vary according to the project and other information.
+ */
+   var count=0;
+   var project=new Array();
+   var issuetype=new Array();
+   var status=new Array();
+   var resolution=new Array();
+   var priority=new Array();
+   var assignee="";
+   var reporter="";
+   var searchquery="";
+   var issearchrequest=false;
+function genarateURL(){
+     document.getElementById('searchdivinfo').innerHTML = "" ;
+	 if(document.getElementById("projectlist")!=null){
+    	 var projectid=document.getElementById("projectlist").value;
+	 }
+     var url =  prefs.getString("CompanyURL") + "/jira/sr/jira.issueviews:searchrequest-xml/temp/SearchXML.xml?pid="+projectid+"&tempMax=10&pager/start="+count;
+     return url;
+  
+}
+function reloadlist(){
+  count=0;
+  issearchrequest=false;
+  makeXMLRequest();
+}
+function countup(){
+  count=count+10;
+  makeXMLRequest();
+}
+function countdown(){
+  count=count-10;
+  makeXMLRequest();
+}
+function enabletextboxas(form){
+  if(form.assigneeSelect.value==="specificuser"){
+       form.assignee.disabled=false;
+     document.getElementById("assignee").style.backgroundColor = "#FFFFFF";
+  }else if(form.assigneeSelect.value===""){
+       form.assignee.disabled=true;
+     document.getElementById("assignee").style.backgroundColor = "#9E9E9E";
+  }
+}
+function enabletextboxre(form){
+  if(form.reporterSelect.value==="specificuser"){
+       form.reporter.disabled=false;
+     document.getElementById("reporter").style.backgroundColor = "#FFFFFF";
+  }else if(form.reporterSelect.value===""){
+       form.reporter.disabled=true;
+     document.getElementById("reporter").style.backgroundColor = "#9E9E9E";
+  }
+}
+function makeXMLRequest(){
+   if(issearchrequest){
+     _IG_FetchXmlContent(genarateSearchURL(), processXML);
+  }else{
+     _IG_FetchXmlContent(genarateURL(), processXML);
+  }
+  
+}
+
+function processSearch(form){
+   count=0;
+   project=new Array();
+   issuetype=new Array();
+   status=new Array();
+   resolution=new Array();
+   priority=new Array();
+   assignee="";
+   reporter="";
+   searchquery="";
+  for(var i=0;i<form.projectlist.options.length;i++){
+     if(form.projectlist.options[0].selected){
+       project.push("-1");
+       break;
+     }
+     if(form.projectlist.options[i].selected){
+         project.push(form.projectlist.options[i].value);
+     }
+  }
+  for(var i=0;i<form.issuetypes.options.length;i++){
+     if(form.issuetypes.options[0].selected){
+       issuetype.push("any");
+       break;
+     }
+     if(form.issuetypes.options[i].selected){
+         issuetype.push(form.issuetypes.options[i].value);
+     }
+  }
+  for(var i=0;i<form.status.options.length;i++){
+     if(form.status.options[0].selected){
+       status.push("any");
+       break;
+     }
+     if(form.status.options[i].selected){
+         status.push(form.status.options[i].value);
+     }
+  }
+  for(var i=0;i<form.resolution.options.length;i++){
+     if(form.resolution.options[0].selected){
+       resolution.push("any");
+       break;
+     }
+     if(form.resolution.options[i].selected){
+         resolution.push(form.resolution.options[i].value);
+     }
+  }
+  for(var i=0;i<form.priority.options.length;i++){
+     if(form.priority.options[0].selected){
+       priority.push("any");
+       break;
+     }
+     if(form.priority.options[i].selected){
+         priority.push(form.priority.options[i].value);
+     }
+  }
+  if(form.reporterSelect.value===""){
+    reporter="any";
+  }else if(form.reporterSelect.value==="issue_no_reporter"){
+    reporter="non";
+  }else if(form.reporterSelect.value==="specificuser"){
+    reporter=form.reporter.value;
+  }else if(form.reporterSelect.value==="specificgroup"){
+    //not implemented yet
+  }
+  if(form.assigneeSelect.value===""){
+    assignee="any";
+  }else if(form.assigneeSelect.value==="unassigned"){
+    assignee="non";
+  }else if(form.assigneeSelect.value==="specificuser"){
+    assignee=form.assignee.value;
+  }else if(form.assigneeSelect.value==="specificgroup"){
+    //not implemented yet
+  }
+  
+  if(form.searchtext.value!=""){
+     searchquery = '&query=' + form.searchtext.value;
+    for (var i=0; i < form.search.length; i++){
+     if (form.search[i].checked){
+          if(form.search[i].value==="summary"){
+          searchquery += '&summary=true';
+        }else if(form.search[i].value==="description"){
+          searchquery += '&description=true';   
+        }else if(form.search[i].value==="comments"){
+          searchquery += '&body=true';
+        }else if(form.search[i].value==="environment"){
+          searchquery += '&environment=true';
+        }
+     }
+   }
+  
+  }
+   issearchrequest=true;
+   document.getElementById('searchdivinfo').innerHTML = "Dispaying Search Results" ;
+   makeXMLRequest();
+
+}
+
+function processProjectList(){
+    var params = {};
+    params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON;
+    var url=prefs.getString("CompanyURL") + '/jira/rest/gadget/1.0/project/generate?_=1301285625122&projectsOrCategories=allprojects&showStats=false'
+    gadgets.io.makeRequest(url, processJson, params);
+  
+}
+function processJson(obj){
+      var jsondata = obj.data;
+      var html = "";
+      var htmltd = "";
+      var projectdata;
+      var projectlistids = new Array();
+      var projectlistnames = new Array();
+      var obj = jQuery.parseJSON(obj.text);
+      for (var key in jsondata){
+      if(key==="categories"){
+      var cata = jsondata.categories[0];
+       for (var key1 in cata) {
+         if(key1==="projects"){
+            projectdata=cata.projects;
+         }
+       }
+    }
+    }
+    html +='<select name="projectlist" id="projectlist" style="font-size:62.5%">'
+    html +=' <form name="projectform" id="projectform" >'
+    htmltd += '<select name="projectlist" multiple="multiple" class="searchcss" size="4">'
+  htmltd += '<option value="">Any</option>'
+    for(var i=0;i<projectdata.length;i++){
+        projectlistids.push(projectdata[i].key);
+      projectlistnames.push(projectdata[i].name);
+      html +=  '<option value="' + projectdata[i].key + '">' + projectdata[i].name + '</option>'
+      htmltd +=  '<option value="' + projectdata[i].key + '">' + projectdata[i].name + '</option>'
+    }
+  
+    html += '</select>';
+    html += '</form>';
+    htmltd += '</select>';
+  
+    document.getElementById('projectid').innerHTML = html;
+    document.getElementById('projectlisttd').innerHTML = htmltd;
+  
+    $(function(){
+      $('select#projectlist').selectmenu({
+         style:'dropdown',
+         maxHeight: 150,
+         width: '100%',
+         hight: 20,
+         menuWidth:'100%',
+         select: function(event, options) {
+            reloadlist();
+              
+            }
+        });
+    });
+  
+     makeXMLRequest();
+}
+function genarateSearchURL(){
+   
+  var searchrul=prefs.getString("CompanyURL") + "/jira/sr/jira.issueviews:searchrequest-xml/temp/SearchXML.xml?";
+  if(project[0]==="-1"){
+    searchrul +='pid=-1';
+  }else{
+    for(var i=0;i<project.length;i++){
+      if(i==0){
+        searchrul +=  'pid=' + project[0];
+      }else{
+        searchrul +=  '&pid=' + project[i];
+      }
+    }
+      
+  }
+  if(issuetype[0]==="any"){
+    
+  }else{
+    for(var i=0;i<issuetype.length;i++){
+      searchrul += '&type=' + issuetype[i];
+      
+    }
+      
+  }
+  if(resolution[0]==="any"){
+    
+  }else{
+    for(var i=0;i<resolution.length;i++){
+      searchrul += '&resolution=' + resolution[i];
+      
+    }
+      
+  }
+  if(status[0]==="any"){
+    
+  }else{
+    for(var i=0;i<status.length;i++){
+      searchrul += '&status=' + status[i];
+      
+    }
+      
+  }
+  if(priority[0]==="any"){
+    
+  }else{
+    for(var i=0;i<priority.length;i++){
+      searchrul += '&priority=' + priority[i];
+      
+    }
+      
+  }
+  if(assignee==="any"){
+    
+  }else if(assignee==="non"){
+    
+  }else{
+    searchrul += '&assignee=' + assignee;
+  }
+  
+  if(reporter==="any"){
+  
+  }else if(reporter==="non"){
+    
+  }else{
+    searchrul += '&reporter=' + reporter;
+  }
+  
+  if(searchquery!=""){
+    searchrul += searchquery
+  }
+  searchrul += '&tempMax=10&pager/start='+count;
+  searchrul = searchrul.replace(/ /g,"\+");
+  tabs.setSelectedTab(0);
+   
+   return searchrul;
+}
+function processXML(response) {
+       
+      var tempMax=10;
+      var itemList = response.getElementsByTagName("item");
+      var issuecount = response.getElementsByTagName("issue");
+      var issuecountnum = issuecount.item(0).getAttribute("total");
+      var issucountend = issuecount.item(0).getAttribute("end");
+      var html="";
+    
+    for (var i = 0; i < itemList.length; i++) {
+      var key = "";
+      var link = null;
+      var summary = "";
+      var type = "";
+      var typeIcon = null;
+      var priority = "";
+      var priorityIcon = null;
+      var status = "";
+      var statusIcon = null;
+      var resolution = "";
+      var assignee = "";
+      var reporter = "";
+      var projectname = "";
+      var nodeList = itemList.item(i).childNodes;
+    
+      
+      // Loop through child nodes. Extract data from the text nodes that are
+        // the children of the associated name, price, and calories element nodes.
+        for (var j = 0; j < nodeList.length; j++) {
+        
+          var node = nodeList.item(j);
+          if (node.nodeName == "key") {
+            key = node.firstChild.nodeValue;
+          }else if (node.nodeName == "link") {
+            link = node.firstChild.nodeValue;
+          }else if (node.nodeName == "summary") {
+            summary = node.firstChild.nodeValue;
+          }else if (node.nodeName == "type") {
+            type = node.firstChild.nodeValue;
+              typeIcon = node.getAttribute("iconUrl");
+            
+          }else if (node.nodeName == "priority") {
+            priority = node.firstChild.nodeValue;
+              priorityIcon =node.getAttribute("iconUrl");
+            
+          }else if (node.nodeName == "status") {
+            status = node.firstChild.nodeValue;
+            statusIcon = node.getAttribute("iconUrl");
+          }else if (node.nodeName == "resolution") {
+            resolution = node.firstChild.nodeValue;
+          }else if (node.nodeName == "assignee") {
+            assignee = node.firstChild.nodeValue;
+          }else if (node.nodeName == "reporter") {
+            reporter = node.firstChild.nodeValue;
+          }else if (node.nodeName == "project") {
+            projectname = node.firstChild.nodeValue;
+          }          
+        }
+              $("#accordion").accordion("destroy");
+          html += '<h2 class="summarysh"><a href="#"><img src="'+typeIcon+'" border="0" alt="type" width="15" hight="15"/>  '+summary.substring(0,45)+'...<img src="'+statusIcon+'" border="0" alt="type" width="15" hight="15" align="right"/><img src="'+priorityIcon+'" border="0" alt="type" width="15" hight="15" align="right"/></a></h2>'
+          html += '<div><p><div class="summary">'+summary+'</div></br><table border="1" class="table">'
+          html +=    '<tr class="tableodd">'
+          html +=          '<td align="left" width="50%">Type: '+type+' <img src="'+typeIcon+'" border="0" alt="type" width="15" hight="15"/></td>'
+          html +=          '<td align="left" width="50%">Priority: '+priority+' <img src="'+priorityIcon+'" border="0" alt="type" width="15" hight="15"/></td>'
+          html +=      '</tr>'
+          html +=      '<tr>'
+          html +=          '<td align="left" v>Status: '+status+' <img src="'+statusIcon+'"  border="0" alt="type" width="15" hight="15"/></td>'
+          html +=          '<td align="left" width="50%">Resolution: '+resolution+'</td>'
+          html +=     '</tr>'
+          html +=     '<tr class="tableodd">'
+          html +=          '<td align="left" width="50%">Assignee: '+assignee+'</td>'
+          html +=          '<td align="left" width="50%">Reporter: '+reporter+'</td>'
+          html +=      '</tr>'
+          html +=     '<tr>'
+          html +=          '<td  colspan="2" align="center"><a href="'+link+'" target="_blank" style="color:#0078AE" >Click Here</a> To See the Full Discription</td>'
+          html +=     '</tr>'
+          html +=     '<tr class="tableodd">'
+          html +=          '<td  colspan="2" align="center">'+projectname+'</td>'
+          html +=     '</tr>'
+          html +=  '</table>'
+          html +=  '</p></div>';
+      
+      }
+       document.getElementById('accordion').innerHTML = html;
+      document.getElementById('pagingdis').innerHTML = 'Viewing issues ' + (count) + ' to ' + issucountend + ' from ' + issuecountnum;
+      
+      if(count >= 10){
+         document.getElementById('previousa').style.visibility = "visible";
+      }else{
+      document.getElementById('previousa').style.visibility = "hidden";
+      }
+    
+    if(issuecountnum==0){
+     document.getElementById('searchdivinfo').innerHTML = "No Related Issues found" ;
+    }
+       $("#accordion").accordion();
+       gadgets.window.adjustHeight();
+      
+};
+    
+    
+     gadgets.util.registerOnLoadHandler(init);
+   </script>
+   </body>
+   ]]>
+  </Content>
+</Module>
+                

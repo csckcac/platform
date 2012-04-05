@@ -1,0 +1,333 @@
+<%
+
+var path;
+var action = request.getParameter("action");
+
+include("registryAPI.jag");
+
+if (action != null) {
+    if (action == "login") {
+        var username = request.getParameter("username");
+        var password = request.getParameter("password");
+        if (username != null && password != null) {
+            print(login(username, password));
+        }
+    } else if (action == "getUser") {
+        print(getUser());
+    } else if (action == "getServices") {
+        print(getServices());
+    }
+    else if (action == "getTopRatedServices") {
+        print(getTopRatedServices());
+    } else if (action == "getRatings") {
+        path = request.getParameter("path");
+        if (path != null) {
+            print(getRating(path));
+        }
+    }
+    else if (action == "getKey") {
+    	var api = request.getParameter("apiName");
+        var version = request.getParameter("version");
+        var provider = request.getParameter("providerName");
+        var application = request.getParameter("application");
+        if (api != null && version != null && provider != null && application != null) {
+            print(getKey(api, version, provider, application));
+        }
+    }
+    else if (action == "getAverageRating") {
+        path = request.getParameter("path");
+        if (path != null) {
+            print(getAverageRating(path));
+        }
+    }else if (action == "getAssociations") {
+        path = request.getParameter("path");
+        type = request.getParameter("type");
+        if (path != null && type != null) {
+            print(getAssociations(path,type));
+        }
+    } else if (action == "getResourceTextContent") {
+        path = request.getParameter("path");
+        if (path != null) {
+            print(getResourceTextContent(path));
+        }
+    }else if (action == "getDocContent") {
+        path = request.getParameter("path");
+        if (path != null) {
+            print(getDocContent(path));
+        }
+    }else if (action == "getAllDocContent") {
+        path = request.getParameter("path");
+        if (path != null) {
+            print(getAllDocContent(path));
+        }
+    }else if (action == "getAllSamplesContent") {
+        path = request.getParameter("path");
+        if (path != null) {
+            print(getAllSamplesContent(path));
+        }
+    }
+    else if (action == "getSampleContent") {
+        path = request.getParameter("path");
+        if (path != null) {
+            print(getSampleContent(path));
+        }
+    }else if (action == "getDescription") {
+        path = request.getParameter("path");
+        if (path != null) {
+            print(getDescription(path));
+        }
+    }
+    else if (action == "getAPIDescription") {
+    log("getAPIDescription")
+    	name  = request.getParameter("apiName");
+    	version  = request.getParameter("version");
+    	provider  = request.getParameter("providerName");
+        if (name != null && version != null && provider != null) {
+            print(getAPIDescription(name,version,provider));
+        }
+    }
+
+    else if (action == "getAuthor") {
+        path = request.getParameter("path");
+        if (path != null) {
+            print(getAuthor(path));
+        }
+    } else if (action == "getRecentlyAddedServices") {
+        print(getRecentlyAddedServices());
+    } else if (action == "getTags") {
+        path = request.getParameter("path");
+        if (path != null) {
+            print(getTags(path));
+        }
+    } else if (action == "getTagCloud") {
+        print(getTagCloud());
+    } else if (action == "purchaseService") {
+        var serviceName = request.getParameter('serviceName');
+        path = request.getParameter("path");
+        if (path != null && serviceName != null) {
+            print(purchaseService(serviceName, path));
+        }
+    } else if (action == "uninstallService") {
+        var serviceName = request.getParameter('serviceName');
+        path = request.getParameter("path");
+        if (path != null && serviceName != null) {
+            print(uninstallService(serviceName, path));
+        }
+    } else if (action == "createResource") {
+        path = request.getParameter("path");
+        if (path != null) {
+            print(createResource(path));
+        }
+    } else if (action == "createAssociation") {
+        var source = request.getParameter("source");
+        var target = request.getParameter("target");
+        if (source != null && target != null) {
+            print(createAssociation(source, target));
+        }
+    } else if (action == "searchServiceByTag") {
+        var tag = request.getParameter("tag");
+        if (tag != null) {
+            print(searchService("tags", tag));
+        }
+    } else if (action == "searchServiceByName") {
+        var name = request.getParameter("name");
+        if (name != null) {
+            print(searchService("resourcePath", name));
+        }
+    } else if (action == "logout") {
+        print(logout());
+    } else if (action == "getPurchases") {
+        print(getPurchases());
+    }else if (action == "getApplications") {
+        print(getApplications());
+    } else if (action == "addApplication") {
+        var name = request.getParameter("name");
+        print(addApplication(name));
+    } else if (action == "getServicesForApplication") {
+    	log("getServicesForApplication");
+    	var appname = request.getParameter("application");
+        if (appname != null) {
+        print(getServicesForApplication(appname));
+        }
+    }else if (action == "getContent") {
+        path = request.getParameter("path");
+        if (path != null) {
+            print(getResourceContent(path));
+        }
+    } else if (action == "rateResource") {
+        path = request.getParameter("path");
+        var rating = request.getParameter("rating");
+        print(rateResource(path, rating));
+    } else if (action == "addComment") {
+        path = request.getParameter("path");
+        var comment = request.getParameter("comment");
+        print(addComment(path, comment));
+    } else if (action == "getComments") {
+        path = request.getParameter("path");
+        print(getComments(path));
+    } else if (action == "getReviews") {
+        path = request.getParameter("path");
+        print(getReviews(path));
+    } else if (action == "getSearchKeys"){
+        print(getSearchKeys());
+    } else if (action == "getTryit") {
+        path = request.getParameter("path");
+        print(getTryit(path));
+    } else if (action == "rateResource") {
+        path = request.getParameter("path");
+        var rating = request.getParameter("rating");
+        print(rateResource(path, rating));
+    }else if (action == "getApplicationProperty") {
+        var app = request.getParameter("app");
+        var pro = request.getParameter("pro");
+        print(getApplicationProperty(app, pro));
+    }
+    //making for Host Object callings
+    else if (action == "getAllPublishedAPIs") {
+        print(getAllPublishedAPIs());
+    }
+    else if (action == "getTopRatedAPIs") {
+    	var limit = request.getParameter("limit");
+        if (limit != null) {
+        	 print(getTopRatedAPIs(limit));
+        }
+    }
+    else if (action == "getRecentlyAddedAPIs") {
+    	var limit = request.getParameter("limit");
+        if (limit != null) {
+        	 print(getRecentlyAddedAPIs(limit));
+        }
+    }
+    else if (action == "listApplications") {
+        	 print(listApplications());
+    }
+    else if (action == "listProvidersNames") {
+   	 print(listProvidersNames());
+}
+    else if (action == "getAllTags") {
+        	 print(getAllTags());
+    }
+    else if (action == "getAPIsWithTag") {
+    	var tag = request.getParameter("tag");
+        if (tag != null) {
+        	 print(getAPIsWithTag(tag));
+        }
+    }
+    else if (action == "searchAPI") {
+    	var search = request.getParameter("searchTerm");
+        if (search != null) {
+        	 print(searchAPI(search));
+        }
+    }
+    
+    else if (action == "searchAPIbyType") {
+    	var search = request.getParameter("searchTerm");
+    	var searchType = request.getParameter("searchType");
+        if (search != null && searchType !=null) {
+        	 print(searchAPIbyType(search,searchType));
+        }
+    }
+
+    else if (action == "getAllDocumentation" || action == "getAllLinks"  ) {
+    	var providerName = request.getParameter("providerName");
+    	var apiName = request.getParameter("apiName");
+    	var version = request.getParameter("version");
+        if (providerName != null && apiName != null && version != null  ) {
+        	if(action == "getAllDocumentation" ){
+        	 print(getAllDocumentation(providerName, apiName,version));
+        	}else if (action == "getAllLinks" ){
+        		print(getAllLink(providerName, apiName,version));
+        	}
+        }
+    }
+    
+    else if (action == "getAllSample") {
+    	var providerName = request.getParameter("providerName");
+    	var apiName = request.getParameter("apiName");
+    	var version = request.getParameter("version");
+        if (providerName != null && apiName != null && version != null  ) {
+        	 print(getAllSample(providerName, apiName,version));
+        }
+    }
+    
+    else if (action == "getAPIComments") {    	
+    	var providerName = request.getParameter("providerName");
+    	var apiName = request.getParameter("apiName");
+    	var version = request.getParameter("version");    	 
+        if (providerName != null && apiName != null && version != null  ) {
+        	 print(getAPIComments(providerName, apiName,version));
+        }
+    }
+    
+    
+    else if (action == "addAPIComment") {    	
+    	var providerName = request.getParameter("providerName");
+    	var apiName = request.getParameter("apiName");
+    	var version = request.getParameter("version");
+    	var comment = request.getParameter("comment");    	
+        if (providerName != null && apiName != null && version != null  ) {
+        	 print(addAPIComment(providerName, apiName,version,comment));
+        }
+    }
+    else if (action == "addSubscription") {
+    	var providerName = request.getParameter("providerName");
+    	var apiName = request.getParameter("apiName");
+    	var version = request.getParameter("version");
+    	var applicationId = parseInt(request.getParameter("applicationId"), 10);
+
+        if (providerName && apiName && version && applicationId) {
+        	 print(addSubscription(providerName, apiName, version, applicationId));
+        }
+    }
+    else if (action == "removeSubscriber") {
+    	var providerName = request.getParameter("providerName");
+    	var apiName = request.getParameter("apiName");
+    	var version = request.getParameter("version");
+    	var application = request.getParameter("application");
+
+        if (providerName && apiName && version && application) {
+        	 print(removeSubscriber(providerName, apiName, version, application));
+        }
+    }
+    else if (action == "getAPI") {
+    	var providerName = request.getParameter("providerName");
+    	var apiName = request.getParameter("apiName");
+    	var version = request.getParameter("version");
+        if (providerName != null && apiName != null && version != null  ) {
+        	 print(getAPI(providerName, apiName,version));
+        }
+    }
+    
+    else if (action == "rateAPI") {
+    	var providerName = request.getParameter("providerName");
+    	var apiName = request.getParameter("apiName");
+    	var version = request.getParameter("version");
+    	var rate = request.getParameter("rate");
+        if (providerName != null && apiName != null && version != null && rate!=null ) {
+        	log ('rateAPI ' + providerName+' '+apiName+' '+version+ ' '+ rate);
+        	 print(rateAPI(providerName, apiName,version,rate));
+        }
+    } else if (action == "getSubscriptions") {
+        var providerName = request.getParameter("providerName");
+    	var apiName = request.getParameter("apiName");
+    	var version = request.getParameter("version");
+        if (providerName != null && apiName != null && version != null  ) {
+        	 print(getSubscriptions(providerName, apiName,version));
+        }
+    } else if (action == "getAllSubscriptions") {
+        print(getAllSubscriptions());
+    }
+    else if (action == "getInlineContent") {    	
+    	var apiProvider = request.getParameter("apiProvider");
+        var apiName = request.getParameter("apiName");
+        var version = request.getParameter("version");
+        var docName = request.getParameter("docName");
+        if(apiName !=null && version != null && docName !=null && apiProvider !=null){        	
+        print(getInlineContent(apiName, version, docName,apiProvider));}
+    }
+
+    //End Host Object calling
+
+}
+
+%>

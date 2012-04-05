@@ -1,0 +1,411 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://internal.admin.brokermanager.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax23="http://internal.admin.brokermanager.carbon.wso2.org/xsd" xmlns:ax21="http://exception.internal.admin.brokermanager.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://internal.admin.brokermanager.carbon.wso2.org">
+    <wsdl:documentation>BrokerManagerAdminService</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://internal.admin.brokermanager.carbon.wso2.org/xsd">
+            <xs:complexType name="BrokerProperty">
+                <xs:all>
+                    <xs:element minOccurs="0" name="displayName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="key" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="required" type="xs:boolean" />
+
+                    <xs:element minOccurs="0" name="secured" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="value" nillable="true" type="xs:string" />
+                </xs:all>
+            </xs:complexType>
+            <xs:complexType name="BrokerConfigurationDetails">
+                <xs:all>
+                    <xs:element minOccurs="0" name="brokerName" nillable="true" type="xs:string" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="brokerProperties" nillable="true" type="ax23:BrokerProperty" />
+                    <xs:element minOccurs="0" name="brokerType" nillable="true" type="xs:string" />
+
+                </xs:all>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://exception.internal.admin.brokermanager.carbon.wso2.org/xsd">
+            <xs:complexType name="BrokerManagerAdminServiceException">
+                <xs:all />
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax22="http://exception.internal.admin.brokermanager.carbon.wso2.org/xsd" xmlns:ax24="http://internal.admin.brokermanager.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://internal.admin.brokermanager.carbon.wso2.org">
+
+            <xs:import namespace="http://exception.internal.admin.brokermanager.carbon.wso2.org/xsd" />
+            <xs:import namespace="http://internal.admin.brokermanager.carbon.wso2.org/xsd" />
+            <xs:element name="BrokerManagerAdminServiceBrokerManagerAdminServiceException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="BrokerManagerAdminServiceException" nillable="true" type="ax21:BrokerManagerAdminServiceException" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="removeBrokerConfiguration">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="brokerName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getBrokerProperties">
+                <xs:complexType>
+
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="brokerName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getBrokerPropertiesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax23:BrokerProperty" />
+
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getBrokerNames">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getBrokerNamesResponse">
+
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getBrokerConfiguration">
+                <xs:complexType>
+                    <xs:sequence>
+
+                        <xs:element minOccurs="0" name="brokerName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getBrokerConfigurationResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax23:BrokerProperty" />
+                    </xs:sequence>
+
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllBrokerConfigurationNamesAndTypes">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllBrokerConfigurationNamesAndTypesResponse">
+                <xs:complexType>
+
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax23:BrokerConfigurationDetails" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addBrokerConfiguration">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="brokerName" nillable="true" type="xs:string" />
+
+                        <xs:element minOccurs="0" name="brokerType" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="properties" nillable="true" type="ax23:BrokerProperty" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getBrokerConfigurationRequest">
+        <wsdl:part name="parameters" element="ns:getBrokerConfiguration" />
+
+    </wsdl:message>
+    <wsdl:message name="getBrokerConfigurationResponse">
+        <wsdl:part name="parameters" element="ns:getBrokerConfigurationResponse" />
+    </wsdl:message>
+    <wsdl:message name="BrokerManagerAdminServiceBrokerManagerAdminServiceException">
+        <wsdl:part name="parameters" element="ns:BrokerManagerAdminServiceBrokerManagerAdminServiceException" />
+    </wsdl:message>
+    <wsdl:message name="removeBrokerConfigurationRequest">
+        <wsdl:part name="parameters" element="ns:removeBrokerConfiguration" />
+
+    </wsdl:message>
+    <wsdl:message name="getBrokerPropertiesRequest">
+        <wsdl:part name="parameters" element="ns:getBrokerProperties" />
+    </wsdl:message>
+    <wsdl:message name="getBrokerPropertiesResponse">
+        <wsdl:part name="parameters" element="ns:getBrokerPropertiesResponse" />
+    </wsdl:message>
+    <wsdl:message name="getBrokerNamesRequest">
+        <wsdl:part name="parameters" element="ns:getBrokerNames" />
+
+    </wsdl:message>
+    <wsdl:message name="getBrokerNamesResponse">
+        <wsdl:part name="parameters" element="ns:getBrokerNamesResponse" />
+    </wsdl:message>
+    <wsdl:message name="getAllBrokerConfigurationNamesAndTypesRequest">
+        <wsdl:part name="parameters" element="ns:getAllBrokerConfigurationNamesAndTypes" />
+    </wsdl:message>
+    <wsdl:message name="getAllBrokerConfigurationNamesAndTypesResponse">
+        <wsdl:part name="parameters" element="ns:getAllBrokerConfigurationNamesAndTypesResponse" />
+
+    </wsdl:message>
+    <wsdl:message name="addBrokerConfigurationRequest">
+        <wsdl:part name="parameters" element="ns:addBrokerConfiguration" />
+    </wsdl:message>
+    <wsdl:portType name="BrokerManagerAdminServicePortType">
+        <wsdl:operation name="getBrokerConfiguration">
+            <wsdl:input message="ns:getBrokerConfigurationRequest" wsaw:Action="urn:getBrokerConfiguration" />
+            <wsdl:output message="ns:getBrokerConfigurationResponse" wsaw:Action="urn:getBrokerConfigurationResponse" />
+            <wsdl:fault message="ns:BrokerManagerAdminServiceBrokerManagerAdminServiceException" name="BrokerManagerAdminServiceBrokerManagerAdminServiceException" wsaw:Action="urn:getBrokerConfigurationBrokerManagerAdminServiceBrokerManagerAdminServiceException" />
+
+        </wsdl:operation>
+        <wsdl:operation name="removeBrokerConfiguration">
+            <wsdl:input message="ns:removeBrokerConfigurationRequest" wsaw:Action="urn:removeBrokerConfiguration" />
+            <wsdl:fault message="ns:BrokerManagerAdminServiceBrokerManagerAdminServiceException" name="BrokerManagerAdminServiceBrokerManagerAdminServiceException" wsaw:Action="urn:removeBrokerConfigurationBrokerManagerAdminServiceBrokerManagerAdminServiceException" />
+        </wsdl:operation>
+        <wsdl:operation name="getBrokerProperties">
+            <wsdl:input message="ns:getBrokerPropertiesRequest" wsaw:Action="urn:getBrokerProperties" />
+            <wsdl:output message="ns:getBrokerPropertiesResponse" wsaw:Action="urn:getBrokerPropertiesResponse" />
+            <wsdl:fault message="ns:BrokerManagerAdminServiceBrokerManagerAdminServiceException" name="BrokerManagerAdminServiceBrokerManagerAdminServiceException" wsaw:Action="urn:getBrokerPropertiesBrokerManagerAdminServiceBrokerManagerAdminServiceException" />
+
+        </wsdl:operation>
+        <wsdl:operation name="getBrokerNames">
+            <wsdl:input message="ns:getBrokerNamesRequest" wsaw:Action="urn:getBrokerNames" />
+            <wsdl:output message="ns:getBrokerNamesResponse" wsaw:Action="urn:getBrokerNamesResponse" />
+            <wsdl:fault message="ns:BrokerManagerAdminServiceBrokerManagerAdminServiceException" name="BrokerManagerAdminServiceBrokerManagerAdminServiceException" wsaw:Action="urn:getBrokerNamesBrokerManagerAdminServiceBrokerManagerAdminServiceException" />
+        </wsdl:operation>
+        <wsdl:operation name="getAllBrokerConfigurationNamesAndTypes">
+            <wsdl:input message="ns:getAllBrokerConfigurationNamesAndTypesRequest" wsaw:Action="urn:getAllBrokerConfigurationNamesAndTypes" />
+            <wsdl:output message="ns:getAllBrokerConfigurationNamesAndTypesResponse" wsaw:Action="urn:getAllBrokerConfigurationNamesAndTypesResponse" />
+
+            <wsdl:fault message="ns:BrokerManagerAdminServiceBrokerManagerAdminServiceException" name="BrokerManagerAdminServiceBrokerManagerAdminServiceException" wsaw:Action="urn:getAllBrokerConfigurationNamesAndTypesBrokerManagerAdminServiceBrokerManagerAdminServiceException" />
+        </wsdl:operation>
+        <wsdl:operation name="addBrokerConfiguration">
+            <wsdl:input message="ns:addBrokerConfigurationRequest" wsaw:Action="urn:addBrokerConfiguration" />
+            <wsdl:fault message="ns:BrokerManagerAdminServiceBrokerManagerAdminServiceException" name="BrokerManagerAdminServiceBrokerManagerAdminServiceException" wsaw:Action="urn:addBrokerConfigurationBrokerManagerAdminServiceBrokerManagerAdminServiceException" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="BrokerManagerAdminServiceSoap11Binding" type="ns:BrokerManagerAdminServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+
+        <wsdl:operation name="getBrokerConfiguration">
+            <soap:operation soapAction="urn:getBrokerConfiguration" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BrokerManagerAdminServiceBrokerManagerAdminServiceException">
+
+                <soap:fault use="literal" name="BrokerManagerAdminServiceBrokerManagerAdminServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="removeBrokerConfiguration">
+            <soap:operation soapAction="urn:removeBrokerConfiguration" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="BrokerManagerAdminServiceBrokerManagerAdminServiceException">
+
+                <soap:fault use="literal" name="BrokerManagerAdminServiceBrokerManagerAdminServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getBrokerProperties">
+            <soap:operation soapAction="urn:getBrokerProperties" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BrokerManagerAdminServiceBrokerManagerAdminServiceException">
+                <soap:fault use="literal" name="BrokerManagerAdminServiceBrokerManagerAdminServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getBrokerNames">
+            <soap:operation soapAction="urn:getBrokerNames" style="document" />
+            <wsdl:input>
+
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BrokerManagerAdminServiceBrokerManagerAdminServiceException">
+                <soap:fault use="literal" name="BrokerManagerAdminServiceBrokerManagerAdminServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+
+        <wsdl:operation name="getAllBrokerConfigurationNamesAndTypes">
+            <soap:operation soapAction="urn:getAllBrokerConfigurationNamesAndTypes" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BrokerManagerAdminServiceBrokerManagerAdminServiceException">
+
+                <soap:fault use="literal" name="BrokerManagerAdminServiceBrokerManagerAdminServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addBrokerConfiguration">
+            <soap:operation soapAction="urn:addBrokerConfiguration" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="BrokerManagerAdminServiceBrokerManagerAdminServiceException">
+
+                <soap:fault use="literal" name="BrokerManagerAdminServiceBrokerManagerAdminServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="BrokerManagerAdminServiceSoap12Binding" type="ns:BrokerManagerAdminServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="getBrokerConfiguration">
+            <soap12:operation soapAction="urn:getBrokerConfiguration" style="document" />
+            <wsdl:input>
+
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BrokerManagerAdminServiceBrokerManagerAdminServiceException">
+                <soap12:fault use="literal" name="BrokerManagerAdminServiceBrokerManagerAdminServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+
+        <wsdl:operation name="removeBrokerConfiguration">
+            <soap12:operation soapAction="urn:removeBrokerConfiguration" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="BrokerManagerAdminServiceBrokerManagerAdminServiceException">
+                <soap12:fault use="literal" name="BrokerManagerAdminServiceBrokerManagerAdminServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+
+        <wsdl:operation name="getBrokerProperties">
+            <soap12:operation soapAction="urn:getBrokerProperties" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BrokerManagerAdminServiceBrokerManagerAdminServiceException">
+
+                <soap12:fault use="literal" name="BrokerManagerAdminServiceBrokerManagerAdminServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getBrokerNames">
+            <soap12:operation soapAction="urn:getBrokerNames" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BrokerManagerAdminServiceBrokerManagerAdminServiceException">
+                <soap12:fault use="literal" name="BrokerManagerAdminServiceBrokerManagerAdminServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllBrokerConfigurationNamesAndTypes">
+            <soap12:operation soapAction="urn:getAllBrokerConfigurationNamesAndTypes" style="document" />
+            <wsdl:input>
+
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="BrokerManagerAdminServiceBrokerManagerAdminServiceException">
+                <soap12:fault use="literal" name="BrokerManagerAdminServiceBrokerManagerAdminServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+
+        <wsdl:operation name="addBrokerConfiguration">
+            <soap12:operation soapAction="urn:addBrokerConfiguration" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="BrokerManagerAdminServiceBrokerManagerAdminServiceException">
+                <soap12:fault use="literal" name="BrokerManagerAdminServiceBrokerManagerAdminServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+
+    </wsdl:binding>
+    <wsdl:binding name="BrokerManagerAdminServiceHttpBinding" type="ns:BrokerManagerAdminServicePortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="getBrokerConfiguration">
+            <http:operation location="getBrokerConfiguration" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="removeBrokerConfiguration">
+            <http:operation location="removeBrokerConfiguration" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+
+        <wsdl:operation name="getBrokerProperties">
+            <http:operation location="getBrokerProperties" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="getBrokerNames">
+            <http:operation location="getBrokerNames" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="getAllBrokerConfigurationNamesAndTypes">
+            <http:operation location="getAllBrokerConfigurationNamesAndTypes" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="addBrokerConfiguration">
+            <http:operation location="addBrokerConfiguration" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="BrokerManagerAdminService">
+        <wsdl:port name="BrokerManagerAdminServiceHttpsSoap11Endpoint" binding="ns:BrokerManagerAdminServiceSoap11Binding">
+
+            <soap:address location="https://172.16.208.1:9443/services/BrokerManagerAdminService.BrokerManagerAdminServiceHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="BrokerManagerAdminServiceHttpsSoap12Endpoint" binding="ns:BrokerManagerAdminServiceSoap12Binding">
+            <soap12:address location="https://172.16.208.1:9443/services/BrokerManagerAdminService.BrokerManagerAdminServiceHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="BrokerManagerAdminServiceHttpsEndpoint" binding="ns:BrokerManagerAdminServiceHttpBinding">
+            <http:address location="https://172.16.208.1:9443/services/BrokerManagerAdminService.BrokerManagerAdminServiceHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+
+</wsdl:definitions>

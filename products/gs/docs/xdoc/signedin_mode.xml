@@ -1,0 +1,54 @@
+<!--
+  ~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <body>
+        <p>[<a
+                href="http://wso2.org/downloads/gadget-server">Download</a>]
+            | [<a href="index_docs.html">Documentation Home</a>] | [<a
+                    href="release_notes.html">Release Note</a>]
+        </p>
+        <div id="main-content">
+            <h1>Installation Guide</h1>
+            <p>Once a user is registered with the WSO2 Gadget Server he/she can sign in to the user area. The portal
+                user area
+                can be easily customized with user's preferences. He/She can add remove new gadgets, can browse the
+                gadget repository,can search for gadgets in the gadget repository based on gadget names,
+                can change the gadget layout, copy gadgets, add new tabs and clone current tabs. The users can also add
+                any other gadget which are hosted elsewhere
+                to the portal via add by url feature. All the features are available for the signed in user, and
+                permissions can be modified by the administrators.
+                <br/>
+                <br/>
+                <img src="images/sign-in.png" alt="register"></img>
+                <br/>
+                <br/>
+                <img src="images/signed-portal.png" alt="register"></img>
+                <br/>
+                <br/>
+                <img src="images/gadget-repo.png" alt="register"></img>
+                <br/>
+                <br/>
+                <img src="images/tab.png" alt="register"></img>
+                <br/>
+                <br/>
+                <img src="images/gadget-settings.png" alt="register"></img>
+
+            </p>
+        </div>
+    </body>
+</html>

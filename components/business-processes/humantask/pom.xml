@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ ~ Copyright (c) 2009-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ Licensed under the Apache License, Version 2.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~      http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>org.wso2.carbon</groupId>
+        <artifactId>business-processes</artifactId>
+        <version>4.0.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.wso2.carbon</groupId>
+    <artifactId>humantask</artifactId>
+    <packaging>pom</packaging>
+    <name>WSO2 Carbon - Human Task Aggregator Module</name>
+    <url>http://wso2.org</url>
+    <description>WSO2 Human Task implementation</description>
+
+    <modules>
+        <module>org.wso2.carbon.humantask</module>
+        <module>org.wso2.carbon.humantask.deployer</module>
+        <module>org.wso2.carbon.humantask.ui</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.wsdl2form</artifactId>
+                <version>${wso2carbon.version.humantask}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.bpel.common</artifactId>
+                <version>${wso2carbon.version.humantask}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.logging</artifactId>
+                <version>${wso2carbon.version.humantask}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.unifiedendpoint.core</artifactId>
+                <version>${wso2carbon.version.humantask}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.sf.saxon.wso2</groupId>
+                <artifactId>saxon.bps</artifactId>
+                <version>${saxon-bps.wso2.version.humantask}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.apache.axis2.wso2</groupId>
+                <artifactId>axis2</artifactId>
+                <version>${axis2.wso2.version.humantask}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.core</artifactId>
+                <version>${wso2carbon.version.humantask}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.utils</artifactId>
+                <version>${wso2carbon.version.humantask}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.ui</artifactId>
+                <version>${wso2carbon.version.humantask}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.xmlbeans.wso2</groupId>
+                <artifactId>xmlbeans</artifactId>
+                <version>2.3.0.wso2v1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.geronimo.components.wso2</groupId>
+                <artifactId>geronimo-connector</artifactId>
+                <version>2.0.1.wso2v1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.geronimo.components.wso2</groupId>
+                <artifactId>geronimo-transaction</artifactId>
+                <version>2.0.1.wso2v1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.datasource</artifactId>
+                <version>${wso2carbon.version.humantask}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.batik.wso2</groupId>
+                <artifactId>batik</artifactId>
+                <version>1.7.0.wso2v1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-jpa_2.0_spec</artifactId>
+                <version>1.0</version>
+                <!-- We don't need an orbit bundle, since this is a bundle -->
+            </dependency>
+            <dependency>
+                <groupId>org.apache.ws.commons.axiom.wso2</groupId>
+                <artifactId>axiom</artifactId>
+                <version>${orbit.version.axiom}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.registry.extensions</artifactId>
+                <version>${wso2carbon.version.humantask}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-dbcp.wso2</groupId>
+                <artifactId>commons-dbcp</artifactId>
+                <version>${orbit.version.commons.dbcp}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.openjpa</groupId>
+                <artifactId>openjpa-osgi</artifactId>
+                <version>${openjpa.version}</version>
+                <!-- We don't need an orbit bundle, since this is a bundle -->
+            </dependency>
+            <dependency>
+                <groupId>com.h2database.wso2</groupId>
+                <artifactId>h2-database-engine</artifactId>
+                <version>${orbit.version.h2.engine}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.derby.wso2</groupId>
+                <artifactId>derby</artifactId>
+                <!--<version>10.3.2.1wso2v1</version>-->
+                <version>${derby.wso2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+                <!--<version>2.4</version>-->
+                <version>${servlet-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.googlecode.json-simple.wso2</groupId>
+                <artifactId>json-simple</artifactId>
+                <version>${simple-json.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.service.mgt.ui</artifactId>
+                <version>${wso2carbon.version.humantask}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.statistics.ui</artifactId>
+                <version>${wso2carbon.version.humantask}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <properties>
+        <axis2.wso2.version.humantask>${axis2.wso2.version}</axis2.wso2.version.humantask>
+        <saxon-bps.wso2.version.humantask>9.0.0.x-wso2v1</saxon-bps.wso2.version.humantask>
+        <wso2carbon.version.humantask>${wso2carbon.version}</wso2carbon.version.humantask>
+        <openjpa.version>2.0.0-wso2v1</openjpa.version>
+        <simple-json.version>1.1.wso2v1</simple-json.version>
+    </properties>
+</project>
+

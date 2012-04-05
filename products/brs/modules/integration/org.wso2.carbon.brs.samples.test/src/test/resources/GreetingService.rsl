@@ -1,0 +1,10 @@
+<ruleService name="GreetingService">
+    <description>Greeting Service</description>
+    <ruleset path="greeting.drl"/>
+    <operation name="greetMe">
+        <with-param type="org.wso2.carbon.greeting.test.User"/>
+        <result>
+            <element type="org.wso2.carbon.greeting.test.GreetingMessage"/>
+        </result>
+    </operation>
+</ruleService>

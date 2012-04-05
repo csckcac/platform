@@ -1,0 +1,49 @@
+
+
+#table-1 {
+    width: 100%;
+    border: 1px solid #ffffff;
+    font-size:16px;
+    cellspacing: "0";
+    cellpadding: "0"
+
+}
+
+#table-1 tr {
+    color: #000000;
+}
+
+#table-1 tr th {
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#F0F0F0', endColorstr = '#DBDBDB', GradientType = 0);
+    text-align: center;
+    background: #757c7b;
+    color: #000000;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 3px 10px;
+}
+
+#table-1 td {
+    color: #000000;
+    padding: 3px 10px;
+}
+
+#table-1 td a {
+    color: #000000;
+    text-decoration: underline;
+}
+
+tr.pass {
+    background-color: #088708;
+}
+
+tr.fail {
+    background-color: #db0e0e;
+}
+
+tr.skip {
+    background-color: #facb1f;
+}
+
+
+

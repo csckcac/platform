@@ -1,0 +1,43 @@
+package org.wso2.carbon.hostobjects.file;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.scriptengine.exceptions.ScriptException;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+public class JavaScriptFileManagerImpl implements JavaScriptFileManager {
+
+    private static final Log log = LogFactory.getLog(JavaScriptFileManagerImpl.class);
+
+    @Override
+    public JavaScriptFile getFile(String path) throws ScriptException {
+        File file;
+        if (path.startsWith("file://")) {
+            try {
+                file = FileUtils.toFile(new URL(path));
+            } catch (MalformedURLException e) {
+                log.error(e.getMessage(), e);
+                throw new ScriptException(e);
+            }
+        } else {
+            path = FilenameUtils.normalizeNoEndSeparator(path);
+            if (path == null) {
+                String msg = "Invalid file path : " + path;
+                log.error(msg);
+                throw new ScriptException(msg);
+            }
+            file = new File(path);
+        }
+        if (file.isDirectory()) {
+            String msg = "File hostobject doesn't handle directories. Specified path contains a directory : " + path;
+            log.error(msg);
+            throw new ScriptException(msg);
+        }
+        return new JavaScriptFileImpl(path);
+    }
+}

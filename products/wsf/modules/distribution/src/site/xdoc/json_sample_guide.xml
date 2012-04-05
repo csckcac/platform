@@ -1,0 +1,64 @@
+<!--
+  ~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html>
+    <body>
+        <h1>JSON (JavaScript Object Notation) Sample Guide</h1>
+
+		<h2>Introduction</h2>
+        <p>This is a simple sample that demonstrates the functionality of the JSON Support
+in WSO2 WSF, which comes from  <a href="http://ws.apache.org/axis2">Apache axis2</a>.
+Please refer to the references below for further information on how JSON works in axis2.</p>
+
+        <h2>Hosting the Service</h2>
+        <p>
+            To host the service, please download WSO2 Application Server and refer to JSON
+            sample.
+        </p>
+
+        <h2>Running the client</h2>
+		<ol>	
+			<p>Use the script run-client.sh or run-client.bat file to invoke the client using following
+optional parameters</p>
+			<pre>
+   -help (For help on available options)
+   -ct {Content type to be used}
+        aj  (application/json)
+        ajb (application/json/badgerfish)
+
+   	e.g: ./run-client.sh -ct ajb</pre>
+        </ol>
+
+		<p>In the JSON sample an xml element  is sent to AppServer via the client.
+<pre>&lt;echo&gt;&lt;ns:value xmlns:ns="http://services.wsas.training.wso2.org"&gt;Hello JSON Service&lt;/ns:value&gt;&lt;/echo&gt;</pre>
+You can change the &quot;<strong>http port</strong>&quot; in 
+&quot;src/org/wso2/wsf/sample/json/client/JSONClient.java&quot; and monitor the JSON
+object that passed through to AppServer, using a capuring tool such as tcp monitor.</p>
+
+		<p><img alt="json_object_captured" src="images/json_captured.jpg"/></p>
+		<p>Figure 1: JSON Object passing captured from tcp monitor.</p>
+
+        <h2>REFERENCES</h2>
+		<ol>
+			<li><a href="http://wso2.org/library/768">http://wso2.org/library/768</a></li>
+			<li><a href="http://axis.apache.org/axis2/java/core/docs/json_support.html">
+http://axis.apache.org/axis2/java/core/docs/json_support.html</a></li>
+        </ol>
+    </body>
+</html>

@@ -1,0 +1,111 @@
+<!--
+  ~ Copyright 2009 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <title>Operational and Analytics Dashboards - User Guide</title>
+    <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all"/>
+</head>
+<body>
+<h1>Operational and Analytics Dashboards</h1>
+<p>
+<ul>
+    <li><a href="#operational">Operational Dashboards</a></li>
+    <li><a href="#analytics">Analytics Dashboards</a></li>
+</ul>
+</p>
+
+<a name="operational"/>
+<h2>Operational Dashboard</h2>
+<p>Service data and Mediation data dashboards display key operational data that are lightly summarized and updated as
+    and when the latest data is available. For example, latest counts and time measures for both service and mediation
+    data are available as operational dashboards. </p>
+<p><img src="../images/server-data-toggle.png" alt=""/></p>
+
+  <p>These dashboards are organized in a tree structure.</p> 
+      <p>For Server Data Dashboard, each server will consist of one or
+      more services and each of these services will consist of a number of operations. For Mediation Data Dashboard,
+          each server will consist a set of Endpoints, Proxy services, and Sequences. Each of these fields can be
+      collapsed for easier viewing, using the toggles as shown in the above diagram.
+   </p>  
+
+
+<p>The <strong>legend</strong> which expains the semantics of the colors can be moved if it covers the area that is being
+    viewed. To move the legend, click on the legend and move the mouse cursor.</p>
+
+<p>Click on the <strong>PDF</strong> and <strong>Excel</strong> icons to generate reports in Adobe PDF and MS Excel
+    formats respectively.</p>
+
+<a name="analytics"/>
+<h2>Analytics Dashboards</h2>
+
+<p> Analytical decision making is a strategic weapon for companies. Analytics is the science of analysis.
+    WSO2 BAM provides means to analyze the service and mediation data, summarized over time dimensions.
+    Users can dig into information on the request, response, and fault counts as well as average time information for
+    various levels of service invocations and mediation data, to help identify trends in the usage of services and
+    message mediation patterns. These information can be used to help with strategic decision making in both IT and
+    business domains. For example, IT can make use of analytics to help with capacity planning for the SOA
+    infrastructure. Business decision makers can monitor the business trends and decide on what business functions
+    to expand, and what steps to be taken to increase the percentage of successfully closed deals. In other words,
+    business users can fine tune the business processes, based on the knowledge discovered.</p>
+<p>
+The knowledge discovery facilitated by the visualization tools of WSO2 BAM help identify valid, novel, potentially
+    useful and ultimately understandable patterns in data that are being collected.
+</p>
+<p>
+The summarizations in the analytics dashboards are based on time dimensions. Both service data and mediation data are
+    summarized into the following time dimensions:
+
+<ul>
+    <li>Hour</li>
+    <li>Day</li>
+    <li>Month</li>
+</ul>
+</p>
+
+<p>
+Based on the above time dimensions, WSO2 BAM summarizes the collected data in the following manner.
+
+
+<ul>
+    <li>At the top of each hour, the data for the last hour will be summarized</li>
+    <li>At midnight, the data for the previous day would be summarized</li>
+    <li>At midnight of the last day of each month, the data for the previous day would be summarized</li>
+</ul>
+
+<p>Below is a sample analytics dashboard:</p>
+</p>
+<p><img src="../images/analytics-main.png" alt=""/></p>
+
+<p>These dashboards are also organized in a collapsible tree structure as is the case for operational dashboards. The
+    time range of analytics views can be selected from the calendar at the top right hand corner. Chart type of each
+    of the analytics charts can be changed by clicking on the tab bar above them. Char type can be selected from one of
+either Line, Bar or Column.</p>
+
+<p>Reports can be generated for each of the charts that are available by clicking on the  <strong>PDF</strong> 
+    and <strong>Excel</strong> icons.</p>
+
+<h3>Selection of Time Range</h3>
+<p><img src="../images/analytics-timerange.png" alt=""/></p>
+<p>Click on the time range area to open the calendar. There are three different modes of time range selection: Hour, Day and Month.
+Click on the desired time range mode and select the time range from the calendar provided. Also it is possible to provide the
+date range directly into the <strong>Date Range</strong> text boxes. Then click <em>Apply</em> to apply the changes.</p>
+
+</body>
+</html>

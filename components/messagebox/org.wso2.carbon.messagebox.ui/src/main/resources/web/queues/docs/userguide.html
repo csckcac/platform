@@ -1,0 +1,90 @@
+<!--
+  ~ Copyright 2008 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"></meta>
+    <title>Queue Management - User Guide</title>
+    <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all"/>
+</head>
+
+<body style="font-family: Times New Roman,Times,serif; font-size: 12pt;">
+<h1>Queue Management</h1>
+
+<h2>Add Queue</h2>
+
+<p><img alt="" src="../images/addQueue.png"/></p>
+
+<p>Figure 1: Add Queue</p>
+
+<p>By providing a queue name, queue is created. Then users can list queues in queue list page.</p>
+
+
+<h2>List Queues</h2>
+
+<p><img alt="" src="../images/queueList.png"/></p>
+
+<p>Figure 2: Queue List</p>
+
+<p>In queue list view, all the queues in the system is shown. More details on these queues can be
+   found at queue details page.</p>
+
+
+<h2>View Queue Details</h2>
+
+<p><img alt="" src="../images/queueDetails.png"/></p>
+
+<p>Figure 3: Queue Details</p>
+
+<p>In queue details page, all the information regarding the queue is listed. Following is a short
+   description of each.</p>
+
+<ul>
+    <li>Queue name</li>
+    <p>Name of the queue. Each message box has a queue, and its name is same as the message box
+       name.</p>
+    <li>Queue size</li>
+    <p>Size of the messages in queue in bytes.</p>
+    <li>Message count</li>
+    <P>Number of messages in queue.</P>
+    <li>Created time</li>
+    <P>Queue created timestamp.</P>
+    <li>Updated time</li>
+    <P>Queue updated time. When queue is allowed new permissions, messages are push and pop from
+       queue, this value is updated.</P>
+    <li>Type</li>
+    <P>There are two types defined namely SQS and AMQP. When a message box is created, the queue
+       type is SQS. And queue is created from admin console or another API like JMS, the queue type
+       is AMQP. If queue type is AMQP, That can be deleted from queue list page. If queue type is
+       SQS, that queue can be deleted in message box list page.</P>
+</ul>
+
+<strong>Queue Permissions</strong>
+
+<p>Consume and publish permissions are listed for each users. The queue created user is allowed both
+   permissions. If a message box is shared with another user in message box view page, queue
+   permissions are mapped as follows.
+</p>
+<ul>
+    <li>Send permission maps with Publish permission</li>
+    <li>One or more permissions from Receive,Delete,Change Visibility, Get Queue Attributes are
+        mapped with Consume permission.
+    </li>
+</ul>
+
+</body>
+</html>

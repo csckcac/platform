@@ -1,0 +1,579 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>org.wso2.manager</groupId>
+    	<artifactId>wso2manager-distribution-parent</artifactId>
+        <version>1.1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>wso2stratos-manager</artifactId>
+    <packaging>jar</packaging>
+    <name>WSO2 Stratos Manager - Distribution</name>
+    <description>WSO2 Stratos Manager Distribution</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.rampart</groupId>
+            <artifactId>rampart</artifactId>
+            <version>${rampart.mar.version}</version>
+            <type>mar</type>
+        </dependency>
+	<dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>features-dashboard</artifactId>
+            <version>${features-dashboard.war.version}</version>
+            <type>war</type>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>maven-buildnumber-plugin</artifactId>
+                <version>0.9.4</version>
+                <configuration>
+                    <format>{0,date,dd MMM yyyy}</format>
+                    <items>
+                        <item>timestamp</item>
+                    </items>
+                    <doCheck>false</doCheck>
+                    <doUpdate>false</doUpdate>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.0-alpha-4</version>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <id>2-unpack-wso2carbon</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon</groupId>
+                                    <artifactId>wso2carbon-core</artifactId>
+                                    <version>${carbon.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>target</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>com.acme.shoppingcart</groupId>
+                                    <artifactId>shopping-cart</artifactId>
+                                    <version>${shoppingcart.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>target</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                    <execution>
+                        <id>3-extract-docs-from-components</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <property name="tempdir" value="target/docs-temp"/>
+                                <mkdir dir="${tempdir}"/>
+                                <unzip dest="${tempdir}">
+                                    <fileset dir="target">
+                                        <include name="${project.artifactId}-${project.version}.zip"/>
+                                    </fileset>
+                                </unzip>
+                                <copy todir="target/wso2carbon-core-${carbon.version}/repository/components" overwrite="true">
+                                    <fileset dir="${tempdir}/${project.artifactId}-${project.version}/repository/components">
+                                    </fileset>
+                                </copy>
+                                <copy todir="target/wso2carbon-core-${carbon.version}/repository/conf" overwrite="true">
+                                    <fileset dir="../../../conf">
+                                        <include name="user-mgt.xml"/>
+                                    </fileset>
+                                </copy>
+                                <delete file="target/${project.artifactId}-${project.version}.zip"/>
+                                <delete dir="${tempdir}"/>
+                                <mkdir dir="${tempdir}"/>
+                                <unzip dest="${tempdir}">
+                                    <fileset dir="target/wso2carbon-core-${carbon.version}/repository/components/plugins/">
+                                        <include name="*.ui*.jar"/>
+                                    </fileset>
+                                </unzip>
+                                <move todir="${tempdir}/web/" includeemptydirs="false">
+                                    <fileset dir="${tempdir}/web/">
+                                        <exclude name="**/yui/**"/>
+                                        <exclude name="**/ajax/**"/>
+                                        <exclude name="**/WEB-INF/**"/>
+                                        <include name="**/*.html"/>
+                                    </fileset>
+                                    <mapper type="glob" from="*.html" to="*.xml"/>
+                                </move>
+                                <mkdir dir="src/site/xdoc"/>
+                                <copy todir="src/site/xdoc" overwrite="false" includeemptydirs="false">
+                                    <fileset dir="${tempdir}/web">
+                                        <exclude name="**/yui/**"/>
+                                        <exclude name="**/ajax/**"/>
+                                        <exclude name="**/WEB-INF/**"/>
+                                        <exclude name="**/*.html"/>
+                                        <exclude name="**/*.js"/>
+                                        <exclude name="**/*.jsp"/>
+                                        <exclude name="**/*.xsl"/>
+                                        <exclude name="*.*"/>
+                                    </fileset>
+                                </copy>
+                                <copy todir="target/site/" overwrite="false" includeemptydirs="false">
+                                    <fileset dir="src/site/xdoc/">
+                                        <include name="**/images/**/*.*"/>
+                                    </fileset>
+                                </copy>
+                                <delete dir="${tempdir}"/>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>clean_target</id>
+                        <phase>install</phase>
+                        <configuration>
+                            <tasks>
+                                <delete dir="target/archive-tmp"/>
+                                <delete dir="target/dependency-maven-plugin-markers"/>
+                                <delete dir="target/maven-archiver"/>
+                                <delete dir="target/wso2carbon-core-${carbon.version}"/>
+                                <delete dir="target/shopping-cart-${project.version}"/>
+                                <delete file="target/${project.artifactId}-${project.version}.jar"/>
+                                <delete dir="target/sources"/>
+                                <delete dir="target/site"/>
+                                <delete dir="src/site"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.0</version>
+                <executions>
+                    <execution>
+                        <phase>5-package</phase>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>1-pre_dist</id>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>attached</goal>
+                                </goals>
+                                <configuration>
+                                    <filters>
+                                        <filter>${basedir}/src/assembly/filter.properties</filter>
+                                    </filters>
+                                    <descriptors>
+                                        <descriptor>${basedir}/src/assembly/dist.xml</descriptor>
+                                    </descriptors>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>4-dist</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>attached</goal>
+                                </goals>
+                                <configuration>
+                                    <filters>
+                                        <filter>${basedir}/src/assembly/filter.properties</filter>
+                                    </filters>
+                                    <descriptors>
+                                        <descriptor>${basedir}/src/assembly/bin.xml</descriptor>
+                                        <!--<descriptor>${basedir}/src/assembly/src.xml</descriptor>-->
+                                        <!--<descriptor>${basedir}/src/assembly/docs.xml</descriptor>-->
+                                    </descriptors>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>fix_configuration</id>
+            <activation>
+                <property>
+                    <name>build</name>
+                    <value>box</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.1.1</version>
+                        <executions>
+                            <execution>
+                                <id>fix_registry_jdbc_url</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>sed</executable>
+                                    <arguments>
+                                        <argument>-i</argument>
+                                        <argument>s,[&lt;]url[&gt;]jdbc[:]h2[:]repository/database/WSO2CARBON_DB[&lt;]/url[&gt;],&lt;url&gt;JDBC_URL&lt;/url&gt;,</argument>
+                                        <argument>
+                                            target/wso2carbon-core-${carbon.version}/repository/conf/registry.xml
+                                        </argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>fix_registry_jdbc_username</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>sed</executable>
+                                    <arguments>
+                                        <argument>-i</argument>
+                                        <argument>s,[&lt;]userName[&gt;]wso2carbon[&lt;]/userName[&gt;],&lt;userName&gt;JDBC_USERNAME&lt;/userName&gt;,</argument>
+                                        <argument>
+                                            target/wso2carbon-core-${carbon.version}/repository/conf/registry.xml
+                                        </argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>fix_registry_jdbc_password</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>sed</executable>
+                                    <arguments>
+                                        <argument>-i</argument>
+                                        <argument>s,[&lt;]password[&gt;]wso2carbon[&lt;]/password[&gt;],&lt;password&gt;JDBC_PASSWORD&lt;/password&gt;,</argument>
+                                        <argument>
+                                            target/wso2carbon-core-${carbon.version}/repository/conf/registry.xml
+                                        </argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>fix_registry_jdbc_driver_name</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>sed</executable>
+                                    <arguments>
+                                        <argument>-i</argument>
+                                        <argument>s,[&lt;]driverName[&gt;]org[.]h2[.]Driver[&lt;]/driverName[&gt;],&lt;driverName&gt;JDBC_DRIVER&lt;/driverName&gt;,</argument>
+                                        <argument>
+                                            target/wso2carbon-core-${carbon.version}/repository/conf/registry.xml
+                                        </argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>fix_user_mgt_jdbc_url</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>sed</executable>
+                                    <arguments>
+                                        <argument>-i</argument>
+                                        <argument>s,[&lt;]Property name[=]["]url["][&gt;]jdbc[:]h2[:]repository/database/WSO2CARBON_DB[&lt;]/Property[&gt;],&lt;Property name="url"&gt;JDBC_URL&lt;/Property&gt;,</argument>
+                                        <argument>
+                                            target/wso2carbon-core-${carbon.version}/repository/conf/user-mgt.xml
+                                        </argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>fix_user_mgt_jdbc_username</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>sed</executable>
+                                    <arguments>
+                                        <argument>-i</argument>
+                                        <argument>s,[&lt;]Property name[=]["]userName["][&gt;]wso2carbon[&lt;]/Property[&gt;],&lt;Property name="userName"&gt;JDBC_USERNAME&lt;/Property&gt;,</argument>
+                                        <argument>
+                                            target/wso2carbon-core-${carbon.version}/repository/conf/user-mgt.xml
+                                        </argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>fix_user_mgt_jdbc_password</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>sed</executable>
+                                    <arguments>
+                                        <argument>-i</argument>
+                                        <argument>s,[&lt;]Property name[=]["]password["][&gt;]wso2carbon[&lt;]/Property[&gt;],&lt;Property name="password"&gt;JDBC_PASSWORD&lt;/Property&gt;,</argument>
+                                        <argument>
+                                            target/wso2carbon-core-${carbon.version}/repository/conf/user-mgt.xml
+                                        </argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>fix_user_mgt_jdbc_driver_name</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>sed</executable>
+                                    <arguments>
+                                        <argument>-i</argument>
+                                        <argument>s,[&lt;]Property name[=]["]driverName["][&gt;]org[.]h2[.]Driver[&lt;]/Property[&gt;],&lt;Property name="driverName"&gt;JDBC_DRIVER&lt;/Property&gt;,</argument>
+                                        <argument>
+                                            target/wso2carbon-core-${carbon.version}/repository/conf/user-mgt.xml
+                                        </argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>add_registry_mount_placeholder</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>sed</executable>
+                                    <arguments>
+                                        <argument>-i</argument>
+                                        <argument>s,[&lt;]/dbConfig[&gt;],&lt;/dbConfig&gt;\n\n    &lt;!-- MOUNT_CONFIG_GOES_HERE --&gt;,</argument>
+                                        <argument>
+                                            target/wso2carbon-core-${carbon.version}/repository/conf/registry.xml
+                                        </argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>add_configured_servers_placeholder</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>sed</executable>
+                                    <arguments>
+                                        <argument>-i</argument>
+                                        <argument>s,[&lt;]tenantRegListenerServers[&gt;],&lt;tenantRegListenerServers&gt;\n    &lt;!-- CONFIGURED_SERVERS_GOES_HERE --&gt;\n,</argument>
+                                        <argument>
+                                            target/wso2carbon-core-${carbon.version}/repository/conf/tenant-reg-agent.xml
+                                        </argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>fix_web_context</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>sed</executable>
+                                    <arguments>
+                                        <argument>-i</argument>
+                                        <argument>s,[&lt;]WebContextRoot[&gt;]/[&lt;]/WebContextRoot[&gt;],&lt;WebContextRoot&gt;CONTEXT_ROOT&lt;/WebContextRoot&gt;,</argument>
+                                        <argument>
+                                            target/wso2carbon-core-${carbon.version}/repository/conf/carbon.xml
+                                        </argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>fix_ports_http</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>sed</executable>
+                                    <arguments>
+                                        <argument>-i</argument>
+                                        <argument>s,9763,HTTP_PORT,</argument>
+                                        <argument>
+                                            target/wso2carbon-core-${carbon.version}/repository/conf/mgt-transports.xml
+                                        </argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>                            
+                            <execution>
+                                <id>fix_ports_https</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>sed</executable>
+                                    <arguments>
+                                        <argument>-i</argument>
+                                        <argument>s,9443,HTTPS_PORT,</argument>
+                                        <argument>
+                                            target/wso2carbon-core-${carbon.version}/repository/conf/mgt-transports.xml
+                                        </argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>                           
+                            <execution>
+                                <id>fix_ports_http_axis2</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>sed</executable>
+                                    <arguments>
+                                        <argument>-i</argument>
+                                        <argument>s,9763,HTTP_PORT,</argument>
+                                        <argument>
+                                            target/wso2carbon-core-${carbon.version}/repository/conf/axis2.xml
+                                        </argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>                            
+                            <execution>
+                                <id>fix_ports_https_axis2</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>sed</executable>
+                                    <arguments>
+                                        <argument>-i</argument>
+                                        <argument>s,9443,HTTPS_PORT,</argument>
+                                        <argument>
+                                            target/wso2carbon-core-${carbon.version}/repository/conf/axis2.xml
+                                        </argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>1-pre_dist</id>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>attached</goal>
+                                </goals>
+                                <configuration>
+                                    <filters>
+                                        <filter>${basedir}/src/assembly/filter.properties</filter>
+                                    </filters>
+                                    <descriptors>
+                                        <descriptor>${basedir}/src/assembly/dist.xml</descriptor>
+                                    </descriptors>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>4-dist</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>attached</goal>
+                                </goals>
+                                <configuration>
+                                    <filters>
+                                        <filter>${basedir}/src/assembly/filter.properties</filter>
+                                    </filters>
+                                    <descriptors>
+                                        <descriptor>${basedir}/src/assembly/bin.xml</descriptor>
+                                        <!--<descriptor>${basedir}/src/assembly/src.xml</descriptor>-->
+                                        <!--<descriptor>${basedir}/src/assembly/docs.xml</descriptor>-->
+                                    </descriptors>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

@@ -1,0 +1,20 @@
+<!--
+this is the configuration file for the carbon messagebox component. This configuration file configure messagebox service implementation factory and TCP connection parameters for qpid broker.
+-->
+<messageBoxConfig xmlns="http://wso2.org/carbon/messagebox/">
+    <messageBoxService name="messageBoxService"
+                       class="org.wso2.carbon.messagebox.internal.qpid.JMSMessageBoxServiceFactory"
+                       type="local">
+	<!-- <remoteMessageBroker>
+            <hostName>localhost</hostName>
+            <servicePort>9443</servicePort>
+	    <webContext>/</webContext>
+            <userName>admin</userName>
+            <password>admin</password>
+            <qpidPort>5672</qpidPort>
+            <clientID>clientID</clientID>
+            <virtualHostName>carbon</virtualHostName>
+        </remoteMessageBroker>-->    
+
+    </messageBoxService>
+</messageBoxConfig>

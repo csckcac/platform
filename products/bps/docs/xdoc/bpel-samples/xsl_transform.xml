@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>@product.name@ - Sample Guide - XslTransform</title>
+        <link href="../css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+        <h1>Sample Guide - XslTransform</h1>
+        <h3>Table of Content</h3>
+        <ul>
+            <li><a href="#objective">Objective</a></li>
+            <li><a href="#prerequisites">Prerequisites</a></li>
+            <li><a href="#overallIdea">Overall Idea</a></li>
+        </ul>
+
+        <br />
+        <h3><a name="objective">Objective</a></h3>
+        <p><code>doXslTransform(string, node-set, (string, object)*)</code> function is used to perform XSLT
+            transformations. So BPEL variable values can be transformed into different schemas.
+        </p>
+        <p>
+            For more details on input parameters, refer
+            <a href="http://docs.oasis-open.org/wsbpel/2.0/CS01/wsbpel-v2.0-CS01.html#SA00039_table">
+                http://docs.oasis-open.org/wsbpel/2.0/CS01/wsbpel-v2.0-CS01.html#SA00039_table
+            </a>
+        </p>
+        <p><b>Note</b><i> : Required name spaces -</i></p>
+        <ul>
+            <li><code>xmlns:bpws="http://docs.oasis-open.org/wsbpel/2.0/process/executable"</code></li>
+            <li><code>queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0"</code></li>
+            <li><code>expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0"</code></li>
+        </ul>
+        <p><code>doXslTransform()</code> should be defined under <code>"http://docs.oasis-open.org/wsbpel/2.0/process/executable"</code> namespace.</p>
+
+        <br />
+        <h3><a name="prerequisites">Prerequisites</a></h3>
+        <ul>
+            <li>Log in into BPS server admin console.</li>
+            <li>Under Business Processes -&gt; Add BPEL.</li>
+            <li>Upload the TestXslTransform.zip , (all samples are located at our <a href="http://svn.wso2.org/repos/wso2/branches/carbon/3.2.0/products/bps/2.1.0/modules/samples/product/src/main/resources/bpel/2.0/">sample repository</a>.)</li>
+            <li>Under the Business Processes -&gt; Processes.</li>
+            <li>Under the WSDL details widget -&gt; Create instance</li>
+        </ul>
+
+
+        <br />
+        <h3><a name="overallIdea">Overall Idea</a></h3>
+        <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>copy</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>from</span><span style='color:#a65700; '>></span>
+        bpws:doXslTransform("HelloXslWorld.xsl", $myVar.TestPart, 'middle', $otherVar)
+    <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>from</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>to</span> <span style='color:#274796; '>variable</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>myVar</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>part</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>TestPart</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>copy</span><span style='color:#a65700; '>></span>
+</pre>
+        <p>In the above <code>doXslTransform()</code>, four parameters are passed.</p>
+        <ul>
+            <li><code>HelloXslWorld.xsl</code> - Style sheet file</li>
+            <li><code>$myVar.TestPart</code> - Input source to be transformed</li>
+            <li><code>middle</code> - name of the object to be used in the transformation</li>
+            <li><code>$otherVar</code> - object which will be referred as 'middle'</li>            
+        </ul>
+        <p>Like this <code>doXslTransform()</code> accepts pairs of string and objects, so that they can be
+            referred in the style sheet.
+        </p>
+        <p>
+            eg - in HelloXslWorld.xsl
+            <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>xsl</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>value-of</span> <span style='color:#274796; '>select</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>concat(*/content/text(), $middle, ' World')</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+</pre>
+        </p>
+    </body>
+</html>

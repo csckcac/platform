@@ -1,0 +1,193 @@
+<!--
+  ~ Copyright 2008 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"></meta>
+    <title>Complex Event Processing Server - User Guide</title>
+    <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all"/>
+</head>
+
+<body style="font-family: Times New Roman,Times,serif; font-size: 12pt;">
+<h1>Complex Event Processing Server - Buckets</h1>
+
+<h2>Deployed Buckets</h2>
+
+<p><img alt="" src="../images/deployed_buckets.png"/></p>
+
+<p>Figure 1: Deployed Buckets</p>
+
+<p> Complex Event Processing server's deployed buckets page shows you a table of all the available buckets in the server.
+    You can have three operations on available buckets in this page.The three basic features provided in this page are;
+    "Removing Bucket" and "Viewing a bucket" and "Edit Bucket". You can delete multiple buckets at once by checking the
+    check box against each bucket and clicking on delete button.
+</p>
+
+
+<ul>
+    <li>View Bucket</li>
+        <p>Once you click on the bucket name in Deployed buckets page , You will be directed to this page.</p>
+
+        <p><img alt="" src="../images/view_bucket.png"/></p>
+
+        <p>Figure 2: View Bucket</p>
+
+       <p> Here you can find all the information on the bucket like, name, description, engine provider, inputs, queries.
+       In order to edit the bucket , there is a link 'Edit Bucket' in the top left corner of this page. When you click on
+       that, you will be directed to 'Edit Bucket page'</p>
+
+    <li>Edit Bucket</li>
+       <p>Once you click on the "Edit Bucket" link on deployed buckets page, you will be directed to this page.</p>
+
+        <p><img alt="" src="../images/edit_bucket.png"/></p>
+
+         <p>Figure 3: Edit Bucket</p>
+
+        <p> Here you can find all the information on the bucket like, name, description, engine provider, inputs, queries.
+            You can remove the existing inputs and queries of the bucket and add new inputs and queries to the bucket from
+            this page. But changing the basic information like "Bucket Name" , "Descriptions" and "Engine provider" is
+            not allowed with this version. Once you have finished removing and adding inputs and queries, click on "Save"
+            button and it will save to the modification to the bucket.
+        </p>
+
+    <li>Delete Bucket</li>
+     <p>Once you click on "Delete" link after checking out the check box in "Deployed Bucket" you will be asked for the
+         confirmation. when you confirm the delete operation , it will remove the bucket from the server.</p>
+
+        <p><img alt="" src="../images/delete_bucket.png"/></p>
+
+         <p>Figure 4: Delete Bucket</p>
+</ul>
+
+<h2>Add Bucket</h2>
+
+<p><img alt="" src="../images/add_bucket.png"/></p>
+
+<p>Figure 5: Add Bucket</p>
+
+    <p> Once you click on the 'Add' menu item under 'CEP Buckets' Sub menu in left panel, you will be directed to
+         Add Bucket page. Adding bucket to the server can be done in tree states.</p>
+
+
+     <li>Adding Basic Information</li>
+
+        <p> Here you can provide the name of the bucket , Description for the bucket (Optional) and choose the
+         Engine provider that you are going to use for the bucket. Once you click on 'Save' , this information
+         will be saved in the server and you can add inputs and queries to the bucket by editing the bucket.
+        </p>
+
+    <li> Adding Basic Information and Inputs</li>
+
+        <p> Other than the above basic information, you can add inputs to the bucket and save the bucket.</p>
+
+     <li>Adding Basic Information, Inputs and Queries</li>
+
+       <p> In this state you are adding all the required information for the bucket.</p>
+
+     <p>You can find more information about the bucket in the User guide of CEP.</p>
+
+     <h3>Add Input</h3>
+        <p>Complex Event Processing Server is triggered by events. When some event source publish event or stream
+            of events , there should be a topic to publish the events to be received by the CEP Server. By defining
+            inputs, we are defining a topic where an event source can publish to. An input consists of five main elements
+         </p>
+
+        <p><img alt="" src="../images/add_input.png"/></p>
+
+            <p>Figure 6: Add Input</p>
+            <li>Topic</li>
+                 <p>Topic which an event source should publish events to be received by the CEP Server </p>
+
+            <li>Broker Name</li>
+                <p>Name of the broker in which, events are used to send through. You need to create a broker if any thing
+                 is not listed in this drop down. To create a broker , Click on 'Add' menu item under Broker sub menu which
+                    exists under 'Configure' menu in left panel </p>
+
+            <li>Mapping Stream</li>
+                 <p>Name of the stream of the events </p>
+
+             <li>Xpath Definitions</li>
+                 <p>Xpath of the receiving xml elements to be mapped </p>
+
+             <li>Properties</li>
+                 <p>Properties to be extracted from the receiving xml element </p>
+
+        <p>Once you provide the above information and click on 'Add Input' button, it will listed in the inputs table and
+           you will be able to see  details of the topic once you click on the input name listed in the table. If you have added
+           wrong values you can simply delete the input from the table by selecting the check bix provided for the
+           particular input and click on delete button.
+        </p>
+        <p> NOTE : Inputs will not be save to the server until you click on the 'Save' button for the bucket.</p>
+
+      <h3>Add Query</h3>
+        <p>Filtering and triggering new events on received events is the basic idea of the CEP Server. To filter events
+            there should be some criteria specified in the CEP Engine. This criteria which is needed to filter events is
+            provided with the query of the CEP Bucket. There can be one or more queries and user can decide the number of
+            queries required to perform the expected task.
+         </p>
+
+        <p><img alt="" src="../images/add_query.png"/></p>
+
+        <p>Figure 7: Add Query</p>
+
+         <p>Query consists of three elements.</p>
+            <li>Query Name</li>
+                 <p>Name of the query which is used to identify </p>
+            <li>Expression</li>
+                 <p>Actual query text contains in the expression, This can be inlined or can be browsed from registry </p>
+                    <li>Inlined </li> <p>User can type the query in the provided space</p>
+                    <li>Registry </li>
+                        <p>
+                        User can browse the registry by clicking on the provided registry browser and
+                        select the query expression from registry.(Before browsing the registry to get this from the registry
+                        , user needs to store the query in registry)</p>
+             <li>Output</li>
+                 <p>When an event is triggered or filtered from the input events, that event need to be publish to a topic
+                     to be received by another event listener. In configuring output we are providing the topic which the
+                     new event to be published and the format of the output event. </p>
+
+                  <p><img alt="" src="../images/add_query_output.png"/></p>
+
+                    <p>Figure 8: Add Output</p>
+
+                <p> User has to provide three things when defining an output</p>
+                  <li>Topic</li>
+                        <p>Topic which a filtered event should be published. Any one interested in receiving filtered events
+                            need to be subscribed to this topic </p>
+                  <li>Broker name</li>
+                        <p>Name of the broker in which, events are used to send through. You need to create a broker if any thing
+                 is not listed in this drop down. To create a broker , Click on 'Add' menu item under Broker sub menu which
+                    exists under 'Configure' menu in left panel </p>
+
+                  <li>XML Mapping</li>
+                        <p> User can provide the full output xml element to be fired. When there are required fields to be filled
+                            with filtered values, names of those values should be provided within curly brackets and CEP Server
+                            will identify them and replace with the filtered values </p>
+                 <li>Element Mapping</li>
+                    <p>User can create the format of the output xml element by providing properties and their types.</p>
+                <p>Note: After filling all the required fields of the Query , click on add query button to add Query to the bucket.
+                    Once you clicked it will disappear the query form and added query will be appeared in Queries table.</p>
+
+                <p>Note: As the last step of adding a bucket , click on save button. Once you clicked it will redirect to the
+                    deployed buckets page and deployed bucket will be appeared in buckets table. Further to check whether you
+                    have entered the details correctly you can click on the link with the defined bucket and it will show added
+                    details. You can come back to the previous adding bucket page by clicking on the back button provided or if
+                    needed to edit the bucket you can click on the "Edit" link on the top of the View bucket Page. </p>
+
+
+</body>
+</html>

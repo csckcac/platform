@@ -1,0 +1,137 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:axis2="http://services.service.activity.publisher.data.bam.carbon.wso2.org" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ax27="http://config.service.activity.publisher.data.bam.carbon.wso2.org/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http1="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.service.activity.publisher.data.bam.carbon.wso2.org">
+    <wsdl:documentation>ActivityPublisherAdmin</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax28="http://config.service.activity.publisher.data.bam.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+            <xs:import namespace="http://config.service.activity.publisher.data.bam.carbon.wso2.org/xsd"/>
+            <xs:element name="getEventingConfigDataResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax27:EventingConfigData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Exception" nillable="true" type="xs:anyType"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="Exception">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="Exception" nillable="true" type="ns1:Exception"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="configureEventing">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="eventingConfigData" nillable="true" type="ax27:EventingConfigData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://config.service.activity.publisher.data.bam.carbon.wso2.org/xsd">
+            <xs:complexType name="EventingConfigData">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="XPathExpression" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="XPathExpressions" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="enableEventing" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="enableMessageDumping" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="enableMessageLookup" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="messageThreshold" type="xs:int"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="configureEventingRequest">
+        <wsdl:part name="parameters" element="ns1:configureEventing"/>
+    </wsdl:message>
+    <wsdl:message name="Exception">
+        <wsdl:part name="parameters" element="ns1:Exception"/>
+    </wsdl:message>
+    <wsdl:message name="getEventingConfigDataRequest"/>
+    <wsdl:message name="getEventingConfigDataResponse">
+        <wsdl:part name="parameters" element="ns1:getEventingConfigDataResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="ActivityPublisherAdminPortType">
+        <wsdl:operation name="configureEventing">
+            <wsdl:input message="axis2:configureEventingRequest" wsaw:Action="urn:configureEventing"/>
+            <wsdl:fault message="axis2:Exception" name="Exception" wsaw:Action="urn:configureEventingException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getEventingConfigData">
+            <wsdl:input message="axis2:getEventingConfigDataRequest" wsaw:Action="urn:getEventingConfigData"/>
+            <wsdl:output message="axis2:getEventingConfigDataResponse" wsaw:Action="urn:getEventingConfigDataResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="ActivityPublisherAdminSoap11Binding" type="axis2:ActivityPublisherAdminPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="configureEventing">
+            <soap:operation soapAction="urn:configureEventing" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap:fault use="literal" name="Exception"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getEventingConfigData">
+            <soap:operation soapAction="urn:getEventingConfigData" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="ActivityPublisherAdminSoap12Binding" type="axis2:ActivityPublisherAdminPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="configureEventing">
+            <soap12:operation soapAction="urn:configureEventing" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="Exception">
+                <soap12:fault use="literal" name="Exception"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getEventingConfigData">
+            <soap12:operation soapAction="urn:getEventingConfigData" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="ActivityPublisherAdminHttpBinding" type="axis2:ActivityPublisherAdminPortType">
+        <http1:binding verb="POST"/>
+        <wsdl:operation name="configureEventing">
+            <http1:operation location="configureEventing"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="configureEventing"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getEventingConfigData">
+            <http1:operation location="getEventingConfigData"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="getEventingConfigData"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getEventingConfigData"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="ActivityPublisherAdmin">
+        <wsdl:port name="ActivityPublisherAdminHttpsSoap11Endpoint" binding="axis2:ActivityPublisherAdminSoap11Binding">
+            <soap:address location="https://192.168.2.3:9443/services/ActivityPublisherAdmin.ActivityPublisherAdminHttpsSoap11Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="ActivityPublisherAdminHttpsSoap12Endpoint" binding="axis2:ActivityPublisherAdminSoap12Binding">
+            <soap12:address location="https://192.168.2.3:9443/services/ActivityPublisherAdmin.ActivityPublisherAdminHttpsSoap12Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="ActivityPublisherAdminHttpsEndpoint" binding="axis2:ActivityPublisherAdminHttpBinding">
+            <http1:address location="https://192.168.2.3:9443/services/ActivityPublisherAdmin.ActivityPublisherAdminHttpsEndpoint/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

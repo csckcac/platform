@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Jaggery - Delicious Javascript</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+        }
+    </style>
+    <link href="../css/prettify.css" rel="stylesheet">
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="../images/favicon.ico">
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72"
+          href="../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114"
+          href="../images/apple-touch-icon-114x114.png">
+</head>
+
+<body>
+
+<%
+include('/includes/topnavi.jag');
+%>
+
+<div class="container-fluid" style="width: 960px; margin: auto;">
+    <div class="row">
+        <div class="span16">
+            <div class="page-header">
+                <h1>
+                    Documentation
+                    <small>API documentation for Jaggery.js</small>
+                </h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="span4">
+            <div class="well">
+                <%
+                include('/includes/navi.jag');
+                %>
+
+            </div>
+
+        </div>
+        <div class="span12">
+            <div class="content" id="email" name="email">
+                <h3>Database</h3>
+
+        <pre class="prettyprint linenums">
+&lt%
+var db = new Database("jdbc:h2:demo", "admin", "admin");
+
+db.query("CREATE TABLE demo(name varchar(255), address varchar(255))");
+
+db.query("INSERT INTO demo VALUES(1, 'WSO2'), (2, '59 Flower Rd');");
+
+var result = db.query("SELECT * FROM demo");
+
+print(result);
+%&gt
+</pre>
+                <%
+                var sesCode = '&lt%'
+                + '\n var db = new Database("jdbc:h2:demo", "admin", "admin");'
+                + '\n '
+                + '\n db.query("CREATE TABLE demo(name varchar(255), address varchar(255));")'
+                + '\n '
+                + '\n db.query("INSERT INTO demo VALUES(1, \'WSO2\'), (2, \'59 Flower Rd\');");'
+                + '\n '
+                + '\n  var result = db.query("SELECT * FROM demo");'
+                + '\n print(result);'
+                + '\n %&gt';
+
+                var codeSnip = encodeURIComponent(sesCode);
+                var urlString = '../tryitframe.jag?code='+codeSnip;
+
+                include('/includes/tryit_but.jag');
+                %>
+
+<div id="pageLinks">
+<a class="navilink" href="#overview">Overview</a>
+<a class="navilink" href="#members">Members</a>
+<a class="navilink" href="#operations">Operations</a>
+</div>
+ <section id="overview">
+
+
+<h4>Overview</h4>
+<p class="description">The Database Object is used to connect to a relational database through jaggery and provides most of the default functionality
+and manipulation through the below members / functions.</p>
+
+</section>
+
+<section id="members">
+<h4>Members</h4>               
+                <table class="clsStd member-table">
+
+                    <tbody>
+
+                    <tr>
+
+                        <th>Member</th>
+                        <th>Type</th>
+                        <th>Description</th>
+
+                    </tr>
+
+
+                       <tr>
+
+                        <td><code>autoCommit</code></td>
+                        <td>Boolean</td>
+                        <td> <pre class="prettyprint">db.autoCommit = true</pre>
+                            Set auto commit in a transaction
+
+                        </td>
+
+
+                    </tr>
+
+
+
+                    </tbody>
+                </table>
+
+    </section>
+                <section id="operations">
+                                       <h4>Operations</h4>
+
+                    <table class="ClsStd operations-table">
+                        <tbody>
+                        <tr>
+                            <th>Operation</th>
+                            <th>Returns</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+
+                        <td><code>Database(connectionUrl, username, password)</code></td>
+                        <td>None</td>
+                        <td><pre class="prettyprint">var db = new Database("jdbc:h2:demo", "admin", "admin");</pre>
+                            Returns Database object for database communication
+                            <br>
+
+                        </td>
+
+                    </tr>
+                    <tr>
+
+                        <td><code>query(query, callback)</code></td>
+                       <td>String</td>
+                        <td>
+                            <pre class="prettyprint">db.query("SELECT * FROM myTable", function(results) {})</pre>
+
+                            Ruery result will be returned to the callback
+
+                        </td>
+
+                    </tr>
+                    <tr>
+
+                        <td><code>savePoint(savepoint)</code></td>
+                        <td>None</td>
+                        <td>creates a save point</td>
+
+                    </tr>
+                    <tr>
+
+                        <td><code>releasePoint(savepoint)</code></td>
+                        <td>None</td>
+                        <td>release a save point</td>
+
+                    </tr>
+                    <tr>
+
+                        <td><code>commit()</code></td>
+                        <td>None</td>
+                        <td><pre class="prettyprint">db.commit()</pre>
+                            SQL transaction commit
+
+                        </td>
+
+
+                    </tr>
+                    <tr>
+
+                        <td><code>rollback()</code></td>
+                        <td>None</td>
+                        <td>
+                              SQL transaction rollback
+                            <pre class="prettyprint">db.rollback()</pre>
+
+
+                        </td>
+
+
+                    </tr>
+                        </tbody>
+                    </table>
+
+                </section>
+            </div>
+            <br>
+            <br>
+        </div>
+
+    </div>
+    <%
+    include('/includes/footer.jag');
+    %>
+
+</div>
+
+<!-- /container -->
+<%
+include('/includes/scripts.jag')
+%>
+	<script>	
+		
+		$(document).ready(function(){
+        $('#rdb').toggleClass('active')
+		$('#docs').addClass('active')
+        })
+	</script>
+</body>
+</html>

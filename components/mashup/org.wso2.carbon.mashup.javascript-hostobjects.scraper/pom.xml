@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ ~ Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ Licensed under the Apache License, Version 2.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~      http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>org.wso2.carbon</groupId>
+        <artifactId>mashup</artifactId>
+        <version>4.0.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>org.wso2.carbon.mashup.javascript.hostobjects.scraper</artifactId>
+    <packaging>bundle</packaging>
+    <name>WSO2 Carbon - Scraper Hostobject</name>
+    <url>http://wso2.org</url>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.webharvest.wso2</groupId>
+            <artifactId>webharvest-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.saxon.wso2</groupId>
+            <artifactId>saxon</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.htmlcleaner.wso2</groupId>
+            <artifactId>htmlcleaner</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>rhino.wso2</groupId>
+            <artifactId>js</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.mashup.utils</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.mashup.jsservices</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wso2.wsf.javascript</groupId>
+            <artifactId>axiom-e4x</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.utils</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.logging</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom.wso2</groupId>
+            <artifactId>axiom</artifactId>
+        </dependency>
+
+        <!-- STAX implementation used in WSAS -->
+        <dependency>
+            <groupId>org.apache.geronimo.specs.wso2</groupId>
+            <artifactId>geronimo-stax-api_1.0_spec</artifactId>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Name>${project.artifactId}</Bundle-Name>
+                        <Bundle-Activator>
+                            org.wso2.carbon.mashup.javascript.hostobjects.scraper.internal.Activator
+                        </Bundle-Activator>
+                        <Export-Package>
+                            org.wso2.carbon.mashup.javascript.hostobjects.scraper.*,
+                        </Export-Package>
+                        <Import-Package>
+                            !org.wso2.carbon.mashup.javascript.hostobjects.scraper.*,
+                            org.wso2.carbon.mashup.utils.*,
+                            org.apache.axiom.*; version="${axiom.osgi.version.range.mashup}",
+                            org.apache.commons.logging.*;version="${commons-logging.osgi.version.mashup}",
+                            org.wso2.carbon.utils.*,
+                            org.apache.commons.httpclient.*,
+                            org.mozilla.javascript.*,
+                            org.w3c.dom.*,
+                            org.wso2.javascript.*,
+                            org.wso2.carbon.*,
+                            javax.xml.stream.*,
+                            org.webharvest.*,
+                            *;resolution:=optional
+                        </Import-Package>
+                        <DynamicImport-Package>*</DynamicImport-Package>
+                        <JavaScript-HostObject>
+                            org.wso2.carbon.mashup.javascript.hostobjects.scraper.ScraperHostObject
+                        </JavaScript-HostObject>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

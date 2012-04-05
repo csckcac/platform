@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  ~  Copyright (c) 2009, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  -->
+
+<!DOCTYPE html
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+      <meta content="text/html; charset=iso-8859-1" http-equiv="content-type"/>
+      <title>WSO2 CSG v1.0.0-alpha release</title>
+  </head>
+  <body>
+  <div id="header">
+</div>
+
+<div id="main-content">
+<h1>The WSO2 Cloud Services Gateway (CSG) 1.0.0-alpha release</h1>
+
+<p>
+    The WSO2 CSG team is pleased to announce the release of version 1.0.0-alpha of
+    the Cloud Services Gateway(CSG).
+</p>
+
+<p>
+    WSO2 Cloud Services Gateway(or CSG for short) is a framework that can be used to
+    expose a private service that is behind a firewall to the outside world in a
+    secure manner. The framework consists of CSG server and the CSG Agent component.
+    CSG Agent component should be installed in a service hosting product( such as
+    WSO2 Application Server).
+</p>
+
+<p>
+    WSO2 CSG 1.0.0-alpha is developed on top of the revolutionary
+    <a href="http://wso2.org/projects/carbon">WSO2 Carbon platform</a>,
+    an OSGi based framework that provides seamless modularity to your SOA via
+    componentization.</p>
+
+<p>
+    You can download this distribution from <a href="http://dist.wso2.org/downloads/csg">
+    http://wso2.org/downloads/csg</a> and give it a try.</p>
+
+<h2>How to Run </h2>
+<ol>
+  <li>Extract the downloaded zip</li>
+  <li>Go to the bin directory in the extracted folder</li>
+  <li>Run the wso2server.sh or wso2server.bat as appropriate</li>
+  <li>If you need to start the OSGi console with the server use the property
+    -DosgiConsole when starting the server. The INSTALL.txt file found on the
+    installation directory will give you a comprehensive set of options and
+    properties that can be passed into the startup script</li>
+  <li>To publish a service, login to a service hosting product which has the CSG Agent installed</li>
+  </ol>
+
+<h2>Key Features of WSO2 CSG</h2>
+<ul>
+    <li>Ability to expose a private SOAP service securely and configurable manner</li>
+    <li>Ability to expose a private REST service securely and configurable manner</li>
+    <li>Ability to expose a private JSON service securely and configurable manner</li>
+    <li>Multi-tenancy support(Ability to expose a private service with same name by two different
+    tenants)</li>
+    <li>Ability to configure dead messages clean up task</li>
+</ul>
+
+<h2>Known Issues</h2>
+<p>
+    All the open issues pertaining to WSO2 CSG 1.0.0-alpha are reported at following
+    locations:
+</p>
+
+<ul>
+    <li>
+        <a href="https://wso2.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10664">
+            Open CSG issues
+        </a>
+    </li>
+    <li><a href="https://wso2.org/jira/secure/IssueNavigator.jspa?requestId=10524">
+        Underling routing engine issues</a></li>
+    <li><a href="https://wso2.org/jira/secure/IssueNavigator.jspa?requestId=10525">
+        Base framework issues</a></li>
+</ul>
+
+    <h2>Release 1.0.0-alpha RC4</h2>
+    <p>This release contains a number of bug fixes.</p>
+    <p>ChangeLog</p>
+    <ol>
+        <li>CARBON-12603 - Added a 'What's this ?' help button which gives more information about
+            CSG server URL.</li>
+        <li>CARBON-12630 - CSG Agent should not allow users to delete a server when there are services
+            published onto it.</li>
+        <li>CARBON-12607 - Added a link to the tool section for the EPRs of the CSG service.</li>
+        <li>CARBON-11771 - Added registry transaction into places where registry API is used.</li>
+        <li>CARBON-12404 - Now no custom mediators can be deployed on CSG. This will avoid someone stealing
+            the messages in the thrift buffers</li>
+        <li>CARBON-12485 - Removed the unwanted features such as VFS, JMS etc..</li>
+        <li>CARBON-12604 - Fixed the CSG server to have a default user, 'csguser'.</li>
+        <li>CARBON-12577 - Fixed the CSG user guide.</li>
+    </ol>
+
+    <h2>Release 1.0.0-alpha RC3</h2>
+    <p>This release contains a number of bug fixes and documentation for the CSG product.</p>
+    <p>ChangeLog</p>
+    <ol>
+        <li>CARBON-12428 - Proxy is now created with the back end WSDL.</li>
+        <li>CARBON-12421 - License file is fixed.</li>
+        <li>CARBON-12422 - Updated README.txt to match with INSTALL.txt.</li>
+        <li>CARBON-12417 - Display a warning for Try it and WSDL tools if the remote CSG server is down.</li>
+        <li>CARBON-12426 - Added a mechanism to re-deploy the CSG service if remote server dies.</li>
+        <li>CARBON-12483 - Fixed not to assume localhost for thrift client always.</li>
+        <li>CARBON-12416 - Fixed the CSG product theme and logo.</li>
+        <li>CARBON-12476 - Fixed the polling task to shutdown properly.</li>
+        <li>CARBON-12477 - Fixed RESTful service publishing</li>
+    </ol>
+
+    <h2>Release 1.0.0-alpha RC2</h2>
+    <p>This release provides the CSG Stratos service.</p>
+    <p>ChangeLog</p>
+    <ol>
+        <li>CARBON-12352 - Back end errors/exception has not transferred to front end properly.</li>
+        <li>CARBON-12353 - Do not suspend the public CSG proxy endpoint in any case.</li>
+        <li>CARBON-12357 - Enable CSG transport sender dynamically in Stratos environment.</li>
+        <li>CARBON-12369 - Increase Thrift client time out to suite a Stratos deployment. </li>
+    </ol>
+
+    <h2>Release 1.0.0-alpha RC1</h2>
+    <p>This is the first public availability of WSO2 Cloud Services Gateway</p>
+
+<h2>How You Can Contribute</h2>
+    <h3>
+      Mailing Lists
+    </h3>
+    <p>
+      Join our mailing list and correspond with the developers directly.
+    </p>
+    <ul>
+      <li>
+        Developer List : <a href="mailto:carbon-dev@wso2.org">carbon-dev@wso2.org</a>
+        | <a href="mailto:carbon-dev-request@wso2.org?subject=subscribe">Subscribe</a>
+        | <a href="http://wso2.org/mailarchive/carbon-dev/">Mail Archive</a>
+      </li>
+     </ul>
+    <h3>
+      Reporting Issues
+    </h3>
+    <p>
+      We encourage you to report issues, documentation faults and feature requests regarding
+      WSO2 CSG or in the Carbon base framework through the public
+      <a href="http://www.wso2.org/jira/browse/CARBON">Carbon JIRA</a>.
+    </p>
+<h2>Support</h2>
+<p>
+    We are committed to ensuring that your enterprise middleware deployment is
+    completely supported from evaluation to production. Our unique approach
+    ensures that all support leverages our open development methodology and is
+    provided by the very same engineers who build the technology.
+</p>
+<p>
+    For more details and to take advantage of this unique opportunity please
+    visit <a href="http://wso2.com/support">http://wso2.com/support</a>.
+</p>
+
+<p><i>-- The WSO2 CSG Team --</i> </p>
+</div>
+  </body>
+</html>

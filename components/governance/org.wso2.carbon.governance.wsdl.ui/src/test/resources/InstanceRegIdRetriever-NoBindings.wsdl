@@ -1,0 +1,77 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:ns="http://instanceid.services.core.carbon.wso2.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="http://instanceid.services.core.carbon.wso2.org">
+    <wsdl:documentation>InstanceRegIdRetriever</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://instanceid.services.core.carbon.wso2.org">
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Exception" nillable="true" type="xs:anyType" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="Exception">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="Exception" nillable="true" type="ns:Exception" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="retrieveRegIdResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="retrieveRegIdRequest" />
+    <wsdl:message name="retrieveRegIdResponse">
+        <wsdl:part name="parameters" element="ns:retrieveRegIdResponse" />
+    </wsdl:message>
+    <wsdl:message name="Exception">
+        <wsdl:part name="parameters" element="ns:Exception" />
+    </wsdl:message>
+    <wsdl:portType name="InstanceRegIdRetrieverPortType">
+        <wsdl:operation name="retrieveRegId">
+            <wsdl:input message="ns:retrieveRegIdRequest" wsaw:Action="urn:retrieveRegId" />
+            <wsdl:output message="ns:retrieveRegIdResponse" wsaw:Action="urn:retrieveRegIdResponse" />
+            <wsdl:fault message="ns:Exception" name="Exception" wsaw:Action="urn:retrieveRegIdException" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:service name="InstanceRegIdRetriever">
+        <wsdl:port name="InstanceRegIdRetrieverHttpsSoap11Endpoint" binding="ns:InstanceRegIdRetrieverSoap11Binding">
+            <soap:address location="https://10.100.1.125:9443/services/InstanceRegIdRetriever.InstanceRegIdRetrieverHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="InstanceRegIdRetrieverHttpSoap11Endpoint" binding="ns:InstanceRegIdRetrieverSoap11Binding">
+            <soap:address location="http://10.100.1.125:9763/services/InstanceRegIdRetriever.InstanceRegIdRetrieverHttpSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="InstanceRegIdRetrieverHttpsSoap12Endpoint" binding="ns:InstanceRegIdRetrieverSoap12Binding">
+            <soap12:address location="https://10.100.1.125:9443/services/InstanceRegIdRetriever.InstanceRegIdRetrieverHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="InstanceRegIdRetrieverHttpSoap12Endpoint" binding="ns:InstanceRegIdRetrieverSoap12Binding">
+            <soap12:address location="http://10.100.1.125:9763/services/InstanceRegIdRetriever.InstanceRegIdRetrieverHttpSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="InstanceRegIdRetrieverHttpEndpoint" binding="ns:InstanceRegIdRetrieverHttpBinding">
+            <http:address location="http://10.100.1.125:9763/services/InstanceRegIdRetriever.InstanceRegIdRetrieverHttpEndpoint/" />
+        </wsdl:port>
+        <wsdl:port name="InstanceRegIdRetrieverHttpsEndpoint" binding="ns:InstanceRegIdRetrieverHttpBinding">
+            <http:address location="https://10.100.1.125:9443/services/InstanceRegIdRetriever.InstanceRegIdRetrieverHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

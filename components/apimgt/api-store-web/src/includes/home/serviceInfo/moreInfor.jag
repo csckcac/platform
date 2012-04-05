@@ -1,0 +1,12 @@
+<div class="content-box" id="moreInformation">
+    <ul class="content-list template tmpl-moreInformation">
+        <li>
+            <div class="content-label">WSDL:</div>
+            <div id="wsdl" class="content-value">Service Name</div>
+        </li>
+        <li>
+            <div class="content-label">WSDL Version:</div>
+            <div id="wsdlversion" class="content-value">0</div>
+        </li>             
+    </ul>
+</div>

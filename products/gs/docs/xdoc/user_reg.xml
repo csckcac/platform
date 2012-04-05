@@ -1,0 +1,73 @@
+<!--
+  ~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <body>
+        <p>[<a href="http://wso2.org/downloads/gadget-server">Download</a>]
+            | [<a href="index_docs.html">Documentation Home</a>] | [<a href="release_notes.html">Release Note</a>]
+        </p>
+        <div id="main-content">
+            <h1>User Registration</h1>
+            <p>User Registration in Gadget server can be done in several ways. The user is given an option to
+                create new user accounts, use their OpenID or Infocard accounts to register with the system.
+            </p>
+            <a name="unpw" />
+            <h2>Username / Password based</h2>
+            <p>The traditional way in registering with the system. the users can easily create a new account with the
+                system
+                and sign in.
+                <br />
+                <br />
+                <img alt="register" src="images/reg-1.png" />
+                <br />
+                <br />
+                <img alt="register" src="images/reg-2.png" />
+                <br />
+                <br />
+                <img alt="register" src="images/reg-3.png" />
+            </p>
+            <a name="openid" />
+            <h2>OpenID Based</h2>
+            <p>WSO2 Gadget server also provides OpenID as an authentication mechanism. Users can register to the system
+                using their OpenID
+                accounts. Users with OpenIDs will be mapped with user accounts in the gadget server at the first
+                login attempt. From then on the user can use OpenID for authentication.
+                <br />
+                <br />
+                <img alt="register" src="images/reg-1.png" />
+                <br />
+                <br />
+                <img alt="register" src="images/oid-reg-1.png" />
+                <br />
+                <br />
+                <img alt="register" src="images/oid-reg-2.png" />
+                <br />
+                <br />
+                <img alt="register" src="images/reg-3.png" />
+            </p>
+            <a name="infocard" />
+            <h2>Infocard Based</h2>
+            <p>For windows based environments (With Internet Explorer) WSO2 Gadget server
+provides Infocard based authentication. The steps are as follows.<br />
+                <br />
+                <img alt="register" src="images/reg-1.png" />
+                <br />
+                <br />
+                <img alt="register" src="images/info-reg-1.png" />
+            </p>
+        </div>
+    </body>
+</html>

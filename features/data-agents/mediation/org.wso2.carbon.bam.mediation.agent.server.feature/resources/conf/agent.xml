@@ -1,0 +1,20 @@
+<BAMDataAgent>
+<!-- ThreadPool has been implemented using ThreadPoolExecutor, following parameters can be used to configure it-->
+	<ThreadPool>
+		<TaskQueue>200</TaskQueue>
+		<CorePool>30</CorePool>
+		<MaxPool>250</MaxPool>
+	</ThreadPool>
+<!-- Maximum no of events in the queue -->
+	<EventQueue>20000</EventQueue>
+<!-- Connection pool configuration parameters (apache commons-pool parameters)-->
+	<ConnectionPool>
+<!-- In product mode this value should be equal to MaxPoolSize, If you don't specify this value, this value will be set from the MaxPoolSize. In stratos we should specify better value for this. -->
+		<MaxIdle>250</MaxIdle>
+<!--Specify, how long the eviction thread should sleep before examining idle objects -->
+		<TimeBetweenEvictionRunsMillis>5500</TimeBetweenEvictionRunsMillis> 
+<!-- Specifies the minimum amount of time that an object may sit idle in the pool before it is eligible for eviction -->
+		<MinEvictableIdleTimeMillis>5000</MinEvictableIdleTimeMillis> 
+	</ConnectionPool>
+
+</BAMDataAgent>

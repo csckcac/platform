@@ -1,0 +1,26 @@
+<analyzerConfiguration>
+<analyzerSequence name="testSequence">
+    <frequencyInSecs>60</frequencyInSecs>
+    <!--<analyzer class="org.wso2.carbon.bam.analyzer.test.SummaryAnalyzer1"/>
+    <analyzer class="org.wso2.carbon.bam.analyzer.test.SummaryAnalyzer2"/>-->
+    <!--<trigger sample="([[count="10"]? interval="1000"] | [cron="0 * 1 * * ?"] | [once=(true | false)])"/>-->
+    <trigger count="1" interval="100" />
+    <!--<trigger cron="* * * * * ? *" />-->
+    <analyzers>
+	<get name="WorkFlowId_NodeId">
+		<index name="workFlowId" start="ORDER" end="ORDER"/>
+		<index name="nodeId" start="AS" end="ESB"/>
+		<!--<groupBy index="nodeId"/>-->
+		<granularity index="timeStamp" type="day"/>
+	</get>
+	<lookup name="Event"/>
+	<aggregate>
+		<measure name="requestCount" aggregationType="SUM"/>
+		<measure name="responseCount" aggregationType="SUM"/>
+		<measure name="maxResponeTime" aggregationType="AVG"/>
+	</aggregate>
+	<put name="TestCF"/>
+	<log/>
+    </analyzers>
+</analyzerSequence>
+</analyzerConfiguration>

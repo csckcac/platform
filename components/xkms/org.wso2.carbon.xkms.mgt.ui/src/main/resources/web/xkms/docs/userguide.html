@@ -1,0 +1,246 @@
+<!--
+  ~ Copyright 2008 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"></meta>
+    <title>XKMS - User Guide</title>
+    <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all"/>
+</head>
+
+<body style="font-family: Times New Roman,Times,serif; font-size: 12pt;">
+<h1>XKMS Implementation and Configurations</h1>
+
+
+<p>WSO2 Carbon ships with an in built XKMS trust web service which is being built on top of XKMS
+   specification and consists of 5 services which can be used to simplify key management. Following
+   is an description about the implementation and configuration of XKMS trust web service.</p>
+
+<p><strong>Contents</strong></p>
+
+<div class="toc">
+    <ul>
+        <li><a href="#introduction">Introduction</a>
+        </li>
+        <li><a href="#implementation">Implementation</a>
+        </li>
+        <li><a href="#configuration">Configuration</a>
+        </li>
+    </ul>
+</div>
+<a name="introduction"></a>
+
+<h3><strong>Introduction</strong></h3>
+<p>XML Key Management Service Specification (a.k.a. XKMS) defines a standard way of
+generating key pairs, storing public key information and retrieving public
+key information. The XKMS services can be exposed as Web services which allow
+other applications to delegate some of the key information processing to such
+services. That allows the client applications of XKMS services to operate
+without worrying about the Public Key Infrastructure which the XKMS services
+might be using. XKMS consists of two components. Namely:</p>
+<ul>
+    <li>Protocol Exchanges
+        <br/>
+
+        Consist of sequences of request/response pairs. This will focus on synchronous,
+        asynchronous
+        and two-phase request protocols.
+    </li>
+    <li>Key Information Service (X-KISS)
+        This set of services allows the client application to retrieve information
+        about a public key. This has the following operations,
+        <ol type="1">
+            <li>Locate</li>
+            <li>Validate</li>
+        </ol>
+    </li>
+    <li>Key Registration Service. (X-KRISS)
+        This set of services allows the client application to register the public
+        key of a client generated key-pair, retrieve the private key of a
+        server generated key-pair, revoke a registered public key and recover
+        a private key issued by the server. This has the following operations,
+        <ol type="1">
+            <li>Register</li>
+            <li>Reissue</li>
+            <li>Revoke</li>
+            <li>Recover</li>
+        </ol>
+    </li>
+</ul>
+<a name="implementation"></a>
+
+<h3><strong>Implementation</strong></h3>
+
+<p>WS02 XKMS Implementation allows the users to expose a Java key store via the following
+   XKMS operations.</p>
+<ul>
+    <li><strong>Registration of a Key Pair</strong><br/>
+
+
+        This allows the client to register a public key with the XKMS service.
+        The XKMS service uses the metadata specified in
+        the Register request to a X509Certificate using the given public key
+        and stores it in underlying Java keystore
+        as a X509Certificate. If a public key is not specified in the
+        Register request, the server will generate a RSA
+        key pair and will send the private key back to the client in an encrypted block.
+
+        Please refer to XKMS sample to see how to use an XKMS client to register a public
+        key with an XKMS server.
+    </li>
+    <li><strong>Reissueing of a X509Certificate</strong><br/>
+
+
+        This allows the client to reissue a X509Certificate with new credentials specified
+        in Reissue request. For example, the client may request the server to reissue a
+        X509Certificate with a new validity interval. However the
+        specified credentials are only advisory to the service.
+
+        Please refer to XKMS sample to see how to use a XKMS client to send a reissue
+        request to a XKMS Service.
+
+    </li>
+    <li><strong>Recovering a Key Pair</strong><br/>
+
+
+        This allows the client to recover the key (and the private key for server-generated
+        key pairs)
+        if it is lost. The private key will be presented inside an encrypted bock.
+
+        Please refer to XKMS sample to see how to use a XKMS client to send a recover
+        request
+        to a XKMS service.
+
+    </li>
+    <li><strong>Locating a Public Key / X509Certificate</strong><br/>
+
+
+        This allows the client to use a XKMS service to locate a Public key or
+        X509Certificate.
+        The XKMS service may reply with
+        more than one Public keys or X509Certificates if the query has multiple matches.
+        the client may use the alias
+        of the key as the key name in the query.
+
+        Please refer to XKMS sample to see how to use a XKMS client to send a locate request
+        to a XKMS service.
+
+    </li>
+    <li><strong>Validating a Public key or a X509Certificate</strong><br/>
+
+
+        This allows the client to validate a Public key or a X509Certificate using the XKMS
+        service.
+        The XKMS service will
+        reply whether the Public key or the X509Certificate is trustworthy.
+
+        Please refer to XKMS sample to see how to use a XKMS client to send a validate
+        request to the
+        XKMS service.
+
+    </li>
+</ul>
+<a name="configuration"></a>
+
+<h3><strong>Configuration</strong></h3>
+<p>The XKMS service can be configured by editing the following parameters for the service as
+shown in figure 1.</p>
+<ul>
+    <li><strong>
+        Server authentication code</strong><br/>
+
+        Specifies the authentication code used to authenticate client requests.
+    </li>
+    <li><strong>
+        Key store location</strong><br/>
+
+        Specifies the location of the Java keystore to be used as the key store of XKMS
+        service.
+    </li>
+    <li><strong>
+        Key store password</strong><br/>
+
+        Specifies the password of the above keystore.
+    </li>
+    <li><strong>
+        Server certificate alias</strong><br/>
+
+        Specifies the alias of XKMS server certificate. This will be used to sign
+        entire outgoing XKMS messages.
+    </li>
+    <li><strong>
+        Server key password</strong><br/>
+
+        Specifies the private key password of the service. This will be used to sign
+        entire outgoing XKMS messages.
+    </li>
+    <li><strong>
+        Issuer certificate alias</strong><br/>
+
+        Specifies the alias of the the Issuer certificate which will be used as
+        issuer certificate when generating
+        certificates for public keys specified in Register requests.
+    </li>
+    <li><strong>
+        Issuer key password</strong><br/>
+
+        Specifies the password of Issuer private key. This will be used when generating
+        certificates for public keys
+        specified in Register requests.
+    </li>
+
+    <li><strong>
+        Default expiration interval</strong><br/>
+
+        Specifies the default validity interval of generated certificates. Client can
+        request to
+        limit the validity
+        period to a value less than the default but can not increase it more than the
+        default period.
+    </li>
+    <li><strong>
+        Default private key password</strong><br/>
+
+        Specifies the password to be used to store server-generated private keys.
+    </li>
+    <li><strong>
+        Enable persistence</strong><br/>
+
+        Sets the flag to enable persistence. If set, it will persist the Java keystore when
+        the
+        keys are uploaded.
+    </li>
+</ul>
+<p><img alt="" src="../images/xkms1.png"/></p>
+
+<p>Figure 1: XKMS Configuration</p>
+
+<h3>Following are the configuration values provided by default:</h3>
+<ul>
+    <li>Server authentication code: secret</li>
+    <li>Key store location: keystore.jks</li>
+    <li>Key store password: password</li>
+    <li>Server certificate alias: bob</li>
+    <li>Server key password: password</li>
+    <li>Issuer certificate alias: alice</li>
+    <li>Issuer key password: password</li>
+    <li>Default expiration interval: 365</li>
+    <li>Default private key password: testing</li>
+    <li>Enable persistence: true</li>
+</ul>
+</body>
+</html>

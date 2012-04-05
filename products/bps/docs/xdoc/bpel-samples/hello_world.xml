@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>@product.name@ - Sample Guide - HelloWorld</title>
+        <link href="../css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+        <h1>Sample Guide - HelloWorld</h1>
+        <h3>Table of Content</h3>
+        <ul>
+            <li><a href="#objective">Objective</a></li>
+            <li><a href="#prerequisites">Prerequisites</a></li>
+            <li><a href="#overallIdea">Overall Idea</a></li>
+        </ul>
+
+        <br />
+        <h3><a name="objective">Objective</a></h3>
+        <p>Explains the basic constructs like &lt;import/&gt;, &lt;partnerLinks/&gt;, &lt;variables/&gt;.</p>
+        <br />
+        <h3><a name="prerequisites">Prerequisites</a></h3>
+        <ul>
+            <li>Log in into BPS server admin console.</li>
+            <li>Under Business Processes -&gt; Add BPEL.</li>
+            <li>Upload the HelloWorld2.zip , (all samples are located at our <a href="http://svn.wso2.org/repos/wso2/branches/carbon/3.2.0/products/bps/2.1.0/modules/samples/product/src/main/resources/bpel/2.0/">sample repository</a>.)</li>
+            <li>Under the Business Processes -&gt; Processes.</li>
+            <li>Under the WSDL details widget -&gt; Create instance</li>
+        </ul>
+        <br />
+        <h3><a name="overallIdea">Overall Idea</a></h3>
+        <p>If we look at the basic bpel process, we can observe some general bpel constructs which are compulsory to any process. eg - &lt;import/&gt;, &lt;partnerLinks/&gt;, &lt;variables/&gt;. Let's take a look at on a general structure of a bpel process.</p>
+
+        <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>process</span>
+        <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>ProcessName</span><span style='color:#0000e6; '>"</span>
+        <span style='color:#274796; '>targetNamespace</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>http://wso2.org/bps/samples</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>import</span> <span style='color:#274796; '>namespace</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>http://wso2.org/bps/samples/wsdl</span><span style='color:#0000e6; '>"</span>
+            <span style='color:#274796; '>location</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>ProcessService.wsdl</span><span style='color:#0000e6; '>"</span>
+            <span style='color:#274796; '>importType</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>http://schemas.xmlsoap.org/wsdl/</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>import</span> <span style='color:#274796; '>namespace</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>http://wso2.org/bps/samples/schema</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>location</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>schema.xsd</span><span style='color:#0000e6; '>"</span>
+            <span style='color:#274796; '>importType</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>http://www.w3.org/2001/XMLSchema</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>partnerLinks</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>partnerLink</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>PartnerLinkName</span><span style='color:#0000e6; '>"</span>
+                     <span style='color:#666616; '>xmlns</span><span style='color:#800080; '>:</span><span style='color:#074726; '>ns01</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#666616; '>http</span><span style='color:#800080; '>:</span><span style='color:#800000; font-weight:bold; '>//</span><span style='color:#5555dd; '>schemas.xmlsoap.org</span><span style='color:#40015a; '>/wsdl/</span><span style='color:#0000e6; '>"</span>
+                     <span style='color:#274796; '>partnerLinkType</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>ns01:ProcessPartnerlinkType</span><span style='color:#0000e6; '>"</span>
+                     <span style='color:#274796; '>partnerRole</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>myRole</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+    <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>partnerLinks</span><span style='color:#a65700; '>></span>
+
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>variables</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>variable</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>VarName</span><span style='color:#0000e6; '>"</span>
+                  <span style='color:#666616; '>xmlns</span><span style='color:#800080; '>:</span><span style='color:#074726; '>ns01</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#666616; '>http</span><span style='color:#800080; '>:</span><span style='color:#800000; font-weight:bold; '>//</span><span style='color:#5555dd; '>schemas.xmlsoap.org</span><span style='color:#40015a; '>/wsdl/</span><span style='color:#0000e6; '>"</span>
+                  <span style='color:#274796; '>messageType</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>ns01:ProcessOperationResponse</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+    <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>variables</span><span style='color:#a65700; '>></span>
+
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>sequence</span><span style='color:#a65700; '>></span>
+        ...
+    <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>sequence</span><span style='color:#a65700; '>></span>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>process</span><span style='color:#a65700; '>></span>
+</pre>
+
+        <p>Let's understand what those compulsory elements are.</p>
+
+        <ul>
+            <li>&lt;import/&gt; - 
+                <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>import</span> <span style='color:#274796; '>location</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>HelloWorld2.wsdl</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>namespace</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>http://ode/bpel/unit-test.wsdl</span><span style='color:#0000e6; '>"</span>
+        <span style='color:#274796; '>importType</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>http://schemas.xmlsoap.org/wsdl/</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+</pre>
+                <p>Used to include WSDL and XSD definitions in the BPEL definition.
+                    <br />
+                    <b>Note</b><i> - need to define namespace prefix for the namespace of imported resource in
+                    the BPEL definition in order to refer the imported resources inside BPEL
+                    definition. </i>
+                </p>
+            </li>
+            <br/>
+            <li>&lt;partnerLinks/&gt; -
+                <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>partnerLinks</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>partnerLink</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>helloPartnerLink</span><span style='color:#0000e6; '>"</span>
+                 <span style='color:#274796; '>partnerLinkType</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>test:HelloPartnerLinkType</span><span style='color:#0000e6; '>"</span>
+                 <span style='color:#274796; '>myRole</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>me</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>partnerLinks</span><span style='color:#a65700; '>></span>
+</pre>
+                <p>
+                    This is where the connections to external parties are defined. If there’s any
+                    external interaction, partner link should be defined for each of them. Each partner link has one or two partner link types and roles which are defined in the service WSDL.
+                </p>
+                <p>
+                    For more details on creating partner links and invoking external parties, refer
+                    <a href="http://wso2.org/library/articles/writing-simple-ws-bpel-process-wso2-bps-apache-ode#establish-partner-link">
+                        http://wso2.org/library/articles/writing-simple-ws-bpel-process-wso2-bps-apache-ode#establish-partner-link
+                    </a>
+                </p>
+            </li>
+            <br />
+            <li>&lt;variables/&gt; -
+                <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>variables</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>variable</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>myVar</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>messageType</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>test:HelloMessage</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>variable</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>tmpVar</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>type</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>xsd:string</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>variable</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>tmpDate</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>type</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>xsd:dateTime</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>variables</span><span style='color:#a65700; '>></span>
+</pre>
+                <p>BPEL variable are used to store the state of the process in the run-time. The
+                    type of a variable can be a WSDL message type or XML schema definition.
+                </p>
+                <p>
+                    For more details on defining variables, referring and modifying variables, refer
+                    <a href="http://wso2.org/library/articles/writing-simple-ws-bpel-process-wso2-bps-apache-ode#variable-manipulation">
+                        http://wso2.org/library/articles/writing-simple-ws-bpel-process-wso2-bps-apache-ode#variable-manipulation
+                    </a>
+                </p>
+            </li>
+        </ul>
+    </body>
+</html>

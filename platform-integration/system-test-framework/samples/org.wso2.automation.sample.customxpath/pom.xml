@@ -1,0 +1,83 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <groupId>org.wso2.automation</groupId>
+        <artifactId>samples</artifactId>
+        <version>4.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.wso2.automation</groupId>
+    <artifactId>hello.customXpath</artifactId>
+    <packaging>jar</packaging>
+
+    <name>WSO2 Automation Samples - Custom XPath</name>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.automation</groupId>
+                                    <artifactId>hello.customXpath</artifactId>
+                                    <version>4.0.0-SNAPSHOT</version>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>
+                                        ${project.build.directory}/../../../core/org.wso2.automation.platform.core/src/main/resources/artifacts/ESB/synapseconfig/config8/jars/lib
+                                    </outputDirectory>
+                                    <destFileName>hello.customXpath.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.build.directory}/wars</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>true</overWriteSnapshots>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Fragment-Host>org.wso2.carbon.registry.core</Fragment-Host>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Name>hello.customXpath</Bundle-Name>
+                        <Private-Package>
+                            common.*,
+                            org.wso2.carbon.registry.samples.handler.*,
+                        </Private-Package>
+                        <Import-Package>
+                            org.apache.axiom.om.*,
+                            org.apache.commons.*,
+                            org.apache.synapse.*,
+                            org.jaxen.*,
+                            javax.servlet.http; version=2.4.0,
+                            org.apache.axiom.*; version="${axiom.osgi.version.range}",
+                            javax.xml.namespace.QName,
+                            *;resolution:=optional
+                        </Import-Package>
+                    </instructions>
+
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<project name="WSO2 Business Process Server">
+    <bannerLeft>
+        <name>WSO2 Business Process Server v@product.version@ Documentation</name>
+    </bannerLeft>
+    <body>
+        <links>
+            <item name="WSO2 Oxygen Tank" href="http://docs.oasis-open.org/wsbpel/2.0/wsbpel-v2.0.html"/>
+            <item name="WSO2 Carbon" href="http://wso2.org/projects/carbon"/>
+            <item name="Apache ODE" href="http://ode.apache.org/"/>
+            <item name="WS-BPEL 2.0" href="http://docs.oasis-open.org/wsbpel/2.0/wsbpel-v2.0.html"/>
+        </links>
+        <menu name="Overview">
+            <item name="Home" href="index.html"/>
+            <item name="Release Note" href="release-note.html"/>
+            <item name="WS-BPEL Compliance" href="ws_bpel_compliance.html"/>
+            <item name="License" href="http://www.apache.org/licenses/LICENSE-2.0.html"/>
+        </menu>
+        <menu name="Downloads">
+            <item name="Releases" href="http://www.wso2.org/downloads/bps/"/>
+        </menu>
+        <menu name="Installation Guide" ref="">
+            <item name="Installing WSO2 BPS" href="installation_guide.html#WSO2-Business-Process-Server-Installation-Guide"/>
+        </menu>
+        <menu name="Quick Start Guide" ref="">
+            <item name="Modeling the process" href="bpel-quick-start-guide/modeling_process.html"/>
+            <item name="Deploying the process" href="bpel-quick-start-guide/deploying_process.html"/>
+            <item name="Testing the process" href="bpel-quick-start-guide/testing_process.html"/>
+        </menu>
+	<menu name="User Guide" ref="">
+              <item name="Deploying BPEL Processes" href="user_guide.html#Using-ProcessDeployment"/>
+              <item name="Deploying Human Tasks" href="user_guide.html#HumanTaskDeployment"/>
+              <item name="Managing BPEL processes" href="user_guide.html#Managing-BPEL-processes"/>
+              <item name="Managing BPEL process instances" href="user_guide.html#Managing-BPEL-process-instances"/>
+              <item name="QoS for BPEL processes" href="user_guide.html#QoS-for-BPEL-processes"/>
+              <item name="Securing BPEL processes" href="user_guide.html#Securing-BPEL-processes"/>
+              <item name="Invoking secured partner services" href="user_guide.html#Invoking-secured-partner-services"/>
+              <item name="Versioning" href="user_guide.html#Using-Versioning"/>
+              <item name="Management API" href="user_guide.html#Using-Management-API"/>
+        </menu>
+        <menu name="Administrator Guide" ref="">
+	    <item name="External data sources Configuration" href="bpel-admin-guide/administrator_guide.html#Configure-WSO2-BPS-with-external-data-sources"/>
+            <item name="Registry Configuration" href="bpel-admin-guide/administrator_guide.html#Registry-Conf"/>
+            <item name="Events" href="bpel-admin-guide/administrator_guide.html#Using-Events"/>
+            <item name="Unified Endpoints" href="bpel-admin-guide/administrator_guide.html#Using-Manipulating-Endpoints"/>
+            <item name="BPEL Extensions" href="bpel-admin-guide/administrator_guide.html#Using-BPEL-Extensions"/>
+            <item name="Transaction Factory Configuration" href="bpel-admin-guide/administrator_guide.html#Using-TransactionFactory"/>
+            <item name="Message Exchange Interceptors" href="bpel-admin-guide/administrator_guide.html#Using-Message-Exchange-Interceptors"/>
+            <item name="OpenJPA specific properties" href="bpel-admin-guide/administrator_guide.html#Using-OpenJPA"/>
+            <item name="JMS Transport Configuration" href="bpel-admin-guide/administrator_guide.html#Configuring-JMS-Transport"/>
+            <item name="Process Instance Cleanup Tasks" href="bpel-admin-guide/administrator_guide.html#Process-Instance-Cleanup"/>
+            <item name="Process Hydration and Dehydration" href="bpel-admin-guide/administrator_guide.html#Process-Hydration-Dehydration"/>
+            <item name="Enabling Peer-to-Peer(P2P) Communication" href="bpel-admin-guide/administrator_guide.html#Enable-P2P-Communication"/>
+            <item name="Setting up a BPS Cluster" href="bpel-admin-guide/administrator_guide.html#BPS-cluster-setup"/>
+        </menu>
+        <menu name="Best Practices" ref="">
+            <item name="Process Deployment Best Practices" href="bpel-best-practices/best_practices.html"/>
+        </menu>
+
+        <menu name="Concepts" ref="">
+            <item name="Process Versioning" href="bpel-concepts/bpel_concepts.html#process-versioning"/>
+            <item name="Process instance events" href="bpel-concepts/bpel_concepts.html#process-instance-event"/>
+            <item name="Partner links" href="bpel-concepts/bpel_concepts.html#partner-links"/>
+        </menu>      
+        <menu name="WS-BPEL Extensions" ref="bpel-extensions/bpel_extension.html">
+            <item name="Activity Failure and Recovery" href="bpel-extensions/bpel_extension_activity_failure_and_recovery.html"/>
+            <item name="Extension Activities and Extensible Assign Operations" href="bpel-extensions/bpel_extension_extension_activities.html"/>
+            <item name="XPath Extensions" href="bpel-extensions/bpel_extension_xpath_extensions.html"/>
+            <item name="Iterable ForEach" href="bpel-extensions/bpel_extension_iterable_foreach.html"/>
+            <item name="Flexible Assigns" href="bpel-extensions/bpel_extension_flexible_assign.html"/>
+        </menu>
+        <menu name="Samples">
+            <item name="HelloWorld" href="bpel-samples/hello_world.html"/>
+            <item name="If-Else" href="bpel-samples/if.html"/>
+            <item name="ForEach" href="bpel-samples/for_each.html"/>
+            <item name="While" href="bpel-samples/while.html"/>
+            <item name="Repeat Until" href="bpel-samples/repeat_until.html"/>
+            <item name="Flow and Links" href="bpel-samples/flow_links.html"/>
+            <item name="Pick" href="bpel-samples/pick.html"/>
+            <item name="Synchronous and Asynchronous Service Invocations" href="bpel-samples/synchronous_and_asynchronous_invocations.html"/>
+            <item name="Fault Handling" href="bpel-samples/throw_catch_fault_handling.html"/>
+            <item name="Split" href="bpel-samples/split.html"/>
+            <item name="XslTransform" href="bpel-samples/xsl_transform.html"/>
+	    <item name="Compensation Handler" href="bpel-samples/compensation_handler.html" />
+	    <item name="Event Handler" href="bpel-samples/event_handler.html" />
+        </menu>
+        <menu name="Resources">
+	    <item name="FAQ" href="faq.html"/>
+            <item name="External Articles" href="external_articles.html"/>
+            <item name="Library" href="http://www.wso2.org/library/bps"/>
+            <item name="Source Code" href="https://svn.wso2.org/repos/wso2/trunk/carbon/products/bps/"/>
+        </menu>
+        <menu name="Community">
+            <item name="Forum" href="http://www.wso2.org/forum/886"/>
+            <item name="Mailing Lists" href="http://www.wso2.org/mail"/>
+        </menu>
+        <menu name="Project Information" ref="">
+            <item name="Issue Tracking" href="issue-tracking.html"/>
+        </menu>
+
+    </body>
+</project>

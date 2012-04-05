@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>@product.name@ - Best Practices -</title>
+        <link href="../css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+        <h1>Best Practices</h1>
+        <h3>Table of Content</h3>
+        <ul>
+            <li><a href="#deployment">Deployment best practices</a></li>
+            <li><a href="#development">Development best practices</a></li>
+        </ul>
+
+        <!--Deployment Best Practices-->
+        <h2 id="deployment">Deployment best practices</h2>
+        <p>Default distribution of
+            <a href="http://wso2.com/products/business-process-server">@product.name@</a>
+            comes with embedded H2 database as
+            <a href="http://docs.oasis-open.org/wsbpel/2.0/CS01/wsbpel-v2.0-CS01.html">BPEL
+            </a>
+            engine's persistence storage and other settings which are suitable for use in
+            development
+            environment. But when you are going to production with @product.name@, there are several
+            configurations you need to change according to your production requirements. These
+            configurations will change based on how much requests BPS is going to handle per second,
+            your auditing and monitoring requirements, performance requirements and nature of your
+            process. Following are the main things you should do before going production with WSO2
+            BPS.
+        </p>
+        <ul>
+            <li>
+                If the deployed BPEL processes has any conflict like
+                <br/>
+                <ol>
+                    <li>Same BPEL process is deployed under several different package names</li>
+                    <li>When a deployed BPEL process has an existing service name</li>
+                </ol>
+                <p>Those deployment issues are displayed under the relevant package in "Deployed
+                    Packages" page.
+                </p>
+                <br/>
+                <img src="../images/bpel-user-guide/erroneous_package_deployed.png" alt="Deployed Package error"/>
+                <br/>
+                Figure 12
+                <br/>
+            </li>
+
+            <li>
+                <a href="../installation_guide.html#Configure-WSO2-BPS-with-external-data-sources">Configure external database server</a>
+                like MySQL as your persistence storage instead of
+                embedded H2 database. You may experience slight performance gain for simple BPEL
+                processes with H2 database, but when it comes to multiple concurrent requests and
+                complex processes H2 can?t server your performance needs.
+                <br/>
+            </li>
+            <li>
+                <a href="../installation_guide.html#Using-Multi-Threaded-HTTP">Configure multi-threaded Http
+                    connection manager connection pool settings
+                </a>
+                to suits
+                to your BPEL processes. There are two configurations in Http connection manager. One
+                is max total connections and other is max total connection per host. These settings
+                will depend on number of concurrent requests BPS needs to handle and number of
+                external service calls in involve per process instance.
+                <br/>
+            </li>
+            <li><a href="#Add-Set-In-memory-execution">Configure BPEL process
+                persistence</a>. If you are implementing process with
+                request-response interaction model use in-memory processes instead of persistence
+                processes. Whether to use in-memory or persisted processes will mainly depends on
+                your business use-case.
+                <br/>
+            </li>
+            <li>
+                <a href="../bpel-concepts/bpel_concepts.html#Events-Filtering-Events">Configure even-filtering</a>
+                at process and scope level. You can save lot of database
+                resources by reducing number of events generated.
+                <br/>
+            </li>
+            <li>Using process-to-process communication. If you are calling one BPEL process from
+                another BPEL process deployed in the same BPS instance, it?s better to use
+                process-to-process communication to reduce overhead introduce by additional network
+                calls.
+                <br/>
+            </li>
+            <li>Also make sure to configure process instance cleanup. Large number of process
+                instance data will be accumulated in the BPEL engine persistence storage if you
+                persisted processes, so to reduce performance overhead introduce by database size
+                you should configure instance cleanup.
+                <br/>
+            </li>
+            <li>
+                In addition to above things you should be careful when deploying @product.name@ in
+                virtualized environments. We have seen random increase of network latencies and
+                random performance degradations when running on VMs.
+                <br/>
+            </li>
+            <li>
+                If the BPEL is going to be deployed as a WS-secured service then, it's recommended
+                to remove all the http endpoints from the process WSDL. Else the WSDL generation for
+                the particular BPEL process will get failed.
+                <br/>
+                eg -
+                <br/>
+                    <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>wsdl</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>service</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>HelloService123</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>wsdl</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>port</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>HelloPort</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>binding</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>tns:HelloSoapBinding</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>soap</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>address</span> <span style='color:#274796; '>location</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>http://az:9763/services/helloWorld</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+    <span style='color:#a65700; '>&lt;/</span><span style='color:#666616; '>wsdl</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>port</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>port</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>LoanServicePort</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>binding</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>tns:HelloSoapBinding</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>soap</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>address</span> <span style='color:#274796; '>location</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>https://gb:9443/services/LoanService</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+    <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>port</span><span style='color:#a65700; '>></span>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#666616; '>wsdl</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>service</span><span style='color:#a65700; '>></span>
+</pre>
+                SHOULD BE
+                <br/>
+                    <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>wsdl</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>service</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>HelloService123</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+    <span style='color:#696969; '>&lt;!--</span><span style='color:#696969; '>&lt;wsdl:port name="HelloPort" binding="tns:HelloSoapBinding"> </span>
+<span style='color:#696969; '>&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&#xa0;&lt;soap:address location="</span><span style='color:#5555dd; '>http://az:9763/services/helloWorld</span><span style='color:#696969; '>"/> </span>
+<span style='color:#696969; '>&#xa0;&#xa0;&#xa0;&#xa0;&lt;/wsdl:port></span><span style='color:#696969; '>--></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>port</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>LoanServicePort</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>binding</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>tns:HelloSoapBinding</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;</span><span style='color:#666616; '>soap</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>address</span> <span style='color:#274796; '>location</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>https://gb:9443/services/LoanService</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>/></span>
+    <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>port</span><span style='color:#a65700; '>></span>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#666616; '>wsdl</span><span style='color:#800080; '>:</span><span style='color:#5f5035; '>service</span><span style='color:#a65700; '>></span>
+</pre>
+            </li>
+        </ul>
+
+        <p><strong>Note 1:</strong><i>
+            Above mention configuration optimizations are true for Apache ODE also.
+            <br/>
+        </i>
+         </p>
+
+
+        <p><strong>Note 2:</strong><i>
+
+            Above mention best practices are valid for @product.name@ @product.version@ and upward. You can
+            do the above optimizations to older versions @product.name@, but configurations and
+            configuration mechanisms will be different. All of the above optimizations are supported
+            by Apache ODE, but configuration is very different from @product.name@. </i>
+         </p>
+
+        <!--Development Best Practices-->
+        <h2 id="development">Development best practices</h2>
+        <p>It&#39;s not encouraged to refer the same variable as the input(in&lt;receive/&gt;) and output(in
+            &lt;reply/&gt;) of the process. This could lead to problems if the message headers (
+            &lt;Header/&gt;
+            in SOAP&lt;Envelope/&gt;) in output variable are processed at the client-end.
+            One possible use-case is when the process is secured if the input and output variables
+            are same then the headers of the input will be used when the output is sent back to the
+            client. So it could prone to errors if those security headers are not expected at the
+            client end.
+        </p>
+    </body>
+</html>

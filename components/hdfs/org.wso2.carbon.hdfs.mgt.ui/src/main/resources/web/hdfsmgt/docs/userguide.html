@@ -1,0 +1,97 @@
+<!--
+  ~ Copyright 2011 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <title>HDFS - User Guide</title>
+    <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all"/>
+</head>
+<body>
+<h1>HDFS - User Guide</h1>
+
+<p> WSO2 Carbon HDFS feature provides Apache HDFS based highly scalable second-generation
+    distributed File System. HDFS supports Column Family based data model. </p>
+
+<p>WSO2 Carbon HDFS helps user to create and manage NoSQL data stores with authentication and
+   authorization. HDFS component uses Carbon User Manager as the user base. </p>
+
+<p>HDFS feature comes with a management user interface. Management interface allows user to
+   manage File System Objectss, Column Families and Columns.</p>
+
+<h2>Manage File System Objectss</h2>
+
+<p>File System Objects management allows user to list available key spaces. User can share, edit and delete
+   File System Objectss using interface.</p>
+
+<h4>Add File System Objects</h4>
+<pre>
+    Home-> Manage-> HDFS File System Objectss-> Add
+</pre>
+<h4>List File System Objectss</h4>
+<pre>
+    Home-> Manage-> HDFS File System Objectss-> List
+</pre>
+<h4>Edit File System Objectss</h4>
+
+<p>User can alter File System Objects name, replication factor and replica replacement strategy.</p>
+<h4>Delete File System Objects</h4>
+
+<p>user can delete File System Objects after the confirmation.</p>
+
+<h2>Manage Column Family</h2>
+
+<p>User can get Column Family details by click on the File System Objects name</p>
+<pre>
+    Home-> Manage-> HDFS File System Objectss-> List-> File System Objects
+</pre>
+<p>In the Column Family summery page user can list all the Column Families related to the File System Objects.
+   HDFS
+   endpoint URL listed in summery page. User has to give HDFS endpoint URL (IP:PORT) and the
+ username and password in the connection string.</p>
+<h4>Add Column Family</h4>
+
+<p>User can add more columns to the File System Objects by clicking Add a New Column Family link.</p>
+<h4>Edit Column Family</h4>
+
+<p>Column Family Edit allows user to modify Name, Replication Factor and Replica Placement Strategy
+    of a Column Family.</p>
+<h4>Delete Column Family</h4>
+
+<p>User can delete Column Family after the confirmation.</p>
+
+<h2>Manage Column</h2>
+
+<p>User can list Column Family summery and manage Column in Column Family page.</p>
+<h4>List Column</h4>
+<pre>
+    Home-> Manage-> HDFS File System Objectss-> List-> File System Objects-> Column Family
+</pre>
+<h4>Add Column</h4>
+
+<p>Add new Column option allows user to add a Column to Column Family and set a Index Column and the
+   validation class. In HDFS Index Column use to create a second index.</p>
+<h4>Edit Column</h4>
+
+<p>Edit Column allows user to modify Name, Index Name and Validation Class.</p>
+<h4>Delete Column</h4>
+
+<p>User can delete a Column after the confirmation.</p>
+</body>
+</html>
+

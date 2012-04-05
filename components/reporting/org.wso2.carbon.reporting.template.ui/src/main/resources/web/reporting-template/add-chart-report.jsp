@@ -1,0 +1,453 @@
+<!--
+~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~
+~ WSO2 Inc. licenses this file to you under the Apache License,
+~ Version 2.0 (the "License"); you may not use this file except
+~ in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing,
+~ software distributed under the License is distributed on an
+~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+~ KIND, either express or implied. See the License for the
+~ specific language governing permissions and limitations
+~ under the License.
+-->
+
+<%@ page import="org.apache.axis2.context.ConfigurationContext" %>
+<%@ page import="org.wso2.carbon.CarbonConstants" %>
+<%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
+<%@ page import="org.wso2.carbon.utils.ServerConstants" %>
+<%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
+<%@ page import="org.wso2.carbon.reporting.template.ui.client.ReportTemplateClient" %>
+<%@ page import="org.apache.axis2.AxisFault" %>
+<%@ page import="org.jaxen.util.StackedIterator" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
+<fmt:bundle basename="org.wso2.carbon.reporting.template.ui.i18n.Resources">
+<script type="text/javascript">
+
+
+</script>
+
+
+<%
+
+    String serverURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
+    ConfigurationContext configContext =
+            (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
+    String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
+
+    ReportTemplateClient client;
+    String message = "";
+    String[] datasources = null;
+    String errorString = "";
+    String dsName = "";
+    String tableName = "";
+    String repType = request.getParameter("reportType");
+    String heading = "";
+    if (repType != null) {
+        if (repType.equalsIgnoreCase("bar_chart_type_report"))
+            heading = "Bar Chart Report";
+        else if (repType.equalsIgnoreCase("line_chart_type_report"))
+            heading = "Line Chart Report";
+        else if (repType.equalsIgnoreCase("area_chart_type_report"))
+            heading = "Area Chart Report";
+        else if (repType.equalsIgnoreCase("stacked_bar_chart_type_report"))
+            heading = "Stacked Bar Chart Report";
+        else if (repType.equalsIgnoreCase("stacked_area_chart_type_report"))
+            heading = "Stacked Area Chart Report";
+        else if (repType.equalsIgnoreCase("xy_bar_chart_type_report"))
+            heading = "XY Bar Chart Report";
+        else if (repType.equalsIgnoreCase("xy_line_chart_type_report"))
+            heading = "XY Line Chart Report";
+        else if (repType.equalsIgnoreCase("xy_area_chart_type_report"))
+            heading = "XY Area Chart Report";
+        else if (repType.equalsIgnoreCase("pie_chart_type_report"))
+            heading = "Pie Chart Report";
+
+    }
+    try {
+        client = new ReportTemplateClient(configContext, serverURL, cookie);
+        datasources = client.getDatasourceNames();
+    } catch (Exception e) {
+        errorString = e.getMessage();
+        CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request, e);
+%>
+<script type="text/javascript">
+    location.href = "../admin/error.jsp";
+    alert(<%=errorString%>);
+</script>
+<%
+        return;
+    }
+%>
+
+<script type="text/javascript">
+    var seriesCount = 0;
+
+    function submitChartReportData() {
+        document.chartreport.action = 'ChartDataProcessor';
+        var msg = checkValidity();
+        if (msg != '') {
+            jQuery(document).init(function () {
+                CARBON.showErrorDialog(msg);
+            });
+            return false;
+        }
+        document.getElementById('noSeries').value = seriesCount;
+        document.chartreport.submit();
+        return true;
+    }
+
+    function cancelTableData() {
+        location.href = "../reporting_custom/select-report.jsp";
+    }
+
+    function dsChanged(dsName) {
+        document.chartreport.action = 'add-chart-report.jsp';
+        var reportName = document.getElementById("reportName").value;
+
+        var reportType = document.getElementById("reportType").value;
+        var url = 'add-chart-report.jsp?reportType=' + reportType + '&selectedDsName=' + dsName + '&reportName=' + reportName;
+        location.href = url;
+    }
+
+    function tableChanged(dsName, tableName) {
+        document.chartreport.action = 'add-chart-report.jsp';
+        var reportName = document.getElementById("reportName").value;
+        var reportType = document.getElementById("reportType").value;
+        var url = 'add-chart-report.jsp?reportType=' + reportType + '&selectedDsName=' + dsName + '&selectedTableName=' + tableName + '&reportName=' + reportName;
+        location.href = url;
+    }
+
+    function addSeries() {
+        document.chartreport.action = 'add-chart-report.jsp';
+        seriesCount = seriesCount + 1;
+        var d = document.getElementById('contentTableBody');
+        var html = '<tr>';
+    <%if(repType != null && !repType.equalsIgnoreCase("pie_chart_type_report")){ %>
+        html = html + '<td colspan="3" class="middle-header">' + '<fmt:message key="series"/>' + ' - ' + seriesCount + '</td>';
+    <%
+    }
+    %>
+        html = html + '</tr>';
+
+    <%if(repType != null && !repType.equalsIgnoreCase("pie_chart_type_report")){ %>
+        html = html + '<tr>';
+        html = html + '<td>' + '<fmt:message key="series.name"/> ' + '<span class = "required" >*</span></td>';
+        html = html + '<td><input id ="series_' + seriesCount + '_name" name="series_' + seriesCount + '_name"></td>';
+        html = html + '</tr>';
+    <%
+    }
+    %>
+        html = html + '<tr >';
+        html = html + '<td class = "leftCol-small" >';
+    <%if(repType != null && repType.equalsIgnoreCase("pie_chart_type_report")){%>
+        html = html + '<fmt:message key="key.field"/>';
+    <%
+    }
+    else {
+    %>
+        html = html + '<fmt:message key="x.axis"/>';
+    <%
+    }
+    %>
+        html = html + '<span class = "required" >*</span>';
+        html = html + '</td>';
+        html = html + '<td>';
+        html = html + getComboBox(seriesCount, 'xData');
+        html = html + '</td>';
+        html = html + '</tr>';
+        html = html + '<tr >';
+        html = html + '<td class = "leftCol-small" >';
+    <%if(repType != null && repType.equalsIgnoreCase("pie_chart_type_report")){%>
+        html = html + '<fmt:message key="value.field"/>';
+    <%
+    }
+    else {
+    %>
+        html = html + '<fmt:message key="y.axis"/>';
+    <%
+    }
+    %>
+        html = html + '<span class = "required" >*</span>';
+        html = html + '</td>';
+        html = html + '<td>';
+        html = html + getComboBox(seriesCount, 'yData');
+        html = html + '</td>';
+        html = html + '</tr>';
+        d.innerHTML = d.innerHTML + html;
+
+    }
+
+    function getComboBox(seriesId, axisType) {
+        var html = '<select id="series_' + seriesId + '_' + axisType + '" name="series_' + seriesId + '_' + axisType + '">';
+        for (i = 0; i < fields.length; i++) {
+            var opt = '<option value="' + fields[i] + '">' + fields[i] + '</option>';
+            html = html + opt;
+        }
+        html = html + '</select>';
+        return html;
+    }
+
+
+    function checkValidity() {
+        var msg = '';
+        var reportName = document.getElementById("reportName").value;
+        if (reportName == '') {
+            msg = 'Please enter a report name.\n';
+        }
+    <%if(repType != null && !repType.equalsIgnoreCase("pie_chart_type_report")){ %>
+        for (i = 0; i < seriesCount; i++) {
+            if (document.getElementById("series_" + (i + 1) + "_name").value == '') {
+                msg = msg + " Please enter a series name for Series - " + (i + 1) + "\n";
+            }
+        }
+    <%
+    }
+    %>
+        return msg;
+    }
+
+    $(window).bind("load", function() {
+        addSeries();
+    });
+</script>
+
+
+<%!
+    private String getFieldsComboBox(String[] fields, String seriesId, String axisType) {
+        String html = "<select id=\"series_" + seriesId + "_" + axisType + "\" name=\"series_" + seriesId + "_" + axisType + "\">\n";
+
+        for (int i = 0; i < fields.length; i++) {
+            html = html + "<option value=\"" + fields[i] + "\" ";
+            if (i == 0) {
+                html = html + "selected = \"selected\">" + fields[i] + "\n";
+            } else {
+                html = html + ">" + fields[i] + "\n";
+            }
+            html = html + "</option>\n";
+        }
+
+        html = html + "</select>\n";
+        return html;
+    }
+%>
+<div id="middle">
+<h2>Add <%=heading%> - Step 1</h2>
+
+<div id="workArea">
+
+<form id="chartreport" name="chartreport" action="" method="POST">
+<table class="styledLeft">
+    <thead>
+    <tr>
+        <th><span style="float: left; position: relative; margin-top: 2px;">
+                            <fmt:message key="table.report.information"/></span>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+
+
+    <tr>
+        <td>
+            <table class="normal-nopadding">
+                <tbody id="contentTableBody">
+
+                <tr>
+                    <td width="180px"><fmt:message key="report.name"/> <span
+                            class="required">*</span></td>
+                    <%
+                        String tempReportName = request.getParameter("reportName");
+                        if (tempReportName == null) {
+                            tempReportName = "";
+                        }
+                    %>
+                    <td><input name="reportName"
+                               id="reportName" value="<%=tempReportName%>"/>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="leftCol-small"><fmt:message key="datasource.name"/><span
+                            class="required"> *</span>
+                    </td>
+                    <td>
+                        <% if (datasources != null && datasources.length > 0) {
+                            dsName = request.getParameter("selectedDsName");
+                            if (dsName == null || dsName.equals("")) {
+                                dsName = datasources[0];
+                            }
+                        %>
+                        </thead>
+                        <select id="datasource" name="datasource">
+                            <%
+                                for (int i = 0; i < datasources.length; i++) {
+                                    String datasource = datasources[i];
+
+                            %>
+                            <option value="<%=datasource%>" <%=datasource.equalsIgnoreCase(dsName) ? "selected=\"selected\"" : ""%>
+                                    onclick="dsChanged('<%=datasource%>')">
+                                <%=datasource%>
+                            </option>
+                            <% }%>
+                        </select>
+
+                        <% } else {
+                            errorString = "No datasource found";
+                        %>
+                        <script type="text/javascript">
+                            jQuery(document).init(function () {
+                                CARBON.showErrorDialog('<%=errorString%>');
+                            });
+                        </script>
+                        <% } %>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="leftCol-small"><fmt:message key="table.name"/><span
+                            class="required"> *</span>
+                    </td>
+                    <td>
+                        <% String[] tableNames = null;
+                            try {
+                                tableNames = client.getTableNames(dsName);
+                            } catch (AxisFault e) {
+                                errorString = e.getMessage();
+                            }
+                            if (tableNames != null && tableNames.length > 0) { %>
+
+                        <select id="tableName" name="tableName">
+                            <%
+                                tableName = request.getParameter("selectedTableName");
+                                if (tableName == null || tableName.equals("")) {
+                                    tableName = tableNames[0];
+                                }
+                                for (int i = 0; i < tableNames.length; i++) {
+                                    String aTableName = tableNames[i];
+
+                            %>
+                            <option value="<%=aTableName%>" <%= aTableName.equalsIgnoreCase(tableName) ? "selected=\"selected\"" : ""%>
+                                    onclick="javascript:tableChanged('<%=dsName%>', '<%=aTableName%>')">
+                                <%=aTableName%>
+                            </option>
+                            <% }%>
+                        </select>
+
+                        <% } else {
+                            errorString = "No Tables found in datasource " + dsName;
+                        %>
+                        <script type="text/javascript">
+                            jQuery(document).init(function () {
+                                CARBON.showErrorDialog('<%=errorString%>');
+                            });
+                        </script>
+                        <% } %>
+
+                    </td>
+                    <% if (repType != null && !repType.equalsIgnoreCase("pie_chart_type_report")) { %>
+                    <td><a style="background-image: url(../admin/images/add.gif);"
+                           class="icon-link spacer-bot" onclick="addSeries()"><fmt:message
+                            key="add.series"/></a></td>
+                    <%
+                        }
+                    %>
+                </tr>
+                <% String[] fieldNames = null;
+                    try {
+                        fieldNames = client.getFieldNames(dsName, tableName); %>
+                <script>
+                    var fields = new Array(<%
+                                for(int i = 0; i < fieldNames.length; i++) {
+                                   out.print("\""+fieldNames[i]+"\"");
+                                 if(i+1 < fieldNames.length) {
+                                     out.print(",");
+                                }
+                                }
+                            %>);
+                </script>
+                <% } catch (AxisFault e) {
+                    errorString = e.getMessage();
+                }
+                %>
+
+                    <%--<tr>--%>
+                    <%--<td colspan="3" class="middle-header"><fmt:message key="series"/> - 1</td>--%>
+                    <%--</tr>--%>
+                    <%--<tr>--%>
+                    <%--<td><fmt:message key="series.name"/></td>--%>
+                    <%--<td><input name="series_1_name" id="series_1_name"></td>--%>
+                    <%--</tr>--%>
+
+                    <%--<tr>--%>
+                    <%--<td class="leftCol-small"><fmt:message key="x.axis"/><span--%>
+                    <%--class="required"> *</span>--%>
+                    <%--</td>--%>
+                    <%--<td>--%>
+                    <%--<%--%>
+                    <%--String comboBox = getFieldsComboBox(fieldNames, "1", "xData");--%>
+                    <%--%>--%>
+                    <%--<%=comboBox%>--%>
+                    <%--</td>--%>
+
+                    <%--</tr>--%>
+
+                    <%--<tr>--%>
+                    <%--<td class="leftCol-small"><fmt:message key="y.axis"/><span--%>
+                    <%--class="required"> *</span>--%>
+                    <%--</td>--%>
+                    <%--<td>--%>
+                    <%--<%--%>
+                    <%--comboBox = getFieldsComboBox(fieldNames, "1", "yData");--%>
+                    <%--%>--%>
+                    <%--<%=comboBox%>--%>
+                    <%--</td>--%>
+
+                    <%--</tr>--%>
+
+
+                    <%--<input id="selectedFields" name="selectedFields" type="hidden"/>--%>
+                <%
+
+                %>
+                <input id="selectedDsName" name="selectedDsName" type="hidden"/>
+                <input id="selectedTableName" name="selectedTableName" type="hidden"/>
+                <input id="reportType" name="reportType" type="hidden" value="<%=repType%>"/>
+                <input id="noSeries" name="noSeries" type="hidden"/>
+                </tbody>
+            </table>
+
+        </td>
+    </tr>
+
+    </tbody>
+</table>
+
+
+<table class="normal-nopadding">
+    <tbody>
+
+    <tr>
+        <td class="buttonRow" colspan="2">
+            <input type="button" value="<fmt:message key="next"/>"
+                   class="button" name="save"
+                   onclick="javascript:submitChartReportData();"/>
+            <input type="button" value="<fmt:message key="cancel"/>"
+                   name="cancel" class="button"
+                   onclick="javascript:cancelTableData();"/>
+        </td>
+    </tr>
+    </tbody>
+
+</table>
+</form>
+</div>
+</div>
+
+
+</fmt:bundle>

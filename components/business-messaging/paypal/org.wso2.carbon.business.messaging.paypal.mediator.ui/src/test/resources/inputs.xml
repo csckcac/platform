@@ -1,0 +1,41 @@
+<service>
+    <operation name="GetBalance" currency="US" version="2.0">
+        <inputs>
+            <input name="DetailLevel" required="true"/>
+            <input name="ErrorLanguage" required="true"/>
+        </inputs>
+    </operation>
+    <operation name="BillUser" currency="US" version="2.0">
+        <inputs>
+            <input name="DetailLevel" required="true"/>
+            <input name="ErrorLanguage" required="true"/>
+            <input type="MerchantPaymentDetails" required="true">
+                <input name="Amount" type="Amount" required="true">
+                     <input name="currencyID" required="true"/>
+                </input>
+                <input name="MpId" required="true"/>
+                <input name="Tax" type="Tax">
+                    <input name="currencyID" required="true"/>    
+                </input>
+                <input name="Shipping" type="Shipping">
+                    <input name="currencyID" required="true"/>
+                </input>
+                <input name="Handling" type="Handling">
+                    <input name="currencyID" required="true"/>
+                </input>
+                <input name="PaymentType"/>
+                <input name="ItemNumber"/>
+                <input name="ItemName"/>
+                <input name="EmailSubject"/>
+                <input name="Memo"/>
+            </input>
+        </inputs>
+    </operation>
+    <operation name="AddressVerify" currency="US" version="2.0">
+        <inputs>
+            <input name="Email" required="true"/>
+            <input name="Zip" required="true"/>
+            <input name="Street" required="true"/>
+        </inputs>
+    </operation>
+</service>

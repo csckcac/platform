@@ -1,0 +1,8 @@
+{"gadgets" : ["http://10.100.2.69:8080/registry/resource/_system/config/repository/gadget-server/gadgets/eBayGadget/ebay.xml",
+    "http://10.100.2.69:8080/registry/resource/_system/config/repository/gadget-server/gadgets/AmazonSearchGadget/amazon-search.xml",
+    "http://www.gstatic.com/ig/modules/currency_converter/currency_converter.xml",
+    "http://10.100.2.69:8080/registry/resource/_system/config/repository/gadget-server/gadgets/StickyNotes/sticky.xml",
+    "http://10.100.2.69:8080/registry/resource/_system/config/repository/gadget-server/gadgets/SOAPlatformBlogFeedGadget/soa.xml",
+    "http://10.100.2.69:8080/registry/resource/_system/config/repository/gadget-server/gadgets/JIRAGadget/jira-gadget.xml",
+    "http://10.100.2.69:8080/registry/resource/_system/config/repository/gadget-server/gadgets/FedExTracking/fedex.xml",
+    "http://10.100.2.69:8080/registry/resource/_system/config/repository/gadget-server/gadgets/EmptyFeedGadget/feed.xml"]}

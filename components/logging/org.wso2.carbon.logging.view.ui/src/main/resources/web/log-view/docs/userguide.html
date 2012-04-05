@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"/>
+  <title>Monitor Logs - User Guide</title>
+  <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all" />
+</head> 
+ 
+<body>
+<h1>Monitor Logs</h1>
+<p>This page displays information regarding the log files of the current product. Further, it has the feature to download and view the log files acccording to the user preferance. The log files can be retreived in two ways, 1) If syslog-ng is configured log files are taken from the remote location where the log files are hosted using syslog-ng server. 2) If syslog-ng is not configured log files are taken from the local file system (super-tenant or Stand alone apps).
+</p>
+<p>The log messages, displayed in this page are obtained from a memory appender. Hence, the severity(log level) of the
+    displayed log messages are equal or higher than the threshold of the memory appender. For more information on
+    appenders, loggers and their log levels, please visit <a href="http://logging.apache.org/log4j/">here</a>. </p>
+<p><img alt="" src="images/logIndex.jpg" /></p>
+<h3><strong>Log files on disk</strong></h3>
+<p>The location of the log files on disk is specified in the log4j.configuration file.</p>
+<p>
+ <span style="font-weight: bold;">Note:Tenant Specific Logs</span> To display tenant specific information, you need to configure syslog-server,
+In the navigator, under Configure, click <span
+    style="font-weight: bold;">Logging</span>. The <span
+    style="font-style: italic; font-weight: bold;">Logging related</span> page
+    appears to configure the syslog-ng server.
+</p>
+<h1>View Logs</h1>
+
+<p>This page displays all the system logs from bottom-up manner. You can also search for a
+particular log by a keyword using the <span style="font-weight: bold;">Search Logs</span>
+feature. <span style="color: red;"></span></p>
+<ol>
+  <li>In the navigator, under Monitor, click <span
+    style="font-weight: bold;">Logs</span>. The <span
+    style="font-style: italic; font-weight: bold;">System Logs</span> page
+    appears. </li>
+  <li>In the <span style="font-weight: bold;">Log Head</span>, you can search for the logs comming from the top by entering number of logs you want to see from the top.</li>
+  <li>In the <span style="font-weight: bold;">View</span> list, select the
+    category of logs you want to view. The available categories are,  </li>
+</ol>
+
+<div style="margin-left: 40px;">
+INFO  - Information messages
+WARN  - Warning messages
+ERROR  - Error messages
+DEBUG  - Debug messages 
+TRACE  - Trace messages
+FATAL - Fatal error messages </div>
+<ol>
+</ol>
+
+<p><img alt="" src="images/logview.jpg" /></p>
+
+<p style="text-align:left;">Figure 1: Monitor Logs</p>
+
+<p>The log messages, displayed in this page are obtained from a memory appender. Hence, the severity(log level) of the
+    displayed log messages are equal or higher than the threshold of the memory appender. For more information on
+    appenders, loggers and their log levels, please visit <a href="http://logging.apache.org/log4j/">here</a>. </p>
+
+<h3><strong>Log files on disk</strong></h3>
+<p>The location of the log files on disk is specified in the log4j.configuration file.</p>
+<p>
+ <span style="font-weight: bold;">Note:Tenant Specific Logs</span> To display tenant specific information, you need to configure syslog-server,
+In the navigator, under Configure, click <span
+    style="font-weight: bold;">Logging</span>. The <span
+    style="font-style: italic; font-weight: bold;">Logging related</span> page
+    appears to configure the syslog-ng server.
+</p>
+</body>
+</html>

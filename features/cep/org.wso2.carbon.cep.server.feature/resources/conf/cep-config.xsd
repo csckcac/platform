@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<schema targetNamespace="http://wso2.org/carbon/cep"
+        xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:tns="http://wso2.org/carbon/cep"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified">
+
+    <element name="cepConfiguration">
+        <complexType>
+            <sequence>
+                <element name="buckets" type="tns:bucketsType"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <complexType name="bucketsType">
+        <sequence>
+            <element name="bucket" type="tns:bucketType" minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="bucketType">
+        <sequence>
+            <element name="description" type="string" minOccurs="0"/>
+            <element name="input" type="tns:inputType" minOccurs="0" maxOccurs="unbounded"/>
+            <element name="query" type="tns:queryType" minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
+        <attribute name="name" type="string" use="required"/>
+        <attribute name="engineProvider" type="tns:engineProviderType" use="required"/>
+        <attribute name="owner" type="string" use="optional"/>
+        <attribute name="overWriteRegistryStoredBucket" type="boolean" use="optional"/>
+    </complexType>
+
+    <simpleType name="engineProviderType">
+        <restriction base="string">
+            <enumeration value="DroolsFusionCEPRuntime"/>
+            <enumeration value="EsperCEPRuntime"/>
+        </restriction>
+    </simpleType>
+
+    <complexType name="inputType">
+        <sequence>
+            <element name="mapping" type="tns:mappingType"/>
+        </sequence>
+        <attribute name="topic" type="string" use="required"/>
+        <attribute name="brokerName" type="string" use="required"/>
+    </complexType>
+
+    <complexType name="mappingType">
+        <sequence>
+            <element name="xpathDefinition" type="tns:xpathDefinitionType" minOccurs="0"
+                     maxOccurs="unbounded"/>
+            <element name="property" type="tns:propertyType" minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
+        <attribute name="stream" type="string" use="required"/>
+        <attribute name="class" type="string" use="optional"/>
+    </complexType>
+
+    <complexType name="xpathDefinitionType">
+        <attribute name="prefix" type="string" use="required"/>
+        <attribute name="namespace" type="string" use="required"/>
+    </complexType>
+
+    <complexType name="propertyType">
+        <attribute name="name" type="string" use="required"/>
+        <attribute name="xpath" type="string" use="optional"/>
+        <attribute name="type" type="string" use="optional"/>
+        <attribute name="xmlFieldName" type="string" use="optional"/>
+        <attribute name="xmlFieldType" type="string" use="optional"/>
+    </complexType>
+
+    <complexType name="queryType">
+        <sequence>
+            <element name="expression" type="tns:expressionType"/>
+            <element name="output" type="tns:outputType" minOccurs="0"/>
+        </sequence>
+        <attribute name="name" type="string" use="required"/>
+    </complexType>
+
+    <complexType name="expressionType">
+        <complexContent>
+            <extension base="string">
+                <attribute name="type" type="tns:queryExpressionType" use="required"/>
+                <attribute name="listenerName" type="string" use="optional"/>
+            </extension>
+        </complexContent>
+    </complexType>
+
+     <simpleType name="queryExpressionType">
+        <restriction base="string">
+            <enumeration value="inline"/>
+            <enumeration value="registry"/>
+        </restriction>
+    </simpleType>
+
+    <complexType name="outputType">
+        <choice>
+            <element name="elementmapping" type="tns:elementmappingType"/>
+            <element name="xmlmapping" type="tns:xmlmappingType"/>
+        </choice>
+        <attribute name="topic" type="string" use="required"/>
+        <attribute name="brokerName" type="string" use="required"/>
+    </complexType>
+
+    <complexType name="elementmappingType">
+        <sequence>
+            <element name="property" type="tns:propertyType" minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
+        <attribute name="documentElement" type="string"/>
+        <attribute name="namespace" type="string"/>
+    </complexType>
+
+    <complexType name="xmlmappingType">
+        <sequence>
+            <any processContents="lax"/>
+        </sequence>
+    </complexType>
+</schema>
+        

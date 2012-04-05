@@ -1,0 +1,141 @@
+<h5>Basic Syntax</h5>
+    <ul>
+        <li id="html"><a href="/docs/apidocs/html.jag">&lt;% %&gt;</a></li>
+        <li id ="html2"> <a href="/docs/apidocs/html2.jag">&lt;%= %&gt;</a></li>
+        <li id="require"><a href="/docs/apidocs/require.jag">require()</a></li>
+        <!--li id="code4"> <a href="/docs/apidocs/j.jag">$j</a> </li-->
+    </ul>
+
+    <h5>Built-ins</h5>
+    <h6>Output</h6>
+    <ul>
+        <li id="print">
+            <a href="/docs/apidocs/print.jag">print()</a>
+        </li>
+        <li id="log">
+            <a href="/docs/apidocs/log.jag">log()</a>
+        </li>
+    </ul>
+
+    <h6>Variables</h6>
+    <ul>
+        <li id="req">
+            <a href="/docs/apidocs/request.jag">request</a>
+        </li>
+        <li id="res">
+            <a href="/docs/apidocs/response.jag">response</a>
+        </li>
+        <li id="ses">
+            <a href="/docs/apidocs/session.jag">session</a>
+        </li>
+    </ul>
+
+    <h6>Http Client</h6>
+    <ul>
+        <li id="get">
+            <a href="/docs/apidocs/get.jag">get()</a>
+        </li>
+        <li id="post">
+            <a href="/docs/apidocs/post.jag">post()</a>
+        </li>
+        <li id="put">
+            <a href="/docs/apidocs/put.jag">put()</a>
+        </li>
+        <li id="del">
+            <a href="/docs/apidocs/del.jag">del()</a>
+        </li>
+        <li id="xhr">
+            <a href="/docs/apidocs/xhr.jag">XMLHTTPRequest</a>
+        </li>
+
+    </ul>
+
+    <h6>Utils</h6>
+    <ul>
+        <li id="urimatcher">
+            <a href="/docs/apidocs/urimatcher.jag">URIMatcher</a>
+        </li>
+        <li id="include">
+            <a href="/docs/apidocs/include.jag">include()</a>
+        </li>
+    </ul>
+
+    <h6>Feed</h6>
+        <ul>
+            <li id="atomfeed">
+                <a href="/docs/apidocs/atom.jag">AtomFeed</a>
+            </li>
+            <li id="atomclient">
+                <a href="/docs/apidocs/atomclient.jag">AtomClient</a>
+            </li>
+            <li id="entry">
+                <a href="/docs/apidocs/entry.jag">Entry</a>
+            </li>
+            <li id="feedreader">
+                <a href="/docs/apidocs/feedreader.jag">FeedReader</a>
+            </li>
+            <li id="feed">
+                <a href="/docs/apidocs/feed.jag">Feed</a>
+            </li>
+        </ul>
+
+    <h6>File System</h6>
+    <ul>
+        <li id="file">
+            <a href="/docs/apidocs/file.jag">File</a>
+        </li>
+        <li id="fileUpload">
+            <a href="/docs/apidocs/fileupload.jag">FileUpload</a>
+        </li>
+    </ul>
+
+    <h6>Data Storage</h6>
+    <ul>
+        <li id="rdb">
+            <a href="/docs/apidocs/rdb.jag">Database</a>
+        </li>
+        <li id="reg">
+            <a href="/docs/apidocs/registry.jag">Registry</a>
+        </li>
+    </ul>
+
+    <h6>Dataformats</h6>
+
+    <span class="sub">JSON</span>
+
+    <ul>
+        <li id="parse">
+            <a href="/docs/apidocs/parse.jag">parse()</a>
+        </li>
+        <li id="stringify">
+            <a href="/docs/apidocs/stringify.jag">stringify()</a>
+        </li>
+    </ul>
+
+    <span class="sub">XML</span>
+    <ul>
+        <li id="xml">
+            <a href="/docs/apidocs/xml.jag">XML</a>
+        </li>
+    </ul>
+
+    <h5>Add-ons</h5>
+
+    <h6>Messaging</h6>
+    <ul>
+        <li id="email">
+            <a href="/docs/apidocs/email.jag">Email</a>
+        </li>
+    </ul>
+
+    <h6>Web Services</h6>
+    <ul>
+        <li id="ws">
+            <a href="/docs/apidocs/ws.jag">WSRequest</a>
+        </li>
+        <li id="wsstub">
+            <a href="/docs/apidocs/wsstub.jag">WSStub</a>
+        </li>
+    </ul>
+
+

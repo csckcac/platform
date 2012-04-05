@@ -1,0 +1,134 @@
+<!--
+  ~  Licensed to the Apache Software Foundation (ASF) under one
+  ~  or more contributor license agreements.  See the NOTICE file
+  ~  distributed with this work for additional information
+  ~  regarding copyright ownership.  The ASF licenses this file
+  ~  to you under the Apache License, Version 2.0 (the
+  ~  "License"); you may not use this file except in compliance
+  ~  with the License.  You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~   * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+        <title>Welcome to WSO2 Identity Server v3.2.0!</title>
+        <link href="css/is-docs.css" rel="stylesheet"/>
+    </head>
+
+    <body>
+        <h1>WSO2 Identity Server : An open source Identity and Entitlement management server</h1>
+
+        <h3>WSO2 Identity Server v3.2.0 Release Note</h3>
+
+        <h3>@buildNumber@</h3>
+
+        <p>WSO2 Identity Server is an open source Identity and Entitlement management server having
+            support for OpenID, Information Cards, XACML and SAML 2.0.
+        </p>
+
+        <p>This is based on revolutionary the WSO2 Carbon framework, Middleware a la carte'.</p>
+
+        <p>All the major features have been developed as pluggable Carbon components.</p>
+
+        <h2>New Features In This Release</h2>
+        <ul>
+            <li>OAuth Support</li>
+            <li>SAML 2.0 based Single Sign-on support</li>
+            <li>Support for bulk-user import</li>
+            <li>Various bug fixes and enhancements including architectural improvements to Apache
+                Axis2,
+                Apache Rampart, Apache Sandesha2 , WSO2 Carbon and
+                other projects.
+            </li>
+        </ul>
+
+        <h2>Key Features</h2>
+        <ul>
+            <li>Entitlement Engine with XACML 2.0 support.</li>
+            <li>Claim based Security Token Service with SAML 1.1/SAML 2.0.</li>
+            <li>Information cards support for SAML 1.1/2.0.</li>
+            <li>OpenID Provider.</li>
+            <li>Extension points for SAML assertion handling.</li>
+            <li>XMPP based multi-factor authentication.</li>
+            <li>Improved User Management.</li>
+            <li>Claim Management.</li>
+            <li>User Profiles and Profile Management.</li>
+            <li>XKMS.</li>
+            <li>Separable front-end and back-end - a single front-end server can be used to
+                administer
+                several back-end servers.
+            </li>
+            <li>Information Cards provider supporting Managed Information Cards backed by user name
+                /
+                password and self-issued cards.
+            </li>
+            <li>Multi-factor authentication with Information Cards.</li>
+        </ul>
+
+        <h2>Reporting Problems</h2>
+        <p>Issues can be reported using the public JIRA available at
+            <a href="https://wso2.org/jira/browse/IDENTITY">https://wso2.org/jira/browse/IDENTITY
+            </a>
+        </p>
+
+        <h2>Contact us</h2>
+        <p>WSO2 Identity Server developers can be contacted via mailing lists:
+            <br/>
+            <strong>For Users:</strong>
+            <a href="mailto:carbon-user@wso2.org">carbon-user@wso2.org</a>
+            <br/>
+            <strong>For Developers:</strong>
+            <a href="mailto:carbon-dev@wso2.org">carbon-dev@wso2.org</a>
+            <br/>
+            For details on subscriptions see
+            <a href="http://wso2.org/mail">http://wso2.org/mail</a>
+        </p>
+        <p>Alternatively, questions can also be raised in the forums:
+            <a href="http://www.wso2.org/forum/308">http://www.wso2.org/forum/308</a>
+        </p>
+        <br/>
+
+        <h2>Support</h2>
+        <p>
+            We are committed to ensuring that your enterprise middleware deployment is completely
+            supported from evaluation to
+            production. Our unique approach ensures that all support leverages our open development
+            methodology and is provided by
+            the very same engineers who build the technology.
+
+            For more details and to take advantage of this unique opportunity
+            <a href="http://wso2.com/support/">
+                http://wso2.com/support/
+            </a>
+        </p>
+
+        <p>For more information about WSO2 Identity Server, please see
+            <a href="http://wso2.org/projects/identity">http://wso2.org/projects/identity</a>
+            or visit
+            the
+            <a href="http://wso2.org/library">WSO2 Oxygen Tank</a>
+            developer portal for addition resources.
+        </p>
+
+        <p>Thank you for your interest in WSO2 Identity Server.
+            <strong>
+                <br/>
+                <br/>
+                <em>-The WSO2 Identity Server Development Team</em>
+            </strong>
+        </p>
+        <hr/>
+
+        <p>Copyright 2010 WSO2 Inc.</p>
+    </body>
+</html>

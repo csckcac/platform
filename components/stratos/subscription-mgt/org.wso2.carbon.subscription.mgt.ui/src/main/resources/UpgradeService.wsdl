@@ -1,0 +1,282 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://services.upgrade.carbon.wso2.org" xmlns:ax2294="http://util.upgrade.carbon.wso2.org/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.upgrade.carbon.wso2.org">
+    <wsdl:documentation>UpgradeService</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://util.upgrade.carbon.wso2.org/xsd">
+            <xs:complexType name="PackageInfoBean">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="bandwidthLimit" type="xs:long" />
+                    <xs:element minOccurs="0" name="currentPackage" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="overuseCharge" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="resourceVolumeLimit" type="xs:long" />
+                    <xs:element minOccurs="0" name="subscriptionPerUserFee" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="userLimit" type="xs:int" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="SubscriptionInfoBean">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="activeSince" nillable="true" type="xs:date" />
+                    <xs:element minOccurs="0" name="activeUntil" nillable="true" type="xs:date" />
+                    <xs:element minOccurs="0" name="packageName" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax2295="http://util.upgrade.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.upgrade.carbon.wso2.org">
+            <xs:import namespace="http://util.upgrade.carbon.wso2.org/xsd" />
+            <xs:element name="updateSubscriptionException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="updateSubscriptionException" nillable="true" type="ns:Exception" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="updateSubscription">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="packageName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="durationInMonth" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPackageInfoException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="getPackageInfoException" nillable="true" type="ns:Exception" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPackageInfo">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPackageInfoResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2295:PackageInfoBean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getCurrentSubscriptionException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="getCurrentSubscriptionException" nillable="true" type="ns:Exception" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getCurrentSubscription">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getCurrentSubscriptionResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2295:SubscriptionInfoBean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="cancelSubscriptionException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="cancelSubscriptionException" nillable="true" type="ns:Exception" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="cancelSubscription">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getCurrentSubscriptionRequest">
+        <wsdl:part name="parameters" element="ns:getCurrentSubscription" />
+    </wsdl:message>
+    <wsdl:message name="getCurrentSubscriptionResponse">
+        <wsdl:part name="parameters" element="ns:getCurrentSubscriptionResponse" />
+    </wsdl:message>
+    <wsdl:message name="getCurrentSubscriptionException">
+        <wsdl:part name="parameters" element="ns:getCurrentSubscriptionException" />
+    </wsdl:message>
+    <wsdl:message name="updateSubscriptionRequest">
+        <wsdl:part name="parameters" element="ns:updateSubscription" />
+    </wsdl:message>
+    <wsdl:message name="updateSubscriptionException">
+        <wsdl:part name="parameters" element="ns:updateSubscriptionException" />
+    </wsdl:message>
+    <wsdl:message name="cancelSubscriptionRequest">
+        <wsdl:part name="parameters" element="ns:cancelSubscription" />
+    </wsdl:message>
+    <wsdl:message name="cancelSubscriptionException">
+        <wsdl:part name="parameters" element="ns:cancelSubscriptionException" />
+    </wsdl:message>
+    <wsdl:message name="getPackageInfoRequest">
+        <wsdl:part name="parameters" element="ns:getPackageInfo" />
+    </wsdl:message>
+    <wsdl:message name="getPackageInfoResponse">
+        <wsdl:part name="parameters" element="ns:getPackageInfoResponse" />
+    </wsdl:message>
+    <wsdl:message name="getPackageInfoException">
+        <wsdl:part name="parameters" element="ns:getPackageInfoException" />
+    </wsdl:message>
+    <wsdl:portType name="UpgradeServicePortType">
+        <wsdl:operation name="getCurrentSubscription">
+            <wsdl:input message="ns:getCurrentSubscriptionRequest" wsaw:Action="urn:getCurrentSubscription" />
+            <wsdl:output message="ns:getCurrentSubscriptionResponse" wsaw:Action="urn:getCurrentSubscriptionResponse" />
+            <wsdl:fault message="ns:getCurrentSubscriptionException" name="getCurrentSubscriptionException" wsaw:Action="urn:getCurrentSubscriptiongetCurrentSubscriptionException" />
+        </wsdl:operation>
+        <wsdl:operation name="updateSubscription">
+            <wsdl:input message="ns:updateSubscriptionRequest" wsaw:Action="urn:updateSubscription" />
+            <wsdl:fault message="ns:updateSubscriptionException" name="updateSubscriptionException" wsaw:Action="urn:updateSubscriptionupdateSubscriptionException" />
+        </wsdl:operation>
+        <wsdl:operation name="cancelSubscription">
+            <wsdl:input message="ns:cancelSubscriptionRequest" wsaw:Action="urn:cancelSubscription" />
+            <wsdl:fault message="ns:cancelSubscriptionException" name="cancelSubscriptionException" wsaw:Action="urn:cancelSubscriptioncancelSubscriptionException" />
+        </wsdl:operation>
+        <wsdl:operation name="getPackageInfo">
+            <wsdl:input message="ns:getPackageInfoRequest" wsaw:Action="urn:getPackageInfo" />
+            <wsdl:output message="ns:getPackageInfoResponse" wsaw:Action="urn:getPackageInfoResponse" />
+            <wsdl:fault message="ns:getPackageInfoException" name="getPackageInfoException" wsaw:Action="urn:getPackageInfogetPackageInfoException" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="UpgradeServiceSoap11Binding" type="ns:UpgradeServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="getCurrentSubscription">
+            <soap:operation soapAction="urn:getCurrentSubscription" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="getCurrentSubscriptionException">
+                <soap:fault use="literal" name="getCurrentSubscriptionException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateSubscription">
+            <soap:operation soapAction="urn:updateSubscription" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="updateSubscriptionException">
+                <soap:fault use="literal" name="updateSubscriptionException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="cancelSubscription">
+            <soap:operation soapAction="urn:cancelSubscription" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="cancelSubscriptionException">
+                <soap:fault use="literal" name="cancelSubscriptionException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getPackageInfo">
+            <soap:operation soapAction="urn:getPackageInfo" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="getPackageInfoException">
+                <soap:fault use="literal" name="getPackageInfoException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="UpgradeServiceSoap12Binding" type="ns:UpgradeServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="getCurrentSubscription">
+            <soap12:operation soapAction="urn:getCurrentSubscription" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="getCurrentSubscriptionException">
+                <soap12:fault use="literal" name="getCurrentSubscriptionException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateSubscription">
+            <soap12:operation soapAction="urn:updateSubscription" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="updateSubscriptionException">
+                <soap12:fault use="literal" name="updateSubscriptionException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="cancelSubscription">
+            <soap12:operation soapAction="urn:cancelSubscription" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="cancelSubscriptionException">
+                <soap12:fault use="literal" name="cancelSubscriptionException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getPackageInfo">
+            <soap12:operation soapAction="urn:getPackageInfo" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="getPackageInfoException">
+                <soap12:fault use="literal" name="getPackageInfoException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="UpgradeServiceHttpBinding" type="ns:UpgradeServicePortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="getCurrentSubscription">
+            <http:operation location="getCurrentSubscription" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateSubscription">
+            <http:operation location="updateSubscription" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="cancelSubscription">
+            <http:operation location="cancelSubscription" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getPackageInfo">
+            <http:operation location="getPackageInfo" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="UpgradeService">
+        <wsdl:port name="UpgradeServiceHttpsSoap11Endpoint" binding="ns:UpgradeServiceSoap11Binding">
+            <soap:address location="https://192.168.1.100:9443/services/UpgradeService.UpgradeServiceHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="UpgradeServiceHttpsSoap12Endpoint" binding="ns:UpgradeServiceSoap12Binding">
+            <soap12:address location="https://192.168.1.100:9443/services/UpgradeService.UpgradeServiceHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="UpgradeServiceHttpsEndpoint" binding="ns:UpgradeServiceHttpBinding">
+            <http:address location="https://192.168.1.100:9443/services/UpgradeService.UpgradeServiceHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

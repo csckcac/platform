@@ -1,0 +1,27 @@
+<%
+
+include("/services/registryUtil.jag");
+
+var path = request.getParameter("path");
+
+var wsdl = getWSDL(path);
+var wsdlConvTrans = new XSLTTransformer(readFile("/tryit/xslt/wsdl11to20.xslt"));
+var wsdl2 = wsdlConvTrans.transform(wsdl);
+
+var sigTrans = new XSLTTransformer(readFile("/tryit/xslt/wsdl2sig.xslt"));
+var sig = sigTrans.transform(wsdl2);
+
+var tryitTrans = new XSLTTransformer(readFile("/tryit/xslt/tryit.xslt"));
+var tryit = tryitTrans.transform(sig, {
+    "wsrequest-location" : "js/WSRequest.js",
+    "proxyAddress" : "/carbon/admin/jsp/WSRequestXSSproxy_ajaxprocessor.jsp",
+    "image-path" : "images/",
+    "global-params-location" : "/carbon/global-params.js",
+    "tryit-service-stub-location" : "jsstub.jag?path=" + path,
+    "full-page" : "true",
+    "xslt-location" : "/apistore/tryit/xslt/formatxml.xslt"
+});
+
+print(tryit);
+
+%>

@@ -1,0 +1,883 @@
+<!--
+~ Copyright 2005-2008 WSO2, Inc. (http://wso2.com)
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <link href="css/mashup-docs.css" rel="stylesheet" type="text/css" media="all"/>
+        <link type="text/css" rel="stylesheet" href="css/SyntaxHighlighter.css" media="all"/>
+        <script language="javascript" src="js/shCore.js"></script>
+        <script language="javascript" src="js/shBrushJScript.js"></script>
+        <script language="javascript" src="js/shBrushJava.js"></script>
+        <script language="javascript" src="js/shBrushSql.js"></script>
+        <script language="javascript" src="js/shBrushXml.js"></script>
+    </head>
+    <body>
+        <div id="main-content">
+            <h1>JavaScript Data Binding (inputTypes/outputType annotation)</h1>
+
+            <p>
+                <strong>Table of Contents</strong>
+            </p>
+
+            <div class="toc">
+                <ul>
+                    <li>
+                        <a href="#JavaScriptTypes">Intepretation and
+                            treatment of JavaScript types
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#XSTypes">Using XML schema built in
+                            types
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#Arrays">Support for optional
+                            parameters and arrays
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#Enumerations">Support for simple
+                            String-Valued enumerations
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#RawValues">Support for Raw values
+                            In/Out
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#ArrayToXML">Array -&gt; XML
+                            Conversion
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#ObjectToXML">Object -&gt; XML
+                            Conversion
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <p>
+                In a dynamically typed language like JavaScript, each argument or
+                parameter passed into a function can have any type - it can be a
+                string, a
+                number, an object, whatever. But internally the function
+                typically operates
+                on a specific type of data. Maybe the function does a
+                calculation, in which
+                case the data must be in (or be converted to) numerical form.
+            </p><br/>
+            <p>JavaScript has rich facilities for converting datatypes - for
+                instance if
+                a function or operation expects a string, you can still pass it a
+                number and
+                javaScript will convert the number to a string automatically.
+                But there are
+                limits to the ability of JavaScript to convert freely from one type to
+                another - for instance converting a string to a number requires the
+                programmer to specify how the conversion is done using the parseInt or
+                parseFloat methods.
+            </p><br/>
+
+            <p>So despite the dynamic character of JavaScript, function
+                parameters typically have a restricted set of types that they operate
+                on, and
+                the caller of the function needs to be aware of what types are allowed
+                or
+                preferred by the function. In JavaScript the programmer
+                typically relies on
+                examining the source code of the function - or of the comments or other
+                human-readable documentation to determine what the types of parameters
+                are.
+            </p><br/>
+
+            <p>When you are invoking a function remotely as a web service
+                operation,
+                examining the source code is less of an option. Having some
+                machine-readable
+                information about the type allows the client to provide some assistance
+                (e.g., ?stub) to the programmer. In addition, the web service
+                may be invoked
+                from a language other than javaScript, so even determining the
+                javaScript
+                type might be somewhat irrelevant. A set of types that can be
+                used across a
+                variety of programming languages and environments is
+                necessary. Just as XML
+                provides a platform- and language-neutral way to format data, the XML
+                Schema
+                Language provides a way to define types. When you expose a
+                web service, the
+                type of the data, including both simple types like strings and numbers,
+                and
+                complex structures, can be described in XML Schema.
+            </p><br/>
+
+            <p>To address these issues, the Mashup Server provides the
+                inputTypes
+                annotation to allow the programmer to declare the expected type of
+                input for
+                each parameter of the operation as an XML Schema type or as a
+                javaScript type which is eventually converted to an XML Schema
+                type. Although this isn't
+                strictly necessary for the exposure of the operation (we'll map the
+                parameters into an XML message) having accurate type
+                information
+                makes for a much nicer experience for the user of your
+                function. The
+                outputType annotation serves a similar purpose for the return value.
+            </p> <br/>
+
+            <p>The inputTypes property is a javaScript object having a number
+                of
+                properties, which is equivalent to the number of parameters of the
+                javaScript
+                function. The names of those properties are the names of the function
+                parameters, and the value of the respective parameter is the intended
+                type (in order to declare XML schema types directly the "xs:" prefix
+                should be used. If the "xs:" prefix is not available its assumed as a
+                JavaScript(plus E4X) type) for the function parameter.
+            </p><br/>
+            <pre name="code" class="js">
+                countWords.inputTypes = {"content" : "string" , "ignoreHyphens" : "boolean"};
+                countWords.outputType = "xs:integer";
+                function countWords(content, ignoreHyphens) {
+                    .....
+                }
+            </pre>
+
+
+            <h2><a id="JavaScriptTypes"/>Intepretation and treatment of JavaScript types</h2>
+
+            <p>Although type information can be provided as javaScript types,
+                WSO2 Mashup Server eventually converts them to XML schema data types.
+                This is done to ensure that the description (WSDL 1.1, WSDL2) which is
+                provided for your service will have rich type information. If the type
+                is specified without an "xs:" prefix they are
+                assumed
+                to be javaScript (plus E4X) types and is mapped into the XML Schema
+                type system as
+                follows:
+            </p>
+            <table>
+                <tbody>
+                    <tr>
+                        <td style="text-align: center;">
+                            <span style="font-weight: bold;">Declared JavaScript (plus</span>
+                            <span style="font-weight: bold;">E4X) Type</span>
+                        </td>
+                        <td style="text-align: center;">
+                            <b>Treatment</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>String | string</td>
+                        <td>Treat as xs:string</td>
+                    </tr>
+                    <tr>
+                        <td>Number| number</td>
+                        <td>Treat as xs:float</td>
+                    </tr>
+                    <tr>
+                        <td>Boolean | boolean</td>
+                        <td>Treat as xs:boolean</td>
+                    </tr>
+                    <tr>
+                        <td>Date | date</td>
+                        <td>Treat as xs:dateTime</td>
+                    </tr>
+                    <tr>
+                        <td>Array | array</td>
+                        <td>Treat as xs:anyType*</td>
+                    </tr>
+                    <tr>
+                        <td>Object | object</td>
+                        <td>Generate XML structure</td>
+                    </tr>
+                    <tr>
+                        <td>Xml | XML | xml</td>
+                        <td>Treat as xs:anyType</td>
+                    </tr>
+                    <tr>
+                        <td>Xmllist | XMLList | XMLlist | xmlList | xmllist</td>
+                        <td>Treat as xs:anyType*</td>
+                    </tr>
+                    <tr>
+                        <td>Any | any</td>
+                        <td>xs:anyType</td>
+                    </tr>
+                    <tr>
+                        <td>None | none</td>
+                        <td>No value.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Each of these tokens has alternative case representations
+                rendering the tokens pseudo-case-insensitive, allowing obvious case
+                &#8220;misspellings&#8221;.
+            </p>
+
+            <p>In most cases you can be more precise by using XML schema
+                types, for instance using the
+                xs:integer
+                type instead of number when only integer values are expected.
+            </p>
+
+            <h2>
+                <a id="XSTypes">Using XML
+                    schema built in types
+                </a>
+            </h2>
+
+            <p>.inputTypes and .outputType can
+                specify a built-in schema
+                type, indicated by using the &#8220;xs:&#8221; prefix.
+            </p>
+
+            <p>When used as an outputType, the
+                return type is serialized as
+                defined below, wrapped in a &lt;return&gt; &#8220;parameter&#8221;, and
+                further wrapped in
+                a targetNamespace-qualified RPC wrapper. The schema reflects
+                the use of
+                parameter and rpc wrappers, and uses the declared type as the type of
+                the
+                return parameter.
+            </p>
+
+            <p>When used as an inputType, the
+                parameter value deserialized
+                by removing the parameter and rpc wrappers, and converted to a
+                javascript
+                native type as defined below.
+            </p>
+
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <b>Declared type</b>
+                        </td>
+                        <td>
+                            <span style="font-weight: bold;">Serialization/Desialization</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>xs:string</td>
+                        <td>string</td>
+                    </tr>
+                    <tr>
+                        <td>xs:normalizedString</td>
+                        <td>string</td>
+                    </tr>
+                    <tr>
+                        <td>xs:token</td>
+                        <td>string</td>
+                    </tr>
+                    <tr>
+                        <td>xs:language</td>
+                        <td>string</td>
+                    </tr>
+                    <tr>
+                        <td>xs:Name</td>
+                        <td>string</td>
+                    </tr>
+                    <tr>
+                        <td>xs:NCName</td>
+                        <td>string</td>
+                    </tr>
+                    <tr>
+                        <td>xs:ID</td>
+                        <td>string</td>
+                    </tr>
+                    <tr>
+                        <td>xs:IDREF</td>
+                        <td>string</td>
+                    </tr>
+                    <tr>
+                        <td>xs:NMTOKEN</td>
+                        <td>string</td>
+                    </tr>
+                    <tr>
+                        <td>xs:ENTITY</td>
+                        <td>string</td>
+                    </tr>
+                    <tr>
+                        <td>xs:NOTATION</td>
+                        <td>string</td>
+                    </tr>
+                    <tr>
+                        <td>xs:anyURI</td>
+                        <td>string</td>
+                    </tr>
+                    <tr>
+                        <td>xs:hexBinary</td>
+                        <td>string</td>
+                    </tr>
+                    <tr>
+                        <td>xs:base64Binary</td>
+                        <td>string</td>
+                    </tr>
+                    <tr>
+                        <td>xs:float</td>
+                        <td>number</td>
+                    </tr>
+                    <tr>
+                        <td>xs:double</td>
+                        <td>number</td>
+                    </tr>
+                    <tr>
+                        <td>xs:duration</td>
+                        <td>number</td>
+                    </tr>
+                    <tr>
+                        <td>xs:integer</td>
+                        <td>number</td>
+                    </tr>
+                    <tr>
+                        <td>xs:nonPositiveInteger</td>
+                        <td>number</td>
+                    </tr>
+                    <tr>
+                        <td>xs:negativeInteger</td>
+                        <td>number</td>
+                    </tr>
+                    <tr>
+                        <td>xs:long</td>
+                        <td>number</td>
+                    </tr>
+                    <tr>
+                        <td>xs:int</td>
+                        <td>number</td>
+                    </tr>
+                    <tr>
+                        <td>xs:short</td>
+                        <td>number</td>
+                    </tr>
+                    <tr>
+                        <td>xs:byte</td>
+                        <td>number</td>
+                    </tr>
+                    <tr>
+                        <td>xs:nonNegativeInteger</td>
+                        <td>number</td>
+                    </tr>
+                    <tr>
+                        <td>xs:unsignedLong</td>
+                        <td>number</td>
+                    </tr>
+                    <tr>
+                        <td>xs:unsignedInt</td>
+                        <td>number</td>
+                    </tr>
+                    <tr>
+                        <td>xs:unsignedShort</td>
+                        <td>number</td>
+                    </tr>
+                    <tr>
+                        <td>xs:unsignedByte</td>
+                        <td>number</td>
+                    </tr>
+                    <tr>
+                        <td>xs:positiveInteger</td>
+                        <td>number</td>
+                    </tr>
+                    <tr>
+                        <td>xs:decimal</td>
+                        <td>number</td>
+                    </tr>
+                    <tr>
+                        <td>xs:boolean</td>
+                        <td>boolean</td>
+                    </tr>
+                    <tr>
+                        <td>xs:dateTime</td>
+                        <td>date</td>
+                    </tr>
+                    <tr>
+                        <td>xs:date</td>
+                        <td>date, time component droped</td>
+                    </tr>
+                    <tr>
+                        <td>xs:time</td>
+                        <td>date, date component droped</td>
+                    </tr>
+                    <tr>
+                        <td>xs:gYearMonth</td>
+                        <td>date, time and day components droped</td>
+                    </tr>
+                    <tr>
+                        <td>xs:gMonthDay</td>
+                        <td>date, time and day components droped</td>
+                    </tr>
+                    <tr>
+                        <td>xs:gYear</td>
+                        <td>date, time, month and day components droped</td>
+                    </tr>
+                    <tr>
+                        <td>xs:gDay</td>
+                        <td>date, time, year and month components droped</td>
+                    </tr>
+                    <tr>
+                        <td>xs:gMonth</td>
+                        <td>date, time, year and day components droped</td>
+                    </tr>
+                    <tr>
+                        <td>xs:NMTOKENS</td>
+                        <td>string</td>
+                    </tr>
+                    <tr>
+                        <td>xs:IDREFS</td>
+                        <td>string</td>
+                    </tr>
+                    <tr>
+                        <td>xs:ENTITIES</td>
+                        <td>string</td>
+                    </tr>
+                    <tr>
+                        <td>xs:QName</td>
+                        <td>string</td>
+                    </tr>
+                    <tr>
+                        <td>xs:anyType</td>
+                        <td>E4X XML object</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>
+                <a id="Arrays">Support for
+                    optional parameters and arrays
+                </a>
+            </h2>
+
+            <p class="MsoNormal">To indicate a parameter is optional,
+                an input type token can
+                be followed by a ?. For example:
+            </p>
+
+            <pre name="code" class="js">
+                test.inputTypes = {"required" : "string", "optional1" : "number?", "optional2" : "boolean?"};
+                function test(required, optional1, optional2) {
+                }
+            </pre>
+
+            <p class="MsoNormal">Messages that omit optional
+                parameters will result in those
+                parameters being assigned the &#8220;undefined&#8221; value. Optional parameters
+                will be dispayed as minoccurs="0" in the schema.
+            </p>
+
+            <p class="MsoNormal">Similarly, an input parameter can be
+                an array.
+                This is modeled in the schema as maxOccurs="unbounded", and
+                repeated elements of the same name are collected into an Array, with
+                items
+                in the array following the normal mappings for that type. The
+                postfix '+'; can
+                be added to an input type (except for 'array' itself) to indicate that
+                maxOccurs='unbounded' should be added.
+            </p>
+
+            <p class="MsoNormal">The '*' postfix is equivalent to the
+                presence of both '?'
+                and '+', except that zero matching elements in the message results in
+                an empty
+                Array rather than 'undefined'.
+            </p>
+
+            <h2>
+                <a id="Enumerations">Support for simple
+                    String-Valued enumerations
+                </a>
+            </h2>
+
+            <p class="MsoNormal">Simple enumerations are a common use
+                case for defining a
+                custom simple type. Additionally they provide a high value to
+                the user to have
+                in a description format (e.g enumerations can be converted into a drop
+                down
+                list in the try-it).
+            </p>
+
+            <p class="MsoNormal">A type that is a list of string
+                values separated by '|' is
+                treated as an enumeration.
+            </p>
+
+            <pre name="code" class="js">
+                accountInfo.inputTypes = {"type" : "silver | gold | platinum"};
+                accountInfo.outputType = "paidup | arrears | unknown";
+                function accountInfo(type) {
+                    ...
+                }
+            </pre>
+
+            <h2>
+                <a id="RawValues">Support for Raw values
+                    In/Out
+                </a>
+            </h2>
+            <p>
+                Without an outputType annotation, a returned value might be of
+                any of the javascript types and therefore an automatic conversion to
+                XML is done. If the return value is not XML itself the data in the
+                return value will be returned wrapped in an element called return which
+                will also have a js:type arribute specifying the JavaScript type
+                returned.
+            </p>
+            <table class="MsoNormalTable"
+                   style="border: medium none ; margin-left: 31.1pt; border-collapse: collapse;" border="1"
+                   cellpadding="0" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td>
+                            <b>Dynamic
+                                type
+                            </b>
+                        </td>
+                        <td>
+                            <b>Wrapper</b>
+                        </td>
+                        <td>
+                            <b>Value
+                                serialization
+                            </b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            String
+                        </td>
+                        <td>
+                            &lt;return
+                            js:type="string"&gt;value&lt;/return&gt;
+                        </td>
+                        <td>
+                            Value serialized as xs:string
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Number
+                        </td>
+                        <td>
+                            &lt;return
+                            js:type="number"&gt;value&lt;/return&gt;
+                        </td>
+                        <td>
+                            Value serialized as xs:float
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Boolean
+                        </td>
+                        <td>
+                            &lt;return
+                            js:type="boolean"&gt;value&lt;/return&gt;
+                        </td>
+                        <td>
+                            Value serialized as
+                            xs:boolean
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Date
+                        </td>
+                        <td>
+                            &lt;return
+                            js:type="date"&gt;value&lt;/return&gt;
+                        </td>
+                        <td>
+                            Value serialized as
+                            xs:dateTime
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Undefined
+                        </td>
+                        <td>
+                            &lt;return
+                            js:type="undefined"&gt;&lt;/return&gt;
+                        </td>
+                        <td>
+                            No value
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Array
+                        </td>
+                        <td>
+                            &lt;return
+                            js:type="array"&gt;value&lt;/return&gt;
+                        </td>
+                        <td>
+                            Value serialized as in
+                            <a href="#ArrayToXML">
+                                <span
+                                        style="color: blue;">Array
+                                    -&gt; XML
+                                </span>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Object
+                        </td>
+                        <td>
+                            &lt;return
+                            js:type="object"&gt;value&lt;/return&gt;
+                        </td>
+                        <td>
+                            Value serialized as in
+                            <a href="#ObjectToXML">
+                                <span
+                                        style="color: blue;">Object
+                                    -&gt; XML
+                                </span>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            XML
+                        </td>
+                        <td>
+                            &lt;return
+                            js:type="xml"&gt;value&lt;/return&gt;
+                        </td>
+                        <td>
+                            Serialize directly as XML
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            XMLList
+                        </td>
+                        <td>
+                            &lt;return
+                            js:type="xmllist"&gt;value&lt;/return&gt;
+                        </td>
+                        <td>
+                            Serialize children directly
+                            as XML
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Wrapped vs Unwrapped behaviour</h2>
+            <p>
+                The Mashup Server will wrap all your request and responses by default
+                in RPC type wrapper elements. These wrapper elements provide a conventional
+                structure that can be easily interpreted as function parameters by many
+                different platforms. It provides a means to serialize simple data values
+                such as strings in XML. Wrapper elements come in handy when using
+                the stub, because the stub generator recognizes this convention
+                and can provide the user a uniform interface. If you are interested in
+                preserving the structure and types of your parameters and return values,
+                we advise you to use the default behaviour. The wrapper element name of the request
+                will be in the form of &lt;operationName&gt; and the wrapper
+                element name of the response will be of the form
+                &lt;operationNameResponse&gt;. The following example
+                illustrates this.
+            </p>
+
+            <pre name="code" class="js">
+                function echoString(param) {
+                    return param;
+                }
+            </pre>
+            <p>
+                The wire-level XML input to this function is as follows (with "value" used as
+                the parameter"):
+            </p>
+
+            <pre name="code" class="xml">
+                &lt;p:echoString xmlns:p="http://services.mashup.wso2.org/test?xsd"&gt;
+                    &lt;param&gt;value&lt;/param&gt;
+                &lt;/p:echoString&gt;
+            </pre>
+            <p>
+                The wire-level XML output from this function is as follows:
+            </p>
+
+            <pre name="code" class="xml">
+                &lt;ws:echoStringResponse xmlns:ws="http://services.mashup.wso2.org/test?xsd"&gt;
+                    &lt;return xmlns:js="http://www.wso2.org/ns/jstype" js:type="string"&gt;value&lt;/return&gt;
+                &lt;/ws:echoStringResponse&gt;
+            </pre>
+            <p>
+                Although providing wrapper elements is the default behaviour the user
+                can always overide this. If you want to instruct the mashup server not
+                to use wrapper elements you should set the inputTypes annotation or the
+                outputType annotation (depending on your requirement) to "#raw". This
+                instructs the mashup server to exclude wrapper elements. Note that if
+                you decide to use raw XML then the input to the function will be the
+                XML value itself. The following example illustrates this use.
+            </p>
+
+            <pre name="code" class="js">
+                echoString.inputTypes="#raw";
+                echoString.outputType="#raw";
+                function echoString(param) {
+                    return param;
+                }
+            </pre>
+            <p>
+                The wire-level XML input to this function is as follows (with
+                "&lt;value/&gt;" used as the parameter"):
+            </p>
+
+            <pre name="code" class="xml">
+                &lt;value/&gt;
+            </pre>
+            <p>
+                The wire-level XML output from this function is as follows:
+            </p>
+
+            <pre name="code" class="xml">
+                &lt;value/&gt;
+            </pre>
+            <p>
+                As you can see that "#raw" forces the mashup server to exclude the
+                wrapper elements.
+            </p>
+
+            <h2><a id="ArrayToXML"></a>Array -&gt;
+                XML conversion
+            </h2>
+            <p>
+                When arrays are returned from an operation the mashup server serializes
+                the array to XML as follows. Take the following function as an example,
+            </p>
+            <pre name="code" class="js">
+                returnArrayFunction.outputType="array";
+                function returnArrayFunction() {
+                    var returnArray = new Array();
+                    returnArray.property1 = "value1";
+                    returnArray.property2 = 2.270;
+                    returnArray.property3 = &lt;value&gt;2&lt;/value&gt;;
+                    return returnArray;
+                }
+            </pre>
+
+            <p>Thie output of the function would be
+                serialized as follows:
+            </p>
+
+            <pre name="code" class="xml">
+                &lt;ws:returnArrayFunctionResponse xmlns:ws="http://services.mashup.wso2.org/test?xsd"&gt;
+                    &lt;return xmlns:js="http://www.wso2.org/ns/jstype" js:type="array"&gt;
+                        &lt;property3 js:type="xml"&gt;
+                            &lt;value&gt;2&lt;/value&gt;
+                        &lt;/property3&gt;
+                        &lt;property1 js:type="string"&gt;value1&lt;/property1&gt;
+                        &lt;property2 js:type="number"&gt;2.27&lt;/property2&gt;
+                    &lt;/return&gt;
+                &lt;/ws:returnArrayFunctionResponse&gt;
+            </pre>
+            <p>
+                As arrays can contain multiple elements they are always wrapped in a
+                return element with the js:type attribute set to indicate that the
+                return was an array.
+            </p>
+            <p>Alternatively an array could have been declared as follows (Note that
+                the array properties are declared using indices):
+            </p>
+
+            <pre name="code" class="js">
+                returnArrayFunction.outputType="array";
+                function returnArrayFunction(){
+                    var returnArray = new Array();
+                    returnArray[0] = "value1";
+                    returnArray[1] = 2.270;
+                    returnArray[2] = &lt;value&gt;2&lt;/value&gt;;
+                    return returnArray;
+                }
+            </pre>
+            <p>In this case the response will look as follows. Instead of having the
+                elements as properties the elements will be as items because they have no
+                name of course.
+            </p>
+
+            <pre name="code" class="xml">
+                &lt;ws:returnArrayFunctionResponse xmlns:ws="http://services.mashup.wso2.org/test?xsd"&gt;
+                    &lt;return xmlns:js="http://www.wso2.org/ns/jstype" js:type="array"&gt;
+                        &lt;item js:type="string"&gt;value1&lt;/item&gt;
+                        &lt;item js:type="number"&gt;2.27&lt;/item&gt;
+                        &lt;item js:type="xml"&gt;
+                            &lt;value&gt;2&lt;/value&gt;
+                        &lt;/item&gt;
+                    &lt;/return&gt;
+                &lt;/ws:returnArrayFunctionResponse&gt;
+            </pre>
+
+
+            <h2><a id="ObjectToXML"></a>Object -&gt;
+                XML conversion
+            </h2>
+            <p>
+                Serialization of Objects is identical to that of
+                <a href="#ArrayToXML">Arrays</a>
+                with the following exception. The
+                type 'js:object' is used. Take a look at the following example:
+            </p>
+
+            <pre name="code" class="js">
+                returnObjectFunction.outputType="object";
+                function returnObjectFunction() {
+                    var returnObject = new objectFunc();
+                    returnObject.property1 = "value1";
+                    returnObject.property2 = 2.270;
+                    returnObject.property3 = &lt;value&gt;2&lt;/value&gt;;
+                    return returnObject;
+                }
+
+                objectFunc.visible=false;
+                function objectFunc(){
+                }
+            </pre>
+            <p>
+                This is the response:
+            </p>
+
+            <pre name="code" class="xml">
+                &lt;ws:returnObjectFunctionResponse xmlns:ws="http://services.mashup.wso2.org/test?xsd"&gt;
+                    &lt;return xmlns:js="http://www.wso2.org/ns/jstype" js:type="object"&gt;
+                        &lt;property3 js:type="xml"&gt;
+                            &lt;value&gt;2&lt;/value&gt;
+                        &lt;/property3&gt;
+                        &lt;property1 js:type="string"&gt;value1&lt;/property1&gt;
+                        &lt;property2 js:type="number"&gt;2.27&lt;/property2&gt;
+                    &lt;/return&gt;
+                &lt;/ws:returnObjectFunctionResponse&gt;
+            </pre>
+        </div>
+        <script language="javascript">
+            dp.SyntaxHighlighter.BloggerMode();
+            dp.SyntaxHighlighter.HighlightAll('code');
+        </script>
+    </body>
+</html>

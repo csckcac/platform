@@ -1,0 +1,610 @@
+/*Page layout styles*/
+body{
+    border-top:solid 7px #3d3d3d;
+    
+    padding:0px;
+    margin:0px;
+    font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+    font-size:12px;
+}
+.navigation{
+    background:transparent url(../images/navback.png) repeat-x left top;
+    height:26px;
+    border-left:solid 5px #ff4700;
+    border-right:solid 5px #ff4700;
+}
+.pageSizer{
+    width:960px;
+    margin:0px auto;
+}
+.footer{
+    background-color:#666666;
+    padding:10px;
+}
+.footerContent{
+    margin:0px auto;
+    width:960px;
+}
+.navFooterColHead{
+    color:#fff;
+    font-size:16px;
+}
+.navFooterLinkCol{
+    vertical-align:top;
+    padding-right:50px;
+}
+.navFooterLinkCol ul{
+    padding:0px;
+    margin:0px;
+    list-style:none;
+}
+.navFooterLinkCol a{
+    color:#d1d1d1;
+    font-size:11px;
+}
+.navigation ul{
+    margin:0px;
+    padding:0px;
+    list-style:none;
+}
+.navigation ul li{
+    float:left;
+    margin-left:20px;
+}
+.navigation ul li a{
+    color:#fff;
+       text-decoration:none;
+       font-size:11px;
+}
+.home_link{
+    padding-left:20px;
+    background:transparent url(../images/home.png) no-repeat left top;
+}
+.leftCol{
+    background:#3d3d3d;
+    width:30%;
+}
+.contentTable{
+    width:100%;
+}
+.leftMenu{
+        /* webkit */
+        background-image: -webkit-gradient(
+          linear, right top, left top, from(rgba(202, 219, 230, 0)),
+          to(rgba(255, 255, 255, 0.7))
+        );
+
+        /* mozilla - FF3.6+ */
+        background-image: -moz-linear-gradient(
+          right center,
+          rgba(202, 219, 230, 0.7) 20%, rgba(202, 219, 230, 0) 95%
+        );
+
+        /* IE 5.5 - 7 */
+        filter: progid:DXImageTransform.Microsoft.gradient(
+          gradientType=1, startColor=0, endColorStr=#cadbe6
+        );
+
+        /* IE8 uses -ms-filter for whatever reason... */
+        -ms-filter: progid:DXImageTransform.Microsoft.gradient(
+          gradientType=1, startColor=0, endColoStr=#cadbe6
+        );
+
+        -moz-box-shadow: 3px 3px 3px #888;
+        -webkit-box-shadow: 3px 3px 3px #888;
+        box-shadow: 3px 3px 3px #888;
+
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+
+        border:slid 1px #fff;
+        margin:5px;
+    }
+.menuHeader{
+        /* webkit */
+        background-image: -webkit-gradient(
+          linear, right top, left top, from(rgba(63, 106, 135, .5)),
+          to(rgba(63, 106, 135, 0.9))
+        );
+
+        /* mozilla - FF3.6+ */
+        background-image: -moz-linear-gradient(
+          right center,
+          rgba(63, 106, 135, 0.7) 50%, rgba(263, 106, 135, 0) 95%
+        );
+
+        /* IE 5.5 - 7 */
+        filter: progid:DXImageTransform.Microsoft.gradient(
+          gradientType=1, startColor=0, endColorStr=#3f6a87
+        );
+
+        /* IE8 uses -ms-filter for whatever reason... */
+        -ms-filter: progid:DXImageTransform.Microsoft.gradient(
+          gradientType=1, startColor=0, endColoStr=#3f6a87
+        );
+
+        -moz-box-shadow: 3px 3px 3px #888;
+        -webkit-box-shadow: 3px 3px 3px #888;
+        box-shadow: 3px 3px 3px #888;
+
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+
+        border:slid 1px #fff;
+        margin:5px;
+
+        color:#fff;
+        font-size:11px;
+        padding:5px;
+}
+.leftMenu-inside{
+    background:transparent url(../images/leftMenuBack.png) no-repeat left top;
+    padding:5px;
+}
+.menuHeader{
+    background-color:#3f6a87;
+}
+
+.leftMenu-inside ul{
+    margin:0px 0px 0px 5px;
+    padding:0px;
+    list-style:none;
+}
+.leftMenu-inside ul li{
+    padding:3px;
+     border-bottom:solid 1px #6f9cbc;
+}
+.leftMenu-inside ul li a{
+        color:#fff;
+       font-size:11px;
+}
+
+.clear{
+    clean:both;
+}
+h1{
+    font: 30px Tahoma, Helvetica, Arial, Sans-Serif;
+	text-align: left;
+	color: #444;
+    text-shadow: 0px 2px 3px #555;
+    margin:0px;
+    padding:10px;
+}
+.contentTable{
+    border-collapse:collapse;
+}
+.contentTable td{
+    vertical-align:top;
+}
+.copyright-message{
+     font: 11px Tahoma, Helvetica, Arial, Sans-Serif;
+	text-align: left;
+	color: #ddd;
+}
+.contentTitle{
+     /* webkit */
+        background-image: -webkit-gradient(
+          linear, right top, left top, from(rgba(209, 209, 209, .9)),
+          to(rgba(209, 209, 209, 0.5))
+        );
+
+        /* mozilla - FF3.6+ */
+        background-image: -moz-linear-gradient(
+          left center,
+          rgba(209, 209, 209, 0) 50%, rgba(209, 209, 209, 0.7) 95%
+        );
+
+        /* IE 5.5 - 7 */
+        filter: progid:DXImageTransform.Microsoft.gradient(
+          gradientType=0, startColor=1, endColorStr=#d1d1d1
+        );
+
+        /* IE8 uses -ms-filter for whatever reason... */
+        -ms-filter: progid:DXImageTransform.Microsoft.gradient(
+          gradientType=0, startColor=1, endColoStr=#d1d1d1
+        );
+
+        -moz-box-shadow: 3px 3px 3px #888;
+        -webkit-box-shadow: 3px 3px 3px #888;
+        box-shadow: 3px 3px 3px #888;
+
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+
+        border:slid 1px #fff;
+        margin:5px;
+
+        color:#444;
+        font-size:13px;
+        font-weight:bold;
+        padding:5px 5px 5px 0px;
+}
+.contentInfo{
+    padding-left:10px;
+}
+.contentContent{
+
+        -moz-box-shadow: 3px 3px 3px #888;
+        -webkit-box-shadow: 3px 3px 3px #888;
+        box-shadow: 3px 3px 3px #888;
+
+        border:slid 1px #fff;
+        margin:5px;
+
+        color:#444;
+        font-size:11px;
+        padding:5px;
+}
+ul.helpLinks{
+    margin:20px 0px;
+    padding:0px;
+    list-style:none;
+}
+ul.helpLinks li{
+    margin-left:10px;
+    height:30px;
+}
+ul.helpLinks li a{
+    color:#13364e;
+    text-decoration:none;
+    font-size:11px;
+    font-weight:bold;
+    padding-left:20px;
+}
+
+a{
+    cursor:pointer;
+}
+
+.catagories-mid h3{
+    margin:0px;
+    padding:0px;
+    font-size:13px;
+}
+h2{
+    color:#466c7e;
+    font-size:18px;
+    font-weight:normal;
+    margin-top:5px;
+    margin-bottom:10px;
+}
+
+table td{
+    vertical-align:top;
+}
+
+.show-cart{
+    background-image:url(../images/cart.png);
+    background-repeat:no-repeat;
+    position:absolute;
+    display:block;
+    margin-left:890px;
+    top:75px;
+    width:80px;
+    height:35px;
+}
+.selected{
+    background-image:url(../images/cart-selected.png) !important;
+    height:48px !important;
+}
+.home-links{
+    list-style-type:none;
+    padding:0px;
+    margin:0px;
+}
+.home-links li{
+    float:left;
+    padding-left:20px;
+}
+.home-links li a{
+    color:#505050;
+}
+.home-links li a.selected{
+    color:#9d3a25;
+    font-weight:bold;
+}
+.breadcrumb{
+    list-style-type:none;
+    padding:0px;
+    margin:0px;
+}
+.breadcrumb li{
+    float:left;
+    padding-right:20px;
+}
+.breadcrumb li a{
+    color: #0033cc;
+}
+.breadcrumb li a.last{
+    color: #666666;
+    font-weight:bold;
+}
+
+.catagories-list{
+    list-style-type:none;
+    padding:0px;
+    margin:0px;
+}
+.catagories-list li{
+    padding-left:5px;
+    padding-top:3px;
+}
+.catagories-list li a{
+    color:#0033cc;
+}
+.catagories-list li a:hover{
+    color:#ddd;
+}
+.catagories-list li a.selected{
+    color:#9d3a25;
+    font-weight:bold;
+}
+.page-headding{
+    border-top:solid 1px #ccc;
+    border-left:solid 1px #ccc;
+    border-right:solid 1px #ccc;
+    border-bottom:solid 10px #ccc;
+    padding:10px;
+}
+.show{
+    background-image:url(../images/show.gif);
+    background-repeat:no-repeat;
+    background-position:right center;
+    padding-right:20px;
+}
+.product-table-tiled{
+    border-left:solid 1px #ccc;
+    border-top:solid 1px #ccc;
+    background-color:#fcfcfc;
+}
+.product-table-tiled th{
+    background-color:#ccc;
+    padding:3px;
+}
+.product-table-tiled td{
+    border-right:solid 1px #ccc;
+    border-bottom:solid 1px #ccc;
+    padding:10px;
+    width:30%;
+}
+.product-table-tiled td td{
+    border:none;
+    padding:0px;
+}
+.product-table-tiled td.price{
+    color:#e72b2b;
+    font-size:16px;
+}
+.add-to-cart{
+    background-image:url(../images/add-to-cart.gif);
+    background-repeat:no-repeat;
+    background-position:0 0;
+    width:94px;
+    height:24px;
+    padding:2px;
+    color:#fff;
+    display:block;
+    text-align:center;
+}
+.link-to-product{
+    display:block;
+}
+.link-to-product img{
+    border:none;
+}
+.delete-icon{
+    background-image:url(../images/trash.gif);
+    background-repeat:no-repeat;
+    background-position:0 0;
+}
+.lastColWidth{
+    width:100px;
+}
+.pricecol{
+    text-align:right !important;
+}
+.price-total{
+    padding-top:10px;
+    font-size:14px;
+    font-weight:bold;
+}
+.checkout-wrapper{
+    padding-top:10px;
+    text-align:right;
+}
+.cartData h1{
+    color:#405c73;
+    font-weight:normal;
+    font-size:18px;
+    margin-bottom:10px;
+}
+.cartData{
+    background-color:#f0f0f0;
+    margin-left:10px;
+    margin-right:10px;
+    padding:10px;
+     -moz-box-shadow: 3px 3px 3px #888;
+        -webkit-box-shadow: 3px 3px 3px #888;
+        box-shadow: 3px 3px 3px #888;
+
+        border:slid 1px #fff;
+        margin:5px;
+
+        color:#444;
+        font-size:11px;
+        padding:5px;
+}
+.item-list{
+    border-left:solid 1px #c3c3c3;
+    border-top:solid 1px #c3c3c3;
+    width:100%;
+}
+.item-list thead th{
+    background-color:#c3c3c3;
+    padding-left:5px;
+    padding-right:3px;
+    padding-top:3px;
+    text-align:left;
+    border-right:solid 1px #c3c3c3;
+    border-bottom:solid 1px #c3c3c3;
+}
+.item-list tbody td{
+    background-color:#fff;
+    padding-left:5px;
+    padding-right:3px;
+    padding-top:3px;
+    border-right:solid 1px #c3c3c3;
+    border-bottom:solid 1px #c3c3c3;
+}
+.pro-description{
+    width:400px;
+    height:150px;
+}
+.formTable{
+    border:solid 1px #ccc;
+    padding-left:10px;
+    padding-top:10px;
+    padding-bottom:10px;
+}
+.formTable td{
+    padding-top:5px;
+}
+.formTable td.first{
+    width:200px;    
+}
+.home-top-msg{
+    background-image:url(../images/home-add-back.png);
+    background-repeat:repeat-x;
+    background-position:0 0;
+    height:25px;
+    color:#3481a5;
+    border:solid 1px #ccc;
+    padding-top:3px;
+    padding-bottom:4px;
+    padding-left:5px;
+    padding-right:5px;
+    margin-bottom:10px;
+}
+.loading{
+    text-align:center;
+    padding:10px;
+}
+.qCol{
+    width:40px;
+}
+.update_btn{
+    background-image:url(../images/update_btn.gif);
+    background-repeat:no-repeat;
+    background-position:0 0;
+    width:51px;
+    height:17px;
+    cursor:pointer;
+    display:block;
+    margin-top:5px;
+    margin-left:10px;
+}
+.clear_cart_btn{
+    background-image:url(../images/clear-cart.gif);
+    background-repeat:no-repeat;
+    background-position:0 0;
+    width:77px;
+    height:17px;
+    cursor:pointer;
+    display:block;
+    margin-top:5px;
+    margin-left:690px;
+}
+
+.highlighted td{
+    background-color:#e6edee;    
+}
+.item-picture-box{
+    border:solid 1px #ccc;
+    text-align:center;
+    padding:5px;
+
+     -moz-box-shadow: 3px 3px 3px #888;
+        -webkit-box-shadow: 3px 3px 3px #888;
+        box-shadow: 3px 3px 3px #888;
+
+        border:solid 1px #ccc;
+        margin:5px;
+
+        color:#444;
+        font-size:11px;
+}
+.item-content-box{
+    border-right:solid 1px #ccc;
+    -moz-box-shadow: 3px 3px 3px #888;
+        -webkit-box-shadow: 3px 3px 3px #888;
+        box-shadow: 3px 3px 3px #888;
+
+        border:solid 1px #ccc;
+        margin:5px;
+        padding:10px;
+        
+        color:#444;
+        font-size:11px;
+
+}
+.data-table th{
+    font-weight:bold;
+    text-align:left;
+    width:150px;
+    vertical-align:top;
+    color:#444;
+    font-size:12px;
+    padding-top:10px;
+}
+.data-table td{
+    padding-top:10px;
+    vertical-align:top;
+    color:#444;
+    font-size:12px;
+    line-height:20px;
+}
+.item-price{
+    color: #ff0000 !important;
+    font-weight:bold;
+}
+.related_item_box{
+    width: 210px;
+}
+.clear{
+    clear:both;
+}
+table.item-list{
+    font-family: "Trebuchet MS", sans-serif;
+    font-weight: bold;
+    line-height: 1em;
+    font-style: normal;
+    border-collapse:separate;
+}
+.item-list thead th{
+    padding:5px;
+    color:#fff;
+    text-shadow:1px 1px 1px #27687e;
+    border:1px solid #27687e;
+    border-bottom:3px solid #27687e;
+    background-color:#27687e;
+    background:-webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0.02, rgb(149,220,244)),
+        color-stop(0.51, rgb(68,162,195)),
+        color-stop(0.87, rgb(95,179,208))
+        );
+    background: -moz-linear-gradient(
+        center bottom,
+        rgb(149,220,244) 2%,
+        rgb(68,162,195) 51%,
+        rgb(95,179,208) 87%
+        );
+    -webkit-border-top-left-radius:5px;
+    -webkit-border-top-right-radius:5px;
+    -moz-border-radius:5px 5px 0px 0px;
+    border-top-left-radius:5px;
+    border-top-right-radius:5px;
+    border-collapse:collapse;
+}

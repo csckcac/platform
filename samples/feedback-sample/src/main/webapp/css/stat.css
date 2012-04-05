@@ -1,0 +1,30 @@
+table, td, div, span, a {
+font-family:"Trebuchet MS", Verdana, Helvetica, Arial,sans-serif;
+font-size:12px;
+}
+table.tableStyle{
+border-left:solid 1px #468aa6;
+border-top:solid 1px #468aa6;
+border-collapse:collapse;
+}
+table.tableStyle th{
+background-image: -webkit-gradient(linear, left top, left bottom, from(#56aed2), to(#417f98)); /* mozilla - FF3.6+ /
+background-image: -moz-linear-gradient(top, #56aed2 0%, #417f98 100%); / IE 5.5 - 7 /
+filter: progid:DXImageTransform.Microsoft.gradient(gradientType = 0, startColor = 0, endColorStr = #417f98); / IE8 */
+-ms-filter: progid: DXImageTransform . Microsoft . gradient(gradientType = 0, startColor = 0, endColoStr = #417f98);
+color:#fff;
+font-size:11px;
+text-align:left;
+padding:3px;
+
+border-right:solid 1px #468aa6;
+border-bottom:solid 1px #468aa6;
+}
+table.tableStyle td{
+border-right:solid 1px #468aa6;
+border-bottom:solid 1px #468aa6;
+margin:0px;
+padding:3px;
+}
+table.tableStyle tr:nth-child(even) {background: #ccdde1}
+table.tableStyle tr:nth-child(odd) {background: #FFF}

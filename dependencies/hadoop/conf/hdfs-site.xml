@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+
+<property>
+  <name>dfs.block.access.token.enable</name>
+  <value>true</value>
+</property>
+
+<property>
+  <name>dfs.replication</name>
+  <value>1</value>
+  <description>Default block replication.
+  The actual number of replications can be specified when the file is created.
+  The default is used if replication is not specified in create time.
+  </description>
+</property>
+<property>
+  <name>dfs.umaskmode</name>
+  <value>026</value>
+</property>
+<property>
+  <name>dfs.https.address</name>
+  <value>localhost:50475</value>
+</property>
+<property>
+  <name>dfs.https.port</name>
+  <value>50475</value>
+</property>
+<property>
+  <name>dfs.namenode.keytab.file</name>
+  <value>/home/wathsala/Downloads/hadoop-0.20.203.0/conf/hdfs.keytab</value>
+</property>
+<property>
+  <name>dfs.namenode.kerberos.principal</name>
+  <value>hdfs/node0@WSO2.ORG</value>
+</property>
+<property>
+  <name>dfs.namenode.kerberos.https.principal</name>
+  <value>host/node0@WSO2.ORG</value>
+</property>
+
+
+<!-- Secondary NameNode security config -->
+
+<property>
+  <name>dfs.secondary.http.address</name>
+  <value>localhost:0</value>
+</property>
+<property>
+  <name>dfs.secondary.https.address</name>
+  <value>localhost:50495</value>
+</property>
+<property>
+  <name>dfs.secondary.https.port</name>
+  <value>50495</value>
+</property>
+<property>
+  <name>dfs.secondary.namenode.keytab.file</name>
+  <value>/home/wathsala/Downloads/hadoop-0.20.203.0/conf/hdfs.keytab</value>
+</property>
+<property>
+  <name>dfs.secondary.namenode.kerberos.https.principal</name>
+  <value>host/node0@WSO2.ORG</value>
+</property>
+<property>
+  <name>dfs.secondary.namenode.kerberos.principal</name>
+  <value>hdfs/node0@WSO2.ORG</value>
+</property>
+
+<!-- DataNode security config -->
+
+<property>
+  <name>dfs.datanode.data.dir.perm</name>
+  <value>700</value>
+</property>
+
+<property>
+  <name>dfs.datanode.address</name>
+  <value>0.0.0.0:1004</value>
+</property>
+
+<property>
+  <name>dfs.datanode.http.address</name>
+  <value>0.0.0.0:1006</value>
+</property>
+
+<property>
+  <name>dfs.datanode.keytab.file</name>
+  <value>/home/wathsala/Downloads/hadoop-0.20.203.0/conf/hdfs.keytab</value>
+</property>
+
+<property>
+  <name>dfs.datanode.kerberos.principal</name>
+  <value>hdfs/node0@WSO2.ORG</value>
+</property>
+
+</configuration>
+

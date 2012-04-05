@@ -1,0 +1,345 @@
+<!--
+~ Copyright 2005-2008 WSO2, Inc. (http://wso2.com)
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <link href="css/mashup-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+
+    <body style="direction: ltr;">
+
+        <h1>Automatically Generated Resources</h1>
+
+        <div id="main-content">
+
+            <p>
+                <strong>Table of Contents</strong>
+            </p>
+
+            <div class="toc">
+
+                <ul>
+                    <li>
+                        <a href="#WSDL">WSDL (?wsdl2, ?wsdl)</a>
+                    </li>
+                    <li>
+                        <a href="#Schema">XML Schema (?xsd)</a>
+                    </li>
+                    <li>
+                        <a href="#JavaScript">JavaScript Stubs (?stub)</a>
+                    </li>
+                    <li>
+                        <a href="#Try-it">Try-it (?tryit)</a>
+                    </li>
+                    <li>
+                        <a href="#Gadget">Gadget (?gadget)</a>
+                    </li>
+                    <li>
+                        <a href="#Source">Source Code (?source)</a>
+                    </li>
+                    <li>
+                        <a href="#Template">Source Code Templates(?template)</a>
+                    </li>
+                    <li>
+                        <a href="#Documentation">API Documentation (?doc)</a>
+                    </li>
+                </ul>
+
+            </div>
+
+            <p>Just by virtue of deploying the service, the WSO2 mashup server generates
+                a number of descriptive artifacts and tools to make it easy to consume the
+                web service you've just created. These artifacts are linked from the mashup
+                page which can be accessed via the management console, or can be accessed
+                directly from the endpoint URI associated with the service. Typically the
+                endpoint URI is http://{host ip}:9763/services/{service name},
+                where the service name is by default the name of the JavaScript file
+                defining the service (minus the '.js'). By appending one of the following
+                queries to the endpoint URI, different artifacts and tools can be accessed:
+            </p>
+
+            <table class="MsoTableGrid" style="margin-left: 0.5in; border-collapse: collapse;" border="1"
+                   cellpadding="5" cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td>?wsdl2</td>
+                        <td>WSDL 2.0 description of the service</td>
+                    </tr>
+                    <tr>
+                        <td>?wsdl</td>
+                        <td>WSDL 1.1 description of the service</td>
+                    </tr>
+                    <tr>
+                        <td>?xsd</td>
+                        <td>XML Schema description of the service</td>
+                    </tr>
+                    <tr>
+                        <td>?stub</td>
+                        <td>JavaScript or E4X stub for accessing the service</td>
+                    </tr>
+                    <tr>
+                        <td>?tryit</td>
+                        <td>Ajax client for simple, generic interactions with the service</td>
+                    </tr>
+                    <tr>
+                        <td>?gadget</td>
+                        <td>A custom gadget (if there is one) for the service, currently only Google gadgets are
+                            supported
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>?source</td>
+                        <td>The JavaScript source code for the service</td>
+                    </tr>
+                    <tr>
+                        <td>?template</td>
+                        <td>A source code template for developing a custom UI</td>
+                    </tr>
+                    <tr>
+                        <td>?doc</td>
+                        <td>Documentation for the service</td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <h2 id="WSDL">WSDL (?wsdl2, ?wsdl)</h2>
+
+
+            <p>By appending '?wsdl2' to the endpoint URI, you can retrieve an
+                automatically-generated WSDL 2.0 document describing the service. For the
+                helloworld service, try http://&lt;your-machine-ip&gt;:9763/service/helloworld?wsdl2.
+                The WSDL describes the operations the service exposes, the structure of the
+                XML that is sent and received by each operation, and how to communicate with
+                the service to retrieve the XML content. By default, six different types of
+                endpoints are deployed. Each of these endpoint types are represented by the
+                WSDL 2.0 &lt;endpoint&gt; elements of the service, and by the &lt;binding&gt;
+                elements which these endpoints refer to. The default six types of endpoints
+                are:
+            </p>
+
+            <ol>
+                <li>SOAP 1.2 over HTTP</li>
+                <li>SOAP 1.1 over HTTP</li>
+                <li>Plain old XML/REST over HTTP</li>
+                <li>SOAP 1.2 over HTTPS</li>
+                <li>SOAP 1.1 over HTTPS</li>
+                <li>Plain old XML/REST over HTTPS</li>
+            </ol>
+
+            <p>One can also get a WSDL 1.1 description of the service by appending
+                '?wsdl' to the endpoint URI. For the helloworld service, try http://&lt;your-machine-ip&gt;:9763/service/helloworld?wsdl.
+            </p>
+
+            <p>For more information on precisely how the Mashup Server generates WSDL,
+                see <a href="annotations.html">JavaScript Annotations</a>.
+            </p>
+
+
+            <h2 id="Schema">XML Schema (?xsd)</h2>
+
+            <p>Although accessing '?wsdl' or '?wsdl2' gives you a service description
+                that includes an XML Schema description of the XML structure, you can also
+                ask for the XML Schema separately using the '?xsd' option. For the
+                helloworld service, try http://&lt;your-machine-ip&gt;:9763/services/helloworld?xsd.
+            </p>
+
+
+            <h2 id="JavaScript">JavaScript Stubs (?stub)</h2>
+
+            <p>Most Web Service toolkits can successfully use the WSDL description to
+                provide a nice programming model for accessing the service. For instance,
+                WSO2 Web Services Application Server (WSAS) provides a utility wsdl2java
+                which generates Java code for interacting with the service in a manner
+                friendly to Java programmers.
+            </p>
+
+
+            <p>Similarly, the Mashup Server provides a tool for interacting with a
+                service in a manner friendly to JavaScript programmers. The '?stub' option
+                returns a JavaScript file that can be included in a Web page or another
+                mashup service to make interacting with the service easy and natural. For
+                example, if a web page is to interact with the hello world service, you only
+                have to include the stub and you can use the WSRequest object -- available
+                natively in the Mashup Server, or a simple version in native JavaScript (shown
+                below) -- to call the Web service simply and naturally. Please refer
+                <a href="helloworldclient.html">Writing a
+                    Helloworld client
+                </a>
+                for further details.
+            </p>
+
+            <p>The '?stub' option accepts these additional parameters:</p>
+
+            <ul>
+                <li><b>lang</b>: Whether the stub should use native E4X XML datatypes, or
+                    use DOM to represent XML. The value 'e4x' indicates that native E4X
+                    datatypes should be used, the values 'js', 'ecmascript', and 'javascript'
+                    are synonymous terms for indicating that XML should be exposed through
+                    the DOM.
+                </li>
+                <li><b>service</b>: When a WSDL 2.0 document from which the stub is
+                    generated contains more than one &lt;service&gt; element, this parameter
+                    can be used to select which service to build a stub for. By default the
+                    first &lt;service&gt; is used. When writing services in JavaScript, each
+                    file corresponds to a single service.
+                </li>
+                <li><span style="font-weight: bold;">localhost</span>: When set to
+                    true returns a stub that has the endpoint reference as localhost
+                    instead of using an IP. Optimum for a Mashup hosted on this server
+                    (especially for including).
+                </li>
+            </ul>
+
+            <p>For more information on using stubs, especially on using them
+                asynchronously, see <a href="consumingservices.html">Using Stubs</a>.
+            </p>
+
+
+            <h2 id="Try-it">Try-it (?tryit)</h2>
+
+            <p>The first thing you might want to do with your new service is try it out.
+                The '?tryit' option provides a quick and easy way to exercise the service
+                right out of the box. The try-it window for a service might look something
+                like this:
+            </p>
+
+            <p>
+                <img style="width: 895px;" alt="try it" src="images/storexml_tryit.png"/>
+            </p>
+            <p>
+                <br/>
+            </p>
+
+            <p>You can choose the operation you'd like to invoke from the list on the
+                left hand side, fill in the necessary parameters, and invoke the operation to
+                view the result. If you need more typing space (for instance, the parameter
+                takes a blob of XML) you can expand the size of the input field by clicking
+                on the small icon in the lower right corner of each field.
+            </p>
+
+            <p>A few notes about the Try-it page:</p>
+
+            <ul>
+                <li>The documentation from the documentation annotation is displayed, and
+                    good documentation makes the try-it much nicer to use. I hope this
+                    encourages you to use the available documentation facilities!
+                </li>
+                <li>The input fields for the parameters initially show the XML Schema type
+                    of data that's expected. 'anyType' means an XML element. Note that you
+                    are responsible for keeping the XML for these types of services
+                    well-formed. You can also get this information from the tooltip.
+                </li>
+                <li>The try-it page is a full Ajax client and interacts with the service
+                    just as any other client would, so it's a good way to verify that a
+                    service not only works, but is reachable by the clients. Note however
+                    that the try-it page attempts to contact the Web Service at the endpoint url
+                    provided. If the domain or url scheme of the service are
+                    different than the endpoint, the browser may impose security restrictions.
+                    In this case the try-it falls back to using a script-injection protocol
+                    to tunnel the web service request. In this case, a wire trace of the
+                    communication with the browser will not show the actual web service
+                    messages used to communicate with the service.
+                </li>
+                <li>The try-it page can dynamically switch between the available endpoints
+                    using the expand to change link. You can choose an appropriate endpoint,
+                    manually edit the endpoint address if necessary (e.g., to redirect
+                    messages through<a href="http://ws.apache.org/commons/tcpmon">tcpmon</a>),
+                    and if appropriate link to an alternate try-it that makes more
+                    endpoints available (when the try-it page is served up under HTTP, only
+                    HTTP endpoints appear, but if you get the try-it page from HTTPS, then
+                    HTTPS endpoints may appear instead.). The current endpoint is used is
+                    displayed on the top left corner of the page.
+                </li>
+                <li>When you have selected a Plain Old XML/REST binding such as HTTP or HTTPS,
+                    and the operation you are invoking is annotated as "safe", the try-it
+                    will provide a link to the service. As you enter values into the
+                    form, they will appear in the link. You can click on this link to
+                    see the operation results directly in the browser, or copy it into
+                    code that accesses the Web service directly through HTTP.
+                </li>
+                <li>If the service is secured using a username/password security scenario,
+                    the try-it will display username and password fields. Security scenarios
+                    other than usename/password authentication are not supported at this time.
+                </li>
+                <li>The try-it page is fully asynchronous, so it doesn't block while a Web
+                    service is being invoked. You could invoke several operations before one
+                    of them completes (though it doesn't have a way to see the results of the
+                    same operation invoked multiple times.)
+                </li>
+            </ul>
+
+            <p>Feel free to take the Try-it as the basis for a custom Ajax-style Web
+                application to interact with your service. You'll find the source code quite
+                minimal.
+            </p>
+
+
+            <h2 id="Gadget">Gadget (?gadget)</h2>
+
+            <p>A version of the try-it packaged as a Google gadget. Copy the URL into your
+                Google gadget host (the Mashup Server Dashboard or a host like iGoogle) to
+                access the try-it for the service as a gadget. Note that the Mashup Server must
+                be internet accessible for the gadget to work in a service such as iGoogle.
+            </p>
+
+
+            <h2 id="Source">Source Code (?source)</h2>
+
+            <p>The source code for a service can be accessed through the '?source'
+                option. By default, the source code is available for each service, but in
+                a future release, we will allow you to prevent others from viewing, copying,
+                adapting, or even fixing your code with an option in the administrative console.
+            </p>
+
+
+            <h2 id="Template">Source Code Templates (?template)</h2>
+
+            <p>A template for a custom UI can be obtained with the '?template' option. This
+                provides a convenient starting place for writing a custom UI in HTML or as a
+                Google Gadget. The template gives minimal functionality to call the mashup
+                Web service, and will work out of the box for many services. Other services
+                will require some service-specific coding before they begin to work. For instance,
+                a service may require operations to be called in a specific order, or the
+                types of inputs allowed may be restricted further than is described in the schema
+                (e.g. an xs:string type may have to be a valid US city name.)
+            </p>
+
+            <p>The '?template' option requires an additional parameter:</p>
+
+            <ul>
+                <li><b>flavor</b>: The type of template to generate. Supported values are
+                    'html' for an HTML Ajax application, or 'googlegadget' for a Google
+                    Gadget manifest suitable for hosting in the Dashboard or an external
+                    Google gadget host such as <a href="http://www.google.com/ig">iGoogle</a>.
+                </li>
+            </ul>
+
+
+            <h2 id="Documentation">API Documentation (?doc)</h2>
+
+            <p>The documentation for a service, as defined in by the<a href="annotations.html#documentat">
+                'documentation'
+                annotations</a>, can be
+                accessed with the '?doc' query. The returned HTML format is intended for reference,
+                printout, etc.
+            </p>
+
+        </div>
+
+    </body>
+</html>

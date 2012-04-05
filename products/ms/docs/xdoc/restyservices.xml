@@ -1,0 +1,190 @@
+<!--
+~ Copyright 2005-2008 WSO2, Inc. (http://wso2.com)
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <link href="css/mashup-docs.css" rel="stylesheet" type="text/css" media="all"/>
+        <link type="text/css" rel="stylesheet" href="css/SyntaxHighlighter.css" media="all"/>
+        <script language="javascript" src="js/shCore.js"></script>
+        <script language="javascript" src="js/shBrushJScript.js"></script>
+        <script language="javascript" src="js/shBrushJava.js"></script>
+        <script language="javascript" src="js/shBrushSql.js"></script>
+        <script language="javascript" src="js/shBrushXml.js"></script>
+    </head>
+    <body>
+        <div id="main-content">
+            <h1>Writing RESTful services</h1>
+
+            <p>The Mashup Server helps you write RESTful services with relative
+                ease, facilitated by the use of the httpMethod, httpLocation and the
+                ignoreUncited annotations. As their names imply the httpMethod is used
+                to specify the HTTP method to be used and the httpLocation annotation
+                specifies how the parameters can be sent in the request URI. These two
+                annotation helps you build truly RESTful mashups. You can have a look at
+                the RESTSample that ships as a sample with the WSO2 Mashup Server for
+                an illustration of the usage of these annotations.
+            </p>
+
+
+            <h2 id="httpMethod">httpMethod annotation</h2>
+
+            <p>
+                The httpMethod annotation helps you specify the HTTP Method under which the
+                operation will be exposed. Supported HTTP methods are GET, POST,
+                PUT and DELETE.
+            </p>
+
+            <pre name="code" class="js">
+                exposeViaGET.httpMethod="GET";
+                function exposeViaGET() {
+                    // get something
+                }
+
+                exposeViaPOST.httpMethod="POST";
+                function exposeViaPOST() {
+                    // post something
+                }
+
+                exposeViaPUT.httpMethod="PUT";
+                function exposeViaPUT() {
+                    // put something
+                }
+
+                exposeViaDELETE.httpMethod="DELETE";
+                function exposeViaDELETE() {
+                    // delete something
+                }
+            </pre>
+            <p>
+                If the httpMethod is not specified the operation is
+                exposed with a default HTTP method. The defaulting rule is as follows,
+            </p>
+            <p>
+                1. If the operation is marked as "safe" using the {function}.safe
+                annotation the HTTP method defaults to GET (the .safe annotation
+                defaults to false unless explicitly set).
+            </p>
+
+            <pre name="code" class="js">
+                defaultsToGET.safe = true;
+                function defaultsToGET() {
+                    // returns something
+                }
+            </pre>
+            <p>
+                2. If the operation is not marked as safe, or marked as not safe the HTTP method defaults
+                to POST.
+            </p>
+
+            <pre name="code" class="js">
+                function defaultsToPOST() {
+                    // do something
+                }
+            </pre>
+
+            <h2 id="inputTypes">httpLocation annotation</h2>
+
+            <p>
+                The
+                httpLocation annotation helps you take control of the URI and expose
+                this operation under a logical URI. It does this by specifying a
+                pattern, or template,
+                for serializing input parameters of the function in the request
+                URI. Curly braces are
+                used to specify the name of an input parameter, which determines where
+                the instance data of that parameter appears
+                in the path component of the request URI. In the stubs the curly
+                brace-enclosed name is replaced with instance data in
+                constructing the path component. Remaining input instance data (not
+                specified by<span style="font-family: monospace;">httpLocation annotation</span>)
+                is serialized
+                into the query string portion of the URI. In order for the httpLocation
+                annotation to be effective you have to use it in conjuction with
+                inputTypes annotation. The server needs to be aware of how to build the
+                payload from the request URI and the inputTypes annotation makes this
+                possible.
+            </p>
+            <p>
+                The following example shows the use of httpMethod and httpLocation annotations. You can
+                try the service out on your local Mashup Server. It's shipped as the RESTSample.
+            </p>
+
+            <pre name="code" class="js">
+                getWeather.safe = true;
+                getWeather.httpMethod = "GET";
+                getWeather.httpLocation = "weather/{city}";
+                getWeather.inputTypes = "string";
+                function getWeather(city) {
+                    var details = session.get(city);
+                    // return whether details of city
+                    // for e.g to get the weather details of colombo you need to perform a
+                    // GET on http://localhost:7762/services/samples/RESTSample/weather/colombo
+                }
+
+                POSTWeather.httpMethod = "POST";
+                POSTWeather.httpLocation = "weather/{city}";
+                POSTWeather.inputTypes = {"city" : "string", "weatherDetails" : "string"};
+                function POSTWeather(city, weatherDetails) {
+                    // Add the weather details of city
+                    // For e.g to add weather details of colombo you need to perform a POST
+                    // on http://localhost:7762/services/samples/RESTSample/weather/colombo
+                    // with the following payload
+                    // &lt;POSTWeather&gt;
+                    //      &lt;city&gt;colombo&lt;/city&gt;
+                    //      &lt;weatherDetails&gt;30&lt;/weatherDetails&gt;
+                    // &lt;/POSTWeather&gt;
+                }
+
+                DeleteWeather.httpMethod = "DELETE";
+                DeleteWeather.httpLocation = "weather/{city}";
+                DeleteWeather.inputTypes = "string";
+                function DeleteWeather(city) {
+                    // Delete the weather details of city
+                    // For e.g to delete the weather details of colombo you need to perform
+                    // a DELETE on http://localhost:7762/services/samples/RESTSample/weather/colombo
+                }
+
+                PUTWeather.httpMethod = "PUT";
+                PUTWeather.httpLocation = "weather/{city}";
+                PUTWeather.inputTypes = {"city" : "string", "weatherDetails" : "string"};
+                function PUTWeather(city, weatherDetails){
+                    // Update the weather details of city
+                    // For e.g to update the weather details of colombo you need to perform
+                    // a PUT on http://localhost:7762/services/samples/RESTSample/weather/colombo with
+                    // the following payload
+                    // &lt;PUTWeather&gt;
+                    //      &lt;city&gt;colombo&lt;/city&gt;
+                    //      &lt;weatherDetails&gt;35&lt;/weatherDetails&gt;
+                    // &lt;/PUTWeather&gt;
+                }
+            </pre>
+
+            <h2>ignoreUncited annotation</h2>
+
+            <p>This boolean indicates whether elements not cited in the httpLocation property MUST be
+                appended to the request URI or ignored. If the value of this property is "false",
+                elements not cited in httpLocation will be appended to the request URI.
+                Otherwise, those are NOT serialized in the request URI.
+            </p>
+
+        </div>
+        <script language="javascript">
+            dp.SyntaxHighlighter.BloggerMode();
+            dp.SyntaxHighlighter.HighlightAll('code');
+        </script>
+    </body>
+</html>

@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>@product.name@ - Extensions - XPath Extensions</title>
+        <link href="../css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+
+      
+        <h1>XPath Extensions</h1>
+        <ul>
+            <li><a href="#XPathExtensions-Introduction">Introduction</a></li>
+            <li><a href="#XPathExtensions-XPath20">XPath 2.0</a></li>
+            <li><a href="#XPathExtensions-ExtensionFunctions">Extension Functions</a>
+                <ul>
+                    <li><a href="#XPathExtensions-insert-before">insert-before</a></li>
+                    <li><a href="#XPathExtensions-insert-after">insert-after</a></li>
+                    <li><a href="#XPathExtensions-insert-as-first-into">insert-as-first-into</a></li>
+                    <li><a href="#XPathExtensions-insert-as-last-into">insert-as-last-into</a></li>
+                    <li><a href="#XPathExtensions-delete">delete</a></li>
+                    <li><a href="#XPathExtensions-rename">rename</a></li>
+                    <li><a href="#XPathExtensions-split-to-elements">split-to-elements</a></li>
+                    <li><a href="#XPathExtensions-combine-url_base_relative">combine-url(base, relative)</a></li>
+                    <li><a href="#XPathExtensions-compose-url_template_name_value">compose-url(template, [name, value]*)</a></li>
+                    <li><a href="#XPathExtensions-compose-url_template_pairs">compose-url(template, pairs)</a></li>
+                    <li><a href="#XPathExtensions-expand-template_template_name_value">expand-template(template, [name, value]*)</a></li>
+                    <li><a href="#XPathExtensions-expand-template_template_pairs">expand-template(template, pairs)</a></li>
+                    <li><a href="#XPathExtensions-dom-to-string">dom-to-string</a></li>
+                    <li><a href="#XPathExtensions-process-property">process-property</a></li>
+                </ul>
+            </li>
+        </ul>
+        <br />
+        <h2>
+            <a name="XPathExtensions-Introduction"></a>
+            Introduction
+        </h2>
+        <p>
+            @product.name@ extends the default XPath coverage provided by the WS-BPEL specification mostly by adding support
+            for XPath 2.0 and by offering a few utility extension functions to make some assignments easier.
+        </p>
+        <br />
+        <h2>
+            <a name="XPathExtensions-XPath20"></a>
+            XPath 2.0
+        </h2>
+        <p>
+            To use XPath 2.0 in processes, use the following queryLanguage and expressionLanguage attributes:
+        </p>
+        <pre class="xml" style="font-family:monospace;">
+    <span style="color: #009900;"><span style="color: #000066;">queryLanguage</span>=&quot;urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0&quot;</span>
+    <span style="color: #009900;"><span style="color: #000066;">expressionLanguage</span>=&quot;urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0&quot;</span>
+        </pre>
+        <p>
+            To make the XPath 2.0 default for the process, add these attributes to the root process element. If you want
+            to stick with XPath 1.0 but want XPath 2.0 support for a specific assignment, you can also define these
+            attributes on an assign element.
+        </p>
+        <br />
+        <h2>
+            <a name="XPathExtensions-ExtensionFunctions"></a>
+            Extension Functions
+        </h2>
+        <p>
+            All extension functions are defined in the ODE extension namespace: http://www.apache.org/ode/type/extension.
+            This namespace will be associated with the ode prefix in the following examples.
+        </p>
+
+        <ul>
+            <li><a name="XPathExtensions-insert-before"></a>
+            <p>insert-before</p>
+            <br/>
+        <p>
+            This is a function that allows you to insert one or more siblings (specified by the $siblings argument in
+            the signature below) before the first node of children (specified by the $children argument), all of whose
+            nodes must have the same parent (specified by the $context argument).
+        </p>
+        <pre class="php" style="font-family:monospace;">ode<span style="color: #339933;">:</span>insert<span style="color: #339933;">-</span>before<span style="color: #009900;">&#40;</span><span style="color: #000088;">$context</span> <span style="color: #b1b100;">as</span> node<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span> <span style="color: #000088;">$children</span> <span style="color: #b1b100;">as</span> node<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">*,</span> <span style="color: #000088;">$siblings</span> <span style="color: #b1b100;">as</span> node<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">*</span><span style="color: #009900;">&#41;</span> <span style="color: #b1b100;">as</span> node<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span></pre>
+        <p>
+            By design, this function is non-updating in that it preserves the identity and properties of its arguments
+            (i.e., they don't try to change the XML in-place). Instead, a modified copy of the context node is created,
+            essentially giving it a new identity. Further, it returns a single R-value item, as opposed to a sequence.
+            The example below illustrates how it may be used in the context of an assign activity:
+        </p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+  <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;copy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>ode:insert-before($parent, $parent/child::node[position()=last()], $siblings)<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;to</span> <span style="color: #000066;">variable</span>=<span style="color: #ff0000;">&quot;parent&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+  <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/copy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        </pre>
+        <p>
+            For those familiar with the <a href="http://www.w3.org/TR/2008/CR-xquery-update-10-20080801/">XQuery Update Facility</a>
+            , the above example is semantically equivalent to the expression shown below:
+        </p>
+        <pre class="php" style="font-family:monospace;">insert nodes <span style="color: #000088;">$siblings</span> before <span style="color: #000088;">$parent</span><span style="color: #339933;">/</span>child<span style="color: #339933;">::</span><span style="color: #004000;">node</span><span style="color: #009900;">&#91;</span>position<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">=</span>last<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#93;</span></pre>
+            </li>
+        <li>
+            <a name="XPathExtensions-insert-after"></a>
+            insert-after
+            <br/>
+            <p>
+                This is a function that allows you to insert one or more siblings (specified by the $siblings argument
+                in the signature below) after the last node of children (specified by the $children argument), all of
+                whose nodes must have the same parent (specified by the $context argument).
+            </p>
+            <pre class="php" style="font-family:monospace;">ode<span style="color: #339933;">:</span>insert<span style="color: #339933;">-</span>after<span style="color: #009900;">&#40;</span><span style="color: #000088;">$context</span> <span style="color: #b1b100;">as</span> node<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span> <span style="color: #000088;">$children</span> <span style="color: #b1b100;">as</span> node<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">*,</span> <span style="color: #000088;">$siblings</span> <span style="color: #b1b100;">as</span> node<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">*</span><span style="color: #009900;">&#41;</span> <span style="color: #b1b100;">as</span> node<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span></pre>
+            <p>
+                By design, this function is non-updating in that it preserves the identity and properties of its
+                arguments (i.e., they don't try to change the XML in-place). Instead, a modified copy of the context
+                node is created, essentially giving it a new identity. Further, it returns a single R-value item, as
+                opposed to a sequence. The example below illustrates how it may be used in the context of an assign
+                activity:
+            </p>
+            <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+  <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;copy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>ode:insert-after($parent, $parent/child::node(), $siblings)<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;to</span> <span style="color: #000066;">variable</span>=<span style="color: #ff0000;">&quot;parent&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+  <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/copy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+            <p>
+                For those familiar with the <a href="http://www.w3.org/TR/2008/CR-xquery-update-10-20080801/">XQuery Update Facility</a>
+                , the above example is semantically equivalent to the expression shown below:
+            </p>
+            <pre class="php" style="font-family:monospace;">insert nodes <span style="color: #000088;">$siblings</span> after <span style="color: #000088;">$parent</span><span style="color: #339933;">/</span>child<span style="color: #339933;">::</span><span style="color: #004000;">node</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span>
+            </pre>
+        </li>
+        <li>
+            <a name="XPathExtensions-insert-as-first-into"></a>
+            insert-as-first-into
+            <br/>
+            <p>
+                This is a function that allows you to insert the node(s) (specified by the $children argument in the
+                signature below) as the first child(ren) of a given context node (specified by the $context argument).
+            </p>
+            <pre class="php" style="font-family:monospace;">ode<span style="color: #339933;">:</span>insert<span style="color: #339933;">-</span>as<span style="color: #339933;">-</span>first<span style="color: #339933;">-</span>into<span style="color: #009900;">&#40;</span><span style="color: #000088;">$context</span> <span style="color: #b1b100;">as</span> node<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span> <span style="color: #000088;">$children</span> <span style="color: #b1b100;">as</span> node<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">*</span><span style="color: #009900;">&#41;</span> <span style="color: #b1b100;">as</span> node<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span></pre>
+            <p>
+                By design, this function is non-updating in that it preserves the identity and properties of its
+                arguments (i.e., they don't try to change the XML in-place). Instead, a modified copy of the context
+                node is created, essentially giving it a new identity. Further, it returns a single R-value item, as
+                opposed to a sequence. The example below illustrates how it may be used in the context of an assign
+                activity:
+            </p>
+            <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+  <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;copy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>ode:insert-as-first-into($parent, $children)<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;to</span> <span style="color: #000066;">variable</span>=<span style="color: #ff0000;">&quot;parent&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+  <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/copy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            </pre>
+            <p>
+                For those familiar with the <a href="http://www.w3.org/TR/2008/CR-xquery-update-10-20080801/">XQuery Update Facility</a>
+                , the above example is semantically equivalent to the expression shown below:
+            </p>
+            <pre class="php" style="font-family:monospace;">insert nodes <span style="color: #000088;">$children</span> <span style="color: #b1b100;">as</span> first into <span style="color: #000088;">$parent</span>
+            </pre>
+        </li>
+        <li>
+            <a name="XPathExtensions-insert-as-last-into"></a>
+            insert-as-last-into
+            <br/>
+            <p>
+                This is a function that allows you to insert the node(s) (specified by the $children argument in the
+                signature below) as the last child(ren) of a given context node (specified by the $context argument).
+            </p>
+            <pre class="php" style="font-family:monospace;">ode<span style="color: #339933;">:</span>insert<span style="color: #339933;">-</span>as<span style="color: #339933;">-</span>last<span style="color: #339933;">-</span>into<span style="color: #009900;">&#40;</span><span style="color: #000088;">$context</span> <span style="color: #b1b100;">as</span> node<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span> <span style="color: #000088;">$children</span> <span style="color: #b1b100;">as</span> node<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">*</span><span style="color: #009900;">&#41;</span> <span style="color: #b1b100;">as</span> node<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span>
+            </pre>
+            <p>
+                By design, this function is non-updating in that it preserves the identity and properties of its
+                arguments (i.e., they don't try to change the XML in-place). Instead, a modified copy of the context
+                node is created, essentially giving it a new identity. Further, it returns a single R-value item, as
+                opposed to a sequence. The example below illustrates how it may be used in the context of an assign
+                activity:
+            </p>
+            <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+  <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;copy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>ode:insert-as-last-into($parent, $children)<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;to</span> <span style="color: #000066;">variable</span>=<span style="color: #ff0000;">&quot;parent&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+  <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/copy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+            <p>
+                For those familiar with the <a href="http://www.w3.org/TR/2008/CR-xquery-update-10-20080801/">XQuery Update Facility</a>
+                , the above example is semantically equivalent to the expression shown below:
+            </p>
+            <pre class="php" style="font-family:monospace;">insert nodes <span style="color: #000088;">$children</span> <span style="color: #b1b100;">as</span> last into <span style="color: #000088;">$parent</span></pre>
+        </li>
+        <li>
+            <a name="XPathExtensions-delete"></a>
+            delete
+            <br/>
+            <p>
+            This is a function that allows you to delete one or more node(s) (specified by the $children argument
+            in the signature below) from its parent (specified by the $context argument).
+        </p>
+            <pre class="php" style="font-family:monospace;">ode<span style="color: #339933;">:</span>delete<span style="color: #009900;">&#40;</span><span style="color: #000088;">$context</span> <span style="color: #b1b100;">as</span> node<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span> <span style="color: #000088;">$children</span> <span style="color: #b1b100;">as</span> node<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">*</span><span style="color: #009900;">&#41;</span> <span style="color: #b1b100;">as</span> node<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span></pre>
+            <p>
+            By design, this function is non-updating in that it preserves the identity and properties of its
+            arguments (i.e., they don't try to change the XML in-place). Instead, a modified copy of the context
+            node is created, essentially giving it a new identity. Further, it returns a single R-value item, as
+            opposed to a sequence. The example below illustrates how it may be used in the context of an assign
+            activity:
+            </p>
+            <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+  <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;copy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>ode:delete($parent, $children)<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;to</span> <span style="color: #000066;">variable</span>=<span style="color: #ff0000;">&quot;parent&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+  <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/copy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            </pre>
+            <p>
+                For those familiar with the <a href="http://www.w3.org/TR/2008/CR-xquery-update-10-20080801/">XQuery Update Facility</a>
+                , the above example is semantically equivalent to the expression shown below:
+            </p>
+            <pre class="php" style="font-family:monospace;">delete nodes <span style="color: #000088;">$children</span></pre>
+        </li>
+        <li>
+            <a name="XPathExtensions-rename"></a>
+            rename
+            <br/>
+            <p>
+                This is a function that allows you to rename the context node (specified by the $context argument in the
+                signature below) as per the given name (specified by $item, which is either a QName, Element or String).
+            </p>
+            <pre class="php" style="font-family:monospace;">ode<span style="color: #339933;">:</span><span style="color: #990000;">rename</span><span style="color: #009900;">&#40;</span><span style="color: #000088;">$context</span> <span style="color: #b1b100;">as</span> node<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">,</span> <span style="color: #000088;">$name</span> <span style="color: #b1b100;">as</span> item<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span> <span style="color: #b1b100;">as</span> node<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span></pre>
+            <p>
+                By design, this function is non-updating in that it preserves the identity and properties of its arguments
+                (i.e., they don't try to change the XML in-place). Instead, a modified copy of the context node is
+                created, essentially giving it a new identity. Further, it returns a single R-value item, as opposed to
+                a sequence. The example below illustrates how it may be used in the context of an assign activity:
+            </p>
+            <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+  <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;copy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>ode:rename($person, fn:QName(&quot;http://www.example.com/example&quot;, &quot;manager&quot;))<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;to</span> <span style="color: #000066;">variable</span>=<span style="color: #ff0000;">&quot;person&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+  <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/copy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+            <p>
+                For those familiar with the <a href="http://www.w3.org/TR/2008/CR-xquery-update-10-20080801/">XQuery Update Facility</a>
+                , the above example is semantically equivalent to the expression shown below:
+            </p>
+            <pre class="php" style="font-family:monospace;"><span style="color: #990000;">rename</span> <span style="color: #000088;">$person</span> <span style="color: #b1b100;">as</span> fn<span style="color: #339933;">:</span>QName<span style="color: #009900;">&#40;</span><span style="color: #0000ff;">&quot;http://www.example.com/example&quot;</span><span style="color: #339933;">,</span> <span style="color: #0000ff;">&quot;manager&quot;</span><span style="color: #009900;">&#41;</span></pre>
+            <p><b>Assign Assumption</b></p>
+            <p>
+                The WS-BPEL requires that "for a copy operation to be valid, the data referred to by the from-spec and
+                the to-spec MUST be of compatible types." Hence, make sure that when you rename an element, the new name
+                refers to a type that is compatible with the target variable. In other words, it should be of a
+                substitutable (essentially stronger) complex type.
+            </p>
+        </li>
+        <li>
+            <a name="XPathExtensions-split-to-elements"></a>
+            split-to-elements
+            <br/>
+            <p>
+                It's impossible to split a given string into a sequence of elements using assignments. The only possible
+                alternative is XSL which is a lot of complexity for a very simple usage pattern. The ode:splitToElements
+                function splits a given string (that can be a variable reference) into several elements by using a
+                specific separators. Here is an example:
+            </p>
+            <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+  <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>ode:split-to-elements($authorizeMessage.credential/userList, ',', 'user')<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+  <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;to<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>$authorizedUsers<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/to<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            </pre>
+            <p>
+                If the source element contains a list like "joe, paul, fred" the target variable will be assigned the
+                sequence of elements:
+            </p>
+            <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;user<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>joe<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/user<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;user<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>paul<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/user<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;user<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>fred<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/user<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            </pre>
+            <p>
+                Alternatively this function can take a fourth parameter that would be the namespace of the elements
+                used to wrap the split strings:
+            </p>
+            <pre class="php" style="font-family:monospace;">ode<span style="color: #339933;">:</span>split<span style="color: #339933;">-</span>to<span style="color: #339933;">-</span>elements<span style="color: #009900;">&#40;</span>stringToSplit<span style="color: #339933;">,</span> separator<span style="color: #339933;">,</span> targetElement<span style="color: #339933;">,</span> targetNamespace<span style="color: #009900;">&#41;</span>
+            </pre>
+            <p>
+                <b>NOTE:</b> <i>This function was formerly known as splitToElements, which may still be used, but is deprecated.</i>
+            </p>
+        </li>
+        <li>
+            <a name="XPathExtensions-combine-url_base_relative"></a>
+            combine-url(base, relative)
+            <br/>
+            <p>
+                Takes the relative URL and combines it with the base URL to return a new absolute URL. If the relative
+                parameter is an absolute URL, returns it instead. This function is similar to
+                <a href="http://www.w3.org/TR/2004/WD-xpath-functions-20040723/#func-resolve-uri">func-resolve-uri</a>.
+                However the latter is available in XPath 2.0 only.
+            </p>
+        </li>
+        <li>
+            <a name="XPathExtensions-compose-url_template_name_value"></a>
+            compose-url(template, [name, value]*)
+            <br/>
+        </li>
+        <li>
+            <a name="XPathExtensions-compose-url_template_pairs"></a>
+            compose-url(template, pairs)
+            <br/>
+            <p>
+                Expands the template URL by substituting place holders in the template, for example,
+                ('/order/{id}', 'id', 5) returns '/order/5'. Substitute values are either name/value pairs passed as
+                separate parameters, or a node-set returning elements with name mapping to value. The functions applies
+                proper encoding to the mapped values. Undefined variables are replaced with an empty string. This
+                function returns an URL. See also the <a href="http://bitworking.org/projects/URI-Templates/spec/draft-gregorio-uritemplate-03.html">URI Template spec</a>.
+            </p>
+        </li>
+        <li>
+            <a name="XPathExtensions-expand-template_template_name_value"></a>
+            expand-template(template, [name, value]*)
+            <br/>
+        </li>
+        <li>
+            <a name="XPathExtensions-expand-template_template_pairs"></a>
+            expand-template(template, pairs)
+            <br/>
+            <p>
+                Similar to composeURL but undefined variables are not replaced with an empty string. They are ignored.
+                As a result with incomplete mapping may return a new URL template.
+            </p>
+        </li>
+        <li>
+            <a name="XPathExtensions-dom-to-string"></a>
+            dom-to-string
+            <br/>
+            <p>
+                This is a function that serialises a DOM node (specified by the $node argument in the signature below)
+                into a string.
+            </p>
+            <pre class="php" style="font-family:monospace;">ode<span style="color: #339933;">:</span>dom<span style="color: #339933;">-</span>to<span style="color: #339933;">-</span>string<span style="color: #009900;">&#40;</span><span style="color: #000088;">$node</span> <span style="color: #b1b100;">as</span> node<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span> <span style="color: #b1b100;">as</span> xs<span style="color: #339933;">:</span>string
+            </pre>
+        </li>
+        <li>
+            <a name="XPathExtensions-process-property"></a>
+            process-property
+            <br/>
+            <p>TODO</p>
+            <p>
+                This is a function that allows you to retrieve the value of a property, defined in deploy.xml for the
+                current process, with the given name (specified by the $name argument in the signature below, which is
+                either a QName, String, Element or Single-Valued List).
+            </p>
+            <pre class="php" style="font-family:monospace;">ode<span style="color: #339933;">:</span>process<span style="color: #339933;">-</span>property<span style="color: #009900;">&#40;</span><span style="color: #000088;">$name</span> <span style="color: #b1b100;">as</span> item<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span> <span style="color: #b1b100;">as</span> node<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span>
+            </pre>
+            <p>
+                Basically, this method gives you a way to reference properties, defined in deploy.xml for a given
+                process, directly in the BPEL code for that process. The $name argument refers to any schema item that
+                resolves to a QName. The return value is the child node of the property element with the given name.
+            </p>
+            <p>
+                The example below illustrates how it may be used in the context of an assign activity:
+            </p>
+            <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+  <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;copy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>ode:process-property(&quot;auctionEpr&quot;)<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;to</span> <span style="color: #000066;">partnerLink</span>=<span style="color: #ff0000;">&quot;partnerLink&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+  <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/copy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            </pre>
+            <p>
+                where, the property called "epr" is defined in the corresponding deploy.xml as follows:
+            </p>
+            <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;deploy</span> <span style="color: #000066;">xmlns</span>=<span style="color: #ff0000;">&quot;http://www.apache.org/ode/schemas/dd/2007/03&quot;</span></span>
+<span style="color: #009900;">                   <span style="color: #000066;">xmlns:tns</span>=<span style="color: #ff0000;">&quot;http://ode/bpel/process&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;process</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;tns:negotiate&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+       <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;property</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;auctionEpr&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+           <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;sref:service-ref</span></span>
+<span style="color: #009900;">                <span style="color: #000066;">xmlns:sref</span>=<span style="color: #ff0000;">&quot; http://docs.oasis-open.org/wsbpel/2.0/serviceref&quot;</span></span>
+<span style="color: #009900;">                <span style="color: #000066;">xmlns:addr</span>=<span style="color: #ff0000;">&quot;http://example.com/addressing&quot;</span></span>
+<span style="color: #009900;">                <span style="color: #000066;">xmlns:as</span>=<span style="color: #ff0000;">&quot;http://example.com/auction/wsdl/auctionService/&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;addr:EndpointReference<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+                    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;addr:Address<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>http://example.com/auction/RegistrationService<span style="color: #ddbb00;">&amp;lt;</span>/addr:Address&gt;
+                    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;addr:ServiceName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>as:RegistrationService<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/addr:ServiceName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+                <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/addr:EndpointReference<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/sref:service-ref<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/property<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>...
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/process<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/deploy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            </pre>
+        </li>
+        </ul>
+
+    </body>
+</html>

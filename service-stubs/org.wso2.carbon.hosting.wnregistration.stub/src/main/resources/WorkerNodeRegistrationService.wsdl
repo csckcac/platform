@@ -1,0 +1,96 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ax2114="http://dto.mgt.hosting.carbon.wso2.org/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://service.mgt.hosting.carbon.wso2.org" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.mgt.hosting.carbon.wso2.org">
+    <wsdl:documentation>WorkerNodeRegistrationService</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://dto.mgt.hosting.carbon.wso2.org/xsd">
+            <xs:complexType name="WorkerNode">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="available" type="xs:boolean" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="bridges" nillable="true" type="ax2114:Bridge" />
+                    <xs:element minOccurs="0" name="containerRoot" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="endPoint" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="zone" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="Bridge">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="available" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="currentCountIps" type="xs:int" />
+                    <xs:element minOccurs="0" name="maximumCountIps" type="xs:int" />
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="workerNode" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ZoneResourcePlan">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="available" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="cpuSetCpus" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="cpuShares" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="memory" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="netGateway" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="netMask" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="storage" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="swap" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="zone" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax2115="http://dto.mgt.hosting.carbon.wso2.org/xsd" xmlns:ns="http://org.apache.axis2/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+            <xs:import namespace="http://dto.mgt.hosting.carbon.wso2.org/xsd" />
+            <xs:element name="registerWorkerNode">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="workerNode" nillable="true" type="ax2115:WorkerNode" />
+                        <xs:element minOccurs="0" name="zoneResourcePlan" nillable="true" type="ax2115:ZoneResourcePlan" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="registerWorkerNodeRequest">
+        <wsdl:part name="parameters" element="ns1:registerWorkerNode" />
+    </wsdl:message>
+    <wsdl:portType name="WorkerNodeRegistrationServicePortType">
+        <wsdl:operation name="registerWorkerNode">
+            <wsdl:input message="tns:registerWorkerNodeRequest" wsaw:Action="urn:registerWorkerNode" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="WorkerNodeRegistrationServiceSoap11Binding" type="tns:WorkerNodeRegistrationServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="registerWorkerNode">
+            <soap:operation soapAction="urn:registerWorkerNode" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="WorkerNodeRegistrationServiceSoap12Binding" type="tns:WorkerNodeRegistrationServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="registerWorkerNode">
+            <soap12:operation soapAction="urn:registerWorkerNode" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="WorkerNodeRegistrationServiceHttpBinding" type="tns:WorkerNodeRegistrationServicePortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="registerWorkerNode">
+            <http:operation location="registerWorkerNode" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="WorkerNodeRegistrationService">
+        <wsdl:port name="WorkerNodeRegistrationServiceHttpsSoap11Endpoint" binding="tns:WorkerNodeRegistrationServiceSoap11Binding">
+            <soap:address location="https://10.100.3.48:9443/services/WorkerNodeRegistrationService.WorkerNodeRegistrationServiceHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="WorkerNodeRegistrationServiceHttpsSoap12Endpoint" binding="tns:WorkerNodeRegistrationServiceSoap12Binding">
+            <soap12:address location="https://10.100.3.48:9443/services/WorkerNodeRegistrationService.WorkerNodeRegistrationServiceHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="WorkerNodeRegistrationServiceHttpsEndpoint" binding="tns:WorkerNodeRegistrationServiceHttpBinding">
+            <http:address location="https://10.100.3.48:9443/services/WorkerNodeRegistrationService.WorkerNodeRegistrationServiceHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

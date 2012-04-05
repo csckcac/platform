@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>@product.name@ - Extensions - Activity Failure and Recovery</title>
+        <link href="../css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+       <h1>Activity Failure and Recovery</h1>
+        
+
+        <ul>
+            <li><a href="#ActivityFailureandRecovery-Introduction">Introduction</a></li>
+            <li><a href="#ActivityFailureandRecovery-FromFailuretoRecovery">From Failure to Recovery</a></li>
+            <li><a href="#ActivityFailureandRecovery-SpecifyingFailureBehavior">Specifying Failure Behavior</a></li>
+            <li><a href="#ActivityFailureandRecovery-Examples">Examples</a></li>
+            <li><a href="#ActivityFailureandRecovery-ProcessInstanceManagement">Process Instance Management</a></li>
+        </ul>
+        <br />
+        <h2>
+            <a name="ActivityFailureandRecovery-Introduction"></a>
+            Introduction
+        </h2>
+
+        <p>
+            There are several types of error conditions. In this document, a class of error condition called failures
+            is introduced, distinct from faults, and describe how failures are caught and handled by the process engine.
+        </p>
+        <p>
+            A service returns a fault in response to a request it cannot process. A process may also raise a fault
+            internally when it encounters a terminal error condition, e.g. a faulty expression or false join condition.
+            In addition, processes may raise faults in order to terminate normal processing.
+        </p>
+        <p>
+            In contrast, failures are non-terminal error conditions that do not affect the normal flow of the process.
+            The process definition is kept simple and straightforward by delegating failure handling to the process
+            engine and administrator.
+        </p>
+        <p>
+            For example, when the process is unable to perform DNS resolution to determine the service endpoint, it
+            generates a failure. An administrator can fix the DNS server and tell the process engine to retry the activity.
+            Had the DNS error been reported as a fault, the process would either terminate or require complex fault
+            handling and recovery logic to proceed past this point of failure.
+        </p>
+        <p>
+            In short, failures shields the process from common, non-terminal error conditions while retaining simple and
+            straightforward process definitions that do not need to account for these error conditions.
+        </p>
+        <br />
+        <h2>
+            <a name="ActivityFailureandRecovery-FromFailuretoRecovery"></a>
+            From Failure to Recovery
+        </h2>
+
+        <p>
+            Currently, the Invoke activity is the only activity that supports failure handling and recovery. The mechanism
+            is identical for all other activities that may support failure handling and recovery in the future.
+        </p>
+        <p>
+            In case of the Invoke activity, a failure condition is triggered by the integration layer, in lieu of a
+            response or fault message. The Invoke activity consults its failure handling policy (specified here) and
+            decides how to respond.
+        </p>
+        <p>
+            Set faultOnFailure to yes, if you want the activity to throw a fault on failure. All other failure handling
+            settings are ignored. The activity will throw the activityFailure fault.
+        </p>
+        <p>
+            The activityFailure fault is a standard fault, so you can use the exitOnStandardFault attribute to control
+            whether the process exits immediately, or throws a fault in the enclosing scope.
+        </p>
+        <p>
+            Set retryFor to a positive integer if you want the activity to attempt self-recovery and retry up to that
+            number of times. Set retryDelay to a reasonable time delay (specified in seconds) between retries. For
+            example, if you set retryFor=2, retryDelay=30, the activity will retry after 30 and 60 seconds, for a total
+            of three attempts, before entering activity recovery mode.
+        </p>
+        <p>
+            If the activity retries and succeeds, it will complete successfully as if no failure occurred. Of course,
+            the activity may retry and fault, e.g. if the invoked service returns a fault. If the activity has exhausted
+            all retry attempts, it enters activity recovery mode. By default retryFor is zero, and the activity enters
+            recovery mode after the first failure.
+        </p>
+        <p>
+            When in recovery mode, you can recover the activity in one of three ways:
+        </p>
+
+        <ul>
+            <li><b>Retry</b> -- Retry the activity manually. This can be repeated any number of times until the activity
+                completes or faults.</li>
+            <li><b>Fault</b> -- Causes the activity to throw the activityFailure fault.</li>
+            <li><b>Cancel</b> -- Cancels the activity. The activity completes unsuccessfully: without changing the state
+                of variables, by setting the status of all its source links to false, and without installing a compensation handler.</li>
+        </ul>
+
+        <p>
+            Activity recovery is performed individually for each activity instance, and does not affect other activities
+            executing in the same process. While the activity is in the FAILURE state, the process instance remains in
+            the ACTIVE state and may execute other activities from parallel flows and event handlers.
+        </p>
+        <br />
+        <h2>
+            <a name="ActivityFailureandRecovery-SpecifyingFailureBehavior"></a>
+            Specifying Failure Behavior
+        </h2>
+        <p>
+            Use the failureHandling extensibility element defined in the namespace http://ode.apache.org/activityRecovery.
+            The structure of the failureHandling element is:
+        </p>
+
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ext:failureHandling</span> <span style="color: #000066;">xmlns:ext</span>=<span style="color: #ff0000;">&quot;http://ode.apache.org/activityRecovery&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ext:faultOnFailure<span style="color: #000000; font-weight: bold;">&gt;</span></span></span> _boolean_ <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ext:faultOnFailure<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ext:retryFor<span style="color: #000000; font-weight: bold;">&gt;</span></span></span> _integer_ <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ext:retryFor<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ext:retryDelay<span style="color: #000000; font-weight: bold;">&gt;</span></span></span> _integer_ <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ext:retryDelay<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ext:failureHandling<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        </pre>
+
+        <p>
+            The faultOnFailure, retryFor and retryDelay elements are optional. The default values are false for
+            faultOnFailure, and zero for retryFor and retryDelay. An activity that does not specify failure handling
+            using this extensibility element, inherits the failure handling policy of its parent activity, recursively
+            up to the top-level activity of the process. You can use inheritance to specify the failure handling policy
+            of a set of activities, or all activities in the process, using a single failureHandling extensibility element.
+        </p>
+        <p>
+            Note that due to this behavior, if activity S specifies failure handling with the values retryFor=2,
+            retryDelay=60, and has a child activity R that specifies failure handling with the values retryFor=3, the
+            retryDelay value for the child activity R is 0, and not 60. Using the failureHandling element without
+            specifying one of its value elements will apply the default value for that element.
+        </p>
+        <br />
+        <h2>
+            <a name="ActivityFailureandRecovery-Examples"></a>
+            Examples
+        </h2>
+
+        <p>
+            A simple invoke with the ext:failureHandling extension:
+        </p>
+
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;bpel:invoke</span> <span style="color: #000066;">inputVariable</span>=<span style="color: #ff0000;">&quot;myRequest&quot;</span></span>
+<span style="color: #009900;">    <span style="color: #000066;">operation</span>=<span style="color: #ff0000;">&quot;foo&quot;</span> <span style="color: #000066;">outputVariable</span>=<span style="color: #ff0000;">&quot;aResponse&quot;</span></span>
+<span style="color: #009900;">    <span style="color: #000066;">partnerLink</span>=<span style="color: #ff0000;">&quot;myPartner&quot;</span> <span style="color: #000066;">portType</span>=<span style="color: #ff0000;">&quot;spt:SomePortType&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ext:failureHandling</span> <span style="color: #000066;">xmlns:ext</span>=<span style="color: #ff0000;">&quot;http://ode.apache.org/activityRecovery&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ext:faultOnFailure<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>false<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ext:faultOnFailure<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ext:retryFor<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>2<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ext:retryFor<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ext:retryDelay<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>60<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ext:retryDelay<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ext:failureHandling<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/bpel:invoke<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        </pre>
+
+        <p>
+            And a sequence activity that converts failures into faults:
+        </p>
+
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;bpel:sequence<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ext:failureHandling</span> <span style="color: #000066;">xmlns:ext</span>=<span style="color: #ff0000;">&quot;http://ode.apache.org/activityRecovery&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;ext:faultOnFailure<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>true<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ext:faultOnFailure<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/ext:failureHandling<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+
+    ...
+
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;bpel:invoke</span> <span style="color: #000066;">inputVariable</span>=<span style="color: #ff0000;">&quot;myRequest&quot;</span></span>
+<span style="color: #009900;">        <span style="color: #000066;">operation</span>=<span style="color: #ff0000;">&quot;foo&quot;</span> <span style="color: #000066;">outputVariable</span>=<span style="color: #ff0000;">&quot;aResponse&quot;</span></span>
+<span style="color: #009900;">        <span style="color: #000066;">partnerLink</span>=<span style="color: #ff0000;">&quot;myPartner&quot;</span> <span style="color: #000066;">portType</span>=<span style="color: #ff0000;">&quot;spt:SomePortType&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;bpel:catchAll<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            ...
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/bpel:catchAll<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/bpel:invoke<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/bpel:sequence<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        </pre>
+         <br />
+         <h2>
+            <a name="ActivityFailureandRecovery-ProcessInstanceManagement"></a>
+            Process Instance Management
+        </h2>
+
+        <p>
+            The process instance management provides the following information:
+        </p>
+        <ul>
+            <li>Process instance summary includes a failures element with a count of the total number of process
+                instances that have one or more activities in recovery mode, and the date/time of the last activity to
+                enter recovery mode. The element exists if at least one activity is in recovery mode</li>
+            <li>Process instance information includes a failures element with a count of the number of activities in
+                recovery mode, and the date/time of the last activity to enter recovery mode. The element exists if at
+                least one activity is in recovery mode</li>
+            <li>Activity instance information includes a failure element that specifies the date/time of the failure,
+                the reason for the failure, number of retries, and list of available recovery actions. The element
+                exists if the activity is in the state FAILURE.</li>
+        </ul>
+
+        <p>
+            Use the recoverActivity operation to perform a recovery action on an activity in recovery mode. The
+            operation requires the process instance ID, the activity instance ID and the recovery action to perform
+            (one of retry, fault or cancel).
+        </p>
+        <p>
+            It can be also determined when failure or recovery occurred for a given activity instance from the execution
+            log.
+        </p>
+
+    </body>
+</html>

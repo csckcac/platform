@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+        <title>
+            @product.name@ - BPEL Assign Activity
+        </title>
+        <link href="css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body xml:lang="en">
+        <h1>
+            BPEL Assign Activity
+        </h1>
+
+        <p>Assign activity(&lt;assign&gt;) update the values of variables with new data.
+        </p>
+
+        <h2>Synopsis</h2>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;assign</span> <span style="color: #000066;">validate</span>=<span style="color: #ff0000;">&quot;yes|no&quot;</span>? standard-attributes<span style="color: #000000; font-weight: bold;">&gt;</span></span>
+   standard-elements
+   (
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;copy</span> <span style="color: #000066;">keepSrcElementName</span>=<span style="color: #ff0000;">&quot;yes|no&quot;</span>? <span style="color: #000066;">ignoreMissingFromData</span>=<span style="color: #ff0000;">&quot;yes|no&quot;</span><span style="color: #000000; font-weight: bold;">?&gt;</span></span>
+      from-spec
+      to-spec
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/copy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+   |
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;extensionAssignOperation<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+      assign-element-of-other-namespace
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/extensionAssignOperation<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+   )+
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+        <p>Throws following faults</p>
+        <ul>
+            <li>bpel:invalidVariables</li>
+            <li>bpel:selectionFailure</li>
+            <li>bpel:subLanguageExecutionFault</li>
+            <li>bpel:uninitializedVariable</li>
+            <li>bpel:mismatchedAssignmentFailure</li>
+            <li>bpel:uninitializedPartnerRole</li>
+        </ul>
+        <h2>Description</h2>
+        <p>The &lt;assign&gt; activity can be used to copy data from one variable to another, as well as to construct
+            and insert new data using expressions. The &lt;assign&gt; activity can also be used to copy endpoint
+            references to and from partnerLinks.
+        </p>
+        <p>Each &lt;assign&gt; is made up of any number of &lt;copy&gt; entries which are each made up of a "to-spec"
+            (lvalue), and a from-spec (rvalue).
+        </p>
+        <ul>
+            <li>ignoreMissingFormData - (optional) Should the bpel:selectionFailure standard fault be suppressed?
+                <ul>
+                    <li>yes - suppress standard faults</li>
+                    <li>no - (default) do not suppress standard faults</li>
+                </ul>
+            </li>
+            <li>validate - (optional, @product.name@ doesn't support this) validate modified variables?
+                <ul>
+                    <li>yes - the &lt;assign&gt; activity validates all the variables deing modified by the activity.
+                        If the validation fails the bpel:invalidVariables fault is thrown.
+                    </li>
+                    <li>no - (default) do not validate the modified variables</li>
+                </ul>
+            </li>
+            <li>&lt;copy&gt; - defines a lvalue, rvalue pair.
+                <ul>
+                    <li>keepSrcElementName - (optional) should the element name of the destination (as selected by the
+                        to-spec) be replaced by the element name of the source(as selected by the from-spec)?
+                        <ul>
+                            <li>yes - element names are replaced</li>
+                            <li>no - (default) element names are not replaced</li>
+                        </ul>
+                    </li>
+                    <li>&lt;from&gt; - specifies the rvalue</li>
+                    <li>&lt;to&gt; - specifies the lvale</li>
+                </ul>
+            </li>
+            <li>&lt;extensionAssignOperation&gt; - a container for assignment extensions. If the element contained
+                within the extensionAssignOperation elements not recognized by ODE and is not subject to a
+                mustUnderstand="yes" requirement from an extension declaration then the element will be ignored.
+            </li>
+        </ul>
+        <h2>From/To-Spec Variants</h2>
+        <p>The &lt;assign&gt; activity copies a type-compatible value from the source("from-spec") to the destination
+            ("to-spec"), using &lt;copy&gt; element. The from-spec must be one of the following variants:
+        </p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;from</span> <span style="color: #000066;">variable</span>=<span style="color: #ff0000;">&quot;BPELVariableName&quot;</span> <span style="color: #000066;">part</span>=<span style="color: #ff0000;">&quot;NCName&quot;</span><span style="color: #000000; font-weight: bold;">?&gt;</span></span>
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;query</span> <span style="color: #000066;">queryLanguage</span>=<span style="color: #ff0000;">&quot;anyURI&quot;</span><span style="color: #000000; font-weight: bold;">?&gt;</span></span>?
+      queryContent
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/query<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+</pre>
+
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;from</span> <span style="color: #000066;">partnerLink</span>=<span style="color: #ff0000;">&quot;NCName&quot;</span> <span style="color: #000066;">endpointReference</span>=<span style="color: #ff0000;">&quot;myRole|partnerRole&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+</pre>
+
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;from</span> <span style="color: #000066;">variable</span>=<span style="color: #ff0000;">&quot;BPELVariableName&quot;</span> <span style="color: #000066;">property</span>=<span style="color: #ff0000;">&quot;QName&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+</pre>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;from</span> <span style="color: #000066;">expressionLanguage</span>=<span style="color: #ff0000;">&quot;anyURI&quot;</span><span style="color: #000000; font-weight: bold;">?&gt;</span></span>expression<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+</pre>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;from<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;literal<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>literal value<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/literal<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+</pre>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;from</span> <span style="color: #000066;">variable</span>=<span style="color: #ff0000;">&quot;BPELVariableName&quot;</span> <span style="color: #000066;">extension</span>=<span style="color: #ff0000;">&quot;QName&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>   <span style="color: #808080; font-style: italic;">&lt;!-- non-standard extension --&gt;</span>
+</pre>
+
+        <p>The to-spec must be one of the following variants:</p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;to</span> <span style="color: #000066;">variable</span>=<span style="color: #ff0000;">&quot;BPELVariableName&quot;</span> <span style="color: #000066;">part</span>=<span style="color: #ff0000;">&quot;NCName&quot;</span><span style="color: #000000; font-weight: bold;">?&gt;</span></span>
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;query</span> <span style="color: #000066;">queryLanguage</span>=<span style="color: #ff0000;">&quot;anyURI&quot;</span><span style="color: #000000; font-weight: bold;">?&gt;</span></span>?
+      queryContent
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/query<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/to<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+</pre>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;to</span> <span style="color: #000066;">partnerLink</span>=<span style="color: #ff0000;">&quot;NCName&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+</pre>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;to</span> <span style="color: #000066;">variable</span>=<span style="color: #ff0000;">&quot;BPELVariableName&quot;</span> <span style="color: #000066;">property</span>=<span style="color: #ff0000;">&quot;QName&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+</pre>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;to</span> <span style="color: #000066;">expressionLanguage</span>=<span style="color: #ff0000;">&quot;anyURI&quot;</span><span style="color: #000000; font-weight: bold;">?&gt;</span></span>expression<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/to<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+</pre>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;to</span> <span style="color: #000066;">variable</span>=<span style="color: #ff0000;">&quot;BPELVariableName&quot;</span> <span style="color: #000066;">extension</span>=<span style="color: #ff0000;">&quot;QName&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span> <span style="color: #808080; font-style: italic;">&lt;!-- @product.name@ SPECIFIC --&gt;</span>
+</pre>
+        <p>A to-spec must return an lvalue. If a to-spec does not return an lvalue then a bpel:selectionFailure will be
+            thrown. In the context of XPath, an lvalue is a node-list containing a single node from a variable or a
+            partnerLink identified by the to-spec (e.g. the XPath expression concat("foo""bar") is not an lvalue).
+        </p>
+        <p>Assignment is an atomic operation; that is, either all &lt;copy&gt; s succeed, or no changes are made.</p>
+        <p>In @product.name@ each &lt;copy&gt; is atomic</p>
+
+        <h2>Variable Variant</h2>
+        <p>Selects value stored in a BPEL variable</p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;to</span>|from <span style="color: #000066;">variable</span>=<span style="color: #ff0000;">&quot;BPELVariableName&quot;</span> <span style="color: #000066;">part</span>=<span style="color: #ff0000;">&quot;NCName&quot;</span><span style="color: #000000; font-weight: bold;">?&gt;</span></span>
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;query</span> <span style="color: #000066;">queryLanguage</span>=<span style="color: #ff0000;">&quot;anyURI&quot;</span><span style="color: #000000; font-weight: bold;">?&gt;</span></span>?
+      queryContent
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/query<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/to</span>|from<span style="color: #000000; font-weight: bold;">&gt;</span></span>
+</pre>
+        <ul>
+            <li>variable - (required) name of the variable</li>
+            <li>part - (optional) if the type of this variable is a WSDL messageType this attribute may be used to
+                provide the name of a part within that variable. This attribute must not be used when the variable is
+                defined using XML schema types or element.
+            </li>
+            <li>&lt;query&gt; element may be used to select a value from the source or target variable or message part.
+                The computed value of the query must be one the following:
+                <ul>
+                    <li>a sigle XML node, for example an attribute or an element</li>
+                    <li>test(i. e. a text node, CDATA section, string-valued XPath expression, etc..)</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h2>PartnerLink Variant</h2>
+        <p>Allows manipulation of the endpoint references associated with partnerLinks. </p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;from</span> <span style="color: #000066;">partnerLink</span>=<span style="color: #ff0000;">&quot;NCName&quot;</span> <span style="color: #000066;">endpointReference</span>=<span style="color: #ff0000;">&quot;myRole|partnerRole&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span></pre>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;to</span> <span style="color: #000066;">partnerLink</span>=<span style="color: #ff0000;">&quot;NCName&quot;</span>  <span style="color: #000000; font-weight: bold;">/&gt;</span></span></pre>
+        <ul>
+            <li>partnerLink - name of the partnerLink</li>
+            <li>role - the role or "side" of the partnerLink
+            <ul>
+                <li>myRole - the endpoint reference of the process</li>
+                <li>partnerRole - the partner's endpoint reference</li>
+            </ul></li>
+        </ul>
+        <p>For from-specs, the role attribute must be specified, while for the to-spec, the assignment is only possible
+            to the partnerRole, hence there is no need to specify the role. Therefore, the to-spec can only refer to a
+            &lt;partnerLink&gt; of which the declaration specifies the partnerRole attribute. The type of the value referenced
+            by partnerLink-style from/to-specs is always a &lt;sref:service-ref&gt; element.</p>
+        <p>
+            An attempt during process execution to read a partner link before its partnerRole EPR is initialized results
+            in the bpel:uninitializedPartnerRole standard fault. Partner roles of partner links are read when they are
+            referenced in an &lt;invoke&gt; or the &lt;from&gt; part of a &lt;copy&gt; in an &lt;assign&gt; activity.
+        </p>
+
+        <h2>Property Variant</h2>
+        <p>Allows data manipulation using properties. The property value generated by the from-spec is generated in the
+            same manner as the value returned by the bpel:getVariableProperty() function. </p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;to</span>|from <span style="color: #000066;">variable</span>=<span style="color: #ff0000;">&quot;BPELVariableName&quot;</span> <span style="color: #000066;">property</span>=<span style="color: #ff0000;">&quot;QName&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span></pre>
+        <ul>
+            <li>variable - name of the variable referenced</li>
+            <li>property - name of the property to apply to the variable</li>
+        </ul>
+
+        <h2>Expression Variant</h2>
+        <p>In the Expression Variant, an expression language (typically XPath), is used to calculate a value. </p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;to</span>|from <span style="color: #000066;">expressionLanguage</span>=<span style="color: #ff0000;">&quot;anyURI&quot;</span><span style="color: #000000; font-weight: bold;">?&gt;</span></span>expression<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+        <ul>
+            <li>expressionLanguage - (optional) identifies the expression language.</li>
+            <li>expression - the expression; syntax is determined by the expression language</li>
+        </ul>
+        <p>The computed value of the expression must be one of the following:</p>
+        <ul>
+            <li>a single XML node, for example an attribute or an element</li>
+            <li>text(i. e. a text node, CDATA section, string-valued XPath expression, etc..)</li>
+        </ul>
+
+        <h2>Literal Variant</h2>
+        <p>The literal variant allows a literal value to be given as the rvalue.</p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;from<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;literal<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>literal value<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/literal<span style="color: #000000; font-weight: bold;">&gt;</span></span><span style="color: #000000; font-weight: bold;">&lt;/from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+        <ul>
+            <li>literal value - value to be assigned</li>
+        </ul>
+        <p>The type of the literal value may be optionally indicated inline with the value by using XML Schema's
+            instance type mechanism (xsi:type). The literal content must be either a single element or text. An empty
+            &lt;literal/&gt; element is equivalent to an empty text node.</p>
+
+        <h2>Empty Variant</h2>
+        <p>Empty variant exist for extensibility purposes; it is not supported by @product.name@.</p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;from</span>|to<span style="color: #000000; font-weight: bold;">/&gt;</span></span></pre>
+
+        <!--h2>Variable Extension Variant(non-standard extensions)</h2>
+        <p>The variable extension variants are non-standard extensions implemented by ODE Engine(@product.name@'s BPEL engine)
+        to allow manipulation of protocol-specific properties from within a BPEL process.</p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;from</span> <span style="color: #000066;">variable</span>=<span style="color: #ff0000;">&quot;BPELVariableName&quot;</span> <span style="color: #000066;">extension</span>=<span style="color: #ff0000;">&quot;QName&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span></pre>
+        <ul>
+            <li>variable - message variable to read</li>
+            <li>extension -qualified name of the extension</li>
+        </ul>
+        <p>The variable referenced by this variant must be message-type. The following extensions are supported:</p-->
+        <h2>Insert Variant(non-standard extension)</h2>
+        <p><!-- TODO: Fill from ode doc. --></p>
+        <p>Faults</p>
+        <ul>
+            <li>bpel:invalidVariables - A modified variable does not conform to its schema and the validate flag was set to yes. </li>
+            <li>bpel:selectionFailure - The node(s) selected by a from/to-spec is (are) invalid. This includes cases when the to-spec returns a node that is not an lvalue, when multiple nodes are selected, or when no node is selected.</li>
+            <li>bpel:subLanguageExecutionFault - Evaluating the expression (in the expression variant), or the query (in the variable variant) generated an error. For example, if a divide-by-zero is attempted.</li>
+            <li>bpel:uninitializedVariable - The variable referenced in the from-spec has not been initialized.</li>
+            <li>bpel:mismatchedAssignmentFailure - The nodes selected by the to-spec and from-spec are not compatible. This could occur if for example an attempt was made to assign a text node to an element variable, or an element variable was assigned to a message variable.</li>
+        </ul>
+        <h2>Examples</h2>
+        <p>The following assigns a childless element bar in namespace http://example.com to an element-typed variable myFooBarElemVar:</p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;copy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+      <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+         <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;literal</span> <span style="color: #000066;">xmlns:foo</span>=<span style="color: #ff0000;">&quot;http://example.com&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;foo:bar</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+         <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/literal<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+      <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+      <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;to</span> <span style="color: #000066;">variable</span>=<span style="color: #ff0000;">&quot;myFooBarElemVar&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/copy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+
+        <p>The following assigns the string "FooBar" to a string-typed variable myStringVar:</p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;copy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+      <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+         <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;literal<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #339933;">&lt;![CDATA[FooBar]]&gt;</span>
+         <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/literal<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+      <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+      <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;to</span> <span style="color: #000066;">variable</span>=<span style="color: #ff0000;">&quot;myStringVar&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/copy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+      <p>The following assigns the string "" (i.e. the empty string) to a string-typed variable myStringVar:</p>
+    <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;copy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+      <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+         <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;literal</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+      <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+      <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;to</span> <span style="color: #000066;">variable</span>=<span style="color: #ff0000;">&quot;myStringVar&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/copy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+</pre>
+
+        <p>The following illustrates copying one variable (c1) to another (c2) as well as copying a variable part (address part of variable c1) to a variable of compatible element type (c3):</p>
+    <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;copy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+      <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;from</span> <span style="color: #000066;">variable</span>=<span style="color: #ff0000;">&quot;c1&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+      <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;to</span> <span style="color: #000066;">variable</span>=<span style="color: #ff0000;">&quot;c2&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/copy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;copy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+      <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>$c1.address<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/from<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+      <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;to</span> <span style="color: #000066;">variable</span>=<span style="color: #ff0000;">&quot;c3&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/copy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/assign<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+    </body>
+</html>

@@ -1,0 +1,162 @@
+<!--
+~ Copyright 2005-2008 WSO2, Inc. (http://wso2.com)
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <link href="css/mashup-docs.css" rel="stylesheet" type="text/css" media="all"/>
+        <link type="text/css" rel="stylesheet" href="css/SyntaxHighlighter.css" media="all"/>
+        <script language="javascript" src="js/shCore.js"></script>
+        <script language="javascript" src="js/shBrushJScript.js"></script>
+        <script language="javascript" src="js/shBrushJava.js"></script>
+        <script language="javascript" src="js/shBrushSql.js"></script>
+        <script language="javascript" src="js/shBrushXml.js"></script>
+    </head>
+
+    <body>
+
+        <div id="main-content">
+            <h1>Writing a Hello World Service</h1>
+
+
+            <h2>JavaScript</h2>
+
+
+            <p></p>
+
+
+            <p>The Mashup Server supports the quick and easy creation of Web
+                services
+                written in JavaScript. Just as a Web server such as Apache or
+                IIS publishes
+                HTML and other Web content from a local directory to the Web, the
+                Mashup
+                Server takes JavaScript files, placed in a local directory, and exposes
+                the
+                functions as Web Service operations.
+            </p>
+
+            <p>The simplest way to deploy a new Web service is simply to write some
+                JavaScript and place it in the scripts directory which is in the repository directory of your Mashup
+                Server installation. Alternatively you
+                can use the
+                <a href="quickstart.html#newMashup">Create new service wizard</a>
+                from the UI or
+                just upload the JavaScript file from the UI. Follow these simple steps:
+            </p>
+
+            <h3>Step 1:</h3>
+
+
+            <p>In Notepad or your favorite IDE, type the following text:</p>
+            <pre name="code" class="js">
+                function hello() {
+                    return "Hello World";
+                }
+            </pre>
+
+            <h3>Step 2:</h3>
+            <p>Save this file as 'helloworld.js' in the a directory(you can use username or any name as the directory name and this directory can contain multiple services) within the repository/deployment/server/jsservices directory of the Mashup Server.
+            </p>
+            <p>
+                <img src="images/scripts_dir.png" title="Mashup server directory structure - scripts folder" alt=""/>
+            </p>
+
+            <h3>Step 3:</h3>
+
+            <p>
+                That's it, the helloworld service is now live (probably a few seconds later just after the file is
+                placed in the scripts directory), exposing a single
+                operation
+                'hello' that returns the text "Hello
+                World". But let's try it out to make
+                sure it's
+                working properly. Open up the WSO2 Mashup Server web-based
+                console
+                (typically at <a href="https://localhost:9443/carbon">https://localhost:9443/carbon</a>)
+                and look for the helloworld mashup you just created. It will be listed under Service Listing page else
+                you can use the searching
+                facility of the Mashup Server to look for the helloworld mashup.
+            </p>
+
+            <p>
+                <img src="images/helloworld_listing.png" alt="hello world service listed in available mashups"/>
+            </p>
+
+            <p>
+                Click the '<strong>Try this service</strong>' link or try
+                typing the tryit URL (typically at http://&lt;your-machine-ip&gt;:9763/services/helloworld?tryit)
+                in the browser, and you will get a web-based client that can interact
+                with
+                the Web service. In this case just click
+                the button titled
+                <strong>hello &gt;&gt;</strong>
+                to invoke the hello operation. The response is illustrated below:
+            </p>
+            <p>
+                <img src="images/helloworld_tryit.png" title="Try the helloworld mashup" alt=""/>
+            </p>
+            <p>
+                The Helloworld mashup also contains many helpful resources which are described <a
+                    href="generatedresources.html">here</a>.
+            </p>
+
+
+            <h2>Adding an user Interface for your service</h2>
+
+
+            <p>When a service is deployed, Mashup server automatically
+                creates a folder
+                to store the resources that belong to the service. This folder is named
+                as
+                "{service javascript file name}.resources". You can install a custom
+                user
+                interface for your service by creating a folder named "www" under the
+                above
+                mentioned resources folder and placing the necessary files under the
+                created
+                "www" folder. This user interface will appear when you point your
+                browser to
+                the Endpoint Reference of the service (eg:
+                http://&lt;your-machine-ip&gt;:9763/services/helloworld).
+            </p>
+
+
+            <p>
+                <img src="images/www_folder.png" title="servicejsfilename.resources folder structure" alt=""/>
+            </p>
+
+
+            <p>Please refer to
+                <a href="helloworldclient.html">"writing
+                    hello world
+                    client"
+                </a>
+                for more information about creating AJAX clients for
+                the mashup
+                services deployed in the WSO2 mashup server.
+                <br/>
+            </p>
+
+            <br/>
+
+        </div>
+        <script language="javascript">
+            dp.SyntaxHighlighter.BloggerMode();
+            dp.SyntaxHighlighter.HighlightAll('code');
+        </script>
+    </body>
+</html>

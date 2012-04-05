@@ -1,0 +1,46 @@
+.gide-config-editor-input input{
+    color: #666666;
+    border: 1px solid #CCCCCC;
+    border-radius: 3px;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1) inset;
+    width: 100%;
+}
+.gide-config-editor-input{
+    height: 23px;
+    margin: 0 10px;
+}
+
+.gide-config-editor-input select{
+    width: 100%;
+}
+.gide-config-editor-label{
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.698);
+    height: 23px;
+}
+
+.gide-config-editor-button{
+    height: 23px;
+    line-height: 12px;
+}
+
+.gide-config-editor-input-block{
+    width: 75%;
+}
+.gide-config-editor-loader{
+    height: 23px;
+}
+
+.gide-config-editor-loader-loading{
+    background: url("../image/loading.png") no-repeat;
+
+}
+
+.gide-configcontainer-terminalin{
+    margin-top: 4px;
+    width: 49%;
+}
+.gide-configcontainer-terminalout{
+    margin-top: 4px;
+    width: 49%;
+    margin-left: 2px;
+}

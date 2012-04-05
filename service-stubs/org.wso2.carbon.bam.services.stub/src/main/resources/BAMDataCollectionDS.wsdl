@@ -1,0 +1,1184 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+                  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ns0="http://ws.wso2.org/dataservice"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+                  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+                  targetNamespace="http://ws.wso2.org/dataservice">
+    <wsdl:documentation/>
+    <wsdl:types>
+        <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+                   targetNamespace="http://ws.wso2.org/dataservice">
+            <xs:element name="addServerUserData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serverID" nillable="true" type="xs:int"/>
+                        <xs:element name="timestamp" nillable="true" type="xs:string"/>
+                        <xs:element name="key" nillable="true" type="xs:string"/>
+                        <xs:element name="value" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addMessageProperty">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="messageID" nillable="true" type="xs:int"/>
+                        <xs:element name="actiivtyID" nillable="true" type="xs:int"/>
+                        <xs:element name="key" nillable="true" type="xs:string"/>
+                        <xs:element name="value" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addMessageData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="operationID" nillable="true" type="xs:int"/>
+                        <xs:element name="msgID" nillable="true" type="xs:string"/>
+                        <xs:element name="activityID" nillable="true" type="xs:int"/>
+                        <xs:element name="timestamp" nillable="true" type="xs:string"/>
+                        <xs:element name="ipAddress" nillable="true" type="xs:string"/>
+                        <xs:element name="userAgent" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addOperationData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="operationID" nillable="true" type="xs:int"/>
+                        <xs:element name="timestamp" nillable="true" type="xs:string"/>
+                        <xs:element name="avgResTime" nillable="true" type="xs:double"/>
+                        <xs:element name="maxResTime" nillable="true" type="xs:double"/>
+                        <xs:element name="minResTime" nillable="true" type="xs:double"/>
+                        <xs:element name="cumReqCount" nillable="true" type="xs:int"/>
+                        <xs:element name="cumResCount" nillable="true" type="xs:int"/>
+                        <xs:element name="cumFaultCount" nillable="true" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addOperationUserData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="operationID" nillable="true" type="xs:int"/>
+                        <xs:element name="timestamp" nillable="true" type="xs:string"/>
+                        <xs:element name="key" nillable="true" type="xs:string"/>
+                        <xs:element name="value" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addServerUserLoginData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serverID" nillable="true" type="xs:int"/>
+                        <xs:element name="timestamp" nillable="true" type="xs:string"/>
+                        <xs:element name="username" nillable="true" type="xs:string"/>
+                        <xs:element name="cumLoginAttempts" nillable="true" type="xs:int"/>
+                        <xs:element name="cumFailedLoginAttempts" nillable="true" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addMessageDataDump">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="messageKeyID" nillable="true" type="xs:int"/>
+                        <xs:element name="activityKeyID" nillable="true" type="xs:int"/>
+                        <xs:element name="timeStamp" nillable="true" type="xs:string"/>
+                        <xs:element name="messageDirection" nillable="true" type="xs:string"/>
+                        <xs:element name="messageBody" nillable="true" type="xs:string"/>
+                        <xs:element name="ipAddress" nillable="true" type="xs:string"/>
+                        <xs:element name="status" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addMessageUserData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="messageID" nillable="true" type="xs:int"/>
+                        <xs:element name="timestamp" nillable="true" type="xs:string"/>
+                        <xs:element name="key" nillable="true" type="xs:string"/>
+                        <xs:element name="value" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addServerLoginData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serverID" nillable="true" type="xs:int"/>
+                        <xs:element name="timestamp" nillable="true" type="xs:string"/>
+                        <xs:element name="cumLoginAttempts" nillable="true" type="xs:int"/>
+                        <xs:element name="cumFailedLoginAttempts" nillable="true" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addServiceData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serviceID" nillable="true" type="xs:int"/>
+                        <xs:element name="timestamp" nillable="true" type="xs:string"/>
+                        <xs:element name="avgResTime" nillable="true" type="xs:double"/>
+                        <xs:element name="maxResTime" nillable="true" type="xs:double"/>
+                        <xs:element name="minResTime" nillable="true" type="xs:double"/>
+                        <xs:element name="cumReqCount" nillable="true" type="xs:int"/>
+                        <xs:element name="cumResCount" nillable="true" type="xs:int"/>
+                        <xs:element name="cumFaultCount" nillable="true" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addActivityData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="name" nillable="true" type="xs:string"/>
+                        <xs:element name="description" nillable="true" type="xs:string"/>
+                        <xs:element name="userDefinedID" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addServiceUserData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serviceID" nillable="true" type="xs:int"/>
+                        <xs:element name="timestamp" nillable="true" type="xs:string"/>
+                        <xs:element name="key" nillable="true" type="xs:string"/>
+                        <xs:element name="value" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addServerData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serverID" nillable="true" type="xs:int"/>
+                        <xs:element name="timestamp" nillable="true" type="xs:string"/>
+                        <xs:element name="avgResTime" nillable="true" type="xs:double"/>
+                        <xs:element name="maxResTime" nillable="true" type="xs:double"/>
+                        <xs:element name="minResTime" nillable="true" type="xs:double"/>
+                        <xs:element name="cumReqCount" nillable="true" type="xs:int"/>
+                        <xs:element name="cumResCount" nillable="true" type="xs:int"/>
+                        <xs:element name="cumFaultCount" nillable="true" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addServerLoginData_batch_req">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" ref="ns0:addServerLoginData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addMessageUserData_batch_req">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" ref="ns0:addMessageUserData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addServerUserLoginData_batch_req">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" ref="ns0:addServerUserLoginData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addOperationData_batch_req">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" ref="ns0:addOperationData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addMessageProperty_batch_req">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" ref="ns0:addMessageProperty"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addServerUserData_batch_req">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" ref="ns0:addServerUserData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addOperationUserData_batch_req">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" ref="ns0:addOperationUserData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addMessageDataDump_batch_req">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" ref="ns0:addMessageDataDump"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addServiceUserData_batch_req">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" ref="ns0:addServiceUserData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addServerData_batch_req">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" ref="ns0:addServerData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addActivityData_batch_req">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" ref="ns0:addActivityData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addMessageData_batch_req">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" ref="ns0:addMessageData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addServiceData_batch_req">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" ref="ns0:addServiceData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="DataServiceFault" type="xs:string"/>
+            <xs:element name="DataServiceAnyElement">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:any/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="addServiceDataRequest">
+        <wsdl:part name="parameters" element="ns0:addServiceData"/>
+    </wsdl:message>
+    <wsdl:message name="DataServiceFault">
+        <wsdl:part name="parameters" element="ns0:DataServiceFault"/>
+    </wsdl:message>
+    <wsdl:message name="addMessageDataDumpRequest">
+        <wsdl:part name="parameters" element="ns0:addMessageDataDump"/>
+    </wsdl:message>
+    <wsdl:message name="addOperationUserData_batch_reqRequest">
+        <wsdl:part name="parameters" element="ns0:addOperationUserData_batch_req"/>
+    </wsdl:message>
+    <wsdl:message name="addMessagePropertyRequest">
+        <wsdl:part name="parameters" element="ns0:addMessageProperty"/>
+    </wsdl:message>
+    <wsdl:message name="addMessageUserDataRequest">
+        <wsdl:part name="parameters" element="ns0:addMessageUserData"/>
+    </wsdl:message>
+    <wsdl:message name="addServiceUserData_batch_reqRequest">
+        <wsdl:part name="parameters" element="ns0:addServiceUserData_batch_req"/>
+    </wsdl:message>
+    <wsdl:message name="addMessageData_batch_reqRequest">
+        <wsdl:part name="parameters" element="ns0:addMessageData_batch_req"/>
+    </wsdl:message>
+    <wsdl:message name="addOperationUserDataRequest">
+        <wsdl:part name="parameters" element="ns0:addOperationUserData"/>
+    </wsdl:message>
+    <wsdl:message name="addServerDataRequest">
+        <wsdl:part name="parameters" element="ns0:addServerData"/>
+    </wsdl:message>
+    <wsdl:message name="addServerLoginDataRequest">
+        <wsdl:part name="parameters" element="ns0:addServerLoginData"/>
+    </wsdl:message>
+    <wsdl:message name="addMessageDataDump_batch_reqRequest">
+        <wsdl:part name="parameters" element="ns0:addMessageDataDump_batch_req"/>
+    </wsdl:message>
+    <wsdl:message name="addServerLoginData_batch_reqRequest">
+        <wsdl:part name="parameters" element="ns0:addServerLoginData_batch_req"/>
+    </wsdl:message>
+    <wsdl:message name="addServerData_batch_reqRequest">
+        <wsdl:part name="parameters" element="ns0:addServerData_batch_req"/>
+    </wsdl:message>
+    <wsdl:message name="addMessageUserData_batch_reqRequest">
+        <wsdl:part name="parameters" element="ns0:addMessageUserData_batch_req"/>
+    </wsdl:message>
+    <wsdl:message name="addActivityData_batch_reqRequest">
+        <wsdl:part name="parameters" element="ns0:addActivityData_batch_req"/>
+    </wsdl:message>
+    <wsdl:message name="addMessageDataRequest">
+        <wsdl:part name="parameters" element="ns0:addMessageData"/>
+    </wsdl:message>
+    <wsdl:message name="addServerUserData_batch_reqRequest">
+        <wsdl:part name="parameters" element="ns0:addServerUserData_batch_req"/>
+    </wsdl:message>
+    <wsdl:message name="addOperationData_batch_reqRequest">
+        <wsdl:part name="parameters" element="ns0:addOperationData_batch_req"/>
+    </wsdl:message>
+    <wsdl:message name="addMessageProperty_batch_reqRequest">
+        <wsdl:part name="parameters" element="ns0:addMessageProperty_batch_req"/>
+    </wsdl:message>
+    <wsdl:message name="addServerUserDataRequest">
+        <wsdl:part name="parameters" element="ns0:addServerUserData"/>
+    </wsdl:message>
+    <wsdl:message name="addActivityDataRequest">
+        <wsdl:part name="parameters" element="ns0:addActivityData"/>
+    </wsdl:message>
+    <wsdl:message name="addServerUserLoginDataRequest">
+        <wsdl:part name="parameters" element="ns0:addServerUserLoginData"/>
+    </wsdl:message>
+    <wsdl:message name="addOperationDataRequest">
+        <wsdl:part name="parameters" element="ns0:addOperationData"/>
+    </wsdl:message>
+    <wsdl:message name="addServiceData_batch_reqRequest">
+        <wsdl:part name="parameters" element="ns0:addServiceData_batch_req"/>
+    </wsdl:message>
+    <wsdl:message name="addServiceUserDataRequest">
+        <wsdl:part name="parameters" element="ns0:addServiceUserData"/>
+    </wsdl:message>
+    <wsdl:message name="addServerUserLoginData_batch_reqRequest">
+        <wsdl:part name="parameters" element="ns0:addServerUserLoginData_batch_req"/>
+    </wsdl:message>
+    <wsdl:portType name="BAMDataCollectionDSPortType">
+        <wsdl:operation name="addServiceData">
+            <wsdl:documentation/>
+            <wsdl:input message="ns0:addServiceDataRequest" wsaw:Action="urn:addServiceData"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addServiceDataDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageDataDump">
+            <wsdl:documentation/>
+            <wsdl:input message="ns0:addMessageDataDumpRequest" wsaw:Action="urn:addMessageDataDump"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addMessageDataDumpDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="addOperationUserData_batch_req">
+            <wsdl:documentation>
+                batch operation for 'addOperationUserData'
+            </wsdl:documentation>
+            <wsdl:input message="ns0:addOperationUserData_batch_reqRequest"
+                        wsaw:Action="urn:addOperationUserData_batch_req"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addOperationUserData_batch_reqDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageProperty">
+            <wsdl:documentation/>
+            <wsdl:input message="ns0:addMessagePropertyRequest" wsaw:Action="urn:addMessageProperty"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addMessagePropertyDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageUserData">
+            <wsdl:documentation/>
+            <wsdl:input message="ns0:addMessageUserDataRequest" wsaw:Action="urn:addMessageUserData"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addMessageUserDataDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="addServiceUserData_batch_req">
+            <wsdl:documentation>
+                batch operation for 'addServiceUserData'
+            </wsdl:documentation>
+            <wsdl:input message="ns0:addServiceUserData_batch_reqRequest"
+                        wsaw:Action="urn:addServiceUserData_batch_req"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addServiceUserData_batch_reqDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageData_batch_req">
+            <wsdl:documentation>
+                batch operation for 'addMessageData'
+            </wsdl:documentation>
+            <wsdl:input message="ns0:addMessageData_batch_reqRequest" wsaw:Action="urn:addMessageData_batch_req"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addMessageData_batch_reqDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="addOperationUserData">
+            <wsdl:documentation/>
+            <wsdl:input message="ns0:addOperationUserDataRequest" wsaw:Action="urn:addOperationUserData"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addOperationUserDataDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="addServerData">
+            <wsdl:documentation/>
+            <wsdl:input message="ns0:addServerDataRequest" wsaw:Action="urn:addServerData"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addServerDataDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="addServerLoginData">
+            <wsdl:documentation/>
+            <wsdl:input message="ns0:addServerLoginDataRequest" wsaw:Action="urn:addServerLoginData"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addServerLoginDataDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageDataDump_batch_req">
+            <wsdl:documentation>
+                batch operation for 'addMessageDataDump'
+            </wsdl:documentation>
+            <wsdl:input message="ns0:addMessageDataDump_batch_reqRequest"
+                        wsaw:Action="urn:addMessageDataDump_batch_req"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addMessageDataDump_batch_reqDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="addServerLoginData_batch_req">
+            <wsdl:documentation>
+                batch operation for 'addServerLoginData'
+            </wsdl:documentation>
+            <wsdl:input message="ns0:addServerLoginData_batch_reqRequest"
+                        wsaw:Action="urn:addServerLoginData_batch_req"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addServerLoginData_batch_reqDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="addServerData_batch_req">
+            <wsdl:documentation>
+                batch operation for 'addServerData'
+            </wsdl:documentation>
+            <wsdl:input message="ns0:addServerData_batch_reqRequest" wsaw:Action="urn:addServerData_batch_req"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addServerData_batch_reqDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageUserData_batch_req">
+            <wsdl:documentation>
+                batch operation for 'addMessageUserData'
+            </wsdl:documentation>
+            <wsdl:input message="ns0:addMessageUserData_batch_reqRequest"
+                        wsaw:Action="urn:addMessageUserData_batch_req"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addMessageUserData_batch_reqDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="addActivityData_batch_req">
+            <wsdl:documentation>
+                batch operation for 'addActivityData'
+            </wsdl:documentation>
+            <wsdl:input message="ns0:addActivityData_batch_reqRequest" wsaw:Action="urn:addActivityData_batch_req"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addActivityData_batch_reqDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageData">
+            <wsdl:documentation/>
+            <wsdl:input message="ns0:addMessageDataRequest" wsaw:Action="urn:addMessageData"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addMessageDataDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="addServerUserData_batch_req">
+            <wsdl:documentation>
+                batch operation for 'addServerUserData'
+            </wsdl:documentation>
+            <wsdl:input message="ns0:addServerUserData_batch_reqRequest" wsaw:Action="urn:addServerUserData_batch_req"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addServerUserData_batch_reqDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="addOperationData_batch_req">
+            <wsdl:documentation>
+                batch operation for 'addOperationData'
+            </wsdl:documentation>
+            <wsdl:input message="ns0:addOperationData_batch_reqRequest" wsaw:Action="urn:addOperationData_batch_req"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addOperationData_batch_reqDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageProperty_batch_req">
+            <wsdl:documentation>
+                batch operation for 'addMessageProperty'
+            </wsdl:documentation>
+            <wsdl:input message="ns0:addMessageProperty_batch_reqRequest"
+                        wsaw:Action="urn:addMessageProperty_batch_req"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addMessageProperty_batch_reqDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="addServerUserData">
+            <wsdl:documentation/>
+            <wsdl:input message="ns0:addServerUserDataRequest" wsaw:Action="urn:addServerUserData"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addServerUserDataDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="addActivityData">
+            <wsdl:documentation/>
+            <wsdl:input message="ns0:addActivityDataRequest" wsaw:Action="urn:addActivityData"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addActivityDataDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="addServerUserLoginData">
+            <wsdl:documentation/>
+            <wsdl:input message="ns0:addServerUserLoginDataRequest" wsaw:Action="urn:addServerUserLoginData"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addServerUserLoginDataDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="addOperationData">
+            <wsdl:documentation/>
+            <wsdl:input message="ns0:addOperationDataRequest" wsaw:Action="urn:addOperationData"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addOperationDataDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="addServiceData_batch_req">
+            <wsdl:documentation>
+                batch operation for 'addServiceData'
+            </wsdl:documentation>
+            <wsdl:input message="ns0:addServiceData_batch_reqRequest" wsaw:Action="urn:addServiceData_batch_req"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addServiceData_batch_reqDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="addServiceUserData">
+            <wsdl:documentation/>
+            <wsdl:input message="ns0:addServiceUserDataRequest" wsaw:Action="urn:addServiceUserData"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addServiceUserDataDataServiceFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="addServerUserLoginData_batch_req">
+            <wsdl:documentation>
+                batch operation for 'addServerUserLoginData'
+            </wsdl:documentation>
+            <wsdl:input message="ns0:addServerUserLoginData_batch_reqRequest"
+                        wsaw:Action="urn:addServerUserLoginData_batch_req"/>
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault"
+                        wsaw:Action="urn:addServerUserLoginData_batch_reqDataServiceFault"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="BAMDataCollectionDSSOAP11Binding" type="ns0:BAMDataCollectionDSPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="addServiceData">
+            <soap:operation soapAction="urn:addServiceData" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageDataDump">
+            <soap:operation soapAction="urn:addMessageDataDump" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addOperationUserData_batch_req">
+            <soap:operation soapAction="urn:addOperationUserData_batch_req" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageProperty">
+            <soap:operation soapAction="urn:addMessageProperty" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageUserData">
+            <soap:operation soapAction="urn:addMessageUserData" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addServiceUserData_batch_req">
+            <soap:operation soapAction="urn:addServiceUserData_batch_req" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageData_batch_req">
+            <soap:operation soapAction="urn:addMessageData_batch_req" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addOperationUserData">
+            <soap:operation soapAction="urn:addOperationUserData" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addServerData">
+            <soap:operation soapAction="urn:addServerData" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addServerLoginData">
+            <soap:operation soapAction="urn:addServerLoginData" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageDataDump_batch_req">
+            <soap:operation soapAction="urn:addMessageDataDump_batch_req" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addServerLoginData_batch_req">
+            <soap:operation soapAction="urn:addServerLoginData_batch_req" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addServerData_batch_req">
+            <soap:operation soapAction="urn:addServerData_batch_req" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageUserData_batch_req">
+            <soap:operation soapAction="urn:addMessageUserData_batch_req" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addActivityData_batch_req">
+            <soap:operation soapAction="urn:addActivityData_batch_req" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageData">
+            <soap:operation soapAction="urn:addMessageData" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addServerUserData_batch_req">
+            <soap:operation soapAction="urn:addServerUserData_batch_req" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addOperationData_batch_req">
+            <soap:operation soapAction="urn:addOperationData_batch_req" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageProperty_batch_req">
+            <soap:operation soapAction="urn:addMessageProperty_batch_req" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addServerUserData">
+            <soap:operation soapAction="urn:addServerUserData" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addActivityData">
+            <soap:operation soapAction="urn:addActivityData" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addServerUserLoginData">
+            <soap:operation soapAction="urn:addServerUserLoginData" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addOperationData">
+            <soap:operation soapAction="urn:addOperationData" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addServiceData_batch_req">
+            <soap:operation soapAction="urn:addServiceData_batch_req" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addServiceUserData">
+            <soap:operation soapAction="urn:addServiceUserData" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addServerUserLoginData_batch_req">
+            <soap:operation soapAction="urn:addServerUserLoginData_batch_req" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="BAMDataCollectionDSSOAP12Binding" type="ns0:BAMDataCollectionDSPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="addServiceData">
+            <soap12:operation soapAction="urn:addServiceData" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageDataDump">
+            <soap12:operation soapAction="urn:addMessageDataDump" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addOperationUserData_batch_req">
+            <soap12:operation soapAction="urn:addOperationUserData_batch_req" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageProperty">
+            <soap12:operation soapAction="urn:addMessageProperty" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageUserData">
+            <soap12:operation soapAction="urn:addMessageUserData" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addServiceUserData_batch_req">
+            <soap12:operation soapAction="urn:addServiceUserData_batch_req" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageData_batch_req">
+            <soap12:operation soapAction="urn:addMessageData_batch_req" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addOperationUserData">
+            <soap12:operation soapAction="urn:addOperationUserData" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addServerData">
+            <soap12:operation soapAction="urn:addServerData" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addServerLoginData">
+            <soap12:operation soapAction="urn:addServerLoginData" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageDataDump_batch_req">
+            <soap12:operation soapAction="urn:addMessageDataDump_batch_req" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addServerLoginData_batch_req">
+            <soap12:operation soapAction="urn:addServerLoginData_batch_req" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addServerData_batch_req">
+            <soap12:operation soapAction="urn:addServerData_batch_req" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageUserData_batch_req">
+            <soap12:operation soapAction="urn:addMessageUserData_batch_req" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addActivityData_batch_req">
+            <soap12:operation soapAction="urn:addActivityData_batch_req" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageData">
+            <soap12:operation soapAction="urn:addMessageData" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addServerUserData_batch_req">
+            <soap12:operation soapAction="urn:addServerUserData_batch_req" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addOperationData_batch_req">
+            <soap12:operation soapAction="urn:addOperationData_batch_req" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageProperty_batch_req">
+            <soap12:operation soapAction="urn:addMessageProperty_batch_req" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addServerUserData">
+            <soap12:operation soapAction="urn:addServerUserData" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addActivityData">
+            <soap12:operation soapAction="urn:addActivityData" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addServerUserLoginData">
+            <soap12:operation soapAction="urn:addServerUserLoginData" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addOperationData">
+            <soap12:operation soapAction="urn:addOperationData" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addServiceData_batch_req">
+            <soap12:operation soapAction="urn:addServiceData_batch_req" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addServiceUserData">
+            <soap12:operation soapAction="urn:addServiceUserData" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addServerUserLoginData_batch_req">
+            <soap12:operation soapAction="urn:addServerUserLoginData_batch_req" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="BAMDataCollectionDSHttpBinding" type="ns0:BAMDataCollectionDSPortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="addServiceData">
+            <http:operation location="addServiceData"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageDataDump">
+            <http:operation location="addMessageDataDump"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addOperationUserData_batch_req">
+            <http:operation location="addOperationUserData_batch_req"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageProperty">
+            <http:operation location="addMessageProperty"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageUserData">
+            <http:operation location="addMessageUserData"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addServiceUserData_batch_req">
+            <http:operation location="addServiceUserData_batch_req"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageData_batch_req">
+            <http:operation location="addMessageData_batch_req"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addOperationUserData">
+            <http:operation location="addOperationUserData"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addServerData">
+            <http:operation location="addServerData"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addServerLoginData">
+            <http:operation location="addServerLoginData"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageDataDump_batch_req">
+            <http:operation location="addMessageDataDump_batch_req"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addServerLoginData_batch_req">
+            <http:operation location="addServerLoginData_batch_req"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addServerData_batch_req">
+            <http:operation location="addServerData_batch_req"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageUserData_batch_req">
+            <http:operation location="addMessageUserData_batch_req"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addActivityData_batch_req">
+            <http:operation location="addActivityData_batch_req"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageData">
+            <http:operation location="addMessageData"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addServerUserData_batch_req">
+            <http:operation location="addServerUserData_batch_req"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addOperationData_batch_req">
+            <http:operation location="addOperationData_batch_req"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addMessageProperty_batch_req">
+            <http:operation location="addMessageProperty_batch_req"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addServerUserData">
+            <http:operation location="addServerUserData"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addActivityData">
+            <http:operation location="addActivityData"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addServerUserLoginData">
+            <http:operation location="addServerUserLoginData"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addOperationData">
+            <http:operation location="addOperationData"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addServiceData_batch_req">
+            <http:operation location="addServiceData_batch_req"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addServiceUserData">
+            <http:operation location="addServiceUserData"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addServerUserLoginData_batch_req">
+            <http:operation location="addServerUserLoginData_batch_req"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="BAMDataCollectionDS">
+        <wsdl:port name="SOAP11Endpoint" binding="ns0:BAMDataCollectionDSSOAP11Binding">
+            <soap:address location="http://10.215.249.3:9763/services/BAMDataCollectionDS.SOAP11Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="SecureSOAP11Endpoint" binding="ns0:BAMDataCollectionDSSOAP11Binding">
+            <soap:address location="https://10.215.249.3:9443/services/BAMDataCollectionDS.SecureSOAP11Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="SecureSOAP12Endpoint" binding="ns0:BAMDataCollectionDSSOAP12Binding">
+            <soap12:address location="https://10.215.249.3:9443/services/BAMDataCollectionDS.SecureSOAP12Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="SOAP12Endpoint" binding="ns0:BAMDataCollectionDSSOAP12Binding">
+            <soap12:address location="http://10.215.249.3:9763/services/BAMDataCollectionDS.SOAP12Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="HTTPEndpoint" binding="ns0:BAMDataCollectionDSHttpBinding">
+            <http:address location="http://10.215.249.3:9763/services/BAMDataCollectionDS.HTTPEndpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="SecureHTTPEndpoint" binding="ns0:BAMDataCollectionDSHttpBinding">
+            <http:address location="https://10.215.249.3:9443/services/BAMDataCollectionDS.SecureHTTPEndpoint/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

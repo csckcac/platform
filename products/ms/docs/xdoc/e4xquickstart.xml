@@ -1,0 +1,987 @@
+<!--
+~ Copyright 2005-2008 WSO2, Inc. (http://wso2.com)
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <link href="css/mashup-docs.css" rel="stylesheet" type="text/css" media="all"/>
+        <link type="text/css" rel="stylesheet" href="css/SyntaxHighlighter.css" media="all"/>
+        <script language="javascript" src="js/shCore.js"></script>
+        <script language="javascript" src="js/shBrushJScript.js"></script>
+        <script language="javascript" src="js/shBrushJava.js"></script>
+        <script language="javascript" src="js/shBrushSql.js"></script>
+        <script language="javascript" src="js/shBrushXml.js"></script>
+        <style type="text/css">
+            .trick {
+                border: 1px solid black;
+                background-color: #FDE9D9;
+                padding-left: 1em;
+                padding-right: 1em;
+                margin-right: 20px;
+                font-style: italic;
+            }
+
+            .trick pre {
+                font-style: normal;
+            }
+
+            tr {
+                vertical-align: top
+            }
+        </style>
+    </head>
+    <body>
+        <div id="main-content">
+            <h1>E4X Quick Start Guide</h1>
+
+            <p>
+                <strong>Table of Contents</strong>
+            </p>
+
+            <div class="toc">
+                <ul>
+                    <li>
+                        <a href="#literal">Literal XML</a>
+                    </li>
+                    <li>
+                        <a href="#navigating">Navigating XML</a>
+                    </li>
+                    <li>
+                        <a href="#constructing">Constructing XML</a>
+                    </li>
+                    <li>
+                        <a href="#modifying">Modifying XML</a>
+                    </li>
+                    <li>
+                        <a href="#iteration">Iteration</a>
+                    </li>
+                    <li>
+                        <a href="#reading">Further Reading</a>
+                    </li>
+                </ul>
+            </div>
+
+            <p>At initial phase,Javascript introduced by Netscape and having no real non-marketing
+                relation to the Java programming language. Then came JScript, Microsoft's Javascript
+                implementation. Then came ECMAscript, the standardized version of the language which
+                unified the flavors (at least the basics) and provided consistent behavior and
+                licensing terms to implementations. Soon there were lots of ECMAscript
+                implementations, in browsers from Firefox,Internet Explorer,Opera and
+                Safari through to Adobe's Flash. ECMAscript, the heir to a long series of
+                unfortunate and confusing names, serves as the basis to much of the dynamic content
+                on the Web.
+            </p><br/>
+
+            <p>But ECMAScript, which still informally call javascript for the remainder of this
+                article, doesn't play terribly well with the primary markup languages of the web --
+                XML and HTML. These languages are generally exposed to script using a set of objects
+                called the Document Object Model (DOM), a notoriously difficult way to navigate and
+                shape the XML structure.
+            </p><br/>
+
+            <p>Enter E4X, officially "ECMAscript for XML", a standard extension to Javascript that
+                makes XML (and therefore XHTML) a first-class datatype within the language. E4X
+                support is still not universal -- it's not supported in Internet Explorer yet, but
+                it is supported in Firefox and implementations based on the open-source Rhino
+                Javascript implementation, including the WSO2 Mashup Server.
+            </p><br/>
+
+            <p>This quick start guide should not only give you the basics of E4X, but also point out
+                some of the tricky cases that an intermediate user will likely encounter. Knowing
+                where these traps are will lead you quickly to an enjoyable and productive use of
+                E4X. A working knowledge of XML and Javascript is required. For those with a working
+                knowledge of XPath, we highlight differences in assumptions to make the transition
+                smoother.
+            </p><br/>
+
+            <h2 id="literal">Literal XML</h2>
+
+            <p>E4X introduces a new type, "XML", which holds an XML element. You can create literal
+                XML values by writing XML directly.
+            </p>
+            <pre name="code" class="xml">
+                var order = &lt;order id="i1000423">
+                                &lt;part id="p343-3456" quantity="2"/&gt;
+                            &lt;/order> ;
+            </pre>
+            <div class="trick">
+                <p>Trick:
+                    <strong>You can't use an arbitrary XML element as an XML literal
+                        value.
+                    </strong>
+                    If you try you might get an error. Watch out for the following
+                    circumstances:
+                </p>
+                <ul>
+                    <li>Named entities other than those defined in XML 1.0 - &amp;amp;,
+                        &amp;lt;, &amp;gt;, &amp;quot;, &amp;apos;. Use a character
+                        reference such as &amp;#x7B; instead.
+                    </li>
+                    <li>Curly braces are used for templating (see below). Thus any literal
+                        occurances of "{" and "}" need to be escaped using the character references
+                        &amp;#x7B and &amp;#x7D; respectively.
+                    </li>
+                    <li>XML declarations such as &lt;?xml version="1.0"?> are not allowed.</li>
+                </ul>
+                <p>If you're having problems, you might try parsing the XML as a string, using the
+                    XML constructor:
+                </p>
+                <pre name="code" class="xml">
+                    var order = new XML('&lt;order id="i1000423"/&gt;&lt;part id="p343-3456" quantity="2"/&gt;&lt;/order>');
+                </pre>
+                <p>But if so you should watch out for backslashes in the XML -- as they are
+                    interpreted as Javascript escaping mechanism. You will need to replace any
+                    occurances of "\" with "\\".
+                </p>
+            </div>
+            <p>E4X also introduces the "XMLList" type, which holds a set of XML structures. This is
+                obviously useful in queries (for instance, when asking for all the children an
+                element, an XMLList is created). But E4X provides a literal notation for an XML list
+                as well: wrap the list of elements in "&lt;>" and "&lt;&gt;".
+            </p>
+            <pre name="code" class="xml">
+                var parts = &lt;>
+                                &lt;part id="p343-3456" quantity="2"/&gt;
+                                &lt;part id="p343-2110" quantity="1"/&gt;
+                            &lt;/&gt; ;
+            </pre>
+            <p>XML lists can also be parsed directly from concatenated strings representing XML
+                elements.
+            </p>
+            <pre name="code" class="xml">
+                var parts = new XMLList('&lt;part id="p343-3456" quantity="2"/&gt;&lt;part id="p343-2110" quantity="1"/&gt;');
+            </pre>
+            <p>In E4X, the line between an XML value and an XMLList value with a single item is
+                intentionally blurry. As a result in practice there is little difference between an
+                XML value and an XMLList value with a single item.
+            </p>
+
+            <h2 id="navigating">Navigating XML</h2>
+
+            <p>Once you have an XML object, you can access its name and namespace, children,
+                attributes, and text content using the familiar Javascript dot operator.
+            </p>
+            <pre name="code" class="js">
+                var c = &lt;customer number=&quot;1721&quot;&gt;
+                            &lt;name&gt;
+                                &lt;first&gt;John&lt;/first&gt;
+                                &lt;last&gt;Smith&lt;/last&gt;
+                            &lt;/name&gt;
+                            &lt;phone type=&quot;mobile&quot;&gt;888-555-1212&lt;/phone&gt;
+                            &lt;phone type=&quot;office&quot;&gt;888-555-2121&lt;/phone&gt;
+                        &lt;/customer&gt; ;
+                var name = c.name.first + &quot; &quot; + c.name.last;
+                var num = c.@number;
+                var firstphone = c.phone[0];
+            </pre>
+            <p>The XML literal can contain comments and processing instructions as well as elements,
+                attributes, and text.
+            </p>
+
+            <p>A child element can be accessed by name as a property of the parent. If there are
+                more than one child with that name, an XML List is returned, which can be further
+                qualified by an index or other qualifier.
+            </p>
+
+            <div class="trick">
+                <p>Trick:
+                    <b>Know your context.</b>
+                    Notice that one writes "c.name" to access the
+                    "name" child of customer. One doesn't write "customer.name" as an XPath user
+                    might be tempted to ("customer/name"). The name of the variable is separate from
+                    the name of the XML element value. I've adopted the convention of naming the
+                    variable the same as the XML element to avoid this. That is, in the above
+                    example, I'd typically name the variable "customer" rather than "c". In XPath
+                    terms the context of the "." query is the element itself, not a document node
+                    that contains the element as a child.
+                </p>
+            </div>
+            <p>A child attribute can be accessed by name using the "@" prefix, or with the
+                attribute() method.
+            </p>
+
+            <div class="trick">
+                <p>Trick:
+                    <b>Escape reserved words when they appear as XML element names.</b>
+                    Javascript has a fair number of reserved words that appear fairly commonly as
+                    XML element names. In this case, dot notation cannot be allowed, and an escaped
+                    syntax must be employed.
+                </p>
+
+                <p>Trick:
+                    <b>Escape names with "." or "-" when they appear as XML element names.</b>
+                    Dot and hyphen already have meaning within Javascript, so when referring to an
+                    XML element containing one of those characters, an escaping mechanism must be
+                    employed.
+                </p>
+                <pre name="code" class="js">
+                    var transcript = &lt;transcript&gt;
+                                        &lt;class&gt;History 101&lt;/class&gt;
+                                        &lt;abstract&gt;Introduction to World History&lt;/abstract&gt;
+                                        &lt;public can-register=&quot;yes&quot;/&gt;
+                                        &lt;div class="description"&gt;How we got to where we are.&lt;/div&gt;
+                                     &lt;/transcript&gt;;
+                </pre>
+                <p>The following expressions are invalid E4X because of reserved words or invalid
+                    name characters.
+                </p>
+                <pre name="code" class="js">
+                    var c = transcript.class;
+                    var a = transcript.abstract;
+                    var r = transcript.public.@can-register;
+                    var description = transcript.div.(@class == 'description');
+                </pre>
+                <p>Instead use the following synonymous syntax:</p>
+                <pre name="code" class="js">
+                    var c = transcript[&quot;class&quot;];
+                    var a = transcript[&quot;abstract&quot;];
+                    var r = transcript[&quot;public&quot;].attribute(&quot;can-register&quot;);
+                    var description = transcript.div.(@[&quot;class&quot;] == 'description');
+                </pre>
+                <p>For your reference, here is a list of reserved words in Javascript and E4X:</p>
+                <pre>abstract boolean break byte case catch
+                    char class const continue debugger default
+                    delete do double each else enum
+                    export extends final finally float for
+                    function goto if implements import in
+                    instanceof int interface long namespace native
+                    new package private protected public return
+                    short static super switch synchronized this
+                    throw throws transient try typeof var
+                    void volatile while with xml
+                </pre>
+            </div>
+            <p>The text value of an element with a primitive value (no element children) or of an
+                attribute can be obtained explicitly as a string by the toString() method, but in
+                most circumstances the toString() method will be called automatically when a string
+                value is needed. For a complex element (one with children), toString() returns the
+                XML syntax representation of the element. To obtain the XML syntax representation of
+                a node explicitly (including elements with primitive values), use the toXMLString()
+                method.
+            </p>
+            <table style="margin-left: 0.5in; border-collapse: collapse;" border="1" cellpadding="5"
+                   cellspacing="0">
+                <tr>
+                    <td>
+                        <pre>c.name.toString()</pre>
+                    </td>
+                    <td>
+                        <pre>'&lt;name&gt;&lt;first&gt;John&lt;/first&gt;&lt;last&gt;Smith&lt;/last&gt;&lt;/name&gt;'
+                        </pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <pre>c.name.toXMLString()</pre>
+                    </td>
+                    <td>
+                        <pre>'&lt;name&gt;&lt;first&gt;John&lt;/first&gt;&lt;last&gt;Smith&lt;/last&gt;&lt;/name&gt;'
+                        </pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <pre>c.@number.toString()</pre>
+                    </td>
+                    <td>
+                        <pre>'1721'</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <pre>c.@number.toXMLString()</pre>
+                    </td>
+                    <td>
+                        <pre>'1721'</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <pre>c.phone[0].toString()</pre>
+                    </td>
+                    <td>
+                        <pre>'888-555-1212'</pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <pre>c.phone[0].toXMLString()</pre>
+                    </td>
+                    <td>
+                        <pre>'&lt;phone type=&quot;mobile&quot;&gt;888-555-1212&lt;/phone&gt;'</pre>
+                    </td>
+                </tr>
+            </table>
+            <p>One useful construct in XPath is the predicate notation (e.g.
+                "customer/phone[@type='mobile']") to filter a node list. E4X has a similar
+                construct:
+            </p>
+            <pre name="code" class="xml">
+                c.phone.(@type == &quot;mobile&quot;)
+            </pre>
+            <p>In this notation the XML List of elements matching c.phone is filtered to those with
+                a type attribute with the value "mobile". If no elements match, the result is an
+                empty XML list, best checked for empty using ".length() == 0".
+            </p>
+
+            <div class="trick">
+                <p>Trick:
+                    <b>Children hide variables of the same name.</b>
+                    If there is a choice
+                    within the filtering expression between a child element name or a variable, the
+                    child element name will take precedence, sometimes with unexpected results, as
+                    shown below:
+                </p>
+                <pre name="code" class="js">
+                    var customer = &lt;customer&gt;
+                                        &lt;phone type=&quot;mobile&quot;&gt;888-555-1212&lt;/phone&gt;
+                                        &lt;phone type=&quot;office&quot;&gt;888-555-2121&lt;/phone&gt;
+                                        &lt;preferred&gt;mobile&lt;/preferred&gt;
+                                   &lt;/customer&gt; ;
+                    var preferred = &quot;office&quot;;
+                    var x = customer.(phone[0].@type == preferred);
+                </pre>
+                <p>In this example, one might expect that x would be empty, as the type attribute of
+                    the first phone element is not equal to the value of the "preferred" variable.
+                    But instead, the value of the "preferred" element is used.
+                </p>
+
+                <p>The rule to remember is that within a filter expression, names are assumed to be
+                    relative to the context XML. Only if no such name is found are variables
+                    checked.
+                </p>
+            </div>
+            <p>The following summary provides some XPath equivalents for common XML navigation
+                operations:
+            </p>
+            <table style="margin-left: 0.5in; border-collapse: collapse;" border="1" cellpadding="5"
+                   cellspacing="0">
+                <tr>
+                    <th>
+                        <p>XPath</p>
+                    </th>
+                    <th>
+                        <p>Meaning</p>
+                    </th>
+                    <th>
+                        <p>E4X Equivalent</p>
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <p>element/*</p>
+                    </td>
+                    <td>
+                        <p>Select all children of element</p>
+                    </td>
+                    <td>
+                        <p>element.*</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>element/@*</p>
+                    </td>
+                    <td>
+                        <p>Select all attributes of element</p>
+                    </td>
+                    <td>
+                        <p>element.@*</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>element//descendent</p>
+                    </td>
+                    <td>
+                        <p>Select all descendents (children, grandchildren, etc.) of element</p>
+                    </td>
+                    <td>
+                        <p>element..descendent</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>.. or parent::element</p>
+                    </td>
+                    <td>
+                        <p>Select the parent of element</p>
+                    </td>
+                    <td>
+                        <p>element.parent()</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>xmlns:foo="..."</p>
+
+                        <p>element/foo:bar</p>
+                    </td>
+                    <td>
+                        <p>Select the foo:bar child of element where foo is the prefix of a declared
+                            namespace
+                        </p>
+                    </td>
+                    <td>
+                        <p>var foo = new Namespace(...);</p>
+
+                        <p>element.foo::bar</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>name(element)</p>
+                    </td>
+                    <td>
+                        <p>Return the full name (including prefix if any) of element</p>
+                    </td>
+                    <td>
+                        <p>element.name()</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>local-name(element)</p>
+                    </td>
+                    <td>
+                        <p>Return the local name of element</p>
+                    </td>
+                    <td>
+                        <p>element.localName()</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>namespace-uri(element)</p>
+                    </td>
+                    <td>
+                        <p>Return the namespace uri (if any) of element</p>
+                    </td>
+                    <td>
+                        <p>element.namespace()</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>element/namespace::*</p>
+                    </td>
+                    <td>
+                        <p>Return the collection of namespaces as an Array of Namespace objects
+                            (E4X) or a nodeset of Namespaces nodes (XPath)
+                        </p>
+                    </td>
+                    <td>
+                        <p>element.inScopeNamespaces()</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>element/processing-instructions(name)</p>
+                    </td>
+                    <td>
+                        <p>Return the processing instruction children of element with the specified
+                            name (if omitted, all are returned).
+                        </p>
+                    </td>
+                    <td>
+                        <p>element.processingInstructions(name)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>string(element)</p>
+                    </td>
+                    <td>
+                        <p>Return the concatenated text nodes of this element and all its
+                            descendants
+                        </p>
+                    </td>
+                    <td>
+                        <p>stringValue(element);</p>
+                        <pre name="code" class="js">
+                            stringValue.visible = false;
+                            function stringValue(node) {
+                                var value = &quot;&quot;;
+                                if (node.hasSimpleContent()) {
+                                    value = node.toString();
+                                } else {
+                                    for each (var c in node.children()) {
+                                        value += stringValue(c);
+                                    }
+                                }
+                                return value;
+                            }
+                        </pre>
+                    </td>
+                </tr>
+            </table>
+
+            <h2 id="constructing">Constructing XML</h2>
+
+            <p>Besides the literal use of XML as a value, or parsing XML text into an XML value, E4X
+                provides a templating mechanism to construct complex XML structures from variable
+                and expression values. Within text content, curly braces can be used to insert a
+                value into the XML:
+            </p>
+            <pre name="code" class="js">
+                var nextId = 1234;
+                var first = &quot;John&quot;;
+                var last = &quot;Smith&quot;;
+                var c = &lt;customer number={nextId++}&gt;
+                            &lt;name&gt;
+                                &lt;first&gt;{first}&lt;/first&gt;
+                                &lt;last&gt;{last}&lt;/last&gt;
+                            &lt;/name&gt;
+                        &lt;/customer&gt; ;
+            </pre>
+            <p>Attribute values can be determined by replacing the whole attribute value (including
+                quotes!) with an expression. Curly braces within quotes will be treated literally.
+            </p>
+
+            <p>Although it's rarely needed, element and attribute names can be evaluated too:</p>
+            <pre name="code" class="js">
+                var phonetype = &quot;mobile&quot;;
+                var identifiertype = &quot;id&quot;;
+                var c = &lt;{phonetype} {identifiertype}={nextId++} &gt;888-555-2112&lt;/{phonetype}&gt;;
+            </pre>
+            <p>XML lists can be created by using the addition operator on individual XML elements:</p>
+            <pre name="code" class="js">
+                var employees = &lt;employee name=&quot;Joe&quot;/&gt; +
+                                &lt;employee name=&quot;Arun&quot;/&gt; +
+                                &lt;employee name=&quot;Betty&quot;/&gt;;
+            </pre>
+
+            <h2 id="modifying">Modifying XML</h2>
+
+            <p>The value of an element or attribute can be changed by assigning a new value to it:</p>
+            <pre name="code" class="xml">
+                c.@number = 1235;
+                c.phone.(@type='mobile') = &quot;650-555-1234&quot;;
+            </pre>
+            <p>Deleting an XML element or attribute from a structure is accomplished with the delete
+                operator (though watch out that you're operating on a single node rather than simply
+                removing an item from a transitory list):
+            </p>
+            <pre name="code" class="xml">
+                delete c.phone.(@type='office')[0];
+            </pre>
+            <p>If one wishes to add an child, one can use the += operator to insert a new element at
+                a particular location:
+            </p>
+            <pre name="code" class="xml">
+                c.phone += &lt;phone type='home'&gt;650-555-1414&lt;/phone&gt;; // append new phone child.
+                c.phone[0] += &lt;phone type='home'&gt;650-555-1414&lt;/phone&gt;; // insert new phone child after the first phone child.
+            </pre>
+            <p>E4X also provides many DOM-like capabilities, often synonyms for the functionality
+                already discussed. The methods of the XML object include the following methods.
+                Objects marked with a * are also available on XML List objects.
+            </p>
+            <table style="margin-left: 0.5in; border-collapse: collapse;" border="1" cellpadding="5"
+                   cellspacing="0">
+                <tr>
+                    <td>
+                        <p>
+                            <b>Methods of the XML object</b>
+                        </p>
+                    </td>
+                    <td>
+                        <p>
+                            <b>Meaning</b>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>addNamespace(namespace)</p>
+                    </td>
+                    <td>
+                        <p>Adds the namespace to the in-scope namespaces of the element.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>appendChild(child)</p>
+                    </td>
+                    <td>
+                        <p>Adds child as a new child of the element, after all other children.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>attribute(attributeName) *</p>
+                    </td>
+                    <td>
+                        <p>Returns the attribute of with the requested name.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>attributes() *</p>
+                    </td>
+                    <td>
+                        <p>Returns the attributes of this element.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>child(propertyName) *</p>
+                    </td>
+                    <td>
+                        <p>Returns the child element with the given propertyName, or if propertyName
+                            is an integer, returns the child in that position.
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>childIndex()</p>
+                    </td>
+                    <td>
+                        <p>Returns the index of this children among its siblings.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>children() *</p>
+                    </td>
+                    <td>
+                        <p>Returns all the children of this object.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>comments() *</p>
+                    </td>
+                    <td>
+                        <p>Returns all the comments that are children of this XML object.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>contains(value) *</p>
+                    </td>
+                    <td>
+                        <p>Compares this element with the value, primarily provided to enable an XML
+                            element and an XML list to be used interchangeably.
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>copy() *</p>
+                    </td>
+                    <td>
+                        <p>Returns a deep copy of the element. The parent property of the copy will
+                            be set to null.
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>descendants([name]) *</p>
+                    </td>
+                    <td>
+                        <p>Returns the descendant elements (children, grandchildren, etc.). If a
+                            name is provided, only elements with that name are returned.
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>elements([name]) *</p>
+                    </td>
+                    <td>
+                        <p>Returns the child elements. If a name is provided, only elements with
+                            that name are returned.
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>hasComplexContent() *</p>
+                    </td>
+                    <td>
+                        <p>Returns true for elements with child elements, otherwise false.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>hasSimpleContent() *</p>
+                    </td>
+                    <td>
+                        <p>Returns true for attributes, text nodes, or elements without child
+                            elements, otherwise false.
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>inScopeNamespaces()</p>
+                    </td>
+                    <td>
+                        <p>Returns an array of Namespace objects representing the namespaces in
+                            scope for this object.
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>insertChildAfter(child1, child2)</p>
+                    </td>
+                    <td>
+                        <p>Inserts child2 immediately after child1 in the XML object's children
+                            list.
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>insertChildBefore(child1, child2)</p>
+                    </td>
+                    <td>
+                        <p>Inserts child2 immediately prior to child1 in the XML object's children
+                            list.
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>length() *</p>
+                    </td>
+                    <td>
+                        <p>Returns 1 for XML objects (allowing an XML object to be treated like an
+                            XML List with a single item.)
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>localName()</p>
+                    </td>
+                    <td>
+                        <p>Returns the local name of this object.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>name()</p>
+                    </td>
+                    <td>
+                        <p>Returns the qualified name of this object.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>namespace([prefix])</p>
+                    </td>
+                    <td>
+                        <p>Returns the namespace associated with this object, or if a prefix is
+                            specified, an in-scope namespace with that prefix.
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>namespaceDeclarations()</p>
+                    </td>
+                    <td>
+                        <p>An array of Namespace objects representing the namespace declarations
+                            associated with this object.
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>nodeKind()</p>
+                    </td>
+                    <td>
+                        <p>A string representing the kind of object this is (e.g. "element").</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>normalize() *</p>
+                    </td>
+                    <td>
+                        <p>Merge adjacent text nodes and eliminate empty ones.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>parent() *</p>
+                    </td>
+                    <td>
+                        <p>The parent of this object. For an XML List object, this returns undefined
+                            unless all the items of the list have the same parent.
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>processingInstructions([name]) *</p>
+                    </td>
+                    <td>
+                        <p>A list of all processing instructions that are children of this element.
+                            If a name is provided, only processing instructions matching this name
+                            will be returned.
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>prependChild(value)</p>
+                    </td>
+                    <td>
+                        <p>Add a new child to an element, prior to all other children.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>removeNamespace(namespace)</p>
+                    </td>
+                    <td>
+                        <p>Removes a namespace from the in-scope namespaces of the element.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>replace(propertyName, value)</p>
+                    </td>
+                    <td>
+                        <p>Replace a child with a new one.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>setChildren(value)</p>
+                    </td>
+                    <td>
+                        <p>Replace the children of the object with the value (typically an XML
+                            List).
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>setLocalName(name)</p>
+                    </td>
+                    <td>
+                        <p>Sets the local name of the XML object to the requested value.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>setName(name)</p>
+                    </td>
+                    <td>
+                        <p>Sets the name of the XML object to the requested value (possibly
+                            qualified).
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>setNamespace(ns)</p>
+                    </td>
+                    <td>
+                        <p>Sets the namespace of the XML object to the requested value.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>text() *</p>
+                    </td>
+                    <td>
+                        <p>Concatenation of all text node children.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>toString() *</p>
+                    </td>
+                    <td>
+                        <p>For elements without element children, returns the values of the text
+                            node children. For elements with element children, returns same as
+                            toXMLString. For other kinds of objects, the value of the object.
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>toXMLString() *</p>
+                    </td>
+                    <td>
+                        <p>Serializes this XML object as parseable XML.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>valueOf() *</p>
+                    </td>
+                    <td>
+                        <p>Returns this XML object.</p>
+                    </td>
+                </tr>
+            </table>
+            <br/>
+            <div class="trick">
+                <p>Trick:
+                    <b>E4X uses methods where DOM uses properties.</b>
+                    DOM users will be used to accessing information about a node (like localName) as
+                    properties of the XML Node object. In E4X, children elements are exposed as
+                    properties, so similar accessors are modeled as methods instead.
+                </p>
+            </div>
+
+            <h2 id="iteration">Iteration</h2>
+
+            <p>The "for each" operator is extended to more easily traverse the properties of an object
+                (especially children of an XML object, or items in an XMLList). This is more convenient
+                than the normal Javascript "for .. in" which sets the iterator variable to an index rather
+                than directly returning the node.
+            </p>
+            <pre name="code" class="js">
+                var firstCustomerDate = new Date();
+                for each (var customer in c.customer) {
+                    var since = new Date(customer.since);
+                    if (since &lt; firstCustomerDate) {
+                        firstCustomerDate = since;
+                    }
+                }
+            </pre>
+
+
+            <h2 id="reading">Further Reading</h2>
+
+            <p>This information is extracted from the ECMA-357 specification [1]. Further
+                information about E4X, including the details of Namespace and QName objects, can be
+                found in the E4X specification. Contribute your ideas for improving this document to
+                <a href="mailto:mashup-user@wso2.org">mashup-user@wso2.org</a>.
+            </p>
+
+            <p>[1]
+                <a
+                        href="http://www.ecma-international.org/publications/standards/Ecma-357.htm">ECMA-357.pdf
+                </a>
+            </p>
+
+        </div>
+        <script language="javascript">
+            dp.SyntaxHighlighter.BloggerMode();
+            dp.SyntaxHighlighter.HighlightAll('code');
+        </script>
+    </body>
+</html>

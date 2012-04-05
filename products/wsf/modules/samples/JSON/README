@@ -1,0 +1,37 @@
+WSO2 WSF/Java
+=============
+
+Sample : JSON Client
+====================
+
+This is a client which can invoke the JSON service sample which comes with the WSO2
+Application Server. This sample demonstrates how to write a client for a JSON Web Service.
+
+If you want to run the sample, you have to host the JSON service in a running WSO2
+AppServer instance. There are different options to achieve that.
+
+1. Download WSO2 AppServer and deploy the service.
+2. Create a tenant in WSO2 Cloud infrastructure (Stratos) and deploy the service in AppServer
+   cloud service.
+3. Deploy the service in WSO2 AppServer AMI.
+
+Running the client
+==================
+
+After deploying the service using one of the above options, use the following steps to run the
+client.
+
+1. Run "ant" on WSF_HOME/samples/JSON directory.
+2. Use the script run-client.sh or run-client.bat file to invoke the client using following
+   optional parameters
+   -help {For help on available options}
+   -e {Endpoint URL}
+   -ct {Content type to be used}
+        aj  (application/json)
+        ajb (application/json/badgerfish)
+
+   ex: ./run-client.sh -ct ajb
+
+If you want more details on how to deploy the service etc, please download the WSO2 Application
+Server Documentation Distribution and refer to the JSON sample document.
+

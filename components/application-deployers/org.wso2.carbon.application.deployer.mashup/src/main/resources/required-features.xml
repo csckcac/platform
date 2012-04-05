@@ -1,0 +1,6 @@
+<featureSets>
+    <featureSet artifactType="wso2/mashup">
+        <feature id="org.wso2.carbon.jsservices.server.feature.group" version="[4.0.0, 4.1.0)"/>
+        <feature id="org.wso2.carbon.jsservices.common.feature.group" version="[4.0.0, 4.1.0)"/>
+    </featureSet>
+</featureSets>

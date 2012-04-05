@@ -1,0 +1,903 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  ~  Copyright (c) 2005-2008, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  ~
+  -->
+
+<!DOCTYPE html
+   PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" >
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <title>
+      WSO2 Governance Registry - Remote Registry
+    </title>
+    <link href="../css/greg-docs.css" rel="stylesheet"/>
+    <link href="../styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+  </head>
+  <body xml:lang="en">
+    [ <a href="../docs_index.html"> Documentation Index </a> ]
+    <h1>
+      Accessing Registry Remotely through an API - Remote Registry
+    </h1>
+    <p>
+        In simple words, the RemoteRegistry is a Java API for interacting with a Registry instance. Regardless of where a given Registry instance is located, either locally or remotely, we can still talk to it using RemoteRegistry. 
+        The RemoteRegistry is yet another implementation of org.wso2.registry.Registry interface. However, the difference between the RemoteRegistry and a standard Registry is that, the RemoteRegistry is not an actual registry 
+        but a client for interacting with a registry instance.
+        <br/>
+        <br/>  
+        Communication between the Registry and the RemoteRegistry takes place using the Atom Publishing Protocol (APP). When we start the registry server, an atom feed is generated . 
+        Thereafter, if you browse https://localhost:9443/registry/atom/ (this address changes depending on your application server settings), you'd be able to see the atom feed from the registry. The structure and format
+        of the feed is described in the following location: http://www.wso2.org/wiki/display/registry/Registry+Protocol.
+     </p>
+
+    <h2>
+      How to Create an Instance of the RemoteRegistry
+    </h2>  
+
+    <p>
+      To create an instance of the RemoteRegistry, what we need first is the URL of a registry. If the root of the registry is http://foo.com/, the URL for the RemoteRegistry instance would be http://foo.com/registry/atom. 
+      Once we have the URL figured out, we can create an instance of the RemoteRegistry using the following code:
+      <br/>
+      <br/>
+      <pre>System.setProperty("javax.net.ssl.trustStore", "GREG_HOME/repository/resources/security/client-truststore.jks");</pre>
+       <pre>System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");</pre>
+        <pre>System.setProperty("javax.net.ssl.trustStoreType","JKS");</pre>
+          
+        <pre>RemoteRegistry remote_registry = new RemoteRegistry(new URL("https://localhost:9443/registry"));</pre>
+    </p>
+    <p>
+      Creating an instance of the RemoteRegistry in this manner, is similar to accessing a registry without login into it with communication taking place as an anonymous user.
+    </p>
+    <p>
+      If you have a user name and password for the registry, you can pass them along when creating the remote_registry instance. At that point, all permissions granted for the particular username/password pair 
+     will apply to the owner of the remote_registry instance. Creating the remote_registry with user name and the password can be done using:
+    <br/>
+    <br/>
+      <pre>RemoteRegistry remote_registry = new RemoteRegistry(new URL("https://localhost:9443/registry"), "admin", "admin");
+      </pre> 
+      In this example, we have created the remote_registry instance with username="admin" and the password as also "admin".
+    </p>  
+ 
+    <h2>
+      Using the Registry API
+    </h2>
+    
+    <h3>
+
+      Reading a resource
+
+    </h3>
+
+    <p>
+
+      Once we have the registry instance in place (embedded registry or remote registry), navigation is straightforward. It is the same as working with the Registry API. Say we have a resource called "/foo/c1" 
+
+      in the Registry and you can access it using the registry instance as given below:
+
+      <br/>
+
+
+      <pre>Resource resource = registry.get("/foo/c1");</pre>
+
+
+    </p>
+
+    <p>
+
+      The resource object will represent the actual resource object in the Registry. But if the resource is a collection, then the object will, of course, represent the collection.
+
+      <br/>
+
+      <br/>
+
+      As you can see in the code sample above, once we have a registry instance we do not need to pass a complete URL for all invocations. It is adequate to pass only a relative path to a resource.
+
+    </p>
+
+    <h3>
+
+      Adding a resource
+
+    </h3> 
+
+    <p>
+
+      To add a resource to the registry instance, first thing we need to do is to create a Resource object and then to call its put method:
+
+      <br/>
+
+      <br/>
+
+      First let's try to create a collection called "/c1/c2"
+
+
+      <br/>
+
+      <pre>Collection collection = registry.newCollection();   
+
+registry.put("/c1/c2", collection);</pre>
+
+
+    </p>
+
+    <p> 
+
+      If you call the get method then you'd be able to access that resource created. Now let's try to add a resource with content. For that, we need to first create a Resource object and then set content. 
+
+      <br/>
+
+      <br/>
+
+      <pre>Resource r1 = registry.newResource();
+
+String str = "My File Content";
+
+r1.setContent(str.getBytes());
+
+registry.put("/c1/c2/r1", r1);</pre>
+
+    </p>
+
+    <h3>
+
+      Checking for the Existence of a Resource 
+
+    </h3>
+
+    <p>
+
+      We can use the following code to confirm whether the resource exists: 
+
+      <br/>
+
+      <pre>boolean value = registry.resourceExists("/c1/c2/r1");</pre>
+
+
+    </p>
+
+    <p>
+
+      If the resource does exist, a boolean value of true will be returned, else false.
+
+    </p>
+
+    <h3>
+
+      Deleting a Resource
+
+    </h3>
+
+    <p>
+
+      Additionally, we can use the registry instance to delete resources. Deleting a resource is a matter of calling the delete method of the registry. Let's just say we want to delete "/c1/c2/r1". Then we can use the following code:
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.delete("/c1/c2/r1");</pre>
+
+    </p>
+
+    <h3>
+
+      Renaming a resource
+
+    </h3>
+
+    <p>
+
+      We can rename individual resources or collections. To rename a resource, use the following lines of code. Same code can be used to rename a collection as well.
+
+      <br/>
+
+      <pre>registry.rename("/c1/c2/r1", "/c1/c2/r2");</pre>
+
+    </p>
+
+    <p> 
+
+      <br/>
+
+      Above line of code renames "/c1/c2/r1" to "/c1/c2/r2".
+
+    </p>
+
+    <h3>
+
+      Creating versions of resources/collections
+
+    </h3>
+
+    <p>
+
+      Resources are automatically versioned when they are added or updated. But collections are not versioned automatically due to performance considerations. However, you can create versions of collections using the API. 
+
+      It is recommended that collection versions are created only for making checkpoints of the sub-tree you are working on.
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.createVersion("/c1/c2");</pre>
+
+    </p>
+
+    <h3>
+
+      Retrieving different Versions of a Given Resource
+
+    </h3>
+
+    <p>
+
+      We can list all of the versions of a given resource using the code given below. The result would be an array of String, containing links to the different versions of the resource.
+
+      <br/>
+
+      <br/>
+
+      <pre>String [] versions = registry.getVersions("/c1/c2");</pre>
+
+    </p>
+
+    <h3>
+
+      Restoring to an old version
+
+    </h3>
+
+    <p>
+
+      Since the Registry comes with versioning, we can restore a resource to any of its versions. This can be done using the registry as well. In the previous section, we discussed how to retrieve versions for a give resource. 
+
+      The following line of code demonstrates we can restore back an old version of the registry instance.
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.restoreVersion ("/c1/c2;version:2");</pre>
+
+    </p>
+
+    <h3>
+
+      Adding a Tag
+
+    </h3>
+
+    <p>
+
+      We can perform tagging operations using the registry. To tag a resource, we need the resource path and the tagging words. Let's say we need to tag a resource named "/c1/c2/r2" as "rename resource". We can do this as:
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.applyTag("/c1/c2/r2" , "rename resource");</pre>
+
+    </p>
+
+    <h3>
+
+      Retrieving All Tags of a Given Resource
+
+    </h3>
+
+    <p>
+
+      We can use the registry to retrieve tags for a give resource. It will return an array of Tag type and we can iterate the array to see the content.
+
+      <br/>
+
+      <br/>
+
+      <pre>Tag[] tags = registry.getTags("/c1/c2/r2");</pre>
+
+    </p>
+
+    <h3>
+
+      Deleting a Tag
+
+    </h3>
+
+    <p>
+
+      We can remove a tag using the tag name. Use the following code:
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.removeTag("/c1/c2/r2","rename resource");</pre>
+
+    </p>
+
+    <h3>
+
+      Retrieving resources with a specific Tag
+
+    </h3>
+
+    <p>
+
+      Resources that have a specific tag can be retrieved using the following code:
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.getResourcePathsWithTag("wso2");</pre>
+
+    </p>
+
+    <h3>
+
+      Commenting on a Resource
+
+    </h3>
+
+    <p>
+
+      We can also comment on a resource using the registry. Here, we will create a comment object and call the registry instance. Following lines of code illustrates how we can achieve this:
+
+      <br/>
+
+      <br/>
+
+      <pre>Comment c1 = new Comment();
+
+c1.setText("This is my comment");
+
+String commentPath = registry.addComment("/c1/c2/r2", c1);</pre>
+
+    </p>
+
+    <p>
+
+      The above lines of code will add a comment to the resource named: "c1/c2/r2 ".
+
+    </p>
+
+    <h3>
+
+      Edit a Comment
+
+    </h3>
+
+    <p>
+
+      We can also make changes to comments we have already made using the registry instance. Here, we need the path and new text for the comment we are adding. Say we want to change from "This is my comment" to "This is cool", 
+
+      For that, we can do the following:
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.editComment(commentpath,"This is cool");</pre>
+
+    </p>
+
+    <h3>
+
+      Remove a Comment
+
+    </h3>
+
+    <p>
+
+      A comment can be removed using the comment path. The following code shows how this is done:
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.removeComment(commentpath);</pre>
+
+    </p>
+
+    <h3>
+
+      Retrieving Comments made about a Resource
+
+    </h3>
+
+    <p>
+
+      Comments about a specific resource can be retrieved using the following code:
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.getComments("/c1/c2/r2");</pre>
+
+    </p>
+
+    <h3>
+
+      Rating a Resource
+
+    </h3>
+
+    <p>
+
+      In order to rate a resource based on our judgment, we can again use the registry instance. Rating a resource can be done using following line of code:
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.rateResource("c1/c2/r2 " , 4);</pre>
+
+    </p>
+
+    <h3>
+
+      Retrieving the average rating of a resource
+
+    </h3>
+
+    <p>
+
+      An average of all ratings of a particular resource can be retrieved. This can be done using following line of code:
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.getAverageRating("c1/c2/r2");</pre>
+
+    </p>
+
+    <h3>
+
+      Retrieving the rating given to the resource by a particular user
+
+    </h3>
+
+    <p>
+
+      When a rating given by a particular user for a resource is needed, it can be done using following line of code:
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.getRating("c1/c2/r2", "wso2_admin"); // rating given for r2 by wso2 admin</pre>
+
+    </p>
+
+    <p>
+
+      <br/>
+
+    </p>
+    
+    <h3>
+
+      Retrieving Meta Data of a Resource
+
+    </h3>
+
+    <p>
+
+      To retrive meta data associated with a resource, such as author, created date, etc. we can use the registry instance with the following line of code:
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.getMetaData("c1/c2/r2");</pre>
+
+    </p>
+
+    <h3>
+
+      Creating a resource from a given URL
+
+    </h3>
+
+    <p>
+
+      If a resource needs to be created with content from any given URL, the following line of code can be used to add a resource with from a given URL to a suggested location. The real location the resource was added is returned. The template resource should contain meta data of the resource that user wants to add.
+
+      <br/>
+
+      <br/>
+
+      <pre>String real_location = registry.importResource("c1/c2/r3", "http://wso2.com", template_resource);</pre>
+
+    </p>
+
+    <h3>
+
+      Moving a resource 
+
+    </h3>
+
+    <p>
+
+      If a resource needs to be moved the following code can be used:
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.move("c1/c2/r3", "c1/c2/r4");</pre>
+
+    </p>
+
+    <h3>
+
+      Moving a Resource 
+
+    </h3>
+
+    <p>
+
+      If a resource needs to be moved the following code can be used:
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.move("c1/c2/r3", "c1/c2/r4");</pre>
+
+    </p>
+
+    <h3>
+
+      Copying a Resource 
+
+    </h3>
+
+    <p>
+
+      If a resource needs to be copied the following code can be used:
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.copy("c1/c2/r3", "c1/c2/r4");</pre>
+
+    </p>
+
+    <h3>
+
+      Creating a Relationship between two resources
+
+    </h3>
+
+    <p>
+
+      A relationship (ex: dependency) can be created between two resources using the following line of code:
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.addAssociation("c1/c2/r3", "c1/c2/r4", "depends on"); // in this case r3 depends on r4</pre>
+
+    </p>
+
+    <h3>
+
+      Creating a Relationship between two resources
+
+    </h3>
+
+    <p>
+
+      A relationship (ex: dependency) can be created between two resources using the following line of code:
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.addAssociation("c1/c2/r3", "c1/c2/r4", "depends on"); // in this case r3 depends on r4</pre>
+
+    </p>
+
+    <h3>
+
+      Removing a relationship between two resources
+
+    </h3>
+
+    <p>
+
+      A relationship can be removed between two resources using the following line of code:
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.removeAssociation("c1/c2/r3", "c1/c2/r4", "depends on"); // in this case r3 depends on r4</pre>
+
+    </p>
+
+    <h3>
+
+      Retrieving relationships from a resource
+
+    </h3>
+
+    <p>
+
+      Relationships of a resource between two resources can be retrieved using the following line of code:
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.getAllAssociations("c1/c2/r3"); // all associations of r3 </pre>
+      <pre>registry.getAssociations("c1/c2/r3", "depends on"); // "depends on" associations of r3 </pre>
+
+    </p>
+
+    <h3>
+
+      Executing a Query
+
+    </h3>
+
+    <p>
+
+      A custom query stored in the registry can be executed by giving the path of the stored query and giving a Map of the required parameters. The following code illustrates: 
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.executeQuery("/path/to/storedQuery", parameter_map); // parameter map contains key value pairs required by the query </pre>
+
+    </p>
+
+    <h3>
+
+      Searching for Content
+
+    </h3>
+
+    <p>
+
+      A search for content can be launched by passing the required keywords as parameters in the following code:
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.searchContent("WSO2 Governance Registry"); // searches through resource content for WSO2 Governance Registry</pre>
+
+    </p>
+
+    <h3>
+
+      Retrieving Logs
+
+    </h3>
+
+    <p>
+
+      Logs can be retrieved based on username, time period, action performed and specific resource. FOr this purpose, the method getLogs returns an array while te method getLogCollection returns a collection.
+
+      <br/>
+
+      <br/>
+
+      <pre>LogEntry[] logentries = registry.getLogs("c1/c2/r3", LogEntry.ALL, "admin", new Date(2010,4,7), new Date(2010,4,12), true);</pre>
+      <pre>LogEntryCollection leCollection = registry.getLogCollection("c1/c2/r3", LogEntry.ALL, "admin", new Date(2010,4,7), new Date(2010,4,12), true); </pre>
+
+    </p>
+
+    <h3>
+
+      Retrieve Available Aspects
+
+    </h3>
+
+    <p>
+
+      The available aspects in the Registry can be retrieve through the following code. It returns a string array containing the names of the aspects:
+
+      <br/>
+
+      <br/>
+
+      <pre>String[] aspects = registry.getAvailableAspects();</pre>
+
+
+    </p>
+
+    <h3>
+
+      Adding a new Aspect
+
+    </h3>
+
+    <p>
+
+      An aspect is a way of associating custom behaviors with resources. The regisry ships an implemented Aspect known as SimpleLifeCycle by default. The following code shows how this Aspect can be added to the registry:
+
+      <br/>
+
+      <br/>
+
+      <pre>Aspect simpleLifeCycle = new SimpleLifeCycle();</pre>
+      <pre>registry.addAspect("SimpleLifeCycle", simpleLifeCycle);</pre>
+
+
+    </p>
+
+    <h3>
+
+      Associating an Aspect with a Resource
+
+    </h3>
+
+    <p>
+
+      An aspect can be associated with a Resource. The following code associated the "SimpleLifeCycle" to be associated with a resource:
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.associateAspect("c1/c2/r3", "SimpleLifeCycle");</pre>
+
+
+    </p>
+
+    <h3>
+
+      Invoking an Aspect
+
+    </h3>
+
+    <p>
+
+      An aspect needs to be invoked with the appropriate actions to make use of its custom behavior. The following code invokes the "SimpleLifeCycle" to be associated with a resource:
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.invokeAspect("c1/c2/r3", "SimpleLifeCycle", SimpleLifecycle.ACTION);</pre>
+
+
+    </p>
+
+    <h3>
+
+      Retrieving Actions of an Aspect
+
+    </h3>
+
+    <p>
+
+      An actions associated with an aspect with respect to a particular resource can be retrieved using the following line of code:
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.getAspectActions("c1/c2/r3", "SimpleLifeCycle");</pre>
+
+
+    </p>
+
+    <h3>
+
+      Removing an Aspect from a Resource
+
+    </h3>
+
+    <p>
+
+      An aspect can be removed from the registry with the following line of code:
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.removeAspect("SimpleLifeCycle");</pre>
+
+
+    </p>
+
+    <h3>
+
+      Creating a Symbolic Link/ Mounting a registry
+
+    </h3>
+
+    <p>
+
+	A symbolic link to a registry can be created in the following manner. The same code can be used to mount a registry to a specific location. If a remote registry needs to be mounted the same method can be used with an extra parameter.
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.createLink("/config", "/_system/config");</pre>
+      <pre>registry.createLink("/config", "/_system/config", "http://remote.registry.url/);</pre>
+
+    </p>
+
+    <h3>
+
+      Removing a symbolic link / mount point of a registry
+
+    </h3>
+
+    <p>
+
+      A symbolic link or a mount point of a registry created above can be removed using the following line of code"
+
+      <br/>
+
+      <br/>
+
+      <pre>registry.removeLink("/config");</pre>
+
+
+    </p>
+
+    <h2>
+      Importing the Local File System to the Registry
+    </h2>
+    <p>
+      We can use the RemoteRegistry to export our entire local file system into the Registry. What we need to do is to give the location of the file system and the location where we want to put them in the Registry. 
+      Once we do that, inside the registry it will create the same structure as the file system and upload all files into the Registry. We can consider this as any check-in operation on any kind of version management 
+      system. Following code demonstrates how to import a local file system into the Registry:
+      <br/>
+      <br/>
+      <pre>File file = new File("Path of the file");
+
+RemoteRegistry remote_registry = new RemoteRegistry(new URL("http://localhost:9443/registry"), "admin", "admin");
+
+RegistryClientUtils.importToRegistry(file ,"/myFile/filesystem" ,remote_registry);</pre>
+    </p>
+    <h2>
+      Exporting the Registry to a File System
+    </h2>
+    <p>
+      In the previous section, we discussed how to import a local file system into the Registry. There is another way round of this and it is to check-out the Registry to a local file system. To export, we can select 
+      either the entire Registry or a selected node. Depending on the node we select, the remote_registry instance will create the same structure within the file system. Even if we have the resource with binary data, 
+      then it will create all of the necessary files in the file system.
+      <br/>
+      <br/>
+      Let's say we want to export "/myFile/filesystem" into my local file system then we can use the following code:
+      <pre>File toFile = new File("Path of the new file");
+
+RemoteRegistry remote_registry = new RemoteRegistry(new URL("http://localhost:9443/registry"), "admin", "admin");
+
+RegistryClientUtils.exportFromRegistry( toFile, "/myFile/filesystem" ,remote_registry);</pre>
+
+    </p>
+
+  </body>
+</html>

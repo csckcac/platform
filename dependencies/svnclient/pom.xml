@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>    
+    <name>Subclipse SVN Client Adapter</name>
+    <groupId>org.tigris</groupId>
+    <artifactId>svn-client-adapter</artifactId>
+    <version>1.6.18.wso2v1</version>
+    <packaging>bundle</packaging>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jvnet.maven.incrementalbuild</groupId>
+                <artifactId>incremental-build-plugin</artifactId>
+                <version>1.3</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>incremental-build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.0</version>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>1.4.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${pom.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Name>${pom.artifactId}</Bundle-Name>
+                        <Export-Package>
+                            org.tigris.subversion.svnclientadapter.*; version=1.6.18,                            
+                        </Export-Package>
+                        <Import-Package>
+                            !org.tigris.subversion.svnclientadapter.*; version=1.6.18,
+                            *;resolution:=optional
+                        </Import-Package>
+                        <DynamicImport-Package>*</DynamicImport-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <dependencies>
+       <dependency>
+          <groupId>org.tmatesoft.svnkit</groupId>
+          <artifactId>svnkit</artifactId>
+          <version>1.3.1</version>
+       </dependency>
+       <dependency>
+          <groupId>org.tmatesoft.svnkit</groupId>
+          <artifactId>svnkit-javahl</artifactId>
+          <version>1.3.5</version>
+       </dependency>   
+    </dependencies>
+
+</project>

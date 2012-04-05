@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Jaggery - Delicious Javascript</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+        }
+    </style>
+    <link href="../css/prettify.css" rel="stylesheet">
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="../images/favicon.ico">
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72"
+          href="../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114"
+          href="../images/apple-touch-icon-114x114.png">
+</head>
+
+<body>
+
+<%
+include('/includes/topnavi.jag');
+%>
+
+<div class="container-fluid" style="width: 960px; margin: auto;">
+    <div class="row">
+        <div class="span16">
+            <div class="page-header">
+                <h1>
+                    Documentation
+                    <small>API documentation for Jaggery.js</small>
+                </h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="span4">
+            <div class="well">
+                <%
+                include('/includes/navi.jag');
+                %>
+
+            </div>
+
+        </div>
+        <div class="span12">
+            <div class="content" id="email" name="email">
+                <h3>request</h3>
+        <pre class="prettyprint linenums">
+&lt%
+    print("&lthtml&gt&ltbody&gt");
+    print("Method : " + request.method + "&ltbr/&gt");
+    print("Protocol : " + request.protocol + "&ltbr/&gt");
+    print("User-Agent : " + request.getHeader("User-Agent"));
+    print("&lt/body&gt&lt/html&gt");
+%&gt
+</pre>
+                <%
+                var reqCode = '&lt%'
+                + '\n print("&lthtml&gt&ltbody&gt");'
+                + '\n print("Method : " + request.method + "&lt;br/&gt");'
+                + '\n print("Protocol : " + request.protocol + "&lt;br/&gt");'
+                + '\n print("User-Agent : " + request.getHeader("User-Agent"));'
+                + '\n print("&lt/body&gt&lt/html&gt");'
+                + '\n %&gt';
+
+                var codeSnip = encodeURIComponent(reqCode);
+                var urlString = '../tryitframe.jag?code='+codeSnip;
+
+                include('/includes/tryit_but.jag');
+                %>
+
+<div id="pageLinks">
+<a class="navilink" href="#overview">Overview</a>
+<a class="navilink" href="#members">Members</a>
+<a class="navilink" href="#operations">Operations</a>
+</div>            <section id="overview">
+
+                   <h4>Overview</h4>
+                   <p class="description">
+                Object that provides the properties and functions of HTTP Request</p>
+               </section>
+               <section id="members">
+
+                   <table class="clsStd member-table">
+
+                       <tbody>
+
+                       <tr>
+                           <th>Member</th>
+                           <th>&nbsp;&nbsp;Type&nbsp;&nbsp;</th>
+                           <th>Description</th>
+                       </tr>
+                      <tr>
+
+                        <td><code>method</code></td>
+                        <td>String</td>
+                        <td>
+                           <pre class="prettyprint">request.method</pre>
+                            Returns the HTTP method of the request
+
+                        </td>
+
+                    </tr>
+                     <tr>
+
+                        <td><code>protocol</code></td>
+                        <td>String</td>
+                        <td>
+                            <pre class="prettyprint">request.protocol</pre>
+                            Returns the protocol of the request
+                        </td>
+
+                    </tr>
+                    <tr>
+
+                        <td><code>queryString</code></td>
+                          <td>String</td>
+                        <td>
+                            <pre class="prettyprint">request.queryString</pre>
+                            Returns the query string of the request
+                        </td>
+
+                    </tr>
+                    <tr>
+
+                        <td><code>content</code></td>
+                        <td>String | Object</td>
+                        <td><pre class="prettyprint">request.content</pre>
+                            <p>Returns the content of the request.</p><p>If the request content type is either
+                            <code>application/json</code> or <code>application/json/badgerfish</code>,
+                            then content is returned as an object. Otherwise, it is
+                            returned as a string.</p>
+                        </td>
+
+                    </tr>
+                    <tr>
+
+                        <td><code>contentType</code></td>
+                        <td>String</td>
+                        <td><pre class="prettyprint">request.contentType</pre>
+                            Returns the content Type of the request
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td><code>contentLength</code>
+                        </td>
+                        <td>Number</td>
+                        <td>
+                            <pre class="prettyprint">request.contentLength</pre>
+                            Returns the content length of the request
+                        </td>
+
+                    </tr>
+                    <tr>
+
+                        <td><code>uri</code>
+                        </td>
+                        <td>String</td>
+                        <td>
+                            <pre class="prettyprint">request.uri</pre>
+                            Returns the request uri
+                        </td>
+
+                    </tr>
+                       </tbody>
+                       </table>
+                   
+               </section>
+
+
+                <section id="operations">
+
+                    <h4>Operations</h4>
+                    
+                <table class="clsStd operations-table">
+
+                    <tbody>
+
+                    <tr>
+
+                        <th>Operation</th>
+                        <th>Returns</th>
+                        <th>Description</th>
+
+                    </tr>
+
+
+
+
+                    <tr>
+
+                        <td><code>getHeader(headerName) </code>
+                        </td>
+                         <td>String</td>
+                        <td>
+                            <pre class="prettyprint">request.getHeader("User-Agent")</pre>
+                            Returns the Header properties
+                            
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td><code>getParameter(paramname) </code>
+                        </td>
+                           <td>String</td>
+                        <td>
+                            <pre class="prettyprint">request.getParameter("action")</pre>
+                            Returns the request parameter
+                            <br/>
+                        </td>
+
+                    </tr>
+
+
+                    </tbody>
+                </table>
+                </section>
+                    
+            </div>
+            <br>
+            <br>
+        </div>
+
+    </div>
+    <%
+    include('/includes/footer.jag');
+    %>
+
+</div>
+
+<!-- /container -->
+<%
+include('/includes/scripts.jag')
+%>
+	<script>	
+		
+		$(document).ready(function(){
+        $('#req').toggleClass('active')
+        $('#docs').addClass('active')
+        })
+	</script>
+</body>
+</html>

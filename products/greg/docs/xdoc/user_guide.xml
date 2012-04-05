@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  ~  Copyright (c) 2005-2008, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  ~
+  -->
+
+<!DOCTYPE html
+   PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" >
+        
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title> WSO2 Governance Registry - User Guide </title>
+<link href="css/greg-docs.css" rel="stylesheet"/>
+<link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+</head>
+<body>
+[ <a href="docs_index.html"> Documentation Index </a> ]
+<h1> WSO2 Governance Registry User Guide </h1>
+<p> The User Guide describes how to configure the WSO2 Governance Registry using the
+  Web based management console. The WSO2 Management Console has been tested
+  on the Mozilla Firefox (3.5, 3.6) Internet Explorer (7.0, 8.0), and Google Chrome (9.0 upwards) Web
+  Browsers at a resolution of 1024x768.</p>
+<h2> Table of Contents </h2>
+<div class="toc">
+  <ul>
+    <li> <a href="installation_guide.html">Installing and Running the WSO2 Governance Registry</a> </li>
+    <li> <a href="user_guide/mgt_console.html#Accessing">Accessing the Registry Web based Management Console</a>
+      <ul>
+        <li> <a href="user_guide/mgt_console.html#Signing">Signing In</a> </li>
+      </ul>
+    </li>
+    <li> <a href="user_guide/resource_ui.html#ResourcesUI">Resources User Interface</a>
+      <ul>
+        <li> <a href="user_guide/resource_ui.html#Breadcrumb">Resource Breadcrumb</a> </li>
+        <li><a href="user_guide/resource_ui.html#Meta">Meta Data Panel</a></li>
+        <li><a href="user_guide/resource_ui.html#Properties">Properties Panel</a></li>
+        <li><a href="user_guide/resource_ui.html#Content">Content Panel</a></li>
+        <li><a href="user_guide/resource_ui.html#Permissions">Permissions</a></li>
+        <li><a href="user_guide/resource_ui.html#TagsW">Tags</a></li>
+        <li><a href="user_guide/resource_ui.html#SearchW">Search</a></li>
+        <li><a href="user_guide/resource_ui.html#RatingsW">Ratings</a></li>
+        <li><a href="user_guide/resource_ui.html#CommentsW">Comments</a></li>
+        <li><a href="user_guide/resource_ui.html#Retention">Retention</a></li>
+        <li><a href="user_guide/resource_ui.html#Associations">Dependencies and Associations</a></li>
+        <li><a href="user_guide/resource_ui.html#media-types">Media Types</a></li>
+        <li><a href="user_guide/resource_ui.html#creating-gar">Creating a Governance Archive</a></li>
+        <li><a href="user_guide/resource_ui.html#adding-link">Adding an External Link</a></li>
+        <li><a href="user_guide/resource_ui.html#adding-profile">Adding a User Profile</a></li>
+      </ul>
+    </li>
+    <li> <a href="user_guide/search.html#Search">Search</a> 
+      <ul>
+        <li> <a href="user_guide/search.html#Tag_Search">Tag Search (Basic Search)</a> </li>
+        <li> <a href="user_guide/search.html#Advanced_Search">Metadata Search (Advanced Search)</a> </li>
+	<li> <a href="user_guide/search.html#Custom_Search">Custom Search</a> </li>
+	<li> <a href="user_guide/search.html#Search_Filters">Saving Search Queries</a> </li>
+	<li> <a href="user_guide/search.html#Content_Search">Content Search</a> </li>
+      </ul>
+    </li>
+    <li> <a href="user_guide/service_metadata.html#metadata">Governance Artifacts</a> 
+      <ul>
+        <li> <a href="user_guide/service_metadata.html#metadata">Adding Governance Artifacts to Registry</a> </li>
+        <li> <a href="user_guide/service_metadata.html#services-manage">Managing Services</a> </li>
+       <li> <a href="user_guide/service_metadata.html#wsdl-manage">Managing WSDLs</a> </li>
+	<li> <a href="user_guide/service_metadata.html#policy-manage">Managing Schemas</a> </li>
+	<li> <a href="user_guide/service_metadata.html#schema-manage">Managing Policies</a> </li>
+      </ul>
+    </li>
+    <li> <a href="user_guide/monitor.html#Monitoring">Monitoring the System</a>
+      <ul>
+        <li> <a href="user_guide/monitor.html#Activities">Activities</a> </li>
+        <li> <a href="user_guide/monitor.html#System">System Logs</a> </li>
+      </ul>
+    </li>
+    <li> <a href="user_guide/governance_dashboard.html#governance_dashboard">Governance Dashboard</a> </li>
+    <li> <a href="user_guide/sym_remote.html#SymRemote">Symbolic links and Remote links</a> </li>
+    <li> <a href="user_guide/extensions.html#extensions">Installing Extensions</a> </li>
+    <li> <a href="user_guide/lcm.html#lcm">Lifecycle Management</a>
+      <ul>
+        <li> <a href="user_guide/lcm.html#lcm-ui">User Interface</a> </li>
+        <li> <a href="user_guide/lcm.html#lcm-conf-ui">Dynamic Configuration</a> </li>
+        <li> <a href="user_guide/lcm.html#lcm-conf">Static Configuration</a> </li>
+        <li> <a href="user_guide/lcm.html#lcm-new">Configuration Model</a> </li>
+      </ul>
+    </li>
+    <li> <a href="user_guide/handler.html#handler">Handler Configuration</a>
+      <ul>
+        <li> <a href="user_guide/handler.html#view-edit-delete">Viewing, Editing and Deleting Handlers</a> </li>
+        <li> <a href="user_guide/handler.html#simulate">Simulating Handlers</a> </li>
+      </ul>
+    </li>
+    <li> <a href="user_guide/remote_configure.html#remote-reg">Remote Registry Configuration</a>
+      <ul>
+        <li> <a href="user_guide/remote_configure.html#remote-reg-jdbc">JDBC-Based Remote Registry Configuration</a> </li>
+        <li><a href="user_guide/remote_configure.html#remote-reg-atom">Atom-Based Remote Registry Configuration [Deprecated]</a></li>
+      </ul>
+    </li>
+    <li> <a href="user_guide/users_and_roles.html#overview">Users and Roles</a> </li>
+    <li> <a href="user_guide/user_profile.html#upm">User Profile Management</a> </li>
+    <li> <a href="user_guide/versioning.html#overview">Versioning</a></li>
+    <li> <a href="user_guide/webdav.html#webdav">Webdav Mounting Support</a></li>
+    <li> <a href="user_guide/checkin_client.html#check-in-client">Check-in Client</a>
+      <ul>
+        <li> <a href="user_guide/checkin_client.html#check-in-commands">Commands Overview</a> </li>
+        <li><a href="user_guide/checkin_client.html#check-in-options">The Options Overview</a></li>
+        <li><a href="user_guide/checkin_client.html#check-in-running">Running Check-in Client</a></li>
+        <li> <a href="user_guide/checkin_client.html#check-in-examples">Examples</a> </li>
+      </ul>
+    </li>
+    <li> <a href="user_guide/registry_config.html#registry-config">Registry Configurations</a>
+      <ul>
+        <li> <a href="user_guide/registry_config.html#read-only-config">Configure Read-Only Registry</a> </li>
+        <li> <a href="user_guide/registry_config.html#caching-config">Configure Registry Caching</a> </li>
+        <li><a href="user_guide/registry_config.html#reg-root-config">Configure Registry Root</a></li>
+        <li><a href="user_guide/registry_config.html#db-config">Database Configurations</a></li>
+        <li><a href="user_guide/registry_config.html#handler-config">Handler Configurations</a></li>
+        <li><a href="user_guide/registry_config.html#remote-instance-config">Remote Instance Configurations</a></li>
+        <li><a href="user_guide/registry_config.html#mount-config">Mount Configurations</a></li>
+        <li><a href="user_guide/registry_config.html#static-config">Static (One-time) Configurations</a></li>
+        <li><a href="user_guide/registry_config.html#version-resource-config">Configure Auto Versioning Resources</a></li>
+      </ul>
+    </li>
+    <li> <a href="user.core/admin_guide.html">User Core Admin Guide</a>
+      <ul>
+        <li> <a href="user.core/admin_guide.html#Overview">Overview</a> </li>
+        <li><a href="user.core/admin_guide.html#Configuration">Realm Configuration</a></li>
+        <li><a href="user.core/admin_guide.html#Default">Default JDBC User Store Configuration</a></li>
+        <li><a href="user.core/admin_guide.html#change">How to Change the RDBMS</a></li>
+        <li><a href="user.core/admin_guide.html#LDAP">How to Configure an External LDAP User Store</a></li>
+        <li><a href="user.core/admin_guide.html#JDBC">How to Configure an External JDBC User Store</a></li>
+      </ul>
+    </li>
+    <li> <a href="user_guide/notifications.html#notifications">WS-Eventing and Notifications</a> </li>
+  </ul>
+</div>
+</body></html>

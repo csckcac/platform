@@ -1,0 +1,48 @@
+<!--
+  ~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  --><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+       "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<body>
+<p>[<a
+href="http://wso2.org/downloads/wsas">Download</a>]
+| [<a href="index_docs.html">Documentation Home</a>] | [<a
+href="release_notes.html">Release Note</a>]</p>
+
+    <p><strong><a href="user_guide.html">User Guide</a></strong></p>
+
+    <p><strong>Sample Guides</strong></p>
+    <ul>
+        <li><a href="commodity_quote_guide.html">Commodity Quote Sample</a> - Provides instructions
+            on how to run the Commodity Quote sample</li>
+        <li><a href="mtom_sample_guide.html">MTOM Sample Guide</a> - Demonstrates how to
+            write an MTOM client</li>
+        <li><a href="sts_guide.html">STS Sample Guide</a> - Demonstrates Security Token
+            Service included with WSF/Java</li>
+        <li><a href="json_sample_guide.html">JSON Sample Guide</a> - Demonstrates how to write
+            a JSON client</li>
+        <li><a href="mail_sample_guide.html">Mail Sample Guide</a> - Demonstrates how to invoke a
+            service using Mail transport</li>
+        <li><a href="mex_sample_guide.html">MEX Sample Guide</a> - Demonstrates WSO2 WSF/Java's
+            ability to enable services to support WS-MetadataExchange and how to use MEX to
+            retrieve metadata from MEX supported services</li>
+        <li><a href="xfer_sample_guide.html">Xfer Sample Guide</a> - Demonstrates WSO2
+            WSF/Java's ability to enable services to support WS-Transfer</li>
+        <li><a href="clientapi_sample_guide.html">Client API Sample Guide</a> - Demonstrates all
+            types of clients which are supported by Axis2.</li>
+    </ul>
+
+</body>
+</html>

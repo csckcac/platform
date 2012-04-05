@@ -1,0 +1,91 @@
+Stratos local setup
+==================
+
+stratos-setup.pl can be called with options to setup stratos for the local machine. Just execute stratos-setup.pl with no option to see all
+available options.
+The scripts work by reading a main configuration file named stratos_config_min.xml which contain minimum configuration for each services.
+
+stratos_config_min.xml contain minimal setup of configration to get you running. If you need more control use stratos_config_full.xml to configure stratos.
+First change the configuration file and then execute stratos_setup.pl with the options.
+
+Options:
+
+-p : Packs dir where services archive files resides
+-t : directory where changed configuration files are stored
+-v : version
+-s : whether to enable sso
+-d : whether to create database
+-l : service list to enable
+-c : configuration file name
+-u : database user name
+-w : database password
+
+Prerequisites:
+
+Install mysql in the machine where Stratos local setup will be installed. Provide username and password for that database when executing the setup script.
+
+Following Perl modules will be needed
+
+File::Copy
+File::Path
+File::Basename
+XML::LibXML
+Archive::Zip
+Getopt::Std
+List::MoreUtils
+
+To install these perl modules follow the instructions below
+
+Using cpan 
+
+sudo cpan File::Copy
+sudo cpan File::Path
+sudo cpan File::Basename
+sudo cpan XML::LibXML (You many need to install libxml2-dev first- sudo apt-get install libxml2-dev)
+sudo cpan Archive::Zip
+sudo cpan Getopt::Std
+sudo cpan List::MoreUtils
+
+using apt repositories
+
+sudo apt-get install libfile-copy-recursive-perl
+sudo apt-get install libfile-path-perl
+sudo apt-get install libfile-basedir-perl
+sudo apt-get install libxml-libxml-perl (You many need to install libxml2-dev first- sudo apt-get install libxml2-dev)
+sudo apt-get install libarchive-zip-perl
+sudo apt-get install libgetopt-declare-perl
+sudo apt-get install liblist-moreutils-perl
+
+
+Usage:
+./stratos-setup.pl -p <packs dir> -t <target dir> -v <version> -s <sso enabled true/false > -d <create database true/false> -l <service list> -c ./stratos_config_min.xml -u <dbuser> -w <dbpassword>
+
+Eg:
+mkdir -p deploy
+./stratos-setup.pl   -p `pwd` -t `pwd`/deploy -v "1.5.1" -d true -l "manager is greg as bam dss bps brs cep esb gs mb ms" -c stratos_config_min.xml -u root -w root -s true
+chmod +x deploy/stratos.sh
+
+
+
+Stratos public/private cloud configuratin setup
+==============================================
+The perl scripts used by stratos-setup.pl can be used independantly for setting up configuration of public/private stratos as well.
+These scripts are used to configure the Stratos services. They can be used either to setup stratos public cloud, stratos private cloud or stratos local setup.
+The scripts work by reading a main configuration file named stratos_config_full.xml which contain all the configuration for each services.
+First change the configuration file and then execute stratos_config.pl with the options.
+
+Options:
+
+-c : configuration file name
+-b : base directory where original configuration files reside.
+-p : service list to enable
+-t : directory where changed configuration files are stored
+-s : whether to enable sso
+
+
+Usage
+
+./stratos_config.pl -c <configuration file> -b <base dir> -p <service list> -t <target dir> -s <sso enabled true/false>
+
+./stratos_config.pl -c ./stratos_config_full.xml -b ./stratoslive -p "manager is greg as bam bps brs esb dss ms" -t ./stratoslive_new -s true
+

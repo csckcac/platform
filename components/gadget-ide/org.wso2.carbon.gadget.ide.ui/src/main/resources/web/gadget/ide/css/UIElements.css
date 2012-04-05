@@ -1,0 +1,50 @@
+.gc-linec{
+    width: 100%;
+    height: 100%;
+}
+/* from TextBox.css */
+.gc-text {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+
+/* from Table.css  @author {}*/
+.gc-table td{
+   font-family:"Trebuchet MS", Verdana, Helvetica, Arial,sans-serif;
+   font-size:12px;
+}
+.gc-combo select{
+    -moz-box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+}
+.gc-table{
+   border-left:solid 1px #468aa6;
+   border-top:solid 1px #468aa6;
+   border-collapse:collapse;
+}
+.gc-table th{
+   background-image: -webkit-gradient(linear, left top, left bottom, from(#56aed2), to(#417f98)); /* mozilla - FF3.6+ */
+   background-image: -moz-linear-gradient(top, #56aed2 0%, #417f98 100%); /* IE 5.5 - 7 */
+   filter: progid:DXImageTransform.Microsoft.gradient(gradientType = 0, startColor = 0, endColorStr = #417f98); /* IE8 */
+   -ms-filter: progid: DXImageTransform . Microsoft . gradient(gradientType = 0, startColor = 0, endColoStr = #417f98);
+   color:#fff;
+   font-size:11px;
+   text-align:left;
+   padding:3px;
+
+   border-right:solid 1px #468aa6;
+   border-bottom:solid 1px #468aa6;
+}
+.gc-table td{
+   border-right:solid 1px #468aa6;
+   border-bottom:solid 1px #468aa6;
+   margin:0px;
+   padding:3px;
+}
+.gc-table tr:nth-child(even) {background: #ccdde1}
+.gc-table tr:nth-child(odd) {background: #FFF}

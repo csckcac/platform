@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  ~  Copyright (c) 2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  -->
+
+<!DOCTYPE html
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+      <meta content="text/html; charset=iso-8859-1" http-equiv="content-type"/>
+      <title>WSO2 LB v1.0.0 Released - 28th Oct. 2011</title>
+  </head>
+  <body>
+  <div id="header">
+</div>
+
+<div id="main-content">
+<h1>The WSO2 Load Balancer (LB) 1.0.0 Released!</h1>
+
+<p>
+    The WSO2 LB team is pleased to announce the release of version 1.0.0 of
+    the Open Source Load Balancer (LB).
+</p>
+
+<p>
+    WSO2 LB is a fast, lightweight and user friendly open source Load Balancer (LB)
+    distributed under the <a href="http://www.apache.org/licenses/LICENSE-2.0.html">Apache
+    Software License v2.0</a>. WSO2 LB allows system administrators and developers to
+    easily configure fail over routing, load balancing, service aware load balancing, 
+    and dynamic load balancing with auto scaling.The LB runtime is designed to be 
+    completely asynchronous, non-blocking and streaming based on the 
+    <a href="http://synapse.apache.org">Apache Synapse</a> mediation engine.
+</p>
+
+<p>
+    WSO2 LB 1.0.0 is developed on top of the revolutionary
+    <a href="http://wso2.org/projects/carbon">WSO2 Carbon platform</a> (Middleware a' la carte),
+    an OSGi based framework that provides seamless modularity to your SOA via
+    componentization. This release also contains many new features and a range of optional
+    components (add-ons) that can be installed to customize the behavior of the LB. Further, any
+    existing features of the LB which are not required to your environment can be easily
+    removed using the underlying provisioning framework of Carbon. In brief, WSO2 LB can
+    be fully customized and tailored to meet your exact SOA needs.
+</p>
+
+<p>
+    You can download this distribution from <a href="http://wso2.org/downloads/lb">
+    http://wso2.org/downloads/lb</a> and give it a try.</p>
+
+<h2>How to Run </h2>
+<ol>
+  <li>Extract the downloaded zip</li>
+  <li>Go to the bin directory in the extracted folder</li>
+  <li>Run the wso2server.sh or wso2server.bat as appropriate</li>
+  <li>Configure the load balancer to manage the load across the instants to be balanced.</li>
+  <li>If you need to start the OSGi console with the server use the property
+    -DosgiConsole when starting the server. The INSTALL.txt file found on the
+    installation directory will give you a comprehensive set of options and
+    properties that can be passed into the startup script</li>
+</ol>
+
+<h2>Key Features of WSO2 LB</h2>
+<ul>
+  <li>Non-blocking HTTP/S transports based on Apache HttpCore-NIO for ultra-fast
+   execution and support for thousands of connections at high concurrency with
+   constant memory usage.</li>
+  <li>Built in support for scheduling tasks using the Quartz scheduler.</li>
+  <li>Load-balancing (with or without sticky sessions)/Fail-over, and clustered
+   Throttling and Caching support</li>
+  <li>Lightweight, XML and Web services centric messaging model</li>
+  <li>Automatically scaling the system according to the load across the nodes in
+   the service nodes that are in the cluster.
+  </li>
+  <li>Service aware dynamic load balancing - A single load balancer
+   can centrally manage the load across the nodes of different service clusters.
+  </li>
+</ul>
+
+<h2>How You Can Contribute</h2>
+    <h3>
+      Mailing Lists
+    </h3>
+    <p>
+      Join our mailing list and correspond with the developers directly.
+    </p>
+    <ul>
+      <li>
+        Developer List : <a href="mailto:carbon-dev@wso2.org">carbon-dev@wso2.org</a>
+        | <a href="mailto:carbon-dev-request@wso2.org?subject=subscribe">Subscribe</a>
+        | <a href="http://wso2.org/mailarchive/carbon-dev/">Mail Archive</a>
+      </li>
+      <li>
+        User List : <a href="mailto:lb-user@wso2.org">lb-java-user@wso2.org</a>
+        | <a href="mailto:lb-user-request@wso2.org?subject=subscribe">Subscribe</a>
+        | <a href="http://wso2.org/mailarchive/lb-user/">Mail Archive</a>
+      </li>
+    </ul>
+    <h3>
+      Reporting Issues
+    </h3>
+    <p>
+      We encourage you to report issues, documentation faults and feature requests regarding
+      WSO2 LB through the public <a href="http://www.wso2.org/jira/browse/lb">LB JIRA</a>. You
+      can use the <a href="http://www.wso2.org/jira/browse/CARBON">Carbon JIRA</a> to report any
+      issues related to the Carbon base framework or associated Carbon components.
+    </p>
+
+    <h3>
+      Discussion Forums
+    </h3>
+    <p>
+      Alternatively, questions could be raised using the forums available.
+    </p>
+    <p>
+      <a href="http://wso2.org/forum/1261">WSO2 LB Forum</a> :
+      Discussion forum for WSO2 LB developers/users
+    </p>
+
+<h2>Support</h2>
+<p>
+    We are committed to ensuring that your enterprise middleware deployment is
+    completely supported from evaluation to production. Our unique approach
+    ensures that all support leverages our open development methodology and is
+    provided by the very same engineers who build the technology.
+</p>
+<p>
+    For more details and to take advantage of this unique opportunity please
+    visit <a href="http://wso2.com/support">http://wso2.com/support</a>.
+</p>
+
+
+<p><i>-- The WSO2 LB Team --</i> </p>
+</div>
+  </body>
+</html>

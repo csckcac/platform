@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2005-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ --><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+
+        <groupId>org.wso2.carbon</groupId>
+        <artifactId>platform-parent</artifactId>
+        <version>4.0.0-SNAPSHOT</version>
+        <relativePath>../parent/pom.xml</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>carbon-service-stubs</artifactId>
+    <packaging>pom</packaging>
+    <name>WSO2 Carbon - Service Stubs - Aggregator Module</name>
+    <url>http://wso2.org</url>
+
+			<modules>
+                                <module>org.wso2.carbon.stratos.common.stub</module>
+                                <module>org.wso2.carbon.tenant.register.gapp.stub</module>
+				<module>org.wso2.carbon.rssmanager.stub</module>
+				<module>org.wso2.carbon.aarservices.stub</module>
+				<module>org.wso2.carbon.account.mgt.stub</module>
+				<module>org.wso2.carbon.admin.mgt.stub</module>
+				<module>org.wso2.carbon.announcement.stub</module>
+				<module>org.wso2.carbon.application.mgt.bpel.stub</module>
+				<module>org.wso2.carbon.application.mgt.stub</module>
+				<module>org.wso2.carbon.application.mgt.synapse.stub</module>
+				<module>org.wso2.carbon.application.mgt.webapp.stub</module>
+				<module>org.wso2.carbon.bam.data.publisher.activity.mediation.stub</module>
+				<module>org.wso2.carbon.bam.data.publisher.activity.service.stub</module>
+				<module>org.wso2.carbon.bam.data.publisher.mediationstats.stub</module>
+				<module>org.wso2.carbon.bam.data.publisher.servicestats.stub</module>
+                		<module>org.wso2.carbon.bam.services.stub</module>
+				<module>org.wso2.carbon.bam.stub</module>
+				<module>org.wso2.carbon.billing.mgt.stub</module>
+				<module>org.wso2.carbon.bpel.stub</module>
+				<module>org.wso2.carbon.brokermanager.stub</module>
+				<module>org.wso2.carbon.business.messaging.salesforce.stub</module>
+				<module>org.wso2.carbon.caching.stub</module>
+				<module>org.wso2.carbon.cassandra.mgt.stub</module>
+				<module>org.wso2.carbon.cep.stub</module>
+				<module>org.wso2.carbon.claim.mgt.stub</module>
+				<module>org.wso2.carbon.cloud.csg.agent.stub</module>
+				<module>org.wso2.carbon.cloud.csg.stub</module>
+				<module>org.wso2.carbon.cluster.mgt.admin.stub</module>
+				<module>org.wso2.carbon.dashboard.mgt.gadgetrepo.stub</module>				
+				<module>org.wso2.carbon.dashboard.mgt.theme.stub</module>
+				<module>org.wso2.carbon.dashboard.mgt.users.stub</module>
+                               <module>org.wso2.carbon.dashboard.mgt.oauth.stub</module>
+				<module>org.wso2.carbon.dashboard.social.stub</module>
+				<module>org.wso2.carbon.dashboard.stub</module>
+				<module>org.wso2.carbon.dataservices.stub</module>
+				<module>org.wso2.carbon.dataservices.fileupload.stub</module>
+				<module>org.wso2.carbon.datasource.stub</module>
+				<module>org.wso2.carbon.deployment.synchronizer.stub</module>
+				<module>org.wso2.carbon.directory.server.manager.stub</module>
+				<module>org.wso2.carbon.discovery.stub</module>
+				<module>org.wso2.carbon.ec2-client.stub</module>
+                                <module>org.wso2.carbon.ejbservices.stub/</module>
+				<module>org.wso2.carbon.email.verification.stub</module>
+				<module>org.wso2.carbon.endpoint.stub</module>
+				<module>org.wso2.carbon.event.stub</module>
+				<module>org.wso2.carbon.event.client.stub</module>
+				<module>org.wso2.carbon.eventing.eventsource.stub</module>
+				<module>org.wso2.carbon.eventing.stub</module>
+				<module>org.wso2.carbon.gadget.editor.stub</module>
+				<module>org.wso2.carbon.gadget.ide.stub</module>
+				<module>org.wso2.carbon.governance.gadgets.stub</module>
+				<module>org.wso2.carbon.governance.generic.stub</module>
+				<module>org.wso2.carbon.governance.custom.lifecycles.checklist.stub</module>
+				<module>org.wso2.carbon.governance.lcm.stub</module>
+				<module>org.wso2.carbon.governance.list.stub</module>
+				<module>org.wso2.carbon.governance.notifications.stub</module>
+				<module>org.wso2.carbon.governance.people.stub</module>
+				<module>org.wso2.carbon.governance.processes.stub</module>
+				<module>org.wso2.carbon.governance.services.stub</module>
+				<module>org.wso2.carbon.governance.sla.stub</module>
+				<module>org.wso2.carbon.governance.wsdltool.stub</module>
+				<module>org.wso2.carbon.identity.authenticator.saml2.sso.stub</module>
+				<module>org.wso2.carbon.identity.authenticator.token.stub</module>
+				<module>org.wso2.carbon.identity.authenticator.webseal.stub</module>
+				<module>org.wso2.carbon.jarservices.stub</module>
+				<module>org.wso2.carbon.jaxwsservices.stub</module>
+				<module>org.wso2.carbon.localentry.stub</module>
+				<module>org.wso2.carbon.logging.admin.stub</module>
+				<module>org.wso2.carbon.logging.view.stub</module>
+				<module>org.wso2.carbon.mediation.artifactuploader.stub</module>
+				<module>org.wso2.carbon.mediation.configadmin.stub</module>
+				<module>org.wso2.carbon.mediation.statistics.stub</module>
+				<module>org.wso2.carbon.mediation.templates.stub</module>
+				<module>org.wso2.carbon.mediators.clazz.admin.stub</module>
+				<module>org.wso2.carbon.mediators.command.admin.stub</module>
+				<module>org.wso2.carbon.mediators.event.admin.stub</module>
+				<module>org.wso2.carbon.mediation.tracer.stub</module>
+				<module>org.wso2.carbon.messagebox.stub</module>
+				<module>org.wso2.carbon.message.store.stub</module>
+				<module>org.wso2.carbon.module.mgt.stub</module>
+				<module>org.wso2.carbon.operation.mgt.stub</module>
+				<module>org.wso2.carbon.payment.stub</module>
+				<module>org.wso2.carbon.policybuilder.stub</module>
+				<module>org.wso2.carbon.priority.executors.stub</module>
+				<module>org.wso2.carbon.profiles.mgt.stub</module>
+				<module>org.wso2.carbon.proxyadmin.stub</module>
+				<module>org.wso2.carbon.redirector.servlet.stub</module>
+				<module>org.wso2.carbon.registry.activities.stub</module>
+				<module>org.wso2.carbon.registry.extensions.stub</module>
+				<module>org.wso2.carbon.registry.handler.stub</module>
+				<module>org.wso2.carbon.registry.indexing.stub</module>
+				<module>org.wso2.carbon.registry.info.stub</module>
+				<module>org.wso2.carbon.registry.profiles.stub</module>
+				<module>org.wso2.carbon.registry.relations.stub</module>
+				<module>org.wso2.carbon.registry.resource.stub</module>
+				<module>org.wso2.carbon.registry.samples.custom.topics.stub</module>
+				<module>org.wso2.carbon.registry.search.stub</module>
+				<module>org.wso2.carbon.registry.ws.stub</module>
+				<module>org.wso2.carbon.registry.properties.stub</module>
+				<module>org.wso2.carbon.repomanager.axis2.stub</module>
+				<module>org.wso2.carbon.reporting.stub</module>
+				<module>org.wso2.carbon.rm.stub</module>
+				<module>org.wso2.carbon.rule.service.stub</module>
+				<module>org.wso2.carbon.rule.ws.stub</module>
+				<module>org.wso2.carbon.sample.installer.stub</module>
+				<module>org.wso2.carbon.security.mgt.stub</module>
+				<module>org.wso2.carbon.sequences.stub</module>
+				<module>org.wso2.carbon.service.mgt.stub</module>
+				<module>org.wso2.carbon.springservices.stub</module>
+				<module>org.wso2.carbon.statistics.stub</module>
+				<module>org.wso2.carbon.statistics.transport.stub</module>
+				<module>org.wso2.carbon.sts.stub</module>
+				<module>org.wso2.carbon.task.stub</module>
+				<module>org.wso2.carbon.tenant.reg.agent.stub</module>
+				<module>org.wso2.carbon.tenant.register.stub</module>
+				<module>org.wso2.carbon.tenant.mgt.stub</module>
+				<module>org.wso2.carbon.theme.mgt.stub</module>
+				<module>org.wso2.carbon.throttle.stub</module>
+				<module>org.wso2.carbon.throttling.stub</module>
+				<module>org.wso2.carbon.throttling.agent.stub</module>
+				<module>org.wso2.carbon.tracer.stub</module>
+				<module>org.wso2.carbon.transport.jms.stub</module>
+				<module>org.wso2.carbon.transport.mgt.stub</module>
+				<module>org.wso2.carbon.unifiedendpoint.stub</module>
+				<module>org.wso2.carbon.validate.domain.stub</module>
+				<module>org.wso2.carbon.viewflows.stub</module>
+				<module>org.wso2.carbon.webapp.mgt.stub</module>
+				<module>org.wso2.carbon.xkms.mgt.stub</module>
+				<module>org.wso2.carbon.bpel.skeleton</module>
+				<module>org.wso2.carbon.usage.stub</module>
+				<module>org.wso2.carbon.subscription.mgt.stub</module>
+				<module>org.wso2.carbon.message.processor.stub</module>
+				<module>org.wso2.carbon.identity.entitlement.stub</module>
+				<module>org.wso2.carbon.identity.oauth.stub</module>
+				<module>org.wso2.carbon.identity.provider.openid.admin.stub</module>
+				<module>org.wso2.carbon.identity.provider.openid.stub</module>
+				<module>org.wso2.carbon.identity.provider.stub</module>
+				<module>org.wso2.carbon.identity.relyingparty.stub</module>
+				<module>org.wso2.carbon.identity.sso.saml.stub</module>
+				<module>org.wso2.carbon.identity.sts.mgt.stub</module>
+				<module>org.wso2.carbon.identity.sts.passive.stub</module>
+				<module>org.wso2.carbon.identity.user.profile.stub</module>
+				<module>org.wso2.carbon.identity.user.registration.stub</module>
+				<module>org.wso2.carbon.um.ws.api.stub</module>
+				<module>org.wso2.carbon.identity.authenticator.sso.stub</module>
+				<module>org.wso2.stratos.gadget.login.stub</module>
+				<module>org.wso2.carbon.usage.meteringqueryds.stub</module>
+				<module>org.wso2.carbon.mashup.jsservices.stub</module>
+				<module>org.wso2.carbon.usage.meteringsummarygenerationds.stub</module>
+				<module>org.wso2.carbon.issue.tracker.stub</module>
+				<module>org.wso2.carbon.qpid.stub</module>
+                                <module>org.wso2.carbon.tenant.activity.stub</module>
+				<module>org.wso2.carbon.load.balance.agent.stub</module>
+				<module>org.wso2.carbon.humantask.skeleton</module>
+				<module>org.wso2.carbon.humantask.stub</module>
+				<module>org.wso2.carbon.wsdl2code.stub</module>
+				<module>org.wso2.carbon.stratos.manager.dashboard.stub</module>
+                                <module>org.wso2.carbon.dataservices.task.stub</module>
+                                <module>org.wso2.carbon.status.monitor.stub</module>
+                                <module>org.wso2.carbon.rest.api.stub</module>
+                                <module>org.wso2.carbon.apimgt.keymgt.stub</module>
+ <module> org.wso2.carbon.url.mapper.stub</module>
+				<module>org.wso2.carbon.jaggery.app.mgt.stub</module>
+			        <module>org.wso2.carbon.reporting.template.stub</module>
+			        <module>org.wso2.carbon.bam.presentation.stub</module>
+				<module>org.wso2.carbon.bam.analyzer.stub</module>
+				<module>org.wso2.carbon.andes.mgt.stub</module>
+				<module>org.wso2.carbon.bam.activity.mediation.data.publisher.stub</module>
+				<module>org.wso2.carbon.bam.mediationstats.data.publisher.stub</module>
+				<module>org.wso2.carbon.bam.core.stub</module>
+				<module>org.wso2.carbon.bam.service.data.publisher.stub</module>
+			</modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.7</version> 
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencyManagement>
+	<dependencies>
+            <!--axis2 dependency-->
+            <dependency>
+                <groupId>org.apache.axis2.wso2</groupId>
+                <artifactId>axis2</artifactId>
+                <version>${orbit.version.axis2}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+	<dependencies>
+      	<dependency>
+                <groupId>wsdl4j.wso2</groupId>
+                <artifactId>wsdl4j</artifactId>
+                <version>${orbit.version.wsdl4j}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.axis2.wso2</groupId>
+                <artifactId>axis2</artifactId>
+            </dependency>
+			<dependency>
+                <groupId>org.apache.neethi.wso2</groupId>
+                <artifactId>neethi</artifactId>
+                <version>${orbit.version.neethi}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.apache.neethi</groupId>
+						<artifactId>neethi</artifactId>
+					</exclusion>
+				</exclusions>
+            </dependency>
+			<dependency>
+                <groupId>org.apache.ws.commons.schema.wso2</groupId>
+                <artifactId>XmlSchema</artifactId>
+                <version>${orbit.version.xmlschema}</version>
+            </dependency>
+			<dependency>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+                <version>1.1.1</version>
+            </dependency>
+			<dependency>
+                <groupId>org.apache.ws.commons.axiom.wso2</groupId>
+                <artifactId>axiom</artifactId>
+				<version>${orbit.version.axiom}</version>
+            </dependency>
+		</dependencies>
+
+
+    <properties>
+        <orbit.version.wsdl4j>1.6.2.wso2v2</orbit.version.wsdl4j>
+	    <orbit.version.xmlschema>1.4.7.wso2v1</orbit.version.xmlschema>
+    </properties>
+</project>
+
+

@@ -1,0 +1,89 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<serviceGroup>
+        <service name="BAMEventBrokerService" scope="transportsession">
+
+        <transports>
+            <transport>https</transport>
+        </transports>
+        <description>
+            To administer eventing for all the services.
+        </description>
+
+        <operation name="renew">
+			<messageReceiver class="org.wso2.carbon.bam.lwevent.core.receivers.CarbonEventingMessageReceiver"/>
+			<actionMapping>http://schemas.xmlsoap.org/ws/2004/08/eventing/Renew</actionMapping>
+			<outputActionMapping>http://schemas.xmlsoap.org/ws/2004/08/eventing/RenewResponse</outputActionMapping>
+		</operation>
+
+		<operation name="getStatus">
+			<messageReceiver class="org.wso2.carbon.bam.lwevent.core.receivers.CarbonEventingMessageReceiver"/>
+			<actionMapping>http://schemas.xmlsoap.org/ws/2004/08/eventing/GetStatus</actionMapping>
+			<outputActionMapping>http://schemas.xmlsoap.org/ws/2004/08/eventing/GetStatusResponse</outputActionMapping>
+		</operation>
+
+		<operation name="subscriptionEnd">
+			<messageReceiver class="org.wso2.carbon.bam.lwevent.core.receivers.CarbonEventingMessageReceiver"/>
+			<actionMapping>http://schemas.xmlsoap.org/ws/2004/08/eventing/SubscriptionEnd</actionMapping>
+		</operation>
+
+		<operation name="subscribe">
+			<messageReceiver class="org.wso2.carbon.bam.lwevent.core.receivers.CarbonEventingMessageReceiver"/>
+			<actionMapping>http://schemas.xmlsoap.org/ws/2004/08/eventing/Subscribe</actionMapping>
+			<outputActionMapping>http://schemas.xmlsoap.org/ws/2004/08/eventing/SubscribeResponse</outputActionMapping>
+		</operation>
+
+		<operation name="unsubscribe">
+			<messageReceiver class="org.wso2.carbon.bam.lwevent.core.receivers.CarbonEventingMessageReceiver"/>
+			<actionMapping>http://schemas.xmlsoap.org/ws/2004/08/eventing/Unsubscribe</actionMapping>
+			<outputActionMapping>http://schemas.xmlsoap.org/ws/2004/08/eventing/UnsubscribeResponse</outputActionMapping>
+		</operation>
+
+		<operation name="getSubscriptions">
+			<messageReceiver class="org.wso2.carbon.bam.lwevent.core.receivers.CarbonEventingMessageReceiver"/>
+			<actionMapping>http://ws.apache.org/ws/2007/05/eventing-extended/getSubscriptions</actionMapping>
+			<outputActionMapping>http://ws.apache.org/ws/2007/05/eventing-extended/getSubscriptionsResponse</outputActionMapping>
+		</operation>
+
+		<operation name="installEventSink">
+			<messageReceiver class="org.wso2.carbon.bam.lwevent.core.receivers.CarbonEventingMessageReceiver"/>
+			<actionMapping>http://schemas.xmlsoap.org/ws/2004/08/eventing/installEventSink</actionMapping>
+			<outputActionMapping>http://schemas.xmlsoap.org/ws/2004/08/eventing/installEventSinkResponse</outputActionMapping>
+		</operation>
+
+
+		<operation name="publish">
+			<messageReceiver
+				class="org.wso2.carbon.bam.lwevent.core.receivers.CarbonEventingMessageReceiver" />
+		</operation>
+     </service>
+
+     <service name="BAMEventPublishService" scope="transportsession">
+        <transports>
+            <transport>http</transport>
+        </transports>
+        <description>
+            To Publish to Broker Service
+        </description>
+        <operation name="publish">
+			<messageReceiver
+				class="org.wso2.carbon.bam.lwevent.core.receivers.CarbonEventingMessageReceiver" />
+		</operation>
+	</service>
+	<parameter name="hiddenService" locked="true">true</parameter>
+</serviceGroup>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence xmlns="http://synapse.apache.org/ns/2010/04/configuration" name="paypal">
+    <paypal>
+        <credentials username="uswick_1291532762_biz_api1.wso2.com" password="1291532800" signature="AQU0e5vuZCvSg-XJploSa.sGUDlpATwhZYmAXFUIuNss83luEA0voic8"/>
+        <GetBalance xmlns:ns2="http://wso2.org/sample" currency="US" DetailLevel="{//ns2:WebRequest/ns2:detail}" ErrorLanguage="{//ns2:WebRequest/ns2:errorlang}"/>
+    </paypal>
+</sequence>

@@ -1,0 +1,141 @@
+<!--
+  ~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+       "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <title>Welcome to WSO2 Identity Server v2.0.0!</title>
+    <link href="css/is-docs.css" rel="stylesheet"/>
+   </head>
+<body>
+<h1>WSO2 Identity Solution, v@wso2is_version@ : Relying party in minutes - A pre-configured login</h1>
+
+<h2>Introduction</h2>
+This is a preconfigured implementation of the Identity Login for J2EE web applications. For more information please refer the Relying party developer guide.
+
+<h2>Configuration Steps</h2>
+
+<p></p>
+<h3>Step 1 : Add the servlet filter to you application and setup the keystore</h3>
+
+<p>Include the following entry in the web.xml file of the application:</p>
+
+<pre><![CDATA[
+
+    <filter>
+        <filter-name>TokenValidator</filter-name>
+        <filter-class>org.wso2.solutions.identity.relyingparty.servletfilter.RelyingPartyFilter</filter-class>
+        <init-param>
+	    <param-name>Keystore</param-name>
+	    <param-value>keys/wso2is.jks</param-value>
+  	</init-param>
+        <init-param>
+	    <param-name>StorePass</param-name>
+	    <param-value>wso2is</param-value>
+  	</init-param>
+        <init-param>
+	    <param-name>KeyAlias</param-name>
+	    <param-value>localhost</param-value>
+  	</init-param>
+    	<init-param>
+	    <param-name>KeyPass</param-name>
+	    <param-value>wso2is</param-value>
+  	</init-param>
+        <init-param>
+	    <param-name>StoreType</param-name>
+	    <param-value>JKS</param-value>
+  	</init-param>
+    </filter>
+	
+    <filter-mapping>
+        <filter-name>TokenValidator</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+]]></pre>
+<br/>
+<br/>
+<strong>Add the keystore containing the private key to the web application.</strong>
+<p>Create a directory called "keys" directly inside the war directory. Download the keystore from <a href="8888">here</a> and add it into it.</p>
+
+<h3>Step 2 : Add the information card login page</h3>
+<br/>
+The user loing page must contain a form with an <strong>object</strong> tag as shown below:
+
+<pre><![CDATA[
+   <form name="frm" id="frm" method="post" action="InfoCardLogin.action">  
+		<input type="hidden" name="InfoCardSignin" value="Log in" /><br/>
+		<OBJECT type="application/x-informationCard" name="xmlToken">
+			<PARAM  Name="tokenType"
+					Value="urn:oasis:names:tc:SAML:1.0:assertion">
+			<PARAM  Name="requiredClaims"
+					Value="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/privatepersonalidentifier">
+			<PARAM Name="issuer" value="http://schemas.xmlsoap.org/ws/2005/05/identity/issuer/self">
+		</OBJECT>
+  </form>
+]]></pre>
+
+<p>The <strong>object</strong> tag here is the standard information card object as
+defined <a href="http://www.identityblog.com/wp-content/resources/profile/InfoCard-Profile-v1-Web-Integration.pdf">
+here</a>.</p>
+
+<p><i>It is important that you include the hidden field called "InfoCardSignin" with
+the value "Log in". The filter will process the HTTP POST request to extract 
+the token sent when this request parameter is available.</i></p>
+
+<br/>
+<br/> 
+<h3>Step 3 : Add the required jars to your classpath.</h3> 
+
+<p>Ant script available <a href="8888">here</a> will create a directory named "required-lib" and copy all the required jar files into it. 
+Download the ant script and copy it to the identity distribution. Then run the script by typing ant create-required-lib. 
+This will create the required-lib directory with the required libraries</p>
+
+<h3>Step 4 : Obtain the information in the verified token and process</h3>
+
+<p>The results of token processing will be available as attributes in the 
+ServletRequest object.</p>  
+
+<p>To indicate whether token verification was successful or not there will be an 
+attribute by the name "<strong>org.wso2.solutions.identity.rp.State</strong>". 
+On successful verification value of this attribute will be 
+"<strong>success</strong>". Otherwise it will be "<strong>failure</strong>".</p>  
+
+<p>Initiate a user session in a web application using these values.</p>
+
+<p>The ServletRequest will also contain a set of attrbites by the names of 
+the claims (the part of claim URI after the final "/")</p> with their values.
+
+<pre><![CDATA[
+	String auth = (String)request.getAttribute(TokenVerifierConstants.SERVLET_ATTR_STATE);
+	String welcomeString = "";
+	
+	if(auth != null && TokenVerifierConstants.STATE_SUCCESS.equals(auth)) {
+		welcomeString = "Welcome "
+		String issuerInfo = request.getAttribute("issuerInfo");
+		//retrieving claims made by the user
+		String givenName = (String)request.getAttribute(IdentityConstants.CLAIM_GIVEN_NAME);
+		String surname = (String)request.getAttribute(IdentityConstants.CLAIM_SURNAME);
+		String email = (String)request.getAttribute(IdentityConstants.CLAIM_EMAIL_ADDRESS);
+		welcomeString = welcomeString + givenName + " " + surname + " "+email;
+	}else{
+		welcomeString = "Login Failure!!"
+	}
+]]></pre>
+
+
+</body>
+</html>

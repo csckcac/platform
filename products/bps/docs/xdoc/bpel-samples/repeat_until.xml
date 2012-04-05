@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>@product.name@ - Sample Guide - Repeat Until</title>
+        <link href="../css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+        <h1>Sample Guide - Repeat Until</h1>
+        <h3>Table of Content</h3>
+        <ul>
+            <li><a href="#objective">Objective</a></li>
+            <li><a href="#prerequisites">Prerequisites</a></li>
+            <li><a href="#overallIdea">Overall Idea</a></li>
+        </ul>
+
+        <br />
+        <h3><a name="objective">Objective</a></h3>
+        <p>Explains the functionality of &lt;repeatUntil/&gt; construct, where the repetitive task
+            should be executed at least once. This functionality also can be achieved via &lt;while/&gt;.
+            But how the logical condition used in both cases differs.
+        </p>
+        <br />
+        <h3><a name="prerequisites">Prerequisites</a></h3>
+        <ul>
+            <li>Log in into BPS server admin console.</li>
+            <li>Under Business Processes -&gt; Add BPEL.</li>
+            <li>Upload the TestRepeatUntil.zip , (all samples are located at our <a href="http://svn.wso2.org/repos/wso2/branches/carbon/3.2.0/products/bps/2.1.0/modules/samples/product/src/main/resources/bpel/2.0/">sample repository</a>.)</li>
+            <li>Under the Business Processes -&gt; Processes.</li>
+            <li>Under the WSDL details widget -&gt; Create instance</li>
+        </ul>
+        <br />
+        <h3><a name="overallIdea">Overall Idea</a></h3>
+        <p>Refer TestRepeatUntil.zip</p>
+        <p>eg - <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>repeatUntil</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>RepeatUntil</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>assign</span> <span style='color:#274796; '>validate</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>no</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>IncrementCounter</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>copy</span><span style='color:#a65700; '>></span>
+            <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>from</span><span style='color:#a65700; '>></span><span style='color:#606060; '>&lt;![CDATA[</span>$counter + 1<span style='color:#606060; '>]]&gt;</span><span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>from</span><span style='color:#a65700; '>></span>
+            <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>to</span> <span style='color:#274796; '>variable</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>counter</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+            <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>to</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>copy</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>assign</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>condition</span><span style='color:#a65700; '>></span><span style='color:#606060; '>&lt;![CDATA[</span>$counter >= 10<span style='color:#606060; '>]]&gt;</span><span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>condition</span><span style='color:#a65700; '>></span>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>repeatUntil</span><span style='color:#a65700; '>></span>
+</pre></p>
+        <p>Here we increment counter variable until it's equal to 10.</p>
+        <p>If you refer TestWhile.zip, the logical condition in &lt;while/&gt; is exactly the
+            negation used in &lt;repeatUntil/&gt; to do the same thing.
+        </p>
+        <p>eg - <pre style='color:#000000;background:#ffffff;'><span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>while</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>While</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>condition</span><span style='color:#a65700; '>></span><span style='color:#606060; '>&lt;![CDATA[</span>$counter &lt; 10<span style='color:#606060; '>]]&gt;</span><span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>condition</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>assign</span> <span style='color:#274796; '>validate</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>no</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>name</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>IncrementInput</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>copy</span><span style='color:#a65700; '>></span>
+            <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>from</span><span style='color:#a65700; '>></span><span style='color:#606060; '>&lt;![CDATA[</span>$counter + 1<span style='color:#606060; '>]]&gt;</span><span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>from</span><span style='color:#a65700; '>></span>
+            <span style='color:#a65700; '>&lt;</span><span style='color:#5f5035; '>to</span> <span style='color:#274796; '>variable</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>counter</span><span style='color:#0000e6; '>"</span><span style='color:#a65700; '>></span>
+            <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>to</span><span style='color:#a65700; '>></span>
+        <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>copy</span><span style='color:#a65700; '>></span>
+    <span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>assign</span><span style='color:#a65700; '>></span>
+<span style='color:#a65700; '>&lt;/</span><span style='color:#5f5035; '>while</span><span style='color:#a65700; '>></span>
+</pre></p>
+    </body>
+</html>

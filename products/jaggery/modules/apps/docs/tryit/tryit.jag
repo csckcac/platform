@@ -1,0 +1,137 @@
+<%
+
+/*
+ * READ ME
+ *
+ * The code is used for tryit in jaggery and it has over ride the print method in jaggery
+ * because  in here we have used eval() funtion so to get the print of inputstream code
+ *
+ * When You called tryit.jag in services with params with key inputstream
+ * and value of the inputstream represent the jss code.
+ * Finally it makes output of the inputstream code.
+ *
+ */
+
+var p = print;
+var F = File;
+
+(function() {
+    var inputStream, htmlResult, print, File;
+
+    inputStream = request.getParameter('inputstream');
+
+    //setting the print funtion for write funrion
+    htmlResult = "";
+
+    inputStream = (function (script) {
+        var opened = false,
+                isExpression = false,
+                source = "",
+                html = "",
+                jsExp = "",
+                index = 0;
+
+        while (index < script.length) {
+            var ch = script.charAt(index);
+            if (ch == "<") {
+                ch = script.charAt(++index);
+                if (ch == "%") {
+                    opened = true;
+                    //as it is html, we can avoid adding empty $j.print("") calls
+                    if (html != "") {
+                        source += "print(\"" + html + "\");";
+                        html = "";
+                    }
+                    ch = script.charAt(++index);
+                    if (ch == "=") {
+                        isExpression = true;
+                    } else {
+                        continue;
+                    }
+                } else {
+                    if (opened) {
+                        source += "<";
+                    } else {
+                        html += "<";
+                    }
+                    continue;
+                }
+            } else if (ch == "%") {
+                ch = script.charAt(++index);
+                if (ch == ">") {
+                    opened = false;
+                    if (isExpression) {
+                        isExpression = false;
+                        source += "print(" + jsExp + ");";
+                        jsExp = "";
+                    }
+                } else {
+                    if (opened) {
+                        source += "%";
+                    } else {
+                        html += "%";
+                    }
+                    continue;
+                }
+            } else {
+                if (opened) {
+                    if (isExpression) {
+                        jsExp += ch;
+                    } else {
+                        source += ch;
+                    }
+                } else {
+                    if (ch == "\"") {
+                        html += "\\" + "\"";
+                    } else if (ch == "\\") {
+                        html += "\\" + "\\";
+                    } else if (ch == "\r") {
+                        html += "\\" + "r";
+                    } else if (ch == "\n") {
+                        source += "print(\"" + html + "\\" + "n" + "\");" + "\n";
+                        html = "";
+                    } else if (ch == "\t") { // Not sure we need this
+                        html += "\\" + "t";
+                    } else {
+                        html += ch;
+                    }
+                }
+            }
+            index++;
+        }
+        if (html != "") {
+            source += "print(\"" + html + "\");";
+        }
+        if (jsExp != "") {
+            source += "print(" + jsExp + ");";
+        }
+        return source;
+    }(inputStream));
+
+    //over riding the print funtion
+    print = function (text) {
+        var type = typeof(text);
+        if (type == "string" || type == "number" || type == "boolean") {
+            htmlResult += text;
+        } else {
+            htmlResult += stringify(text);
+        }
+    };
+
+    File = function (path) {
+        path = 'file:///tmp' + path;
+        return new F(path);
+    };
+
+    (function() {
+        try {
+            eval(inputStream);
+        } catch(e) {
+            print(e.message + ' at line #' +e.lineNumber);
+        }
+    }());
+
+    p(htmlResult);
+})();
+%>
+

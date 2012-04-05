@@ -1,0 +1,69 @@
+<html>
+    <head>
+        <title>API Store</title>
+        <script type="text/javascript" src="js/lib/jquery-1.7.1.min.js"></script>
+        <script type="text/javascript" src="js/lib/jquery-ui-1.8.17.custom.min.js"></script>
+        <script type="text/javascript" src="js/lib/jquery.tools.min.js"></script>
+        <script type="text/javascript" src="js/lib/ui/jquery.ui.core.min.js"></script>
+        <script type="text/javascript" src="js/lib/ui/jquery.ui.widget.min.js"></script>
+        <script type="text/javascript" src="js/lib/ui/jquery.ui.position.min.js"></script>
+        <script type="text/javascript" src="js/lib/ui/jquery.ui.autocomplete.min.js"></script>
+        <script type="text/javascript" src="js/lib/jquery.paginate.js"></script>
+        <script type="text/javascript" src="js/search_bar.js"></script>
+        <script type="text/javascript" src="js/serviceStoreApp.js"></script>
+        <script type="text/javascript" src="js/layout-service-detail.js"></script>
+        <!--script src="js/assembly.js"></script-->
+        <script type="text/javascript" src="js/util.js"></script>
+        <script type="text/javascript" src="js/common/renderCommon.js"></script>
+        <script type="text/javascript">
+            <% include("/includes/home/initProject.jag"); %>
+        </script>
+        <script type="text/javascript" src="js/common/initCommon.js"></script>
+        <script type="text/javascript" src="js/application/initApplication.js"></script>
+
+
+        <link rel="stylesheet" type="text/css" href="css/overlay-basic.css"/>
+        <!--[if IE 7]><link type="text/css" rel="stylesheet" href="css/ie7.css"/><![endif]-->
+        <!--[if IE 8]><link type="text/css" rel="stylesheet" href="css/ie8.css"/><![endif]-->
+
+        <link rel="stylesheet" href="css/960_16_col.css" />
+        <!--<link href='http://fonts.googleapis.com/css?family=Stint+Ultra+Condensed' rel='stylesheet' type='text/css'>-->
+        <link type="text/css" rel="stylesheet" href="css/styles.css" />
+        <link type="text/css" rel="stylesheet" href="css/searchbox.css" />
+        <link type="text/css" rel="stylesheet" href="css/layout.css" />
+        <link type="text/css" rel="stylesheet" href="css/paginate-styles.css" />
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="header-strip-links" id="header-strip-links">
+                <% include("/includes/home/header-strip-links.jag"); %>
+            </div>
+            <div class="container_16 content">
+                <div class="grid_16" id="header-strip-search">
+                    <% include("/includes/home/header-strip-search.jag"); %>
+                </div>
+                <div class="grid_16">
+                    <div class="breadcrumb" id="breadcrumb">Services</div>
+                </div>
+                <div class="grid_16 title-main" id="titleMain">Services</div>
+                <div class="grid_4 special-links" id="special-links">
+                    <% include("/includes/home/serviceStoreTabs.jag"); %>
+                </div>
+                <div class="grid_9">
+                    <div id="main-ajax-loader" style="display:none;"><img src="images/1.gif"/></div>
+                    <div id="middle-container">
+                        <% include("/includes/home/serviceInfo.jag"); %>
+                        <% include("/includes/home/applicationList.jag"); %>
+                    </div>
+                    <!--<% include("/includes/home/notifications.jag"); %>-->
+                </div>
+                <div class="grid_3 cloud margin-override" id="cloud">
+                    <% include("/includes/home/tagCloud.jag"); %>
+                </div>
+            </div>
+        </div>
+        <div class="footer" id="footer">
+            <% include("/includes/home/footer.jag"); %>
+        </div>
+    </body>
+</html>

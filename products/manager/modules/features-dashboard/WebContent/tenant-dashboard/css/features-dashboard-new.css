@@ -1,0 +1,93 @@
+body{
+    font-size:11px;
+    font-family:Arial;
+    margin:0;padding:0;
+}
+.db_menu ul{
+    margin:0;
+    padding:0;
+}
+.db_menu li{
+    list-style-type:none;
+    width:100%;
+    margin-bottom:2px;
+    padding:5px;
+}
+.db_menu li a{
+    color:#fff;
+    cursor:pointer;
+    width:100%;
+    font-size:14px;
+}
+.db_menu li.selected a{
+    color:#fff96f;
+    font-weight:bold;
+}
+.db_menu li.selected{
+    background:transparent url(../images/arrow.png) no-repeat right top;
+}
+.db_table{
+    width:100%;
+    opacity:1;
+}
+.db_table td{
+    vertical-align:top;
+}
+.db_menu{
+    width:200px;
+    padding-top:20px;
+}
+.db_content{
+    padding:0px 10px 10px 0px;
+}
+#db_content_title{
+    color:#333;
+    font-size:29px;
+    text-indent:10px;
+}
+.main-title{
+    color:#131313;
+    font-size:28px;
+    margin:10px;
+}
+
+/*Blue theme styles*/
+.page-background{
+    background:transparent url(../images/dashboard-back-repeat.png) repeat-y left top;
+}
+.page-picture{
+    background:transparent url(../images/cloud-tree.png) no-repeat -150px 50px;
+    padding:10px;
+}
+
+div.page-popup{
+    background:transparent url(../images/transparent-back.png) repeat left top;
+    /*Rounded corners */
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    border: solid 1px #888888;
+
+    /*The shadow */
+    -moz-box-shadow: 3px 3px 2px #ddd;
+    -webkit-box-shadow: 3px 3px 2px #ddd;
+    box-shadow: 3px 3px 2px #ddd;
+}
+.page-popup  div.popup-circle{
+    margin:5px;
+    padding:10px;
+    border:solid 1px #fff;
+
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    height:100%;
+    background:#fff url(../images/boxes.png) repeat-x left top;
+
+}
+#popup-close{
+    color:#000;
+    position:absolute;
+    right:20px;
+    top:20px;
+    cursor:pointer;
+    font-size:14px;
+}

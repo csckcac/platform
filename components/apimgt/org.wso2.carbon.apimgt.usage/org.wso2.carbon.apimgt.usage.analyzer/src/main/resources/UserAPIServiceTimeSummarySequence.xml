@@ -1,0 +1,34 @@
+<analyzerSequence name="UserAPIServiceTimeSummarySequence">
+   <trigger cron="1 * * * * ? *"/>
+   <analyzers>
+      <get name="BASEEnriched" batchSize="1000">
+      </get>
+      <groupBy>
+         <field name="user"/>
+         <field name="api"/>
+      </groupBy>
+      <drop type="column">
+         <fieldSet>
+            <field name="consumerKey"/>
+            <field name="context"/>
+            <field name="resource"/>
+            <field name="method"/>
+            <field name="version"/>
+	    <field name="request"/>
+	    <field name="requestTime"/>
+	    <field name="response"/>
+	    <field name="responseTime"/>
+         </fieldSet>
+      </drop>
+      <aggregate>
+         <measure name="serviceTime" aggregationType="AVG"/>
+      </aggregate>
+      <put name="UserAPIServiceTimeSummary" dataSourceType="CASSANDRA">
+         <onExist>
+            <aggregate>
+               <measure name="serviceTime" aggregationType="AVG"/>
+            </aggregate>
+         </onExist>
+      </put>
+   </analyzers>
+</analyzerSequence>

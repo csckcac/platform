@@ -1,0 +1,449 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://services.mgt.admin.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:ax2380="http://beans.mgt.captcha.carbon.wso2.org/xsd" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ax2378="http://beans.mgt.admin.carbon.wso2.org/xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.mgt.admin.carbon.wso2.org">
+    <wsdl:documentation>AdminManagementService</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://beans.mgt.captcha.carbon.wso2.org/xsd">
+            <xs:complexType name="CaptchaInfoBean">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="imagePath" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="secretKey" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="userAnswer" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax2379="http://beans.mgt.admin.carbon.wso2.org/xsd" xmlns:ax2381="http://beans.mgt.captcha.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.mgt.admin.carbon.wso2.org">
+            <xs:import namespace="http://beans.mgt.admin.carbon.wso2.org/xsd" />
+            <xs:import namespace="http://beans.mgt.captcha.carbon.wso2.org/xsd" />
+            <xs:element name="AdminManagementServiceException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="AdminManagementServiceException" nillable="true" type="ns:Exception" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="updateTenantPassword">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="adminInfoBean" nillable="true" type="ax2379:AdminMgtInfoBean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateTenantPasswordResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateAdminPasswordWithUserInput">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="adminInfoBean" nillable="true" type="ax2379:AdminMgtInfoBean" />
+                        <xs:element minOccurs="0" name="captchaInfoBean" nillable="true" type="ax2380:CaptchaInfoBean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateAdminPasswordWithUserInputResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="resetPassword">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="adminInfoBean" nillable="true" type="ax2379:AdminMgtInfoBean" />
+                        <xs:element minOccurs="0" name="captchaInfoBean" nillable="true" type="ax2380:CaptchaInfoBean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="resetPasswordResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="proceedUpdateCredentials">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="domain" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="confirmationKey" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="proceedUpdateCredentialsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="generateRandomCaptcha">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="generateRandomCaptchaResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2380:CaptchaInfoBean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="confirmUser">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="secretKey" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="confirmUserResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2379:ConfirmationBean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://beans.mgt.admin.carbon.wso2.org/xsd">
+            <xs:complexType name="AdminMgtInfoBean">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="active" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="admin" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="adminPassword" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="email" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="firstname" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="tenantDomain" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="tenantId" type="xs:int" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ConfirmationBean">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="data" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="redirectPath" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="proceedUpdateCredentialsRequest">
+        <wsdl:part name="parameters" element="ns:proceedUpdateCredentials" />
+    </wsdl:message>
+    <wsdl:message name="proceedUpdateCredentialsResponse">
+        <wsdl:part name="parameters" element="ns:proceedUpdateCredentialsResponse" />
+    </wsdl:message>
+    <wsdl:message name="AdminManagementServiceException">
+        <wsdl:part name="parameters" element="ns:AdminManagementServiceException" />
+    </wsdl:message>
+    <wsdl:message name="updateTenantPasswordRequest">
+        <wsdl:part name="parameters" element="ns:updateTenantPassword" />
+    </wsdl:message>
+    <wsdl:message name="updateTenantPasswordResponse">
+        <wsdl:part name="parameters" element="ns:updateTenantPasswordResponse" />
+    </wsdl:message>
+    <wsdl:message name="updateAdminPasswordWithUserInputRequest">
+        <wsdl:part name="parameters" element="ns:updateAdminPasswordWithUserInput" />
+    </wsdl:message>
+    <wsdl:message name="updateAdminPasswordWithUserInputResponse">
+        <wsdl:part name="parameters" element="ns:updateAdminPasswordWithUserInputResponse" />
+    </wsdl:message>
+    <wsdl:message name="confirmUserRequest">
+        <wsdl:part name="parameters" element="ns:confirmUser" />
+    </wsdl:message>
+    <wsdl:message name="confirmUserResponse">
+        <wsdl:part name="parameters" element="ns:confirmUserResponse" />
+    </wsdl:message>
+    <wsdl:message name="resetPasswordRequest">
+        <wsdl:part name="parameters" element="ns:resetPassword" />
+    </wsdl:message>
+    <wsdl:message name="resetPasswordResponse">
+        <wsdl:part name="parameters" element="ns:resetPasswordResponse" />
+    </wsdl:message>
+    <wsdl:message name="generateRandomCaptchaRequest">
+        <wsdl:part name="parameters" element="ns:generateRandomCaptcha" />
+    </wsdl:message>
+    <wsdl:message name="generateRandomCaptchaResponse">
+        <wsdl:part name="parameters" element="ns:generateRandomCaptchaResponse" />
+    </wsdl:message>
+    <wsdl:portType name="AdminManagementServicePortType">
+        <wsdl:operation name="proceedUpdateCredentials">
+            <wsdl:input message="ns:proceedUpdateCredentialsRequest" wsaw:Action="urn:proceedUpdateCredentials" />
+            <wsdl:output message="ns:proceedUpdateCredentialsResponse" wsaw:Action="urn:proceedUpdateCredentialsResponse" />
+            <wsdl:fault message="ns:AdminManagementServiceException" name="AdminManagementServiceException" wsaw:Action="urn:proceedUpdateCredentialsAdminManagementServiceException" />
+        </wsdl:operation>
+        <wsdl:operation name="updateTenantPassword">
+            <wsdl:input message="ns:updateTenantPasswordRequest" wsaw:Action="urn:updateTenantPassword" />
+            <wsdl:output message="ns:updateTenantPasswordResponse" wsaw:Action="urn:updateTenantPasswordResponse" />
+            <wsdl:fault message="ns:AdminManagementServiceException" name="AdminManagementServiceException" wsaw:Action="urn:updateTenantPasswordAdminManagementServiceException" />
+        </wsdl:operation>
+        <wsdl:operation name="updateAdminPasswordWithUserInput">
+            <wsdl:input message="ns:updateAdminPasswordWithUserInputRequest" wsaw:Action="urn:updateAdminPasswordWithUserInput" />
+            <wsdl:output message="ns:updateAdminPasswordWithUserInputResponse" wsaw:Action="urn:updateAdminPasswordWithUserInputResponse" />
+            <wsdl:fault message="ns:AdminManagementServiceException" name="AdminManagementServiceException" wsaw:Action="urn:updateAdminPasswordWithUserInputAdminManagementServiceException" />
+        </wsdl:operation>
+        <wsdl:operation name="confirmUser">
+            <wsdl:input message="ns:confirmUserRequest" wsaw:Action="urn:confirmUser" />
+            <wsdl:output message="ns:confirmUserResponse" wsaw:Action="urn:confirmUserResponse" />
+            <wsdl:fault message="ns:AdminManagementServiceException" name="AdminManagementServiceException" wsaw:Action="urn:confirmUserAdminManagementServiceException" />
+        </wsdl:operation>
+        <wsdl:operation name="resetPassword">
+            <wsdl:input message="ns:resetPasswordRequest" wsaw:Action="urn:resetPassword" />
+            <wsdl:output message="ns:resetPasswordResponse" wsaw:Action="urn:resetPasswordResponse" />
+            <wsdl:fault message="ns:AdminManagementServiceException" name="AdminManagementServiceException" wsaw:Action="urn:resetPasswordAdminManagementServiceException" />
+        </wsdl:operation>
+        <wsdl:operation name="generateRandomCaptcha">
+            <wsdl:input message="ns:generateRandomCaptchaRequest" wsaw:Action="urn:generateRandomCaptcha" />
+            <wsdl:output message="ns:generateRandomCaptchaResponse" wsaw:Action="urn:generateRandomCaptchaResponse" />
+            <wsdl:fault message="ns:AdminManagementServiceException" name="AdminManagementServiceException" wsaw:Action="urn:generateRandomCaptchaAdminManagementServiceException" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="AdminManagementServiceSoap11Binding" type="ns:AdminManagementServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="proceedUpdateCredentials">
+            <soap:operation soapAction="urn:proceedUpdateCredentials" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="AdminManagementServiceException">
+                <soap:fault use="literal" name="AdminManagementServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateTenantPassword">
+            <soap:operation soapAction="urn:updateTenantPassword" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="AdminManagementServiceException">
+                <soap:fault use="literal" name="AdminManagementServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateAdminPasswordWithUserInput">
+            <soap:operation soapAction="urn:updateAdminPasswordWithUserInput" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="AdminManagementServiceException">
+                <soap:fault use="literal" name="AdminManagementServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="confirmUser">
+            <soap:operation soapAction="urn:confirmUser" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="AdminManagementServiceException">
+                <soap:fault use="literal" name="AdminManagementServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="resetPassword">
+            <soap:operation soapAction="urn:resetPassword" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="AdminManagementServiceException">
+                <soap:fault use="literal" name="AdminManagementServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="generateRandomCaptcha">
+            <soap:operation soapAction="urn:generateRandomCaptcha" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="AdminManagementServiceException">
+                <soap:fault use="literal" name="AdminManagementServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="AdminManagementServiceSoap12Binding" type="ns:AdminManagementServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="proceedUpdateCredentials">
+            <soap12:operation soapAction="urn:proceedUpdateCredentials" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="AdminManagementServiceException">
+                <soap12:fault use="literal" name="AdminManagementServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateTenantPassword">
+            <soap12:operation soapAction="urn:updateTenantPassword" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="AdminManagementServiceException">
+                <soap12:fault use="literal" name="AdminManagementServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateAdminPasswordWithUserInput">
+            <soap12:operation soapAction="urn:updateAdminPasswordWithUserInput" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="AdminManagementServiceException">
+                <soap12:fault use="literal" name="AdminManagementServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="confirmUser">
+            <soap12:operation soapAction="urn:confirmUser" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="AdminManagementServiceException">
+                <soap12:fault use="literal" name="AdminManagementServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="resetPassword">
+            <soap12:operation soapAction="urn:resetPassword" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="AdminManagementServiceException">
+                <soap12:fault use="literal" name="AdminManagementServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="generateRandomCaptcha">
+            <soap12:operation soapAction="urn:generateRandomCaptcha" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="AdminManagementServiceException">
+                <soap12:fault use="literal" name="AdminManagementServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="AdminManagementServiceHttpBinding" type="ns:AdminManagementServicePortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="proceedUpdateCredentials">
+            <http:operation location="proceedUpdateCredentials" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateTenantPassword">
+            <http:operation location="updateTenantPassword" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateAdminPasswordWithUserInput">
+            <http:operation location="updateAdminPasswordWithUserInput" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="confirmUser">
+            <http:operation location="confirmUser" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="resetPassword">
+            <http:operation location="resetPassword" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="generateRandomCaptcha">
+            <http:operation location="generateRandomCaptcha" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="AdminManagementService">
+        <wsdl:port name="AdminManagementServiceHttpSoap11Endpoint" binding="ns:AdminManagementServiceSoap11Binding">
+            <soap:address location="http://10.200.2.106:9763/services/AdminManagementService.AdminManagementServiceHttpSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="AdminManagementServiceHttpsSoap11Endpoint" binding="ns:AdminManagementServiceSoap11Binding">
+            <soap:address location="https://10.200.2.106:9443/services/AdminManagementService.AdminManagementServiceHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="AdminManagementServiceHttpSoap12Endpoint" binding="ns:AdminManagementServiceSoap12Binding">
+            <soap12:address location="http://10.200.2.106:9763/services/AdminManagementService.AdminManagementServiceHttpSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="AdminManagementServiceHttpsSoap12Endpoint" binding="ns:AdminManagementServiceSoap12Binding">
+            <soap12:address location="https://10.200.2.106:9443/services/AdminManagementService.AdminManagementServiceHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="AdminManagementServiceHttpEndpoint" binding="ns:AdminManagementServiceHttpBinding">
+            <http:address location="http://10.200.2.106:9763/services/AdminManagementService.AdminManagementServiceHttpEndpoint/" />
+        </wsdl:port>
+        <wsdl:port name="AdminManagementServiceHttpsEndpoint" binding="ns:AdminManagementServiceHttpBinding">
+            <http:address location="https://10.200.2.106:9443/services/AdminManagementService.AdminManagementServiceHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

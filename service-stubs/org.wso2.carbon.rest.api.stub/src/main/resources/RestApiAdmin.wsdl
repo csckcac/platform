@@ -1,0 +1,614 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://service.api.rest.carbon.wso2.org" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ax2217="http://api.rest.carbon.wso2.org/xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.api.rest.carbon.wso2.org">
+    <wsdl:documentation>RestApiAdmin</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ax2218="http://api.rest.carbon.wso2.org/xsd" xmlns:ns="http://org.apache.axis2/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+            <xs:import namespace="http://api.rest.carbon.wso2.org/xsd"/>
+            <xs:element name="RestApiAdminAPIException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="APIException" nillable="true" type="ax2218:APIException"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateApiFromString">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="apiName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="apiData" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateApiFromStringResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateApi">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="apiName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="apiData" nillable="true" type="ax2218:APIData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateApiResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getSequences">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getSequencesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getResourceSource">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="resourceData" nillable="true" type="ax2218:ResourceData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getResourceSourceResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getApiSource">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="apiData" nillable="true" type="ax2218:APIData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getApiSourceResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getApiNames">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getApiNamesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getApiByName">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="apiName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getApiByNameResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2218:APIData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteApi">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="apiName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteApiResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addApiFromString">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="apiData" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addApiFromStringResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addApi">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="apiData" nillable="true" type="ax2218:APIData"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addApiResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://api.rest.carbon.wso2.org/xsd">
+            <xs:complexType name="APIException">
+                <xs:sequence/>
+            </xs:complexType>
+            <xs:complexType name="APIData">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="context" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="fileName" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="host" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="port" type="xs:int"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="resources" nillable="true" type="ax2217:ResourceData"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ResourceData">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="contentType" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="faultSeqXml" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="faultSequenceKey" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="inSeqXml" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="inSequenceKey" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="methods" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="outSeqXml" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="outSequenceKey" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="protocol" type="xs:int"/>
+                    <xs:element minOccurs="0" name="uriTemplate" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="urlMapping" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="userAgent" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getApiByNameRequest">
+        <wsdl:part name="parameters" element="ns1:getApiByName"/>
+    </wsdl:message>
+    <wsdl:message name="getApiByNameResponse">
+        <wsdl:part name="parameters" element="ns1:getApiByNameResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getResourceSourceRequest">
+        <wsdl:part name="parameters" element="ns1:getResourceSource"/>
+    </wsdl:message>
+    <wsdl:message name="getResourceSourceResponse">
+        <wsdl:part name="parameters" element="ns1:getResourceSourceResponse"/>
+    </wsdl:message>
+    <wsdl:message name="addApiRequest">
+        <wsdl:part name="parameters" element="ns1:addApi"/>
+    </wsdl:message>
+    <wsdl:message name="addApiResponse">
+        <wsdl:part name="parameters" element="ns1:addApiResponse"/>
+    </wsdl:message>
+    <wsdl:message name="RestApiAdminAPIException">
+        <wsdl:part name="parameters" element="ns1:RestApiAdminAPIException"/>
+    </wsdl:message>
+    <wsdl:message name="deleteApiRequest">
+        <wsdl:part name="parameters" element="ns1:deleteApi"/>
+    </wsdl:message>
+    <wsdl:message name="deleteApiResponse">
+        <wsdl:part name="parameters" element="ns1:deleteApiResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getApiSourceRequest">
+        <wsdl:part name="parameters" element="ns1:getApiSource"/>
+    </wsdl:message>
+    <wsdl:message name="getApiSourceResponse">
+        <wsdl:part name="parameters" element="ns1:getApiSourceResponse"/>
+    </wsdl:message>
+    <wsdl:message name="updateApiRequest">
+        <wsdl:part name="parameters" element="ns1:updateApi"/>
+    </wsdl:message>
+    <wsdl:message name="updateApiResponse">
+        <wsdl:part name="parameters" element="ns1:updateApiResponse"/>
+    </wsdl:message>
+    <wsdl:message name="updateApiFromStringRequest">
+        <wsdl:part name="parameters" element="ns1:updateApiFromString"/>
+    </wsdl:message>
+    <wsdl:message name="updateApiFromStringResponse">
+        <wsdl:part name="parameters" element="ns1:updateApiFromStringResponse"/>
+    </wsdl:message>
+    <wsdl:message name="addApiFromStringRequest">
+        <wsdl:part name="parameters" element="ns1:addApiFromString"/>
+    </wsdl:message>
+    <wsdl:message name="addApiFromStringResponse">
+        <wsdl:part name="parameters" element="ns1:addApiFromStringResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getSequencesRequest">
+        <wsdl:part name="parameters" element="ns1:getSequences"/>
+    </wsdl:message>
+    <wsdl:message name="getSequencesResponse">
+        <wsdl:part name="parameters" element="ns1:getSequencesResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getApiNamesRequest">
+        <wsdl:part name="parameters" element="ns1:getApiNames"/>
+    </wsdl:message>
+    <wsdl:message name="getApiNamesResponse">
+        <wsdl:part name="parameters" element="ns1:getApiNamesResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="RestApiAdminPortType">
+        <wsdl:operation name="getApiByName">
+            <wsdl:input message="tns:getApiByNameRequest" wsaw:Action="urn:getApiByName"/>
+            <wsdl:output message="tns:getApiByNameResponse" wsaw:Action="urn:getApiByNameResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getResourceSource">
+            <wsdl:input message="tns:getResourceSourceRequest" wsaw:Action="urn:getResourceSource"/>
+            <wsdl:output message="tns:getResourceSourceResponse" wsaw:Action="urn:getResourceSourceResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="addApi">
+            <wsdl:input message="tns:addApiRequest" wsaw:Action="urn:addApi"/>
+            <wsdl:output message="tns:addApiResponse" wsaw:Action="urn:addApiResponse"/>
+            <wsdl:fault message="tns:RestApiAdminAPIException" name="RestApiAdminAPIException" wsaw:Action="urn:addApiRestApiAdminAPIException"/>
+        </wsdl:operation>
+        <wsdl:operation name="deleteApi">
+            <wsdl:input message="tns:deleteApiRequest" wsaw:Action="urn:deleteApi"/>
+            <wsdl:output message="tns:deleteApiResponse" wsaw:Action="urn:deleteApiResponse"/>
+            <wsdl:fault message="tns:RestApiAdminAPIException" name="RestApiAdminAPIException" wsaw:Action="urn:deleteApiRestApiAdminAPIException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getApiSource">
+            <wsdl:input message="tns:getApiSourceRequest" wsaw:Action="urn:getApiSource"/>
+            <wsdl:output message="tns:getApiSourceResponse" wsaw:Action="urn:getApiSourceResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="updateApi">
+            <wsdl:input message="tns:updateApiRequest" wsaw:Action="urn:updateApi"/>
+            <wsdl:output message="tns:updateApiResponse" wsaw:Action="urn:updateApiResponse"/>
+            <wsdl:fault message="tns:RestApiAdminAPIException" name="RestApiAdminAPIException" wsaw:Action="urn:updateApiRestApiAdminAPIException"/>
+        </wsdl:operation>
+        <wsdl:operation name="updateApiFromString">
+            <wsdl:input message="tns:updateApiFromStringRequest" wsaw:Action="urn:updateApiFromString"/>
+            <wsdl:output message="tns:updateApiFromStringResponse" wsaw:Action="urn:updateApiFromStringResponse"/>
+            <wsdl:fault message="tns:RestApiAdminAPIException" name="RestApiAdminAPIException" wsaw:Action="urn:updateApiFromStringRestApiAdminAPIException"/>
+        </wsdl:operation>
+        <wsdl:operation name="addApiFromString">
+            <wsdl:input message="tns:addApiFromStringRequest" wsaw:Action="urn:addApiFromString"/>
+            <wsdl:output message="tns:addApiFromStringResponse" wsaw:Action="urn:addApiFromStringResponse"/>
+            <wsdl:fault message="tns:RestApiAdminAPIException" name="RestApiAdminAPIException" wsaw:Action="urn:addApiFromStringRestApiAdminAPIException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getSequences">
+            <wsdl:input message="tns:getSequencesRequest" wsaw:Action="urn:getSequences"/>
+            <wsdl:output message="tns:getSequencesResponse" wsaw:Action="urn:getSequencesResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getApiNames">
+            <wsdl:input message="tns:getApiNamesRequest" wsaw:Action="urn:getApiNames"/>
+            <wsdl:output message="tns:getApiNamesResponse" wsaw:Action="urn:getApiNamesResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="RestApiAdminSoap11Binding" type="tns:RestApiAdminPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getApiByName">
+            <soap:operation soapAction="urn:getApiByName" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getResourceSource">
+            <soap:operation soapAction="urn:getResourceSource" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addApi">
+            <soap:operation soapAction="urn:addApi" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RestApiAdminAPIException">
+                <soap:fault use="literal" name="RestApiAdminAPIException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteApi">
+            <soap:operation soapAction="urn:deleteApi" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RestApiAdminAPIException">
+                <soap:fault use="literal" name="RestApiAdminAPIException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getApiSource">
+            <soap:operation soapAction="urn:getApiSource" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateApi">
+            <soap:operation soapAction="urn:updateApi" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RestApiAdminAPIException">
+                <soap:fault use="literal" name="RestApiAdminAPIException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateApiFromString">
+            <soap:operation soapAction="urn:updateApiFromString" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RestApiAdminAPIException">
+                <soap:fault use="literal" name="RestApiAdminAPIException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addApiFromString">
+            <soap:operation soapAction="urn:addApiFromString" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RestApiAdminAPIException">
+                <soap:fault use="literal" name="RestApiAdminAPIException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getApiNames">
+            <soap:operation soapAction="urn:getApiNames" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getSequences">
+            <soap:operation soapAction="urn:getSequences" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="RestApiAdminSoap12Binding" type="tns:RestApiAdminPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getApiByName">
+            <soap12:operation soapAction="urn:getApiByName" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getResourceSource">
+            <soap12:operation soapAction="urn:getResourceSource" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addApi">
+            <soap12:operation soapAction="urn:addApi" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RestApiAdminAPIException">
+                <soap12:fault use="literal" name="RestApiAdminAPIException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteApi">
+            <soap12:operation soapAction="urn:deleteApi" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RestApiAdminAPIException">
+                <soap12:fault use="literal" name="RestApiAdminAPIException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getApiSource">
+            <soap12:operation soapAction="urn:getApiSource" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateApi">
+            <soap12:operation soapAction="urn:updateApi" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RestApiAdminAPIException">
+                <soap12:fault use="literal" name="RestApiAdminAPIException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateApiFromString">
+            <soap12:operation soapAction="urn:updateApiFromString" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RestApiAdminAPIException">
+                <soap12:fault use="literal" name="RestApiAdminAPIException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addApiFromString">
+            <soap12:operation soapAction="urn:addApiFromString" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RestApiAdminAPIException">
+                <soap12:fault use="literal" name="RestApiAdminAPIException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getApiNames">
+            <soap12:operation soapAction="urn:getApiNames" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getSequences">
+            <soap12:operation soapAction="urn:getSequences" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="RestApiAdminHttpBinding" type="tns:RestApiAdminPortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="getApiByName">
+            <http:operation location="getApiByName"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getResourceSource">
+            <http:operation location="getResourceSource"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addApi">
+            <http:operation location="addApi"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteApi">
+            <http:operation location="deleteApi"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getApiSource">
+            <http:operation location="getApiSource"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateApi">
+            <http:operation location="updateApi"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateApiFromString">
+            <http:operation location="updateApiFromString"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addApiFromString">
+            <http:operation location="addApiFromString"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getApiNames">
+            <http:operation location="getApiNames"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getSequences">
+            <http:operation location="getSequences"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="RestApiAdmin">
+        <wsdl:port name="RestApiAdminHttpsSoap11Endpoint" binding="tns:RestApiAdminSoap11Binding">
+            <soap:address location="https://localhost:8243/services/RestApiAdmin.RestApiAdminHttpsSoap11Endpoint"/>
+        </wsdl:port>
+        <wsdl:port name="RestApiAdminHttpsSoap12Endpoint" binding="tns:RestApiAdminSoap12Binding">
+            <soap12:address location="https://localhost:8243/services/RestApiAdmin.RestApiAdminHttpsSoap12Endpoint"/>
+        </wsdl:port>
+        <wsdl:port name="RestApiAdminHttpsEndpoint" binding="tns:RestApiAdminHttpBinding">
+            <http:address location="https://localhost:8243/services/RestApiAdmin.RestApiAdminHttpsEndpoint"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

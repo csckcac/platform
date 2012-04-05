@@ -1,0 +1,36 @@
+.gide-tab {
+    float: left;
+    background: -moz-linear-gradient(center top,#A5D2D5,#749395) repeat scroll 0 0 transparent;
+    padding: 1px 8px 3px;
+    margin-left: 2px;
+    text-shadow: 0 1px 0 #C0C0FF;
+    font-weight: bold;
+
+    border-radius: 5px 5px 0 0 ;
+}
+.gide-tab-hover {
+    color: #555555;
+}
+.gide-tab-selected {
+    background: -moz-linear-gradient(center top, #F0F8F9, #A5D2D5) repeat scroll 0 0 transparent;
+    text-shadow: 0 1px 0 #FFFFFF;
+}
+.gide-tab-bar-top{
+    border-bottom:3px solid #A5D2D5;
+}
+
+.gide-tab-bar-top:after {
+    clear: both;
+    content: " ";
+    display: block;
+    height: 0;
+    visibility: hidden;
+}
+
+
+.gide-tab-bar-clear {
+    clear: both;
+    height: 0;
+    overflow: hidden;
+}
+

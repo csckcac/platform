@@ -1,0 +1,870 @@
+<!--
+~ Copyright 2005-2008 WSO2, Inc. (http://wso2.com)
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <link href="css/mashup-docs.css" rel="stylesheet" type="text/css" media="all"/>
+        <link type="text/css" rel="stylesheet" href="css/SyntaxHighlighter.css" media="all"/>
+        <script language="javascript" src="js/shCore.js"></script>
+        <script language="javascript" src="js/shBrushJScript.js"></script>
+        <script language="javascript" src="js/shBrushJava.js"></script>
+        <script language="javascript" src="js/shBrushSql.js"></script>
+        <script language="javascript" src="js/shBrushXml.js"></script>
+    </head>
+    <body>
+
+        <div id="main-content">
+
+            <h1>Consuming Services</h1>
+
+            <p>Table of Contents</p>
+
+            <div class="toc">
+                <ul>
+                    <li>
+                        <a href="#Using">Using Stubs</a>
+                        <ul>
+                            <li>
+                                <a href="#Operations">Invoke Service Operations</a>
+                            </li>
+                            <li>
+                                <a href="#Setting">Setting Endpoints and Endpoint Addresses</a>
+                            </li>
+                            <li>
+                                <a href="#Asynchrono">Asynchronous Invocation</a>
+                            </li>
+                            <li>
+                                <a href="#Authentication">Authentication</a>
+                            </li>
+                            <li>
+                                <a href="#Using1">Using Stubs in Web Pages</a>
+                            </li>
+                            <li>
+                                <a href="#Using2">Using Stubs in Services</a>
+                            </li>
+                            <li>
+                                <a href="#Automatic">Automatic Type Conversions</a>
+                            </li>
+                            <li>
+                                <a href="#Utility">Utility Functions</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <h2 id="Using">Using Stubs</h2>
+
+            <p>The Javascript returned by "?stub" defines a JavaScript object
+                built specially for each Web Service. It serves two primary purposes:
+            </p>
+
+            <ol>
+                <li>Databinding. When
+                    appropriate, the stub converts XML to JavaScript datatypes.
+                </li>
+
+                <li>Abstract binding
+                    details. The stub takes care of all the details of formulating the message
+                    which are sent to the endpoint.
+                </li>
+            </ol>
+
+            <p>When you import the stub into a javaScript environment
+                (the mashup server, or a web page shown in a browser), a global object called 'services' is
+                created with a property as the name of the service. That is, for a service named
+                "helloworld", importing the helloworld stub will create an global object called
+                "services". By manipulating the properties and calling the methods of this
+                object, messages can be sent to an endpoint and the responses can be
+                received.
+            </p>
+
+            <h3 id="Operations">Invoke Service Operations</h3>
+
+            <p>The 'services' global object has the property of service name and that property has attributes as its 
+             operations exposed by that web service,end point details,etc.Format of global object 'services' for 'helloWorld' service is as follows.
+            </p>
+	    <pre name="code" class="js">
+            services={ 
+		     "admin/helloWorld" : { 
+						"$":{ 
+														          
+						    }
+
+						"operations":{
+						
+                                                 		"hello": {
+										response:{}
+										payloadJSON:{} 
+										payloadXML:{}
+										callback
+										onError
+									 }
+
+								}
+ 					  }
+
+
+			}</pre>
+      <p>According to above global object,you'll see there's a property name as service name "admin/helloWorld",and it contains two attributes as operations and $. "$" contains some further attributes related to service as endpointDetails,documentation,etc.And "operations" attribute contains some more attributes as response,payloadJSON(),payloadXML(),callback() and onError().</p><br/>
+<p>Out of these response,payloadJSON() and payloadXML() are defined in imported stub and you have to define other two methods in your consuming client.The property-serviceName of global object 'services' can be accessed as services.serviceName,but in the case of if the serviceName contains "." or "/",this wont work.So serviceName is accessed as ;</p>
+<pre name="code" class="js">var theResponse = services["admin/helloWorld"];</pre>
+<p>For instance,
+                if the "helloworld" service has a "hello" operation, after importing the stub
+                you can invoke the hello operation like this:
+</p>
+
+           <pre name="code" class="js">var theResponse = services["admin/helloWorld"].operations["hello"];</pre>
+
+            <p>Of course, in distributed application programming you
+                must be prepared for failures. For instance, say your internet connection
+                has gone down. I recommend right from the start wrapping this method with a
+                try-catch block so you can define some recovery information for the
+                operation:
+            </p>
+
+            <pre name="code" class="js">
+                try {
+                    var theResponse = services["admin/helloWorld"].operations["hello"];
+                } catch (e) {
+                    alert("Danger Will Robinson! " + e);
+                }
+            </pre>
+
+           
+            <h3 id="Setting">Setting Endpoints and Endpoint Addresses</h3>
+
+            <p>The global object corresponding to a service has a
+                property and two methods which help you determine which binding will be used
+                to invoke the service:
+            </p>
+
+            <table style="margin-left: 0.5in; border-collapse: collapse;" class="MsoTableGrid" border="1"
+                   cellpadding="5"
+                   cellspacing="0">
+                <tbody>
+                    <tr>
+                        <td>
+                            <b>{services["serviceName"]}.$.endpoint</b>
+                        </td>
+                        <td>This read/write property
+                            names the endpoint that will be invoked. This corresponds to the WSDL 2.0
+                            endpoint name - and for services exposed by the mashup, it is generally one
+                            of these values:
+
+                            <ul>
+                                <li>"SOAP12Endpoint"</li>
+                                <li>"SOAP11Endpoint"</li>
+                                <li>"HTTPEndoint"</li>
+                                <li>"SecureSOAP12Endpoint"</li>
+                                <li>"SecureSOAP11Endpoint"</li>
+                                <li>"SecureHTTPEndpoint"</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>{services["serviceName"]}.$.getAddress(endpoint)</b>
+                        </td>
+                        <td>This method takes an endpoint name (typically one of the above) and returns
+                            the endpoint address.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>{services["serviceName"]}.$.setAddress(endpoint, url)</b>
+                        </td>
+                        <td>This method sets the address for a particular named endpoint.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>{services["serviceName"]}.$.scriptInjectionCallback</b>
+                        </td>
+                        <td>This read/write property defines an optional callback when an operation is invoked,
+                            providing a hook for
+                            notification when a normal Web Service call is made versus an attempt at accessing an
+                            endpoint across
+                            domains within a browser environment. The callback parameter indicates whether script
+                            injection was
+                            used (true) or whether a normal Web service call was performed (false).
+                            <br/>
+                            <em>myMashup.scriptInjectionCallback = function(scriptInjection) {
+                                <br/>
+                                if (scriptInjection) alert("Using script injection");
+                                <br/>
+                                else alert("Normal Web services call");
+                                <br/>
+                                }
+                            </em>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>Typically you will use the "endpoint" property to select
+                an alternate binding if the default (SOAP 12) isn't appropriate for some
+                reason. You might use the getAddress and setAddress properties to reroute
+                the message, for instance to a monitoring program such as tcpmon (which
+                displays the messages and forwards them to their original destination.)
+            </p>
+
+            <pre name="code" class="js">
+                // choose an endpoint type
+                services["serviceName"].$.endpoint = "HTTPEndpoint";
+
+                // record where the messages were supposed to go
+                log("Original destination: " + services["serviceName"].$.getAddress("HTTPEndpoint"));
+
+                // redirect the messages to a different port for logging/debugging purposes.
+                services["serviceName"].$.setAddress("HTTPEndpoint", "http://localhost:12345/services/myService");
+            </pre>
+
+            <h3 id="Asynchrono">Asynchronous Invocation</h3>
+
+            <p>Because Web Services often involve communicating with
+                services located who-knows-where on the globe, it is usually good practice to
+                make the call asynchronously. In the browser, this prevents the UI from
+                blocking and becoming unresponsive. It offers better performance because you
+                can invoke several operations in parallel rather than waiting for one to
+                complete before starting the next. Asynchronous programming can be a bit
+                more complicated than regular synchronous calling, but the benefits are
+                usually well worth the additional complexity.
+            </p>
+
+            <p>The stubs support asynchronous calling through the
+                addition of two properties (callback, onError) on the method objects:
+            </p>
+
+            <pre name="code" class="js">
+		var helloWorld = services["admin/helloWorld"].operations["hello"];
+	        var payload = null;
+				
+
+		helloWorld.callback = function(payload) {
+			var responseXML = WSRequest.util._serializeToString(payload);	
+			
+		};
+		helloWorld.onError = handleError;
+		helloWorld(payload); 
+                
+		function handleError(error) {
+        	log (console, "Fault: " + error.reason + "\n\n" + error.detail);
+   		 };       
+
+                
+            </pre>
+
+            <p>The callback and onError handlers, when set to a
+                function, cause the operation to be executed asynchronously. That is, the
+                call is sent, and the execution continues (displaying the "waiting for
+                response" alert in this case).You can access the responseXML value(serialized string)
+		to check whether response has come properly or not.One more point has to be mentioned here,
+		helloWorld sample describing in section-http://wso2.org/project/mashup/2.2.0/docs/helloworldservice.html ,has no payload.But if a service has a payload,you can access it
+		by;
+            </p>
+		<pre name="code" class="js">
+		
+	        var payload = services["admin/serviceName"].operations["operationName"].payloadJSON();
+
+                
+            </pre>
+		<p>To give needed values to service payload;
+            </p>
+		<pre name="code" class="js">
+		
+	        var payload = services["admin/serviceName"].operations["operationName"].payloadJSON();				
+											payload["p:operationName"].payloadAttributeName.$ = value;
+                
+            </pre>
+
+            <p>The callback function will be called with a single
+                parameter - the response from the Web service as a serialized string. This response will be
+                unwrapped and typed just as the return value in the synchronous case.
+            </p>
+
+            <p>The onError function, returns an error object with the
+                following properties:
+            </p>
+
+            <p><strong>error.code</strong>: when the binding is SOAP, the
+                error.code will be the QName corresponding to the &lt;code&gt; element.
+            </p>
+
+            <p><strong>error.reason</strong>: a human readable error message.
+                When the binding is SOAP, the error.reason corresponds to the &lt;reason&gt;
+                element.
+            </p>
+
+            <p><strong>error.detail</strong>: additional information about the
+                failure, for instance a stack trace. When the binding is SOAP, the
+                error.detail corresponds to the &lt;detail&gt; element.
+            </p>
+
+            <h3 id="Authentication">Authentication</h3>
+
+            <p>A service requiring username/password authentication can be accessed by setting the
+                username and password anntations on the 'services' global object prior to calling an operation:
+            </p>
+
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <b>{services["serviceName"]}.$.username</b>
+                        </td>
+                        <td>Sets the username for authenticated calls.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>{services["serviceName"]}.$.password</b>
+                        </td>
+                        <td>Sets the password for authenticated calls.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <pre name="code" class="js">
+                services["helloworld"].$.username = "joey";
+                services["helloworld"].$.password = "fahr451!";
+                var helloWorld = services["admin/helloWorld"].operations["hello"];
+	        var payload = null;
+				
+
+		helloWorld.callback = function(payload) {
+			var responseXML = WSRequest.util._serializeToString(payload);	
+			
+		};
+		helloWorld.onError = handleError;
+		helloWorld(payload); 
+                
+		function handleError(error) {
+        	log (console, "Fault: " + error.reason + "\n\n" + error.detail);
+   		 }; 
+            </pre>
+
+            <h3 id="Using1">Using Stubs in Web Pages</h3>
+
+            <p>In order to use the stub in a Web page, you must import
+                it using a normal script import statement:
+            </p>
+
+            <pre name="code" class="js">
+                &lt;script type="text/javascript" src="?stub"&gt;&lt;/script&gt;
+            </pre>
+
+            <p>The stub depends upon a WSRequest object to actually
+                make the calls. If you are using IE, you can install WSRequest as an
+                Active-X Object <a href="http://wso2.org/projects/wsf/ajax/activex"
+                                  title="WSO2 Web Serivces Framework/AJAX ActiveX">here</a>. If you are
+                using
+                Firefox, you can install WSRequest as an XPI plugin <a
+                        href="http://dist.wso2.org/products/wsf/ajax/xpi/0.1/" title="AJAX XPI 0.1">here</a>.
+                Of course, it's often inconvenient to require a download in
+                a web page, so we provide a version written in JavaScript using the
+                XMLHTTPRequest object that is native in both IE and Firefox browsers. In
+                order to use the native version, import it like this:
+            </p>
+
+            <pre name="code" class="java">
+                &lt;script type="text/javascript" src="js/wso2/WSRequest.js"&gt;&lt;/script&gt;
+            </pre>
+
+            <p>The native version handles basic messaging with SOAP
+                1.2, SOAP 1.1, and HTTP endpoints, but doesn't support advanced features such
+                as message-level security, which will soon be supported more fully in the
+                Mashup Server.
+            </p>
+
+            <p>When using Firefox, E4X support is built in. While the
+                normal JavaScript stub works fine, returning DOM objects, for a version of
+                the stub that exposes XML results as native E4X XML objects, add the
+                "lang=e4x" parameter to the import:
+            </p>
+
+            <pre name="code" class="java">
+                &lt;script type="text/javascript;e4x=1" src="?stub&amp;lang=e4x"&gt;&lt;/script&gt;
+            </pre>
+
+            <h3 id="Using2">Using Stubs in Services</h3>
+
+            <p>When you wish to access one JavaScript service from
+                another, first make a copy of the stub that you wish to use (for now use
+                "?stub&amp;lang=e4x&amp;localhost=true", so you can get direct access to XML results as native
+                E4X objects), and place it in the {servicename}.resources folder. Then you
+                can include it in the JavaScript for your service as follows:
+            </p>
+
+            <pre name="code" class="java">
+                system.include("{location of stub}");
+            </pre>
+
+
+            <p>File paths in system.include are interpreted relative to
+                the .resources folder for that service. The affect of the include is as if
+                you had copied and pasted the text of the stub directly into the JavaScript
+                for the service.
+            </p>
+
+            <h3 id="Automatic">Automatic Type Conversions</h3>
+
+            <p>When a service returns a value (described by one of the
+                XML Schema built-in types), the stub converts that value into a native
+                JavaScript type as follows:
+            </p>
+
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>
+                                <b>XML Schema type</b>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <b>JavaScript type</b>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:anyType</p>
+                        </td>
+                        <td>
+                            <p>E4X XML object</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:anyURI</p>
+                        </td>
+                        <td>
+                            <p>string</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:base64Binary</p>
+                        </td>
+                        <td>
+                            <p>string</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:boolean</p>
+                        </td>
+                        <td>
+                            <p>boolean</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:byte</p>
+                        </td>
+                        <td>
+                            <p>number</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:date</p>
+                        </td>
+                        <td>
+                            <p>Date(yyyy, mm, dd, 0:00:00, tz)</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:dateTime</p>
+                        </td>
+                        <td>
+                            <p>Date(yyyy, mm, dd, hh:mm:ss, tz)</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:decimal</p>
+                        </td>
+                        <td>
+                            <p>string</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:double</p>
+                        </td>
+                        <td>
+                            <p>number</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:duration</p>
+                        </td>
+                        <td>
+                            <p>Number (in milliseconds)</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:ENTITIES</p>
+                        </td>
+                        <td>
+                            <p>Array of strings</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:ENTITY</p>
+                        </td>
+                        <td>
+                            <p>string</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:float</p>
+                        </td>
+                        <td>
+                            <p>number</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:gDay</p>
+                        </td>
+                        <td>
+                            <p>Date(1970, 1, dd, 0:00:00, tz)</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:gMonth</p>
+                        </td>
+                        <td>
+                            <p>Date(1970, mm, 1, 0:00:00, tz)</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:gMonthDay</p>
+                        </td>
+                        <td>
+                            <p>Date(1970, mm, dd, 0:00:00, tz)</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:gYear</p>
+                        </td>
+                        <td>
+                            <p>Date(yyyy, 1, 1, 0:00:00, tz)</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:gYearMonth</p>
+                        </td>
+                        <td>
+                            <p>Date (yyyy, mm, 1, 0:00:00, tz)</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:hexBinary</p>
+                        </td>
+                        <td>
+                            <p>string</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:ID</p>
+                        </td>
+                        <td>
+                            <p>string</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:IDREF</p>
+                        </td>
+                        <td>
+                            <p>string</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:IDREFS</p>
+                        </td>
+                        <td>
+                            <p>Array of strings</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:int</p>
+                        </td>
+                        <td>
+                            <p>number</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:integer</p>
+                        </td>
+                        <td>
+                            <p>number</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:language</p>
+                        </td>
+                        <td>
+                            <p>string</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:long</p>
+                        </td>
+                        <td>
+                            <p>number</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:Name</p>
+                        </td>
+                        <td>
+                            <p>string</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:NCName</p>
+                        </td>
+                        <td>
+                            <p>string</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:negativeInteger</p>
+                        </td>
+                        <td>
+                            <p>number</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:NMTOKEN</p>
+                        </td>
+                        <td>
+                            <p>string</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:NMTOKENS</p>
+                        </td>
+                        <td>
+                            <p>Array of strings</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:nonNegativeInteger</p>
+                        </td>
+                        <td>
+                            <p>number</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><p>xs:nonPositiveIntege</p>r
+                        </td>
+                        <td>
+                            <p>number</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:normalizedString</p>
+                        </td>
+                        <td>
+                            <p>string</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:NOTATION</p>
+                        </td>
+                        <td>
+                            <p>string</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:positiveInteger</p>
+                        </td>
+                        <td>
+                            <p>number</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:QName</p>
+                        </td>
+                        <td>
+                            <p>E4X QName object consisting of name, prefix, local-name, namespace-uri.
+                                (Note that DOM stubs don't support QNames yet.)
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:short</p>
+                        </td>
+                        <td>
+                            <p>number</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:string</p>
+                        </td>
+                        <td>
+                            <p>string</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:time</p>
+                        </td>
+                        <td>
+                            <p>Date(1970, 1, 1 hh:mm:ss, tz)</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:token</p>
+                        </td>
+                        <td>
+                            <p>string</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:unsignedByte</p>
+                        </td>
+                        <td>
+                            <p>number</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:unsignedInt</p>
+                        </td>
+                        <td>
+                            <p>number</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:unsignedLong</p>
+                        </td>
+                        <td>
+                            <p>number</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>xs:unsignedShort</p>
+                        </td>
+                        <td>
+                            <p>number</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 id="Utility">Utility Functions</h3>
+
+            <p>The 'services' global object also exposes some utility functions that can be used to further manipulate data
+                types:
+            </p>
+
+            <table>
+
+                <tbody>
+                    <tr>
+                        <td>
+                            <b>String services.utils.toXSdate(date)</b>
+                        </td>
+                        <td>Convert a Javascript Date to an xs:date format string (discarding the time information.)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>String services.utils.toXStime(date)</b>
+                        </td>
+                        <td>Convert a Javascript Date to an xs:time format string (discarding the date information.)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>String services.utils.toXSdateTime(date)</b>
+                        </td>
+                        <td>Convert a Javascript Date to an xs:dateTime format string.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Date services.utils.parseXSdateTime(date)</b>
+                        </td>
+                        <td>Convert an xs:date, xs:time, or xs:dateTime format string into a Javascript date.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>String services.utils.scheme(url)</b>
+                        </td>
+                        <td>Extract the scheme from a url.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>String services.utils.domain(url)</b>
+                        </td>
+                        <td>Extract the domain from a url.</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>String services.utils.domainNoPort(url)</b>
+                        </td>
+                        <td>Extract the domain from a url, trimming off any port information.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <script class="javascript">
+            dp.SyntaxHighlighter.BloggerMode();
+            dp.SyntaxHighlighter.HighlightAll('code');
+        </script>
+    </body>
+
+</html>

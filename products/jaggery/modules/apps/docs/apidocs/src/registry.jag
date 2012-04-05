@@ -1,0 +1,21 @@
+<%
+	//LOCAL_REPOSITORY, SYSTEM_GOVERNANCE, SYSTEM_CONFIGURATION, USER_GOVERNANCE, USER_CONFIGURATION
+	var registry = new Registry("SYSTEM_CONFIGURATION");
+	var resource = registry.newResource();
+	resource.content = "Hello Jaggery";
+	resource.addProperty("url", "http://wso2.com");
+	resource.addProperty("company", "WSO2 Inc.");
+	registry.put("wso2products.xml", resource);
+
+	//now we read the resource again
+	var res = registry.get("wso2products.xml");
+
+	//html to show the result
+	var resource = {};
+    resource.content = res.content.toXMLString();
+    resource.props = {};
+    resource.props.url = res.getProperty("url");
+    resource.props.company = res.getProperty("company")
+
+    print(resource);
+%>

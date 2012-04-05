@@ -1,0 +1,14 @@
+<div class="topbar">
+    <div class="fill">
+        <div class="container">
+            <a class="brand" href="/docs/index.jag"><img src="/docs/images/topbar_logo.png" alt=""/></a>
+            <ul class="nav">
+                <li id="home"><a href="/docs/index.jag">Home</a></li>
+                <li id="howto"><a href="/docs/howto.jag">How to</a></li>
+                <li id="docs"><a href="/docs/documentation.jag">Documentation</a></li>
+                <!--li><a href="/docs/samples.html">Samples</a></li-->
+                <li id="tryit"><a href="/docs/tryitview.jag">Try it!</a></li>
+            </ul>
+        </div>
+    </div>
+</div>

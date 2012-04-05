@@ -1,0 +1,20 @@
+<config>
+  <dbConfig name="wso2am">
+    <url>jdbc:h2:repository/database/WSO2AM_DB;DB_CLOSE_ON_EXIT=FALSE</url>
+    <userName>wso2carbon</userName>
+    <password>wso2carbon</password>
+    <driverName>org.h2.Driver</driverName>
+    <maxActive>50</maxActive>
+    <maxWait>60000</maxWait>
+    <minIdle>5</minIdle>
+  </dbConfig>
+  <apiMGTDataAgentConfig>
+    <bamServerThriftPort>7612</bamServerThriftPort>
+    <bamServerURL>https://localhost:9444/</bamServerURL>
+    <bamServerUser>admin</bamServerUser>
+    <bamServerPassword>admin</bamServerPassword>
+    <bamAgentTrustStore>repository/resources/security/client-truststore.jks</bamAgentTrustStore>
+    <bamAgentTrustStorePassword>wso2carbon</bamAgentTrustStorePassword>
+  </apiMGTDataAgentConfig>
+</config>
+

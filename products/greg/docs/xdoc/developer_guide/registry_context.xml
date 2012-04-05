@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  ~  Copyright (c) 2005-2008, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  ~
+  -->
+
+<!DOCTYPE html
+   PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" >
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title> WSO2 Governance Registry - Developer Guide </title>
+<link href="../css/greg-docs.css" rel="stylesheet"/>
+<link href="../styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+</head>
+<body>
+[ <a href="../docs_index.html"> Documentation Index </a> ]
+<h1> WSO2 Governance Registry - Developer User Guide </h1>
+
+<h2 id="overview">Overview</h2>
+
+<p>
+
+Registry Context is a very important class which contains set of attributes of the Registry which initialize during start up of the registry. All the configuration related information
+
+is stored in this object which will be used in all over the places in the Registry Core as well as in Management Bundles.
+
+</p>
+<h2>RegistryContext Attribute Description</h2>
+  <table border="1px">
+          <tbody>
+              <tr class="title">
+                  <td>
+                      Attribute Name
+                  </td>
+                  <td>
+                      A description about the Attribute
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+                      resourceMediaTypes
+                  </td>
+                  <td>
+                      <p>
+                     The list of media types defined and available to all resources stored on the
+             registry can be found here.
+		      </p>
+		  </td>
+              </tr>
+              <tr>
+                  <td>
+                      collectionMediaTypes
+                  </td>
+                  <td>
+                      <p>
+                     The list of media types defined and available to all collections stored on the
+             registry can be found here.
+		      </p>
+		  </td>
+              </tr>
+              <tr>
+                  <td>
+                      customUIMediaTypes
+                  </td>
+                  <td>
+                      <p>
+                     The list of media types for which custom content can be created are listed in
+             here.
+		      </p>
+		  </td>
+              </tr>
+              <tr>
+                  <td>
+                      clone
+                  </td>
+                  <td>
+                      <p>
+                     Whether this RegistryContext instance is the base instance of whether it is a
+             clone of the base instance.
+		      </p>
+		  </td>
+              </tr>
+              <tr>
+                  <td>
+                      realmService
+                  </td>
+                  <td>
+                      <p>
+                     This is an instance of the OSGi RealmService class which users can use to access user permission 
+		     related things like adding editing deleting users and roles and manage permissions of users in the userRealm.
+		      </p>
+		  </td>
+              </tr>
+	      <tr>
+                  <td>
+		    defaultDataBaseConfiguration
+                  </td>
+                  <td>
+                      <p>
+			This contains the database configurations which contains username password with data source information
+			and other useful database related information.
+                      </p>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+		    dbConfigs
+                  </td>
+                  <td>
+                      <p>
+			This is a Map which contains DataBaseConfiguration objects with Configuration Name as the key. So multiple database configurations are loading in to this Map which users
+			can examine the current database configurations in the Registry or if they want to add more they can always see whether those changes are applied by examining this map.
+                      </p>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+		    handlerManager
+                  </td>
+                  <td>
+                      <p>
+			This is the object which keeps all the handlers in it with set of Lists for each and every operation of the Registry interface with appropriate names.
+			As an example which extend put method in Registry interface will be at putHandlerMap which contains the appropriate Handler object and Filter.
+                      </p>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+		    customEditManager
+                  </td>
+                  <td>
+                      <p>
+			This contains the information about the Custom Editing. For certain resources Registry allow users have it's own Custom UI to edit that resource instead of standard view.
+			During the initialization all the custom Editing information will be load in to this Object at RegistryConfigurationProcessor class.
+                      </p>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+		    queryProcessors 
+                  </td>
+                  <td>
+                      <p>
+			This is again a list which keeps QueryProcessorConfiguration objects in it. There can be set of QueryProcessorConfiguration in the registry.xml 
+			and all the configurations are loading in to set of QueryProcessorConfiguration objects and simply add them to this list. 
+                      </p>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+		    queryProcessorManager
+                  </td>
+                  <td>
+                      <p>
+			This is the QueryProcessorManager instance, which is responsible of managing the query processors that are used to
+            execute various types of queries. 
+                      </p>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+		    repository
+                  </td>
+                  <td>
+                      <p>
+			User can get a Repository instance from RegistryContext object which user can call some of the methods like put when user wants to skip 
+			handlers and put certain resources in to Registry.
+                      </p>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+		    versionRepository
+                  </td>
+                  <td>
+                      <p>
+			This is the instance of the repository that deals with versioned resources and collections.
+                      </p>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+		    aspects
+                  </td>
+                  <td>
+                      <p>
+			RegistryContext provide set of methods to deal with Aspects like adding aspects get and remove aspects. This is a map which contains 
+			all set of aspects available in the current registry instance.
+                      </p>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+		    dataSource
+                  </td>
+                  <td>
+                      <p>
+			This is the data source object in for the current registry instance which is a javax.sql.DataSource object.
+                      </p>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+		    embeddedRegistryService
+                  </td>
+                  <td>
+                      <p>
+			User can always get an EmbeddedRegistryService through RegistryContext object and perform certain actions with the EmbeddedRegistryService. This is again one of the easy way to have
+			an access to registry by having a RegistryContext object.
+                      </p>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+		    remoteInstances
+                  </td>
+                  <td>
+                      <p>
+			This is a List which contains objects of RemoteConfiguration. RemoteConfiguration object contains information about remote User information if available. This object contains 
+			fields like id, url with username and password.
+                      </p>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+		    mounts
+                  </td>
+                  <td>
+                      <p>
+			This is a List which contains objects of Mount. Mount object contains information about a mount created using a remote configuration. This object contains 
+			fields like path, instanceId, targetPath, and about overwrite status.
+                      </p>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+		    versionOnChange
+                  </td>
+                  <td>
+                      <p>
+			This is a variable directly get from registry.xml and appropriate element name is versionResourceOnChange and if it's not set in registry.xml this boolean is set to false.
+                      </p>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+		    profilesPath
+                  </td>
+                  <td>
+                      <p>
+			This is the path at which user profiles are stored.
+                      </p>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+		    servicePath
+                  </td>
+                  <td>
+                      <p>
+			This is the path at which services are stored. Services can be added and managed via the Metadata menus and also as a
+            part of the WS-Discovery proxy which has been integrated into the Governance Registry.
+                      </p>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+		    readOnly
+                  </td>
+                  <td>
+                      <p>
+			This specifies whether the Registry instance backed by this RegistryContext is read-only.
+                      </p>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+		    registryRoot
+                  </td>
+                  <td>
+                      <p>
+			This defines the root of the Registry instance backed by this RegistryContext.
+                      </p>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+		    jdbcDir
+                  </td>
+                  <td>
+                      <p>
+			This defines JDBC Directory used by the associated Registry instance. This used in indexing supported
+            by Apache Lucene, which is useful for content search capabilities.
+                      </p>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+		    logWriter
+                  </td>
+                  <td>
+                      <p>
+			This gives a reference to the LogWriter instance used to generate activity logs. Activity logs are
+            stored on the registry for most operations, which can later be browsed via the corresponding
+            log feeds and activity search results.
+                      </p>
+                  </td>
+              </tr>
+
+          </tbody>
+      </table>
+
+</body>
+</html>

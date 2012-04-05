@@ -1,0 +1,13 @@
+<div id="services-store-tabs">
+    <div class="service-store-tabs">
+        <a name="topCharts" class="tab selected">Top Charts</a>
+        <a name="categories" class="tab">Categories</a>
+    </div>
+    <div style="clear:both"></div>
+
+    <div style="clear:both"></div>
+    <div class="content-box-left-side">
+        <% include("/includes/home/serviceStoreTabs/topRated.jag"); %>
+        <% include("/includes/home/serviceStoreTabs/recentlyAdded.jag"); %>
+    </div>
+</div>

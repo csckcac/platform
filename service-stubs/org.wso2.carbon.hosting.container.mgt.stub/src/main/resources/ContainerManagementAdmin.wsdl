@@ -1,0 +1,127 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://service.mgt.hosting.carbon.wso2.org" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.mgt.hosting.carbon.wso2.org">
+    <wsdl:documentation>ContainerManagementAdmin</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ns="http://org.apache.axis2/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+            <xs:element name="stopContainer">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="tenantName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="containerRoot" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="startContainer">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="tenantName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="containerRoot" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="createContainer">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="tenantName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="tenantPassword" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="zone" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="template" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="stopContainerRequest">
+        <wsdl:part name="parameters" element="ns1:stopContainer" />
+    </wsdl:message>
+    <wsdl:message name="createContainerRequest">
+        <wsdl:part name="parameters" element="ns1:createContainer" />
+    </wsdl:message>
+    <wsdl:message name="startContainerRequest">
+        <wsdl:part name="parameters" element="ns1:startContainer" />
+    </wsdl:message>
+    <wsdl:portType name="ContainerManagementAdminPortType">
+        <wsdl:operation name="stopContainer">
+            <wsdl:input message="tns:stopContainerRequest" wsaw:Action="urn:stopContainer" />
+        </wsdl:operation>
+        <wsdl:operation name="createContainer">
+            <wsdl:input message="tns:createContainerRequest" wsaw:Action="urn:createContainer" />
+        </wsdl:operation>
+        <wsdl:operation name="startContainer">
+            <wsdl:input message="tns:startContainerRequest" wsaw:Action="urn:startContainer" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="ContainerManagementAdminSoap11Binding" type="tns:ContainerManagementAdminPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="stopContainer">
+            <soap:operation soapAction="urn:stopContainer" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="createContainer">
+            <soap:operation soapAction="urn:createContainer" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="startContainer">
+            <soap:operation soapAction="urn:startContainer" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="ContainerManagementAdminSoap12Binding" type="tns:ContainerManagementAdminPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="stopContainer">
+            <soap12:operation soapAction="urn:stopContainer" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="createContainer">
+            <soap12:operation soapAction="urn:createContainer" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="startContainer">
+            <soap12:operation soapAction="urn:startContainer" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="ContainerManagementAdminHttpBinding" type="tns:ContainerManagementAdminPortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="stopContainer">
+            <http:operation location="stopContainer" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="createContainer">
+            <http:operation location="createContainer" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="startContainer">
+            <http:operation location="startContainer" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="ContainerManagementAdmin">
+        <wsdl:port name="ContainerManagementAdminHttpsSoap11Endpoint" binding="tns:ContainerManagementAdminSoap11Binding">
+            <soap:address location="https://10.100.2.91:9443/services/ContainerManagementAdmin.ContainerManagementAdminHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="ContainerManagementAdminHttpsSoap12Endpoint" binding="tns:ContainerManagementAdminSoap12Binding">
+            <soap12:address location="https://10.100.2.91:9443/services/ContainerManagementAdmin.ContainerManagementAdminHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="ContainerManagementAdminHttpsEndpoint" binding="tns:ContainerManagementAdminHttpBinding">
+            <http:address location="https://10.100.2.91:9443/services/ContainerManagementAdmin.ContainerManagementAdminHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

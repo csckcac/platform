@@ -1,0 +1,42 @@
+.arrowUp {
+    background-image: url(../images/up.gif) !important;
+}
+
+.arrowDown {
+    background-image: url(../images/down.gif) !important;
+}
+
+#middle {
+    line-height: 30px;
+}
+
+.noRuleBox {
+    color: #999;
+    border: solid 1px #ccc;
+    padding: 5px;
+    font-style: italic;
+}
+
+.text-box-big {
+    width: 420px !important;
+}
+
+.defaultText {
+    color: #666666;
+    font-style: italic;
+}
+
+.goToAdvance {
+    border: solid 1px #ccc;
+    background-color: #e3f2db;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.formTableTabed{
+    margin:10px;
+}
+
+.formTableTabed td{
+    padding:10px;
+}

@@ -1,0 +1,52 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<component xmlns="http://products.wso2.org/carbon">
+    <menus>
+        <menu>
+            <id>bam_menu_analyzer</id>
+            <i18n-key>main.analyzer</i18n-key>
+            <i18n-bundle>org.wso2.carbon.bam.analyzer.ui.i18n.Resources</i18n-bundle>
+            <parent-menu>configure_menu</parent-menu>
+            <link>../analyzer/index.jsp</link>
+            <url-params>name=bam</url-params>
+            <region>region1</region>
+            <order>3</order>
+            <style-class>home</style-class>
+            <icon>../analyzer/images/analyzerFramework.png
+            </icon>
+            <require-permission>/permission/admin/bam/view</require-permission>
+            <!--<require-super-tenant>true</require-super-tenant>-->
+            <!--<require-not-super-tenant>true</require-not-super-tenant>-->
+        </menu>
+        <menu>
+            <id>bam_index_analyzer</id>
+            <i18n-key>bam.database</i18n-key>
+            <i18n-bundle>org.wso2.carbon.bam.analyzer.ui.i18n.Resources</i18n-bundle>
+            <parent-menu>configure_menu</parent-menu>
+            <link>../analyzer/data-config.jsp</link>
+            <url-params>name=bam</url-params>
+            <region>region1</region>
+            <order>4</order>
+            <style-class>home</style-class>
+            <icon>../analyzer/images/bamDatabase.png</icon>
+            <require-permission>/permission/admin/bam/view</require-permission>
+            <!--<require-super-tenant>true</require-super-tenant>-->
+            <!--<require-not-super-tenant>true</require-not-super-tenant>-->
+        </menu>
+    </menus>
+</component>

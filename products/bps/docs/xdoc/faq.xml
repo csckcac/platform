@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+        <!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+        <title>@product.name@ - Frequently Asked Questions</title>
+        <link href="css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body xml:lang="en">
+        <h1>WSO2 Business Process Server (BPS) Frequently Asked Questions</h1>
+        <p>This article provides answers to most commonly asked questions regarding @product.name@,
+            its underlying Carbon framework, BPS deployment and configuration.</p>
+        <h2>Contents</h2>
+
+
+        <div class="toc">
+            <h3>General (General BPS questions - Non technical)</h3>
+            <ol>
+                <li>
+                    <a href="#general-whatis">What is @product.name@?</a>
+                </li>
+                <li>
+                    <a href="#general-license">What is the Open Source License of @product.name@?</a>
+                </li>
+                <li>
+                    <a href="#general-get-bps">How do I get @product.name@?</a>
+                </li>
+                <li>
+                    <a href="#general-support">Is their commercial support available for @product.name@?</a>
+                </li>
+                <li>
+                    <a href="#general-get-invloved">Can I get involved with the BPS development activities?</a>
+                </li>
+            </ol>
+
+            <h3>General (General BPS questions - Technical)</h3>
+            <ol>
+                <li>
+                    <a href="#bpel-designer-tool">What is the recommended WS-BPEL designer tool to develop BPEL processes?</a>
+                </li>
+                <li>
+                    <a href="#bpel-debug">Is it possible to debug a BPEL process?</a>
+                </li>
+                <li>
+                    <a href="#install-bpel-feature">How can I install BPEL feature to any of the carbon based servers?</a>
+                </li>
+                <li>
+                    <a href="#deployment-descriptor">Why do we need a Deployment Descriptor?</a>
+                </li>
+                <li>
+                    <a href="#bpel-process-configs">What are the BPEL Process Configurations?</a>
+                </li>
+                <li>
+                    <a href="#bpel-message-trace">How can I get a message trace for a particular BPEL invocation?</a>
+                </li>
+                <li>
+                    <a href="#secure-bpel-process">How can I secure a BPEL process?</a>
+                </li>
+                <li>
+                    <a href="#bpel-inside-proxy">Can I execute a BPEL process inside a proxy service created using WSO2 ESB?</a>
+                </li>
+                <li>
+                    <a href="#email-notifications">Can I send email-notifications using @product.name@?</a>
+                </li>
+                <li>
+                    <a href="#start-multiple-servers">How can I start multiple carbon server instances?</a>
+                </li>
+                <li>
+                    <a href="#bpel-cluster-configs">Can @product.name@ be deployed in clustered or other configurations intended to provide fault tolerance and increased performance?</a>
+                </li>
+                <li>
+                    <a href="#bpel-and-hs">How does WS-BPEL handle human tasks?</a>
+                </li>
+            </ol>
+
+            <h3>Core (Questions related to the Carbon core and underlying framework)</h3>
+            <ol>
+                <li>
+                    <a href="#core-underneath-tech">What are the technologies used underneath @product.name@?</a>
+                </li>
+                <li>
+                    <a href="#core-requirement">What are the minimum requirements to run @product.name@?</a>
+                </li>
+                <li>
+                    <a href="#core-how-to-deploy-libs">How do I deploy a third party library into the BPS?</a>
+                </li>
+                <li>
+                    <a href="#core-extend-mgmt-console">Can I extend the management console UI to add custom UIs ?</a>
+                </li>
+                <li>
+                    <a href="#core-external-store">Can I use an external user store to manage and authenticate @product.name@ users?</a>
+                </li>
+                <li>
+                    <a href="#core-omit-features">I don't want some of the features that come with @product.name@. Can I get rid of them?</a>
+                </li>
+                <li>
+                    <a href="#core-multiple-languages">Can I add support for other language for the management console ?</a>
+                </li>
+            </ol> 
+            <h3>Production (Questions related to production environments)</h3>
+            <ol>
+                <li>
+                    <a href="#production-hot-update-implications">What are the implications of hot deployment/hot update in a production environment?</a>
+                </li>
+                <li>
+                    <a href="#production-greg">I already have a WSO2 Governance Registry instance that contains my organization's SOA metadata.
+                    Can I get @product.name@ to use that registry instance as the metadata store?</a>
+                </li>
+            </ol>
+
+            <h3>Deployment Questions (Questions related to BPS deployments)</h3>
+            <ol>
+                <li>
+                    <a href="#deploy-jdk-verions">What are the versions of Java supported by the BPS?</a>
+                </li>
+                <li>
+                    <a href="#deployment-minimum-artifacts">What are the minimum artifacts required to deploy BPS?</a>
+                </li>
+                <li>
+                    <a href="#deployment-disable-mgmt-console">How can I disable the management console ?</a>
+                </li>
+                <li>
+                    <a href="#deployment-appservers">Does @product.name@ supports application server deployments?</a>
+                </li>
+                <li>
+                    <a href="#deployment-sysreq">What are the recommended hardware and software configurations for a typical @product.name@ deployment?</a>
+                </li>
+                <li>
+                    <a href="#deployment-custom-registry">How do I embed a third party registry with @product.name@?</a>
+                </li>
+                <li>
+                    <a href="#deployment-dbms">What is the database management system used in @product.name@?</a>
+                </li>
+                <li>
+                    <a href="#deployment-memallocation">How can I change the memory allocation for the @product.name@?</a>
+                </li>
+            </ol>
+        </div>
+
+        <h2>General (General BPS questions - Non technical)</h2>
+        <ol>
+            <li>
+                <h3 id="general-whatis">
+                    What is @product.name@?
+                </h3>
+                <p>
+		    WSO2 Business Process Server (BPS) is an easy-to-use Open Source Business Process Server that executes business processes written following WS-BPEL standard. It serves as the business process management and hosting environment for your SOA.	
+                </p>.
+            </li>
+            <li>
+                <h3 id="general-license">
+                    What is the Open Source License of @product.name@?
+                </h3>
+                <p>
+                    It is released under <a href="http://www.apache.org/licenses/LICENSE-2.0">
+                    Apache Software License Version 2.0</a>.
+                </p>
+            </li>
+            <li>
+                <h3 id="general-get-bps">
+                    How do I get @product.name@?
+                </h3>
+                <p>
+                    @product.name@ is distributed completely free and all the distribution packs can be downloaded from the
+                    WSO2 Oxygen Tank. @product.name@ can be downloaded as a binary distribution or a source distribution and
+                    if required one can even checkout the complete source code from the
+                    <a href="http://wso2.org/svn" >WSO2 SVN repository.</a>
+                </p>
+            </li>
+            <li>
+               <h3 id="general-support">
+                   Is their commercial support available for @product.name@?
+               </h3>
+                <p>
+                    We are committed to ensuring that your enterprise middleware deployment is completely supported
+                    from evaluation to production. Our unique approach ensures that all support leverages our open
+                    development methodology and is provided by the very same engineers who build the technology. For
+                    more details and to take advantage of this unique opportunity please visit
+                    <a href="http://wso2.com/support/">WSO2 Support</a>.
+
+                </p>
+            </li>
+            <li>
+                <h3 id="general-get-invloved">
+                    Can I get involved with the BPS development activities?
+                </h3>
+                <p>
+                    Not only you are allowed, but it is encouraged. You can start by subscribing to carbon-dev@wso2.org
+                    and architecture@wso2.org mailing lists. Feel free to provide ideas, feed back and help us make our
+                    code better. You can also report bugs on our issue tracker and you can even submit patches. Visit
+                    <a href="http://wso2.org/mail">WSO2 Oxygen Tank</a> for more information about our mailig lists.
+                </p>
+            </li>
+        </ol>
+
+<h2>General (General BPS questions - Technical)</h2>
+        <ol>
+            <li>
+                <h3 id="bpel-designer-tool">
+                    What is the recommended WS-BPEL designer tool to develop BPEL processes?
+                </h3>
+                <p>
+		    <a href="http://wso2.org/library/carbon-studio">WSO2 carbon-studio</a> is recommended.	
+                </p>
+            </li>
+            <li>
+                <h3 id="bpel-debug">
+                    Is it possible to debug a BPEL process?
+                </h3>
+                <p>
+                    Yes. You can debug a BPEL process using the Event Table in the Instance View of Management Console or using the Message Tracer.
+                </p>
+            </li>
+            <li>
+                <h3 id="install-bpel-feature">
+                    How can I install BPEL feature to any of the carbon based servers?
+                </h3>
+                <p>
+                    Get the BPEL feature from the P2 repository and install it using the Carbon feature configuration functionality.
+                </p>
+            </li>
+            <li>
+               <h3 id="deployment-descriptor">
+                   Why do we need a Deployment Descriptor?
+               </h3>
+                <p>
+                    The deploy.xml file acts as the deployment descriptor for a BPEL package. It maps configuration information such as partner links, WSDL service, port, etc for processes in a BPEL archive.
+                </p>
+            </li>
+            <li>
+                <h3 id="bpel-process-configs">
+                    What are the BPEL Process Configurations?
+                </h3>
+                <p>
+                    The BPEL Process Configurations represents activities carried out within a business process written using WS-BPEL. The Basic Activities includes; <code>Invoke, Receive, Reply, Assign, Compensate, CompensateScope, Exit, Throw, Empty, Rethrow, Wait.</code> The Structured Activities includes; <code>Flow, ForEach, If, Pick, RepeatUntil, Scope, Sequence, While.</code>
+                </p>
+            </li>
+            <li>
+                <h3 id="bpel-message-trace">
+                    How can I get a message trace for a particular BPEL invocation?
+                </h3>
+                <p>
+		    Add <code>log4j.logger.org.wso2.carbon.bpel.messagetrace=TRACE</code> to log4j.properties file and set the Carbon log file threshold to trace. i.e. <code>log4j.appender.CARBON_LOGFILE.threshold=TRACE</code> Now re-start the BPS server and send a single request to the BPEL process and find the log file: BPS_HOME/repository/logs/wso2carbon.log	
+                </p>
+            </li>
+            <li>
+                <h3 id="secure-bpel-process">
+                    How can I secure a BPEL process?
+                </h3>
+                <p>
+                    Apply either "Basic Security Scenarios" or "Advanced Security Scenarios" based on your preference.
+                </p>
+            </li>
+            <li>
+                <h3 id="bpel-inside-proxy">
+                    Can I execute a BPEL process inside a proxy service created using WSO2 ESB?
+                </h3>
+                <p>
+                    Yes. @product.name@ exposes business processes written in BPEL as web services. These services can be executed by a proxy service hosted in WSO2 Enterprise Service Bus (ESB) just like any other web service.
+                </p>
+            </li>
+            <li>
+               <h3 id="email-notifications">
+                   Can I send email-notifications using @product.name@?
+               </h3>
+                <p>
+                    Yes. Create a proxy service which sends out emails using WSO2 ESB and call this proxy service within the BPEL process using "invoke" activity
+                </p>
+            </li>
+            <li>
+                <h3 id="start-multiple-servers">
+                    How can I start multiple carbon server instances?
+                </h3>
+                <p>
+                    Change the offSet value in the carbon.xml in each instance to different values.
+                </p>
+            </li>
+            <li>
+                <h3 id="bpel-cluster-configs">
+                    Can @product.name@ be deployed in clustered or other configurations intended to provide fault tolerance and increased performance?
+                </h3>
+                <p>
+                    Yes @product.name@ supports clustering.
+                </p>
+            </li>
+            <li>
+                <h3 id="bpel-and-hs">
+                    How does WS-BPEL handle human tasks?
+                </h3>
+                <p>
+                    WS-BPEL 2.0 does not address human interactions directly. The BPEL4People is an extension to WS-BPEL 2.0 and is used to model human interactions within a BPEL process through the use of an extension activity.
+                </p>
+            </li>
+        </ol>
+
+        <h2>Core (Questions related to the Carbon core and underlying framework)</h2>
+        <ol>
+            <li>
+                <h3 id="core-underneath-tech">
+                    What are the technologies used underneath @product.name@?
+                </h3>
+                <p>
+                    @product.name@ is built on top of WSO2 Carbon, an OSGi based components framework for SOA. It is powered by
+                    <a href="http://ode.apache.org/">Apache ODE</a> as the underlying BPEL engine.
+                    Java is the primary programming language used to develop @product.name@.
+                </p>
+            </li>
+            <li>
+                <h3 id="core-requirement">
+                    What are the minimum requirements to run @product.name@?
+                </h3>
+                <ul>
+                    <li>
+                        <strong>Hardware Requirements:</strong>
+                        <ul>
+                            <li>Pentium 2GHz or equivalent processor</li>
+                            <li>512 MB of memory</li>
+                            <li>The extracted binary distribution of @product.name@ takes up about 150 MB of disk space</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Software Requirements:</strong>
+                        <ul>
+                            <li>Java Runtime Environment 1.6 or above</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+	    <li>                                                             
+                <h3 id="core-how-to-deploy-libs">
+                    How do I deploy a third party library into the BPS?
+                </h3>
+                <p>
+                    You can deploy any third party jar into the repository/components/lib directory. You also need to
+                    restart the server for the newly deployed jars to be picked up by the server runtime. @product.name@ will
+                    convert any jar files copied into the above location into OSGi bundles. These OSGi bundles are
+                    placed in the repository/components/dropins directory.                                                
+                </p>
+            </li>
+
+            <li>
+                <h3 id="core-extend-mgmt-console">
+                    Can I extend the management console UI to add custom UIs ?
+                </h3>
+                <p>
+                   Yes, you can extend the management console easily by writing a custom UI component.
+                </p>
+            </li>
+
+            <li>
+                <h3 id="core-external-store">
+                    Can I use an external user store to manage and authenticate @product.name@ users?
+                </h3>
+                <p>
+                    Yes you can. You can connect @product.name@ with any external user store implementation.
+                    The user store could be LDAP based, JDBC based or a custom developed user store. Please
+                    refer <a href="user.core/admin_guide.html">user core documentation</a> for more details.
+                </p>
+            </li>
+            <li>
+                <h3 id="core-omit-features">
+                    I don't want some of the features that come with @product.name@. Can I get rid of them?
+                </h3>
+                <p>
+                    Yes you can. Login to the BPS management console and browse to the Feature Manager. Open the
+                    'Installed Features' tab. From here you can uninstall any unwanted features.
+                </p>
+            </li>
+
+            <li>
+                <h3 id="core-multiple-languages">
+                    Can I add support for other language for the management console ? 
+                </h3>
+                <p>
+                    Yes, @product.name@ comes with a UI framework which supports i18n (internationalization) which lets you
+                    to use a language of your choice for the management console.
+                </p>
+            </li>
+
+        </ol>
+        <!-- ==================================================================================================== -->
+        <h2>Production (Questions related to production environments)</h2>
+
+        <ol>
+	    <li>
+                <h3 id="production-hot-update-implications">
+                    What are the implications of hot deployment/hot update in a production environment?
+                </h3>
+                <p>
+                    Hot deployment/hot update may take the system to inconsistent states if the updates are not properly
+                    coordinated. Therefore it is recommended to turn hot deployment and hot update off for
+                    production deployments.
+                </p>
+            </li>
+
+            <li>
+                <h3 id="production-greg">
+                    I already have a WSO2 Governance Registry instance that contains my organization's SOA metadata.
+                    Can I get @product.name@ to use that registry instance as the metadata store?
+                </h3>
+                <p>
+                    @product.name@ integrates with WSO2 Governance Registry out of the box. Refer the administrator
+                    guide for the necessary steps involved in remote registry configuration.
+                </p>
+            </li>
+        </ol>
+
+        <h2>Deployment (Questions related to BPS deployments)</h2>
+        <ol>
+            <li>
+                <h3 id="deployment-java-support">
+                    What are the versions of Java supported by the BPS?
+                </h3>
+                <p>
+                    It is tested on JDK 1.6. Sun JDK and IBM JDK are supported.
+                </p>
+            </li>
+
+            <li>
+                <h3 id="deployment-minimum-artifacts">
+                    What are the minimum artifacts required to deploy WSO2?
+                </h3>
+                <p>
+                    When deploying you can remove, $BPS_HOME/samples and $BPS_HOME/repository/samples from the
+                    standard distribution. 
+                </p>
+            </li>
+
+            <li>
+                <h3 id="deployment-disable-mgmt-console">
+                    How can I disable the management console ?
+                </h3>
+                <p>
+                    You can uninstall all the UI components using the feature manager which will disable the
+                    management console.
+                </p>
+            </li>
+
+           <li>
+                <h3 id="deployment-appservers">
+                    Does @product.name@ supports application server deployments?
+                </h3>
+                <p>
+                    It has been tested on the following app servers. JBoss, Weblogic, Websphere and Tomcat.
+                </p>
+            </li>
+
+            <li>
+                <h3 id="deployment-sysreq">
+                    What are the recommended hardware and software configurations for a typical @product.name@ deployment?
+                </h3>
+                <ul>
+                    <li>
+                        <strong>Hardware configuration:</strong>
+                        <ul>
+                            <li>2 GHz Multicore processor</li>
+                            <li>2 GB of memory</li>
+                            <li>The extracted binary distribution of @product.name@ takes up about 130 MB of disk space
+                                (@product.name@ will require more disk space at runtime to keep temporary files,
+                                server logs etc)
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Software Requirements:</strong>
+                        <ul>
+                            <li>Java Runtime Environment 1.6</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+
+            <li>
+                <h3 id="deployment-dbms">
+                    What is the database management system used in @product.name@?
+                </h3>
+                <p>
+                    @product.name@ ships with an embedded H2 database. However any database management system can be plugged
+                    into the BPS via JDBC. Database for BPEL engine persistence storage can be configured via datasources.properties file
+                    in repository/conf directory. Registry and user management related database configurations are available in
+                    repository/conf/registry.xml and repository/cong/user-mgt.xml files. @product.name@ has been tested
+                    with MySQL, Oracle, MSSQL and PostgreSQL databases.
+                </p>
+            </li>
+
+            <li>
+                <h3 id="deployment-memallocation">
+                    How can I change the memory allocation for the @product.name@?
+                </h3>
+                <p>
+                    The memory allocation setting are in the wso2server.sh. The user can change the memory allocation
+                    settings by changing the following configuration.
+                </p>
+                <p>
+                    -Xms256m -Xmx512m -XX:MaxPermSize=128m
+                </p>
+            </li>            
+        </ol>
+    </body>
+</html>

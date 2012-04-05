@@ -1,0 +1,17 @@
+<div id="service-info">
+    <div id="detailViewTabs" class="service-store-tabs">
+        <a name="overview" class="tab">Overview</a>
+        <a name="subscriptions" class="tab">My Subscriptions</a>
+        <a name="tryit" class="tab selected">Tryit</a>
+        <a name="documentation" class="tab selected">Documentation</a>
+        <a name="samples " class="tab">Samples</a>
+        <a name="stats " class="tab">Statistics</a>
+    </div>
+    <div style="clear:both"></div>
+    <% include("/includes/home/serviceInfo/overview.jag"); %>
+    <% include("/includes/home/serviceInfo/subscriptions.jag"); %>
+    <% include("/includes/home/serviceInfo/tryit.jag"); %>
+    <% include("/includes/home/serviceInfo/documentation.jag"); %>
+    <% include("/includes/home/serviceInfo/samples.jag"); %>
+    <% include("/includes/home/serviceInfo/stats.jag"); %>
+</div>

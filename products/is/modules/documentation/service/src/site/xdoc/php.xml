@@ -1,0 +1,86 @@
+<!--
+  ~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <title>PHP Relying Party Sample - Documentation</title>
+ 
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+
+    <link href="css/is-docs.css" rel="stylesheet"/>
+   </head>
+ <body>
+  <h1>PHP Relying Party Sample</h1>
+  <p>
+   <strong>IMPORTANT: This guide assumes that you are installing all the components of the Identity Solution in the same system, and that you try it out from the same system (i.e., we assume that everything is done within the localhost).
+</strong>
+  </p>
+  <p>This sample demonstrate how the relying party Apache2 module (mod_cspace) can be used to enable CardSpace authentication on a PHP web application.</p>
+  <p>Requirements:</p>
+  <ul>
+      <li>Apache2 Web Server (2.2.X or better) </li>
+      <li>libxml2 (2.6.20 or better)</li>
+      <li>libxmlsec1 (1.2.0  or better)</li>
+      <li>PHP (5.x) </li>
+  </ul>
+  <h2>Please follow the instructions listed below:</h2>
+  <h3>Step 1: Setting up Apache2 Web Server with SSL/TLS and PHP</h3>
+  <p>Please refer to the following web sites for information on installing Apache2 with SSL/TLS enabled:
+</p>
+  <ul>
+   <li>
+    <a href="http://httpd.apache.org/docs/2.2/ssl/">http://httpd.apache.org/docs/2.2/ssl/</a>
+   </li>
+   <li>
+    <a href="http://httpd.apache.org/docs/2.2/mod/mod_ssl.html">http://httpd.apache.org/docs/2.2/mod/mod_ssl.html</a>
+   </li>
+  </ul>
+  <p>
+   <strong>NOTE:</strong> you do not have to generate your own keys. This sample provides you the keys required. The <code>keys</code> directory contains three PEM encoded files: <code>server.key</code>, <code>server.crt</code>, and <code>cacert.crt</code> which are respectively the server private key, server certificate (public key), and certificate authority's certificate.</p>
+  <p>Your configuration of keys in <code>httpd.conf</code> should look like the following:</p>
+  <pre>SSLCertificateFile /usr/local/apache2/conf/keys/server.crt
+SSLCertificateKeyFile /usr/local/apache2/conf/keys/server.key
+SSLCACertificateFile /usr/local/apache2/conf/keys/cacert.crt</pre>
+  <h3>Step 2: Installing the CardSpace Module and the Sample Web Application</h3>
+  <p>If you built mod_cspace using the source distribution, copy <code>libmod_cspace.so</code> file inside the <code>.libs</code> directory to the modules directory of your apache installation as <code>mod_cspace.so</code>. (<code>/usr/lib/apache2/modules/</code> is the modules directory of a typical apache2 installation)</p>
+  <p>In addition, you may install the module using the packages provided (.deb and .rpm), if you happen to be on one of the supported platforms.
+  </p>
+  <p>Copy <code>php-sample</code> directory to the document root of your Apache2 installation.</p>
+  <h3>Step 3: Configuring Apache2 (<code>httpd.conf</code>)</h3>
+  <p>Following configuration should be done in your <code>httpd.conf</code> file of the Apache 2 installation. Assuming that you have copied the <code>php-sample</code> to the document root of your Apache2 installation, the configuration in your <code>httpd.conf</code> should be as follows: 
+</p>
+  <pre>LoadModule cspace_module modules/mod_cspace.so
+
+&lt;Location /php-sample/&gt;
+    UseCardSpaceAuth
+&lt;/Location&gt;</pre>
+  <strong>IMPORTANT:</strong>
+  <ul>
+   <li>If you copied the sample to a different directory please set the url accordingly. </li>
+   <li>Since you have already configured SSL/TLS, using mod_ssl, <code>SSLCertificateKeyFile</code> directive should be already in the <code>httpd.conf</code> file.</li>
+   <li>For further information on the configuration derectives that can be used with mod_cspace please refer to the <a href="mod_cspace-config.html">module configuration guide</a>.</li>
+  </ul>
+  <h3>Step 4: Run Apache2 server and try to login to the web app</h3>
+  <p>Point your browser to the location you have installed the web application. If you followed this guide properly, it will be <a href="https://localhost/php-sample/">https://localhost/php-sample/</a>.</p>
+  <p>Now you can try out the sample PHP web application.</p>
+  <strong>IMPORTANT:</strong>
+  <ul>
+   <li>You must use IE 7 or any other browser has CardSpace authentication support.</li>
+   <li>You must install the <code>cacert.crt</code> certificate in your certificate stores so that the web app will be trusted by the identity-selector.</li>
+  </ul>
+ </body>
+</html>

@@ -1,0 +1,196 @@
+Index: utils/CommonUtil.java
+===================================================================
+--- utils/CommonUtil.java	(revision 53771)
++++ utils/CommonUtil.java	(working copy)
+@@ -33,11 +33,13 @@
+ package org.wso2.carbon.registry.ws.utils;
+ 
+ 
++import java.io.ByteArrayInputStream;
+ import java.io.ByteArrayOutputStream;
+ import java.io.File;
+ import java.io.FileOutputStream;
+ import java.io.IOException;
+ import java.io.InputStream;
++import java.io.ObjectInputStream;
+ import java.io.ObjectOutputStream;
+ import java.io.OutputStream;
+ import java.util.Arrays;
+@@ -147,9 +149,10 @@
+             resource = new CollectionImpl();
+         }
+         else {
+-            resource = new ResourceImpl();            
++            resource = new ResourceImpl();
++            resource.setContent(content);
+         }
+-        resource.setContent(content);
++        
+         if (wsResource.getDescription() != null) resource.setDescription(wsResource.getDescription());
+         if (wsResource.getMediaType() != null) resource.setMediaType(wsResource.getMediaType());
+         if (wsResource.getProperties() != null) resource.setProperties(getPropertiesForResource(wsResource.getProperties(), new Properties()));
+@@ -179,9 +182,24 @@
+     }
+ 
+     public static Collection transformWSCollectiontoCollection(WSResource wsCollection, Object content) throws RegistryException {
+-
+-        Collection collection = (Collection) transformWSResourcetoResource(wsCollection, content);
+-        return collection;
++    	Collection collection = (Collection) transformWSResourcetoResource(wsCollection, content);
++    	if (content != null) {
++			InputStream in = new ByteArrayInputStream((byte[]) content);
++			Object object;
++			try {
++				ObjectInputStream ois = new ObjectInputStream(in);
++				object = ois.readObject();
++				if (object instanceof String[]) {
++					String[] strArray = (String[]) object;
++					collection.setContent(strArray);
++				}
++			} catch (IOException e) {
++				throw new RegistryException(e.getMessage(), e);
++			} catch (ClassNotFoundException e) {
++				throw new RegistryException(e.getMessage(), e);
++			}
++		}
++		return collection;
+     }
+ 
+     public static WSCollection transformCollectiontoWSCollection(Collection collection, DataHandler dataHandler) {
+@@ -241,38 +259,42 @@
+     }
+ 
+     public static DataHandler makeDataHandler(Resource resource, File tempFile) throws IOException, RegistryException{
+-        if (resource.getContent() == null) return null;
+-        try {
+-            InputStream is = null;
+-            OutputStream os = new FileOutputStream(tempFile);
++    	 try {
++ 			if (resource.getContent() == null) return null;
++ 		} catch (Exception e) {
++ 			return null;
++ 		}
++ 		try {
++ 			InputStream is = null;
++ 			OutputStream os = new FileOutputStream(tempFile);
+ 
+-            if (resource.getContent() instanceof String[]) {
+-                String[] strArray = (String[]) resource.getContent();
++ 			if (!(resource.getContent() instanceof byte[])) { // To accommodate collections and ratings
++ 				//                String[] strArray = (String[]) resource.getContent();
+ 
+-                ObjectOutputStream oos = new ObjectOutputStream(os);
+-                oos.writeObject(strArray);
+-            }
+-            else {
+-                try {
+-                    is = resource.getContentStream();
+-//                    os = new FileOutputStream(tempFile);  
+-                    try {  
+-                        byte[] buffer = new byte[4096];  
+-                        for (int n; (n = is.read(buffer)) != -1; )   
+-                            os.write(buffer, 0, n); 
+-                        os.flush();
+-                    } finally { os.close(); }  
+-                } finally { is.close(); }  
+-            }
+-        }catch (IOException e) { 
+-                throw e;
+-            } 
+-        
+-        //         Base64Binary base64Binary = new Base64Binary();
+-        FileDataSource fileDataSource = new FileDataSource(tempFile);
+-        DataHandler dataHandler = new DataHandler(fileDataSource);
++ 				ObjectOutputStream oos = new ObjectOutputStream(os);
++ 				oos.writeObject(resource.getContent());
++ 			}
++ 			else {
++ 				try {
++ 					is = resource.getContentStream();
++ 					//                    os = new FileOutputStream(tempFile);  
++ 					try {  
++ 						byte[] buffer = new byte[4096];  
++ 						for (int n; (n = is.read(buffer)) != -1; )   
++ 							os.write(buffer, 0, n); 
++ 						os.flush();
++ 					} finally { os.close(); }  
++ 				} finally { is.close(); }  
++ 			}
++ 		}catch (IOException e) { 
++ 			throw e;
++ 		} 
+ 
+-        return dataHandler;
++ 		//         Base64Binary base64Binary = new Base64Binary();
++ 		FileDataSource fileDataSource = new FileDataSource(tempFile);
++ 		DataHandler dataHandler = new DataHandler(fileDataSource);
++ 		tempFile.deleteOnExit();
++ 		return dataHandler;
+     }
+ 
+ 
+@@ -304,9 +326,9 @@
+             String[] key = (String[])registry[i].getTagCounts().keySet().toArray(new String[size]);
+             WSMap[] map = new WSMap[size];
+             for(int j=0;j<size;j++){
+-                map[i] = new WSMap();
+-                map[i].setKey(key[i]);
+-                map[i].setValue((String)registry[i].getTagCounts().get(key[i]));
++                map[j] = new WSMap();
++                map[j].setKey(key[j]);
++                map[j].setValue(registry[i].getTagCounts().get(key[j]).toString());
+             }
+             wsTRP[i].setTagCounts(map);
+             
+@@ -325,7 +347,7 @@
+             trPath[i].setTagCount(wsrpath[i].getTagCount());
+             WSMap[] map = wsrpath[i].getTagCounts();
+             for(int j=0;j<map.length;j++){
+-                pathmap.put(map[j].getKey(),map[j].getValue());
++                pathmap.put(map[j].getKey(),Long.parseLong(map[j].getValue()));
+             }
+             trPath[i].setTagCounts(pathmap);
+         }
+Index: WSRegistry.java
+===================================================================
+--- WSRegistry.java	(revision 53771)
++++ WSRegistry.java	(working copy)
+@@ -51,6 +51,7 @@
+ import org.wso2.carbon.registry.core.config.RegistryContext;
+ import org.wso2.carbon.registry.core.exceptions.RegistryException;
+ import org.wso2.carbon.registry.core.session.UserRegistry;
++import org.wso2.carbon.registry.core.utils.UUIDGenerator;
+ import org.wso2.carbon.registry.ws.utils.CommonUtil;
+ import org.wso2.carbon.utils.ServerConstants;
+ 
+@@ -61,7 +62,7 @@
+     private Log log = LogFactory.getLog(WSRegistry.class);
+ 
+     private String workingDir = System.getProperty(ServerConstants.WORK_DIR);
+-    private String tempFileName = "wsresource.tmp";
++    private String tempFileName = "wsresource.tmp" + UUIDGenerator.generateUUID();
+     private File tempFile = new File(workingDir,tempFileName);
+ 
+     public Resource newResource() throws RegistryException{
+@@ -99,7 +100,6 @@
+     public WSResource WSget(String path) throws RegistryException {
+         UserRegistry registry = CommonUtil.getRegistry();
+         Resource resource = registry.get(path);
+-        log.info("Code changed");
+         
+         //        WSResource wsResource = new WSResource();
+         //        wsResource.setContent(resource.getContent());
+@@ -489,7 +489,12 @@
+     public Association[] getAssociations(String resourcePath, String associationType)
+     throws RegistryException{
+         UserRegistry registry = CommonUtil.getRegistry();
+-        return registry.getAssociations(resourcePath,associationType);
++        Association[] associations = registry.getAssociations(resourcePath,associationType);
++//        if (associations.length == 0) {
++//        	associations = new Association[1];
++//        	associations[0] = new Association();
++//        }
++        return associations;
+     }
+ 
+     ////////////////////////////////////////////////////////

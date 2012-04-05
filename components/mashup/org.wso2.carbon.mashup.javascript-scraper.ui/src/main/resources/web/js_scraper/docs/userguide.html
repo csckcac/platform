@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<html>
+<head>
+    <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"/>
+    <title>Scraper Assistant - User Guide</title>
+    <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all"/>
+</head>
+
+<body style="direction: ltr;">
+<h1>The Scraper Assistant</h1><img src="images/scraper-assistant-link.png" alt="scraper-assistant-link.png"/><br/><br/>
+This tool allows you to easily create a Scraper Config XML to be used
+with the Scraper Host Object. The Scraper Host Object can be used in a Mashup as follows; <br/>
+<pre name="code" class="js">
+	var config = &lt;config&gt;
+                    &lt;var-def name='response'&gt;
+                        &lt;html-to-xml&gt;
+                            &lt;http method='get' url='http://ww2.wso2.org/~builder/'/&gt;
+                        &lt;/html-to-xml&gt;
+                    &lt;/var-def&gt;
+                &lt;/config&gt;;
+	var scraper = new Scraper(config);
+	var response = scraper.response;
+</pre>
+<br/>
+The above XML segment can be generated via this tool using a Menu Driven interface, which writes the XML for
+you.<br/><br/><br/><img src="images/ui-intro.png" alt="ui-intro.png"/><br/><br/><br/>You can also use this tool to
+harvest XPath expressions off target Web Pages easily.<br/><br/><span style="font-style: italic; font-weight: bold;">Step 1</span>
+- Enter the URL to scrape as illustrated below<br/><br/><br/><img src="images/step1.png"
+                                                                  alt="step1.png"/><br/><br/><span
+        style="font-style: italic; font-weight: bold;">Step 2</span> - Highlight and click the page element to harvest
+its XPath expression.<br/><br/><br/><img src="images/step2.png" alt="step2.png"/><br/><br/><br/>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ ~ Copyright (c) 2009-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ Licensed under the Apache License, Version 2.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~      http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>org.wso2.carbon</groupId>
+        <artifactId>bam2</artifactId>
+        <version>4.0.0-SNAPSHOT</version>
+    </parent>
+
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.wso2.carbon</groupId>
+    <artifactId>org.wso2.carbon.bam2.analyzer</artifactId>
+    <packaging>bundle</packaging>
+    <name>WSO2 Carbon - bam2 Analyzer</name>
+    <description>A custom wso2 products or solution</description>
+    <url>http://wso2.org</url>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-core</artifactId>
+            <version>0.20.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.task</artifactId>
+            <version>${wso2carbon.version.bam2}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.task.services</artifactId>
+            <version>${wso2carbon.version.bam2}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.task.ui</artifactId>
+            <version>${wso2carbon.version.bam2}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.synapse</groupId>
+            <artifactId>synapse-tasks</artifactId>
+            <version>${version.synapse}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.synapse</groupId>
+            <artifactId>synapse-commons</artifactId>
+            <version>${version.synapse}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.axis2.wso2</groupId>
+            <artifactId>axis2</artifactId>
+            <version>${axis2.osgi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.cassandra.server</artifactId>
+            <version>${wso2carbon.version.bam2}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.cassandra.dataaccess</artifactId>
+            <version>${wso2carbon.version.bam2}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.authenticator.proxy</artifactId>
+            <version>${wso2carbon.version.bam2}</version>
+        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.wso2.carbon</groupId>-->
+        <!--<artifactId>org.wso2.carbon.dataservices.core</artifactId>-->
+        <!--<version>${wso2carbon.version.bam2}</version>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.registry.core</artifactId>
+            <version>${wso2carbon.version.bam2}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.authenticator.stub</artifactId>
+            <version>${wso2carbon.version.bam2}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.utils</artifactId>
+            <version>${wso2carbon.version.bam2}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.bam2.core</artifactId>
+            <version>${wso2carbon.version.bam2}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-scr-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>
+                            ${project.artifactId}
+                        </Bundle-SymbolicName>
+
+                        <!--<Bundle-Activator>org.wso2.carbon.bam2.core.internal.Activator</Bundle-Activator>-->
+                        <!--<Axis2RequiredServices>org.wso2.carbon.bam2.core.deployment.bam2DeploymentInterceptor</Axis2RequiredServices>-->
+
+                        <Private-Package>
+                            org.wso2.carbon.bam.analyzer.internal
+                        </Private-Package>
+                        <Export-Package>
+                            org.wso2.carbon.bam.analyzer.*
+                        </Export-Package>
+                        <Import-Package>
+                            !org.wso2.carbon.bam.analyzer.*,
+                            org.wso2.carbon.bam.receiver.*,
+                            org.apache.synapse.*,
+                            org.wso2.carbon.task.*,
+                            org.apache.axis2.*,
+                            org.apache.axiom.*,
+                            org.apache.commons.logging.*,
+                            org.wso2.carbon.bam2.core.*,
+                            *;resolution:=optional
+                        </Import-Package>
+                        <DynamicImport-Package>*</DynamicImport-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>target/generated-code/src</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,48 @@
+<module name="wso2bampubclientstat" class="org.wso2.carbon.bam.data.publisher.clientstats.modules.UserDefinedModule">
+	<OutFlow>
+	<handler name="GlobalRequestCounter"
+			class="org.wso2.carbon.bam.data.publisher.clientstats.modules.GlobalRequestCountHandler">
+			<order phase="Transport" />
+		</handler>
+		<handler name="ServiceRequestCounter"
+                 class="org.wso2.carbon.bam.data.publisher.clientstats.modules.ServiceRequestCountHandler">
+            <order phase="Dispatch"/> 
+        </handler>
+		<handler name="OperationInCounter"
+			class="org.wso2.carbon.bam.data.publisher.clientstats.modules.InOperationCountHandler">
+			<order phase="OpPhase" />
+		</handler>
+		<handler name="ResponseTimeHandler"
+			class="org.wso2.carbon.bam.data.publisher.clientstats.modules.ResponseTimeHandler">
+			<order phaseFirst="true" phase="Transport" />
+		</handler>
+		<handler name="UserDefinedHandler" class="org.wso2.carbon.bam.data.publisher.clientstats.modules.UserDefinedHandler">
+			<order phase="OpPhase" />
+		</handler>
+		
+	</OutFlow>
+	<InFlow>
+	<handler name="GlobalResponseCounter"
+			class="org.wso2.carbon.bam.data.publisher.clientstats.modules.GlobalResponseCountHandler">
+			<order phase="OpPhase" />
+		</handler>
+		<handler name="OperationOutCounter"
+			class="org.wso2.carbon.bam.data.publisher.clientstats.modules.OutOperationCountHandler">
+			<order phase="OpPhase" />
+		</handler>
+		<handler name="ResponseTimeHandler"
+			class="org.wso2.carbon.bam.data.publisher.clientstats.modules.ResponseTimeHandler">
+			<order phase="MessageOut" phaseLast="true" />
+		</handler>
+		<handler name="ClientStatisticsHandler"
+			class="org.wso2.carbon.bam.data.publisher.clientstats.modules.ClientStatisticsHandler">
+			<order phase="OpPhase" />
+		</handler>
+	</InFlow>
+	<InFaultFlow>
+		<handler name="FaultCountHandler" class="org.wso2.carbon.bam.data.publisher.clientstats.modules.FaultCountHandler">
+			<order phase="Dispatch" />
+		</handler>
+	</InFaultFlow>
+	<parameter name="adminModule" locked="true">true</parameter>
+</module>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+        xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>csg-features</artifactId>
+        <groupId>org.wso2.carbon</groupId>
+        <version>4.0.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>org.wso2.carbon</groupId>
+    <artifactId>org.wso2.carbon.cloud.csg.agent.server.feature</artifactId>
+    <name>WSO2 Carbon - CSG Agent server feature</name>
+    <packaging>pom</packaging>
+    <url>http://maven.apache.org</url>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.cloud.csg.common</artifactId>
+            <version>${wso2carbon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.cloud.csg.agent</artifactId>
+            <version>${wso2carbon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>libthrift.wso2</groupId>
+            <artifactId>libthrift</artifactId>
+            <version>${libthrift.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.cloud.csg.stub</artifactId>
+            <version>${wso2carbon.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.wso2.maven</groupId>
+                <artifactId>carbon-p2-plugin</artifactId>
+                <version>${carbon.p2.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>4-p2-feature-generation</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>p2-feature-gen</goal>
+                        </goals>
+                        <configuration>
+                            <id>org.wso2.carbon.cloud.csg.agent.server</id>
+                            <propertiesFile>../../etc/feature.properties</propertiesFile>
+                            <adviceFile>
+                                <properties>
+                                    <propertyDef>org.wso2.carbon.p2.category.type:server</propertyDef>
+                                    <propertyDef>org.eclipse.equinox.p2.type.group:false</propertyDef>
+                                </properties>
+                            </adviceFile>
+                            <bundles>
+                                <bundleDef>libthrift.wso2:libthrift</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cloud.csg.agent</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cloud.csg.common</bundleDef>
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.cloud.csg.stub:${wso2carbon.version}</bundleDef>
+                            </bundles>
+                            <importFeatures>
+                                <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>
+                            </importFeatures>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <libthrift.version>0.8.0.wso2v1</libthrift.version>
+    </properties>
+
+</project>

@@ -1,0 +1,60 @@
+<!--
+  ~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <body>
+        <p>[<a href="http://wso2.org/downloads/gadget-server">Download</a>]
+            | [<a href="index_docs.html">Documentation Home</a>] | [<a href="release_notes.html">Release Note</a>]
+        </p>
+        <div id="main-content">
+        <h1>Gadget Archive Deployment</h1>
+<p>A gadget archive (.dar file) can be created by using Carbon Studio and it resides in a cApp(.car file).The tree structure of a gadget archive is as follows.
+<pre>
+.
+|-- css files folder
+|-- images folder  
+|-- gadget-conf.xml
+`-- gadget.xml
+</pre>
+</p>
+<p>
+gadget-conf.xml file contains the name of the gadget,its author,description and the path to which the .dar file should deploy in gadget server.The structure of a sample gadget-conf.xml is as follows;
+<pre>
+
+&lt;gadget>
+	&lt;name&gt;testGadget&lt;/name&gt;
+	&lt;author&gt;WSO2&lt;/author&gt;
+	&lt;path&gt;/registry/resource/_system/config/repository/gadget-server/gadgets/carGadget/gadget1.xml&lt;/path&gt;
+       	&lt;description&gt;This is for testing.&lt;/description&gt;
+&lt;/gadget&gt;
+</pre>
+ </p>
+            <h2>Deploy a Gadget Archive</h2>
+            <p>A user can deploy a gadget archive into the gadget server by uploading the whole cApp file which contains .dar file by management console. 
+<br /><br />
+                <img alt="add gadget archive" src="images/add_gadget_archive.png" space="preserve" xmlns="http://www.w3.org/1999/xhtml" />
+            </p>
+<p>After successfully uploaded the gadget archive,it will be deployed to the gadget server and stored in the path mentioned in gadget-conf.xml.
+<br /><br />
+                <img alt="registry view" src="images/registry-gadgets-view.png" space="preserve" xmlns="http://www.w3.org/1999/xhtml" />
+<br /><br />
+Finally the gadget could access through the gadget repository.
+ </p>
+
+
+</div>
+ </body>
+</html>

@@ -1,0 +1,81 @@
+<pre style="line-height: 100%;font-family:monospace;background-color:#ffffff; border-width:0.01mm; border-color:#000000; border-style:solid;padding:4px;font-size:10pt;"><span style="color:#808080;background-color:#ffffff;">/*
+* Licensed to the Apache Software Foundation (ASF) under one or more
+* contributor license agreements.  See the NOTICE file distributed with
+* this work for additional information regarding copyright ownership.
+* The ASF licenses this file to You under the Apache License, Version 2.0
+* (the "License"); you may not use this file except in compliance with
+* the License.  You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+
+</span><span style="color:#000080;background-color:#ffffff;">package</span><span style="background-color:#ffffff;"> jsp2.examples.simpletag;
+
+</span><span style="color:#000080;background-color:#ffffff;">import</span><span style="background-color:#ffffff;"> javax.servlet.jsp.JspException;
+</span><span style="color:#000080;background-color:#ffffff;">import</span><span style="background-color:#ffffff;"> javax.servlet.jsp.tagext.JspFragment;
+</span><span style="color:#000080;background-color:#ffffff;">import</span><span style="background-color:#ffffff;"> javax.servlet.jsp.tagext.SimpleTagSupport;
+</span><span style="color:#000080;background-color:#ffffff;">import</span><span style="background-color:#ffffff;"> java.io.IOException;
+
+</span><span style="color:#008000;background-color:#ffffff;">/**
+ * SimpleTag handler that accepts takes three attributes of type
+ * JspFragment and invokes then in a random order.
+ */
+</span><span style="color:#000080;background-color:#ffffff;">public</span><span style="background-color:#ffffff;"> </span><span style="color:#000080;background-color:#ffffff;">class</span><span style="background-color:#ffffff;"> ShuffleSimpleTag </span><span style="color:#000080;background-color:#ffffff;">extends</span><span style="background-color:#ffffff;"> SimpleTagSupport {
+    </span><span style="color:#000080;background-color:#ffffff;">private</span><span style="background-color:#ffffff;"> JspFragment fragment1;
+    </span><span style="color:#000080;background-color:#ffffff;">private</span><span style="background-color:#ffffff;"> JspFragment fragment2;
+    </span><span style="color:#000080;background-color:#ffffff;">private</span><span style="background-color:#ffffff;"> JspFragment fragment3;
+
+    </span><span style="color:#000080;background-color:#ffffff;">public</span><span style="background-color:#ffffff;"> </span><span style="color:#000080;background-color:#ffffff;">void</span><span style="background-color:#ffffff;"> doTag() </span><span style="color:#000080;background-color:#ffffff;">throws</span><span style="background-color:#ffffff;"> JspException, IOException {
+        </span><span style="color:#000080;background-color:#ffffff;">switch</span><span style="background-color:#ffffff;">( (</span><span style="color:#000080;background-color:#ffffff;">int</span><span style="background-color:#ffffff;">)(Math.</span><span style="color:#800000;background-color:#ffffff;">random(</span><span style="background-color:#ffffff;">) * </span><span style="color:#0000ff;background-color:#ffffff;">6</span><span style="background-color:#ffffff;">) ) {
+            </span><span style="color:#000080;background-color:#ffffff;">case</span><span style="background-color:#ffffff;"> </span><span style="color:#0000ff;background-color:#ffffff;">0</span><span style="background-color:#ffffff;">:
+                </span><span style="color:#660e7a;background-color:#ffffff;">fragment1.</span><span style="background-color:#ffffff;">invoke( </span><span style="color:#000080;background-color:#ffffff;">null</span><span style="background-color:#ffffff;"> );
+                </span><span style="color:#660e7a;background-color:#ffffff;">fragment2.</span><span style="background-color:#ffffff;">invoke( </span><span style="color:#000080;background-color:#ffffff;">null</span><span style="background-color:#ffffff;"> );
+                </span><span style="color:#660e7a;background-color:#ffffff;">fragment3.</span><span style="background-color:#ffffff;">invoke( </span><span style="color:#000080;background-color:#ffffff;">null</span><span style="background-color:#ffffff;"> );
+                </span><span style="color:#000080;background-color:#ffffff;">break</span><span style="background-color:#ffffff;">;
+            </span><span style="color:#000080;background-color:#ffffff;">case</span><span style="background-color:#ffffff;"> </span><span style="color:#0000ff;background-color:#ffffff;">1</span><span style="background-color:#ffffff;">:
+                </span><span style="color:#660e7a;background-color:#ffffff;">fragment1.</span><span style="background-color:#ffffff;">invoke( </span><span style="color:#000080;background-color:#ffffff;">null</span><span style="background-color:#ffffff;"> );
+                </span><span style="color:#660e7a;background-color:#ffffff;">fragment3.</span><span style="background-color:#ffffff;">invoke( </span><span style="color:#000080;background-color:#ffffff;">null</span><span style="background-color:#ffffff;"> );
+                </span><span style="color:#660e7a;background-color:#ffffff;">fragment2.</span><span style="background-color:#ffffff;">invoke( </span><span style="color:#000080;background-color:#ffffff;">null</span><span style="background-color:#ffffff;"> );
+                </span><span style="color:#000080;background-color:#ffffff;">break</span><span style="background-color:#ffffff;">;
+            </span><span style="color:#000080;background-color:#ffffff;">case</span><span style="background-color:#ffffff;"> </span><span style="color:#0000ff;background-color:#ffffff;">2</span><span style="background-color:#ffffff;">:
+                </span><span style="color:#660e7a;background-color:#ffffff;">fragment2.</span><span style="background-color:#ffffff;">invoke( </span><span style="color:#000080;background-color:#ffffff;">null</span><span style="background-color:#ffffff;"> );
+                </span><span style="color:#660e7a;background-color:#ffffff;">fragment1.</span><span style="background-color:#ffffff;">invoke( </span><span style="color:#000080;background-color:#ffffff;">null</span><span style="background-color:#ffffff;"> );
+                </span><span style="color:#660e7a;background-color:#ffffff;">fragment3.</span><span style="background-color:#ffffff;">invoke( </span><span style="color:#000080;background-color:#ffffff;">null</span><span style="background-color:#ffffff;"> );
+                </span><span style="color:#000080;background-color:#ffffff;">break</span><span style="background-color:#ffffff;">;
+            </span><span style="color:#000080;background-color:#ffffff;">case</span><span style="background-color:#ffffff;"> </span><span style="color:#0000ff;background-color:#ffffff;">3</span><span style="background-color:#ffffff;">:
+                </span><span style="color:#660e7a;background-color:#ffffff;">fragment2.</span><span style="background-color:#ffffff;">invoke( </span><span style="color:#000080;background-color:#ffffff;">null</span><span style="background-color:#ffffff;"> );
+                </span><span style="color:#660e7a;background-color:#ffffff;">fragment3.</span><span style="background-color:#ffffff;">invoke( </span><span style="color:#000080;background-color:#ffffff;">null</span><span style="background-color:#ffffff;"> );
+                </span><span style="color:#660e7a;background-color:#ffffff;">fragment1.</span><span style="background-color:#ffffff;">invoke( </span><span style="color:#000080;background-color:#ffffff;">null</span><span style="background-color:#ffffff;"> );
+                </span><span style="color:#000080;background-color:#ffffff;">break</span><span style="background-color:#ffffff;">;
+            </span><span style="color:#000080;background-color:#ffffff;">case</span><span style="background-color:#ffffff;"> </span><span style="color:#0000ff;background-color:#ffffff;">4</span><span style="background-color:#ffffff;">:
+                </span><span style="color:#660e7a;background-color:#ffffff;">fragment3.</span><span style="background-color:#ffffff;">invoke( </span><span style="color:#000080;background-color:#ffffff;">null</span><span style="background-color:#ffffff;"> );
+                </span><span style="color:#660e7a;background-color:#ffffff;">fragment1.</span><span style="background-color:#ffffff;">invoke( </span><span style="color:#000080;background-color:#ffffff;">null</span><span style="background-color:#ffffff;"> );
+                </span><span style="color:#660e7a;background-color:#ffffff;">fragment2.</span><span style="background-color:#ffffff;">invoke( </span><span style="color:#000080;background-color:#ffffff;">null</span><span style="background-color:#ffffff;"> );
+                </span><span style="color:#000080;background-color:#ffffff;">break</span><span style="background-color:#ffffff;">;
+            </span><span style="color:#000080;background-color:#ffffff;">case</span><span style="background-color:#ffffff;"> </span><span style="color:#0000ff;background-color:#ffffff;">5</span><span style="background-color:#ffffff;">:
+                </span><span style="color:#660e7a;background-color:#ffffff;">fragment3.</span><span style="background-color:#ffffff;">invoke( </span><span style="color:#000080;background-color:#ffffff;">null</span><span style="background-color:#ffffff;"> );
+                </span><span style="color:#660e7a;background-color:#ffffff;">fragment2.</span><span style="background-color:#ffffff;">invoke( </span><span style="color:#000080;background-color:#ffffff;">null</span><span style="background-color:#ffffff;"> );
+                </span><span style="color:#660e7a;background-color:#ffffff;">fragment1.</span><span style="background-color:#ffffff;">invoke( </span><span style="color:#000080;background-color:#ffffff;">null</span><span style="background-color:#ffffff;"> );
+                </span><span style="color:#000080;background-color:#ffffff;">break</span><span style="background-color:#ffffff;">;
+        }
+    }
+
+    </span><span style="color:#000080;background-color:#ffffff;">public</span><span style="background-color:#ffffff;"> </span><span style="color:#000080;background-color:#ffffff;">void</span><span style="background-color:#ffffff;"> setFragment1( JspFragment fragment1 ) {
+        </span><span style="color:#000080;background-color:#ffffff;">this</span><span style="background-color:#ffffff;">.</span><span style="color:#660e7a;background-color:#ffffff;">fragment1 </span><span style="background-color:#ffffff;">= fragment1;
+    }
+
+    </span><span style="color:#000080;background-color:#ffffff;">public</span><span style="background-color:#ffffff;"> </span><span style="color:#000080;background-color:#ffffff;">void</span><span style="background-color:#ffffff;"> setFragment2( JspFragment fragment2 ) {
+        </span><span style="color:#000080;background-color:#ffffff;">this</span><span style="background-color:#ffffff;">.</span><span style="color:#660e7a;background-color:#ffffff;">fragment2 </span><span style="background-color:#ffffff;">= fragment2;
+    }
+
+    </span><span style="color:#000080;background-color:#ffffff;">public</span><span style="background-color:#ffffff;"> </span><span style="color:#000080;background-color:#ffffff;">void</span><span style="background-color:#ffffff;"> setFragment3( JspFragment fragment3 ) {
+        </span><span style="color:#000080;background-color:#ffffff;">this</span><span style="background-color:#ffffff;">.</span><span style="color:#660e7a;background-color:#ffffff;">fragment3 </span><span style="background-color:#ffffff;">= fragment3;
+    }
+}</span></pre>

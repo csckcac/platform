@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta http-equiv="X-UA-Compatible" content="IE=8">
+            <meta charset="utf-8">
+                <title>Jaggery - Delicious Javascript</title>
+                <meta name="description" content="">
+                    <meta name="author" content="">
+
+                        <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+                        <!--[if lt IE 9]>
+                          <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+                        <![endif]-->
+
+                        <!-- Le styles -->
+                        <link href="css/bootstrap.css" rel="stylesheet">
+                            <style type="text/css">
+                            body {
+                                padding-top: 60px;
+                                }
+                            </style>
+
+                            <script language="Javascript" type="text/javascript"
+                            src="edit_area/edit_area_full.js"></script>
+                            <script language="Javascript" type="text/javascript">
+                            // initialisation
+                            editAreaLoader.init({
+                                id : "codeinput" // id of the textarea to
+													// transform
+                                ,
+                                start_highlight : true // if start with
+														// highlight
+                                ,
+                                allow_resize : "both",
+                                allow_toggle : true,
+                                word_wrap : true,
+                                language : "en",
+                                syntax : "php"
+                                });
+
+                            // callback functions
+                            function my_save(id, content) {
+                                alert("Here is the content of the EditArea '" + id
+                                    + "' as received by the save callback function:\n" + content);
+                                }
+
+                            function my_load(id) {
+                                editAreaLoader
+                                    .setValue(id,
+                                    "The content is loaded from the load_callback function into EditArea");
+                                }
+
+                            function test_setSelectionRange(id) {
+                                editAreaLoader.setSelectionRange(id, 100, 150);
+                                }
+
+                            function test_getSelectionRange(id) {
+                                var sel = editAreaLoader.getSelectionRange(id);
+                                alert("start: " + sel["start"] + "\nend: " + sel["end"]);
+                                }
+
+                            function test_setSelectedText(id) {
+                                text = "[REPLACED SELECTION]";
+                                editAreaLoader.setSelectedText(id, text);
+                                }
+
+                            function test_getSelectedText(id) {
+                                alert(editAreaLoader.getSelectedText(id));
+                                }
+
+                            function editAreaLoaded(id) {
+                                if (id == "example_2") {
+                                open_file1();
+                                open_file2();
+                                }
+                            }
+
+                            function open_file1() {
+                                var new_file = {
+                                id : "to\\ � # � to",
+                                text : "$authors= array();\n$news= array();",
+                                syntax : 'php',
+                                title : 'beautiful title'
+                                };
+                            editAreaLoader.openFile('example_2', new_file);
+                            }
+
+                            function open_file2() {
+                                var new_file = {
+                                id : "Filename",
+                                text : "<a href=\"toto\">\n\tbouh\n</a>\n<!-- it's a comment -->",
+                                syntax : 'html'
+                                };
+                            editAreaLoader.openFile('example_2', new_file);
+                            }
+
+                            function close_file1() {
+                                editAreaLoader.closeFile('example_2', "to\\ � # � to");
+                                }
+
+                            function toogle_editable(id) {
+                                editAreaLoader.execCommand(id, 'set_editable', !editAreaLoader
+                                    .execCommand(id, 'is_editable'));
+                                }
+                            </script>
+
+                            <link href="css/prettify.css" rel="stylesheet">
+                                <!-- Le fav and touch icons -->
+                                <link rel="shortcut icon" href="images/favicon.ico">
+                                    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+                                        <link rel="apple-touch-icon" sizes="72x72"
+                                        href="images/apple-touch-icon-72x72.png">
+                                            <link rel="apple-touch-icon" sizes="114x114"
+                                            href="images/apple-touch-icon-114x114.png">
+                                            </head>
+
+                                            <body>
+
+                                                <%
+                                                include('/includes/topnavi.jag');
+                                                %>
+
+                                                <div class="container-fluid">
+
+                                                    <!-- Main hero unit for a primary marketing message or call to action -->
+
+
+                                                    <!-- Example row of columns -->
+
+
+
+                                                    <div class="row">
+
+                                                        <div class="span8">
+                                                            <input type="submit" value="Try it >>" id="tryitbtn"
+                                                            class="btn primary" onclick="Tryit.call('')" style="float:left;">
+                                                            <a href="#" class="label success" id="querybtn">+ Add Query String</a>
+                                                            <span style="margin-top:-3px;" class="hidden" id="queryblock"> <label style="float:left;">QueryString :</label>
+                                                                <input type="text" class="span6" id="qString">
+                                                                <a href="#" id="queryremove" class="label important"> X </a>  </span>
+
+                                                                <textarea class="span-full prettyprint linenums" id="codeinput"></textarea>
+
+                                                                <span class="help-block"> Edit the code above to generate
+                                                                your output </span>
+                                                            </div>
+
+                                                            <div class="span8">
+                                                                <h4 id="result">Your Result :</h4>
+                                                                <iframe class="span-full" id='output' style="background:#FFF;"></iframe>
+
+                                                            </div>
+
+                                                        </div>
+                                                        <!-- /row -->
+
+                                                    <%
+                                                    include('includes/footer.jag');
+                                                    %>
+
+                                                    </div>
+                                                    <!-- /container -->
+                                                    <script src="js/google-code-prettify/prettify.js"></script>
+                                                    <script src="js/jquery-1.7.1.min.js"></script>
+                                                    <script src="js/tryit.js"></script>
+                                                    <script src="js/util.js"></script>
+                                                    
+                                                    	<script>
+                                                    		$(document).ready(function(){
+                                                    			$('#tryit').toggleClass('active')
+                                                    		});
+
+                                                            $('#querybtn').click(function(){
+                                                                $('#queryblock').toggleClass('hidden');
+                                                                $('#querybtn').toggleClass('hidden');
+                                                               
+                                                            });
+
+                                                            $('#queryremove').click(function(){
+                                                                $('#queryblock').toggleClass('hidden');
+                                                                $('#querybtn').toggleClass('hidden');
+                                                                $('#qString').val('');
+                                                            })
+
+                                                    		</script>
+                                                </body>
+                                            </html>

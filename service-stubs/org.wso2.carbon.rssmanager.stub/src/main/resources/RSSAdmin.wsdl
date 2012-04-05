@@ -1,0 +1,1225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://admin.core.rssmanager.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax23="http://description.core.rssmanager.carbon.wso2.org/xsd" xmlns:ax21="http://exception.core.rssmanager.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://admin.core.rssmanager.carbon.wso2.org">
+    <wsdl:types>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://description.core.rssmanager.carbon.wso2.org/xsd">
+            <xs:complexType name="DatabaseUserEntry">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="rssInstanceId" type="xs:int"/>
+                    <xs:element minOccurs="0" name="userId" type="xs:int"/>
+                    <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="RSSInstanceEntry">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="instanceType" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="rssInstanceId" type="xs:int"/>
+                    <xs:element minOccurs="0" name="serverCategory" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="serverUrl" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="tenantDomainName" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="RSSInstance">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="adminPassword" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="adminUsername" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="dbmsType" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="instanceType" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="name" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="rssInstanceId" type="xs:int"/>
+                    <xs:element minOccurs="0" name="serverCategory" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="serverURL" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="tenantId" type="xs:int"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="PrivilegeGroup">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="privGroupId" type="xs:int"/>
+                    <xs:element minOccurs="0" name="privGroupName" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="privs" nillable="true" type="ax23:DatabasePrivilege"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="DatabasePrivilege">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="privName" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="privValue" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="DatabaseUser">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="password" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="rssInstanceId" type="xs:int"/>
+                    <xs:element minOccurs="0" name="userId" type="xs:int"/>
+                    <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="DatabaseInstanceEntry">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="dbInstanceId" type="xs:int"/>
+                    <xs:element minOccurs="0" name="dbName" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="dbUrl" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="rssInstanceId" type="xs:int"/>
+                    <xs:element minOccurs="0" name="rssName" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="rssTenantDomain" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://exception.core.rssmanager.carbon.wso2.org/xsd">
+            <xs:complexType name="RSSDAOException">
+                <xs:sequence/>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax24="http://description.core.rssmanager.carbon.wso2.org/xsd" xmlns:ax22="http://exception.core.rssmanager.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://admin.core.rssmanager.carbon.wso2.org">
+            <xs:import namespace="http://exception.core.rssmanager.carbon.wso2.org/xsd"/>
+            <xs:import namespace="http://description.core.rssmanager.carbon.wso2.org/xsd"/>
+            <xs:element name="RSSAdminRSSDAOException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="RSSDAOException" nillable="true" type="ax21:RSSDAOException"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="testConnection">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="driverClass" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="jdbcURL" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="password" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="testConnectionResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="removeRSSInstance">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="rssInsId" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="removePrivilegeGroup">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="privGroupId" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUsersByDatabaseInstanceId">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="dbInstId" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUsersByDatabaseInstanceIdResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax23:DatabaseUserEntry"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserDatabasePermissions">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userId" type="xs:int"/>
+                        <xs:element minOccurs="0" name="dbInsId" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserDatabasePermissionsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getRoundRobinAssignedRSSInstance">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getRoundRobinAssignedRSSInstanceResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax23:RSSInstanceEntry"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getRSSInstanceList">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getRSSInstanceListResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax23:RSSInstanceEntry"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getRSSInstanceDataById">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="rssInsId" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getRSSInstanceDataByIdResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax23:RSSInstance"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPrivilegeGroups">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPrivilegeGroupsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax23:PrivilegeGroup"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPrivilegeGroupById">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="privGroupId" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPrivilegeGroupByIdResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax23:PrivilegeGroup"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getDatabaseUserById">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userId" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getDatabaseUserByIdResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax23:DatabaseUser"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getDatabaseInstanceList">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getDatabaseInstanceListResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax23:DatabaseInstanceEntry"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getDatabaseInstanceById">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="dbInsId" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getDatabaseInstanceByIdResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax23:DatabaseInstanceEntry"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="editUserPrivileges">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="privs" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="user" nillable="true" type="ax23:DatabaseUser"/>
+                        <xs:element minOccurs="0" name="dbInsId" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="editRSSInstance">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="rssIns" nillable="true" type="ax23:RSSInstance"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="editPrivilegeGroup">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="privGroup" nillable="true" type="ax23:PrivilegeGroup"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="dropUser">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userId" type="xs:int"/>
+                        <xs:element minOccurs="0" name="dbInsId" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="dropDatabase">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="dbInsId" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="createUser">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="user" nillable="true" type="ax23:DatabaseUser"/>
+                        <xs:element minOccurs="0" name="privGroupId" type="xs:int"/>
+                        <xs:element minOccurs="0" name="dbInsId" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="createPrivilegeGroup">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="privGroup" nillable="true" type="ax23:PrivilegeGroup"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="createDatabase">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="dbIns" nillable="true" type="xs:anyType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="createCarbonDSFromDatabaseUserEntry">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="dbInsId" type="xs:int"/>
+                        <xs:element minOccurs="0" name="userId" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="createCarbonDSFromDatabaseUserEntryResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addRSSInstance">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="rssIns" nillable="true" type="ax23:RSSInstance"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getRSSInstanceListRequest">
+        <wsdl:part name="parameters" element="ns:getRSSInstanceList"/>
+    </wsdl:message>
+    <wsdl:message name="getRSSInstanceListResponse">
+        <wsdl:part name="parameters" element="ns:getRSSInstanceListResponse"/>
+    </wsdl:message>
+    <wsdl:message name="RSSAdminRSSDAOException">
+        <wsdl:part name="parameters" element="ns:RSSAdminRSSDAOException"/>
+    </wsdl:message>
+    <wsdl:message name="testConnectionRequest">
+        <wsdl:part name="parameters" element="ns:testConnection"/>
+    </wsdl:message>
+    <wsdl:message name="testConnectionResponse">
+        <wsdl:part name="parameters" element="ns:testConnectionResponse"/>
+    </wsdl:message>
+    <wsdl:message name="editPrivilegeGroupRequest">
+        <wsdl:part name="parameters" element="ns:editPrivilegeGroup"/>
+    </wsdl:message>
+    <wsdl:message name="getPrivilegeGroupByIdRequest">
+        <wsdl:part name="parameters" element="ns:getPrivilegeGroupById"/>
+    </wsdl:message>
+    <wsdl:message name="getPrivilegeGroupByIdResponse">
+        <wsdl:part name="parameters" element="ns:getPrivilegeGroupByIdResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getRSSInstanceDataByIdRequest">
+        <wsdl:part name="parameters" element="ns:getRSSInstanceDataById"/>
+    </wsdl:message>
+    <wsdl:message name="getRSSInstanceDataByIdResponse">
+        <wsdl:part name="parameters" element="ns:getRSSInstanceDataByIdResponse"/>
+    </wsdl:message>
+    <wsdl:message name="createCarbonDSFromDatabaseUserEntryRequest">
+        <wsdl:part name="parameters" element="ns:createCarbonDSFromDatabaseUserEntry"/>
+    </wsdl:message>
+    <wsdl:message name="createCarbonDSFromDatabaseUserEntryResponse">
+        <wsdl:part name="parameters" element="ns:createCarbonDSFromDatabaseUserEntryResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getUserDatabasePermissionsRequest">
+        <wsdl:part name="parameters" element="ns:getUserDatabasePermissions"/>
+    </wsdl:message>
+    <wsdl:message name="getUserDatabasePermissionsResponse">
+        <wsdl:part name="parameters" element="ns:getUserDatabasePermissionsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="removePrivilegeGroupRequest">
+        <wsdl:part name="parameters" element="ns:removePrivilegeGroup"/>
+    </wsdl:message>
+    <wsdl:message name="removeRSSInstanceRequest">
+        <wsdl:part name="parameters" element="ns:removeRSSInstance"/>
+    </wsdl:message>
+    <wsdl:message name="getDatabaseUserByIdRequest">
+        <wsdl:part name="parameters" element="ns:getDatabaseUserById"/>
+    </wsdl:message>
+    <wsdl:message name="getDatabaseUserByIdResponse">
+        <wsdl:part name="parameters" element="ns:getDatabaseUserByIdResponse"/>
+    </wsdl:message>
+    <wsdl:message name="createUserRequest">
+        <wsdl:part name="parameters" element="ns:createUser"/>
+    </wsdl:message>
+    <wsdl:message name="getUsersByDatabaseInstanceIdRequest">
+        <wsdl:part name="parameters" element="ns:getUsersByDatabaseInstanceId"/>
+    </wsdl:message>
+    <wsdl:message name="getUsersByDatabaseInstanceIdResponse">
+        <wsdl:part name="parameters" element="ns:getUsersByDatabaseInstanceIdResponse"/>
+    </wsdl:message>
+    <wsdl:message name="dropUserRequest">
+        <wsdl:part name="parameters" element="ns:dropUser"/>
+    </wsdl:message>
+    <wsdl:message name="getPrivilegeGroupsRequest">
+        <wsdl:part name="parameters" element="ns:getPrivilegeGroups"/>
+    </wsdl:message>
+    <wsdl:message name="getPrivilegeGroupsResponse">
+        <wsdl:part name="parameters" element="ns:getPrivilegeGroupsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getRoundRobinAssignedRSSInstanceRequest">
+        <wsdl:part name="parameters" element="ns:getRoundRobinAssignedRSSInstance"/>
+    </wsdl:message>
+    <wsdl:message name="getRoundRobinAssignedRSSInstanceResponse">
+        <wsdl:part name="parameters" element="ns:getRoundRobinAssignedRSSInstanceResponse"/>
+    </wsdl:message>
+    <wsdl:message name="createDatabaseRequest">
+        <wsdl:part name="parameters" element="ns:createDatabase"/>
+    </wsdl:message>
+    <wsdl:message name="editRSSInstanceRequest">
+        <wsdl:part name="parameters" element="ns:editRSSInstance"/>
+    </wsdl:message>
+    <wsdl:message name="editUserPrivilegesRequest">
+        <wsdl:part name="parameters" element="ns:editUserPrivileges"/>
+    </wsdl:message>
+    <wsdl:message name="createPrivilegeGroupRequest">
+        <wsdl:part name="parameters" element="ns:createPrivilegeGroup"/>
+    </wsdl:message>
+    <wsdl:message name="addRSSInstanceRequest">
+        <wsdl:part name="parameters" element="ns:addRSSInstance"/>
+    </wsdl:message>
+    <wsdl:message name="dropDatabaseRequest">
+        <wsdl:part name="parameters" element="ns:dropDatabase"/>
+    </wsdl:message>
+    <wsdl:message name="getDatabaseInstanceListRequest">
+        <wsdl:part name="parameters" element="ns:getDatabaseInstanceList"/>
+    </wsdl:message>
+    <wsdl:message name="getDatabaseInstanceListResponse">
+        <wsdl:part name="parameters" element="ns:getDatabaseInstanceListResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getDatabaseInstanceByIdRequest">
+        <wsdl:part name="parameters" element="ns:getDatabaseInstanceById"/>
+    </wsdl:message>
+    <wsdl:message name="getDatabaseInstanceByIdResponse">
+        <wsdl:part name="parameters" element="ns:getDatabaseInstanceByIdResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="RSSAdminPortType">
+        <wsdl:operation name="getRSSInstanceList">
+            <wsdl:input message="ns:getRSSInstanceListRequest" wsaw:Action="urn:getRSSInstanceList"/>
+            <wsdl:output message="ns:getRSSInstanceListResponse" wsaw:Action="urn:getRSSInstanceListResponse"/>
+            <wsdl:fault message="ns:RSSAdminRSSDAOException" name="RSSAdminRSSDAOException" wsaw:Action="urn:getRSSInstanceListRSSAdminRSSDAOException"/>
+        </wsdl:operation>
+        <wsdl:operation name="testConnection">
+            <wsdl:input message="ns:testConnectionRequest" wsaw:Action="urn:testConnection"/>
+            <wsdl:output message="ns:testConnectionResponse" wsaw:Action="urn:testConnectionResponse"/>
+            <wsdl:fault message="ns:RSSAdminRSSDAOException" name="RSSAdminRSSDAOException" wsaw:Action="urn:testConnectionRSSAdminRSSDAOException"/>
+        </wsdl:operation>
+        <wsdl:operation name="editPrivilegeGroup">
+            <wsdl:input message="ns:editPrivilegeGroupRequest" wsaw:Action="urn:editPrivilegeGroup"/>
+            <wsdl:fault message="ns:RSSAdminRSSDAOException" name="RSSAdminRSSDAOException" wsaw:Action="urn:editPrivilegeGroupRSSAdminRSSDAOException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getPrivilegeGroupById">
+            <wsdl:input message="ns:getPrivilegeGroupByIdRequest" wsaw:Action="urn:getPrivilegeGroupById"/>
+            <wsdl:output message="ns:getPrivilegeGroupByIdResponse" wsaw:Action="urn:getPrivilegeGroupByIdResponse"/>
+            <wsdl:fault message="ns:RSSAdminRSSDAOException" name="RSSAdminRSSDAOException" wsaw:Action="urn:getPrivilegeGroupByIdRSSAdminRSSDAOException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getRSSInstanceDataById">
+            <wsdl:input message="ns:getRSSInstanceDataByIdRequest" wsaw:Action="urn:getRSSInstanceDataById"/>
+            <wsdl:output message="ns:getRSSInstanceDataByIdResponse" wsaw:Action="urn:getRSSInstanceDataByIdResponse"/>
+            <wsdl:fault message="ns:RSSAdminRSSDAOException" name="RSSAdminRSSDAOException" wsaw:Action="urn:getRSSInstanceDataByIdRSSAdminRSSDAOException"/>
+        </wsdl:operation>
+        <wsdl:operation name="createCarbonDSFromDatabaseUserEntry">
+            <wsdl:input message="ns:createCarbonDSFromDatabaseUserEntryRequest" wsaw:Action="urn:createCarbonDSFromDatabaseUserEntry"/>
+            <wsdl:output message="ns:createCarbonDSFromDatabaseUserEntryResponse" wsaw:Action="urn:createCarbonDSFromDatabaseUserEntryResponse"/>
+            <wsdl:fault message="ns:RSSAdminRSSDAOException" name="RSSAdminRSSDAOException" wsaw:Action="urn:createCarbonDSFromDatabaseUserEntryRSSAdminRSSDAOException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getUserDatabasePermissions">
+            <wsdl:input message="ns:getUserDatabasePermissionsRequest" wsaw:Action="urn:getUserDatabasePermissions"/>
+            <wsdl:output message="ns:getUserDatabasePermissionsResponse" wsaw:Action="urn:getUserDatabasePermissionsResponse"/>
+            <wsdl:fault message="ns:RSSAdminRSSDAOException" name="RSSAdminRSSDAOException" wsaw:Action="urn:getUserDatabasePermissionsRSSAdminRSSDAOException"/>
+        </wsdl:operation>
+        <wsdl:operation name="removePrivilegeGroup">
+            <wsdl:input message="ns:removePrivilegeGroupRequest" wsaw:Action="urn:removePrivilegeGroup"/>
+            <wsdl:fault message="ns:RSSAdminRSSDAOException" name="RSSAdminRSSDAOException" wsaw:Action="urn:removePrivilegeGroupRSSAdminRSSDAOException"/>
+        </wsdl:operation>
+        <wsdl:operation name="removeRSSInstance">
+            <wsdl:input message="ns:removeRSSInstanceRequest" wsaw:Action="urn:removeRSSInstance"/>
+            <wsdl:fault message="ns:RSSAdminRSSDAOException" name="RSSAdminRSSDAOException" wsaw:Action="urn:removeRSSInstanceRSSAdminRSSDAOException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getDatabaseUserById">
+            <wsdl:input message="ns:getDatabaseUserByIdRequest" wsaw:Action="urn:getDatabaseUserById"/>
+            <wsdl:output message="ns:getDatabaseUserByIdResponse" wsaw:Action="urn:getDatabaseUserByIdResponse"/>
+            <wsdl:fault message="ns:RSSAdminRSSDAOException" name="RSSAdminRSSDAOException" wsaw:Action="urn:getDatabaseUserByIdRSSAdminRSSDAOException"/>
+        </wsdl:operation>
+        <wsdl:operation name="createUser">
+            <wsdl:input message="ns:createUserRequest" wsaw:Action="urn:createUser"/>
+            <wsdl:fault message="ns:RSSAdminRSSDAOException" name="RSSAdminRSSDAOException" wsaw:Action="urn:createUserRSSAdminRSSDAOException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getUsersByDatabaseInstanceId">
+            <wsdl:input message="ns:getUsersByDatabaseInstanceIdRequest" wsaw:Action="urn:getUsersByDatabaseInstanceId"/>
+            <wsdl:output message="ns:getUsersByDatabaseInstanceIdResponse" wsaw:Action="urn:getUsersByDatabaseInstanceIdResponse"/>
+            <wsdl:fault message="ns:RSSAdminRSSDAOException" name="RSSAdminRSSDAOException" wsaw:Action="urn:getUsersByDatabaseInstanceIdRSSAdminRSSDAOException"/>
+        </wsdl:operation>
+        <wsdl:operation name="dropUser">
+            <wsdl:input message="ns:dropUserRequest" wsaw:Action="urn:dropUser"/>
+            <wsdl:fault message="ns:RSSAdminRSSDAOException" name="RSSAdminRSSDAOException" wsaw:Action="urn:dropUserRSSAdminRSSDAOException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getPrivilegeGroups">
+            <wsdl:input message="ns:getPrivilegeGroupsRequest" wsaw:Action="urn:getPrivilegeGroups"/>
+            <wsdl:output message="ns:getPrivilegeGroupsResponse" wsaw:Action="urn:getPrivilegeGroupsResponse"/>
+            <wsdl:fault message="ns:RSSAdminRSSDAOException" name="RSSAdminRSSDAOException" wsaw:Action="urn:getPrivilegeGroupsRSSAdminRSSDAOException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getRoundRobinAssignedRSSInstance">
+            <wsdl:input message="ns:getRoundRobinAssignedRSSInstanceRequest" wsaw:Action="urn:getRoundRobinAssignedRSSInstance"/>
+            <wsdl:output message="ns:getRoundRobinAssignedRSSInstanceResponse" wsaw:Action="urn:getRoundRobinAssignedRSSInstanceResponse"/>
+            <wsdl:fault message="ns:RSSAdminRSSDAOException" name="RSSAdminRSSDAOException" wsaw:Action="urn:getRoundRobinAssignedRSSInstanceRSSAdminRSSDAOException"/>
+        </wsdl:operation>
+        <wsdl:operation name="createDatabase">
+            <wsdl:input message="ns:createDatabaseRequest" wsaw:Action="urn:createDatabase"/>
+            <wsdl:fault message="ns:RSSAdminRSSDAOException" name="RSSAdminRSSDAOException" wsaw:Action="urn:createDatabaseRSSAdminRSSDAOException"/>
+        </wsdl:operation>
+        <wsdl:operation name="editRSSInstance">
+            <wsdl:input message="ns:editRSSInstanceRequest" wsaw:Action="urn:editRSSInstance"/>
+            <wsdl:fault message="ns:RSSAdminRSSDAOException" name="RSSAdminRSSDAOException" wsaw:Action="urn:editRSSInstanceRSSAdminRSSDAOException"/>
+        </wsdl:operation>
+        <wsdl:operation name="editUserPrivileges">
+            <wsdl:input message="ns:editUserPrivilegesRequest" wsaw:Action="urn:editUserPrivileges"/>
+            <wsdl:fault message="ns:RSSAdminRSSDAOException" name="RSSAdminRSSDAOException" wsaw:Action="urn:editUserPrivilegesRSSAdminRSSDAOException"/>
+        </wsdl:operation>
+        <wsdl:operation name="createPrivilegeGroup">
+            <wsdl:input message="ns:createPrivilegeGroupRequest" wsaw:Action="urn:createPrivilegeGroup"/>
+            <wsdl:fault message="ns:RSSAdminRSSDAOException" name="RSSAdminRSSDAOException" wsaw:Action="urn:createPrivilegeGroupRSSAdminRSSDAOException"/>
+        </wsdl:operation>
+        <wsdl:operation name="addRSSInstance">
+            <wsdl:input message="ns:addRSSInstanceRequest" wsaw:Action="urn:addRSSInstance"/>
+            <wsdl:fault message="ns:RSSAdminRSSDAOException" name="RSSAdminRSSDAOException" wsaw:Action="urn:addRSSInstanceRSSAdminRSSDAOException"/>
+        </wsdl:operation>
+        <wsdl:operation name="dropDatabase">
+            <wsdl:input message="ns:dropDatabaseRequest" wsaw:Action="urn:dropDatabase"/>
+            <wsdl:fault message="ns:RSSAdminRSSDAOException" name="RSSAdminRSSDAOException" wsaw:Action="urn:dropDatabaseRSSAdminRSSDAOException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getDatabaseInstanceList">
+            <wsdl:input message="ns:getDatabaseInstanceListRequest" wsaw:Action="urn:getDatabaseInstanceList"/>
+            <wsdl:output message="ns:getDatabaseInstanceListResponse" wsaw:Action="urn:getDatabaseInstanceListResponse"/>
+            <wsdl:fault message="ns:RSSAdminRSSDAOException" name="RSSAdminRSSDAOException" wsaw:Action="urn:getDatabaseInstanceListRSSAdminRSSDAOException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getDatabaseInstanceById">
+            <wsdl:input message="ns:getDatabaseInstanceByIdRequest" wsaw:Action="urn:getDatabaseInstanceById"/>
+            <wsdl:output message="ns:getDatabaseInstanceByIdResponse" wsaw:Action="urn:getDatabaseInstanceByIdResponse"/>
+            <wsdl:fault message="ns:RSSAdminRSSDAOException" name="RSSAdminRSSDAOException" wsaw:Action="urn:getDatabaseInstanceByIdRSSAdminRSSDAOException"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="RSSAdminSoap11Binding" type="ns:RSSAdminPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getRSSInstanceList">
+            <soap:operation soapAction="urn:getRSSInstanceList" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="testConnection">
+            <soap:operation soapAction="urn:testConnection" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="editPrivilegeGroup">
+            <soap:operation soapAction="urn:editPrivilegeGroup" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getPrivilegeGroupById">
+            <soap:operation soapAction="urn:getPrivilegeGroupById" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getRSSInstanceDataById">
+            <soap:operation soapAction="urn:getRSSInstanceDataById" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUserDatabasePermissions">
+            <soap:operation soapAction="urn:getUserDatabasePermissions" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="createCarbonDSFromDatabaseUserEntry">
+            <soap:operation soapAction="urn:createCarbonDSFromDatabaseUserEntry" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="removePrivilegeGroup">
+            <soap:operation soapAction="urn:removePrivilegeGroup" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="removeRSSInstance">
+            <soap:operation soapAction="urn:removeRSSInstance" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getDatabaseUserById">
+            <soap:operation soapAction="urn:getDatabaseUserById" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="createUser">
+            <soap:operation soapAction="urn:createUser" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUsersByDatabaseInstanceId">
+            <soap:operation soapAction="urn:getUsersByDatabaseInstanceId" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getPrivilegeGroups">
+            <soap:operation soapAction="urn:getPrivilegeGroups" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="dropUser">
+            <soap:operation soapAction="urn:dropUser" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getRoundRobinAssignedRSSInstance">
+            <soap:operation soapAction="urn:getRoundRobinAssignedRSSInstance" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="editRSSInstance">
+            <soap:operation soapAction="urn:editRSSInstance" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="createDatabase">
+            <soap:operation soapAction="urn:createDatabase" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="editUserPrivileges">
+            <soap:operation soapAction="urn:editUserPrivileges" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="createPrivilegeGroup">
+            <soap:operation soapAction="urn:createPrivilegeGroup" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addRSSInstance">
+            <soap:operation soapAction="urn:addRSSInstance" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="dropDatabase">
+            <soap:operation soapAction="urn:dropDatabase" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getDatabaseInstanceList">
+            <soap:operation soapAction="urn:getDatabaseInstanceList" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getDatabaseInstanceById">
+            <soap:operation soapAction="urn:getDatabaseInstanceById" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="RSSAdminSoap12Binding" type="ns:RSSAdminPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getRSSInstanceList">
+            <soap12:operation soapAction="urn:getRSSInstanceList" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap12:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="testConnection">
+            <soap12:operation soapAction="urn:testConnection" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap12:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="editPrivilegeGroup">
+            <soap12:operation soapAction="urn:editPrivilegeGroup" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap12:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getPrivilegeGroupById">
+            <soap12:operation soapAction="urn:getPrivilegeGroupById" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap12:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getRSSInstanceDataById">
+            <soap12:operation soapAction="urn:getRSSInstanceDataById" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap12:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUserDatabasePermissions">
+            <soap12:operation soapAction="urn:getUserDatabasePermissions" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap12:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="createCarbonDSFromDatabaseUserEntry">
+            <soap12:operation soapAction="urn:createCarbonDSFromDatabaseUserEntry" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap12:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="removePrivilegeGroup">
+            <soap12:operation soapAction="urn:removePrivilegeGroup" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap12:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="removeRSSInstance">
+            <soap12:operation soapAction="urn:removeRSSInstance" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap12:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getDatabaseUserById">
+            <soap12:operation soapAction="urn:getDatabaseUserById" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap12:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="createUser">
+            <soap12:operation soapAction="urn:createUser" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap12:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUsersByDatabaseInstanceId">
+            <soap12:operation soapAction="urn:getUsersByDatabaseInstanceId" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap12:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getPrivilegeGroups">
+            <soap12:operation soapAction="urn:getPrivilegeGroups" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap12:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="dropUser">
+            <soap12:operation soapAction="urn:dropUser" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap12:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getRoundRobinAssignedRSSInstance">
+            <soap12:operation soapAction="urn:getRoundRobinAssignedRSSInstance" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap12:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="editRSSInstance">
+            <soap12:operation soapAction="urn:editRSSInstance" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap12:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="createDatabase">
+            <soap12:operation soapAction="urn:createDatabase" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap12:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="editUserPrivileges">
+            <soap12:operation soapAction="urn:editUserPrivileges" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap12:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="createPrivilegeGroup">
+            <soap12:operation soapAction="urn:createPrivilegeGroup" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap12:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addRSSInstance">
+            <soap12:operation soapAction="urn:addRSSInstance" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap12:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="dropDatabase">
+            <soap12:operation soapAction="urn:dropDatabase" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap12:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getDatabaseInstanceList">
+            <soap12:operation soapAction="urn:getDatabaseInstanceList" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap12:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getDatabaseInstanceById">
+            <soap12:operation soapAction="urn:getDatabaseInstanceById" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="RSSAdminRSSDAOException">
+                <soap12:fault use="literal" name="RSSAdminRSSDAOException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="RSSAdminHttpBinding" type="ns:RSSAdminPortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="getRSSInstanceList">
+            <http:operation location="getRSSInstanceList"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="testConnection">
+            <http:operation location="testConnection"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="editPrivilegeGroup">
+            <http:operation location="editPrivilegeGroup"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getPrivilegeGroupById">
+            <http:operation location="getPrivilegeGroupById"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getRSSInstanceDataById">
+            <http:operation location="getRSSInstanceDataById"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getUserDatabasePermissions">
+            <http:operation location="getUserDatabasePermissions"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createCarbonDSFromDatabaseUserEntry">
+            <http:operation location="createCarbonDSFromDatabaseUserEntry"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="removePrivilegeGroup">
+            <http:operation location="removePrivilegeGroup"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="removeRSSInstance">
+            <http:operation location="removeRSSInstance"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getDatabaseUserById">
+            <http:operation location="getDatabaseUserById"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createUser">
+            <http:operation location="createUser"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getUsersByDatabaseInstanceId">
+            <http:operation location="getUsersByDatabaseInstanceId"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getPrivilegeGroups">
+            <http:operation location="getPrivilegeGroups"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="dropUser">
+            <http:operation location="dropUser"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getRoundRobinAssignedRSSInstance">
+            <http:operation location="getRoundRobinAssignedRSSInstance"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="editRSSInstance">
+            <http:operation location="editRSSInstance"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="createDatabase">
+            <http:operation location="createDatabase"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="editUserPrivileges">
+            <http:operation location="editUserPrivileges"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="createPrivilegeGroup">
+            <http:operation location="createPrivilegeGroup"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addRSSInstance">
+            <http:operation location="addRSSInstance"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="dropDatabase">
+            <http:operation location="dropDatabase"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getDatabaseInstanceList">
+            <http:operation location="getDatabaseInstanceList"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getDatabaseInstanceById">
+            <http:operation location="getDatabaseInstanceById"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="RSSAdmin">
+        <wsdl:port name="RSSAdminHttpSoap11Endpoint" binding="ns:RSSAdminSoap11Binding">
+            <soap:address location="http://localhost:8080/axis2/services/RSSAdmin"/>
+        </wsdl:port>
+        <wsdl:port name="RSSAdminHttpSoap12Endpoint" binding="ns:RSSAdminSoap12Binding">
+            <soap12:address location="http://localhost:8080/axis2/services/RSSAdmin"/>
+        </wsdl:port>
+        <wsdl:port name="RSSAdminHttpEndpoint" binding="ns:RSSAdminHttpBinding">
+            <http:address location="http://localhost:8080/axis2/services/RSSAdmin"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

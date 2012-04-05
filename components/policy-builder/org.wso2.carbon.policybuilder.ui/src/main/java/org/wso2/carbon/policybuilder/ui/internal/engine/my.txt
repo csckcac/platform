@@ -1,0 +1,16 @@
+AlgorithmSuiteBehavior.java
+AsymmetricBindingBehavior.java
+AsymmetricTokenBehavior.java
+EncryptedPartsBehavior.java
+EncryptSignOrderBehavior.java
+InitiatorTokenBehavior.java
+my.txt
+PolicyBehavior.java
+PolicyBuilder.java
+RecipientTokenBehavior.java
+SignedPartsBehavior.java
+SymmetricBindingBehavior.java
+SymmetricProtectionBehavior.java
+TimeStampBehavior.java
+TokenBehavior.java
+TransportBindingBehavior.java

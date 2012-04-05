@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>@product.name@ - Installation Guide -</title>
+        <link href="css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+        <h1>Installation Guide</h1>
+        <h3>Table of Content</h3>
+        <ul>
+            <li>
+                <a href="#WSO2-Business-Process-Server-Installation-Guide">WSO2 Business Process Server (BPS)
+                    Installation Guide
+                </a>
+            </li>
+            <li>
+                <a href="#Using-Feature-Manager">Installing other WSO2 features in WSO2 BPS</a>
+            </li>
+            <li>
+                <a href="#Installing-WSO2-CS">Installing WSO2 CS</a>
+            </li>
+            <li> <a href="#Building">Building @product.name@ Using the Source Distribution</a>
+                <ul>
+                    <li><a href="#Building-Prerequisites">Prerequisites</a></li>
+                    <li><a href="#Building-Setting">Setting Up the Environment and Tools</a></li>
+                    <li><a href="#Building-Product">Building @product.name@</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#Logging-BPS">Enabling logging for various components in @product.name@</a>
+            </li>
+        </ul>
+
+
+        <p>
+            <br/>
+        </p>
+        <h2 id="WSO2-Business-Process-Server-Installation-Guide">
+            WSO2 Business Process Server (BPS) Installation Guide
+        </h2>
+        <p>
+            This document describes how to install and run WSO2 Business Process Server using binary distribution
+            available for <a
+                href="http://wso2.org/downloads/bps/">download</a>. Binary Distribution includes binary files for both
+            MS Windows and Linux operating systems as a zip file.
+        </p>
+        <h3>Installing and Running @product.name@ using the binary distribution</h3>
+        <strong>Prerequisites</strong>
+        <br/>
+        <p/>
+        <table border="2">
+            <tbody>
+                <tr>
+                    <td>
+                        <a href="http://java.sun.com/javase/downloads/index.jsp">Java SE
+                            Development Kit
+                        </a>
+                    </td>
+                    <td>
+                        1.6.x (For instructions on setting up the JDK on different operating
+                        systems, visit<a href="http://java.sun.com">http://java.sun.com</a>)
+                        <p/>
+                        <p>
+                            To build @product.name@ from the Source distribution, it is necessary
+                            that you have JDK 1.6.x version and Maven 2.2.0 or later
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Web browser- To log-in to the BPS Management Console
+                    </td>
+                    <td>
+                        Mozilla Firefox or Google Chrome at a resolution of 1024x768 or higher is recommended. MS
+                        Internet Explorer 7 or 8 can be used as well, with some limitations. Once
+                        the @product.name@ is started point the browser to
+                        https://localhost:9443/carbon you can access your Management Console.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Memory
+                    </td>
+                    <td>
+                        No minimum requirement - A heap size of 256~512MB is generally
+                        sufficient to process typical SOAP messages. Requirements may vary
+                        with larger message size and on the number of messages processed
+                        concurrently
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Disk
+                    </td>
+                    <td>
+                        No minimum requirement. The installation will require ~150MB
+                        excluding space allocated for log files and Databases.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Operating System
+                    </td>
+                    <td>
+                        Linux, Solaris, MS Windows - XP/ Vista (Not fully tested on Windows
+                        Vista). As the @product.name@ is a Java application, it will generally be
+                        possible to run it on other operating systems with a JDK 1.6.x
+                        runtime. Linux/Solaris is recommended for a production deployment.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p/>
+        <br/>
+        <h3 id="Installing2">
+            <strong>Installing on Linux / Unix</strong>
+        </h3>
+        <ol>
+            <li>
+                <a href="http://wso2.org/downloads/bps/">Download</a>
+                the @product.name@ binary distribution.
+            </li>
+            <li>
+                Extract the zip archive where you want the @product.name@ installed (e.g. into
+                /opt)
+            </li>
+            <li>
+                Set the JAVA_HOME environment variable to your Java home using the
+                export command or by editing /etc/profile, and add the Java /bin
+                directory to your PATH
+            </li>
+            <li>
+                Execute the @product.name@ start script from the bin
+                directory. e.g. ./wso2server.sh OR
+                ./wso2server.sh start
+            </li>
+            <li>
+                Check your @product.name@ instance using the URL https://localhost:9443/carbon
+                which will take you to the @product.name@ Management Console.
+            </li>
+            <li>
+                Login as "admin" using the default password "admin"
+            </li>
+        </ol>
+        <br/>
+        <h3 id="Installing1">
+            <strong>Installing on MS Windows</strong>
+        </h3>
+        <p>
+            The following steps will take you through the installation for the MS
+            Windows operating system.
+        </p>
+        <ol>
+            <li>
+                <a href="http://wso2.org/downloads/bps/">Download</a>
+                the @product.name@ binary distribution.
+            </li>
+            <li>
+                Extract the zip archive where you want the @product.name@ installed
+            </li>
+            <li>
+                Set the JAVA_HOME
+                environment variable to your Java installation, and the PATH environment
+                variable to the Java /bin directory.
+            </li>
+            <li>
+                Execute the @product.name@ start script from the bin folder. e.g. wso2server.bat
+            </li>
+            <li>
+                If you would like to install the @product.name@ as a Windows service, use the
+                install.bat script
+            </li>
+            <li>
+                Check your @product.name@ instance using the URL https://localhost:9443/carbon
+                which will take you to the @product.name@ Management Console.
+            </li>
+            <li>
+                Login as "admin" using the default password "admin"
+            </li>
+        </ol>
+        <p>
+            <br/>
+        </p>
+        <h2 id="Using-Feature-Manager">Installing other WSO2 features in @product.name@</h2>
+         <p>   All the WSO2 Carbon based products function as a collection of solution specific features included on top of WSO2 Carbon platform based on OSGi. So you can convert a WSO2 BPS to any other WSO2 Carbon product by including those specific features. Please refer the following <a href="http://docs.wso2.com/display/ESB402/Installing+Features">documentation on how to install a feature via feature manager</a> for a step by step guide.
+ <br/>
+<b>Note:</b>You can use <a href="http://dist.wso2.org/p2/carbon/releases/@carbon.version@/">http://dist.wso2.org/p2/carbon/releases/@carbon.version@</a> as the repository compatible with this version (@product.version@) of @product.name@
+        </p>
+        <!--Installing WSO2 CS -->
+        <h2 id="Installing-WSO2-CS">
+            Installing WSO2 CS
+        </h2>
+        <p>
+            WSO2 Carbon Studio provides the tooling environment for users to model, deploy and execute the WS-BPEL
+            processes. Latest WSO2 Carbon Studio documentation is available
+            <a href="http://wso2.org/project/carbon-studio/documentation">here</a>. Please follow the installation guide
+            in above documentation to install WSO2 Carbon Studio.
+        </p>
+
+        <h2 id="Building">
+            Building @product.name@ Using the Source Distribution
+        </h2>
+        <h3 id="Building-Prerequisites">
+            Prerequisites
+        </h3>
+        <table border="2">
+            <tbody>
+                <tr>
+                    <td>
+                        <a href="http://java.sun.com/javase/downloads/index.jsp">Java SE
+                            Development Kit
+                        </a>
+                    </td>
+                    <td>
+                        1.6.x (For instructions on setting up the JDK in different operating
+                        systems, visit <a href="http://java.sun.com">http://java.sun.com</a>)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="http://maven.apache.org/">Apache Maven</a>- To
+                        build BPS from Source
+                    </td>
+                    <td>
+                        To build the @product.name@ from its source distribution, you will need
+                        Maven 3.0.3 or later
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Operating System
+                    </td>
+                    <td>
+                        Linux, Solaris, MS Windows - XP/ Vista (Not fully tested on Windows
+                        Vista)
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p/>
+        <h3 id="Building-Setting">
+            Setting Up the Environment and Tools
+        </h3>
+        <p>
+            <strong>Maven:</strong>
+        </p>
+        <p>
+            The @product.name@ build is based on<a href="http://maven.apache.org/">Apache
+            Maven 3</a>. Hence, it is a prerequisite to have Maven (version 3.0.3 or later)
+            and JDK (version 1.6.0_24 or later) installed in order to build @product.name@ from the
+            source distribution. Extensive instructions on using Maven 3 are available
+            on the Maven website.
+        </p>
+        <p>
+            Please refer to the
+            <a
+                    href="http://maven.apache.org/guides/getting-started/index.html">Maven
+                Getting Started Guide
+            </a>
+            for more information on Maven
+        </p>
+        <ul>
+            <li>
+                Unix based OS (e.g., Linux)
+            </li>
+        </ul>
+        <ol>
+            <li>
+                Download Apache Maven tar ball or the zip archive.
+            </li>
+            <li>
+                Expand it to a directory of choice.
+            </li>
+            <li>
+                Set the environment variable M2_HOME and add M2_HOME/bin to the
+                path as well.
+            </li>
+            <li>
+                Run mvn --version to verify that it is correctly installed.
+            </li>
+        </ol>
+        <ul>
+            <li>
+                MS Windows
+            </li>
+        </ul>
+        <ol>
+            <li>
+                Download and run the Apache Maven Windows installer package.
+            </li>
+            <li>
+                Set the 'Environment Variables' (create the system variable M2_HOME
+                and edit the path. e.g., "C:\Program Files\Apache Software
+                Foundation\maven-3.0.3"; path %M2_HOME%\bin)
+            </li>
+            <li>
+                Make sure that the system variable
+                <a href="setting_java_home.html">JAVA_HOME</a>
+                is set to the location of your JDK, e.g., C:\Program Files\Java\jdk1.6
+            </li>
+            <li>
+                Run mvn --version to verify that it is correctly installed.
+            </li>
+        </ol>
+        <p>
+            Once Maven is properly installed, you can start building the @product.name@.
+        </p>
+
+        <h3 id="Building-Product">
+            Building @product.name@
+        </h3>
+        <ol>
+            <li>
+                <a href="http://wso2.org/downloads/bps/">Download</a>
+                the source distribution, which is available as a zip archive.
+            </li>
+            <li>
+                Expand the source archive to a directory of your choice.
+            </li>
+            <li>
+                All the necessary build scripts are included with the source
+                distribution.
+            </li>
+            <li>
+                You can run the following command inside that directory to build the
+                @product.name@. Note that you will require a connection to the Internet for the Maven
+                build
+                to download dependencies required for the build.
+                <br/>
+                <p>
+                    Command:
+                    <strong>mvn clean install</strong>
+                </p>
+            </li>
+        </ol>
+        <p>
+            This will create the complete release artifacts including the binary and
+            source distributions in the modules/distribution/target/ directory which can be
+            installed using
+            the above instructions.
+        </p>
+        <p>
+            Note: The first time you run Maven it will automatically download the
+            dependent .jar files. Therefore, the first run will take more time.
+        </p>
+
+        <h2 id="Logging-BPS">
+            Enabling logging for various components in @product.name@
+        </h2>
+        <ol>
+            <li>Add the following entries to the @product.name@-@product.version@/lib/log4j.properties 
+                <ul>
+                    <li>log4j.logger.org.apache.ode.bpel.messagetrace=TRACE</li>
+                    <li>log4j.logger.org.wso2.carbon.bpel.messagetrace=TRACE</li>
+                </ul>
+            </li>
+            <li>Then the preferred log4j appender should be configured such that it has a threshold of TRACE level. If CARBON_LOGFILE is the log4j appender, it should be changed as follows. By default this is set to DEBUG.
+                <ul>
+                    <li>eg - log4j.appender.CARBON_LOGFILE.threshold=TRACE</li>
+                </ul>
+            </li>
+            <li>Then re-start the @product.name@ server.</li>
+            <li>The log files can be found as @product.name@-@product.version@/repository/logs/wso2carbon.log</li>
+        </ol>
+        <p>
+            Note: You can configure this via Management console as well.
+        </p>
+
+    </body>
+</html>

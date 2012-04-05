@@ -1,0 +1,139 @@
+<!--
+  ~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+       "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <title>Welcome to WSO2 Identity Server v2.0.0!</title>
+    <link href="css/is-docs.css" rel="stylesheet"/>
+   </head>
+<body>
+<p>[<a
+href="http://wso2.org/downloads/solutions/identity">Download</a>]
+| [<a href="index_docs.html">Documentation Index</a>] | [<a
+href="release-notes.html">Release Note</a>]</p>
+
+<h1>WSO2 Identity Solution, v@wso2is_version@-OpenID Provider Administrator's Guide</h1>
+
+<p>This document provides information and instructions on the functionality
+of the Management Console of WSO2 Identity Solution related to OpenID Provider.</p>
+
+<p>Your feedback on WSO2 Identity Solution is most appreciated. Please send them to our <a
+href="index.html#mail">mailing lists</a>.</p>
+
+<h2>Content</h2>
+
+<div class="toc">
+<ul>
+  <li><a href="#start">Configuring WSO2 Identity Provider</a></li>
+  <li><a href="#configure">Initial OpenID Provider Configurations</a></li>
+     <ul>
+  	<li><a href="#enableOpenID">Enable OpenID Registration</a></li>
+  	<li><a href="#claims">Defining Claims</a></li>
+  	<li><a href="#claim_mapping">Mapping Claims</a></li>
+    </ul>  
+</ul>
+</div>
+
+<h2 id="start">Configuring WSO2 Identity Provider</h2>
+<p>Please configure WSO2 Identity Provider as in 
+<a href="idp_administratorguide.html">here</a>.</p>
+
+<p>Point your browser to https://host:port/admin. If you haven't changed 
+the default settings then you should be able to login to 
+https://localhost:12443/admin/ using username "admin" and passowrd "admin".</p> 
+
+<h2 id="configure">Initial OpenID Provider Configurations</h2>
+
+<p>WSO2 OpenID Provider supports following OpenID related specifications</p>
+
+<ul>
+<li>OpenID Authentication 2.0 </li>
+<li>OpenID Authentication 1.1</li>
+<li>OpenID Simple Registration Extension 1.1</li>
+<li>OpenID Attribute Exchange  1.0</li>
+<li>OpenID Provider Authentication Policy Extension 1.0, draft 1</li>
+<li>OpenID Information Cards 1.0 - Draft 01</li>
+</ul>
+
+<p>Please refer <a href="idp_production.html">this</a> for configuring WSO2 OpenID Provider in a production environment</p>
+
+<h3><a name="enableOpenID"></a>Enable OpenID Registration</h3>
+<p>By default OpenID registration is enabled in WSO2 Identity Solution. To change the setting, switch off the "Enable OpenID Registration" 
+check box under "User Management" [Manage --> Users].
+</p>
+
+<h3><a name="claims"></a>Defining Claims</h3>
+
+<p>By default claims related to OpenID are defined under two dialects.</p>
+
+<ul>
+<li>OpenID Simple Registration 1.1: http://schema.openid.net/2007/05/claims</li>
+<li>OpenID Attribute Exchange  1.0: http://axschema.org</li>
+</ul>
+
+<p>Click the "switch" icon in the claim detail section of each claim to enable/disable
+a claim.</p>
+
+<p>The same claim is identified by different namespaces under different contexts. For example,email address is identified by
+<b>http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress</b> for Information Cards and for OpenID Simple Registration by 
+<b>http://schema.openid.net/2007/05/claims/email</b> and <b>http://axschema.org/contact/email</b> is used by OpenID Attribute Exchange. 
+Even under OpenID Attribute Exchange, there can be different namespaces - another widely used one is <b>http://schema.openid.net/contact/email</b>. 
+</p>
+
+<p>
+If you want to suppport all of these. simply we have
+to enable all these claiims as supported claims - but this will give a bad user experince since he has to enter his email 4 time at the time of registration.
+To avoid this we use an internal claim mapper - which can map one namespace under one context to another namespace under a different context, using an XML configuration 
+file [wso2-identity-solution-@wso2is_version@/conf/openid-claim-mapper.xml file].</p>
+
+<p>To add a new claim as an OpenID claim, make sure you set a non-empty value for the OpenID Tag field. You can't set the same OpenID Tag for two supported claims
+at the same time</p>
+
+<p>With default installation WSO2 OpenID Provider supports following claims under OpenID Attribute Exchange 1.0 and all are mapped to the respective 
+OpenID Simple Registration claims</p>
+
+<ul>
+<li>http://schema.openid.net/namePerson/friendly</li>
+<li>http://schema.openid.net/contact/email</li>
+<li>http://schema.openid.net/namePerson</li>
+<li>http://schema.openid.net/birthDate</li>
+<li>http://schema.openid.net/person/gender</li>
+<li>http://schema.openid.net/contact/postalCode/home</li>
+<li>http://schema.openid.net/contact/country/home</li>
+<li>http://schema.openid.net/pref/language</li>
+<li>http://schema.openid.net/pref/timezone</li>
+<li>http://axschema.org/namePerson/friendly</li>
+<li>http://axschema.org/contact/email</li>
+<li>http://axschema.org/namePerson</li>
+<li>http://axschema.org/birthDate</li>
+<li>http://axschema.org/person/gender</li>
+<li>http://axschema.org/contact/postalCode/home</li>
+<li>http://axschema.org/contact/country/home</li>
+<li>http://axschema.org/pref/language</li>
+<li>http://axschema.org/pref/timezone</li>
+</ul>
+
+<h3><a name="claim_mapping"></a>Mapping Claims</h3>
+
+<p>This view allows mapping a claim to a user attribute in the user store. The 
+available attibute identifiers will be shown in the claim edit view, when the 
+display name of a claim is selected.</p>
+
+</body>
+</html>

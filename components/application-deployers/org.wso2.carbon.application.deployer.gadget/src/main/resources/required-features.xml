@@ -1,0 +1,6 @@
+<featureSets>
+    <featureSet artifactType="wso2/gadget">
+        <!--todo : specify correct gadget features-->
+        <feature id="org.wso2.carbon.gadget.editor.feature.group" version="[4.0.0, 4.1.0)"/>
+    </featureSet>
+</featureSets>

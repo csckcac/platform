@@ -1,0 +1,97 @@
+<!--
+  ~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <body>
+        <h1>
+            WSO2 Web Services Framework for Java (WSO2 WSF/Java) User Guide
+        </h1>
+
+        <p>[<a href="http://wso2.org/downloads/wsfjava">Download</a>]
+            | [<a href="index_docs.html">Documentation Home</a>] | [<a
+                    href="release_notes.html">Release Note</a>]</p>
+        
+        <h2>Introduction</h2>
+
+        <p>
+            WSO2 Web Services Framework for Java (WSF/Java) provides the complete framework
+            for developing Web Services or Web Service clients. Basically this contains all
+            the libraries you need to write a service or client.</p>
+
+        <p>
+            WSF/Java includes all WS-Security (Rampart), WS-ReliablieMessage (Sandesha) etc.
+            libraries and Axis2 modules (.mar archives) which you need in developing complex
+            services and clients.
+        </p>
+        
+        <h2>Usage</h2>
+        
+        <p>
+            You can find all needed libraries in the WSF_JAVA_HOME/lib directory. If you want to
+            develop a Web Service or a Cliet for a Web Service, all you have to do is to add 
+            those libraries into your java classpath and use the API. You can go through the 
+            set of samples which are shipped with WSO2 WSF to clearly understand how to use the
+            client API for different use cases.
+        </p>
+        
+        <h2>Directory Structure</h2>
+
+        <pre>
+            WSF_JAVA_HOME
+            |- lib (folder)
+            |- repository (folder)
+            |--- modules (folder)
+            |- resources (folder)
+            |- samples (folder)
+            |- LICENSE.txt (file)
+            |- README.txt (file)
+            |- release-notes.html (file)
+        </pre>
+
+        <h3>- lib</h3>
+            <p>Contains all the libraries.</p>
+
+        <h3>- repository</h3>
+            <p>This is the Axis2 client side repository. By default it contains all Axis2 modules.</p>
+
+        <h3>- resources</h3>
+            <p>Contains additional resources that may be required. Ex: key stores.</p>
+
+        <h3>- samples</h3>
+            <p>Contains some client samples that demonstrate how to develop
+            various clients with security, RM ect.</p>
+
+        <h3>- LICENSE.txt</h3>
+            <p>Lists all libraries used by WSF/Java with their licenses.</p>
+
+        <h3>- README.txt</h3>
+            <p>This document.</p>
+
+        <h3>- release-notes.html</h3>
+            <p>Release information for WSO2 WSF/Java current version.</p>
+
+        <h2>Important Resources</h2>
+        <ul>
+            <li><a href="http://axis.apache.org/axis2/java/core/">Axis2 Documentation</a></li>
+            <li><a href="http://wso2.org/library/290">Quick Introduction To Axis2 Client API</a></li>
+            <li><a href="http://wso2.org/library/230">Reference Guide to Apache Axis2 Client
+                API Parameters</a></li>
+            <li><a href="http://wso2.org/library/95">Hello World with Apache Axis2</a></li>
+        </ul>
+
+</body>
+</html>    

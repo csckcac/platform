@@ -1,0 +1,12 @@
+<div class="content-box" id="subscriptions">
+    <table class="horizontal-data">
+        <tr>
+            <th>Application</th>
+            <th>Key</th>
+        </tr>
+        <tbody id="subscription-listing">
+
+        </tbody>
+        <tfoot class="horizontal-data-title"></tfoot>
+    </table>
+</div>

@@ -1,0 +1,159 @@
+<!--
+  ~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+       "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+    <title>Welcome to WSO2 Identity Server v2.0.0!</title>
+    <link href="css/is-docs.css" rel="stylesheet"/>
+   </head>
+<body>
+<p>[<a
+href="http://wso2.org/downloads/solutions/identity">Download</a>]
+| [<a href="index_docs.html">Documentation Index</a>] | [<a
+href="release-notes.html">Release Note</a>]</p>
+
+<h1>WSO2 Identity Solution, v@wso2is_version@-Identity Provider Administrator's Guide</h1>
+
+<p>This document provides information and instructions on the functionality
+of the Management Console of WSO2 Identity Solution .</p>
+
+<p>Your feedback on WSO2 Identity Solution is most appreciated. Please send them to our <a
+href="index.html#mail">mailing lists</a>.</p>
+
+<h2>Content</h2>
+
+<div class="toc">
+<ul>
+  <li><a href="#start">Loging to Admin Console</a></li>
+  <li><a href="#configure">Intial Configuration</a></li>
+     <ul>
+  	<li><a href="#userstore">User Stores</a></li>
+  	<li><a href="#claims">Defining Claims</a></li>
+  	<li><a href="#claim_mapping">Mapping Claims</a></li>
+    </ul>
+  <li><a href="#manage">Manage IdP</a></li>
+     <ul>
+  	<li><a href="#users">Manage Users</a></li>
+  	<li><a href="#relying_parties">Trusted Relying Parties</a></li>
+	<li><a href="#issued_cards">Issued Cards</a></li>
+    </ul>
+  <li><a href="#stats">Statics</a></li>
+</ul>
+</div>
+
+<h2 id="start">Loging to Admin Console</h2>
+<p>Download and install Identity Provider as in 
+<a href="installation_guide.html">here</a>.</p>
+<br/>
+
+<p>Point your browser to https://host:port/admin. If you haven't changed 
+the default settings then you should be able to login to 
+https://localhost:12443/admin/ using username "admin" and passowrd "admin".</p> 
+
+<h2 id="configure">Configure Identity Provider</h2>
+<h3><a name="userstore"></a>User Stores</h3>
+<p>WSO2 Identity Solution can access users from existing user stores. Identity Provider will 
+issue Managed Cards and Tokens for the users in configured user store. You can have several user
+stores but only one can be active at a time. User store can be an LDAP or JDBC.</p>
+<br/>
+<strong>LDAP - org.wso2.usermanager.custom.ldap.LDAPRealm</strong>
+<table>
+	<tr><td>Parameter Name</td><td>Description</td></tr>
+	<tr><td>ConnectionUrl</td><td>LDAP connection url - e.g. ldap://localhost:389</td></tr>
+	<tr><td>ConnectionName</td><td>LDAP connection username. This must be a root user who can read attribute IDs</td></tr> 
+	<tr><td>ConnectionPass</td><td>LDAP connection password.</td></tr>
+	<tr><td>UserPattern</td><td>User search pattern must be given - e.g. uid={0},ou=People,dc=wso2,dc=com </td></tr>
+	<tr><td>UserContextName</td><td>Name of the context, where user objects are stored</td></tr>
+	<tr><td>AttributeIds</td><td>User Attribute IDs that will be read by the IdP. 
+    Column names must be comma seperated - e.g. email_address, telephone. These attributes 
+    will be included in the issued SAML tokens. </td></tr>
+</table>    
+
+<strong>JDBC - org.wso2.usermanager.custom.jdbc.JDBCRealm</strong>
+<table>
+  <tr><td>Parameter Name</td><td>Description</td></tr>
+  <tr><td>DriverName</td><td>JDBC Driver's class name. It must be present in the classpath - e.g. org.apache.derby.jdbc.EmbeddedDriver</td></tr>
+  <tr><td>ConnectionURL</td><td>Connection URL to the database - e.g. jdbc:derby:home/identity/database/SAMPLE_DB</td></tr>
+  <tr><td>ConnectionUserName</td><td>Connection username to the database</td></tr>
+  <tr><td>ConnectionPassword</td><td>Connection password of the username</td></tr>
+  <tr><td>UserTable</td><td>User table name in the database.</td></tr>
+  <tr><td>UserNameColumn</td><td>User name column in the User table</td></tr>
+  <tr><td>UserCredentialColumn</td><td>User credential column in the User table</td></tr>
+  <tr><td>ColumnNames</td><td>Column names of the user table from where the user properties will be read.
+  Column names must be comma seperated - e.g. email_address, telephone. These attributes 
+  will be included in the issued SAML tokens.
+  </td></tr>
+</table>
+
+<h3><a name="claims"></a>Defining Claims</h3>
+
+<p>The standard set of claims of the http://schemas.xmlsoap.org/ws/2005/05/identity
+dialect and another set of sample claims are available in this view. Use 
+the "add new dialect" option and "add new claim" option to add diatects and 
+claims. 
+</p>
+
+<p>Click the "switch" icon in the claim detail section of each claim to enable/disable
+a claim.</p>
+
+<p>A detailed guide on defining claims realted to OpenID is available <a href="op_administratorguide.html">here</a>.</p>
+
+<h3><a name="claim_mapping"></a>Mapping Claims</h3>
+
+<p>This view allows mapping a claim to a user attribute in the user store. The 
+available attibute identifiers will be shown in the claim edit view, when the 
+display name of a claim is selected.</p>
+
+<h2 id="manage">Manage Identity Provider</h2>
+
+<h3><a name="users"></a>Manage Users</h3>
+
+<p>The user management currectly allows the administrator to view the 
+list of users who can use the identity provider.</p>
+
+<h3><a name="relying_parties"></a>Trusted Relying Parties</h3>
+
+<p>Administrator can specify a list of relying parties trusted globally by the 
+identity provider. To add a new relying party to this list, click on the 
+"Add new trusted relying party" link and provide the certificate of the
+relying party. This certificate must be in DER format (When you export a
+cerificate using java keytool the certificate will be in DER format). 
+The "Common Name" (CN) of this certificate will be used to identify 
+the host name of the trusted relying party.</p>
+
+<h3><a name="issued_cards"></a>Issued Cards</h3>
+
+<p>Administator can view issued and revoked information cards using this view.
+A card can be revoked using the "Revoke Card" option.</p>
+
+<h2 id="stats">Statistics</h2>
+<p>Statistics provides information on user behavior, card downloads and token issuance.  These are the reports that it generates.</p>
+<ul>
+<li>View All users</li>
+<li>User Behavior Report</li>
+<li>Failed Card Issuences</li> 
+<li>Failed Token Issuences</li> 
+<li>Tokens by User - Clicking on details will give you a descriptive view of the summary</li> 
+<li>Tokens by Card - Clicking on details will give you a descriptive view of the summary</li> 
+<li>Tokens by User and Card - Clicking on details will give you a descriptive view of the summary</li> 
+<li>Info Cards by User - Clicking on details will give you a descriptive view of the summary</li>
+<li>OpenIDs by User</li>
+</ul>
+</body>
+</html>

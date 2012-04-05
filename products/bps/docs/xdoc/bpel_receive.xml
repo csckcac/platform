@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>@product.name@ - BPEL Receive Activity</title>
+        <link href="css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+       <p>&lt;receive&gt; – receive a message from a partner</p>
+        <h2>Synopsis</h2>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;receive</span> <span style="color: #000066;">partnerLink</span>=<span style="color: #ff0000;">&quot;NCName&quot;</span></span>
+<span style="color: #009900;">   <span style="color: #000066;">portType</span>=<span style="color: #ff0000;">&quot;QName&quot;</span>?</span>
+<span style="color: #009900;">   <span style="color: #000066;">operation</span>=<span style="color: #ff0000;">&quot;NCName&quot;</span></span>
+<span style="color: #009900;">   <span style="color: #000066;">variable</span>=<span style="color: #ff0000;">&quot;BPELVariableName&quot;</span>?</span>
+<span style="color: #009900;">   <span style="color: #000066;">createInstance</span>=<span style="color: #ff0000;">&quot;yes|no&quot;</span>?</span>
+<span style="color: #009900;">   <span style="color: #000066;">messageExchange</span>=<span style="color: #ff0000;">&quot;NCName&quot;</span>?</span>
+<span style="color: #009900;">   standard-attributes<span style="color: #000000; font-weight: bold;">&gt;</span></span>
+   standard-elements
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;correlations<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>?
+      <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;correlation</span> <span style="color: #000066;">set</span>=<span style="color: #ff0000;">&quot;NCName&quot;</span> <span style="color: #000066;">initiate</span>=<span style="color: #ff0000;">&quot;yes|join|no&quot;</span>? <span style="color: #000000; font-weight: bold;">/&gt;</span></span>+
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/correlations<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;fromParts<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>?
+      <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;fromPart</span> <span style="color: #000066;">part</span>=<span style="color: #ff0000;">&quot;NCName&quot;</span> <span style="color: #000066;">toVariable</span>=<span style="color: #ff0000;">&quot;BPELVariableName&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>+
+   <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/fromParts<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/receive<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+        <p>Throws following faults:</p>
+        <ul>
+            <li>bpel:ambiguousReceive</li>
+            <li>bpel:conflictingRequest</li>
+            <li>bpel:conflictingReceive</li>
+            <li>bpel:correlationViolation</li>
+            <li>bpel:invalidVariables</li>
+            <li>bpel:uninitializedPartnerRole</li>
+            <li>bpel:uninitializedVariable</li>
+        </ul>
+        <h2>Description</h2>
+        <p>The &lt;receive&gt; activity enables a BPEL process to implement a Web Service operation. When this activity
+            is encountered, ODE will begin searching for messages that match the activity. The activity will not
+            complete until a match is found or the scope is terminated.
+            In this sense, the activity can be said to block. For non-deterministic selection (something akin to a POSIX
+            select), the &lt;pick&gt; activity should be used.
+        </p>
+        <p>The precise timing of message arrival is not important. The message can arrive before the &lt;receive&gt;
+            activity is activated; ODE will store the message in an internal queue and associate it with the appropriate
+            &lt;receive&gt; once it is activated.
+        </p>
+        <p>If the operation is of a request-response style, the &lt;reply&gt; activity can be used to send the reply.
+        </p>
+        <ul>
+            <li>partnerLink - the partner link whose myRole should be used.</li>
+            <li>portType - (optional) the port type of the implemented operation.</li>
+            <li>operation - name of the implemented operation.</li>
+            <li>variable - (optional) variable into which the received message content should be stored.</li>
+            <li>createInstance - (optional) flag indicating whether this activity is used to instantiate the process instance
+                <ul>
+                    <li>yes - if this is an activity that can be used to create a new process instance</li>
+                    <li>no - if this activity does not create a new process instance</li>
+                </ul>
+            </li>
+            <li>messageExchange – (optional) a string identifer used to disambiguate message exchanges on the same
+                partnerLink/operation.
+            </li>
+            <li>&lt;correlations&gt; / &lt;correlation&gt; - specifies the correlation sets that are used in this
+                exchange
+                <ul>
+                    <li>set - name of the correlation set</li>
+                    <li>initiate - specifies whether this operation will initiate the correlation set.
+                        <ul>
+                            <li>yes - the operation will initialize the correlation set based on the data received in
+                                message
+                            </li>
+                            <li>no - the operation will not initialize the correlation set. Correlation set will already
+                                be initialized and the operation will ensure that the message returned matches the
+                                correlation set.
+                            </li>
+                            <li>join - the operation will not initialize the correlation set if it is not already
+                                initialized. Otherwise, the operation will ensure that the message returned matches the
+                                correlation set.
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>{{ &lt;fromParts&gt; / &lt;fromPart&gt; }} – map received message parts into variables. When these
+                elements are present, the variable attribute must not be used (@product.name@ not yet support the &lt;fromPart&gt;.
+                Hence, the variable attribute must be used.)
+                <ul>
+                    <li>part - name of the received message part</li>
+                    <li>toVariable - the variable in which the part should be saved.</li>
+                </ul>
+            </li>
+
+        </ul>
+
+    </body>
+</html>

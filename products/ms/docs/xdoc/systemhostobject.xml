@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+~ Copyright 2005-2008 WSO2, Inc. (http://wso2.com)
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+      "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <title></title>
+  <link href="css/mashup-docs.css" rel="stylesheet" type="text/css" media="all"
+  />
+  <link type="text/css" rel="stylesheet" href="css/SyntaxHighlighter.css"
+  media="all" />
+  <script type="text/javascript" language="javascript" src="js/shCore.js">
+  </script>
+  <script type="text/javascript" language="javascript"
+  src="js/shBrushJScript.js">
+  </script>
+  <script type="text/javascript" language="javascript" src="js/shBrushJava.js">
+  </script>
+  <script type="text/javascript" language="javascript" src="js/shBrushSql.js">
+  </script>
+  <script type="text/javascript" language="javascript" src="js/shBrushXml.js">
+  </script>
+</head>
+
+<body>
+
+<div id="main-content">
+<h1>System Host Object</h1>
+
+<h2>1.0 Introduction</h2>
+
+<p>The 'system' host object provides a set of system specific utility
+functions. The system object is global and thus does not need to be
+instantiated explicitly. </p>
+
+<h3>1.1 Example</h3>
+<pre name="code" class="js">                system.include("concatscript.js");
+                function add(first, last) {
+                    system.log(system.localHostName);
+                    //waits for 1 second
+                    system.wait(1000);
+                    // concat is a function in the included concatscript.js javascript
+                    var answer = concat(first,last);
+                    // Send a notification to the Desk tray specifying the answer
+                    system.notifyMonitor("Result of concaternating" + first + " and " + last + ", " + answer);
+                    return answer;
+                }
+
+                // Here is the contents of the "concatscript.js" file which was included above. It should have been placed in the ".resources" folder of this mashup.
+                concat.visible=false; // Note that I have set the "visible" annotation to false. If it was not set the concat function would appear in the service as well.
+                function concat(first,last){
+                    return first + last;
+                }
+            </pre>
+
+<h2>2.0 System Object</h2>
+
+<h3>2.1 System Object Interface</h3>
+<pre name="code" class="js">                {
+                    function void include(string[] scriptPath);
+                    function void wait([optional int time]);
+                    readonly property string localHostName;
+                    function String setInterval(String javascriptCode/Function javascriptFunctionName, timeInterval, [optional]Array parameters, [optional] Date startTime, [optional] Date endtime, [optional] String taskName);
+                    function void clearInterval(String uuid);
+                    function String setTimeout (String javascriptCode/Function javascriptFunctionName, Number startInMilliSeconds, [optional]String taskName);
+                    function void clearTimeout(String uuid);
+                    function boolean isTaskActive(String taskName);
+                    function void notifyMonitor( string message, [optional] string title, [optional] int severity);
+                    function XML getXML(String url);
+                    function void log(String logmessage, [Optional]String logLevel);
+                    readonly property string wwwURL;
+                }
+            </pre>
+
+<h3>2.2 API Documentation</h3>
+
+<table class="MsoTableGrid"
+style="margin-left: 0.5in; border-collapse: collapse;" border="1"
+cellpadding="5" cellspacing="0">
+  <tbody>
+    <tr>
+      <td>Member</td>
+      <td>Description</td>
+      <td>Supported in version</td>
+    </tr>
+    <tr>
+      <td><span style="font-weight: bold;">function</span> <span
+        style="font-weight: bold;"></span> <b>void include(string
+        scriptPath*</b>); </td>
+      <td>Imports the external scripts given as the arguments. Paths of the
+        scripts to be imported can be given using a comma separated list as
+        arguments. Imported script files need to be placed in the
+        service.resources directory of the mashup service. If the path
+        represents a file it should be given relative to the service.resources
+        directory. If a file is not found at this location, the path is treated
+        as an URL. The URL can be given relative to the services context root
+        (eg:<a
+        href="http://127.0.0.1:9763/services">http://127.0.0.1:9763/services</a>)
+        or it can also be an absolute URL to a JavaScript file. <br />
+        <em>system.include("include.js");</em> <br />
+        <em>system.include("system/version?stub&amp;lang=e4x", "lib2.js");
+        </em> <br />
+        system.include("http://tempuri.org/js/temp.js"); <br />
+      </td>
+      <td>0.1</td>
+    </tr>
+    <tr>
+      <td><span style="font-weight: bold;">function</span> <span
+        style="font-weight: bold;"></span> <b>void wait([optional int time])
+        </b> </td>
+      <td>Waits for the execution of the script for the given time in
+        milliseconds or waits for 10 milliseconds when the time is not given.
+        <br />
+        <em>system.wait();</em> <br />
+        <em>system.wait(1000);</em> </td>
+      <td>0.1</td>
+    </tr>
+    <tr>
+      <td><b>readonly property string localHostName;</b> </td>
+      <td>Gets the string defining the hostname of the system. <br />
+        <em>var hostname = system.localHostName; </em> </td>
+      <td>0.1</td>
+    </tr>
+    <tr>
+      <td><span style="font-weight: bold;">function</span> <span
+        style="font-weight: bold;">String setInterval ( <br />
+        String javascriptCode/Function javascriptFunctionName, <br />
+        timeInterval, <br />
+        [optional] Array parameters, <br />
+        [optional] Date startTime, <br />
+        [optional] Date endtime, <br />
+        [optional] String taskName <br />
+        ); </span> </td>
+      <td>This function allows the scheduling of a JavaScript function or a
+        String of Javascript code periodically. There are 2 mandatory
+        parameters. <br />
+
+        <ol>
+          <li>A javascript function (or a javascript expression) and </li>
+          <li>the time interval between two consecutive executions. </li>
+        </ol>
+        <br />
+        Optionally one can specify a start time, indicating when to begin the
+        function execution (after given number of milliseconds in the frequency
+        parameter by default). It is also possible to give a start time and an
+        end time. <br />
+        <br />
+        The function returns a String UUID, which can be used to refer to this
+        function scheduling instance. <br />
+        <span style="font-style: italic;">var id =
+        system.setInterval('myJavaScriptFunction("parameterValue")', 2000); <br
+        />
+        <br />
+        </span> For a demonstration of this feature, please refer the <span
+        style="font-weight: bold; font-style: italic;">TomatoTube</span> sample
+        in your WSO2 Mashup Server distribution. <span
+        style="font-style: italic;"></span> </td>
+      <td>0.2</td>
+    </tr>
+    <tr>
+      <td><b>function void clearInterval(String uuid);</b> </td>
+      <td>Removes a JavaScript function scheduled for periodic execution using
+        the job uuid. <br />
+        <span style="font-style: italic;">system.clearInterval(uuid);</span>
+      </td>
+      <td>0.2</td>
+    </tr>
+    <tr>
+      <td><span style="font-weight: bold;">function</span> <span
+        style="font-weight: bold;">String setTimeout ( <br />
+        String javascriptCode/Function javascriptFunctionName, <br />
+        Number startInMilliSeconds, <br />
+        [optional] String taskName <br />
+        ); </span> </td>
+      <td>setTimeout() allows you to specify that a piece of JavaScript code
+        (called an expression) will be run a specified number of milliseconds
+        from when the setTimeout() method was called. setTimeout() also returns
+        a numeric timeout ID that can be used to track the timeout. This is
+        most commonly used with the clearTimeout() method. <br />
+        <span style="font-style: italic;">var id =
+        system.setTimeout('myJavaScriptFunction("parameterValue")', 2000);
+        </span> </td>
+      <td>1.5</td>
+    </tr>
+    <tr>
+      <td><b>function void clearTimeout(String uuid);</b> </td>
+      <td>Sometimes it's useful to be able to cancel a timer before it goes
+        off. The clearTimeout() method lets us do exactly that. <br />
+        <span style="font-style: italic;">system. clearTimeout ( id ); <br />
+        </span> where timeoutId is the ID of the timeout as returned from the
+        setTimeout() method call. </td>
+      <td>1.5</td>
+    </tr>
+    <tr>
+      <td><b>function boolean isTaskActive(String taskName);</b> </td>
+      <td>Sometimes it's useful to be able to get the task status as it might
+        have been deleted from the UI. User can check whether the task is
+        active and re-schedule it with the help of this. <br />
+        <span style="font-style: italic;">system.isTaskActive ( taskName ); <br
+        />
+        </span> where taskName is name of the task to be get the status. </td>
+      <td>2.0 </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span
+        style="font-weight: bold;">function void notifyMonitor( <br />
+        string message, <br />
+        </span> <span style="font-weight: bold;">[optional] string title
+        </span> <br />
+        <span style="font-weight: bold;">[optional] int severity) </span> <br />
+      </td>
+      <td style="vertical-align: top;">Sends the user a message via the desk
+        tray icon of the monitor. The message string is the only mandatory
+        parameter, with the title defaulting to 'Message' and the message
+        severity defaulting to 'none'. The options for message severity are 0 -
+        Informational, 1 - Error, 2 - Warning and 3 - None. <br />
+        <span style="font-style: italic;">system.notifyMonitor("My Error
+        Message", "Title", 2); </span> </td>
+      <td style="vertical-align: top;">1.5 <br />
+      </td>
+    </tr>
+    <tr>
+      <td><b>function XML getXML(String url, [[username, [password]]);</b> </td>
+      <td><p>Utility function to get an XML file over the network. You can
+        optionally pass username and password for HTTP basic authentication.<br
+        />
+        <span
+        style="font-style: italic;">system.getXML('http://wso2.org/repos/wso2/trunk/mashup/java/modules/
+        samples/upgradeChecker/upgradeChecker.resources/history.xml'); </span>
+        </p>
+      </td>
+      <td>1.5</td>
+    </tr>
+    <tr>
+      <td><b>function object getJSON(String url, [[username, [password]]);</b>
+      </td>
+      <td><p>Utility function to get a JSON file over the network. You can
+        optionally pass username and password for HTTP basic authentication.<br
+        />
+        <span
+        style="font-style: italic;">system.getJSON('http://wso2.org/repos/wso2/trunk/mashup/java/modules/
+        samples/upgradeChecker/upgradeChecker.resources/history.json');</span>
+        </p>
+      </td>
+      <td>2.2</td>
+    </tr>
+    <tr>
+      <td><b>function void log(String logmessage, [Optional] String
+        logLevel);</b> </td>
+      <td>Allows printing to the system log from a Mashup. Where logmessage
+        contains a string to be written to the system log and (optional)
+        loglevel indicates the logging level as * 'info', 'warn', 'debug',
+        'error' or 'fatal'. The logging level defaults to 'info' when one is
+        not provided. <br />
+        <span style="font-style: italic;">system.log("Message", "error");
+        </span> </td>
+      <td>1.5</td>
+    </tr>
+    <tr>
+      <td><b>readonly property string wwwURL;</b> </td>
+      <td>Returns the base address of the calling mashup. Could be usefull when
+        a user wants to return a URL to a feed that it has created. Using this
+        function will make sure that the feed URL would not break when a mashup
+        is shared to another Mashup Server. <br />
+        Assuming the user bob has created a feed called bobsFeed.xml in a
+        mashup called feedExample. <br />
+        <span style="font-style: italic;">var bobsFeed = system.wwwURL +
+        "/bobsFeed.xml"; </span> </td>
+      <td>1.5</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>3.0 References</h2>
+<ul>
+  <li><a
+    href="apidocs/org/wso2/mashup/hostobjects/system/SystemHostObject.html">JavaDoc
+    for the system host Object </a> </li>
+</ul>
+</div>
+<script type="text/javascript" language="javascript">
+            dp.SyntaxHighlighter.BloggerMode();
+            dp.SyntaxHighlighter.HighlightAll('code');
+        </script>
+</body>
+</html>

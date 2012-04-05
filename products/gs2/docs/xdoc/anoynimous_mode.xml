@@ -1,0 +1,42 @@
+<!--
+  ~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <body>
+        <p>[<a href="http://wso2.org/downloads/gadget-server">Download</a>]
+            | [<a href="index_docs.html">Documentation Home</a>] | [<a href="release_notes.html">Release Note</a>]
+        </p>
+        <h1>WSO2 Gadget Server in Anonymous mode</h1>
+        <p>
+            When a new user first launches the portal, the WSO2 Gadget Server provides the same user experience he/she will
+            have in
+            signed in mode. There will be a set of default gadgets displayed for the user and more gadgets are shown in
+            add gadgets drop-down.
+            The user can drag-drop gadgets and create his/her own gadget layout as preferred. <br />
+</p>
+<p>User data storage in anonymous mode is done using a browser cookie based storage mechanism.<br />
+</p>
+<p><span style="font-style: italic; font-weight: bold;">Note:</span> The anonymous mode will not give the user access to the <span style="font-style: italic;">Enterprise Gadget Repository</span> and adding gadgets by specifying a URL is also disabled.
+            <br /><br />
+            <img alt="ann-portal" src="images/ann-portal.png" />
+            <br /><br />
+            <img alt="ann-portal" src="images/ann-portal-add-gadget.png" />
+        </p>
+
+
+
+    </body>
+</html>

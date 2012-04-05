@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<!--
+    ~ Copyright (c) 2009, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+    ~
+    ~ Licensed under the Apache License, Version 2.0 (the "License");
+    ~ you may not use this file except in compliance with the License.
+    ~ You may obtain a copy of the License at
+    ~
+    ~ http://www.apache.org/licenses/LICENSE-2.0
+    ~
+    ~ Unless required by applicable law or agreed to in writing, software
+    ~ distributed under the License is distributed on an "AS IS" BASIS,
+    ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    ~ See the License for the specific language governing permissions and
+    ~ limitations under the License.
+    -->
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type" />
+<title>Message Store Mediator - User Guide</title>
+<link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all" />
+</head>
+
+<body>
+	<h1>EJB Mediator</h1>
+
+	<p>EJB mediator calls an external Enterprise JavaBean(EJB) and stores the result in the message payload or in a message context property. Currently, this mediator supports EJB3 Stateless Session Beans and Stateful Session Beans</p>
+
+	<img alt="Message Store Mediator" src="images/ejb_mediator_screenshot.png" />
+
+	<p>
+		<strong>Figure1: EJB Mediator figure 1</strong>
+	</p>
+
+	<h2>EJB Mediator</h2>
+	<p>Following will describe the properties which required to configure EJB (under EJB 3.0 specification).</p>
+
+	<h2>Beanstalk</h2>
+
+	<p>An enterprise beanstalk is used to retrieve Enterprise JavaBean (EJB) client stubs. This class supports stateless and stateful session beans. Enterprise beanstalks can be configured in synapse.properties file. Parameters of the JNDI service to be looked up for EJBs should be provided in that configuration. Enterprise beanstalks cache EJB client stubs to improve efficiency by omitting
+		excessive JNDI look ups. Cache timeout for both stateless and stateful session beans could be configured separately</p>
+	<h2>Class</h2>
+
+	<p>A class reprasants the client service stubs which can be statelss aor statefull beans (should be included at the runtime environment)</p>
+	<h2>Method</h2>
+
+	<p>A piece of method which is registered at EJB session and going to invoke while execute at the synapse run time environemnt</p>
+
+	<h2>Session Id</h2>
+
+	<p>Session id of the stateful session bean, null for stateless session beans.</p>
+	<h2>Remove</h2>
+
+	<p>Whether or not this bean is removed from the beanstalk after the method invocation.</p>
+	<h2>Target</h2>
+
+	<p>Target to store the result of the EJB method call.</p>
+	<h2>JNDI Name</h2>
+	<p>JNDI name of the bean. Could be null if this bean is already cached in the beanstalk.</p>
+	<h2>Method Arguments</h2>
+	<p>Argument list for the remote method invocation.</p>
+</body>
+</html>

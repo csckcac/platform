@@ -1,0 +1,16 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Header/>
+  <soapenv:Body>
+     <bam:data xmlns:bam="http://wso2.org/bam/2011/07/31">
+         <workFlowId>3</workFlowId>
+         <nodeId>2</nodeId>
+         <serverAddress>127.0.0.1</serverAddress>
+        <requestCount>2</requestCount>
+        <responseCount>4</responseCount>
+        <faultCount>2</faultCount>
+        <maxResponeTime>23.45</maxResponeTime>
+        <minResponeTime>0.34</minResponeTime>
+
+     </bam:data>
+  </soapenv:Body>
+</soapenv:Envelope>

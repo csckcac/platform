@@ -1,0 +1,1 @@
+instructions.configure = org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/features/org.wso2.carbon.bam2.receiver.server_${feature.version}/conf/bam.xml,target:${installFolder}/../conf/bam.xml,overwrite:true);org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/bam.xml);

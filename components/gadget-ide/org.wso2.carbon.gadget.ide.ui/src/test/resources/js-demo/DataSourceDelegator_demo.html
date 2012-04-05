@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+<head>
+    <title>Demo for DataSourceDelegtor</title>
+    <link href="../../../main/js/lib/closure-library/closure/goog/css/common.css"
+          rel="stylesheet">
+    <link href="css/ConfigEditor.css" rel="stylesheet">
+    <link href="css/WSDLConfigEditor.css" rel="stylesheet">
+    <link href="css/TerminalView.css" rel="stylesheet">
+    <link href="../../../main/resources/css/WireIt.css" rel="stylesheet">
+    <link href="../../../main/js/lib/closure-library/closure/goog/css/css3button.css"
+          rel="stylesheet">
+
+    <script src="../../../main/js/lib/closure-library/closure/goog/base.js"></script>
+    <script src="../../../main/resources/js/wireit/utilities.js"></script>
+    <script src="../../../main/resources/js/wireit/excanvas.js"></script>
+    <script src="../../../main/resources/js/wireit/wireit.js"></script>
+    <script>
+        goog.require('gadgetide.flow.WSDLConfigEditor');
+        goog.require('goog.dom');
+        goog.require('goog.events');
+        goog.require('gadgetide.ui.ConfigEditorContainer');
+        goog.require('gadgetide.datasource.DataSource');
+        goog.require('gadgetide.datasource.Delegator');
+
+
+    </script>
+    <style type="text/css">
+        .WireIt-Layer {
+            box-shadow: 2px 0 120px 0 rgba(54, 54, 54, 0.15) inset;
+        }
+
+        .wsdl-config-editor {
+            width: 400px;
+        }
+    </style>
+</head>
+<body>
+<div id="demoBox" style=" height: 600px;
+                             width: 800px;
+                             background-color:#f7f7f7;
+                             padding: 40px;
+                             font:12px/18px 'Lucida Grande','Lucida Sans Unicode',Helvetica,Arial,Verdana,sans-serif;
+                              ">
+
+</div>
+
+<script>
+    var PrefixConfigEditor = function() {
+        gadgetide.ui.ConfigEditor.call(this);
+    };
+    goog.inherits(PrefixConfigEditor, gadgetide.ui.ConfigEditor);
+    PrefixConfigEditor.prototype.createDom = function() {
+        gadgetide.ui.ConfigEditor.prototype.createDom.call(this);
+        var el = this.getContentElement(), dom = this.getDomHelper(), b;
+        dom.appendChild(el, this.in_ = dom.createDom('input', {'type':'text'}));
+        dom.appendChild(el, b = dom.createDom('button', undefined, 'Set Prefix'));
+        this.getHandler().listen(b, goog.events.EventType.CLICK, this.changePrefix_);
+    };
+    PrefixConfigEditor.prototype.changePrefix_ = function(e) {
+        this.fireConfigChange({'prefix':this.in_.value});
+    };
+    PrefixConfigEditor.prototype.initConfig = function(){
+        this.fireConfigChange({'prefix':''});
+    };
+
+
+    var PrefixDataSource = function(config) {
+        gadgetide.datasource.DataSource.call(this, config);
+        this.prefix_ = config.prefix || "";
+    };
+    goog.inherits(PrefixDataSource, gadgetide.datasource.DataSource);
+    PrefixDataSource.INPUT_FORMAT = { 'text': { '$': '?' } };
+    PrefixDataSource.OUTPUT_FORMAT = { 'prefixedText': { '$': '?' } };
+    PrefixDataSource.prototype.execute = function(callback, input) {
+        var outputClone = goog.object.clone(PrefixDataSource.OUTPUT_FORMAT);
+        outputClone['prefixedText']['$'] = this.prefix_ + input['text']['$'];
+        callback(outputClone);
+    };
+    PrefixDataSource.prototype.loadInputFormat = function(callback) {
+        callback(PrefixDataSource.INPUT_FORMAT);
+    };
+    PrefixDataSource.prototype.loadOutputFormat = function(callback, inputFormat) {
+        callback(PrefixDataSource.OUTPUT_FORMAT);
+    };
+    PrefixDataSource.prototype.getPrefix = function() {
+        return this.prefix_;
+    };
+
+
+    var demoBox = goog.dom.getElement('demoBox');
+    layer = new WireIt.Layer({
+        parentEl:demoBox
+    });
+    var containerCreator = function() {
+        var editor = new PrefixConfigEditor();
+        var container = new gadgetide.ui.ConfigEditorContainer(layer, editor);
+        return container;
+    };
+
+    var delegator = new gadgetide.datasource.Delegator(
+            PrefixDataSource,containerCreator);
+    delegator.display();
+
+    var delegator2 = new gadgetide.datasource.Delegator(
+            PrefixDataSource,containerCreator);
+    delegator2.display();
+
+
+</script>
+</body>
+
+</html>
+

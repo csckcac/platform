@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Jaggery - Delicious Javascript</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+        }
+    </style>
+    <link href="css/prettify.css" rel="stylesheet">
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72"
+          href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114"
+          href="images/apple-touch-icon-114x114.png">
+</head>
+
+<body>
+
+<%
+include('/includes/topnavi.jag');
+%>
+
+<div class="container">
+
+    <!-- Main hero unit for a primary marketing message or call to action -->
+
+    <div class="row">
+        <div class="span-two-thirds">
+            <div class="page-header">
+                <h1>
+                    Setting up Jaggery
+                </h1>
+            </div>
+
+            <ol>
+                <li>Extract <code>jaggery-1.0.0-SNAPSHOT_M4.zip</code></li>
+                <li>The bin folder will contain all the Jaggery execution scripts.</li>
+                <li>Run <code>sh bin/wso2server.sh (bin/wso2server.bat)</code> command to start the server.</li>
+            </ol>
+
+        </div>
+        <div class="span-one-third">
+            <p align="right">
+                <a class="btn success large" href="http://dist.wso2.org/products/jaggery/dl/jaggery-1.0.0-SNAPSHOT_M4.zip">Download Jaggery (M4) </a>
+            </p>
+        </div>
+    </div>
+    <br/>
+	<div class="row">
+	    <div class="span-two-thirds">
+	        <div class="page-header">
+	            <h2>
+	                Jaggery Server
+	            </h2>
+	        </div>
+	
+	        <p>
+	            Jaggery Server is the Runtime that host Jaggery applications.
+	            <br/>  <br/>
+	            It contains a management console, for Admins to manger (deploy, reload, stop and start) Jaggery Apps. Using the management console, admins can gather basic statistics about the
+	            deployed applications.
+	             <br/><br/>
+	            Jaggery Server is powered by WSO2 carbon OSGi Runtime
+	
+	            <br/> <br/>
+	            Management console can be accessed by <code>{http://localhost:9443/carbon}</code>
+	        </p>
+	        <img alt="Jaggery Management Console" src="images/j-mgt-console.png"/>
+	
+	    </div>
+	</div>
+    <div class="row">
+        <div class="span16">
+            <h2>How to Deploy a Jaggery App</h2>
+
+            <p>In-order to compose a Jaggery script you have to make it a <span class="label notice"> .jag</span> extension.</p>
+
+            <p>There are no restrictions for the directory structure, add your <code>.jag</code> files where ever you want,
+            zip them all together, rename the .zip to .war <b>(Just for now
+                in M3)</b> and deploy at <i>{JAGGERY_HOME}/repository/deployment/server/jaggeryapps</i>
+            </p>
+            
+            <p>Also Jaggery app .war file can be uploaded through the management console as follows. This can be found under Add link in Jaggery Applications section.</p>
+            <br/>
+            <img alt="Upload Jaggery" src="images/uploadjaggery.png"/>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="span-two-thirds">
+            <div class="page-header">
+                <h2>
+                    Jaggery Command Line Client
+                </h2>
+            </div>
+
+            <p>
+                Jaggery command line client ships with the Jaggery bundle. Execute bin/jaggery.bat or bin/jaggery.sh
+                based on your platform to enter into the command line console.
+            </p>
+            <img alt="Jaggery Command Line" src="images/commandline.png"/>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="span-two-thirds">
+            <div class="page-header">
+                <h2>
+                    Command Line Commands
+                </h2>
+            </div>
+            <p><code>&#60script.jag&#62</code> &#150 Load Jaggery script from the current path.</p>
+            <p><code>&#60filepath&#47script.jag&#62</code> &#150 Load Jaggery script from the path given.</p>
+            <img alt="Jaggery Commands" src="images/load.png"/>
+
+            <p><code>-help</code> &#150 Shows all the commands for help.</p>
+
+            <p><code>-quit</code> &#150 Quits the Jaggery command line (Only applicable for shell mode).</p>
+            
+            <p><code>-shell</code> &#150 Enter into the shell mode (shell mode is described in the next section).</p>
+            
+            <p><code>-version</code> &#150 Shows the current version of the Jaggery build.</p>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+    <div class="span-two-thirds">
+        <div class="page-header">
+            <h2>
+                Command Line Shell Mode
+            </h2>
+        </div>
+        <p>
+        	Jaggery command line shell mode will facilitate the evaluation of realtime Jaggery expressions. Also this will be
+        	helpful for interactive shell executions.
+        </p>
+
+        <img alt="Jaggery Shell" src="images/shell.png"/>
+
+        <p><code>help</code> &#150 Shows all the commands for help.</p>
+
+        <p><code>quit</code> &#150 Quits the Jaggery command line (Only applicable for shell mode).</p>
+
+        <p><code>version</code> &#150 Shows the current version of the Jaggery build.</p>
+    </div>
+    </div>
+    <br/>
+
+    <%
+    include('includes/footer.jag');
+    %>
+
+
+</div>
+<!-- /container -->
+<script src="js/google-code-prettify/prettify.js"></script>
+<script src="js/jquery-1.7.1.min.js"></script>
+<script>
+    $(function () {
+        prettyPrint();
+    })
+
+    $(document).ready(function () {
+        $('#howto').toggleClass('active')
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!--
+~ Copyright 2005-2008 WSO2, Inc. (http://wso2.com)
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <link href="css/mashup-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+	<p>[<a
+                href="http://wso2.org/downloads/mashup">Download</a>]
+            | [<a href="index_docs.html">Documentation Home</a>] | [<a
+                    href="release_notes.html">Release Note</a>]
+        </p>
+
+        <div id="main-content">
+            <h1>User Management
+                <br/>
+            </h1>
+
+            <p>This document introduces the user management features of the WSO2 Mashup
+                Server:
+            </p>
+
+            <h1>Administrator Actions</h1>
+
+            <p>All the use management operations are only available for the Mashup Server administrator. The
+                administrator can login with the default admin Username/password and navigate to user management area
+                for user management operations.
+            </p>
+
+            <h2>Managing Users
+                <br/>
+            </h2>
+
+            <p>All user management functions require admin privileges and are provided from
+                the 'User Management' page.
+            </p>
+
+            <h3>Add User</h3>
+
+            <p>New users can be added to the mashup server via
+                <strong>Home > Configure > User Management > Users > Add New User</strong>
+                and following the guided process.
+                <br/>
+                <br/>
+                <img alt="Add User" src="images/Add_User.png"/>
+                <br/>
+            </p>
+
+            <h3>Add New User Role</h3>
+            <p>Mashup admin can create new user roles with permissions and assign users to them. By default an Admin
+                role is created with all permissions for Mashup Server administration.
+            </p>
+            <p>A newly created role can have privileges such as,</p>
+            <ul>
+                <li>Login to admin console</li>
+                <li>Manage system configuration</li>
+                <li>Manage security</li>
+                <li>Upload services</li>
+                <li>Manage services</li>
+                <li>Manage lifecycle configuration</li>
+                <li>Manage mediation</li>
+                <li>Monitor system</li>
+                <li>Delegate Identity</li>
+            </ul>
+
+            <p>
+                <img alt="Add Role" src="images/Add_Role.png"/>
+            </p>
+            <br/><br/>
+            <p>
+                <img alt="Add Role" src="images/permisionset.png"/>
+            </p>
+
+        </div>
+    </body>
+</html>

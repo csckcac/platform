@@ -1,0 +1,74 @@
+<h2>API Statistics</h2>
+
+        <div class="row-fluid well">
+        <div class="span5">
+        
+            <div>
+                <div id="chartVersion1"></div>
+            </div>
+        </div>
+            <div class="span6">
+                <table class="table" id="versionTable">
+                      <tr>
+                        <th>API Name</th>
+                        <th>Usage</th>
+                      </tr>
+                  </table>
+            </div>
+
+
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$.jqplot('chartVersion1', 
+		    [[['API1', 9],['API2', 0],['API3', 2]]], 
+		    {
+		      title: ' ', 
+		      seriesDefaults: {
+		        shadow: false, 
+		        renderer: jQuery.jqplot.PieRenderer, 
+		        rendererOptions: { 
+		          startAngle: 180, 
+		          sliceMargin: 4, 
+		          showDataLabels: true } 
+		      }, 
+		      legend: { show:true, location: 'w' }
+		    }
+		  );
+	
+    apiProviderApp.call("action=getAllAPIUsage&server=https://localhost:9444/", function (json) {
+        if (json.error == "true") {
+            alert(json.message);
+        }
+        else {
+            var data = new Array();
+            $('#versionTable').find("tr:gt(0)").remove();
+            for (var i = 0; i < json.data.usage.length; i++) {
+                data[i] = [json.data.usage[i].apiName, parseFloat(json.data.usage[i].count)];
+                $('#versionTable').append($('<tr><td>' + json.data.usage[i].apiName + '</td><td>' + json.data.usage[i].count + '</td></tr>'));
+
+            }
+            
+            var plot1 = jQuery.jqplot('chartVersion1', [data],
+                {
+                    seriesDefaults:{
+                        // Make this a pie chart.
+                        renderer:jQuery.jqplot.PieRenderer,
+                        rendererOptions:{
+                            // Put data labels on the pie slices.
+                            // By default, labels show the percentage of the slice.
+                            showDataLabels:true
+                        }
+                    },
+                    legend:{ show:true, location:'e' }
+                }
+            );
+
+        }
+    });
+
+});
+
+
+</script>

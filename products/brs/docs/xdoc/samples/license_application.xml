@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+~ Copyright (c) 2009, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~
+~ WSO2 Inc. licenses this file to you under the Apache License,
+~ Version 2.0 (the "License"); you may not use this file except
+~ in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing,
+~ software distributed under the License is distributed on an
+~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+~ KIND, either express or implied. See the License for the
+~ specific language governing permissions and limitations
+~ under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <title>WSO2 BRS - Samples License Approval Service</title>
+  <link href="../css/brs-docs.css" rel="stylesheet" />
+  <link href="../styles/dist-docs.css" rel="stylesheet" type="text/css"
+  media="all" />
+</head>
+
+<body>
+<p>[<a href="../docs_index.html">Documentation Index</a>] 
+<h1>WSO2 BRS - Samples : License Approval Service</h1>
+
+<p>This guide demonstrates a simple license application approval service which
+uses business rules.</p>
+
+<p>Please follow the <a href="../user_guide.html">User Guide</a> before proceeding with this sample, if you have
+not already followed the <a href="../user_guide.html">User Guide</a>. </p>
+
+<h2>Contents</h2>
+
+<div class="toc">
+<ul>
+  <li><a href="#LicenseApplication">License Application</a> </li>
+  <li><a href="#References">References</a> </li>
+</ul>
+</div>
+
+<h2 id="LicenseApplication">License Approval Service</h2>
+
+<h3>Rules</h3>
+
+<p>Rule 1: The applicant must be elder than 18 years </p>
+
+<p>Rule 2: The application must have been made this year</p>
+
+<h3>Facts</h3>
+</p>
+
+<p>There is a one fact that is <i>a license application request was made</i>.
+In this sample, we use the XML fact capability of the BRS server. </p>
+
+<p><h3>Rule Service Configuration - LicenseApprovalService.rsl</h3>
+</p>
+
+<p>This service only needs a rule service language file (i.e
+LicenseApprovalService.rsl). Create a LicenseApprovalService.rsl file using
+following content and upload it. </p>
+<pre>&lt;ruleService name="LicenseApprovalService" tns="http://brs.carbon.wso2.org"&gt;
+    &lt;description&gt;LicenseApprovalService&lt;/description&gt;
+    &lt;ruleset&gt;&lt;![CDATA[package License
+
+import org.wso2.carbon.rulecep.adapters.Message;
+import java.util.Calendar;
+import java.lang.String;
+
+rule "Is of valid age" no-loop true salience 3
+when
+    $message : Message()
+    eval($message.selectInt("//p:Applicant/p:Age/child::text()") &lt; 18)
+then
+    retract($message);
+    String reject = new String("The applicant must be elder than 18 years");
+    insertLogical(reject);
+end
+
+rule "Application was made this year"  no-loop true salience 2
+when
+    $message : Message()
+    eval($message.selectDataTime("//p:Applicant/p:AppliedDate/p:DateTime/child::text()").get(Calendar.YEAR) != 2010)
+then
+    retract($message);
+    String reject = new String("The application must have been made this year");   
+    insertLogical(reject);
+end
+
+rule "Valid Application" no-loop true salience 1
+when
+    $message : Message()
+    not String()
+then
+    retract($message);
+    String accept = new String("The application is valid");   
+    insertLogical(accept);
+end]]&gt;&lt;/ruleset&gt;
+    &lt;operation name="applyForLicense"&gt;
+        &lt;with-param xmlns:p="http://brs.carbon.wso2.org" type="message"/&gt;
+        &lt;result name="result"&gt;
+            &lt;element name="notification" type="java.lang.String"/&gt;
+        &lt;/result&gt;
+    &lt;/operation&gt;
+&lt;/ruleService&gt;</pre>
+
+<h3>Deploying Service </h3>
+
+<p>You can either create an <strong>.rsl</strong> file and upload or create a
+rule service using rule service wizard UI. Please refer the <a href="../user_guide.html">User Guide</a> for more
+information.</p>
+
+<p><h3>Testing Sample</h3>
+You can use Try-it tool with a request similar to the following. </p>
+<pre>&lt;Applicant&gt;
+    &lt;Age&gt;21&lt;/Age&gt;
+    &lt;AppliedDate&gt;
+        &lt;DateTime&gt;2010-04-23T13:05:34&lt;/DateTime&gt;
+    &lt;/AppliedDate&gt;
+&lt;/Applicant&gt;</pre>
+
+<p>You can also use the code generation. There is an option for code generation
+in the services management page. A client using generated stub codes is shown
+bellow. Codes was generated with option - Unpacks the databinding classes. </p>
+<pre>package org.wso2.carbon.brs;
+
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.axis2.AxisFault;
+
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import java.io.StringReader;
+import java.rmi.RemoteException;
+
+/**
+ * A client for testing LicenseApprovalService
+ */
+public class TestLicenseApprovalService {
+
+    public static void main(String arg[]) {
+
+        try {
+
+            LicenseApprovalServiceStub licenseApprovalServiceStub =
+                    new LicenseApprovalServiceStub("http://localhost:9763/services/LicenseApprovalService");
+            ApplyForLicenseRequest applyForLicenseRequest = new ApplyForLicenseRequest();
+            applyForLicenseRequest.setExtraElement(
+                    createOMElement("&lt;ps:Applicant xmlns:ps=\"http://brs.carbon.wso2.org\"&gt;\n" +
+                    "    &lt;ps:Age&gt;21&lt;/ps:Age&gt;\n" +
+                    "    &lt;ps:AppliedDate&gt;\n" +
+                    "        &lt;ps:DateTime&gt;2010-04-23T13:05:34&lt;/ps:DateTime&gt;\n" +
+                    "    &lt;/ps:AppliedDate&gt;\n" +
+                    "&lt;/ps:Applicant&gt;"));
+
+            ApplyForLicenseResponse response =
+                    licenseApprovalServiceStub.applyForLicense(applyForLicenseRequest);
+            Result result = response.getResult();
+            String notification = result.getNotification();
+            if (notification != null) {
+                System.out.print(notification);
+            }
+
+        } catch (AxisFault axisFault) {
+            axisFault.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static OMElement createOMElement(String xml) {
+        try {
+
+            XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(
+                    new StringReader(xml));
+            StAXOMBuilder builder = new StAXOMBuilder(reader);
+            return builder.getDocumentElement();
+
+        }
+        catch (XMLStreamException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}</pre>
+
+<p><h2 id="References">References</h2>
+</p>
+</body>
+</html>

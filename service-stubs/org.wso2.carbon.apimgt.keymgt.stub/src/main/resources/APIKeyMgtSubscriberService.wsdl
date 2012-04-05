@@ -1,0 +1,353 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax29="http://keymgt.apimgt.carbon.wso2.org/xsd" xmlns:ax27="http://dto.impl.apimgt.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ax213="http://base.identity.carbon.wso2.org/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:ax211="http://api.apimgt.carbon.wso2.org/xsd" xmlns:tns="http://service.keymgt.apimgt.carbon.wso2.org" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.keymgt.apimgt.carbon.wso2.org">
+    <wsdl:documentation>APIKeyMgtSubscriberService</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ax214="http://base.identity.carbon.wso2.org/xsd" xmlns:ax212="http://api.apimgt.carbon.wso2.org/xsd" xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax28="http://dto.impl.apimgt.carbon.wso2.org/xsd" xmlns:ax210="http://keymgt.apimgt.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+            <xs:import namespace="http://dto.impl.apimgt.carbon.wso2.org/xsd" />
+            <xs:import namespace="http://keymgt.apimgt.carbon.wso2.org/xsd" />
+            <xs:import namespace="http://api.apimgt.carbon.wso2.org/xsd" />
+            <xs:import namespace="http://base.identity.carbon.wso2.org/xsd" />
+            <xs:element name="unsubscribeFromAPI">
+
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userId" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="apiInfoDTO" nillable="true" type="ax27:APIInfoDTO" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="renewAccessToken">
+                <xs:complexType>
+
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userId" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="apiInfoDTO" nillable="true" type="ax27:APIInfoDTO" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="renewAccessTokenResponse">
+                <xs:complexType>
+                    <xs:sequence>
+
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="APIKeyMgtSubscriberServiceAPIKeyMgtException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="APIKeyMgtException" nillable="true" type="ax29:APIKeyMgtException" />
+                    </xs:sequence>
+
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="APIKeyMgtSubscriberServiceAPIManagementException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="APIManagementException" nillable="true" type="ax212:APIManagementException" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="APIKeyMgtSubscriberServiceIdentityException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="IdentityException" nillable="true" type="ax214:IdentityException" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getSubscribedAPIsOfUser">
+                <xs:complexType>
+
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userId" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getSubscribedAPIsOfUserResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax27:APIInfoDTO" />
+
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAccessToken">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userId" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="apiInfoDTO" nillable="true" type="ax27:APIInfoDTO" />
+                        <xs:element minOccurs="0" name="applicationName" nillable="true" type="xs:string" />
+
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAccessTokenResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+
+            </xs:element>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://keymgt.apimgt.carbon.wso2.org/xsd">
+            <xs:complexType name="APIKeyMgtException">
+                <xs:sequence />
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://dto.impl.apimgt.carbon.wso2.org/xsd">
+            <xs:complexType name="APIInfoDTO">
+
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="apiName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="context" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="providerId" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="version" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://base.identity.carbon.wso2.org/xsd">
+
+            <xs:complexType name="IdentityException">
+                <xs:sequence />
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://api.apimgt.carbon.wso2.org/xsd">
+            <xs:complexType name="APIManagementException">
+                <xs:sequence />
+            </xs:complexType>
+        </xs:schema>
+
+    </wsdl:types>
+    <wsdl:message name="unsubscribeFromAPIRequest">
+        <wsdl:part name="parameters" element="ns1:unsubscribeFromAPI" />
+    </wsdl:message>
+    <wsdl:message name="renewAccessTokenRequest">
+        <wsdl:part name="parameters" element="ns1:renewAccessToken" />
+    </wsdl:message>
+    <wsdl:message name="renewAccessTokenResponse">
+        <wsdl:part name="parameters" element="ns1:renewAccessTokenResponse" />
+
+    </wsdl:message>
+    <wsdl:message name="getSubscribedAPIsOfUserRequest">
+        <wsdl:part name="parameters" element="ns1:getSubscribedAPIsOfUser" />
+    </wsdl:message>
+    <wsdl:message name="getSubscribedAPIsOfUserResponse">
+        <wsdl:part name="parameters" element="ns1:getSubscribedAPIsOfUserResponse" />
+    </wsdl:message>
+    <wsdl:message name="APIKeyMgtSubscriberServiceAPIKeyMgtException">
+        <wsdl:part name="parameters" element="ns1:APIKeyMgtSubscriberServiceAPIKeyMgtException" />
+
+    </wsdl:message>
+    <wsdl:message name="APIKeyMgtSubscriberServiceAPIManagementException">
+        <wsdl:part name="parameters" element="ns1:APIKeyMgtSubscriberServiceAPIManagementException" />
+    </wsdl:message>
+    <wsdl:message name="APIKeyMgtSubscriberServiceIdentityException">
+        <wsdl:part name="parameters" element="ns1:APIKeyMgtSubscriberServiceIdentityException" />
+    </wsdl:message>
+    <wsdl:message name="getAccessTokenRequest">
+        <wsdl:part name="parameters" element="ns1:getAccessToken" />
+
+    </wsdl:message>
+    <wsdl:message name="getAccessTokenResponse">
+        <wsdl:part name="parameters" element="ns1:getAccessTokenResponse" />
+    </wsdl:message>
+    <wsdl:portType name="APIKeyMgtSubscriberServicePortType">
+        <wsdl:operation name="unsubscribeFromAPI">
+            <wsdl:input message="tns:unsubscribeFromAPIRequest" wsaw:Action="urn:unsubscribeFromAPI" />
+        </wsdl:operation>
+        <wsdl:operation name="renewAccessToken">
+
+            <wsdl:input message="tns:renewAccessTokenRequest" wsaw:Action="urn:renewAccessToken" />
+            <wsdl:output message="tns:renewAccessTokenResponse" wsaw:Action="urn:renewAccessTokenResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getSubscribedAPIsOfUser">
+            <wsdl:input message="tns:getSubscribedAPIsOfUserRequest" wsaw:Action="urn:getSubscribedAPIsOfUser" />
+            <wsdl:output message="tns:getSubscribedAPIsOfUserResponse" wsaw:Action="urn:getSubscribedAPIsOfUserResponse" />
+            <wsdl:fault message="tns:APIKeyMgtSubscriberServiceAPIKeyMgtException" name="APIKeyMgtSubscriberServiceAPIKeyMgtException" wsaw:Action="urn:getSubscribedAPIsOfUserAPIKeyMgtSubscriberServiceAPIKeyMgtException" />
+            <wsdl:fault message="tns:APIKeyMgtSubscriberServiceAPIManagementException" name="APIKeyMgtSubscriberServiceAPIManagementException" wsaw:Action="urn:getSubscribedAPIsOfUserAPIKeyMgtSubscriberServiceAPIManagementException" />
+            <wsdl:fault message="tns:APIKeyMgtSubscriberServiceIdentityException" name="APIKeyMgtSubscriberServiceIdentityException" wsaw:Action="urn:getSubscribedAPIsOfUserAPIKeyMgtSubscriberServiceIdentityException" />
+
+        </wsdl:operation>
+        <wsdl:operation name="getAccessToken">
+            <wsdl:input message="tns:getAccessTokenRequest" wsaw:Action="urn:getAccessToken" />
+            <wsdl:output message="tns:getAccessTokenResponse" wsaw:Action="urn:getAccessTokenResponse" />
+            <wsdl:fault message="tns:APIKeyMgtSubscriberServiceAPIKeyMgtException" name="APIKeyMgtSubscriberServiceAPIKeyMgtException" wsaw:Action="urn:getAccessTokenAPIKeyMgtSubscriberServiceAPIKeyMgtException" />
+            <wsdl:fault message="tns:APIKeyMgtSubscriberServiceAPIManagementException" name="APIKeyMgtSubscriberServiceAPIManagementException" wsaw:Action="urn:getAccessTokenAPIKeyMgtSubscriberServiceAPIManagementException" />
+            <wsdl:fault message="tns:APIKeyMgtSubscriberServiceIdentityException" name="APIKeyMgtSubscriberServiceIdentityException" wsaw:Action="urn:getAccessTokenAPIKeyMgtSubscriberServiceIdentityException" />
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="APIKeyMgtSubscriberServiceSoap11Binding" type="tns:APIKeyMgtSubscriberServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="unsubscribeFromAPI">
+            <soap:operation soapAction="urn:unsubscribeFromAPI" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="renewAccessToken">
+
+            <soap:operation soapAction="urn:renewAccessToken" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getSubscribedAPIsOfUser">
+
+            <soap:operation soapAction="urn:getSubscribedAPIsOfUser" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="APIKeyMgtSubscriberServiceAPIKeyMgtException">
+                <soap:fault use="literal" name="APIKeyMgtSubscriberServiceAPIKeyMgtException" />
+
+            </wsdl:fault>
+            <wsdl:fault name="APIKeyMgtSubscriberServiceIdentityException">
+                <soap:fault use="literal" name="APIKeyMgtSubscriberServiceIdentityException" />
+            </wsdl:fault>
+            <wsdl:fault name="APIKeyMgtSubscriberServiceAPIManagementException">
+                <soap:fault use="literal" name="APIKeyMgtSubscriberServiceAPIManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAccessToken">
+
+            <soap:operation soapAction="urn:getAccessToken" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="APIKeyMgtSubscriberServiceAPIKeyMgtException">
+                <soap:fault use="literal" name="APIKeyMgtSubscriberServiceAPIKeyMgtException" />
+
+            </wsdl:fault>
+            <wsdl:fault name="APIKeyMgtSubscriberServiceIdentityException">
+                <soap:fault use="literal" name="APIKeyMgtSubscriberServiceIdentityException" />
+            </wsdl:fault>
+            <wsdl:fault name="APIKeyMgtSubscriberServiceAPIManagementException">
+                <soap:fault use="literal" name="APIKeyMgtSubscriberServiceAPIManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:binding name="APIKeyMgtSubscriberServiceSoap12Binding" type="tns:APIKeyMgtSubscriberServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="unsubscribeFromAPI">
+            <soap12:operation soapAction="urn:unsubscribeFromAPI" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="renewAccessToken">
+
+            <soap12:operation soapAction="urn:renewAccessToken" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getSubscribedAPIsOfUser">
+
+            <soap12:operation soapAction="urn:getSubscribedAPIsOfUser" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="APIKeyMgtSubscriberServiceAPIKeyMgtException">
+                <soap12:fault use="literal" name="APIKeyMgtSubscriberServiceAPIKeyMgtException" />
+
+            </wsdl:fault>
+            <wsdl:fault name="APIKeyMgtSubscriberServiceIdentityException">
+                <soap12:fault use="literal" name="APIKeyMgtSubscriberServiceIdentityException" />
+            </wsdl:fault>
+            <wsdl:fault name="APIKeyMgtSubscriberServiceAPIManagementException">
+                <soap12:fault use="literal" name="APIKeyMgtSubscriberServiceAPIManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAccessToken">
+
+            <soap12:operation soapAction="urn:getAccessToken" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="APIKeyMgtSubscriberServiceAPIKeyMgtException">
+                <soap12:fault use="literal" name="APIKeyMgtSubscriberServiceAPIKeyMgtException" />
+
+            </wsdl:fault>
+            <wsdl:fault name="APIKeyMgtSubscriberServiceIdentityException">
+                <soap12:fault use="literal" name="APIKeyMgtSubscriberServiceIdentityException" />
+            </wsdl:fault>
+            <wsdl:fault name="APIKeyMgtSubscriberServiceAPIManagementException">
+                <soap12:fault use="literal" name="APIKeyMgtSubscriberServiceAPIManagementException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:binding name="APIKeyMgtSubscriberServiceHttpBinding" type="tns:APIKeyMgtSubscriberServicePortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="unsubscribeFromAPI">
+            <http:operation location="unsubscribeFromAPI" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="renewAccessToken">
+
+            <http:operation location="renewAccessToken" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getSubscribedAPIsOfUser">
+
+            <http:operation location="getSubscribedAPIsOfUser" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAccessToken">
+
+            <http:operation location="getAccessToken" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="APIKeyMgtSubscriberService">
+        <wsdl:port name="APIKeyMgtSubscriberServiceHttpsSoap11Endpoint" binding="tns:APIKeyMgtSubscriberServiceSoap11Binding">
+            <soap:address location="https://10.200.3.207:9443/services/APIKeyMgtSubscriberService.APIKeyMgtSubscriberServiceHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="APIKeyMgtSubscriberServiceHttpsSoap12Endpoint" binding="tns:APIKeyMgtSubscriberServiceSoap12Binding">
+            <soap12:address location="https://10.200.3.207:9443/services/APIKeyMgtSubscriberService.APIKeyMgtSubscriberServiceHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="APIKeyMgtSubscriberServiceHttpsEndpoint" binding="tns:APIKeyMgtSubscriberServiceHttpBinding">
+            <http:address location="https://10.200.3.207:9443/services/APIKeyMgtSubscriberService.APIKeyMgtSubscriberServiceHttpsEndpoint/" />
+
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

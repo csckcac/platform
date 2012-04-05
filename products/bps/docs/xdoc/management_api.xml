@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>@product.name@ - Management API</title>
+        <link href="css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+         <p>[
+            <a href="docs_index.html">Documentation Index</a>
+            ]
+        </p>
+        <h1>
+            WSO2 Business Process Server (BPS) Management API
+        </h1>
+
+         <h2 id="Introduction">Introduction</h2>
+
+        <p>
+            @product.name@ has a complete management API to check which processes are deployed, running and completed instances,
+            variables values and more. The available methods can be found at <a href="http://svn.wso2.org/repos/wso2/branches/carbon/3.2.0/service-stubs/org.wso2.carbon.bpel.skeleton/3.2.0/src/main/resources/process_mgt.wsdl">ProcessManagement</a>,
+            <a href="http://svn.wso2.org/repos/wso2/branches/carbon/3.2.0/service-stubs/org.wso2.carbon.bpel.skeleton/3.2.0/src/main/resources/instance_mgt.wsdl">InstanceManagement</a>
+            and <a href="http://svn.wso2.org/repos/wso2/branches/carbon/3.2.0/service-stubs/org.wso2.carbon.bpel.skeleton/3.2.0/src/main/resources/package_mgt.wsdl">PackageManagement</a> WSDLs.
+        </p>
+        <p>
+            Those three services can be invoked through any web service client.
+        </p>
+
+        <h2 id="Sample">Sample Client</h2>
+        <p>
+            <b>NOTE:</b> It is mandatory to authenticate the user before invoking management services.
+        </p>
+        <p>
+            The following is the source for sample management client which uses default username (admin), password (admin)
+            to login to the BPS server and retrieves the process list. You can find the sample pom file to create a jar
+            <a href="http://svn.wso2.org/repos/wso2/branches/carbon/3.2.0/products/bps/2.1.0/modules/samples/product/BPSManagementClient/pom.xml">here</a>
+        </p>
+        <pre class="java" style="font-family:monospace;"><span style="color: #000000; font-weight: bold;">package</span> <span style="color: #006699;">org.wso2.bps.samples.client</span><span style="color: #339933;">;</span>
+
+<span style="color: #000000; font-weight: bold;">import</span> <span style="color: #006699;">org.wso2.bps.samples.client.types.Login</span><span style="color: #339933;">;</span>
+<span style="color: #000000; font-weight: bold;">import</span> <span style="color: #006699;">org.wso2.bps.samples.client.types.LoginResponse</span><span style="color: #339933;">;</span>
+<span style="color: #000000; font-weight: bold;">import</span> <span style="color: #006699;">org.wso2.bps.samples.client.types.GetSystemPermissionOfUser</span><span style="color: #339933;">;</span>
+<span style="color: #000000; font-weight: bold;">import</span> <span style="color: #006699;">org.wso2.bps.samples.client.types.GetSystemPermissionOfUserResponse</span><span style="color: #339933;">;</span>
+<span style="color: #000000; font-weight: bold;">import</span> <span style="color: #006699;">org.wso2.bps.samples.client.mgt.types.ProcessInfoListPaginated</span><span style="color: #339933;">;</span>
+<span style="color: #000000; font-weight: bold;">import</span> <span style="color: #006699;">org.wso2.bps.samples.client.mgt.types.ProcessInfoType</span><span style="color: #339933;">;</span>
+<span style="color: #000000; font-weight: bold;">import</span> <span style="color: #006699;">org.wso2.bps.samples.client.mgt.ProcessManagementServiceStub</span><span style="color: #339933;">;</span>
+<span style="color: #000000; font-weight: bold;">import</span> <span style="color: #006699;">org.apache.axis2.client.Options</span><span style="color: #339933;">;</span>
+<span style="color: #000000; font-weight: bold;">import</span> <span style="color: #006699;">org.apache.axis2.client.ServiceClient</span><span style="color: #339933;">;</span>
+<span style="color: #000000; font-weight: bold;">import</span> <span style="color: #006699;">org.apache.axis2.transport.http.HTTPConstants</span><span style="color: #339933;">;</span>
+
+<span style="color: #000000; font-weight: bold;">import</span> <span style="color: #006699;">java.rmi.RemoteException</span><span style="color: #339933;">;</span>
+
+<span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">class</span> BPSManagementClient <span style="color: #009900;">&#123;</span>
+    <span style="color: #000000; font-weight: bold;">final</span> <span style="color: #003399;">String</span> backendServerURL <span style="color: #339933;">=</span> <span style="color: #0000ff;">&quot;https://localhost:9443/services/&quot;</span><span style="color: #339933;">;</span>
+    <span style="color: #000000; font-weight: bold;">final</span> <span style="color: #003399;">String</span> AUTHENTICATION_ADMIN_SERVICE <span style="color: #339933;">=</span> <span style="color: #0000ff;">&quot;AuthenticationAdminService&quot;</span><span style="color: #339933;">;</span>
+    <span style="color: #000000; font-weight: bold;">final</span> <span style="color: #003399;">String</span> trustStore <span style="color: #339933;">=</span> <span style="color: #0000ff;">&quot;/home/waruna/Desktop/BPS/new/wso2bps-1.1.0/repository/resources/security&quot;</span><span style="color: #339933;">;</span>
+    <span style="color: #003399;">String</span> userName <span style="color: #339933;">=</span> <span style="color: #0000ff;">&quot;admin&quot;</span><span style="color: #339933;">;</span>
+    <span style="color: #003399;">String</span> password <span style="color: #339933;">=</span> <span style="color: #0000ff;">&quot;admin&quot;</span><span style="color: #339933;">;</span>
+    <span style="color: #003399;">String</span> clientIPAddr <span style="color: #339933;">=</span> <span style="color: #0000ff;">&quot;localhost&quot;</span><span style="color: #339933;">;</span>
+    <span style="color: #003399;">String</span> cookie <span style="color: #339933;">=</span> <span style="color: #000066; font-weight: bold;">null</span><span style="color: #339933;">;</span>
+
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000000; font-weight: bold;">static</span> <span style="color: #000066; font-weight: bold;">void</span> main <span style="color: #009900;">&#40;</span><span style="color: #003399;">String</span> <span style="color: #009900;">&#91;</span><span style="color: #009900;">&#93;</span>args<span style="color: #009900;">&#41;</span> <span style="color: #009900;">&#123;</span>
+        <span style="color: #000066; font-weight: bold;">boolean</span> isLogged <span style="color: #339933;">=</span> <span style="color: #000066; font-weight: bold;">false</span><span style="color: #339933;">;</span>
+        BPSManagementClient client <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> BPSManagementClient<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #000000; font-weight: bold;">try</span> <span style="color: #009900;">&#123;</span>
+            isLogged <span style="color: #339933;">=</span> client.<span style="color: #006633;">authenticate</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #009900;">&#125;</span> <span style="color: #000000; font-weight: bold;">catch</span> <span style="color: #009900;">&#40;</span>AuthenticationExceptionException e<span style="color: #009900;">&#41;</span> <span style="color: #009900;">&#123;</span>
+            e.<span style="color: #006633;">printStackTrace</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>  <span style="color: #666666; font-style: italic;">//To change body of catch statement use File | Settings | File Templates.</span>
+        <span style="color: #009900;">&#125;</span> <span style="color: #000000; font-weight: bold;">catch</span> <span style="color: #009900;">&#40;</span><span style="color: #003399;">RemoteException</span> e<span style="color: #009900;">&#41;</span> <span style="color: #009900;">&#123;</span>
+            e.<span style="color: #006633;">printStackTrace</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>  <span style="color: #666666; font-style: italic;">//To change body of catch statement use File | Settings | File Templates.</span>
+        <span style="color: #009900;">&#125;</span>
+
+        ProcessInfoListPaginated processList <span style="color: #339933;">=</span> <span style="color: #000066; font-weight: bold;">null</span><span style="color: #339933;">;</span>
+
+        <span style="color: #000000; font-weight: bold;">if</span> <span style="color: #009900;">&#40;</span>isLogged<span style="color: #009900;">&#41;</span> <span style="color: #009900;">&#123;</span>
+            <span style="color: #000000; font-weight: bold;">try</span> <span style="color: #009900;">&#123;</span>
+                <span style="color: #003399;">System</span>.<span style="color: #006633;">out</span>.<span style="color: #006633;">println</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">&quot;User: &quot;</span> <span style="color: #339933;">+</span> client.<span style="color: #006633;">userName</span> <span style="color: #339933;">+</span> <span style="color: #0000ff;">&quot; loggin successful&quot;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+                processList <span style="color: #339933;">=</span> client.<span style="color: #006633;">listProcessesPaginated</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">&quot;name}}* namespace=*&quot;</span>, <span style="color: #0000ff;">&quot;deployed name&quot;</span>, <span style="color: #cc66cc;">0</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+            <span style="color: #009900;">&#125;</span> <span style="color: #000000; font-weight: bold;">catch</span> <span style="color: #009900;">&#40;</span><span style="color: #003399;">RemoteException</span> e<span style="color: #009900;">&#41;</span> <span style="color: #009900;">&#123;</span>
+                e.<span style="color: #006633;">printStackTrace</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>  <span style="color: #666666; font-style: italic;">//To change body of catch statement use File | Settings | File Templates.</span>
+            <span style="color: #009900;">&#125;</span>
+
+            ProcessInfoType<span style="color: #009900;">&#91;</span><span style="color: #009900;">&#93;</span> processes <span style="color: #339933;">=</span> processList.<span style="color: #006633;">getProcessInfo</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+            <span style="color: #000000; font-weight: bold;">if</span> <span style="color: #009900;">&#40;</span>processes <span style="color: #339933;">!=</span> <span style="color: #000066; font-weight: bold;">null</span><span style="color: #009900;">&#41;</span> <span style="color: #009900;">&#123;</span>
+                <span style="color: #003399;">System</span>.<span style="color: #006633;">out</span>.<span style="color: #006633;">println</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">&quot;---------------------------PROCESS LIST---------------------------&quot;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+                <span style="color: #003399;">System</span>.<span style="color: #006633;">out</span>.<span style="color: #006633;">println</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">&quot;<span style="color: #000099; font-weight: bold;">\t</span><span style="color: #000099; font-weight: bold;">\t</span>NAME<span style="color: #000099; font-weight: bold;">\t</span><span style="color: #000099; font-weight: bold;">\t</span>|<span style="color: #000099; font-weight: bold;">\t</span><span style="color: #000099; font-weight: bold;">\t</span>STATUS<span style="color: #000099; font-weight: bold;">\t</span><span style="color: #000099; font-weight: bold;">\t</span>|<span style="color: #000099; font-weight: bold;">\t</span><span style="color: #000099; font-weight: bold;">\t</span>VERSION<span style="color: #000099; font-weight: bold;">\t</span><span style="color: #000099; font-weight: bold;">\t</span>|<span style="color: #000099; font-weight: bold;">\t</span><span style="color: #000099; font-weight: bold;">\t</span>PACKAGE<span style="color: #000099; font-weight: bold;">\t</span><span style="color: #000099; font-weight: bold;">\t</span>|<span style="color: #000099; font-weight: bold;">\t</span><span style="color: #000099; font-weight: bold;">\t</span>DEPLOYED ON&quot;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+                <span style="color: #000000; font-weight: bold;">for</span> <span style="color: #009900;">&#40;</span>ProcessInfoType process <span style="color: #339933;">:</span> processes<span style="color: #009900;">&#41;</span> <span style="color: #009900;">&#123;</span>
+                    <span style="color: #003399;">System</span>.<span style="color: #006633;">out</span>.<span style="color: #006633;">println</span><span style="color: #009900;">&#40;</span>process.<span style="color: #006633;">getPid</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span> <span style="color: #339933;">+</span> <span style="color: #0000ff;">&quot;<span style="color: #000099; font-weight: bold;">\t</span>|<span style="color: #000099; font-weight: bold;">\t</span>&quot;</span> <span style="color: #339933;">+</span> process.<span style="color: #006633;">getStatus</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span>.<span style="color: #006633;">getValue</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span> <span style="color: #339933;">+</span> <span style="color: #0000ff;">&quot;<span style="color: #000099; font-weight: bold;">\t</span>|<span style="color: #000099; font-weight: bold;">\t</span>&quot;</span> <span style="color: #339933;">+</span>
+                            process.<span style="color: #006633;">getVersion</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span> <span style="color: #339933;">+</span> <span style="color: #0000ff;">&quot;<span style="color: #000099; font-weight: bold;">\t</span>|<span style="color: #000099; font-weight: bold;">\t</span>&quot;</span> <span style="color: #339933;">+</span> process.<span style="color: #006633;">getDeploymentInfo</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span>.<span style="color: #006633;">getPackageName</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span>  <span style="color: #339933;">+</span> <span style="color: #0000ff;">&quot;<span style="color: #000099; font-weight: bold;">\t</span>|<span style="color: #000099; font-weight: bold;">\t</span>&quot;</span> <span style="color: #339933;">+</span>
+                            process.<span style="color: #006633;">getDeploymentInfo</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span>.<span style="color: #006633;">getDeployDate</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span>.<span style="color: #006633;">getTime</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span>.<span style="color: #006633;">toString</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+                <span style="color: #009900;">&#125;</span>
+            <span style="color: #009900;">&#125;</span>  <span style="color: #000000; font-weight: bold;">else</span> <span style="color: #009900;">&#123;</span>
+                <span style="color: #003399;">System</span>.<span style="color: #006633;">out</span>.<span style="color: #006633;">println</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">&quot;NULL process list&quot;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+            <span style="color: #009900;">&#125;</span>
+        <span style="color: #009900;">&#125;</span> <span style="color: #000000; font-weight: bold;">else</span> <span style="color: #009900;">&#123;</span>
+            <span style="color: #003399;">System</span>.<span style="color: #006633;">out</span>.<span style="color: #006633;">println</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">&quot;User: &quot;</span> <span style="color: #339933;">+</span> client.<span style="color: #006633;">userName</span> <span style="color: #339933;">+</span> <span style="color: #0000ff;">&quot; loggin FAILED!&quot;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #009900;">&#125;</span>
+    <span style="color: #009900;">&#125;</span>
+
+    <span style="color: #000000; font-weight: bold;">public</span> <span style="color: #000066; font-weight: bold;">boolean</span> authenticate<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span> <span style="color: #000000; font-weight: bold;">throws</span> AuthenticationExceptionException, <span style="color: #003399;">RemoteException</span> <span style="color: #009900;">&#123;</span>
+        <span style="color: #003399;">String</span> serviceURL <span style="color: #339933;">=</span> backendServerURL <span style="color: #339933;">+</span> AUTHENTICATION_ADMIN_SERVICE<span style="color: #339933;">;</span>
+        AuthenticationAdminServiceStub stub <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> AuthenticationAdminServiceStub<span style="color: #009900;">&#40;</span><span style="color: #000066; font-weight: bold;">null</span>, serviceURL<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        Login loginRequest <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> Login<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        loginRequest.<span style="color: #006633;">setUsername</span><span style="color: #009900;">&#40;</span>userName<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        loginRequest.<span style="color: #006633;">setPassword</span><span style="color: #009900;">&#40;</span>password<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        loginRequest.<span style="color: #006633;">setRemoteAddress</span><span style="color: #009900;">&#40;</span>clientIPAddr<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+
+        <span style="color: #003399;">System</span>.<span style="color: #006633;">setProperty</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">&quot;javax.net.ssl.trustStore&quot;</span>, trustStore <span style="color: #339933;">+</span> <span style="color: #0000ff;">&quot;/client-truststore.jks&quot;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #003399;">System</span>.<span style="color: #006633;">setProperty</span><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">&quot;javax.net.ssl.trustStorePassword&quot;</span>, <span style="color: #0000ff;">&quot;wso2carbon&quot;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+
+        Options option <span style="color: #339933;">=</span> stub._getServiceClient<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span>.<span style="color: #006633;">getOptions</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        option.<span style="color: #006633;">setManageSession</span><span style="color: #009900;">&#40;</span><span style="color: #000066; font-weight: bold;">true</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        LoginResponse loginResponse <span style="color: #339933;">=</span> stub.<span style="color: #006633;">login</span><span style="color: #009900;">&#40;</span>loginRequest<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+
+        <span style="color: #000066; font-weight: bold;">boolean</span> isLogged <span style="color: #339933;">=</span> loginResponse.<span style="color: #006633;">get_return</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #000000; font-weight: bold;">if</span> <span style="color: #009900;">&#40;</span>isLogged<span style="color: #009900;">&#41;</span> <span style="color: #009900;">&#123;</span>
+            cookie <span style="color: #339933;">=</span> <span style="color: #009900;">&#40;</span><span style="color: #003399;">String</span><span style="color: #009900;">&#41;</span> stub._getServiceClient<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span>.<span style="color: #006633;">getServiceContext</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span>.<span style="color: #006633;">getProperty</span><span style="color: #009900;">&#40;</span>HTTPConstants.<span style="color: #006633;">COOKIE_STRING</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        <span style="color: #009900;">&#125;</span>
+
+        <span style="color: #000000; font-weight: bold;">return</span> isLogged<span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span>
+
+    <span style="color: #000000; font-weight: bold;">public</span> ProcessInfoListPaginated listProcessesPaginated<span style="color: #009900;">&#40;</span><span style="color: #003399;">String</span> filter, <span style="color: #003399;">String</span> orderBy, <span style="color: #000066; font-weight: bold;">int</span> pageNumber<span style="color: #009900;">&#41;</span> <span style="color: #000000; font-weight: bold;">throws</span> <span style="color: #003399;">RemoteException</span> <span style="color: #009900;">&#123;</span>
+        <span style="color: #003399;">String</span> serviceURL <span style="color: #339933;">=</span> backendServerURL <span style="color: #339933;">+</span> <span style="color: #0000ff;">&quot;ProcessManagementService&quot;</span><span style="color: #339933;">;</span>
+        ProcessManagementServiceStub stub <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">new</span> ProcessManagementServiceStub<span style="color: #009900;">&#40;</span><span style="color: #000066; font-weight: bold;">null</span>, serviceURL<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        ServiceClient client <span style="color: #339933;">=</span> stub._getServiceClient<span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        Options option <span style="color: #339933;">=</span> client.<span style="color: #006633;">getOptions</span><span style="color: #009900;">&#40;</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        option.<span style="color: #006633;">setManageSession</span><span style="color: #009900;">&#40;</span><span style="color: #000066; font-weight: bold;">true</span><span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+        option.<span style="color: #006633;">setProperty</span><span style="color: #009900;">&#40;</span>org.<span style="color: #006633;">apache</span>.<span style="color: #006633;">axis2</span>.<span style="color: #006633;">transport</span>.<span style="color: #006633;">http</span>.<span style="color: #006633;">HTTPConstants</span>.<span style="color: #006633;">COOKIE_STRING</span>, cookie<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+
+        <span style="color: #000000; font-weight: bold;">return</span> stub.<span style="color: #006633;">listProcessesPaginated</span><span style="color: #009900;">&#40;</span>filter, orderBy, pageNumber<span style="color: #009900;">&#41;</span><span style="color: #339933;">;</span>
+    <span style="color: #009900;">&#125;</span>
+
+<span style="color: #009900;">&#125;</span>
+</pre>
+
+    </body>
+</html>

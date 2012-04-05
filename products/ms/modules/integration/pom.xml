@@ -1,0 +1,148 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>org.wso2.ms</groupId>
+        <artifactId>wso2ms-parent</artifactId>
+        <version>2.3.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>wso2ms-integration</artifactId>
+    <packaging>jar</packaging>
+    <name>WSO2 Mashup Server Integration Tests</name>
+    <url>http://wso2.org/projects/mashup</url>
+    <description>WSO2 Mashup Server Integration Tests</description>
+
+    <licenses>
+        <license>
+            <name>Apache License Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>6.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>emma</groupId>
+            <artifactId>emma</artifactId>
+            <version>${emma.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.integration.core</artifactId>
+            <version>${carbon.version}</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.mashup.jsservices.stub</artifactId>
+            <version>4.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.integration.framework</artifactId>
+            <version>4.0.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <inherited>false</inherited>
+                <configuration>
+                    <includes>
+                        <include>**/*TestServerManager.java</include>
+                        <include>**/*TestCase.java</include>
+                    </includes>
+                    <systemProperties>
+                        <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
+                        <carbon.zip>
+                            ${basedir}/../../modules/distribution/product/target/wso2ms-${project.version}.zip
+                        </carbon.zip>
+                        <https.port>9443</https.port>
+                        <http.port>9763</http.port>
+                        <samples.dir>${basedir}/src/test/resources</samples.dir>
+                        <extracted.dir>wso2ms-${project.version}</extracted.dir>
+                        <sec.verifier.dir>${basedir}/../../../integration/security-verifier/</sec.verifier.dir>
+                        <emma.home>${basedir}/target/emma</emma.home>
+                        <emma.output>${basedir}/target/emma</emma.output>
+                    </systemProperties>
+                    <workingDirectory>${basedir}/target</workingDirectory>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.4.1</version>
+                <executions>
+                    <execution>
+                        <id>auto-clean</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+             <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/emma</outputDirectory>
+                            <includeTypes>jar</includeTypes>
+                            <includeArtifactIds>emma,org.wso2.carbon.integration.framework</includeArtifactIds>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

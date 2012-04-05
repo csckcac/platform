@@ -1,0 +1,1162 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>@product.name@ - Administrator Guide -</title>
+        <link href="../css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+        <h1>Administrator Guide</h1>
+        <h3>Table of Contents</h3>
+        <ul>
+                         <li>
+                <a href="#Configure-WSO2-BPS-with-external-data-sources">Configuring @product.name@
+                    with external data sources
+                </a>
+            </li>
+            <li>
+                <a href="#Registry-Conf">Registry Configuration</a>
+            </li>
+            <li>
+                <a href="#Using-Events">Events</a>
+                <ul>
+                    <li>
+                        <a href="#Events-Event-Types">Event Types</a>
+                    </li>
+                    <li>
+                        <a href="#Events-Filtering-Events">Filtering Events</a>
+                        <ul>
+                            <li>
+                                <a href="#Events-Process">Filtering at the process level</a>
+                            </li>
+                            <li>
+                                <a href="#Events-Scope">Filtering at the scope level</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#Events-Listeners">Event Listeners</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#Using-Manipulating-Endpoints">Unified Endpoints</a>
+            </li>
+            <li>
+                <a href="#Using-BPEL-Extensions">BPEL Extensions</a>
+            </li>
+            <li>
+                <a href="#Using-TransactionFactory">Configuring Transaction Factory</a>
+            </li>
+            <li>
+                <a href="#Using-Message-Exchange-Interceptors">Message Exchange Interceptors</a>
+            </li>
+            <li>
+                <a href="#Using-OpenJPA">Configuring OpenJPA specific properties</a>
+            </li>
+            <li>
+                <a href="#Using-Multi-Threaded-HTTP">Configuring Multi Threaded HTTP Connection
+                    Manager
+                </a>
+            </li>
+            <!--li><a href="#Using-Instance-Data-Cleanup">Instance Data Cleanup</a></li>
+         <li><a href="#Using-Direct-Process-to-Process-Communication">Direct Process-to-Process Communication</a></li-->
+            <li>
+                <a href="#Configuring-JMS-Transport">Configuring JMS Transport</a>
+            </li>
+            <li>
+                <a href="#Process-Instance-Cleanup">Configuring Process Instance Cleanup Tasks</a>
+            </li>
+            <li>
+                <a href="#Process-Hydration-Dehydration">Process Hydration and Dehydration</a>
+            </li>
+            <li>
+                <a href="#Enable-P2P-Communication">Enabling Peer-to-Peer(P2P) Communication</a>
+            </li>
+
+
+
+            <li>
+                <a href="#BPS-cluster-setup">Setting up a BPS Cluster</a>
+            </li>
+        </ul>
+
+        <p>
+            <br/>
+        </p>
+
+                 <!-- Configure @product.name@ with external data sources -->
+
+        <h2 id="Configure-WSO2-BPS-with-external-data-sources">
+            Configure @product.name@ with external data sources
+        </h2>
+        <p>
+            WSO2 Business Process Server comes with a embedded H2 database as the BPEL engine
+            persistence storage.
+            Embedded databases are not suitable as the BPEL engine persistence storage for
+            production deployments.This
+            document will guide you through the steps to configure @product.name@ with external
+            database servers.
+        </p>
+        <br/>
+        <h3>
+            Table of Contents
+        </h3>
+        <div class="toc">
+            <ul>
+                <li>
+                    <a href="#Preparing">Setting up Database Server</a>
+                </li>
+                <li>
+                    <a href="#CreatingDataSource">Configuring a Data Source</a>
+                </li>
+                <li>
+                    <a href="#Configure">Configuring BPS to use the Data Source created</a>
+                </li>
+            </ul>
+        </div>
+        <br/>
+        <h3 id="Preparing">Setting up Database Server</h3>
+
+        <p>@product.name@ uses Apache ODE as it's BPEL engine and Apache ODE can be configured to
+            use external database
+            other than the embedded H2 databse as it's persistence storage.
+        </p>
+
+        <p>There are two approaches to setup the DB.</p>
+
+        <ol>
+            <li>Start the Carbon server with -Dsetup option. That is to clean the registry and other
+                configuration, recreate DB and re-populate the configuration.
+                <br/>
+                <code>sh wso2server.sh -Dsetup</code>
+            </li>
+            <br/>
+            <li>Manually create the database in your preferred database server using the provided
+                scripts
+            </li>
+        </ol>
+        <ul>
+            <li>Set up and start your database server.
+            </li>
+            <li>
+                Create a database.
+            </li>
+            <li>
+                Load the BPS schema into that database using provided SQL scripts. For example if
+                you are using MySQL
+                as your database server, use mysql.sql script located inside 'dbscripts/bpel/bps'
+                directory to create the
+                BPS schema.
+                <br/>
+                <p>
+                    eg - to load a mysql database script to a database called "bps" you can use the
+                    following command.
+                    <br/>
+                    <code>mysql -u root -p bps &lt;
+                        /opt/WSO2-BPS-@product.version@/dbscripts/bps/bpel/mysql.sql
+                    </code>
+                </p>
+            </li>
+        </ul>
+        <br/>
+        <h3 id="CreatingDataSource">
+            Configuring a Data Source
+        </h3>
+        <p>
+            Definition of the reusable database sources can be done using datasources.properties
+            file located inside
+            @product.name@ 'repository/conf' directory under BPS root directory. It is possible to
+            configure any number of
+            data sources. But for @product.name@ one data source is enough.
+        </p>
+        <p>
+            @product.name@ ships with a default datasources.properties file which contains
+            configurations for embedded H2
+            database. To configure a external database you only need to change following properties
+            which are database
+            specific. The following property values are specific to MySQL database.
+        </p>
+        <pre xml:space="preserve">
+            synapse.datasources.bpsds.driverClassName=com.mysql.jdbc.Driver
+            synapse.datasources.bpsds.url=jdbc:mysql://localhost:3306/bps_212
+            synapse.datasources.bpsds.username=root
+            synapse.datasources.bpsds.password=root
+        </pre>
+        <p>
+            <b>Note:</b>As external database related JDBC libs are not shipped with @product.name@, user
+            have to manually put
+            them in WSO2-BPS-@product.version@/repository/components/lib.
+        </p>
+        <p>
+            You can fine tune your data source configurations using various other properties
+            available. You can find
+            description about other configuration in
+            <a href="http://commons.apache.org/dbcp/configuration.html">parameters</a>
+            document from Apache Commons. @product.name@ data sources support all the parameters
+            support by Apache dbcp and
+            you must follow the synapse.datasources.&lt;data source name&gt;.&lt;parameter&gt;=&lt;parameter
+            value&gt; pattern
+            when specifying parameters for the data source. You can use any of the parameters
+            supported by Apache dbcp
+            to replace 'parameters' field.
+        </p>
+
+        <p>
+            <br/>
+            <b>Note:</b>For embedded H2 database, if absolute file URL is used for the datasource
+            URL on Windows environment, that needs to be configured as follows. (i.e. the
+            backslashes should be escaped)
+            synapse.datasources.bpsds.url=jdbc:h2:file:C:\\bps\\myDs
+        </p>
+
+        <h4 id="CreatingDataSource">
+            Configure JNDIProviderPort to run multiple server instances.
+        </h4>
+
+        <p>
+            The datasources.properties contains following property which requires to change when
+            configuring to run multiple server instances.
+        </p>
+        <pre xml:space="preserve">
+            synapse.datasources.providerPort=2199
+        </pre>
+
+        <p>
+            The following two approaches use the advantage of port-offsetting to automatically alter
+            this property value without manually changing datasources.properties or bps.xml.
+        </p>
+
+        <b>Method 1: Uncomment following section in carbon.xml</b>
+        <pre xml:space="preserve">
+            &lt;Ports&gt;
+            &lt;!--
+            Override datasources JNDIProviderPort defined in bps.xml and datasources.properties
+            files
+            --&gt;
+            &lt;!--&lt;JNDIProviderPort&gt;2199&lt; &#47;JNDIProviderPort&gt;--&gt;
+            &lt;&#47;Ports&gt;
+        </pre>
+
+        <p>
+            JNDIProviderPort has been overridden in carbon.xml and can be enabled by uncommenting
+            above. Therefore, it is not required to change RMI ports in multiple places as defined
+            in bps.xml and datasource.properties files.
+        </p>
+
+        <b>Method 2: Without enabling above property in Method 1.</b>
+
+        <p>
+            This only requires to change port offset value in carbon.xml. Then it will automatically
+            alter the JNDI ports defined in bps.xml and datasources.xml. This won't require to
+            enable/uncomment above section in Method 1.
+        </p>
+
+
+        <!-- Registry Configuration-->
+        <p>
+            <br/>
+        </p>
+        <h2 id="Registry-Conf">
+            Registry Configuration
+        </h2>
+
+        <p>You must leave Registry configuration in bps.xml as it is. If you want to configure
+            registry to use external
+            data base you must follow the
+            <a href="http://wso2.org/project/registry/3.5.0/docs/user_guide/registry_config.html#registry-config">
+                registry configuration
+            </a>
+            document.
+        </p>
+        <!--h2 id="Using-Specification">Specification</h2-->
+
+        <h2 id="Using-Events">Events</h2>
+        <ul>
+            <li>
+                <a href="#Events-Event-Types">Event Types</a>
+            </li>
+            <li>
+                <a href="#Events-Filtering-Events">Filtering Events</a>
+                <ul>
+                    <li>
+                        <a href="#Events-Process">Filtering at the process level</a>
+                    </li>
+                    <li>
+                        <a href="#Events-Scope">Filtering at the scope level</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#Events-Listeners">Event Listeners</a>
+            </li>
+        </ul>
+        <p>
+            @product.name@ generates events to let you track what is exactly happening in the engine
+            and produces detailed
+            information about process executions. These events are persisted in BPS's database and
+            can be queried using
+            the<a href="management_api.html">Management API</a>. The default behaviour for the
+            engine is to always
+            generate all events for every executed action. However from a performance standpoint it
+            is better to
+            deactivate some of the events you're not interested in (or even all of them). Inserting
+            all these events
+            generates a non-negligible overhead.
+        </p>
+        <h3 id="Events-Event-Types">Event Types</h3>
+        <p>
+            The following table details each event possibly generated by ODE:
+        </p>
+        <table>
+            <tbody>
+                <tr>
+                    <th>Event Name</th>
+                    <th>Process/Scope</th>
+                    <th>Description</th>
+                    <th>Type</th>
+                </tr>
+                <tr>
+                    <td>ActivityEnabledEvent</td>
+                    <td>Scope</td>
+                    <td>An activity is enabled (just before it's started)</td>
+                    <td>activityLifecycle</td>
+                </tr>
+                <tr>
+                    <td>ActivityDisabledEvent</td>
+                    <td>Scope</td>
+                    <td>An activity is disabled (due to dead path elimination)</td>
+                    <td>activityLifecycle</td>
+                </tr>
+                <tr>
+                    <td>ActivityExecStartEvent</td>
+                    <td>Scope</td>
+                    <td>An activity starts its execution</td>
+                    <td>activityLifecycle</td>
+                </tr>
+                <tr>
+                    <td>ActivityExecEndEvent</td>
+                    <td>Scope</td>
+                    <td>An activity execution terminates</td>
+                    <td>activityLifecycle</td>
+                </tr>
+                <tr>
+                    <td>ActivityFailureEvent</td>
+                    <td>Scope</td>
+
+                    <td>An activity failed</td>
+                    <td>activityLifecycle</td>
+                </tr>
+                <tr>
+                    <td>CompensationHandlerRegistered</td>
+                    <td>Scope</td>
+                    <td>A compensation handler gets registered on a scope</td>
+                    <td>scopeHandling</td>
+                </tr>
+                <tr>
+                    <td>CorrelationMatchEvent</td>
+                    <td>Process</td>
+                    <td>A matching correlation has been found upon reception of a message</td>
+                    <td>correlation</td>
+                </tr>
+                <tr>
+                    <td>CorrelationNoMatchEvent</td>
+                    <td>Process</td>
+                    <td>No matching correlation has been found upon reception of a message</td>
+                    <td>correlation</td>
+                </tr>
+                <tr>
+                    <td>CorrelationSetWriteEvent</td>
+                    <td>Scope</td>
+                    <td>A correlation set value has been initialized</td>
+                    <td>dataHandling</td>
+                </tr>
+                <tr>
+                    <td>NewProcessInstanceEvent</td>
+                    <td>Process</td>
+                    <td>A new process instance is created</td>
+                    <td>instanceLifecycle</td>
+                </tr>
+                <tr>
+                    <td>PartnerLinkModificationEvent</td>
+                    <td>Scope</td>
+                    <td>A partner link has been modified (a new value has been assigned to it)</td>
+                    <td>dataHandling</td>
+                </tr>
+                <tr>
+                    <td>ProcessCompletionEvent</td>
+                    <td>Process</td>
+                    <td>A process instance completes</td>
+                    <td>instanceLifecycle</td>
+                </tr>
+                <tr>
+                    <td>ProcessInstanceStartedEvent</td>
+                    <td>Process</td>
+                    <td>A process instance starts</td>
+                    <td>instanceLifecycle</td>
+                </tr>
+                <tr>
+                    <td>ProcessInstanceStateChangeEvent</td>
+                    <td>Process</td>
+                    <td>The state of a process instance has changed</td>
+                    <td>instanceLifecycle</td>
+                </tr>
+                <tr>
+                    <td>ProcessMessageExchangeEvent</td>
+                    <td>Process</td>
+                    <td>A process instance has received a message</td>
+                    <td>instanceLifecycle</td>
+                </tr>
+                <tr>
+                    <td>ProcessTerminationEvent</td>
+                    <td>Process</td>
+                    <td>A process instance terminates</td>
+                    <td>instanceLifecycle</td>
+                </tr>
+                <tr>
+                    <td>ScopeCompletionEvent</td>
+                    <td>Scope</td>
+                    <td>A scope completes</td>
+                    <td>scopeHandling</td>
+                </tr>
+                <tr>
+                    <td>ScopeFaultEvent</td>
+                    <td>Scope</td>
+                    <td>A fault has been produced in a scope</td>
+                    <td>scopeHandling</td>
+                </tr>
+                <tr>
+                    <td>ScopeStartEvent</td>
+                    <td>Scope</td>
+                    <td>A scope started</td>
+                    <td>scopeHandling</td>
+                </tr>
+                <tr>
+                    <td>VariableModificationEvent</td>
+                    <td>Scope</td>
+                    <td>The value of a variable has been modified</td>
+                    <td>dataHandling</td>
+                </tr>
+                <tr>
+                    <td>VariableReadEvent</td>
+                    <td>Scope</td>
+                    <td>The value of a variable has been read</td>
+                    <td>dataHandling</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>
+            The second column specifies whether an event is associated with the process itself or
+            with one of its scopes.
+            The event type is used for filtering events.
+        </p>
+        <h3 id="Events-Filtering-Events">Filtering Events</h3>
+        <h4 id="Events-Process">Filtering at the process level</h4>
+        <p>
+            Using the<a href="#ProcessDeployment-Deployment-Descriptor">deployment descriptor</a>,
+            it is possible to
+            tweak events generation to filtrate which ones get created. First, events can be
+            filtered at the process
+            level using one of the following stanza:
+        </p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;dd:process-events</span> <span style="color: #000066;">generate</span>=<span style="color: #ff0000;">&quot;all&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span> <span style="color: #808080; font-style: italic;">&lt;!-- Default configuration --&gt;</span>
+
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;dd:process-events</span> <span style="color: #000066;">generate</span>=<span style="color: #ff0000;">&quot;none&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;dd:process-events<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;dd:enable-event<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>dataHandling<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/dd:enable-event<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;dd:enable-event<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>activityLifecycle<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/dd:enable-event<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/dd:process-events<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+        <p>
+            The first form just duplicates the default behaviour, when nothing is specified in the
+            deployment descriptor,
+            all events are generated. The third form lets you define which type of event is
+            generated, possible types are:
+        </p>
+        <ul>
+            <li>instanceLifecycle</li>
+            <li>activityLifecycle</li>
+            <li>dataHandling</li>
+            <li>scopeHandling</li>
+            <li>correlation</li>
+        </ul>
+        <h4 id="Events-Scope">Filtering at the scope level</h4>
+        <p>
+            It is also possible to define filtering for each scope of your process. This overrides
+            the settings defined
+            on the process. In order to define event filtering on a scope, the scope activity MUST
+            have a name in your
+            process definition. Scopes are referenced by name in the deployment descriptor:
+        </p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;dd:deploy</span> <span style="color: #000066;">xmlns:dd</span>=<span style="color: #ff0000;">&quot;http://www.apache.org/ode/schemas/dd/2007/03&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    ...
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;dd:process-events</span> <span style="color: #000066;">generate</span>=<span style="color: #ff0000;">&quot;none&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;dd:scope-events</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;aScope&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;dd:enable-event<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>dataHandling<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/bpel:enable-event<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;dd:enable-event<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>scopeHandling<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/bpel:enable-event<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/dd:scope-events<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;dd:scope-events</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;anotherScope&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+            <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;dd:enable-event<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>activityLifecycle<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/bpel:enable-event<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/dd:scope-events<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/dd:process-events<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    ...
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/dd:deploy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+        <p>
+            Note that it is useless to enable an event associated with the process itself when
+            filtering events on scopes.
+            The filter defined on a scope is automatically inherited by its inner scopes. So if no
+            filter is defined on
+            a scope, it will use the settings of its closest parent scope having event filters (up
+            to the process).
+            Note that what gets inherited is the full list of selected events, not each event
+            definition individually.
+        </p>
+        <h3 id="Events-Listeners">Event Listeners</h3>
+        <p>
+            @product.name@ lets you register your own event listeners to analyse all produced events
+            and do whatever you want
+            to do with them. To create a listener, you just need to implement the
+            org.apache.ode.bpel.iapi.BpelEventListener
+            interface.
+        </p>
+        <p>
+            Then add your implementation in the server's classpath
+            (BPS_HOME/repository/components/lib) and add a property
+            in bps.xml giving your fully qualified implementation class name:
+        </p>
+ <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;tns:WSO2BPS</span> <span style="color: #000066;">xmlns:tns</span>=<span style="color: #ff0000;">&quot;http://wso2.org/bps/config&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+  ...
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;tns:EventListeners<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;tns:listener</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;org.wso2.bps.samples.eventlistener.CustomEventListener&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/tns:EventListeners<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+  ...
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/tns:WSO2BPS<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+        <p>
+            You can try the sample event listener that is shipped with @product.name@ by adding
+            abouve configuration to the bps.xml and restart the server.
+            You can find the source of the sample implementation of event listener<a
+                href="http://svn.wso2.org/repos/wso2/branches/carbon/3.0.0/products/bps/modules/samples/bpel-eventlistener">
+            here</a>.
+        </p>
+
+        <h2 id="Using-Manipulating-Endpoints">Unified Endpoints</h2>
+        <p>
+            WSO2 Carbon platform supports unified-endpoints(UEPs) to configure partner endpoints
+            which are used in the BPEL processes. In more general terms, UEPs facilitate for a
+            generalized way of configuring endpoints taking quality of service in to the picture. So
+            a particular UEP configuration can be used across the carbon platform to configure
+            security in a partner endpoint in BPEL process and to configure WS-Addressing in a WSO2
+            ESB endpoint.
+        </p>
+        <p>
+            The UEP configuration is engaged to a partner endpoint at the deploy.xml which declares
+            the particular partner service as follows.
+        </p>
+
+<pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;?xml</span> <span style="color: #000066;">version</span>=<span style="color: #ff0000;">&quot;1.0&quot;</span> <span style="color: #000066;">encoding</span>=<span style="color: #ff0000;">&quot;UTF-8&quot;</span><span style="color: #000000; font-weight: bold;">?&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;deploy</span> <span style="color: #000066;">xmlns</span>=<span style="color: #ff0000;">&quot;http://www.apache.org/ode/schemas/dd/2007/03&quot;</span> <span style="color: #000066;">xmlns:client</span>=<span style="color: #ff0000;">&quot;urn:ode-apache-org:example:async:client&quot;</span></span>
+<span style="color: #009900;">  <span style="color: #000066;">xmlns:server</span>=<span style="color: #ff0000;">&quot;urn:ode-apache-org:example:async:server&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+  <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;process</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;server:Server&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;active<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>true<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/active<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;retired<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>false<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/retired<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;process-events</span> <span style="color: #000066;">generate</span>=<span style="color: #ff0000;">&quot;all&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;provide</span> <span style="color: #000066;">partnerLink</span>=<span style="color: #ff0000;">&quot;client&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+      <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;service</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;server:ServerService&quot;</span> <span style="color: #000066;">port</span>=<span style="color: #ff0000;">&quot;ServerPort&quot;</span> <span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/provide<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;invoke</span> <span style="color: #000066;">partnerLink</span>=<span style="color: #ff0000;">&quot;client&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;service</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;client:ServerCallbackService&quot;</span> <span style="color: #000066;">port</span>=<span style="color: #ff0000;">&quot;ServerCallbackPort&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;endpoint</span> <span style="color: #000066;">xmlns</span>=<span style="color: #ff0000;">&quot;http://wso2.org/bps/bpel/endpoint/config&quot;</span></span>
+<span style="color: #009900;">                          <span style="color: #000066;">endpointReference</span>=<span style="color: #ff0000;">&quot;uep.epr&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/service<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/invoke<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+  <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/process<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/deploy<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+&nbsp;
+&nbsp;</pre>
+
+        <p>Here, you can see the endpointReference property is pointing to a file path for the
+            endpoint reference file.
+            This EPR file will contain the address that needs to be used for the invoke.
+            Following is one such sample EPR file (endpoint reference file).
+        </p>
+
+<pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;wsa:EndpointReference</span></span>
+<span style="color: #009900;">        <span style="color: #000066;">xmlns:xsi</span>=<span style="color: #ff0000;">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span>
+<span style="color: #009900;">        <span style="color: #000066;">xsi:schemaLocation</span>=<span style="color: #ff0000;">&quot;http://www.w3schools.com uep_schema.xsd&quot;</span></span>
+<span style="color: #009900;">        <span style="color: #000066;">xmlns:wsa</span>=<span style="color: #ff0000;">&quot;http://www.w3.org/2005/08/addressing&quot;</span></span>
+<span style="color: #009900;">        <span style="color: #000066;">xmlns:wsdl11</span>=<span style="color: #ff0000;">&quot;http://schemas.xmlsoap.org/wsdl/&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;wsa:Address<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>http://localhost:9973/services/ServerCallbackService<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/wsa:Address<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;wsa:Metadata<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;id<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>SInvokeEPR<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/id<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/wsa:Metadata<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/wsa:EndpointReference<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+        <p>The UEP can be located outside the BPEL artifact, in the file system or registry too.
+            Maintaining an UEP outside from the BPEL artifact becomes very useful when governing
+            endpoints which are used by multiple BPEL processes in multiple WSO2 BPS instances.
+
+            eg - If the UEP to be maintained in the file sytem - Use the absolute path for the UEP
+            in deploy.xml
+        </p>
+
+<pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;endpoint</span> <span style="color: #000066;">xmlns</span>=<span style="color: #ff0000;">&quot;http://wso2.org/bps/bpel/endpoint/config&quot;</span></span>
+<span style="color: #009900;">          <span style="color: #000066;">endpointReference</span>=<span style="color: #ff0000;">&quot;conf:/uep.epr&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span><span style="color: #000000; font-weight: bold;">&lt;endpoint</span> <span style="color: #000066;">xmlns</span>=<span style="color: #ff0000;">&quot;http://wso2.org/bps/bpel/endpoint/config&quot;</span></span>
+<span style="color: #009900;">          <span style="color: #000066;">endpointReference</span>=<span style="color: #ff0000;">&quot;/opt/wso2/server/config/uep.epr&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+&nbsp;
+&nbsp;</pre>
+
+        <p>eg - If the UEP to be maintained in the registry - Use the registry specific path for the
+            UEP in deploy.xml
+        </p>
+
+<pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;endpoint</span> <span style="color: #000066;">xmlns</span>=<span style="color: #ff0000;">&quot;http://wso2.org/bps/bpel/endpoint/config&quot;</span></span>
+<span style="color: #009900;">          <span style="color: #000066;">endpointReference</span>=<span style="color: #ff0000;">&quot;conf:/uep.epr&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span></pre>
+
+        <p>If you are interested in other supported constructs by UEPs, please refer this
+            <a href="https://svn.wso2.org/repos/wso2/trunk/graphite/components/unified-endpoint/org.wso2.carbon.unifiedendpoint.core/src/main/resources/schema/uep_schema.xsd">
+                xml schema
+            </a>
+            which provides the current supported&nbsp;functionality&nbsp;like setting ?
+            <a href="http://www.w3.org/Submission/ws-addressing/#_Toc77464314">ReplyTo</a>
+            ? header.
+            Please take a look at
+            <a href="https://svn.wso2.org/repos/wso2/trunk/graphite/products/bps/modules/samples/product/src/main/resources/bpel/2.0/SampleAsynchronousProcess/Async-Server.zip">
+                Async-Server sample
+            </a>
+            which is a sample BPEL process which uses an UEP to configure the target endpoint of a
+            partner service.
+        </p>
+
+        <h2 id="Using-BPEL-Extensions">BPEL Extensions</h2>
+        <p>You can find more details on BPEL extensions<a href="bpel_extension.html">here</a>.
+        </p>
+        <!--h2 id="Using-Instance-Data-Cleanup">Instance Data Cleanup</h2>
+        <h2 id="Using-Direct-Process-to-Process-Communication">Direct Process-to-Process Communication</h2-->
+
+        <h2 id="Using-TransactionFactory">Configure Transaction Factory</h2>
+        <p>You can specify an external or custom transaction factory class to take care of
+            transactions. The following
+            onfiguration in BPS_HOME/repository/conf/bps.xml can be used to set transaction factory.
+        </p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;tns:WSO2BPS</span> <span style="color: #000066;">xmlns:tns</span>=<span style="color: #ff0000;">&quot;http://wso2.org/bps/config&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+  ...
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;tns:TransactionFactory</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;class name&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+  ...
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/tns:WSO2BPS<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+        <h2 id="Using-Message-Exchange-Interceptors">Message Exchange Interceptors</h2>
+        <p>Message Exchange Interceptors can be used to pull out data as well as to manipulate them
+            by enabling
+            interception of parntner/server invocations. MEX interceptors can be used in four
+            different situations.
+        </p>
+        <ul>
+            <li>When the BPEL server is invoked, before any attempt to route the message exchange to
+                a process.
+            </li>
+            <li>When the BPEL server is invoked, after the message exchange has been routed to the
+                process.
+            </li>
+            <li>When the BPEL server is invoked, after the message exchange has been routed to the
+                process and
+                it has been determined that a new instance needs to be created.
+            </li>
+            <li>When a partner link is invoked.</li>
+        </ul>
+        <p>You need to implement
+            <a href="http://svn.wso2.org/repos/wso2/branches/carbon/3.0.0/dependencies/ode/engine/src/main/java/org/apache/ode/bpel/intercept/MessageExchangeInterceptor.java">
+                MessageExchangeInterceptor
+            </a>
+            interface to implement a custom message exchange interceptor and drop the respective
+            jar to the BPS_HOME/repository/components/lib/ directory. Then, add the following
+            configuration entry to the
+            bps.xml in BPS_HOME/repository/conf directory
+        </p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;tns:WSO2BPS</span> <span style="color: #000066;">xmlns:tns</span>=<span style="color: #ff0000;">&quot;http://wso2.org/bps/config&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+  ...
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;tns:MexInterceptors<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;tns:interceptor</span> <span style="color: #000066;">class</span>=<span style="color: #ff0000;">&quot;class name&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/tns:MexInterceptors<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+  ...
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/tns:WSO2BPS<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+
+        <h2 id="Using-OpenJPA">Configure OpenJPA specific properties</h2>
+        <p>
+            You can configure and fine tune
+            <a href="http://openjpa.apache.org/">OpenJPA</a>
+            by specifying
+            <a href="http://openjpa.apache.org/builds/2.0.0-beta3/apache-openjpa-2.0.0-beta3/docs/manual/main.html">
+                OpenJPA properties
+            </a>
+            in BPS_HOME/repository/conf/bps.xml file.
+        </p>
+         <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;tns:WSO2BPS</span> <span style="color: #000066;">xmlns:tns</span>=<span style="color: #ff0000;">&quot;http://wso2.org/bps/config&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+  ...
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;tns:OpenJPAConfig<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;tns:property</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;openjpa.FlushBeforeQueries&quot;</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;true&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;tns:property</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;property name&quot;</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;value&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+        ...
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/tns:OpenJPAConfig<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+  ...
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/tns:WSO2BPS<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+
+        <h2 id="Using-Multi-Threaded-HTTP">Configure Multi Threaded HTTP Connection Manager</h2>
+        <p>
+            HTTP connection manager should be configured to be sync with the concurrent HTTP
+            connections that should be
+            in the BPS server.
+        </p>
+       <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;tns:WSO2BPS</span> <span style="color: #000066;">xmlns:tns</span>=<span style="color: #ff0000;">&quot;http://wso2.org/bps/config&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+  ...
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;tns:MultithreadedHttpConnectionManagerConfig<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;tns:maxConnectionsPerHost</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;20&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+        <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;tns:maxTotalConnections</span> <span style="color: #000066;">value</span>=<span style="color: #ff0000;">&quot;200&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+    <span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/tns:MultithreadedHttpConnectionManagerConfig<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+  ...
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/tns:WSO2BPS<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+
+        <!-- Configuring JMS Transport  -->
+        <p>
+            <br/>
+        </p>
+        <h2 id="Configuring-JMS-Transport">Configuring JMS Transport</h2>
+
+        <p>Prerequisites - Start a JMS-provider. ActiveMQ is used here as the default configs are
+            already added to axis2.xml (see step 4 below).
+        </p>
+        <ol>
+            <li>Add these required jars to $CARBON-HOME/repository/components/lib
+                <ul>
+                    <li>activemq-core-5.4.1</li>
+                    <li>geronimo-j2ee-management_1.1_spec-1.0.1</li>
+                </ul>
+
+            </li>
+            <li>Start the server
+                <br/>
+
+            </li>
+            <li>Install the "WSO2 Carbon - JMS Transport Core Feature" to the product(WSO2-BPS). You
+                can do this by Features link in the left side menu bar.
+                <br/>
+
+                <img src="../images/bpel-user-guide/JMS-transport.png"
+                     alt="Adding JMS transport feature"/>
+                <br/>
+                Figure 12
+                <br/>
+            </li>
+            <li>Add the relevant JMS configs related to JMS transport listener to axis2.xml. You can
+                do this by just uncommenting this element
+                <pre>&lt;transportReceivername=&quot;jms&quot;class=&quot;org.apache.axis2.transport.jms.JMSListener&quot;/&gt;</pre>
+                if you are using ActiveMQ.
+                <br/>
+
+            </li>
+            <li>Restart the server.
+                <br/>
+                <p>If you have correctly configured, these logs will be shown during the server
+                    start-up.
+                </p>
+                    <pre style='color:#000000;background:#ffffff;'>INFO <span style='color:#808030; '>-</span> JMSSender <span style='color:#808030; '>-</span> JMS Sender started
+INFO <span style='color:#808030; '>-</span> JMSSender <span style='color:#808030; '>-</span> JMS Transport Sender initialized<span style='color:#808030; '>.</span><span style='color:#808030; '>.</span><span style='color:#808030; '>.</span>
+<span style='color:#808030; '>.</span><span style='color:#808030; '>.</span><span style='color:#808030; '>.</span>
+INFO <span style='color:#808030; '>-</span> JMSListener <span style='color:#808030; '>-</span> JMS Transport Receiver<span style='color:#808030; '>/</span>Listener initialized<span style='color:#808030; '>.</span><span style='color:#808030; '>.</span><span style='color:#808030; '>.</span>
+<span style='color:#808030; '>.</span><span style='color:#808030; '>.</span><span style='color:#808030; '>.</span>
+INFO <span style='color:#808030; '>-</span> JMSListener <span style='color:#808030; '>-</span> JMS listener started
+</pre>
+
+            </li>
+            <li>Then you can configure JMS transport from service level via UI.</li>
+        </ol>
+
+        <!-- Process Instance Cleanup  -->
+        <p>
+            <br/>
+        </p>
+        <h2 id="Process-Instance-Cleanup">Process Instance Cleanup</h2>
+
+        <p>Process instance cleanup feature in WSO2 Business Process Server allows you to configure
+            periodic process
+            instance cleanup tasks based on various process instance properties to remove process
+            instance data from
+            @product.name@ persistence storage.
+        </p>
+        <br/>
+        <h3>How to configure process instance cleanup</h3>
+        <p>
+            You can use 'Schedules' section in bps.xml to configure instance cleanup. 'Schedules'
+            section can contain multiple
+            'Schedule' elements with multiple 'cleanup' elements. In each 'Schedule' element you can
+            specify attribute 'when'
+            which will be the time that the instance cleanup task get executed. Time is configured
+            using
+            <a href="http://www.quartz-scheduler.org/docs/tutorials/crontrigger.html">cron
+                expressions.
+            </a>
+            Inside cleanup element you can use filters. In those filter elements you can specify
+            various instance properties
+            which will use to select the instance to be deleted.
+        </p>
+        <br/>
+        <h4>Example Cleanup Configuration</h4>
+        <p>Below example schedule cleanup task at 5:11 PM every day to clean completed process
+            instances.
+        </p>
+<pre style='color:#000000;background:#ffffff;'><span style='color:#808030; '>&lt;</span>tns<span style='color:#800080; '>:</span>Schedules<span style='color:#808030; '>></span>
+        <span style='color:#808030; '>&lt;</span>tns<span style='color:#800080; '>:</span>Schedule when<span style='color:#808030; '>=</span><span style='color:#800000; '>"</span><span style='color:#0000e6; '>0 11 17 * * ?</span><span style='color:#800000; '>"</span><span style='color:#808030; '>></span>
+            <span style='color:#808030; '>&lt;</span>tns<span style='color:#800080; '>:</span>cleanup<span style='color:#808030; '>></span>
+                <span style='color:#808030; '>&lt;</span>tns<span style='color:#800080; '>:</span>filter<span style='color:#808030; '>></span><span style='color:#808030; '>&lt;</span><span style='color:#808030; '>!</span><span style='color:#808030; '>[</span>CDATA<span style='color:#808030; '>[</span>status<span style='color:#808030; '>=</span>completed<span style='color:#808030; '>]</span><span style='color:#808030; '>]</span><span style='color:#808030; '>></span><span style='color:#808030; '>&lt;</span><span style='color:#808030; '>/</span>tns<span style='color:#800080; '>:</span>filter<span style='color:#808030; '>></span>
+            <span style='color:#808030; '>&lt;</span><span style='color:#808030; '>/</span>tns<span style='color:#800080; '>:</span>cleanup<span style='color:#808030; '>></span>
+        <span style='color:#808030; '>&lt;</span><span style='color:#808030; '>/</span>tns<span style='color:#800080; '>:</span>Schedule<span style='color:#808030; '>></span>
+    <span style='color:#808030; '>&lt;</span><span style='color:#808030; '>/</span>tns<span style='color:#800080; '>:</span>Schedules<span style='color:#808030; '>></span>
+</pre>
+
+        <!-- Process hydration/dehydration  -->
+        <p>
+            <br/>
+        </p>
+        <h2 id="Process-Hydration-Dehydration">Process Hydration and Dehydration</h2>
+        <p>One technique to reduce memory utilization of BPS engine is process hydration and
+            dehydration. That means
+            user can configure the hydration/dehydration policy at bps.xml in repository/conf
+            directory. As well programmatically
+            user can define a custom hydration/dehydration policy.
+        </p>
+        <p>In bps.xml user can set the maximum age of a process before it is dehydrated via MaxAge
+            element. And the maximum deployed process count can exist in memory at a particular time
+            via maxCount attribute.
+        </p>
+        <h3>Sample Process Dehydration Configuration</h3>
+        <p>Below example policy with enable the dehydration policy and set the maximum deployed
+            process count can exist in memory at a particular time to 100 and the maximum age of a
+            process before it is dehydrated to 5 minutes.
+        </p>
+  <pre style='color:#000000;background:#ffffff;'><span style='color:#808030; '>&lt;</span><span style='color:#000000; '>tns</span><span style='color:#800080; '>:</span><span style='color:#000000; '>ProcessDehydration</span> <span style='color:#274796; '>maxCount</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>100</span><span style='color:#0000e6; '>"</span> <span style='color:#274796; '>value</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>true</span><span style='color:#0000e6; '>"</span><span style='color:#808030; '>></span>
+    <span style='color:#808030; '>&lt;</span><span style='color:#000000; '>tns</span><span style='color:#800080; '>:</span><span style='color:#000000; '>MaxAge</span> <span style='color:#274796; '>value</span><span style='color:#808030; '>=</span><span style='color:#0000e6; '>"</span><span style='color:#0000e6; '>300000</span><span style='color:#0000e6; '>"</span><span style='color:#808030; '>/></span>
+<span style='color:#808030; '>&lt;/</span><span style='color:#000000; '>tns</span><span style='color:#800080; '>:</span><span style='color:#000000; '>ProcessDehydration</span><span style='color:#808030; '>></span>
+</pre>
+
+        <!-- Enable-P2P-Communication  -->
+        <p>
+            <br/>
+        </p>
+        <h2 id="Enable-P2P-Communication">Enabling Peer-to-Peer(P2P) Communication</h2>
+        <p>The
+            <strong>usePeer2Peer</strong>
+            property informs the BPEL engine not to use internal communications for sending messages
+            between BPEL processes that may be executing within the same engine. The
+            <strong>usePeer2Peer</strong>
+            property has
+            <strong>true</strong>
+            as the default value.
+        </p>
+        <pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;dd:invoke</span> <span style="color: #000066;">partnerLink</span>=<span style="color: #ff0000;">&quot;...&quot;</span> <span style="color: #000066;">usePeer2Peer</span>=<span style="color: #ff0000;">&quot;true&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+	<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;dd:service</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;...&quot;</span> <span style="color: #000066;">port</span>=<span style="color: #ff0000;">&quot;...&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/dd:invoke<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+        <p>Disabling P2P Communication</p>
+        <ol>
+            <li>Add the attribute usePeer2Peer in the deploy.xml file if it is not already there.
+            </li>
+            <li>Set this attribute value to false for the specific partner link.</li>
+        </ol>
+<pre class="xml" style="font-family:monospace;"><span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;dd:invoke</span> <span style="color: #000066;">partnerLink</span>=<span style="color: #ff0000;">&quot;...&quot;</span> <span style="color: #000066;">usePeer2Peer</span>=<span style="color: #ff0000;">&quot;false&quot;</span><span style="color: #000000; font-weight: bold;">&gt;</span></span>
+	<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;dd:service</span> <span style="color: #000066;">name</span>=<span style="color: #ff0000;">&quot;...&quot;</span> <span style="color: #000066;">port</span>=<span style="color: #ff0000;">&quot;...&quot;</span><span style="color: #000000; font-weight: bold;">/&gt;</span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/dd:invoke<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+        <p>When the value of this attribute is false, BPS engine will send the message to other
+            process through the integration layer.
+            If you have deployed your BPEL process and its partner services on the same WSO2 Carbon
+            instance, you can avoid the network overhead using usePeer2Peer="false" for the
+            particular partner interaction in deploy.xml.
+        </p>
+        <!-- Setting up a BPS Cluster  -->
+        <p><br /></p>
+        <h2 id="BPS-cluster-setup">Setting up a BPS Cluster</h2>
+<p>Clustering BPS has three different aspects.</p>
+<ul>
+<li>Configuration sharing across the cluster nodes</li>
+<li>Configure user store</li>
+<li>Runtime state replication among the cluster nodes</li>
+
+<ol>
+<li>BPEL database</li>
+<li>Deployment Synchronizer based Deployment</li>
+<li>Configure cache</li>
+</ol>
+</ul>
+
+<h4>Configuration sharing across the cluster nodes</h4>
+<p>The configuration sharing is done using the WSO2 Governance Registry. All the BPS nodes in the cluster are pointed to one instance of WSO2 G-Reg. WSO2 G-Reg consists of three registry spaces.</p>
+<ul><li>Local Registry - Per running instance of every product</li>
+<li>Configuration Registry - Shared among all the instance of a cluster of one product</li>
+<li>Governance Registry - Centrally managed and shared across multiple products and multiple instances of those</li></ul>
+<p>For BPS clustering, local registry is used per each instance, the configuration registry of each BPS instance is mounted to the same configuration registry and the governance registry is shared among G-Reg and all the BPS instances.</p> <br />
+
+<p><img src="../images/bpel-admin-guide/bps_cluster.png" alt="@product.name@ cluster deployment diagram"/></p><br/>
+Figure 1<br/>
+
+<h4>Configure G-Reg Node</h4>
+<p>Remove the original dbConfig element from GREG_HOME/repository/conf/registry.xml and add the database configurations as follows. Change the IP address, url, username and passwords accordingly. Copy MySQL jdbc driver library to GREG_HOME/repository/components/lib directory.</p>
+<pre class="xml" style="font-family:monospace;">
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;currentDBConfig<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>wso2registry<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/currentDBConfig<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;readOnly<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>false<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/readOnly<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;registryRoot<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>/<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/registryRoot<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;dbConfig name="wso2registry<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;url<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>jdbc:MySQL://ip:3306/greg?autoReconnect=true<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/url<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;userName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>root<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/userName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;password<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>root123<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/password<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;driverName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>com.mysql.jdbc.Driver<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/driverName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;maxActive<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>50<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/maxActive<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;maxWait<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>60000<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/maxWait<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;minIdle<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>5<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/minIdle<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/dbConfig<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+</pre>
+
+<h4>Configure BPS Master Node</h4>
+<p>Remove the original dbConfig element from BPS_MASTER_HOME/repository/conf/registry.xml and add the database configuration below. Change the IP address, url, username and passwords accordingly. Copy MySQL jdbc driver library to BPS_MASTER_HOME/repository/components/lib directory.</p>
+
+<pre class="xml" style="font-family:monospace;">
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;currentDBConfig<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>wso2registry<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/currentDBConfig<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;readOnly<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>false<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/readOnly<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;registryRoot<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>/<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/registryRoot<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;dbConfig name="wso2registry<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;url<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>jdbc:MySQL://IP:3306/bpsMaster?autoReconnect=true<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/url<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;userName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>root<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/userName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;password<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>root123<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/password<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;driverName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>com.mysql.jdbc.Driver<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/driverName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;maxActive<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>50<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/maxActive<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;maxWait<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>60000<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/maxWait<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;minIdle<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>5<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/minIdle<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/dbConfig<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+</pre>
+
+<p>Let's configure mounting configuration by adding add more parameters to registry.xml. Add following database configurations to the BPS_MASTER_HOME/repository/conf/registry.xml. Change IP address, url, username and passwords accordingly.</p>
+
+<pre class="xml" style="font-family:monospace;">
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;dbConfig name="bpsMountRegistry"<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;url<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>jdbc:MySQL://IP:3306/greg?autoReconnect=true<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/url<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;userName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>root<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/userName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;password<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>root123<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/password<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;driverName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>com.mysql.jdbc.Driver<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/driverName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;maxActive<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>50<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/maxActive<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;maxWait<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>60000<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/maxWait<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;minIdle<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>5<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/minIdle<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/dbConfig<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+</pre>
+
+<pre class="xml" style="font-family:monospace;">
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;remoteInstance url="https://<span style="color: #000000; font-weight: bold;">&lt;IP of G-Reg>:<span style="color: #000000; font-weight: bold;">&lt;HTTPS prot of G-Reg>/registry"<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;id<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Mount1<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/id<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;dbConfig<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>bpsMountRegistry<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/dbConfig<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;readOnly<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>false<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/readOnly<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;registryRoot<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>/<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/registryRoot<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/remoteInstance<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+</pre>
+
+<pre class="xml" style="font-family:monospace;">
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;mount path="/_system/config" overwrite="true"<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;instanceId<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Mount1<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/instanceId<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;targetPath<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>/_system/bpsConfig<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/targetPath<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/mount<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+</pre>
+
+<pre class="xml" style="font-family:monospace;">
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;mount path="/_system/governance" overwrite="true"<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;instanceId<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Mount1<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/instanceId<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;targetPath<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>/_system/governance<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/targetPath<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/mount<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+</pre>
+
+<p>Update the remoteInstance URL according to the configuration of G-Reg running machine. <br />
+Note: "InstanceId", "id" and "dbConfig" elements should be mapped properly if you are using different names for them.</p>
+
+<h4>Configure BPS Slave Node</h4>
+
+<p>Remove the original dbConfig element from BPS_SLAVE_HOME/repository/conf/registry.xml and add the database configuration below. Change IP address, url, username and passwords accordingly. Copy MySQL jdbc driver library to BPS_SLAVE_HOME/repository/components/lib directory.</p>
+
+<pre class="xml" style="font-family:monospace;">
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;currentDBConfig<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>wso2registry<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/currentDBConfig<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;readOnly<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>false<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/readOnly<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;registryRoot<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>/<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/registryRoot<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<pre class="xml" style="font-family:monospace;">
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;dbConfig name="wso2registry"<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;url<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>jdbc:MySQL://IP:3306/bpsSlave?autoReconnect=true<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/url<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;userName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>root<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/userName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;password<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>root123<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/password<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;driverName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>com.mysql.jdbc.Driver<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/driverName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;maxActive<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>50<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/maxActive<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;maxWait<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>60000<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/maxWait<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;minIdle<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>5<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/minIdle<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #000000; font-weight: bold;">&lt;/dbConfig<span style="color: #000000; font-weight: bold;">&gt;</span></span></pre>
+
+<p>Change  database configuration at BPS_SLAVE_HOME/repository/conf/registry.xml as below. Change IP address, url, username and passwords accordingly.<br />
+Note: Here we are changing the registry mode to readonly in database configuration.</p>
+
+<pre class="xml" style="font-family:monospace;">
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;dbConfig name="bpsMountRegistry"<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;url<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>jdbc:MySQL://IP:3306/greg?autoReconnect=true<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/url<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;userName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>root<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/userName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;password<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>root123<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/password<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;driverName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>com.mysql.jdbc.Driver<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/driverName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;maxActive<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>50<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/maxActive<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;maxWait<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>60000<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/maxWait<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;minIdle<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>5<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/minIdle<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/dbConfig<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<pre class="xml" style="font-family:monospace;">
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;remoteInstance url="https://<span style="color: #000000; font-weight: bold;">&lt;HTTPS port of G-Reg<span style="color: #000000; font-weight: bold;">&gt;</span><span style="color: #000000; font-weight: bold;">&lt;/registry<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;id<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Mount1<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/id<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;dbConfig<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>bpsMountRegistry<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/dbConfig<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;readOnly<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>true<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/readOnly<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;registryRoot<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>/<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/registryRoot<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #000000; font-weight: bold;">&lt;/remoteInstance<span style="color: #000000; font-weight: bold;">&gt;</span></span>
+</pre>
+
+<pre class="xml" style="font-family:monospace;">
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;mount path="/_system/config" overwrite="true"<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;instanceId<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Mount1<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/instanceId<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;targetPath<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>/_system/bpsConfig<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/targetPath<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #000000; font-weight: bold;">&lt;/mount<span style="color: #000000; font-weight: bold;">&gt;</span></span>
+</pre>
+
+<pre class="xml" style="font-family:monospace;">
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;mount path="/_system/governance" overwrite="true"<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;instanceId<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>Mount1<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/instanceId<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;targetPath<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>/_system/governance<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/targetPath<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #000000; font-weight: bold;">&lt;/mount<span style="color: #000000; font-weight: bold;">&gt;</span></span>
+</pre>
+
+<p>Update the remoteInstance URL based on the configuration of G-Reg running machine. <br />
+Note: "InstanceId", "id" and "dbConfig" elements should be mapped properly if you are using different names for them.
+Note: If you compare the configuration with master node, we are only changing the configuration of local registry and the registry access mode in mounting is readonly but the local registry configuration should be read-write since it is specific for each node.</p>
+
+<h4>Configure User Store</h4>
+
+<p>For all the cluster nodes (G-Reg, BPS Master and BPS Slave), same user store should be used.
+Change the database configuration at CARBON_HOME/repository/conf/user-mgt.xml as below. Change IP address, url, username and passwords should be changed accordingly.</p>
+
+<pre class="xml" style="font-family:monospace;">
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;Property name="url"<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>jdbc:MySQL://IP:3306/greg?autoReconnect=true<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/Property<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;Property name="userName"<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>root<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/Property<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;Property name="password"<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>root123<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/Property<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;Property name="driverName"<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>com.mysql.jdbc.Driver<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/Property<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;Property name="maxActive"<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>50<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/Property<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;Property name="maxWait"<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>60000<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/Property<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;Property name="minIdle"<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>5<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/Property<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+</pre>
+
+<p>To configure the user store for the cluster nodes, refer <a href="../user.core/admin_guide.html">How to Configure an External LDAP User Store</a>.</p>
+
+<h4>Runtime state replication among the cluster nodes</h4>
+
+<p>The following instructions should be followed only for the BPS cluster nodes.</p>
+
+<h4>BPEL Database</h4>
+
+<p>BPEL database for the both master and slave nodes should be pointed to the same database. The default BPEL database is pointed to a embedded H2 database per each BPS cluster node. You need to configure it to a single database preferably to a MySQL database. Open BPS_HOME/repository/conf/datasources.properties file of both BPS nodes and edit the configuration as follows. See Configuring a Data Source for the instructions. Ips, ports, usernames and passwords should be updated to reflect the real and appropriate values.</p>
+<p>Note - JNDI port (synapse.datasources.providerPort) should be changed in each BPS node if the BPS cluster nodes are on the same host.</p>
+
+<pre class="xml" style="font-family:monospace;">
+<span style="color: #009900;"></span>synapse.datasources=bpsds<span style="color: #009900;"></span>
+<span style="color: #009900;"></span>synapse.datasources.icFactory=com.sun.jndi.rmi.registry.RegistryContextFactory<span style="color: #009900;"></span>
+<span style="color: #009900;"></span>synapse.datasources.providerPort=2199<span style="color: #009900;"></span>
+<span style="color: #009900;"></span>synapse.datasources.bpsds.registry=JNDI<span style="color: #009900;"></span>
+<span style="color: #009900;"></span>synapse.datasources.bpsds.type=BasicDataSource<span style="color: #009900;"></span>
+<span style="color: #009900;"></span>synapse.datasources.bpsds.driverClassName=com.mysql.jdbc.Driver<span style="color: #009900;"></span>
+<span style="color: #009900;"></span>synapse.datasources.bpsds.url=jdbc:MySQL://localhost:3306/bps210MySQL?autoReconnect=true<span style="color: #009900;"></span>
+<span style="color: #009900;"></span>synapse.datasources.bpsds.username=root<span style="color: #009900;"></span>
+<span style="color: #009900;"></span>synapse.datasources.bpsds.password=root123<span style="color: #009900;"></span>
+<span style="color: #009900;"></span>synapse.datasources.bpsds.dsName=bpsds<span style="color: #009900;"></span>
+<span style="color: #009900;"></span>synapse.datasources.bpsds.maxActive=100<span style="color: #009900;"></span>
+<span style="color: #009900;"></span>synapse.datasources.bpsds.maxIdle=20<span style="color: #009900;"></span>
+<span style="color: #009900;"></span>synapse.datasources.bpsds.maxWait=10000<span style="color: #009900;"></span>
+</pre>
+
+<h4>Deployment Synchronizer based Deployment</h4>
+
+<p>The deployment happens using the deployment synchronizer that is to easily synchronize the configuration across a cluster of carbon servers. The deployment synchronizer can be tuned by defining a synchronization period to run periodically.</p>
+
+<p>It is possible to maintain all the nodes in the cluster in sync through the shared registry with the deployment synchronizer. One of the nodes can be designated as the master node and it can upload its local repository to the registry using the deployment synchronizer. Other nodes (slave nodes) can then download the same repository from the registry and deploy locally.</p>
+
+<p>For that, the synchronizer has to be run in auto commit mode in the master node. When in auto commit mode, it will periodically upload the changed artifacts in the local repository to the registry. Similarly slave nodes should run the synchronizer in the auto checkout mode. If needed, registry eventing can be employed to run the checkout operations so that a checkout will be made only when some artifact has changed in the shared registry.</p>
+
+<p><strong>Configure master node to enable Auto Commit mode</strong></p>
+<p><img src="../images/bpel-admin-guide/auto_commit_mode.png" alt="@product.name@ cluster deployment diagram"/></p><br/>
+Figure 2<br/>
+
+<p><strong>Configure slave node to enable Auto Checkout mode</strong></p>
+<p><img src="../images/bpel-admin-guide/auto_checkout_mode.png" alt="@product.name@ cluster deployment diagram"/></p><br/>
+Figure 3<br/>
+
+<h4>Configure Cache</h4>
+
+<p>Update the cache configuration for all the nodes in the cluster including the G-Reg node.</p>
+
+<p>Open CARBON_HOME/repository/conf/cache.xml file and change the clustering configuration as below.</p>
+
+<p>Comment/remove the following</p>
+
+<pre class="xml" style="font-family:monospace;">
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;configuration<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;cacheMode<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>local<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/cacheMode<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/configuration<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+</pre>
+
+<p>Uncomment the following</p>
+
+<pre class="xml" style="font-family:monospace;">
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;configuration<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;clustering<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;enabled<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>true<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/enabled<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;clusterName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>wso2carbon-cache<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/clusterName<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/clustering<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;cacheMode<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>replicated<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/cacheMode<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;sync<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>true<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/sync<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/configuration<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>
+</pre>
+
+<h4>Running Multiple instance of the WSO2 Carbon Servers in the same machine</h4>
+
+<p>If you are running multiple instances of same or different WSO2 Product Instances, then you need to configure ports for each instance. You can configure $CARBON_HOME/repository/conf/carbon.xml by using port Offset</p>
+<pre class="xml" style="font-family:monospace;">
+<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;Offset<span style="color: #000000; font-weight: bold;">&gt;</span></span></span>0<span style="color: #009900;"><span style="color: #000000; font-weight: bold;">&lt;/Offset<span style="color: #000000; font-weight: bold;">&gt;</span></span></span></pre>
+
+<p>e.g. Offset=2 and HTTPS port=9443 will set the effective HTTPS port to 9445</p>
+
+<h4>Start up order and commands</h4>
+
+<p>Make sure that all the databases mentioned above are created in the MySQL database server.
+Use the following command to start the servers for the first time in the order given below.</p>
+
+<ul><li>wso2server.sh -Dsetup</li>
+<li>G-Reg node</li>
+<li>BPS master node</li>
+<li>BPS slave node</li></ul>
+
+    </body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Jaggery - Delicious Javascript</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+        }
+    </style>
+    <link href="../css/prettify.css" rel="stylesheet">
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="../images/favicon.ico">
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72"
+          href="../images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114"
+          href="../images/apple-touch-icon-114x114.png">
+</head>
+
+<body>
+
+<%
+include('/includes/topnavi.jag');
+%>
+
+<div class="container-fluid" style="width: 960px; margin: auto;">
+    <div class="row">
+        <div class="span16">
+            <div class="page-header">
+                <h1>
+                    Documentation
+                    <small>API documentation for Jaggery.js</small>
+                </h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="span4">
+            <div class="well">
+                <%
+                include('/includes/navi.jag');
+                %>
+
+            </div>
+
+        </div>
+        <div class="span12">
+            <div class="content" id="email" name="email">
+                <h3>Feed</h3>
+
+                <pre class="prettyprint linenums">
+&lt%
+var reader = new FeedReader();
+
+//returns a Feed object
+feed = reader.get("http://feeds.bbci.co.uk/news/rss.xml");
+
+print(feed.feedType);
+%&gt
+</pre>
+                <%
+                var feedCode = '&lt%'
+                    + '\n var reader = new FeedReader(); '
+                    + '\n //returns a Feed object'
+                    + '\n feed = reader.get("http://feeds.bbci.co.uk/news/rss.xml");'
+                    + '\n print(feed.feedType);'
+                	+ '\n %&gt';
+
+                var codeSnip = encodeURIComponent(feedCode);
+                var urlString = '../tryitframe.jag?code='+codeSnip;
+
+                include('/includes/tryit_but.jag');
+                %>
+
+                <br>
+
+                <div id="pageLinks">
+<a class="navilink" href="#overview">Overview</a>
+<a class="navilink" href="#members">Members</a>
+<a class="navilink" href="#operations">Operations</a>
+</div>
+
+<section id="overview">
+    <h4>Overview</h4>
+    <p class="description">Feed API is capable of intelligently working with both Atom and RSS feeds.
+    The underlying protocol implementation is kept transparent. However, some data might be lost due to this being an
+    abstraction of both Atom and RSS feeds. The Feed host object is capable of persisting it's content to disk.</p>
+    
+</section>
+<section id="members">
+    <h4>Members</h4>
+                <table class="clsStd member-table">
+
+                    <tbody>
+
+                    <tr>
+                        <th>Member</th>
+                         <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                    
+                    <tr>
+                    <td>
+                    <code>getEntries()</code>
+                    </td>
+                    <td>Entry[]</td>
+                    <td>
+                    <pre class="prettyprint">feed.getEntries();</pre>
+                    Returns the complete set of entries contained in this feed.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <code>insertEntry(newEntry)</code>
+                    </td>
+                    <td>None</td>
+                    <td>
+                     <pre class="prettyprint">feed.insertEntry(newEntry);</pre>
+                    Adds a new Entry to the end of the Feeds collection of entries.
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <code>writeTo(fileName)</code>
+                    </td>
+                    <td>None</td>
+                    <td>
+                    <pre class="prettyprint">feed.writeTo("file-name.xml");</pre>
+                    Serializes the Feed to a given local file
+
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <code>author</code>
+                    </td>
+                    <td>String</td>
+                    <td>The author of this feed.</td>
+                </tr>
+                <tr>
+                    <td>
+                    <code>category</code>
+                    </td>
+                    <td>String</td>
+                    <td>The category of this feed.</td>
+                </tr>
+                <tr>
+                    <td>
+                    <code>contributor</code>
+                    </td>
+                    <td>String</td>
+                    <td>The contributor of this feed.</td>
+                </tr>
+                <tr>
+                    <td>
+                    <code>description</code>
+                    </td>
+                    <td>String</td>
+                    <td>The description of this feed.</td>
+                </tr>
+                <tr>
+                    <td>
+                    <code>feedType</code>
+                    </td>
+                    <td>String</td>
+                    <td>The type of this feed ("atom", "rss_2.0", "rss_1.0").</td>
+                </tr>
+                <tr>
+                    <td>
+                    <code>link</code>
+                    </td>
+                    <td>String</td>
+                    <td>The location of this feed.</td>
+                </tr>
+                <tr>
+                    <td>
+                    <code>title</code>
+                    </td>
+                    <td>String</td>
+                    <td>The title of this feed.</td>
+                </tr>
+                <tr>
+                    <td>
+                    <code>updated</code>
+                    </td>
+                    <td>String</td>
+                    <td>The date when this feed was last updated.</td>
+                </tr>
+                <tr>
+                    <td>
+                    <code>XML</code>
+                    </td>
+                    <td>XML</td>
+                    <td>Returns the E4X XML contents of this Feed object.</td>
+                </tr>
+                     </tbody>
+                </table>
+
+    </section>
+            </div>
+            <br>
+            <br>
+        </div>
+
+    </div>
+    <%
+    include('/includes/footer.jag');
+    %>
+
+</div>
+
+<!-- /container -->
+<%
+include('/includes/scripts.jag')
+%>
+
+	<script>	
+		
+		$(document).ready(function(){
+        $('#feed').toggleClass('active')
+		$('#docs').addClass('active')
+        })
+	</script>
+</body>
+</html>

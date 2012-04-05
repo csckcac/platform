@@ -1,0 +1,184 @@
+<!--
+~ Copyright 2005-2008 WSO2, Inc. (http://wso2.com)
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+    <body>
+	<p>[<a href="http://wso2.org/downloads/gadget-server">Download</a>]
+            | [<a href="index_docs.html">Documentation Home</a>] | [<a href="release_notes.html">Release Note</a>]
+        </p>
+
+        <div id="main-content">
+            <h1>Welcome to the WSO2 Gadget Server 1.4.0</h1>
+            <p>This document provides an
+                introduction to the concepts and use of the Gadget Server, and will help you
+                get started using Web service technology.
+            </p>
+
+            <p>Services
+are the building blocks of SOAs. A complete SOA platform needs to
+enable the creation of services on a wide variety of platforms, to
+support today's heterogeneous enterprises. However, end users mostly
+care about their business needs and they will demand complete access to
+every application and service required to satisfy these needs.
+Organisations need to come up with tangible applications that help
+utilise existing investments made in building their SOAs, irrelevant of
+the underlying technology (Java, .Net, PHP or any other) while
+maintaining a people centric approach and delivering maximum value for
+the business user.<br />
+<br />
+The WSO2 Gadget Server is a light weight portal platform enabling the
+re-purposing and unification of existing services in an organisation's
+SOA.<br />
+<br />
+Gadgets deployed in WSO2 Gadget Server are HTML and Javascript wrapped
+in XML adhering to the Google Gadgets Specification and thus can be
+hosted anywhere. This increases scalability and allows organisations to
+leverage existing services and code to satisfy new user requirements.
+Gadgets are self contained, ready to use applications which are task
+specific and lightweight. The WSO2 Gadget Server powers the rendering
+and management of gadgets according to the preference of the business
+user via a drag and drop layout of gadgets, per gadget settings and
+different tabs for gadget categorization among others.<br />
+<br />
+The WSO2 Gadget Server also provides an Enterprise Gadget Repository
+from where business users can pick and choose additional, recommended
+gadgets to be added to their individual portal pages. This repository
+helps enterprises govern the gadgets exposed to the end user while the
+users get to rate and comment on each gadget found in the repository.<br />
+<br />
+The WSO2 Gadget Server is released under the Apache License v2.0<br />
+</p>
+
+
+            <h3>features in the 1.4.0 release:<br />
+</h3>
+<ul style="font-style: italic;">
+  <li>Enterprise class Portal interface</li>
+</ul>
+<dl>
+  <dd>Users get to organise gadgets in a familiar portal interface.
+Sets of gadgets can be organised using tabs. Individual gadgets can be
+moved between tabs as well as cloning an entire tab to be used as the
+foundation for a new tab.<br />
+  </dd>
+</dl>
+<ul style="font-style: italic;">
+  <li>Client Side Gadgets</li>
+</ul>
+<dl>
+  <dd>Any gadget adhering to the Google Gadget Specification can be
+added to the portal. These gadgets are basically HTML and Javascript
+embedded in XML. They can be hosted in any publicly accessible Web
+Server. The URL of the gadget XML is used to add them to the Portal.<br />
+  </dd>
+</dl>
+<ul style="font-style: italic;">
+  <li>Enterprise Gadget Repository</li>
+</ul>
+<dl>
+  <dd>Organisations can maintain a central repository of gadgets.
+Portal users can browse and add gadgets from this repository to their
+individual portals, while rating and commenting on individual gadgets.<br />
+  </dd>
+</dl>
+<ul style="font-style: italic;">
+  <li>Anonymous Mode</li>
+</ul>
+<dl>
+  <dd>Users can experience most of the Portal's functionality
+'excluding' the gadget Repository even before registration and sign in.
+All data in this mode will be stored in the user's browser.<br />
+  </dd>
+</dl>
+<ul style="font-style: italic;">
+  <li>Multi option user registration and sign in</li>
+</ul>
+<dl>
+  <dd>User registration and sign in can be done using OpenID or
+Infocards in addition to the traditional user name and password based
+scheme.<br />
+  </dd>
+</dl>
+<ul style="font-style: italic;">
+  <li>Management Console</li>
+</ul>
+<dl>
+  <dd>Helps configure and manage the server, its users and the
+Enterprise Gadget Repository via an intuitive browser based
+administrative interface.</dd>
+</dl>
+<ul style="font-style: italic;">
+  <li>Custom Layouts for Tabs</li>
+</ul>
+<dl>
+  <dd>Gadget Server users can choose a desired layout form
+six different layouts when creating a new tab.</dd>
+</dl>
+<ul style="font-style: italic;">
+  <li>Role Based Permissions</li>
+</ul>
+<dl>
+  <dd>Gadgets can be restricted based on users role.</dd>
+</dl>
+<ul style="font-style: italic;">
+  <li>Make SOAP Request Support</li>
+</ul>
+<dl>
+  <dd>Not only REST style requests, gadgets written for
+WSO2 Gadget Server can consume SOAP only web service
+via make SOAP Request.</dd>
+</dl>
+<ul style="font-style: italic;">
+  <li>Theming Support</li>
+</ul>
+<dl>
+  <dd>Gadget Server users can create custom templates
+for the portal UI, and add them via Gadget Server
+management console.</dd>
+</dl>
+<ul style="font-style: italic;">
+  <li>Gadget Archive Deployment</li>
+</ul>
+<dl>
+  <dd>With WSO2 Carbon Application deployment, users can,
+write gadgets using Carbon Studio and deploy the
+gadget archive in to the Gadget server.</dd>
+</dl>
+<br />
+
+                <p>
+                    Please refer the
+                    <a href="release_notes.html">Gadget Server 1.4.0 Release Note</a>
+                    for more details.<br />
+<br />
+
+                </p>
+            <h2>Mailling Lists</h2>
+            <p>Your feedback on WSO2 Gadget Server is most appreciated. Please send them to our user mailing lists.</p> 
+            <ul>
+              <li>WSO2 Gadget Server Users' mailing list: <a href="mailto:gs-user@wso2.org%20">gs-user@wso2.org </a> | <a href="mailto:gs-user-request@wso2.org?subject=subscribe">Subscribe</a>
+                | <a href="mailto:gs-user-request@lists.wso2.com?subject=unsubscribe">Unsubscribe</a>
+                | <a href="http://www.wso2.org/mailarchive/gs-user/">Mail
+                Archive</a></li><br />
+  <br />
+
+            </ul>
+
+            
+        </div>
+    </body>
+</html>

@@ -1,0 +1,926 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  ~  Copyright (c) 2005-2008, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  ~
+  -->
+
+<!DOCTYPE html
+   PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" >
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title> WSO2 Governance Registry - Developer Guide </title>
+<link href="../css/greg-docs.css" rel="stylesheet"/>
+<link href="../styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+</head>
+<body>
+[ <a href="../docs_index.html"> Documentation Index </a> ]
+<h1> WSO2 Governance Registry - Developer User Guide </h1>
+
+    <h2 id="extending">Extending Governance Registry</h2>
+    <p>
+    Governance Registry has lot of functionality built-in. But there may be instances that you want to add custom functionality to the Registry.
+    In such scenarios you can use the extending APIs provided by the Registry.
+    </p>
+    <p>
+    There are 3 main ways you can extend the Registry.
+    </p>
+    <ul>
+    <li>
+    Handlers
+    </li>
+    <li>
+    Filters
+    </li>
+    <li>
+    Aspects
+    </li>
+    </ul>
+
+    <p>
+    We will discuss each of these methods in the following sections.
+    </p>
+
+    <h3 id="handlers">Handlers</h3>
+    <p>
+    Handlers are plug-able components, that contain custom processing logic for handling resources. All handlers extend an abstract class named Handler,
+    which provides default implementations for resource handling methods as well as a few utilities useful for concrete handler implementations. Handler
+    implementations can provide alternative behaviors for basic resource related operations, by overwriting one or more methods in the Handler class.
+    At this point, is useful to look at the Handler class listed below (please note that some details are omitted for clarity).
+    </p>
+
+    <p><img alt="Handlers" src="../images/handler.png"/></p>
+    <p>Figure 1: Handler class</p>
+
+    <p>
+    Here is a description on how each of these handler works.
+    </p>
+
+    <table border="1px">
+    <tr>
+    <td>
+    Method
+    </td>
+    <td>
+    Important parameters (To extract from Request Context)
+    </td>
+    <td>
+    Return value
+    </td>
+    <td>
+    Description
+    </td>
+    </tr>
+
+    <tr>
+    <td>
+    get
+    </td>
+    <td>
+    <p>
+    requestContext.getResourcePath() // path, the resource is getting
+    </p>
+    </td>
+    <td>
+    Resource // the resource at the path
+    </td>
+    <td>
+    Retrieve a resource in a given path
+    </td>
+    </tr>
+
+
+    <tr>
+    <td>
+    put
+    </td>
+    <td>
+    <p>
+    requestContext.getResourcePath() // path to put
+    </p>
+    <p>
+    requestContext.getResourceh() // the resource to store
+    </p>
+    </td>
+    <td>
+    -
+    </td>
+    <td>
+    Store a resource in a given path
+    </td>
+    </tr>
+
+
+    <tr>
+    <td>
+    importResource
+    </td>
+    <td>
+    <p>
+    requestContext.getResourcePath() // path to put
+    </p>
+    <p>
+    requestContext.getSourceURL() // the URL of the importing resource
+    </p>
+    </td>
+    <td>
+    -
+    </td>
+    <td>
+    Import a resource from a URL
+    </td>
+    </tr>
+
+    <tr>
+    <td>
+    move
+    </td>
+    <td>
+    <p>
+    requestContext.getSourcePath() // source to move from
+    </p>
+    <p>
+    requestContext.getTargetPath() // target to move to
+    </p>
+    </td>
+    <td>
+    String  // the new path
+    </td>
+    <td>
+    Move a resource from one to another
+    </td>
+    </tr>
+
+
+    <tr>
+    <td>
+    copy
+    </td>
+    <td>
+    <p>
+    requestContext.getSourcePath() // source to copy from
+    </p>
+    <p>
+    requestContext.getTargetPath() // target to copy to
+    </p>
+    </td>
+    <td>
+    String // the new path
+    </td>
+    <td>
+    Copy a resource from one to another
+    </td>
+    </tr>
+
+
+    <tr>
+    <td>
+    rename
+    </td>
+    <td>
+    <p>
+    requestContext.getSourcePath() // source of the resource
+    </p>
+    <p>
+    requestContext.getTargetPath() // the new name
+    </p>
+    </td>
+    <td>
+    String // the new path
+    </td>
+    <td>
+    Change a name of a resource
+    </td>
+    </tr>
+
+
+    <tr>
+    <td>
+    createLink
+    </td>
+    <td>
+    <p>
+    requestContext.getResourcePath() // the path of the link is creating
+    </p>
+    <p>
+    requestContext.getTargetPath() // the target path or the target registry url
+    </p>
+    <p>
+    requestContext.getTargetSubPath() // the target sub path if the target is a remote url
+    </p>
+    </td>
+    <td>
+    -
+    </td>
+    <td>
+    Create a sym-link or a remote link
+    </td>
+    </tr>
+
+
+    <tr>
+    <td>
+    removeLink
+    </td>
+    <td>
+    <p>
+    requestContext.getResourcePath() // the path of the link to remove
+    </p>
+    </td>
+    <td>
+    -
+    </td>
+    <td>
+    Remove a link
+    </td>
+    </tr>
+
+    <tr>
+    <td>
+    delete
+    </td>
+    <td>
+    <p>
+    requestContext.getResourcePath() // the path of the resource to remove
+    </p>
+    </td>
+    <td>
+    -
+    </td>
+    <td>
+    Delete a resource. If this is a collection, all the children will also be
+    removed.
+    </td>
+    </tr>
+
+    <tr>
+    <td>
+    putChild <em>Deprecated.</em>
+    </td>
+    <td>
+    <p>
+    requestContext.getResourcePath() // the path resource is putting
+    </p>
+    <p>
+    requestContext.getResource() // the resource to put
+    </p>
+    </td>
+    <td>
+    String // the path of the resource
+    </td>
+    <td>
+    Called when putting a resource to any path except root.
+    </td>
+    </tr>
+
+    <tr>
+    <td>
+    importChild
+    </td>
+    <td>
+    <p>
+    requestContext.getResourcePath() // the path resource is importing to
+    </p>
+    <p>
+    requestContext.getSourceURL() // the URL of the importing resource
+    </p>
+    </td>
+    <td>
+    String // the path of the resource
+    </td>
+    <td>
+    Called when importing a resource to any path except root.
+    </td>
+    </tr>
+
+
+    <tr>
+    <td>
+    invokeAspect
+    </td>
+    <td>
+    <p>
+    requestContext.getResource() // the resource to invoke the aspect
+    </p>
+    <p>
+    requestContext.getAspect() // the Aspect object to be invoked
+    </p>
+    <p>
+    requestContext.getAction() // the action of the Aspect
+    </p>
+    </td>
+    <td>
+    -
+    </td>
+    <td>
+    Triggered when invoking an aspect (Aspects are described in detail in following sections).
+    </td>
+    </tr>
+
+
+    <tr>
+    <td>
+    addAssociation
+    </td>
+    <td>
+    <p>
+    requestContext.getSourcePath() // left branch of the association
+    </p>
+    <p>
+    requestContext.getTargetPath() // right branch of the association
+    </p>
+    <p>
+    requestContext.getAssociationType() // the type of the association
+    </p>
+    </td>
+    <td>
+    -
+    </td>
+    <td>
+    Triggered when adding an association
+    </td>
+    </tr>
+
+
+    <tr>
+    <td>
+    removeAssociation
+    </td>
+    <td>
+    <p>
+    requestContext.getSourcePath() // left branch of the association
+    </p>
+    <p>
+    requestContext.getTargetPath() // right branch of the association
+    </p>
+    <p>
+    requestContext.getAssociationType() // the type of the association
+    </p>
+    </td>
+    <td>
+    -
+    </td>
+    <td>
+    Triggered when removing an association
+    </td>
+    </tr>
+
+
+    <tr>
+    <td>
+    getAllAssociations
+    </td>
+    <td>
+    <p>
+    requestContext.getResourcePath() // the path of the resource
+    </p>
+    </td>
+    <td>
+    Association[]
+    </td>
+    <td>
+    Return all the associations of a given resource.
+    </td>
+    </tr>
+
+    <tr>
+    <td>
+    getAssociations
+    </td>
+    <td>
+    <p>
+    requestContext.getResourcePath() // the path of the resource
+    </p>
+    <p>
+    requestContext.getAssociationType() // the type of the association
+    </p>
+    </td>
+    <td>
+    Association[]
+    </td>
+    <td>
+    Return associations of a give association type of a given resource.
+    </td>
+    </tr>
+
+
+    <tr>
+    <td>
+    applyTag
+    </td>
+    <td>
+    <p>
+    requestContext.getResourcePath() // the path of the resource
+    </p>
+    <p>
+    requestContext.getTag() // the tag to be added
+    </p>
+    </td>
+    <td>
+    -
+    </td>
+    <td>
+    Apply a tag to a particular path
+    </td>
+    </tr>
+
+
+
+    <tr>
+    <td>
+    removeTag
+    </td>
+    <td>
+    <p>
+    requestContext.getResourcePath() // the path of the resource
+    </p>
+    <p>
+    requestContext.getTag() // the tag to be removed
+    </p>
+    </td>
+    <td>
+    -
+    </td>
+    <td>
+    Remove a tag in a particular path
+    </td>
+    </tr>
+
+
+
+    <tr>
+    <td>
+    rateResource
+    </td>
+    <td>
+    <p>
+    requestContext.getResourcePath() // the path of the resource
+    </p>
+    <p>
+    requestContext.getRating() // the value of the rating
+    </p>
+    </td>
+    <td>
+    -
+    </td>
+    <td>
+    Triggered when Rating a resource
+    </td>
+    </tr>
+
+
+    <tr>
+    <td>
+    restoreVersion
+    </td>
+    <td>
+    <p>
+    requestContext.getVersionPath() // the path + version of the resource
+    </p>
+    </td>
+    <td>
+    -
+    </td>
+    <td>
+    Triggered when restoring a version-ed resource.
+    </td>
+    </tr>
+
+
+
+    <tr>
+    <td>
+    createVersion
+    </td>
+    <td>
+    <p>
+    requestContext.getResourcePath() // Create a version of a resource
+    </p>
+    </td>
+    <td>
+    -
+    </td>
+    <td>
+    Triggered when creating a resource
+    </td>
+    </tr>
+
+
+    <tr>
+    <td>
+    editComment
+    </td>
+    <td>
+    <p>
+    requestContext.getCommentPath() // The path of the comment of a resource
+    </p>
+    <p>
+    requestContext.getComment() // The comment
+    </p>
+    </td>
+    <td>
+    -
+    </td>
+    <td>
+    Edit a comment in a given path
+    </td>
+    </tr>
+
+    <tr>
+    <td>
+    addComment
+    </td>
+    <td>
+    <p>
+    requestContext.getResourcePath() // The path of the resource
+    </p>
+    <p>
+    requestContext.getComment() // The comment
+    </p>
+    </td>
+    <td>
+    String // the comment path
+    </td>
+    <td>
+    Add a comment to the given path.
+    </td>
+    </tr>
+
+    <tr>
+    <td>
+    removeComment
+    </td>
+    <td>
+    <p>
+    requestContext.getCommentPath() // The path of the comment of a resource
+    </p>
+    <p>
+    requestContext.getComment() // The comment
+    </p>
+    </td>
+    <td>
+    -
+    </td>
+    <td>
+    Remove a comment in a given path
+    </td>
+    </tr>
+
+    <tr>
+    <td>
+    getComments
+    </td>
+    <td>
+    <p>
+    requestContext.getResourcePath() // The path of the resource
+    </p>
+    </td>
+    <td>
+    Comment[]
+    </td>
+    <td>
+    get all comments in a given path.
+    </td>
+    </tr>
+
+
+    <tr>
+    <td>
+    getAverageRating
+    </td>
+    <td>
+    <p>
+    requestContext.getResourcePath() // The path of the resource
+    </p>
+    </td>
+    <td>
+    float
+    </td>
+    <td>
+    Get the average rating of a resource
+    </td>
+    </tr>
+
+    <tr>
+    <td>
+    getRating
+    </td>
+    <td>
+    <p>
+    requestContext.getResourcePath() // The path of the resource
+    </p>
+    <p>
+    requestContext.getUserName() // The path of the resource
+    </p>
+    </td>
+    <td>
+    int
+    </td>
+    <td>
+    Get the rating given by a user to a given resource
+    </td>
+    </tr>
+
+
+    <tr>
+    <td>
+    getVersions
+    </td>
+    <td>
+    <p>
+    requestContext.getResourcePath() // The path of the resource
+    </p>
+    </td>
+    <td>
+    String[]
+    </td>
+    <td>
+    Returns version paths of a given resource.
+    </td>
+    </tr>
+
+
+    <tr>
+    <td>
+    getTags
+    </td>
+    <td>
+    <p>
+    requestContext.getResourcePath() // The path of the resource
+    </p>
+    </td>
+    <td>
+    Tag[]
+    </td>
+    <td>
+    Returns tags of a given resource.
+    </td>
+    </tr>
+
+
+    <tr>
+    <td>
+    getResourcePathWithTag
+    </td>
+    <td>
+    <p>
+    requestContext.getResourcePath() // The path of the resource
+    </p>
+    <p>
+    requestContext.getTag() // The value of the tag
+    </p>
+    </td>
+    <td>
+    TaggedResourcePath[]
+    </td>
+    <td>
+    Returns resource paths with a given tag
+    </td>
+    </tr>
+
+
+    <tr>
+    <td>
+    executeQuery
+    </td>
+    <td>
+    <p>
+    requestContext.getResourcePath() // The path of the query
+    </p>
+    <p>
+    requestContext.getQueryParameters() // The query parameters
+    </p>
+    </td>
+    <td>
+    Collection
+    </td>
+    <td>
+    Returns collection (paths as the content) queried in the given query
+    </td>
+    </tr>
+
+    <tr>
+    <td>
+    searchContent
+    </td>
+    <td>
+    <p>
+    requestContext.getKeywords() // The search keywords
+    </p>
+    </td>
+    <td>
+    Collection
+    </td>
+    <td>
+    Returns collection (paths as the content) found as a result of search operation.
+    </td>
+    </tr>
+
+    <tr>
+    <td>
+    resourceExists
+    </td>
+    <td>
+    <p>
+    requestContext.getResourcePath() // The path of the resource
+    </p>
+    </td>
+    <td>
+    boolean
+    </td>
+    <td>
+    Returns whether the resource in the given path exists
+    </td>
+    </tr>
+
+
+    <tr>
+    <td>
+    dump
+    </td>
+    <td>
+    <p>
+    requestContext.getResourcePath() // The path of the resource
+    </p>
+    <p>
+    requestContext.getDumpingWriter() // The writer that requested in dumping
+    </p>
+    </td>
+    <td>
+    -
+    </td>
+    <td>
+    Dump a particular path
+    </td>
+    </tr>
+
+
+    <tr>
+    <td>
+    restore
+    </td>
+    <td>
+    <p>
+    requestContext.getResourcePath() // The path of the resource
+    </p>
+    <p>
+    requestContext.getDumpingReader() // The reader that used with restoring
+    </p>
+    </td>
+    <td>
+    -
+    </td>
+    <td>
+    Restore a dump
+    </td>
+    </tr>
+    </table>
+
+<p>
+Handlers can be engaged and configured using the registry configuration file (registry.xml). Here is an example of using registry.xml to declare a handler.
+</p>
+
+<pre>
+    &lt;handler class="org.wso2.carbon.registry.extensions.handlers.WSDLMediaTypeHandler"&gt;
+        &lt;property name="schemaLocationConfiguration" type="xml"&gt;
+            &lt;locationType&gt;absolute&lt;/locationType&gt;
+            &lt;location&gt;/governance/schemas/&lt;/location&gt;
+        &lt;/property&gt;
+        &lt;property name="wsdlLocationConfiguration" type="xml"&gt;
+            &lt;locationType&gt;absolute&lt;/locationType&gt;  &lt;!-- absolute or relative --&gt;
+            &lt;location&gt;/governance/wsdls/&lt;/location&gt;
+        &lt;/property&gt;
+        &lt;filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher"&gt;
+            &lt;property name="mediaType"&gt;application/wsdl+xml&lt;/property&gt;
+        &lt;/filter&gt;
+    &lt;/handler&gt;
+</pre>
+
+<p>
+Here are the important parameters you can provide in the handler configuration.
+</p>
+
+<p>
+<ul>
+<li>
+<p>Handler class : The class name of the handler. Provided in the "class" attribute in the Handler</p>
+<p>Example:</p>
+<pre>
+    &lt;handler class="org.wso2.carbon.registry.extensions.handlers.WSDLMediaTypeHandler"&gt;
+       ...
+    &lt;/handler&gt;
+</pre>
+
+</li>
+<li>
+Handler properties : Custom properties that will be used in handler processing logic. Example of a handler property.
+<pre>
+    &lt;property name="wsdlLocationConfiguration" type="xml"&gt;
+</pre>
+<p>
+The attributes in the property element
+<ul>
+<li>
+name: The name of the property. In order to store the property value you should have an setter method in the particular handler class. The method name should be "set" + property name with first letter capitalized. The method name for the above property would be:
+<pre>
+<i>setWsdlLocationConfiguration</i>
+</pre>
+</li>
+<li>
+type: The type of the property. Possible values are "xml" and null. If the type is "xml" the handler method should have an method argument of the type 'org.apache.axiom.om.OMElement'. If the type attribute is not given, the method argument will be of type 'java.lang.String'. So the method signature for the above example property is:
+<pre>
+
+    public void setWsdlLocationConfiguration(OMElement locationConfiguration) throws RegistryException {
+    }  
+</pre>
+</li>
+</ul>
+</p>
+</li>
+<li>
+Filter Associated with the Handler: You can refer a filter inside a handler which would provide the filter functionality to that particular handler. The handler for a particular method is invoked only if the filter is returning true for the corresponding method. More details about filters is covered in the next section.
+</li>
+</ul>
+</p>
+
+    <h2 id="filters">Filters</h2>
+    <p>
+    Each handler is associated with a filter. Filters provide criteria for engaging handlers. Registry always evaluates
+    the associated filter before invoking a handler. If the filter evaluates to true, it will invoke its associated handler.
+    All filters should extend from a abstract class named Filter. Filter implementations should provide criteria for all
+    handler methods by overwriting corresponding Filter method. Below is the listing of Filter class.
+    </p>
+
+    <p><img alt="Filter" src="../images/filter.png"/></p>
+    <p>Figure 2: Filter class</p>
+
+
+    <h3 id="aspects">Aspects</h3>
+    <p>
+    Aspects are using to associate custom behaviors with resources; Aspects are different form handlers in a way, that handlers are
+    automatically applied to a resource, whereas, aspects are needed to be invoked manually through user action
+    (e.g. by clicking a button in the user interface). You can integrate a piece of logic that involve with
+    resource manipulation, inside an aspect, so they can be reused using registry aspect interface.
+    </p>
+
+    <p>
+    You can create an aspect by implementing the 'Aspect' class.
+    </p>
+
+    <p><img alt="Aspect" src="../images/aspect.png"/></p>
+    <p>Figure 3: Aspect class</p>
+
+
+    <h3 id="request_context">Request Context</h3>
+    <p>
+    Per each request made to the registry, a <strong>Handler Manager</strong> decides whether the call will be intercepted through one or more handlers before it being served by the registry itself. For a given method implemented by the registry, the handler manager stores a dictionary of filters and associated handlers.
+    </p>
+
+    <p>
+    If a filter evaluates to true, the associated handler will be invoked. Soon after the handler being
+    invoked, the call will be returned to the handler manager, which evaluates whether the request has
+    been completely served by the handler. If the handler has not completely served the request, the
+    handler manager will poll the remaining filters to determine whether any downstream handlers need to
+    be invoked. This process will continue until the handler manager is being told that a handler
+    completely served the request or until there are no more filters to poll.
+    </p>
+
+    <p>
+    In order to facilitate the ability for more than one handler to act upon a resource or collection,
+    and also pass information downstream, a request context is passed to each handler operation. It
+    contains a number of methods through which you can extract data from the request and also add
+    information to. If a handler decides that it has completely served a request and no downstream
+    handlers should be invoked it can set the <strong>Processing Complete</strong> flag.
+    </p>
+
+    <pre>requestContext.setProcessingComplete(true)</pre>
+
+    <p>
+    This will cause the downstream handlers to not be invoked. Also, in such a situation, the registry
+    implementation can decide, based on the result returned by the handler chain to whether it should
+    continue processing or simply return. Therefore, the request context serves as the basis for
+    handler-handler and handler-registry communication and plays a vital role in the process of
+    extending the registry.
+    </p>
+
+    <p><img alt="Request Context" src="../images/request-context.png"/></p>
+    <p>Figure 4: RequestContext class (Only the Accessors are shown here)</p>
+
+</body>
+</html>

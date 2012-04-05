@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>org.wso2.brs</groupId>
+        <artifactId>integration</artifactId>
+        <version>1.2.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>integration-services</artifactId>
+    <name>WSO2 BRS - Integration Service Module</name>
+    <packaging>pom</packaging>
+
+       <dependencies>
+        <dependency>
+            <groupId>org.wso2.brs</groupId>
+            <artifactId>org.wso2.brs.samples</artifactId>
+            <version>1.2.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.wso2.carbon</groupId>
+                    <artifactId>org.wso2.carbon.rule.core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+    <modules>
+        <module>banking.service</module>
+        <module>callcharging.service</module> 
+        <module>carrental.service</module>
+        <module>greeting.service</module>
+        <module>heathcare.service</module>
+        <module>insurance.service</module>
+        <module>MIPCalculate.service</module>
+        <module>orderApproval.service</module>
+        <module>quotation.service</module>
+        <module>shopping.service</module>
+    </modules>
+
+    </project>

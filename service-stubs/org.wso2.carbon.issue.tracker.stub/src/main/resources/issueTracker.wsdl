@@ -1,0 +1,2042 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns="http://mgt.tracker.issue.carbon.wso2.org" xmlns:ax2321="http://io.java/xsd" xmlns:ax2325="http://adapterImpl.reporting.jira.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ax2323="http://mgt.tracker.issue.carbon.wso2.org/xsd" xmlns:ax2314="http://exceptions.adapter.tracker.issue.carbon.wso2.org/xsd" xmlns:ax2316="http://api.adapter.tracker.issue.carbon.wso2.org/xsd" xmlns:ax2318="http://core.tracker.issue.carbon.wso2.org/xsd" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://mgt.tracker.issue.carbon.wso2.org">
+    <wsdl:documentation>IssueTrackerAdmin</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ax2326="http://api.adapter.tracker.issue.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://adapterImpl.reporting.jira.carbon.wso2.org/xsd">
+            <xs:import namespace="http://api.adapter.tracker.issue.carbon.wso2.org/xsd" />
+            <xs:complexType name="SupportJiraUser">
+                <xs:complexContent>
+                    <xs:extension base="ax2316:GenericUser">
+                        <xs:sequence>
+
+                            <xs:element minOccurs="0" name="credentials" nillable="true" type="ax2316:GenericCredentials" />
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://mgt.tracker.issue.carbon.wso2.org/xsd">
+            <xs:complexType name="AttachmentData">
+                <xs:sequence>
+
+                    <xs:element minOccurs="0" name="dataHandler" nillable="true" type="xs:base64Binary" />
+                    <xs:element minOccurs="0" name="fileName" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://io.java/xsd">
+            <xs:complexType name="IOException">
+                <xs:sequence />
+            </xs:complexType>
+
+        </xs:schema>
+        <xs:schema xmlns:ax2319="http://api.adapter.tracker.issue.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://core.tracker.issue.carbon.wso2.org/xsd">
+            <xs:import namespace="http://api.adapter.tracker.issue.carbon.wso2.org/xsd" />
+            <xs:complexType name="PaginatedIssueInfo">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="issueInfo" nillable="true" type="ax2319:GenericIssue" />
+                    <xs:element minOccurs="0" name="numberOfPages" type="xs:int" />
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="AccountInfo">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="autoReportingEnable" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="autoReportingSettings" nillable="true" type="ax2318:AutoReportingSettings" />
+                    <xs:element minOccurs="0" name="credentials" nillable="true" type="ax2319:GenericCredentials" />
+                    <xs:element minOccurs="0" name="email" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="hasSupportAccount" type="xs:boolean" />
+                    <xs:element minOccurs="0" name="key" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="uid" nillable="true" type="xs:string" />
+
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="AutoReportingSettings">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="issueType" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="priority" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="projectName" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://api.adapter.tracker.issue.carbon.wso2.org/xsd">
+            <xs:complexType name="GenericCredentials">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="password" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="url" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="username" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="GenericIssue">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="affectVersions" nillable="true" type="ax2316:AbstractVersion" />
+                    <xs:element minOccurs="0" name="assignee" nillable="true" type="xs:string" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="attachmentNames" nillable="true" type="xs:string" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="components" nillable="true" type="ax2316:AbstractComponent" />
+                    <xs:element minOccurs="0" name="created" nillable="true" type="xs:dateTime" />
+                    <xs:element minOccurs="0" name="description" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="dueDate" nillable="true" type="xs:dateTime" />
+
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="fixVersions" nillable="true" type="ax2316:AbstractVersion" />
+                    <xs:element minOccurs="0" name="issueKey" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="lastUpdated" nillable="true" type="xs:dateTime" />
+                    <xs:element minOccurs="0" name="priority" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="projectKey" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="reporter" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="severity" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="status" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="summary" nillable="true" type="xs:string" />
+
+                    <xs:element minOccurs="0" name="type" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="url" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType abstract="true" name="AbstractVersion">
+                <xs:sequence />
+            </xs:complexType>
+            <xs:complexType abstract="true" name="AbstractComponent">
+                <xs:sequence />
+
+            </xs:complexType>
+            <xs:complexType name="GenericUser">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="company" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="country" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="email" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="firstName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="industry" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="jobTitle" nillable="true" type="xs:string" />
+
+                    <xs:element minOccurs="0" name="lastName" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="phone" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="state" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="username" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://exceptions.adapter.tracker.issue.carbon.wso2.org/xsd">
+            <xs:complexType name="IssueTrackerException">
+
+                <xs:sequence />
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax2324="http://mgt.tracker.issue.carbon.wso2.org/xsd" xmlns:ax2322="http://io.java/xsd" xmlns:ax2315="http://exceptions.adapter.tracker.issue.carbon.wso2.org/xsd" xmlns:ax2320="http://core.tracker.issue.carbon.wso2.org/xsd" xmlns:ax2317="http://api.adapter.tracker.issue.carbon.wso2.org/xsd" xmlns:ax2327="http://adapterImpl.reporting.jira.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://mgt.tracker.issue.carbon.wso2.org">
+            <xs:import namespace="http://exceptions.adapter.tracker.issue.carbon.wso2.org/xsd" />
+            <xs:import namespace="http://api.adapter.tracker.issue.carbon.wso2.org/xsd" />
+            <xs:import namespace="http://core.tracker.issue.carbon.wso2.org/xsd" />
+            <xs:import namespace="http://io.java/xsd" />
+            <xs:import namespace="http://mgt.tracker.issue.carbon.wso2.org/xsd" />
+
+            <xs:import namespace="http://adapterImpl.reporting.jira.carbon.wso2.org/xsd" />
+            <xs:element name="IssueTrackerAdminIssueTrackerException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="IssueTrackerException" nillable="true" type="ax2314:IssueTrackerException" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="validateCredentials">
+
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="credentials" nillable="true" type="ax2316:GenericCredentials" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="validateCredentialsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="retrieveIssues">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="token" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="url" nillable="true" type="xs:string" />
+
+                        <xs:element minOccurs="0" name="maxResults" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="retrieveIssuesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2316:GenericIssue" />
+                    </xs:sequence>
+
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="login">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="credentials" nillable="true" type="ax2316:GenericCredentials" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="loginResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="isTenantSubscriptionFree">
+                <xs:complexType>
+
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="isTenantSubscriptionFreeResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+
+            </xs:element>
+            <xs:element name="isStratosService">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="isStratosServiceResponse">
+                <xs:complexType>
+                    <xs:sequence>
+
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getSupportInfoUrl">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="getSupportInfoUrlResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="IssueTrackerAdminException">
+                <xs:complexType>
+
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="IssueTrackerAdminException" nillable="true" type="ns:Exception" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string" />
+                </xs:sequence>
+
+            </xs:complexType>
+            <xs:element name="getPaginatedIssuesForTenant">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="pageNumber" type="xs:int" />
+                        <xs:element minOccurs="0" name="token" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="url" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+
+            </xs:element>
+            <xs:element name="getPaginatedIssuesForTenantResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2320:PaginatedIssueInfo" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPaginatedIssueInfo">
+
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="pageNumber" type="xs:int" />
+                        <xs:element minOccurs="0" name="token" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="url" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPaginatedIssueInfoResponse">
+
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2320:PaginatedIssueInfo" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getIssueCount">
+                <xs:complexType>
+                    <xs:sequence>
+
+                        <xs:element minOccurs="0" name="token" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="url" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getIssueCountResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:long" />
+
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getForumUrl">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getForumUrlResponse">
+
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAccountWhenService">
+                <xs:complexType>
+                    <xs:sequence />
+
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAccountWhenServiceResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2320:AccountInfo" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="getAccountSpecificDetails">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="credentials" nillable="true" type="ax2316:GenericCredentials" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAccountSpecificDetailsResponse">
+                <xs:complexType>
+
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAccountSpecificDataInService">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+
+            </xs:element>
+            <xs:element name="getAccountSpecificDataInServiceResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAccountSpecificData">
+
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="accountName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="url" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAccountSpecificDataResponse">
+                <xs:complexType>
+
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAccountNames">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+
+            </xs:element>
+            <xs:element name="getAccountNamesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAccountInfo">
+
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAccountInfoResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2320:AccountInfo" />
+                    </xs:sequence>
+
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAccountCredentials">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="getAccountCredentialsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2316:GenericCredentials" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAccount">
+                <xs:complexType>
+
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAccountResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2320:AccountInfo" />
+
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteIssue">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="token" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="issueKey" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="url" nillable="true" type="xs:string" />
+
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteIssueResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+
+            </xs:element>
+            <xs:element name="deleteAccount">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="key" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteAccountResponse">
+
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="createUserInOT">
+                <xs:complexType>
+                    <xs:sequence>
+
+                        <xs:element minOccurs="0" name="user" nillable="true" type="ax2316:GenericUser" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="createUserInOTResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="captureIssueInfo">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="genericIssue" nillable="true" type="ax2316:GenericIssue" />
+                        <xs:element minOccurs="0" name="token" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="url" nillable="true" type="xs:string" />
+                    </xs:sequence>
+
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="captureIssueInfoResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="captureAccountInfo">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="accountInfo" nillable="true" type="ax2320:AccountInfo" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="authenticateWithOT">
+                <xs:complexType>
+
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="credentials" nillable="true" type="ax2316:GenericCredentials" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="authenticateWithOTResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2316:GenericUser" />
+
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="attachThreadDump">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="token" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="issueKey" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="url" nillable="true" type="xs:string" />
+
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="attachThreadDumpResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+
+            </xs:element>
+            <xs:element name="attachLogFile">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="token" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="issueKey" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="url" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+
+            </xs:element>
+            <xs:element name="attachLogFileResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="IssueTrackerAdminIOException">
+
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="IOException" nillable="true" type="ax2321:IOException" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="attachFiles">
+                <xs:complexType>
+                    <xs:sequence>
+
+                        <xs:element minOccurs="0" name="token" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="issueKey" nillable="true" type="xs:string" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="attachmentData" nillable="true" type="ax2324:AttachmentData" />
+                        <xs:element minOccurs="0" name="url" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="attachFilesResponse">
+                <xs:complexType>
+
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="attachBundleInfo">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="token" nillable="true" type="xs:string" />
+
+                        <xs:element minOccurs="0" name="issueKey" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="url" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="attachBundleInfoResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="associateUserWithSupportJira">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="supportJiraUser" nillable="true" type="ax2325:SupportJiraUser" />
+                    </xs:sequence>
+                </xs:complexType>
+
+            </xs:element>
+            <xs:element name="associateUserWithSupportJiraResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+
+    </wsdl:types>
+    <wsdl:message name="getAccountSpecificDataInServiceRequest">
+        <wsdl:part name="parameters" element="ns:getAccountSpecificDataInService" />
+    </wsdl:message>
+    <wsdl:message name="getAccountSpecificDataInServiceResponse">
+        <wsdl:part name="parameters" element="ns:getAccountSpecificDataInServiceResponse" />
+    </wsdl:message>
+    <wsdl:message name="IssueTrackerAdminIssueTrackerException">
+        <wsdl:part name="parameters" element="ns:IssueTrackerAdminIssueTrackerException" />
+
+    </wsdl:message>
+    <wsdl:message name="attachFilesRequest">
+        <wsdl:part name="parameters" element="ns:attachFiles" />
+    </wsdl:message>
+    <wsdl:message name="attachFilesResponse">
+        <wsdl:part name="parameters" element="ns:attachFilesResponse" />
+    </wsdl:message>
+    <wsdl:message name="IssueTrackerAdminIOException">
+        <wsdl:part name="parameters" element="ns:IssueTrackerAdminIOException" />
+
+    </wsdl:message>
+    <wsdl:message name="getPaginatedIssueInfoRequest">
+        <wsdl:part name="parameters" element="ns:getPaginatedIssueInfo" />
+    </wsdl:message>
+    <wsdl:message name="getPaginatedIssueInfoResponse">
+        <wsdl:part name="parameters" element="ns:getPaginatedIssueInfoResponse" />
+    </wsdl:message>
+    <wsdl:message name="IssueTrackerAdminException">
+        <wsdl:part name="parameters" element="ns:IssueTrackerAdminException" />
+
+    </wsdl:message>
+    <wsdl:message name="associateUserWithSupportJiraRequest">
+        <wsdl:part name="parameters" element="ns:associateUserWithSupportJira" />
+    </wsdl:message>
+    <wsdl:message name="associateUserWithSupportJiraResponse">
+        <wsdl:part name="parameters" element="ns:associateUserWithSupportJiraResponse" />
+    </wsdl:message>
+    <wsdl:message name="captureIssueInfoRequest">
+        <wsdl:part name="parameters" element="ns:captureIssueInfo" />
+
+    </wsdl:message>
+    <wsdl:message name="captureIssueInfoResponse">
+        <wsdl:part name="parameters" element="ns:captureIssueInfoResponse" />
+    </wsdl:message>
+    <wsdl:message name="getAccountCredentialsRequest">
+        <wsdl:part name="parameters" element="ns:getAccountCredentials" />
+    </wsdl:message>
+    <wsdl:message name="getAccountCredentialsResponse">
+        <wsdl:part name="parameters" element="ns:getAccountCredentialsResponse" />
+
+    </wsdl:message>
+    <wsdl:message name="attachBundleInfoRequest">
+        <wsdl:part name="parameters" element="ns:attachBundleInfo" />
+    </wsdl:message>
+    <wsdl:message name="attachBundleInfoResponse">
+        <wsdl:part name="parameters" element="ns:attachBundleInfoResponse" />
+    </wsdl:message>
+    <wsdl:message name="validateCredentialsRequest">
+        <wsdl:part name="parameters" element="ns:validateCredentials" />
+
+    </wsdl:message>
+    <wsdl:message name="validateCredentialsResponse">
+        <wsdl:part name="parameters" element="ns:validateCredentialsResponse" />
+    </wsdl:message>
+    <wsdl:message name="getForumUrlRequest">
+        <wsdl:part name="parameters" element="ns:getForumUrl" />
+    </wsdl:message>
+    <wsdl:message name="getForumUrlResponse">
+        <wsdl:part name="parameters" element="ns:getForumUrlResponse" />
+
+    </wsdl:message>
+    <wsdl:message name="deleteIssueRequest">
+        <wsdl:part name="parameters" element="ns:deleteIssue" />
+    </wsdl:message>
+    <wsdl:message name="deleteIssueResponse">
+        <wsdl:part name="parameters" element="ns:deleteIssueResponse" />
+    </wsdl:message>
+    <wsdl:message name="getAccountSpecificDataRequest">
+        <wsdl:part name="parameters" element="ns:getAccountSpecificData" />
+
+    </wsdl:message>
+    <wsdl:message name="getAccountSpecificDataResponse">
+        <wsdl:part name="parameters" element="ns:getAccountSpecificDataResponse" />
+    </wsdl:message>
+    <wsdl:message name="attachLogFileRequest">
+        <wsdl:part name="parameters" element="ns:attachLogFile" />
+    </wsdl:message>
+    <wsdl:message name="attachLogFileResponse">
+        <wsdl:part name="parameters" element="ns:attachLogFileResponse" />
+
+    </wsdl:message>
+    <wsdl:message name="createUserInOTRequest">
+        <wsdl:part name="parameters" element="ns:createUserInOT" />
+    </wsdl:message>
+    <wsdl:message name="createUserInOTResponse">
+        <wsdl:part name="parameters" element="ns:createUserInOTResponse" />
+    </wsdl:message>
+    <wsdl:message name="attachThreadDumpRequest">
+        <wsdl:part name="parameters" element="ns:attachThreadDump" />
+
+    </wsdl:message>
+    <wsdl:message name="attachThreadDumpResponse">
+        <wsdl:part name="parameters" element="ns:attachThreadDumpResponse" />
+    </wsdl:message>
+    <wsdl:message name="captureAccountInfoRequest">
+        <wsdl:part name="parameters" element="ns:captureAccountInfo" />
+    </wsdl:message>
+    <wsdl:message name="getPaginatedIssuesForTenantRequest">
+        <wsdl:part name="parameters" element="ns:getPaginatedIssuesForTenant" />
+
+    </wsdl:message>
+    <wsdl:message name="getPaginatedIssuesForTenantResponse">
+        <wsdl:part name="parameters" element="ns:getPaginatedIssuesForTenantResponse" />
+    </wsdl:message>
+    <wsdl:message name="getAccountInfoRequest">
+        <wsdl:part name="parameters" element="ns:getAccountInfo" />
+    </wsdl:message>
+    <wsdl:message name="getAccountInfoResponse">
+        <wsdl:part name="parameters" element="ns:getAccountInfoResponse" />
+
+    </wsdl:message>
+    <wsdl:message name="loginRequest">
+        <wsdl:part name="parameters" element="ns:login" />
+    </wsdl:message>
+    <wsdl:message name="loginResponse">
+        <wsdl:part name="parameters" element="ns:loginResponse" />
+    </wsdl:message>
+    <wsdl:message name="getAccountNamesRequest">
+        <wsdl:part name="parameters" element="ns:getAccountNames" />
+
+    </wsdl:message>
+    <wsdl:message name="getAccountNamesResponse">
+        <wsdl:part name="parameters" element="ns:getAccountNamesResponse" />
+    </wsdl:message>
+    <wsdl:message name="getIssueCountRequest">
+        <wsdl:part name="parameters" element="ns:getIssueCount" />
+    </wsdl:message>
+    <wsdl:message name="getIssueCountResponse">
+        <wsdl:part name="parameters" element="ns:getIssueCountResponse" />
+
+    </wsdl:message>
+    <wsdl:message name="retrieveIssuesRequest">
+        <wsdl:part name="parameters" element="ns:retrieveIssues" />
+    </wsdl:message>
+    <wsdl:message name="retrieveIssuesResponse">
+        <wsdl:part name="parameters" element="ns:retrieveIssuesResponse" />
+    </wsdl:message>
+    <wsdl:message name="getSupportInfoUrlRequest">
+        <wsdl:part name="parameters" element="ns:getSupportInfoUrl" />
+
+    </wsdl:message>
+    <wsdl:message name="getSupportInfoUrlResponse">
+        <wsdl:part name="parameters" element="ns:getSupportInfoUrlResponse" />
+    </wsdl:message>
+    <wsdl:message name="isTenantSubscriptionFreeRequest">
+        <wsdl:part name="parameters" element="ns:isTenantSubscriptionFree" />
+    </wsdl:message>
+    <wsdl:message name="isTenantSubscriptionFreeResponse">
+        <wsdl:part name="parameters" element="ns:isTenantSubscriptionFreeResponse" />
+
+    </wsdl:message>
+    <wsdl:message name="getAccountSpecificDetailsRequest">
+        <wsdl:part name="parameters" element="ns:getAccountSpecificDetails" />
+    </wsdl:message>
+    <wsdl:message name="getAccountSpecificDetailsResponse">
+        <wsdl:part name="parameters" element="ns:getAccountSpecificDetailsResponse" />
+    </wsdl:message>
+    <wsdl:message name="deleteAccountRequest">
+        <wsdl:part name="parameters" element="ns:deleteAccount" />
+
+    </wsdl:message>
+    <wsdl:message name="deleteAccountResponse">
+        <wsdl:part name="parameters" element="ns:deleteAccountResponse" />
+    </wsdl:message>
+    <wsdl:message name="getAccountRequest">
+        <wsdl:part name="parameters" element="ns:getAccount" />
+    </wsdl:message>
+    <wsdl:message name="getAccountResponse">
+        <wsdl:part name="parameters" element="ns:getAccountResponse" />
+
+    </wsdl:message>
+    <wsdl:message name="isStratosServiceRequest">
+        <wsdl:part name="parameters" element="ns:isStratosService" />
+    </wsdl:message>
+    <wsdl:message name="isStratosServiceResponse">
+        <wsdl:part name="parameters" element="ns:isStratosServiceResponse" />
+    </wsdl:message>
+    <wsdl:message name="authenticateWithOTRequest">
+        <wsdl:part name="parameters" element="ns:authenticateWithOT" />
+
+    </wsdl:message>
+    <wsdl:message name="authenticateWithOTResponse">
+        <wsdl:part name="parameters" element="ns:authenticateWithOTResponse" />
+    </wsdl:message>
+    <wsdl:message name="getAccountWhenServiceRequest">
+        <wsdl:part name="parameters" element="ns:getAccountWhenService" />
+    </wsdl:message>
+    <wsdl:message name="getAccountWhenServiceResponse">
+        <wsdl:part name="parameters" element="ns:getAccountWhenServiceResponse" />
+
+    </wsdl:message>
+    <wsdl:portType name="IssueTrackerAdminPortType">
+        <wsdl:operation name="getAccountSpecificDataInService">
+            <wsdl:input message="ns:getAccountSpecificDataInServiceRequest" wsaw:Action="urn:getAccountSpecificDataInService" />
+            <wsdl:output message="ns:getAccountSpecificDataInServiceResponse" wsaw:Action="urn:getAccountSpecificDataInServiceResponse" />
+            <wsdl:fault message="ns:IssueTrackerAdminIssueTrackerException" name="IssueTrackerAdminIssueTrackerException" wsaw:Action="urn:getAccountSpecificDataInServiceIssueTrackerAdminIssueTrackerException" />
+        </wsdl:operation>
+        <wsdl:operation name="attachFiles">
+            <wsdl:input message="ns:attachFilesRequest" wsaw:Action="urn:attachFiles" />
+
+            <wsdl:output message="ns:attachFilesResponse" wsaw:Action="urn:attachFilesResponse" />
+            <wsdl:fault message="ns:IssueTrackerAdminIssueTrackerException" name="IssueTrackerAdminIssueTrackerException" wsaw:Action="urn:attachFilesIssueTrackerAdminIssueTrackerException" />
+            <wsdl:fault message="ns:IssueTrackerAdminIOException" name="IssueTrackerAdminIOException" wsaw:Action="urn:attachFilesIssueTrackerAdminIOException" />
+        </wsdl:operation>
+        <wsdl:operation name="getPaginatedIssueInfo">
+            <wsdl:input message="ns:getPaginatedIssueInfoRequest" wsaw:Action="urn:getPaginatedIssueInfo" />
+            <wsdl:output message="ns:getPaginatedIssueInfoResponse" wsaw:Action="urn:getPaginatedIssueInfoResponse" />
+            <wsdl:fault message="ns:IssueTrackerAdminException" name="IssueTrackerAdminException" wsaw:Action="urn:getPaginatedIssueInfoIssueTrackerAdminException" />
+        </wsdl:operation>
+
+        <wsdl:operation name="associateUserWithSupportJira">
+            <wsdl:input message="ns:associateUserWithSupportJiraRequest" wsaw:Action="urn:associateUserWithSupportJira" />
+            <wsdl:output message="ns:associateUserWithSupportJiraResponse" wsaw:Action="urn:associateUserWithSupportJiraResponse" />
+            <wsdl:fault message="ns:IssueTrackerAdminIssueTrackerException" name="IssueTrackerAdminIssueTrackerException" wsaw:Action="urn:associateUserWithSupportJiraIssueTrackerAdminIssueTrackerException" />
+        </wsdl:operation>
+        <wsdl:operation name="captureIssueInfo">
+            <wsdl:input message="ns:captureIssueInfoRequest" wsaw:Action="urn:captureIssueInfo" />
+            <wsdl:output message="ns:captureIssueInfoResponse" wsaw:Action="urn:captureIssueInfoResponse" />
+            <wsdl:fault message="ns:IssueTrackerAdminIssueTrackerException" name="IssueTrackerAdminIssueTrackerException" wsaw:Action="urn:captureIssueInfoIssueTrackerAdminIssueTrackerException" />
+
+        </wsdl:operation>
+        <wsdl:operation name="getAccountCredentials">
+            <wsdl:input message="ns:getAccountCredentialsRequest" wsaw:Action="urn:getAccountCredentials" />
+            <wsdl:output message="ns:getAccountCredentialsResponse" wsaw:Action="urn:getAccountCredentialsResponse" />
+            <wsdl:fault message="ns:IssueTrackerAdminIssueTrackerException" name="IssueTrackerAdminIssueTrackerException" wsaw:Action="urn:getAccountCredentialsIssueTrackerAdminIssueTrackerException" />
+        </wsdl:operation>
+        <wsdl:operation name="attachBundleInfo">
+            <wsdl:input message="ns:attachBundleInfoRequest" wsaw:Action="urn:attachBundleInfo" />
+            <wsdl:output message="ns:attachBundleInfoResponse" wsaw:Action="urn:attachBundleInfoResponse" />
+
+            <wsdl:fault message="ns:IssueTrackerAdminIssueTrackerException" name="IssueTrackerAdminIssueTrackerException" wsaw:Action="urn:attachBundleInfoIssueTrackerAdminIssueTrackerException" />
+        </wsdl:operation>
+        <wsdl:operation name="validateCredentials">
+            <wsdl:input message="ns:validateCredentialsRequest" wsaw:Action="urn:validateCredentials" />
+            <wsdl:output message="ns:validateCredentialsResponse" wsaw:Action="urn:validateCredentialsResponse" />
+            <wsdl:fault message="ns:IssueTrackerAdminIssueTrackerException" name="IssueTrackerAdminIssueTrackerException" wsaw:Action="urn:validateCredentialsIssueTrackerAdminIssueTrackerException" />
+        </wsdl:operation>
+        <wsdl:operation name="getForumUrl">
+            <wsdl:input message="ns:getForumUrlRequest" wsaw:Action="urn:getForumUrl" />
+
+            <wsdl:output message="ns:getForumUrlResponse" wsaw:Action="urn:getForumUrlResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="deleteIssue">
+            <wsdl:input message="ns:deleteIssueRequest" wsaw:Action="urn:deleteIssue" />
+            <wsdl:output message="ns:deleteIssueResponse" wsaw:Action="urn:deleteIssueResponse" />
+            <wsdl:fault message="ns:IssueTrackerAdminIssueTrackerException" name="IssueTrackerAdminIssueTrackerException" wsaw:Action="urn:deleteIssueIssueTrackerAdminIssueTrackerException" />
+        </wsdl:operation>
+        <wsdl:operation name="getAccountSpecificData">
+            <wsdl:input message="ns:getAccountSpecificDataRequest" wsaw:Action="urn:getAccountSpecificData" />
+
+            <wsdl:output message="ns:getAccountSpecificDataResponse" wsaw:Action="urn:getAccountSpecificDataResponse" />
+            <wsdl:fault message="ns:IssueTrackerAdminIssueTrackerException" name="IssueTrackerAdminIssueTrackerException" wsaw:Action="urn:getAccountSpecificDataIssueTrackerAdminIssueTrackerException" />
+        </wsdl:operation>
+        <wsdl:operation name="attachLogFile">
+            <wsdl:input message="ns:attachLogFileRequest" wsaw:Action="urn:attachLogFile" />
+            <wsdl:output message="ns:attachLogFileResponse" wsaw:Action="urn:attachLogFileResponse" />
+            <wsdl:fault message="ns:IssueTrackerAdminIssueTrackerException" name="IssueTrackerAdminIssueTrackerException" wsaw:Action="urn:attachLogFileIssueTrackerAdminIssueTrackerException" />
+        </wsdl:operation>
+        <wsdl:operation name="createUserInOT">
+
+            <wsdl:input message="ns:createUserInOTRequest" wsaw:Action="urn:createUserInOT" />
+            <wsdl:output message="ns:createUserInOTResponse" wsaw:Action="urn:createUserInOTResponse" />
+            <wsdl:fault message="ns:IssueTrackerAdminIssueTrackerException" name="IssueTrackerAdminIssueTrackerException" wsaw:Action="urn:createUserInOTIssueTrackerAdminIssueTrackerException" />
+        </wsdl:operation>
+        <wsdl:operation name="attachThreadDump">
+            <wsdl:input message="ns:attachThreadDumpRequest" wsaw:Action="urn:attachThreadDump" />
+            <wsdl:output message="ns:attachThreadDumpResponse" wsaw:Action="urn:attachThreadDumpResponse" />
+            <wsdl:fault message="ns:IssueTrackerAdminIssueTrackerException" name="IssueTrackerAdminIssueTrackerException" wsaw:Action="urn:attachThreadDumpIssueTrackerAdminIssueTrackerException" />
+        </wsdl:operation>
+
+        <wsdl:operation name="captureAccountInfo">
+            <wsdl:input message="ns:captureAccountInfoRequest" wsaw:Action="urn:captureAccountInfo" />
+            <wsdl:fault message="ns:IssueTrackerAdminIssueTrackerException" name="IssueTrackerAdminIssueTrackerException" wsaw:Action="urn:captureAccountInfoIssueTrackerAdminIssueTrackerException" />
+        </wsdl:operation>
+        <wsdl:operation name="getPaginatedIssuesForTenant">
+            <wsdl:input message="ns:getPaginatedIssuesForTenantRequest" wsaw:Action="urn:getPaginatedIssuesForTenant" />
+            <wsdl:output message="ns:getPaginatedIssuesForTenantResponse" wsaw:Action="urn:getPaginatedIssuesForTenantResponse" />
+            <wsdl:fault message="ns:IssueTrackerAdminException" name="IssueTrackerAdminException" wsaw:Action="urn:getPaginatedIssuesForTenantIssueTrackerAdminException" />
+        </wsdl:operation>
+
+        <wsdl:operation name="getAccountInfo">
+            <wsdl:input message="ns:getAccountInfoRequest" wsaw:Action="urn:getAccountInfo" />
+            <wsdl:output message="ns:getAccountInfoResponse" wsaw:Action="urn:getAccountInfoResponse" />
+            <wsdl:fault message="ns:IssueTrackerAdminIssueTrackerException" name="IssueTrackerAdminIssueTrackerException" wsaw:Action="urn:getAccountInfoIssueTrackerAdminIssueTrackerException" />
+        </wsdl:operation>
+        <wsdl:operation name="login">
+            <wsdl:input message="ns:loginRequest" wsaw:Action="urn:login" />
+            <wsdl:output message="ns:loginResponse" wsaw:Action="urn:loginResponse" />
+            <wsdl:fault message="ns:IssueTrackerAdminIssueTrackerException" name="IssueTrackerAdminIssueTrackerException" wsaw:Action="urn:loginIssueTrackerAdminIssueTrackerException" />
+
+        </wsdl:operation>
+        <wsdl:operation name="getAccountNames">
+            <wsdl:input message="ns:getAccountNamesRequest" wsaw:Action="urn:getAccountNames" />
+            <wsdl:output message="ns:getAccountNamesResponse" wsaw:Action="urn:getAccountNamesResponse" />
+            <wsdl:fault message="ns:IssueTrackerAdminIssueTrackerException" name="IssueTrackerAdminIssueTrackerException" wsaw:Action="urn:getAccountNamesIssueTrackerAdminIssueTrackerException" />
+        </wsdl:operation>
+        <wsdl:operation name="getIssueCount">
+            <wsdl:input message="ns:getIssueCountRequest" wsaw:Action="urn:getIssueCount" />
+            <wsdl:output message="ns:getIssueCountResponse" wsaw:Action="urn:getIssueCountResponse" />
+
+            <wsdl:fault message="ns:IssueTrackerAdminIssueTrackerException" name="IssueTrackerAdminIssueTrackerException" wsaw:Action="urn:getIssueCountIssueTrackerAdminIssueTrackerException" />
+        </wsdl:operation>
+        <wsdl:operation name="retrieveIssues">
+            <wsdl:input message="ns:retrieveIssuesRequest" wsaw:Action="urn:retrieveIssues" />
+            <wsdl:output message="ns:retrieveIssuesResponse" wsaw:Action="urn:retrieveIssuesResponse" />
+            <wsdl:fault message="ns:IssueTrackerAdminIssueTrackerException" name="IssueTrackerAdminIssueTrackerException" wsaw:Action="urn:retrieveIssuesIssueTrackerAdminIssueTrackerException" />
+        </wsdl:operation>
+        <wsdl:operation name="getSupportInfoUrl">
+            <wsdl:input message="ns:getSupportInfoUrlRequest" wsaw:Action="urn:getSupportInfoUrl" />
+
+            <wsdl:output message="ns:getSupportInfoUrlResponse" wsaw:Action="urn:getSupportInfoUrlResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="isTenantSubscriptionFree">
+            <wsdl:input message="ns:isTenantSubscriptionFreeRequest" wsaw:Action="urn:isTenantSubscriptionFree" />
+            <wsdl:output message="ns:isTenantSubscriptionFreeResponse" wsaw:Action="urn:isTenantSubscriptionFreeResponse" />
+            <wsdl:fault message="ns:IssueTrackerAdminIssueTrackerException" name="IssueTrackerAdminIssueTrackerException" wsaw:Action="urn:isTenantSubscriptionFreeIssueTrackerAdminIssueTrackerException" />
+        </wsdl:operation>
+        <wsdl:operation name="getAccountSpecificDetails">
+            <wsdl:input message="ns:getAccountSpecificDetailsRequest" wsaw:Action="urn:getAccountSpecificDetails" />
+
+            <wsdl:output message="ns:getAccountSpecificDetailsResponse" wsaw:Action="urn:getAccountSpecificDetailsResponse" />
+            <wsdl:fault message="ns:IssueTrackerAdminIssueTrackerException" name="IssueTrackerAdminIssueTrackerException" wsaw:Action="urn:getAccountSpecificDetailsIssueTrackerAdminIssueTrackerException" />
+        </wsdl:operation>
+        <wsdl:operation name="deleteAccount">
+            <wsdl:input message="ns:deleteAccountRequest" wsaw:Action="urn:deleteAccount" />
+            <wsdl:output message="ns:deleteAccountResponse" wsaw:Action="urn:deleteAccountResponse" />
+            <wsdl:fault message="ns:IssueTrackerAdminIssueTrackerException" name="IssueTrackerAdminIssueTrackerException" wsaw:Action="urn:deleteAccountIssueTrackerAdminIssueTrackerException" />
+        </wsdl:operation>
+        <wsdl:operation name="getAccount">
+
+            <wsdl:input message="ns:getAccountRequest" wsaw:Action="urn:getAccount" />
+            <wsdl:output message="ns:getAccountResponse" wsaw:Action="urn:getAccountResponse" />
+            <wsdl:fault message="ns:IssueTrackerAdminIssueTrackerException" name="IssueTrackerAdminIssueTrackerException" wsaw:Action="urn:getAccountIssueTrackerAdminIssueTrackerException" />
+        </wsdl:operation>
+        <wsdl:operation name="isStratosService">
+            <wsdl:input message="ns:isStratosServiceRequest" wsaw:Action="urn:isStratosService" />
+            <wsdl:output message="ns:isStratosServiceResponse" wsaw:Action="urn:isStratosServiceResponse" />
+            <wsdl:fault message="ns:IssueTrackerAdminIssueTrackerException" name="IssueTrackerAdminIssueTrackerException" wsaw:Action="urn:isStratosServiceIssueTrackerAdminIssueTrackerException" />
+        </wsdl:operation>
+
+        <wsdl:operation name="authenticateWithOT">
+            <wsdl:input message="ns:authenticateWithOTRequest" wsaw:Action="urn:authenticateWithOT" />
+            <wsdl:output message="ns:authenticateWithOTResponse" wsaw:Action="urn:authenticateWithOTResponse" />
+            <wsdl:fault message="ns:IssueTrackerAdminIssueTrackerException" name="IssueTrackerAdminIssueTrackerException" wsaw:Action="urn:authenticateWithOTIssueTrackerAdminIssueTrackerException" />
+        </wsdl:operation>
+        <wsdl:operation name="getAccountWhenService">
+            <wsdl:input message="ns:getAccountWhenServiceRequest" wsaw:Action="urn:getAccountWhenService" />
+            <wsdl:output message="ns:getAccountWhenServiceResponse" wsaw:Action="urn:getAccountWhenServiceResponse" />
+            <wsdl:fault message="ns:IssueTrackerAdminIssueTrackerException" name="IssueTrackerAdminIssueTrackerException" wsaw:Action="urn:getAccountWhenServiceIssueTrackerAdminIssueTrackerException" />
+
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="IssueTrackerAdminSoap11Binding" type="ns:IssueTrackerAdminPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="getAccountSpecificDataInService">
+            <soap:operation soapAction="urn:getAccountSpecificDataInService" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="attachFiles">
+            <soap:operation soapAction="urn:attachFiles" style="document" />
+
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+
+            <wsdl:fault name="IssueTrackerAdminIOException">
+                <soap:fault use="literal" name="IssueTrackerAdminIOException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getPaginatedIssueInfo">
+            <soap:operation soapAction="urn:getPaginatedIssueInfo" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminException">
+                <soap:fault use="literal" name="IssueTrackerAdminException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="associateUserWithSupportJira">
+            <soap:operation soapAction="urn:associateUserWithSupportJira" style="document" />
+
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+
+        </wsdl:operation>
+        <wsdl:operation name="getAccountCredentials">
+            <soap:operation soapAction="urn:getAccountCredentials" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="captureIssueInfo">
+            <soap:operation soapAction="urn:captureIssueInfo" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="attachBundleInfo">
+            <soap:operation soapAction="urn:attachBundleInfo" style="document" />
+
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+
+        </wsdl:operation>
+        <wsdl:operation name="validateCredentials">
+            <soap:operation soapAction="urn:validateCredentials" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteIssue">
+            <soap:operation soapAction="urn:deleteIssue" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getForumUrl">
+            <soap:operation soapAction="urn:getForumUrl" style="document" />
+
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="attachLogFile">
+            <soap:operation soapAction="urn:attachLogFile" style="document" />
+
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+
+        </wsdl:operation>
+        <wsdl:operation name="getAccountSpecificData">
+            <soap:operation soapAction="urn:getAccountSpecificData" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="createUserInOT">
+            <soap:operation soapAction="urn:createUserInOT" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="captureAccountInfo">
+            <soap:operation soapAction="urn:captureAccountInfo" style="document" />
+
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="attachThreadDump">
+            <soap:operation soapAction="urn:attachThreadDump" style="document" />
+
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+
+        </wsdl:operation>
+        <wsdl:operation name="getPaginatedIssuesForTenant">
+            <soap:operation soapAction="urn:getPaginatedIssuesForTenant" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+
+            <wsdl:fault name="IssueTrackerAdminException">
+                <soap:fault use="literal" name="IssueTrackerAdminException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="login">
+            <soap:operation soapAction="urn:login" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAccountInfo">
+            <soap:operation soapAction="urn:getAccountInfo" style="document" />
+
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+
+        </wsdl:operation>
+        <wsdl:operation name="getAccountNames">
+            <soap:operation soapAction="urn:getAccountNames" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getIssueCount">
+            <soap:operation soapAction="urn:getIssueCount" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="retrieveIssues">
+            <soap:operation soapAction="urn:retrieveIssues" style="document" />
+
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+
+        </wsdl:operation>
+        <wsdl:operation name="isTenantSubscriptionFree">
+            <soap:operation soapAction="urn:isTenantSubscriptionFree" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getSupportInfoUrl">
+            <soap:operation soapAction="urn:getSupportInfoUrl" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAccountSpecificDetails">
+            <soap:operation soapAction="urn:getAccountSpecificDetails" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteAccount">
+            <soap:operation soapAction="urn:deleteAccount" style="document" />
+
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+
+        </wsdl:operation>
+        <wsdl:operation name="isStratosService">
+            <soap:operation soapAction="urn:isStratosService" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAccount">
+            <soap:operation soapAction="urn:getAccount" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="authenticateWithOT">
+            <soap:operation soapAction="urn:authenticateWithOT" style="document" />
+
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+
+        </wsdl:operation>
+        <wsdl:operation name="getAccountWhenService">
+            <soap:operation soapAction="urn:getAccountWhenService" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="IssueTrackerAdminSoap12Binding" type="ns:IssueTrackerAdminPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="getAccountSpecificDataInService">
+            <soap12:operation soapAction="urn:getAccountSpecificDataInService" style="document" />
+
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+
+        </wsdl:operation>
+        <wsdl:operation name="attachFiles">
+            <soap12:operation soapAction="urn:attachFiles" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+            <wsdl:fault name="IssueTrackerAdminIOException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIOException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getPaginatedIssueInfo">
+            <soap12:operation soapAction="urn:getPaginatedIssueInfo" style="document" />
+
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminException">
+                <soap12:fault use="literal" name="IssueTrackerAdminException" />
+            </wsdl:fault>
+
+        </wsdl:operation>
+        <wsdl:operation name="associateUserWithSupportJira">
+            <soap12:operation soapAction="urn:associateUserWithSupportJira" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAccountCredentials">
+            <soap12:operation soapAction="urn:getAccountCredentials" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="captureIssueInfo">
+            <soap12:operation soapAction="urn:captureIssueInfo" style="document" />
+
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+
+        </wsdl:operation>
+        <wsdl:operation name="attachBundleInfo">
+            <soap12:operation soapAction="urn:attachBundleInfo" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="validateCredentials">
+            <soap12:operation soapAction="urn:validateCredentials" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteIssue">
+            <soap12:operation soapAction="urn:deleteIssue" style="document" />
+
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+
+        </wsdl:operation>
+        <wsdl:operation name="getForumUrl">
+            <soap12:operation soapAction="urn:getForumUrl" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+
+        </wsdl:operation>
+        <wsdl:operation name="attachLogFile">
+            <soap12:operation soapAction="urn:attachLogFile" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAccountSpecificData">
+            <soap12:operation soapAction="urn:getAccountSpecificData" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="createUserInOT">
+            <soap12:operation soapAction="urn:createUserInOT" style="document" />
+
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+
+        </wsdl:operation>
+        <wsdl:operation name="captureAccountInfo">
+            <soap12:operation soapAction="urn:captureAccountInfo" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+
+        </wsdl:operation>
+        <wsdl:operation name="attachThreadDump">
+            <soap12:operation soapAction="urn:attachThreadDump" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getPaginatedIssuesForTenant">
+            <soap12:operation soapAction="urn:getPaginatedIssuesForTenant" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminException">
+                <soap12:fault use="literal" name="IssueTrackerAdminException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="login">
+            <soap12:operation soapAction="urn:login" style="document" />
+
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+
+        </wsdl:operation>
+        <wsdl:operation name="getAccountInfo">
+            <soap12:operation soapAction="urn:getAccountInfo" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAccountNames">
+            <soap12:operation soapAction="urn:getAccountNames" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getIssueCount">
+            <soap12:operation soapAction="urn:getIssueCount" style="document" />
+
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+
+        </wsdl:operation>
+        <wsdl:operation name="retrieveIssues">
+            <soap12:operation soapAction="urn:retrieveIssues" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="isTenantSubscriptionFree">
+            <soap12:operation soapAction="urn:isTenantSubscriptionFree" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getSupportInfoUrl">
+            <soap12:operation soapAction="urn:getSupportInfoUrl" style="document" />
+
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAccountSpecificDetails">
+            <soap12:operation soapAction="urn:getAccountSpecificDetails" style="document" />
+
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+
+        </wsdl:operation>
+        <wsdl:operation name="deleteAccount">
+            <soap12:operation soapAction="urn:deleteAccount" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="isStratosService">
+            <soap12:operation soapAction="urn:isStratosService" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAccount">
+            <soap12:operation soapAction="urn:getAccount" style="document" />
+
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+
+        </wsdl:operation>
+        <wsdl:operation name="authenticateWithOT">
+            <soap12:operation soapAction="urn:authenticateWithOT" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAccountWhenService">
+            <soap12:operation soapAction="urn:getAccountWhenService" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IssueTrackerAdminIssueTrackerException">
+                <soap12:fault use="literal" name="IssueTrackerAdminIssueTrackerException" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="IssueTrackerAdminHttpBinding" type="ns:IssueTrackerAdminPortType">
+
+        <http:binding verb="POST" />
+        <wsdl:operation name="getAccountSpecificDataInService">
+            <http:operation location="getAccountSpecificDataInService" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+
+        </wsdl:operation>
+        <wsdl:operation name="attachFiles">
+            <http:operation location="attachFiles" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+
+        </wsdl:operation>
+        <wsdl:operation name="getPaginatedIssueInfo">
+            <http:operation location="getPaginatedIssueInfo" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+
+        </wsdl:operation>
+        <wsdl:operation name="associateUserWithSupportJira">
+            <http:operation location="associateUserWithSupportJira" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+
+        </wsdl:operation>
+        <wsdl:operation name="getAccountCredentials">
+            <http:operation location="getAccountCredentials" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+
+        </wsdl:operation>
+        <wsdl:operation name="captureIssueInfo">
+            <http:operation location="captureIssueInfo" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+
+        </wsdl:operation>
+        <wsdl:operation name="attachBundleInfo">
+            <http:operation location="attachBundleInfo" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+
+        </wsdl:operation>
+        <wsdl:operation name="validateCredentials">
+            <http:operation location="validateCredentials" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+
+        </wsdl:operation>
+        <wsdl:operation name="deleteIssue">
+            <http:operation location="deleteIssue" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+
+        </wsdl:operation>
+        <wsdl:operation name="getForumUrl">
+            <http:operation location="getForumUrl" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+
+        </wsdl:operation>
+        <wsdl:operation name="attachLogFile">
+            <http:operation location="attachLogFile" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+
+        </wsdl:operation>
+        <wsdl:operation name="getAccountSpecificData">
+            <http:operation location="getAccountSpecificData" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+
+        </wsdl:operation>
+        <wsdl:operation name="createUserInOT">
+            <http:operation location="createUserInOT" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+
+        </wsdl:operation>
+        <wsdl:operation name="captureAccountInfo">
+            <http:operation location="captureAccountInfo" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="attachThreadDump">
+            <http:operation location="attachThreadDump" />
+
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getPaginatedIssuesForTenant">
+            <http:operation location="getPaginatedIssuesForTenant" />
+
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="login">
+            <http:operation location="login" />
+
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAccountInfo">
+            <http:operation location="getAccountInfo" />
+
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAccountNames">
+            <http:operation location="getAccountNames" />
+
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getIssueCount">
+            <http:operation location="getIssueCount" />
+
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="retrieveIssues">
+            <http:operation location="retrieveIssues" />
+
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="isTenantSubscriptionFree">
+            <http:operation location="isTenantSubscriptionFree" />
+
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getSupportInfoUrl">
+            <http:operation location="getSupportInfoUrl" />
+
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAccountSpecificDetails">
+            <http:operation location="getAccountSpecificDetails" />
+
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteAccount">
+            <http:operation location="deleteAccount" />
+
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="isStratosService">
+            <http:operation location="isStratosService" />
+
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAccount">
+            <http:operation location="getAccount" />
+
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="authenticateWithOT">
+            <http:operation location="authenticateWithOT" />
+
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAccountWhenService">
+            <http:operation location="getAccountWhenService" />
+
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="IssueTrackerAdmin">
+
+        <wsdl:port name="IssueTrackerAdminHttpsSoap11Endpoint" binding="ns:IssueTrackerAdminSoap11Binding">
+            <soap:address location="https://cloud-test.wso2.com:9443/services/IssueTrackerAdmin.IssueTrackerAdminHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="IssueTrackerAdminHttpsSoap12Endpoint" binding="ns:IssueTrackerAdminSoap12Binding">
+            <soap12:address location="https://cloud-test.wso2.com:9443/services/IssueTrackerAdmin.IssueTrackerAdminHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="IssueTrackerAdminHttpsEndpoint" binding="ns:IssueTrackerAdminHttpBinding">
+            <http:address location="https://cloud-test.wso2.com:9443/services/IssueTrackerAdmin.IssueTrackerAdminHttpsEndpoint/" />
+        </wsdl:port>
+
+    </wsdl:service>
+</wsdl:definitions>

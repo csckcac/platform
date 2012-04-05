@@ -1,0 +1,140 @@
+<!--
+~ Copyright 2005-2008 WSO2, Inc. (http://wso2.com)
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <link href="css/mashup-docs.css" rel="stylesheet" type="text/css" media="all"/>
+        <link type="text/css" rel="stylesheet" href="css/SyntaxHighlighter.css" media="all"/><script language="javascript" src="js/shCore.js"></script><script language="javascript" src="js/shBrushJScript.js"></script><script language="javascript" src="js/shBrushJava.js"></script><script language="javascript" src="js/shBrushSql.js"></script><script language="javascript" src="js/shBrushXml.js"></script>
+    </head>
+    <body>
+        <div id="main-content">
+            <h1>
+        Sparql Host Object
+      </h1>
+
+            <h2>1.0 Introduction
+      </h2>
+
+            <p>
+Sparql hostobject allows you to do RDF querying and making use of the semantic data within a mashup. You can specify the RDF endpoint or the data source with the Sparql query and retrieve the dataset in XML or JSON.
+            </p>
+
+            <h3>
+        1. Example
+      </h3>
+
+            <pre name="code" class="js">
+function sparqlQuery(sparqlEndPoint, rdfQuery, resultType) {
+   var sparql = new Sparql();
+   sparql.sparqlEndPoint = sparqlEndPoint;
+   sparql.spaqrlQuery = rdfQuery;
+   sparql.resultType = resultType;
+   return new XML(sparql.getDataFromSparqlEndPoint());
+}
+            </pre>
+
+<h3>2 Resource Interface</h3>
+
+<pre name="code" class="js">{<br /> property String sparqlEndPoint;<br /> property String rdfDataSource;<br /> property String spaqrlQuery;<br /> property String resultType;<br /> function String getDataFromRdfSource();<br /> function String getDataFromSparqlEndPoint();<br />}<br /></pre>
+
+            <h3>2. API Documentation</h3>
+
+
+            <table style="margin-left: 0.5in; border-collapse: collapse;" class="MsoTableGrid" border="1"
+                   cellpadding="5" cellspacing="0">
+
+                <tbody>
+
+                    <tr>
+
+                        <td>Member</td>
+
+                        <td>Description</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>
+<pre>property  String 
+sparqlEndPoint</pre>
+                        </td>
+
+                        <td>
+              This property is used to specify the RDF endpoint.
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>
+<pre>property String 
+rdfDataSource</pre>                            
+                        </td>
+
+                        <td>
+              This property is used to specify RDF data source as a string.
+            </td>
+
+                    </tr>
+
+                    <tr>
+                        <td>
+<pre>property String 
+spaqrlQuery</pre>
+                        </td>
+                        <td>
+This property is used to specify the RDF query.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+<pre>property String 
+resultType</pre>
+                        </td>
+                        <td>
+This property is used to specify the result type of the query. you can use either JSON or XML. If this property isn't set, it will use XML as the result type.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+<pre>String 
+getDataFromRdfSource()</pre>
+                        </td>
+                        <td>
+This method is used to get the result from an RDF source.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+<pre>String 
+getDataFromSparqlEndPoint()</pre>
+                        </td>
+                        <td>
+This method is used to get the result from an RDF endpoint.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div><script language="javascript">
+            dp.SyntaxHighlighter.BloggerMode();
+            dp.SyntaxHighlighter.HighlightAll('code');
+        </script>
+    </body>
+</html>

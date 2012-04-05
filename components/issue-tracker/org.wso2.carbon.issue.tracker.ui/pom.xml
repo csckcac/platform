@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <parent>
+        <groupId>org.wso2.carbon</groupId>
+        <artifactId>issue-tracker</artifactId>
+        <version>4.0.0-SNAPSHOT</version>
+    </parent>
+
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.wso2.carbon</groupId>
+    <artifactId>org.wso2.carbon.issue.tracker.ui</artifactId>
+    <packaging>bundle</packaging>
+    <name>WSO2 Carbon - Issue Tracker UI</name>
+    <description>Issue Tracker FE functionalities</description>
+    <url>http://wso2.org</url>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Name>${project.artifactId}</Bundle-Name>
+                        <Export-Package>
+                            org.wso2.carbon.issue.tracker.ui.*,
+                        </Export-Package>
+                        <Import-Package>
+                            org.apache.axis2.*;version="${axis2.osgi.version.range.issue-tracker}",
+                            org.wso2.carbon.issue.tracker.stub.*;version="${carbon.platform.package.import.version.range}",
+                            javax.servlet.*;version="2.4.0",
+                            javax.servlet.http;version="2.4.0",
+                            *;resolution:=optional
+                        </Import-Package>
+                        <Carbon-Component>UIBundle</Carbon-Component>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.json.wso2</groupId>
+            <artifactId>json</artifactId>
+            <version>1.0.0.wso2v1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ui</artifactId>
+            <version>${wso2carbon.version.issue-tracker}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.axis2.wso2</groupId>
+            <artifactId>axis2</artifactId>
+            <version>${axis2.wso2.version.issue-tracker}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.core</artifactId>
+            <version>${wso2carbon.version.issue-tracker}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.issue.tracker.stub</artifactId>
+            <version>${wso2carbon.version}</version>
+        </dependency>
+
+    </dependencies>
+</project>

@@ -1,0 +1,99 @@
+<!--
+~ Copyright 2005-2008 WSO2, Inc. (http://wso2.com)
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <link href="css/mashup-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+
+    <body>
+
+
+        <div id="main-content">
+
+            <h1>Host Objects</h1>
+
+
+            <p>The Mashup Server includes a number of built-in objects
+                to provide access to various data sources from your mashup.
+            </p>
+
+
+            <ul>
+
+
+                <li><a href="apphostobject.html">APP</a>: A
+                    collection of objects facilitating publishing using the Atom
+                    Publishing Protocol (APP)
+                </li>
+                <li><a href="emailhostobject.html">Email</a>:
+                    An
+                    object that allows emails to be sent from mashups.
+                </li>
+                <li><a href="imhostobject.html">IM</a>:
+                    An
+                    object that allows Instant Messages to be sent from mashups.
+                </li>
+                <li><a href="feedhostobject.html">Feed</a>:
+                    A generic collection of objects allowing the consuming and
+                    persisting of Atom/RSS feeds
+                </li>
+                <li><a href="filehostobject.html">File</a>:
+                    An
+                    object that allows files to be read and written to the .resources
+                    folder.
+                </li>
+                <li><a href="requesthostobject.html">Request</a>:
+                    A global object that provides the ability for users
+                    to get information regarding the request it received.
+                </li>
+
+
+                <li><a href="sessionhostobject.html">Session</a>:
+                    A global object that aids in a persisting state for the duration of a
+                    session.
+                </li>
+
+
+                <li><a href="scraperhostobject.html">Scraper</a>:
+                    An object that allows Web pages to be converted into XML for data
+                    extraction
+                    and other manipulations.
+                </li>
+
+
+                <li><a href="systemhostobject.html">System</a>:
+                    A
+                    global object providing methods for useful tasks such as including
+                    JavaScript
+                    files.
+                </li>
+
+                <li><a href="wsrequesthostobject.html">WSRequest</a>:
+                    An object for invoking a Web service without a stub,
+                    or necessarily even a WSDL.
+                </li>
+
+
+            </ul>
+
+
+        </div>
+
+
+    </body>
+</html>

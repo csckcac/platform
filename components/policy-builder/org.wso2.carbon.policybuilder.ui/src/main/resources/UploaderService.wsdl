@@ -1,0 +1,208 @@
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:ns="http://ui.policybuilder.carbon.wso2.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="http://ui.policybuilder.carbon.wso2.org">
+    <wsdl:documentation>UploaderService</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://ui.policybuilder.carbon.wso2.org">
+    <xs:element name="getPolicy">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" name="soap" nillable="true" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="getPolicyResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="getString">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" name="soapFile" nillable="true" type="xs:base64Binary"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="getStringResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="test">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" name="soapFile" nillable="true" type="xs:base64Binary"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="testResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+    </wsdl:types>
+    <wsdl:message name="testRequest">
+        <wsdl:part name="parameters" element="ns:test"/>
+    </wsdl:message>
+    <wsdl:message name="testResponse">
+        <wsdl:part name="parameters" element="ns:testResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getStringRequest">
+        <wsdl:part name="parameters" element="ns:getString"/>
+    </wsdl:message>
+    <wsdl:message name="getStringResponse">
+        <wsdl:part name="parameters" element="ns:getStringResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getPolicyRequest">
+        <wsdl:part name="parameters" element="ns:getPolicy"/>
+    </wsdl:message>
+    <wsdl:message name="getPolicyResponse">
+        <wsdl:part name="parameters" element="ns:getPolicyResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="UploaderServicePortType">
+        <wsdl:operation name="test">
+            <wsdl:input message="ns:testRequest" wsaw:Action="urn:test"/>
+            <wsdl:output message="ns:testResponse" wsaw:Action="urn:testResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getString">
+            <wsdl:input message="ns:getStringRequest" wsaw:Action="urn:getString"/>
+            <wsdl:output message="ns:getStringResponse" wsaw:Action="urn:getStringResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getPolicy">
+            <wsdl:input message="ns:getPolicyRequest" wsaw:Action="urn:getPolicy"/>
+            <wsdl:output message="ns:getPolicyResponse" wsaw:Action="urn:getPolicyResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="UploaderServiceSoap11Binding" type="ns:UploaderServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="test">
+            <soap:operation soapAction="urn:test" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getString">
+            <soap:operation soapAction="urn:getString" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getPolicy">
+            <soap:operation soapAction="urn:getPolicy" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="UploaderServiceSoap12Binding" type="ns:UploaderServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="test">
+            <soap12:operation soapAction="urn:test" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getString">
+            <soap12:operation soapAction="urn:getString" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getPolicy">
+            <soap12:operation soapAction="urn:getPolicy" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="UploaderServiceHttpBinding" type="ns:UploaderServicePortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="test">
+            <http:operation location="UploaderService/test"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="test"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="test"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getString">
+            <http:operation location="UploaderService/getString"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="getString"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getString"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getPolicy">
+            <http:operation location="UploaderService/getPolicy"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="getPolicy"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getPolicy"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="UploaderService">
+        <wsdl:port name="UploaderServiceHttpSoap11Endpoint" binding="ns:UploaderServiceSoap11Binding">
+            <soap:address location="http://10.100.1.87:9763/services/UploaderService.UploaderServiceHttpSoap11Endpoint"/>
+        </wsdl:port>
+        <wsdl:port name="UploaderServiceHttpsSoap11Endpoint" binding="ns:UploaderServiceSoap11Binding">
+            <soap:address location="https://10.100.1.87:9443/services/UploaderService.UploaderServiceHttpsSoap11Endpoint"/>
+        </wsdl:port>
+        <wsdl:port name="UploaderServiceHttpSoap12Endpoint" binding="ns:UploaderServiceSoap12Binding">
+            <soap12:address location="http://10.100.1.87:9763/services/UploaderService.UploaderServiceHttpSoap12Endpoint"/>
+        </wsdl:port>
+        <wsdl:port name="UploaderServiceHttpsSoap12Endpoint" binding="ns:UploaderServiceSoap12Binding">
+            <soap12:address location="https://10.100.1.87:9443/services/UploaderService.UploaderServiceHttpsSoap12Endpoint"/>
+        </wsdl:port>
+        <wsdl:port name="UploaderServiceHttpEndpoint" binding="ns:UploaderServiceHttpBinding">
+            <http:address location="http://10.100.1.87:9763/services/UploaderService.UploaderServiceHttpEndpoint"/>
+        </wsdl:port>
+        <wsdl:port name="UploaderServiceHttpsEndpoint" binding="ns:UploaderServiceHttpBinding">
+            <http:address location="https://10.100.1.87:9443/services/UploaderService.UploaderServiceHttpsEndpoint"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

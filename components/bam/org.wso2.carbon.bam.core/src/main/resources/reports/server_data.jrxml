@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="classic" pageWidth="780" pageHeight="842" columnWidth="720" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<field name="serverURL" class="java.lang.String"/>
+	<field name="serverMsgReqCount" class="java.lang.String"/>
+	<field name="serverMsgResCount" class="java.lang.String"/>
+	<field name="serverMsgFaultCount" class="java.lang.String"/>
+	<field name="serverAvgResTime" class="java.lang.String"/>
+	<field name="serverMaxResTime" class="java.lang.String"/>
+	<field name="serverMinResTime" class="java.lang.String"/>
+	<field name="serviceName" class="java.lang.String"/>
+	<field name="serviceMsgReqCount" class="java.lang.String"/>
+	<field name="serviceMsgResCount" class="java.lang.String"/>
+	<field name="serviceMsgFaultCount" class="java.lang.String"/>
+	<field name="serviceAvgResTime" class="java.lang.String"/>
+	<field name="serviceMaxResTime" class="java.lang.String"/>
+	<field name="serviceMinResTime" class="java.lang.String"/>
+	<field name="operationName" class="java.lang.String"/>
+	<field name="opMsgReqCount" class="java.lang.String"/>
+	<field name="opMsgResCount" class="java.lang.String"/>
+	<field name="opMsgFaultCount" class="java.lang.String"/>
+	<field name="opAvgResTime" class="java.lang.String"/>
+	<field name="opMaxResTime" class="java.lang.String"/>
+	<field name="opMinResTime" class="java.lang.String"/>
+	<group name="serverURL">
+		<groupExpression><![CDATA[$F{serverURL}]]></groupExpression>
+		<groupHeader>
+			<band height="17" splitType="Stretch">
+				<rectangle>
+					<reportElement stretchType="RelativeToBandHeight" x="0" y="1" width="719" height="15" forecolor="#92A962" backcolor="#92A962"/>
+				</rectangle>
+				<textField isStretchWithOverflow="true">
+					<reportElement x="0" y="1" width="311" height="15"/>
+					<textElement>
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{serverURL}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="310" y="1" width="79" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{serverMsgReqCount}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="388" y="1" width="68" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{serverMsgResCount}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="456" y="1" width="64" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{serverMsgFaultCount}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="520" y="1" width="66" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{serverAvgResTime}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="586" y="1" width="65" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{serverMaxResTime}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="651" y="1" width="67" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{serverMinResTime}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band splitType="Stretch"/>
+		</groupFooter>
+	</group>
+	<group name="serviceName">
+		<groupExpression><![CDATA[$F{serviceName}]]></groupExpression>
+		<groupHeader>
+			<band height="16" splitType="Stretch">
+				<rectangle>
+					<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="720" height="15" forecolor="#C8DD99" backcolor="#C8DD99"/>
+				</rectangle>
+				<textField>
+					<reportElement x="311" y="0" width="77" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{serviceMsgReqCount}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="389" y="0" width="66" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{serviceMsgResCount}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="456" y="0" width="64" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{serviceMsgFaultCount}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="520" y="0" width="65" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{serviceAvgResTime}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="586" y="0" width="64" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{serviceMaxResTime}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="651" y="0" width="68" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{serviceMinResTime}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement x="3" y="1" width="308" height="15"/>
+					<textElement>
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{serviceName}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band splitType="Stretch"/>
+		</groupFooter>
+	</group>
+	<group name="operationName">
+		<groupExpression><![CDATA[$F{operationName}]]></groupExpression>
+		<groupHeader>
+			<band height="18" splitType="Stretch">
+				<rectangle radius="0">
+					<reportElement key="rectangle-6" stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="2" width="720" height="15" forecolor="#C9F2F8" backcolor="#C9F2F8">
+						<printWhenExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue() % 2 == 0)]]></printWhenExpression>
+					</reportElement>
+				</rectangle>
+				<rectangle radius="0">
+					<reportElement key="rectangle-6" stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="1" width="720" height="15" forecolor="#E7EFEF" backcolor="#E7EFEF">
+						<printWhenExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue() % 2 == 1)]]></printWhenExpression>
+					</reportElement>
+				</rectangle>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField" x="311" y="1" width="77" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12" isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{opMsgReqCount}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField" x="388" y="1" width="67" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12" isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{opMsgResCount}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField" x="455" y="2" width="64" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12" isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{opMsgFaultCount}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField" x="519" y="2" width="66" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12" isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{opAvgResTime}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField" x="585" y="2" width="65" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12" isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{opMaxResTime}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField" x="650" y="2" width="69" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="12" isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{opMinResTime}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement x="22" y="1" width="289" height="15"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{operationName}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band splitType="Stretch"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="41" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="65" splitType="Stretch">
+			<rectangle radius="0">
+				<reportElement key="rectangle-1" mode="Opaque" x="0" y="30" width="720" height="35" forecolor="#E7EFEF" backcolor="#E7EFEF"/>
+				<graphicElement>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement key="staticText-2" x="388" y="48" width="67" height="17"/>
+				<box leftPadding="10">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Response ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-3" x="455" y="48" width="64" height="17"/>
+				<box leftPadding="10">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[  Fault ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-4" x="519" y="48" width="66" height="17"/>
+				<box leftPadding="10">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Avg]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-5" x="585" y="48" width="66" height="17"/>
+				<box leftPadding="10">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Max]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-6" x="651" y="48" width="68" height="17"/>
+				<box leftPadding="10">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Min]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-10" x="311" y="32" width="208" height="16"/>
+				<box leftPadding="10">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Message Count]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-11" x="519" y="32" width="200" height="16"/>
+				<box leftPadding="10">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Response Time(ms)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-12" x="311" y="48" width="77" height="17"/>
+				<box leftPadding="10">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Request]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="0" y="9" width="720" height="20" backcolor="#E7EFEF"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="9" width="720" height="20"/>
+				<box leftPadding="10">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Servers , Services , and Operations Data Report]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="24" splitType="Stretch">
+			<rectangle radius="0">
+				<reportElement key="rectangle-2" mode="Opaque" x="0" y="3" width="720" height="20" forecolor="#688468" backcolor="#688468"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+			<line>
+				<reportElement key="line" mode="Opaque" x="0" y="1" width="720" height="1" forecolor="#000000" backcolor="#FFFFFF"/>
+				<graphicElement>
+					<pen lineWidth="2.0" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="277" y="3" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="357" y="2" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEE, d MMM yyyy HH:mm:ss Z">
+				<reportElement x="0" y="3" width="253" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

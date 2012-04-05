@@ -1,0 +1,70 @@
+<!--
+ ~ Copyright (c) 2005-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<component xmlns="http://products.wso2.org/carbon">
+    <!-- sample menu configuration -->
+    <menus>
+        <menu>
+            <id>governance_list_services_menu</id>
+            <i18n-key>governance.list.service.menu</i18n-key>
+            <i18n-bundle>org.wso2.carbon.governance.list.ui.i18n.Resources</i18n-bundle>
+            <parent-menu>list_sub_menu</parent-menu>
+            <link>../list/service.jsp</link>
+            <region>region3</region>
+            <order>1</order>
+            <style-class>manage</style-class>
+            <icon>../images/services.gif</icon>
+            <require-permission>/permission/admin/manage/resources/govern/metadata/list</require-permission>
+        </menu>
+        <menu>
+            <id>governance_list_policy_menu</id>
+            <i18n-key>governance.list.policy.menu</i18n-key>
+            <i18n-bundle>org.wso2.carbon.governance.list.ui.i18n.Resources</i18n-bundle>
+            <parent-menu>list_sub_menu</parent-menu>
+            <link>../list/policy.jsp</link>
+            <region>region3</region>
+            <order>20</order>
+            <style-class>manage</style-class>
+            <icon>../images/policies.gif</icon>
+            <require-permission>/permission/admin/manage/resources/govern/metadata/list</require-permission>
+        </menu>
+        <menu>
+            <id>governance_list_wsdl_menu</id>
+            <i18n-key>governance.list.wsdl.menu</i18n-key>
+            <i18n-bundle>org.wso2.carbon.governance.list.ui.i18n.Resources</i18n-bundle>
+            <parent-menu>list_sub_menu</parent-menu>
+            <link>../list/wsdl.jsp</link>
+            <region>region3</region>
+            <order>10</order>
+            <style-class>manage</style-class>
+            <icon>../images/wsdl.gif</icon>
+            <require-permission>/permission/admin/manage/resources/govern/metadata/list</require-permission>
+        </menu>
+        <menu>
+            <id>governance_list_schema_menu</id>
+            <i18n-key>governance.list.schema.menu</i18n-key>
+            <i18n-bundle>org.wso2.carbon.governance.list.ui.i18n.Resources</i18n-bundle>
+            <parent-menu>list_sub_menu</parent-menu>
+            <link>../list/schema.jsp</link>
+            <region>region3</region>
+            <order>15</order>
+            <style-class>manage</style-class>
+            <icon>../images/schema.gif</icon>
+            <require-permission>/permission/admin/manage/resources/govern/metadata/list</require-permission>
+        </menu>
+    </menus>
+</component>

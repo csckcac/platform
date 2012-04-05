@@ -1,0 +1,58 @@
+<!--
+~ Copyright 2005-2008 WSO2, Inc. (http://wso2.com)
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <link href="css/mashup-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body>
+        <div id="main-content">
+            <br/>
+
+            <h1>Productivity Tools Available For Mashup Developers</h1>
+            <h2>The Javascript Stub Generator</h2>
+
+            <p>The Javascript Stub
+                Generator can be accessed by pointing your browser to
+                <a href="https://localhost:9443/carbon/js_stub_generator/index.jsp">
+                    https://localhost:9443/carbon/js_stub_generator/index.jsp
+                </a>
+                in a local server installation. Using this tool you can either provide
+                a URL of a WSDL (1.1 or 2.0) document or upload a WSDL (1.1 or 2.0) document from your local file
+                system to generate a Javascript stub to the Web Service in concern.
+                This stub can then be imported and used in the mashups to access this
+                Web Service with your Javascript as described in the
+                <a href="generatedresources.html#JavaScript">JavaScript
+                    Stubs
+                </a>
+                section.
+            </p>
+
+            <h2>The Scraping Assistant</h2>
+            <p>The Scraping Assistant is available to you at the URL<a
+                    href="https://localhost:9443/carbon/js_scraper/index.jsp">
+                https://localhost:9443/carbon/js_scraper/index.jsp</a>.
+                This tool will help you to generate a
+                <a href="http://web-harvest.sourceforge.net/">Web Harvest</a>
+                scraper configuration, which in turn can be used in your mashups to
+                scrape data from web resources. The tool will also assist developers to
+                gather XPath expressions from selected pages.
+            </p>
+        </div>
+
+    </body>
+</html>

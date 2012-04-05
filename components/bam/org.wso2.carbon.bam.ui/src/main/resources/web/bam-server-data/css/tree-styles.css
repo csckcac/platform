@@ -1,0 +1,256 @@
+.legendBox{
+    position:absolute;
+    border:solid 1px #cccccc;
+    text-align:left;
+    z-index:101;
+    cursor:move;
+    background-color:#ffffff;
+}
+.legendBox-out{
+    background-color:#ffffff;
+    height:20px;
+    padding:5px;
+    float:left;
+    *width:80px;
+}
+.legendBox-color{
+    background-color:#cccccc;
+    width:20px;
+    height:20px;
+
+}
+.legendBox-color[class] {
+  background-image:url(../images/graph-back.png);
+}
+.legendBox-label{
+    color:#585858;
+    float:right;
+    font-size:11px;
+    text-indent:25px;
+    *text-indent:0px;
+}
+.legendBox-label-big{
+    padding:5px !important;
+    color:#374353;
+    font-weight:bold;
+}
+.legendBox-head{
+    background-color:#585858;
+    color:#ffffff;
+    padding:5px;
+    text-align:right;
+}
+.legendBox-box{
+    border:solid 1px #b5b5b5;
+}
+.input-area label {
+    width: 150px;
+    display: block;
+    float: left;
+}
+
+.vertical-line {
+
+    background-image: url( ../images/line.png );
+    background-repeat: repeat-y;
+    background-position: 10px 0px;
+
+}
+
+.vertical-line-alone {
+
+    background-image: url( ../images/line.png );
+    background-repeat: repeat-y;
+    background-position: 10.5px 0px;
+    margin-top: 5px;
+    height: 20px;
+
+}
+.root-list{
+   list-style-type: none;
+    padding: 0px;
+    margin: 0px; 
+}
+ul {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+}
+ul li{
+}
+.treePane {
+    padding-left: 10px;
+    padding-top: 10px;
+}
+
+.child-list {
+    padding-left: 55px;
+}
+
+.child-list li {
+
+    text-align: left;
+}
+
+.branch-node {
+    background-image: url( ../images/line-branch.png );
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+    height:20px;
+    margin-left:65px;
+}
+
+.mediators {
+    padding:5px;
+    margin-top: -1px;
+    *margin-top: -15px;
+    margin-left: 25px;
+    vertical-align: middle;
+}
+.level1 a{
+    font-size:14px;
+    color:#ffffff !important;
+}
+.level2 a{
+    font-size:12px;
+}
+.level3 a{
+    font-size:11px;
+}
+.mediators a{
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+    display:block;
+    text-indent: 15px;
+    color:#000000;
+    height:23px;
+}
+
+.endpoit-toolbar {
+    border: solid 1px #3d5a72;
+    background-color: #ccd3d8;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 5px;
+    padding-right: 5px;
+    width: 150px;
+    height: 230px;
+    position: absolute;
+    right: 10px;
+    top: 100px;
+}
+
+.endpoit-toolbar a {
+    display: block;
+    border-bottom: solid 1px #91aabd;
+    padding: 3px;
+    color: #2f486a;
+    text-decoration: none;
+    vertical-align: middle;
+}
+
+.endpoit-toolbar a img {
+    border: none;
+    vertical-align: middle;
+    padding-right: 5px;
+}
+.endpoint-info{
+    margin-top:10px;
+}
+.endpoint-info-title {
+    background-color: #000000;
+    color: #ffffff;
+    padding: 5px;
+}
+
+.alone-icon {
+    background-image: url( ../images/icon-tree-alone.jpg );
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+    position: absolute;
+    width: 20px;
+    height: 12px;
+    z-index: 100;
+    cursor: pointer;
+    margin-left:5px;
+    *margin-left:0px;
+    *margin-left:-21px;
+    margin-top:0px;
+
+}
+.minus-icon {
+    background-image: url( ../images/icon-tree-minus.jpg );
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+    position: absolute;
+    width: 20px;
+    height: 12px;
+    z-index: 100;
+    cursor: pointer;
+    margin-left:5px;
+    *margin-left:-21px;
+    margin-top:0px;
+}
+
+.plus-icon {
+    background-image: url( ../images/icon-tree-plus-alone.jpg );
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+    position: absolute;
+    width: 20px;
+    height: 13px;
+    z-index: 100;
+    cursor: pointer;
+     margin-left:5px;
+    *margin-left:-21px;
+     margin-top:0px;
+}
+.rowTypeA td{
+   background-color:#ececec; 
+}
+.rowTypeA,.rowTypeB{
+    width:100%;
+}
+.data-chart{
+    padding-left:5px;
+    padding-top:5px;
+    float:right;
+    /*width:275px;*/
+}
+.data-chart table{
+    background-color:#ffffff;
+    width:100%;
+}
+
+
+.empty-brake{
+    height:10px;
+}
+.y-axis{
+    background-image: url( ../images/line.png );
+    background-repeat: repeat-y;
+    background-position: 0 0;
+    width:5px;
+}
+.barData{
+    float:left;
+}
+.bar{
+    height:20px;
+    float:left;
+    margin-right:5px;
+    background-repeat: repeat-x;
+    background-position: 0 0;
+     /* Mozilla ignores crazy MS image filters, so it will skip the following */
+    /*filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale, src='../images/graph-back.png');*/
+}
+.bar[class] {
+  background-image:url(../images/graph-back.png);
+}
+.BarClear{
+    clear:both;
+    *clear:right;
+    display:block;
+    *display:inline;
+}

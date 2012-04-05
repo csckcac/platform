@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+<head>
+    <title>Unit Test for Graph.js</title>
+    <script src="../../main/js/lib/closure-library/closure/goog/base.js"></script>
+    <script>
+        goog.require('goog.testing.jsunit');
+        goog.require('gadgetide.datasource.Graph');
+    </script>
+    <script language="javascript">
+
+        var MockDelegator = function(id) {
+            this.id = id
+        };
+        MockDelegator.prototype.toString = function(){
+            return "D["+this.id+"]";
+        };
+        var MockField = function(id) {
+            this.id = id
+        };
+        MockField.prototype.toString = function(){
+            return "F["+this.id+"]";
+        };
+        //make 100 pairs of Delegators.
+        var units = [];
+        for (i = 0; i < 100; i++) {
+            var m1 = new MockDelegator(2 * i);
+            var f1 = new MockField(2 * i);
+            var m2 = new MockDelegator(2 * i + 1);
+            var f2 = new MockField(2 * i + 1);
+            units[i] = [m1,f1,m2,f2];
+        }
+
+        var graph;
+        var setUp = function() {
+            graph = new gadgetide.datasource.Graph();
+        };
+
+
+        var testDirectedAddRemove = function() {
+            graph.clear();
+            var i;
+            for (i = 0; i < 50; i = i + 1) {
+                graph.add(units[i][0], units[i][1], units[i][2], units[i][3]);
+            }
+
+            for (i = 50; i < 100; i = i + 1) {
+                assertFalse("never put in at all, and shouldn't be removed",graph.remove(units[i][0], units[i][2]));
+            }
+            for (i = 0; i < 50; i = i + 1) {
+                assertFalse("never put in with this link, and shouldn't be removed",graph.remove(units[i+50][0], units[i][2]));
+            }
+            for (i = 0; i < 50; i = i + 1) {
+                assertTrue("should be removed", graph.remove(units[i][0], units[i][2]));
+            }
+            for (i = 0; i < 50; i = i + 1) {
+                assertFalse("already removed shouldn't be re-removed" ,graph.remove(units[i][0], units[i][2]));
+            }
+//            var m_z = 36969 * (i & 65535) + (i >> 16);
+//            var m_w = 18000 * (m_z & 65535) + (m_z >> 16);
+//            var x = Math.abs(Math.round((((m_z << 16) + m_w) / 4294967296) * 100));
+        };
+
+        var testDirectDependencies = function() {
+            graph.clear();
+            /*
+             * 1 -> 2 \
+             *         -> 0 -> 6
+             *      4 /   ^          7 -> 8
+             *            |
+             *            v
+             *            3
+             */
+            var links = [[1,2],[2,0],[4,0],[0,6],[7,8],[0,3],[3,0]];
+            var depOf0 = [2,4,3];
+
+            link = function(i,j){
+                graph.add(units[i][0], units[i][1], units[j][0], units[j][1]);
+            };
+
+            for (var i = 0; i < links.length; i++) {
+                var l = links[i];
+                link(l[0],l[1]);
+            }
+
+            var depOf0Obj = [];
+            for (var i = 0; i < depOf0.length; i++) {
+                depOf0Obj.push(units[depOf0[i]][0]);
+
+            }
+
+            var depnd = graph.getDirectDependencies(units[0][0]);
+            assertEquals("should has 3 dependencies",depnd.length,depOf0.length);
+            for (var i = 0; i < depnd.length; i++) {
+                assertContains("should contain the given dependencies",depnd[i].from,depOf0Obj)
+            }
+
+        }
+
+    </script>
+</head>
+<body>
+</body>
+</html>
+

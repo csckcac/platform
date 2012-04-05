@@ -1,0 +1,202 @@
+/*
+ *  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+package org.wso2.carbon.admin.mgt.services;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.admin.mgt.beans.AdminMgtInfoBean;
+import org.wso2.carbon.admin.mgt.beans.ConfirmationBean;
+import org.wso2.carbon.admin.mgt.constants.AdminMgtConstants;
+import org.wso2.carbon.admin.mgt.internal.AdminManagementServiceComponent;
+import org.wso2.carbon.admin.mgt.internal.util.PasswordUtil;
+import org.wso2.carbon.admin.mgt.util.AdminMgtUtil;
+import org.wso2.carbon.captcha.mgt.beans.CaptchaInfoBean;
+import org.wso2.carbon.captcha.mgt.util.CaptchaUtil;
+import org.wso2.carbon.registry.core.RegistryConstants;
+import org.wso2.carbon.registry.core.Resource;
+import org.wso2.carbon.registry.core.session.UserRegistry;
+import org.wso2.carbon.user.core.UserRealm;
+import org.wso2.carbon.user.core.UserStoreException;
+import org.wso2.carbon.user.core.UserStoreManager;
+import org.wso2.carbon.user.core.tenant.TenantManager;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+
+
+/**
+ * AdminManagement Service Class
+ */
+public class AdminManagementService {
+    private static final Log log = LogFactory.getLog(AdminManagementService.class);
+
+
+    public static ConfirmationBean confirmUser(String secretKey) throws Exception {
+        return AdminMgtUtil.confirmUser(secretKey);
+    }
+
+    /**
+     * Handling the User Request for a password reset
+     *
+     * @param adminInfoBean   AdminMgtInfobean
+     * @param captchaInfoBean captcha info bean
+     * @return true if successful
+     * @throws Exception, if exception occurred in validating the domain.
+     */
+    public boolean resetPassword(
+            AdminMgtInfoBean adminInfoBean, CaptchaInfoBean captchaInfoBean) throws Exception {
+
+        //processes the captchaInfoBean
+        CaptchaUtil.processCaptchaInfoBean(captchaInfoBean);
+
+        // validate the domain
+        String tenantDomain = adminInfoBean.getTenantDomain();
+        if (!(tenantDomain.trim().equals(""))) {
+            try {
+                AdminMgtUtil.validateDomain(adminInfoBean.getTenantDomain());
+            } catch (Exception e) {
+                String msg = "Domain Validation Failed.";
+                log.error(msg, e);
+                // Password Reset Failed. Not passing the error details to client.
+                return false;
+            }
+        }
+        return PasswordUtil.resetPassword(adminInfoBean);
+    }
+
+    /**
+     * Update the password with the new password provided by the user
+     *
+     * @param adminInfoBean   tenantInfo
+     * @param captchaInfoBean captcha
+     * @return tenanttrue if password is changed successfully. Final call in password reset.
+     * @throws Exception, if captcha validation failed.
+     */
+    public boolean updateAdminPasswordWithUserInput(
+            AdminMgtInfoBean adminInfoBean, CaptchaInfoBean captchaInfoBean) throws Exception {
+
+        //processes the captchaInfoBean
+        CaptchaUtil.processCaptchaInfoBean(captchaInfoBean);
+
+        // change the password with the user input password
+        AdminManagementService adminMgtService = new AdminManagementService();
+        if (log.isDebugEnabled()) {
+            log.debug("Initializing AdminManagementService for the admin account configuration.");
+        }
+        return adminMgtService.updateTenantPassword(adminInfoBean);
+    }
+
+    /**
+     * To proceed updating credentials
+     *
+     * @param domain          domain name to update the credentials
+     * @param confirmationKey confirmation key to verify the request.
+     * @return True, if successful in verifying and hence updating the credentials.
+     * @throws Exception, if confirmation key doesn't exist in the registry.
+     */
+    public boolean proceedUpdateCredentials(String domain, String confirmationKey) throws Exception {
+
+        TenantManager tenantManager = AdminManagementServiceComponent.getTenantManager();
+        int tenantId = AdminMgtUtil.getTenantIdFromDomain(domain, tenantManager);
+
+        UserRegistry superTenantSystemRegistry = AdminManagementServiceComponent.
+                getGovernanceSystemRegistry(MultitenantConstants.SUPER_TENANT_ID);
+        String adminManagementPath = AdminMgtConstants.ADMIN_MANAGEMENT_FLAG_PATH +
+                RegistryConstants.PATH_SEPARATOR + tenantId;
+        Resource resource = null;
+        if (superTenantSystemRegistry.resourceExists(adminManagementPath)) {
+            resource = superTenantSystemRegistry.get(adminManagementPath);
+            String actualConfirmationKey = null;
+            Object content = resource.getContent();
+            if (content instanceof String) {
+                actualConfirmationKey = (String) content;
+            } else if (content instanceof byte[]) {
+                actualConfirmationKey = new String((byte[]) content);
+            }
+
+            if ((actualConfirmationKey != null) && (actualConfirmationKey.equals(confirmationKey))) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Password resetting by the tenant admin for the domain: " + domain);
+                }
+                return true;
+            } else if (actualConfirmationKey == null ||
+                    !actualConfirmationKey.equals(confirmationKey)) {
+                String msg = AdminMgtConstants.CONFIRMATION_KEY_NOT_MACHING;
+                log.error(msg);
+                return false; // validation fails; do not proceed
+            }
+        } else {
+            log.warn("The confirmationKey doesn't exist in service.");
+        }
+
+        AdminMgtUtil.cleanupResources(superTenantSystemRegistry, resource);
+        return false;
+    }
+
+    /**
+     * Updates the tenant admin password, with the tenant provided password or
+     * the autogenerated password, in case the tenant forgot the initial password
+     *
+     * @param adminInfoBean tenant domain details
+     * @return true if successfully reset
+     * @throws Exception if failed due to userStore or registry exceptions.
+     */
+    public boolean updateTenantPassword(AdminMgtInfoBean adminInfoBean) throws Exception {
+
+        TenantManager tenantManager = AdminManagementServiceComponent.getTenantManager();
+        String tenantDomain = adminInfoBean.getTenantDomain();
+        int tenantId = AdminMgtUtil.getTenantIdFromDomain(tenantDomain, tenantManager);
+        UserStoreManager userStoreManager;
+
+        // filling the non-set admin and admin password first
+        UserRegistry configSystemRegistry =
+                AdminManagementServiceComponent.getConfigSystemRegistry(tenantId);
+
+        boolean updatePassword = false;
+        if (adminInfoBean.getAdminPassword() != null
+                && !adminInfoBean.getAdminPassword().equals("")) {
+            updatePassword = true;
+        }
+
+        UserRealm userRealm = configSystemRegistry.getUserRealm();
+        try {
+            userStoreManager = userRealm.getUserStoreManager();
+        } catch (UserStoreException e) {
+            String msg = "Error in getting the user store manager for the user.";
+            log.error(msg, e);
+            throw new Exception(msg, e);
+        }
+
+        if (!userStoreManager.isReadOnly() && updatePassword) {
+            return PasswordUtil.updatePassword(adminInfoBean, userStoreManager);
+        }
+        return false;
+    }
+
+    /**
+     * Generates a random Captcha
+     *
+     * @return captchaInfoBean
+     * @throws Exception, if exception in cleaning old captchas or generating new
+     *                    captcha image.
+     */
+    public CaptchaInfoBean generateRandomCaptcha() throws Exception {
+        // we will clean the old captchas asynchronously
+        CaptchaUtil.cleanOldCaptchas();
+        return CaptchaUtil.generateCaptchaImage();
+    }
+}

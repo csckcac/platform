@@ -1,0 +1,7 @@
+<%
+    var uriMatcher = new URIMatcher(request.uri);
+
+    if(uriMatcher.match('/{context}/{dir}/{page}')) {
+        print(uriMatcher.elements.id)
+    }
+%>

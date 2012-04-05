@@ -1,0 +1,37 @@
+<serviceGroup>
+    <service name="MessageBoxAdminService">
+        <transports>
+            <transport>https</transport>
+        </transports>
+        <messageReceivers>
+            <messageReceiver mep="http://www.w3.org/ns/wsdl/robust-in-only"
+                             class="org.apache.axis2.rpc.receivers.RPCInOnlyMessageReceiver"/>
+            <messageReceiver mep="http://www.w3.org/ns/wsdl/in-only"
+                             class="org.apache.axis2.rpc.receivers.RPCInOnlyMessageReceiver"/>
+            <messageReceiver mep="http://www.w3.org/ns/wsdl/in-out"
+                             class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
+        </messageReceivers>
+        <parameter name="ServiceClass">
+            org.wso2.carbon.messagebox.admin.internal.MessageBoxAdminService
+        </parameter>
+    </service>
+    <service name="QueueManagerAdminService">
+        <transports>
+            <transport>https</transport>
+        </transports>
+        <messageReceivers>
+            <messageReceiver mep="http://www.w3.org/ns/wsdl/robust-in-only"
+                             class="org.apache.axis2.rpc.receivers.RPCInOnlyMessageReceiver"/>
+            <messageReceiver mep="http://www.w3.org/ns/wsdl/in-only"
+                             class="org.apache.axis2.rpc.receivers.RPCInOnlyMessageReceiver"/>
+            <messageReceiver mep="http://www.w3.org/ns/wsdl/in-out"
+                             class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
+        </messageReceivers>
+        <parameter name="ServiceClass">
+            org.wso2.carbon.messagebox.admin.internal.QueueManagerAdminService
+        </parameter>
+    </service>
+
+    <parameter name="adminService" locked="true">true</parameter>
+    <parameter name="hiddenService" locked="true">true</parameter>
+</serviceGroup>

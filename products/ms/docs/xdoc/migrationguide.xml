@@ -1,0 +1,240 @@
+<!--
+~ Copyright 2005-2008 WSO2, Inc. (http://wso2.com)
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <link href="css/mashup-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body style="direction: ltr;">
+
+        <div id="main-content">
+            <h1>Migration Guide</h1>
+
+            <p>This document describes how you can migrate from an older version of the
+                Mashup Server to a newer version. Steps for reverting to a previous version
+                have not been tested or documented.
+            </p>
+
+            <p>In all migrations, please make sure that you either backup the existing
+                mashup server installation or leave the installation's database and script
+                directories intact until you verify that the migration to the newer version
+                has been completed successfully.
+            </p>
+
+            <h1>Upgrading to a Point Release within the Same Version</h1>
+            Migrating from a Mashup Server 1.0 installation to a 1.0.1 or 1.0.2 or from a
+            1.5 to a 1.5.1 (or 1.5.1 to 1.5.2) simply requires the copying of database and scripts folders
+            across to the new installation. The steps to be followed are:
+            <ol>
+                <li>Shut down your existing Mashup Server instance.</li>
+                <li>Backup your database and scripts directories, by copying them to a
+                    separate location. Both directories can be found in the installation root
+                    of your mashup server.
+                </li>
+                <li>Extract the binary distribution of the new version of the mashup server
+                    in a different location. Leave the old installation untouched, so that
+                    you can revert to the previous version at any point if you wish to do
+                    so.
+                </li>
+                <li>Delete the contents of the 'database' and 'scripts' directories of the
+                    new installation.
+                </li>
+                <li>Copy the contents of the 'database' and 'scripts' directories of the
+                    old installation into the now empty 'database' and 'scripts' directories
+                    of the new installation.
+                </li>
+                <li>Start the new server. You will not be requested to provision the new
+                    installation as the previously created administrator account will be
+                    active on the new server.
+                </li>
+            </ol>
+
+            <h1>Upgrading from a 1.0.x installation to a 1.5.x Installation</h1>
+
+            <p>Migrating a 1.0.x installation of the Mashup Server to a 1.5 requires that
+                data be exported from the older version of the WSO2 Mashup Server and
+                imported into the new version. The steps below describe how the downloadable
+                'MigrationTool' can be setup and used to perform the data migration.
+            </p>
+
+            <h2>Getting the Migration Tool</h2>
+
+            <p>You can download the MigrationTool.zip file containing the binaries, JSP's
+                and configuration files required to perform the migration from<a
+                        href="https://wso2.org/repos/wso2/people/channa/migration/MigrationTool.zip">here</a>.
+                Extract the contents of the zip file and perform the steps below to migrate
+                your Mashups and MetaData from your 1.0.x installation to your a 1.5.x
+                installation.
+            </p>
+
+            <h2>Performing the Migration Using the Migration Tool</h2>
+
+            <p>This document assumes you have installed, but not provisioned a WSO2
+                Mashup Server 1.5.x on the same system that is running the WSO2 Mashup Server
+                1.0.x. The installation root directories of your Mashup Server 1.0.x, Mashup
+                Server 1.5.x will be referred to as 'Mashup 1.0 Home' and 'Mashup 1.5 Home'
+                respectively. The extracted contents of the MigrationTool.zip file are
+                assumed to reside in the 'MigrationTool' directory.
+            </p>
+
+            <h3>Step 1 - Exporting Data from the 1.0.x installation</h3>
+
+            <p>1.1. Move the 'wso2mashup-core-1.0.2.jar' file out of the 'Mashup 1.0
+                Home\lib' directory.
+            </p>
+
+            <p>1.2. Copy the 'wso2mashup-core-1.0.x-withexport.jar' file from the
+                'MigrationTool\export' directory to the 'Mashup 1.0 Home\lib' directory.
+            </p>
+
+            <p>1.3. Copy the 'extract.jsp' file from the 'MigrationTool\export' directory
+                to the 'Mashup 1.0 Home\lib\tomcat\webapps\ROOT' directory.
+            </p>
+
+            <p>1.4. Start the 1.0.2 Mashup Server and access the extract.jsp page
+                (typically at<a
+                        href="https://localhost:7443/extract.jsp">https://localhost:7443/extract.jsp</a>).
+            </p>
+
+            <p>1.5. The follwing page should be displayed:</p>
+
+            <p>
+                <img alt="Extraction Confirmation" src="images/extraction_util.png"
+                     width="50%"/>
+            </p>
+
+            <p>1.6. Shut down the 1.0.x Server.</p>
+
+            <p>1.7. Delete the 'wso2mashup-core-1.0.x-withexport.jar' file from the
+                'Mashup 1.0 Home\lib' directory and restore the 'wso2mashup-core-1.0.2.jar'
+                file.
+            </p>
+
+            <h3>Step 2 - Importing Data into the 1.5.x Installation</h3>
+
+            <p>2.1. Move the 'wso2mashup-core-1.5.1.jar' file out of the 'Mashup 1.5
+                Home\lib' directory.
+            </p>
+
+            <p>2.2 Copy the 'wso2mashup-core-1.5.x-withimport.jar' file from the
+                'MigrationTool\import' directory to the 'Mashup 1.5 Home\lib' directory.
+            </p>
+
+            <p>2.3 Copy the 'populate.jsp' file from the 'MigrationTool\import' directory
+                to the 'Mashup 1.5 Home\lib\tomcat\webapps\ROOT' directory.
+            </p>
+
+            <p>2.4 Copy the 'migration.xml' file from the 'MigrationTool\import'
+                directory to the 'Mashup 1.5 Home\conf' directory.
+            </p>
+
+            <p>2.5.1 Update the &lt;url&gt; parameter in this file with the fully
+                qualified path to the 'Mashup 1.0 Home\database\WSO2WSAS_DB' directory.'
+            </p>
+
+            <p>2.5 Move the 'server.xml' file out of the 'Mashup 1.5 Home\conf' directory
+                and copy the 'server.xml' file from the 'MigrationTool\import' directory
+                there.
+            </p>
+
+            <p>2.6 Copy the user script directories from the 'Mashup 1.0 Home\scripts'
+                directory to the 'Mashup 1.5 Home\scripts' directory.
+            </p>
+
+            <p>2.6.1 Copy the mashup-metadata.xml file from the 'Mashup 1.0 Home'
+                directory to the 'Mashup 1.5 Home' directory.
+            </p>
+
+            <p>2.7 Start 1.5.1 Server and access the populate.jsp page (typically at<a
+                    href="https://localhost:7443/populate.jsp">https://localhost:7443/populate.jsp</a>).
+                The following page should be displayed.
+            </p>
+
+            <p>
+                <img alt="Import Utility" src="images/import_util.png" width="70%"/>
+            </p>
+
+            <p>2.8 Shut down the 1.5.x server.</p>
+
+            <p>2.9 Delete the files you copied in from the 'MigrationTool' directory and
+                restore the 'server.xml' file and 'wso2mashup-core-1.5.1.jar' files to the
+                'conf' and 'lib' directories respectively.
+            </p>
+
+            <p>2.10. Optional: Use a database tool of your choice* to run the
+                'extracted_logs.sql' file, available in the 'Mashup 1.0 Home' against the
+                'Mashup 1.5 Home\database\WSO2REGISTRY_DB' database, to restore activity
+                logs.
+            </p>
+
+            <p>2.11. Start up and provision the 1.5.x server. The data migration is
+                complete!
+            </p>
+            <br/>
+
+
+            <h2>Performing the Migration by Building the Source</h2>
+
+            <p>If required, you can also obtain the source code for the
+                <a
+                        href="https://wso2.org/repos/wso2/people/channa/migration/export/MetadataExtractor.java">
+                    MetadataExtractor
+                </a>
+                and
+                <a
+                        href="https://wso2.org/repos/wso2/people/channa/migration/import/MigrationInitializer.java">
+                    MigrationInitializer
+                </a>
+                java classes, which are not included in the MigrationTool.zip file and use
+                them to build the migration tools from source.
+            </p>
+
+            <h3>MetaData Export</h3>
+
+            <p>User, Mashup and Activity information is extracted saved into the Mashup
+                Home directory by the 'MetadataExtractor' java class. The source code for
+                this class should be included in a new 'migration' package of the mashup
+                server's core module source and built into a mashup-core java archive. The
+                remaing steps for data extraction are the same.
+            </p>
+
+            <p>The mashup-metadata.xml file contains serialized user information and
+                metadata for all mashups including tags, comments and ratings entered by all
+                users.
+            </p>
+
+            <h3>MetaData Import</h3>
+
+            <p>The 'MigrationInitializer' java class re-creates the users registered in
+                the old instance of the Mashup Server in the new instance and also restores
+                the user profile and mashup metadata. The source code for this class should
+                be included in the 1.5.x source and built into a mashup-core java archive.
+                The remaing steps for data import are the same.
+            </p>
+        </div>
+
+        <p>*You can use the free ij tool that ships with the derby downloadable
+            distribution available at
+            <a
+                    href="http://db.apache.org/derby/">http://db.apache.org/derby/
+            </a>
+            to execute the
+            exported SQL statement.
+        </p>
+
+    </body>
+</html>

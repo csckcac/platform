@@ -1,0 +1,110 @@
+<!--
+  ~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  --><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <body>
+        <p>[<a
+                href="http://wso2.org/downloads/mashup">Download</a>]
+            | [<a href="index_docs.html">Documentation Home</a>] | [<a
+                    href="release_notes.html">Release Note</a>]
+        </p>
+
+        <h1>Documentation Index</h1>
+        <strong>Installation and user guide Guides</strong>
+        <ul>
+            <li>
+                <a href="installation_guide.html">Installation in Standalone mode</a>
+                - Provides an
+                overview of installing WSO2 Mashup Server in
+                Standalone mode
+            </li>
+            <li>
+                <a href="installation_src.html">WSO2 Mashup Server Source Distribution</a>
+                -
+                Provides instructions on how to build the WSO2 Mashup Server using the source
+                distribution
+            </li>
+        </ul>
+        <strong>Administration Guides</strong>
+        <ul>
+            <li>
+                <a href="user_guide.html">Management Console Guide</a>
+                -
+                Describes some of the administrative options of the Management
+                Console
+            </li>
+	    <li>
+                <a href="usermanagement.html">Managing Users and permissions</a>
+                - Describes steps on managing users and user specific permissions
+            </li>
+	    <li>
+                <a href="adminguide.html">Service Management</a>
+                - Provides instructions in managing services and monitoring
+            </li>
+            <li>
+                <a href="keys.html">Changing WSO2 Mashup Server Crypto Keys</a>
+                - Provides
+                instructions on how to change the WSO2 Mashup Server SSL certificate
+            </li>
+	    <li>
+                <a href="securingmashups.html">Securing Mashups</a>
+                - Provides a guide on how to develop secure JS services
+            </li>
+            <li>
+                <a href="proxy_guide.html">Running behind a Proxy</a>
+                - Provides
+                instructions on how to run Mashup Server behind an Apache HTTPD Proxy
+            </li>
+	    <li>
+                <a href="mashup-clustering.html">Clustering Mashup Server</a>
+                - This document
+                describes the Mashup clustering functionality and demonstrates it using
+                examples.
+            </li>
+        </ul>
+
+        <p>
+            <strong>Writing Mashups</strong>
+        </p>
+        <ul>
+            <li>
+                <a href="helloworldservice.html">Writing a hello world service</a>
+                - Provides instructions on how to write an publish a simple mashup service
+            </li>
+            <li>
+                <a href="helloworldclient.html">Writing a Hello World Client</a>
+                - Provides instructions on how to write a client to invoke mashups
+            </li>
+            <li>
+                <a href="annotations.html">Javascript web service annotations</a>
+                - Provides a documentation about available javascript annotations
+            </li>
+            <li>
+                <a href="dataBinding.html">JavaScript Data Binding</a>
+                - Provides documentation for js data binding
+            </li>
+            <li>
+                <a href="restyservices.html">Writing RESTful services</a>
+                - Provides instructions on how to write and publish javascript based RESTful services
+            </li>
+            <li>
+                <a href="quickstart.html">Quick Start Guide</a>
+                - Provides Quick Start Summary of WSO2 Mashup Server from starting the server to writing a mashup
+            </li>
+        </ul>
+
+    </body>
+</html>

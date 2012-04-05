@@ -1,0 +1,150 @@
+<!--
+~ Copyright 2005-2008 WSO2, Inc. (http://wso2.com)
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <link href="css/mashup-docs.css" rel="stylesheet" type="text/css" media="all"/>
+        <link type="text/css" rel="stylesheet" href="css/SyntaxHighlighter.css" media="all"/>
+        <script language="javascript" src="js/shCore.js"></script>
+        <script language="javascript" src="js/shBrushJScript.js"></script>
+        <script language="javascript" src="js/shBrushJava.js"></script>
+        <script language="javascript" src="js/shBrushSql.js"></script>
+        <script language="javascript" src="js/shBrushXml.js"></script>
+    </head>
+
+    <body>
+        <div id="main-content">
+            <h1>Service Lifecycle Support</h1>
+            <p>Service Lifecycle is a way to manage life cycle of a particular mashup
+                you deploy in the WSO2 Mashup Server. For example, let's say a user
+                wants a mashup to start execution as soon as a mashup gets deployed.
+                Such situations may be a good example for the usage of
+                service life cycle.The Service Lifecycle support in the WSO2 Mashup
+                Server is powered by the "init" and "destroy" service level
+                annotations. The function referred to by the "init" annotation will be
+                executed when the particullar mashup is been deployed while
+                the function referred to by the "destroy" annotation will be
+                executed when the particullar mashup is been undeployed. You can have a
+                look at the feedCache mashup that ships as a sample with the WSO2 Mashup Server
+                for an illustration of the usage of these annotations.
+            </p>
+            <p>In addition to the "init" and "destroy" annotation which control what
+                happens when a mashup is deployed or undeployed the Mashup Server
+                provides another usefull annotation called "undispatched". Under normal
+                circumstances when the Mashup Server receives a request it first
+                dispatches the request to the correct service and then to the
+                corresponding operation depending on the information available in the
+                request. There are cases where the Mashup Server would not be able to
+                find the correct operation from the information available in the
+                request. In such cases it would result in a fault been thrown. Users
+                can overcome the above issue by using the " undispatched" annotation.
+                What it basically does is route all undispatched operations that came
+                into that service to this special operation. Please refer the example
+                below for details.
+            </p>
+            <h2 id="httpMethod">Using the init or destroy annotation</h2>
+            <p>The "init" or "destroy" function can be specified in three different
+                ways. They are as follows
+            </p>
+            <ol>
+                <li>Uisng this annotation in the following manner will make the
+                    function you reference reusable within your mashup. Using it in this
+                    manner will also make the referenced init function appear in the WSDL.
+                    For example if you deploy the following mashup, the corresponding WSDL
+                    will have a operation called myInitFunction.
+                    <pre name="code" class="js">
+                        //Because the function referenced by init is not a annonymous fucntion it can be reused in a mashup
+                        this.init=myInitFunction;
+                        function myInitFunction() {
+                            // Do some stuff upon deployment
+                            system.log("init");
+                        }
+                    </pre>
+                </li>
+                <li>Uisng this annotation in the following manner will mean
+                    that you cannot reuse the functionreferenced by the
+                    annotation.
+                    Still using it in this manner will make the
+                    referenced init function
+                    appear in the WSDL. For example if you deploy the following mashup, the
+                    corresponding WSDL will have a operation
+                    calledmyInitFunction.
+
+                    <pre name="code" class="js">
+                        //The function referenced by init cannot be reused in your mashup
+                        this.init = function myInitFunction() {
+                            // Do some stuff upon deployment
+                            system.log("init");
+                        }
+                    </pre>
+                </li>
+                <li>Uisng this annotation in the following manner will mean
+                    that you cannot reuse the function referenced by the
+                    annotation. Furthermore the referenced init function
+                    will not appear in the WSDL.
+                    <pre name="code" class="js">
+                        //The function referenced by init cannot be reused in your mashup
+                        this.init = function () {
+                            // Do some stuff upon deployment
+                            system.log("init");
+                        }
+                    </pre>
+                </li>
+            </ol>
+
+            <h2 id="init">init annotation</h2>
+            <p>The init annotation helps you specify the function that should be
+                executed when a mashup is deployed.
+                <span style="font-weight: bold;">Please
+                    note that using the session host object from within a init function
+                    will not preserve your session</span>.
+                The reason is that the init function is called within the Masup Server and sessions are
+                created when request enter the Mashup Server.
+            </p>
+            <h2 id="destroy">destroy annotation</h2>
+            <p>The destroy annotation helps you specify the function that should be
+                executed when a mashup is undeployed.
+                <span style="font-weight: bold;">Please note that using the
+                    session host object from within a destroy function will not give you
+                    the services session</span>.
+                The reason is that the destroy function is called within the Masup
+                Server
+                and sessions are created when request enter the Mashup Server.
+            </p>
+
+            <h2 id="inputTypes">undispatched annotation</h2>
+            <p>All undispatched
+                operations that came into a particullar service will be routed to
+                the operation reffered to by the undispatched annotation. As the Mashup
+                Server should be able to call this function from the requests it
+                receives using this annotation in the third variant defined above is
+                not allowed. The operation referred to be the undispatched annotation
+                should be avaiable in the WSDL.
+            </p>
+            <pre name="code" class="js">
+                this.undispatched = function undispatchedOperation() {
+                    // Do something here
+                    system.log("undispatched");
+                }
+            </pre>
+        </div>
+        <script language="javascript">
+            dp.SyntaxHighlighter.BloggerMode();
+            dp.SyntaxHighlighter.HighlightAll('code');
+        </script>
+    </body>
+</html>

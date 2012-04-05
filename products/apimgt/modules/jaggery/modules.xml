@@ -1,0 +1,12 @@
+<modules xmlns="http://wso2.org/projects/jaggery/modules.xml">
+    <module name="apistore">
+        <hostObject>
+            <className>org.wso2.carbon.apimgt.hostobjects.APIProviderHostObject</className>
+            <name>APIProvider</name>
+        </hostObject>
+        <hostObject>
+            <className>org.wso2.carbon.apimgt.hostobjects.APIStoreHostObject</className>
+            <name>APIStore</name>
+        </hostObject>
+    </module>
+</modules>

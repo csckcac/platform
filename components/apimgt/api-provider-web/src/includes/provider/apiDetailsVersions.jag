@@ -1,0 +1,16 @@
+<div class="row-fluid well">
+    <div class="span5">
+    <h3>Usage by API Version</h3>
+        <div>
+            <div id="chartVersion1"></div>
+        </div>
+    </div>
+        <div class="span6">
+            <table class="table" id="versionTable">
+                  <tr>
+                    <th>Version</th>
+                    <th>Usage</th>
+                  </tr>
+              </table>
+        </div>
+</div>

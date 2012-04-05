@@ -1,0 +1,3138 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns2="http://ws.wso2.org/dataservice" xmlns:ns1="http://dss.server.bam.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ns0="http://bam.carbon.wso2.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://ws.wso2.org/dataservice">
+    <wsdl:documentation />
+    <wsdl:types>
+        <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://bam.carbon.wso2.org">
+            <xs:element name="selectNamespaceData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="bamXpathId" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="namespaces" type="ns0:namespaces" />
+            <xs:complexType name="namespaces">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="namespaceData" type="ns0:namespaceData" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="namespaceData">
+                <xs:sequence>
+                    <xs:element name="bamId" nillable="true" type="xs:integer" />
+                    <xs:element name="bamPrefix" nillable="true" type="xs:string" />
+                    <xs:element name="bamURI" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="getAllClients">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serverID" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="clients" type="ns0:clients" />
+            <xs:complexType name="clients">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="client" type="ns0:client" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="client">
+                <xs:sequence>
+                    <xs:element name="clientname" nillable="true" type="xs:string" />
+                    <xs:element name="clientuuid" nillable="true" type="xs:string" />
+                    <xs:element name="clientvalue" nillable="true" type="xs:string" />
+                    <xs:element name="clientserverid" nillable="true" type="xs:string" />
+                    <xs:element name="clientbamid" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="getActivity">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="activityKeyId" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="activities" type="ns0:activities" />
+            <xs:complexType name="activities">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="activity" type="ns0:activity" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="activity">
+                <xs:sequence>
+                    <xs:element name="activityKeyId" nillable="true" type="xs:string" />
+                    <xs:element name="name" nillable="true" type="xs:string" />
+                    <xs:element name="description" nillable="true" type="xs:string" />
+                    <xs:element name="activityId" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="getServer">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serverID" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="servers" type="ns0:servers" />
+            <xs:complexType name="servers">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="server" type="ns0:server" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="server">
+                <xs:sequence>
+                    <xs:element name="serverID" nillable="true" type="xs:int" />
+                    <xs:element name="tenentID" nillable="true" type="xs:int" />
+                    <xs:element name="serverType" nillable="true" type="xs:string" />
+                    <xs:element name="serverURL" nillable="true" type="xs:string" />
+                    <xs:element name="serverDesc" nillable="true" type="xs:string" />
+                    <xs:element name="isActive" nillable="true" type="xs:boolean" />
+                    <xs:element name="statCategory" nillable="true" type="xs:int" />
+                    <xs:element name="epr" nillable="true" type="xs:string" />
+                    <xs:element name="subscriptionID" nillable="true" type="xs:string" />
+                    <xs:element name="username" nillable="true" type="xs:string" />
+                    <xs:element name="password" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="getAllActivities">
+                <xs:complexType />
+            </xs:element>
+            <xs:element name="getTenent">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="tenentID" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="tenents" type="ns0:tenents" />
+            <xs:complexType name="tenents">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="tenent" type="ns0:tenent" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="tenent">
+                <xs:sequence>
+                    <xs:element name="tenenetID" nillable="true" type="xs:string" />
+                    <xs:element name="tenentDesc" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="getServersForServerType">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serverType" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getEndpoints">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serverID" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="endpoints" type="ns0:endpoints" />
+            <xs:complexType name="endpoints">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="endpoint" type="ns0:endpoint" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="endpoint">
+                <xs:sequence>
+                    <xs:element name="endpoint" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="getAllServices">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serverID" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="services" type="ns0:services" />
+            <xs:complexType name="services">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="service" type="ns0:service" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="service">
+                <xs:sequence>
+                    <xs:element name="serviceID" nillable="true" type="xs:string" />
+                    <xs:element name="serverID" nillable="true" type="xs:string" />
+                    <xs:element name="serviceName" nillable="true" type="xs:string" />
+                    <xs:element name="serviceDesc" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="getAllOperationsForService">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serviceID" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="operations" type="ns0:operations" />
+            <xs:complexType name="operations">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="operation" type="ns0:operation" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="operation">
+                <xs:sequence>
+                    <xs:element name="operationID" nillable="true" type="xs:string" />
+                    <xs:element name="serviceID" nillable="true" type="xs:string" />
+                    <xs:element name="operationName" nillable="true" type="xs:string" />
+                    <xs:element name="operationDesc" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="getAllXpathData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="bamServerID" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="allXpaths" type="ns0:allXpaths" />
+            <xs:complexType name="allXpaths">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="xpathConfig" type="ns0:xpathConfig" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="xpathConfig">
+                <xs:sequence>
+                    <xs:element name="bamId" nillable="true" type="xs:integer" />
+                    <xs:element name="bamAlias" nillable="true" type="xs:string" />
+                    <xs:element name="bamName" nillable="true" type="xs:string" />
+                    <xs:element name="bamXpath" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="getServerFromURLAndTenantID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serverURL" nillable="true" type="xs:string" />
+                        <xs:element name="tenantID" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getSequences">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serverID" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="sequences" type="ns0:sequences" />
+            <xs:complexType name="sequences">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="sequence" type="ns0:sequence" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="sequence">
+                <xs:sequence>
+                    <xs:element name="sequence" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="getService">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serviceID" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllServers">
+                <xs:complexType />
+            </xs:element>
+            <xs:element name="getActivityForActivityID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="activityId" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="selectXpathData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="bamName" nillable="true" type="xs:string" />
+                        <xs:element name="bamServerId" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="xpaths" type="ns0:xpaths" />
+            <xs:complexType name="xpaths">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="xpathData" type="ns0:xpathData" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="xpathData">
+                <xs:sequence>
+                    <xs:element name="bamId" nillable="true" type="xs:integer" />
+                    <xs:element name="bamAlias" nillable="true" type="xs:string" />
+                    <xs:element name="bamXpath" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="getOperation">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="operationID" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServersForTenant">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="tenantID" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServerFromURL">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serverURL" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOperationFromName">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serviceID" nillable="true" type="xs:int" />
+                        <xs:element name="operationName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllServersWithCategoryForTenent">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="tenentID" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="serversWithCategory" type="ns0:serversWithCategory" />
+            <xs:complexType name="serversWithCategory">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="serverWithCategory" type="ns0:serverWithCategory" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="serverWithCategory">
+                <xs:sequence>
+                    <xs:element name="serverID" nillable="true" type="xs:int" />
+                    <xs:element name="tenentID" nillable="true" type="xs:int" />
+                    <xs:element name="serverType" nillable="true" type="xs:string" />
+                    <xs:element name="serverURL" nillable="true" type="xs:string" />
+                    <xs:element name="serverDesc" nillable="true" type="xs:string" />
+                    <xs:element name="isActive" nillable="true" type="xs:boolean" />
+                    <xs:element name="statCategory" nillable="true" type="xs:int" />
+                    <xs:element name="statCategoryName" nillable="true" type="xs:string" />
+                    <xs:element name="epr" nillable="true" type="xs:string" />
+                    <xs:element name="subscriptionID" nillable="true" type="xs:string" />
+                    <xs:element name="username" nillable="true" type="xs:string" />
+                    <xs:element name="password" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="getServiceForServer">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serverID" nillable="true" type="xs:int" />
+                        <xs:element name="serviceName" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMessageForMessageandOperationandActivity">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="messageId" nillable="true" type="xs:string" />
+                        <xs:element name="operationId" nillable="true" type="xs:int" />
+                        <xs:element name="activityKeyId" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="messages" type="ns0:messages" />
+            <xs:complexType name="messages">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="message" type="ns0:message" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="message">
+                <xs:sequence>
+                    <xs:element name="messageKeyId" nillable="true" type="xs:string" />
+                    <xs:element name="operationId" nillable="true" type="xs:string" />
+                    <xs:element name="messageId" nillable="true" type="xs:string" />
+                    <xs:element name="activityKeyId" nillable="true" type="xs:string" />
+                    <xs:element name="timestamp" nillable="true" type="xs:string" />
+                    <xs:element name="ipAddress" nillable="true" type="xs:string" />
+                    <xs:element name="userAgent" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="getServerFromBAMDB">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serverURL" nillable="true" type="xs:string" />
+                        <xs:element name="tenantID" nillable="true" type="xs:int" />
+                        <xs:element name="serverType" nillable="true" type="xs:string" />
+                        <xs:element name="category" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getProxyServices">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serverID" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="proxyServices" type="ns0:proxyServices" />
+            <xs:complexType name="proxyServices">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="proxyService" type="ns0:proxyService" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="proxyService">
+                <xs:sequence>
+                    <xs:element name="proxyService" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="getAllMessagesForOperationID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="operationId" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMessage">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="messageKeyId" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllMessages">
+                <xs:complexType />
+            </xs:element>
+            <xs:element name="getMessageDataForActivityKeyIDandMessageKeyID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="messageKeyId" nillable="true" type="xs:int" />
+                        <xs:element name="activityKeyId" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="messagedatas" type="ns0:messagedatas" />
+            <xs:complexType name="messagedatas">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="messagedata" type="ns0:messagedata" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="messagedata">
+                <xs:sequence>
+                    <xs:element name="messageDataKeyId" nillable="true" type="xs:string" />
+                    <xs:element name="messageKeyId" nillable="true" type="xs:string" />
+                    <xs:element name="activityKeyId" nillable="true" type="xs:string" />
+                    <xs:element name="timestamp" nillable="true" type="xs:string" />
+                    <xs:element name="direction" nillable="true" type="xs:string" />
+                    <xs:element name="message" nillable="true" type="xs:string" />
+                    <xs:element name="ipAddress" nillable="true" type="xs:string" />
+                    <xs:element name="status" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="getAllMessagesForActivityKeyId">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="activityKeyId" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllServersWithCategory">
+                <xs:complexType />
+            </xs:element>
+            <xs:element name="getAllOperations">
+                <xs:complexType />
+            </xs:element>
+            <xs:element name="getAllTenents">
+                <xs:complexType />
+            </xs:element>
+            <xs:element name="getMessageProperty">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="messageKeyId" nillable="true" type="xs:int" />
+                        <xs:element name="activityKeyId" nillable="true" type="xs:int" />
+                        <xs:element name="key" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="messagepropertiess" type="ns0:messagepropertiess" />
+            <xs:complexType name="messagepropertiess">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="messageproperty" type="ns0:messageproperty" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="messageproperty">
+                <xs:sequence>
+                    <xs:element name="messagePropertyKeyId" nillable="true" type="xs:string" />
+                    <xs:element name="messageKeyId" nillable="true" type="xs:string" />
+                    <xs:element name="activityKeyId" nillable="true" type="xs:string" />
+                    <xs:element name="key" nillable="true" type="xs:string" />
+                    <xs:element name="value" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://dss.server.bam.carbon.wso2.org">
+            <xs:element name="addServer">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="tenentID" nillable="true" type="xs:int" />
+                        <xs:element name="serverType" nillable="true" type="xs:string" />
+                        <xs:element name="serverURL" nillable="true" type="xs:string" />
+                        <xs:element name="serverDesc" nillable="true" type="xs:string" />
+                        <xs:element name="statCategory" nillable="true" type="xs:int" />
+                        <xs:element name="epr" nillable="true" type="xs:string" />
+                        <xs:element name="subscriptionID" nillable="true" type="xs:string" />
+                        <xs:element name="username" nillable="true" type="xs:string" />
+                        <xs:element name="password" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="serverIDs" type="ns1:serverIDs" />
+            <xs:complexType name="serverIDs">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="bamSeverIDval" type="ns1:bamSeverIDval" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="bamSeverIDval">
+                <xs:sequence>
+                    <xs:element name="bamServerIDValue" nillable="true" type="xs:int" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://ws.wso2.org/dataservice">
+            <xs:element name="DataServiceFault" type="xs:string" />
+            <xs:element name="REQUEST_STATUS" type="xs:string" />
+            <xs:element name="deleteOperation">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serviceID" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateMessageStatus">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="messageStatus" nillable="true" type="xs:string" />
+                        <xs:element name="messageDataKeyId" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateMessageProperty">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="propertyValue" nillable="true" type="xs:string" />
+                        <xs:element name="messagePropertyKeyId" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateServerWithSubscription">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serverURL" nillable="true" type="xs:string" />
+                        <xs:element name="serverDesc" nillable="true" type="xs:string" />
+                        <xs:element name="epr" nillable="true" type="xs:string" />
+                        <xs:element name="subscriptionID" nillable="true" type="xs:string" />
+                        <xs:element name="username" nillable="true" type="xs:string" />
+                        <xs:element name="password" nillable="true" type="xs:string" />
+                        <xs:element name="serverID" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addNamespaceData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="bamXpathId" nillable="true" type="xs:int" />
+                        <xs:element name="bamPrefix" nillable="true" type="xs:string" />
+                        <xs:element name="bamURI" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteMessage">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="messageKeyId" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateMessageDump">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="messageBody" nillable="true" type="xs:string" />
+                        <xs:element name="messageDir" nillable="true" type="xs:string" />
+                        <xs:element name="ipAddress" nillable="true" type="xs:string" />
+                        <xs:element name="messageDataKeyId" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteNamespaceData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="bamXpathId" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteTenet">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="tenentID" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteActivity">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="activityKeyId" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteServer">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serverID" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateActivity">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="activityName" nillable="true" type="xs:string" />
+                        <xs:element name="activityDescription" nillable="true" type="xs:string" />
+                        <xs:element name="activityKeyId" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addActivityData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="name" nillable="true" type="xs:string" />
+                        <xs:element name="description" nillable="true" type="xs:string" />
+                        <xs:element name="userDefinedID" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteService">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serviceID" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateServer">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serverURL" nillable="true" type="xs:string" />
+                        <xs:element name="serverDesc" nillable="true" type="xs:string" />
+                        <xs:element name="username" nillable="true" type="xs:string" />
+                        <xs:element name="password" nillable="true" type="xs:string" />
+                        <xs:element name="serverID" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="activateServer">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="subscriptionID" nillable="true" type="xs:string" />
+                        <xs:element name="serverID" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateXpathData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="bamAlias" nillable="true" type="xs:string" />
+                        <xs:element name="bamName" nillable="true" type="xs:string" />
+                        <xs:element name="bamXpath" nillable="true" type="xs:string" />
+                        <xs:element name="bamServerId" nillable="true" type="xs:int" />
+                        <xs:element name="bamId" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addTenent">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="tenentDesc" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addService">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serverID" nillable="true" type="xs:int" />
+                        <xs:element name="serviceName" nillable="true" type="xs:string" />
+                        <xs:element name="serviceDesc" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addXpathData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="bamAlias" nillable="true" type="xs:string" />
+                        <xs:element name="bamName" nillable="true" type="xs:string" />
+                        <xs:element name="bamXpath" nillable="true" type="xs:string" />
+                        <xs:element name="bamServerId" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addOperation">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serviceID" nillable="true" type="xs:int" />
+                        <xs:element name="operationName" nillable="true" type="xs:string" />
+                        <xs:element name="operationDesc" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deactivateServer">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="serverID" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateNamespaceData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="bamXpathId" nillable="true" type="xs:int" />
+                        <xs:element name="bamPrefix" nillable="true" type="xs:string" />
+                        <xs:element name="bamURI" nillable="true" type="xs:string" />
+                        <xs:element name="bamId" nillable="true" type="xs:int" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addMessage">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="operationId" nillable="true" type="xs:int" />
+                        <xs:element name="messageId" nillable="true" type="xs:string" />
+                        <xs:element name="activityKeyId" nillable="true" type="xs:int" />
+                        <xs:element name="timestamp" nillable="true" type="xs:string" />
+                        <xs:element name="ipAddress" nillable="true" type="xs:string" />
+                        <xs:element name="userAgent" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="addServerRequest">
+        <wsdl:part name="parameters" element="ns1:addServer" />
+    </wsdl:message>
+    <wsdl:message name="addServerResponse">
+        <wsdl:part name="parameters" element="ns1:serverIDs" />
+    </wsdl:message>
+    <wsdl:message name="DataServiceFault">
+        <wsdl:part name="parameters" element="ns2:DataServiceFault" />
+    </wsdl:message>
+    <wsdl:message name="addNamespaceDataRequest">
+        <wsdl:part name="parameters" element="ns2:addNamespaceData" />
+    </wsdl:message>
+    <wsdl:message name="deleteActivityRequest">
+        <wsdl:part name="parameters" element="ns2:deleteActivity" />
+    </wsdl:message>
+    <wsdl:message name="getAllClientsRequest">
+        <wsdl:part name="parameters" element="ns0:getAllClients" />
+    </wsdl:message>
+    <wsdl:message name="getAllClientsResponse">
+        <wsdl:part name="parameters" element="ns0:clients" />
+    </wsdl:message>
+    <wsdl:message name="getMessageRequest">
+        <wsdl:part name="parameters" element="ns0:getMessage" />
+    </wsdl:message>
+    <wsdl:message name="getMessageResponse">
+        <wsdl:part name="parameters" element="ns0:messages" />
+    </wsdl:message>
+    <wsdl:message name="updateServerRequest">
+        <wsdl:part name="parameters" element="ns2:updateServer" />
+    </wsdl:message>
+    <wsdl:message name="getServiceForServerRequest">
+        <wsdl:part name="parameters" element="ns0:getServiceForServer" />
+    </wsdl:message>
+    <wsdl:message name="getServiceForServerResponse">
+        <wsdl:part name="parameters" element="ns0:services" />
+    </wsdl:message>
+    <wsdl:message name="addServiceRequest">
+        <wsdl:part name="parameters" element="ns2:addService" />
+    </wsdl:message>
+    <wsdl:message name="deleteServiceRequest">
+        <wsdl:part name="parameters" element="ns2:deleteService" />
+    </wsdl:message>
+    <wsdl:message name="getAllMessagesForActivityKeyIdRequest">
+        <wsdl:part name="parameters" element="ns0:getAllMessagesForActivityKeyId" />
+    </wsdl:message>
+    <wsdl:message name="getAllMessagesForActivityKeyIdResponse">
+        <wsdl:part name="parameters" element="ns0:messages" />
+    </wsdl:message>
+    <wsdl:message name="updateXpathDataRequest">
+        <wsdl:part name="parameters" element="ns2:updateXpathData" />
+    </wsdl:message>
+    <wsdl:message name="addXpathDataRequest">
+        <wsdl:part name="parameters" element="ns2:addXpathData" />
+    </wsdl:message>
+    <wsdl:message name="getActivityRequest">
+        <wsdl:part name="parameters" element="ns0:getActivity" />
+    </wsdl:message>
+    <wsdl:message name="getActivityResponse">
+        <wsdl:part name="parameters" element="ns0:activities" />
+    </wsdl:message>
+    <wsdl:message name="getServerFromBAMDBRequest">
+        <wsdl:part name="parameters" element="ns0:getServerFromBAMDB" />
+    </wsdl:message>
+    <wsdl:message name="getServerFromBAMDBResponse">
+        <wsdl:part name="parameters" element="ns0:servers" />
+    </wsdl:message>
+    <wsdl:message name="addMessageRequest">
+        <wsdl:part name="parameters" element="ns2:addMessage" />
+    </wsdl:message>
+    <wsdl:message name="getActivityForActivityIDRequest">
+        <wsdl:part name="parameters" element="ns0:getActivityForActivityID" />
+    </wsdl:message>
+    <wsdl:message name="getActivityForActivityIDResponse">
+        <wsdl:part name="parameters" element="ns0:activities" />
+    </wsdl:message>
+    <wsdl:message name="getServiceRequest">
+        <wsdl:part name="parameters" element="ns0:getService" />
+    </wsdl:message>
+    <wsdl:message name="getServiceResponse">
+        <wsdl:part name="parameters" element="ns0:services" />
+    </wsdl:message>
+    <wsdl:message name="getMessageDataForActivityKeyIDandMessageKeyIDRequest">
+        <wsdl:part name="parameters" element="ns0:getMessageDataForActivityKeyIDandMessageKeyID" />
+    </wsdl:message>
+    <wsdl:message name="getMessageDataForActivityKeyIDandMessageKeyIDResponse">
+        <wsdl:part name="parameters" element="ns0:messagedatas" />
+    </wsdl:message>
+    <wsdl:message name="addTenentRequest">
+        <wsdl:part name="parameters" element="ns2:addTenent" />
+    </wsdl:message>
+    <wsdl:message name="getAllServersWithCategoryForTenentRequest">
+        <wsdl:part name="parameters" element="ns0:getAllServersWithCategoryForTenent" />
+    </wsdl:message>
+    <wsdl:message name="getAllServersWithCategoryForTenentResponse">
+        <wsdl:part name="parameters" element="ns0:serversWithCategory" />
+    </wsdl:message>
+    <wsdl:message name="getEndpointsRequest">
+        <wsdl:part name="parameters" element="ns0:getEndpoints" />
+    </wsdl:message>
+    <wsdl:message name="getEndpointsResponse">
+        <wsdl:part name="parameters" element="ns0:endpoints" />
+    </wsdl:message>
+    <wsdl:message name="updateServerWithSubscriptionRequest">
+        <wsdl:part name="parameters" element="ns2:updateServerWithSubscription" />
+    </wsdl:message>
+    <wsdl:message name="deleteNamespaceDataRequest">
+        <wsdl:part name="parameters" element="ns2:deleteNamespaceData" />
+    </wsdl:message>
+    <wsdl:message name="getAllServicesRequest">
+        <wsdl:part name="parameters" element="ns0:getAllServices" />
+    </wsdl:message>
+    <wsdl:message name="getAllServicesResponse">
+        <wsdl:part name="parameters" element="ns0:services" />
+    </wsdl:message>
+    <wsdl:message name="getAllServersRequest">
+        <wsdl:part name="parameters" element="ns0:getAllServers" />
+    </wsdl:message>
+    <wsdl:message name="getAllServersResponse">
+        <wsdl:part name="parameters" element="ns0:servers" />
+    </wsdl:message>
+    <wsdl:message name="deleteOperationRequest">
+        <wsdl:part name="parameters" element="ns2:deleteOperation" />
+    </wsdl:message>
+    <wsdl:message name="getProxyServicesRequest">
+        <wsdl:part name="parameters" element="ns0:getProxyServices" />
+    </wsdl:message>
+    <wsdl:message name="getProxyServicesResponse">
+        <wsdl:part name="parameters" element="ns0:proxyServices" />
+    </wsdl:message>
+    <wsdl:message name="updateMessageStatusRequest">
+        <wsdl:part name="parameters" element="ns2:updateMessageStatus" />
+    </wsdl:message>
+    <wsdl:message name="getAllOperationsRequest">
+        <wsdl:part name="parameters" element="ns0:getAllOperations" />
+    </wsdl:message>
+    <wsdl:message name="getAllOperationsResponse">
+        <wsdl:part name="parameters" element="ns0:operations" />
+    </wsdl:message>
+    <wsdl:message name="deactivateServerRequest">
+        <wsdl:part name="parameters" element="ns2:deactivateServer" />
+    </wsdl:message>
+    <wsdl:message name="getServerRequest">
+        <wsdl:part name="parameters" element="ns0:getServer" />
+    </wsdl:message>
+    <wsdl:message name="getServerResponse">
+        <wsdl:part name="parameters" element="ns0:servers" />
+    </wsdl:message>
+    <wsdl:message name="getServerFromURLAndTenantIDRequest">
+        <wsdl:part name="parameters" element="ns0:getServerFromURLAndTenantID" />
+    </wsdl:message>
+    <wsdl:message name="getServerFromURLAndTenantIDResponse">
+        <wsdl:part name="parameters" element="ns0:servers" />
+    </wsdl:message>
+    <wsdl:message name="deleteTenetRequest">
+        <wsdl:part name="parameters" element="ns2:deleteTenet" />
+    </wsdl:message>
+    <wsdl:message name="getTenentRequest">
+        <wsdl:part name="parameters" element="ns0:getTenent" />
+    </wsdl:message>
+    <wsdl:message name="getTenentResponse">
+        <wsdl:part name="parameters" element="ns0:tenents" />
+    </wsdl:message>
+    <wsdl:message name="selectNamespaceDataRequest">
+        <wsdl:part name="parameters" element="ns0:selectNamespaceData" />
+    </wsdl:message>
+    <wsdl:message name="selectNamespaceDataResponse">
+        <wsdl:part name="parameters" element="ns0:namespaces" />
+    </wsdl:message>
+    <wsdl:message name="getMessagePropertyRequest">
+        <wsdl:part name="parameters" element="ns0:getMessageProperty" />
+    </wsdl:message>
+    <wsdl:message name="getMessagePropertyResponse">
+        <wsdl:part name="parameters" element="ns0:messagepropertiess" />
+    </wsdl:message>
+    <wsdl:message name="getAllMessagesForOperationIDRequest">
+        <wsdl:part name="parameters" element="ns0:getAllMessagesForOperationID" />
+    </wsdl:message>
+    <wsdl:message name="getAllMessagesForOperationIDResponse">
+        <wsdl:part name="parameters" element="ns0:messages" />
+    </wsdl:message>
+    <wsdl:message name="updateMessageDumpRequest">
+        <wsdl:part name="parameters" element="ns2:updateMessageDump" />
+    </wsdl:message>
+    <wsdl:message name="getMessageForMessageandOperationandActivityRequest">
+        <wsdl:part name="parameters" element="ns0:getMessageForMessageandOperationandActivity" />
+    </wsdl:message>
+    <wsdl:message name="getMessageForMessageandOperationandActivityResponse">
+        <wsdl:part name="parameters" element="ns0:messages" />
+    </wsdl:message>
+    <wsdl:message name="getAllActivitiesRequest">
+        <wsdl:part name="parameters" element="ns0:getAllActivities" />
+    </wsdl:message>
+    <wsdl:message name="getAllActivitiesResponse">
+        <wsdl:part name="parameters" element="ns0:activities" />
+    </wsdl:message>
+    <wsdl:message name="getServersForTenantRequest">
+        <wsdl:part name="parameters" element="ns0:getServersForTenant" />
+    </wsdl:message>
+    <wsdl:message name="getServersForTenantResponse">
+        <wsdl:part name="parameters" element="ns0:servers" />
+    </wsdl:message>
+    <wsdl:message name="getSequencesRequest">
+        <wsdl:part name="parameters" element="ns0:getSequences" />
+    </wsdl:message>
+    <wsdl:message name="getSequencesResponse">
+        <wsdl:part name="parameters" element="ns0:sequences" />
+    </wsdl:message>
+    <wsdl:message name="getAllTenentsRequest">
+        <wsdl:part name="parameters" element="ns0:getAllTenents" />
+    </wsdl:message>
+    <wsdl:message name="getAllTenentsResponse">
+        <wsdl:part name="parameters" element="ns0:tenents" />
+    </wsdl:message>
+    <wsdl:message name="getAllMessagesRequest">
+        <wsdl:part name="parameters" element="ns0:getAllMessages" />
+    </wsdl:message>
+    <wsdl:message name="getAllMessagesResponse">
+        <wsdl:part name="parameters" element="ns0:messages" />
+    </wsdl:message>
+    <wsdl:message name="activateServerRequest">
+        <wsdl:part name="parameters" element="ns2:activateServer" />
+    </wsdl:message>
+    <wsdl:message name="deleteMessageRequest">
+        <wsdl:part name="parameters" element="ns2:deleteMessage" />
+    </wsdl:message>
+    <wsdl:message name="addOperationRequest">
+        <wsdl:part name="parameters" element="ns2:addOperation" />
+    </wsdl:message>
+    <wsdl:message name="getAllServersWithCategoryRequest">
+        <wsdl:part name="parameters" element="ns0:getAllServersWithCategory" />
+    </wsdl:message>
+    <wsdl:message name="getAllServersWithCategoryResponse">
+        <wsdl:part name="parameters" element="ns0:serversWithCategory" />
+    </wsdl:message>
+    <wsdl:message name="getServerFromURLRequest">
+        <wsdl:part name="parameters" element="ns0:getServerFromURL" />
+    </wsdl:message>
+    <wsdl:message name="getServerFromURLResponse">
+        <wsdl:part name="parameters" element="ns0:servers" />
+    </wsdl:message>
+    <wsdl:message name="selectXpathDataRequest">
+        <wsdl:part name="parameters" element="ns0:selectXpathData" />
+    </wsdl:message>
+    <wsdl:message name="selectXpathDataResponse">
+        <wsdl:part name="parameters" element="ns0:xpaths" />
+    </wsdl:message>
+    <wsdl:message name="updateMessagePropertyRequest">
+        <wsdl:part name="parameters" element="ns2:updateMessageProperty" />
+    </wsdl:message>
+    <wsdl:message name="updateActivityRequest">
+        <wsdl:part name="parameters" element="ns2:updateActivity" />
+    </wsdl:message>
+    <wsdl:message name="getAllOperationsForServiceRequest">
+        <wsdl:part name="parameters" element="ns0:getAllOperationsForService" />
+    </wsdl:message>
+    <wsdl:message name="getAllOperationsForServiceResponse">
+        <wsdl:part name="parameters" element="ns0:operations" />
+    </wsdl:message>
+    <wsdl:message name="getOperationRequest">
+        <wsdl:part name="parameters" element="ns0:getOperation" />
+    </wsdl:message>
+    <wsdl:message name="getOperationResponse">
+        <wsdl:part name="parameters" element="ns0:operations" />
+    </wsdl:message>
+    <wsdl:message name="addActivityDataRequest">
+        <wsdl:part name="parameters" element="ns2:addActivityData" />
+    </wsdl:message>
+    <wsdl:message name="updateNamespaceDataRequest">
+        <wsdl:part name="parameters" element="ns2:updateNamespaceData" />
+    </wsdl:message>
+    <wsdl:message name="getServersForServerTypeRequest">
+        <wsdl:part name="parameters" element="ns0:getServersForServerType" />
+    </wsdl:message>
+    <wsdl:message name="getServersForServerTypeResponse">
+        <wsdl:part name="parameters" element="ns0:servers" />
+    </wsdl:message>
+    <wsdl:message name="deleteServerRequest">
+        <wsdl:part name="parameters" element="ns2:deleteServer" />
+    </wsdl:message>
+    <wsdl:message name="getOperationFromNameRequest">
+        <wsdl:part name="parameters" element="ns0:getOperationFromName" />
+    </wsdl:message>
+    <wsdl:message name="getOperationFromNameResponse">
+        <wsdl:part name="parameters" element="ns0:operations" />
+    </wsdl:message>
+    <wsdl:message name="getAllXpathDataRequest">
+        <wsdl:part name="parameters" element="ns0:getAllXpathData" />
+    </wsdl:message>
+    <wsdl:message name="getAllXpathDataResponse">
+        <wsdl:part name="parameters" element="ns0:allXpaths" />
+    </wsdl:message>
+    <wsdl:portType name="BAMConfigurationDSPortType">
+        <wsdl:operation name="addServer">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:addServerRequest" wsaw:Action="urn:addServer" />
+            <wsdl:output message="ns2:addServerResponse" wsaw:Action="urn:addServerResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:addServerDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="addNamespaceData">
+            <wsdl:documentation>This operation adds data corresponds to a particular namespace.</wsdl:documentation>
+            <wsdl:input message="ns2:addNamespaceDataRequest" wsaw:Action="urn:addNamespaceData" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:addNamespaceDataDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="deleteActivity">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:deleteActivityRequest" wsaw:Action="urn:deleteActivity" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:deleteActivityDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getAllClients">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getAllClientsRequest" wsaw:Action="urn:getAllClients" />
+            <wsdl:output message="ns2:getAllClientsResponse" wsaw:Action="urn:getAllClientsResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getAllClientsDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getMessage">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getMessageRequest" wsaw:Action="urn:getMessage" />
+            <wsdl:output message="ns2:getMessageResponse" wsaw:Action="urn:getMessageResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getMessageDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="updateServer">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:updateServerRequest" wsaw:Action="urn:updateServer" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:updateServerDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getServiceForServer">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getServiceForServerRequest" wsaw:Action="urn:getServiceForServer" />
+            <wsdl:output message="ns2:getServiceForServerResponse" wsaw:Action="urn:getServiceForServerResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getServiceForServerDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="addService">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:addServiceRequest" wsaw:Action="urn:addService" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:addServiceDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="deleteService">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:deleteServiceRequest" wsaw:Action="urn:deleteService" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:deleteServiceDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getAllMessagesForActivityKeyId">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getAllMessagesForActivityKeyIdRequest" wsaw:Action="urn:getAllMessagesForActivityKeyId" />
+            <wsdl:output message="ns2:getAllMessagesForActivityKeyIdResponse" wsaw:Action="urn:getAllMessagesForActivityKeyIdResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getAllMessagesForActivityKeyIdDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="updateXpathData">
+            <wsdl:documentation>This operation updates and existing xpath record with some new set of values.</wsdl:documentation>
+            <wsdl:input message="ns2:updateXpathDataRequest" wsaw:Action="urn:updateXpathData" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:updateXpathDataDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="addXpathData">
+            <wsdl:documentation>This operation adds details corresponds to a particular xpath to the table xpath.</wsdl:documentation>
+            <wsdl:input message="ns2:addXpathDataRequest" wsaw:Action="urn:addXpathData" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:addXpathDataDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getActivity">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getActivityRequest" wsaw:Action="urn:getActivity" />
+            <wsdl:output message="ns2:getActivityResponse" wsaw:Action="urn:getActivityResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getActivityDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getServerFromBAMDB">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getServerFromBAMDBRequest" wsaw:Action="urn:getServerFromBAMDB" />
+            <wsdl:output message="ns2:getServerFromBAMDBResponse" wsaw:Action="urn:getServerFromBAMDBResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getServerFromBAMDBDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="addMessage">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:addMessageRequest" wsaw:Action="urn:addMessage" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:addMessageDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getActivityForActivityID">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getActivityForActivityIDRequest" wsaw:Action="urn:getActivityForActivityID" />
+            <wsdl:output message="ns2:getActivityForActivityIDResponse" wsaw:Action="urn:getActivityForActivityIDResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getActivityForActivityIDDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getService">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getServiceRequest" wsaw:Action="urn:getService" />
+            <wsdl:output message="ns2:getServiceResponse" wsaw:Action="urn:getServiceResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getServiceDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getMessageDataForActivityKeyIDandMessageKeyID">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getMessageDataForActivityKeyIDandMessageKeyIDRequest" wsaw:Action="urn:getMessageDataForActivityKeyIDandMessageKeyID" />
+            <wsdl:output message="ns2:getMessageDataForActivityKeyIDandMessageKeyIDResponse" wsaw:Action="urn:getMessageDataForActivityKeyIDandMessageKeyIDResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getMessageDataForActivityKeyIDandMessageKeyIDDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="addTenent">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:addTenentRequest" wsaw:Action="urn:addTenent" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:addTenentDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getAllServersWithCategoryForTenent">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getAllServersWithCategoryForTenentRequest" wsaw:Action="urn:getAllServersWithCategoryForTenent" />
+            <wsdl:output message="ns2:getAllServersWithCategoryForTenentResponse" wsaw:Action="urn:getAllServersWithCategoryForTenentResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getAllServersWithCategoryForTenentDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getEndpoints">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getEndpointsRequest" wsaw:Action="urn:getEndpoints" />
+            <wsdl:output message="ns2:getEndpointsResponse" wsaw:Action="urn:getEndpointsResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getEndpointsDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="updateServerWithSubscription">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:updateServerWithSubscriptionRequest" wsaw:Action="urn:updateServerWithSubscription" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:updateServerWithSubscriptionDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="deleteNamespaceData">
+            <wsdl:documentation>This operation deletes namespaces belonging to a particular xpath configuration.</wsdl:documentation>
+            <wsdl:input message="ns2:deleteNamespaceDataRequest" wsaw:Action="urn:deleteNamespaceData" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:deleteNamespaceDataDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getAllServices">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getAllServicesRequest" wsaw:Action="urn:getAllServices" />
+            <wsdl:output message="ns2:getAllServicesResponse" wsaw:Action="urn:getAllServicesResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getAllServicesDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getAllServers">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getAllServersRequest" wsaw:Action="urn:getAllServers" />
+            <wsdl:output message="ns2:getAllServersResponse" wsaw:Action="urn:getAllServersResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getAllServersDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="deleteOperation">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:deleteOperationRequest" wsaw:Action="urn:deleteOperation" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:deleteOperationDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getProxyServices">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getProxyServicesRequest" wsaw:Action="urn:getProxyServices" />
+            <wsdl:output message="ns2:getProxyServicesResponse" wsaw:Action="urn:getProxyServicesResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getProxyServicesDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="updateMessageStatus">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:updateMessageStatusRequest" wsaw:Action="urn:updateMessageStatus" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:updateMessageStatusDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getAllOperations">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getAllOperationsRequest" wsaw:Action="urn:getAllOperations" />
+            <wsdl:output message="ns2:getAllOperationsResponse" wsaw:Action="urn:getAllOperationsResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getAllOperationsDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="deactivateServer">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:deactivateServerRequest" wsaw:Action="urn:deactivateServer" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:deactivateServerDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getServer">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getServerRequest" wsaw:Action="urn:getServer" />
+            <wsdl:output message="ns2:getServerResponse" wsaw:Action="urn:getServerResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getServerDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getServerFromURLAndTenantID">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getServerFromURLAndTenantIDRequest" wsaw:Action="urn:getServerFromURLAndTenantID" />
+            <wsdl:output message="ns2:getServerFromURLAndTenantIDResponse" wsaw:Action="urn:getServerFromURLAndTenantIDResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getServerFromURLAndTenantIDDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="deleteTenet">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:deleteTenetRequest" wsaw:Action="urn:deleteTenet" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:deleteTenetDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getTenent">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getTenentRequest" wsaw:Action="urn:getTenent" />
+            <wsdl:output message="ns2:getTenentResponse" wsaw:Action="urn:getTenentResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getTenentDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="selectNamespaceData">
+            <wsdl:documentation>This operation retrieves BAM_ID, BAM_PREFIX, BAM_URI associated with a particular BAM_XPATH_ID.</wsdl:documentation>
+            <wsdl:input message="ns2:selectNamespaceDataRequest" wsaw:Action="urn:selectNamespaceData" />
+            <wsdl:output message="ns2:selectNamespaceDataResponse" wsaw:Action="urn:selectNamespaceDataResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:selectNamespaceDataDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getMessageProperty">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getMessagePropertyRequest" wsaw:Action="urn:getMessageProperty" />
+            <wsdl:output message="ns2:getMessagePropertyResponse" wsaw:Action="urn:getMessagePropertyResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getMessagePropertyDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getAllMessagesForOperationID">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getAllMessagesForOperationIDRequest" wsaw:Action="urn:getAllMessagesForOperationID" />
+            <wsdl:output message="ns2:getAllMessagesForOperationIDResponse" wsaw:Action="urn:getAllMessagesForOperationIDResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getAllMessagesForOperationIDDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="updateMessageDump">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:updateMessageDumpRequest" wsaw:Action="urn:updateMessageDump" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:updateMessageDumpDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getMessageForMessageandOperationandActivity">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getMessageForMessageandOperationandActivityRequest" wsaw:Action="urn:getMessageForMessageandOperationandActivity" />
+            <wsdl:output message="ns2:getMessageForMessageandOperationandActivityResponse" wsaw:Action="urn:getMessageForMessageandOperationandActivityResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getMessageForMessageandOperationandActivityDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getAllActivities">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getAllActivitiesRequest" wsaw:Action="urn:getAllActivities" />
+            <wsdl:output message="ns2:getAllActivitiesResponse" wsaw:Action="urn:getAllActivitiesResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getAllActivitiesDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getServersForTenant">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getServersForTenantRequest" wsaw:Action="urn:getServersForTenant" />
+            <wsdl:output message="ns2:getServersForTenantResponse" wsaw:Action="urn:getServersForTenantResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getServersForTenantDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getSequences">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getSequencesRequest" wsaw:Action="urn:getSequences" />
+            <wsdl:output message="ns2:getSequencesResponse" wsaw:Action="urn:getSequencesResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getSequencesDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getAllTenents">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getAllTenentsRequest" wsaw:Action="urn:getAllTenents" />
+            <wsdl:output message="ns2:getAllTenentsResponse" wsaw:Action="urn:getAllTenentsResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getAllTenentsDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getAllMessages">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getAllMessagesRequest" wsaw:Action="urn:getAllMessages" />
+            <wsdl:output message="ns2:getAllMessagesResponse" wsaw:Action="urn:getAllMessagesResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getAllMessagesDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="activateServer">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:activateServerRequest" wsaw:Action="urn:activateServer" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:activateServerDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="deleteMessage">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:deleteMessageRequest" wsaw:Action="urn:deleteMessage" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:deleteMessageDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="addOperation">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:addOperationRequest" wsaw:Action="urn:addOperation" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:addOperationDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getAllServersWithCategory">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getAllServersWithCategoryRequest" wsaw:Action="urn:getAllServersWithCategory" />
+            <wsdl:output message="ns2:getAllServersWithCategoryResponse" wsaw:Action="urn:getAllServersWithCategoryResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getAllServersWithCategoryDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getServerFromURL">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getServerFromURLRequest" wsaw:Action="urn:getServerFromURL" />
+            <wsdl:output message="ns2:getServerFromURLResponse" wsaw:Action="urn:getServerFromURLResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getServerFromURLDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="selectXpathData">
+            <wsdl:documentation>This operation retrieves BAM_ID, BAM_ALIAS, BAM_XPATH from the table BAM_XPATH corresponds to a given BAM_NAME and BAM_SERVER_ID.</wsdl:documentation>
+            <wsdl:input message="ns2:selectXpathDataRequest" wsaw:Action="urn:selectXpathData" />
+            <wsdl:output message="ns2:selectXpathDataResponse" wsaw:Action="urn:selectXpathDataResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:selectXpathDataDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="updateMessageProperty">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:updateMessagePropertyRequest" wsaw:Action="urn:updateMessageProperty" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:updateMessagePropertyDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="updateActivity">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:updateActivityRequest" wsaw:Action="urn:updateActivity" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:updateActivityDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getAllOperationsForService">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getAllOperationsForServiceRequest" wsaw:Action="urn:getAllOperationsForService" />
+            <wsdl:output message="ns2:getAllOperationsForServiceResponse" wsaw:Action="urn:getAllOperationsForServiceResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getAllOperationsForServiceDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getOperation">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getOperationRequest" wsaw:Action="urn:getOperation" />
+            <wsdl:output message="ns2:getOperationResponse" wsaw:Action="urn:getOperationResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getOperationDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="addActivityData">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:addActivityDataRequest" wsaw:Action="urn:addActivityData" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:addActivityDataDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="updateNamespaceData">
+            <wsdl:documentation>This operation updates data corresponds to a particular namespace with a given set of new data.</wsdl:documentation>
+            <wsdl:input message="ns2:updateNamespaceDataRequest" wsaw:Action="urn:updateNamespaceData" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:updateNamespaceDataDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getServersForServerType">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getServersForServerTypeRequest" wsaw:Action="urn:getServersForServerType" />
+            <wsdl:output message="ns2:getServersForServerTypeResponse" wsaw:Action="urn:getServersForServerTypeResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getServersForServerTypeDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="deleteServer">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:deleteServerRequest" wsaw:Action="urn:deleteServer" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:deleteServerDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getOperationFromName">
+            <wsdl:documentation />
+            <wsdl:input message="ns2:getOperationFromNameRequest" wsaw:Action="urn:getOperationFromName" />
+            <wsdl:output message="ns2:getOperationFromNameResponse" wsaw:Action="urn:getOperationFromNameResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getOperationFromNameDataServiceFault" />
+        </wsdl:operation>
+        <wsdl:operation name="getAllXpathData">
+            <wsdl:documentation>This operation retrieves all xpath configurations from BAM_XPATH.</wsdl:documentation>
+            <wsdl:input message="ns2:getAllXpathDataRequest" wsaw:Action="urn:getAllXpathData" />
+            <wsdl:output message="ns2:getAllXpathDataResponse" wsaw:Action="urn:getAllXpathDataResponse" />
+            <wsdl:fault message="ns2:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:getAllXpathDataDataServiceFault" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="BAMConfigurationDSSOAP11Binding" type="ns2:BAMConfigurationDSPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="addServer">
+            <soap:operation soapAction="urn:addServer" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addNamespaceData">
+            <soap:operation soapAction="urn:addNamespaceData" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteActivity">
+            <soap:operation soapAction="urn:deleteActivity" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllClients">
+            <soap:operation soapAction="urn:getAllClients" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getMessage">
+            <soap:operation soapAction="urn:getMessage" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateServer">
+            <soap:operation soapAction="urn:updateServer" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceForServer">
+            <soap:operation soapAction="urn:getServiceForServer" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addService">
+            <soap:operation soapAction="urn:addService" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteService">
+            <soap:operation soapAction="urn:deleteService" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllMessagesForActivityKeyId">
+            <soap:operation soapAction="urn:getAllMessagesForActivityKeyId" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateXpathData">
+            <soap:operation soapAction="urn:updateXpathData" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addXpathData">
+            <soap:operation soapAction="urn:addXpathData" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getActivity">
+            <soap:operation soapAction="urn:getActivity" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServerFromBAMDB">
+            <soap:operation soapAction="urn:getServerFromBAMDB" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addMessage">
+            <soap:operation soapAction="urn:addMessage" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getActivityForActivityID">
+            <soap:operation soapAction="urn:getActivityForActivityID" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getService">
+            <soap:operation soapAction="urn:getService" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getMessageDataForActivityKeyIDandMessageKeyID">
+            <soap:operation soapAction="urn:getMessageDataForActivityKeyIDandMessageKeyID" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addTenent">
+            <soap:operation soapAction="urn:addTenent" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllServersWithCategoryForTenent">
+            <soap:operation soapAction="urn:getAllServersWithCategoryForTenent" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getEndpoints">
+            <soap:operation soapAction="urn:getEndpoints" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateServerWithSubscription">
+            <soap:operation soapAction="urn:updateServerWithSubscription" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteNamespaceData">
+            <soap:operation soapAction="urn:deleteNamespaceData" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllServices">
+            <soap:operation soapAction="urn:getAllServices" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllServers">
+            <soap:operation soapAction="urn:getAllServers" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteOperation">
+            <soap:operation soapAction="urn:deleteOperation" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getProxyServices">
+            <soap:operation soapAction="urn:getProxyServices" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateMessageStatus">
+            <soap:operation soapAction="urn:updateMessageStatus" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllOperations">
+            <soap:operation soapAction="urn:getAllOperations" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deactivateServer">
+            <soap:operation soapAction="urn:deactivateServer" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServer">
+            <soap:operation soapAction="urn:getServer" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServerFromURLAndTenantID">
+            <soap:operation soapAction="urn:getServerFromURLAndTenantID" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteTenet">
+            <soap:operation soapAction="urn:deleteTenet" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getTenent">
+            <soap:operation soapAction="urn:getTenent" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="selectNamespaceData">
+            <soap:operation soapAction="urn:selectNamespaceData" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getMessageProperty">
+            <soap:operation soapAction="urn:getMessageProperty" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllMessagesForOperationID">
+            <soap:operation soapAction="urn:getAllMessagesForOperationID" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateMessageDump">
+            <soap:operation soapAction="urn:updateMessageDump" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getMessageForMessageandOperationandActivity">
+            <soap:operation soapAction="urn:getMessageForMessageandOperationandActivity" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllActivities">
+            <soap:operation soapAction="urn:getAllActivities" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServersForTenant">
+            <soap:operation soapAction="urn:getServersForTenant" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getSequences">
+            <soap:operation soapAction="urn:getSequences" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllTenents">
+            <soap:operation soapAction="urn:getAllTenents" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllMessages">
+            <soap:operation soapAction="urn:getAllMessages" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="activateServer">
+            <soap:operation soapAction="urn:activateServer" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteMessage">
+            <soap:operation soapAction="urn:deleteMessage" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addOperation">
+            <soap:operation soapAction="urn:addOperation" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllServersWithCategory">
+            <soap:operation soapAction="urn:getAllServersWithCategory" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServerFromURL">
+            <soap:operation soapAction="urn:getServerFromURL" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="selectXpathData">
+            <soap:operation soapAction="urn:selectXpathData" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateMessageProperty">
+            <soap:operation soapAction="urn:updateMessageProperty" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateActivity">
+            <soap:operation soapAction="urn:updateActivity" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllOperationsForService">
+            <soap:operation soapAction="urn:getAllOperationsForService" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getOperation">
+            <soap:operation soapAction="urn:getOperation" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addActivityData">
+            <soap:operation soapAction="urn:addActivityData" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateNamespaceData">
+            <soap:operation soapAction="urn:updateNamespaceData" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServersForServerType">
+            <soap:operation soapAction="urn:getServersForServerType" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteServer">
+            <soap:operation soapAction="urn:deleteServer" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationFromName">
+            <soap:operation soapAction="urn:getOperationFromName" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllXpathData">
+            <soap:operation soapAction="urn:getAllXpathData" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="BAMConfigurationDSSOAP12Binding" type="ns2:BAMConfigurationDSPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="addServer">
+            <soap12:operation soapAction="urn:addServer" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addNamespaceData">
+            <soap12:operation soapAction="urn:addNamespaceData" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteActivity">
+            <soap12:operation soapAction="urn:deleteActivity" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllClients">
+            <soap12:operation soapAction="urn:getAllClients" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getMessage">
+            <soap12:operation soapAction="urn:getMessage" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateServer">
+            <soap12:operation soapAction="urn:updateServer" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceForServer">
+            <soap12:operation soapAction="urn:getServiceForServer" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addService">
+            <soap12:operation soapAction="urn:addService" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteService">
+            <soap12:operation soapAction="urn:deleteService" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllMessagesForActivityKeyId">
+            <soap12:operation soapAction="urn:getAllMessagesForActivityKeyId" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateXpathData">
+            <soap12:operation soapAction="urn:updateXpathData" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addXpathData">
+            <soap12:operation soapAction="urn:addXpathData" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getActivity">
+            <soap12:operation soapAction="urn:getActivity" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServerFromBAMDB">
+            <soap12:operation soapAction="urn:getServerFromBAMDB" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addMessage">
+            <soap12:operation soapAction="urn:addMessage" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getActivityForActivityID">
+            <soap12:operation soapAction="urn:getActivityForActivityID" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getService">
+            <soap12:operation soapAction="urn:getService" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getMessageDataForActivityKeyIDandMessageKeyID">
+            <soap12:operation soapAction="urn:getMessageDataForActivityKeyIDandMessageKeyID" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addTenent">
+            <soap12:operation soapAction="urn:addTenent" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllServersWithCategoryForTenent">
+            <soap12:operation soapAction="urn:getAllServersWithCategoryForTenent" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getEndpoints">
+            <soap12:operation soapAction="urn:getEndpoints" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateServerWithSubscription">
+            <soap12:operation soapAction="urn:updateServerWithSubscription" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteNamespaceData">
+            <soap12:operation soapAction="urn:deleteNamespaceData" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllServices">
+            <soap12:operation soapAction="urn:getAllServices" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllServers">
+            <soap12:operation soapAction="urn:getAllServers" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteOperation">
+            <soap12:operation soapAction="urn:deleteOperation" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getProxyServices">
+            <soap12:operation soapAction="urn:getProxyServices" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateMessageStatus">
+            <soap12:operation soapAction="urn:updateMessageStatus" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllOperations">
+            <soap12:operation soapAction="urn:getAllOperations" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deactivateServer">
+            <soap12:operation soapAction="urn:deactivateServer" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServer">
+            <soap12:operation soapAction="urn:getServer" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServerFromURLAndTenantID">
+            <soap12:operation soapAction="urn:getServerFromURLAndTenantID" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteTenet">
+            <soap12:operation soapAction="urn:deleteTenet" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getTenent">
+            <soap12:operation soapAction="urn:getTenent" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="selectNamespaceData">
+            <soap12:operation soapAction="urn:selectNamespaceData" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getMessageProperty">
+            <soap12:operation soapAction="urn:getMessageProperty" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllMessagesForOperationID">
+            <soap12:operation soapAction="urn:getAllMessagesForOperationID" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateMessageDump">
+            <soap12:operation soapAction="urn:updateMessageDump" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getMessageForMessageandOperationandActivity">
+            <soap12:operation soapAction="urn:getMessageForMessageandOperationandActivity" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllActivities">
+            <soap12:operation soapAction="urn:getAllActivities" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServersForTenant">
+            <soap12:operation soapAction="urn:getServersForTenant" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getSequences">
+            <soap12:operation soapAction="urn:getSequences" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllTenents">
+            <soap12:operation soapAction="urn:getAllTenents" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllMessages">
+            <soap12:operation soapAction="urn:getAllMessages" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="activateServer">
+            <soap12:operation soapAction="urn:activateServer" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteMessage">
+            <soap12:operation soapAction="urn:deleteMessage" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addOperation">
+            <soap12:operation soapAction="urn:addOperation" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllServersWithCategory">
+            <soap12:operation soapAction="urn:getAllServersWithCategory" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServerFromURL">
+            <soap12:operation soapAction="urn:getServerFromURL" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="selectXpathData">
+            <soap12:operation soapAction="urn:selectXpathData" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateMessageProperty">
+            <soap12:operation soapAction="urn:updateMessageProperty" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateActivity">
+            <soap12:operation soapAction="urn:updateActivity" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllOperationsForService">
+            <soap12:operation soapAction="urn:getAllOperationsForService" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getOperation">
+            <soap12:operation soapAction="urn:getOperation" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addActivityData">
+            <soap12:operation soapAction="urn:addActivityData" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateNamespaceData">
+            <soap12:operation soapAction="urn:updateNamespaceData" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServersForServerType">
+            <soap12:operation soapAction="urn:getServersForServerType" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteServer">
+            <soap12:operation soapAction="urn:deleteServer" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationFromName">
+            <soap12:operation soapAction="urn:getOperationFromName" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getAllXpathData">
+            <soap12:operation soapAction="urn:getAllXpathData" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="DataServiceFault">
+                <soap12:fault use="literal" name="DataServiceFault" />
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="BAMConfigurationDSHttpBinding" type="ns2:BAMConfigurationDSPortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="addServer">
+            <http:operation location="addServer" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addNamespaceData">
+            <http:operation location="addNamespaceData" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="deleteActivity">
+            <http:operation location="deleteActivity" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getAllClients">
+            <http:operation location="getAllClients" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMessage">
+            <http:operation location="getMessage" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateServer">
+            <http:operation location="updateServer" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceForServer">
+            <http:operation location="getServiceForServer" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addService">
+            <http:operation location="addService" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="deleteService">
+            <http:operation location="deleteService" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getAllMessagesForActivityKeyId">
+            <http:operation location="getAllMessagesForActivityKeyId" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateXpathData">
+            <http:operation location="updateXpathData" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addXpathData">
+            <http:operation location="addXpathData" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getActivity">
+            <http:operation location="getActivity" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServerFromBAMDB">
+            <http:operation location="getServerFromBAMDB" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addMessage">
+            <http:operation location="addMessage" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getActivityForActivityID">
+            <http:operation location="getActivityForActivityID" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getService">
+            <http:operation location="getService" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMessageDataForActivityKeyIDandMessageKeyID">
+            <http:operation location="getMessageDataForActivityKeyIDandMessageKeyID" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addTenent">
+            <http:operation location="addTenent" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getAllServersWithCategoryForTenent">
+            <http:operation location="getAllServersWithCategoryForTenent" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getEndpoints">
+            <http:operation location="getEndpoints" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateServerWithSubscription">
+            <http:operation location="updateServerWithSubscription" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="deleteNamespaceData">
+            <http:operation location="deleteNamespaceData" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getAllServices">
+            <http:operation location="getAllServices" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAllServers">
+            <http:operation location="getAllServers" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteOperation">
+            <http:operation location="deleteOperation" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getProxyServices">
+            <http:operation location="getProxyServices" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateMessageStatus">
+            <http:operation location="updateMessageStatus" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getAllOperations">
+            <http:operation location="getAllOperations" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deactivateServer">
+            <http:operation location="deactivateServer" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getServer">
+            <http:operation location="getServer" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServerFromURLAndTenantID">
+            <http:operation location="getServerFromURLAndTenantID" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteTenet">
+            <http:operation location="deleteTenet" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getTenent">
+            <http:operation location="getTenent" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="selectNamespaceData">
+            <http:operation location="selectNamespaceData" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getMessageProperty">
+            <http:operation location="getMessageProperty" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAllMessagesForOperationID">
+            <http:operation location="getAllMessagesForOperationID" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateMessageDump">
+            <http:operation location="updateMessageDump" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getMessageForMessageandOperationandActivity">
+            <http:operation location="getMessageForMessageandOperationandActivity" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAllActivities">
+            <http:operation location="getAllActivities" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServersForTenant">
+            <http:operation location="getServersForTenant" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getSequences">
+            <http:operation location="getSequences" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAllTenents">
+            <http:operation location="getAllTenents" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAllMessages">
+            <http:operation location="getAllMessages" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="activateServer">
+            <http:operation location="activateServer" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="deleteMessage">
+            <http:operation location="deleteMessage" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="addOperation">
+            <http:operation location="addOperation" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getAllServersWithCategory">
+            <http:operation location="getAllServersWithCategory" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getServerFromURL">
+            <http:operation location="getServerFromURL" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="selectXpathData">
+            <http:operation location="selectXpathData" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateMessageProperty">
+            <http:operation location="updateMessageProperty" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="updateActivity">
+            <http:operation location="updateActivity" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getAllOperationsForService">
+            <http:operation location="getAllOperationsForService" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getOperation">
+            <http:operation location="getOperation" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addActivityData">
+            <http:operation location="addActivityData" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="updateNamespaceData">
+            <http:operation location="updateNamespaceData" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getServersForServerType">
+            <http:operation location="getServersForServerType" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteServer">
+            <http:operation location="deleteServer" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getOperationFromName">
+            <http:operation location="getOperationFromName" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAllXpathData">
+            <http:operation location="getAllXpathData" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="BAMConfigurationDS">
+        <wsdl:port name="SOAP11Endpoint" binding="ns2:BAMConfigurationDSSOAP11Binding">
+            <soap:address location="http://10.100.0.151:9763/services/BAMConfigurationDS.SOAP11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="SecureSOAP11Endpoint" binding="ns2:BAMConfigurationDSSOAP11Binding">
+            <soap:address location="https://10.100.0.151:9443/services/BAMConfigurationDS.SecureSOAP11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="SecureSOAP12Endpoint" binding="ns2:BAMConfigurationDSSOAP12Binding">
+            <soap12:address location="https://10.100.0.151:9443/services/BAMConfigurationDS.SecureSOAP12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="SOAP12Endpoint" binding="ns2:BAMConfigurationDSSOAP12Binding">
+            <soap12:address location="http://10.100.0.151:9763/services/BAMConfigurationDS.SOAP12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="HTTPEndpoint" binding="ns2:BAMConfigurationDSHttpBinding">
+            <http:address location="http://10.100.0.151:9763/services/BAMConfigurationDS.HTTPEndpoint/" />
+        </wsdl:port>
+        <wsdl:port name="SecureHTTPEndpoint" binding="ns2:BAMConfigurationDSHttpBinding">
+            <http:address location="https://10.100.0.151:9443/services/BAMConfigurationDS.SecureHTTPEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

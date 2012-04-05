@@ -1,0 +1,12 @@
+<resource xmlns="http://ws.apache.org/ns/synapse" uri-template="[1]" methods="[2]" >
+		    <inSequence>
+		    	<send>
+				<endpoint name="APIEndpoint" xmlns="http://ws.apache.org/ns/synapse">
+					<address uri="[3]"  />
+				</endpoint>
+			</send>
+		    </inSequence>
+		    <outSequence>
+		    	<send />
+		    </outSequence>
+</resource>

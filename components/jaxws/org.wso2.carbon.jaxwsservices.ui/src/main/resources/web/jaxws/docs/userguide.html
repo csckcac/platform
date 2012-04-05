@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<html><head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"></meta>
+  <title>JAX-WS Service - User Guide</title>
+  <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all" />
+</head>
+<body>
+<h1>Deploying the JAX-WS Service</h1>
+
+
+
+<p>The WSO2 SOA platform provides a JAX-WS component to deploy JAX-WS
+annotated .jar files as Web services. It is extremely simple, and there is no need
+to write services.xml files. You have to write your web service class (just
+like a POJO) and then annotate it using JAX-WS annotations. You can then
+deploy it as a web service simply by creating a .jar file, which includes your
+service class. </p>
+
+<p></p>
+
+<h2>Writing a Simple Annotated Web Service</h2>
+
+<p>First write your Web service logic as follows.</p>
+
+<p><strong>public class ExampleService {</strong></p>
+
+<p><strong>public String reverse(String input) {</strong></p>
+
+<p><strong>StringBuffer buff = new StringBuffer();</strong></p>
+
+<p><strong>for (int i=input.length()-1; i&gt;=0; i--) {</strong></p>
+
+<p><strong>buff.append(input.charAt(i));</strong></p>
+
+<p><strong>}</strong></p>
+
+<p><strong>return buff.toString();</strong></p>
+
+<p><strong>}</strong> </p>
+
+<p>}</p>
+
+<p></p>
+
+<p>Then annotate it as follows. Compile and include it in a .jar file.</p>
+
+<p><strong>import javax.jws.WebMethod;</strong></p>
+
+<p><strong>import javax.jws.WebService;</strong></p>
+
+<p><strong>@WebService</strong></p>
+
+<p><strong>public class ExamplePOJOService {</strong></p>
+
+<p><strong>@WebMethod</strong></p>
+
+<p><strong>public String reverse(String input) {</strong></p>
+
+<p><strong>StringBuffer buff = new StringBuffer();</strong></p>
+
+<p><strong>for (int i=input.length()-1; i&gt;=0; i--) {</strong></p>
+
+<p><strong>buff.append(input.charAt(i));</strong></p>
+
+<p><strong>}</strong></p>
+
+<p><strong>return buff.toString();</strong></p>
+
+<p><strong>}</strong></p>
+
+<p><strong>}</strong></p>
+
+<p><strong>Note</strong>: For more information on writing JAXWS annotated web
+services, refer to the <a href="http://ws.apache.org/axis2/1_4_1/jaxws-guide.html">JAXWS Axis2 User
+Guide</a>. </p>
+
+<p></p>
+
+<h2>Uploading a JAX-WS Service </h2>
+
+<p>This feature is used to upload annotated .jar files and resource .jars
+which are dependencies used by the service implementation.</p>
+
+<p><img alt="" src="../images/add.png"/></p>
+
+<p>Figure 1: Uploading JAX-WS Services</p>
+<ol>
+  <li>In the navigator, under Manage/Service, click <span style="font-weight: bold;">JAX-WS Service</span>. The <em><strong>Add JAX-WS
+    Service</strong></em> page appears.</li>
+  <li>Provide the hierarchical path of the service. This is optional. If you want to manage
+      services separately, specifying a heirarchy is important. This allows you to customise
+      your service EPR as you wish. And also it allows you to manage multiple versions of the
+      same service changing only the business logic.
+      <p><strong>Example:</strong> Consider a service "JAXWSTest"</p>
+      <p>If no service hierarchy -> EPR is ../services/JAXWSTest</p>
+      <p>With service hierarchy foo/bar/1.0.0 -> EPR is ../services/foo/bar/1.0.0/JAXWSTest</p>
+  </li>
+  <li>Click <strong>Browse</strong>, and select the annotated .jar file. Multiple .jar files can be uploaded by clicking on the "+" button.</li>
+  <li>Click <strong>Upload. </strong></li>
+</ol>
+
+<p>You can check your service on the <em><strong>Service List</strong></em>
+page. You can also use the tools available on this page to check the status
+of the service and control the quality of the service.</p>
+</body></html>

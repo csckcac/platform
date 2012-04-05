@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl2:description xmlns:wsdl2="http://www.w3.org/ns/wsdl" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://impl.service.agentmgt.autoscaler.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wrpc="http://www.w3.org/ns/wsdl/rpc" xmlns:wsoap="http://www.w3.org/ns/wsdl/soap" xmlns:tns="http://impl.service.agentmgt.autoscaler.carbon.wso2.org" xmlns:wsdlx="http://www.w3.org/ns/wsdl-extensions" xmlns:ax21="http://exception.service.agentmgt.autoscaler.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:whttp="http://www.w3.org/ns/wsdl/http" targetNamespace="http://impl.service.agentmgt.autoscaler.carbon.wso2.org">
+    <wsdl2:types>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://exception.service.agentmgt.autoscaler.carbon.wso2.org/xsd">
+            <xs:complexType name="NullAgentException">
+                <xs:sequence/>
+            </xs:complexType>
+            <xs:complexType name="AgentNotAlreadyRegisteredException">
+                <xs:sequence/>
+            </xs:complexType>
+            <xs:complexType name="AgentAlreadyRegisteredException">
+                <xs:sequence/>
+            </xs:complexType>
+            <xs:complexType name="AgentRegisteringException">
+                <xs:sequence/>
+            </xs:complexType>
+            <xs:complexType name="AgentNotFoundException">
+                <xs:sequence/>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax22="http://exception.service.agentmgt.autoscaler.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://impl.service.agentmgt.autoscaler.carbon.wso2.org">
+            <xs:import namespace="http://exception.service.agentmgt.autoscaler.carbon.wso2.org/xsd"/>
+            <xs:element name="AgentManagementServiceNullAgentException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="NullAgentException" nillable="true" type="ax21:NullAgentException"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AgentManagementServiceAgentNotAlreadyRegisteredException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="AgentNotAlreadyRegisteredException" nillable="true" type="ax21:AgentNotAlreadyRegisteredException"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="unregisterAgentForcefully">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="epr" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="unregisterAgentForcefullyResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="unregisterAgent">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="epr" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="instanceCount" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="unregisterAgentResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AgentManagementServiceAgentAlreadyRegisteredException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="AgentAlreadyRegisteredException" nillable="true" type="ax21:AgentAlreadyRegisteredException"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AgentManagementServiceAgentRegisteringException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="AgentRegisteringException" nillable="true" type="ax21:AgentRegisteringException"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="registerAgent">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="epr" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="instanceCount" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="registerAgentResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AgentManagementServiceAgentNotFoundException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="AgentNotFoundException" nillable="true" type="ax21:AgentNotFoundException"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="pickAnAgent">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="pickAnAgentResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="isRegisteredAgent">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="epr" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="isRegisteredAgentResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getTotalMaxInstanceCount">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getTotalMaxInstanceCountResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getNumberOfRegisteredAgents">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getNumberOfRegisteredAgentsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl2:types>
+    <wsdl2:interface name="ServiceInterface">
+        <wsdl2:fault name="AgentManagementServiceAgentNotFoundException" element="ns:AgentManagementServiceAgentNotFoundException"/>
+        <wsdl2:fault name="AgentManagementServiceNullAgentException" element="ns:AgentManagementServiceNullAgentException"/>
+        <wsdl2:fault name="AgentManagementServiceAgentAlreadyRegisteredException" element="ns:AgentManagementServiceAgentAlreadyRegisteredException"/>
+        <wsdl2:fault name="AgentManagementServiceAgentRegisteringException" element="ns:AgentManagementServiceAgentRegisteringException"/>
+        <wsdl2:fault name="AgentManagementServiceAgentNotAlreadyRegisteredException" element="ns:AgentManagementServiceAgentNotAlreadyRegisteredException"/>
+        <wsdl2:operation name="pickAnAgent" style="http://www.w3.org/ns/wsdl/style/rpc http://www.w3.org/ns/wsdl/style/iri http://www.w3.org/ns/wsdl/style/multipart" wrpc:signature="return #return " pattern="http://www.w3.org/ns/wsdl/in-out">
+            <wsdl2:input element="ns:pickAnAgent" wsaw:Action="urn:pickAnAgent"/>
+            <wsdl2:output element="ns:pickAnAgentResponse" wsaw:Action="urn:pickAnAgentResponse"/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceAgentNotFoundException" wsaw:Action="urn:pickAnAgentAgentManagementServiceAgentNotFoundException"/>
+        </wsdl2:operation>
+        <wsdl2:operation name="registerAgent" style="http://www.w3.org/ns/wsdl/style/rpc" wrpc:signature="epr #in instanceCount #in return #return " pattern="http://www.w3.org/ns/wsdl/in-out">
+            <wsdl2:input element="ns:registerAgent" wsaw:Action="urn:registerAgent"/>
+            <wsdl2:output element="ns:registerAgentResponse" wsaw:Action="urn:registerAgentResponse"/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceNullAgentException" wsaw:Action="urn:registerAgentAgentManagementServiceNullAgentException"/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceAgentAlreadyRegisteredException" wsaw:Action="urn:registerAgentAgentManagementServiceAgentAlreadyRegisteredException"/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceAgentRegisteringException" wsaw:Action="urn:registerAgentAgentManagementServiceAgentRegisteringException"/>
+        </wsdl2:operation>
+        <wsdl2:operation name="unregisterAgentForcefully" style="http://www.w3.org/ns/wsdl/style/rpc" wrpc:signature="epr #in return #return " pattern="http://www.w3.org/ns/wsdl/in-out">
+            <wsdl2:input element="ns:unregisterAgentForcefully" wsaw:Action="urn:unregisterAgentForcefully"/>
+            <wsdl2:output element="ns:unregisterAgentForcefullyResponse" wsaw:Action="urn:unregisterAgentForcefullyResponse"/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceNullAgentException" wsaw:Action="urn:unregisterAgentForcefullyAgentManagementServiceNullAgentException"/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceAgentNotAlreadyRegisteredException" wsaw:Action="urn:unregisterAgentForcefullyAgentManagementServiceAgentNotAlreadyRegisteredException"/>
+        </wsdl2:operation>
+        <wsdl2:operation name="unregisterAgent" style="http://www.w3.org/ns/wsdl/style/rpc" wrpc:signature="epr #in instanceCount #in return #return " pattern="http://www.w3.org/ns/wsdl/in-out">
+            <wsdl2:input element="ns:unregisterAgent" wsaw:Action="urn:unregisterAgent"/>
+            <wsdl2:output element="ns:unregisterAgentResponse" wsaw:Action="urn:unregisterAgentResponse"/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceNullAgentException" wsaw:Action="urn:unregisterAgentAgentManagementServiceNullAgentException"/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceAgentNotAlreadyRegisteredException" wsaw:Action="urn:unregisterAgentAgentManagementServiceAgentNotAlreadyRegisteredException"/>
+        </wsdl2:operation>
+        <wsdl2:operation name="getNumberOfRegisteredAgents" style="http://www.w3.org/ns/wsdl/style/rpc http://www.w3.org/ns/wsdl/style/iri http://www.w3.org/ns/wsdl/style/multipart" wrpc:signature="return #return " pattern="http://www.w3.org/ns/wsdl/in-out">
+            <wsdl2:input element="ns:getNumberOfRegisteredAgents" wsaw:Action="urn:getNumberOfRegisteredAgents"/>
+            <wsdl2:output element="ns:getNumberOfRegisteredAgentsResponse" wsaw:Action="urn:getNumberOfRegisteredAgentsResponse"/>
+        </wsdl2:operation>
+        <wsdl2:operation name="getTotalMaxInstanceCount" style="http://www.w3.org/ns/wsdl/style/rpc http://www.w3.org/ns/wsdl/style/iri http://www.w3.org/ns/wsdl/style/multipart" wrpc:signature="return #return " pattern="http://www.w3.org/ns/wsdl/in-out">
+            <wsdl2:input element="ns:getTotalMaxInstanceCount" wsaw:Action="urn:getTotalMaxInstanceCount"/>
+            <wsdl2:output element="ns:getTotalMaxInstanceCountResponse" wsaw:Action="urn:getTotalMaxInstanceCountResponse"/>
+        </wsdl2:operation>
+        <wsdl2:operation name="isRegisteredAgent" style="http://www.w3.org/ns/wsdl/style/rpc" wrpc:signature="epr #in return #return " pattern="http://www.w3.org/ns/wsdl/in-out">
+            <wsdl2:input element="ns:isRegisteredAgent" wsaw:Action="urn:isRegisteredAgent"/>
+            <wsdl2:output element="ns:isRegisteredAgentResponse" wsaw:Action="urn:isRegisteredAgentResponse"/>
+        </wsdl2:operation>
+    </wsdl2:interface>
+    <wsdl2:binding name="AgentManagementServiceHttpBinding" interface="tns:ServiceInterface" whttp:methodDefault="POST" type="http://www.w3.org/ns/wsdl/http">
+        <wsdl2:fault ref="tns:AgentManagementServiceAgentNotFoundException"/>
+        <wsdl2:fault ref="tns:AgentManagementServiceAgentAlreadyRegisteredException"/>
+        <wsdl2:fault ref="tns:AgentManagementServiceAgentNotAlreadyRegisteredException"/>
+        <wsdl2:fault ref="tns:AgentManagementServiceNullAgentException"/>
+        <wsdl2:fault ref="tns:AgentManagementServiceAgentRegisteringException"/>
+        <wsdl2:operation ref="tns:pickAnAgent" whttp:location="agent" whttp:method="GET">
+            <wsdl2:input/>
+            <wsdl2:output/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceAgentNotFoundException"/>
+        </wsdl2:operation>
+        <wsdl2:operation ref="tns:registerAgent" whttp:location="register">
+            <wsdl2:input/>
+            <wsdl2:output/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceAgentAlreadyRegisteredException"/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceNullAgentException"/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceAgentRegisteringException"/>
+        </wsdl2:operation>
+        <wsdl2:operation ref="tns:unregisterAgent" whttp:location="unregister">
+            <wsdl2:input/>
+            <wsdl2:output/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceAgentNotAlreadyRegisteredException"/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceNullAgentException"/>
+        </wsdl2:operation>
+        <wsdl2:operation ref="tns:unregisterAgentForcefully" whttp:location="unregisterForcefully">
+            <wsdl2:input/>
+            <wsdl2:output/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceAgentNotAlreadyRegisteredException"/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceNullAgentException"/>
+        </wsdl2:operation>
+        <wsdl2:operation ref="tns:getNumberOfRegisteredAgents" whttp:location="agents" whttp:method="GET">
+            <wsdl2:input/>
+            <wsdl2:output/>
+        </wsdl2:operation>
+        <wsdl2:operation ref="tns:getTotalMaxInstanceCount" whttp:location="maxInstanceCount" whttp:method="GET">
+            <wsdl2:input/>
+            <wsdl2:output/>
+        </wsdl2:operation>
+        <wsdl2:operation ref="tns:isRegisteredAgent" whttp:location="isRegisteredAgent">
+            <wsdl2:input/>
+            <wsdl2:output/>
+        </wsdl2:operation>
+    </wsdl2:binding>
+    <wsdl2:binding name="AgentManagementServiceSoap11Binding" interface="tns:ServiceInterface" type="http://www.w3.org/ns/wsdl/soap" wsoap:version="1.1">
+        <wsdl2:fault ref="tns:AgentManagementServiceAgentNotFoundException"/>
+        <wsdl2:fault ref="tns:AgentManagementServiceAgentAlreadyRegisteredException"/>
+        <wsdl2:fault ref="tns:AgentManagementServiceAgentNotAlreadyRegisteredException"/>
+        <wsdl2:fault ref="tns:AgentManagementServiceNullAgentException"/>
+        <wsdl2:fault ref="tns:AgentManagementServiceAgentRegisteringException"/>
+        <wsdl2:operation ref="tns:pickAnAgent" wsoap:action="urn:pickAnAgent">
+            <wsdl2:input/>
+            <wsdl2:output/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceAgentNotFoundException"/>
+        </wsdl2:operation>
+        <wsdl2:operation ref="tns:registerAgent" wsoap:action="urn:registerAgent">
+            <wsdl2:input/>
+            <wsdl2:output/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceAgentAlreadyRegisteredException"/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceNullAgentException"/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceAgentRegisteringException"/>
+        </wsdl2:operation>
+        <wsdl2:operation ref="tns:unregisterAgent" wsoap:action="urn:unregisterAgent">
+            <wsdl2:input/>
+            <wsdl2:output/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceAgentNotAlreadyRegisteredException"/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceNullAgentException"/>
+        </wsdl2:operation>
+        <wsdl2:operation ref="tns:unregisterAgentForcefully" wsoap:action="urn:unregisterAgentForcefully">
+            <wsdl2:input/>
+            <wsdl2:output/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceAgentNotAlreadyRegisteredException"/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceNullAgentException"/>
+        </wsdl2:operation>
+        <wsdl2:operation ref="tns:getNumberOfRegisteredAgents" wsoap:action="urn:getNumberOfRegisteredAgents">
+            <wsdl2:input/>
+            <wsdl2:output/>
+        </wsdl2:operation>
+        <wsdl2:operation ref="tns:getTotalMaxInstanceCount" wsoap:action="urn:getTotalMaxInstanceCount">
+            <wsdl2:input/>
+            <wsdl2:output/>
+        </wsdl2:operation>
+        <wsdl2:operation ref="tns:isRegisteredAgent" wsoap:action="urn:isRegisteredAgent">
+            <wsdl2:input/>
+            <wsdl2:output/>
+        </wsdl2:operation>
+    </wsdl2:binding>
+    <wsdl2:binding name="AgentManagementServiceSoap12Binding" interface="tns:ServiceInterface" type="http://www.w3.org/ns/wsdl/soap" wsoap:version="1.2">
+        <wsdl2:fault ref="tns:AgentManagementServiceAgentNotFoundException"/>
+        <wsdl2:fault ref="tns:AgentManagementServiceAgentAlreadyRegisteredException"/>
+        <wsdl2:fault ref="tns:AgentManagementServiceAgentNotAlreadyRegisteredException"/>
+        <wsdl2:fault ref="tns:AgentManagementServiceNullAgentException"/>
+        <wsdl2:fault ref="tns:AgentManagementServiceAgentRegisteringException"/>
+        <wsdl2:operation ref="tns:pickAnAgent" wsoap:action="urn:pickAnAgent">
+            <wsdl2:input/>
+            <wsdl2:output/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceAgentNotFoundException"/>
+        </wsdl2:operation>
+        <wsdl2:operation ref="tns:registerAgent" wsoap:action="urn:registerAgent">
+            <wsdl2:input/>
+            <wsdl2:output/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceAgentAlreadyRegisteredException"/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceNullAgentException"/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceAgentRegisteringException"/>
+        </wsdl2:operation>
+        <wsdl2:operation ref="tns:unregisterAgent" wsoap:action="urn:unregisterAgent">
+            <wsdl2:input/>
+            <wsdl2:output/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceAgentNotAlreadyRegisteredException"/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceNullAgentException"/>
+        </wsdl2:operation>
+        <wsdl2:operation ref="tns:unregisterAgentForcefully" wsoap:action="urn:unregisterAgentForcefully">
+            <wsdl2:input/>
+            <wsdl2:output/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceAgentNotAlreadyRegisteredException"/>
+            <wsdl2:outfault ref="tns:AgentManagementServiceNullAgentException"/>
+        </wsdl2:operation>
+        <wsdl2:operation ref="tns:getNumberOfRegisteredAgents" wsoap:action="urn:getNumberOfRegisteredAgents">
+            <wsdl2:input/>
+            <wsdl2:output/>
+        </wsdl2:operation>
+        <wsdl2:operation ref="tns:getTotalMaxInstanceCount" wsoap:action="urn:getTotalMaxInstanceCount">
+            <wsdl2:input/>
+            <wsdl2:output/>
+        </wsdl2:operation>
+        <wsdl2:operation ref="tns:isRegisteredAgent" wsoap:action="urn:isRegisteredAgent">
+            <wsdl2:input/>
+            <wsdl2:output/>
+        </wsdl2:operation>
+    </wsdl2:binding>
+    <wsdl2:service name="AgentManagementService" interface="tns:ServiceInterface">
+        <wsdl2:endpoint name="AgentManagementServiceHttpEndpoint" binding="tns:AgentManagementServiceHttpBinding" address="http://localhost:8080/axis2/services/AgentManagementService"/>
+        <!--wsdl2:endpoint name="AgentManagementServiceHttpSoap12Endpoint" binding="tns:AgentManagementServiceSoap12Binding" address="http://localhost:8080/axis2/services/AgentManagementService"/>
+        <wsdl2:endpoint name="AgentManagementServiceHttpSoap11Endpoint" binding="tns:AgentManagementServiceSoap11Binding" address="http://localhost:8080/axis2/services/AgentManagementService"/-->
+    </wsdl2:service>
+</wsdl2:description>

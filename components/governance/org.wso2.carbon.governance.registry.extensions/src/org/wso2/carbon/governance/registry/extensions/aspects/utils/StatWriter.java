@@ -1,0 +1,169 @@
+package org.wso2.carbon.governance.registry.extensions.aspects.utils;
+
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.RegistryConstants;
+import org.wso2.carbon.registry.core.Resource;
+
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLInputFactory;
+import java.io.StringReader;
+import java.util.Map;
+
+public class StatWriter {
+
+    private static final Log log = LogFactory.getLog(StatWriter.class);
+    private static final String LOG_DEFAULT_PATH = "/_system/governance/repository/components/org.wso2.carbon.governance/lifecycles/history";
+    private static final String REGISTRY_LIFECYCLE_HISTORY_ORDER = "registry.lifecycle_history.order";
+    private OMFactory factory = OMAbstractFactory.getOMFactory();
+
+    public void writeHistory(StatCollection currentCollection) {
+
+        try {
+            Registry systemRegistry = currentCollection.getRegistry();
+            String resourcePath = currentCollection.getResourcePath();
+            Resource statResource;
+
+            String statResourcePath;
+            if (currentCollection.getOriginalPath().equals(resourcePath)) {
+                statResourcePath = getStatResourcePath(resourcePath);
+            }else{
+                statResourcePath = getStatResourcePath(currentCollection.getOriginalPath());
+            }
+
+            if (systemRegistry.resourceExists(statResourcePath)) {
+                statResource = systemRegistry.get(statResourcePath);
+            } else {
+                statResource = systemRegistry.newResource();
+                statResource.setMediaType("application/xml");
+            }
+
+            statResource.setContent(buildOMContent(statResource, currentCollection));
+            systemRegistry.put(statResourcePath, statResource);
+        } catch (Exception e) {
+            log.error("Failed to add lifecycle history", e);
+        }
+    }
+
+    private String getStatResourcePath(String resourcePath) {
+        return LOG_DEFAULT_PATH + RegistryConstants.PATH_SEPARATOR
+                + resourcePath.replace(RegistryConstants.PATH_SEPARATOR,"_");
+    }
+
+    private String buildOMContent(Resource resource, StatCollection currentCollection) throws Exception {
+        String content = null;
+
+        String property = resource.getProperty(REGISTRY_LIFECYCLE_HISTORY_ORDER);
+        int newOrder = 0;
+        if (property != null) {
+            newOrder = Integer.parseInt(property) + 1;
+        }
+
+        resource.setProperty(REGISTRY_LIFECYCLE_HISTORY_ORDER, "" + newOrder);
+
+        if (resource.getContent() != null) {
+            if (resource.getContent() instanceof String) {
+                content = (String) resource.getContent();
+            } else if (resource.getContent() instanceof byte[]) {
+                content = new String((byte[]) resource.getContent());
+            }
+        }
+
+        if (content == null) {
+            content = buildInitialOMElement().toString();
+        }
+
+        return addNewContentElement(content, currentCollection, newOrder);
+    }
+
+    private String addNewContentElement(String currentContent, StatCollection currentCollection, int order) throws Exception {
+        OMElement currentOmElement;
+
+        javax.xml.stream.XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(
+                new StringReader(currentContent));
+        StAXOMBuilder builder = new StAXOMBuilder(reader);
+
+        currentOmElement = builder.getDocumentElement();
+
+//        Adding the parent element
+        OMElement itemChildElement = factory.createOMElement("item", currentOmElement.getNamespace(), currentOmElement);
+
+//        Adding attributes
+//        Adding the order attribute
+        itemChildElement.addAttribute("order", "" + order, null);
+
+//        Adding the user attribute
+        itemChildElement.addAttribute("user", currentCollection.getUserName(), null);
+
+//        Adding the state attribute
+        itemChildElement.addAttribute("state", currentCollection.getState(), null);
+
+        if (!currentCollection.getOriginalPath().equals(currentCollection.getResourcePath())) {
+//        Adding the originalPath attribute
+            itemChildElement.addAttribute("originalPath", currentCollection.getResourcePath(),null);
+        }
+
+//        Adding the action element
+        OMElement actionElement = factory.createOMElement("action", itemChildElement.getNamespace(), itemChildElement);
+
+//        Adding the action type attribute
+        actionElement.addAttribute("type", currentCollection.getActionType(), null);
+
+//        Adding the action name
+        actionElement.addAttribute("name", currentCollection.getAction(), null);
+
+        if (currentCollection.getValidations() != null) {
+//          Adding the sub elements under action element
+            OMElement actionValidationsElement = factory.createOMElement("validations", actionElement.getNamespace(), actionElement);
+
+            Map<String,String> validations = currentCollection.getValidations();
+
+            for (Map.Entry<String, String> validation : validations.entrySet()) {
+                OMElement validationElement = factory.createOMElement("validation"
+                        , actionValidationsElement.getNamespace(), actionValidationsElement);
+                validationElement.addAttribute("name",validation.getKey(),null);
+
+                if (validation.getValue() != null && !validation.getValue().equals("")) {
+                    OMElement validationsInfoElement = factory.createOMElement("info"
+                            ,validationElement.getNamespace(),validationElement);
+                    validationsInfoElement.setText(validation.getValue());
+                }
+            }
+        }
+        if (currentCollection.getExecutors() != null) {
+            OMElement actionExecutors = factory.createOMElement("executors", actionElement.getNamespace(), actionElement);
+
+            Map<String,String> executors = currentCollection.getExecutors();
+
+            for (Map.Entry<String, String> executor : executors.entrySet()) {
+                OMElement executorElement = factory.createOMElement("executor"
+                        , actionExecutors.getNamespace(), actionExecutors);
+                executorElement.addAttribute("name", executor.getKey(), null);
+
+                if (executor.getValue() != null && !executor.getValue().equals("")) {
+                    OMElement executorInfoElement =factory.createOMElement("info"
+                            ,executorElement.getNamespace(),executorElement);
+                    executorInfoElement.setText(executor.getValue());
+                }
+            }
+        }
+        if(currentCollection.getActionValue() != null){
+    //        adding comments
+            OMElement actionValueElement = factory.createOMElement("value", actionElement.getNamespace(), actionElement);
+            actionValueElement.setText(currentCollection.getActionValue());
+        }
+
+        return currentOmElement.toString();
+    }
+
+    private OMElement buildInitialOMElement() {
+        OMElement initialOMElement;
+        initialOMElement = factory.createOMElement(new QName("lifecycleHistory"));
+        return initialOMElement;
+    }
+}

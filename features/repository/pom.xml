@@ -350,9 +350,6 @@
                                     org.wso2.carbon:org.wso2.carbon.xkms.mgt.feature:${carbon.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.multiple.instance.feature:${carbon.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
                                     org.wso2.esb:org.wso2.esb.styles.feature:${esb.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>

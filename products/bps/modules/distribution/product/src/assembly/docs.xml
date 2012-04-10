@@ -72,11 +72,9 @@
 	<fileSet>
             <directory>../../../docs/xdoc/user-core</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}-docs/user-core</outputDirectory>
-            <fileMode>755</fileMode>
+            <fileMode>644</fileMode>
               <includes>
-                <include>user-mgt-actdir.xml</include>
-                <include>user-mgt-jdbc.xml</include>
-                <include>user-mgt-ldap.xml</include>
+                <include>user-mgt-*.xml</include>
               </includes>
          </fileSet>        
     </fileSets>

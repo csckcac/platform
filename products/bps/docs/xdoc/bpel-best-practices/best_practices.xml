@@ -105,6 +105,24 @@
                 calls.
                 <br/>
             </li>
+            <li>
+                In the default @product.name@ distribution, the size of a fault message (which is
+                stored in BPEL DB) is limited to ~4KB.
+                <ul>
+                    <li>eg - See the following <a href="https://svn.wso2.org/repos/wso2/carbon/platform/trunk/products/bps/modules/distribution/product/sql/bpel/h2.sql">BPEL database SQL script</a>
+                        <br/>
+                        CREATE TABLE ODE_FAULT (FAULT_ID
+                        BIGINT NOT NULL,
+                        ACTIVITY_ID INTEGER,
+                        DATA CLOB, MESSAGE VARCHAR(4000), LINE_NUMBER INTEGER, NAME VARCHAR(255),
+                        PRIMARY KEY (FAULT_ID));
+                    </li>
+                </ul>
+                So if a deployed BPEL process is expected to handle larger size of fault
+                messages, the above database script should be modified and re-built from source
+                distribution accordingly.
+                <br/>
+            </li>
             <li>Also make sure to configure process instance cleanup. Large number of process
                 instance data will be accumulated in the BPEL engine persistence storage if you
                 persisted processes, so to reduce performance overhead introduce by database size
@@ -164,10 +182,11 @@
 
         <!--Development Best Practices-->
         <h2 id="development">Development best practices</h2>
-        <p>It&#39;s not encouraged to refer the same variable as the input(in&lt;receive/&gt;) and output(in
+        <p>It&#39;s not encouraged to refer the same variable as the input(in &lt;receive/&gt;)
+            and output(in
             &lt;reply/&gt;) of the process. This could lead to problems if the message headers (
             &lt;Header/&gt;
-            in SOAP&lt;Envelope/&gt;) in output variable are processed at the client-end.
+            in SOAP &lt;Envelope/&gt;) in output variable are processed at the client-end.
             One possible use-case is when the process is secured if the input and output variables
             are same then the headers of the input will be used when the output is sent back to the
             client. So it could prone to errors if those security headers are not expected at the

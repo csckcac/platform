@@ -21,6 +21,7 @@
     <properties>
         <maven.build.timestamp.format>dd MMM yyyy</maven.build.timestamp.format>
         <buildNumber>${maven.build.timestamp}</buildNumber>
+	    <product.version>${project.parent.version}</product.version>
     </properties>
     <parent>
         <groupId>org.wso2.bps</groupId>

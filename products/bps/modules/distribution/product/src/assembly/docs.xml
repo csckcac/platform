@@ -35,6 +35,8 @@
 		<exclude>external_articles.html</exclude>
                 <exclude>management_api.html</exclude>
                 <exclude>bpel_assign.html</exclude>
+                <exclude>bpel_receive.html</exclude>
+                <exclude>bpel_language.html</exclude>
 		<exclude>bpel-admin-guide/administrator_guide.html</exclude>
 		<exclude>bpel-best-practices/best_practices.html</exclude>
                 <exclude>bpel-concepts/bpel_concepts.html</exclude>
@@ -48,6 +50,8 @@
                 <exclude>bpel-extensions/bpel_extension_activity_failure_and_recovery.html</exclude>
                 <exclude>bpel-extensions/bpel_extension_extension_activities.html</exclude>
                 <exclude>bpel-extensions/bpel_extension_xpath_extensions.html</exclude>
+                <exclude>bpel-extensions/bpel_extension_implicit_correlations.html</exclude>
+                <exclude>bpel-extensions/bpel_extension_external_variables.html</exclude>
                 <exclude>bpel-extensions/bpel_extension_iterable_foreach.html</exclude>
                 <exclude>bpel-extensions/bpel_extension_flexible_assign.html</exclude>
                 <exclude>bpel-samples/flow_links.html</exclude>
@@ -191,6 +195,20 @@
             <fileMode>644</fileMode>
         </file>
         <file>
+            <source>target/site/bpel-extensions/bpel_extension_implicit_correlations.html</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}-docs/bpel-extensions/
+            </outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/site/bpel-extensions/bpel_extension_external_variables.html</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}-docs/bpel-extensions/
+            </outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
             <source>target/site/bpel-extensions/bpel_extension_iterable_foreach.html</source>
             <outputDirectory>${pom.artifactId}-${pom.version}-docs/bpel-extensions/
             </outputDirectory>
@@ -212,6 +230,18 @@
         </file>
         <file>
             <source>target/site/bpel_assign.html</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}-docs/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/site/bpel_receive.html</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}-docs/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/site/bpel_language.html</source>
             <outputDirectory>${pom.artifactId}-${pom.version}-docs/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>

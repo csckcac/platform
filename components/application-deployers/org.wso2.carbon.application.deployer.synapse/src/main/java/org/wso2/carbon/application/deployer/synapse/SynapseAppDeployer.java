@@ -17,31 +17,31 @@
 */
 package org.wso2.carbon.application.deployer.synapse;
 
-import org.wso2.carbon.application.deployer.CarbonApplication;
+import org.apache.axis2.engine.AxisConfiguration;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.application.deployer.AppDeployerUtils;
-import org.wso2.carbon.application.deployer.synapse.internal.SynapseAppDeployerDSComponent;
+import org.wso2.carbon.application.deployer.CarbonApplication;
 import org.wso2.carbon.application.deployer.config.Artifact;
 import org.wso2.carbon.application.deployer.config.CappFile;
 import org.wso2.carbon.application.deployer.handler.AppDeploymentHandler;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.axis2.engine.AxisConfiguration;
+import org.wso2.carbon.application.deployer.synapse.internal.SynapseAppDeployerDSComponent;
 
-import java.util.List;
-import java.util.HashMap;
 import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 public class SynapseAppDeployer implements AppDeploymentHandler {
 
     private static final Log log = LogFactory.getLog(SynapseAppDeployer.class);
 
-    private HashMap<String, Boolean> acceptanceList = null;
+    private Map<String, Boolean> acceptanceList = null;
 
     /**
      * Deploy the artifacts which can be deployed through this deployer (endpoints, sequences,
      * proxy service etc.).
      *
-     * @param carbonApp - CarbonApplication instance to check for artifacts
+     * @param carbonApp  - CarbonApplication instance to check for artifacts
      * @param axisConfig - AxisConfiguration of the current tenant
      */
     public void deployArtifacts(CarbonApplication carbonApp, AxisConfiguration axisConfig) {
@@ -50,8 +50,8 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                 .getDependencies();
 
         String synapseRepo = axisConfig.getRepository().getPath() + File.separator +
-                SynapseAppDeployerConstants.SYNAPSE_CONFIGS + File.separator + 
-                SynapseAppDeployerConstants.DEFAULT_DIR;
+                             SynapseAppDeployerConstants.SYNAPSE_CONFIGS + File.separator +
+                             SynapseAppDeployerConstants.DEFAULT_DIR;
         String artifactPath, destPath;
         for (Artifact.Dependency dep : artifacts) {
             Artifact artifact = dep.getArtifact();
@@ -61,7 +61,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
 
             if (!isAccepted(artifact.getType())) {
                 log.warn("Can't deploy artifact : " + artifact.getName() + " of type : " +
-                        artifact.getType() + ". Required features are not installed in the system");
+                         artifact.getType() + ". Required features are not installed in the system");
                 continue;
             }
 
@@ -77,9 +77,9 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                 destPath = synapseRepo + SynapseAppDeployerConstants.EVENTS_FOLDER;
             } else if (SynapseAppDeployerConstants.TASK_TYPE.equals(artifact.getType())) {
                 destPath = synapseRepo + SynapseAppDeployerConstants.TASKS_FOLDER;
-            } else if(SynapseAppDeployerConstants.MESSAGE_STORE_TYPE.endsWith(artifact.getType())){
+            } else if (SynapseAppDeployerConstants.MESSAGE_STORE_TYPE.endsWith(artifact.getType())) {
                 destPath = synapseRepo + SynapseAppDeployerConstants.MESSAGE_STORE_FOLDER;
-            } else if(SynapseAppDeployerConstants.MESSAGE_PROCESSOR_TYPE.endsWith(artifact.getType())){
+            } else if (SynapseAppDeployerConstants.MESSAGE_PROCESSOR_TYPE.endsWith(artifact.getType())) {
                 destPath = synapseRepo + SynapseAppDeployerConstants.MESSAGE_PROCESSOR_FOLDER;
             } else {
                 continue;
@@ -88,7 +88,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
             List<CappFile> files = artifact.getFiles();
             if (files.size() != 1) {
                 log.error("Synapse artifact types must have a single file to " +
-                        "be deployed. But " + files.size() + " files found.");
+                          "be deployed. But " + files.size() + " files found.");
                 continue;
             }
             String fileName = artifact.getFiles().get(0).getName();
@@ -110,7 +110,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
     private boolean isAccepted(String serviceType) {
         if (acceptanceList == null) {
             acceptanceList = AppDeployerUtils.buildAcceptanceList(SynapseAppDeployerDSComponent
-                    .getRequiredFeatures());
+                                                                          .getRequiredFeatures());
         }
         Boolean acceptance = acceptanceList.get(serviceType);
         return (acceptance == null || acceptance);

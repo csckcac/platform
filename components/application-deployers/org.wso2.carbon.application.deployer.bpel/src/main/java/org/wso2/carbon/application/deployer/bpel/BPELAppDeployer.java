@@ -30,6 +30,7 @@ import org.apache.axis2.engine.AxisConfiguration;
 import java.util.List;
 import java.util.HashMap;
 import java.io.File;
+import java.util.Map;
 
 public class BPELAppDeployer implements AppDeploymentHandler {
 
@@ -38,7 +39,7 @@ public class BPELAppDeployer implements AppDeploymentHandler {
     public static final String BPEL_TYPE = "bpel/workflow";
     public static final String BPEL_DIR = "bpel";
 
-    private HashMap<String, Boolean> acceptanceList = null;
+    private Map<String, Boolean> acceptanceList = null;
 
     /**
      * Check the artifact type and if it is a BPEL, copy it to the BPEL deployment hot folder

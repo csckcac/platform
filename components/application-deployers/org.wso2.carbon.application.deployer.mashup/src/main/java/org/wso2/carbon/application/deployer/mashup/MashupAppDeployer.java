@@ -17,21 +17,21 @@
 */
 package org.wso2.carbon.application.deployer.mashup;
 
-import org.wso2.carbon.application.deployer.handler.AppDeploymentHandler;
-import org.wso2.carbon.application.deployer.CarbonApplication;
-import org.wso2.carbon.application.deployer.AppDeployerUtils;
-import org.wso2.carbon.application.deployer.config.Artifact;
-import org.wso2.carbon.application.deployer.config.CappFile;
+import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.axis2.engine.AxisConfiguration;
+import org.wso2.carbon.application.deployer.AppDeployerUtils;
+import org.wso2.carbon.application.deployer.CarbonApplication;
+import org.wso2.carbon.application.deployer.config.Artifact;
+import org.wso2.carbon.application.deployer.config.CappFile;
+import org.wso2.carbon.application.deployer.handler.AppDeploymentHandler;
 import org.wso2.carbon.application.deployer.mashup.internal.MashupAppDeployerDSComponent;
 import org.wso2.carbon.utils.ArchiveManipulator;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.HashMap;
-import java.io.File;
+import java.util.Map;
 
 public class MashupAppDeployer implements AppDeploymentHandler {
 
@@ -41,7 +41,7 @@ public class MashupAppDeployer implements AppDeploymentHandler {
     public static final String MASHUP_CONTEXT = "carbon";
     public static final String MASHUP_DIR = "jsservices";
 
-    private HashMap<String, Boolean> acceptanceList = null;
+    private Map<String, Boolean> acceptanceList = null;
 
     /**
      * Check the artifact type and if it is a Mashup, copy it to the Mashup deployment hot folder
@@ -68,7 +68,7 @@ public class MashupAppDeployer implements AppDeploymentHandler {
             String artifactName = artifact.getName();
             if (!isAccepted(artifact.getType())) {
                 log.warn("Can't deploy artifact : " + artifactName + " of type : " +
-                        artifact.getType() + ". Required features are not installed in the system");
+                         artifact.getType() + ". Required features are not installed in the system");
                 continue;
             }
 
@@ -82,7 +82,7 @@ public class MashupAppDeployer implements AppDeploymentHandler {
             if (files.size() != 1) {
                 log.error(
                         "Mashups must have a single file to " + "be deployed. But " + files.size() +
-                                " files found.");
+                        " files found.");
                 continue;
             }
             String fileName = artifact.getFiles().get(0).getName();
@@ -103,7 +103,6 @@ public class MashupAppDeployer implements AppDeploymentHandler {
      * acceptance list, the acceptance value is returned.
      *
      * @param serviceType - service type to be checked
-     *
      * @return true if all features are there or entry is null. else false
      */
     private boolean isAccepted(String serviceType) {

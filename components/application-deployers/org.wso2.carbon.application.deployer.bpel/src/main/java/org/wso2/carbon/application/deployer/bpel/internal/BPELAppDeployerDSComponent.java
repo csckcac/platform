@@ -17,21 +17,21 @@
 */
 package org.wso2.carbon.application.deployer.bpel.internal;
 
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
-import org.wso2.carbon.application.deployer.service.ApplicationManagerService;
-import org.wso2.carbon.application.deployer.bpel.BPELAppUndeployer;
-import org.wso2.carbon.application.deployer.bpel.BPELAppDeployer;
-import org.wso2.carbon.application.deployer.Feature;
+import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.application.deployer.AppDeployerConstants;
 import org.wso2.carbon.application.deployer.AppDeployerUtils;
-import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.application.deployer.Feature;
+import org.wso2.carbon.application.deployer.bpel.BPELAppDeployer;
+import org.wso2.carbon.application.deployer.bpel.BPELAppUndeployer;
+import org.wso2.carbon.application.deployer.service.ApplicationManagerService;
 
-import java.util.List;
-import java.util.HashMap;
-import java.net.URL;
 import java.io.InputStream;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @scr.component name="application.deployer.bpel" immediate="true"
@@ -44,7 +44,7 @@ public class BPELAppDeployerDSComponent {
     private static Log log = LogFactory.getLog(BPELAppDeployerDSComponent.class);
 
     private static ApplicationManagerService applicationManager;
-    private static HashMap<String, List<Feature>> requiredFeatures;
+    private static Map<String, List<Feature>> requiredFeatures;
 
     private BPELAppDeployer bpelDeployer = null;
     private BPELAppUndeployer bpelUndeployer = null;
@@ -83,8 +83,8 @@ public class BPELAppDeployerDSComponent {
     protected void unsetAppManager(ApplicationManagerService appManager) {
         applicationManager = null;
     }
-    
-    public static HashMap<String, List<Feature>> getRequiredFeatures() {
+
+    public static Map<String, List<Feature>> getRequiredFeatures() {
         return requiredFeatures;
     }
 

@@ -17,21 +17,21 @@
 */
 package org.wso2.carbon.application.deployer.synapse.internal;
 
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.application.deployer.AppDeployerConstants;
+import org.wso2.carbon.application.deployer.AppDeployerUtils;
+import org.wso2.carbon.application.deployer.Feature;
 import org.wso2.carbon.application.deployer.service.ApplicationManagerService;
 import org.wso2.carbon.application.deployer.synapse.SynapseAppDeployer;
 import org.wso2.carbon.application.deployer.synapse.SynapseAppUndeployer;
-import org.wso2.carbon.application.deployer.Feature;
-import org.wso2.carbon.application.deployer.AppDeployerConstants;
-import org.wso2.carbon.application.deployer.AppDeployerUtils;
-import org.osgi.service.component.ComponentContext;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 
-import java.util.List;
-import java.util.HashMap;
-import java.net.URL;
 import java.io.InputStream;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @scr.component name="application.deployer.synapse" immediate="true"
@@ -45,7 +45,7 @@ public class SynapseAppDeployerDSComponent {
     private static Log log = LogFactory.getLog(SynapseAppDeployerDSComponent.class);
 
     private static ApplicationManagerService applicationManager;
-    private static HashMap<String, List<Feature>> requiredFeatures;
+    private static Map<String, List<Feature>> requiredFeatures;
 
     private SynapseAppDeployer synapseDeployer = null;
     private SynapseAppUndeployer synapseUndeployer = null;
@@ -85,7 +85,7 @@ public class SynapseAppDeployerDSComponent {
         applicationManager = null;
     }
 
-    public static HashMap<String, List<Feature>> getRequiredFeatures() {
+    public static Map<String, List<Feature>> getRequiredFeatures() {
         return requiredFeatures;
     }
 

@@ -17,19 +17,19 @@
 */
 package org.wso2.carbon.application.deployer.gadget;
 
-import org.wso2.carbon.application.deployer.handler.AppDeploymentHandler;
-import org.wso2.carbon.application.deployer.CarbonApplication;
-import org.wso2.carbon.application.deployer.AppDeployerUtils;
-import org.wso2.carbon.application.deployer.gadget.internal.GadgetAppDeployerDSComponent;
-import org.wso2.carbon.application.deployer.config.Artifact;
-import org.wso2.carbon.application.deployer.config.CappFile;
+import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.axis2.engine.AxisConfiguration;
+import org.wso2.carbon.application.deployer.AppDeployerUtils;
+import org.wso2.carbon.application.deployer.CarbonApplication;
+import org.wso2.carbon.application.deployer.config.Artifact;
+import org.wso2.carbon.application.deployer.config.CappFile;
+import org.wso2.carbon.application.deployer.gadget.internal.GadgetAppDeployerDSComponent;
+import org.wso2.carbon.application.deployer.handler.AppDeploymentHandler;
 
-import java.util.List;
-import java.util.HashMap;
 import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 public class GadgetAppDeployer implements AppDeploymentHandler {
 
@@ -38,12 +38,12 @@ public class GadgetAppDeployer implements AppDeploymentHandler {
     public static final String GADGET_TYPE = "wso2/gadget";
     public static final String GADGET_DIR = "gadgets";
 
-    private HashMap<String, Boolean> acceptanceList = null;
+    private Map<String, Boolean> acceptanceList = null;
 
     /**
      * Check the artifact type and if it is a Gadget, copy it to the Gadget deployment hot folder
      *
-     * @param carbonApp - CarbonApplication instance to check for Gadget artifacts
+     * @param carbonApp  - CarbonApplication instance to check for Gadget artifacts
      * @param axisConfig - AxisConfiguration of the current tenant
      */
     public void deployArtifacts(CarbonApplication carbonApp, AxisConfiguration axisConfig) {
@@ -62,7 +62,7 @@ public class GadgetAppDeployer implements AppDeploymentHandler {
 
             if (!isAccepted(artifact.getType())) {
                 log.warn("Can't deploy artifact : " + artifact.getName() + " of type : " +
-                        artifact.getType() + ". Required features are not installed in the system");
+                         artifact.getType() + ". Required features are not installed in the system");
                 continue;
             }
 
@@ -75,7 +75,7 @@ public class GadgetAppDeployer implements AppDeploymentHandler {
             List<CappFile> files = artifact.getFiles();
             if (files.size() != 1) {
                 log.error("Gadgets must have a single .gar file to " +
-                        "be deployed. But " + files.size() + " files found.");
+                          "be deployed. But " + files.size() + " files found.");
                 continue;
             }
             String fileName = artifact.getFiles().get(0).getName();
@@ -97,7 +97,7 @@ public class GadgetAppDeployer implements AppDeploymentHandler {
     private boolean isAccepted(String serviceType) {
         if (acceptanceList == null) {
             acceptanceList = AppDeployerUtils.buildAcceptanceList(GadgetAppDeployerDSComponent
-                    .getRequiredFeatures());
+                                                                          .getRequiredFeatures());
         }
         Boolean acceptance = acceptanceList.get(serviceType);
         return (acceptance == null || acceptance);

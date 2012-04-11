@@ -181,15 +181,21 @@
 
         <!--Development Best Practices-->
         <h2 id="development">Development best practices</h2>
-        <p>It&#39;s not encouraged to refer the same variable as the input(in &lt;receive/&gt;)
-            and output(in
-            &lt;reply/&gt;) of the process. This could lead to problems if the message headers (
-            &lt;Header/&gt;
-            in SOAP &lt;Envelope/&gt;) in output variable are processed at the client-end.
-            One possible use-case is when the process is secured if the input and output variables
-            are same then the headers of the input will be used when the output is sent back to the
-            client. So it could prone to errors if those security headers are not expected at the
-            client end.
+        <p>When it comes to BPEL development in WSO2 BPS, BPEL developer need to aware some
+            scenarios which could lead to some problems. Those are listed as follows.
+        </p>
+        <ul>
+            <li>
+                It's not encouraged to refer the same variable as the input(in &lt;receive/&gt;)
+                and output(in &lt;reply/&gt;) of the process. This could lead to problems if the
+                message headers (&lt;Header/&gt; in SOAP &lt;Envelope/&gt;) in output variable
+                are processed at the client-end. One possible use-case is when the process is
+                secured if the input and output variables are same then the headers of the input
+                will be used when the output is sent back to the client. So it could prone to
+                errors if those security headers are not expected at the client end.
+            </li>
+        </ul>
+        <p>
         </p>
     </body>
 </html>

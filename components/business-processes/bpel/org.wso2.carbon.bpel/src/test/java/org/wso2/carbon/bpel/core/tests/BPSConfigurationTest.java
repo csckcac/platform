@@ -22,51 +22,51 @@ public class BPSConfigurationTest extends TestCase {
      * Test for checking bps.xml gets parsed correctly.
      */
     public void testBPSConfigurationFile() {
-        System.setProperty(ServerConstants.CARBON_CONFIG_DIR_PATH,System.getProperty("user.dir") +
-                                                                  "/src/test/resources/conf");
+        System.setProperty(ServerConstants.CARBON_CONFIG_DIR_PATH, System.getProperty("user.dir") +
+                                                                   "/src/test/resources/conf");
         BPELServerConfiguration BPELsc = new BPELServerConfiguration();
 
         System.out.println(System.getProperty("user.dir"));
 
         //Datasource Config Fields
-        assertEquals(BPELServerConfiguration.DataSourceType.EXTERNAL,BPELsc.getDsType());
-        assertEquals("bpsds",BPELsc.getDataSourceName() );
+        assertEquals(BPELServerConfiguration.DataSourceType.EXTERNAL, BPELsc.getDsType());
+        assertEquals("bpsds", BPELsc.getDataSourceName());
         assertEquals("com.sun.jndi.rmi.registry.RegistryContextFactory",
-                     BPELsc.getDataSourceJNDIRepoInitialContextFactory() );
-        assertEquals("rmi://localhost:2199",BPELsc.getDataSourceJNDIRepoProviderURL());
+                     BPELsc.getDataSourceJNDIRepoInitialContextFactory());
+        assertEquals("rmi://localhost:2199", BPELsc.getDataSourceJNDIRepoProviderURL());
 
         //Process Dehydration Fields
         assertTrue(BPELsc.isProcessDehydrationEnabled());
-        assertEquals(1,BPELsc.getProcessDehydraionMaxCount());
-        assertEquals(2,BPELsc.getProcessDehydrationMaxAge());
+        assertEquals(1, BPELsc.getProcessDehydraionMaxCount());
+        assertEquals(2, BPELsc.getProcessDehydrationMaxAge());
 
         //TransactionFactory
-        assertEquals("org.wso2.bps.SampleTransactionFactory",BPELsc.getTransactionFactoryClass());
+        assertEquals("org.wso2.bps.SampleTransactionFactory", BPELsc.getTransactionFactoryClass());
 
         //Event Listeners
-        assertEquals("org.wso2.bps.SampleEventListener",BPELsc.getEventListeners().get(0));
+        assertEquals("org.wso2.bps.SampleEventListener", BPELsc.getEventListeners().get(0));
 
         //Mexinterceptors
-        assertEquals("org.wso2.bps.SampleMexInterceptor",BPELsc.getMexInterceptors().get(0));
+        assertEquals("org.wso2.bps.SampleMexInterceptor", BPELsc.getMexInterceptors().get(0));
 
         //Extension Bundle Fields
-        assertEquals("org.wso2.bps.SampleExtensionRuntime",BPELsc.getExtensionBundleRuntimes().get(0));
-        assertEquals("org.wso2.bps.SampleCorrelationFilter",BPELsc.getExtensionCorrelationFilters().get(0));
+        assertEquals("org.wso2.bps.SampleExtensionRuntime", BPELsc.getExtensionBundleRuntimes().get(0));
+        assertEquals("org.wso2.bps.SampleCorrelationFilter", BPELsc.getExtensionCorrelationFilters().get(0));
 
         //OpenJPA Props
         assertEquals("false", BPELsc.getOpenJpaProperties().get(BPELConstants.OPENJPA_FLUSH_BEFORE_QUERIES));
 
         //MexTimeOutField
-        assertEquals(120001,BPELsc.getMexTimeOut());
+        assertEquals(120001, BPELsc.getMexTimeOut());
         //ExternalService Timeout field
-        assertEquals(60001,BPELsc.getExternalServiceTimeOut());
+        assertEquals(60001, BPELsc.getExternalServiceTimeOut());
 
         //HTTP Connection Manager Properties
-        assertEquals(21,BPELsc.getMaxConnectionsPerHost());
+        assertEquals(21, BPELsc.getMaxConnectionsPerHost());
         assertEquals(101, BPELsc.getMaxTotalConnections());
 
         //Debug Transactions Manager
-        assertEquals(true,BPELsc.isDebugOnTransactionManager());
+        assertEquals(true, BPELsc.isDebugOnTransactionManager());
 
         //Sync with registry
         assertTrue(BPELsc.isSyncWithRegistry());

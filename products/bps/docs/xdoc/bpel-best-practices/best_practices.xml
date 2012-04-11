@@ -38,8 +38,7 @@
         <p>Default distribution of
             <a href="http://wso2.com/products/business-process-server">@product.name@</a>
             comes with embedded H2 database as
-            <a href="http://docs.oasis-open.org/wsbpel/2.0/CS01/wsbpel-v2.0-CS01.html">BPEL
-            </a>
+            <a href="http://docs.oasis-open.org/wsbpel/2.0/CS01/wsbpel-v2.0-CS01.html">BPEL</a>
             engine's persistence storage and other settings which are suitable for use in
             development
             environment. But when you are going to production with @product.name@, there are several
@@ -72,7 +71,7 @@
                 like MySQL as your persistence storage instead of
                 embedded H2 database. You may experience slight performance gain for simple BPEL
                 processes with H2 database, but when it comes to multiple concurrent requests and
-                complex processes H2 can?t server your performance needs.
+                complex processes H2 can't serve your performance needs.
                 <br/>
             </li>
             <li>

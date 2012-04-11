@@ -395,15 +395,14 @@ public static void processACleanup(Set<ProcessConf.CLEANUP_CATEGORY> categories,
                     jndiConfig.getContextFactory().length() > 0 &&
                     jndiConfig.getProviderURL() != null &&
                     jndiConfig.getProviderURL().length() > 0) {
-                dataSourceJNDIRepoInitialContextFactory = jndiConfig.getContextFactory();
-                dataSourceJNDIRepoProviderURL = jndiConfig.getProviderURL();
-                String urlWithoutPort = dataSourceJNDIRepoProviderURL.substring(0, dataSourceJNDIRepoProviderURL.lastIndexOf(":") + 1);
+                dataSourceJNDIRepoInitialContextFactory = jndiConfig.getContextFactory().trim();
+                dataSourceJNDIRepoProviderURL = jndiConfig.getProviderURL().trim();
 
                 // Read Port Offset
                 portOffset = readPortOffset();
                 //applying port offset operation
+                String urlWithoutPort = dataSourceJNDIRepoProviderURL.substring(0, dataSourceJNDIRepoProviderURL.lastIndexOf(":") + 1);
                 dataSourceJNDIRepoProviderPort = Integer.parseInt(dataSourceJNDIRepoProviderURL.substring(urlWithoutPort.length())) + portOffset;
-                dataSourceJNDIRepoProviderURL = dataSourceJNDIRepoProviderURL.substring(0, 16).concat(Integer.toString(dataSourceJNDIRepoProviderPort));
 
             } else {
                 throw new RuntimeException("Data source configuration must contain JNDI " +

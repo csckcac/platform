@@ -7,10 +7,13 @@ import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.ResourcePath;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.jdbc.handlers.RequestContext;
+import org.wso2.carbon.registry.extensions.utils.CommonConstants;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
+
+import static org.wso2.carbon.governance.registry.extensions.executors.utils.Utils.addNewId;
+import static org.wso2.carbon.governance.registry.extensions.executors.utils.Utils.populateParameterMap;
 
 public class CopyExecutor implements Execution {
     private static final Log log = LogFactory.getLog(ServiceVersionExecutor.class);
@@ -26,7 +29,7 @@ public class CopyExecutor implements Execution {
     public boolean execute(RequestContext requestContext, String currentState, String targetState) {
 
         String resourcePath = requestContext.getResource().getPath();
-        String newPath = "";
+        String newPath;
 
 //        Now we are going to get the list of parameters from the context and add it to a map
         Map<String, String> currentParameterMap = new HashMap<String, String>();
@@ -54,6 +57,10 @@ public class CopyExecutor implements Execution {
             requestContext.getRegistry().copy(resourcePath,newPath);
             Resource newResource = requestContext.getRegistry().get(newPath);
 
+            if(newResource.getProperty(CommonConstants.ARTIFACT_ID_PROP_KEY) != null){
+                addNewId(requestContext.getRegistry(), newResource, newPath);
+            }
+
             requestContext.setResource(newResource);
             requestContext.setResourcePath(new ResourcePath(newPath));
 
@@ -69,21 +76,6 @@ public class CopyExecutor implements Execution {
             return originalPath;
         }
         return originalPath.replace(key,value);
-    }
-
-    public boolean populateParameterMap(RequestContext requestContext, Map<String, String> currentParameterMap) {
-        Set parameterMapKeySet = (Set) requestContext.getProperty("parameterNames");
-        if (parameterMapKeySet == null) {
-            log.warn("No parameters where found");
-            return true;
-        }
-        for (Object entry : parameterMapKeySet) {
-            String key = (String) entry;
-            if (!key.equals("preserveOriginal")) {
-                currentParameterMap.put(key, (String) requestContext.getProperty(key));
-            }
-        }
-        return true;
     }
 }
 

@@ -394,6 +394,8 @@ public class DefaultLifeCycle extends Aspect {
                         .addValidations(customCodeBean.getClass().getName(),"");
 
                 if (!customValidations.validate(context)) {
+                    ((StatCollection)context.getProperty(STAT_COLLECTION))
+                            .addValidations(customCodeBean.getClass().getName(),"validation failed");
                     throw new RegistryException("Validation : " + customCodeBean.getClassObeject().getClass().getName()
                             + " failed for action : " + customCodeBean.getEventName());
                 }
@@ -416,6 +418,8 @@ public class DefaultLifeCycle extends Aspect {
                             .addExecutors(customExecutor.getClass().getName(),"");
 
                     if (!customExecutor.execute(context,currentState,nextState)) {
+                        ((StatCollection)context.getProperty(STAT_COLLECTION))
+                                .addExecutors(customExecutor.getClass().getName(),"executor failed");
                         throw new RegistryException("Execution failed for action : " + customCodeBean.getEventName());
                     }
                 }

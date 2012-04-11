@@ -3,7 +3,6 @@ package org.wso2.carbon.governance.registry.extensions.executors;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.governance.registry.extensions.aspects.DefaultLifeCycle;
@@ -13,15 +12,11 @@ import org.wso2.carbon.registry.core.*;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.jdbc.handlers.RequestContext;
-import org.wso2.carbon.registry.extensions.utils.CommonConstants;
 import org.wso2.carbon.registry.extensions.utils.CommonUtil;
 
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamReader;
-import java.io.StringReader;
 import java.util.*;
 
+import static org.wso2.carbon.governance.registry.extensions.executors.utils.Utils.*;
 import static org.wso2.carbon.registry.extensions.utils.CommonUtil.setServiceVersion;
 
 public class ServiceVersionExecutor implements Execution {
@@ -73,7 +68,10 @@ public class ServiceVersionExecutor implements Execution {
             return true;
         }
         else if(!resource.getMediaType().equals(serviceMediaType)){
-//        TODO:This is the service version executor. Hence we are ignoring any other resource of different media types
+//            We have a generic copy executor to copy any resource type.
+//            This executor is written for services.
+//            If a resource other than a service comes here, then we simply return true
+//            since we can not handle it using this executor.
             return true;
         }
 
@@ -119,8 +117,7 @@ public class ServiceVersionExecutor implements Execution {
                                     newPathMappings,currentParameterMapEntry.getKey(),currentParameterMapEntry.getValue());
                         }
 
-                        String resourceContent = getResourceContent(resource, tempResource);
-                        String artifactID = UUID.randomUUID().toString();
+                        String resourceContent = getResourceContent(tempResource);
 
 //                        Update resource content to reflect new paths
                         for (Map.Entry<String, String> newPathMappingsEntry : newPathMappings.entrySet()) {
@@ -134,7 +131,7 @@ public class ServiceVersionExecutor implements Execution {
                                 }
                             }
                         }
-
+                        tempResource.setContent(resourceContent);
 //                        Checking whether this resource is a service resource
 //                        If so, then we handle it in a different way
                         if (tempResource.getMediaType().equals(serviceMediaType)) {
@@ -157,11 +154,10 @@ public class ServiceVersionExecutor implements Execution {
                             serviceElement.build();
                             resourceContent = serviceElement.toString();
                             newResource.setContent(resourceContent);
-                            addNewId(registry, newResource, newPath, artifactID);
+                            addNewId(registry, newResource, newPath);
                             continue;
                         }
-                        addNewId(registry, tempResource, newPathMappings.get(tempResource.getPath()), artifactID);
-                        tempResource.setContent(resourceContent);
+                        addNewId(registry, tempResource, newPathMappings.get(tempResource.getPath()));
 
 //                        We add all the resources other than the original one here
                         if (!tempResource.getPath().equals(resourcePath)) {
@@ -204,19 +200,6 @@ public class ServiceVersionExecutor implements Execution {
         return true;
     }
 
-    private OMElement getServiceOMElement(Resource newResource) {
-        try {
-            XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(
-                    new StringReader(new String((byte[]) newResource.getContent())));
-            StAXOMBuilder builder = new StAXOMBuilder(reader);
-            OMElement serviceElement = builder.getDocumentElement();
-            serviceElement.build();
-            return serviceElement;
-        } catch (Exception e) {
-            log.error("Error in parsing the resource content");
-        }
-        return null;
-    }
     private void updateNewPathMappings(String mediaType,String currentExpression,String targetExpression,
                                        Map<String,String> newPathMappingsMap,String resourcePath,String version){
         boolean hasValue = false;
@@ -232,15 +215,6 @@ public class ServiceVersionExecutor implements Execution {
             String path = reformatPath(resourcePath,currentExpression,targetExpression,version);
             newPathMappingsMap.put(resourcePath,path);
         }
-    }
-
-    private String getResourceContent(Resource resource, Resource tempResource) throws RegistryException {
-        if (tempResource.getContent() instanceof String) {
-            return (String) resource.getContent();
-        } else if (tempResource.getContent() instanceof byte[]) {
-            return new String((byte[]) tempResource.getContent());
-        }
-        return null;
     }
 
     private String updateRelativePaths(String targetEnvironment, String currentEnvironment, String resourceContent,
@@ -277,12 +251,6 @@ public class ServiceVersionExecutor implements Execution {
                     replacementValue);
         }
         return resourceContent;
-    }
-
-    private void addNewId(Registry registry, Resource newResource, String newPath, String artifactID) throws RegistryException {
-        newResource.removeProperty(CommonConstants.ARTIFACT_ID_PROP_KEY);
-        newResource.addProperty(CommonConstants.ARTIFACT_ID_PROP_KEY,artifactID);
-        CommonUtil.addGovernanceArtifactEntryWithAbsoluteValues(registry, artifactID, newPath);
     }
 
     private String replacePathRecursively(String content,String value,String replacement) {
@@ -402,7 +370,7 @@ public class ServiceVersionExecutor implements Execution {
                      pathValue = formatPath(pathValue.substring(path.indexOf(RegistryConstants.PATH_SEPARATOR)));
                 }
 
-                returnPath = returnPath.replace(RESOURCE_PATH,pathValue);
+                returnPath = returnPath.replace(RESOURCE_PATH,formatPath(pathValue));
                 path = path.replace(pathValue,"");
                 continue;
             }
@@ -420,16 +388,6 @@ public class ServiceVersionExecutor implements Execution {
             return returnPath.replace(RESOURCE_VERSION, newResourceVersion);
         }
         return returnPath;
-    }
-    
-    private String formatPath(String path){
-        if(path.startsWith(RegistryConstants.PATH_SEPARATOR)){
-            path = path.substring(1);
-        }
-        if(path.endsWith(RegistryConstants.PATH_SEPARATOR)){
-            path = path.substring(0,path.length() -1);
-        }
-        return path;
     }
 
     private void makeAssociations(RequestContext requestContext, Map<String, String> parameterMap
@@ -492,22 +450,4 @@ public class ServiceVersionExecutor implements Execution {
 
         }
     }
-
-    //    From this method we are removing the endpoint values from the content since they are added back again when associating with the service
-    public static void modifyEndPointValues(OMElement element, String newValue, String oldValue) {
-        OMElement endPointRoot = element.getFirstChildWithName(new QName(CommonConstants.SERVICE_ELEMENT_NAMESPACE,"endpoints"));
-
-        if (endPointRoot != null) {
-            Iterator endpointIterator = endPointRoot.getChildElements();
-            while (endpointIterator.hasNext()) {
-                OMElement endPoint = (OMElement) endpointIterator.next();
-                if(endPoint.getText().equals(oldValue)){
-                    endPoint.setText(newValue);
-                    break;
-                }
-            }
-            element.build();
-        }
-    }
-
 }

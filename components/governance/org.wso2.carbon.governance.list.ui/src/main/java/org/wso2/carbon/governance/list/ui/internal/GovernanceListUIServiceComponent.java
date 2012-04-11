@@ -159,9 +159,29 @@ public class GovernanceListUIServiceComponent {
         }
     }
 
+    /*
+    * This method is used to capture the lifecycle attribute from the configuration.
+    *
+    * expected configuration elements are
+    *
+    * <field type="options">
+            <name label="Lifecycle Name" >Lifecycle Name</name>
+            <values class="org.wso2.carbon.governance.services.ui.utils.LifecycleListPopulator"/>
+        </field>
+    *
+    * or
+    *
+    *  <field type="options">
+            <name label="Lifecycle Name" >Lifecycle Name</name>
+            <values class="com.foo.bar.LifecycleListPopulator" isLifecycle="true"/>
+        </field>
+    *  */
     private String BuilLifecycleAttribute(GovernanceArtifactConfiguration configuration,
                                           String defaultLifecycleGeneratorClass, String lifecycleAttribute) {
         try {
+//            This part checks whether the user has given a lifecycle populates.
+//            If not, then we check whether there is an attribute called, "isLifecycle"
+//            This attribute will identify the lifecycle attribute from the configuration. 
             OMElement configurationElement = configuration.getContentDefinition();
             String xpathExpression = "//@class";
 
@@ -183,17 +203,27 @@ public class GovernanceListUIServiceComponent {
                         OMElement rootElement = (OMElement) ((OMElement) parentElement.getParent()).getParent();
                         lifecycleParentName = rootElement.getAttributeValue(new QName("name"));
                         break;
+                    }else if(parentElement.getAttributeValue(new QName("isLifecycle")).equals("true")){
+                        Iterator childrenIterator = parentElement.getParent().getChildrenWithLocalName("name");
+                        while (childrenIterator.hasNext()) {
+                            OMElement next = (OMElement) childrenIterator.next();
+                            lifecycleName = next.getAttributeValue(new QName("label"));
+                        }
+                        OMElement rootElement = (OMElement) ((OMElement) parentElement.getParent()).getParent();
+                        lifecycleParentName = rootElement.getAttributeValue(new QName("name"));
+                        break;
                     }
                 }
                 if (lifecycleParentName != null && lifecycleName != null) {
-                    lifecycleAttribute = convertName(lifecycleParentName.split(" "))
+                    return convertName(lifecycleParentName.split(" "))
                             + "_" + convertName(lifecycleName.split(" "));
                 }
             }
+            
         } catch (JaxenException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            log.error("Error in getting the lifecycle attribute",e);
         }
-        return lifecycleAttribute;
+        return null;
     }
 
     private String convertName(String[] nameParts) {

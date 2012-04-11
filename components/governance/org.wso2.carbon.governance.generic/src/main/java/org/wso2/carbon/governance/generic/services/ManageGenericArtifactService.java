@@ -143,13 +143,16 @@ public class ManageGenericArtifactService extends RegistryAbstractAdmin {
                     artifactBean.setPath(path);
                     for (String expression : expressions) {
                         if (expression != null) {
-                            if (artifact == null || artifact.getPath() == null) {
+                            if (expression.contains("@{storagePath}") && artifact.getPath() != null) {
+                                paths.add(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
+                                        GovernanceUtils
+                                                .getPathFromPathExpression(expression, artifact,
+                                                        artifact.getPath()));
+                            } else {
                                 paths.add(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
                                         GovernanceUtils
                                                 .getPathFromPathExpression(expression, artifact,
                                                         configuration.getPathExpression()));
-                            } else {
-                                paths.add(RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + artifact.getPath());
                             }
                         } else {
                             paths.add("");
@@ -221,7 +224,7 @@ public class ManageGenericArtifactService extends RegistryAbstractAdmin {
             } else {
                 manager.addGenericArtifact(artifact);
             }
-            if (lifecycleAttribute != null) {
+            if (lifecycleAttribute != null && !lifecycleAttribute.equals("null")) {
                 String lifecycle = artifact.getAttribute(lifecycleAttribute);
                 artifact.attachLifecycle(lifecycle);
             }

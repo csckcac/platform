@@ -86,9 +86,10 @@ public class CachingConfigAdminService extends AbstractAdmin {
 
     /**
      * Creates a new instance of the <code>CachingConfigAdminService</code>.
+     *
      * @throws Exception
      */
-    public CachingConfigAdminService() throws Exception{
+    public CachingConfigAdminService() throws Exception {
         axisConfig = getAxisConfig();
         pf = PersistenceFactory.getInstance(axisConfig);
         sfpm = pf.getServiceGroupFilePM();
@@ -120,7 +121,7 @@ public class CachingConfigAdminService extends AbstractAdmin {
             this.enableCaching(serviceGroupId, axisService, confData, serviceXPath);
         } catch (AxisFault af) {
             throw new CachingComponentException("errorEngagingModuleToService",
-                                                new String[]{serviceName}, af, log);
+                    new String[]{serviceName}, af, log);
         }
 
         if (log.isDebugEnabled()) {
@@ -141,7 +142,7 @@ public class CachingConfigAdminService extends AbstractAdmin {
             operationName, CachingConfigData confData) throws CachingComponentException {
         if (log.isDebugEnabled()) {
             log.debug("Enabling caching for the operation: " + operationName
-                      + " of service : " + serviceName);
+                    + " of service : " + serviceName);
         }
 
         //get AxisService from service name
@@ -166,12 +167,12 @@ public class CachingConfigAdminService extends AbstractAdmin {
             this.enableCaching(serviceGroupId, operation, confData, operationXPath);
         } catch (AxisFault af) {
             throw new CachingComponentException("errorEngagingModuleToOperation",
-                                                new String[]{operationName}, af, log);
+                    new String[]{operationName}, af, log);
         }
 
         if (log.isDebugEnabled()) {
             log.debug("Engaged caching for the Axis operation: " + serviceName
-                      + " of service : " + serviceName);
+                    + " of service : " + serviceName);
         }
         return false;
     }
@@ -194,7 +195,7 @@ public class CachingConfigAdminService extends AbstractAdmin {
 
         try {
             boolean transactionStarted = sfpm.isTransactionStarted(serviceGroupId);
-            if(!transactionStarted) {
+            if (!transactionStarted) {
                 sfpm.beginTransaction(serviceGroupId);
             }
             // Checks if an association exists between engagementPath and moduleResourcePath.
@@ -204,13 +205,13 @@ public class CachingConfigAdminService extends AbstractAdmin {
                             Resources.ModuleProperties.TYPE, Resources.Associations.ENGAGED_MODULES));
             boolean associationExist = false;
             String version = cachingModule.getVersion().toString();
-            if(cachingModule.getVersion() == null) {
+            if (cachingModule.getVersion() == null) {
                 version = Resources.ModuleProperties.UNDEFINED;
             }
             for (Object node : associations) {
                 OMElement association = (OMElement) node;
                 if (association.getAttributeValue(new QName(Resources.NAME)).equals(cachingModule.getName()) &&
-                        association.getAttributeValue(new QName(Resources.VERSION)).equals(version) ) {
+                        association.getAttributeValue(new QName(Resources.VERSION)).equals(version)) {
                     associationExist = true;
                     break;
                 }
@@ -252,32 +253,32 @@ public class CachingConfigAdminService extends AbstractAdmin {
                 OMElement policyElementToPersist = PersistenceUtils.createPolicyElement(policy);
                 policyWrapperElement.addChild(policyElementToPersist);
 
-                if (!sfpm.elementExists(serviceGroupId, policyPath+"/"+Resources.POLICIES)) {
+                if (!sfpm.elementExists(serviceGroupId, policyPath + "/" + Resources.POLICIES)) {
                     sfpm.put(serviceGroupId,
                             omFactory.createOMElement(Resources.POLICIES, null), policyPath);
                 } else {
                     //you must manually delete the existing policy before adding new one.
-                    String pathToPolicy = policyPath+"/"+Resources.POLICIES+
-                            "/"+Resources.POLICY+
+                    String pathToPolicy = policyPath + "/" + Resources.POLICIES +
+                            "/" + Resources.POLICY +
                             PersistenceUtils.getXPathTextPredicate(
-                                    Resources.ServiceProperties.POLICY_UUID, policy.getId() );
+                                    Resources.ServiceProperties.POLICY_UUID, policy.getId());
                     if (sfpm.elementExists(serviceGroupId, pathToPolicy)) {
                         sfpm.delete(serviceGroupId, pathToPolicy);
                     }
                 }
-                sfpm.put(serviceGroupId, policyWrapperElement, policyPath+
-                        "/"+Resources.POLICIES);
+                sfpm.put(serviceGroupId, policyWrapperElement, policyPath +
+                        "/" + Resources.POLICIES);
 
-                if (!sfpm.elementExists(serviceGroupId, policyPath+
+                if (!sfpm.elementExists(serviceGroupId, policyPath +
                         PersistenceUtils.getXPathTextPredicate(
-                                Resources.ServiceProperties.POLICY_UUID, policy.getId() ))) {
+                                Resources.ServiceProperties.POLICY_UUID, policy.getId()))) {
                     sfpm.put(serviceGroupId, idElement.cloneOMElement(), policyPath);
                 }
                 if (log.isDebugEnabled()) {
                     log.debug("Caching policy is saved in file system");
                 }
                 description.engageModule(cachingModule);
-                if(!transactionStarted) {
+                if (!transactionStarted) {
                     sfpm.commitTransaction(serviceGroupId);
                 }
             } catch (Exception e) {
@@ -295,7 +296,7 @@ public class CachingConfigAdminService extends AbstractAdmin {
     }
 
     public void globallyEngageCaching(CachingConfigData confData) throws AxisFault,
-                                                                         CachingComponentException {
+            CachingComponentException {
         // Retrieves caching module.
         AxisModule cachingModule = axisConfig.getModule(CachingComponentConstants.CACHING_MODULE);
         // Engage caching only if it is not engaged already.
@@ -348,10 +349,10 @@ public class CachingConfigAdminService extends AbstractAdmin {
                         omFactory.createOMElement(Resources.POLICIES, null), globalPath);
             } else {
                 //you must manually delete the existing policy before adding new one.
-                String pathToPolicy = globalPath+"/"+Resources.POLICIES+
-                        "/"+Resources.POLICY+
+                String pathToPolicy = globalPath + "/" + Resources.POLICIES +
+                        "/" + Resources.POLICY +
                         PersistenceUtils.getXPathTextPredicate(
-                                Resources.ServiceProperties.POLICY_UUID, policy.getId() );
+                                Resources.ServiceProperties.POLICY_UUID, policy.getId());
                 if (mfpm.elementExists(cachingModule.getName(), pathToPolicy)) {
                     mfpm.delete(cachingModule.getName(), pathToPolicy);
                 }
@@ -375,7 +376,7 @@ public class CachingConfigAdminService extends AbstractAdmin {
                 if ((adminParamValue != null && adminParamValue.length() != 0 &&
                         Boolean.parseBoolean(adminParamValue.trim())) ||
                         (hiddenParamValue != null && hiddenParamValue.length() != 0 &&
-                        Boolean.parseBoolean(hiddenParamValue.trim())) ){
+                                Boolean.parseBoolean(hiddenParamValue.trim()))) {
                     continue;
                 }
                 this.engageCachingForService(service.getName(), confData);
@@ -409,7 +410,7 @@ public class CachingConfigAdminService extends AbstractAdmin {
             this.disableCaching(serviceGroupId, axisService, serviceXPath);
         } catch (AxisFault af) {
             throw new CachingComponentException("errorDisablingCaching",
-                                                new String[]{serviceName}, af, log);
+                    new String[]{serviceName}, af, log);
         }
 
         if (log.isDebugEnabled()) {
@@ -429,7 +430,7 @@ public class CachingConfigAdminService extends AbstractAdmin {
             operationName) throws CachingComponentException {
         if (log.isDebugEnabled()) {
             log.debug("Disabling caching for the operation: " + operationName +
-                      "service: " + serviceName);
+                    "service: " + serviceName);
         }
 
         // Retrieves the AxisService instance corresponding to the serviceName.
@@ -451,12 +452,12 @@ public class CachingConfigAdminService extends AbstractAdmin {
             this.disableCaching(serviceGroupId, operation, operationXPath);
         } catch (AxisFault af) {
             throw new CachingComponentException("errorDisablingCaching",
-                                                new String[]{serviceName + "operation : " + operationName}, af, log);
+                    new String[]{serviceName + "operation : " + operationName}, af, log);
         }
 
         if (log.isDebugEnabled()) {
             log.debug("Disengaged caching for the Axis operation: " + operationName +
-                      "service: " + serviceName);
+                    "service: " + serviceName);
         }
         return false;
     }
@@ -477,21 +478,21 @@ public class CachingConfigAdminService extends AbstractAdmin {
             AxisModule cachingModule = axisConfig.getModule(CachingComponentConstants.CACHING_MODULE);
 
             boolean isTransactionStarted = sfpm.isTransactionStarted(serviceGroupId);
-            if(!isTransactionStarted) {
+            if (!isTransactionStarted) {
                 sfpm.beginTransaction(serviceGroupId);
             }
             /* TODO - replace these two lines with moduleResourcePath += cachingModule.getVersion()
            This is done at the moment
             */
             // Removes the association from the file system.
-            sfpm.delete(serviceGroupId, engagementPath+
-                    "/"+Resources.ModuleProperties.MODULE_XML_TAG+
-                    PersistenceUtils.getXPathAttrPredicate(Resources.NAME, cachingModule.getName())+
+            sfpm.delete(serviceGroupId, engagementPath +
+                    "/" + Resources.ModuleProperties.MODULE_XML_TAG +
+                    PersistenceUtils.getXPathAttrPredicate(Resources.NAME, cachingModule.getName()) +
                     PersistenceUtils.getXPathAttrPredicate(Resources.ModuleProperties.TYPE,
                             Resources.Associations.ENGAGED_MODULES));
             // Disengage from description
             description.disengageModule(cachingModule);
-            if(!isTransactionStarted) {
+            if (!isTransactionStarted) {
                 sfpm.commitTransaction(serviceGroupId);
             }
         } catch (Exception e) {
@@ -511,7 +512,7 @@ public class CachingConfigAdminService extends AbstractAdmin {
         //disengage the caching module
         try {
             boolean isTransactionStarted = mfpm.isTransactionStarted(module.getName());
-            if(!isTransactionStarted) {
+            if (!isTransactionStarted) {
                 mfpm.beginTransaction(module.getName());
             }
 
@@ -539,12 +540,12 @@ public class CachingConfigAdminService extends AbstractAdmin {
                 if ((adminParamValue != null && adminParamValue.length() != 0 &&
                         Boolean.parseBoolean(adminParamValue.trim())) ||
                         (hiddenParamValue != null && hiddenParamValue.length() != 0 &&
-                                Boolean.parseBoolean(hiddenParamValue.trim())) ){
+                                Boolean.parseBoolean(hiddenParamValue.trim()))) {
                     continue;
                 }
                 this.disengageCachingForService(service.getName());
             }
-            if(!isTransactionStarted) {
+            if (!isTransactionStarted) {
                 mfpm.commitTransaction(module.getName());
             }
         } catch (PersistenceException e) {
@@ -637,7 +638,7 @@ public class CachingConfigAdminService extends AbstractAdmin {
             policySubject.attachPolicy(builtPolicy);
             if (log.isDebugEnabled()) {
                 log.debug("Used the new policy configuration as no " +
-                          "existing policy components were found");
+                        "existing policy components were found");
             }
         } else {
             Policy[] arr = cachingPolicyUtils.retrieveCachingAssertionAndPolicy(policyComponents);
@@ -647,7 +648,7 @@ public class CachingConfigAdminService extends AbstractAdmin {
                 policySubject.attachPolicy(builtPolicy);
                 if (log.isDebugEnabled()) {
                     log.debug("Used the new policy configuration as no existing " +
-                              "caching assertion was found");
+                            "caching assertion was found");
                 }
             } else {
 
@@ -667,7 +668,7 @@ public class CachingConfigAdminService extends AbstractAdmin {
 
         // Checks whether the service is already associated with any caching policy.
         if (policyComponents != null &&
-            (arr = cachingPolicyUtils.retrieveCachingAssertionAndPolicy(policyComponents)) != null) {
+                (arr = cachingPolicyUtils.retrieveCachingAssertionAndPolicy(policyComponents)) != null) {
             if (log.isDebugEnabled()) {
                 log.debug("Returns the configuration data generated from the exisiting caching policy");
             }
@@ -736,7 +737,7 @@ public class CachingConfigAdminService extends AbstractAdmin {
         AxisService axisService = axisConfig.getServiceForActivation(serviceName);
         if (axisService == null) {
             throw new CachingComponentException("noSuchService",
-                                                new String[]{serviceName}, log);
+                    new String[]{serviceName}, log);
         }
         return axisService;
     }

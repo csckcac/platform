@@ -126,7 +126,7 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
         // persist
         try {
             boolean transactionStarted = sfpm.isTransactionStarted(serviceGroupId);
-            if(!transactionStarted) {
+            if (!transactionStarted) {
                 sfpm.beginTransaction(serviceGroupId);
             }
             try {
@@ -137,13 +137,13 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
                                 Resources.ModuleProperties.TYPE, Resources.Associations.ENGAGED_MODULES));
                 boolean associationExist = false;
                 String version = module.getVersion().toString();
-                if(module.getVersion() == null) {
+                if (module.getVersion() == null) {
                     version = Resources.ModuleProperties.UNDEFINED;
                 }
                 for (Object node : associations) {
                     OMElement association = (OMElement) node;
                     if (association.getAttributeValue(new QName(Resources.NAME)).equals(module.getName()) &&
-                            association.getAttributeValue(new QName(Resources.VERSION)).equals(version) ) {
+                            association.getAttributeValue(new QName(Resources.VERSION)).equals(version)) {
                         associationExist = true;
                         break;
                     }
@@ -191,34 +191,34 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
                 OMElement policyElementToPersist = PersistenceUtils.createPolicyElement(policyToPersist);
                 policyWrapperElement.addChild(policyElementToPersist);
 
-                if (!sfpm.elementExists(serviceGroupId, serviceXPath+"/"+Resources.POLICIES)) {
+                if (!sfpm.elementExists(serviceGroupId, serviceXPath + "/" + Resources.POLICIES)) {
                     sfpm.put(serviceGroupId,
                             omFactory.createOMElement(Resources.POLICIES, null), serviceXPath);
                 } else {
                     //you must manually delete the existing policy before adding new one.
-                    String pathToPolicy = serviceXPath+"/"+Resources.POLICIES+
-                            "/"+Resources.POLICY+
+                    String pathToPolicy = serviceXPath + "/" + Resources.POLICIES +
+                            "/" + Resources.POLICY +
                             PersistenceUtils.getXPathTextPredicate(
-                                    Resources.ServiceProperties.POLICY_UUID, policyToPersist.getId() );
+                                    Resources.ServiceProperties.POLICY_UUID, policyToPersist.getId());
                     if (sfpm.elementExists(serviceGroupId, pathToPolicy)) {
                         sfpm.delete(serviceGroupId, pathToPolicy);
                     }
                 }
-                sfpm.put(serviceGroupId, policyWrapperElement, serviceXPath+
-                        "/"+Resources.POLICIES);
+                sfpm.put(serviceGroupId, policyWrapperElement, serviceXPath +
+                        "/" + Resources.POLICIES);
 
-                if (!sfpm.elementExists(serviceGroupId, serviceXPath+
+                if (!sfpm.elementExists(serviceGroupId, serviceXPath +
                         PersistenceUtils.getXPathTextPredicate(
-                                Resources.ServiceProperties.POLICY_UUID, policyToPersist.getId() ))) {
+                                Resources.ServiceProperties.POLICY_UUID, policyToPersist.getId()))) {
                     sfpm.put(serviceGroupId, idElement.cloneOMElement(), serviceXPath);
                 }
-    //            this.persistPoliciesToRegistry(policyToPersist, servicePath, servicePath, policyResource);
+                //            this.persistPoliciesToRegistry(policyToPersist, servicePath, servicePath, policyResource);
             } catch (Exception e) {
                 log.error("Error occurred while persisting", e);
                 throw new ThrottleComponentException("errorSavingPolicy");
             }
 
-            if(!transactionStarted) {
+            if (!transactionStarted) {
                 sfpm.commitTransaction(serviceGroupId);
             }
         } catch (Exception e) {
@@ -313,10 +313,10 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
                             omFactory.createOMElement(Resources.POLICIES, null), globalPath);
                 } else {
                     //you must manually delete the existing policy before adding new one.
-                    String pathToPolicy = globalPath+"/"+Resources.POLICIES+
-                            "/"+Resources.POLICY+
+                    String pathToPolicy = globalPath + "/" + Resources.POLICIES +
+                            "/" + Resources.POLICY +
                             PersistenceUtils.getXPathTextPredicate(
-                                    Resources.ServiceProperties.POLICY_UUID, policyToPersist.getId() );
+                                    Resources.ServiceProperties.POLICY_UUID, policyToPersist.getId());
                     if (mfpm.elementExists(module.getName(), pathToPolicy)) {
                         mfpm.delete(module.getName(), pathToPolicy);
                     }
@@ -342,7 +342,7 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
                     if ((adminParamValue != null && adminParamValue.length() != 0 &&
                             Boolean.parseBoolean(adminParamValue.trim())) ||
                             (hiddenParamValue != null && hiddenParamValue.length() != 0 &&
-                                    Boolean.parseBoolean(hiddenParamValue.trim())) ){
+                                    Boolean.parseBoolean(hiddenParamValue.trim()))) {
                         continue;
                     }
                     this.enableThrottling(service.getName(), policy);
@@ -361,15 +361,16 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
 
     /**
      * Engage throttling for the given operation
-     * @param policy - throttle config
-     * @param serviceName - name of the service which contains the operation
+     *
+     * @param policy        - throttle config
+     * @param serviceName   - name of the service which contains the operation
      * @param operationName - operation name
      * @return - true if already engaged throttling at the service level, else false
-     * @throws AxisFault - on axis error
+     * @throws AxisFault                  - on axis error
      * @throws ThrottleComponentException - throttle specific error
      */
     public boolean engageThrottlingForOperation(ThrottlePolicy policy,
-                                             String serviceName, String operationName)
+                                                String serviceName, String operationName)
             throws AxisFault, ThrottleComponentException {
 
         if (log.isDebugEnabled()) {
@@ -402,7 +403,7 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
         // persist
         try {
             boolean isTransactionStarted = sfpm.isTransactionStarted(serviceGroupId);
-            if(!isTransactionStarted) {
+            if (!isTransactionStarted) {
                 sfpm.beginTransaction(serviceGroupId);
             }
 
@@ -413,13 +414,13 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
                             Resources.ModuleProperties.TYPE, Resources.Associations.ENGAGED_MODULES));
             boolean associationExist = false;
             String version = module.getVersion().toString();
-            if(module.getVersion() == null) {
+            if (module.getVersion() == null) {
                 version = Resources.ModuleProperties.UNDEFINED;
             }
             for (Object node : associations) {
                 OMElement association = (OMElement) node;
-                if(association.getAttributeValue(new QName(Resources.NAME)).equals(module.getName()) &&
-                        association.getAttributeValue(new QName(Resources.VERSION)).equals(version) ) {
+                if (association.getAttributeValue(new QName(Resources.NAME)).equals(module.getName()) &&
+                        association.getAttributeValue(new QName(Resources.VERSION)).equals(version)) {
                     associationExist = true;
                     break;
                 }
@@ -431,7 +432,7 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
                         PersistenceUtils.createModule(module.getName(), version, Resources.Associations.ENGAGED_MODULES),
                         operationXPath);
             }
-            if(!isTransactionStarted) {
+            if (!isTransactionStarted) {
                 sfpm.commitTransaction(serviceGroupId);
             }
         } catch (PersistenceException e) {
@@ -460,7 +461,7 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
         //persist the throttle builtPolicy into registry
         try {
             boolean isTransactionStarted = sfpm.isTransactionStarted(serviceGroupId);
-            if(!isTransactionStarted) {
+            if (!isTransactionStarted) {
                 sfpm.beginTransaction(serviceGroupId);
             }
 
@@ -476,28 +477,28 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
             OMElement policyElementToPersist = PersistenceUtils.createPolicyElement(policyToPersist);
             policyWrapperElement.addChild(policyElementToPersist);
 
-            if (!sfpm.elementExists(serviceGroupId, serviceXPath+"/"+Resources.POLICIES)) {
+            if (!sfpm.elementExists(serviceGroupId, serviceXPath + "/" + Resources.POLICIES)) {
                 sfpm.put(serviceGroupId,
                         omFactory.createOMElement(Resources.POLICIES, null), serviceXPath);
             } else {
                 //you must manually delete the existing policy before adding new one.
-                String pathToPolicy = serviceXPath+"/"+Resources.POLICIES+
-                        "/"+Resources.POLICY+
+                String pathToPolicy = serviceXPath + "/" + Resources.POLICIES +
+                        "/" + Resources.POLICY +
                         PersistenceUtils.getXPathTextPredicate(
-                                Resources.ServiceProperties.POLICY_UUID, policyToPersist.getId() );
+                                Resources.ServiceProperties.POLICY_UUID, policyToPersist.getId());
                 if (sfpm.elementExists(serviceGroupId, pathToPolicy)) {
                     sfpm.delete(serviceGroupId, pathToPolicy);
                 }
             }
-            sfpm.put(serviceGroupId, policyWrapperElement, serviceXPath+
-                    "/"+Resources.POLICIES);
+            sfpm.put(serviceGroupId, policyWrapperElement, serviceXPath +
+                    "/" + Resources.POLICIES);
 
-            if (!sfpm.elementExists(serviceGroupId, serviceXPath+
+            if (!sfpm.elementExists(serviceGroupId, serviceXPath +
                     PersistenceUtils.getXPathTextPredicate(
-                            Resources.ServiceProperties.POLICY_UUID, policyToPersist.getId() ))) {
+                            Resources.ServiceProperties.POLICY_UUID, policyToPersist.getId()))) {
                 sfpm.put(serviceGroupId, idElement.cloneOMElement(), operationXPath);
             }
-            if(!isTransactionStarted) {
+            if (!isTransactionStarted) {
                 sfpm.beginTransaction(serviceGroupId);
             }
         } catch (Exception e) {
@@ -512,7 +513,8 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
 
     /**
      * Disengages throttling from an operation
-     * @param serviceName - name of the service which contains the operation
+     *
+     * @param serviceName   - name of the service which contains the operation
      * @param operationName - operation name
      * @return - true if throttling is already engaged at the service level, else false
      * @throws ThrottleComponentException - on error
@@ -553,16 +555,16 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
             //disengage the throttling module
             try {
                 boolean isTransactionStarted = sfpm.isTransactionStarted(serviceGroupId);
-                if(!isTransactionStarted) {
+                if (!isTransactionStarted) {
                     sfpm.beginTransaction(serviceGroupId);
                 }
                 // remove persisted data
-                sfpm.delete(serviceGroupId, operationXPath+
-                "/"+Resources.ModuleProperties.MODULE_XML_TAG+
-                PersistenceUtils.getXPathAttrPredicate(Resources.NAME, module.getName())+
-                PersistenceUtils.getXPathAttrPredicate(Resources.ModuleProperties.TYPE,
-                        Resources.Associations.ENGAGED_MODULES));
-                if(!isTransactionStarted) {
+                sfpm.delete(serviceGroupId, operationXPath +
+                        "/" + Resources.ModuleProperties.MODULE_XML_TAG +
+                        PersistenceUtils.getXPathAttrPredicate(Resources.NAME, module.getName()) +
+                        PersistenceUtils.getXPathAttrPredicate(Resources.ModuleProperties.TYPE,
+                                Resources.Associations.ENGAGED_MODULES));
+                if (!isTransactionStarted) {
                     sfpm.commitTransaction(serviceGroupId);
                 }
 
@@ -606,15 +608,15 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
 
                 // remove persisted data
                 boolean isTransactionStarted = sfpm.isTransactionStarted(serviceGroupId);
-                if(!isTransactionStarted) {
+                if (!isTransactionStarted) {
                     sfpm.beginTransaction(serviceGroupId);
                 }
-                sfpm.delete(serviceGroupId, serviceXPath+
-                        "/"+Resources.ModuleProperties.MODULE_XML_TAG+
-                        PersistenceUtils.getXPathAttrPredicate(Resources.NAME, module.getName())+
+                sfpm.delete(serviceGroupId, serviceXPath +
+                        "/" + Resources.ModuleProperties.MODULE_XML_TAG +
+                        PersistenceUtils.getXPathAttrPredicate(Resources.NAME, module.getName()) +
                         PersistenceUtils.getXPathAttrPredicate(Resources.ModuleProperties.TYPE,
                                 Resources.Associations.ENGAGED_MODULES));
-                if(!isTransactionStarted) {
+                if (!isTransactionStarted) {
                     sfpm.commitTransaction(serviceGroupId);
                 }
 
@@ -649,7 +651,7 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
                     .getModule(ThrottleComponentConstants.THROTTLE_MODULE);
 
             boolean isTransactionStarted = mfpm.isTransactionStarted(module.getName());
-            if(!isTransactionStarted) {
+            if (!isTransactionStarted) {
                 mfpm.beginTransaction(module.getName());
             }
 
@@ -662,7 +664,7 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
                 }
             }
 
-            if(!isTransactionStarted) {
+            if (!isTransactionStarted) {
                 mfpm.commitTransaction(module.getName());
             }
 
@@ -673,7 +675,7 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
 
             //disengage throttling from all the services which are not admin services
             for (Iterator serviceIter = this.axisConfig.getServices().values().iterator();
-                 serviceIter.hasNext();) {
+                 serviceIter.hasNext(); ) {
                 AxisService service = (AxisService) serviceIter.next();
                 String adminParamValue =
                         (String) service.getParent().getParameterValue(ADMIN_SERICE_PARAM_NAME);
@@ -683,7 +685,7 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
                 if ((adminParamValue != null && adminParamValue.length() != 0 &&
                         Boolean.parseBoolean(adminParamValue.trim())) ||
                         (hiddenParamValue != null && hiddenParamValue.length() != 0 &&
-                                Boolean.parseBoolean(hiddenParamValue.trim())) ){
+                                Boolean.parseBoolean(hiddenParamValue.trim()))) {
                     continue;
                 }
                 this.disableThrottling(service.getName());
@@ -825,12 +827,11 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
                     .newInstance().createXMLStreamReader(new StringReader(xml));
             StAXOMBuilder builder = new StAXOMBuilder(reader);
             return builder.getDocumentElement();
-        }
-        catch (XMLStreamException e) {
+        } catch (XMLStreamException e) {
             throw new RuntimeException(e);
         }
     }
-    
+
     private ThrottlePolicy preparePolicyConfigs(XmlPrimtiveAssertion assertion, ThrottlePolicy currentConfig) {
         ArrayList<InternalData> internalConfigs = new ArrayList<InternalData>();
         Policy throttlePolicy;
@@ -930,7 +931,7 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
             if (comp instanceof Policy) {
                 Policy policy = (Policy) comp;
                 for (Iterator iterator = policy.getAlternatives();
-                     iterator.hasNext();) {
+                     iterator.hasNext(); ) {
                     Object object = iterator.next();
                     if (object instanceof List) {
                         List list = (List) object;
@@ -1153,7 +1154,8 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
 
     /**
      * Returns the throttle assertion relevent to level of engagement
-     * @param level - global,  service or operation level
+     *
+     * @param level  - global,  service or operation level
      * @param parent - policy element
      * @return throttle assertion
      */

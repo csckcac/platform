@@ -791,6 +791,7 @@ INFO <span style='color:#808030; '>-</span> JMSListener <span style='color:#8080
             </li>
             <li>Then you can configure JMS transport from service level via UI.</li>
         </ol>
+        <p>Note - More information can be found from this article <a href="http://wso2.org/library/articles/2012/01/configuring-jms-transport-in-wso2-business-process-server-bps">Configuring JMS Transport in WSO2 Business Process Server (BPS)</a>.</p>
 
         <!-- Process Instance Cleanup  -->
         <p>

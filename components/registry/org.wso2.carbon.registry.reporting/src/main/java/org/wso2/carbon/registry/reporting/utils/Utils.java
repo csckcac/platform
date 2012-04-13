@@ -45,7 +45,7 @@ public class Utils {
                 }
                 name = name.substring(0, 1).toLowerCase() + name.substring(1);
                 String value = attributes.get(name);
-                if (value == null && method.getAnnotation(Property.class).value()) {
+                if (value == null && method.getAnnotation(Property.class).mandatory()) {
                     throw new IOException("A mandatory field " + name + " was not set");
                 }
                 method.invoke(reportGenerator, value);

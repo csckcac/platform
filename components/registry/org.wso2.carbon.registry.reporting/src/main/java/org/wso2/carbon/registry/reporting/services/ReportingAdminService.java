@@ -223,7 +223,7 @@ public class ReportingAdminService extends RegistryAbstractAdmin {
         Method[] declaredMethods = Class.forName(className).getDeclaredMethods();
         for (Method method : declaredMethods) {
             if (method.isAnnotationPresent(Property.class) &&
-                    method.getAnnotation(Property.class).value()) {
+                    method.getAnnotation(Property.class).mandatory()) {
                 String name = method.getName();
                 if (name.startsWith("set")) {
                     name = name.substring("set".length());

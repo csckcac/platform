@@ -30,5 +30,11 @@ import java.lang.annotation.Target;
  * present the user with a set of fields for which we can collect values for.
  */
 public @interface Property {
-    boolean value();
+
+    /**
+     * The mandatory field will define whether this property is mandatory or not.
+     *
+     * @return true if the property is mandatory or false if not.
+     */
+    boolean mandatory();
 }

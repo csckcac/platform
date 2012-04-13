@@ -28,6 +28,7 @@ org.wso2.carbon.registry.info_
 org.wso2.carbon.registry.profiles_
 org.wso2.carbon.registry.properties_
 org.wso2.carbon.registry.relations_
+org.wso2.carbon.registry.reporting_
 org.wso2.carbon.registry.resource_
 org.wso2.carbon.registry.search_
 org.wso2.carbon.registry.server_

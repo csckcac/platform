@@ -18,6 +18,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="org.wso2.carbon.registry.reporting.ui.clients.ReportGeneratorClient" %>
 <%@ page import="java.util.*" %>
+<%@ page import="org.wso2.carbon.registry.common.utils.CommonUtil" %>
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%
@@ -32,10 +33,11 @@
             return;
         }
         attributes.addAll(Arrays.asList(client.getAttributeNames(reportClass)));
-        mandatoryAttributes.addAll(Arrays.asList(client.getMandatoryAttributeNames(reportClass)));
         String reportName = request.getParameter("reportName");
-        if (reportName != null) {
-            attributeValues = client.getSavedReport(reportName).getAttributes();
+        if (reportName != null && reportName.length() > 0) {
+            // mandatory attributes show up only when you have already created a report. For the first time, everything is optional.
+            mandatoryAttributes.addAll(Arrays.asList(client.getMandatoryAttributeNames(reportClass)));
+            attributeValues = CommonUtil.attributeArrayToMap(client.getSavedReport(reportName).getAttributes());
         }
     } catch (Exception e){
         response.setStatus(500);

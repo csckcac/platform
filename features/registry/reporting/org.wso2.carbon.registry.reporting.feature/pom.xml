@@ -39,6 +39,12 @@
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.registry.reporting.server.feature</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+	    </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.registry.reporting.ui.feature</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
@@ -65,6 +71,7 @@
                                 <importFeatureDef>org.wso2.carbon.registry.core:${registry.core.feature.version}</importFeatureDef>
                             </importFeatures>
                             <includedFeatures>
+                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.registry.reporting.server.feature</includedFeatureDef>
                                 <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.registry.reporting.ui.feature</includedFeatureDef>
                             </includedFeatures>
                         </configuration>

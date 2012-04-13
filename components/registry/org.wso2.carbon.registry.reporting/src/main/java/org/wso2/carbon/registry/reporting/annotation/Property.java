@@ -16,7 +16,7 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.registry.reporting.ui.annotation;
+package org.wso2.carbon.registry.reporting.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -16,18 +16,18 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.registry.reporting.ui.clients.beans;
+package org.wso2.carbon.registry.common.beans;
 
-import java.util.Collections;
-import java.util.Map;
+import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 
+@SuppressWarnings({"EI_EXPOSE_REP", "EI_EXPOSE_REP2"})
 public class ReportConfigurationBean {
 
     private String reportClass;
     private String name;
     private String template;
     private String type;
-    private Map<String, String> attributes = Collections.<String, String>emptyMap();
+    private String[] attributes = new String[0];
     private String cronExpression;
     private String registryURL;
     private String username;
@@ -67,11 +67,11 @@ public class ReportConfigurationBean {
         this.type = type;
     }
 
-    public Map<String, String> getAttributes() {
+    public String[] getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(Map<String, String> attributes) {
+    public void setAttributes(String[] attributes) {
         this.attributes = attributes;
     }
 
@@ -115,6 +115,7 @@ public class ReportConfigurationBean {
         this.resourcePath = resourcePath;
     }
 
+    @SuppressWarnings("unused")
     public boolean isScheduled() {
         return isScheduled;
     }

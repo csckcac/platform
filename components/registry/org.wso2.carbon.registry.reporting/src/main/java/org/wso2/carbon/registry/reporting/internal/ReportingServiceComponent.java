@@ -16,24 +16,45 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.registry.reporting.ui.internal;
+package org.wso2.carbon.registry.reporting.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.ntask.common.TaskException;
 import org.wso2.carbon.ntask.core.TaskManager;
 import org.wso2.carbon.ntask.core.service.TaskService;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 /**
- * @scr.component name="org.wso2.carbon.registry.reporting.ui" immediate="true"
+ * @scr.component name="org.wso2.carbon.registry.reporting" immediate="true"
  * @scr.reference name="ntask.component" interface="org.wso2.carbon.ntask.core.service.TaskService"
  * cardinality="1..1" policy="dynamic" bind="setTaskService" unbind="unsetTaskService"
  */
-public class ReportingUIServiceComponent {
+public class ReportingServiceComponent {
 
-    private static final Log log = LogFactory.getLog(ReportingUIServiceComponent.class);
+    private static final Log log = LogFactory.getLog(ReportingServiceComponent.class);
     private static final String REPORTING_TASK_MANAGER = "registryReportingTasks";
     private static TaskManager taskManager;
+
+    /**
+     * Method to trigger when the OSGI component become active.
+     *
+     * @param context the component context
+     */
+    protected void activate(ComponentContext context) {
+        log.debug("******* Registry Reporting bundle is activated ******* ");
+    }
+
+    /**
+     * Method to trigger when the OSGI component become inactive.
+     *
+     * @param context the component context
+     */
+    protected void deactivate(ComponentContext context) {
+        log.debug("******* Registry Reporting bundle is deactivated ******* ");
+    }
 
     public static TaskManager getTaskManager() {
         return taskManager;
@@ -41,9 +62,16 @@ public class ReportingUIServiceComponent {
 
     public void setTaskService(TaskService taskService) {
         try {
-            updateTaskManager(taskService.getTaskManager(REPORTING_TASK_MANAGER));
+            SuperTenantCarbonContext.startTenantFlow();
+            try {
+                SuperTenantCarbonContext.getCurrentContext().setTenantId(
+                        MultitenantConstants.SUPER_TENANT_ID);
+                updateTaskManager(taskService.getTaskManager(REPORTING_TASK_MANAGER));
+            } finally {
+                SuperTenantCarbonContext.endTenantFlow();
+            }
         } catch (TaskException e) {
-            log.error("Unable to obtain task manager");
+            log.error("Unable to obtain task manager", e);
         }
     }
 

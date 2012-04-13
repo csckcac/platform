@@ -16,7 +16,7 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.registry.reporting.ui;
+package org.wso2.carbon.registry.reporting;
 
 import org.wso2.carbon.registry.core.Registry;
 import java.io.ByteArrayOutputStream;

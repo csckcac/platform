@@ -20,6 +20,7 @@ import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.ntask.common.TaskException;
 import org.wso2.carbon.ntask.core.AbstractTask;
 import org.wso2.carbon.ntask.core.Task;
@@ -28,6 +29,7 @@ import org.wso2.carbon.ntask.core.TaskManager;
 import org.wso2.carbon.ntask.core.service.TaskService;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -68,7 +70,15 @@ public class RegistryTaskServiceComponent {
             log.debug("Setting the Task Service");
         }
         try {
-            TaskManager taskManager = taskService.getTaskManager(REGISTRY_TASK_MANAGER);
+            TaskManager taskManager = null;
+            SuperTenantCarbonContext.startTenantFlow();
+            try {
+                SuperTenantCarbonContext.getCurrentContext().setTenantId(
+                        MultitenantConstants.SUPER_TENANT_ID);
+                taskManager = taskService.getTaskManager(REGISTRY_TASK_MANAGER);
+            } finally {
+                SuperTenantCarbonContext.endTenantFlow();
+            }
             if (taskManager != null) {
                 registerTasks(taskManager);
                 List<TaskInfo> allTasks = taskManager.getAllTasks();
@@ -132,7 +142,15 @@ public class RegistryTaskServiceComponent {
 
     protected void unsetTaskService(TaskService taskService) {
         try {
-            TaskManager taskManager = taskService.getTaskManager(REGISTRY_TASK_MANAGER);
+            TaskManager taskManager = null;
+            SuperTenantCarbonContext.startTenantFlow();
+            try {
+                SuperTenantCarbonContext.getCurrentContext().setTenantId(
+                        MultitenantConstants.SUPER_TENANT_ID);
+                taskManager = taskService.getTaskManager(REGISTRY_TASK_MANAGER);
+            } finally {
+                SuperTenantCarbonContext.endTenantFlow();
+            }
             if (taskManager != null) {
                 for (TaskInfo taskInfo : taskManager.getAllTasks()) {
                     taskManager.deleteTask(taskInfo.getName());

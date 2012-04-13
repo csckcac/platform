@@ -36,8 +36,7 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 public class CommonUtil {
 
@@ -359,5 +358,26 @@ public class CommonUtil {
             return true;
         }
         return false;
+    }
+
+    public static Map<String, String> attributeArrayToMap(String[] array) {
+        Map<String, String> map = new LinkedHashMap<String, String>();
+        if (array != null) {
+            for (String item : array) {
+                if (item != null) {
+                    String[] pair = item.split("\\|");
+                    map.put(pair[0], pair[1]);
+                }
+            }
+        }
+        return map;
+    }
+
+    public static String[] mapToAttributeArray(Map<String, String> map) {
+        List<String> list = new LinkedList<String>();
+        for (Map.Entry<String, String> e : map.entrySet()) {
+            list.add(e.getKey() + "|" + e.getValue());
+        }
+        return list.toArray(new String[list.size()]);
     }
 }

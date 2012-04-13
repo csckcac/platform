@@ -16,44 +16,9 @@
 
 package org.wso2.carbon.registry.reporting.ui.utils;
 
-import org.wso2.carbon.registry.core.Registry;
-import org.wso2.carbon.registry.reporting.ui.AbstractReportGenerator;
-import org.wso2.carbon.registry.reporting.ui.annotation.Property;
-import org.wso2.carbon.registry.reporting.ui.clients.beans.ReportConfigurationBean;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.Map;
+import org.wso2.carbon.registry.reporting.stub.beans.xsd.ReportConfigurationBean;
 
 public class Utils {
-
-    public static ByteArrayOutputStream getReportContentStream(String reportClass,
-                                                               String template,
-                                                               String type,
-                                                               Map<String, String> attributes,
-                                                               Registry registry)
-            throws Exception {
-        AbstractReportGenerator reportGenerator =
-                (AbstractReportGenerator)Class.forName(reportClass).newInstance();
-        reportGenerator.setRegistry(registry);
-        Method[] declaredMethods = reportGenerator.getClass().getDeclaredMethods();
-        for (Method method : declaredMethods) {
-            if (method.isAnnotationPresent(Property.class)) {
-                String name = method.getName();
-                if (name.startsWith("set")) {
-                    name = name.substring("set".length());
-                }
-                name = name.substring(0, 1).toLowerCase() + name.substring(1);
-                String value = attributes.get(name);
-                if (value == null && method.getAnnotation(Property.class).value()) {
-                    throw new IOException("A mandatory field " + name + " was not set");
-                }
-                method.invoke(reportGenerator, value);
-            }
-        }
-        return reportGenerator.execute(template, type);
-    }
 
     public static ReportConfigurationBean[] getPaginatedReports(int start, int pageLength,
                                                              ReportConfigurationBean[] reports) {

@@ -13,7 +13,7 @@
 ~  See the License for the specific language governing permissions and
 ~  limitations under the License.
 --%>
-<%@ page import="org.wso2.carbon.registry.reporting.ui.clients.beans.ReportConfigurationBean" %>
+<%@ page import="org.wso2.carbon.registry.reporting.stub.beans.xsd.ReportConfigurationBean" %>
 <%@ page import="org.wso2.carbon.registry.reporting.ui.clients.ReportGeneratorClient" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.registry.core.utils.RegistryUtils" %>
@@ -110,7 +110,6 @@
             pageNumber = 1;
         }
     
-        numberOfPages=1;
         if(savedReports.length % itemsPerPage==0){
             numberOfPages =  savedReports.length / itemsPerPage;
         }
@@ -130,7 +129,7 @@
 %>
                 <tr>
                     <td style="width:30%"><a href="edit_report.jsp?reportName=<%=report.getName()%>"><%=report.getName()%></a></td>
-                    <td style="width:10%"><%=report.getType() != null ? CarbonUIUtil.geti18nString("report.type." + report.getType().toLowerCase(), "org.wso2.carbon.registry.reporting.ui.i18n.Resources", request.getLocale()) : ""%></a></td>
+                    <td style="width:10%"><%=report.getType() != null ? CarbonUIUtil.geti18nString("report.type." + report.getType().toLowerCase(), "org.wso2.carbon.registry.reporting.ui.i18n.Resources", request.getLocale()) : ""%></td>
                     <td style="width:20%"><a href="../resources/resource.jsp?region=region3&item=resource_browser_menu&viewType=std&path=<%=report.getTemplate()%>"><%=RegistryUtils.getResourceName(
                             report.getTemplate())%></a></td>
                     <td style="width:40%">
@@ -144,7 +143,7 @@
                                              style="background-image: url(../registry-reporting/images/generate.gif);">
                             <fmt:message key="generate"/>
                         </a>&nbsp;
-                        <% if (report.isScheduled()) { %>
+                        <% if (report.getScheduled()) { %>
                         <a class="icon-link" onclick="stopReport('<%=report.getName()%>')" href="javascript:void(0)"
                            style="background-image: url(../registry-reporting/images/stop.gif);">
                             <fmt:message key="stop"/>

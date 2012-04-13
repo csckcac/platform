@@ -17,8 +17,9 @@ package org.wso2.carbon.registry.reporting.ui.clients;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.registry.common.utils.CommonUtil;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.registry.reporting.ui.clients.beans.ReportConfigurationBean;
+import org.wso2.carbon.registry.reporting.stub.beans.xsd.ReportConfigurationBean;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -75,14 +76,15 @@ public class ReportGeneratorServlet extends HttpServlet {
             }
             String attributes = request.getParameter("attributes");
             if (attributes != null && attributes.length() > 0) {
-                Map<String, String> attributeMap = bean.getAttributes();
+                Map<String, String> attributeMap =
+                        CommonUtil.attributeArrayToMap(bean.getAttributes());
                 attributes = attributes.substring(0, attributes.length() - 1);
                 String[] attributeStrings = attributes.split("\\^");
                 for (String temp : attributeStrings) {
                     String[] pair = temp.split("\\|");
                     attributeMap.put(pair[0].substring("attribute".length()), pair[1]);
                 }
-                bean.setAttributes(attributeMap);
+                bean.setAttributes(CommonUtil.mapToAttributeArray(attributeMap));
             }
 
             response.setDateHeader("Last-Modified", new Date().getTime());
@@ -108,7 +110,7 @@ public class ReportGeneratorServlet extends HttpServlet {
 
             ServletOutputStream servletOutputStream = response.getOutputStream();
             try {
-                servletOutputStream.write(client.getReportBytes(bean).toByteArray());
+                client.getReportBytes(bean).writeTo(servletOutputStream);
                 response.flushBuffer();
                 servletOutputStream.flush();
             } finally {

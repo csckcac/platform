@@ -13,7 +13,7 @@
 ~  See the License for the specific language governing permissions and
 ~  limitations under the License.
 --%>
-<%@ page import="org.wso2.carbon.registry.reporting.ui.clients.beans.ReportConfigurationBean" %>
+<%@ page import="org.wso2.carbon.registry.reporting.stub.beans.xsd.ReportConfigurationBean" %>
 <%@ page import="org.wso2.carbon.registry.reporting.ui.clients.ReportGeneratorClient" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>

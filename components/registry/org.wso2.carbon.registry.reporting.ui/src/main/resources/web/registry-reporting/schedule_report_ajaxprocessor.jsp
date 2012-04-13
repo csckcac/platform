@@ -18,10 +18,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%@ page import="org.wso2.carbon.registry.reporting.ui.clients.ReportGeneratorClient" %>
-<%@ page import="org.wso2.carbon.registry.reporting.ui.clients.beans.ReportConfigurationBean" %>
+<%@ page import="org.wso2.carbon.registry.reporting.stub.beans.xsd.ReportConfigurationBean" %>
 <%@ page import="java.util.Collections" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
+<%@ page import="org.wso2.carbon.registry.common.utils.CommonUtil" %>
 <%
     try{
         ReportGeneratorClient client = new ReportGeneratorClient(request, config);
@@ -44,9 +45,9 @@
                 String[] pair = temp.split("\\|");
                 attributeMap.put(pair[0].substring("attribute".length()), pair[1]);
             }
-            bean.setAttributes(attributeMap);
+            bean.setAttributes(CommonUtil.mapToAttributeArray(attributeMap));
         } else {
-            bean.setAttributes(Collections.<String, String>emptyMap());
+            bean.setAttributes(new String[0]);
         }
         client.scheduleReport(bean);
     } catch (Exception e){

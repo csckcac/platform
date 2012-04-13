@@ -25,7 +25,6 @@ import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.ntask.common.TaskException;
 import org.wso2.carbon.ntask.core.TaskManager;
 import org.wso2.carbon.ntask.core.service.TaskService;
-import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 /**
  * @scr.component name="org.wso2.carbon.registry.reporting" immediate="true"
@@ -36,7 +35,7 @@ public class ReportingServiceComponent {
 
     private static final Log log = LogFactory.getLog(ReportingServiceComponent.class);
     private static final String REPORTING_TASK_MANAGER = "registryReportingTasks";
-    private static TaskManager taskManager;
+    private static TaskService taskService;
 
     /**
      * Method to trigger when the OSGI component become active.
@@ -56,31 +55,32 @@ public class ReportingServiceComponent {
         log.debug("******* Registry Reporting bundle is deactivated ******* ");
     }
 
-    public static TaskManager getTaskManager() {
-        return taskManager;
-    }
-
-    public void setTaskService(TaskService taskService) {
+    public static TaskManager getTaskManager(int tenantId) {
         try {
             SuperTenantCarbonContext.startTenantFlow();
             try {
-                SuperTenantCarbonContext.getCurrentContext().setTenantId(
-                        MultitenantConstants.SUPER_TENANT_ID);
-                updateTaskManager(taskService.getTaskManager(REPORTING_TASK_MANAGER));
+                SuperTenantCarbonContext.getCurrentContext().setTenantId(tenantId);
+                return taskService.getTaskManager(REPORTING_TASK_MANAGER);
             } finally {
                 SuperTenantCarbonContext.endTenantFlow();
             }
         } catch (TaskException e) {
             log.error("Unable to obtain task manager", e);
         }
+        return null;
+    }
+
+    public void setTaskService(TaskService taskService) {
+        updateTaskService(taskService);
+
     }
 
     public void unsetTaskService(TaskService taskService) {
-        updateTaskManager(null);
+        updateTaskService(null);
     }
 
-    // Method to update task manager.
-    private static void updateTaskManager(TaskManager manager) {
-        taskManager = manager;
+    // Method to update task service.
+    private static void updateTaskService(TaskService service) {
+        taskService = service;
     }
 }

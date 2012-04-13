@@ -33,6 +33,7 @@ import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.reporting.annotation.Property;
 import org.wso2.carbon.registry.reporting.internal.ReportingServiceComponent;
@@ -68,14 +69,16 @@ public class ReportingAdminService extends RegistryAbstractAdmin {
         propertyMap.put("reporting.template", configuration.getTemplate());
         propertyMap.put("reporting.resource.path", configuration.getResourcePath());
         String clazz = ReportingTask.class.getName();
-        TaskManager taskManager = ReportingServiceComponent.getTaskManager();
+        TaskManager taskManager = ReportingServiceComponent.getTaskManager(
+                ((UserRegistry) getRootRegistry()).getTenantId());
         taskManager.registerTask(new TaskInfo(configuration.getName(), clazz, propertyMap,
                 new TaskInfo.TriggerInfo(configuration.getCronExpression())));
         taskManager.rescheduleTask(configuration.getName());
     }
 
     public void stopScheduledReport(String name) throws Exception {
-        TaskManager taskManager = ReportingServiceComponent.getTaskManager();
+        TaskManager taskManager = ReportingServiceComponent.getTaskManager(
+                ((UserRegistry) getRootRegistry()).getTenantId());
         taskManager.pauseTask(name);
         taskManager.deleteTask(name);
     }
@@ -170,12 +173,13 @@ public class ReportingAdminService extends RegistryAbstractAdmin {
 
     private ReportConfigurationBean getConfigurationBean(String path)
             throws RegistryException, CryptoException, TaskException {
-        Resource resource = getRootRegistry().get(path);
+        UserRegistry registry = (UserRegistry) getRootRegistry();
+        Resource resource = registry.get(path);
         ReportConfigurationBean bean = new ReportConfigurationBean();
         String name = RegistryUtils.getResourceName(path);
         bean.setName(name);
         bean.setCronExpression(resource.getProperty("cronExpression"));
-        TaskManager taskManager = ReportingServiceComponent.getTaskManager();
+        TaskManager taskManager = ReportingServiceComponent.getTaskManager(registry.getTenantId());
         bean.setScheduled(taskManager.isTaskScheduled(name));
         bean.setReportClass(resource.getProperty("class"));
         bean.setResourcePath(resource.getProperty("resourcePath"));

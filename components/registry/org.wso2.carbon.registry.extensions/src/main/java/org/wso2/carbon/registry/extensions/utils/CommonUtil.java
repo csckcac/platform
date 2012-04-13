@@ -461,11 +461,9 @@ public class CommonUtil {
                         CommonConstants.GOVERNANCE_ARTIFACT_INDEX_PATH);
         try {
             Resource govIndexResource;
-            String root = registry.getRegistryContext().getRegistryRoot();
-            if (root == null) {
-                root = "/";
-            }
-            registry.put(root + RegistryConstants.LOCAL_REPOSITORY_BASE_PATH.substring(1), registry.get(root));
+            String path = RegistryUtils.getAbsolutePath(registry.getRegistryContext(),
+                    RegistryConstants.LOCAL_REPOSITORY_BASE_PATH);
+            registry.put(path, registry.get(path));
             if (registry.resourceExists(govIndexPath)) {
                 govIndexResource = registry.get(govIndexPath);
             } else {

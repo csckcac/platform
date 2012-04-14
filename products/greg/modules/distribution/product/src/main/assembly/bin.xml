@@ -63,6 +63,19 @@
                 <exclude>**/**.sh</exclude>
                 <exclude>**/README*</exclude>
                 <exclude>**/target/**</exclude>
+                <exclude>**/asset-models/**</exclude>
+                <exclude>**/**.iws</exclude>
+                <exclude>**/**.ipr</exclude>
+                <exclude>**/**.iml</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>../../samples/product/asset-models</directory>
+            <outputDirectory>${pom.artifactId}-${build.version}/samples</outputDirectory>
+            <excludes>
+                <exclude>**/**.sh</exclude>
+                <exclude>**/build.xml</exclude>
+                <exclude>**/target/**</exclude>
                 <exclude>**/**.iws</exclude>
                 <exclude>**/**.ipr</exclude>
                 <exclude>**/**.iml</exclude>
@@ -236,6 +249,12 @@
         <file>
             <source>../../../README.txt</source>
             <outputDirectory>${pom.artifactId}-${build.version}/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../../samples/product/asset-models/Populator/build.xml</source>
+            <outputDirectory>${pom.artifactId}-${build.version}/samples/asset-models/Populator</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>

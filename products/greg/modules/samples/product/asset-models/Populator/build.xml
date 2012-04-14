@@ -10,10 +10,10 @@
     <property name="password" value="admin"/>
     <property name="host" value="localhost"/>
     <property name="port" value="9443"/>
+    <property name="version" value="${carbon.version}"/>
     <target name="help">
         <echo/>
-    </target>
-    <property name="version" value="4.0.0-SNAPSHOT"/>
+    </target>    
 
     <target name="compile" depends="init" description="Compile all Java">
         <javac srcdir="src" destdir="${class.dir}">

@@ -34,7 +34,7 @@ public class Main {
             setSystemProperties();
 
             String axis2Configuration = System.getProperty("carbon.home") + File.separator + "repository" +
-                    File.separator + "conf" + File.separator + "axis2_client.xml";
+                    File.separator + "conf" + File.separator + "axis2" + File.separator + "axis2_client.xml";
             ConfigurationContext configContext = ConfigurationContextFactory
                     .createConfigurationContextFromFileSystem(axis2Configuration);
 
@@ -99,8 +99,7 @@ public class Main {
     }
 
     public static String getResourceName(String fileLocation){
-        String[] s =  fileLocation.split("/");
+        String[] s =  fileLocation.replace("\\", "/").split("/");
         return s[s.length-1];
     }
 }
-

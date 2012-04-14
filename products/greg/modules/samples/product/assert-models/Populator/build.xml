@@ -1,11 +1,15 @@
 <project name="org.wso2.carbon.registry.samples.populator" default="help" basedir=".">
-    <property name="registry.home" value="/home/eranda/Desktop/wso2greg-4.0.0-SNAPSHOT"/>
+    <property name="registry.home" value="../../.."/>
     <property name="class.dir" value="target/classes"/>
     <property name="people.dir" value="../PeopleModel"/>
     <property name="process.dir" value="../BusinessProcessModel"/>
     <property name="test.plan.dir" value="../TestPlanModel"/>
     <property name="application.dir" value="../ApplicationModel"/>
     <property name="project.dir" value="../ProjectModel"/>
+    <property name="username" value="admin"/>
+    <property name="password" value="admin"/>
+    <property name="host" value="localhost"/>
+    <property name="port" value="9443"/>
     <target name="help">
         <echo/>
     </target>
@@ -24,13 +28,13 @@
             <arg value="-ch" />
             <arg value="${registry.home}"/>
             <arg value="-h"/>
-            <arg value="localhost"/>
+            <arg value="${host}"/>
             <arg value="-p" />
-            <arg value="9443"/>
+            <arg value="${port}"/>
             <arg value="-u" />
-            <arg value="admin"/>
+            <arg value="${username}"/>
             <arg value="-pw" />
-            <arg value="admin"/>
+            <arg value="${password}"/>
             <arg value="-l" />
             <arg value="${people.dir}"/>
         </java>
@@ -43,13 +47,13 @@
             <arg value="-ch" />
             <arg value="${registry.home}"/>
             <arg value="-h"/>
-            <arg value="localhost"/>
+            <arg value="${host}"/>
             <arg value="-p" />
-            <arg value="9443"/>
+            <arg value="${port}"/>
             <arg value="-u" />
-            <arg value="admin"/>
+            <arg value="${username}"/>
             <arg value="-pw" />
-            <arg value="admin"/>
+            <arg value="${password}"/>
             <arg value="-l" />
             <arg value="${process.dir}"/>
         </java>
@@ -77,14 +81,12 @@
     <target name="init-process">
         <mkdir dir="${process.dir}/target/classes"/>
         <path id="javac.classpath">
-            <fileset dir="${registry.home}/repository/lib">
-                <include name="**/*.jar"/>
-            </fileset>
-            <fileset dir="${registry.home}/bin">
-                <include name="*.jar"/>
-            </fileset>
              <fileset dir="${registry.home}/repository/components/plugins">
-                <include name="*.jar" />
+                <include name="**/axiom*.jar"/>
+                <include name="**/org.wso2.carbon.logging*.jar"/>
+                <include name="**/org.wso2.carbon.registry.api*.jar"/>
+                <include name="**/org.wso2.carbon.registry.core*.jar"/>
+                <include name="**/org.wso2.carbon.governance.api*.jar"/>
             </fileset>
         </path>
     </target>
@@ -96,13 +98,13 @@
             <arg value="-ch" />
             <arg value="${registry.home}"/>
             <arg value="-h"/>
-            <arg value="localhost"/>
+            <arg value="${host}"/>
             <arg value="-p" />
-            <arg value="9443"/>
+            <arg value="${port}"/>
             <arg value="-u" />
-            <arg value="admin"/>
+            <arg value="${username}"/>
             <arg value="-pw" />
-            <arg value="admin"/>
+            <arg value="${password}"/>
             <arg value="-l" />
             <arg value="${test.plan.dir}"/>
         </java>
@@ -116,13 +118,13 @@
             <arg value="-ch" />
             <arg value="${registry.home}"/>
             <arg value="-h"/>
-            <arg value="localhost"/>
+            <arg value="${host}"/>
             <arg value="-p" />
-            <arg value="9443"/>
+            <arg value="${port}"/>
             <arg value="-u" />
-            <arg value="admin"/>
+            <arg value="${username}"/>
             <arg value="-pw" />
-            <arg value="admin"/>
+            <arg value="${password}"/>
             <arg value="-l" />
             <arg value="${application.dir}"/>
         </java>
@@ -135,13 +137,13 @@
             <arg value="-ch" />
             <arg value="${registry.home}"/>
             <arg value="-h"/>
-            <arg value="localhost"/>
+            <arg value="${host}"/>
             <arg value="-p" />
-            <arg value="9443"/>
+            <arg value="${port}"/>
             <arg value="-u" />
-            <arg value="admin"/>
+            <arg value="${username}"/>
             <arg value="-pw" />
-            <arg value="admin"/>
+            <arg value="${password}"/>
             <arg value="-l" />
             <arg value="${project.dir}"/>
         </java>
@@ -151,14 +153,32 @@
         <mkdir dir="${class.dir}"/>
         <path id="javac.classpath">
             <pathelement path="${class.dir}"/>
-            <fileset dir="${registry.home}/repository/lib">
-                <include name="**/*.jar"/>
-            </fileset>
-            <fileset dir="${registry.home}/bin">
-                <include name="*.jar"/>
-            </fileset>
              <fileset dir="${registry.home}/repository/components/plugins">
-                <include name="*.jar" />
+                <include name="**/axiom_*.jar"/>
+                <include name="**/axis2_*.jar"/>
+                <include name="**/commons-codec*.jar"/>
+                <include name="**/commons-httpclient_*.jar"/>
+                <include name="**/javax.servlet_*.jar"/>
+                <include name="**/httpcore_*.jar"/>
+                <include name="**/neethi*.jar"/>
+                <include name="**/wsdl4j_*.jar"/>
+                <include name="**/XmlSchema*.jar"/>
+                <include name="**/org.wso2.securevault_*.jar"/>
+                <include name="**/org.wso2.carbon.core*.jar"/>
+                <include name="**/org.wso2.carbon.base*.jar"/>
+                <include name="**/org.wso2.carbon.utils*.jar"/>
+                <include name="**/org.wso2.carbon.authenticator.stub*.jar"/>
+                <include name="**/org.wso2.carbon.logging_*.jar"/>
+                <include name="**/org.wso2.carbon.registry.api_*.jar"/>
+                <include name="**/org.wso2.carbon.registry.core_*.jar"/>
+                <include name="**/org.wso2.carbon.registry.resource.ui_*.jar"/>
+                <include name="**/org.wso2.carbon.registry.resource.stub_*.jar"/>
+                <include name="**/org.wso2.carbon.registry.resource_*.jar"/>
+                <include name="**/org.wso2.carbon.registry.extensions.ui_*.jar"/>
+                <include name="**/org.wso2.carbon.registry.extensions.stub_*.jar"/>
+                <include name="**/org.wso2.carbon.registry.ws.client_*.jar"/>
+                <include name="**/org.wso2.carbon.registry.handler.stub_*.jar"/>
+                <include name="**/org.wso2.carbon.governance.api_*.jar"/>
             </fileset>
         </path>
     </target>

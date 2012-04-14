@@ -1,7 +1,17 @@
 <handlers>
 	<handler class="org.wso2.carbon.registry.samples.handler.process.BusinessProcessMediaTypeHandler">
 		<filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher">
-			<property name="mediaType">application/vnd.wso2.registry-ext-process+xml</property>
+			<property name="mediaType">application/vnd.wso2.bpel+xml</property>
 		</filter>
 	</handler>
+    <handler class="org.wso2.carbon.registry.samples.handler.process.BusinessProcessMediaTypeHandler">
+        <filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher">
+            <property name="mediaType">application/vnd.wso2.bpmn+xml</property>
+        </filter>
+    </handler>
+    <handler class="org.wso2.carbon.registry.samples.handler.process.BusinessProcessMediaTypeHandler">
+        <filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher">
+            <property name="mediaType">application/vnd.wso2.xpdl+xml</property>
+        </filter>
+    </handler>
 </handlers>

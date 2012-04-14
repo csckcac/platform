@@ -76,10 +76,9 @@
             <artifactId>org.wso2.carbon.registry.ws.client</artifactId>
         </dependency>
         <dependency>
-        <groupId>org.wso2.carbon</groupId>
-        <artifactId>org.wso2.carbon.ntask.core</artifactId>
-        <version>${project.version}</version>
-    </dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ntask.core</artifactId>
+        </dependency>
     </dependencies>
     
 </project>

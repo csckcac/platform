@@ -18,13 +18,12 @@
  */
 package org.wso2.carbon.registry.reporting.services;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.util.CryptoException;
 import org.wso2.carbon.core.util.CryptoUtil;
 import org.wso2.carbon.ntask.common.TaskException;
 import org.wso2.carbon.ntask.core.TaskInfo;
 import org.wso2.carbon.ntask.core.TaskManager;
+import org.wso2.carbon.registry.admin.api.reporting.IReportingAdminService;
 import org.wso2.carbon.registry.common.beans.ReportConfigurationBean;
 import org.wso2.carbon.registry.common.services.RegistryAbstractAdmin;
 import org.wso2.carbon.registry.common.utils.CommonUtil;
@@ -43,9 +42,9 @@ import org.wso2.carbon.registry.reporting.utils.Utils;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class ReportingAdminService extends RegistryAbstractAdmin {
+public class ReportingAdminService extends RegistryAbstractAdmin implements
+        IReportingAdminService<ReportConfigurationBean> {
 
-    private static final Log log = LogFactory.getLog(ReportingAdminService.class);
     public static final String REPORTING_CONFIG_PATH = RegistryConstants.CONFIG_REGISTRY_BASE_PATH +
             "/repository/components/org.wso2.carbon.registry.reporting/configurations/";
 

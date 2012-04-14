@@ -25,7 +25,7 @@
     <fileSets>
         <fileSet>
             <directory>target/site/apidocs</directory>
-            <outputDirectory>${project.artifactId}-${project.version}-docs</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}-docs</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
     </fileSets>

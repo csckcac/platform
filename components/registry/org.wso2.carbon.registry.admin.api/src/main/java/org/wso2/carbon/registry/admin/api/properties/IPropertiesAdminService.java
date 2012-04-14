@@ -21,7 +21,7 @@ package org.wso2.carbon.registry.admin.api.properties;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 
 /**
- * Provides functionality to search inside resource content.
+ * Provides functionality to manage resource properties.
  *
  * @param <PropertiesBean> This bean contains a list of properties, for a given resource.
  */

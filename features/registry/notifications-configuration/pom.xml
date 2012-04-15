@@ -47,6 +47,16 @@
                 <artifactId>org.wso2.carbon.governance.notifications.stub</artifactId>
                 <version>${wso2carbon.version.governance.notification.configurations}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.governance.notifications.worklist.stub</artifactId>
+                <version>${wso2carbon.version.governance.notification.configurations}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.humantask.stub</artifactId>
+                <version>${wso2carbon.version.governance.notification.configurations}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

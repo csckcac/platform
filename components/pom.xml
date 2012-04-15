@@ -1022,6 +1022,11 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.governance.notifications.worklist.stub</artifactId>
+                <version>${carbon.platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.governance.people.stub</artifactId>
                 <version>${carbon.platform.version}</version>
             </dependency>

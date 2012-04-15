@@ -114,6 +114,18 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.governance.notifications.stub</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.humantask.stub</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.user.mgt.stub</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.governance.notifications.worklist.stub</artifactId>
+        </dependency>
     </dependencies>
     
 </project>

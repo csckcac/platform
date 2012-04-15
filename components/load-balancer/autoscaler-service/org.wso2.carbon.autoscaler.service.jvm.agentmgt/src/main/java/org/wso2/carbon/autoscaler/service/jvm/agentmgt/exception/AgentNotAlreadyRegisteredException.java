@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.carbon.autoscaler.agentmgt.service.exception;
+package org.wso2.carbon.autoscaler.service.jvm.agentmgt.exception;
 
 /**
  * This will be thrown if an Agent to be unregistered, is not already

@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.carbon.autoscaler.agentmgt.service.registry;
+package org.wso2.carbon.autoscaler.service.jvm.agentmgt.registry;
 
 import java.util.ArrayList;
 import java.util.HashMap;

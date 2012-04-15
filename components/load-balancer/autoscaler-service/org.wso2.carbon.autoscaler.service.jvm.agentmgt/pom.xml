@@ -49,12 +49,12 @@
                         <Bundle-SymbolicName>${pom.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${pom.artifactId}</Bundle-Name>
                         <Export-Package>
-                            org.wso2.carbon.autoscaler.agentmgt.service
+                            org.wso2.carbon.autoscaler.service.jvm.agentmgt
                         </Export-Package>
                         <Private-Package>
-                            org.wso2.carbon.autoscaler.agentmgt.service.impl, 
-                            org.wso2.carbon.autoscaler.agentmgt.service.exception,
-                            org.wso2.carbon.autoscaler.agentmgt.service.registry
+                            org.wso2.carbon.autoscaler.service.jvm.agentmgt.impl, 
+                            org.wso2.carbon.autoscaler.service.jvm.agentmgt.exception,
+                            org.wso2.carbon.autoscaler.service.jvm.agentmgt.registry
                         </Private-Package> 
                         <Import-Package>
                             org.apache.commons.logging,

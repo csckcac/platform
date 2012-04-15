@@ -15,29 +15,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.carbon.autoscaler.agentmgt.service.impl;
+package org.wso2.carbon.autoscaler.service.jvm.agentmgt.impl;
 
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.autoscaler.agentmgt.service.IAgentManagementService;
-import org.wso2.carbon.autoscaler.agentmgt.service.exception.AgentAlreadyRegisteredException;
-import org.wso2.carbon.autoscaler.agentmgt.service.exception.AgentNotAlreadyRegisteredException;
-import org.wso2.carbon.autoscaler.agentmgt.service.exception.AgentNotFoundException;
-import org.wso2.carbon.autoscaler.agentmgt.service.exception.AgentRegisteringException;
-import org.wso2.carbon.autoscaler.agentmgt.service.exception.NullAgentException;
-import org.wso2.carbon.autoscaler.agentmgt.service.registry.AgentRegistry;
+import org.wso2.carbon.autoscaler.service.jvm.agentmgt.IAgentManagementService;
+import org.wso2.carbon.autoscaler.service.jvm.agentmgt.registry.AgentRegistry;
+import org.wso2.carbon.autoscaler.service.jvm.agentmgt.exception.AgentAlreadyRegisteredException;
+import org.wso2.carbon.autoscaler.service.jvm.agentmgt.exception.AgentNotAlreadyRegisteredException;
+import org.wso2.carbon.autoscaler.service.jvm.agentmgt.exception.AgentNotFoundException;
+import org.wso2.carbon.autoscaler.service.jvm.agentmgt.exception.AgentRegisteringException;
+import org.wso2.carbon.autoscaler.service.jvm.agentmgt.exception.NullAgentException;
 
 /**
  * Implements the IAgentManagementService interface.
  * 
- * @scr.component name="org.wso2.carbon.autoscaler.agentmgt.service"
+ * @scr.component name="org.wso2.carbon.autoscaler.service.jvm.agentmgt"
  * 
  * @scr.service
  *              value=
- *              "org.wso2.carbon.autoscaler.agentmgt.service.IAgentManagementService"
+ *              "org.wso2.carbon.autoscaler.service.jvm.agentmgt.IAgentManagementService"
  * 
  */
 public class AgentManagementServiceImpl implements IAgentManagementService {
@@ -175,7 +174,7 @@ public class AgentManagementServiceImpl implements IAgentManagementService {
 
         // registeredAgentList can never be null since we've initialized it, but
         // it can be empty.
-        if (registeredAgentList.size() > 0) {
+        if (!registeredAgentList.isEmpty()) {
 
             // this is the first time we're picking an agent
             if (lastPickedAgent == -1) {
@@ -234,10 +233,29 @@ public class AgentManagementServiceImpl implements IAgentManagementService {
         return unregisterAgent(epr, 0);
     }
     
+    @Override
+    public boolean isRegisteredAgent(String epr) {
+
+        // retrieve values from registry
+        registeredAgentList = agentRegistry.getRegisteredAgentList();
+        
+        if (!registeredAgentList.isEmpty()){
+            for (String agentEpr : registeredAgentList) {
+                if(agentEpr.equals(epr)){
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
     private void addToTotalMaxInstanceCount(int instanceCount) {
 
         totalMaxInstanceCount += instanceCount;
     }
+
+    
 
 
     // /**

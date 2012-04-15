@@ -15,13 +15,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.carbon.autoscaler.agentmgt.service;
+package org.wso2.carbon.autoscaler.service.jvm.agentmgt;
 
-import org.wso2.carbon.autoscaler.agentmgt.service.exception.AgentAlreadyRegisteredException;
-import org.wso2.carbon.autoscaler.agentmgt.service.exception.AgentNotAlreadyRegisteredException;
-import org.wso2.carbon.autoscaler.agentmgt.service.exception.AgentNotFoundException;
-import org.wso2.carbon.autoscaler.agentmgt.service.exception.AgentRegisteringException;
-import org.wso2.carbon.autoscaler.agentmgt.service.exception.NullAgentException;
+import org.wso2.carbon.autoscaler.service.jvm.agentmgt.exception.AgentAlreadyRegisteredException;
+import org.wso2.carbon.autoscaler.service.jvm.agentmgt.exception.AgentNotAlreadyRegisteredException;
+import org.wso2.carbon.autoscaler.service.jvm.agentmgt.exception.AgentNotFoundException;
+import org.wso2.carbon.autoscaler.service.jvm.agentmgt.exception.AgentRegisteringException;
+import org.wso2.carbon.autoscaler.service.jvm.agentmgt.exception.NullAgentException;
 
 /**
  * This service is responsible for keep a list of Agents that get registered to this service and
@@ -111,6 +111,13 @@ public interface IAgentManagementService {
      */
     public String pickAnAgent() throws AgentNotFoundException;
 
+    /**
+     * Tells whether the Agent's EPR given, is a registered one or not.
+     * @param epr an EPR
+     * @return true: if the EPR is a registered one, else false.
+     */
+    public boolean isRegisteredAgent(String epr);
+    
     /**
      * Returns the number of registered Agents.
      * 

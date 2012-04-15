@@ -33,7 +33,7 @@ import org.wso2.carbon.autoscaler.service.util.Policy;
 import org.wso2.carbon.autoscaler.service.xml.AutoscalerPolicyFileReader;
 
 /**
- * AutoScaler API should communicate with AutoscalerService, when it decides to scale up
+ * AutoScaler task should communicate with AutoscalerService, when it decides to scale up
  * or down.
  * @scr.component name="org.wso2.carbon.autoscaler.service" immediate="true"
  * @scr.service value="org.wso2.carbon.autoscaler.service.IAutoscalerService"
@@ -104,7 +104,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
      * {@link #domainToInstanceIdsMap} and {@link #instanceIdToAdapterMap}.
      * If failed we try to spawn an instance in the adapter next in line of the scale up order.
      */
-    public boolean startInstance(String domainName) throws Exception {
+    public boolean startInstance(String domainName) {
 
         boolean isSuccessfullyStarted = false;
 
@@ -166,7 +166,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
      * If instance is successfully get terminated, we remove details corresponds to that
      * instanceId from {@link #domainToInstanceIdsMap} and {@link #instanceIdToAdapterMap}.  
      */
-    public boolean terminateInstance(String domainName) throws Exception {
+    public boolean terminateInstance(String domainName) throws NoInstanceFoundException {
 
         List<String> scaleDownOrder = autoscalerPolicy.getScaleDownOrderList();
 

@@ -39,10 +39,8 @@ public abstract class Adapter {
      * @param instanceId
      *            this will be set as the id of the new instance.
      * @return whether an instance is successfully spawned?
-     * @throws Exception
-     *             failed to spawn an instance.
      */
-    public abstract boolean spawnInstance(String domainName, String instanceId) throws Exception;
+    public abstract boolean spawnInstance(String domainName, String instanceId);
 
     /**
      * Finds the Agent who spawned this particular instance, and request it to terminate
@@ -50,11 +48,9 @@ public abstract class Adapter {
      * 
      * @param instanceId
      *            id of the instance to be terminated.
-     * @return whether the termination is successful or not.fill
-     * @throws Exception
-     *             failed to terminate.
+     * @return whether the termination is successful or not.
      */
-    public abstract boolean terminateInstance(String instanceId) throws Exception;
+    public abstract boolean terminateInstance(String instanceId);
 
     /**
      * This method should return total number of running instances.

@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl2:description xmlns:wsdl2="http://www.w3.org/ns/wsdl" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://impl.service.autoscaler.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wrpc="http://www.w3.org/ns/wsdl/rpc" xmlns:tns="http://impl.service.autoscaler.carbon.wso2.org" xmlns:wsoap="http://www.w3.org/ns/wsdl/soap" xmlns:wsdlx="http://www.w3.org/ns/wsdl-extensions" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:whttp="http://www.w3.org/ns/wsdl/http" targetNamespace="http://impl.service.autoscaler.carbon.wso2.org">
-    <wsdl2:types>
-        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://impl.service.autoscaler.carbon.wso2.org">
-            <xs:element name="AutoscalerServiceException">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://impl.service.autoscaler.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax21="http://exception.service.autoscaler.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://impl.service.autoscaler.carbon.wso2.org">
+    <wsdl:types>
+        <xs:schema xmlns:ax22="http://exception.service.autoscaler.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://impl.service.autoscaler.carbon.wso2.org">
+            <xs:import namespace="http://exception.service.autoscaler.carbon.wso2.org/xsd"/>
+            <xs:element name="AutoscalerServiceNoInstanceFoundException">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="AutoscalerServiceException" nillable="true" type="ns:Exception"/>
+                        <xs:element minOccurs="0" name="NoInstanceFoundException" nillable="true" type="ax21:NoInstanceFoundException"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:complexType name="Exception">
-                <xs:sequence>
-                    <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string"/>
-                </xs:sequence>
-            </xs:complexType>
             <xs:element name="terminateInstance">
                 <xs:complexType>
                     <xs:sequence>
@@ -43,62 +39,116 @@
                 </xs:complexType>
             </xs:element>
         </xs:schema>
-    </wsdl2:types>
-    <wsdl2:interface name="ServiceInterface">
-        <wsdl2:fault name="AutoscalerServiceException" element="ns:AutoscalerServiceException"/>
-        <wsdl2:operation name="terminateInstance" style="http://www.w3.org/ns/wsdl/style/rpc" wrpc:signature="domainName #in return #return " pattern="http://www.w3.org/ns/wsdl/in-out">
-            <wsdl2:input element="ns:terminateInstance" wsaw:Action="urn:terminateInstance"/>
-            <wsdl2:output element="ns:terminateInstanceResponse" wsaw:Action="urn:terminateInstanceResponse"/>
-            <wsdl2:outfault ref="tns:AutoscalerServiceException" wsaw:Action="urn:terminateInstanceAutoscalerServiceException"/>
-        </wsdl2:operation>
-        <wsdl2:operation name="startInstance" style="http://www.w3.org/ns/wsdl/style/rpc" wrpc:signature="domainName #in return #return " pattern="http://www.w3.org/ns/wsdl/in-out">
-            <wsdl2:input element="ns:startInstance" wsaw:Action="urn:startInstance"/>
-            <wsdl2:output element="ns:startInstanceResponse" wsaw:Action="urn:startInstanceResponse"/>
-            <wsdl2:outfault ref="tns:AutoscalerServiceException" wsaw:Action="urn:startInstanceAutoscalerServiceException"/>
-        </wsdl2:operation>
-    </wsdl2:interface>
-    <wsdl2:binding name="AutoscalerServiceSoap12Binding" interface="tns:ServiceInterface" type="http://www.w3.org/ns/wsdl/soap" wsoap:version="1.2">
-        <wsdl2:fault ref="tns:AutoscalerServiceException"/>
-        <wsdl2:operation ref="tns:terminateInstance" wsoap:action="urn:terminateInstance">
-            <wsdl2:input/>
-            <wsdl2:output/>
-            <wsdl2:outfault ref="tns:AutoscalerServiceException"/>
-        </wsdl2:operation>
-        <wsdl2:operation ref="tns:startInstance" wsoap:action="urn:startInstance">
-            <wsdl2:input/>
-            <wsdl2:output/>
-            <wsdl2:outfault ref="tns:AutoscalerServiceException"/>
-        </wsdl2:operation>
-    </wsdl2:binding>
-    <wsdl2:binding name="AutoscalerServiceSoap11Binding" interface="tns:ServiceInterface" type="http://www.w3.org/ns/wsdl/soap" wsoap:version="1.1">
-        <wsdl2:fault ref="tns:AutoscalerServiceException"/>
-        <wsdl2:operation ref="tns:terminateInstance" wsoap:action="urn:terminateInstance">
-            <wsdl2:input/>
-            <wsdl2:output/>
-            <wsdl2:outfault ref="tns:AutoscalerServiceException"/>
-        </wsdl2:operation>
-        <wsdl2:operation ref="tns:startInstance" wsoap:action="urn:startInstance">
-            <wsdl2:input/>
-            <wsdl2:output/>
-            <wsdl2:outfault ref="tns:AutoscalerServiceException"/>
-        </wsdl2:operation>
-    </wsdl2:binding>
-    <wsdl2:binding name="AutoscalerServiceHttpBinding" interface="tns:ServiceInterface" whttp:methodDefault="POST" type="http://www.w3.org/ns/wsdl/http">
-        <wsdl2:fault ref="tns:AutoscalerServiceException"/>
-        <wsdl2:operation ref="tns:terminateInstance" whttp:location="terminate">
-            <wsdl2:input/>
-            <wsdl2:output/>
-            <wsdl2:outfault ref="tns:AutoscalerServiceException"/>
-        </wsdl2:operation>
-        <wsdl2:operation ref="tns:startInstance" whttp:location="start">
-            <wsdl2:input/>
-            <wsdl2:output/>
-            <wsdl2:outfault ref="tns:AutoscalerServiceException"/>
-        </wsdl2:operation>
-    </wsdl2:binding>
-    <wsdl2:service name="AutoscalerService" interface="tns:ServiceInterface">
-        <wsdl2:endpoint name="AutoscalerServiceHttpEndpoint" binding="tns:AutoscalerServiceHttpBinding" address="http://localhost:8080/axis2/services/AutoscalerService"/>
-        <!--wsdl2:endpoint name="AutoscalerServiceHttpSoap12Endpoint" binding="tns:AutoscalerServiceSoap12Binding" address="http://localhost:8080/axis2/services/AutoscalerService"/>
-        <wsdl2:endpoint name="AutoscalerServiceHttpSoap11Endpoint" binding="tns:AutoscalerServiceSoap11Binding" address="http://localhost:8080/axis2/services/AutoscalerService"/-->
-    </wsdl2:service>
-</wsdl2:description>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://exception.service.autoscaler.carbon.wso2.org/xsd">
+            <xs:complexType name="NoInstanceFoundException">
+                <xs:sequence/>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="terminateInstanceRequest">
+        <wsdl:part name="parameters" element="ns:terminateInstance"/>
+    </wsdl:message>
+    <wsdl:message name="terminateInstanceResponse">
+        <wsdl:part name="parameters" element="ns:terminateInstanceResponse"/>
+    </wsdl:message>
+    <wsdl:message name="AutoscalerServiceNoInstanceFoundException">
+        <wsdl:part name="parameters" element="ns:AutoscalerServiceNoInstanceFoundException"/>
+    </wsdl:message>
+    <wsdl:message name="startInstanceRequest">
+        <wsdl:part name="parameters" element="ns:startInstance"/>
+    </wsdl:message>
+    <wsdl:message name="startInstanceResponse">
+        <wsdl:part name="parameters" element="ns:startInstanceResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="AutoscalerServicePortType">
+        <wsdl:operation name="terminateInstance">
+            <wsdl:input message="ns:terminateInstanceRequest" wsaw:Action="urn:terminateInstance"/>
+            <wsdl:output message="ns:terminateInstanceResponse" wsaw:Action="urn:terminateInstanceResponse"/>
+            <wsdl:fault message="ns:AutoscalerServiceNoInstanceFoundException" name="AutoscalerServiceNoInstanceFoundException" wsaw:Action="urn:terminateInstanceAutoscalerServiceNoInstanceFoundException"/>
+        </wsdl:operation>
+        <wsdl:operation name="startInstance">
+            <wsdl:input message="ns:startInstanceRequest" wsaw:Action="urn:startInstance"/>
+            <wsdl:output message="ns:startInstanceResponse" wsaw:Action="urn:startInstanceResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="AutoscalerServiceSoap11Binding" type="ns:AutoscalerServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="terminateInstance">
+            <soap:operation soapAction="urn:terminateInstance" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AutoscalerServiceNoInstanceFoundException">
+                <soap:fault use="literal" name="AutoscalerServiceNoInstanceFoundException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="startInstance">
+            <soap:operation soapAction="urn:startInstance" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="AutoscalerServiceSoap12Binding" type="ns:AutoscalerServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="terminateInstance">
+            <soap12:operation soapAction="urn:terminateInstance" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AutoscalerServiceNoInstanceFoundException">
+                <soap12:fault use="literal" name="AutoscalerServiceNoInstanceFoundException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="startInstance">
+            <soap12:operation soapAction="urn:startInstance" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="AutoscalerServiceHttpBinding" type="ns:AutoscalerServicePortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="terminateInstance">
+            <http:operation location="terminateInstance"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="startInstance">
+            <http:operation location="startInstance"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="AutoscalerService">
+        <wsdl:port name="AutoscalerServiceHttpSoap11Endpoint" binding="ns:AutoscalerServiceSoap11Binding">
+            <soap:address location="http://localhost:8080/axis2/services/AutoscalerService"/>
+        </wsdl:port>
+        <wsdl:port name="AutoscalerServiceHttpSoap12Endpoint" binding="ns:AutoscalerServiceSoap12Binding">
+            <soap12:address location="http://localhost:8080/axis2/services/AutoscalerService"/>
+        </wsdl:port>
+        <wsdl:port name="AutoscalerServiceHttpEndpoint" binding="ns:AutoscalerServiceHttpBinding">
+            <http:address location="http://localhost:8080/axis2/services/AutoscalerService"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

@@ -17,6 +17,8 @@
  */
 package org.wso2.carbon.autoscaler.service.agent.clients;
 
+import java.rmi.RemoteException;
+
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -53,5 +55,10 @@ public class AgentServiceClient {
 
         return stub.terminateInstance(instanceId);
     }
+    
+	public int getNumberOfInstances() throws RemoteException {
+
+		return stub.getNumberOfInstances();
+	}
 
 }

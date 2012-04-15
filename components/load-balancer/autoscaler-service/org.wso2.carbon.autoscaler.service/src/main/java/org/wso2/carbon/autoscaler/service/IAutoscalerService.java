@@ -17,30 +17,32 @@
 */
 package org.wso2.carbon.autoscaler.service;
 
+import org.wso2.carbon.autoscaler.service.exception.NoInstanceFoundException;
+
 /**
- * AutoScaler API should communicate with AutoscalerService, when it decides to scale up
+ * AutoScaler task should communicate with AutoscalerService, when it decides to scale up
  * or down. Only {@link #startInstance(String)} and {@link #terminateInstance(String)}
- * operations are provided by this this service.
+ * operations are provided by this service.
  * 
  */
 public interface IAutoscalerService {
 
     
     /**
-     * This will be called by the Autoscaler API, if it wants to scale up.
+     * This will be called by the Autoscaler task, if it wants to scale up.
      * @param domainName spawning instance should be in this domain.
      * @return whether an instance started successfully or not.
-     * @throws Exception when it fails to spawn an instance
      */
-    public boolean startInstance(String domainName) throws Exception ;
+    public boolean startInstance(String domainName);
     
    
     /**
-     * This will be called by the Autoscaler API, if it wants to scale down.
+     * This will be called by the Autoscaler task, if it wants to scale down.
      * @param domainName terminating instance should be in this domain.
      * @return whether an instance terminated successfully or not.
-     * @throws Exception when it fails to terminate an instance
+     * @throws NoInstanceFoundException if no instance in this particular domain has
+     *  spawned.
      */
-	public boolean terminateInstance(String domainName) throws Exception;
+	public boolean terminateInstance(String domainName) throws NoInstanceFoundException;
     
 }

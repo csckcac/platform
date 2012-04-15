@@ -17,7 +17,7 @@
 */
 package org.wso2.carbon.autoscaler.service.internal;
 
-import org.wso2.carbon.autoscaler.agentmgt.service.IAgentManagementService;
+import org.wso2.carbon.autoscaler.service.jvm.agentmgt.IAgentManagementService;
 
 /**
  * Singleton class to hold Agent Management Service

@@ -19,15 +19,15 @@ package org.wso2.carbon.autoscaler.service.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.autoscaler.agentmgt.service.IAgentManagementService;
+import org.wso2.carbon.autoscaler.service.jvm.agentmgt.IAgentManagementService;
 
 /**
  * OSGi declarative service component to acquire <i>Agent Management Service</i>.
  * 
  * @scr.component name="org.wso2.carbon.autoscaler.service.internal.AgentManagementDSComponent"
  *                immediate="true"
- * @scr.reference name="org.wso2.carbon.autoscaler.agentmgt.service"
- *                interface="org.wso2.carbon.autoscaler.agentmgt.service.IAgentManagementService"
+ * @scr.reference name="org.wso2.carbon.autoscaler.service.jvm.agentmgt"
+ *                interface="org.wso2.carbon.autoscaler.service.jvm.agentmgt.IAgentManagementService"
  *                cardinality="1..1" bind="setAgentManagementService"
  *                unbind="unsetAgentManagementService"
  *                policy="dynamic"

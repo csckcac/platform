@@ -1,0 +1,69 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tschema="http://www.example.com/claims/schema" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://www.example.com/claims/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://www.example.com/claims/">
+    <wsdl:documentation>&#xd;
+        Example for WS-HumanTask 1.1 - WS-HumanTask Task Interface Definition&#xd;
+    </wsdl:documentation>
+    <wsdl:types>
+        <xsd:schema xmlns:tns="http://www.example.com/claims/schema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.example.com/claims/schema">
+            <xsd:element name="ClaimApprovalData" type="tschema:ClaimApprovalDataType" />
+            <xsd:complexType name="ClaimApprovalDataType">
+                <xsd:sequence>
+                    <xsd:element name="cust">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="id" type="xsd:string" />
+                                <xsd:element name="firstname" type="xsd:string" />
+                                <xsd:element name="lastname" type="xsd:string" />
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="amount" type="xsd:double" />
+                    <xsd:element name="region" type="xsd:string" />
+                    <xsd:element name="prio" type="xsd:int" />
+                    <xsd:element name="activateAt" type="xsd:dateTime" />
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="ClaimApprovalNotificationData" type="tschema:ClaimApprovalNotificationDataType" />
+            <xsd:complexType name="ClaimApprovalNotificationDataType">
+                <xsd:sequence>
+                    <xsd:element name="firstname" type="xsd:string" />
+                    <xsd:element name="lastname" type="xsd:string" />
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="ClaimApprovalRequest">
+        <wsdl:part name="ClaimApprovalRequest" element="tschema:ClaimApprovalData" />
+    </wsdl:message>
+    <wsdl:portType name="ClaimServicePortType">
+        <wsdl:operation name="approve">
+            <wsdl:input message="tns:ClaimApprovalRequest" wsaw:Action="urn:approve" />
+            <wsdl:output message="tns:null" />
+        </wsdl:operation>
+        <wsdl:operation name="escalate">
+            <wsdl:input message="tns:ClaimApprovalRequest" wsaw:Action="urn:escalate" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="ClaimSoapBinding" type="tns:ClaimServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="approve">
+            <soap:operation soapAction="urn:approve" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="escalate">
+            <soap:operation soapAction="urn:escalate" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="ClaimService">
+        <wsdl:port name="ClaimServicehttpsClaimSoapBindingEndpoint" binding="tns:ClaimSoapBinding">
+            <soap:address location="https://10.0.0.14:9444/services/ClaimService.ClaimServicehttpsClaimSoapBindingEndpoint/" />
+        </wsdl:port>
+        <wsdl:port name="ClaimServicehttpClaimSoapBindingEndpoint" binding="tns:ClaimSoapBinding">
+            <soap:address location="http://10.0.0.14:9764/services/ClaimService.ClaimServicehttpClaimSoapBindingEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

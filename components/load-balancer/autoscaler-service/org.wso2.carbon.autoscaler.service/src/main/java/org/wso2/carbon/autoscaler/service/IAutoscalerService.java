@@ -19,6 +19,8 @@ package org.wso2.carbon.autoscaler.service;
 
 import org.wso2.carbon.autoscaler.service.exception.NoInstanceFoundException;
 
+import java.sql.SQLException;
+
 /**
  * AutoScaler task should communicate with AutoscalerService, when it decides to scale up
  * or down. Only {@link #startInstance(String)} and {@link #terminateInstance(String)}
@@ -33,7 +35,7 @@ public interface IAutoscalerService {
      * @param domainName spawning instance should be in this domain.
      * @return whether an instance started successfully or not.
      */
-    public boolean startInstance(String domainName);
+    public boolean startInstance(String domainName) throws ClassNotFoundException, SQLException;
     
    
     /**

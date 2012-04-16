@@ -106,13 +106,12 @@ public class JVMAgentServiceRecoverer extends Thread {
                     " milliseconds, but failed.");
             }
 
-            IAgentManagementService agentManagementService =
-                AgentManagementDSHolder.getInstance().getAgentMgtService();
+        IAgentManagementService agentManagementService
+                = AgentManagementDSHolder.getInstance().getAgentMgtService();
 
             try {
 
-                // unregister the Agent if we failed to connect to it.
-                agentManagementService.unregisterAgentForcefully(epr);
+                agentManagementService.unregisterAgent(epr);
 
             } catch (Exception e) {
                 String msg =

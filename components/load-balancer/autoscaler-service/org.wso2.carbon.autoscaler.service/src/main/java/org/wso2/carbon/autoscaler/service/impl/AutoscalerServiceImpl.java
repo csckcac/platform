@@ -17,6 +17,7 @@
 */
 package org.wso2.carbon.autoscaler.service.impl;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.autoscaler.service.IAutoscalerService;
 import org.wso2.carbon.autoscaler.service.adapters.Adapter;
-import org.wso2.carbon.autoscaler.service.adapters.JVMAdapter;
+import org.wso2.carbon.autoscaler.service.adapters.ContainerAdapter;
 import org.wso2.carbon.autoscaler.service.exception.NoInstanceFoundException;
 import org.wso2.carbon.autoscaler.service.util.Policy;
 import org.wso2.carbon.autoscaler.service.xml.AutoscalerPolicyFileReader;
@@ -58,12 +59,12 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
     /**
      * Keeps a JVMAdapter instance.
      */
-    private JVMAdapter jvmAdapter = new JVMAdapter();
+    private ContainerAdapter containerAdapter = new ContainerAdapter();
     
     /**
      * Specify all available adapters here.
      */
-    private Adapter[] adapters = new Adapter[]{jvmAdapter};
+    private Adapter[] adapters = new Adapter[]{containerAdapter};
     
     /**
      * To read autoscaler-policy.xml file.
@@ -104,7 +105,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
      * {@link #domainToInstanceIdsMap} and {@link #instanceIdToAdapterMap}.
      * If failed we try to spawn an instance in the adapter next in line of the scale up order.
      */
-    public boolean startInstance(String domainName) {
+    public boolean startInstance(String domainName) throws ClassNotFoundException, SQLException {
 
         boolean isSuccessfullyStarted = false;
 

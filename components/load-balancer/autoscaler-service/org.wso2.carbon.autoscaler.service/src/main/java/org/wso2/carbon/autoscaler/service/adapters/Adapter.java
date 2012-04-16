@@ -17,6 +17,8 @@
  */
 package org.wso2.carbon.autoscaler.service.adapters;
 
+import java.sql.SQLException;
+
 /**
  * Every adapter should extend this Abstract class.
  * When a new adapter is added, make sure you edit the default policy specified at
@@ -40,7 +42,8 @@ public abstract class Adapter {
      *            this will be set as the id of the new instance.
      * @return whether an instance is successfully spawned?
      */
-    public abstract boolean spawnInstance(String domainName, String instanceId);
+    public abstract boolean spawnInstance(String domainName, String instanceId)
+            throws ClassNotFoundException, SQLException;
 
     /**
      * Finds the Agent who spawned this particular instance, and request it to terminate

@@ -105,6 +105,14 @@ public interface HumanTaskDAOConnection {
      */
     public void obsoleteTasks(String taskName, Integer tenantId);
 
+
+    /**
+     * Remove the tasks matching the provided criteria.
+     *
+     * @param queryCriteria : The query criteria for which the matching tasks should be deleted.
+     */
+    public void removeTasks(SimpleQueryCriteria queryCriteria);
+
     /**
      * Create a Deadline
      * @return DeadLine

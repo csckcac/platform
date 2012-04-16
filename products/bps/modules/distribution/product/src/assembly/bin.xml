@@ -40,7 +40,7 @@
                 <exclude>**/axis2/axis2.xml</exclude>
                 <exclude>**/wrapper.conf</exclude>
                 <exclude>**/dbscripts/**</exclude>
-		<exclude>**/INSTALL.txt</exclude>
+		        <exclude>**/INSTALL.txt</exclude>
                 <exclude>**/README.txt</exclude>
                 <exclude>**/LICENSE.txt</exclude>
                 <exclude>**/release-notes.html</exclude>
@@ -72,6 +72,7 @@
 				<include>**/qpid-config.xml</include>
 				<include>**/qpid-jmxremote.access</include>
 				<include>**/qpid-virtualhosts.xml</include>
+				<include>**/coordination-client-config.xml</include>
 			</includes>
 		</fileSet>
         <!--copying registry dbscripts-->

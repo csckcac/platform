@@ -9,6 +9,7 @@
             <xsd:element name="PeopleQueryEvaluatorConfig" type="tns:tPeopleQueryEvaluatorConfig"/>
             <xsd:element name="SchedulerConfig" type="tns:tSchedulerConfig"/>
             <xsd:element name="TransactionManagerConfig" type="tns:tTransactionManagerConfig"/>
+            <xsd:element name="TaskCleanupConfig" type="tns:tTaskCleanupConfig"/>
         </xsd:sequence>
     </xsd:complexType>
     <xsd:complexType name="tPersistenceConfig">
@@ -34,6 +35,12 @@
     <xsd:complexType name="tTransactionManagerConfig">
         <xsd:sequence>
             <xsd:element name="TransactionManagerClass" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="tTaskCleanupConfig">
+        <xsd:sequence>
+            <xsd:element name="cronExpression" type="xsd:string"/>
+            <xsd:element name="statuses" type="xsd:string"/>
         </xsd:sequence>
     </xsd:complexType>
 </xsd:schema>

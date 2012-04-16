@@ -34,7 +34,7 @@ public class HumanTaskDAOConnectionFactoryImpl implements HumanTaskDAOConnection
 
     private Map<String, Object> jpaPropertiesMap;
 
-    static ThreadLocal<HumanTaskDAOConnectionImpl> connections = new ThreadLocal<HumanTaskDAOConnectionImpl>();
+    private static ThreadLocal<HumanTaskDAOConnectionImpl> connections = new ThreadLocal<HumanTaskDAOConnectionImpl>();
 
 //    private HumanTaskDAOConnectionImpl connection;
 

@@ -235,6 +235,13 @@ public class HumanTaskServer {
     }
 
     /**
+     * @return : The server configuration information.
+     */
+    public HumanTaskServerConfiguration getServerConfig() {
+        return serverConfig;
+    }
+
+    /**
      * @return : The DAO Connection Factory.
      */
     public HumanTaskDAOConnectionFactory getDaoConnectionFactory() {

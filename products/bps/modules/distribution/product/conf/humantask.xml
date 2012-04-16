@@ -11,4 +11,8 @@
     <PeopleQueryEvaluatorConfig>
         <PeopleQueryEvaluatorClass>org.wso2.carbon.humantask.core.integration.UserManagerBasedPeopleQueryEvaluator</PeopleQueryEvaluatorClass>
     </PeopleQueryEvaluatorConfig>
+    <!--TaskCleanupConfig>
+        <cronExpression>0 0 0/4 * * ?</cronExpression>
+        <statuses>COMPLETED,OBSOLETE</statuses>
+    </TaskCleanupConfig-->
 </HumanTaskServerConfig>

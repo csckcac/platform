@@ -159,7 +159,8 @@
                             <bundles>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.humantask</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.humantask.deployer</bundleDef>
-				<bundleDef>org.wso2.carbon:org.wso2.carbon.humantask.skeleton</bundleDef>
+								<bundleDef>org.wso2.carbon:org.wso2.carbon.humantask.skeleton</bundleDef>
+								<bundleDef>org.wso2.carbon:org.wso2.carbon.humantask.cleanup.scheduler</bundleDef>
                             </bundles>
                             <importBundles>
                                 <importBundleDef>org.apache.openjpa:openjpa-osgi</importBundleDef>

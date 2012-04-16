@@ -16,9 +16,12 @@
 
 package org.wso2.carbon.humantask.core.configuration;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xmlbeans.XmlException;
+import org.quartz.CronExpression;
+import org.wso2.carbon.humantask.core.dao.TaskStatus;
 import org.wso2.carbon.humantask.server.config.*;
 import org.wso2.carbon.utils.CarbonUtils;
 
@@ -26,6 +29,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * The memory model of the humantask configuration - humantask.xml.
@@ -59,6 +65,12 @@ public class HumanTaskServerConfiguration {
 
 //    private String transactionFactoryClass = "com.atomikos.icatch.jta.UserTransactionManager";
     private String transactionFactoryClass = "org.apache.ode.il.EmbeddedGeronimoFactory";
+
+    private List<TaskStatus> removableTaskStatuses = Collections.emptyList();
+
+    private String taskCleanupCronExpression;
+
+    private boolean enableTaskEventPersistence = false;
 
 
     /**
@@ -122,6 +134,42 @@ public class HumanTaskServerConfiguration {
 
         if (tHumanTaskServerConfig.getTransactionManagerConfig() != null) {
             initTransactionManagerConfig(tHumanTaskServerConfig.getTransactionManagerConfig());
+        }
+
+        if(tHumanTaskServerConfig.getTaskCleanupConfig() != null) {
+            iniTaskCleanupConfig(tHumanTaskServerConfig.getTaskCleanupConfig());
+        }
+    }
+
+    private void iniTaskCleanupConfig(TTaskCleanupConfig taskCleanupConfig) {
+
+        if(taskCleanupConfig != null) {
+            if(StringUtils.isNotEmpty(taskCleanupConfig.getCronExpression())) {
+                if(CronExpression.isValidExpression(taskCleanupConfig.getCronExpression().trim())) {
+                    this.taskCleanupCronExpression = taskCleanupConfig.getCronExpression();
+                } else {
+                    String warnMsg = String.format("The task clean up cron expression[%s] is invalid." +
+                                                   " Ignoring task clean up configurations! ",
+                                                   taskCleanupConfig.getCronExpression());
+                    log.warn(warnMsg);
+                    return;
+                }
+            }
+
+            if(StringUtils.isNotEmpty(taskCleanupConfig.getStatuses())) {
+                String[] removableStatusesArray = taskCleanupConfig.getStatuses().split(",");
+
+                List<TaskStatus> removableTaskStatusList = new ArrayList<TaskStatus>();
+                for(String removableStatus : removableStatusesArray) {
+                    for (TaskStatus taskStatusEnum : TaskStatus.values() ) {
+                        if(taskStatusEnum.toString().equals(removableStatus.trim())) {
+                            removableTaskStatusList.add(taskStatusEnum);
+                            break;
+                        }
+                    }
+                }
+                this.removableTaskStatuses = removableTaskStatusList;
+            }
         }
     }
 
@@ -230,5 +278,38 @@ public class HumanTaskServerConfiguration {
 
     public String getTransactionFactoryClass() {
         return transactionFactoryClass;
+    }
+
+    public String getTaskCleanupCronExpression() {
+        return taskCleanupCronExpression;
+    }
+
+    public void setTaskCleanupCronExpression(String taskCleanupCronExpression) {
+        this.taskCleanupCronExpression = taskCleanupCronExpression;
+    }
+
+    public List<TaskStatus> getRemovableTaskStatuses() {
+        return removableTaskStatuses;
+    }
+
+    public void setRemovableTaskStatuses(List<TaskStatus> removableTaskStatuses) {
+        this.removableTaskStatuses = removableTaskStatuses;
+    }
+
+    public boolean isEnableTaskEventPersistence() {
+        return enableTaskEventPersistence;
+    }
+
+    public void setEnableTaskEventPersistence(boolean enableTaskEventPersistence) {
+        this.enableTaskEventPersistence = enableTaskEventPersistence;
+    }
+
+    /**
+     * @return :  true if we have a valid task cleanup configuration parameters. False otherwise.
+     */
+    public boolean isTaskCleanupEnabled() {
+        return StringUtils.isNotEmpty(this.taskCleanupCronExpression) &&
+               CronExpression.isValidExpression(taskCleanupCronExpression) &&
+               removableTaskStatuses.size()>0;
     }
 }

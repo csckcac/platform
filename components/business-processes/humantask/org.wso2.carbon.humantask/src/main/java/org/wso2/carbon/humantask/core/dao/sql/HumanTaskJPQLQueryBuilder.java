@@ -67,6 +67,8 @@ public class HumanTaskJPQLQueryBuilder {
                 return buildAllTasksQuery();
             case NOTIFICATIONS:
                 return buildNotificationsQuery();
+            case REMOVE_TASKS:
+                return buildRemoveTasksQuery();
         }
         return null;
     }
@@ -162,6 +164,14 @@ public class HumanTaskJPQLQueryBuilder {
         List<TaskStatus> statusList = Arrays.asList(TaskStatus.COMPLETED, TaskStatus.OBSOLETE);
         assignedToMeQuery.setParameter("taskStatuses", statusList);
         return assignedToMeQuery;
+    }
+
+    private Query buildRemoveTasksQuery() {
+        Query removeTasksQuery = em.createQuery(" DELETE FROM  org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.Task t  " +
+                                                " WHERE t.status in :removableStatuses" );
+
+        removeTasksQuery.setParameter("removableStatuses" , queryCriteria.getStatuses());
+        return removeTasksQuery;
     }
 
 

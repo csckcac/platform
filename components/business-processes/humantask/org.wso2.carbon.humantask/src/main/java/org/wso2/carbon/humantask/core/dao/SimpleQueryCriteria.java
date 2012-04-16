@@ -54,6 +54,7 @@ public class SimpleQueryCriteria {
         CLAIMABLE,
         ALL_TASKS,
         NOTIFICATIONS,
+        REMOVE_TASKS,
         ADVANCED
     }
 

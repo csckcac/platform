@@ -141,6 +141,12 @@ public class HumanTaskDAOConnectionImpl implements HumanTaskDAOConnection {
         return matchingTasks;
     }
 
+    public void removeTasks(SimpleQueryCriteria queryCriteria) {
+        HumanTaskJPQLQueryBuilder queryBuilder = new HumanTaskJPQLQueryBuilder(queryCriteria, entityManager);
+        Query taskQuery = queryBuilder.build();
+        taskQuery.executeUpdate();
+    }
+
     @Override
     public CommentDAO getCommentDAO(String commentString, String commentedByUserName) {
         return new Comment(commentString, commentedByUserName);

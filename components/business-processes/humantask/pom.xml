@@ -37,6 +37,7 @@
         <module>org.wso2.carbon.humantask</module>
         <module>org.wso2.carbon.humantask.deployer</module>
         <module>org.wso2.carbon.humantask.ui</module>
+        <module>org.wso2.carbon.humantask.cleanup.scheduler</module>
     </modules>
 
     <dependencyManagement>
@@ -67,7 +68,6 @@
                 <artifactId>saxon.bps</artifactId>
                 <version>${saxon-bps.wso2.version.humantask}</version>
             </dependency>
-
 
             <dependency>
                 <groupId>org.apache.axis2.wso2</groupId>
@@ -172,6 +172,11 @@
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.statistics.ui</artifactId>
                 <version>${wso2carbon.version.humantask}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.ntask.core</artifactId>
+                <version>${pom.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -41,7 +41,11 @@ public class HumanTaskConstants {
 	public static final String B4P_NAMESPACE = "http://docs.oasis-open.org/ns/bpel4people/bpel4people/200803";
     
 	public static final int ITEMS_PER_PAGE = 20;
-	
+
+    public static final String HUMANTASK_TASK_TYPE =  "humantaskType";
+
+    public static final String HUMANTASK_CLEANUP_JOB = "humantaskCleanupJob";
+
     public interface XPathConstants {
 
 

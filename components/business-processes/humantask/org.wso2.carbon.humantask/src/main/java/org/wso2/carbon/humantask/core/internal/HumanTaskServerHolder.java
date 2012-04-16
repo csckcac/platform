@@ -75,7 +75,7 @@ public class HumanTaskServerHolder {
     public void setRegistryService(RegistryService registryService) {
         this.registryService = registryService;
     }
-    
+
     public HumanTaskUIResourceProvider getHumanTaskUIResourceProvider() {
         return humanTaskUIResourceProvider;
     }

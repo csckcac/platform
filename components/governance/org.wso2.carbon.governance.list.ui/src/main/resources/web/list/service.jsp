@@ -153,6 +153,7 @@
                 <th><fmt:message key="service.name"/></th>
                 <th><fmt:message key="service.version"/></th>
                 <th><fmt:message key="service.namespace"/></th>
+                <th><fmt:message key="service.LC.info"/></th>
                 <% if (CarbonUIUtil.isUserAuthorized(request,
                     "/permission/admin/manage/resources/browse")) {%><th><fmt:message key="actions"/></th><%} %>
             </tr>
@@ -189,6 +190,17 @@
                 <td><a href="../resources/resource.jsp?region=region3&item=resource_browser_menu&path=<%=urlCompletePathNoVersion%>"><%=bean.getNames()[i]%></a></td>
                 <td><a href="../resources/resource.jsp?region=region3&item=resource_browser_menu&path=<%=urlCompletePath%>"><%=version%></a></td>
                 <td><%=bean.getNamespace()[i]%></td>
+                <%
+                    if(!(bean.getLCName()[i].equals("")) && !(bean.getLCState()[i].equals(""))){
+                %>
+                <td><%=bean.getLCName()[i]+" / "+bean.getLCState()[i]%></td>
+                <%
+                    }else{
+                %>
+                <td></td>
+                <%
+                    }
+                %>
                 <td>
                     <%if (bean.getCanDelete()[i])  { %>
                         <a title="<fmt:message key="delete"/>" onclick="deleteService('<%=completePath%>','/','../list/service.jsp?region=region3&item=governance_list_services_menu')" href="#" class="icon-link registryWriteOperation" style="background-image:url(../admin/images/delete.gif);"><fmt:message key="delete"/></a>
@@ -200,7 +212,18 @@
                 <td><%=bean.getNames()[i]%></td>
                 <td><%=version%></td>
                 <td><%=bean.getNamespace()[i]%></td>
-                <% } %>
+                <%
+                    if(!(bean.getLCName()[i].equals("")) && !(bean.getLCState()[i].equals(""))){
+                %>
+                <td><%=bean.getLCName()[i]+" / "+bean.getLCState()[i]%></td>
+                <%
+                }else{
+                %>
+                <td></td>
+                <%
+                    }
+                 }
+                %>
             </tr>
 
                 <%

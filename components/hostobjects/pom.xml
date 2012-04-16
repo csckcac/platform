@@ -48,7 +48,8 @@
         <module>org.wso2.carbon.hostobjects.scripts</module>
         <module>org.wso2.carbon.hostobjects.uri</module>
         <module>org.wso2.carbon.hostobjects.stream</module>
-	<!--module>org.wso2.carbon.hostobjects.log</module>
+        <module>org.wso2.carbon.hostobjects.log</module>
+        <!--module>org.wso2.carbon.hostobjects.log</module>
         <module>org.wso2.carbon.hostobjects.svnclient</module-->
     </modules>
 
@@ -90,6 +91,12 @@
                 <artifactId>org.wso2.carbon.scriptengine</artifactId>
                 <version>${jaggery.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.jaggery.core</artifactId>
+                <version>${jaggery.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>commons-fileupload</groupId>
                 <artifactId>commons-fileupload</artifactId>

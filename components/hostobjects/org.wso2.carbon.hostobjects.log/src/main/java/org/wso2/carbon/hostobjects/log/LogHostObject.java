@@ -108,29 +108,4 @@ public class LogHostObject extends ScriptableObject {
         LogHostObject logObj = (LogHostObject) thisObj;
         return logObj.logger.isTraceEnabled();
     }
-
-    public static void jsSet_level(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
-        String functionName = "level";
-        int argsCount = args.length;
-        if (argsCount != 1) {
-            HostObjectUtil.invalidNumberOfArgs(HOSTOBJECT_NAME, functionName, argsCount, false);
-        }
-        if (!(args[0] instanceof String)) {
-            HostObjectUtil.invalidArgsError(HOSTOBJECT_NAME, functionName, "1", "string", args[0], false);
-        }
-
-        String level = (String) args[0];
-        LogHostObject logObj = (LogHostObject) thisObj;
-        if (level.equalsIgnoreCase("error")) {
-            logObj.logger.setLevel(Level.ERROR);
-        } else if (level.equalsIgnoreCase("debug")) {
-            logObj.logger.setLevel(Level.DEBUG);
-        } else if (level.equalsIgnoreCase("info")) {
-            logObj.logger.setLevel(Level.INFO);
-        } else if (level.equalsIgnoreCase("fatal")) {
-            logObj.logger.setLevel(Level.FATAL);
-        } else if (level.equalsIgnoreCase("trace")) {
-            logObj.logger.setLevel(Level.TRACE);
-        }
-    }
 }

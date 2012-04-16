@@ -15,27 +15,26 @@
  ~ specific language governing permissions and limitations
  ~ under the License.
  -->
-
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax2211="http://exceptions.core.registry.carbon.wso2.org/xsd" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://services.list.governance.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ax2215="http://beans.list.governance.carbon.wso2.org/xsd" xmlns:ax2212="http://api.registry.carbon.wso2.org/xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.list.governance.carbon.wso2.org">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax2220="http://api.registry.carbon.wso2.org/xsd" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://services.list.governance.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax2219="http://exceptions.core.registry.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ax2223="http://beans.list.governance.carbon.wso2.org/xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://services.list.governance.carbon.wso2.org">
     <wsdl:documentation>ListMetadataService</wsdl:documentation>
     <wsdl:types>
-        <xs:schema xmlns:ax2213="http://api.registry.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://exceptions.core.registry.carbon.wso2.org/xsd">
+        <xs:schema xmlns:ax2221="http://api.registry.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://exceptions.core.registry.carbon.wso2.org/xsd">
             <xs:import namespace="http://api.registry.carbon.wso2.org/xsd" />
             <xs:complexType name="RegistryException">
                 <xs:complexContent>
-                    <xs:extension base="ax2213:RegistryException">
+                    <xs:extension base="ax2220:RegistryException">
                         <xs:sequence />
                     </xs:extension>
                 </xs:complexContent>
             </xs:complexType>
         </xs:schema>
-        <xs:schema xmlns:ax2216="http://beans.list.governance.carbon.wso2.org/xsd" xmlns:ax2214="http://exceptions.core.registry.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.list.governance.carbon.wso2.org">
+        <xs:schema xmlns:ax2222="http://exceptions.core.registry.carbon.wso2.org/xsd" xmlns:ax2224="http://beans.list.governance.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.list.governance.carbon.wso2.org">
             <xs:import namespace="http://exceptions.core.registry.carbon.wso2.org/xsd" />
             <xs:import namespace="http://beans.list.governance.carbon.wso2.org/xsd" />
-            <xs:element name="RegistryException">
+            <xs:element name="ListMetadataServiceRegistryException">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="RegistryException" nillable="true" type="ax2211:RegistryException" />
+                        <xs:element minOccurs="0" name="RegistryException" nillable="true" type="ax2222:RegistryException" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -47,7 +46,7 @@
             <xs:element name="listwsdlsResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2216:WSDLBean" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2224:WSDLBean" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -61,7 +60,7 @@
             <xs:element name="listservicesResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2216:ServiceBean" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2224:ServiceBean" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -73,7 +72,7 @@
             <xs:element name="listschemaResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2216:SchemaBean" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2224:SchemaBean" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -85,7 +84,7 @@
             <xs:element name="listpoliciesResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2216:PolicyBean" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2224:PolicyBean" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -102,6 +101,8 @@
             </xs:complexType>
             <xs:complexType name="ServiceBean">
                 <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="LCName" nillable="true" type="xs:string" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="LCState" nillable="true" type="xs:string" />
                     <xs:element maxOccurs="unbounded" minOccurs="0" name="canDelete" nillable="true" type="xs:boolean" />
                     <xs:element minOccurs="0" name="defaultServicePath" nillable="true" type="xs:string" />
                     <xs:element maxOccurs="unbounded" minOccurs="0" name="names" nillable="true" type="xs:string" />
@@ -140,8 +141,8 @@
     <wsdl:message name="listschemaResponse">
         <wsdl:part name="parameters" element="ns:listschemaResponse" />
     </wsdl:message>
-    <wsdl:message name="RegistryException">
-        <wsdl:part name="parameters" element="ns:RegistryException" />
+    <wsdl:message name="ListMetadataServiceRegistryException">
+        <wsdl:part name="parameters" element="ns:ListMetadataServiceRegistryException" />
     </wsdl:message>
     <wsdl:message name="listservicesRequest">
         <wsdl:part name="parameters" element="ns:listservices" />
@@ -165,22 +166,22 @@
         <wsdl:operation name="listschema">
             <wsdl:input message="ns:listschemaRequest" wsaw:Action="urn:listschema" />
             <wsdl:output message="ns:listschemaResponse" wsaw:Action="urn:listschemaResponse" />
-            <wsdl:fault message="ns:RegistryException" name="RegistryException" wsaw:Action="urn:listschemaRegistryException" />
+            <wsdl:fault message="ns:ListMetadataServiceRegistryException" name="ListMetadataServiceRegistryException" wsaw:Action="urn:listschemaListMetadataServiceRegistryException" />
         </wsdl:operation>
         <wsdl:operation name="listservices">
             <wsdl:input message="ns:listservicesRequest" wsaw:Action="urn:listservices" />
             <wsdl:output message="ns:listservicesResponse" wsaw:Action="urn:listservicesResponse" />
-            <wsdl:fault message="ns:RegistryException" name="RegistryException" wsaw:Action="urn:listservicesRegistryException" />
+            <wsdl:fault message="ns:ListMetadataServiceRegistryException" name="ListMetadataServiceRegistryException" wsaw:Action="urn:listservicesListMetadataServiceRegistryException" />
         </wsdl:operation>
         <wsdl:operation name="listwsdls">
             <wsdl:input message="ns:listwsdlsRequest" wsaw:Action="urn:listwsdls" />
             <wsdl:output message="ns:listwsdlsResponse" wsaw:Action="urn:listwsdlsResponse" />
-            <wsdl:fault message="ns:RegistryException" name="RegistryException" wsaw:Action="urn:listwsdlsRegistryException" />
+            <wsdl:fault message="ns:ListMetadataServiceRegistryException" name="ListMetadataServiceRegistryException" wsaw:Action="urn:listwsdlsListMetadataServiceRegistryException" />
         </wsdl:operation>
         <wsdl:operation name="listpolicies">
             <wsdl:input message="ns:listpoliciesRequest" wsaw:Action="urn:listpolicies" />
             <wsdl:output message="ns:listpoliciesResponse" wsaw:Action="urn:listpoliciesResponse" />
-            <wsdl:fault message="ns:RegistryException" name="RegistryException" wsaw:Action="urn:listpoliciesRegistryException" />
+            <wsdl:fault message="ns:ListMetadataServiceRegistryException" name="ListMetadataServiceRegistryException" wsaw:Action="urn:listpoliciesListMetadataServiceRegistryException" />
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="ListMetadataServiceSoap11Binding" type="ns:ListMetadataServicePortType">
@@ -193,8 +194,8 @@
             <wsdl:output>
                 <soap:body use="literal" />
             </wsdl:output>
-            <wsdl:fault name="RegistryException">
-                <soap:fault use="literal" name="RegistryException" />
+            <wsdl:fault name="ListMetadataServiceRegistryException">
+                <soap:fault use="literal" name="ListMetadataServiceRegistryException" />
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="listservices">
@@ -205,8 +206,8 @@
             <wsdl:output>
                 <soap:body use="literal" />
             </wsdl:output>
-            <wsdl:fault name="RegistryException">
-                <soap:fault use="literal" name="RegistryException" />
+            <wsdl:fault name="ListMetadataServiceRegistryException">
+                <soap:fault use="literal" name="ListMetadataServiceRegistryException" />
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="listwsdls">
@@ -217,8 +218,8 @@
             <wsdl:output>
                 <soap:body use="literal" />
             </wsdl:output>
-            <wsdl:fault name="RegistryException">
-                <soap:fault use="literal" name="RegistryException" />
+            <wsdl:fault name="ListMetadataServiceRegistryException">
+                <soap:fault use="literal" name="ListMetadataServiceRegistryException" />
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="listpolicies">
@@ -229,8 +230,8 @@
             <wsdl:output>
                 <soap:body use="literal" />
             </wsdl:output>
-            <wsdl:fault name="RegistryException">
-                <soap:fault use="literal" name="RegistryException" />
+            <wsdl:fault name="ListMetadataServiceRegistryException">
+                <soap:fault use="literal" name="ListMetadataServiceRegistryException" />
             </wsdl:fault>
         </wsdl:operation>
     </wsdl:binding>
@@ -244,8 +245,8 @@
             <wsdl:output>
                 <soap12:body use="literal" />
             </wsdl:output>
-            <wsdl:fault name="RegistryException">
-                <soap12:fault use="literal" name="RegistryException" />
+            <wsdl:fault name="ListMetadataServiceRegistryException">
+                <soap12:fault use="literal" name="ListMetadataServiceRegistryException" />
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="listservices">
@@ -256,8 +257,8 @@
             <wsdl:output>
                 <soap12:body use="literal" />
             </wsdl:output>
-            <wsdl:fault name="RegistryException">
-                <soap12:fault use="literal" name="RegistryException" />
+            <wsdl:fault name="ListMetadataServiceRegistryException">
+                <soap12:fault use="literal" name="ListMetadataServiceRegistryException" />
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="listwsdls">
@@ -268,8 +269,8 @@
             <wsdl:output>
                 <soap12:body use="literal" />
             </wsdl:output>
-            <wsdl:fault name="RegistryException">
-                <soap12:fault use="literal" name="RegistryException" />
+            <wsdl:fault name="ListMetadataServiceRegistryException">
+                <soap12:fault use="literal" name="ListMetadataServiceRegistryException" />
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="listpolicies">
@@ -280,8 +281,8 @@
             <wsdl:output>
                 <soap12:body use="literal" />
             </wsdl:output>
-            <wsdl:fault name="RegistryException">
-                <soap12:fault use="literal" name="RegistryException" />
+            <wsdl:fault name="ListMetadataServiceRegistryException">
+                <soap12:fault use="literal" name="ListMetadataServiceRegistryException" />
             </wsdl:fault>
         </wsdl:operation>
     </wsdl:binding>
@@ -326,13 +327,13 @@
     </wsdl:binding>
     <wsdl:service name="ListMetadataService">
         <wsdl:port name="ListMetadataServiceHttpsSoap11Endpoint" binding="ns:ListMetadataServiceSoap11Binding">
-            <soap:address location="https://10.100.2.99:9443/services/ListMetadataService.ListMetadataServiceHttpsSoap11Endpoint/" />
+            <soap:address location="https://10.100.3.72:9443/services/ListMetadataService.ListMetadataServiceHttpsSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="ListMetadataServiceHttpsSoap12Endpoint" binding="ns:ListMetadataServiceSoap12Binding">
-            <soap12:address location="https://10.100.2.99:9443/services/ListMetadataService.ListMetadataServiceHttpsSoap12Endpoint/" />
+            <soap12:address location="https://10.100.3.72:9443/services/ListMetadataService.ListMetadataServiceHttpsSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="ListMetadataServiceHttpsEndpoint" binding="ns:ListMetadataServiceHttpBinding">
-            <http:address location="https://10.100.2.99:9443/services/ListMetadataService.ListMetadataServiceHttpsEndpoint/" />
+            <http:address location="https://10.100.3.72:9443/services/ListMetadataService.ListMetadataServiceHttpsEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

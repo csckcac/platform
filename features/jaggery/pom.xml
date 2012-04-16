@@ -202,6 +202,11 @@
                 <artifactId>org.wso2.carbon.hostobjects.atom</artifactId>
                 <version>${hostobjects.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.hostobjects.log</artifactId>
+                <version>${hostobjects.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.wso2.carbon</groupId>

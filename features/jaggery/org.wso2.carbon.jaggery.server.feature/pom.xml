@@ -104,6 +104,11 @@
 
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.hostobjects.log</artifactId>
+
+        </dependency>
+        <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
             <version>1.1.1</version>
@@ -376,6 +381,7 @@
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.xslt</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.scripts</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.uri</bundleDef>
+				<bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.log</bundleDef>
 
                             </bundles>
                             <importBundles>

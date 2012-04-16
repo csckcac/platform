@@ -133,7 +133,7 @@
         <module>rest-api</module>
 		<module>jaggery</module>
         <!--module>apimgt</module-->
-		<!--module>andes</module-->
+	<module>andes</module>
 	<module>data-agents</module>
 	<module>bam2</module>
 	<module>gadget-ide</module>

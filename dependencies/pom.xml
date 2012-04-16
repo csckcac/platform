@@ -62,7 +62,7 @@
 		<module>synapse/2.1.0-wso2v6</module>
 		<module>thrift</module>
 		<module>webharvest</module>	
-		<!--module>andes</module-->
+		<module>andes</module>
 		<module>closure-js-plugin</module>
 		<!-- orbit/modules -->
                 <module>orbit/cassandra</module>
@@ -85,7 +85,7 @@
                 <module>orbit/webharvest</module>
                 <module>orbit/wsdl-validator</module>
                 <module>orbit/xkms</module>
-		<!--module>orbit/andes</module-->
+		<module>orbit/andes</module>
 	     </modules>
    <dependencyManagement>
 	<dependencies>

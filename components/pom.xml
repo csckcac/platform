@@ -147,7 +147,7 @@
                 <module>hostobjects</module>
                 <module>jaggery</module>
                 <!--module>apimgt</module-->
-		<!--module>andes</module-->
+		<module>andes</module>
 		<module>bam2</module>
 		<module>data-agents</module>
 		<module>gadget-ide</module>

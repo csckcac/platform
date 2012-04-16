@@ -66,7 +66,7 @@ public class RemoteUMClient {
      */
     public String login(String username, String password) throws Exception {
         //String cookie = null;
-        boolean loggedIn = authstub.login(username, password, "https://localhost:9443");
+        boolean loggedIn = authstub.login(username, password, "localhost");
         if (loggedIn) {
             System.out.println("The user " + username + " logged in successfully.");
             authCookie = (String) authstub._getServiceClient().getServiceContext().getProperty(

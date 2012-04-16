@@ -25,6 +25,8 @@ public class ServiceBean {
     private String[] names;
     private String[] path;
     private String[] namespace;
+    private String[] LCName;
+    private String[] LCState;
     private boolean[] canDelete;
     private int size=0;
 
@@ -75,5 +77,21 @@ public class ServiceBean {
 
     public void setCanDelete(boolean[] canDelete) {
         this.canDelete = canDelete;
+    }
+
+    public String[] getLCName() {
+        return LCName;
+    }
+
+    public void setLCName(String[] LCName) {
+        this.LCName = LCName;
+    }
+
+    public String[] getLCState() {
+        return LCState;
+    }
+
+    public void setLCState(String[] LCState) {
+        this.LCState = LCState;
     }
 }

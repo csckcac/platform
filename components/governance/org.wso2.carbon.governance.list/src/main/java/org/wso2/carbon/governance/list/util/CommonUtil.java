@@ -72,6 +72,30 @@ public class CommonUtil {
             throw new RegistryException(msg, e);
         }
     }
+
+    public static String getLifeCycleName(Resource resource){
+        String lifeCycleName="";
+        if(resource.getProperties()!=null){
+            if (resource.getProperty("registry.LC.name") != null) {
+                lifeCycleName = resource.getProperty("registry.LC.name");
+            }
+        }
+        return lifeCycleName;
+    }
+
+    public static String getLifeCycleState(Resource resource){
+        String lifeCycleState="";
+        if(resource.getProperties()!=null){
+            if(!getLifeCycleName(resource).equals("")){
+                String LCStatePropertyName="registry.lifecycle."+getLifeCycleName(resource)+".state";
+                if (resource.getProperty(LCStatePropertyName) != null) {
+                    lifeCycleState = resource.getProperty(LCStatePropertyName);
+                }
+            }
+
+        }
+        return lifeCycleState;
+    }
    
     public static String getResourceName(String path){
         String[] temp = path.split("/");

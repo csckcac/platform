@@ -30,6 +30,7 @@ import org.wso2.carbon.governance.list.beans.WSDLBean;
 import org.wso2.carbon.governance.list.util.CommonUtil;
 import org.wso2.carbon.governance.list.util.ListServiceUtil;
 import org.wso2.carbon.governance.list.util.StringComparatorUtil;
+import org.wso2.carbon.registry.admin.api.governance.IListMetadataService;
 import org.wso2.carbon.registry.core.ActionConstants;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
@@ -42,7 +43,7 @@ import org.wso2.carbon.user.core.UserStoreException;
 import javax.xml.stream.XMLStreamException;
 import java.util.*;
 
-public class ListMetadataService extends AbstractAdmin {
+public class ListMetadataService extends AbstractAdmin implements IListMetadataService<ServiceBean, WSDLBean, PolicyBean, SchemaBean> {
 
     private static final Log log = LogFactory.getLog(ListMetadataService.class);
     private static final String REGISTRY_WSDL_TARGET_NAMESPACE = "registry.wsdl.TargetNamespace";
@@ -56,12 +57,16 @@ public class ListMetadataService extends AbstractAdmin {
     private static class ServiceEntry {
         private String path,
                 name,
-                namespace;
+                namespace,
+                lcname,
+                lcstate;
         private boolean canDelete;
-        ServiceEntry(String path, String name, String namespace, boolean canDelete) {
+        ServiceEntry(String path, String name, String namespace,String lcname,String lcstate, boolean canDelete) {
             this.path = path;
             this.name = name;
             this.namespace = namespace;
+            this.lcname=lcname;
+            this.lcstate=lcstate;
             this.canDelete = canDelete;
         }
     }
@@ -84,6 +89,8 @@ public class ListMetadataService extends AbstractAdmin {
         }
         String[] name = new String[path.length];
         String[] namespace = new String[path.length];
+        String[] LCName = new String[path.length];
+        String[] LCState = new String[path.length];
         boolean[] canDelete = new boolean[path.length];
         for(int i=0;i<path.length;i++){
             bean.increment();
@@ -107,6 +114,9 @@ public class ListMetadataService extends AbstractAdmin {
             }
             name[i] = CommonUtil.getServiceName(resource);
             namespace[i] = CommonUtil.getServiceNamespace(resource);
+            LCName[i]=CommonUtil.getLifeCycleName(resource);
+            LCState[i]=CommonUtil.getLifeCycleState(resource);
+
             if (registry.getUserRealm() != null && registry.getUserName() != null) {
                 try {
                     canDelete[i] =
@@ -125,9 +135,30 @@ public class ListMetadataService extends AbstractAdmin {
         bean.setNames(name);
         bean.setNamespace(namespace);
         bean.setPath(path);
+        bean.setLCName(LCName);
+        bean.setLCState(LCState);
         bean.setCanDelete(canDelete);
         sortServicesByName(bean);
         return bean;
+    }
+
+    private String[] getLCInfo(Resource resource) {
+        String[] LCInfo = new String[2];
+        String lifecycleState;
+        if(resource.getProperties()!=null){
+            if (resource.getProperty("registry.LC.name") != null) {
+                LCInfo[0] =resource.getProperty("registry.LC.name");
+            }
+
+            if(LCInfo[0]!=null){
+                lifecycleState="registry.lifecycle."+LCInfo[0]+".state";
+                if (resource.getProperty("registry.lifecycle.ServiceLifeCycle.state") != null) {
+                    LCInfo[1] = resource.getProperty("registry.lifecycle.ServiceLifeCycle.state");
+                }
+            }
+
+        }
+        return LCInfo;
     }
 
     /**
@@ -137,7 +168,7 @@ public class ListMetadataService extends AbstractAdmin {
 
         List<ServiceEntry> serviceEntryList = new ArrayList<ServiceEntry>();
         for(int i=0; i < bean.getPath().length; i++) {
-            serviceEntryList.add( new ServiceEntry(bean.getPath()[i], bean.getNames()[i], bean.getNamespace()[i], bean.getCanDelete()[i]));
+            serviceEntryList.add( new ServiceEntry(bean.getPath()[i], bean.getNames()[i], bean.getNamespace()[i],bean.getLCName()[i],bean.getLCState()[i],bean.getCanDelete()[i]));
         }
 
         Collections.sort(serviceEntryList, new Comparator<ServiceEntry>() {
@@ -155,6 +186,8 @@ public class ListMetadataService extends AbstractAdmin {
             bean.getPath()[i] = se.path;
             bean.getNames()[i] = se.name;
             bean.getNamespace()[i] = se.namespace;
+            bean.getLCName()[i]=se.lcname;
+            bean.getLCState()[i]=se.lcstate;
             bean.getCanDelete()[i] = se.canDelete;
             i++;
         }

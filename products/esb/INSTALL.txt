@@ -1,9 +1,9 @@
-Installing  WSO2 Enterprise Service Bus (ESB) 4.0.0-SNAPSHOT
+Installing  WSO2 Enterprise Service Bus (ESB) 4.5.0-SNAPSHOT
 ===================================================
 
-WSO2 ESB 4.0.0-SNAPSHOT can be run either in standalone mode or as a webapp within a
+WSO2 ESB 4.5.0-SNAPSHOT can be run either in standalone mode or as a webapp within a
 servlet container, for webapp deployment please follow the ESB documentation
-available at the http://wso2.org/project/esb/java/4.0.0-SNAPSHOT/docs/index.html or
+available at the http://wso2.org/project/esb/java/4.5.0-SNAPSHOT/docs/index.html or
 download the WSO2 ESB documentation distribution.
 
 Standalone Mode
@@ -93,8 +93,8 @@ Running Samples
 =======================
 ESB samples are available at CARBON_HOME/repository/samples directory.
 The instructions to run samples are given in the samples guide in the WSO2 ESB
-Documentation, http://wso2.org/project/esb/java/4.0.0-SNAPSHOT/docs/index.html or refer
-to the documentation distribution [wso2esb-4.0.0-SNAPSHOT-docs.zip].
+Documentation, http://wso2.org/project/esb/java/4.5.0-SNAPSHOT/docs/index.html or refer
+to the documentation distribution [wso2esb-4.5.0-SNAPSHOT-docs.zip].
 
 To run the ESB server in sample mode use,
 

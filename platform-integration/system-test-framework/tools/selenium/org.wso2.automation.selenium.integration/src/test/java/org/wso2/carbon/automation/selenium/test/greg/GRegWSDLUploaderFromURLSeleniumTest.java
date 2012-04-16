@@ -41,8 +41,8 @@ import java.net.MalformedURLException;
 import static org.testng.Assert.*;
 
 
-public class GRegWSDLUploaderfromURLSeleniumTest {
-    private static final Log log = LogFactory.getLog(GRegWSDLUploaderfromURLSeleniumTest.class);
+public class GRegWSDLUploaderFromURLSeleniumTest {
+    private static final Log log = LogFactory.getLog(GRegWSDLUploaderFromURLSeleniumTest.class);
     private static Selenium selenium;
     private static WebDriver driver;
     String username;
@@ -89,16 +89,18 @@ public class GRegWSDLUploaderfromURLSeleniumTest {
             selenium.click("css=button[type=\"button\"]");
             selenium.waitForPageToLoad("30000");
             //goto service dashboard
-            selenium.click("css=input.button.registryWriteOperation");
+            driver.findElement(By.linkText("Services")).click();
             selenium.waitForPageToLoad("30000");
             assertTrue(selenium.isTextPresent("Service List"), "Service List DashBoard fail : ");
             // delete service
             driver.findElement(By.linkText("Delete")).click();
             selenium.waitForPageToLoad("30000");
             assertTrue(selenium.isTextPresent("WSO2 Carbon"), "Service Delete Popup fail :");
+            Thread.sleep(2000);
             selenium.click("css=button[type=\"button\"]");
             selenium.waitForPageToLoad("30000");
             //logout
+            Thread.sleep(2000);
             new GregUserLogout().userLogout(driver);
             log.info("GRegWSDLUploaderfromURLSeleniumTest -testAddWSDLfromURL()- Passed");
         } catch (AssertionFailedError e) {

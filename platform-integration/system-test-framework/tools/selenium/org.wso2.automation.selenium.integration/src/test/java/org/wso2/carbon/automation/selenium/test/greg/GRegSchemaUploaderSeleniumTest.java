@@ -67,9 +67,8 @@ public class GRegSchemaUploaderSeleniumTest {
     }
 
     @Test(groups = {"wso2.greg"}, description = "add person schema from url", priority = 1)
-    public void testAddSchemafromURL() throws WebDriverException, Exception {
+    public void testAddSchemaFromURL() throws Exception {
         String schemaURL = "http://people.wso2.com/~evanthika/schemas/org/company/www/person/Person.xsd";
-//        String schemaName = "Person.xsd";
         try {
             userLogin();
             gotoSchemaPage();
@@ -107,9 +106,11 @@ public class GRegSchemaUploaderSeleniumTest {
     }
 
     @Test(groups = {"wso2.greg"}, description = "add person schema from file", priority = 2)
-    public void testAddSchemafromFile() throws InterruptedException, IOException {
+    public void testAddSchemaFromFile() throws InterruptedException, IOException {
         String resourcePath = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION;
-        String schema_path = resourcePath + File.separator + "artifacts" + File.separator + "Selenium" + File.separator + "GREG" + File.separator + "schema" + File.separator + "Person.xsd";
+        String schema_path = resourcePath + File.separator + "artifacts" + File.separator + "GREG"
+                             + File.separator + "schema" + File.separator
+                             + "Person.xsd";
         try {
             userLogin();
             gotoSchemaPage();
@@ -127,13 +128,18 @@ public class GRegSchemaUploaderSeleniumTest {
             Thread.sleep(15000L);
             log.info("Schema was successfully uploaded from file");
             assertTrue(selenium.isTextPresent("Schema List"), "Schema Dash board Fail :");
-            assertTrue(selenium.isTextPresent("Person.xsd"), "Uploaded Schema name does not display on Shema Dash board :");
-            assertTrue(selenium.isTextPresent("exact:http://www.company.org"), "Uploaded Schema nameSpace does not display on Shema Dash board  :");
+            assertTrue(selenium.isTextPresent("Person.xsd"), "Uploaded Schema name does not display " +
+                                                             "on Schema Dashboard :");
+            assertTrue(selenium.isTextPresent("exact:http://www.company.org"), "Uploaded Schema " +
+                                                                               "nameSpace does not " +
+                                                                               "display on Schema Dashboard  :");
             // click on Delete link
             driver.findElement(By.linkText("Delete")).click();
             Thread.sleep(2000L);
             assertTrue(selenium.isTextPresent("WSO2 Carbon"), "Schema Delete pop-up fail :");
-            assertTrue(selenium.isTextPresent("exact:Are you sure you want to delete'/_system/governance/trunk/schemas/org/company/www/Person.xsd' permanently?"), "Schema Delete pop-up fail :");
+            assertTrue(selenium.isTextPresent("exact:Are you sure you want to delete'/_system/governance" +
+                                              "/trunk/schemas/org/company/www/Person.xsd' permanently?"),
+                       "Schema Delete pop-up fail :");
             selenium.click("css=button[type=\"button\"]");
             selenium.waitForPageToLoad("30000");
 

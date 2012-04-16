@@ -62,7 +62,7 @@ public class GRegLifeCyclePromoteTest {
 
 
     @Test(groups = {"wso2.greg"}, description = "add echo wsdl from URL", priority = 2)
-    public void testAddWSDLfromURL() throws Exception {
+    public void testAddWSDLFromURL() throws Exception {
         String wsdlURL = "http://svn.wso2.org/repos/wso2/carbon/platform/trunk/platform-integration" +
                          "/system-test-framework/core/org.wso2.automation.platform.core/src/main/" +
                          "resources/artifacts/GREG/wsdl/echo.wsdl";
@@ -73,7 +73,7 @@ public class GRegLifeCyclePromoteTest {
         assertTrue(selenium.isTextPresent("Add New WSDL"), "Add WSDL Dash Board - Add New WSDL Text does not appear::");
         // Add WSDL Dashboard
         new GregResourceURLUploader().uploadResource(driver, wsdlURL, null);
-        Thread.sleep(15000L);
+        Thread.sleep(30000L);
         // wsdl dash board
         assertTrue(selenium.isTextPresent("WSDL List"), "WSDL Dashboard Does not appear ::");
         assertTrue(selenium.isTextPresent("echo.wsdl"), "Uploaded WSDL name does appear on WSDL Dashboard :");

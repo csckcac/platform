@@ -36,8 +36,6 @@ import org.wso2.platform.test.core.utils.seleniumutils.SeleniumScreenCapture;
 
 import static org.testng.Assert.*;
 
-
-import java.io.IOException;
 import java.net.MalformedURLException;
 
 
@@ -63,7 +61,7 @@ public class GRegCollectionSeleniumTest {
     }
 
     @Test(groups = {"wso2.greg"}, description = "add a collection tree ", priority = 1)
-    private void testAddCollectionTree() throws Exception {
+    public void testAddCollectionTree() throws Exception {
         String collectionPath = "/selenium_root/collection_root/c1/c2";
         try {
             userLogin();
@@ -96,7 +94,7 @@ public class GRegCollectionSeleniumTest {
     }
 
     @Test(groups = {"wso2.greg"}, description = "add a comment to collection ", priority = 2)
-    private void testAddComment() throws Exception {
+    public void testAddComment() throws Exception {
         String collectionPath = "/selenium_root/collection_root/comment/a1";
         String comment = "Collection Comment1";
 
@@ -156,7 +154,7 @@ public class GRegCollectionSeleniumTest {
     }
 
     @Test(groups = {"wso2.greg"}, description = "apply a tag to a collection", priority = 3)
-    private void testAddTagToCollection() throws Exception {
+    public void testAddTagToCollection() throws Exception {
         String collectionPath = "/selenium_root/collection_root/tag/a1";
         String tag = "Collection_tag1";
 
@@ -278,7 +276,7 @@ public class GRegCollectionSeleniumTest {
     }
 
     @Test(groups = {"wso2.greg"}, description = "apply a rating to a collection", priority = 5)
-    public void testAddRatingToCollection() throws Exception, IOException {
+    public void testAddRatingToCollection() throws Exception {
         String collectionPath = "/selenium_root/collection_root/rating/a1";
 
         try {
@@ -336,7 +334,7 @@ public class GRegCollectionSeleniumTest {
     }
 
     @Test(groups = {"wso2.greg"}, description = "rename a collection collection", priority = 6)
-    private void testRenameCollection() throws Exception {
+    public void testRenameCollection() throws Exception {
         String collectionPath = "/selenium_root/collection_root/rename/a1";
         String rename = "renameda1";
 
@@ -389,7 +387,7 @@ public class GRegCollectionSeleniumTest {
     }
 
     @Test(groups = {"wso2.greg"}, description = "move a collection", priority = 7)
-    private void testMoveCollection() throws Exception {
+    public void testMoveCollection() throws Exception {
         String collectionPath1 = "/selenium_root/collection_root/move/collection1/a1";
         String collectionPath2 = "/selenium_root/collection_root/move/collection2/b1";
         String movePath = "/selenium_root/collection_root/move/collection2/b1";
@@ -456,7 +454,7 @@ public class GRegCollectionSeleniumTest {
 
 
     @Test(groups = {"wso2.greg"}, description = "copy a collection", priority = 8)
-    private void testcopyCollection() throws Exception {
+    public void testcopyCollection() throws Exception {
         String collectionPath1 = "/selenium_root/collection_root/copy/collection1/a1";
         String collectionPath2 = "/selenium_root/collection_root/copy/collection2/b1";
 
@@ -523,7 +521,7 @@ public class GRegCollectionSeleniumTest {
     }
 
     @Test(groups = {"wso2.greg"}, description = "copy a collection", priority = 9)
-    private void testDeleteCollection() throws Exception {
+    public void testDeleteCollection() throws Exception {
         String collectionPath1 = "/selenium_root/collection_root/delete/collection1/a1";
         try {
             userLogin();
@@ -572,13 +570,6 @@ public class GRegCollectionSeleniumTest {
                                 + e.getMessage());
         }
     }
-
-
-    @AfterClass(alwaysRun = true)
-    public void cleanup() {
-        driver.quit();
-    }
-
 
     private void promoteState() throws Exception {
         try {
@@ -692,6 +683,49 @@ public class GRegCollectionSeleniumTest {
         new GregUserLogin().userLogin(driver, username, password);
         selenium.waitForPageToLoad("30000");
         assertTrue(selenium.isTextPresent("WSO2 Governance Registry Home"), "GReg Home page not present :");
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
+        userLogin();
+        gotoDetailViewTab();
+        String collectionName = "selenium_root";
+        int collectionId = getResourceId(collectionName);
+
+        if (collectionId != 0) {
+            deleteResourceFromBrowser(collectionId);
+        }
+        driver.quit();
+    }
+
+    private int getResourceId(String resourceName) {
+        int pageCount = 10;
+        int id = 0;
+        for (int i = 1; i <= pageCount; i++) {
+            if (driver.getPageSource().contains(resourceName)) {
+                if (driver.findElement(By.xpath("//*[@id=\"resourceView" + i + "\"]")).getText().equals(resourceName)) {
+                    id = i;
+                    break;
+                }
+            }
+        }
+        return id;
+    }
+
+    private void deleteResourceFromBrowser(int resourceRowId) {
+        if (resourceRowId != 0) {
+            driver.findElement(By.id("actionLink" + resourceRowId)).click();
+            selenium.waitForPageToLoad("30000");
+            resourceRowId = ((resourceRowId - 1) * 7) + 2;
+            driver.findElement(By.xpath("/html/body/table/tbody/tr[2]/td[3]/table/tbody/tr[2]/td/div/div/" +
+                                        "table/tbody/tr/td/div[2]/div[3]/div[3]/div[9]/table/tbody/tr[" + resourceRowId + "]" +
+                                        "/td/div/a[3]")).click();
+            selenium.waitForPageToLoad("30000");
+            assertTrue(selenium.isTextPresent("WSO2 Carbon"), "Resource Delete pop-up  failed :");
+            assertTrue(selenium.isTextPresent("exact:Are you sure you want to delete"), "Resource Delete pop-up  failed :");
+            selenium.click("//button");
+            selenium.waitForPageToLoad("30000");
+        }
     }
 
 }

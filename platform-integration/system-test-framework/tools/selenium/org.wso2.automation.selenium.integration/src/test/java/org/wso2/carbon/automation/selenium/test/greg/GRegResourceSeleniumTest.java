@@ -41,6 +41,7 @@ import org.wso2.platform.test.core.utils.seleniumutils.SeleniumScreenCapture;
 
 
 import java.net.MalformedURLException;
+import java.util.Calendar;
 
 
 public class GRegResourceSeleniumTest {
@@ -65,14 +66,19 @@ public class GRegResourceSeleniumTest {
     }
 
     @Test(groups = {"wso2.greg"}, description = "add a resource to a collection", priority = 1)
-    private void testaddResourceToCollection() throws Exception {
+    public void testAddResourceToCollection() throws Exception {
         String collectionPath = "/selenium_root/resource_root/resource/a1";
         String resourceName = "res1";
+
 
         try {
             userLogin();
             gotoDetailViewTab();
-
+            int resourceId = getResourceId("selenium_root");
+            if (resourceId != 0) {
+                deleteResourceFromBrowser(resourceId);
+            }
+            selenium.waitForPageToLoad("30000");
             addCollection(collectionPath);   //Create Collection  1
             Thread.sleep(2000L);
             assertEquals(collectionPath, selenium.getValue("//input"),
@@ -102,7 +108,7 @@ public class GRegResourceSeleniumTest {
     }
 
     @Test(groups = {"wso2.greg"}, description = "add a comment to a resource", priority = 2)
-    private void testaddCommentToResource() throws Exception {
+    public void testAddCommentToResource() throws Exception {
         String collectionPath = "/selenium_root/resource_root/comment/a1";
         String resourceName = "res1";
         String comment = "resourceComment";
@@ -121,7 +127,12 @@ public class GRegResourceSeleniumTest {
 
             findLocation(collectionPath + "/" + resourceName);
 
-            driver.findElement(By.id("commentsIconMinimized")).click();       //Add Comment
+            if (waitForElement("//*[@id=\"commentsIconMinimized\"]")) {
+                driver.findElement(By.id("commentsIconMinimized")).click();
+            } else {
+                driver.findElement(By.id("commentsIconExpanded")).click();
+            }
+
             Thread.sleep(2000L);
             driver.findElement(By.linkText("Add Comment")).click();
             Thread.sleep(5000L);
@@ -172,7 +183,7 @@ public class GRegResourceSeleniumTest {
     }
 
     @Test(groups = {"wso2.greg"}, description = "add a tag to resource", priority = 3)
-    private void testAddTagToResource() throws Exception {
+    public void testAddTagToResource() throws Exception {
         String collectionPath = "/selenium_root/resource_root/tag/a1";
         String resourceName = "res1";
         String tagName = "resource";
@@ -228,31 +239,6 @@ public class GRegResourceSeleniumTest {
         }
 
     }
-
-
-//    @Override
-//    public void runSuccessCase() {
-//        log.info("*********************Running G-Reg Resource SeleniumTest********************* ");
-//        addResourceToCollection();
-//        addCommentToResource();
-//        addTagToResource();
-//        addLifeCycleToResource();
-//        addRatingToResource();
-//        renameResource();
-//        moveResource();
-
-    //        copyResource();
-//        deleteResource();
-//        log.info("*********************Completed Running G-Reg Resource SeleniumTest********************* ");
-//
-//    }
-//
-//    @Override
-//    public void cleanup() {
-//        driver.quit();
-//
-//    }
-
 
     private void userLogin() {
         new GregUserLogin().userLogin(driver, username, password);
@@ -361,7 +347,7 @@ public class GRegResourceSeleniumTest {
     }
 
     @Test(groups = {"wso2.greg"}, description = "add a life cycle to resource", priority = 4)
-    private void testaddLifeCycleToResource() throws Exception {
+    public void testAddLifeCycleToResource() throws Exception {
         String collectionPath = "/selenium_root/resource_root/lifecycle/a1";
         String resourceName = "res1";
 
@@ -451,357 +437,59 @@ public class GRegResourceSeleniumTest {
             throw new Exception("GRegResourceSeleniumTest-addResource()  :" + e.getMessage());
         }
     }
-//
-//    private void addRatingToResource() {
-//        String collectionPath = "/resource_root/rating/a1";
-//        String resourceName = "res1";
-//
-//        try {
-//            new GregUserLogin().userLogin(driver, username, password);
-//            selenium.waitForPageToLoad("30000");
-//            Assert.assertTrue("GReg Home page not present :", selenium.isTextPresent("WSO2 Governance Registry Home"));
-//
-//            gotoDetailViewTab();
-//
-//            findLocation("/selenium_root");
-//            //Create Collection  1
-//            addCollection(collectionPath);
-//            Thread.sleep(2000L);
-//            Assert.assertEquals("New Created Collection does not Exists :", "/selenium_root" + collectionPath, selenium.getValue("//input"));
-//
-//            //add Resource
-//            addResource(resourceName);
-//
-//            findLocation("/selenium_root/resource_root/rating/a1/res1");
-//            Assert.assertTrue("Resource res1 does not Exists:", selenium.isTextPresent("res1"));
-//
-//            // Add rating 1
-//            driver.findElement(By.xpath("//span/img[3]")).click();
-//            Thread.sleep(2000L);
-//            Assert.assertTrue("Rating 1 has failed :", selenium.isTextPresent("(1.0)"));
-//
-//            // Add rating 2
-//            driver.findElement(By.xpath("//span/img[5]")).click();
-//            Thread.sleep(2000L);
-//            Assert.assertTrue("Rating 1 has failed :", selenium.isTextPresent("(2.0)"));
-//
-//            // Add rating 3
-//            driver.findElement(By.xpath("//img[7]")).click();
-//            Thread.sleep(2000L);
-//            Assert.assertTrue("Rating 1 has failed :", selenium.isTextPresent("(3.0)"));
-//
-//            // Add rating 4
-//            driver.findElement(By.xpath("//img[9]")).click();
-//            Thread.sleep(2000L);
-//            Assert.assertTrue("Rating 1 has failed :", selenium.isTextPresent("(4.0)"));
-//
-//            // Add rating 5
-//            driver.findElement(By.xpath("//img[11]")).click();
-//            Thread.sleep(2000L);
-//            Assert.assertTrue("Rating 1 has failed :", selenium.isTextPresent("(5.0)"));
-//
-//            //signout
-//            new GregUserLogout().userLogout(driver);
-//            log.info("********GRegResourceSeleniumTest addRatingToResource() - Passed ***********");
-//        } catch (AssertionFailedError e) {
-//            log.info("GRegResourceSeleniumTest -addRatingToResource() Assertion Failure ::" + e.getMessage());
-//            new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_addRatingToResource");
-//            driver.quit();
-//            Assert.fail("GRegResourceSeleniumTest addRatingToResource() - Assertion Failure :" + e.getMessage());
-//        } catch (WebDriverException e) {
-//            log.info("GRegResourceSeleniumTest addRatingToResource() - WebDriver Exception :" + e.getMessage());
-//            new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_addRatingToResource");
-//            driver.quit();
-//            Assert.fail("GRegResourceSeleniumTest addRatingToResource() - WebDriver Exception :" + e.getMessage());
-//        } catch (Exception e) {
-//            log.info("GRegResourceSeleniumTest addRatingToResource()- Fail :" + e.getMessage());
-//            new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_addRatingToResource");
-//            driver.quit();
-//            Assert.fail("GRegResourceSeleniumTest addRatingToResource() - Exception :" + e.getMessage());
-//        }
-//    }
-//
-//    private void renameResource() {
-//        String collectionPath = "/resource_root/rename/a1";
-//        String resourceName = "res1";
-//        String rename = "rename_res1";
-//
-//        try {
-//            new GregUserLogin().userLogin(driver, username, password);
-//            selenium.waitForPageToLoad("30000");
-//            Assert.assertTrue("GReg Home page not present :", selenium.isTextPresent("WSO2 Governance Registry Home"));
-//
-//            gotoDetailViewTab();
-//
-//            findLocation("/selenium_root");
-//            //Create Collection  1
-//            addCollection(collectionPath);
-//            Thread.sleep(2000L);
-//            Assert.assertEquals("New Created Collection does not Exists :", "/selenium_root" + collectionPath, selenium.getValue("//input"));
-//
-//            //add Resource
-//            addResource(resourceName);
-//
-//            findLocation("/selenium_root/resource_root/rename/a1/");
-//            Assert.assertTrue("Resource res1 does not Exists:", selenium.isTextPresent("res1"));
-//
-//            //Rename Resource
-//            driver.findElement(By.id("actionLink1")).click();
-//            Thread.sleep(2000L);
-//            driver.findElement(By.linkText("Rename")).click();
-//            Thread.sleep(2000L);
-//            driver.findElement(By.id("resourceEdit1")).clear();
-//            driver.findElement(By.id("resourceEdit1")).sendKeys(rename);
-//            Thread.sleep(2000L);
-//            driver.findElement(By.xpath("//tr[6]/td/table/tbody/tr[2]/td/input")).click();
-//            Thread.sleep(4000L);
-//            Assert.assertTrue("Rename pop-up Title fail :", selenium.isTextPresent("WSO2 Carbon"));
-//            Assert.assertTrue("Rename pop-up message fail :", selenium.isTextPresent("Successfully renamed resource."));
-//            selenium.click("//button");
-//            Thread.sleep(3000L);
-//            Assert.assertTrue("Renamed Resource does not Exists :", selenium.isTextPresent(rename));
-//
-//            //signout
-//            new GregUserLogout().userLogout(driver);
-//            log.info("********GRegResourceSeleniumTest renameResource() - Passed ***********");
-//        } catch (AssertionFailedError e) {
-//            log.info("GRegResourceSeleniumTest -renameResource() Assertion Failure ::" + e.getMessage());
-//            new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_renameResource");
-//            driver.quit();
-//            Assert.fail("GRegResourceSeleniumTest renameResource() - Assertion Failure :" + e.getMessage());
-//        } catch (WebDriverException e) {
-//            log.info("GRegResourceSeleniumTest renameResource() - WebDriver Exception :" + e.getMessage());
-//            new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_renameResource");
-//            driver.quit();
-//            Assert.fail("GRegResourceSeleniumTest renameResource() - WebDriver Exception :" + e.getMessage());
-//        } catch (Exception e) {
-//            log.info("GRegResourceSeleniumTest renameResource()- Fail :" + e.getMessage());
-//            new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_renameResource");
-//            driver.quit();
-//            Assert.fail("GRegResourceSeleniumTest renameResource() - Exception :" + e.getMessage());
-//        }
-//
-//    }
-//
-//    private void moveResource() {
-//        String collectionPath1 = "/resource_root/move1/a1";
-//        String collectionPath2 = "/resource_root/move2/b1";
-//        String resourceName1 = "res1";
-//        String resourceName2 = "res2";
-//
-//        try {
-//            new GregUserLogin().userLogin(driver, username, password);
-//            selenium.waitForPageToLoad("30000");
-//            Assert.assertTrue("GReg Home page not present :", selenium.isTextPresent("WSO2 Governance Registry Home"));
-//
-//            gotoDetailViewTab();
-//
-//            findLocation("/selenium_root");
-//            //Create Collection  1
-//            addCollection(collectionPath1);
-//            Thread.sleep(2000L);
-//            Assert.assertEquals("New Created Collection does not Exists :", "/selenium_root" + collectionPath1, selenium.getValue("//input"));
-//
-//            //add Resource
-//            addResource(resourceName1);
-//
-//            findLocation("/selenium_root/resource_root/move1/a1/");
-//            Assert.assertTrue("Resource res1 does not Exists:", selenium.isTextPresent("res1"));
-//
-//            findLocation("/selenium_root");
-//            //Create Collection  2
-//            addCollection(collectionPath2);
-//            Thread.sleep(2000L);
-//            Assert.assertEquals("New Created Collection does not Exists :", "/selenium_root" + collectionPath2, selenium.getValue("//input"));
-//
-//            findLocation("/selenium_root/resource_root/move1/a1/");
-//
-//            //move Collection
-//            driver.findElement(By.id("actionLink1")).click();
-//            Thread.sleep(2000L);
-//            driver.findElement(By.linkText("Move")).click();
-//            Thread.sleep(2000L);
-//            driver.findElement(By.id("move_destination_path1")).sendKeys("/selenium_root" + collectionPath2);
-//            Thread.sleep(4000L);
-//            driver.findElement(By.xpath("//tr[5]/td/table/tbody/tr[2]/td/input")).click();
-//            Thread.sleep(3000L);
-//            Assert.assertTrue("Move pop-up window Title fail", selenium.isTextPresent("WSO2 Carbon"));
-//            Assert.assertTrue("Move pop-up window message fail", selenium.isTextPresent("Successfully moved resource."));
-//            selenium.click("//button");
-//
-//            findLocation("/selenium_root/resource_root/move2/b1/");
-//            //add resource 2
-//            addResource(resourceName2);
-//
-//            findLocation("/selenium_root/resource_root/move2/b1/");
-//            Assert.assertTrue("Moved res1 resource does not Exists :", selenium.isTextPresent("res1"));
-//
-//            findLocation("/selenium_root/resource_root/move1/a1");
-//            Assert.assertFalse("res1 resource has not been moved :", selenium.isTextPresent("res1"));
-//
-//            //signout
-//            new GregUserLogout().userLogout(driver);
-//            log.info("********GRegResourceSeleniumTest moveResource() - Passed ***********");
-//        } catch (AssertionFailedError e) {
-//            log.info("GRegResourceSeleniumTest -moveResource() Assertion Failure ::" + e.getMessage());
-//            new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_moveResource");
-//            driver.quit();
-//            Assert.fail("GRegResourceSeleniumTest moveResource() - Assertion Failure :" + e.getMessage());
-//        } catch (WebDriverException e) {
-//            log.info("GRegResourceSeleniumTest moveResource() - WebDriver Exception :" + e.getMessage());
-//            new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_moveResource");
-//            driver.quit();
-//            Assert.fail("GRegResourceSeleniumTest moveResource() - WebDriver Exception :" + e.getMessage());
-//        } catch (Exception e) {
-//            log.info("GRegResourceSeleniumTest moveResource()- Fail :" + e.getMessage());
-//            new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_moveResource");
-//            driver.quit();
-//            Assert.fail("GRegResourceSeleniumTest moveResource() - Exception :" + e.getMessage());
-//        }
-//
-//    }
-//
-//    private void copyResource() {
-//        String collectionPath1 = "/resource_root/copy1/a1";
-//        String collectionPath2 = "/resource_root/copy2/b1";
-//        String resourceName1 = "res1";
-//        String resourceName2 = "res2";
-//        String copyPath = "/selenium_root/resource_root/copy2/b1";
-//
-//        try {
-//            new GregUserLogin().userLogin(driver, username, password);
-//            selenium.waitForPageToLoad("30000");
-//            Assert.assertTrue("GReg Home page not present :", selenium.isTextPresent("WSO2 Governance Registry Home"));
-//
-//            gotoDetailViewTab();
-//
-//            findLocation("/selenium_root");
-//            //Create Collection  1
-//            addCollection(collectionPath1);
-//            Thread.sleep(2000L);
-//            Assert.assertEquals("New Created Collection does not Exists :", "/selenium_root" + collectionPath1, selenium.getValue("//input"));
-//
-//            //add Resource
-//            addResource(resourceName1);
-//
-//            findLocation("/selenium_root/resource_root/copy1/a1/");
-//            Assert.assertTrue("Resource res1 does not Exists:", selenium.isTextPresent("res1"));
-//
-//            findLocation("/selenium_root");
-//            //Create Collection  2
-//            addCollection(collectionPath2);
-//            Thread.sleep(2000L);
-//            Assert.assertEquals("New Created Collection does not Exists :", "/selenium_root" + collectionPath2, selenium.getValue("//input"));
-//
-//            findLocation("/selenium_root/resource_root/copy1/a1/");
-//
-//            //copy resource
-//            driver.findElement(By.id("actionLink1")).click();
-//            Thread.sleep(2000L);
-//            //click on copy link
-//            driver.findElement(By.linkText("Copy")).click();
-//            Thread.sleep(2000L);
-//            driver.findElement(By.id("copy_destination_path1")).sendKeys(copyPath);
-//            //click on copy button
-//            driver.findElement(By.xpath("//td/table/tbody/tr[2]/td/input")).click();
-//            Thread.sleep(4000L);
-//            Assert.assertTrue("copy pop-up title fail :", selenium.isTextPresent("WSO2 Carbon"));
-//            Assert.assertTrue("copy pop-up message fail :", selenium.isTextPresent("Successfully copied resource."));
-//            //click on OK button popup window
-//            driver.findElement(By.xpath("//button")).click();
-//
-//            findLocation("/selenium_root" + collectionPath2);
-//            addResource(resourceName2);
-//
-//            findLocation("/selenium_root" + collectionPath2);
-//            Assert.assertTrue("copied res1 resource does not Exists in copied to location :", selenium.isTextPresent("res1"));
-//
-//            findLocation("/selenium_root" + collectionPath1);
-//            Assert.assertTrue("copied resource does not exists : :", selenium.isTextPresent("res1"));
-//
-//            //signout
-//            new GregUserLogout().userLogout(driver);
-//            log.info("********GRegResourceSeleniumTest copyResource() - Passed ***********");
-//        } catch (AssertionFailedError e) {
-//            log.info("GRegResourceSeleniumTest -copyResource() Assertion Failure ::" + e.getMessage());
-//            new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_copyResource");
-//            driver.quit();
-//            Assert.fail("GRegResourceSeleniumTest copyResource() - Assertion Failure :" + e.getMessage());
-//        } catch (WebDriverException e) {
-//            log.info("GRegResourceSeleniumTest copyResource() - WebDriver Exception :" + e.getMessage());
-//            new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_copyResource");
-//            driver.quit();
-//            Assert.fail("GRegResourceSeleniumTest copyResource() - WebDriver Exception :" + e.getMessage());
-//        } catch (Exception e) {
-//            log.info("GRegResourceSeleniumTest copyResource()- Fail :" + e.getMessage());
-//            new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_copyResource");
-//            driver.quit();
-//            Assert.fail("GRegResourceSeleniumTest copyResource() - Exception :" + e.getMessage());
-//        }
-//    }
-//
-//    private void deleteResource() {
-//        String collectionPath1 = "/resource_root/delete/a1";
-//        String resourceName1 = "res1";
-//
-//        try {
-//            new GregUserLogin().userLogin(driver, username, password);
-//            selenium.waitForPageToLoad("30000");
-//            Assert.assertTrue("GReg Home page not present :", selenium.isTextPresent("WSO2 Governance Registry Home"));
-//
-//            gotoDetailViewTab();
-//
-//            findLocation("/selenium_root");
-//            //Create Collection  1
-//            addCollection(collectionPath1);
-//            Thread.sleep(2000L);
-//            Assert.assertEquals("New Created Collection does not Exists :", "/selenium_root" + collectionPath1, selenium.getValue("//input"));
-//
-//            //add Resource
-//            addResource(resourceName1);
-//
-//            findLocation("/selenium_root" + collectionPath1);
-//            Assert.assertTrue("Resource res1 does not Exists:", selenium.isTextPresent("res1"));
-//
-//            //Delete Resource
-//            driver.findElement(By.id("actionLink1")).click();
-//            Thread.sleep(2000L);
-//            driver.findElement(By.linkText("Delete")).click();
-//            Thread.sleep(3000L);
-//            Assert.assertTrue("Delete Resource pop-up Title fail :", selenium.isTextPresent("WSO2 Carbon"));
-//            Assert.assertTrue("Delete Resource pop-up message fail :", selenium.isTextPresent("exact:Are you sure you want to delete '/selenium_root/resource_root/delete/a1/res1' permanently?"));
-//            selenium.click("//button");
-//            Thread.sleep(2000L);
-//
-//            findLocation("/selenium_root" + collectionPath1);
-//            Assert.assertFalse("Resource res1 does Exists:", selenium.isTextPresent("res1"));
-//
-//
-//            //signout
-//            new GregUserLogout().userLogout(driver);
-//            log.info("********GRegResourceSeleniumTest deleteResource() - Passed ***********");
-//        } catch (AssertionFailedError e) {
-//            log.info("GRegResourceSeleniumTest -deleteResource() Assertion Failure ::" + e.getMessage());
-//            new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_deleteResource");
-//            driver.quit();
-//            Assert.fail("GRegResourceSeleniumTest deleteResource() - Assertion Failure :" + e.getMessage());
-//        } catch (WebDriverException e) {
-//            log.info("GRegResourceSeleniumTest deleteResource() - WebDriver Exception :" + e.getMessage());
-//            new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_deleteResource");
-//            driver.quit();
-//            Assert.fail("GRegResourceSeleniumTest deleteResource() - WebDriver Exception :" + e.getMessage());
-//        } catch (Exception e) {
-//            log.info("GRegResourceSeleniumTest deleteResource()- Fail :" + e.getMessage());
-//            new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_deleteResource");
-//            driver.quit();
-//            Assert.fail("GRegResourceSeleniumTest deleteResource() - Exception :" + e.getMessage());
-//        }
-//
-//    }
+
+    private boolean waitForElement(String elementName) throws InterruptedException {
+        Calendar startTime = Calendar.getInstance();
+        while (((Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis()))
+               < (120 * 1000)) {
+            if (selenium.isElementPresent(elementName)) {
+                return true;
+            }
+            Thread.sleep(1000);
+            log.info("waiting for element :" + elementName);
+        }
+        return false;
+    }
 
     @AfterClass(alwaysRun = true)
-    public void cleanup() {
+    public void cleanup() throws Exception {
+        userLogin();
+        gotoDetailViewTab();
+        int resourceId = getResourceId("selenium_root");
+        if (resourceId != 0) {
+            deleteResourceFromBrowser(resourceId);
+        }
         driver.quit();
 
+    }
+
+    private int getResourceId(String resourceName) {
+        int pageCount = 10;
+        int id = 0;
+        for (int i = 1; i <= pageCount; i++) {
+            if (driver.getPageSource().contains(resourceName)) {
+                if (driver.findElement(By.xpath("//*[@id=\"resourceView" + i + "\"]")).getText().equals(resourceName)) {
+                    id = i;
+                    break;
+                }
+            }
+        }
+        return id;
+    }
+
+    private void deleteResourceFromBrowser(int resourceRowId) {
+        if (resourceRowId != 0) {
+            driver.findElement(By.id("actionLink" + resourceRowId)).click();
+            selenium.waitForPageToLoad("30000");
+            resourceRowId = ((resourceRowId - 1) * 7) + 2;
+            driver.findElement(By.xpath("/html/body/table/tbody/tr[2]/td[3]/table/tbody/tr[2]/td/div/div/" +
+                                        "table/tbody/tr/td/div[2]/div[3]/div[3]/div[9]/table/tbody/tr[" + resourceRowId + "]" +
+                                        "/td/div/a[3]")).click();
+            selenium.waitForPageToLoad("30000");
+            assertTrue(selenium.isTextPresent("WSO2 Carbon"), "Resource Delete pop-up  failed :");
+            assertTrue(selenium.isTextPresent("exact:Are you sure you want to delete"), "Resource Delete pop-up  failed :");
+            selenium.click("//button");
+            selenium.waitForPageToLoad("30000");
+        }
     }
 }

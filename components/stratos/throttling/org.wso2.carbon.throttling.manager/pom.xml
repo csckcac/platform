@@ -68,6 +68,7 @@
                             org.wso2.carbon.rule.*,
                             org.wso2.carbon.stratos.common.*,
                             org.wso2.carbon.throttling.agent.*,
+                            org.wso2.carbon.billing.core.*,
                             org.wso2.carbon.billing.mgt.*,
                             org.wso2.carbon.registry.core.*;version=1.0.1,
                             org.wso2.carbon.registry.resource.*,

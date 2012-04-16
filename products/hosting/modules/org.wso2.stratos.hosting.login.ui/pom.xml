@@ -28,7 +28,7 @@
     <artifactId>org.wso2.stratos.hosting.login.ui</artifactId>
     <version>1.1.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
-    <name>WSO2 AS - Login User Interface</name>
+    <name>WSO2 Hosting Server - Login User Interface</name>
 
     <build>
 

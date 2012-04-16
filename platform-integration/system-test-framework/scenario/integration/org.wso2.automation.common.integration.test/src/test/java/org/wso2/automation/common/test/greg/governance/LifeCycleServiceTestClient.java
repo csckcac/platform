@@ -26,7 +26,10 @@ import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 import org.wso2.platform.test.core.ProductConstant;
+import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
+import org.wso2.platform.test.core.utils.frameworkutils.FrameworkFactory;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkProperties;
+import org.wso2.platform.test.core.utils.frameworkutils.productvariables.EnvironmentVariables;
 import org.wso2.platform.test.core.utils.gregutils.GregUserIDEvaluator;
 import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
 import org.testng.annotations.*;
@@ -53,11 +56,11 @@ public class LifeCycleServiceTestClient {
 
 
     @Test(groups = {"wso2.greg"}, description = "Add WSDL first to check life cycle test scenarios", priority = 1)
-    private void testAddWSDL() throws GovernanceException {
-        String wsdl_url="http://people.wso2.com/~evanthika/wsdls/BizService.wsdl";
+    public void testAddWSDL() throws GovernanceException {
+        String wsdl_url = "http://people.wso2.com/~evanthika/wsdls/BizService.wsdl";
 //        String wsdl_url = "http://svn.wso2.org/repos/wso2/trunk/carbon/components/governance/org.wso2.carbon.governance.api/src/test/resources/test-resources/wsdl/BizService.wsdl";
         WsdlManager wsdlManager = new WsdlManager(governance);
-        Wsdl wsdl = null;
+        Wsdl wsdl;
         try {
             wsdl = wsdlManager.newWsdl(wsdl_url);
             wsdl.addAttribute("creator2", "it is me");
@@ -70,10 +73,12 @@ public class LifeCycleServiceTestClient {
         }
     }
 
-    @Test(groups = {"wso2.greg"}, description = "check service life cycle promote/demote test scenarios", dependsOnMethods = {"testAddWSDL"})
-    private void testCheckLifeCycle() throws RegistryException, InterruptedException {
+    @Test(groups = {"wso2.greg"}, description = "check service life cycle promote/demote test scenarios",
+          dependsOnMethods = {"testAddWSDL"})
+    public void testCheckLifeCycle() throws RegistryException, InterruptedException {
         String testStageState;
-        FrameworkProperties properties = new FrameworkProperties();
+        FrameworkProperties properties =
+                FrameworkFactory.getFrameworkProperties(ProductConstant.GREG_SERVER_NAME);
 
         if (properties.getEnvironmentSettings().is_enableSelenium()) {
             testStageState = "Tested";
@@ -84,23 +89,28 @@ public class LifeCycleServiceTestClient {
         try {
             registry.associateAspect(wsdl_path, "ServiceLifeCycle");
 //            System.out.println(registry.get(wsdl_path).getProperty(StateProperty));
-            assertEquals(registry.get(wsdl_path).getProperty(StateProperty), "Development", "Default Service Life Cycle Development State Fail:");
+            assertEquals(registry.get(wsdl_path).getProperty(StateProperty), "Development",
+                         "Default Service Life Cycle Development State Fail:");
             Thread.sleep(sleepTime);
 
             registry.invokeAspect(wsdl_path, "ServiceLifeCycle", "Promote");  //Promote Life cycle to Tested State
-            assertEquals(registry.get(wsdl_path).getProperty(StateProperty), testStageState, "Service Life Cycle Promote to Test state fail :");
+            assertEquals(registry.get(wsdl_path).getProperty(StateProperty), testStageState,
+                         "Service Life Cycle Promote to Test state fail :");
             Thread.sleep(3000);
 
             registry.invokeAspect(wsdl_path, "ServiceLifeCycle", "Promote");  //Promote Life cycle to Production State
-            assertEquals(registry.get(wsdl_path).getProperty(StateProperty), "Production", "Service Life Cycle Promote to Production state fail:");
+            assertEquals(registry.get(wsdl_path).getProperty(StateProperty), "Production",
+                         "Service Life Cycle Promote to Production state fail:");
             Thread.sleep(3000);
 
             registry.invokeAspect(wsdl_path, "ServiceLifeCycle", "Demote");   //Demote Life cycle to Tested State
-            assertEquals(registry.get(wsdl_path).getProperty(StateProperty), testStageState, "Service Life Cycle Demote to Test State fail :");
+            assertEquals(registry.get(wsdl_path).getProperty(StateProperty), testStageState,
+                         "Service Life Cycle Demote to Test State fail :");
             Thread.sleep(3000);
 
             registry.invokeAspect(wsdl_path, "ServiceLifeCycle", "Demote"); //Demote Life cycle to Development State
-            assertEquals(registry.get(wsdl_path).getProperty(StateProperty), "Development", "Service Life Cycle Demote to initial state fail:");
+            assertEquals(registry.get(wsdl_path).getProperty(StateProperty), "Development",
+                         "Service Life Cycle Demote to initial state fail:");
             Thread.sleep(3000);
             deleteWSDL();      //Delete wsdl
             log.info("LifeCycleServiceTestClient testCheckLifeCycle() - Passed");

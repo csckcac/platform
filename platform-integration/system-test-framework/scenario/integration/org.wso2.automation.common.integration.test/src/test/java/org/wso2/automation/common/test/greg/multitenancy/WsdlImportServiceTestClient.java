@@ -51,14 +51,14 @@ public class WsdlImportServiceTestClient {
     @BeforeClass(alwaysRun = true)
     public void init() throws RegistryException, RemoteException, UserAdminException, LoginAuthenticationExceptionException {
         int tenantId = 3;
-        int diff_Domainuser = 6;
+        int diff_DomainUser = 6;
         int tenantID_testUser = 3;
         String userID = "testuser1";
         String userPassword = "test123";
         String roleName = "admin";
 
         registry = new RegistryProvider().getRegistry(tenantId, ProductConstant.GREG_SERVER_NAME);
-        registry_diffDomainUser1 = new RegistryProvider().getRegistry(diff_Domainuser, ProductConstant.GREG_SERVER_NAME);
+        registry_diffDomainUser1 = new RegistryProvider().getRegistry(diff_DomainUser, ProductConstant.GREG_SERVER_NAME);
 
         GregUserCreator GregUserCreator = new GregUserCreator();
         GregUserCreator.deleteUsers(tenantID_testUser, userID);
@@ -70,7 +70,7 @@ public class WsdlImportServiceTestClient {
     }
 
     @Test(groups = {"wso2.greg"}, description = "test multi tenancy scenario add WSDL ", priority = 1)
-    private void testaddWSDL() throws RegistryException {
+    public void testaddWSDL() throws RegistryException {
         String wsdl_url = "http://geocoder.us/dist/eg/clients/GeoCoder.wsdl";
         String wsdl_path = "/_system/governance/trunk/wsdls/us/geocoder/rpc/geo/coder/us/GeoCoder.wsdl";
         String association_path = "/_system/governance/trunk/services/us/geocoder/rpc/geo/coder/us/GeoCode_Service";

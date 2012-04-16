@@ -189,31 +189,31 @@
         </file>
         <file>
             <source>src/main/conf/synapse.properties</source>
-            <outputDirectory>wso2esb-${pom.version}/lib/core/WEB-INF/classes</outputDirectory>
+            <outputDirectory>wso2esb-${pom.version}/lib</outputDirectory>
             <destName>synapse.properties</destName>
             <filtered>true</filtered>
         </file>
         <file>
             <source>src/main/conf/datasources.properties</source>
-            <outputDirectory>wso2esb-${pom.version}/lib/core/WEB-INF/classes</outputDirectory>
+            <outputDirectory>wso2esb-${pom.version}/lib</outputDirectory>
             <destName>datasources.properties</destName>
             <filtered>true</filtered>
         </file>
         <file>
             <source>src/main/conf/cipher-text.properties</source>
-            <outputDirectory>wso2esb-${pom.version}/lib/core/WEB-INF/classes</outputDirectory>
+            <outputDirectory>wso2esb-${pom.version}/lib</outputDirectory>
             <destName>cipher-text.properties</destName>
             <filtered>true</filtered>
         </file>
         <file>
             <source>src/main/conf/nhttp.properties</source>
-            <outputDirectory>wso2esb-${pom.version}/lib/core/WEB-INF/classes</outputDirectory>
+            <outputDirectory>wso2esb-${pom.version}/lib</outputDirectory>
             <destName>nhttp.properties</destName>
             <filtered>true</filtered>
         </file>
         <file>
             <source>src/main/conf/passthru-http.properties</source>
-            <outputDirectory>wso2esb-${pom.version}/lib/core/WEB-INF/classes</outputDirectory>
+            <outputDirectory>wso2esb-${pom.version}/lib</outputDirectory>
             <destName>passthru-http.properties</destName>
             <filtered>true</filtered>
         </file>

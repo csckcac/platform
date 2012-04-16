@@ -53,4 +53,4 @@ if [ -z "$QPID_PID_FILENAME" ]; then
 fi
 echo $$ > ${QPID_WORK}/${QPID_PID_FILENAME}
 
-. ${QPID_HOME}/bin/qpid-run org.apache.qpid.server.Main "$@"
+. ${QPID_HOME}/bin/qpid-run org.wso2.andes.server.Main "$@"

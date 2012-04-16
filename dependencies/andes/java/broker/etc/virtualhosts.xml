@@ -25,7 +25,7 @@
         <name>localhost</name>
         <localhost>
             <store>
-                <class>org.apache.qpid.server.store.MemoryMessageStore
+                <class>org.wso2.andes.server.store.MemoryMessageStore
                 </class>
             </store>
 
@@ -85,7 +85,7 @@
         <name>development</name>
         <development>
             <store>
-                <class>org.apache.qpid.server.store.MemoryMessageStore
+                <class>org.wso2.andes.server.store.MemoryMessageStore
                 </class>
             </store>
 
@@ -123,7 +123,7 @@
         <name>test</name>
         <test>
             <store>
-                <class>org.apache.qpid.server.store.MemoryMessageStore
+                <class>org.wso2.andes.server.store.MemoryMessageStore
                 </class>
             </store>
 
@@ -161,7 +161,7 @@
         <name>cassandra</name>
         <cassandra>
             <store>
-                <class>org.apache.qpid.server.store.CassandraMessageStore</class>
+                <class>org.wso2.andes.server.store.CassandraMessageStore</class>
                 <ZooKeeperHostName>127.0.0.1</ZooKeeperHostName>
                 <ZooKeeperPort>2181</ZooKeeperPort>
                 <IsRMSupportEnabled>false</IsRMSupportEnabled>

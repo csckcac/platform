@@ -24,9 +24,9 @@
 
   <import file="../module.xml"/>
 
-  <property name="generated.package" value="org/apache/qpid/framing" />
+  <property name="generated.package" value="org/wso2/andes/framing" />
   <property name="framing.generated.dir" location="${module.precompiled}/${generated.package}" />
-  <property name="qpidbuildversion.java" location="${module.precompiled}/org/apache/qpid/QpidBuildVersion.java" />
+  <property name="qpidbuildversion.java" location="${module.precompiled}/org/wso2/andes/QpidBuildVersion.java" />
   <property name="xml.spec.dir" location="${project.root}/../specs" />
   <property name="xml.spec.deps" value="amqp.0-8.xml amqp.0-9.xml amqp0-9-1.stripped.xml" />
   <property name="xml.spec.list" value='"${xml.spec.dir}/amqp.0-8.xml" "${xml.spec.dir}/amqp.0-9.xml" "${xml.spec.dir}/amqp0-9-1.stripped.xml"' />

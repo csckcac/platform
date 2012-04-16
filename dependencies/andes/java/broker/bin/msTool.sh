@@ -57,4 +57,4 @@ export JAVA=java \
        JAVA_OPTS=-Dlog4j.configuration=file:$QPID_TOOLS/etc/mstool-log4j.xml \
        QPID_CLASSPATH=$QPID_LIBS
 
-. qpid-run org.apache.qpid.tools.messagestore.MessageStoreTool "$@"
+. qpid-run org.wso2.andes.tools.messagestore.MessageStoreTool "$@"

@@ -33,7 +33,7 @@
                              class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
         </messageReceivers>
         <parameter name="ServiceClass">
-            org.wso2.carbon.qpid.service.ws.QpidAdminService
+            org.wso2.carbon.andes.service.ws.QpidAdminService
         </parameter>
     </service>
 

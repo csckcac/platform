@@ -37,12 +37,11 @@ import javax.jms.Topic;
 import junit.framework.TestCase;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.qpid.client.AMQConnectionFactory;
-import org.apache.qpid.client.AMQConnection;
-import org.apache.qpid.client.AMQTopic;
+import org.wso2.andes.client.AMQConnection;
+import org.wso2.andes.client.AMQTopic;
 import org.apache.qpid.exchange.ExchangeDefaults;
 import org.apache.qpid.framing.AMQShortString;
-import org.apache.qpid.jms.Session;
+import org.wso2.andes.jms.Session;
 
 /**
  * Test AMQ.

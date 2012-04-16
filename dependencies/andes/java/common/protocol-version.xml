@@ -23,7 +23,7 @@
   <property name="project.build.directory" location="target" />
   <property name="gentools.home" location="${topDirectoryLocation}/../gentools" />
   <property name="generated.path" location="${project.build.directory}/generated-sources/gentools" />
-  <property name="generated.package" value="org/apache/qpid/framing" />
+  <property name="generated.package" value="org/wso2/andes/framing" />
   <property name="generated.dir" location="${generated.path}/${generated.package}" />
   <property name="generated.timestamp" location="${generated.dir}/timestamp" />
   <property name="xml.spec.dir" location="${topDirectoryLocation}/../specs" />
@@ -35,7 +35,7 @@
   <!--<target name="generate" depends="compile_generator,check_generate_deps" unless="generation.notRequired">-->
   <target name="generate" depends="compile_generator" unless="generation.notRequired">
     <mkdir dir="${generated.dir}"/>
-    <java classname="org.apache.qpid.gentools.Main" fork="true" dir="${gentools.home}/src" failonerror="true">
+    <java classname="org.wso2.andes.qpid.gentools.Main" fork="true" dir="${gentools.home}/src" failonerror="true">
     	<arg line="-j -o ${generated.dir} -t ${template.dir} ${xml.spec.list}" />
         <classpath>
           <pathelement path="${gentools.home}/src" />

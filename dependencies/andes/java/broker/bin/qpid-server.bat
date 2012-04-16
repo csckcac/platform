@@ -192,7 +192,7 @@ rem QPID_OPTS intended to hold any -D props for use
 rem user must enclose any value for QPID_OPTS in double quotes
 :runCommand
 set MODULE_JARS=%QPID_MODULE_JARS%
-set COMMAND="%JAVA_HOME%\bin\java" %JAVA_VM% %JAVA_MEM% %JAVA_GC% %QPID_OPTS% %JPDA_OPTS% %SYSTEM_PROPS% -cp "%CLASSPATH%;%MODULE_JARS%" org.apache.qpid.server.Main %QPID_ARGS%
+set COMMAND="%JAVA_HOME%\bin\java" %JAVA_VM% %JAVA_MEM% %JAVA_GC% %QPID_OPTS% %JPDA_OPTS% %SYSTEM_PROPS% -cp "%CLASSPATH%;%MODULE_JARS%" org.wso2.andes.server.Main %QPID_ARGS%
 
 if "%debug%" == "true" echo %CLASSPATH%;%LAUNCH_JAR%;%MODULE_JARS%
 if "%debug%" == "true" echo %COMMAND%

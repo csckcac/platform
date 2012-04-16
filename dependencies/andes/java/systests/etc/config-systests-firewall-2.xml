@@ -63,7 +63,7 @@
     <security>
         <pd-auth-manager>
             <principal-database>
-                <class>org.apache.qpid.server.security.auth.database.PlainPasswordFilePrincipalDatabase</class>
+                <class>org.wso2.andes.server.security.auth.database.PlainPasswordFilePrincipalDatabase</class>
                 <attributes>
                     <attribute>
                         <name>passwordFile</name>

@@ -25,7 +25,7 @@ E.g, in order to run the Hello example, you would add the client+example library
 files to the java classpath and launch the example like follows:
 
 java -cp "lib/qpid-all.jar:example/lib/qpid-client-example-<version>.jar" \
-    org.apache.qpid.example.Hello
+    org.wso2.andes.example.Hello
 
 NOTE: The client uses the SL4FJ API for its logging. You must supply a logging 
 implementation of your choice (eg Log4J) and its associated SLF4J binding, by 

@@ -59,14 +59,14 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Private-Package>
-                            org.wso2.carbon.qpid.authentication.internal
+                            org.wso2.carbon.andes.authentication.internal
                         </Private-Package>
                         <Export-Package>
-                            !org.wso2.carbon.qpid.authentication.internal,
-                            org.wso2.carbon.qpid.authentication.*
+                            !org.wso2.carbon.andes.authentication.internal,
+                            org.wso2.carbon.andes.authentication.*
                         </Export-Package>
                         <Import-Package>
-                            org.apache.qpid.*,
+                            org.wso2.andes.*,
                             *;resolution:=optional
                         </Import-Package>
                     </instructions>

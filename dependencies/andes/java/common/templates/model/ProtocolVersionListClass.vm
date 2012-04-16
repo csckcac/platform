@@ -28,7 +28,7 @@
 #end
 */
 
-package org.apache.qpid.framing;
+package org.wso2.andes.framing;
 
 import java.util.SortedSet;
 import java.util.Collections;

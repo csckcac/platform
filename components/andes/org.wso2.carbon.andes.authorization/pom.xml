@@ -71,16 +71,16 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Private-Package>
-                            org.wso2.carbon.qpid.authorization.internal
+                            org.wso2.carbon.andes.authorization.internal
                         </Private-Package>
                         <Export-Package>
-                            !org.wso2.carbon.qpid.authorization.internal,
-                            org.wso2.carbon.qpid.authorization.*
+                            !org.wso2.carbon.andes.authorization.internal,
+                            org.wso2.carbon.andes.authorizationn.*
                         </Export-Package>
                         <Import-Package>
-			                org.apache.qpid.*,
-                            org.wso2.carbon.qpid.commons.registry,
-                            org.wso2.carbon.qpid.authentication.service,
+                            org.apache.qpid.*,
+                            org.wso2.carbon.andes.commons.registry,
+                            org.wso2.carbon.andes.authentication.service,
                             *;resolution:=optional
                         </Import-Package>
                     </instructions>

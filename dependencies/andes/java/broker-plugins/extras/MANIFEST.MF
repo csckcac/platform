@@ -4,10 +4,10 @@ Bundle-SymbolicName: broker-plugins-extras
 Bundle-Description: Extra exchange types plugin for Qpid.
 Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
 Bundle-DocURL: http://www.apache.org/
-Bundle-Activator: org.apache.qpid.extras.Activator
+Bundle-Activator: org.wso2.andes.extras.Activator
 Private-Package: org.apache.qpid.extras,
- org.apache.qpid.extras.exchanges.diagnostic,
- org.apache.qpid.extras.exchanges.example
+ org.wso2.andes.extras.exchanges.diagnostic,
+ org.wso2.andes.extras.exchanges.example
 Import-Package: org.apache.qpid,
  org.apache.qpid.framing,
  org.apache.qpid.junit.extensions.util,

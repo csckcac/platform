@@ -20,7 +20,7 @@
  */
 package org.apache.qpid.transacted;
 
-import org.apache.qpid.client.AMQSession;
+import org.wso2.andes.client.AMQSession;
 
 import javax.jms.MessageProducer;
 import javax.jms.MessageConsumer;

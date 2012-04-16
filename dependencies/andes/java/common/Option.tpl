@@ -1,4 +1,4 @@
-package org.apache.qpid.transport;
+package org.wso2.andes.transport;
 /*
  * 
  * Licensed to the Apache Software Foundation (ASF) under one

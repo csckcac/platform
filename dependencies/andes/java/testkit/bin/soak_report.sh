@@ -151,8 +151,8 @@ print_results()
 trap cleanup EXIT
 
 # runs a single instance of the MultiThreadedConsumer and MultiThreadedProducer
-sh $QPID_TEST_HOME/bin/run_soak_client.sh 1 $log_freq $log_iter org.apache.qpid.testkit.soak.MultiThreadedConsumer $JVM_ARGS
-sh $QPID_TEST_HOME/bin/run_soak_client.sh 1 $log_freq $log_iter org.apache.qpid.testkit.soak.MultiThreadedProducer $JVM_ARGS
+sh $QPID_TEST_HOME/bin/run_soak_client.sh 1 $log_freq $log_iter org.wso2.andes.testkit.soak.MultiThreadedConsumer $JVM_ARGS
+sh $QPID_TEST_HOME/bin/run_soak_client.sh 1 $log_freq $log_iter org.wso2.andes.testkit.soak.MultiThreadedProducer $JVM_ARGS
 
 sleep_time=$((log_freq * log_iter))
 echo "sleep time : " $sleep_time

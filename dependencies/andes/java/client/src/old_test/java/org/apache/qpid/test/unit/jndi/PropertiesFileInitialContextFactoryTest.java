@@ -18,11 +18,11 @@
  * under the License.
  *
  */
-package org.apache.qpid.test.unit.jndi;
+package org.wso2.andes.unit.jndi;
 
-import org.apache.qpid.client.AMQConnectionFactory;
-import org.apache.qpid.client.AMQQueue;
-import org.apache.qpid.client.AMQTopic;
+import org.wso2.andes.client.AMQConnectionFactory;
+import org.wso2.andes.client.AMQQueue;
+import org.wso2.andes.client.AMQTopic;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -46,7 +46,7 @@ public class PropertiesFileInitialContextFactoryTest extends TestCase
 
         //create simple set of hardcoded props
         _properties = new Properties();
-        _properties.put("java.naming.factory.initial", "org.apache.qpid.jndi.PropertiesFileInitialContextFactory");
+        _properties.put("java.naming.factory.initial", "org.wso2.andes.jndi.PropertiesFileInitialContextFactory");
         _properties.put("connectionfactory.local", "amqp://guest:guest@clientid/testpath?brokerlist='vm://:1'");
         _properties.put("queue.MyQueue", "example.MyQueue");
         _properties.put("topic.ibmStocks", "stocks.nyse.ibm");

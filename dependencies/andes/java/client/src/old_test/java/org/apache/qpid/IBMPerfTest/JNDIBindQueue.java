@@ -22,9 +22,9 @@ package org.apache.qpid.IBMPerfTest;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.qpid.client.AMQConnection;
-import org.apache.qpid.client.AMQQueue;
-import org.apache.qpid.client.AMQSession;
+import org.wso2.andes.client.AMQConnection;
+import org.wso2.andes.client.AMQQueue;
+import org.wso2.andes.client.AMQSession;
 
 import javax.jms.Connection;
 import javax.jms.JMSException;

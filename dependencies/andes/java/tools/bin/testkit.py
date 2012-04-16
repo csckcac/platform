@@ -47,7 +47,7 @@ class Formatter:
 class JavaClientTest(BrokerTest):
     """Base Case for Java Test cases"""
 
-    client_class = "org.apache.qpid.testkit.TestLauncher" 
+    client_class = "org.wso2.andes.testkit.TestLauncher"
 
     # currently there is no transparent reconnection.
     # temp hack: just creating the queue here and closing it.

@@ -20,10 +20,10 @@
  */
 package org.apache.qpid.flow;
 
-import org.apache.qpid.client.AMQConnection;
-import org.apache.qpid.client.AMQDestination;
-import org.apache.qpid.client.AMQQueue;
-import org.apache.qpid.client.AMQSession;
+import org.wso2.andes.client.AMQConnection;
+import org.wso2.andes.client.AMQDestination;
+import org.wso2.andes.client.AMQQueue;
+import org.wso2.andes.client.AMQSession;
 import org.apache.qpid.exchange.ExchangeDefaults;
 import org.apache.qpid.framing.AMQShortString;
 

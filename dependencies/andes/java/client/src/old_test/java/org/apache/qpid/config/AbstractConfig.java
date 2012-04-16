@@ -18,7 +18,7 @@
  * under the License.
  *
  */
-package org.apache.qpid.config;
+package org.wso2.andes.client.config;
 
 public abstract class AbstractConfig
 {

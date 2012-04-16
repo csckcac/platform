@@ -28,11 +28,11 @@
  #end
  */
  
-package org.apache.qpid.framing;
+package org.wso2.andes.framing;
 
 import org.apache.mina.common.ByteBuffer;
 
-import org.apache.qpid.framing.abstraction.ProtocolVersionMethodConverter;
+import org.wso2.andes.framing.abstraction.ProtocolVersionMethodConverter;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -46,7 +46,7 @@ public abstract class MethodRegistry
 #foreach( $supportedVersion in $model.VersionSet )
 
 #set( $verName = "_$supportedVersion.getMajor()_$supportedVersion.getMinor()" )
-#set( $regPackage = "org.apache.qpid.framing.amqp$verName" )
+#set( $regPackage = "org.wso2.andes.framing.amqp$verName" )
 	public static final MethodRegistry registry_$supportedVersion.getMajor()_$supportedVersion.getMinor() = 
 	    new ${regPackage}.MethodRegistry${verName}();
 	

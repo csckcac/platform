@@ -18,14 +18,12 @@
  * under the License.
  *
  */
-package org.apache.qpid.topic;
+package org.wso2.andes.client.topic;
 
-import org.apache.qpid.client.AMQSession;
-import org.apache.qpid.client.AMQTopic;
+import org.wso2.andes.client.AMQSession;
+import org.wso2.andes.client.AMQTopic;
 import org.apache.qpid.exchange.ExchangeDefaults;
 import org.apache.qpid.framing.AMQShortString;
-
-import javax.jms.*;
 
 /**
  */

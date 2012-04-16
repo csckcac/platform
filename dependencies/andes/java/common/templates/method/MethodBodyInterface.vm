@@ -43,7 +43,7 @@
  */
  
  
-package org.apache.qpid.framing;
+package org.wso2.andes.framing;
 
 
 public interface ${javaClassName} extends EncodableAMQDataBlock, AMQMethodBody

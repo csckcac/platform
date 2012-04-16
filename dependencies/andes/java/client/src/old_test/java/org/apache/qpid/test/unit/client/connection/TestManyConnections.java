@@ -18,11 +18,11 @@
  * under the License.
  *
  */
-package org.apache.qpid.test.unit.client.connection;
+package org.wso2.andes.unit.client.connection;
 
 import org.apache.qpid.AMQException;
 import org.apache.qpid.url.URLSyntaxException;
-import org.apache.qpid.client.AMQConnection;
+import org.wso2.andes.client.AMQConnection;
 import org.apache.log4j.Logger;
 
 import junit.framework.TestCase;

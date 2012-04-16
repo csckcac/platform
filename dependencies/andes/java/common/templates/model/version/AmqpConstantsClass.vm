@@ -26,7 +26,7 @@
 %{VLIST} *   ${major}-${minor}
  */
  
-package org.apache.qpid.framing;
+package org.wso2.andes.framing;
 
 class AmqpConstants
 {

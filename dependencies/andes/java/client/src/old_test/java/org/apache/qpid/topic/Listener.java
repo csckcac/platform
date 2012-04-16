@@ -18,13 +18,12 @@
  * under the License.
  *
  */
-package org.apache.qpid.topic;
+package org.wso2.andes.client.topic;
 
 import javax.jms.Connection;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
-import javax.jms.Session;
 
 public class Listener implements MessageListener
 {

@@ -26,10 +26,10 @@
  *   $version.getMajor()-$version.getMinor()
  */
  
-package org.apache.qpid.framing.amqp_${version.getMajor()}_${version.getMinor()};
+package org.wso2.andes.framing.amqp_${version.getMajor()}_${version.getMinor()};
 
-import org.apache.qpid.framing.*;
-import org.apache.qpid.protocol.AMQConstant;
+import org.wso2.andes.framing.*;
+import org.wso2.andes.protocol.AMQConstant;
 
 
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import org.apache.mina.common.ByteBuffer;
 
-import org.apache.qpid.framing.abstraction.ProtocolVersionMethodConverter;
+import org.wso2.andes.framing.abstraction.ProtocolVersionMethodConverter;
 
 
 public class MethodRegistry_$version.getMajor()_$version.getMinor() extends MethodRegistry

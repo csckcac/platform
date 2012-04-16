@@ -55,12 +55,12 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Private-Package>
-                            org.wso2.carbon.qpid.commons.internal
+                            org.wso2.carbon.andes.commons.internal
                         </Private-Package>
                         <Export-Package>
-                            !org.wso2.carbon.qpid.commons.internal,
-                            org.wso2.carbon.qpid.commons,
-                            org.wso2.carbon.qpid.commons.registry
+                            !org.wso2.carbon.andes.commons.internal,
+                            org.wso2.carbon.andes.commons,
+                            org.wso2.carbon.andes.commons.registry
                         </Export-Package>
                         <Import-Package>
 			                *;resolution:=optional

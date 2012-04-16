@@ -87,7 +87,7 @@
         </layout>
     </appender>
 
-    <category additivity="true" name="org.apache.qpid.server.queue.AMQQueueMBean">
+    <category additivity="true" name="org.wso2.andes.server.queue.AMQQueueMBean">
         <priority value="info"/>
     </category>
 
@@ -106,7 +106,7 @@
     <!-- Examples of additional logging settings -->
     <!-- Used to generate extra debug. See debug.log4j.xml -->
     
-    <!--<category additivity="true" name="org.apache.qpid.server.store">
+    <!--<category additivity="true" name="org.wso2.andes.server.store">
         <priority value="debug"/>
     </category-->
 

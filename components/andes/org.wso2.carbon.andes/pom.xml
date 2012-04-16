@@ -33,17 +33,17 @@
     <url>http://wso2.org</url>
 
     <dependencies>
-  	    <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.andes.authentication</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.andes.commons</artifactId>
+        </dependency>
+        <dependency>
+              <groupId>org.wso2.carbon</groupId>
+              <artifactId>org.wso2.carbon.core</artifactId>
+          </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.andes.authentication</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -70,17 +70,17 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
-                        <Private-Package>org.wso2.carbon.qpid.internal</Private-Package>
+                        <Private-Package>org.wso2.carbon.andes.internal</Private-Package>
                         <Export-Package>
-                            !org.wso2.carbon.qpid.internal,
-			                org.wso2.carbon.qpid.service.*
+                            !org.wso2.carbon.andes.internal,
+                            org.wso2.carbon.andes.service.*
                         </Export-Package>
                         <Import-Package>
                             org.apache.axis2.*; version="${axis2.osgi.version.range.qpid}",
                             org.apache.axiom.*; version="${axiom.osgi.version.range.qpid}",
-                            org.wso2.carbon.qpid.authentication.service,
-                            org.wso2.carbon.qpid.commons,
-                            org.wso2.carbon.qpid.commons.registry,
+                            org.wso2.carbon.andes.authentication.service,
+                            org.wso2.carbon.andes.commons,
+                            org.wso2.carbon.andes.commons.registry,
                             *;resolution:=optional
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>

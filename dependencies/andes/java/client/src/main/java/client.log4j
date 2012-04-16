@@ -25,7 +25,7 @@ log4j.rootLogger=${root.logging.level}
 log4j.logger.org.apache.qpid=ERROR, console
 log4j.additivity.org.apache.qpid=false
 
-#log4j.logger.org.apache.qpid.client.message.AbstractBytesTypedMessage=DEBUG, console
+#log4j.logger.org.wso2.andes.client.message.AbstractBytesTypedMessage=DEBUG, console
 
 log4j.appender.console=org.apache.log4j.ConsoleAppender
 log4j.appender.console.Threshold=all

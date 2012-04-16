@@ -16,7 +16,7 @@
 
 package org.wso2.andes.wso2.internal;
 
-import org.apache.qpid.server.plugins.PluginManager;
+import org.wso2.andes.server.plugins.PluginManager;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
 import org.osgi.framework.BundleActivator;

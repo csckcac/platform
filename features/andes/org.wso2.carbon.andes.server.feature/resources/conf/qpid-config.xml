@@ -75,7 +75,7 @@
        <pd-auth-manager>
             <principal-database>
                
-                <class>org.wso2.carbon.qpid.authentication.qpid.CarbonBasedPrincipalDatabase</class>
+                <class>org.wso2.carbon.andes.authentication.andes.CarbonBasedPrincipalDatabase</class>
                 <!--attributes>
                     <attribute>
                         <name>name</name>

@@ -21,14 +21,10 @@
 package org.apache.qpid.weblogic;
 
 import org.apache.log4j.Logger;
-import org.apache.qpid.client.AMQConnection;
-import org.apache.qpid.client.AMQDestination;
 
-import javax.jms.*;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.naming.Context;
-import java.net.InetAddress;
 import java.util.Hashtable;
 
 public class ServiceProvider

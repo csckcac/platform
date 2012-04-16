@@ -20,10 +20,10 @@
  */
 package org.apache.qpid.cluster;
 
-import org.apache.qpid.client.AMQConnection;
-import org.apache.qpid.client.AMQSession;
-import org.apache.qpid.client.AMQTopic;
-import org.apache.qpid.client.AMQQueue;
+import org.wso2.andes.client.AMQConnection;
+import org.wso2.andes.client.AMQSession;
+import org.wso2.andes.client.AMQTopic;
+import org.wso2.andes.client.AMQQueue;
 import org.apache.qpid.AMQException;
 import org.apache.qpid.framing.AMQShortString;
 import org.apache.qpid.exchange.ExchangeDefaults;

@@ -18,7 +18,7 @@
  * under the License.
  *
  */
-package org.apache.qpid.topic;
+package org.wso2.andes.client.topic;
 
 import javax.jms.*;
 

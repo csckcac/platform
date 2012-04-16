@@ -29,4 +29,4 @@ export JAVA=java \
        JAVA_GC="-XX:-UseConcMarkSweepGC -XX:+HeapDumpOnOutOfMemoryError" \
        QPID_CLASSPATH=$QPID_LIBS
 
-. qpid-run -Damqj.logging.level="INFO" org.apache.qpid.oldtopic.Listener $*
+. qpid-run -Damqj.logging.level="INFO" org.wso2.andes.client.oldtopic.Listener $*

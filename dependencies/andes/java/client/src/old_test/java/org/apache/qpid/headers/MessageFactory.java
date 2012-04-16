@@ -20,7 +20,7 @@
  */
 package org.apache.qpid.headers;
 
-import org.apache.qpid.client.AMQSession;
+import org.wso2.andes.client.AMQSession;
 import org.apache.qpid.framing.FieldTable;
 import org.apache.qpid.framing.FieldTableFactory;
 

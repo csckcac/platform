@@ -22,7 +22,7 @@ package org.apache.qpid.IBMPerfTest;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.qpid.client.AMQConnectionFactory;
+import org.wso2.andes.client.AMQConnectionFactory;
 import org.apache.qpid.url.URLSyntaxException;
 
 import javax.jms.ConnectionFactory;

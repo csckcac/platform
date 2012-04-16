@@ -20,10 +20,7 @@
  */
 package org.apache.qpid.headers;
 
-import org.apache.qpid.client.AMQConnection;
-import org.apache.qpid.client.AMQSession;
-import org.apache.qpid.jms.Session;
-//import org.apache.qpid.testutil.Config;
+//import org.wso2.andes.testutil.Config;
 
 import javax.jms.MessageListener;
 import javax.jms.Message;

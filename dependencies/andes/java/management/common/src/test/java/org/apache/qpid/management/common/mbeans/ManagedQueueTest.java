@@ -18,12 +18,11 @@
  * under the License.
  *
  */
-package org.apache.qpid.management.common.mbeans;
+package org.wso2.andes.management.common.mbeans;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.management.MBeanAttributeInfo;

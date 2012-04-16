@@ -24,7 +24,7 @@ from optparse import OptionParser
 
 interop_cases = ["InteropTestCase1DummyRun", "InteropTestCase2BasicP2P", "InteropTestCase3BasicPubSub", "InteropTestCase4P2PMessageSize", "InteropTestCase5PubSubMessageSize"]
 
-interop_command = "java -cp %s org.apache.qpid.test.framework.distributedtesting.Coordinator --xml -e interop -o . -n interop org.apache.qpid.interop.testcases.%s"
+interop_command = "java -cp %s org.wso2.andes.distributedtesting.Coordinator --xml -e interop -o . -n interop org.wso2.andes.interop.testcases.%s"
 
 # TODO: read this from the ant properties file
 clientlibs = ["qpid-integrationtests-M4.jar",
@@ -117,7 +117,7 @@ def start_java(javapath):
     classpath = classpath + ";"+testlibdir+"/qpid-common-M4.jar"
     
     return Popen(["java", "-cp","\""+classpath+"\"",
-                  "org.apache.qpid.test.framework.distributedtesting.TestClient"],
+                  "org.wso2.andes.distributedtesting.TestClient"],
                  stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                  stderr=subprocess.STDOUT)
 
@@ -128,8 +128,8 @@ def start_cpp(cpppath):
 
 def run_tests():
     for testcase in interop_cases:
-        cmd = " ".join(["java", "-cp","\""+classpath+"\"", "org.apache.qpid.test.framework.distributedtesting.Coordinator",
-                        "--xml", "-e", "interop", "-o", ".", "-n", "interop", ("org.apache.qpid.interop.testcases.%s" % testcase)])
+        cmd = " ".join(["java", "-cp","\""+classpath+"\"", "org.wso2.andes.distributedtesting.Coordinator",
+                        "--xml", "-e", "interop", "-o", ".", "-n", "interop", ("org.wso2.andes.interop.testcases.%s" % testcase)])
         fd = os.popen(cmd, "r")
         output = fd.read()
         fd.close()

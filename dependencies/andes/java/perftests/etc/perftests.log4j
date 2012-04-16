@@ -24,10 +24,10 @@ log4j.logger.org.apache.mina=${amqj.logging.level}
 log4j.logger.org.apache.qpid=${amqj.logging.level}, console
 log4j.additivity.org.apache.qpid=false
 
-log4j.logger.org.apache.qpid.requestreply=${amqj.test.logging.level}
+log4j.logger.org.wso2.andes.client.requestreply=${amqj.test.logging.level}
 log4j.logger.org.apache.qpid.pingpong=${amqj.test.logging.level}
-log4j.logger.org.apache.qpid.ping=${amqj.test.logging.level}
-log4j.logger.org.apache.qpid.topic=${amqj.test.logging.level}
+log4j.logger.org.wso2.andes.client.ping=${amqj.test.logging.level}
+log4j.logger.org.wso2.andes.client.topic=${amqj.test.logging.level}
 
 log4j.logger.org.apache.qpid.junit.extensions=${badger.level}, console
 log4j.additivity.org.apache.qpid.junit.extensions=false

@@ -25,7 +25,7 @@
          point="org.eclipse.core.runtime.applications">
       <application>
          <run
-               class="org.apache.qpid.management.ui.Application">
+               class="org.wso2.andes.management.ui.Application">
          </run>
       </application>
    </extension>
@@ -34,29 +34,29 @@
       <perspective
             name="Qpid Management"
             icon="icons/mbean_view.png"
-            class="org.apache.qpid.management.ui.Perspective"
-            id="org.apache.qpid.management.ui.perspective">
+            class="org.wso2.andes.management.ui.Perspective"
+            id="org.wso2.andes.management.ui.perspective">
       </perspective>
    </extension>
    <extension
          point="org.eclipse.ui.views">
       <category
-            id="org.apache.qpid.management.ui.viewcategory"
+            id="org.wso2.andes.management.ui.viewcategory"
             name="Qpid Management Console"/>
       <view
             allowMultiple="false"
-            category="org.apache.qpid.management.ui.viewcategory"
-            class="org.apache.qpid.management.ui.views.NavigationView"
+            category="org.wso2.andes.management.ui.viewcategory"
+            class="org.wso2.andes.management.ui.views.NavigationView"
             icon="icons/qpidConnections.gif"
-            id="org.apache.qpid.management.ui.navigationView"
+            id="org.wso2.andes.management.ui.navigationView"
             name="Qpid Connections">
       </view>
       <view
             allowMultiple="false"
-            category="org.apache.qpid.management.ui.viewcategory"
-            class="org.apache.qpid.management.ui.views.MBeanView"
+            category="org.wso2.andes.management.ui.viewcategory"
+            class="org.wso2.andes.management.ui.views.MBeanView"
             icon="icons/mbean_view.png"
-            id="org.apache.qpid.management.ui.mbeanView"
+            id="org.wso2.andes.management.ui.mbeanView"
             name="Qpid Management">
       </view>
    </extension>
@@ -64,36 +64,36 @@
          point="org.eclipse.ui.commands">
       <category
             name="qpid.manager.commands"
-            id="org.apache.qpid.management.ui.category">
+            id="org.wso2.andes.management.ui.category">
       </category>
       <command
             name="New Connection"
             description="Created a new Qpid server connection"
-            categoryId="org.apache.qpid.management.ui.category"
-            id="org.apache.qpid.management.ui.actions.cmd_add">
+            categoryId="org.wso2.andes.management.ui.category"
+            id="org.wso2.andes.management.ui.actions.cmd_add">
       </command>
       <command
-            categoryId="org.apache.qpid.management.ui.category"
+            categoryId="org.wso2.andes.management.ui.category"
             description="Reconnect the Qpid server connection"
-            id="org.apache.qpid.management.ui.actions.cmd_reconnect"
+            id="org.wso2.andes.management.ui.actions.cmd_reconnect"
             name="Reconnect"/>
       <command
-            categoryId="org.apache.qpid.management.ui.category"
+            categoryId="org.wso2.andes.management.ui.category"
             description="Disconnects the Qpid server connection"
-            id="org.apache.qpid.management.ui.actions.cmd_disconnect"
+            id="org.wso2.andes.management.ui.actions.cmd_disconnect"
             name="Disconnect"/>
       <command
-            categoryId="org.apache.qpid.management.ui.category"
+            categoryId="org.wso2.andes.management.ui.category"
             description="Removes the server from management console"
-            id="org.apache.qpid.management.ui.actions.cmd_remove"
+            id="org.wso2.andes.management.ui.actions.cmd_remove"
             name="Remove Connection"/>
       <command
-            categoryId="org.apache.qpid.management.ui.category"
+            categoryId="org.wso2.andes.management.ui.category"
             description="refreshes the views"
-            id="org.apache.qpid.management.ui.actions.cmd_refresh"
+            id="org.wso2.andes.management.ui.actions.cmd_refresh"
             name="Refresh"/>
       <command
-            categoryId="org.apache.qpid.management.ui.category"
+            categoryId="org.wso2.andes.management.ui.category"
             description="About Qpid Management Console"
             id="qpidmc.about"
             name="About"/>
@@ -101,25 +101,25 @@
    <extension
          point="org.eclipse.ui.bindings">
       <key
-            commandId="org.apache.qpid.management.ui.actions.cmd_add"
+            commandId="org.wso2.andes.management.ui.actions.cmd_add"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="CTRL+Alt+N">
       </key>
       <key
-            commandId="org.apache.qpid.management.ui.actions.cmd_reconnect"
+            commandId="org.wso2.andes.management.ui.actions.cmd_reconnect"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="CTRL+Alt+C"/>
       <key
-            commandId="org.apache.qpid.management.ui.actions.cmd_disconnect"
+            commandId="org.wso2.andes.management.ui.actions.cmd_disconnect"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="CTRL+Alt+D">
       </key>
       <key
-            commandId="org.apache.qpid.management.ui.actions.cmd_remove"
+            commandId="org.wso2.andes.management.ui.actions.cmd_remove"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="CTRL+Alt+R"/>
       <key
-            commandId="org.apache.qpid.management.ui.actions.cmd_refresh"
+            commandId="org.wso2.andes.management.ui.actions.cmd_refresh"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="CTRL+Alt+F5"/>
       <key
@@ -133,7 +133,7 @@
          id="product"
          point="org.eclipse.core.runtime.products">
       <product
-            application="org.apache.qpid.management.ui.application"
+            application="org.wso2.andes.management.ui.application"
             name="Qpid Management Console">
          <property
                name="windowImages"
@@ -156,7 +156,7 @@
        </menuContribution>
        <menuContribution locationURI="toolbar:qpidMC?after=refresh">
            <control
-               class="org.apache.qpid.management.ui.RefreshIntervalComboPanel">
+               class="org.wso2.andes.management.ui.RefreshIntervalComboPanel">
            </control>
        </menuContribution>
    </extension>
@@ -164,7 +164,7 @@
    <extension
          point="org.eclipse.ui.actionSets">
       <actionSet
-            id="org.apache.qpid.management.ui.actionSet"
+            id="org.wso2.andes.management.ui.actionSet"
             label="Qpid Action Set"
             visible="true">
          <menu
@@ -173,48 +173,48 @@
             <separator name="qpidActionsGroup"/>
          </menu>
          <action
-               class="org.apache.qpid.management.ui.actions.Refresh"
-               definitionId="org.apache.qpid.management.ui.actions.cmd_refresh"
+               class="org.wso2.andes.management.ui.actions.Refresh"
+               definitionId="org.wso2.andes.management.ui.actions.cmd_refresh"
                icon="icons/refresh.gif"
-               id="org.apache.qpid.management.ui.actions.refresh"
+               id="org.wso2.andes.management.ui.actions.refresh"
                label="Refresh"
                menubarPath="qpidmanager/additions"
                style="push"
                toolbarPath="qpidMC/refresh2"
                tooltip="Refresh Now"/>
          <action
-               class="org.apache.qpid.management.ui.actions.RemoveServer"
-               definitionId="org.apache.qpid.management.ui.actions.cmd_remove"
+               class="org.wso2.andes.management.ui.actions.RemoveServer"
+               definitionId="org.wso2.andes.management.ui.actions.cmd_remove"
                icon="icons/delete.gif"
-               id="org.apache.qpid.management.ui.actions.remove"
+               id="org.wso2.andes.management.ui.actions.remove"
                label="Remove Connection"
                menubarPath="qpidmanager/additions"
                style="push"
                toolbarPath="qpidMC/qpidActionsGroup"
                tooltip="Remove Server"/>
          <action
-               class="org.apache.qpid.management.ui.actions.CloseConnection"
-               definitionId="org.apache.qpid.management.ui.actions.cmd_disconnect"
+               class="org.wso2.andes.management.ui.actions.CloseConnection"
+               definitionId="org.wso2.andes.management.ui.actions.cmd_disconnect"
                icon="icons/stop.gif"
-               id="org.apache.qpid.management.ui.disconnect"
+               id="org.wso2.andes.management.ui.disconnect"
                label="Disconnect"
                menubarPath="qpidmanager/additions"
                toolbarPath="qpidMC/qpidActionsGroup"
                tooltip="Disconnect"/>
          <action
-               class="org.apache.qpid.management.ui.actions.ReconnectServer"
-               definitionId="org.apache.qpid.management.ui.actions.cmd_reconnect"
+               class="org.wso2.andes.management.ui.actions.ReconnectServer"
+               definitionId="org.wso2.andes.management.ui.actions.cmd_reconnect"
                icon="icons/reconnect.gif"
-               id="org.apache.qpid.management.ui.reconnect"
+               id="org.wso2.andes.management.ui.reconnect"
                label="Reconnect"
                menubarPath="qpidmanager/additions"
                toolbarPath="qpidMC/qpidActionsGroup"
                tooltip="Reconnect"/>
          <action
-               class="org.apache.qpid.management.ui.actions.AddServer"
-               definitionId="org.apache.qpid.management.ui.actions.cmd_add"
+               class="org.wso2.andes.management.ui.actions.AddServer"
+               definitionId="org.wso2.andes.management.ui.actions.cmd_add"
                icon="icons/add.gif"
-               id="org.apache.qpid.management.ui.add"
+               id="org.wso2.andes.management.ui.add"
                label="New Connection"
                menubarPath="qpidmanager/additions"
                toolbarPath="qpidMC/qpidActionsGroup"

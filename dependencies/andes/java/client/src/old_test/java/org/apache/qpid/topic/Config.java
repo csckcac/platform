@@ -18,16 +18,15 @@
  * under the License.
  *
  */
-package org.apache.qpid.topic;
+package org.wso2.andes.client.topic;
 
-import org.apache.qpid.client.AMQSession;
-import org.apache.qpid.config.ConnectorConfig;
-import org.apache.qpid.config.ConnectionFactoryInitialiser;
-import org.apache.qpid.config.Connector;
-import org.apache.qpid.config.AbstractConfig;
+import org.wso2.andes.client.AMQSession;
+import org.wso2.andes.client.config.ConnectorConfig;
+import org.wso2.andes.client.config.ConnectionFactoryInitialiser;
+import org.wso2.andes.client.config.Connector;
+import org.wso2.andes.client.config.AbstractConfig;
 
 import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
 
 class Config extends AbstractConfig implements ConnectorConfig
 {

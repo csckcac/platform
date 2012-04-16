@@ -1,4 +1,4 @@
-package org.apache.qpid.transport;
+package org.wso2.andes.transport;
 /*
  * 
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -28,13 +28,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.apache.qpid.transport.codec.Decoder;
-import org.apache.qpid.transport.codec.Encodable;
-import org.apache.qpid.transport.codec.Encoder;
+import org.wso2.andes.transport.codec.Decoder;
+import org.wso2.andes.transport.codec.Encodable;
+import org.wso2.andes.transport.codec.Encoder;
 
-import org.apache.qpid.transport.network.Frame;
+import org.wso2.andes.transport.network.Frame;
 
-import org.apache.qpid.util.Strings;
+import org.wso2.andes.util.Strings;
 
 
 ${

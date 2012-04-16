@@ -30,7 +30,7 @@
         </layout>
     </appender>
 
-    <category name="org.apache.qpid.tools">
+    <category name="org.wso2.andes.tools">
         <priority value="info"/>
     </category>
 
@@ -38,11 +38,11 @@
         <priority value="error"/>
     </category>
 
-    <category name="org.apache.qpid.server.security">
+    <category name="org.wso2.andes.server.security">
         <priority value="error"/>
     </category>
 
-    <category name="org.apache.qpid.server.management">
+    <category name="org.wso2.andes.server.management">
         <priority value="error"/>
     </category>
 

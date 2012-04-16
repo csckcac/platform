@@ -20,11 +20,10 @@
  */
 package org.apache.qpid.transacted;
 
-import org.apache.qpid.client.AMQConnection;
 import org.apache.qpid.AMQException;
 import org.apache.qpid.framing.AMQShortString;
 import org.apache.qpid.exchange.ExchangeDefaults;
-import org.apache.qpid.client.AMQQueue;
+import org.wso2.andes.client.AMQQueue;
 
 import javax.jms.Connection;
 import javax.jms.JMSException;

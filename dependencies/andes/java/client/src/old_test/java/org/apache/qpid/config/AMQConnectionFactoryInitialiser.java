@@ -18,11 +18,11 @@
  * under the License.
  *
  */
-package org.apache.qpid.config;
+package org.wso2.andes.client.config;
 
-import org.apache.qpid.client.AMQConnectionFactory;
-import org.apache.qpid.config.ConnectionFactoryInitialiser;
-import org.apache.qpid.config.ConnectorConfig;
+import org.wso2.andes.client.AMQConnectionFactory;
+import org.wso2.andes.client.config.ConnectionFactoryInitialiser;
+import org.wso2.andes.client.config.ConnectorConfig;
 
 import javax.jms.ConnectionFactory;
 

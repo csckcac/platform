@@ -80,7 +80,7 @@
     </category>
 
 
-    <category additivity="true" name="org.apache.qpid.server.queue.AMQQueueMBean">
+    <category additivity="true" name="org.wso2.andes.server.queue.AMQQueueMBean">
         <priority value="info"/>
         <appender-ref ref="AlertFile"/>
     </category>
@@ -96,11 +96,11 @@
     <!-- Additional level settings for debugging -->
     <!-- Each class in the Broker is a category that can have its logging level adjusted. -->
     <!-- This will provide more details if available about that classes processing. -->
-    <!--category additivity="true" name="org.apache.qpid.server.txn">
+    <!--category additivity="true" name="org.wso2.andes.server.txn">
         <priority value="debug"/>
     </category>-->
 
-    <!--<category additivity="true" name="org.apache.qpid.server.store">
+    <!--<category additivity="true" name="org.wso2.andes.server.store">
         <priority value="debug"/>
     </category-->
 

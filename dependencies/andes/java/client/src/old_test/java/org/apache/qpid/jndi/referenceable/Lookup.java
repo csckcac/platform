@@ -18,7 +18,7 @@
  * under the License.
  *
  */
-package org.apache.qpid.jndi.referenceable;
+package org.wso2.andes.jndi.referenceable;
 
 import javax.jms.Connection;
 import javax.jms.JMSException;

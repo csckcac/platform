@@ -86,7 +86,7 @@
             <arg value="-t testPingLatency"/>
             <arg value="-o${results}"/>
             <arg value="--csv"/>
-            <arg value="org.apache.qpid.ping.PingLatencyTestPerf"/>
+            <arg value="org.wso2.andes.client.ping.PingLatencyTestPerf"/>
             <arg value="rate=100"/>
             <arg value="batchSize=1000"/>
             <arg value="messageSize=512"/>
@@ -113,7 +113,7 @@
             <arg value="-t testAsyncPingOk"/>
             <arg value="-o${results}"/>
             <arg value="--csv"/>
-            <arg value="org.apache.qpid.ping.PingAsyncTestPerf"/>
+            <arg value="org.wso2.andes.client.ping.PingAsyncTestPerf"/>
             <arg value="messageSize=512"/>
         </java>
     </target>
@@ -138,7 +138,7 @@
             <arg value="-t testAsyncPingOk"/>
             <arg value="-o${results}"/>
             <arg value="--csv"/>
-            <arg value="org.apache.qpid.ping.PingAsyncTestPerf"/>
+            <arg value="org.wso2.andes.client.ping.PingAsyncTestPerf"/>
             <arg value="persistent=true"/>
             <arg value="messageSize=512"/>
         </java>
@@ -164,7 +164,7 @@
             <arg value="-t testAsyncPingOk"/>
             <arg value="-o${results}"/>
             <arg value="--csv"/>
-            <arg value="org.apache.qpid.ping.PingAsyncTestPerf"/>
+            <arg value="org.wso2.andes.client.ping.PingAsyncTestPerf"/>
             <arg value="persistent=true"/>
             <arg value="messageSize=102400"/>
         </java>
@@ -191,7 +191,7 @@
             <arg value="-t testAsyncPingOk"/>
             <arg value="-o${results}"/>
             <arg value="--csv"/>
-            <arg value="org.apache.qpid.ping.PingAsyncTestPerf"/>
+            <arg value="org.wso2.andes.client.ping.PingAsyncTestPerf"/>
             <arg value="persistent=true"/>
             <arg value="transacted=true"/>
             <arg value="batchSize=100"/>
@@ -220,7 +220,7 @@
             <arg value="-t testAsyncPingOk"/>
             <arg value="-o${results}"/>
             <arg value="--csv"/>
-            <arg value="org.apache.qpid.ping.PingAsyncTestPerf"/>
+            <arg value="org.wso2.andes.client.ping.PingAsyncTestPerf"/>
             <arg value="messageSize=512"/>
         </java>
     </target>
@@ -247,7 +247,7 @@
             <arg value="-t testPingLatency"/>
             <arg value="-o${results}"/>
             <arg value="--csv"/>
-            <arg value="org.apache.qpid.ping.PingLatencyTestPerf"/>
+            <arg value="org.wso2.andes.client.ping.PingLatencyTestPerf"/>
             <arg value="rate=100"/>
             <arg value="batchSize=1000"/>
             <arg value="messageSize=512"/>
@@ -275,7 +275,7 @@
             <arg value="-t testAsyncPingOk"/>
             <arg value="-o${results}"/>
             <arg value="--csv"/>
-            <arg value="org.apache.qpid.ping.PingAsyncTestPerf"/>
+            <arg value="org.wso2.andes.client.ping.PingAsyncTestPerf"/>
             <arg value="messageSize=512"/>
             <arg value="pubsub=true"/>
         </java>
@@ -302,7 +302,7 @@
             <arg value="-t testAsyncPingOk"/>
             <arg value="-o${results}"/>
             <arg value="--csv"/>
-            <arg value="org.apache.qpid.ping.PingAsyncTestPerf"/>
+            <arg value="org.wso2.andes.client.ping.PingAsyncTestPerf"/>
             <arg value="persistent=true"/>
             <arg value="transacted=true"/>
             <arg value="batchSize=100"/>
@@ -331,7 +331,7 @@
             <arg value="-t testAsyncPingOk"/>
             <arg value="-o${results}"/>
             <arg value="--csv"/>
-            <arg value="org.apache.qpid.ping.PingAsyncTestPerf"/>
+            <arg value="org.wso2.andes.client.ping.PingAsyncTestPerf"/>
             <arg value="messageSize=512"/>
         </java>
     </target>

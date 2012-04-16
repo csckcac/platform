@@ -30,7 +30,7 @@
   <property name="example.src.dir" value="${project.root}/client/example/src/main/java" />
   <property name="example.jar.file" value="${build.lib}/qpid-client-example-${project.version}.jar" />
 
-  <property name="output.dir" value="${module.precompiled}/org/apache/qpid/filter/selector"/>
+  <property name="output.dir" value="${module.precompiled}/org/wso2/andes/filter/selector"/>
 
   <target name="precompile">
     <mkdir dir="${output.dir}"/>
@@ -46,7 +46,7 @@
 
   <target name="doc-release" depends="build" unless="doc-release.done">
       <javadoc destdir="${module.release}/api" sourcepathref="module.src.path"
-               classpathref="module.class.path" packagenames="org.apache.qpid.jms"/>
+               classpathref="module.class.path" packagenames="org.wso2.andes.jms"/>
   </target>
 
   <target name="release-bin-copy-examples">

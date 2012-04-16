@@ -19,4 +19,4 @@
 #
 
 # XXX -Xmx512m -Xms512m -XX:NewSize=150m
-. qpid-run -Damqj.logging.level="INFO" org.apache.qpid.topic.Publisher $*
+. qpid-run -Damqj.logging.level="INFO" org.wso2.andes.client.topic.Publisher $*

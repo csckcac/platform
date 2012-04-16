@@ -19,4 +19,4 @@
 #
 #
 
-$JAVA_HOME/bin/java -Dlog4j.configuration=backup-log4j.xml -cp qpid-perftests-1.0-incubating-M2-SNAPSHOT-all-test-deps.jar org.apache.qpid.ping.PingSendOnlyClient messageSize=512
+$JAVA_HOME/bin/java -Dlog4j.configuration=backup-log4j.xml -cp qpid-perftests-1.0-incubating-M2-SNAPSHOT-all-test-deps.jar org.wso2.andes.client.ping.PingSendOnlyClient messageSize=512

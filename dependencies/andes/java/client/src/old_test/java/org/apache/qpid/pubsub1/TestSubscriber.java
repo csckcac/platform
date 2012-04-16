@@ -21,9 +21,9 @@
 package org.apache.qpid.pubsub1;
 
 import org.apache.log4j.Logger;
-import org.apache.qpid.client.AMQConnection;
-import org.apache.qpid.client.AMQTopic;
-import org.apache.qpid.jms.Session;
+import org.wso2.andes.client.AMQConnection;
+import org.wso2.andes.client.AMQTopic;
+import org.wso2.andes.jms.Session;
 import org.apache.qpid.exchange.ExchangeDefaults;
 import org.apache.qpid.framing.AMQShortString;
 

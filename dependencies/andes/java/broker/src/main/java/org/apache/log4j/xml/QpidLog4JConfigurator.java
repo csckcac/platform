@@ -31,7 +31,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.qpid.server.logging.management.LoggingManagementMBean;
+import org.wso2.andes.server.logging.management.LoggingManagementMBean;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;

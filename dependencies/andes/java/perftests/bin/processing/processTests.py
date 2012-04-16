@@ -751,7 +751,7 @@ def createTestStatData(resultDir, testName):
             #
             # Data format is
             # <Test> <TestName> <Thread> <Status> <Time> <Latency> <Concurrency> <Thread> <TestSize>
-            #org.apache.qpid.ping.PingAsyncTestPerf, testAsyncPingOk, Dispatcher-Channel-1, Pass, 209.074, 219.706, 0, 1, 10
+            #org.wso2.andes.client.ping.PingAsyncTestPerf, testAsyncPingOk, Dispatcher-Channel-1, Pass, 209.074, 219.706, 0, 1, 10
             LatencyIndex = 5 
             ThroughputIndex = 4
             
@@ -760,13 +760,13 @@ def createTestStatData(resultDir, testName):
             #
             # Data format is
             # <Test> <TestName> <Thread> <Status> <Time> <Latency> <Concurrency> <Thread> <TestSize>
-            # org.apache.qpid.ping.PingLatencyTestPerf, testPingLatency, Dispatcher-Channel-1, Pass, 397.05502, 0, 2, 1000
+            # org.wso2.andes.client.ping.PingLatencyTestPerf, testPingLatency, Dispatcher-Channel-1, Pass, 397.05502, 0, 2, 1000
             LatencyIndex = 4          
             ThroughputIndex = -1
             
     
-        # Only process the test lines that have 'org.apache.qpid.ping', i.e. skip header and footer.
-        if line.find("org.apache.qpid.ping") != -1:               
+        # Only process the test lines that have 'org.wso2.andes.client.ping', i.e. skip header and footer.
+        if line.find("org.wso2.andes.client.ping") != -1:
             # Perform stat processing for the min/max/avg            
             data = line.split(",")
     

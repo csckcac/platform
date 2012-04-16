@@ -23,13 +23,13 @@
  *
  */
 
-package org.apache.qpid.qmf.schema;
+package org.wso2.andes.qmf.schema;
 
-import org.apache.qpid.qmf.*;
-import org.apache.qpid.server.virtualhost.VirtualHost;
-import org.apache.qpid.server.message.ServerMessage;
-import org.apache.qpid.transport.codec.BBEncoder;
-import org.apache.qpid.transport.codec.BBDecoder;
+import org.wso2.andes.qmf.*;
+import org.wso2.andes.server.virtualhost.VirtualHost;
+import org.wso2.andes.server.message.ServerMessage;
+import org.wso2.andes.transport.codec.BBEncoder;
+import org.wso2.andes.transport.codec.BBDecoder;
 
 import java.util.Arrays;
 import java.util.UUID;

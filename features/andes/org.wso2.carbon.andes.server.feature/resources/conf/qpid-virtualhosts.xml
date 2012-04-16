@@ -25,7 +25,7 @@
         <name>carbon</name>
         <carbon>
             <store>
-                <class>org.apache.qpid.server.store.CassandraMessageStore</class>
+                <class>org.wso2.andes.server.store.CassandraMessageStore</class>
                 <ZooKeeperHostName>127.0.0.1</ZooKeeperHostName>
                 <ZooKeeperPort>2181</ZooKeeperPort>
                 <IsRMSupportEnabled>false</IsRMSupportEnabled>

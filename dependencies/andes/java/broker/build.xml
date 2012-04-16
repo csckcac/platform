@@ -22,15 +22,15 @@
 
     <property name="module.depends" value="management/common common"/>
     <property name="module.test.depends" value="common/test" />
-    <property name="module.main" value="org.apache.qpid.server.Main"/>
+    <property name="module.main" value="org.wso2.andes.server.Main"/>
 
     <import file="../module.xml"/>
 
-    <property name="output.dir" value="${module.precompiled}/org/apache/qpid/server/filter/jms/selector"/>
+    <property name="output.dir" value="${module.precompiled}/org/wso2/andes/server/filter/jms/selector"/>
 
     <property name="qmf.input.file" value="${project.root}/../specs/management-schema.xml"/>
     <property name="qmf.xsl.file" value="${project.root}/broker/src/xsl/qmf.xsl"/>
-    <property name="qmf.output.dir" value="${module.precompiled}/org/apache/qpid/qmf/schema"/>
+    <property name="qmf.output.dir" value="${module.precompiled}/org/wso2/andes/qmf/schema"/>
     <property name="qmf.output.file" value="BrokerSchema.java"/>
 
 

@@ -28,9 +28,9 @@
  #end
  */
  
-package org.apache.qpid.framing;
+package org.wso2.andes.framing;
 
-import org.apache.qpid.AMQException;
+import org.wso2.andes.AMQException;
 
 
 public interface ClientMethodDispatcher

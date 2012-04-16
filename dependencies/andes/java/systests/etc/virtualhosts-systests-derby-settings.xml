@@ -26,7 +26,7 @@
     <virtualhost>
         <localhost>
             <store>
-                <class>org.apache.qpid.server.store.DerbyMessageStore</class>
+                <class>org.wso2.andes.server.store.DerbyMessageStore</class>
                 <environment-path>${QPID_WORK}/derbyDB/localhost-store</environment-path>
             </store>
         </localhost>
@@ -35,7 +35,7 @@
     <virtualhost>
         <development>
             <store>
-                <class>org.apache.qpid.server.store.DerbyMessageStore</class>
+                <class>org.wso2.andes.server.store.DerbyMessageStore</class>
                 <environment-path>${QPID_WORK}/derbyDB/development-store</environment-path>                                        
             </store>
         </development>
@@ -44,7 +44,7 @@
     <virtualhost>
         <test>
             <store>
-                <class>org.apache.qpid.server.store.DerbyMessageStore</class>
+                <class>org.wso2.andes.server.store.DerbyMessageStore</class>
                 <environment-path>${QPID_WORK}/derbyDB/test-store</environment-path>
             </store>
         </test>

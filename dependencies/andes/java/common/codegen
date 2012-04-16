@@ -26,7 +26,7 @@ from genutil import *
 out_dir = sys.argv[1]
 spec_file = sys.argv[2]
 tpl_dir = sys.argv[3]
-pkg_dir = os.path.join(out_dir, "org/apache/qpid/transport")
+pkg_dir = os.path.join(out_dir, "org/wso2/andes/transport")
 
 if not os.path.exists(pkg_dir):
   os.makedirs(pkg_dir)
@@ -68,6 +68,7 @@ session = [c for c in actions if c.parent["@name"] != "connection"]
 
 for c in composites:
   name = cname(c)
+  print '************' + name
   execute("%s.java" % name, "Composite.tpl", type = c, name = name)
 
 execute("MethodDelegate.java", "MethodDelegate.tpl", composites = actions)

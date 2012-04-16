@@ -18,13 +18,12 @@
  * under the License.
  *
  */
-package org.apache.qpid.jndi.referenceable;
+package org.wso2.andes.jndi.referenceable;
 
-import org.apache.qpid.client.*;
+import org.wso2.andes.client.*;
 import org.apache.qpid.AMQException;
 import org.apache.qpid.url.URLSyntaxException;
 
-import javax.jms.*;
 import javax.naming.*;
 
 import java.util.Properties;

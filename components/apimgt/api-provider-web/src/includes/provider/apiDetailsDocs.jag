@@ -44,7 +44,7 @@
                             Public Forum
                           </label>
                           <label class="radio">
-                            <input type="radio" name="optionsRadios" id="optionsRadios4" value="suppport forum">
+                            <input type="radio" name="optionsRadios" id="optionsRadios4" value="support forum">
                             Support Forum
                           </label>
                           <label class="radio">

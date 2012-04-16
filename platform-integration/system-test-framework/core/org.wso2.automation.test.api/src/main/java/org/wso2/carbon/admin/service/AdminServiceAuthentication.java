@@ -50,7 +50,28 @@ public class AdminServiceAuthentication {
         }
     }
 
-    public String login(String userName, String password, String backEndURL) {
+    public String login(String userName, String password, String host) {
+        Boolean loginStatus = false;
+        ServiceContext serviceContext;
+        String sessionCookie;
+        try {
+            loginStatus = authenticationAdminStub.login(userName, password, host);
+        } catch (RemoteException e) {
+            log.error("Login to " + endPoint + " fail :" + e.getMessage());
+            Assert.fail("Login to " + endPoint + " fail :" + e.getMessage());
+        } catch (LoginAuthenticationExceptionException e) {
+            log.error("Login to " + endPoint + " fail :" + e.getMessage());
+            Assert.fail("Login to " + endPoint + " fail :" + e.getMessage());
+        }
+        Assert.assertTrue("Login unsuccessful", loginStatus);
+        log.info("Login Successful");
+        serviceContext = authenticationAdminStub._getServiceClient().getLastOperationContext().getServiceContext();
+        sessionCookie = (String) serviceContext.getProperty(HTTPConstants.COOKIE_STRING);
+        log.debug("SessionCookie :" + sessionCookie);
+        return sessionCookie;
+    }
+
+    public String login1(String userName, String password, String backEndURL) {
         Boolean loginStatus = false;
         ServiceContext serviceContext;
         String sessionCookie;

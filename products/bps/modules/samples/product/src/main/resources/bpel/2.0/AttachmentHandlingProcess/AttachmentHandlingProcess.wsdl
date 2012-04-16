@@ -39,7 +39,7 @@
  <xsd:element name="output">
                 <xsd:complexType>
                     <xsd:sequence>
-                        <xsd:element name="attachment-id" type="xsd:string"/>
+                        <xsd:element name="attachment-name" type="xsd:string"/>
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>

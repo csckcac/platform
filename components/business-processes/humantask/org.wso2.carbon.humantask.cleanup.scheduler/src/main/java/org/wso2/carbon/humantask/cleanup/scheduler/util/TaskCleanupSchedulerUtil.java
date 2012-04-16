@@ -18,6 +18,7 @@ package org.wso2.carbon.humantask.cleanup.scheduler.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.humantask.cleanup.scheduler.internal.HumanTaskCleanupSchedulerServiceComponent;
 import org.wso2.carbon.humantask.cleanup.scheduler.ntask.RemovableTaskCleanupJob;
 import org.wso2.carbon.humantask.core.HumanTaskConstants;
@@ -27,6 +28,7 @@ import org.wso2.carbon.humantask.core.engine.HumanTaskServerException;
 import org.wso2.carbon.ntask.common.TaskException;
 import org.wso2.carbon.ntask.core.TaskInfo;
 import org.wso2.carbon.ntask.core.TaskManager;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -51,7 +53,9 @@ public class TaskCleanupSchedulerUtil {
             try {
                 log.info("Initialising the task cleanup service.....");
                 HumanTaskCleanupSchedulerServiceComponent.getTaskService().registerTaskType(HumanTaskConstants.HUMANTASK_TASK_TYPE);
-
+                //TODO - pass the proper tenant id here.
+                SuperTenantCarbonContext.getCurrentContext().setTenantId(
+                        MultitenantConstants.SUPER_TENANT_ID);
                 TaskManager taskManager = HumanTaskCleanupSchedulerServiceComponent.getTaskService().
                         getTaskManager(HumanTaskConstants.HUMANTASK_TASK_TYPE);
 
@@ -81,6 +85,9 @@ public class TaskCleanupSchedulerUtil {
     public static void deleteTaskCleanupScheduledJob() {
         //remove the scheduled tasks.
         try {
+            //TODO - pass the proper tenant id here.
+            SuperTenantCarbonContext.getCurrentContext().setTenantId(
+                        MultitenantConstants.SUPER_TENANT_ID);
             TaskManager taskManager =
                     HumanTaskCleanupSchedulerServiceComponent.getTaskService().getTaskManager(
                             HumanTaskConstants.HUMANTASK_TASK_TYPE);

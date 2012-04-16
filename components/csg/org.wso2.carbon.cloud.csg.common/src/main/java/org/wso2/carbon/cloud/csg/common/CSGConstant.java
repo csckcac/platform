@@ -244,13 +244,13 @@ public class CSGConstant {
 
     public enum DEPLOYMENT_TYPE {SERVICE, WEBAPP}
 
-    public static final String CSG_USER = "csguser";
+    public static final String CSG_USER_NAME = "csg-user-name";
 
-    public static final String DEFAULT_CSG_USER = CSG_USER;
+    public static final String DEFAULT_CSG_USER = "csguser";
 
-    public static final String CSG_USER_PASSWORD = CSG_USER;
+    public static final String CSG_USER_PASSWORD = "csg-user-password";
 
-    public static final String DEFAULT_CSG_USER_PASSWORD = CSG_USER_PASSWORD;
+    public static final String DEFAULT_CSG_USER_PASSWORD = "csguser";
 
     public static final String CSG_USER_PERMISSION_LIST = "csg-user-permission-list";
 

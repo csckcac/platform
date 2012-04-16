@@ -86,7 +86,7 @@ public class CSGServiceComponent {
             addCSGUser(
                     csgRoleName,
                     permissionList,
-                    CSGUtils.getStringProperty(CSGConstant.CSG_USER, CSGConstant.DEFAULT_CSG_USER),
+                    CSGUtils.getStringProperty(CSGConstant.CSG_USER_NAME, CSGConstant.DEFAULT_CSG_USER),
                     CSGUtils.getStringProperty(CSGConstant.CSG_USER_PASSWORD,
                             CSGConstant.DEFAULT_CSG_USER_PASSWORD));
 

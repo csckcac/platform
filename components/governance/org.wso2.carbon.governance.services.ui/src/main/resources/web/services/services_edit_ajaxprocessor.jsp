@@ -43,6 +43,7 @@
 <script type="text/javascript" src="../registry_common/js/registry_validation.js"></script>
 <script type="text/javascript" src="../registry_common/js/registry_common.js"></script>
 <script type="text/javascript" src="../ajax/js/prototype.js"></script>
+<script type="text/javascript" src="../services/js/collapsible_menu_util.js"></script>
 <fmt:bundle basename="org.wso2.carbon.governance.services.ui.i18n.Resources">
 <carbon:jsi18n
         resourceBundle="org.wso2.carbon.governance.services.ui.i18n.JSResources"
@@ -202,6 +203,16 @@
 %>
 
 <br/>
+
+<script type="text/javascript">
+
+    jQuery(document).ready(
+            function() {
+                initCollapseMenu("#_addEditTable");
+            }
+    );
+
+</script>
 <script type="text/javascript">
 
     function validateIllegalNamespace(fld){
@@ -313,7 +324,7 @@
                 endpointMgt.parentNode.style.display = "none";
             }
         }
-        function add<%=addname[i]%>_<%=addwidget[i]%>(inputParam){
+        function add<%=addname[i]%>_<%=addwidget[i]%>(inputParam) {
         <%String[] valuelist = selectvaluelist[i];%>
             var epOptions = '<%for(int j=0;j<valuelist.length;j++){%><option value="<%=valuelist[j]%>"><%=valuelist[j]%></option><%}%>';
             var endpointMgt = document.getElementById('<%=addname[i]%>Mgt');
@@ -379,7 +390,7 @@
             <input type="hidden" name="newname" value="">
             <input type="hidden" name="newnamespace" value="">
             <input type="hidden" name="path" value="<%=path%>">
-            <table class="styledLeft">
+            <table class="styledLeft" id="#_addEditTable">
                 <tr><td>
                     <%=table.toString()%>
                 </td></tr>

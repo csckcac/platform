@@ -42,6 +42,7 @@ public class MySqlDatabaseManager implements DatabaseManager {
         Statement st = connection.createStatement();
         log.debug(sql);
         st.executeUpdate(sql.trim());
+        st.close();
         log.debug("Sql update Success");
 
     }
@@ -55,19 +56,24 @@ public class MySqlDatabaseManager implements DatabaseManager {
             log.debug(query);
             st.executeUpdate(query.trim());
         }
+        st.close();
         log.debug("Sql execution Success");
     }
 
     public ResultSet executeQuery(String sql) throws SQLException {
+        ResultSet rs;
         Statement st = connection.createStatement();
         log.debug(sql);
-        return st.executeQuery(sql);
+        rs = st.executeQuery(sql);
+        st.close();
+        return rs;
 
     }
 
     public void execute(String sql) throws SQLException {
         Statement st = connection.createStatement();
         st.execute(sql);
+        st.close();
         log.debug("Sql execution Success");
     }
 

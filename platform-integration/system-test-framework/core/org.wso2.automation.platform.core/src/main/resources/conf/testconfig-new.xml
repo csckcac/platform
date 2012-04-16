@@ -59,14 +59,15 @@
     </scenario>
 
     <scenario testName="org.wso2.automation.common.test.esb.CustomXpathTest">
-       <product name="ESB">
+        <product name="ESB">
             <artifacts userId="1">
                 <artifact name="config8" type="synapseconfig"/>
             </artifacts>
         </product>
     </scenario>
 
-    <scenario testName="org.wso2.automation.product.scenarios.test.esb.XFormURLEncodedBuilderWithWSDLTest">
+    <scenario
+            testName="org.wso2.automation.product.scenarios.test.esb.XFormURLEncodedBuilderWithWSDLTest">
         <product name="AS">
             <artifacts userId="1">
                 <artifact name="HelloWorld.aar" type="aar"/>
@@ -92,7 +93,8 @@
         </product>
     </scenario>
 
-    <scenario testName="org.wso2.automation.product.scenarios.test.esb.MsgProcessorHeaderProcessingTest">
+    <scenario
+            testName="org.wso2.automation.product.scenarios.test.esb.MsgProcessorHeaderProcessingTest">
         <product name="AS">
             <artifacts userId="1">
                 <artifact name="SimpleStockQuoteService.aar" type="aar"/>
@@ -128,7 +130,7 @@
         <product name="ESB">
             <artifacts userId="0">
                 <artifact name="config1" type="synapseconfig">
-                     </artifact>
+                </artifact>
             </artifacts>
         </product>
     </scenario>
@@ -383,7 +385,8 @@
         </product>
 
     </scenario>
-    <scenario testName="org.wso2.automation.common.test.bps.managescenarios.BpelProcessManagementClient">
+    <scenario
+            testName="org.wso2.automation.common.test.bps.managescenarios.BpelProcessManagementClient">
         <product name="BPS">
             <artifacts userId="3">
                 <artifact name="LoanService.zip" type="bpelzip"/>
@@ -391,7 +394,8 @@
         </product>
     </scenario>
 
-    <scenario testName="org.wso2.automation.common.test.bps.managescenarios.BpelInstanceManagementClient">
+    <scenario
+            testName="org.wso2.automation.common.test.bps.managescenarios.BpelInstanceManagementClient">
         <product name="BPS">
             <artifacts userId="3">
                 <artifact name="TestPickOneWay.zip" type="bpelzip"/>
@@ -406,42 +410,48 @@
             </artifacts>
         </product>
     </scenario>
-    <scenario testName="org.wso2.automation.common.test.bps.mgtstructuredactivities.BpelStructAct_FlowClient">
+    <scenario
+            testName="org.wso2.automation.common.test.bps.mgtstructuredactivities.BpelStructAct_FlowClient">
         <product name="BPS">
             <artifacts userId="3">
                 <artifact name="TestFlowLinks.zip" type="bpelzip"/>
             </artifacts>
         </product>
     </scenario>
-    <scenario testName="org.wso2.automation.common.test.bps.mgtstructuredactivities.BpelStructAct_forEachClient">
+    <scenario
+            testName="org.wso2.automation.common.test.bps.mgtstructuredactivities.BpelStructAct_forEachClient">
         <product name="BPS">
             <artifacts userId="3">
                 <artifact name="TestForEach.zip" type="bpelzip"/>
             </artifacts>
         </product>
     </scenario>
-    <scenario testName="org.wso2.automation.common.test.bps.mgtstructuredactivities.BpelStructAct_IfClient">
+    <scenario
+            testName="org.wso2.automation.common.test.bps.mgtstructuredactivities.BpelStructAct_IfClient">
         <product name="BPS">
             <artifacts userId="3">
                 <artifact name="TestIf.zip" type="bpelzip"/>
             </artifacts>
         </product>
     </scenario>
-    <scenario testName="org.wso2.automation.common.test.bps.mgtstructuredactivities.BpelStructAct_PickClient">
+    <scenario
+            testName="org.wso2.automation.common.test.bps.mgtstructuredactivities.BpelStructAct_PickClient">
         <product name="BPS">
             <artifacts userId="3">
                 <artifact name="TestPickOneWay.zip" type="bpelzip"/>
             </artifacts>
         </product>
     </scenario>
-    <scenario testName="org.wso2.automation.common.test.bps.mgtstructuredactivities.BpelStructAct_RepeatUntillClient">
+    <scenario
+            testName="org.wso2.automation.common.test.bps.mgtstructuredactivities.BpelStructAct_RepeatUntillClient">
         <product name="BPS">
             <artifacts userId="3">
                 <artifact name="TestRepeatUntil.zip" type="bpelzip"/>
             </artifacts>
         </product>
     </scenario>
-    <scenario testName="org.wso2.automation.common.test.bps.mgtstructuredactivities.BpelStructAct_WhileClient">
+    <scenario
+            testName="org.wso2.automation.common.test.bps.mgtstructuredactivities.BpelStructAct_WhileClient">
         <product name="BPS">
             <artifacts userId="3">
                 <artifact name="TestWhile.zip" type="bpelzip"/>
@@ -462,7 +472,7 @@
         </product>
     </scenario>
 
-     <scenario testName="org.wso2.automation.common.test.dss.fileservice.ExcelDataServiceTest">
+    <scenario testName="org.wso2.automation.common.test.dss.fileservice.ExcelDataServiceTest">
         <product name="DSS">
             <artifacts userId="3">
                 <artifact name="ExcelDataService.dbs" type="dbs">
@@ -479,7 +489,7 @@
         <product name="DSS">
             <artifacts userId="3">
                 <artifact name="GSpreadDataService.dbs" type="dbs">
-                <association name="artifact_location" value="gspread"/>    
+                    <association name="artifact_location" value="gspread"/>
                 </artifact>
             </artifacts>
         </product>
@@ -601,7 +611,7 @@
         </product>
     </scenario>
 
-     <scenario testName="org.wso2.automation.common.test.dss.scheduletask.ReScheduleTaskTest">
+    <scenario testName="org.wso2.automation.common.test.dss.scheduletask.ReScheduleTaskTest">
         <product name="DSS">
             <artifacts userId="3">
                 <artifact name="ScheduleTaskTest.dbs" type="dbs">
@@ -630,10 +640,10 @@
             </artifacts>
         </product>
         <product name="ESB">
-        <artifacts userId="0">
-            <artifact name="config3" type="synapseconfig">
-            </artifact>
-        </artifacts>
+            <artifacts userId="0">
+                <artifact name="config3" type="synapseconfig">
+                </artifact>
+            </artifacts>
         </product>
     </scenario>
 
@@ -644,6 +654,27 @@
             </artifacts>
         </product>
     </scenario>
+    <scenario testName="org.wso2.automation.common.test.dss.syntax.WhiteSpaceWithQueryParamsTest">
+        <product name="DSS">
+            <artifacts userId="3">
+                <artifact name="WhiteSpacesInQueryParamsTest.dbs" type="dbs">
+                    <dependency name="CreateTables.sql" dependencyType="sql"/>
+                    <association name="artifact_location" value="rdbms/MySql"/>
+                    <association name="dependency_location" value="sql/MySql"/>
+                </artifact>
+            </artifacts>
+        </product>
+    </scenario>
 
-
+     <scenario testName="org.wso2.automation.common.test.dss.syntax.ReturnRequestStatusTest">
+        <product name="DSS">
+            <artifacts userId="3">
+                <artifact name="ReturnRequestStatusTest.dbs" type="dbs">
+                    <dependency name="CreateTables.sql" dependencyType="sql"/>
+                    <association name="artifact_location" value="rdbms/MySql"/>
+                    <association name="dependency_location" value="sql/MySql"/>
+                </artifact>
+            </artifacts>
+        </product>
+    </scenario>
 </scenarios>

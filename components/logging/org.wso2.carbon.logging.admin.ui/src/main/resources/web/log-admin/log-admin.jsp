@@ -49,7 +49,7 @@
         <%--return;--%>
     <%--}--%>
 <%--%>--%>
-<script type="text/javascript" src="../ajax/js/prototype.js"></script>
+
 <script type="text/javascript" src="js/loggingadmin.js"></script>
 <fmt:bundle basename="org.wso2.carbon.logging.admin.ui.i18n.Resources">
     <carbon:breadcrumb label="logging.management"

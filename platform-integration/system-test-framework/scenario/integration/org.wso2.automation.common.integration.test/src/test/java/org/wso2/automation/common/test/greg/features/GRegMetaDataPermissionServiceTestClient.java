@@ -40,6 +40,7 @@ public class GRegMetaDataPermissionServiceTestClient {
     private static AdminServiceResourceAdmin admin_service_resource_admin;
     private EnvironmentVariables gregServer;
     private String gregBackEndUrl;
+    private String gregHostName;
     private String sessionCookie;
     private String roleName;
     private String userName;
@@ -51,10 +52,20 @@ public class GRegMetaDataPermissionServiceTestClient {
         gregServer = builder.build().getGreg();
         sessionCookie = gregServer.getSessionCookie();
         gregBackEndUrl = gregServer.getBackEndUrl();
-
+        gregHostName = gregServer.getProductVariables().getHostName();
         userAdminStub = new AdminServiceUserMgtService(gregBackEndUrl);
         userAuthenticationStub = new AdminServiceAuthentication(gregBackEndUrl);
         admin_service_resource_admin = new AdminServiceResourceAdmin(gregBackEndUrl);
+        roleName = "meta_role";
+        userName = "greg_meta_user";
+
+        if (userAdminStub.roleNameExists(roleName, sessionCookie)) {  //delete the role if exists
+            userAdminStub.deleteRole(sessionCookie, roleName);
+        }
+
+        if (userAdminStub.userNameExists(roleName, sessionCookie, userName)) { //delete user if exists
+            userAdminStub.deleteUser(sessionCookie, userName);
+        }
     }
 
 
@@ -62,8 +73,7 @@ public class GRegMetaDataPermissionServiceTestClient {
           priority = 1)
     public void testAddMetaDataPermissionUser()
             throws UserAdminException, RemoteException, ResourceAdminServiceExceptionException {
-        roleName = "meta_role";
-        userName = "greg_meta_user";
+
         userPassword = "welcome";
         String permission1[] = {"/permission/admin/login",
                                 "/permission/admin/manage/resources/govern/metadata"};
@@ -75,7 +85,7 @@ public class GRegMetaDataPermissionServiceTestClient {
         String resourceName = "echo.wsdl";
         String fetchUrl = "http://people.wso2.com/~evanthika/wsdls/echo.wsdl";
         addRolewithUser(permission1, userList);
-        sessionCookieUser = userAuthenticationStub.login(userName, userPassword, gregBackEndUrl);
+        sessionCookieUser = userAuthenticationStub.login(userName, userPassword, gregHostName);
         log.info("Newly Created User Loged in :" + userName);
 
 
@@ -94,7 +104,7 @@ public class GRegMetaDataPermissionServiceTestClient {
         userAuthenticationStub.logOut();
         deleteRoleAndUsers(roleName, userName);
         addRolewithUser(permission2, userList);
-        sessionCookieUser = userAuthenticationStub.login(userName, userPassword, gregBackEndUrl);
+        sessionCookieUser = userAuthenticationStub.login(userName, userPassword, gregHostName);
         log.info("Newly Created User Loged in :" + userName);
         admin_service_resource_admin.addWSDL(sessionCookieUser, resourceName, "", fetchUrl);
         admin_service_resource_admin.deleteResource(sessionCookieUser,

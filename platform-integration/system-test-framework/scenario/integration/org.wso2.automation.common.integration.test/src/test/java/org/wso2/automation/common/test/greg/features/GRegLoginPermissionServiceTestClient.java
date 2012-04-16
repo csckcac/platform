@@ -18,6 +18,7 @@ package org.wso2.automation.common.test.greg.features;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceAuthentication;
@@ -38,8 +39,8 @@ public class GRegLoginPermissionServiceTestClient {
     private AdminServiceUserMgtService userAdminStub;
     private static AdminServiceAuthentication userAuthenticationStub;
     private static AdminServiceResourceAdmin admin_service_resource_admin;
-    private EnvironmentVariables gregServer;
     private String gregBackEndUrl;
+    private String gregHostName;
     private String sessionCookie;
     private String roleName;
     private String userName;
@@ -49,29 +50,39 @@ public class GRegLoginPermissionServiceTestClient {
     @BeforeClass(alwaysRun = true)
     public void init() throws AxisFault {
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(0);
-        gregServer = builder.build().getGreg();
+        EnvironmentVariables gregServer = builder.build().getGreg();
         sessionCookie = gregServer.getSessionCookie();
         gregBackEndUrl = gregServer.getBackEndUrl();
+        gregHostName = gregServer.getProductVariables().getHostName();
         userAdminStub = new AdminServiceUserMgtService(gregBackEndUrl);
         userAuthenticationStub = new AdminServiceAuthentication(gregBackEndUrl);
         admin_service_resource_admin = new AdminServiceResourceAdmin(gregBackEndUrl);
+        roleName = "login_role";
+        userName = "greg_login_user";
+
+        if (userAdminStub.roleNameExists(roleName, sessionCookie)) {  //delete the role if exists
+            userAdminStub.deleteRole(sessionCookie, roleName);
+        }
+
+        if (userAdminStub.userNameExists(roleName, sessionCookie, userName)) { //delete user if exists
+            userAdminStub.deleteUser(sessionCookie, userName);
+        }
     }
 
 
     @Test(groups = {"wso2.greg"}, description = "test add a role with login permission",
           priority = 1)
-    public void testaddLoginPermissionUser()
+    public void testAddLoginPermissionUser()
             throws UserAdminException, RemoteException, ResourceAdminServiceExceptionException {
-        roleName = "login_role";
-        userName = "greg_login_user";
+
         userPassword = "welcome";
         String permission[] = {"/permission/admin/login"};
         String userList[] = {"admin"};
         String sessionCookieUser;
         boolean status;
         try {
-            addRolewithUser(permission, userList);
-            sessionCookieUser = userAuthenticationStub.login(userName, userPassword, gregBackEndUrl);
+            addRoleWithUser(permission, userList);
+            sessionCookieUser = userAuthenticationStub.login(userName, userPassword, gregHostName);
             log.info("Newly Created User Loged in :" + userName);
             try {
                 status = false;
@@ -87,7 +98,6 @@ public class GRegLoginPermissionServiceTestClient {
             assertTrue(status, "Only Login user permission has uploaded a text resource ? :");
             userAuthenticationStub.logOut();
 
-            deleteRoleAndUsers(roleName, userName);
             log.info("*************Login Permission Only Test Scenario-Passed ******************");
         } catch (UserAdminException e) {
             log.error("Login Permission Only Test Scenario -Failed :" + e.getMessage());
@@ -96,7 +106,7 @@ public class GRegLoginPermissionServiceTestClient {
         }
     }
 
-    private void addRolewithUser(String[] permission, String[] userList) throws UserAdminException {
+    private void addRoleWithUser(String[] permission, String[] userList) throws UserAdminException {
         userAdminStub.addRole(roleName, userList, permission, sessionCookie);
         log.info("Successfully added Role :" + roleName);
         String roles[] = {roleName};
@@ -104,8 +114,8 @@ public class GRegLoginPermissionServiceTestClient {
         log.info("Successfully User Crated :" + userName);
     }
 
-
-    private void deleteRoleAndUsers(String roleName, String userName) {
+    @AfterClass(alwaysRun = true)
+    public void deleteRoleAndUsers() {
         userAdminStub.deleteRole(sessionCookie, roleName);
         log.info("Role " + roleName + " deleted successfully");
         userAdminStub.deleteUser(sessionCookie, userName);

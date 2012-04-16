@@ -33,7 +33,7 @@ public class GRegGovernanceTestSuite extends MasterTestSuite {
         suiteVariablesList.add(new SuiteVariables("LifeCycleTest", LifeCycleServiceTestClient.class));
         suiteVariablesList.add(new SuiteVariables("PolicyImportTest", PolicyImportServiceTestClient.class));
         suiteVariablesList.add(new SuiteVariables("SchemaImportServiceClient", SchemaImportServiceTestClient.class));
-        suiteVariablesList.add(new SuiteVariables("ServieImportTest", ServiceImportServiceTestClient.class));
+        suiteVariablesList.add(new SuiteVariables("ServiceImportTest", ServiceImportServiceTestClient.class));
         suiteVariablesList.add(new SuiteVariables("WSDLImportTest", WSDLImportServiceTestClient.class));
         suiteVariablesList.add(new SuiteVariables("WSDLContentUpdateTest", WsdlUpadateContentServiceTestClient.class));
         suiteVariablesList.add(new SuiteVariables("WSDLWithSpecialCharTest", WSDLWithSpecialCharTest.class));

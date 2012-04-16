@@ -58,8 +58,8 @@
     <parameter name="ModulesDirectory">axis2modules</parameter>
 
     <!-- User agent and the server details to be used in the http communication -->
-    <parameter name="userAgent" locked="true">WSO2 ESB 5.0.0-SNAPSHOT</parameter>
-    <parameter name="server" locked="true">WSO2 ESB 5.0.0-SNAPSHOT</parameter>
+    <parameter name="userAgent" locked="true">WSO2 ESB 4.5.0-SNAPSHOT</parameter>
+    <parameter name="server" locked="true">WSO2 ESB 4.5.0-SNAPSHOT</parameter>
 
     <!-- During a fault, stacktrace can be sent with the fault message. The following flag -->
     <!-- will control that behaviour -->
@@ -162,6 +162,8 @@
                          class="org.apache.axis2.transport.http.SOAPMessageFormatter"/>
         <messageFormatter contentType="application/soap+xml"
                          class="org.apache.axis2.transport.http.SOAPMessageFormatter"/>
+        <messageFormatter contentType="text/plain"
+                         class="org.apache.axis2.format.PlainTextFormatter"/>
 
         <!--JSON Message Formatters-->
         <messageFormatter contentType="application/json"
@@ -203,6 +205,8 @@
                         class="org.apache.synapse.commons.builders.XFormURLEncodedBuilder"/>
         <messageBuilder contentType="multipart/form-data"
                         class="org.apache.axis2.builder.MultipartFormDataBuilder"/>
+        <messageBuilder contentType="text/plain"
+                        class="org.apache.axis2.format.PlainTextBuilder"/>
 
         <!--JSON Message Builders-->
         <messageBuilder contentType="application/json"

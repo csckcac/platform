@@ -34,7 +34,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- *
+ * Utility methods related to task clean up scheduler.
  */
 public class TaskCleanupSchedulerUtil {
 

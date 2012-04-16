@@ -103,7 +103,8 @@ public class AddServiceUIGenerator {
         }
         Iterator subHeadingIt = widget.getChildrenWithName(new QName(null, UIGeneratorConstants.SUBHEADING_ELEMENT));
         StringBuilder table = new StringBuilder();
-        table.append("<div id=\"" + divId + "\" title=\"" + String.valueOf(collapsed) + "\"><table class=\"normal-nopadding\" cellspacing=\"0\">");
+        table.append("<div id=\"" + divId + "\"  "+"onmouseover='title=\"\"' onmouseout='title=\""+String.valueOf(collapsed)+"\"'"
+                + " title=\"" + String.valueOf(collapsed) + "\"><table class=\"normal-nopadding\" cellspacing=\"0\">");
         List<String> subList = new ArrayList<String>();
         OMElement sub = null;
         if (subHeadingIt != null && subHeadingIt.hasNext()) {

@@ -65,6 +65,9 @@
                     </ul>
                 </li>
                 <li>
+                    <a href="#Default-user">CSG user</a>
+                </li>
+                <li>
                     <a href="#Configure-port">Configuring the CSG Thrift server port</a>
                 </li>
                 <li>
@@ -306,6 +309,13 @@
         <p>
             <img alt="Add namespace" src="images/ns-add.png"/>
         </p>
+        
+        <h2 id="Default-user">CSG user</h2>
+        <p>CSG server is equipped with a default user called 'csguser' with the
+        password 'csguser' (without the quotes). This user can be used to publish a service
+        at the CSGAgent side. The user name and the password can be changed using the csg.properties
+        file using two parameters csg-user-name and csg-user-password respectively.
+        the </p>
 
         <h2 id="Configure-port">Configuring the CSG Thrift server port</h2>
         <p>The CSG Thrift server port can be configured in

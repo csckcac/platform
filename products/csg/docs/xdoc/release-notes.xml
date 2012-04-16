@@ -110,6 +110,9 @@
         <li>CARBON-12485 - Removed the unwanted features such as VFS, JMS etc..</li>
         <li>CARBON-12604 - Fixed the CSG server to have a default user, 'csguser'.</li>
         <li>CARBON-12577 - Fixed the CSG user guide.</li>
+        <li>CARBON-12872 - Added integration tests for CSG.</li>
+        <li>CARBON-11779 - Added the proxy WSDL into registry.</li>
+        <li>CARBON-12782 - Updated the documentation to include information about the 'csguser'.</li>
     </ol>
 
     <h2>Release 1.0.0-alpha RC3</h2>

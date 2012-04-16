@@ -61,7 +61,7 @@
             <from variable="inputVar" part="TestPart">
 		<query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
 			<!--<![CDATA[*[local-name() = 'input']/*[local-name() = 'attachment']/*[local-name() = 'id']]]>-->
-			<![CDATA[test:attachment/test:id]]>
+			<![CDATA[test:attachment/test:name]]>
 		</query>
 	    </from>
             <to variable="outputVar" part="TestPart">

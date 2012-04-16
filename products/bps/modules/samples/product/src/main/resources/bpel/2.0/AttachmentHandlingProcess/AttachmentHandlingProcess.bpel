@@ -60,13 +60,13 @@
          <copy>
             <from variable="inputVar" part="TestPart">
 		<query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
-			<![CDATA[*[local-name() = 'input']/*[local-name() = 'attachment']/*[local-name() = 'id']]]>
-			<!--<![CDATA[test:input/test:attachment/test:id]]>-->
+			<!--<![CDATA[*[local-name() = 'input']/*[local-name() = 'attachment']/*[local-name() = 'id']]]>-->
+			<![CDATA[test:attachment/test:id]]>
 		</query>
 	    </from>
             <to variable="outputVar" part="TestPart">
 		<query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
-			<![CDATA[test:output/test:attachment-id]]>
+			<![CDATA[test:attachment-id]]>
 		</query>
 	    </to>
          </copy>

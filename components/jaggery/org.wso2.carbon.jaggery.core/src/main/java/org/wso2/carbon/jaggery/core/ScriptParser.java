@@ -6,10 +6,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public final class ScriptParser {
-	
-	private ScriptParser() {
-	    //disable external instantiation
-	}
+
+    private ScriptParser() {
+        //disable external instantiation
+    }
 
     /**
      * Main Parser to process the .jss script
@@ -45,7 +45,12 @@ public final class ScriptParser {
                     }
                 } else {
                     if (opened) {
-                        source.append('<');
+                        if (isExpression) {
+                            jsExp.append("<");
+                        } else {
+                            source.append("<");
+                        }
+                        //source.append('<');
                     } else {
                         html.append('<');
                     }

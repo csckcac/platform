@@ -62,32 +62,30 @@ public class UserPopulator {
                 UserInfo adminDetails = UserListCsvReader.getUserInfo(adminUserId);
                 String[] permissions = {"/permission/"};
                 String[] userList = null;
-                ClusterReader clusterReader= new ClusterReader();
+                ClusterReader clusterReader = new ClusterReader();
                 List<String> productList = framework.getEnvironmentVariables().getProductList();
-                if(framework.getEnvironmentSettings().isClusterEnable())
-                {
-                      clusterReader.getClusterList();
-                    for(String id:clusterReader.getClusterList())
-                    {
-                        if(productList.contains(clusterReader.getProductName(id).toUpperCase()))
-                        {
+                if (framework.getEnvironmentSettings().isClusterEnable()) {
+                    clusterReader.getClusterList();
+                    for (String id : clusterReader.getClusterList()) {
+                        if (productList.contains(clusterReader.getProductName(id).toUpperCase())) {
                             FrameworkProperties properties = FrameworkFactory.getClusterProperties(id);
                             String backendURL = properties.getProductVariables().getBackendUrl();
+                            String hostName = properties.getProductVariables().getHostName();
                             userMgtAdmin = new AdminServiceUserMgtService(backendURL);
                             log.info("Populate user to " + id + " server");
-                            createProductUsers(adminDetails, permissions, userList, backendURL);
+                            createProductUsers(adminDetails, permissions, userList, backendURL,hostName);
                         }
                     }
+                } else {
+                    for (String product : productList) {
+                        FrameworkProperties properties = FrameworkFactory.getFrameworkProperties(product);
+                        String backendURL = properties.getProductVariables().getBackendUrl();
+                        String hostName = properties.getProductVariables().getHostName();
+                        userMgtAdmin = new AdminServiceUserMgtService(backendURL);
+                        log.info("Populate user to " + product + " server");
+                        createProductUsers(adminDetails, permissions, userList, backendURL, hostName);
+                    }
                 }
-                else{
-                for (String product : productList) {
-                    FrameworkProperties properties = FrameworkFactory.getFrameworkProperties(product);
-                    String backendURL = properties.getProductVariables().getBackendUrl();
-                    userMgtAdmin = new AdminServiceUserMgtService(backendURL);
-                    log.info("Populate user to " + product + " server");
-                    createProductUsers(adminDetails, permissions, userList, backendURL);
-                }
-            }
             }
             //users are populated. user population disabled
             isUsersPopulated = false;
@@ -96,8 +94,9 @@ public class UserPopulator {
     }
 
     private void createProductUsers(UserInfo adminDetails, String[] permissions, String[] userList,
-                                    String backendURL) throws UserAdminException {
-        String sessionCookieUser = login(adminDetails.getUserName(), adminDetails.getPassword(), backendURL);
+                                    String backendUrl,
+                                    String hostName) throws UserAdminException {
+        String sessionCookieUser = login(adminDetails.getUserName(), adminDetails.getPassword(), backendUrl, hostName);
         String[] roleName = {"testRole"};
         int roleNameIndex = 0;
 
@@ -137,7 +136,8 @@ public class UserPopulator {
                 FrameworkFactory.getFrameworkProperties(ProductConstant.MANAGER_SERVER_NAME);
         String sessionCookie =
                 login(superTenantDetails.getUserName(), superTenantDetails.getPassword(),
-                      manProperties.getProductVariables().getBackendUrl());
+                      manProperties.getProductVariables().getBackendUrl(),
+                      manProperties.getProductVariables().getHostName());
 
         for (int userId = 0; userId < userCount; userId++) {
             if (userId != 0) {
@@ -150,8 +150,9 @@ public class UserPopulator {
         }
     }
 
-    protected static String login(String userName, String password, String hostName) {
-        AdminServiceAuthentication loginClient = new AdminServiceAuthentication(hostName);
+    protected static String login(String userName, String password, String backendUrl,
+                                  String hostName) {
+        AdminServiceAuthentication loginClient = new AdminServiceAuthentication(backendUrl);
         return loginClient.login(userName, password, hostName);
     }
 

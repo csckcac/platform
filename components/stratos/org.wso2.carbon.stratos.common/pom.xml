@@ -43,10 +43,6 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
-                        <ListenerManager-RequiredServices>
-                            org.wso2.carbon.stratos.common.TenantBillingService,
-                            org.wso2.carbon.stratos.common.listeners.TenantMgtListener
-                        </ListenerManager-RequiredServices>
                         <Export-Package>
                             org.wso2.carbon.stratos.common.*,
                         </Export-Package>

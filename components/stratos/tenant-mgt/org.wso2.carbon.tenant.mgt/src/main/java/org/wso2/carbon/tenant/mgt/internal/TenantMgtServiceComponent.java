@@ -349,7 +349,6 @@ public class TenantMgtServiceComponent {
 
     protected void setTenantPersistor(TenantPersistor defaultTenantPersistor) {
         tenantPersistor = defaultTenantPersistor;
-        System.out.println("TenantMgtServiceComponent setTenantPersistor");
     }
 
     public void unsetTenantPersistor(TenantPersistor defaultTenantPersistor) {

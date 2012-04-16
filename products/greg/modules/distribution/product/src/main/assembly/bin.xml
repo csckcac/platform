@@ -129,7 +129,7 @@
         </fileSet>
         <fileSet>
             <directory>src/main/resources/humantask/sql</directory>
-            <outputDirectory>${pom.artifactId}-${build.version}/dbscripts/humantask</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${build.version}/dbscripts/bps/ht</outputDirectory>
             <excludes>
                <exclude>**/.svn</exclude>
             </excludes>

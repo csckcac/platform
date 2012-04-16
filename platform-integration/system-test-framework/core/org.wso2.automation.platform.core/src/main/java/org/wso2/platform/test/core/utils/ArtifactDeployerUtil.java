@@ -43,6 +43,7 @@ import org.wso2.carbon.admin.service.AdminServiceSequenceAdmin;
 import org.wso2.carbon.admin.service.AdminServiceSynapseConfigAdmin;
 import org.wso2.carbon.admin.service.AdminServiceTaskAdmin;
 import org.wso2.carbon.admin.service.AdminServiceWebAppAdmin;
+import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
 import org.wso2.carbon.endpoint.stub.types.EndpointAdminEndpointAdminException;
 import org.wso2.carbon.localentry.stub.types.LocalEntryAdminException;
 import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminProxyAdminException;
@@ -206,7 +207,8 @@ public class ArtifactDeployerUtil {
 
 
     public void bpelFileUploader(String sessionCookie, String backEndUrl, String artifactLocation,
-                                 String artifactName) throws InterruptedException, RemoteException {
+                                 String artifactName)
+            throws InterruptedException, RemoteException, PackageManagementException {
         AdminServiceBpelUploader bpelUploader = new AdminServiceBpelUploader(backEndUrl);
         bpelUploader.deployBPEL(artifactName.substring(0, artifactName.indexOf(".")), artifactLocation,
                                 sessionCookie);

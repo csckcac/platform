@@ -13,6 +13,32 @@ public class LBConfigParser {
 
 
     /**
+     * Convert given configuration file to a single String
+     *
+     * @param configFileName - file name to convert
+     * @return String with complete lb configuration
+     */
+    public String createLBConfigString(String configFileName) {
+        String lbConfigString = "";
+
+        File configFile = new File(configFileName);
+        Scanner scanner;
+        try {
+            scanner = new Scanner(configFile);
+
+            while (scanner.hasNextLine()) {
+                lbConfigString = lbConfigString + scanner.nextLine();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+        return lbConfigString;
+    }
+
+
+    /**
      * This method will read the whole config file, line by line and drag only the part(tag) under given element Name
      * return String - sub string from config file which is under services tag
      *
@@ -60,7 +86,8 @@ public class LBConfigParser {
 
                 if (lineContent.contains("{")) {
                     stack.push("{");
-                } else if (lineContent.contains("}")) {
+                }
+                if (lineContent.contains("}")) {
                     // then pop one element from stack
                     stack.pop();
                 }

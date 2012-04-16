@@ -3,11 +3,9 @@ package org.wso2.carbon.scriptengine.engine;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.*;
-import org.wso2.carbon.scriptengine.util.HostObjectUtil;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
-import org.wso2.javascript.xmlimpl.XML;
+import org.wso2.carbon.scriptengine.util.HostObjectUtil;
 
-import java.io.StringReader;
 import java.lang.reflect.Method;
 
 
@@ -19,7 +17,8 @@ public class CarbonTopLevel extends ImporterTopLevel {
 
     public CarbonTopLevel(Context context, boolean sealed) {
         super(context, sealed);
-        //defineGlobalFunctions(context);
+        //TODO: need to remove this once the log is refactored @Nuwan
+        defineGlobalFunctions(context);
     }
 
     public static void log(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
@@ -82,12 +81,12 @@ public class CarbonTopLevel extends ImporterTopLevel {
             Method method = CarbonTopLevel.class.getDeclaredMethod("log", Context.class,
                     Scriptable.class, Object[].class, Function.class);
             RhinoEngine.defineFunction(this, "log", method, ScriptableObject.PERMANENT);
-            method = CarbonTopLevel.class.getDeclaredMethod("stringify", Context.class,
+/*            method = CarbonTopLevel.class.getDeclaredMethod("stringify", Context.class,
                     Scriptable.class, Object[].class, Function.class);
             RhinoEngine.defineFunction(this, "stringify", method, ScriptableObject.PERMANENT);
             method = CarbonTopLevel.class.getDeclaredMethod("parse", Context.class,
                     Scriptable.class, Object[].class, Function.class);
-            RhinoEngine.defineFunction(this, "parse", method, ScriptableObject.PERMANENT);
+            RhinoEngine.defineFunction(this, "parse", method, ScriptableObject.PERMANENT);*/
         } catch (NoSuchMethodException e) {
             log.error(e);
         }

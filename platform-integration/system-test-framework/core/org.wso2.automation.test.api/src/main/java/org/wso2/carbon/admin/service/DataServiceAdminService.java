@@ -17,7 +17,6 @@
 */
 package org.wso2.carbon.admin.service;
 
-import junit.framework.Assert;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,52 +34,40 @@ public class DataServiceAdminService {
     private DataServiceAdminStub dataServiceAdminStub;
     private String endPoint;
 
-    public DataServiceAdminService(String backEndUrl) {
+    public DataServiceAdminService(String backEndUrl) throws AxisFault {
         this.endPoint = backEndUrl + serviceName;
         log.debug("Endpoint : " + endPoint);
-        try {
-            dataServiceAdminStub = new DataServiceAdminStub(endPoint);
-        } catch (AxisFault axisFault) {
-            log.error("Initializing DataServiceAdminStub failed : ", axisFault);
-            Assert.fail("Initializing DataServiceAdminStub failed : " + axisFault.getMessage());
-        }
+        dataServiceAdminStub = new DataServiceAdminStub(endPoint);
+
     }
 
-    public String[] getCarbonDataSources(String sessionCookie) {
+    public String[] getCarbonDataSources(String sessionCookie) throws RemoteException {
         new AuthenticateStub().authenticateStub(sessionCookie, dataServiceAdminStub);
-        String[] dataSourceList = null;
-        try {
-            dataSourceList = dataServiceAdminStub.getCarbonDataSourceNames();
-        } catch (RemoteException e) {
-            log.error("Remote Exception when listing data sources :", e);
-            Assert.fail("Remote Exception when listing data sources : " + e.getMessage());
-        }
+        String[] dataSourceList;
+
+        dataSourceList = dataServiceAdminStub.getCarbonDataSourceNames();
+
         return dataSourceList;
     }
 
-    public void editDataService(String sessionCookie, String serviceName, String serviceHierachy, String dataServiceContent) {
+    public void editDataService(String sessionCookie, String serviceName, String serviceHierachy,
+                                String dataServiceContent)
+            throws RemoteException {
         new AuthenticateStub().authenticateStub(sessionCookie, dataServiceAdminStub);
 
-        try {
-            dataServiceAdminStub.saveDataService(serviceName, serviceHierachy, dataServiceContent);
-        } catch (RemoteException e) {
-            log.error("Remote Exception when editing data service :", e);
-            Assert.fail("Remote Exception when editing data service : " + e.getMessage());
-        }
+
+        dataServiceAdminStub.saveDataService(serviceName, serviceHierachy, dataServiceContent);
+
 
     }
 
-    public String getDataServiceContent(String sessionCookie, String serviceName) {
+    public String getDataServiceContent(String sessionCookie, String serviceName)
+            throws RemoteException {
         new AuthenticateStub().authenticateStub(sessionCookie, dataServiceAdminStub);
-        String content = null;
-        try {
-            content = dataServiceAdminStub.getDataServiceContentAsString(serviceName);
-            log.debug(content);
-        } catch (RemoteException e) {
-            log.error("Remote Exception when getting data service content :", e);
-            Assert.fail("Remote Exception when getting data service content : " + e.getMessage());
-        }
-        Assert.assertNotNull("Data service content null", content);
+        String content;
+
+        content = dataServiceAdminStub.getDataServiceContentAsString(serviceName);
+        log.debug(content);
         return content;
     }
 

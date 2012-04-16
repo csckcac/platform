@@ -31,6 +31,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSDAOExceptionException;
+import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.dssutils.SqlDataSourceUtil;
 import org.wso2.platform.test.core.utils.fileutils.FileManager;
@@ -42,6 +44,7 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -66,9 +69,11 @@ public class DistributedTransactionTest extends DataServiceTest {
 
     @Override
     @Test(priority = 0)
-    public void serviceDeployment() {
+    public void serviceDeployment()
+            throws ServiceAdminException, RemoteException, RSSAdminRSSDAOExceptionException {
         deleteServiceIfExist(serviceName);
-        DataHandler dhArtifact = getArtifactWithDTP(serviceFile);
+        DataHandler dhArtifact;
+        dhArtifact = getArtifactWithDTP(serviceFile);
         adminServiceClientDSS.uploadArtifact(sessionCookie, serviceFile, dhArtifact);
         isServiceDeployed(serviceName);
         setServiceEndPointHttp(serviceName);
@@ -100,7 +105,7 @@ public class DistributedTransactionTest extends DataServiceTest {
     }
 
     @Test(dependsOnMethods = {"distributedTransactionTest", "distributedTransactionFailTest"}, priority = 100)
-    public void deleteService() {
+    public void deleteService() throws ServiceAdminException, RemoteException {
         deleteService(serviceName);
         log.info(serviceName + " deleted");
     }
@@ -384,7 +389,8 @@ public class DistributedTransactionTest extends DataServiceTest {
     }
 
 
-    private DataHandler getArtifactWithDTP(String serviceFile) {
+    private DataHandler getArtifactWithDTP(String serviceFile)
+            throws RSSAdminRSSDAOExceptionException, RemoteException {
         SqlDataSourceUtil dataSource1;
         SqlDataSourceUtil dataSource2;
         dataSource1 = new SqlDataSourceUtil(sessionCookie, dssBackEndUrl, FrameworkFactory.getFrameworkProperties(ProductConstant.DSS_SERVER_NAME), 3);
@@ -441,12 +447,11 @@ public class DistributedTransactionTest extends DataServiceTest {
 
         } catch (XMLStreamException e) {
             log.error("XMLStreamException when Reading Service File" + e.getMessage());
-            Assert.fail("XMLStreamException when Reading Service File" + e.getMessage());
+            throw new RuntimeException("XMLStreamException when Reading Service File" + e.getMessage(), e);
         } catch (IOException e) {
             log.error("IOException when Reading Service File" + e.getMessage());
-            Assert.fail("IOException  when Reading Service File" + e.getMessage());
+            throw new RuntimeException("IOException  when Reading Service File" + e.getMessage(), e);
         }
-        return null;
     }
 
     private List<File> getSqlScript() {

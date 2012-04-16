@@ -49,7 +49,7 @@ public class SecureAxisServiceClient implements CallbackHandler {
 
     public OMElement sendReceive(String userName, String password, String endpointReference, String operation, OMElement payload, int securityScenarioNo) throws Exception {
         ServiceClient sc = getServiceClient(userName, password, endpointReference, operation, securityScenarioNo);
-        OMElement result = null;
+        OMElement result;
         log.debug("payload :" + payload);
         log.debug("Security Scenario No :" + securityScenarioNo);
         log.debug("Operation :" + operation);
@@ -62,7 +62,7 @@ public class SecureAxisServiceClient implements CallbackHandler {
             log.debug("Response :" + result);
         } catch (AxisFault axisFault) {
             log.error("AxisFault : " + axisFault.getMessage());
-            throw new AxisFault("AxisFault : " + axisFault.getMessage());
+            throw new AxisFault("AxisFault : " + axisFault.getMessage(), axisFault);
         }
         Assert.assertNotNull( result);
         return result;
@@ -77,7 +77,7 @@ public class SecureAxisServiceClient implements CallbackHandler {
             log.info("Request Sent");
         } catch (AxisFault axisFault) {
             log.error("AxisFault : " + axisFault.getMessage());
-            throw new AxisFault("AxisFault : " + axisFault.getMessage());
+            throw new AxisFault("AxisFault : " + axisFault.getMessage(), axisFault);
         }
     }
 
@@ -156,8 +156,8 @@ public class SecureAxisServiceClient implements CallbackHandler {
         log.debug("javax.net.ssl.trustStore :" + System.getProperty("javax.net.ssl.trustStore"));
         log.debug("javax.net.ssl.trustStorePassword :" + System.getProperty("javax.net.ssl.trustStorePassword"));
 
-        ConfigurationContext ctx = null;
-        ServiceClient sc = null;
+        ConfigurationContext ctx;
+        ServiceClient sc;
         try {
             ctx = ConfigurationContextFactory.createConfigurationContextFromFileSystem
                     (ProductConstant.getModuleClientPath(), null);
@@ -187,13 +187,13 @@ public class SecureAxisServiceClient implements CallbackHandler {
 
             } catch (Exception e) {
                 log.error(e.getMessage());
-                throw new Exception(e.getMessage());
+                throw new Exception(e.getMessage(), e);
             }
 
             sc.setOptions(opts);
         } catch (AxisFault axisFault) {
             log.error("AxisFault : " + axisFault.getMessage());
-            Assert.fail("AxisFault : " + axisFault.getMessage());
+            throw new AxisFault("AxisFault : " + axisFault.getMessage(), axisFault);
         }
         Assert.assertNotNull("ServiceClient object is null" + sc);
         return sc;

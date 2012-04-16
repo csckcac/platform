@@ -21,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
 import org.wso2.carbon.service.mgt.stub.types.carbon.FaultyService;
 import org.wso2.automation.common.test.dss.utils.DataServiceTest;
 
@@ -28,6 +29,7 @@ import javax.activation.DataHandler;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.rmi.RemoteException;
 
 public class FaultyServiceTest extends DataServiceTest {
 
@@ -42,7 +44,7 @@ public class FaultyServiceTest extends DataServiceTest {
 
     @Test(priority = 0)
     @Override
-    public void serviceDeployment() {
+    public void serviceDeployment() throws ServiceAdminException, RemoteException {
         deleteServiceIfExist(serviceName);
         DataHandler dhArtifact = null;
         try {
@@ -57,13 +59,13 @@ public class FaultyServiceTest extends DataServiceTest {
     }
 
     @Test(priority = 1, dependsOnMethods = {"serviceDeployment"})
-    public void isServiceFaulty() {
+    public void isServiceFaulty() throws RemoteException {
         adminServiceClientDSS.isServiceFaulty(sessionCookie, serviceName, frameworkSettings.getEnvironmentVariables().getDeploymentDelay());
         log.info(serviceName + " is faulty");
     }
 
     @Test(priority = 2, dependsOnMethods = {"isServiceFaulty"})
-    public void deleteFaultyService() {
+    public void deleteFaultyService() throws RemoteException {
         FaultyService faultyService;
         faultyService = adminServiceClientDSS.getFaultyServiceData(sessionCookie, serviceName);
         adminServiceClientDSS.deleteFaultyService(sessionCookie, faultyService.getArtifact());

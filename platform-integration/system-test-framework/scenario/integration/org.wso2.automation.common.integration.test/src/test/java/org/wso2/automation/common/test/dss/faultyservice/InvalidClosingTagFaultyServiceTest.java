@@ -24,6 +24,8 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.wso2.automation.common.test.dss.utils.DataServiceTest;
 import org.wso2.carbon.admin.service.AdminServiceCarbonServerAdmin;
+import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSDAOExceptionException;
+import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
 import org.wso2.carbon.service.mgt.stub.types.carbon.FaultyService;
 import org.wso2.platform.test.core.utils.ClientConnectionUtil;
 
@@ -48,9 +50,14 @@ public class InvalidClosingTagFaultyServiceTest extends DataServiceTest {
 
     @Test(priority = 0)
     @Override
-    public void serviceDeployment() {
+    public void serviceDeployment() throws ServiceAdminException, RemoteException {
         deleteServiceIfExist(serviceName);
-        DataHandler dhArtifact = createArtifact(serviceFile, getSqlScript());
+        DataHandler dhArtifact;
+        try{
+        dhArtifact = createArtifact(serviceFile, getSqlScript());
+        } catch (RSSAdminRSSDAOExceptionException e) {
+            throw new RuntimeException(e);
+        }
         String content = "";
         ByteArrayDataSource dbs;
         try {
@@ -62,7 +69,7 @@ public class InvalidClosingTagFaultyServiceTest extends DataServiceTest {
                 content = content + line;
             }
         } catch (IOException e) {
-            Assert.fail("Exception Occurred while processing input Stream");
+            throw new RuntimeException("Exception Occurred while processing input Stream");
         }
         Assert.assertTrue(content.contains("</query>"), "query tag missing");
         content = content.replaceFirst("</query>", "</que>");
@@ -74,7 +81,7 @@ public class InvalidClosingTagFaultyServiceTest extends DataServiceTest {
     }
 
     @Test(priority = 1, dependsOnMethods = {"serviceDeployment"})
-    public void isServiceFaulty() {
+    public void isServiceFaulty() throws RemoteException {
         adminServiceClientDSS.isServiceFaulty(sessionCookie, serviceName, frameworkSettings.getEnvironmentVariables().getDeploymentDelay());
         log.info(serviceName + " is faulty");
     }
@@ -90,13 +97,13 @@ public class InvalidClosingTagFaultyServiceTest extends DataServiceTest {
     }
 
     @Test(priority = 3, dependsOnMethods = {"ServerRestarting"})
-    public void isServiceFaultyAfterServerRestarting() {
+    public void isServiceFaultyAfterServerRestarting() throws RemoteException {
         adminServiceClientDSS.isServiceFaulty(sessionCookie, serviceName, frameworkSettings.getEnvironmentVariables().getDeploymentDelay());
         log.info(serviceName + " is faulty");
     }
 
     @Test(priority = 4, dependsOnMethods = {"isServiceFaultyAfterServerRestarting"})
-    public void deleteFaultyService() {
+    public void deleteFaultyService() throws RemoteException {
         FaultyService faultyService;
         faultyService = adminServiceClientDSS.getFaultyServiceData(sessionCookie, serviceName);
         adminServiceClientDSS.deleteFaultyService(sessionCookie, faultyService.getArtifact());

@@ -17,6 +17,7 @@
 */
 package org.wso2.automation.common.test.dss.utils;
 
+import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
@@ -24,6 +25,7 @@ import org.wso2.carbon.admin.service.*;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.security.mgt.stub.config.SecurityAdminServiceSecurityConfigExceptionException;
 import org.wso2.carbon.admin.service.AdminServiceDataServiceFileUploader;
+import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
 import org.wso2.carbon.service.mgt.stub.types.carbon.FaultyService;
 import org.wso2.carbon.service.mgt.stub.types.carbon.ServiceMetaData;
 
@@ -45,13 +47,14 @@ public class AdminServiceClientDSS {
         adminServiceDataServiceFileUploader.uploadDataServiceFile(sessionCookie, fileName, dh);
     }
 
-    public void deleteService(String sessionCookie, String[] serviceGroup) {
+    public void deleteService(String sessionCookie, String[] serviceGroup) throws RemoteException {
         AdminServiceService adminServiceService = new AdminServiceService(backEndUrl);
         adminServiceService.deleteService(sessionCookie, serviceGroup);
 
     }
 
-    public void deleteFaultyService(String sessionCookie, String artifactPath) {
+    public void deleteFaultyService(String sessionCookie, String artifactPath)
+            throws RemoteException {
         AdminServiceService adminServiceService = new AdminServiceService(backEndUrl);
         adminServiceService.deleteFaultyService(sessionCookie, artifactPath);
 
@@ -69,13 +72,15 @@ public class AdminServiceClientDSS {
 
     }
 
-    public void applySecurity(String sessionCookie, String serviceName, String policyId, String[] userGroups, String[] trustedKeyStoreArray, String privateStore) {
+    public void applySecurity(String sessionCookie, String serviceName, String policyId, String[] userGroups, String[] trustedKeyStoreArray, String privateStore)
+            throws RemoteException, SecurityAdminServiceSecurityConfigExceptionException {
         AdminServiceSecurity adminServiceSecurity = new AdminServiceSecurity(backEndUrl);
         adminServiceSecurity.applySecurity(sessionCookie, serviceName, policyId, userGroups, trustedKeyStoreArray, privateStore);
 
     }
 
-    public void applyKerberosSecurity(String sessionCookie, String serviceName, String policyId, String ServicePrincipalName, String ServicePrincipalPassword) {
+    public void applyKerberosSecurity(String sessionCookie, String serviceName, String policyId, String ServicePrincipalName, String ServicePrincipalPassword)
+            throws RemoteException, SecurityAdminServiceSecurityConfigExceptionException {
         AdminServiceSecurity adminServiceSecurity = new AdminServiceSecurity(backEndUrl);
         adminServiceSecurity.applyKerberosSecurityPolicy(sessionCookie, serviceName, policyId, ServicePrincipalName, ServicePrincipalPassword);
 
@@ -105,27 +110,31 @@ public class AdminServiceClientDSS {
         adminServiceResourceAdmin.addResource(sessionCookie, destinationPath, mediaType, description, dh);
     }
 
-    public ServiceMetaData getServiceData(String sessionCookie, String serviceName) {
+    public ServiceMetaData getServiceData(String sessionCookie, String serviceName)
+            throws RemoteException, ServiceAdminException {
         AdminServiceService adminServiceService = new AdminServiceService(backEndUrl);
         return adminServiceService.getServicesData(sessionCookie, serviceName);
     }
 
-    public FaultyService getFaultyServiceData(String sessionCookie, String serviceName) {
+    public FaultyService getFaultyServiceData(String sessionCookie, String serviceName)
+            throws RemoteException {
         AdminServiceService adminServiceService = new AdminServiceService(backEndUrl);
         return adminServiceService.getFaultyData(sessionCookie, serviceName);
     }
 
-    public boolean isServiceExist(String sessionCookie, String serviceName) {
+    public boolean isServiceExist(String sessionCookie, String serviceName) throws RemoteException {
         AdminServiceService adminServiceService = new AdminServiceService(backEndUrl);
         return adminServiceService.isServiceExists(sessionCookie, serviceName);
     }
 
-    public boolean isServiceFaulty(String sessionCookie, String serviceName) {
+    public boolean isServiceFaulty(String sessionCookie, String serviceName)
+            throws RemoteException {
         AdminServiceService adminServiceService = new AdminServiceService(backEndUrl);
         return adminServiceService.isServiceFaulty(sessionCookie, serviceName);
     }
 
-    public void isServiceDeployed(String sessionCookie, String serviceName, int waitingTimeInMillis) {
+    public void isServiceDeployed(String sessionCookie, String serviceName, int waitingTimeInMillis)
+            throws RemoteException {
 
         boolean isServiceDeployed = false;
         Calendar startTime = Calendar.getInstance();
@@ -147,7 +156,8 @@ public class AdminServiceClientDSS {
 
     }
 
-    public void isServiceFaulty(String sessionCookie, String serviceName, int waitingTimeInMillis) {
+    public void isServiceFaulty(String sessionCookie, String serviceName, int waitingTimeInMillis)
+            throws RemoteException {
 
         boolean isServiceDeployed = false;
         Calendar startTime = Calendar.getInstance();

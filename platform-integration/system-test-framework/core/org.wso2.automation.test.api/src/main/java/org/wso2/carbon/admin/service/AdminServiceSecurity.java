@@ -33,18 +33,18 @@ public class AdminServiceSecurity {
     private SecurityAdminServiceStub securityAdminServiceStub;
     private String endPoint;
 
-    public AdminServiceSecurity(String backEndUrl) {
+    public AdminServiceSecurity(String backEndUrl) throws AxisFault {
         this.endPoint = backEndUrl + securityServiceName;
         log.debug("Endpoint : " + this.endPoint);
-        try {
-            securityAdminServiceStub = new SecurityAdminServiceStub(endPoint);
-        } catch (AxisFault axisFault) {
-            log.error("Initialization of SecurityAdminServiceStub initialization failed: " + axisFault.getMessage());
-            Assert.fail("Initialization of SecurityAdminServiceStub initialization failed: " + axisFault.getMessage());
-        }
+
+        securityAdminServiceStub = new SecurityAdminServiceStub(endPoint);
+
     }
 
-    public void applySecurity(String sessionCookie, String serviceName, String policyId, String[] userGroups, String[] trustedKeyStoreArray, String privateStore) {
+    public void applySecurity(String sessionCookie, String serviceName, String policyId,
+                              String[] userGroups, String[] trustedKeyStoreArray,
+                              String privateStore)
+            throws SecurityAdminServiceSecurityConfigExceptionException, RemoteException {
 
         new AuthenticateStub().authenticateStub(sessionCookie, securityAdminServiceStub);
         ApplySecurity applySecurity;
@@ -55,20 +55,16 @@ public class AdminServiceSecurity {
         applySecurity.setPrivateStore(privateStore);
         applySecurity.setUserGroupNames(userGroups);
 
-        try {
-            securityAdminServiceStub.applySecurity(applySecurity);
-            log.info("Security Applied");
-        } catch (RemoteException e) {
-            log.error("RemoteException when applying security " + applySecurity.getPolicyId() + " :" + e.getMessage());
-            Assert.fail("RemoteException when applying security " + applySecurity.getPolicyId() + " :" + e.getMessage());
-        } catch (SecurityAdminServiceSecurityConfigExceptionException e) {
-            log.error("SecurityAdminServiceSecurityConfigExceptionException when applying security " + applySecurity.getPolicyId() + " :" + e.getMessage());
-            Assert.fail("SecurityAdminServiceSecurityConfigExceptionException when applying security " + applySecurity.getPolicyId() + " :" + e.getMessage());
-        }
+        securityAdminServiceStub.applySecurity(applySecurity);
+        log.info("Security Applied");
+
 
     }
 
-    public void applyKerberosSecurityPolicy(String sessionCookie, String serviceName, String policyId, String ServicePrincipalName, String ServicePrincipalPassword) {
+    public void applyKerberosSecurityPolicy(String sessionCookie, String serviceName,
+                                            String policyId, String ServicePrincipalName,
+                                            String ServicePrincipalPassword)
+            throws SecurityAdminServiceSecurityConfigExceptionException, RemoteException {
 
         new AuthenticateStub().authenticateStub(sessionCookie, securityAdminServiceStub);
         ApplyKerberosSecurityPolicy applySecurity;
@@ -78,37 +74,24 @@ public class AdminServiceSecurity {
         applySecurity.setServicePrincipalName(ServicePrincipalName);
         applySecurity.setServicePrincipalPassword(ServicePrincipalPassword);
 
-        try {
-            securityAdminServiceStub.applyKerberosSecurityPolicy(applySecurity);
-            log.info("Security Applied");
-        } catch (RemoteException e) {
-            log.error("RemoteException when applying Kerberos security " + applySecurity.getPolicyId() + " :" + e.getMessage());
-            Assert.fail("RemoteException when applying Kerberos security " + applySecurity.getPolicyId() + " :" + e.getMessage());
-        } catch (SecurityAdminServiceSecurityConfigExceptionException e) {
-            log.error("SecurityAdminServiceSecurityConfigExceptionException when applying Kerberos security " + applySecurity.getPolicyId() + " :" + e.getMessage());
-            Assert.fail("SecurityAdminServiceSecurityConfigExceptionException when applying Kerberos security " + applySecurity.getPolicyId() + " :" + e.getMessage());
-        }
+
+        securityAdminServiceStub.applyKerberosSecurityPolicy(applySecurity);
+        log.info("Security Applied");
+
 
     }
 
-    public void disableSecurity(String sessionCookie, String serviceName) {
+    public void disableSecurity(String sessionCookie, String serviceName)
+            throws SecurityAdminServiceSecurityConfigExceptionException, RemoteException {
 
         DisableSecurityOnService disableRequest = new DisableSecurityOnService();
         disableRequest.setServiceName(serviceName);
 
         new AuthenticateStub().authenticateStub(sessionCookie, securityAdminServiceStub);
 
-        try {
-            securityAdminServiceStub.disableSecurityOnService(disableRequest);
-            log.info("Security Disabled");
-        } catch (RemoteException e) {
-            log.error("RemoteException when disabling security: " + e.getMessage());
-            Assert.fail("RemoteException when disabling security: " + e.getMessage());
-        } catch (SecurityAdminServiceSecurityConfigExceptionException e) {
-            log.error("SecurityAdminServiceSecurityConfigExceptionException when disabling security: " + e.getMessage());
-            Assert.fail("SecurityAdminServiceSecurityConfigExceptionException when disabling security: " + e.getMessage());
 
-        }
+        securityAdminServiceStub.disableSecurityOnService(disableRequest);
+        log.info("Security Disabled");
 
 
     }

@@ -17,16 +17,21 @@
 */
 package org.wso2.automation.common.test.dss.utils;
 
+import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.wso2.carbon.admin.service.AdminServiceService;
+import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
 import org.wso2.carbon.service.mgt.stub.types.carbon.ServiceMetaData;
+
+import java.rmi.RemoteException;
 
 public class DataServiceUtility {
     private static final Log log = LogFactory.getLog(DataServiceUtility.class);
 
-    public static void deleteServiceIfExist(String sessionCookie, String dssBackEndUrl, String serviceName) {
+    public static void deleteServiceIfExist(String sessionCookie, String dssBackEndUrl, String serviceName)
+            throws RemoteException, ServiceAdminException {
         AdminServiceService adminServiceService;
         adminServiceService = new AdminServiceService(dssBackEndUrl);
 
@@ -54,7 +59,8 @@ public class DataServiceUtility {
         Assert.assertFalse(adminServiceService.isServiceFaulty(sessionCookie, serviceName), "Service Still in faulty service list. service deletion failed");
     }
 
-    public static String getServiceEndpointHttp(String sessionCookie, String backEndUrl, String serviceName) {
+    public static String getServiceEndpointHttp(String sessionCookie, String backEndUrl, String serviceName)
+            throws RemoteException, ServiceAdminException {
         String serviceEndPoint = null;
         AdminServiceService adminServiceService;
         ServiceMetaData serviceMetaData;
@@ -80,7 +86,8 @@ public class DataServiceUtility {
         return serviceEndPoint;
     }
 
-    public static String getServiceEndpointHttps(String sessionCookie, String backEndUrl, String serviceName) {
+    public static String getServiceEndpointHttps(String sessionCookie, String backEndUrl, String serviceName)
+            throws RemoteException, ServiceAdminException {
         String serviceEndPoint = null;
         AdminServiceService adminServiceService;
         ServiceMetaData serviceMetaData;

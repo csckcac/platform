@@ -25,9 +25,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.wso2.carbon.security.mgt.stub.config.SecurityAdminServiceSecurityConfigExceptionException;
 import org.wso2.platform.test.core.utils.axis2client.SecureAxisServiceClient;
 import org.wso2.automation.common.test.dss.utils.DataServiceUtility;
 import org.wso2.automation.common.test.dss.utils.DataServiceTest;
+
+import java.rmi.RemoteException;
 
 public class SecureDataServiceTest extends DataServiceTest {
 
@@ -368,7 +371,8 @@ public class SecureDataServiceTest extends DataServiceTest {
 //    }*/
 
 
-    private void secureService(int policyId) {
+    private void secureService(int policyId)
+            throws SecurityAdminServiceSecurityConfigExceptionException, RemoteException {
         if (environment.is_runningOnStratos()) {
             adminServiceClientDSS.applySecurity(sessionCookie, serviceName, policyId + "", new String[]{"admin"}, new String[]{userInfo.getDomain().replace('.', '-') + ".jks"}, userInfo.getDomain().replace('.', '-') + ".jks");
         } else {

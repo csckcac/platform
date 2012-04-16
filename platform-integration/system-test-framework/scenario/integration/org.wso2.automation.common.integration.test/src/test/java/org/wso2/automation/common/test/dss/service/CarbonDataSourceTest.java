@@ -32,6 +32,9 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.DataServiceAdminService;
 import org.wso2.carbon.admin.service.DataSourceAdminService;
 import org.wso2.carbon.admin.service.RSSAdminConsoleService;
+import org.wso2.carbon.datasource.ui.stub.DataSourceManagementException;
+import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSDAOExceptionException;
+import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
 import org.wso2.platform.test.core.utils.dssutils.SqlDataSourceUtil;
 import org.wso2.platform.test.core.utils.fileutils.FileManager;
@@ -44,6 +47,7 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -66,14 +70,16 @@ public class CarbonDataSourceTest extends DataServiceTest {
     }
 
     @Test(priority = 0)
-    public void createDataSourceTest() {
+    public void createDataSourceTest()
+            throws RemoteException, DataSourceManagementException,
+                   RSSAdminRSSDAOExceptionException {
         carbonDataSourceName = createDataSource();
         log.info(carbonDataSourceName + " carbon Data Source Created");
     }
 
     @Test(priority = 1, dependsOnMethods = {"createDataSourceTest"})
     @Override
-    public void serviceDeployment() {
+    public void serviceDeployment() throws ServiceAdminException, RemoteException {
         deleteServiceIfExist(serviceName);
         DataHandler dhArtifact = createArtifactWithDataSource(serviceFile);
         adminServiceClientDSS.uploadArtifact(sessionCookie, serviceFile, dhArtifact);
@@ -123,13 +129,15 @@ public class CarbonDataSourceTest extends DataServiceTest {
     }
 
     @Test(priority = 7, dependsOnMethods = {"deleteOperation"})
-    public void deleteService() {
+    public void deleteService() throws ServiceAdminException, RemoteException {
         deleteService(serviceName);
         log.info(serviceName + " Deleted");
     }
 
 
-    private String createDataSource() {
+    private String createDataSource()
+            throws RemoteException, DataSourceManagementException,
+                   RSSAdminRSSDAOExceptionException {
 
         DataServiceAdminService dataServiceAdminService = new DataServiceAdminService(dssBackEndUrl);
         DataSourceAdminService dataSourceAdminService = new DataSourceAdminService(dssBackEndUrl);

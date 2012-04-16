@@ -20,10 +20,12 @@ package org.wso2.platform.test.core.utils.dssutils;
 import org.apache.axiom.attachments.ByteArrayDataSource;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.wso2.carbon.admin.service.RSSAdminConsoleService;
+import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSDAOExceptionException;
 import org.wso2.carbon.rssmanager.ui.stub.types.DatabaseInstanceEntry;
 import org.wso2.carbon.rssmanager.ui.stub.types.DatabaseUserEntry;
 import org.wso2.carbon.rssmanager.ui.stub.types.PrivilegeGroup;
@@ -39,6 +41,7 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
@@ -129,7 +132,8 @@ public class SqlDataSourceUtil {
         return this.jdbcUrl;
     }
 
-    public void createDataSource(List<File> sqlFileList) {
+    public void createDataSource(List<File> sqlFileList)
+            throws RemoteException, RSSAdminRSSDAOExceptionException {
         databaseName = frameworkProperties.getDataSource().getDbName();
         if (frameworkProperties.getEnvironmentSettings().is_runningOnStratos()) {
             rSSAdminConsoleService = new RSSAdminConsoleService(dssBackEndUrl);
@@ -149,7 +153,8 @@ public class SqlDataSourceUtil {
         executeUpdate(sqlFileList);
     }
 
-    public void createDataSource(String dbName, String dbUser, String dbPassword, List<File> sqlFileList) {
+    public void createDataSource(String dbName, String dbUser, String dbPassword, List<File> sqlFileList)
+            throws RemoteException, RSSAdminRSSDAOExceptionException {
         databaseName = dbName;
 
         if (frameworkProperties.getEnvironmentSettings().is_runningOnStratos()) {
@@ -170,7 +175,7 @@ public class SqlDataSourceUtil {
         executeUpdate(sqlFileList);
     }
 
-    private void createDataBase() {
+    private void createDataBase() throws RSSAdminRSSDAOExceptionException, RemoteException {
         RSSInstanceEntry rssInstance;
 
         rssInstance = rSSAdminConsoleService.getRoundRobinAssignedRSSInstance(sessionCookie);
@@ -210,7 +215,7 @@ public class SqlDataSourceUtil {
 
     }
 
-    private void createPrivilegeGroup() {
+    private void createPrivilegeGroup() throws RSSAdminRSSDAOExceptionException, RemoteException {
         rSSAdminConsoleService.createPrivilegeGroup(sessionCookie, userPrivilegeGroup);
         userPrivilegeGroupId = rSSAdminConsoleService.getPrivilegeGroup(sessionCookie, userPrivilegeGroup).getPrivGroupId();
         log.info("privilege Group Created");
@@ -218,7 +223,7 @@ public class SqlDataSourceUtil {
         Assert.assertNotSame(-1, userPrivilegeGroupId, "Privilege Group Not Found");
     }
 
-    private void createUser() {
+    private void createUser() throws RSSAdminRSSDAOExceptionException, RemoteException {
         DatabaseUserEntry dbUser;
         rSSAdminConsoleService.createUser(sessionCookie, databaseUser, databasePassword, rssInstanceId, dbInstanceId, userPrivilegeGroupId);
         log.info("Database User Created");
@@ -233,7 +238,7 @@ public class SqlDataSourceUtil {
 
     }
 
-    private void setPriConditions() {
+    private void setPriConditions() throws RSSAdminRSSDAOExceptionException, RemoteException {
         DatabaseInstanceEntry dbInstance;
         DatabaseUserEntry userEntry;
         PrivilegeGroup privGroup;

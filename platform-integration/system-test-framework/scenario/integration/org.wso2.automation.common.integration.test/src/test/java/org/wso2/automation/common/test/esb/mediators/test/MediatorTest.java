@@ -21,6 +21,7 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
+import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeTest;
@@ -44,7 +45,7 @@ public class MediatorTest {
 
 
     @BeforeTest
-    private void setEnv() throws InterruptedException {
+    private void setEnv() throws InterruptedException, RemoteException {
         EnvironmentBuilder environmentBuilder = new EnvironmentBuilder().esb(1).as(1);
         environmentObj = environmentBuilder.build();
         AdminServiceService adminServiceService =

@@ -52,7 +52,7 @@ public class AxisServiceClient {
             log.debug("Response Message : " + response);
         } catch (AxisFault axisFault) {
             log.error(axisFault.getMessage());
-            throw new AxisFault("AxisFault while getting response :" + axisFault.getMessage());
+            throw new AxisFault("AxisFault while getting response :" + axisFault.getMessage(), axisFault);
         }
         Assert.assertNotNull(response);
         return response;
@@ -81,7 +81,7 @@ public class AxisServiceClient {
             log.debug("Response Message : " + response);
         } catch (AxisFault axisFault) {
             log.error(axisFault.getMessage());
-            throw new AxisFault("AxisFault while getting response :" + axisFault.getMessage());
+            throw new AxisFault("AxisFault while getting response :" + axisFault.getMessage(), axisFault);
         }
         Assert.assertNotNull(response);
         return response;
@@ -107,7 +107,7 @@ public class AxisServiceClient {
 
         } catch (AxisFault axisFault) {
             log.error(axisFault.getMessage());
-            throw new AxisFault("AxisFault while getting response :" + axisFault.getMessage());
+            throw new AxisFault("AxisFault while getting response :" + axisFault.getMessage(), axisFault);
         }
 
     }
@@ -132,7 +132,7 @@ public class AxisServiceClient {
 
         } catch (AxisFault axisFault) {
             log.error(axisFault.getMessage());
-            throw new AxisFault("AxisFault while getting response :" + axisFault.getMessage());
+            throw new AxisFault("AxisFault while getting response :" + axisFault.getMessage(), axisFault);
         }
 
     }

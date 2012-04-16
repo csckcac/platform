@@ -28,6 +28,8 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.DataServiceAdminService;
+import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSDAOExceptionException;
+import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
 import org.wso2.platform.test.core.utils.dssutils.SqlDataSourceUtil;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkFactory;
@@ -40,6 +42,7 @@ import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -54,7 +57,7 @@ public class EditFaultyDataServiceTest extends DataServiceTest {
 
     @Override
     @Test(priority = 0)
-    public void serviceDeployment() {
+    public void serviceDeployment() throws ServiceAdminException, RemoteException {
         deleteServiceIfExist(serviceName);
         DataHandler dhArtifact = null;
         try {
@@ -69,14 +72,14 @@ public class EditFaultyDataServiceTest extends DataServiceTest {
     }
 
     @Test(priority = 1, dependsOnMethods = {"serviceDeployment"})
-    public void isServiceFaulty() {
+    public void isServiceFaulty() throws RemoteException {
         adminServiceClientDSS.isServiceFaulty(sessionCookie, serviceName, frameworkSettings.getEnvironmentVariables().getDeploymentDelay());
         log.info(serviceName + " is faulty");
 
     }
 
     @Test(priority = 2, dependsOnMethods = {"isServiceFaulty"})
-    public void editFaultyService() {
+    public void editFaultyService() throws RemoteException, RSSAdminRSSDAOExceptionException {
         DataServiceAdminService dataServiceAdminService = new DataServiceAdminService(dssBackEndUrl);
         String serviceContent;
         String newServiceContent = null;
@@ -114,7 +117,7 @@ public class EditFaultyDataServiceTest extends DataServiceTest {
     }
 
     @Test(priority = 4, dependsOnMethods = {"editFaultyService"})
-    public void serviceReDeployment() {
+    public void serviceReDeployment() throws RemoteException {
         adminServiceClientDSS.isServiceDeployed(sessionCookie, serviceName, frameworkSettings.getEnvironmentVariables().getDeploymentDelay());
         log.info(serviceName + " redeployed");
         //todo this sleep should be removed after fixing CARBON-11900 gira
@@ -128,7 +131,7 @@ public class EditFaultyDataServiceTest extends DataServiceTest {
     }
 
     @Test(priority = 5, dependsOnMethods = {"serviceReDeployment"})
-    public void serviceInvocation() throws AxisFault {
+    public void serviceInvocation() throws RemoteException, ServiceAdminException {
         OMElement response;
         String serviceEndPoint = DataServiceUtility.getServiceEndpointHttp(sessionCookie, dssBackEndUrl, serviceName);
         AxisServiceClient axisServiceClient = new AxisServiceClient();
@@ -144,7 +147,7 @@ public class EditFaultyDataServiceTest extends DataServiceTest {
     }
 
     @Test(priority = 6, dependsOnMethods = {"serviceInvocation"})
-    public void deleteService() {
+    public void deleteService() throws ServiceAdminException, RemoteException {
         deleteService(serviceName);
         log.info(serviceName + " deleted");
     }

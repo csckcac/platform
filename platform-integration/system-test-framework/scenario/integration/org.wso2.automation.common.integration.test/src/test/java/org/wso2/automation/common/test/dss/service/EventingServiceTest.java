@@ -29,6 +29,8 @@ import org.wso2.carbon.admin.service.AdminServiceAuthentication;
 import org.wso2.carbon.admin.service.AdminServiceProxyServiceAdmin;
 import org.wso2.carbon.admin.service.AdminServiceService;
 import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminProxyAdminException;
+import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSDAOExceptionException;
+import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
 import org.wso2.carbon.service.mgt.stub.types.carbon.ServiceMetaData;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
 import org.wso2.platform.test.core.utils.dssutils.SqlDataSourceUtil;
@@ -66,7 +68,8 @@ public class EventingServiceTest extends DataServiceTest {
     }
 
     @Test(priority = 0)
-    public void addProxy() throws ProxyServiceAdminProxyAdminException, RemoteException {
+    public void addProxy()
+            throws ProxyServiceAdminProxyAdminException, RemoteException, ServiceAdminException {
         createProxy();
         Assert.assertNotNull(proxyUrl, "proxy url is null");
         log.info("Proxy Service Added");
@@ -74,9 +77,12 @@ public class EventingServiceTest extends DataServiceTest {
 
     @Test(priority = 1, dependsOnMethods = {"addProxy"})
     @Override
-    public void serviceDeployment() {
+    public void serviceDeployment()
+            throws ServiceAdminException, RemoteException, RSSAdminRSSDAOExceptionException {
         deleteServiceIfExist(serviceName);
-        DataHandler dhArtifact = getArtifactWithSubscription(serviceFile);
+        DataHandler dhArtifact;
+        dhArtifact = getArtifactWithSubscription(serviceFile);
+
         adminServiceClientDSS.uploadArtifact(sessionCookie, serviceFile, dhArtifact);
         isServiceDeployed(serviceName);
         setServiceEndPointHttp(serviceName);
@@ -118,7 +124,7 @@ public class EventingServiceTest extends DataServiceTest {
     }
 
     @Test(priority = 5, dependsOnMethods = {"triggerEvent"})
-    public void deleteService() {
+    public void deleteService() throws ServiceAdminException, RemoteException {
         deleteService(serviceName);
         log.info(serviceName + " deleted");
     }
@@ -180,7 +186,8 @@ public class EventingServiceTest extends DataServiceTest {
 
     }
 
-    private DataHandler getArtifactWithSubscription(String serviceFile) {
+    private DataHandler getArtifactWithSubscription(String serviceFile)
+            throws RSSAdminRSSDAOExceptionException, RemoteException {
         SqlDataSourceUtil sqlDataSource;
 
         sqlDataSource = new SqlDataSourceUtil(sessionCookie, dssBackEndUrl, FrameworkFactory.getFrameworkProperties("DSS"), 3);
@@ -220,15 +227,15 @@ public class EventingServiceTest extends DataServiceTest {
 
         } catch (XMLStreamException e) {
             log.error("XMLStreamException when Reading Service File" + e.getMessage());
-            Assert.fail("XMLStreamException when Reading Service File" + e.getMessage());
+            throw new RuntimeException("XMLStreamException when Reading Service File" + e.getMessage(), e);
         } catch (IOException e) {
             log.error("IOException when Reading Service File" + e.getMessage());
-            Assert.fail("IOException  when Reading Service File" + e.getMessage());
+            throw new RuntimeException("IOException  when Reading Service File" + e.getMessage(), e);
         }
-        return null;
     }
 
-    private void createProxy() throws ProxyServiceAdminProxyAdminException, RemoteException {
+    private void createProxy()
+            throws ProxyServiceAdminProxyAdminException, RemoteException, ServiceAdminException {
         EnvironmentBuilder builder = new EnvironmentBuilder().esb(3);
         EnvironmentVariables esbServer = builder.build().getEsb();
         String esbBackEndUrl = esbServer.getBackEndUrl();

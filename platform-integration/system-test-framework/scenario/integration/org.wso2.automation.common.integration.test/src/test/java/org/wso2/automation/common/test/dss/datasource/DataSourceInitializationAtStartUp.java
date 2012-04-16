@@ -28,6 +28,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.wso2.automation.common.test.dss.service.CarbonDataSourceTest;
 import org.wso2.carbon.admin.service.AdminServiceCarbonServerAdmin;
+import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
 import org.wso2.platform.test.core.utils.ClientConnectionUtil;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
 
@@ -69,7 +70,7 @@ public class DataSourceInitializationAtStartUp extends CarbonDataSourceTest {
 
     @Override
     @Test(priority = 10, dependsOnMethods = {"invokeOperation"})
-    public void deleteService() {
+    public void deleteService() throws ServiceAdminException, RemoteException {
         deleteService(serviceName);
     }
 

@@ -40,7 +40,7 @@ public class SimpleProxyTest {
     private static final Log log = LogFactory.getLog(SimpleProxyTest.class);
 
     @BeforeTest
-    public void init() throws InterruptedException {
+    public void init() throws InterruptedException, RemoteException {
         EnvironmentBuilder environmentBuilder = new EnvironmentBuilder().esb(1).as(1);
         manageEnvironmentObj = environmentBuilder.build();
         AdminServiceService adminServiceService = new AdminServiceService(manageEnvironmentObj.getAs().getBackEndUrl());

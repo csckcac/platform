@@ -28,6 +28,8 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.DataServiceAdminService;
+import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSDAOExceptionException;
+import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
 import org.wso2.carbon.service.mgt.stub.types.carbon.FaultyService;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
 import org.wso2.automation.common.test.dss.utils.DataServiceTest;
@@ -36,6 +38,7 @@ import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -51,9 +54,15 @@ public class ServiceFaultyTest extends DataServiceTest {
 
     @Test(priority = 0)
     @Override
-    public void serviceDeployment() {
+    public void serviceDeployment() throws ServiceAdminException, RemoteException {
         deleteServiceIfExist(serviceName);
-        DataHandler dhArtifact = createArtifact(serviceFile, getSqlScript());
+        DataHandler dhArtifact;
+        try {
+            dhArtifact = createArtifact(serviceFile, getSqlScript());
+        } catch (RSSAdminRSSDAOExceptionException e) {
+            throw new RuntimeException(e);
+        }
+
         adminServiceClientDSS.uploadArtifact(sessionCookie, serviceFile, dhArtifact);
         isServiceDeployed(serviceName);
         setServiceEndPointHttp(serviceName);
@@ -75,7 +84,7 @@ public class ServiceFaultyTest extends DataServiceTest {
     }
 
     @Test(priority = 2, dependsOnMethods = {"serviceInvocation"})
-    public void faultyService() {
+    public void faultyService() throws RemoteException {
         String serviceContent;
         String newServiceContent = null;
         DataServiceAdminService dataServiceAdminService = new DataServiceAdminService(dssBackEndUrl);
@@ -109,14 +118,14 @@ public class ServiceFaultyTest extends DataServiceTest {
     }
 
     @Test(priority = 3, dependsOnMethods = {"faultyService"})
-    public void isServiceFaulty() {
+    public void isServiceFaulty() throws RemoteException {
         adminServiceClientDSS.isServiceFaulty(sessionCookie, serviceName, frameworkSettings.getEnvironmentVariables().getDeploymentDelay());
         log.info(serviceName + " is faulty");
 
     }
 
     @Test(priority = 4, dependsOnMethods = {"isServiceFaulty"})
-    public void deleteFaultyService() {
+    public void deleteFaultyService() throws RemoteException {
         FaultyService faultyService;
         faultyService = adminServiceClientDSS.getFaultyServiceData(sessionCookie, serviceName);
         adminServiceClientDSS.deleteFaultyService(sessionCookie, faultyService.getArtifact());

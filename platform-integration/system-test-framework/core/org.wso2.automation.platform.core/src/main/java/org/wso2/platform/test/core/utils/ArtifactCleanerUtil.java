@@ -25,6 +25,7 @@ import org.wso2.carbon.admin.service.*;
 import org.wso2.carbon.application.mgt.stub.ApplicationAdminExceptionException;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
 import org.wso2.carbon.sequences.stub.types.SequenceEditorException;
+import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
 import org.wso2.carbon.service.mgt.stub.types.carbon.ServiceMetaData;
 import org.wso2.platform.test.core.ProductConstant;
 import org.xml.sax.SAXException;
@@ -94,7 +95,8 @@ public class ArtifactCleanerUtil {
         return appList;
     }
 
-    public String[] deleteAllNotAdminServices(String sessionCookie, String serviceURL) {
+    public String[] deleteAllNotAdminServices(String sessionCookie, String serviceURL)
+            throws RemoteException {
         String[] appList = null;
         AdminServiceService adminServiceService;
         adminServiceService = new AdminServiceService(serviceURL);
@@ -154,7 +156,8 @@ public class ArtifactCleanerUtil {
     }
 
     public void deleteDataService(String sessionCookie, String backEndUrl, String artifactName,
-                                  List<ArtifactDependency> artifactDependencyList) {
+                                  List<ArtifactDependency> artifactDependencyList)
+            throws RemoteException, ServiceAdminException {
         AdminServiceService serviceAdmin = new AdminServiceService(backEndUrl);
         ServiceMetaData serviceInfo = serviceAdmin.getServicesData(sessionCookie, artifactName.substring(0, artifactName.indexOf(".dbs")));
         serviceAdmin.deleteService(sessionCookie, new String[]{serviceInfo.getServiceGroupName()});

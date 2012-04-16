@@ -24,6 +24,8 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceAuthentication;
+import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSDAOExceptionException;
+import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
@@ -36,6 +38,7 @@ import org.wso2.platform.test.core.utils.frameworkutils.productvariables.Environ
 
 import javax.activation.DataHandler;
 import java.io.File;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 public abstract class DataServiceTest {
@@ -78,7 +81,7 @@ public abstract class DataServiceTest {
     }
 
     @Test(priority = 0)
-    public void serviceDeployment() {
+    public void serviceDeployment() throws Exception{
         isServiceDeployed(serviceName);
         setServiceEndPointHttp(serviceName);
     }
@@ -93,17 +96,19 @@ public abstract class DataServiceTest {
         userInfo = null;
     }
 
-    protected void setServiceEndpointHttps(String serviceName) {
+    protected void setServiceEndpointHttps(String serviceName)
+            throws ServiceAdminException, RemoteException {
         serviceEndPoint = DataServiceUtility.getServiceEndpointHttps(sessionCookie, dssBackEndUrl, serviceName);
         Assert.assertTrue(serviceEndPoint.contains(serviceName), "Service Name not found in service endpoint reference");
     }
 
-    protected void setServiceEndPointHttp(String serviceName) {
+    protected void setServiceEndPointHttp(String serviceName)
+            throws ServiceAdminException, RemoteException {
         serviceEndPoint = DataServiceUtility.getServiceEndpointHttp(sessionCookie, dssBackEndUrl, serviceName);
         Assert.assertTrue(serviceEndPoint.contains(serviceName), "Service Name not found in service endpoint reference");
     }
 
-    protected void deleteService(String serviceName) {
+    protected void deleteService(String serviceName) throws ServiceAdminException, RemoteException {
 
         String serviceGroup = adminServiceClientDSS.getServiceData(sessionCookie, serviceName).getServiceGroupName();
         adminServiceClientDSS.deleteService(sessionCookie, new String[]{serviceGroup});
@@ -112,7 +117,7 @@ public abstract class DataServiceTest {
 
     }
 
-    protected void isServiceDeployed(String serviceName) {
+    protected void isServiceDeployed(String serviceName) throws RemoteException {
         log.info("waiting " + frameworkSettings.getEnvironmentVariables().getDeploymentDelay()
                  + " millis for service deployment");
 
@@ -127,7 +132,8 @@ public abstract class DataServiceTest {
         }
     }
 
-    protected DataHandler createArtifact(String serviceFileName, ArrayList<File> sqlScript) {
+    protected DataHandler createArtifact(String serviceFileName, ArrayList<File> sqlScript)
+            throws RSSAdminRSSDAOExceptionException, RemoteException {
         SqlDataSourceUtil dssUtil = new SqlDataSourceUtil(sessionCookie, dssBackEndUrl,
                                         FrameworkFactory.getFrameworkProperties(ProductConstant.DSS_SERVER_NAME),
                                         Integer.parseInt(userInfo.getUserId()));
@@ -135,7 +141,8 @@ public abstract class DataServiceTest {
         return dssUtil.createArtifact(serviceFileLocation + File.separator + serviceFileName);
     }
 
-    protected void deleteServiceIfExist(String serviceName) {
+    protected void deleteServiceIfExist(String serviceName)
+            throws ServiceAdminException, RemoteException {
         DataServiceUtility.deleteServiceIfExist(sessionCookie, dssBackEndUrl, serviceName);
     }
 

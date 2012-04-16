@@ -17,7 +17,6 @@
 */
 package org.wso2.carbon.admin.service;
 
-import junit.framework.Assert;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,80 +34,62 @@ public class AdminServiceService {
 
     private ServiceAdminStub serviceAdminStub;
 
-    public AdminServiceService(String backEndUrl) {
+    public AdminServiceService(String backEndUrl) throws AxisFault {
         String serviceName = "ServiceAdmin";
         String endPoint = backEndUrl + serviceName;
         log.debug("EndPoint :" + endPoint);
-        try {
-            serviceAdminStub = new ServiceAdminStub(endPoint);
-        } catch (AxisFault axisFault) {
-            log.error("ServiceAdminStub Initializing failed : " + axisFault.getMessage());
-            Assert.fail("ServiceAdminStub Initializing failed : " + axisFault.getMessage());
-        }
-    }
 
-    public void deleteService(String sessionCookie, String[] serviceGroup) {
-        new AuthenticateStub().authenticateStub(sessionCookie, serviceAdminStub);
-        try {
-            serviceAdminStub.deleteServiceGroups(serviceGroup);
-
-        } catch (RemoteException e) {
-            log.error("Delete Service Fail :" + e.getMessage());
-            Assert.fail("Delete Service Fail :" + e.getMessage());
-        }
+        serviceAdminStub = new ServiceAdminStub(endPoint);
 
     }
 
-    public void deleteFaultyService(String sessionCookie, String artifactPath) {
+    public void deleteService(String sessionCookie, String[] serviceGroup) throws RemoteException {
         new AuthenticateStub().authenticateStub(sessionCookie, serviceAdminStub);
-        try {
-            serviceAdminStub.deleteFaultyServiceGroup(artifactPath);
-        } catch (RemoteException e) {
-            log.error("Deleting Faulty Service Failed due to RemoteException :" + e.getMessage());
-            Assert.fail("Deleting Faulty Service Failed due to RemoteException :" + e.getMessage());
-        }
+
+        serviceAdminStub.deleteServiceGroups(serviceGroup);
 
     }
 
-    public void deleteAllNonAdminServiceGroups(String sessionCookie) {
+    public void deleteFaultyService(String sessionCookie, String artifactPath)
+            throws RemoteException {
         new AuthenticateStub().authenticateStub(sessionCookie, serviceAdminStub);
-        try {
-            serviceAdminStub.deleteAllNonAdminServiceGroups();
-        } catch (RemoteException e) {
-            log.error("Deleting All None admin services Failed due to RemoteException :" + e.getMessage());
-            Assert.fail("Deleting All None admin services Failed due to RemoteException :" + e.getMessage());
-        }
+
+        serviceAdminStub.deleteFaultyServiceGroup(artifactPath);
+
 
     }
 
-    public ServiceMetaDataWrapper listServices(String sessionCookie, String serviceName) {
+    public void deleteAllNonAdminServiceGroups(String sessionCookie) throws RemoteException {
         new AuthenticateStub().authenticateStub(sessionCookie, serviceAdminStub);
-        ServiceMetaDataWrapper serviceMetaDataWrapper = null;
-        try {
-            serviceMetaDataWrapper = serviceAdminStub.listServices("ALL", serviceName, 0);
-        } catch (RemoteException e) {
-            log.error("List Service Failed due to RemoteException :" + e.getMessage());
-            Assert.fail("List Service Failed due to RemoteException :" + e.getMessage());
-        }
-        Assert.assertNotNull("No Service found. Service List null :", serviceMetaDataWrapper);
+
+        serviceAdminStub.deleteAllNonAdminServiceGroups();
+
+
+    }
+
+    public ServiceMetaDataWrapper listServices(String sessionCookie, String serviceName)
+            throws RemoteException {
+        new AuthenticateStub().authenticateStub(sessionCookie, serviceAdminStub);
+        ServiceMetaDataWrapper serviceMetaDataWrapper;
+
+        serviceMetaDataWrapper = serviceAdminStub.listServices("ALL", serviceName, 0);
+
         return serviceMetaDataWrapper;
     }
 
 
-    public FaultyServicesWrapper listFaultyServices(String sessionCookie) {
+    public FaultyServicesWrapper listFaultyServices(String sessionCookie) throws RemoteException {
         new AuthenticateStub().authenticateStub(sessionCookie, serviceAdminStub);
-        FaultyServicesWrapper faultyServicesWrapper = null;
-        try {
-            faultyServicesWrapper = serviceAdminStub.getFaultyServiceArchives(0);
-        } catch (RemoteException e) {
-            log.error("List Faulty Service Failed due to RemoteException :" + e.getMessage());
-            Assert.fail("List Faulty Service Failed due to RemoteException :" + e.getMessage());
-        }
+        FaultyServicesWrapper faultyServicesWrapper;
+
+        faultyServicesWrapper = serviceAdminStub.getFaultyServiceArchives(0);
+
         return faultyServicesWrapper;
     }
 
 
-    public boolean isServiceExists(String sessionCookie, String serviceName) {
+    public boolean isServiceExists(String sessionCookie, String serviceName)
+            throws RemoteException {
         boolean serviceState = false;
         ServiceMetaDataWrapper serviceMetaDataWrapper;
         ServiceMetaData[] serviceMetaDataList;
@@ -126,43 +107,40 @@ public class AdminServiceService {
         return serviceState;
     }
 
-    public void deleteMatchingServiceByGroup(String sessionCookie, String serviceFileName) throws RemoteException {
+    public void deleteMatchingServiceByGroup(String sessionCookie, String serviceFileName)
+            throws RemoteException {
         new AuthenticateStub().authenticateStub(sessionCookie, serviceAdminStub);
         String matchingServiceName = getMatchingServiceName(sessionCookie, serviceFileName);
         if (matchingServiceName != null) {
             String serviceGroup[] = {getServiceGroup(sessionCookie, matchingServiceName)};
             log.info("Service group name " + serviceGroup[0]);
-            try {
-                serviceAdminStub.deleteServiceGroups(serviceGroup);
-            } catch (RemoteException e) {
-                log.error("Delete ServiceGroup Fail :" + e.getMessage());
-                Assert.fail("Delete ServiceGroup Fail :" + e.getMessage());
-            }
+
+            serviceAdminStub.deleteServiceGroups(serviceGroup);
+
         } else {
             log.error("Service group name cannot be null");
         }
     }
 
-    public String deleteAllServicesByType(String sessionCookie,String type) throws RemoteException {
+    public String deleteAllServicesByType(String sessionCookie, String type)
+            throws RemoteException {
         new AuthenticateStub().authenticateStub(sessionCookie, serviceAdminStub);
         ServiceMetaDataWrapper serviceMetaDataWrapper;
-        try {
-            serviceMetaDataWrapper = serviceAdminStub.listServices("ALL", null, 0);
-        } catch (RemoteException e) {
-            log.error("List Service Fail :" + e.getMessage());
-            throw new RemoteException("List Service Fail :" + e.getMessage());
-        }
+
+        serviceMetaDataWrapper = serviceAdminStub.listServices("ALL", null, 0);
 
         ServiceMetaData[] serviceMetaDataList;
-        assert serviceMetaDataWrapper != null;
-        serviceMetaDataList = serviceMetaDataWrapper.getServices();
-        String[] serviceGroup;
-        if (serviceMetaDataList != null && serviceMetaDataList.length > 0) {
+        if (serviceMetaDataWrapper != null) {
+            serviceMetaDataList = serviceMetaDataWrapper.getServices();
 
-            for (ServiceMetaData serviceData : serviceMetaDataList) {
-                if(serviceData.getServiceType().equalsIgnoreCase(type)){
-                    serviceGroup = new String[]{serviceData.getServiceGroupName()};
-                    deleteService(sessionCookie, serviceGroup );
+            String[] serviceGroup;
+            if (serviceMetaDataList != null && serviceMetaDataList.length > 0) {
+
+                for (ServiceMetaData serviceData : serviceMetaDataList) {
+                    if (serviceData.getServiceType().equalsIgnoreCase(type)) {
+                        serviceGroup = new String[]{serviceData.getServiceGroupName()};
+                        deleteService(sessionCookie, serviceGroup);
+                    }
                 }
             }
         }
@@ -170,32 +148,30 @@ public class AdminServiceService {
 
     }
 
-    public String getMatchingServiceName(String sessionCookie, String serviceFileName) throws RemoteException {
+    public String getMatchingServiceName(String sessionCookie, String serviceFileName)
+            throws RemoteException {
 
         new AuthenticateStub().authenticateStub(sessionCookie, serviceAdminStub);
         ServiceMetaDataWrapper serviceMetaDataWrapper;
-        try {
-            serviceMetaDataWrapper = serviceAdminStub.listServices("ALL", serviceFileName, 0);
-        } catch (RemoteException e) {
-            log.error("List Service Fail :" + e.getMessage());
-            throw new RemoteException("List Service Fail :" + e.getMessage());
-        }
+        serviceMetaDataWrapper = serviceAdminStub.listServices("ALL", serviceFileName, 0);
+
 
         ServiceMetaData[] serviceMetaDataList;
-        assert serviceMetaDataWrapper != null;
-        serviceMetaDataList = serviceMetaDataWrapper.getServices();
-        if (serviceMetaDataList != null && serviceMetaDataList.length > 0) {
+        if (serviceMetaDataWrapper != null) {
+            serviceMetaDataList = serviceMetaDataWrapper.getServices();
+            if (serviceMetaDataList != null && serviceMetaDataList.length > 0) {
 
-            for (ServiceMetaData serviceData : serviceMetaDataList) {
-                if (serviceData != null && serviceData.getName().contains(serviceFileName)) {
-                    return serviceData.getName();
+                for (ServiceMetaData serviceData : serviceMetaDataList) {
+                    if (serviceData != null && serviceData.getName().contains(serviceFileName)) {
+                        return serviceData.getName();
+                    }
                 }
             }
         }
         return null;
     }
 
-    public String getServiceGroup(String sessionCookie, String serviceName) {
+    public String getServiceGroup(String sessionCookie, String serviceName) throws RemoteException {
         ServiceMetaDataWrapper serviceMetaDataWrapper;
         ServiceMetaData[] serviceMetaDataList;
         serviceMetaDataWrapper = listServices(sessionCookie, serviceName);
@@ -211,7 +187,8 @@ public class AdminServiceService {
         return null;
     }
 
-    public boolean isServiceFaulty(String sessionCookie, String serviceName) {
+    public boolean isServiceFaulty(String sessionCookie, String serviceName)
+            throws RemoteException {
         boolean serviceState = false;
         FaultyServicesWrapper faultyServicesWrapper;
         FaultyService[] faultyServiceList;
@@ -231,7 +208,8 @@ public class AdminServiceService {
         return serviceState;
     }
 
-    public FaultyService getFaultyData(String sessionCookie, String serviceName) {
+    public FaultyService getFaultyData(String sessionCookie, String serviceName)
+            throws RemoteException {
         FaultyService faultyService = null;
         FaultyServicesWrapper faultyServicesWrapper;
         FaultyService[] faultyServiceList;
@@ -239,7 +217,7 @@ public class AdminServiceService {
         if (faultyServicesWrapper != null) {
             faultyServiceList = faultyServicesWrapper.getFaultyServices();
             if (faultyServiceList == null || faultyServiceList.length == 0) {
-                Assert.fail("Service not found in faulty service list");
+                throw new RuntimeException("Service not found in faulty service list");
             } else {
                 for (FaultyService faultyServiceData : faultyServiceList) {
                     if (faultyServiceData != null && faultyServiceData.getServiceName().equalsIgnoreCase(serviceName)) {
@@ -248,51 +226,35 @@ public class AdminServiceService {
                 }
             }
         }
-        Assert.assertNotNull("Service not found in faulty service list", faultyService);
+        if (faultyService == null) {
+            throw new RuntimeException("Service not found in faulty service list " + faultyService);
+        }
         return faultyService;
     }
 
-    public ServiceMetaData getServicesData(String sessionCookie, String serviceName) {
+    public ServiceMetaData getServicesData(String sessionCookie, String serviceName)
+            throws ServiceAdminException, RemoteException {
         new AuthenticateStub().authenticateStub(sessionCookie, serviceAdminStub);
-        try {
-            return serviceAdminStub.getServiceData(serviceName);
-        } catch (RemoteException e) {
-            log.error("Service Not Found due to RemoteException :" + e.getMessage());
-            Assert.fail("Service Not Found :" + e.getMessage());
-        } catch (ServiceAdminException e) {
-            log.error("Service Not Found due to ServiceAdminException :" + e.getMessage());
-            Assert.fail("Service Not Found :" + e.getMessage());
-        }
-        Assert.assertNotNull("Service Not found. Service Data null :");
-        return null;
+
+        return serviceAdminStub.getServiceData(serviceName);
+
     }
 
-    public void startService(String sessionCookie, String serviceName) {
+    public void startService(String sessionCookie, String serviceName)
+            throws ServiceAdminException, RemoteException {
         new AuthenticateStub().authenticateStub(sessionCookie, serviceAdminStub);
-        try {
-            serviceAdminStub.startService(serviceName);
-            log.info("Service Started");
-        } catch (RemoteException e) {
-            log.error("Service Starting failed due to RemoteException :" + e.getMessage());
-            Assert.fail("Service Starting failed due to RemoteException :" + e.getMessage());
-        } catch (ServiceAdminException e) {
-            log.error("Service Starting failed due to Exception :" + e.getMessage());
-            Assert.fail("Service Starting failed due to Exception :" + e.getMessage());
-        }
+
+        serviceAdminStub.startService(serviceName);
+        log.info("Service Started");
+
     }
 
-    public void stopService(String sessionCookie, String serviceName) {
+    public void stopService(String sessionCookie, String serviceName)
+            throws ServiceAdminException, RemoteException {
         new AuthenticateStub().authenticateStub(sessionCookie, serviceAdminStub);
 
-        try {
-            serviceAdminStub.stopService(serviceName);
-            log.info("Service Stopped");
-        } catch (RemoteException e) {
-            log.error("Service Stopping failed due to RemoteException :" + e.getMessage());
-            Assert.fail("Service Stopping failed due to RemoteException :" + e.getMessage());
-        } catch (ServiceAdminException e) {
-            log.error("Service Stopping failed due to Exception :" + e.getMessage());
-            Assert.fail("Service Stopping failed due to Exception :" + e.getMessage());
-        }
+        serviceAdminStub.stopService(serviceName);
+        log.info("Service Stopped");
+
     }
 }

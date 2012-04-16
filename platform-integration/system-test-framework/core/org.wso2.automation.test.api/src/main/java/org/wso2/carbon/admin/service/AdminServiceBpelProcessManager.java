@@ -17,7 +17,6 @@
 */
 package org.wso2.carbon.admin.service;
 
-import junit.framework.Assert;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -46,140 +45,85 @@ public class AdminServiceBpelProcessManager {
         this.SessionCookie = sessionCookie;
     }
 
-    private ProcessManagementServiceStub setProcessManagementStub() {
+    private ProcessManagementServiceStub setProcessManagementStub() throws AxisFault {
         final String serviceMgtServiceUrl = ServiceEndPoint + "ProcessManagementService";
         AuthenticateStub authenticateStub = new AuthenticateStub();
         ProcessManagementServiceStub processManagementServiceStub = null;
-        try {
-
-            processManagementServiceStub = new ProcessManagementServiceStub(serviceMgtServiceUrl);
-            authenticateStub.authenticateStub(SessionCookie, processManagementServiceStub);
-
-        } catch (AxisFault axisFault) {
-            log.error("Process management failed" + axisFault.getMessage());
-            Assert.fail(axisFault.getMessage());
-        }
+        processManagementServiceStub = new ProcessManagementServiceStub(serviceMgtServiceUrl);
+        authenticateStub.authenticateStub(SessionCookie, processManagementServiceStub);
         return processManagementServiceStub;
     }
 
-    public void setStatus(String processID, String status) {
+    public void setStatus(String processID, String status)
+            throws RemoteException, ProcessManagementException {
         processManagementServiceStub = this.setProcessManagementStub();
-        try {
-            if (ProcessStatus.ACTIVE.getValue().equals(status.toUpperCase())) {
-                processManagementServiceStub.activateProcess(QName.valueOf(processID));
-            } else if (ProcessStatus.RETIRED.getValue().equals(status.toUpperCase())) {
-                processManagementServiceStub.retireProcess(QName.valueOf(processID));
-            } else {
-                Assert.fail("Invalid process status " + status);
-            }
-
-        } catch (ProcessManagementException e) {
-            log.error("Process management failed" + e.getMessage());
-            Assert.fail(e.getMessage());
-        } catch (RemoteException e) {
-            log.error("Connection failed " + e.getMessage());
-            Assert.fail(e.getMessage());
+        if (ProcessStatus.ACTIVE.getValue().equals(status.toUpperCase())) {
+            processManagementServiceStub.activateProcess(QName.valueOf(processID));
+        } else if (ProcessStatus.RETIRED.getValue().equals(status.toUpperCase())) {
+            processManagementServiceStub.retireProcess(QName.valueOf(processID));
         }
     }
 
-    public String getStatus(String processID) {
+    public String getStatus(String processID) throws RemoteException, ProcessManagementException {
         String status = null;
         processManagementServiceStub = this.setProcessManagementStub();
-        try {
-            ProcessInfoType processInfo = processManagementServiceStub.
-                    getProcessInfo(QName.valueOf(processID));
-            status = processInfo.getStatus().getValue().toString();
+        ProcessInfoType processInfo = processManagementServiceStub.
+                getProcessInfo(QName.valueOf(processID));
+        status = processInfo.getStatus().getValue().toString();
 
-        } catch (ProcessManagementException e) {
-            log.error("Process management failed" + e.getMessage());
-            Assert.fail(e.getMessage());
-        } catch (RemoteException e) {
-            log.error("Connection failed " + e.getMessage());
-            Assert.fail(e.getMessage());
-        }
         return status;
     }
 
-    public String getProcessId(String packageName) {
+    public String getProcessId(String packageName)
+            throws RemoteException, ProcessManagementException {
         processManagementServiceStub = this.setProcessManagementStub();
         String processId = null;
         final String processFilter = "name}}";
         final String processListOrderBy = "-deployed";
-        try {
-            String[] processList = processManagementServiceStub.getAllProcesses("y");
-            Assert.assertFalse("Process list cannot be empty", processList.length == 0);
-
-            boolean processFound = false;
-            for (String id : processList) {
-                if (id.contains(packageName + "-")) {
-                    processFound = true;
-                    processId = id;
-                }
-            }
-            Assert.assertFalse("Process: " + processId + " cannot be found", !processFound);
-
-        } catch (RemoteException e) {
-            log.error("Process management failed" + e.getMessage());
-            Assert.fail(e.getMessage());
-        } catch (ProcessManagementException e) {
-            log.error("Process management failed" + e.getMessage());
-            Assert.fail(e.getMessage());
+        String[] processList = processManagementServiceStub.getAllProcesses("y");
+        if (processList.length == 0) {
+            throw new AssertionError("Process list cannot be empty");
         }
-
+        boolean processFound = false;
+        for (String id : processList) {
+            if (id.contains(packageName + "-")) {
+                processFound = true;
+                processId = id;
+            }
+        }
         return processId;
     }
 
-    public PaginatedProcessInfoList getProcessInfo(String packageName) {
+    public PaginatedProcessInfoList getProcessInfo(String packageName)
+            throws RemoteException, ProcessManagementException {
         processManagementServiceStub = this.setProcessManagementStub();
 
         PaginatedProcessInfoList filteredProcess = new PaginatedProcessInfoList();
         final String processFilter = "name}}* namespace=*";
         final String processListOrderBy = "-deployed";
-        try {
-
-            PaginatedProcessInfoList processes =
-                    processManagementServiceStub.getPaginatedProcessList(processFilter,
-                            processListOrderBy, 0);
-            Assert.assertFalse("Process list cannot be empty", !processes.isProcessInfoSpecified() ||
-                    processes.getProcessInfo().length == 0);
-
-            for (LimitedProcessInfoType processInfo : processes.getProcessInfo()) {
-                if (processInfo.getPid().contains(packageName + "-")) {
-                    filteredProcess.addProcessInfo(processInfo);
-                }
+        PaginatedProcessInfoList processes =
+                processManagementServiceStub.getPaginatedProcessList(processFilter,
+                                                                     processListOrderBy, 0);
+        for (LimitedProcessInfoType processInfo : processes.getProcessInfo()) {
+            if (processInfo.getPid().contains(packageName + "-")) {
+                filteredProcess.addProcessInfo(processInfo);
             }
-
-        } catch (RemoteException e) {
-            log.error("Process management failed" + e.getMessage());
-            Assert.fail(e.getMessage());
-        } catch (ProcessManagementException e) {
-            log.error("Process management failed" + e.getMessage());
-            Assert.fail(e.getMessage());
         }
         return filteredProcess;
     }
 
 
-    public LinkedList<String> getProcessInfoList(String packageName) {
+    public LinkedList<String> getProcessInfoList(String packageName)
+            throws RemoteException, ProcessManagementException {
         processManagementServiceStub = this.setProcessManagementStub();
 
         LinkedList<String> filteredProcess = new LinkedList<String>();
-        try {
-            String[] processList = processManagementServiceStub.getAllProcesses("y");
-            Assert.assertFalse("Process list cannot be empty", processList.length == 0);
 
-            for (String id : processList) {
-                if (id.contains(packageName + "-")) {
-                    filteredProcess.add(id);
-                }
+        String[] processList = processManagementServiceStub.getAllProcesses("y");
+        for (String id : processList) {
+            if (id.contains(packageName + "-")) {
+                filteredProcess.add(id);
             }
-
-        } catch (RemoteException e) {
-            log.error("Process management failed" + e.getMessage());
-            Assert.fail(e.getMessage());
-        } catch (ProcessManagementException e) {
-            log.error("Process management failed" + e.getMessage());
-            Assert.fail(e.getMessage());
         }
         return filteredProcess;
     }

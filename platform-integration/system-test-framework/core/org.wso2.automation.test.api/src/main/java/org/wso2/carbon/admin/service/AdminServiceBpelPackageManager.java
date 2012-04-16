@@ -17,7 +17,7 @@
 */
 package org.wso2.carbon.admin.service;
 
-import junit.framework.Assert;
+
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,23 +42,17 @@ public class AdminServiceBpelPackageManager {
         this.SessionCookie = sessionCookie;
     }
 
-    private BPELPackageManagementServiceStub setPackageManagementStub() {
+    private BPELPackageManagementServiceStub setPackageManagementStub() throws AxisFault {
         final String packageMgtServiceUrl = ServiceEndPoint + "BPELPackageManagementService";
         AuthenticateStub authenticateStub = new AuthenticateStub();
         BPELPackageManagementServiceStub packageManagementServiceStub = null;
-        try {
-
-            packageManagementServiceStub = new BPELPackageManagementServiceStub(packageMgtServiceUrl);
-            authenticateStub.authenticateStub(SessionCookie, packageManagementServiceStub);
-
-        } catch (AxisFault axisFault) {
-            axisFault.printStackTrace();
-            Assert.fail(axisFault.getMessage());
-        }
+        packageManagementServiceStub = new BPELPackageManagementServiceStub(packageMgtServiceUrl);
+        authenticateStub.authenticateStub(SessionCookie, packageManagementServiceStub);
         return packageManagementServiceStub;
     }
 
-    private UploadedFileItem getUploadedFileItem(DataHandler dataHandler, String fileName, String fileType) {
+    private UploadedFileItem getUploadedFileItem(DataHandler dataHandler, String fileName,
+                                                 String fileType) {
         UploadedFileItem uploadedFileItem = new UploadedFileItem();
         uploadedFileItem.setDataHandler(dataHandler);
         uploadedFileItem.setFileName(fileName);
@@ -67,51 +61,44 @@ public class AdminServiceBpelPackageManager {
         return uploadedFileItem;
     }
 
-    public void undeployBPEL(String packageName) throws PackageManagementException, RemoteException, InterruptedException {
-            bpelPackageManagementServiceStub = this.setPackageManagementStub();
-            bpelPackageManagementServiceStub.undeployBPELPackage(packageName);
-            Thread.sleep(10000);
-            DeployedPackagesPaginated deployedPackages = bpelPackageManagementServiceStub.
-                    listDeployedPackagesPaginated(0);
-            boolean packageUndeployed = true;
-            try {
-                for (Package_type0 bpelPackage : deployedPackages.get_package()) {
-                    if (bpelPackage.getName().equals(packageName)) {
+    public void undeployBPEL(String packageName)
+            throws PackageManagementException, RemoteException, InterruptedException {
+        bpelPackageManagementServiceStub = this.setPackageManagementStub();
+        bpelPackageManagementServiceStub.undeployBPELPackage(packageName);
+        Thread.sleep(10000);
+        DeployedPackagesPaginated deployedPackages = bpelPackageManagementServiceStub.
+                listDeployedPackagesPaginated(0);
+        boolean packageUndeployed = true;
+        try {
+            for (Package_type0 bpelPackage : deployedPackages.get_package()) {
+                if (bpelPackage.getName().equals(packageName)) {
 
-                        packageUndeployed = false;
-                        Assert.fail("Service is not undeployed");
-                        log.error("Service stilll exists, Undeployment failed");
-                    }
+                    packageUndeployed = false;
+                    log.error("Service stilll exists, Undeployment failed");
                 }
-            } catch (NullPointerException e) {
-                System.out.println(packageName + " has undeployed successfully");
             }
-            Assert.assertFalse(packageName + " undeplyment failed", !packageUndeployed);
+        } catch (NullPointerException e) {
+            System.out.println(packageName + " has undeployed successfully");
+        }
     }
 
-    public boolean checkProcessDeployment(String packageName) {
+    public boolean checkProcessDeployment(String packageName)
+            throws RemoteException, PackageManagementException {
         boolean packageDeployed = false;
         bpelPackageManagementServiceStub = this.setPackageManagementStub();
-        try {
-            for (int page = 0; page <= 20; page++) {
-                DeployedPackagesPaginated deployedPackages = bpelPackageManagementServiceStub.
-                        listDeployedPackagesPaginated(page);
-                packageDeployed = false;
-                for (Package_type0 bpelPackage : deployedPackages.get_package()) {
-                    if (bpelPackage.getName().equals(packageName)) {
-                        System.out.println(packageName + " has deployed successfully");
-                        packageDeployed = true;
-                    }
+        for (int page = 0; page <= 20; page++) {
+            DeployedPackagesPaginated deployedPackages = bpelPackageManagementServiceStub.
+                    listDeployedPackagesPaginated(page);
+            packageDeployed = false;
+            for (Package_type0 bpelPackage : deployedPackages.get_package()) {
+                if (bpelPackage.getName().equals(packageName)) {
+                    System.out.println(packageName + " has deployed successfully");
+                    packageDeployed = true;
                 }
-                if(packageDeployed){break;}
             }
-            Assert.assertFalse(packageName + " deployment failed", !packageDeployed);
-        } catch (RemoteException e) {
-            log.error("Connection failed " + e.getMessage());
-            Assert.fail(e.getMessage());
-        } catch (PackageManagementException e) {
-            log.error("Package management failed" + e.getMessage());
-            Assert.fail(e.getMessage());
+            if (packageDeployed) {
+                break;
+            }
         }
         return packageDeployed;
     }

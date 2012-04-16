@@ -17,11 +17,11 @@
 */
 package org.wso2.carbon.admin.service;
 
-import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.admin.service.utils.AuthenticateStub;
 import org.wso2.carbon.bpel.stub.mgt.BPELPackageManagementServiceStub;
+import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
 import org.wso2.carbon.bpel.stub.upload.BPELUploaderStub;
 import org.wso2.carbon.bpel.stub.upload.types.UploadedFileItem;
 
@@ -42,7 +42,9 @@ public class AdminServiceBpelUploader {
     }
 
 
-    public boolean deployBPEL(String packageName, String sessionCookie) throws RemoteException, MalformedURLException, InterruptedException {
+    public boolean deployBPEL(String packageName, String sessionCookie)
+            throws RemoteException, MalformedURLException, InterruptedException,
+                   PackageManagementException {
 
         final String uploaderServiceURL = ServiceEndPoint + "BPELUploader";
         AdminServiceBpelPackageManager manager = new AdminServiceBpelPackageManager(ServiceEndPoint, sessionCookie);
@@ -57,7 +59,8 @@ public class AdminServiceBpelUploader {
         return success;
     }
 
-    public boolean deployBPEL(String packageName, String dirPath, String sessionCookie) throws RemoteException, InterruptedException {
+    public boolean deployBPEL(String packageName, String dirPath, String sessionCookie)
+            throws RemoteException, InterruptedException, PackageManagementException {
 
         final String uploaderServiceURL = ServiceEndPoint + "BPELUploader";
         AdminServiceBpelPackageManager manager = new AdminServiceBpelPackageManager(ServiceEndPoint, sessionCookie);
@@ -68,9 +71,6 @@ public class AdminServiceBpelUploader {
         deployPackage(packageName, dirPath, bpelUploaderStub);
         Thread.sleep(10000);
         success = manager.checkProcessDeployment(packageName);
-        Assert.assertTrue("Service did not deployed successfully", success);
-
-
         return success;
     }
 

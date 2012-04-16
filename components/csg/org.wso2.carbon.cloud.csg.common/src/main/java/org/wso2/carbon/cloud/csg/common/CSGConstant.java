@@ -163,6 +163,11 @@ public class CSGConstant {
     public static final String REGISTRY_FLAG_RESOURCE_PATH = REGISTRY_CSG_RESOURCE_PATH + "flags";
 
     /**
+     * The path where WSDLs of published services are stored.
+     */
+    public static final String REGISTRY_CSG_WSDL_RESOURCE_PATH = "/trunk/services/wsdls";
+
+    /**
      * Client axis2.xml for admin services when using with ESB
      */
     public static final String CLIENT_AXIS2_XML = "repository/conf/axis2_client.xml";

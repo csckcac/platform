@@ -15,22 +15,31 @@
  */
 package org.wso2.carbon.cloud.csg.service;
 
+import java.net.SocketException;
+
 import org.apache.axis2.description.TransportOutDescription;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.engine.AxisEvent;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.SynapseConstants;
-import org.wso2.carbon.cloud.csg.common.*;
+import org.wso2.carbon.cloud.csg.common.CSGConstant;
+import org.wso2.carbon.cloud.csg.common.CSGException;
+import org.wso2.carbon.cloud.csg.common.CSGProxyToolsURLs;
+import org.wso2.carbon.cloud.csg.common.CSGServiceMetaDataBean;
+import org.wso2.carbon.cloud.csg.common.CSGThriftServerBean;
+import org.wso2.carbon.cloud.csg.common.CSGUtils;
 import org.wso2.carbon.cloud.csg.transport.CSGTransportSender;
 import org.wso2.carbon.mediation.initializer.AbstractServiceBusAdmin;
 import org.wso2.carbon.proxyadmin.ProxyAdminException;
 import org.wso2.carbon.proxyadmin.ProxyData;
 import org.wso2.carbon.proxyadmin.service.ProxyServiceAdmin;
+import org.wso2.carbon.registry.api.RegistryException;
+import org.wso2.carbon.registry.api.Resource;
+import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.jdbc.utils.Transaction;
 import org.wso2.carbon.service.mgt.ServiceAdmin;
 import org.wso2.carbon.service.mgt.ServiceMetaData;
-
-import java.net.SocketException;
 
 /**
  * The class <code>CSGAdminService</code> service provides the operations for deploying the proxies
@@ -78,6 +87,7 @@ public class CSGAdminService extends AbstractServiceBusAdmin {
         }
         try {
             new ProxyServiceAdmin().deleteProxyService(serviceName);
+            deleteWSDL(serviceName);// remove the wsdl document from the registry
         } catch (ProxyAdminException e) {
             handleException("Could not delete the CSG service '" + serviceName + "'. "
                     + e.getMessage(), e);
@@ -114,8 +124,9 @@ public class CSGAdminService extends AbstractServiceBusAdmin {
 
     /**
      * Update the public proxy based on the new event of the back end service
+     *
      * @param serviceName service
-     * @param eventType the new event type
+     * @param eventType   the new event type
      * @throws CSGException throws in case of an error
      */
     public void updateProxy(String serviceName, int eventType) throws CSGException {
@@ -176,7 +187,9 @@ public class CSGAdminService extends AbstractServiceBusAdmin {
         ProxyData proxy = new ProxyData();
         proxy.setName(proxyMetaData.getServiceName());
         if (proxyMetaData.getInLineWSDL() != null) {
-            proxy.setWsdlDef(proxyMetaData.getInLineWSDL());
+            String persistedWsdlPath = persistWSDL(proxyMetaData.getServiceName(),
+                    proxyMetaData.getInLineWSDL());
+            proxy.setWsdlKey(persistedWsdlPath);
         }
 
         // FIXME - this is the workaround for https://issues.apache.org/jira/browse/SYNAPSE-527 and
@@ -209,7 +222,7 @@ public class CSGAdminService extends AbstractServiceBusAdmin {
                         "<address uri=\"" + proxyMetaData.getEndpoint() + "\">" +
                         "<suspendOnFailure>" +
                         "<errorCodes>400207</errorCodes>" +
-                        "<initialDuration>1000</initialDuration>"  +
+                        "<initialDuration>1000</initialDuration>" +
                         "<progressionFactor>2</progressionFactor>" +
                         "<maximumDuration>64000</maximumDuration>" +
                         "</suspendOnFailure>" +
@@ -239,4 +252,127 @@ public class CSGAdminService extends AbstractServiceBusAdmin {
         axisConfig.addTransportOut(transportOut);
         transportOut.getSender().init(getConfigContext(), transportOut);
     }
+
+    /**
+     * Saves the Wsdl of service published onto this server in Governance user
+     * registry
+     *
+     * @param serviceName Name of the service
+     * @param wsdl        content of the Wsdl document.
+     * @return returns the key of the stored WSDL
+     * @throws CSGException in case of an error.
+     */
+    private String persistWSDL(String serviceName, String wsdl) throws CSGException {
+        boolean isTransactionAlreadyStarted = Transaction.isStarted();
+        boolean isTransactionSuccess = true;
+        Registry registry = getGovernanceUserRegistry();
+
+        String resourcePath = composeWsdlResourcePath(serviceName);
+
+        try {
+
+            if (!isTransactionAlreadyStarted) {
+                registry.beginTransaction(); // start a transaction if none
+                // exists currently.
+            }
+
+            if (registry.resourceExists(resourcePath)) {
+                // delete the resource and add it again
+                if (log.isDebugEnabled()) {
+                    log.debug("Replacing the Wsdl for the service: " + serviceName);
+                }
+                registry.delete(resourcePath);
+            }
+
+            Resource resource = registry.newResource();
+            resource.setContent(wsdl);
+
+            if (log.isDebugEnabled()) {
+                log.debug("Adding wsdl to registry. Service name: " + serviceName);
+            }
+
+            registry.put(resourcePath, resource);
+        } catch (RegistryException e) {
+            isTransactionSuccess = false;
+            handleException("Error occurred while saving the wsdl into registry", e);
+        } finally {
+            if (!isTransactionAlreadyStarted) {
+                try {
+                    if (isTransactionSuccess) {
+                        // commit the transaction since we started it.
+                        registry.commitTransaction();
+                    } else {
+                        registry.rollbackTransaction();
+                    }
+                } catch (RegistryException re) {
+                    handleException("Error occurred while trying to rollback or commit the " +
+                            "transaction", re);
+                }
+            }
+        }
+
+        return resourcePath;
+    }
+
+
+    /**
+     * Deletes the Wsdl of service published onto this server
+     *
+     * @param serviceName Name of the service
+     * @return
+     * @throws CSGException in case of an error.
+     */
+    private String deleteWSDL(String serviceName) throws CSGException {
+        boolean isTransactionAlreadyStarted = Transaction.isStarted();
+        boolean isTransactionSuccess = true;
+        Registry registry = getGovernanceUserRegistry();
+
+        String resourcePath = composeWsdlResourcePath(serviceName);
+
+        try {
+
+            if (!isTransactionAlreadyStarted) {
+                // start a transaction if none exists currently.
+                registry.beginTransaction();
+            }
+
+            if (registry.resourceExists(resourcePath)) {
+                // delete the resource ( - Wsdl document)
+                registry.delete(resourcePath);
+            }
+        } catch (RegistryException e) {
+            isTransactionSuccess = false;
+            handleException("Error occurred while deleting the wsdl from registry", e);
+        } finally {
+            if (!isTransactionAlreadyStarted) {
+                try {
+                    if (isTransactionSuccess) {
+                        // commit the transaction since we started it.
+                        registry.commitTransaction();
+                    } else {
+                        registry.rollbackTransaction();
+                    }
+                } catch (RegistryException re) {
+                    handleException("Error occurred while trying to rollback or " +
+                            "commit the transaction", re);
+                }
+            }
+        }
+
+        return resourcePath;
+    }
+
+
+    /**
+     * Constructs the registry path to persist a wsdl document ( - belonging to
+     * service published on CSG server)
+     *
+     * @param serviceName Name of the service
+     * @return Designated path in registry
+     */
+    private String composeWsdlResourcePath(String serviceName) {
+        return CSGConstant.REGISTRY_CSG_WSDL_RESOURCE_PATH + "/" + serviceName +
+                ".wsdl";
+    }
+
 }

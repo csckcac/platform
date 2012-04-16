@@ -180,6 +180,11 @@ public class CSGServiceComponent {
                     UserMgtConstants.EXECUTE_ACTION);
         }
 
+        // set required permission for csguser to put/get/delete WSDLs etc..
+        authorizationManager.authorizeRole(roleName, "/", "add");
+        authorizationManager.authorizeRole(roleName, "/", "get");
+        authorizationManager.authorizeRole(roleName, "/", "delete");
+
         UserStoreManager manager = realm.getUserStoreManager();
         // register the csg role if not registered already and add the csguser
         if (!manager.isExistingRole(roleName)) {

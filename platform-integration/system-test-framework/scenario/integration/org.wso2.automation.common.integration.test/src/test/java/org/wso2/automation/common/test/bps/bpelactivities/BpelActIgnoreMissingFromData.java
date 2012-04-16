@@ -61,7 +61,9 @@ public class BpelActIgnoreMissingFromData{
     }
 
     @BeforeClass(alwaysRun = true,groups = {"wso2.bps", "wso2.bps.bpelactivities"})
-    public void deployArtifact() throws InterruptedException, RemoteException, MalformedURLException {
+    public void deployArtifact()
+            throws InterruptedException, RemoteException, MalformedURLException,
+                   PackageManagementException {
         bpelUploader.deployBPEL("TestCombineUrl", sessionCookie);
     }
 

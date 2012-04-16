@@ -44,7 +44,8 @@ public class BpelActComposeUrl{
     }
 
     @BeforeClass(alwaysRun = true,groups = {"wso2.bps", "wso2.bps.bpelactivities"})
-    public void deployArtifact() throws InterruptedException, RemoteException {
+    public void deployArtifact()
+            throws InterruptedException, RemoteException, PackageManagementException {
         bpelUploader.deployBPEL("TestComposeUrl", "TestComposeUrl", sessionCookie);
     }
 

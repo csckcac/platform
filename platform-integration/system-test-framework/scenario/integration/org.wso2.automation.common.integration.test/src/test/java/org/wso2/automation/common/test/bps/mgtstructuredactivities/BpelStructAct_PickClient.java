@@ -26,6 +26,7 @@ import org.testng.annotations.*;
 import org.wso2.carbon.admin.service.*;
 import org.wso2.carbon.bpel.stub.mgt.InstanceManagementException;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
+import org.wso2.carbon.bpel.stub.mgt.ProcessManagementException;
 import org.wso2.carbon.bpel.stub.mgt.types.PaginatedInstanceList;
 import org.wso2.platform.test.core.RequestSender;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
@@ -69,7 +70,8 @@ public class BpelStructAct_PickClient {
     }
 
     @Test(groups = {"wso2.bps", "wso2.bps.structures"}, description = "Deploys Bpel with If activity", priority=2)
-    public void runSuccessCase() throws InstanceManagementException, RemoteException {
+    public void runSuccessCase()
+            throws InstanceManagementException, RemoteException, ProcessManagementException {
         int instanceCount = 0;
 
         String processID = bpelProcrss.getProcessId("PickProcess");

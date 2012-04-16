@@ -63,7 +63,9 @@ public class BpelInMemoryDeploymentClient{
     }
 
     @BeforeClass(alwaysRun = true)
-    public void deployArtifact() throws InterruptedException, RemoteException, MalformedURLException {
+    public void deployArtifact()
+            throws InterruptedException, RemoteException, MalformedURLException,
+                   PackageManagementException {
         bpelUploader.deployBPEL("CustomerInfo", sessionCookie);
     }
 

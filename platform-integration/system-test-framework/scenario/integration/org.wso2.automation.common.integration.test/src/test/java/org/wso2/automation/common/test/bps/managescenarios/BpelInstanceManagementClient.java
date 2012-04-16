@@ -17,7 +17,6 @@
 */
 package org.wso2.automation.common.test.bps.managescenarios;
 
-import org.apache.axis2.AxisFault;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,9 +25,14 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import org.wso2.carbon.admin.service.*;
+import org.wso2.carbon.admin.service.AdminServiceAuthentication;
+import org.wso2.carbon.admin.service.AdminServiceBpelInstanceManager;
+import org.wso2.carbon.admin.service.AdminServiceBpelPackageManager;
+import org.wso2.carbon.admin.service.AdminServiceBpelProcessManager;
+import org.wso2.carbon.admin.service.AdminServiceBpelUploader;
 import org.wso2.carbon.bpel.stub.mgt.InstanceManagementException;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
+import org.wso2.carbon.bpel.stub.mgt.ProcessManagementException;
 import org.wso2.carbon.bpel.stub.mgt.types.LimitedInstanceInfoType;
 import org.wso2.carbon.bpel.stub.mgt.types.PaginatedInstanceList;
 import org.wso2.platform.test.core.RequestSender;
@@ -55,6 +59,8 @@ public class BpelInstanceManagementClient {
 
     @BeforeTest(alwaysRun = true)
     public void setEnvironment() {
+
+
         EnvironmentBuilder builder = new EnvironmentBuilder().bps(3);
         ManageEnvironment environment = builder.build();
         backEndUrl = environment.getBps().getBackEndUrl();
@@ -69,54 +75,62 @@ public class BpelInstanceManagementClient {
     }
 
     @BeforeClass(alwaysRun = true)
-    public void deployArtifact() throws InterruptedException, RemoteException, MalformedURLException {
-     //  bpelUploader.deployBPEL("TestPickOneWay", sessionCookie);
+    public void deployArtifact()
+            throws InterruptedException, RemoteException, MalformedURLException {
+        //  bpelUploader.deployBPEL("TestPickOneWay", sessionCookie);
     }
 
     @Test(groups = {"wso2.bps", "wso2.bps.manage"}, description = "Set setvice to Active State", priority = 1)
-    public void testCreateInstance() throws InterruptedException, XMLStreamException, AxisFault {
+    public void testCreateInstance()
+            throws InterruptedException, XMLStreamException, RemoteException,
+                   ProcessManagementException, InstanceManagementException {
         EndpointReference epr = new EndpointReference(serviceUrl + "/PickService" + "/" + "dealDeck");
         requestSender.sendRequest("<pic:dealDeck xmlns:pic=\"http://www.stark.com/PickService\">" +
-                "   <pic:Deck>testPick</pic:Deck>" +
-                "</pic:dealDeck>", epr);
+                                  "   <pic:Deck>testPick</pic:Deck>" +
+                                  "</pic:dealDeck>", epr);
         Thread.sleep(5000);
         PaginatedInstanceList instanceList = bpelInstance.filterPageInstances(bpelProcrss.getProcessId("PickProcess"));
-         instanceInfo = instanceList.getInstance()[0];
+        instanceInfo = instanceList.getInstance()[0];
         if (instanceList.getInstance().length == 0) {
             Assert.fail("Instance failed to create");
         }
     }
 
     @Test(groups = {"wso2.bps", "wso2.bps.manage"}, description = "Suspends The Service", priority = 2)
-    public void testSuspendInstance() throws InterruptedException {
+    public void testSuspendInstance()
+            throws InterruptedException, InstanceManagementException, RemoteException {
         bpelInstance.performAction(instanceInfo.getIid(), AdminServiceBpelInstanceManager.InstanceOperation.SUSPEND);
         Thread.sleep(5000);
         Assert.assertTrue(bpelInstance.getInstanceInfo(instanceInfo.getIid()).getStatus().getValue().equals("SUSPENDED"), "The Service Is not Suspended");
     }
 
     @Test(groups = {"wso2.bps", "wso2.bps.manage"}, description = "Suspends The Service", priority = 3)
-    public void testResumeInstance() throws InterruptedException {
+    public void testResumeInstance()
+            throws InterruptedException, InstanceManagementException, RemoteException {
         bpelInstance.performAction(instanceInfo.getIid(), AdminServiceBpelInstanceManager.InstanceOperation.RESUME);
         Thread.sleep(5000);
         Assert.assertTrue(bpelInstance.getInstanceInfo(instanceInfo.getIid()).getStatus().getValue().equals("ACTIVE"), "The Service Is not Suspended");
     }
 
     @Test(groups = {"wso2.bps", "wso2.bps.manage"}, description = "Suspends The Service", priority = 4)
-    public void testTerminateInstance() throws InterruptedException {
+    public void testTerminateInstance()
+            throws InterruptedException, InstanceManagementException, RemoteException {
         bpelInstance.performAction(instanceInfo.getIid(), AdminServiceBpelInstanceManager.InstanceOperation.TERMINATE);
         Thread.sleep(5000);
         Assert.assertTrue(bpelInstance.getInstanceInfo(instanceInfo.getIid()).getStatus().getValue().equals("TERMINATED"), "The Service Is not Terminated");
     }
 
     @Test(groups = {"wso2.bps", "wso2.bps.manage"}, description = "Suspends The Service", priority = 5)
-    public void testDeleteInstance() throws InterruptedException, InstanceManagementException, RemoteException {
+    public void testDeleteInstance()
+            throws InterruptedException, InstanceManagementException, RemoteException {
         bpelInstance.deleteInstance(instanceInfo.getIid());
         Thread.sleep(5000);
     }
 
     @AfterClass(alwaysRun = true)
-    public void removeArtifacts() throws PackageManagementException, InterruptedException, RemoteException {
-       // bpelManager.undeployBPEL("TestPickOneWay");
+    public void removeArtifacts()
+            throws PackageManagementException, InterruptedException, RemoteException {
+        // bpelManager.undeployBPEL("TestPickOneWay");
         adminServiceAuthentication.logOut();
     }
 }

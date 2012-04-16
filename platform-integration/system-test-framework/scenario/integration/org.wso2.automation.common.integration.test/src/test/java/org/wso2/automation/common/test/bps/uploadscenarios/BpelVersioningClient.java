@@ -27,6 +27,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.*;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
+import org.wso2.carbon.bpel.stub.mgt.ProcessManagementException;
 import org.wso2.carbon.bpel.stub.mgt.types.ProcessStatus;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.RequestSender;
@@ -71,13 +72,16 @@ public class BpelVersioningClient {
     }
 
     @BeforeClass(alwaysRun = true)
-    public void deployArtifact() throws InterruptedException, RemoteException, MalformedURLException {
+    public void deployArtifact()
+            throws InterruptedException, RemoteException, MalformedURLException,
+                   PackageManagementException {
         bpelUploader.deployBPEL("HelloWorld2", sessionCookie);
 
     }
 
     @Test(groups = {"wso2.bps", "wso2.bps.manage"}, description = "Tests uploading Bpel Service with In memory", priority = 0)
-    public void getVersion() throws RemoteException, XMLStreamException, InterruptedException {
+    public void getVersion() throws RemoteException, XMLStreamException, InterruptedException,
+                                    ProcessManagementException {
 
         Thread.sleep(5000);
         LinkedList<String> processBefore = bpelProcrss.getProcessInfoList("HelloWorld2");
@@ -105,13 +109,15 @@ public class BpelVersioningClient {
     }
 
     @Test(groups = {"wso2.bps", "wso2.bps.manage"}, description = "Tests uploading Bpel Service with In memory", priority = 1)
-    public void deployVersioningBpel() throws InterruptedException, RemoteException {
+    public void deployVersioningBpel()
+            throws InterruptedException, RemoteException, PackageManagementException {
         bpelUploader.deployBPEL("HelloWorld2", ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + File.separator + "artifacts" + File.separator + "BPS" + File.separator + "bpel" + File.separator + "VersioningSamples", sessionCookie);
 
     }
 
     @Test(groups = {"wso2.bps", "wso2.bps.manage"}, description = "Tests uploading Bpel Service with In memory", priority = 2)
-    public void checkVersion() throws InterruptedException, XMLStreamException, AxisFault {
+    public void checkVersion() throws InterruptedException, XMLStreamException, RemoteException,
+                                      ProcessManagementException {
 
         LinkedList<String> processAfter = null;
         for (int a = 0; a <= 10; a++) {

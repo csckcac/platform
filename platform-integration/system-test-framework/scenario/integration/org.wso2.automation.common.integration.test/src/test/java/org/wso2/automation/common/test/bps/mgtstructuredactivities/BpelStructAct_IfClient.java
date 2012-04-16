@@ -24,6 +24,7 @@ import org.testng.annotations.*;
 import org.wso2.carbon.admin.service.*;
 import org.wso2.carbon.bpel.stub.mgt.InstanceManagementException;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
+import org.wso2.carbon.bpel.stub.mgt.ProcessManagementException;
 import org.wso2.carbon.bpel.stub.mgt.types.PaginatedInstanceList;
 import org.wso2.platform.test.core.RequestSender;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
@@ -71,8 +72,7 @@ public class BpelStructAct_IfClient {
     }
 
    @BeforeMethod
-   public void getInstanceList()
-   {
+   public void getInstanceList() throws ProcessManagementException, RemoteException {
        processID = bpelProcrss.getProcessId("TestIf");
        System.out.println("BeforeMethod");
    }

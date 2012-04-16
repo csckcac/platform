@@ -29,6 +29,7 @@ import org.wso2.carbon.admin.service.AdminServiceBpelPackageManager;
 import org.wso2.carbon.admin.service.AdminServiceBpelProcessManager;
 import org.wso2.carbon.admin.service.AdminServiceBpelUploader;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
+import org.wso2.carbon.bpel.stub.mgt.ProcessManagementException;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
 
@@ -57,12 +58,14 @@ public class BpelRetireDeploymentClient {
     }
 
     @BeforeClass(alwaysRun = true)
-    public void deployArtifact() throws InterruptedException, RemoteException, MalformedURLException {
+    public void deployArtifact()
+            throws InterruptedException, RemoteException, MalformedURLException,
+                   PackageManagementException {
         bpelUploader.deployBPEL("HelloWorld-retire", sessionCookie);
 
     }
     @Test(groups = {"wso2.bps", "wso2.bps.manage"}, description = "Tests uploading Bpel with retire true")
-    public void testRetireClient() {
+    public void testRetireClient() throws ProcessManagementException, RemoteException {
         Assert.assertTrue( bpelProcrss.getStatus(bpelProcrss.getProcessId("HelloWorld-retire")).equals("RETIRED".toUpperCase()),"Process State is still Active");
     }
 

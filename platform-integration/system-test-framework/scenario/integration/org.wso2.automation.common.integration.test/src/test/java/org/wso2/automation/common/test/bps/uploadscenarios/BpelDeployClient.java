@@ -57,7 +57,9 @@ public class BpelDeployClient{
         bpelInstance = new AdminServiceBpelInstanceManager(backEndUrl, sessionCookie);
     }
     @Test(groups = {"wso2.bps", "wso2.bps.upload"}, description = "Upload a bpel", priority = 0)
-    public void testUploadBpel() throws InterruptedException, RemoteException, MalformedURLException {
+    public void testUploadBpel()
+            throws InterruptedException, RemoteException, MalformedURLException,
+                   PackageManagementException {
         Assert.assertTrue( bpelUploader.deployBPEL("TestE4XDirect", sessionCookie),"Bpel service deployment failed");
     }
 

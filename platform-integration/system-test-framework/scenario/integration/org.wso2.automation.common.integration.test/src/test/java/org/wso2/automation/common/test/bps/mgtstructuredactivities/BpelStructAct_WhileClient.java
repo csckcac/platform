@@ -27,6 +27,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.*;
 import org.wso2.carbon.bpel.stub.mgt.InstanceManagementException;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
+import org.wso2.carbon.bpel.stub.mgt.ProcessManagementException;
 import org.wso2.carbon.bpel.stub.mgt.types.PaginatedInstanceList;
 import org.wso2.platform.test.core.RequestSender;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
@@ -70,7 +71,8 @@ public class BpelStructAct_WhileClient {
     }
 
     @Test(groups = {"wso2.bps", "wso2.bps.structures"}, description = "Deploys TestWhile with activity", priority=0)
-    public void runSuccessCase() throws InstanceManagementException, RemoteException {
+    public void runSuccessCase()
+            throws InstanceManagementException, RemoteException, ProcessManagementException {
         int instanceCount = 0;
 
         String processID = bpelProcrss.getProcessId("TestWhile");

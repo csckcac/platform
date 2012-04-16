@@ -50,15 +50,15 @@ public class BpelActCombineUrl {
 
     @BeforeTest(alwaysRun = true)
     public void setEnvironment() {
-        EnvironmentBuilder builder = new EnvironmentBuilder().bps(3);
+        EnvironmentBuilder builder = new EnvironmentBuilder().clusterNode("bps001",3).clusterNode("bps002",3).clusterNode("bps003",3);
         ManageEnvironment environment = builder.build();
-        backEndUrl = environment.getBps().getBackEndUrl();
-        sessionCookie = environment.getBps().getSessionCookie();
+        backEndUrl = environment.getClusterNode("bps001").getBackEndUrl();
+        sessionCookie = environment.getClusterNode("bps001").getSessionCookie();
         bpelUploader = new AdminServiceBpelUploader(backEndUrl);
         bpelManager = new AdminServiceBpelPackageManager(backEndUrl, sessionCookie);
         bpelProcrss = new AdminServiceBpelProcessManager(backEndUrl, sessionCookie);
         bpelInstance = new AdminServiceBpelInstanceManager(backEndUrl, sessionCookie);
-        adminServiceAuthentication=  environment.getBps().getAdminServiceAuthentication();
+        adminServiceAuthentication=  environment.getClusterNode("bps001").getAdminServiceAuthentication();
         requestSender = new RequestSender();
     }
 

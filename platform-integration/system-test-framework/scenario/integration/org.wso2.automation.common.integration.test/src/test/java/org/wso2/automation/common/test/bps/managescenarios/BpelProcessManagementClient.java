@@ -25,9 +25,12 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.*;
+import org.wso2.carbon.bpel.stub.mgt.ProcessManagementException;
 import org.wso2.platform.test.core.RequestSender;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
+
+import java.rmi.RemoteException;
 
 public class BpelProcessManagementClient {
 
@@ -63,7 +66,7 @@ public class BpelProcessManagementClient {
     }
 
     @Test(groups = {"wso2.bps", "wso2.bps.manage"}, description = "Set setvice to Retire State", priority=1)
-    public void testServiceRetire() {
+    public void testServiceRetire() throws ProcessManagementException, RemoteException {
         try {
             String processID = bpelProcrss.getProcessId("XKLoanService");
             bpelProcrss.setStatus(processID, "RETIRED");
@@ -77,7 +80,7 @@ public class BpelProcessManagementClient {
     }
 
     @Test(groups = {"wso2.bps", "wso2.bps.manage"}, description = "Set setvice to Active State",priority=2)
-    public void testServiceActive() {
+    public void testServiceActive() throws ProcessManagementException, RemoteException {
         try {
             String processID = bpelProcrss.getProcessId("XKLoanService");
             bpelProcrss.setStatus(processID, "ACTIVE");

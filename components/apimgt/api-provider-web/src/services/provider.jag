@@ -115,8 +115,6 @@ if (action != null) {
         if(request.getParameter("resourceCount") != null) {
             var resCount = request.getParameter("resourceCount").split(',');
         }
-        var resCount = request.getParameter("resourceCount").split(',');
-
         var uriTemplateArr = [];
         var uriMethodArr = [];
 

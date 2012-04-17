@@ -94,11 +94,14 @@ AppServer Binary Distribution Directory Structure
         |-- repository <folder>
         |   |-- components <folder>
         |   |-- conf <folder>
-        |   |-- resources <folder>
-        |       `-- security <folder>
+        |   |-- data <folder>
         |   |-- database <folder>
         |   |-- deployment <folder>
-        |   `-- logs <folder>
+        |   |-- lib <folder>
+        |   |-- logs <folder>
+        |   |-- resources <folder>
+        |       `-- security <folder>
+        |   `-- tenants <folder>
         |-- samples <folder>
         |-- tmp <folder>
         |-- LICENSE.txt <file>
@@ -108,13 +111,7 @@ AppServer Binary Distribution Directory Structure
 
 
     - bin
-      Contains various scripts .sh & .bat scripts
-
-    - conf
-      Contains configuration files
-
-    - database
-      Contains the WSO2 Registry & User Manager database
+      Contains various .sh & .bat scripts
 
     - dbscripts
       Contains the database creation & seed data population SQL scripts for
@@ -124,11 +121,32 @@ AppServer Binary Distribution Directory Structure
       Contains the basic set of libraries required to startup AppServer
       in standalone mode
 
-    - logs
-      Contains all log files created during execution
+    - repository
 
-    - resources
-      Contains additional resources that may be required
+        - components
+          Contains all OSGi related libraries and configurations
+
+        - conf
+          Contains server configuration files. Ex: axis2.xml, carbon.xml
+
+        - data
+          Contains internal LDAP related data
+
+        - database
+          Contains the WSO2 Registry & User Manager database
+
+        - deployment
+          Contains server side and client side Axis2 repositories. All deployment artifacts should
+          go into this directory
+
+        - lib
+          Used as the client class path for all samples
+
+        - logs
+          Contains all log files created during execution
+
+        - resources
+          Contains additional resources that may be required
 
     - samples
       Contains some sample applications that demonstrate the functionality
@@ -145,7 +163,7 @@ AppServer Binary Distribution Directory Structure
       This document.
 
     - INSTALL.txt
-          This document will contain information on installing WSO2 AppServer
+      This document will contain information on installing WSO2 AppServer
 
     - release-notes.html
       Release information for WSO2 AppServer 4.5.0-SNAPSHOT

@@ -429,7 +429,7 @@ var renderUsersList = function (result) {
         a.innerHTML = user.userName;
         cell1.appendChild(a);
 
-        cell2.innerHTML = "10/10/2011:12:20";
+        cell2.innerHTML = user.subscribedDate;
 
         var icon2 = document.createElement("i");
         icon2.setAttribute("class", "icon-edit");

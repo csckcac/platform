@@ -672,7 +672,7 @@ public class APIManagerImpl implements APIManager {
     @Override
     public boolean isAPIAvailable(APIIdentifier identifier) throws APIManagementException {
         boolean availability = false;
-        String path = identifier.getProviderName() + RegistryConstants.PATH_SEPARATOR +
+        String path = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +identifier.getProviderName() + RegistryConstants.PATH_SEPARATOR +
                 identifier.getApiName() + RegistryConstants.PATH_SEPARATOR + identifier.getVersion();
         try {
             if (registry.resourceExists(path)) {

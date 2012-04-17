@@ -270,6 +270,7 @@ do
     -Xms256m -Xmx512m -XX:MaxPermSize=256m \
     $JAVA_OPTS \
     -DandesConfig=qpid-config.xml \
+    -Ddisable.cassandra.server.startup=true \
     -Dimpl.prefix=Carbon \
     -Dcom.sun.management.jmxremote \
     -classpath "$CARBON_CLASSPATH" \

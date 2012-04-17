@@ -2,9 +2,7 @@ var apiData;
 var addAPI;
 
 var login = function () {
-    apiProviderApp.login();
-
-
+    return apiProviderApp.login();
 };
 
 var logout = function () {

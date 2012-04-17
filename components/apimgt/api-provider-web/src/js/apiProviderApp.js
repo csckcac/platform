@@ -73,11 +73,11 @@ var apiProviderApp = new function () {
 
     //logout operation
     this.logout = function () {
-        //console.log("logout");
         var loginCallback = function (result) {
             if (result.error == "false") {
                 apiProviderApp.loggedUser = null;
-                $('#userNameShow').html('');
+                //$('#userNameShow').html('');
+                location.href = "login.jag";
             }
         };
 

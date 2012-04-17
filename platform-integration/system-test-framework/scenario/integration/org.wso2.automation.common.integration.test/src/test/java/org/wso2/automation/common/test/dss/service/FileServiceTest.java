@@ -28,7 +28,10 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
 import org.wso2.automation.common.test.dss.utils.DataServiceTest;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
+import java.io.IOException;
 import java.util.Iterator;
 
 public class FileServiceTest extends DataServiceTest {
@@ -94,7 +97,7 @@ public class FileServiceTest extends DataServiceTest {
     }
 
     @Test(priority = 4, dependsOnMethods = {"createNewFile"})
-    public void addRecord() throws AxisFault {
+    public void addRecord() throws IOException {
         OMElement payload = fac.createOMElement("_postappenddatatofile", omNs);
         String recordsExpected = "";
 
@@ -104,10 +107,13 @@ public class FileServiceTest extends DataServiceTest {
 
         OMElement fileRecord = fac.createOMElement("data", omNs);
         AxisServiceClient axisClient = new AxisServiceClient();
+        BASE64Encoder encoder = new BASE64Encoder();
+        BASE64Decoder decoder = new BASE64Decoder();
         for (int i = 0; i < 5; i++) {
-            fileRecord.setText("TestFileRecord" + i);
+            String record = "TestFileRecord" + i;
+            fileRecord.setText(encoder.encode(record.getBytes()));
             payload.addChild(fileRecord);
-            recordsExpected = recordsExpected + fileRecord.getText() + ";";
+            recordsExpected = recordsExpected + record + ";";
             axisClient.sendRobust(payload, serviceEndPoint, "_postappenddatatofile");
 
         }
@@ -117,7 +123,7 @@ public class FileServiceTest extends DataServiceTest {
         String recordData = "";
         while (file.hasNext()) {
             OMElement data = (OMElement) file.next();
-            recordData = recordData + data.getFirstElement().getText() + ";";
+            recordData = recordData + new String(decoder.decodeBuffer(data.getFirstElement().getText())) + ";";
 
         }
         Assert.assertNotSame("", recordsExpected, "No Record added to file. add records to file");
@@ -163,7 +169,6 @@ public class FileServiceTest extends DataServiceTest {
         payload.addChild(fileName);
 
         OMElement result = new AxisServiceClient().sendReceive(payload, serviceEndPoint, "_getgetfilerecords");
-        System.out.println(result);
         Assert.assertNotNull(result, "Response message null ");
         return result;
     }

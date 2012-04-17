@@ -209,35 +209,39 @@ public class DynamicLoadbalanceEndpoint extends LoadbalanceEndpoint {
         return null;
     }
 
-    /**
-     * Adds the X-Forwarded-For header to the outgoing message.
-     *
-     * @param synCtx Current message context
-     */
+	/**
+	 * Adding the X-Forwarded-For/X-Originating-IP headers to the outgoing message.
+	 * 
+	 * @param synCtx Current message context
+	 */
 	protected void setupTransportHeaders(MessageContext synCtx) {
 		Axis2MessageContext axis2smc = (Axis2MessageContext) synCtx;
-        org.apache.axis2.context.MessageContext axis2MessageCtx =
-                axis2smc.getAxis2MessageContext();
-        Object headers = axis2MessageCtx.getProperty(
-                org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS);
-        if (headers != null && headers instanceof Map ) {
-        	Map headersMap = (Map) headers;
-        	String xForwardFor = (String) headersMap.get(NhttpConstants.HEADER_X_FORWARDED_FOR);
-        	String remoteHost = (String) axis2MessageCtx.getProperty(
-                    org.apache.axis2.context.MessageContext.REMOTE_ADDR);
+		org.apache.axis2.context.MessageContext axis2MessageCtx = axis2smc.getAxis2MessageContext();
+		Object headers = axis2MessageCtx.getProperty(org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS);
+		if (headers != null && headers instanceof Map) {
+			Map headersMap = (Map) headers;
+			String xForwardFor = (String) headersMap.get(NhttpConstants.HEADER_X_FORWARDED_FOR);
+		    String remoteHost = (String) axis2MessageCtx.getProperty(org.apache.axis2.context.MessageContext.REMOTE_ADDR);
 
-            if (xForwardFor != null && !"".equals(xForwardFor)) {
-                StringBuilder xForwardedForString = new StringBuilder();
-                xForwardedForString.append(xForwardFor);
-                if (remoteHost != null && !"".equals(remoteHost)) {
-                    xForwardedForString.append(",").append(remoteHost);
-                }
-                headersMap.put(NhttpConstants.HEADER_X_FORWARDED_FOR, xForwardedForString.toString());
-            } else {
-                headersMap.put(NhttpConstants.HEADER_X_FORWARDED_FOR,remoteHost);
-            }
+			if (xForwardFor != null && !"".equals(xForwardFor)) {
+				StringBuilder xForwardedForString = new StringBuilder();
+				xForwardedForString.append(xForwardFor);
+				if (remoteHost != null && !"".equals(remoteHost)) {
+					xForwardedForString.append(",").append(remoteHost);
+				}
+				headersMap.put(NhttpConstants.HEADER_X_FORWARDED_FOR, xForwardedForString.toString());
+			} else {
+				headersMap.put(NhttpConstants.HEADER_X_FORWARDED_FOR, remoteHost);
+			}
 
-        }
+			//Extracting information of X-Originating-IP
+			if (headersMap.get(NhttpConstants.HEADER_X_ORIGINATING_IP_FORM_1) != null) {
+				headersMap.put(NhttpConstants.HEADER_X_ORIGINATING_IP_FORM_1, headersMap.get(NhttpConstants.HEADER_X_ORIGINATING_IP_FORM_1));
+			} else if (headersMap.get(NhttpConstants.HEADER_X_ORIGINATING_IP_FORM_2) != null) {
+				headersMap.put(NhttpConstants.HEADER_X_ORIGINATING_IP_FORM_2, headersMap.get(NhttpConstants.HEADER_X_ORIGINATING_IP_FORM_2));
+			}
+
+		}
 	}
 
     public void setName(String name) {

@@ -33,6 +33,8 @@
 <script type="text/javascript" src="../ajax/js/prototype.js"></script>
 <jsp:include page="../resources/resources-i18n-ajaxprocessor.jsp"/>
 <script type="text/javascript" src="../resources/js/resource_util.js"></script>
+<script type="text/javascript" src="../services/js/collapsible_menu_util.js"></script>
+
 <fmt:bundle basename="org.wso2.carbon.governance.generic.ui.i18n.Resources">
 <carbon:jsi18n
         resourceBundle="org.wso2.carbon.governance.generic.ui.i18n.JSResources"
@@ -98,6 +100,15 @@
 %>
 
 <br/>
+<script type="text/javascript">
+
+    jQuery(document).ready(
+            function() {
+                initCollapseMenu("#_addEditTable");
+            }
+    );
+</script>
+
 <script type="text/javascript">
     function addEditArtifact(){
         sessionAwareFunction(function() {
@@ -214,7 +225,7 @@
                 <input type="hidden" name="key" value="<%=request.getParameter("key")%>"/>
                 <input type="hidden" name="breadcrumb" value="<%=request.getParameter("add_edit_breadcrumb")%>"/>
                 <input type="hidden" name="lifecycleAttribute" value="<%=request.getParameter("lifecycleAttribute")%>"/>
-            <table class="styledLeft">
+            <table class="styledLeft" id="#_addEditTable">
                 <tr><td>
                     <%=table.toString()%>
                 </td></tr>

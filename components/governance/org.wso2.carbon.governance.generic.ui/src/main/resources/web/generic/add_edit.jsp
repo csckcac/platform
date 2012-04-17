@@ -34,6 +34,8 @@
 <script type="text/javascript" src="../ajax/js/prototype.js"></script>
 <jsp:include page="../resources/resources-i18n-ajaxprocessor.jsp"/>
 <script type="text/javascript" src="../resources/js/resource_util.js"></script>
+<script type="text/javascript" src="../services/js/collapsible_menu_util.js"></script>
+
 <%
     String dataName = request.getParameter("dataName");
     if (dataName == null) {
@@ -72,6 +74,15 @@
         resourceBundle="org.wso2.carbon.governance.generic.ui.i18n.JSResources"
         request="<%=request%>" namespace="org.wso2.carbon.governance.generic.ui"/>
     <br/>
+
+<script type="text/javascript">
+
+    jQuery(document).ready(
+            function() {
+                initCollapseMenu("#_addTable");
+            }
+    );
+</script>
 
     <script type="text/javascript">
         <% if (request.getParameter("wsdlError") != null) { %>

@@ -339,9 +339,8 @@ function getSubscribersOfAPIFunc(apiName, version) {
 
 }
 
-function getSubscribedAPIsFunc() {
+function getSubscribedAPIsFunc(username) {
     log("getSubscribedAPIsFunc");
-    var username = getUserFunc().username;
     var apisOut = new Array();
     var apis = new Array();
     apis = apiProvider.getSubscribedAPIs(username);

@@ -463,16 +463,67 @@ var renderUsersList = function (result) {
 
 };
 
-var getSubscribedAPIs = function () {
-    apiProviderApp.call("action=getSubscribedAPIs", function (json) {
+var getSubscribedAPIs = function (userName) {
+    apiProviderApp.call("action=getSubscribedAPIs&username="+userName, function (json) {
         if (json.error == "true") {
             alert(json.message);
         }
         else {
-            return json.data.apis;
+            renderSubscribedAPIs(json);
 
         }
     });
+};
+
+var renderSubscribedAPIs = function (result) {
+    var apis = result.data.apis;
+    for (var i = 0; i < apis.length; i++) {
+        var api = apis[i];
+        var tabBody = document.getElementById("user1");
+        var row = document.createElement("tr");
+        var cell1 = document.createElement("td");
+        var cell2 = document.createElement("td");
+        var cell3 = document.createElement("td");
+        var icon = document.createElement("i");
+        icon.setAttribute("class", "icon-user");
+        var a = document.createElement("a");
+        a.setAttribute("href", "?place=api-details&name=" + api.name + "&version=" + api.version);
+        a.innerHTML = api.name;
+        cell1.appendChild(icon);
+        cell1.appendChild(a);
+
+        cell2.innerHTML = api.lastUpdatedDate;
+
+        var icon2 = document.createElement("i");
+        icon2.setAttribute("class", "icon-edit");
+        var a2 = document.createElement("a");
+        a2.setAttribute("href", "#");
+        a2.innerHTML = "Stats";
+        cell3.appendChild(icon2);
+        cell3.appendChild(a2);
+
+        var icon3 = document.createElement("i");
+        icon3.setAttribute("class", "icon-trash");
+        var a3 = document.createElement("a");
+        a3.setAttribute("href", "#");
+        a3.innerHTML = "Revoke Access";
+        cell3.appendChild(icon3);
+        cell3.appendChild(a3);
+
+        var icon4 = document.createElement("i");
+        icon4.setAttribute("class", "icon-ban-circle");
+        var a4 = document.createElement("a");
+        a4.setAttribute("href", "#");
+        a4.innerHTML = "Block";
+        cell3.appendChild(icon4);
+        cell3.appendChild(a4);
+
+        row.appendChild(cell1);
+        row.appendChild(cell2);
+        row.appendChild(cell3);
+        tabBody.appendChild(row);
+    }
+
 };
 
 var loadSubscribersOfProvider = function () {

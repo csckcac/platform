@@ -76,8 +76,8 @@ function getAllAPIUsageByProvider() {
 function getSubscribersOfAPI(apiName,version) {
     return getDataJSON(getSubscribersOfAPIFunc(apiName,version),null, "Error while getting subscribers for a provider");
 }
-function getSubscribedAPIs() {
-    return getDataJSON(getSubscribedAPIsFunc(), null, "Error while getting subscribed APIs");
+function getSubscribedAPIs(username) {
+    return getDataJSON(getSubscribedAPIsFunc(username), null, "Error while getting subscribed APIs");
 }
 function updateAPI(apiName,version,description,imageUrl,endpoint,wsdl,tags,tier,status,resourceTemplate,resourceMethod,resourceUri,context, uriTemplateArr, uriMethodArr) {
     return getDataJSON(updateAPIFunc(apiName,version,description,imageUrl,endpoint,wsdl,tags,tier,status,resourceTemplate,resourceMethod,resourceUri,context, uriTemplateArr, uriMethodArr), null, "Error while updating API");

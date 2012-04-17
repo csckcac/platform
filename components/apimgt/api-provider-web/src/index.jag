@@ -156,7 +156,18 @@
             <% include("/includes/provider/addNewAPI.jag");%>
 
             <% } %>
-            <% if(place != null && place.equals("user")){%><% include("/includes/provider/user.jag"); %><% } %>
+            <% if(place != null && place.equals("user")){
+              var userName=request.getParameter("uname");
+            %>
+             <script type="text/javascript">
+            var userName = '<%=request.getParameter("uname")%>';
+
+            $(document).ready(function() {
+            getSubscribedAPIs(userName);
+            });
+            </script>
+
+            <% include("/includes/provider/user.jag"); %><% } %>
             <% if(place != null && place.equals("users_keys")){%>
             <script type="text/javascript">
 

@@ -67,7 +67,8 @@ if (action != null) {
         var version = request.getParameter("version");
         print(getSubscribersOfAPI(apiName, version));
     } else if (action == "getSubscribedAPIs") {
-        print(getSubscribedAPIs());
+        var username= request.getParameter("username");
+        print(getSubscribedAPIs(username));
     }
     else if (action == "saveAPI") {
         var apiName = request.getParameter("apiName");
@@ -79,11 +80,10 @@ if (action != null) {
         var tier = request.getParameter("tier");
         var thumbUrl = request.getParameter("thumbUrl");
         var context = request.getParameter("context");
-         var resCount = new Array();
+        var resCount = new Array();
         if(request.getParameter("resourceCount") != null) {
             var resCount = request.getParameter("resourceCount").split(',');
         }
-
         var uriTemplateArr = [];
         var uriMethodArr = [];
 

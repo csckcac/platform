@@ -23,6 +23,22 @@ public class LogHostObject extends ScriptableObject {
         return HOSTOBJECT_NAME;
     }
 
+    /**
+     * Creates a new log object for the requested resource.
+     * logger name will be the resource name separated by a . (dot)
+     * i.e if resource is /foo/bar/mar.jag
+     * the loger name will be
+     * JAGGERY.foo.bar.mar
+     *
+     * by default the log level is set to debug
+     *
+     * @param cx
+     * @param args
+     * @param ctorObj
+     * @param inNewExpr
+     * @return
+     * @throws ScriptException
+     */
     public static Scriptable jsConstructor(Context cx, Object[] args, Function ctorObj,
                                            boolean inNewExpr) throws ScriptException {
         String requestString = ((WebAppContext) cx.getThreadLocal("jaggeryContext")).getServletRequest().getRequestURI();
@@ -30,10 +46,13 @@ public class LogHostObject extends ScriptableObject {
 
         LogHostObject logObj = new LogHostObject();
         logObj.logger = Logger.getLogger(loggerName);
+
+        //TODO need to remove this once the set from config is implemented
         logObj.logger.setLevel(Level.DEBUG);
         return logObj;
     }
 
+    //prints a debug message
     public static void jsFunction_debug(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
         String functionName = "debug";
         int argsCount = args.length;
@@ -44,9 +63,10 @@ public class LogHostObject extends ScriptableObject {
             HostObjectUtil.invalidArgsError(HOSTOBJECT_NAME, functionName, "1", "string", args[0], false);
         }
         LogHostObject logObj = (LogHostObject) thisObj;
-        logObj.logger.debug((String) args[0]);
+        logObj.logger.debug(args[0]);
     }
 
+    //prints an info message
     public static void jsFunction_info(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
         String functionName = "info";
         int argsCount = args.length;
@@ -57,9 +77,10 @@ public class LogHostObject extends ScriptableObject {
             HostObjectUtil.invalidArgsError(HOSTOBJECT_NAME, functionName, "1", "string", args[0], false);
         }
         LogHostObject logObj = (LogHostObject) thisObj;
-        logObj.logger.info((String) args[0]);
+        logObj.logger.info(args[0]);
     }
 
+    //prints an error message
     public static void jsFunction_error(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
         String functionName = "error";
         int argsCount = args.length;
@@ -70,9 +91,10 @@ public class LogHostObject extends ScriptableObject {
             HostObjectUtil.invalidArgsError(HOSTOBJECT_NAME, functionName, "1", "string", args[0], false);
         }
         LogHostObject logObj = (LogHostObject) thisObj;
-        logObj.logger.error((String) args[0]);
+        logObj.logger.error(args[0]);
     }
 
+    //prints a warning message
     public static void jsFunction_warn(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
         String functionName = "warn";
         int argsCount = args.length;
@@ -83,9 +105,10 @@ public class LogHostObject extends ScriptableObject {
             HostObjectUtil.invalidArgsError(HOSTOBJECT_NAME, functionName, "1", "string", args[0], false);
         }
         LogHostObject logObj = (LogHostObject) thisObj;
-        logObj.logger.warn((String) args[0]);
+        logObj.logger.warn(args[0]);
     }
 
+    //prints a fatal message
     public static void jsFunction_fatal(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
         String functionName = "fatal";
         int argsCount = args.length;
@@ -96,16 +119,16 @@ public class LogHostObject extends ScriptableObject {
             HostObjectUtil.invalidArgsError(HOSTOBJECT_NAME, functionName, "1", "string", args[0], false);
         }
         LogHostObject logObj = (LogHostObject) thisObj;
-        logObj.logger.fatal((String) args[0]);
+        logObj.logger.fatal(args[0]);
     }
 
-    public static boolean jsFunction_isDebugEnabled(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
-        LogHostObject logObj = (LogHostObject) thisObj;
-        return logObj.logger.isDebugEnabled();
+    //check if debug is enabled
+    public boolean jsGet_isDebugEnabled() throws ScriptException {
+        return this.logger.isDebugEnabled();
     }
 
-    public static boolean jsFunction_isTraceEnabled(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
-        LogHostObject logObj = (LogHostObject) thisObj;
-        return logObj.logger.isTraceEnabled();
+    //check if trace is anabled
+    public boolean jsGet_isTraceEnabled() throws ScriptException {
+        return this.logger.isTraceEnabled();
     }
 }

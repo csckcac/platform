@@ -295,7 +295,7 @@ function saveAPIFunc(apiName, version, description, endpoint, wsdl, tags, tier, 
         error:false,
         message:"success"
     };
-}
+   }
 
 function getAllAPIUsageByProviderFunc() {
     log("getAllAPIUsageByProviderFunc");
@@ -327,7 +327,7 @@ function getSubscribersOfAPIFunc(apiName, version) {
     for (var k = 0; k < subscribersArray.length; k++) {
         var elem = {
             userName:subscribersArray[k].userName,
-            email:subscribersArray[k].email,
+            subscribedDate:subscribersArray[k].subscribedDate,
             description:subscribersArray[k].description
         };
         subscribersOut.push(elem);
@@ -485,7 +485,6 @@ function createNewAPIVersionFunc(apiName, version, newVersion) {
 function isContextExistFunc(context) {
     log("isContextExistFunc");
     var contextExist = apiProvider.isContextExist(context);
-    log("contextt" + contextExist);
     return {
         error:false,
         contextExist:contextExist

@@ -43,8 +43,8 @@
 
     <modules>
         <module>core</module>
-        <module>endpoints</module>
-        <module>nhttp-transport</module>
+        <!--<module>endpoints</module>-->
+        <!--<module>nhttp-transport</module>-->
         <module>proxyservices</module>
     </modules>
 

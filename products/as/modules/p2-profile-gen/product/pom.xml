@@ -128,8 +128,6 @@
 
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.datasource.server.feature:${carbon.platform.version}</featureArtifactDef>
 
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.jsscraper.feature:${carbon.platform.version}</featureArtifactDef>
-
                                 <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.cloud.csg.agent.feature:${carbon.platform.version}</featureArtifactDef>-->
 
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.deployment.synchronizer.feature:${carbon.platform.version}</featureArtifactDef>
@@ -351,11 +349,6 @@
 
                                 <feature>
                                     <id>org.wso2.carbon.datasource.server.feature.group</id>
-                                    <version>${carbon.platform.version}</version>
-                                </feature>
-
-                                <feature>
-                                    <id>org.wso2.carbon.jsscraper.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
 

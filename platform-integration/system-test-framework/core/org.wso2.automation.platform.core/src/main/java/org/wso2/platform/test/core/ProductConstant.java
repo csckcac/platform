@@ -66,7 +66,7 @@ public class ProductConstant {
 
     public static String getModuleClientPath() {
         return SYSTEM_TEST_RESOURCE_LOCATION + File.separator +
-               "modules" + File.separator + "client";
+               "client";
     }
 
     public static String getSecurityScenarios() {

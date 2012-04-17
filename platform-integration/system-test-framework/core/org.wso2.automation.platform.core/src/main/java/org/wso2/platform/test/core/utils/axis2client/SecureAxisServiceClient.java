@@ -144,9 +144,8 @@ public class SecureAxisServiceClient implements CallbackHandler {
         String keyPath = 
                 environmentBuilder.getFrameworkSettings().getEnvironmentVariables().getKeystorePath();
         String securityPolicyPath = 
-                ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION +
-                File.separator + "security" + File.separator + "policies" + File.separator +
-                securityScenarioNo + "-policy.xml";
+                ProductConstant.getSecurityScenarios() + File.separator +
+                 "scenario"+ securityScenarioNo + "-policy.xml";
 
         log.debug("Key_Path :" + keyPath);
         log.debug("securityPolicyPath :" + securityPolicyPath);
@@ -193,7 +192,7 @@ public class SecureAxisServiceClient implements CallbackHandler {
             sc.setOptions(opts);
         } catch (AxisFault axisFault) {
             log.error("AxisFault : " + axisFault.getMessage());
-            throw new AxisFault("AxisFault : " + axisFault.getMessage(), axisFault);
+            throw new RuntimeException("AxisFault : " + axisFault.getMessage(), axisFault);
         }
         Assert.assertNotNull("ServiceClient object is null" + sc);
         return sc;

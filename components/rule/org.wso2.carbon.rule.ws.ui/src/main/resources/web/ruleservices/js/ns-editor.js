@@ -94,6 +94,9 @@ function createNSEditorTextBox(id, classOfTextBox) {
     if (classOfTextBox != null) {
         input.className = classOfTextBox;
     }
+    else{
+         input.style['width'] = "100px";
+    }
     return input;
 }
 

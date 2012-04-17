@@ -382,7 +382,6 @@
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.scripts</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.uri</bundleDef>
 				<bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.log</bundleDef>
-
                             </bundles>
                             <importBundles>
                                 <importBundleDef>org.codehaus.jettison:jettison</importBundleDef>

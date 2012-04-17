@@ -24,16 +24,28 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.wst.common.uriresolver.internal.util.URIEncoder;
-import org.mozilla.javascript.*;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.NativeObject;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.dto.UserApplicationAPIUsage;
-import org.wso2.carbon.apimgt.api.model.*;
+import org.wso2.carbon.apimgt.api.model.API;
+import org.wso2.carbon.apimgt.api.model.APIIdentifier;
+import org.wso2.carbon.apimgt.api.model.APIStatus;
+import org.wso2.carbon.apimgt.api.model.Documentation;
+import org.wso2.carbon.apimgt.api.model.DocumentationType;
+import org.wso2.carbon.apimgt.api.model.DuplicateAPIException;
+import org.wso2.carbon.apimgt.api.model.Subscriber;
+import org.wso2.carbon.apimgt.api.model.Tier;
+import org.wso2.carbon.apimgt.api.model.URITemplate;
 import org.wso2.carbon.apimgt.hostobjects.utils.APIHostObjectUtil;
 import org.wso2.carbon.apimgt.impl.APIManagerImpl;
 import org.wso2.carbon.apimgt.usage.client.APIMgtUsageQueryServiceClient;
-import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUsage;
+import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionDTO;
 import org.wso2.carbon.hostobjects.web.RequestHostObject;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.rest.api.ui.client.AuthAdminServiceClient;
@@ -46,7 +58,15 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class APIProviderHostObject extends ScriptableObject {
     private static final Log log = LogFactory.getLog(APIProviderHostObject.class);
@@ -132,6 +152,12 @@ public class APIProviderHostObject extends ScriptableObject {
 
 
                 APIIdentifier apiId = new APIIdentifier(provider, name, version);
+                boolean apiExist = apiManagerImpl.isAPIAvailable(apiId);
+                if (apiExist) {
+                    throw new APIManagementException("Failed saving the new API due to an API already exists " +
+                                                     " with same name: " + name + " and version: "
+                                                     + version + " for the provider: " + provider);
+                }
                 API api = new API(apiId);
 
                 NativeArray uriMethodArr = (NativeArray) args[12];

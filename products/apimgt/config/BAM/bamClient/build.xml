@@ -1,28 +1,66 @@
 <project name="BAMClient" default="configureBAM" basedir=".">
 
-    <property name="class.dir" value="target/classes"/>
+    <property name="client.class.dir" value="target/client/classes"/>
+    <property name="analyzer.class.dir" value="target/analyzer/classes"/>
+    <property name="analyzer.jar.dir" value="target/jar"/>
 
-    <target name="init">
-        <mkdir dir="${class.dir}"/>
-        <path id="javac.classpath">
-            <pathelement path="${class.dir}"/>
-            <fileset dir="../../repository/components/plugins"/>
+    <target name="clean">
+        <delete dir="target"/>
+    </target>
+
+    <target name="init" depends="clean">
+        <mkdir dir="${client.class.dir}"/>
+        <mkdir dir="${analyzer.class.dir}"/>
+	<mkdir dir="org.wso2.carbon.bam.client/lib">
+        <path id="javac.bam.analyzer.classpath">
+            <pathelement path="${analyzer.class.dir}"/>
+            <fileset dir="./../repository/components/plugins"/>
+            <fileset dir="./../lib"/>
+        </path>
+        <path id="javac.bam.client.classpath">
+            <pathelement path="${client.class.dir}"/>
+            <fileset dir="./../repository/components/plugins"/>
+            <fileset dir="./../lib"/>
+            <fileset dir="./org.wso2.carbon.bam.client/lib"/>
         </path>
     </target>
 
-    <target name="compile" depends="init" description="Compile all Java">
-        <javac srcdir="src" destdir="${class.dir}">
-            <classpath refid="javac.classpath"/>
+    <target name="download_jars" depends="init" description="Download necessary dependencies">
+	<get src="http://dist.wso2.org/p2/carbon/releases/3.2.4/plugins/google-collect-1.0.0.wso2v2.jar" dest="org.wso2.carbon.bam.client/lib"/>
+	<get src="http://dist.wso2.org/p2/carbon/releases/3.2.4/plugins/libthrift-0.5.0.wso2v2.jar" dest="org.wso2.carbon.bam.client/lib"/>
+	<get src="http://dist.wso2.org/p2/carbon/releases/3.2.4/plugins/org.wso2.carbon.bam.agent-3.2.4.jar" dest="org.wso2.carbon.bam.client/lib"/>
+	<get src="http://dist.wso2.org/p2/carbon/releases/3.2.4/plugins/org.wso2.carbon.bam.data.publisher.util-3.2.4.jar" dest="org.wso2.carbon.bam.client/lib"/>
+	<get src="http://dist.wso2.org/p2/carbon/releases/3.2.4/plugins/org.wso2.carbon.bam.service-3.2.4.jar" dest="org.wso2.carbon.bam.client/lib"/>
+	<get src="http://dist.wso2.org/p2/carbon/releases/3.2.4/plugins/slf4j.api-1.6.1.jar" dest="org.wso2.carbon.bam.client/lib"/>
+	<get src="http://dist.wso2.org/p2/carbon/releases/3.2.4/plugins/slf4j.log4j12-1.6.1.jar" dest="org.wso2.carbon.bam.client/lib"/>
+    </target>
+
+    <target name="compile_client" depends="download_jars" description="Compile all Java">
+        <javac srcdir="org.wso2.carbon.bam.client/src" destdir="${client.class.dir}">
+            <classpath refid="javac.bam.client.classpath"/>
         </javac>
     </target>
 
-    <target name="configureBAM" depends="compile">
+    <target name="compile_analyzer" depends="init" description="Compile all Java">
+        <javac srcdir="org.wso2.carbon.apimgt.usage.analyzer/src" destdir="${analyzer.class.dir}">
+            <classpath refid="javac.bam.analyzer.classpath"/>
+        </javac>
+    </target>
+
+
+    <target name="configureBAM" depends="compile_client">
         <java classname="org.wso2.carbon.bam.client.Client"
-              classpathref="javac.classpath" fork="true">
+              classpathref="javac.bam.client.classpath" fork="true">
             <sysproperty key="bamUrl" value="https://localhost:9444/services/"/>
             <sysproperty key="carbon.home" value="./.."/>
-            <sysproperty key="amConfigFilePath" value="./.."/>
+            <sysproperty key="configFilePath" value="./org.wso2.carbon.bam.client/src/main/resources/"/>
         </java>
+    </target>
+
+    <target name="makejar" depends="compile_analyzer">
+	<mkdir dir="${client.class.dir}"/>
+        <jar destfile="${analyzer.jar.dir}/ClassAnalyzer.jar" basedir="${analyzer.class.dir}"/>
+	<copy file="${analyzer.jar.dir}/ClassAnalyzer.jar" todir="../repository/components/lib"/>
     </target>
 
 </project>

@@ -271,7 +271,7 @@ public class ContainerDAO extends AbstractDAO{
             throws ClassNotFoundException, SQLException {
 
         ContainerInformation containerInformation = new ContainerInformation();
-        containerInformation.setZone(zone);
+        //containerInformation.setZone(zone);
         WorkerNode workerNode = getAvailableWorkerNode(zone);
         Bridge[] bridges = workerNode.getBridges();
         Bridge bridge = bridges[0];

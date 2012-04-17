@@ -1,4 +1,5 @@
 var apiData;
+var addAPI;
 
 var login = function () {
     apiProviderApp.login();
@@ -292,6 +293,9 @@ var renderAPIs = function (result) {
     }
     var itemCount = result.data.apis.length;
     if (itemCount == 0) {
+        if(!addAPI){
+        location.href = "?place=add";
+        }
         return;
     }
     var itemsPerPage = 10; //reduce this number to preview the pagination

@@ -164,4 +164,10 @@ public interface QpidService {
      * @return the SSL port 
      */
     public String getSSLPort();
+
+    /**
+     * Returns the Whether the clustering is enabled
+     * @return  clustering enabled disabled status
+     */
+    public boolean isClusterEnabled();
 }

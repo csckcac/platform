@@ -28,6 +28,7 @@ import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.andes.service.QpidService;
 import org.wso2.carbon.andes.service.QpidServiceImpl;
 import org.wso2.carbon.andes.authentication.service.AuthenticationService;
+import org.wso2.carbon.cassandra.server.service.CassandraServerService;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.event.core.EventBundleNotificationService;
 import org.wso2.carbon.event.core.qpid.QpidServerDetails;
@@ -37,6 +38,8 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
+import java.net.ServerSocket;
+import java.net.UnknownHostException;
 import java.util.Set;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -68,6 +71,12 @@ import java.net.Socket;
  *                              policy="dynamic"
  *                              bind="setEventBundleNotificationService"
  *                              unbind="unsetEventBundleNotificationService"
+ * @scr.reference    name="cassandra.service"
+ *                              interface="org.wso2.carbon.cassandra.server.service.CassandraServerService"
+ *                              cardinality="1..1"
+ *                              policy="dynamic"
+ *                              bind="setCassandraServerService"
+ *                              unbind="unsetCassandraServerService"
  */
 public class QpidServiceComponent {
 
@@ -81,6 +90,7 @@ public class QpidServiceComponent {
 
 
     private boolean activated = false;
+
 
     protected void activate(ComponentContext ctx) {
 
@@ -97,8 +107,32 @@ public class QpidServiceComponent {
         QpidServiceImpl qpidServiceImpl =
                 new QpidServiceImpl(QpidServiceDataHolder.getInstance().getAccessKey());
 
-        // Start Qpid broker
+        CassandraServerService cassandraServerService = QpidServiceDataHolder.getInstance().getCassandraServerService();
+
+        if(cassandraServerService != null) {
+            if(!qpidServiceImpl.isClusterEnabled()) {
+                cassandraServerService.startServer();
+                int count = 0;
+                while (!isCassandraStarted()) {
+                    count++;
+                    if(count > 10) {
+                        break;
+                    }
+
+                    try {
+                        Thread.sleep(30*1000);
+                    } catch (InterruptedException e) {
+
+                    }
+                }
+            }
+        } else {
+            log.error("Cassandra Server service not set properly server will not start properly");
+        }
+
+        // Start andes broker
         try {
+            log.debug("Starting andes server");
             System.setProperty(BrokerOptions.QPID_HOME, qpidServiceImpl.getQpidHome());
             String[] args = {"-p" + qpidServiceImpl.getPort(), "-s" + qpidServiceImpl.getSSLPort()};
             //Main.setStandaloneMode(false);
@@ -203,6 +237,18 @@ public class QpidServiceComponent {
         // unsetting
     }
 
+
+    protected void setCassandraServerService(CassandraServerService cassandraServerService){
+        if (QpidServiceDataHolder.getInstance().getCassandraServerService() == null) {
+            QpidServiceDataHolder.getInstance().registerCassandraServerService(cassandraServerService);
+        }
+    }
+
+    protected void unsetCassandraServerService(CassandraServerService cassandraServerService){
+
+
+    }
+
     /**
         * Check if the broker is up and running
         *
@@ -224,5 +270,27 @@ public class QpidServiceComponent {
         }
 
         return response;
+    }
+
+
+    private boolean isCassandraStarted() {
+        Socket socket = null;
+        boolean status = false;
+        try {
+            socket = new Socket(InetAddress.getByName("localhost"), 9160);
+        } catch (UnknownHostException e) {
+        } catch (IOException e) {
+        } finally {
+            if(socket != null) {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+
+                }
+                status = true;
+            }
+        }
+        log.debug("Checking for Cassandra server started status - status :" + status);
+        return status;
     }
 }

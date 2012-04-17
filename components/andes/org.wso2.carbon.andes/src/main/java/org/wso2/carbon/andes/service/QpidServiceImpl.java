@@ -52,6 +52,8 @@ public class QpidServiceImpl implements QpidService {
     private static final String QPID_CONF_CONNECTOR_NODE = "connector";
     private static final String QPID_CONF_PORT_NODE = "port";
     private static final String QPID_CONF_SSL_PORT_NODE = "sslport";
+    private static final String QPID_CONF_CLUSTER_NODE="clustering";
+    private static final String QPID_CONF_CLUSTER_ENABLE_NODE="enabled";
 
     private static String CARBON_CONFIG_QPID_PORT_NODE = "Ports.EmbeddedQpid.BrokerPort";
     private static String CARBON_CONFIG_QPID_SSL_PORT_NODE = "Ports.EmbeddedQpid.BrokerSSLPort";
@@ -65,6 +67,8 @@ public class QpidServiceImpl implements QpidService {
     private String port = "";
     private String sslPort = "";
     private int portOffset = 0;
+
+    private Boolean clsuterEnabled;
 
     public QpidServiceImpl(String accessKey) {
         this.accessKey = accessKey;
@@ -193,6 +197,16 @@ public class QpidServiceImpl implements QpidService {
         return sslPort;
     }
 
+    public boolean isClusterEnabled() {
+
+        if(clsuterEnabled==null) {
+            clsuterEnabled = readClusterEnabledDisabledStatusFromQpidConfig();
+            return clsuterEnabled;
+        }
+
+        return clsuterEnabled;
+    }
+
     private int readPortOffset() {
         ServerConfigurationService carbonConfig = QpidServiceDataHolder.getInstance().getCarbonConfiguration();
         String portOffset = carbonConfig.getFirstProperty(CARBON_CONFIG_PORT_OFFSET_NODE);
@@ -241,10 +255,10 @@ public class QpidServiceImpl implements QpidService {
     }
 
     /**
-        * Read port from qpid-config.xml
-        *
-        * @return
-        */
+     * Read port from qpid-config.xml
+     *
+     * @return
+     */
     private String readPortFromQpidConfig() {
         String port = "";
 
@@ -269,6 +283,41 @@ public class QpidServiceImpl implements QpidService {
         }
 
         return ((port != null) ? port.trim() : "");
+    }
+
+    /**
+     * Read port from qpid-config.xml
+     *
+     * @return
+     */
+    private boolean readClusterEnabledDisabledStatusFromQpidConfig() {
+        String enabled = "";
+
+        try {
+            File confFile = new File(getQpidHome() + QPID_CONF_FILE);
+
+            OMElement docRootNode = new StAXOMBuilder(new FileInputStream(confFile)).
+                    getDocumentElement();
+            OMElement clusteringNode = docRootNode.getFirstChildWithName(
+                    new QName(QPID_CONF_CLUSTER_NODE));
+            OMElement enabledNode = clusteringNode.getFirstChildWithName(
+                    new QName(QPID_CONF_CLUSTER_ENABLE_NODE));
+
+            enabled = enabledNode.getText();
+        } catch (FileNotFoundException e) {
+            log.error(getQpidHome() + QPID_CONF_FILE + " not found");
+        } catch (XMLStreamException e) {
+            log.error("Error while reading " + getQpidHome() +
+                      QPID_CONF_FILE + " : " + e.getMessage());
+        } catch (NullPointerException e) {
+            log.error("Invalid configuration : " + getQpidHome() + QPID_CONF_FILE);
+        }
+
+        if("true".equals(enabled)) {
+            return true;
+        }
+
+        return false;
     }
 
     private String readSSLPortFromConfig() {

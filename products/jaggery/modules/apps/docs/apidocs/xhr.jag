@@ -291,10 +291,7 @@ include('/includes/topnavi.jag');
 include('/includes/scripts.jag')
 %>
 <script src="../js/google-code-prettify/prettify.js"></script>
-<script>$(function () {
-    prettyPrint();
-})
-
+<script>
 $(document).ready(function(){
         $('#xhr').toggleClass('active')  ;
         $('#docs').addClass('active')  ;

@@ -1,37 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Jaggery - Delicious Javascript</title>
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <html lang="en">
+        <head>
+            <meta charset="utf-8">
+                <title>Jaggery - Delicious Javascript</title>
+                <meta name="description" content="">
+                    <meta name="author" content="">
 
-    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
-    <!--[if lt IE 9]>
-    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+                        <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+                        <!--[if lt IE 9]>
+                        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+                        <![endif]-->
 
-    <!-- Le styles -->
-    <link href="../css/bootstrap.css" rel="stylesheet">
-    <style type="text/css">
-        body {
-            padding-top: 60px;
-        }
-    </style>
-    <link href="../css/prettify.css" rel="stylesheet">
-    <!-- Le fav and touch icons -->
-    <link rel="shortcut icon" href="../images/favicon.ico">
-    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="72x72"
-          href="../images/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="114x114"
-          href="../images/apple-touch-icon-114x114.png">
-</head>
+                        <!-- Le styles -->
+                        <link href="../css/bootstrap.css" rel="stylesheet">
+                            <style type="text/css">
+                            body {
+                                padding-top: 60px;
+                                }
+                            </style>
+                            <link href="../css/prettify.css" rel="stylesheet">
+                                <!-- Le fav and touch icons -->
+                                <link rel="shortcut icon" href="../images/favicon.ico">
+                                    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png">
+                                        <link rel="apple-touch-icon" sizes="72x72"
+                                        href="../images/apple-touch-icon-72x72.png">
+                                            <link rel="apple-touch-icon" sizes="114x114"
+                                            href="../images/apple-touch-icon-114x114.png">
+                                            </head>
 
-<body>
+                                            <body>
 
-<%
-include('/includes/topnavi.jag');
+                                                <%
+                                                include('/includes/topnavi.jag');
 %>
 
 <div class="container-fluid" style="width: 960px; margin: auto;">
@@ -58,15 +58,12 @@ include('/includes/topnavi.jag');
         </div>
         <div class="span12">
             <div class="content" id="print" name="print">
-                <h3>log()</h3>
+                <h3>Log</h3>
 <pre class="prettyprint linenums">
-    &lt%
-        log("This is an INFO level log", "info");
-        log("This is an WARN level log", "warn");
-        log("This is an DEBUG level log", "debug");
-        log("This is an ERROR level log", "error");
-        log("This is an FATAL level log", "fatal");
-    %&gt
+&lt%
+var log = new Log();
+log.info("This is an INFO level log");
+%&gt
 </pre>
 <div id="pageLinks">
 <a class="navilink" href="#overview">Overview</a>
@@ -76,28 +73,89 @@ include('/includes/topnavi.jag');
 
 <section id="overview">
     <h4>Overview</h4>
-                <p class="description">In-built function <code>log()</code> will log errors, warning and information to the Jaggery console.
-                    <code>log()</code> will mostly help when debugging your scripts.
+                <p class="description">The <code>Log</code> class will log errors, warning and information to the Jaggery console.
+                    It will mostly help when debugging your scripts.
                 </p>
          </section>
 
+<section id="members">
+
+                   <table class="clsStd member-table">
+
+                       <tbody>
+
+                       <tr>
+                           <th>Member</th>
+                           <th>&nbsp;&nbsp;Type&nbsp;&nbsp;</th>
+                           <th>Description</th>
+                       </tr>
+                      <tr>
+
+                        <td><code>isDebugEnabeld</code></td>
+                        <td>boolean</td>
+                        <td>
+                           <pre class="prettyprint">log.isDebugEnabled</pre>
+                            Returns true if Debug level is enabled. Default is true
+
+                        </td>
+
+                    </tr>
+
+                       </tbody>
+                       </table>
+
+               </section>
                 <section id="operations">
                     <h4>Operations</h4>
                 <table class="clsStd operations-table">
                     <tbody>
                     <tr>
                         <th>Member</th>
+			<th>&nbsp;&nbsp;Type&nbsp;&nbsp;</th>
                         <th>Description</th>
                     </tr>
                     <tr>
-                        <td><code>constructor</code></td>
+                        <td><code>Log()</code></td>
+			<td>Log</td>
                         <td>
 <pre class="prettyprint">
-log("This is a log", "info");
-// return an info level log
+var log = new Log();
 </pre>
- Returns string, takes the log message and log level (optional) as inputs
-                           
+ Returns a Log object
+
+                        </td>
+                    </tr>
+                                        <tr>
+                        <td><code>debug()</code></td>
+<td>None</td>
+                        <td>
+<pre class="prettyprint">
+log.debug("this is a debug message")
+</pre>
+ prints a debug message to the console
+
+                        </td>
+                    </tr>
+                                                            <tr>
+                        <td><code>info()</code></td>
+<td>None</td>
+                        <td>
+<pre class="prettyprint">
+log.info("this is a info message")
+</pre>
+ prints a info message to the console
+
+                        </td>
+                    </tr>
+                                                            <tr>
+                        <td><code>warn()</code></td>
+<td>None</td>
+                        <td>
+<pre class="prettyprint">
+log.warn("this is a warn message")
+</pre>
+ prints a warn message to the console
+
                         </td>
                     </tr>
                     </tbody>
@@ -121,9 +179,7 @@ log("This is a log", "info");
 include('/includes/scripts.jag')
 %>
 
-<script>$(function () {
-    prettyPrint();
-})
+<script>
 $(document).ready(function () {
     $('#log').toggleClass('active')
     $('#docs').addClass('active')

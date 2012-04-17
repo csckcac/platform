@@ -123,10 +123,7 @@ print("Number of people " + people.length());
 <%
 include('/includes/scripts.jag')
 %>
-<script>$(function () {
-    prettyPrint();
-})
-
+<script>
 $(document).ready(function(){
         $('#xmllist').toggleClass('active')
         $('#docs').addClass('active')

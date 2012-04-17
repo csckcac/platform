@@ -146,10 +146,7 @@ print("Toves age is - " + employees.person.(name == "Tove").age);
 <%
 include('/includes/scripts.jag')
 %>
-<script>$(function () {
-    prettyPrint();
-})
-
+<script>
 $(document).ready(function(){
         $('#xml').toggleClass('active')
         $('#docs').addClass('active')

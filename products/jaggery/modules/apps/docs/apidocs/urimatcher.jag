@@ -189,10 +189,7 @@ if(uriMatcher.match('/{context}/{dir}/{page}')) {
 <%
 include('/includes/scripts.jag')
 %>
-<script>$(function () {
-    prettyPrint();
-})
-
+<script>
 $(document).ready(function(){
         $('#urimatcher').toggleClass('active')
         $('#docs').addClass('active')

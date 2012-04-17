@@ -115,10 +115,7 @@ include('/includes/topnavi.jag');
                 
 <section id="overview">
     <h4>Overview</h4>
-          <p class="description">In-built function <code>print() </code> will write server side output to the document. Further, <code>
-
-                    &lt%=my_var%&gt </code> can be used instead of <code>print() </code>
-                </p>
+          <p class="description">In-built function <code>print() </code> will write serverside output to the document.</p>
 </section>
 
 <section id="operations">
@@ -131,7 +128,7 @@ include('/includes/topnavi.jag');
                         <th>Description</th>
                     </tr>
                     <tr>
-                        <td><code>constructor</code></td>
+                        <td><code>print()</code></td>
                         <td>
         <pre class="prettyprint">
 print("hi");
@@ -144,17 +141,7 @@ var obj = {"name": "Madhuka", "company":"WSO2"};<br>
 print(obj);
 // return a JSON object
         </pre>
-                            Passing native Javascript object will be return as JSON object.
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><code>string literals</code></td>
-                        <td>
-		 <pre class="prettyprint">
-print("hello world");
-print('hello world');
-		 </pre>
-                            Create a String is to use single or double quotes inside a Jaggery program
+                            Passing a Javascript object to <code>print()</code> will be return as JSON object.
                         </td>
                     </tr>
                     <tr>
@@ -164,17 +151,6 @@ print('hello world');
 print("\"\'");
 </pre>
                             Escape sequences that can appear inside of double quotes.
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><code>Expression &lt%= &gt;</code></td>
-                        <td>
-		<pre class="prettyprint">
-&lt%
-var name="Nuwan";
-&gt;
-&lt%= name&gt;
-</pre>  Act as print.
                         </td>
                     </tr>
 
@@ -200,9 +176,7 @@ var name="Nuwan";
 include('/includes/scripts.jag')
 %>
 
-<script>$(function () {
-    prettyPrint();
-})
+<script>
 $(document).ready(function(){
         $('#print').toggleClass('active')
         $('#docs').addClass('active')

@@ -125,9 +125,7 @@ include('/includes/footer.jag');
 include('/includes/scripts.jag')
 %>
 
-<script>$(function () {
-    prettyPrint();
-});
+<script>
 $(document).ready(function () {
     $('#require').toggleClass('active')
     $('#docs').addClass('active')

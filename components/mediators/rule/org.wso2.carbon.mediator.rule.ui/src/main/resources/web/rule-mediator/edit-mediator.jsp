@@ -1,20 +1,20 @@
 <!--
- ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- ~
- ~ WSO2 Inc. licenses this file to you under the Apache License,
- ~ Version 2.0 (the "License"); you may not use this file except
- ~ in compliance with the License.
- ~ You may obtain a copy of the License at
- ~
- ~    http://www.apache.org/licenses/LICENSE-2.0
- ~
- ~ Unless required by applicable law or agreed to in writing,
- ~ software distributed under the License is distributed on an
- ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- ~ KIND, either express or implied.  See the License for the
- ~ specific language governing permissions and limitations
- ~ under the License.
- -->
+~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~
+~ WSO2 Inc. licenses this file to you under the Apache License,
+~ Version 2.0 (the "License"); you may not use this file except
+~ in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing,
+~ software distributed under the License is distributed on an
+~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+~ KIND, either express or implied. See the License for the
+~ specific language governing permissions and limitations
+~ under the License.
+-->
 <%@ page import="org.wso2.carbon.mediator.rule.RuleMediator" %>
 <%@ page import="org.wso2.carbon.mediator.rule.ui.internal.RuleMediatorClientHelper" %>
 <%@ page import="org.wso2.carbon.mediator.service.ui.Mediator" %>
@@ -85,7 +85,7 @@
         ruleSet = new RuleSet();
     }
 
-    if (ruleSet.getRules().isEmpty()){
+    if (ruleSet.getRules().isEmpty()) {
         ruleSet.addRule(new Rule());
     }
 
@@ -94,13 +94,15 @@
     boolean isInline = (rule.getSourceType() == null)
             || (rule.getSourceType().equals(""))
             || (rule.getSourceType().equals("inline"));
+    boolean isURL = rule.getSourceType().equals("url");
 
     // if the type is in line rule value is the script value
     // if the type is registry key, then value is regsitry key
     String ruleValue = rule.getValue() != null ? rule.getValue().toString() : "";
 
     String ruleSourceValue = isInline ? ruleValue : "";
-    String ruleRegistryKeyValue = isInline ? "" : ruleValue;
+    String ruleRegistryKeyValue = (isInline || isURL) ? "" : ruleValue;
+    String ruleURLValue = isURL ? ruleValue : "";
 
     String ruleScriptID = SequenceEditorHelper.getEditingMediatorPosition(session) + "_rulescript";
     Map ruleScriptsMap = (Map) request.getSession().getAttribute("rulemediator_script_map");
@@ -164,7 +166,7 @@
             </tr>
         </table>
     </td>
-</tr>                                                                                                   
+</tr>
 
 <tr>
     <td><h3 class="mediator"><fmt:message key="mediator.rule.target"/></h3></td>
@@ -174,7 +176,7 @@
         <table class="normal">
             <tr>
                 <td><fmt:message key="mediator.rule.source.value"/>
-                    <font style="color: red; font-size: 8pt;">*</font>
+                    <font style="color: #ff0000; font-size: 8pt;">*</font>
                 </td>
                 <td>
                     <input type="text" id="mediator.rule.target.value"
@@ -216,37 +218,144 @@
 <tr>
     <td><h3 class="mediator"><fmt:message key="mediator.rule.executionset"/></h3></td>
 </tr>
+    <%--
+    <tr>
+        <td>
+            <table class="normal">
+                <tr>
+                    <td>
+                        <select id="mediator.rule.inline"
+                                name="mediator.rule.inline"
+                                onchange="onScriptSourceModeSelectionChange();">
+                            <%
+                                if (isInline) {
+                            %>
+                            <option id="inline" value="inline" selected="true"><fmt:message
+                                    key="in-lined"/></option>
+                            </option>
+                            <option id="registrykeylookup" value="registrykey">
+                                <fmt:message key="registry.lookup"/>
+                            </option>
+                            <%
+                            } else {
+                            %>
+                            <option id="registrykeylookup" value="registrykey"
+                                    selected="true"><fmt:message key="registry.lookup"/>
+                            </option>
+                            <option id="inline" value="inline"><fmt:message key="in-lined"/></option>
+                            <%
+                                }
+                            %>
+                        </select>
+                    </td>
+                </tr>
+                    &lt;%&ndash;<tr>&ndash;%&gt;
 
+                    &lt;%&ndash;<td id="inline_rulescript" style="<%=!isInline?"display:none" : ""%>">&ndash;%&gt;
+                    &lt;%&ndash;<a&ndash;%&gt;
+                    &lt;%&ndash;href="#ruleScriptBrowserLink" class="policie-icon-link"&ndash;%&gt;
+                    &lt;%&ndash;style="padding-left:40px"&ndash;%&gt;
+                    &lt;%&ndash;onclick="showInLinedRuleScriptPolicyEditor('<%=ruleScriptID%>');"><fmt:message&ndash;%&gt;
+                    &lt;%&ndash;key="ruleScript.policy.editor"/></a>&ndash;%&gt;
+                    &lt;%&ndash;</td>&ndash;%&gt;
+
+                    &lt;%&ndash;<td id="regkey_rulescript" style="<%=isInline? "display:none;" : ""%>">&ndash;%&gt;
+                    &lt;%&ndash;<input type="text" class="longInput" id="mediator.rule.key"&ndash;%&gt;
+                    &lt;%&ndash;name="mediator.rule.key" value="<%=ruleRegistryKeyValue%>"&ndash;%&gt;
+                    &lt;%&ndash;readonly="true"/>&ndash;%&gt;
+                    &lt;%&ndash;</td>&ndash;%&gt;
+                    &lt;%&ndash;<td id="regbrowser_rulescript"&ndash;%&gt;
+                    &lt;%&ndash;style="<%=isInline? "display:none;" : ""%>">&ndash;%&gt;
+                    &lt;%&ndash;<a href="#registryBrowserLink" class="registry-picker-icon-link"&ndash;%&gt;
+                    &lt;%&ndash;style="padding-left:20px;padding-left:20px"&ndash;%&gt;
+                    &lt;%&ndash;onclick="showRegistryBrowser('mediator.rule.key','/_system/config');"><fmt:message&ndash;%&gt;
+                    &lt;%&ndash;key="registry.conf.keys"/></a>&ndash;%&gt;
+                    &lt;%&ndash;<a href="#registryBrowserLink" class="registry-picker-icon-link"&ndash;%&gt;
+                    &lt;%&ndash;style="padding-left:20px"&ndash;%&gt;
+                    &lt;%&ndash;onclick="showRegistryBrowser('mediator.rule.key','/_system/governance');"><fmt:message&ndash;%&gt;
+                    &lt;%&ndash;key="registry.gov.keys"/></a>&ndash;%&gt;
+                    &lt;%&ndash;</td>&ndash;%&gt;
+                    &lt;%&ndash;</tr>&ndash;%&gt;
+                    &lt;%&ndash;<tr>&ndash;%&gt;
+                    &lt;%&ndash;<td>&ndash;%&gt;
+                    &lt;%&ndash;<a name="ruleScriptBrowserLink"></a>&ndash;%&gt;
+
+                    &lt;%&ndash;<div id="ruleScriptBrowser" style="display:none;"></div>&ndash;%&gt;
+                    &lt;%&ndash;</td>&ndash;%&gt;
+                    &lt;%&ndash;</tr>&ndash;%&gt;
+            </table>
+        </td>
+    </tr>--%>
+    <%--<%=RuleMediatorClientHelper.getPropertyXML("creation", creationProperties, request.getLocale())%>--%>
+    <%--<%=RuleMediatorClientHelper.getPropertyXML("registration", registrationIterator, request.getLocale())%>--%>
+    <%--<%=RuleMediatorClientHelper.getPropertyXML("deregistration", deRegistrationIterator, request.getLocale())%>--%>
+
+    <%-- Add RuleSet with radio buttons  --%>
 <tr>
     <td>
         <table class="normal">
             <tr>
                 <td>
-                    <select id="mediator.rule.inline"
-                            name="mediator.rule.inline"
-                            onchange="onScriptSourceModeSelectionChange();">
-                        <%
-                            if (isInline) {
-                        %>
-                        <option id="inline" value="inline" selected="true"><fmt:message
-                                key="in-lined"/></option>
-                        </option>
-                        <option id="registrykeylookup" value="registrykey">
-                            <fmt:message key="registry.lookup"/>
-                        </option>
-                        <%
-                        } else {
-                        %>
-                        <option id="registrykeylookup" value="registrykey"
-                                selected="true"><fmt:message key="registry.lookup"/>
-                        </option>
-                        <option id="inline" value="inline"><fmt:message key="in-lined"/></option>
-                        <%
-                            }
-                        %>
-                    </select>
-                </td>
+                    <%
+                        if (isInline) {
+                    %>
+                    <input type="radio" name="ruleScriptType"
+                           id="ruleScriptTypeinlined"
+                           value="inlined"
+                           onclick="setRuleScriptType('inlined');"
+                           checked="checked"/>
+                    <fmt:message key="in-lined"/>
+                    <input type="radio" name="ruleScriptType"
+                           id="ruleScriptTypekey"
+                           value="key"
+                           onclick="setRuleScriptType('key');"/>
+                    <fmt:message key="key"/>
+                    <input type="radio" name="ruleScriptType"
+                           id="ruleScriptTypeurl"
+                           value="url"
+                           onclick="setRuleScriptType('url');"/>
+                    <fmt:message key="reg.url"/>
+                    <% } else if (isURL) { %>
+                    <input type="radio" name="ruleScriptType"
+                           id="ruleScriptTypeinlined"
+                           value="inlined"
+                           onclick="setRuleScriptType('inlined');"/>
+                    <fmt:message key="in-lined"/>
+                    <input type="radio" name="ruleScriptType"
+                           id="ruleScriptTypekey"
+                           value="key"
+                           onclick="setRuleScriptType('key');"/>
+                    <fmt:message key="key"/>
+                    <input type="radio" name="ruleScriptType"
+                           id="ruleScriptTypeurl"
+                           value="url"
+                           onclick="setRuleScriptType('url');"
+                           checked="checked"/>
+                    <fmt:message key="reg.url"/>
 
+                    <%} else { %>
+                    <input type="radio" name="ruleScriptType"
+                           id="ruleScriptTypeinlined"
+                           value="inlined"
+                           onclick="setRuleScriptType('inlined');"/>
+                    <fmt:message key="in-lined"/>
+                    <input type="radio" name="ruleScriptType"
+                           id="ruleScriptTypekey"
+                           value="key"
+                           onclick="setRuleScriptType('key');"
+                           checked="checked"/>
+                    <fmt:message key="key"/>
+
+                    <input type="radio" name="ruleScriptType"
+                           id="ruleScriptTypeurl"
+                           value="url"
+                           onclick="setRuleScriptType('url');"/>
+                    <fmt:message key="reg.url"/>
+
+                    <%} %>
+                </td>
+            </tr>
+            <tr>
                 <td id="inline_rulescript" style="<%=!isInline?"display:none" : ""%>">
                     <a
                             href="#ruleScriptBrowserLink" class="policie-icon-link"
@@ -254,14 +363,18 @@
                             onclick="showInLinedRuleScriptPolicyEditor('<%=ruleScriptID%>');"><fmt:message
                             key="ruleScript.policy.editor"/></a>
                 </td>
+                  <td id="url_rulescript" style="<%=!isURL ? "display:none;" : ""%>">
+                    <input type="text" class="longInput" id="mediator.rule.url"
+                           name="mediator.rule.url" value="<%=ruleURLValue%>"/>
+                </td>
 
-                <td id="regkey_rulescript" style="<%=isInline? "display:none;" : ""%>">
+                <td id="regkey_rulescript" style="<%=(isInline || isURL) ? "display:none;" : ""%>">
                     <input type="text" class="longInput" id="mediator.rule.key"
                            name="mediator.rule.key" value="<%=ruleRegistryKeyValue%>"
                            readonly="true"/>
                 </td>
                 <td id="regbrowser_rulescript"
-                    style="<%=isInline? "display:none;" : ""%>">
+                    style="<%=(isInline || isURL) ? "display:none;" : ""%>">
                     <a href="#registryBrowserLink" class="registry-picker-icon-link"
                        style="padding-left:20px;padding-left:20px"
                        onclick="showRegistryBrowser('mediator.rule.key','/_system/config');"><fmt:message
@@ -282,9 +395,6 @@
         </table>
     </td>
 </tr>
-<%--<%=RuleMediatorClientHelper.getPropertyXML("creation", creationProperties, request.getLocale())%>--%>
-    <%--<%=RuleMediatorClientHelper.getPropertyXML("registration", registrationIterator, request.getLocale())%>--%>
-    <%--<%=RuleMediatorClientHelper.getPropertyXML("deregistration", deRegistrationIterator, request.getLocale())%>--%>
 
 <tr>
     <td><h3 class="mediator"><fmt:message key="mediator.rule.inputs"/></h3></td>
@@ -312,49 +422,49 @@
                         String factNamespace = fact.getNamespace() != null ? fact.getNamespace() : "";
                         String factXpath = fact.getXpath() != null ? fact.getXpath() : "";
 
-                    %>
-                    <tr id="factRaw<%=k%>">
-                        <td>
-                            <input name="factType<%=k%>"
-                                   id="factType<%=k%>" value="<%=factType%>"
-                                   type="text"/>
-                        </td>
-                        <td>
-                            <a class="fact-selector-icon-link" href="#factEditorLink"
-                               style="padding-left:40px"
-                               onclick="showFactEditor('fact','<%=k%>')"><fmt:message
-                                key="fact.type"/></a>
-                        </td>
-                        <td>
-                            <input name="factElementName<%=k%>"
-                                   id="factElementName<%=k%>" value="<%=factElementName%>"
-                                   type="text"/>
-                        </td>
+            %>
+            <tr id="factRaw<%=k%>">
+                <td>
+                    <input name="factType<%=k%>"
+                           id="factType<%=k%>" value="<%=factType%>"
+                           type="text"/>
+                </td>
+                <td>
+                    <a class="fact-selector-icon-link" href="#factEditorLink"
+                       style="padding-left:40px"
+                       onclick="showFactEditor('fact','<%=k%>')"><fmt:message
+                            key="fact.type"/></a>
+                </td>
+                <td>
+                    <input name="factElementName<%=k%>"
+                           id="factElementName<%=k%>" value="<%=factElementName%>"
+                           type="text"/>
+                </td>
 
-                        <td>
-                            <input name="factNamespace<%=k%>"
-                                   id="factNamespace<%=k%>" value="<%=factNamespace%>"
-                                   type="text"/>
-                        </td>
+                <td>
+                    <input name="factNamespace<%=k%>"
+                           id="factNamespace<%=k%>" value="<%=factNamespace%>"
+                           type="text"/>
+                </td>
 
-                        <td>
-                            <input name="factXpath<%=k%>"
-                                   id="factXpath<%=k%>" value="<%=factXpath%>"
-                                   type="text"/>
-                        </td>
+                <td>
+                    <input name="factXpath<%=k%>"
+                           id="factXpath<%=k%>" value="<%=factXpath%>"
+                           type="text"/>
+                </td>
 
-                        <td id="factNsEditorButtonTD<%=k%>">
-                            <a href="#nsEditorLink" class="nseditor-icon-link"
-                               style="padding-left:40px"
-                               onclick="showNameSpaceEditor('factValue<%=k%>')"><fmt:message
-                                    key="namespaces"/></a>
-                        </td>
+                <td id="factNsEditorButtonTD<%=k%>">
+                    <a href="#nsEditorLink" class="nseditor-icon-link"
+                       style="padding-left:40px"
+                       onclick="showNameSpaceEditor('factValue<%=k%>')"><fmt:message
+                            key="namespaces"/></a>
+                </td>
 
-                        <td><a href="#" href="#" class="delete-icon-link" style="padding-left:40px"
-                               onclick="deleteFact('fact','<%=k%>')"><fmt:message
-                                key="delete"/></a></td>
-                    </tr>
-                    <% }
+                <td><a href="#" href="#" class="delete-icon-link" style="padding-left:40px"
+                       onclick="deleteFact('fact','<%=k%>')"><fmt:message
+                        key="delete"/></a></td>
+            </tr>
+            <% }
                 k++;
             } %>
             <input type="hidden" name="factCount" id="factCount"
@@ -400,50 +510,50 @@
                         String resultNamespace = result.getNamespace() != null ? result.getNamespace() : "";
                         String resultXpath = result.getXpath() != null ? result.getXpath() : "";
 
-                    %>
-                    <tr id="resultRaw<%=j%>">
-                        <td>
-                            <input name="resultType<%=j%>"
-                                   id="resultType<%=j%>" value="<%=resultType%>"
-                                   type="text"/>
-                        </td>
-                        <td>
-                            <a class="fact-selector-icon-link" href="#factEditorLink"
-                               style="padding-left:40px"
-                               onclick="showFactEditor('result','<%=j%>')"><fmt:message
-                                key="result.type"/></a>
-                        </td>
+            %>
+            <tr id="resultRaw<%=j%>">
+                <td>
+                    <input name="resultType<%=j%>"
+                           id="resultType<%=j%>" value="<%=resultType%>"
+                           type="text"/>
+                </td>
+                <td>
+                    <a class="fact-selector-icon-link" href="#factEditorLink"
+                       style="padding-left:40px"
+                       onclick="showFactEditor('result','<%=j%>')"><fmt:message
+                            key="result.type"/></a>
+                </td>
 
-                        <td>
-                            <input name="resultElementName<%=j%>"
-                                   id="resultElementName<%=j%>" value="<%=resultElementName%>"
-                                   type="text"/>
-                        </td>
+                <td>
+                    <input name="resultElementName<%=j%>"
+                           id="resultElementName<%=j%>" value="<%=resultElementName%>"
+                           type="text"/>
+                </td>
 
-                        <td>
-                            <input name="resultNamespace<%=j%>"
-                                   id="resultNamespace<%=j%>" value="<%=resultNamespace%>"
-                                   type="text"/>
-                        </td>
+                <td>
+                    <input name="resultNamespace<%=j%>"
+                           id="resultNamespace<%=j%>" value="<%=resultNamespace%>"
+                           type="text"/>
+                </td>
 
-                        <td>
-                            <input name="resultXpath<%=j%>"
-                                   id="resultXpath<%=j%>" value="<%=resultXpath%>"
-                                   type="text"/>
-                        </td>
+                <td>
+                    <input name="resultXpath<%=j%>"
+                           id="resultXpath<%=j%>" value="<%=resultXpath%>"
+                           type="text"/>
+                </td>
 
-                        <td id="resultNsEditorButtonTD<%=j%>">
-                            <a href="#nsEditorLink" class="nseditor-icon-link"
-                               style="padding-left:40px"
-                               onclick="showNameSpaceEditor('resultValue<%=j%>')"><fmt:message
-                                    key="namespaces"/></a>
-                        </td>
+                <td id="resultNsEditorButtonTD<%=j%>">
+                    <a href="#nsEditorLink" class="nseditor-icon-link"
+                       style="padding-left:40px"
+                       onclick="showNameSpaceEditor('resultValue<%=j%>')"><fmt:message
+                            key="namespaces"/></a>
+                </td>
 
-                        <td><a href="#" href="#" class="delete-icon-link" style="padding-left:40px"
-                               onclick="deleteFact('result','<%=j%>')"><fmt:message
-                                key="delete"/></a></td>
-                    </tr>
-                    <% }
+                <td><a href="#" href="#" class="delete-icon-link" style="padding-left:40px"
+                       onclick="deleteFact('result','<%=j%>')"><fmt:message
+                        key="delete"/></a></td>
+            </tr>
+            <% }
                 j++;
             } %>
             <input type="hidden" name="resultCount" id="resultCount"

@@ -18,13 +18,12 @@
  */
 package org.wso2.carbon.mediator.rule.ui.internal;
 
-import org.wso2.carbon.sequences.ui.util.ns.XPathFactory;
-import org.wso2.carbon.rule.mediator.config.RuleMediatorConfig;
-import org.wso2.carbon.rule.mediator.config.Target;
-import org.wso2.carbon.rule.mediator.config.Source;
-import org.wso2.carbon.rule.common.Input;
 import org.wso2.carbon.rule.common.Fact;
+import org.wso2.carbon.rule.common.Input;
 import org.wso2.carbon.rule.common.Output;
+import org.wso2.carbon.rule.mediator.config.RuleMediatorConfig;
+import org.wso2.carbon.rule.mediator.config.Source;
+import org.wso2.carbon.rule.mediator.config.Target;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -209,19 +208,23 @@ public class RuleMediatorClientHelper {
                 inputCount = Integer.parseInt(inputCountParameter.trim());
                 if (inputCount > 0) {
                     Input input = ruleMediatorConfig.getInput();
+                    input.getFacts().clear();
                     Fact inputFact = null;
                     for (int i = 0; i < inputCount; i++) {
                         String type = request.getParameter(id + "Type" + i);
                         String elementName = request.getParameter(id + "ElementName" + i);
                         String namespace = request.getParameter(id + "Namespace" + i);
                         String xpath = request.getParameter(id + "Xpath" + i);
-                        inputFact = new Fact();
-                        inputFact.setType(type);
-                        inputFact.setElementName(elementName);
-                        inputFact.setNamespace(namespace);
-                        inputFact.setXpath(xpath);
+                        if(type != null && !"".equals(type)){
+
+                            inputFact = new Fact();
+                            inputFact.setType(type);
+                            inputFact.setElementName(elementName);
+                            inputFact.setNamespace(namespace);
+                            inputFact.setXpath(xpath);
+                            input.addFact(inputFact);
+                        }
                     }
-                    input.addFact(inputFact);
                 }
             } catch (NumberFormatException ignored) {
             }
@@ -238,19 +241,23 @@ public class RuleMediatorClientHelper {
                 outputCount = Integer.parseInt(outputCountParameter.trim());
                 if (outputCount > 0) {
                     Output outPut = ruleMediatorConfig.getOutput();
+                    outPut.getFacts().clear();
                     Fact outputFact = null;
                     for (int i = 0; i < outputCount; i++) {
                         String type = request.getParameter(id + "Type" + i);
                         String elementName = request.getParameter(id + "ElementName" + i);
                         String namespace = request.getParameter(id + "Namespace" + i);
                         String xpath = request.getParameter(id + "Xpath" + i);
-                        outputFact = new Fact();
-                        outputFact.setType(type);
-                        outputFact.setElementName(elementName);
-                        outputFact.setNamespace(namespace);
-                        outputFact.setXpath(xpath);
+                        if(type != null && !"".equals(type)){
+
+                            outputFact = new Fact();
+                            outputFact.setType(type);
+                            outputFact.setElementName(elementName);
+                            outputFact.setNamespace(namespace);
+                            outputFact.setXpath(xpath);
+                            outPut.addFact(outputFact);
+                        }
                     }
-                    outPut.addFact(outputFact);
                 }
             } catch (NumberFormatException ignored) {
             }

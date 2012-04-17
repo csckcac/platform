@@ -240,11 +240,11 @@ function showInLinedRuleScriptPolicyEditor(id) {
 
     var url = '../rule-mediator/rulesript_editor-ajaxprocessor.jsp?scriptID=' + id;
     jQuery("#popupContent").load(url, null,
-            function(res, status, t) {
-                if (status != "success") {
-                    CARBON.showWarningDialog(rulejsi18n["rule.policy.error"]);
-                }
-            });
+        function(res, status, t) {
+            if (status != "success") {
+                CARBON.showWarningDialog(rulejsi18n["rule.policy.error"]);
+            }
+        });
     return false;
 }
 
@@ -255,11 +255,11 @@ function saveRuleScript(id) {
     }
     var url = '../rule-mediator/rulescript_save-ajaxprocessor.jsp?scriptID=' + id;
     jQuery.post(url, ({scriptxml:scriptxml}),
-            function(data, status) {
-                if (status != "success") {
-                    CARBON.showWarningDialog(rulejsi18n["rule.policy.error"]);
-                }
-            });
+        function(data, status) {
+            if (status != "success") {
+                CARBON.showWarningDialog(rulejsi18n["rule.policy.error"]);
+            }
+        });
     CARBON.closeWindow();
     return false;
 }
@@ -293,13 +293,21 @@ function isContainRaw(tbody) {
 }
 
 function ruleMediatorValidate() {
-    var sourceMode = getSelectedValue("mediator.rule.inline");
-    if (sourceMode != "inline") {
+    //var sourceMode = getSelectedValue("mediator.rule.inline");  ruleScriptTypeinlined
+    if (document.getElementById('ruleScriptTypekey').checked) {
         var key = document.getElementById("mediator.rule.key");
         if (key == null || key == undefined || key.value == undefined || key.value == "") {
             CARBON.showWarningDialog(rulejsi18n["mediator.rule.script.key.empty"]);
             return false;
         }
+    }
+    else if(document.getElementById('ruleScriptTypeurl').checked){
+      var url = document.getElementById("mediator.rule.url");
+        if (url == null || url == undefined || url.value == undefined || url.value == "") {
+            CARBON.showWarningDialog(rulejsi18n["mediator.rule.script.url.empty"]);
+            return false;
+        }
+
     }
     return true;
 }
@@ -333,11 +341,11 @@ function showFactEditor(category, i) {
     CARBON.showPopupDialog(loadingContent, rulejsi18n["rule." + category + ".editor"], 200, false, null, 550);
 
     jQuery("#popupContent").load(url, null,
-            function(res, status, t) {
-                if (status != "success") {
-                    CARBON.showWarningDialog(rulejsi18n["rule.facteditor.error"]);
-                }
-            });
+        function(res, status, t) {
+            if (status != "success") {
+                CARBON.showWarningDialog(rulejsi18n["rule.facteditor.error"]);
+            }
+        });
     return false;
 }
 function addFact(category) {
@@ -359,22 +367,22 @@ function addFact(category) {
 
     var factTypeTD = document.createElement("td");
     factTypeTD.innerHTML = "<input type='text' name='" + category + "Type" + i + "' id='" +
-                           category + "Type" + i + "'" + "  />";
+        category + "Type" + i + "'" + "  />";
 
     var factSelectorTD = document.createElement("td");
     factSelectorTD.appendChild(createFactEditorLLink(category, i));
 
     var elementNameTD = document.createElement("td");
     elementNameTD.innerHTML = "<input type='text' name='" + category + "ElementName" + i + "' id='" +
-                       category + "ElementName" + i + "'" + "  />";
+        category + "ElementName" + i + "'" + "  />";
 
     var namespaceTD = document.createElement("td");
     namespaceTD.innerHTML = "<input type='text' name='" + category + "Namespace" + i + "' id='" +
-                       category + "Namespace" + i + "'" + "  />";
+        category + "Namespace" + i + "'" + "  />";
 
     var xpathTD = document.createElement("td");
     xpathTD.innerHTML = "<input type='text' name='" + category + "Xpath" + i + "' id='" +
-                       category + "Xpath" + i + "'" + "  />";
+        category + "Xpath" + i + "'" + "  />";
     var nsBrowserTD = document.createElement("td");
     nsBrowserTD.setAttribute("id", category + 'NsEditorButtonTD' + i);
     nsBrowserTD.appendChild(createNSEditorLink(category, i));
@@ -492,6 +500,78 @@ function createFactTypeComboBox(category, i) {
     combo_box.appendChild(choice);
 
     return combo_box;
+}
+function setRuleScriptType(type) {
+
+
+    var scriptEditorButtonTD = document.getElementById("inline_rulescript");
+    var urlTD = document.getElementById("url_rulescript");
+    var regKeyTD = document.getElementById("regkey_rulescript");
+    var regBrowserTD = document.getElementById("regbrowser_rulescript");
+    if (scriptEditorButtonTD == undefined || scriptEditorButtonTD == null ||
+        regKeyTD == undefined || regKeyTD == null ||
+        regBrowserTD == undefined || regBrowserTD == null) {
+        return;
+    }
+    if ('inlined' == type) {
+        regKeyTD.style.display = "none";
+        regBrowserTD.style.display = "none";
+        urlTD.style.display = "none";
+        scriptEditorButtonTD.style.display = "";
+    }
+    else if ('url' == type) {
+        regKeyTD.style.display = "none";
+        regBrowserTD.style.display = "none";
+        urlTD.style.display = "";
+        scriptEditorButtonTD.style.display = "none";
+
+    }
+    else {
+        regKeyTD.style.display = "";
+        regBrowserTD.style.display = "";
+        urlTD.style.display = "none";
+        scriptEditorButtonTD.style.display = "none";
+    }
+
+    /*
+     var ruleScriptKeyTR = document.getElementById("ruleScriptKeyTR");
+     var ruleScriptSourceTR = document.getElementById("ruleScriptSourceTR");
+     var rulesetCreationTR = document.getElementById("rulesetCreationTR");
+     var rulesetCreationUploadTR = document.getElementById("rulesetCreationUploadTR");
+     var ruleScriptUploadTR = document.getElementById("ruleScriptUploadTR");
+     var ruleScriptURLTR = document.getElementById("ruleScriptURLTR");
+     if ('key' == type) {
+     ruleScriptKeyTR.style.display = "";
+     rulesetCreationTR.style.display = "";
+     ruleScriptSourceTR.style.display = "none";
+     ruleScriptUploadTR.style.display = "none";
+     rulesetCreationUploadTR.style.display = "none";
+     ruleScriptURLTR.style.display = "none";
+     } else if ('upload' == type) {
+     ruleScriptSourceTR.style.display = "none";
+     ruleScriptKeyTR.style.display = "none";
+     rulesetCreationTR.style.display = "none";
+     ruleScriptUploadTR.style.display = "";
+     rulesetCreationUploadTR.style.display = "";
+     ruleScriptURLTR.style.display = "none";
+     }
+     else if ('url' == type) {
+     ruleScriptSourceTR.style.display = "none";
+     ruleScriptKeyTR.style.display = "none";
+     rulesetCreationTR.style.display = "";
+     ruleScriptURLTR.style.display = "";
+     rulesetCreationUploadTR.style.display = "none";
+     ruleScriptUploadTR.style.display = "none";
+     }else {
+     ruleScriptSourceTR.style.display = "";
+     rulesetCreationTR.style.display = "";
+     ruleScriptKeyTR.style.display = "none";
+     ruleScriptUploadTR.style.display = "none";
+     rulesetCreationUploadTR.style.display = "none";
+     ruleScriptURLTR.style.display = "none";
+     }*/
+
+    return true;
 }
 
 

@@ -40,15 +40,28 @@
             ruleMediatorConfig = new RuleMediatorConfig();
             ruleMediator.setRuleMediatorConfig(ruleMediatorConfig);
         }
-                                                                                                                        
+
         // set the source details
         RuleMediatorClientHelper.populateSource(request, ruleMediatorConfig);
         RuleMediatorClientHelper.populateTarget(request, ruleMediatorConfig);
 
         Rule rule = ruleMediatorConfig.getRuleSet().getRules().get(0);
 
-        boolean isInlined = "inline".equals(request.getParameter("mediator.rule.inline"));
-        if (isInlined) {
+        boolean isKey = "key".equals(request.getParameter("ruleScriptType"));
+        boolean isURL = "url".equals(request.getParameter("ruleScriptType"));
+        if (isKey) {
+            String registryKey = request.getParameter("mediator.rule.key");
+            rule.setSourceType("registry");
+            rule.setResourceType("drl");
+            rule.setValue(registryKey);
+
+        } else if (isURL) {
+            String ruleScriptURL = request.getParameter("mediator.rule.url");
+            rule.setSourceType("url");
+            rule.setResourceType("drl");
+            rule.setValue(ruleScriptURL);
+
+        } else {
             String ruleScriptID = SequenceEditorHelper.getEditingMediatorPosition(session) + "_rulescript";
             Map ruleScriptsMap = (Map) request.getSession().getAttribute("rulemediator_script_map");
             if (ruleScriptsMap != null) {
@@ -57,15 +70,8 @@
                 rule.setResourceType("drl");
                 rule.setValue(ruleScript);
             }
-        } else {
-            String registryKey = request.getParameter("mediator.rule.key");
-            rule.setSourceType("registry");
-            rule.setResourceType("drl");
-            rule.setValue(registryKey);
-
         }
 
-        
         RuleMediatorClientHelper.setProperty(request, ruleMediatorConfig.getRuleSet(), "addCreationProperty", "creation");
 //        RuleMediatorClientHelper.setProperty(request, session, setDescription,
 //                "addRegistrationProperty", "registration");

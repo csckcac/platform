@@ -98,7 +98,7 @@
             <directory>
                 ../../p2-profile-gen/service/target/wso2carbon-core-${wso2carbon.version}/repository/conf/
             </directory>
-            <outputDirectory>wso2stratos-as-${pom.version}/repository/conf</outputDirectory>
+            <outputDirectory>wso2stratos-hosting-${pom.version}/repository/conf</outputDirectory>
             <includes>
                 <include>**/krb5.conf</include>
                 <include>**/jaas.conf</include>

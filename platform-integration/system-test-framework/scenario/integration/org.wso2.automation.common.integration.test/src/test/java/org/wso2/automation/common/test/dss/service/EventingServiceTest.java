@@ -321,7 +321,7 @@ public class EventingServiceTest extends DataServiceTest {
 
     private List<File> getSqlScript() {
         ArrayList<File> al = new ArrayList<File>();
-        al.add(new File("/home/nuwanw/svn/graphite/platform-integration/system-test-framework/core/org.wso2.platform.integration.core/src/main/resources/artifacts/DSS/sql/MySql/CreateTables.sql"));
+        al.add(new File(resourceFileLocation + File.separator + "sql" +  File.separator + "MySql" + File.separator + "CreateTables.sql"));
         return al;
     }
 }

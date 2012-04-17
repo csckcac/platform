@@ -45,7 +45,7 @@ public class GRegRemoteRegistryAPITestSuite extends MasterTestSuite{
         suiteVariablesList.add(new SuiteVariables("TestResources", TestResources.class));
         suiteVariablesList.add(new SuiteVariables("TestTagging", TestTagging.class));
 
-        superSuite("Registry WS-API Test suite", suiteVariablesList).run();
+        superSuite("RemoteRegistryTestSuite", suiteVariablesList).run();
     }
 
     public static void main(String[] args) {

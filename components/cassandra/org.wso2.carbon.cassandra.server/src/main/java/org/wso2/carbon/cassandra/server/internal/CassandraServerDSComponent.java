@@ -23,6 +23,8 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.cassandra.server.CassandraServerComponentManager;
 import org.wso2.carbon.cassandra.server.CassandraServerController;
+import org.wso2.carbon.cassandra.server.service.CassandraServerService;
+import org.wso2.carbon.cassandra.server.service.CassandraServerServiceImpl;
 import org.wso2.carbon.identity.authentication.AuthenticationService;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.ServerConstants;
@@ -55,6 +57,8 @@ public class CassandraServerDSComponent {
     private static String CARBON_CONFIG_CASSANDRA_STORAGE_PORT = "Ports.EmbeddedCassandra.StoragePort";
     private static String CARBON_CONFIG_PORT_OFFSET = "Ports.Offset";
 
+
+    private static String DISABLE_CASSANDRA_SERVER_STARTUP = "disable.cassandra.server.startup";
 
     private CassandraServerController cassandraServerController;
     private RealmService realmService;
@@ -109,6 +113,22 @@ public class CassandraServerDSComponent {
 
 
         cassandraServerController = new CassandraServerController();
+
+        //register OSGI service
+
+        CassandraServerService  cassandraServerService =
+                new CassandraServerServiceImpl(cassandraServerController);
+        componentContext.getBundleContext().registerService(
+                    CassandraServerService.class.getName(), cassandraServerService, null);
+
+        String disableServerStartup = System.getProperty(DISABLE_CASSANDRA_SERVER_STARTUP);
+
+
+        if("true".equals(disableServerStartup)) {
+            log.debug("Cassandra server is not started in service activator");
+            return;
+        }
+
         cassandraServerController.start();
         }catch (Throwable throwable) {
             throwable.printStackTrace();

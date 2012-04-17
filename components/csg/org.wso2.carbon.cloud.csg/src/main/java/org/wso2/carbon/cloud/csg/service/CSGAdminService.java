@@ -101,7 +101,7 @@ public class CSGAdminService extends AbstractServiceBusAdmin {
      * @throws CSGException In case the server is not running
      */
     public CSGThriftServerBean getThriftServerConnectionBean() throws CSGException {
-        CSGThriftServerBean bean = null;
+        CSGThriftServerBean bean;
         try {
             String hostName = CSGUtils.getCSGThriftServerHostName();
             int port = CSGUtils.getCSGThriftServerPort();
@@ -159,7 +159,8 @@ public class CSGAdminService extends AbstractServiceBusAdmin {
             tools.setEprArray(data.getEprs());
             return tools;
         } catch (Exception e) {
-            handleException("Could not read the proxy service URL", e);
+            handleException("Could not read the proxy service URL for the service '" + serviceName
+                    + "', for the domain '" + domainName + "'", e);
         }
         return null;
     }
@@ -319,10 +320,9 @@ public class CSGAdminService extends AbstractServiceBusAdmin {
      * Deletes the Wsdl of service published onto this server
      *
      * @param serviceName Name of the service
-     * @return
      * @throws CSGException in case of an error.
      */
-    private String deleteWSDL(String serviceName) throws CSGException {
+    private void deleteWSDL(String serviceName) throws CSGException {
         boolean isTransactionAlreadyStarted = Transaction.isStarted();
         boolean isTransactionSuccess = true;
         Registry registry = getGovernanceUserRegistry();
@@ -358,8 +358,6 @@ public class CSGAdminService extends AbstractServiceBusAdmin {
                 }
             }
         }
-
-        return resourcePath;
     }
 
 

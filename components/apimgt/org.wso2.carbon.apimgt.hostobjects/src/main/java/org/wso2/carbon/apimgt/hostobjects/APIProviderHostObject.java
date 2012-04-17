@@ -810,7 +810,7 @@ public class APIProviderHostObject extends ScriptableObject {
                 Object subscriberObject = it.next();
                 Subscriber user = (Subscriber) subscriberObject;
                 row.put("userName", row, user.getName());
-                row.put("subscribedDate", row, user.getSubscribedDate());
+                row.put("subscribedDate", row, checkValue(user.getSubscribedDate().toString()));
                 row.put("description", row, user.getDescription());
                 myn.put(i, myn, row);
                 i++;

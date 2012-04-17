@@ -51,6 +51,9 @@ public final class JaggeryConstants {
         public static final String AUTH_ROLES = "authRoles";
         public static final String SECURITY_ROLES = "securityRoles";
         public static final String WELCOME_FILES = "welcomeFiles";
+        public static final String URL_MAPPINGS = "urlMappings";
+        public static final String URL_MAPPINGS_URL = "url";
+        public static final String URL_MAPPINGS_PATH = "path";
     }
 
     public static final class WebappState {

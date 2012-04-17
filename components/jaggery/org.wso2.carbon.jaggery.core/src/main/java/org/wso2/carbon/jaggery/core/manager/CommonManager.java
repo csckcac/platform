@@ -41,6 +41,7 @@ public class CommonManager {
     public static final int ENV_COMMAND_LINE = 1;
     public static final String JAGGERY_CONTEXT = "jaggeryContext";
     public static final String JAGGERY_PREFIX = "$j";
+    public static final String JAGGERY_URLS_MAP = "jaggery.urls.map";
 
     private static final String HOST_OBJECT_NAME = "CarbonTopLevel";
 

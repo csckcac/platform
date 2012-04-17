@@ -9,6 +9,7 @@ public class WebAppContext extends JaggeryContext {
     private ServletContext servletConext = null;
     private HttpServletRequest servletRequest = null;
     private HttpServletResponse servletResponse = null;
+    private String scriptPath = null;
 
     public ServletContext getServletConext() {
         return servletConext;
@@ -32,5 +33,13 @@ public class WebAppContext extends JaggeryContext {
 
     public void setServletResponse(HttpServletResponse servletResponse) {
         this.servletResponse = servletResponse;
+    }
+
+    public String getScriptPath() {
+        return scriptPath;
+    }
+
+    public void setScriptPath(String scriptPath) {
+        this.scriptPath = scriptPath;
     }
 }

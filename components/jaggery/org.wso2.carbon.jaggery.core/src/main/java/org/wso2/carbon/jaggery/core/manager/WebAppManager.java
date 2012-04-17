@@ -26,7 +26,10 @@ import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class WebAppManager extends CommonManager {
 
@@ -47,7 +50,7 @@ public class WebAppManager extends CommonManager {
         try {
             Method method = CommonManager.class.getDeclaredMethod(
                     "require", Context.class, Scriptable.class, Object[].class, Function.class);
-            getEngine().defineFunction("require", method,  ScriptableObject.READONLY);
+            getEngine().defineFunction("require", method, ScriptableObject.READONLY);
         } catch (NoSuchMethodException e) {
             log.error(e.getMessage(), e);
             throw new ScriptException(e);
@@ -83,7 +86,8 @@ public class WebAppManager extends CommonManager {
     }
 
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        InputStream sourceIn = request.getServletContext().getResourceAsStream(request.getServletPath());
+        String scriptPath = getScriptPath(request.getServletPath(), request);
+        InputStream sourceIn = request.getServletContext().getResourceAsStream(scriptPath);
         if (sourceIn == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, request.getRequestURI());
             return;
@@ -93,11 +97,12 @@ public class WebAppManager extends CommonManager {
             RhinoEngine.enterContext();
             //Creating an OutputStreamWritter to write content to the servletResponse
             OutputStream out = response.getOutputStream();
-            JaggeryContext webAppContext = getJaggeryContext(out, request, response);
+            JaggeryContext webAppContext = getJaggeryContext(out, scriptPath, request, response);
             initContext(webAppContext);
             RhinoEngine.putContextProperty(FileHostObject.JAVASCRIPT_FILE_MANAGER,
                     new WebAppFileManager(request.getServletContext()));
-            getEngine().exec(new ScriptReader(sourceIn), webAppContext.getScope(), getScriptCachingContext(request));
+            getEngine().exec(new ScriptReader(sourceIn), webAppContext.getScope(),
+                    getScriptCachingContext(request, scriptPath));
             out.flush();
         } catch (ScriptException e) {
             String msg = e.getMessage();
@@ -106,6 +111,39 @@ public class WebAppManager extends CommonManager {
         } finally {
             //Exiting from the context
             RhinoEngine.exitContext();
+        }
+    }
+
+    private String getScriptPath(String url, HttpServletRequest request) {
+        Map<String, Object> urlMappings = (Map<String, Object>) request.getServletContext()
+                .getAttribute(CommonManager.JAGGERY_URLS_MAP);
+        if (urlMappings == null) {
+            return url;
+        }
+        if (url.equals("/")) {
+            Object obj = urlMappings.get("/");
+            return obj != null ? (String) obj : url;
+        }
+        String tmpUrl = url.startsWith("/") ? url.substring(1) : url;
+        String path = resolveScriptPath(new ArrayList<String>(Arrays.asList(tmpUrl.split("/"))), urlMappings);
+        return path == null ? url : path;
+    }
+
+    private String resolveScriptPath(List<String> parts, Map<String, Object> map) {
+        String part = parts.remove(0);
+        if (parts.isEmpty()) {
+            Object obj = map.get(part);
+            if (obj instanceof Map) {
+                return (String) ((Map) obj).get("/");
+            } else {
+                return (String) obj;
+            }
+        }
+        Object obj = map.get(part);
+        if (obj instanceof Map) {
+            return resolveScriptPath(parts, (Map<String, Object>) obj);
+        } else {
+            return (String) map.get("*");
         }
     }
 
@@ -126,7 +164,7 @@ public class WebAppManager extends CommonManager {
         RhinoEngine.exitContext();
     }
 
-    public JaggeryContext getJaggeryContext(OutputStream out,
+    public JaggeryContext getJaggeryContext(OutputStream out, String scriptPath,
                                             HttpServletRequest request, HttpServletResponse response) {
         WebAppContext context = new WebAppContext();
         context.setEnvironment(ENV_WEBAPP);
@@ -135,15 +173,15 @@ public class WebAppManager extends CommonManager {
         context.setServletRequest(request);
         context.setServletResponse(response);
         context.setServletConext(request.getServletContext());
-        context.getIncludesCallstack().push(request.getServletPath());
+        context.setScriptPath(scriptPath);
+        context.getIncludesCallstack().push(scriptPath);
         return context;
     }
 
-    protected static ScriptCachingContext getScriptCachingContext(HttpServletRequest request) throws ScriptException {
+    protected static ScriptCachingContext getScriptCachingContext(HttpServletRequest request, String scriptPath) throws ScriptException {
         JaggeryContext jaggeryContext = getJaggeryContext();
         String tenantId = jaggeryContext.getTenantId();
-        String servletPath = request.getServletPath();
-        String[] parts = getKeys(request.getContextPath(), servletPath, servletPath);
+        String[] parts = getKeys(request.getContextPath(), scriptPath, scriptPath);
         /**
          * tenantId = tenantId
          * context = webapp context
@@ -151,7 +189,7 @@ public class WebAppManager extends CommonManager {
          * cacheKey = name of the *.js file being cached
          */
         ScriptCachingContext sctx = new ScriptCachingContext(tenantId, parts[0], parts[1], parts[2]);
-        long lastModified = getScriptLastModified(request.getServletContext(), request.getServletPath());
+        long lastModified = getScriptLastModified(request.getServletContext(), scriptPath);
         sctx.setSourceModifiedTime(lastModified);
         return sctx;
     }
@@ -161,21 +199,21 @@ public class WebAppManager extends CommonManager {
      * @param context in the form of /foo
      * @param parent in the form of /foo/bar/ or /foo/bar/dar.jss
      * @param scriptPath in the form of /foo/bar/mar.jss or bar/mar.jss
-     * @return  String[] with keys
+     * @return String[] with keys
      */
     public static String[] getKeys(String context, String parent, String scriptPath) {
         String path;
         String normalizedScriptPath;
-        if(scriptPath.startsWith("/")) {
-        	normalizedScriptPath = FilenameUtils.normalize(scriptPath, true);
+        if (scriptPath.startsWith("/")) {
+            normalizedScriptPath = FilenameUtils.normalize(scriptPath, true);
         } else {
-        	normalizedScriptPath = FilenameUtils.normalize(FilenameUtils.getFullPath(parent) + scriptPath, true);
+            normalizedScriptPath = FilenameUtils.normalize(FilenameUtils.getFullPath(parent) + scriptPath, true);
         }
         path = FilenameUtils.getFullPath(normalizedScriptPath);
         //remove trailing "/"
         path = path.substring(0, path.length() - 1);
         normalizedScriptPath = "/" + FilenameUtils.getName(normalizedScriptPath);
-        return new String[] {
+        return new String[]{
                 context,
                 path,
                 normalizedScriptPath
@@ -215,7 +253,7 @@ public class WebAppManager extends CommonManager {
 
     private static String canonicalURI(String s) {
         if (s == null) {
-        	return null;
+            return null;
         }
         StringBuilder result = new StringBuilder();
         final int len = s.length();
@@ -236,7 +274,7 @@ public class WebAppManager extends CommonManager {
                     * a single dot at the end of the path - we are done.
                     */
                     if (pos + 2 >= len) {
-                    	break;
+                        break;
                     }
 
                     switch (s.charAt(pos + 2)) {

@@ -18,10 +18,7 @@ package org.wso2.carbon.jaggery.app.mgt;
 
 import org.apache.catalina.*;
 import org.apache.catalina.core.StandardContext;
-import org.apache.catalina.deploy.ErrorPage;
-import org.apache.catalina.deploy.LoginConfig;
-import org.apache.catalina.deploy.SecurityCollection;
-import org.apache.catalina.deploy.SecurityConstraint;
+import org.apache.catalina.deploy.*;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
@@ -30,6 +27,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.wso2.carbon.CarbonException;
+import org.wso2.carbon.jaggery.core.manager.CommonManager;
 import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 import org.wso2.carbon.webapp.mgt.CarbonTomcatSessionManager;
 import org.wso2.carbon.webapp.mgt.DataHolder;
@@ -41,8 +39,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.lang.management.ManagementPermission;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This deployer is responsible for deploying/undeploying/updating those Jaggery apps.
@@ -493,6 +490,7 @@ public class TomcatJaggeryWebappsDeployer {
             addSecurityConstraints(ctx, jaggeryConfig);
             setLoginConfig(ctx, jaggeryConfig);
             addSecurityRoles(ctx, jaggeryConfig);
+            addUrlMappings(ctx, jaggeryConfig);
         }
     }
 
@@ -604,6 +602,87 @@ public class TomcatJaggeryWebappsDeployer {
                 context.addWelcomeFile((String) role);
             }
         }
+    }
+
+    private static void addUrlMappings(Context context, JSONObject obj) {
+        JSONArray arr = (JSONArray) obj.get(JaggeryConstants.JaggeryConfigParams.URL_MAPPINGS);
+        if (arr != null) {
+            Map<String, Object> urlMappings = new HashMap<String, Object>();
+            for (Object mapObj : arr) {
+                JSONObject mapping = (JSONObject) mapObj;
+                String url = (String) mapping.get(JaggeryConstants.JaggeryConfigParams.URL_MAPPINGS_URL);
+                String path = (String) mapping.get(JaggeryConstants.JaggeryConfigParams.URL_MAPPINGS_PATH);
+                if (url != null && path != null) {
+                    path = path.startsWith("/") ? path : "/" + path;
+                    context.addServletMapping(url, JaggeryConstants.JAGGERY_SERVLET_NAME);
+                    if (url.equals("/")) {
+                        urlMappings.put("/", path);
+                        continue;
+                    }
+                    url = url.startsWith("/") ? url.substring(1) : url;
+                    List<String> parts = new ArrayList<String>(Arrays.asList(url.split("/")));
+                    addMappings(urlMappings, parts, path);
+                } else {
+                    log.error("Invalid url mapping in jaggery.conf url : " + url + ", path : " + path);
+                }
+            }
+            context.getServletContext().setAttribute(CommonManager.JAGGERY_URLS_MAP, urlMappings);
+        }
+    }
+
+    private static void addMappings(Map<String, Object> map, List<String> parts, String path) {
+        String part = parts.remove(0);
+        if (parts.isEmpty()) {
+            Object obj = map.get(part);
+            if (obj != null) {
+                log.error("Conflicting url patterns for the path : " + path);
+            }
+            if (part.startsWith("*")) {
+                int dotIndex = part.lastIndexOf(".");
+                if (dotIndex != -1) {
+                    if (part.length() == dotIndex + 1) {
+                        log.error("Extension cannot be found for the url pattern for " + path);
+                        return;
+                    }
+                    String ext = part.substring(dotIndex + 1);
+                    Object exts = map.get("*");
+                    if (exts instanceof String) {
+                        log.error("* wildcard mapping is already existing for " + path);
+                        return;
+                    }
+
+                    Map<String, String> extsMap;
+                    if (exts == null) {
+                        extsMap = new HashMap<String, String>();
+                    } else {
+                        extsMap = (Map<String, String>) exts;
+                        if (extsMap.get(ext) != null) {
+                            log.error("Url mapping is already existing for " + path);
+                            return;
+                        }
+                    }
+                    extsMap.put(ext, path);
+                    map.put(part, extsMap);
+                    return;
+                }
+                map.put(part, path);
+                return;
+            }
+            map.put(part, path);
+            return;
+        }
+        Map<String, Object> childMap;
+        Object obj = map.get(part);
+        if (obj instanceof Map) {
+            childMap = (Map<String, Object>) obj;
+        } else {
+            childMap = new HashMap<String, Object>();
+            map.put(part, childMap);
+            if (obj instanceof String) {
+                childMap.put("/", obj);
+            }
+        }
+        addMappings(childMap, parts, path);
     }
 }
 

@@ -425,8 +425,8 @@ var renderUsersList = function (result) {
         icon.setAttribute("class", "icon-user");
         var a = document.createElement("a");
         a.setAttribute("href", "?place=user&uname=" + user.userName);
-        a.appendChild(icon);
         a.innerHTML = user.userName;
+        cell1.appendChild(icon);
         cell1.appendChild(a);
 
         cell2.innerHTML = user.subscribedDate;
@@ -435,27 +435,24 @@ var renderUsersList = function (result) {
         icon2.setAttribute("class", "icon-edit");
         var a2 = document.createElement("a");
         a2.setAttribute("href", "#");
-        a2.appendChild(icon2);
         a2.innerHTML = "Stats";
-
+        cell3.appendChild(icon2);
+        cell3.appendChild(a2);
 
         var icon3 = document.createElement("i");
         icon3.setAttribute("class", "icon-trash");
         var a3 = document.createElement("a");
         a3.setAttribute("href", "#");
-        a3.appendChild(icon3);
         a3.innerHTML = "Revoke Access";
+        cell3.appendChild(icon3);
+        cell3.appendChild(a3);
 
         var icon4 = document.createElement("i");
         icon4.setAttribute("class", "icon-ban-circle");
         var a4 = document.createElement("a");
         a4.setAttribute("href", "#");
-        a4.appendChild(icon4);
         a4.innerHTML = "Block";
-
-
-        cell3.appendChild(a2);
-        cell3.appendChild(a3);
+        cell3.appendChild(icon4);
         cell3.appendChild(a4);
 
         row.appendChild(cell1);

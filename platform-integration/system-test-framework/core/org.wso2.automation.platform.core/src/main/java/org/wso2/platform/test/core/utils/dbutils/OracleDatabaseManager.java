@@ -66,7 +66,6 @@ public class OracleDatabaseManager implements DatabaseManager {
         Statement st = connection.createStatement();
         log.debug(sql);
         rs = st.executeQuery(sql);
-        st.close();
         return rs;
 
     }

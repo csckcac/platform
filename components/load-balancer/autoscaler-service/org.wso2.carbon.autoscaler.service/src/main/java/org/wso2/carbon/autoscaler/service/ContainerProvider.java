@@ -39,7 +39,7 @@ public class
                 = AgentPersistenceManager.getPersistenceManager();
         if(agentPersistenceManager.isZoneExist(zone)){
             containerInformation = agentPersistenceManager.retrieveAvailableContainerInformation(zone);
-            containerInformation.setJailKeysFile(jailKeysFile);
+            //containerInformation.setJailKeysFile(jailKeysFile);
         }else {
             String msg = "Requested zone is not exist !";
             log.error(msg);

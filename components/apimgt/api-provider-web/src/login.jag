@@ -25,6 +25,7 @@
     <!--Loca styles-->
     <link href="localcss/localstyles.css" rel="stylesheet">
     <script src="lib/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="lib/jquery-validation/jquery.validate.min.js"></script>
     <script type="text/javascript" src="js/apiProviderApp.js"></script>
     <script type="text/javascript" src="js/provider/renderProvider.js"></script>
     <script type="text/javascript" src="js/util.js"></script>
@@ -58,14 +59,14 @@
             </div>
             <form class="well" action="index.jag?place=" id="loginForm">
                 <label>Username:<span class="requiredAstrix">*</span></label>
-                <input type="text" class="span3" id="username">
+                <input type="text" class="span3" id="username" autofocus="autofocus" validation="required"  />
 
                 <label>Password:<span class="requiredAstrix">*</span></label>
-                <input type="password" class="span3" id="pass">
+                <input type="password" class="span3" id="pass" />
 
                 <div>
-                    <button class="btn btn-primary" onclick="login()">Login</button>
-                    <input type="reset" class="btn" value="Cancel">
+                    <input type="button" class="btn btn-primary" onclick="login()"  value="Login" />
+                    <input type="reset" class="btn" value="Cancel" />
                 </div>
             </form>
         </div>

@@ -58,11 +58,11 @@ var apiProviderApp = new function () {
 
 
         var result = APIProviderAppUtil.makeSyncRequest(apiProviderApp.url, "action=login&username=" + name + "&password=" + pass);
-
+        //debugger;
         if (result.error == "true") {
             $('#loginError').show('fast');
             $('#loginErrorSpan').html('<strong>Unable to log you in!</strong><br />'+result.message);
-            return;
+            return false;
         }
         else {
             apiProviderApp.loggedUser = name;

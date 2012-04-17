@@ -15,7 +15,7 @@
                 <th>Actions</th>
             </tr>
             </thead>
-            <tbody id="user">
+            <tbody id="userSubscribedAPIs">
             </tbody>
         </table>
         <div class="pagination">

@@ -16,6 +16,11 @@
 
 function loadXMLDoc(titletxt)
 {
+
+ if (titletxt==""){
+     document.getElementById("myDiv").innerHTML = "<h2>Ha! tried a blank search didn't you? try again</h2>";  
+     exit(0);
+ }
 document.getElementById("myDiv").innerHTML = "<h2>Searching</h2>";    
 var xmlhttp;
 if (window.XMLHttpRequest)

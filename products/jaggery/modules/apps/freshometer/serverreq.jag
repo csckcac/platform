@@ -3,12 +3,10 @@
 
 var title = request.getParameter('q');
         log("search term : " + encodeURI(title));
-var title = encodeURI(title);        
+var title = encodeURI(title); // encode search term for rottentomatoes search        
 var apikey = "e9r83r3qcp3hdghg8qpu5kf3";
    var moviesJSON = get("http://api.rottentomatoes.com/api/public/v1.0/movies.json", { apikey : "e9r83r3qcp3hdghg8qpu5kf3", q : title, page_limit : "1" },"json");
 
-    //    print(title);
-    //print(moviesJSON.data.movies);
 
     var i=0;
 
@@ -16,13 +14,13 @@ var apikey = "e9r83r3qcp3hdghg8qpu5kf3";
 
  // Creating an instance of AtomFeed
  var feed = new AtomFeed();
-
+ var videotitle = encodeURI(moviesJSON.data.movies[0].title);  //encode the full movie title for youtube search
  // Retrieving and online feed
- feed = client.getFeed("http://gdata.youtube.com/feeds/api/videos?q="+title+"+trailer&start-index=1&max-results=6&v=2");
+ feed = client.getFeed("http://gdata.youtube.com/feeds/api/videos?q="+videotitle+"video&start-index=1&max-results=6&v=2");
 
  // Getting an array of individual entries from the feed
  var entries = feed.getEntries();
-
+ if (moviesJSON.data.movies[0] != null) {
 %>
         <div class="results" id="results" >
 
@@ -34,7 +32,7 @@ var apikey = "e9r83r3qcp3hdghg8qpu5kf3";
     <h1 id="title"><%=moviesJSON.data.movies[0].title%></h1><span class="year">(<%=moviesJSON.data.movies[0].year%>)</span>
         <div style="clear:both;"></div>
     <div id="rating">Rating : <%=moviesJSON.data.movies[0].ratings.critics_score%>% </div> <div id="icon"><!--<img src="images/thumbsup.gif" alt="">--></div>
-        <div id="director">Directed by : </div>
+        
         <div id="Starring">Starring : <%
 
             for ( var j=0; j < moviesJSON.data.movies[0].abridged_cast.length; j++) {
@@ -42,13 +40,21 @@ var apikey = "e9r83r3qcp3hdghg8qpu5kf3";
             }
 
             %></div>
-
-        <div id="consensus">Overall : <%=moviesJSON.data.movies[0].critics_consensus%> </div>
-
+<%
+           if (moviesJSON.data.movies[0].critics_consensus != null) {
+        %>
+        <div id="consensus">
+            Overall : <%=moviesJSON.data.movies[0].critics_consensus%> </div>
+      <%   }
+           if (moviesJSON.data.movies[0].synopsis != "") {
+        %>
         <h3>Plot</h3>
         <div id="synopsis">
            <%=moviesJSON.data.movies[0].synopsis%>
         </div>
+        <%
+        }
+        %>
         </div>
 
       <div class="trailers">
@@ -73,6 +79,11 @@ var apikey = "e9r83r3qcp3hdghg8qpu5kf3";
 
       </div>
 
+ <%
+        } else {
 
+        print("<h2>Not Found, Sorry. Try a proper full movie title</h2>");
+                 }
+        %>
 
 

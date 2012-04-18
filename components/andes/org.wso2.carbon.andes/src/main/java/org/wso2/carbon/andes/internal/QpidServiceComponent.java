@@ -24,6 +24,7 @@ import org.wso2.andes.server.registry.ApplicationRegistry;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.andes.wso2.service.QpidNotificationService;
+import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.andes.service.QpidService;
 import org.wso2.carbon.andes.service.QpidServiceImpl;
@@ -85,6 +86,9 @@ public class QpidServiceComponent {
     private static final String VM_BROKER_AUTO_CREATE = "amqj.AutoCreateVMBroker";
     private static final String DERBY_LOG_FILE = "derby.stream.error.file";
     private static final String QPID_DERBY_LOG_FILE = "/repository/logs/qpid-derby-store.log";
+    private static final int CASSANDRA_THRIFT_PORT= 9160;
+    private static String CARBON_CONFIG_PORT_OFFSET = "Ports.Offset";
+    private static int CARBON_DEFAULT_PORT_OFFSET = 0;
 
     private ServiceRegistration qpidService = null;
 
@@ -277,7 +281,8 @@ public class QpidServiceComponent {
         Socket socket = null;
         boolean status = false;
         try {
-            socket = new Socket(InetAddress.getByName("localhost"), 9160);
+            int listenPort =  CASSANDRA_THRIFT_PORT + readPortOffset();
+            socket = new Socket(InetAddress.getByName("localhost"),listenPort);
         } catch (UnknownHostException e) {
         } catch (IOException e) {
         } finally {
@@ -292,5 +297,16 @@ public class QpidServiceComponent {
         }
         log.debug("Checking for Cassandra server started status - status :" + status);
         return status;
+    }
+
+    private int readPortOffset() {
+        ServerConfiguration carbonConfig = ServerConfiguration.getInstance();
+        String portOffset = carbonConfig.getFirstProperty(CARBON_CONFIG_PORT_OFFSET);
+
+        try {
+            return ((portOffset != null) ? Integer.parseInt(portOffset.trim()) : CARBON_DEFAULT_PORT_OFFSET);
+        } catch (NumberFormatException e) {
+            return CARBON_DEFAULT_PORT_OFFSET;
+        }
     }
 }

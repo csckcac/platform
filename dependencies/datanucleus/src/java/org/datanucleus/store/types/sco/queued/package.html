@@ -1,0 +1,12 @@
+<body>
+    <p>
+        This package provides classes allowing SCO containers to queue mutating commands (add, remove, 
+        clear etc). When a SCO is operating in "queued" mode it saves the operation for processing at 
+        some later point. This is to cater for optimistic transactions where we want to delay all datastore 
+        updates until the commit stage and do it later.
+    </p>
+    <p>
+        All operations implement QueuedOperation and have a perform() method to actually perform the 
+        operation on the backing store it was required for.
+    </p>
+</body>

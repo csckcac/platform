@@ -15,6 +15,30 @@
  */
 package org.wso2.csg.integration.tests;
 
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
+import org.wso2.carbon.integration.framework.TestServerManager;
+
+import java.io.IOException;
+
 public class CSGTestServerManager extends TestServerManager {
 
+    @Override
+    @BeforeSuite(timeOut = 300000)
+    public String startServer() throws IOException {
+        String carbonHome = super.startServer();
+        System.setProperty("carbon.home", carbonHome);
+        return carbonHome;
+    }
+
+    @Override
+    @AfterSuite(timeOut = 60000)
+    public void stopServer() throws Exception {
+        super.stopServer();
+    }
+
+    @Override
+    protected void copyArtifacts(String s) throws IOException {
+        //FIXME
+    }
 }

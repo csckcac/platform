@@ -61,6 +61,7 @@ public class ConnectionPool {
                                 port + " is available in the pool, and will be reused");
                         }
                         conn.requestInput(); // asankha - make sure keep alives work properly when reused with throttling
+                        conn.setSocketTimeout(conn.getSocketTimeout());
                         return conn;
                     } else {
                         if (log.isDebugEnabled()) {
@@ -94,7 +95,7 @@ public class ConnectionPool {
                 }
             }
         }
-
+        conn.setSocketTimeout(0);
         cleanConnectionReferences(conn);
         connections.add(conn);
 

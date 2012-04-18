@@ -40,15 +40,14 @@ import org.wso2.carbon.core.RegistryResources;
 import org.wso2.carbon.core.Resources;
 import org.wso2.carbon.core.persistence.*;
 import org.wso2.carbon.core.persistence.file.*;
-import org.wso2.carbon.registry.core.Association;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.jdbc.utils.Transaction;
 
 import javax.xml.namespace.QName;
-import java.io.File;
+import javax.xml.stream.XMLStreamException;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -65,6 +64,8 @@ public class CachingConfigAdminService extends AbstractAdmin {
     private PersistenceFactory pf;
     private ServiceGroupFilePersistenceManager sfpm;
     private ModuleFilePersistenceManager mfpm;
+
+    private Registry configRegistry;
 
     /**
      * Reference to Axis configuration.
@@ -95,6 +96,7 @@ public class CachingConfigAdminService extends AbstractAdmin {
         sfpm = pf.getServiceGroupFilePM();
         mfpm = pf.getModuleFilePM();
         cachingPolicyUtils = new CachingPolicyUtils();
+        configRegistry = getConfigSystemRegistry();
     }
 
     /**
@@ -180,6 +182,7 @@ public class CachingConfigAdminService extends AbstractAdmin {
     /**
      * Engages caching for service or operation
      *
+     * @param serviceGroupId  SG
      * @param description    - AxisService or AxisOperation
      * @param confData       - incomming config data
      * @param engagementPath - service path or operation path
@@ -197,6 +200,10 @@ public class CachingConfigAdminService extends AbstractAdmin {
             boolean transactionStarted = sfpm.isTransactionStarted(serviceGroupId);
             if (!transactionStarted) {
                 sfpm.beginTransaction(serviceGroupId);
+            }
+            boolean registryTransactionStarted = Transaction.isStarted();
+            if (!registryTransactionStarted) {
+                configRegistry.beginTransaction();
             }
             // Checks if an association exists between engagementPath and moduleResourcePath.
             List associations = sfpm.getAll(serviceGroupId, engagementPath +
@@ -221,7 +228,8 @@ public class CachingConfigAdminService extends AbstractAdmin {
             // add new association between them.
             if (!associationExist) {
                 sfpm.put(serviceGroupId,
-                        PersistenceUtils.createModule(cachingModule.getName(), version, Resources.Associations.ENGAGED_MODULES),
+                        PersistenceUtils.createModule(
+                                cachingModule.getName(), version, Resources.Associations.ENGAGED_MODULES),
                         engagementPath);
             }
 
@@ -233,6 +241,39 @@ public class CachingConfigAdminService extends AbstractAdmin {
 
             // Save the policy
             try {
+                //to registry if a proxy
+                boolean isProxyService = false;
+                String registryEngagementPath = "";
+                if (description instanceof AxisService) {
+                    AxisService service = (AxisService) description;
+                    isProxyService = PersistenceUtils.isProxyService((AxisService) description);
+                    registryEngagementPath = RegistryResources.SERVICE_GROUPS
+                            + service.getAxisServiceGroup().getServiceGroupName()
+                            + RegistryResources.SERVICES + service.getName();
+                } else if (description instanceof AxisOperation) {
+                    AxisService service = ((AxisOperation) description).getAxisService();
+                    isProxyService = PersistenceUtils.isProxyService(service);
+                    registryEngagementPath = RegistryResources.SERVICE_GROUPS
+                            + service.getAxisServiceGroup().getServiceGroupName()
+                            + RegistryResources.SERVICES + service.getName() +
+                            RegistryResources.OPERATIONS + ((AxisOperation)description).getName().getLocalPart();
+
+                } else {
+                    log.debug("Proxy services - AxisDescription is neither an instance of AxisService nor AxisOperation.");
+                }
+
+                if(isProxyService) {
+                    String policyType = "" + PolicyInclude.AXIS_SERVICE_POLICY;
+                    String policyPath = registryEngagementPath;
+                    if (description instanceof AxisOperation) {
+                        policyPath = registryEngagementPath.substring(0, registryEngagementPath
+                                .indexOf(RegistryResources.OPERATIONS));
+                        policyType = "" + PolicyInclude.AXIS_OPERATION_POLICY;
+                    }
+                    pf.getServicePM().persistPolicyToRegistry(policy, policyType, policyPath);
+                }
+
+                //persist policy to file
                 OMFactory omFactory = OMAbstractFactory.getOMFactory();
                 OMElement policyWrapperElement = omFactory.createOMElement(Resources.POLICY, null);
 
@@ -281,13 +322,20 @@ public class CachingConfigAdminService extends AbstractAdmin {
                 if (!transactionStarted) {
                     sfpm.commitTransaction(serviceGroupId);
                 }
+                if (!registryTransactionStarted) {
+                    configRegistry.commitTransaction();
+                }
             } catch (Exception e) {
                 String msg = "Error persisting caching policy in file system.";
                 log.error(msg, e);
-                throw new PersistenceException(e.getMessage(), e);
+                sfpm.rollbackTransaction(serviceGroupId);
+                configRegistry.rollbackTransaction();
+                throw new PersistenceException(msg, e);
             }
         } catch (Exception e) {
+            log.error(e.getMessage(), e);
             sfpm.rollbackTransaction(serviceGroupId);
+            try { configRegistry.rollbackTransaction(); } catch (RegistryException re) { log.error(re.getMessage(), re); }
             throw new CachingComponentException("errorSavingPolicy", e, log);
         }
 
@@ -329,39 +377,46 @@ public class CachingConfigAdminService extends AbstractAdmin {
             // Add new policy to module
             this.handleNewPolicyAddition(policy, cachingModule.getPolicySubject(), confData);
 
-            // Save the policy.
-            OMFactory omFactory = OMAbstractFactory.getOMFactory();
-            OMElement policyWrapperElement = omFactory.createOMElement(Resources.POLICY, null);
-            policyWrapperElement.addAttribute(Resources.ServiceProperties.POLICY_TYPE,
-                    "" + PolicyInclude.AXIS_MODULE_POLICY, null);
+            // Save the policy. //todo test this.
+            pf.getModulePM().persistModulePolicy(cachingModule.getName(), cachingModule.getVersion().toString(),
+                    policy,policy.getId(), "" + PolicyInclude.AXIS_MODULE_POLICY, globalPath);
 
-            OMElement idElement = omFactory.createOMElement(Resources.ServiceProperties.POLICY_UUID, null);
-            idElement.setText("" + policy.getId());
-            policyWrapperElement.addChild(idElement);
+            //no need to persist to registry since modules are not proxy services in any case.
+            //todo but what if proxy services looks for the policy in registry when the module is globally engaged
 
-            policyWrapperElement.addAttribute(Resources.VERSION, cachingModule.getVersion().toString(), null);
 
-            OMElement policyElementToPersist = PersistenceUtils.createPolicyElement(policy);
-            policyWrapperElement.addChild(policyElementToPersist);
-
-            if (!mfpm.elementExists(cachingModule.getName(), globalPath + "/" + Resources.POLICIES)) {
-                mfpm.put(cachingModule.getName(),
-                        omFactory.createOMElement(Resources.POLICIES, null), globalPath);
-            } else {
-                //you must manually delete the existing policy before adding new one.
-                String pathToPolicy = globalPath + "/" + Resources.POLICIES +
-                        "/" + Resources.POLICY +
-                        PersistenceUtils.getXPathTextPredicate(
-                                Resources.ServiceProperties.POLICY_UUID, policy.getId());
-                if (mfpm.elementExists(cachingModule.getName(), pathToPolicy)) {
-                    mfpm.delete(cachingModule.getName(), pathToPolicy);
-                }
-            }
-            mfpm.put(cachingModule.getName(), policyWrapperElement, globalPath +
-                    "/" + Resources.POLICIES);
-            if (log.isDebugEnabled()) {
-                log.debug("Caching policy is saved in the configRegistry");
-            }
+//            OMFactory omFactory = OMAbstractFactory.getOMFactory();
+//            OMElement policyWrapperElement = omFactory.createOMElement(Resources.POLICY, null);
+//            policyWrapperElement.addAttribute(Resources.ServiceProperties.POLICY_TYPE,
+//                    "" + PolicyInclude.AXIS_MODULE_POLICY, null);
+//
+//            OMElement idElement = omFactory.createOMElement(Resources.ServiceProperties.POLICY_UUID, null);
+//            idElement.setText("" + policy.getId());
+//            policyWrapperElement.addChild(idElement);
+//
+//            policyWrapperElement.addAttribute(Resources.VERSION, cachingModule.getVersion().toString(), null);
+//
+//            OMElement policyElementToPersist = PersistenceUtils.createPolicyElement(policy);
+//            policyWrapperElement.addChild(policyElementToPersist);
+//
+//            if (!mfpm.elementExists(cachingModule.getName(), globalPath + "/" + Resources.POLICIES)) {
+//                mfpm.put(cachingModule.getName(),
+//                        omFactory.createOMElement(Resources.POLICIES, null), globalPath);
+//            } else {
+//                //you must manually delete the existing policy before adding new one. todo for throttling
+//                String pathToPolicy = globalPath + "/" + Resources.POLICIES +
+//                        "/" + Resources.POLICY +
+//                        PersistenceUtils.getXPathTextPredicate(
+//                                Resources.ServiceProperties.POLICY_UUID, policy.getId());
+//                if (mfpm.elementExists(cachingModule.getName(), pathToPolicy)) {
+//                    mfpm.delete(cachingModule.getName(), pathToPolicy);
+//                }
+//            }
+//            mfpm.put(cachingModule.getName(), policyWrapperElement, globalPath +
+//                    "/" + Resources.POLICIES);
+//            if (log.isDebugEnabled()) {
+//                log.debug("Caching policy is saved in the configRegistry");
+//            }
 
             cachingModule.addParameter(new Parameter(GLOBALLY_ENGAGED_PARAM_NAME, "true"));
 
@@ -481,9 +536,6 @@ public class CachingConfigAdminService extends AbstractAdmin {
             if (!isTransactionStarted) {
                 sfpm.beginTransaction(serviceGroupId);
             }
-            /* TODO - replace these two lines with moduleResourcePath += cachingModule.getVersion()
-           This is done at the moment
-            */
             // Removes the association from the file system.
             sfpm.delete(serviceGroupId, engagementPath +
                     "/" + Resources.ModuleProperties.MODULE_XML_TAG +
@@ -710,7 +762,6 @@ public class CachingConfigAdminService extends AbstractAdmin {
         return operation.isEngaged(module) || service.isEngaged(module);
     }
 
-
     public boolean isCachingGloballyEnabled() throws CachingComponentException {
         AxisModule module = axisConfig.getModule(CachingComponentConstants.CACHING_MODULE);
         Parameter param = module.getParameter(GLOBALLY_ENGAGED_PARAM_NAME);
@@ -756,4 +807,38 @@ public class CachingConfigAdminService extends AbstractAdmin {
         }
         return RegistryResources.MODULES + moduleName + "/" + moduleVersion;
     }
+
+//    /**
+//     * Persists the given <code>Policy</code> object under policies associated with the
+//     * <code>servicePath</code> in the registry.
+//     *
+//     * //todo remove this, and replace with AbstractPersistenceManager#persistPolicyToRegistry
+//     *
+//     * @param policy      the <code>Policy</code> instance to be persisted
+//     * @param policyType Policy Type
+//     * @param policyPath       - path in the registry to persist policy
+//     * @throws RegistryException  if saving data to the registry is unsuccessful
+//     * @throws XMLStreamException if serializing the <code>Policy<code> object is unsuccessful
+//     */
+//    private void persistPolicyToRegistry(Policy policy, String policyType, String policyPath)
+//            throws RegistryException, XMLStreamException {
+//        if (log.isDebugEnabled()) {
+//            log.debug("Persisting caching policy in the registry");
+//        }
+//
+//        Resource policyResource = PersistenceUtils.createPolicyResource(
+//                configRegistry, policy, policy.getId(), policyType);
+//        String policyResourcePath = policyPath + RegistryResources.POLICIES
+//                + policy.getId();
+//        try {
+//            configRegistry.beginTransaction();
+//            configRegistry.put(policyResourcePath, policyResource);
+//            configRegistry.commitTransaction();
+//        } catch (Exception e) {
+//            String msg = "Error persisting caching policy in the configRegistry.";
+//            log.error(msg, e);
+//            configRegistry.rollbackTransaction();
+//            throw new RegistryException(e.getMessage(), e);
+//        }
+//    }
 }

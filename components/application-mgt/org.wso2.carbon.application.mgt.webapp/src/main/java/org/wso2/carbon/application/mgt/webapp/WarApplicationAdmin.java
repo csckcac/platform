@@ -143,6 +143,13 @@ public class WarApplicationAdmin extends AbstractAdmin {
         return warCappMetadata;
     }
 
+    /**
+     * Gives a list of WarCappMetadata which includes all the jaxws webapps deployed
+     * through given C-App
+     * @param appName - input app name
+     * @return Array of WarCappMetadata with found jaxws webapps
+     * @throws Exception - error on retrieving metadata
+     */
     public WarCappMetadata[] getJaxWSWarAppData(String appName) throws Exception {
         String tenantId = AppDeployerUtils.getTenantIdString(getAxisConfig());
 

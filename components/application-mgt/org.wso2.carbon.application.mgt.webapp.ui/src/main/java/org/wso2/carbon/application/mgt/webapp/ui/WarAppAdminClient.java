@@ -60,6 +60,12 @@ public class WarAppAdminClient {
         return null;
     }
 
+    /**
+     * This is used to get the jaxws webapps metadata from the BE
+     * @param appName - input app name
+     * @return Array of WarCappMetadata with found jaxws webapps
+     * @throws AxisFault rror on retrieving service data from BE
+     */
     public WarCappMetadata[] getJaxWSWarAppData(String appName) throws AxisFault {
         try {
             return stub.getJaxWSWarAppData(appName);

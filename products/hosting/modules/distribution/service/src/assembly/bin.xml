@@ -96,13 +96,15 @@
         <!--copying Kerberos conf files and multitenancy-packages.xml file-->
         <fileSet>
             <directory>
-                ../../p2-profile-gen/service/target/wso2carbon-core-${wso2carbon.version}/repository/conf/
+                ../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/
             </directory>
             <outputDirectory>wso2stratos-hosting-${pom.version}/repository/conf</outputDirectory>
             <includes>
                 <include>**/krb5.conf</include>
                 <include>**/jaas.conf</include>
                 <include>**/multitenancy-packages.xml</include>
+		<include>**/identity.xml</include>
+		<include>**/stratos.xml</include>
             </includes>
         </fileSet>   
         
@@ -136,6 +138,14 @@
             <directory>lib</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/lib</outputDirectory>
         </fileSet>
+	<fileSet>
+            <directory>../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/dbscripts/identity/</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts/identity</outputDirectory>
+            <includes>
+                <include>**/**.sql</include>
+            </includes>
+        </fileSet>
+
     </fileSets>
 
     <dependencySets>

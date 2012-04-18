@@ -201,9 +201,9 @@
                                 <featureArtifactDef>
                                     org.wso2.hosting:org.wso2.stratos.hosting.styles.feature:${project.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>
+                                <!--<featureArtifactDef>
                                     org.wso2.hosting:org.wso2.stratos.hosting.utils.feature:${project.version}
-                                </featureArtifactDef>
+                                </featureArtifactDef>-->
                                 <featureArtifactDef>
                                     org.wso2.hosting:org.wso2.stratos.hosting.dashboard.ui.feature:${project.version}
                                 </featureArtifactDef>
@@ -272,7 +272,7 @@
                             <metadataRepository>file:${basedir}/target/p2-repo</metadataRepository>
                             <artifactRepository>file:${basedir}/target/p2-repo</artifactRepository>
                             <destination>
-                                ${basedir}/target/wso2carbon-core-${carbon.version}/repository/components
+                                ${basedir}/target/wso2carbon-core-${carbon.platform.version}/repository/components
                             </destination>
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
                             <features>
@@ -428,10 +428,10 @@
                                     <id>org.wso2.stratos.hosting.styles.feature.group</id>
                                     <version>${project.version}</version>
                                 </feature>
-                                <feature>
+                                <!--<feature>
                                     <id>org.wso2.stratos.hosting.utils.feature.group</id>
                                     <version>${project.version}</version>
-                                </feature>
+                                </feature>-->
                                 <feature>
                                     <id>org.wso2.stratos.hosting.dashboard.ui.feature.group</id>
                                     <version>${project.version}</version>

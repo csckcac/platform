@@ -42,8 +42,8 @@ public class GenericJMSBrokerType extends JMSBrokerType {
     private static GenericJMSBrokerType instance = new GenericJMSBrokerType();
 
     public GenericJMSBrokerType() {
-        this.brokerTypeDto = new BrokerTypeDto();
-        this.brokerTypeDto.setName(BrokerConstants.BROKER_TYPE_JMS_GENERIC);
+        setBrokerTypeDto(new BrokerTypeDto());
+        getBrokerTypeDto().setName(BrokerConstants.BROKER_TYPE_JMS_GENERIC);
 
         ResourceBundle resourceBundle = ResourceBundle.getBundle(
                 "org.wso2.carbon.broker.core.i18n.Resources", Locale.getDefault());
@@ -53,14 +53,14 @@ public class GenericJMSBrokerType extends JMSBrokerType {
         factoryInitialProperty.setRequired(true);
         factoryInitialProperty.setDisplayName(
                 resourceBundle.getString(BrokerConstants.BROKER_CONF_JMS_PROP_JNDI_NAME));
-        this.brokerTypeDto.addProperty(factoryInitialProperty);
+        getBrokerTypeDto().addProperty(factoryInitialProperty);
 
         // set connection user name as property
         Property userNameProperty = new Property(BrokerConstants.BROKER_CONF_JMS_PROP_USER_NAME);
         userNameProperty.setRequired(false);
         userNameProperty.setDisplayName(
                 resourceBundle.getString(BrokerConstants.BROKER_CONF_JMS_PROP_USER_NAME));
-        this.brokerTypeDto.addProperty(userNameProperty);
+        getBrokerTypeDto().addProperty(userNameProperty);
 
         // set connection password as property
         Property passwordProperty = new Property(BrokerConstants.BROKER_CONF_JMS_PROP_PASSWORD);
@@ -68,14 +68,14 @@ public class GenericJMSBrokerType extends JMSBrokerType {
         passwordProperty.setSecured(true);
         passwordProperty.setDisplayName(
                 resourceBundle.getString(BrokerConstants.BROKER_CONF_JMS_PROP_PASSWORD));
-        this.brokerTypeDto.addProperty(passwordProperty);
+        getBrokerTypeDto().addProperty(passwordProperty);
 
         // set provider url of broker
         Property ipProperty = new Property(BrokerConstants.BROKER_CONF_JMS_PROP_PROVIDER_URL);
         ipProperty.setDisplayName(
                 resourceBundle.getString(BrokerConstants.BROKER_CONF_JMS_PROP_PROVIDER_URL));
         ipProperty.setRequired(true);
-        this.brokerTypeDto.addProperty(ipProperty);
+        getBrokerTypeDto().addProperty(ipProperty);
 
 //        // set virtual host name as property
 //        Property virtualHostNameProperty =
@@ -85,7 +85,7 @@ public class GenericJMSBrokerType extends JMSBrokerType {
 //                resourceBundle.getString(BrokerConstants.BROKER_CONF_JMS_PROP_VIRTURAL_HOST_NAME));
 //        this.brokerTypeDto.addProperty(virtualHostNameProperty);
 
-        this.brokerSubscriptionsMap = new ConcurrentHashMap<String, Map<String, SubscriptionDetails>>();
+        setBrokerSubscriptionsMap(new ConcurrentHashMap<String, Map<String, SubscriptionDetails>>());
     }
 
     public static JMSBrokerType getInstance() {
@@ -119,8 +119,7 @@ public class GenericJMSBrokerType extends JMSBrokerType {
 
             String userName = properties.get(BrokerConstants.BROKER_CONF_JMS_PROP_USER_NAME);
             String password = properties.get(BrokerConstants.BROKER_CONF_JMS_PROP_PASSWORD);
-            TopicConnection topicConnection = topicConnectionFactory.createTopicConnection(userName, password);
-            return topicConnection;
+            return topicConnectionFactory.createTopicConnection(userName, password);
         } catch (NamingException e) {
             throw new BrokerEventProcessingException("Can not create initial context with given parameters.", e);
 

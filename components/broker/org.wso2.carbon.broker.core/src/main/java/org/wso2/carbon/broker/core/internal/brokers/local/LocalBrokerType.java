@@ -31,7 +31,7 @@ import org.wso2.carbon.event.core.EventBroker;
 import org.wso2.carbon.event.core.Message;
 import org.wso2.carbon.event.core.exception.EventBrokerException;
 
-public class LocalBrokerType implements BrokerType {
+public final class LocalBrokerType implements BrokerType {
     
     private BrokerTypeDto brokerTypeDto = null;
 

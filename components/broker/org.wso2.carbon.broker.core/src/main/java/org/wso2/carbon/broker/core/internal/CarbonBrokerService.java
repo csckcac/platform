@@ -16,7 +16,6 @@
 
 package org.wso2.carbon.broker.core.internal;
 
-import org.apache.axiom.om.OMElement;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.wso2.carbon.broker.core.*;
 import org.wso2.carbon.broker.core.exception.BrokerEventProcessingException;

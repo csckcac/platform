@@ -18,6 +18,6 @@ package org.wso2.carbon.broker.core.internal;
 
 public interface BrokerTypeFactory {
 
-    public BrokerType getBrokerType();
+    BrokerType getBrokerType();
 
 }

@@ -43,9 +43,12 @@ import java.util.List;
 /**
  * reads the broker typesfrom the carbon.xml file and creates the broker types.
  */
-public class BrokerServiceBuilder {
+public final class BrokerServiceBuilder {
 
     private static final Log log = LogFactory.getLog(BrokerService.class);
+
+    private BrokerServiceBuilder(){
+    }
 
     /**
      * builds the broker service objects with the configurations defined in the
@@ -111,11 +114,11 @@ public class BrokerServiceBuilder {
                     (BrokerTypeFactory) brokerTypeFactoryClass.newInstance();
             brokerService.registerBrokerType(factory.getBrokerType());
         } catch (ClassNotFoundException e) {
-            throw new BrokerConfigException("Broker class " + className + " can not be found");
+            throw new BrokerConfigException("Broker class " + className + " can not be found",e);
         } catch (IllegalAccessException e) {
-            throw new BrokerConfigException("Can not access the class " + className);
+            throw new BrokerConfigException("Can not access the class " + className,e);
         } catch (InstantiationException e) {
-            throw new BrokerConfigException("Can not instantiate the class " + className);
+            throw new BrokerConfigException("Can not instantiate the class " + className,e);
         }
     }
 
@@ -156,7 +159,7 @@ public class BrokerServiceBuilder {
                     inputStream.close();
                 }
             } catch (IOException ingored) {
-                throw new BrokerConfigException("Can not close the input stream");
+                log.error("Can not close the input stream after reading "+inputFile.getAbsolutePath());
             }
         }
     }

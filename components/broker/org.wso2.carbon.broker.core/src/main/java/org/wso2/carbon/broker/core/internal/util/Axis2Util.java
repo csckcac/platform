@@ -28,7 +28,9 @@ import org.wso2.carbon.broker.core.internal.brokers.ws.SubscriptionMessageReceiv
 
 import javax.xml.namespace.QName;
 
-public class Axis2Util {
+public final class Axis2Util {
+
+    private Axis2Util(){}
 
     public static AxisService registerAxis2Service(String topicName,
                                                    BrokerListener brokerListener,
@@ -37,7 +39,6 @@ public class Axis2Util {
             throws AxisFault {
         //first create an Axis2 service to receive the messages to this broker
         //operation name can not have
-        topicName = topicName.replaceAll("/","");
         String axisServiceName = brokerConfiguration.getName() + "Service";
         AxisService axisService = axisConfiguration.getService(axisServiceName);
         if (axisService == null) {
@@ -48,11 +49,12 @@ public class Axis2Util {
             axisService.getAxisServiceGroup().addParameter(CarbonConstants.DYNAMIC_SERVICE_PARAM_NAME, "true");
         }
 
-        AxisOperation axisOperation = axisService.getOperation(new QName("", topicName));
+        String topicNameWithoutSlash = topicName.replaceAll("/","");
+        AxisOperation axisOperation = axisService.getOperation(new QName("", topicNameWithoutSlash));
         if (axisOperation == null) {
-            axisOperation = new InOnlyAxisOperation(new QName("", topicName));
+            axisOperation = new InOnlyAxisOperation(new QName("", topicNameWithoutSlash));
             axisOperation.setMessageReceiver(new SubscriptionMessageReceiver());
-            axisOperation.setSoapAction("urn:" + topicName);
+            axisOperation.setSoapAction("urn:" + topicNameWithoutSlash);
 
 
             axisConfiguration.getPhasesInfo().setOperationPhases(axisOperation);
@@ -76,7 +78,6 @@ public class Axis2Util {
                                        BrokerConfiguration brokerConfiguration,
                                        AxisConfiguration axisConfiguration) throws AxisFault {
 
-        topicName = topicName.replaceAll("/", "");
         String axisServiceName = brokerConfiguration.getName() + "Service";
         AxisService axisService = axisConfiguration.getService(axisServiceName);
 
@@ -84,7 +85,7 @@ public class Axis2Util {
             throw new AxisFault("There is not service with the name ==> " + axisServiceName);
         }
 
-        axisService.removeOperation(new QName("", topicName));
+        axisService.removeOperation(new QName("", topicName.replaceAll("/", "")));
     }
 
 

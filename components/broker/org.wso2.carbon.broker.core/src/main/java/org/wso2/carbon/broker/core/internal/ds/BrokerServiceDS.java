@@ -22,6 +22,7 @@ import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.agent.Agent;
 import org.wso2.carbon.agent.server.AgentServer;
 import org.wso2.carbon.broker.core.BrokerService;
+import org.wso2.carbon.broker.core.exception.BrokerConfigException;
 import org.wso2.carbon.broker.core.internal.builder.BrokerServiceBuilder;
 import org.wso2.carbon.event.core.EventBroker;
 import org.wso2.carbon.utils.ConfigurationContextService;
@@ -57,7 +58,7 @@ public class BrokerServiceDS {
             context.getBundleContext().registerService(BrokerService.class.getName(),
                                                        brokerService, null);
             log.info("Successfully deployed the broker service");
-        } catch (Throwable e) {
+        } catch (BrokerConfigException e) {
             log.error("Can not create the broker service ", e);
         }
     }

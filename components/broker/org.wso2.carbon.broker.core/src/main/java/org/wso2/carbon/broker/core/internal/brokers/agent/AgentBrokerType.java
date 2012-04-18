@@ -27,6 +27,9 @@ import org.wso2.carbon.agent.commons.Attribute;
 import org.wso2.carbon.agent.commons.AttributeType;
 import org.wso2.carbon.agent.commons.Event;
 import org.wso2.carbon.agent.commons.EventStreamDefinition;
+import org.wso2.carbon.agent.commons.exception.AuthenticationException;
+import org.wso2.carbon.agent.exception.AgentException;
+import org.wso2.carbon.agent.exception.TransportException;
 import org.wso2.carbon.agent.server.AgentCallback;
 import org.wso2.carbon.broker.core.BrokerConfiguration;
 import org.wso2.carbon.broker.core.BrokerListener;
@@ -37,6 +40,7 @@ import org.wso2.carbon.broker.core.internal.BrokerType;
 import org.wso2.carbon.broker.core.internal.ds.BrokerServiceValueHolder;
 import org.wso2.carbon.broker.core.internal.util.BrokerConstants;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -46,7 +50,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class AgentBrokerType implements BrokerType {
+public final class AgentBrokerType implements BrokerType {
 
     private static final Log log = LogFactory.getLog(AgentBrokerType.class);
     private Gson gson = new Gson();
@@ -97,52 +101,51 @@ public class AgentBrokerType implements BrokerType {
                 resourceBundle.getString(BrokerConstants.BROKER_CONF_AGENT_PROP_PASSWORD));
         this.brokerTypeDto.addProperty(passwordProperty);
 
-        BrokerServiceValueHolder.getAgentServer().subscribe(assignAgentCallback());
+        BrokerServiceValueHolder.getAgentServer().subscribe(new AgentBrokerCallback());
     }
 
     public static AgentBrokerType getInstance() {
         return agentBrokerType;
     }
 
-    private AgentCallback assignAgentCallback() {
-        return new AgentCallback() {
+    private class AgentBrokerCallback implements AgentCallback {
 
-            @Override
-            public void definedEventStream(EventStreamDefinition eventStreamDefinition, String s) {
-                Map<BrokerConfiguration, BrokerListener> brokerListeners = brokerListenerMap.get(eventStreamDefinition.getStreamId());
-                if (brokerListeners == null) {
-                    brokerListeners = new HashMap<BrokerConfiguration, BrokerListener>();
-                    brokerListenerMap.put(eventStreamDefinition.getStreamId(), brokerListeners);
+        @Override
+        public void definedEventStream(EventStreamDefinition eventStreamDefinition, String s) {
+            Map<BrokerConfiguration, BrokerListener> brokerListeners = brokerListenerMap.get(eventStreamDefinition.getStreamId());
+            if (brokerListeners == null) {
+                brokerListeners = new HashMap<BrokerConfiguration, BrokerListener>();
+                brokerListenerMap.put(eventStreamDefinition.getStreamId(), brokerListeners);
+            }
+            inputTypeDefMap.put(eventStreamDefinition.getStreamId(), eventStreamDefinition);
+            for (BrokerListener brokerListener : brokerListeners.values()) {
+                try {
+                    brokerListener.onEventDefinition(eventStreamDefinition);
+                } catch (BrokerEventProcessingException e) {
+                    log.error("Cannot send Stream Definition to a brokerListener subscribed to " +
+                              eventStreamDefinition.getStreamId(), e);
                 }
-                inputTypeDefMap.put(eventStreamDefinition.getStreamId(), eventStreamDefinition);
+
+            }
+        }
+
+        @Override
+        public void receive(List<Event> events, String s) {
+            //Here all events are of same stream
+            Map<BrokerConfiguration, BrokerListener> brokerListeners = brokerListenerMap.get(events.get(0).getStreamId());
+            for (Event event : events) {
                 for (BrokerListener brokerListener : brokerListeners.values()) {
                     try {
-                        brokerListener.onEventDefinition(eventStreamDefinition);
+                        brokerListener.onEvent(event);
                     } catch (BrokerEventProcessingException e) {
-                        log.error("Cannot send Stream Definition to a brokerListener subscribed to " +
-                                  eventStreamDefinition.getStreamId(), e);
+                        log.error("Cannot send event to a brokerListener subscribed to " +
+                                  events.get(0).getStreamId(), e);
                     }
 
                 }
             }
+        }
 
-            @Override
-            public void receive(List<Event> events, String s) {
-                //Here all events are of same stream
-                Map<BrokerConfiguration, BrokerListener> brokerListeners = brokerListenerMap.get(events.get(0).getStreamId());
-                for (Event event : events) {
-                    for (BrokerListener brokerListener : brokerListeners.values()) {
-                        try {
-                            brokerListener.onEvent(event);
-                        } catch (BrokerEventProcessingException e) {
-                            log.error("Cannot send event to a brokerListener subscribed to " +
-                                      events.get(0).getStreamId(), e);
-                        }
-
-                    }
-                }
-            }
-        };
     }
 
     public void subscribe(String topicName, BrokerListener brokerListener,
@@ -164,29 +167,7 @@ public class AgentBrokerType implements BrokerType {
 
         DataPublisher dataPublisher = dataPublisherMap.get(brokerConfiguration);
         if (dataPublisher == null) {
-            if (agent == null) {
-                agent = BrokerServiceValueHolder.getAgent();
-            }
-            Map<String, String> properties = brokerConfiguration.getProperties();
-            try {
-                if (null != properties.get(BrokerConstants.BROKER_CONF_AGENT_PROP_AUTHENTICATOR_URL) && properties.get(BrokerConstants.BROKER_CONF_AGENT_PROP_AUTHENTICATOR_URL).length() > 0) {
-                    dataPublisher = new DataPublisher(properties.get(BrokerConstants.BROKER_CONF_AGENT_PROP_AUTHENTICATOR_URL),
-                                                      properties.get(BrokerConstants.BROKER_CONF_AGENT_PROP_RECEIVER_URL),
-                                                      properties.get(BrokerConstants.BROKER_CONF_AGENT_PROP_USER_NAME),
-                                                      properties.get(BrokerConstants.BROKER_CONF_AGENT_PROP_PASSWORD),
-                                                      agent);
-                } else {
-                    dataPublisher = new DataPublisher(properties.get(BrokerConstants.BROKER_CONF_AGENT_PROP_RECEIVER_URL),
-                                                      properties.get(BrokerConstants.BROKER_CONF_AGENT_PROP_USER_NAME),
-                                                      properties.get(BrokerConstants.BROKER_CONF_AGENT_PROP_PASSWORD),
-                                                      agent);
-                }
-            } catch (Exception e) {
-                throw new BrokerEventProcessingException(
-                        "Cannot create DataPublisher for the broker configuration:" + brokerConfiguration.getName(), e);
-            }
-
-            dataPublisherMap.put(brokerConfiguration, dataPublisher);
+            dataPublisher = createDataPublihser(brokerConfiguration);
         }
 
         //Building the Common Object model Event
@@ -195,18 +176,14 @@ public class AgentBrokerType implements BrokerType {
         if (eventStreamDefinition == null) {
             List<Attribute> attributes = new ArrayList<Attribute>();
             List<String> values = new ArrayList<String>();
-            Iterator iterator = ((OMElement) message).getChildElements();
-            while (iterator.hasNext()) {
-                OMElement omElement = (OMElement) iterator.next();
-                attributes.add(new Attribute(omElement.getLocalName(), AttributeType.STRING));
-                values.add(omElement.getText());
-            }
+
+            buildPayLoadDataAndAttributes((OMElement) message, attributes, values);
 
             eventStreamDefinition = new EventStreamDefinition(streamId);
             eventStreamDefinition.setPayloadData(attributes);
             outputTypeDefMap.put(streamId, eventStreamDefinition);
 
-            String eventStreamDefinitionString=gson.toJson(eventStreamDefinition);
+            String eventStreamDefinitionString = gson.toJson(eventStreamDefinition);
             try {
                 dataPublisher.defineEventStream(eventStreamDefinitionString);
             } catch (Exception ex) {
@@ -216,24 +193,83 @@ public class AgentBrokerType implements BrokerType {
             }
 
             //Sending the first Event
-            Event event = new Event();
-            event.setStreamId(streamId);
-            event.setCorrelationData(values.toArray());
-            publishEvent(brokerConfiguration, dataPublisher, event);
+            sendEvent(brokerConfiguration, dataPublisher, streamId, values.toArray());
 
         } else {
             //Sending Events
-            Object[] data = new Object[eventStreamDefinition.getPayloadData().size()];
-            List<Attribute> payloadAttributes = eventStreamDefinition.getPayloadData();
-            for (int i = 0; i < eventStreamDefinition.getPayloadData().size(); i++) {
-                data[i] = ((OMElement) message).getChildrenWithLocalName(payloadAttributes.get(i).getName()).next();
-            }
-            Event event = new Event();
-            event.setStreamId(streamId);
-            event.setPayloadData(data);
-            publishEvent(brokerConfiguration, dataPublisher, event);
+            Object[] data = buildPayloadData((OMElement) message, eventStreamDefinition);
+            sendEvent(brokerConfiguration, dataPublisher, streamId, data);
         }
 
+    }
+
+    private void buildPayLoadDataAndAttributes(OMElement message, List<Attribute> attributes,
+                                               List<String> values) {
+        Iterator iterator = message.getChildElements();
+        while (iterator.hasNext()) {
+            OMElement omElement = (OMElement) iterator.next();
+            attributes.add(new Attribute(omElement.getLocalName(), AttributeType.STRING));
+            values.add(omElement.getText());
+        }
+    }
+
+    private Object[] buildPayloadData(OMElement message,
+                                      EventStreamDefinition eventStreamDefinition) {
+        Object[] data = new Object[eventStreamDefinition.getPayloadData().size()];
+        List<Attribute> payloadAttributes = eventStreamDefinition.getPayloadData();
+        for (int i = 0; i < eventStreamDefinition.getPayloadData().size(); i++) {
+            data[i] = message.getChildrenWithLocalName(payloadAttributes.get(i).getName()).next();
+        }
+        return data;
+    }
+
+    private void sendEvent(BrokerConfiguration brokerConfiguration, DataPublisher dataPublisher,
+                           String streamId, Object[] values)
+            throws BrokerEventProcessingException {
+        Event event = new Event();
+        event.setStreamId(streamId);
+        event.setCorrelationData(values);
+        publishEvent(brokerConfiguration, dataPublisher, event);
+    }
+
+    private DataPublisher createDataPublihser(BrokerConfiguration brokerConfiguration)
+            throws BrokerEventProcessingException {
+        if (agent == null) {
+            agent = BrokerServiceValueHolder.getAgent();
+        }
+        DataPublisher dataPublisher = null;
+        Map<String, String> properties = brokerConfiguration.getProperties();
+        try {
+            if (null != properties.get(BrokerConstants.BROKER_CONF_AGENT_PROP_AUTHENTICATOR_URL) && properties.get(BrokerConstants.BROKER_CONF_AGENT_PROP_AUTHENTICATOR_URL).length() > 0) {
+                dataPublisher = new DataPublisher(properties.get(BrokerConstants.BROKER_CONF_AGENT_PROP_AUTHENTICATOR_URL),
+                                                  properties.get(BrokerConstants.BROKER_CONF_AGENT_PROP_RECEIVER_URL),
+                                                  properties.get(BrokerConstants.BROKER_CONF_AGENT_PROP_USER_NAME),
+                                                  properties.get(BrokerConstants.BROKER_CONF_AGENT_PROP_PASSWORD),
+                                                  agent);
+            } else {
+                dataPublisher = new DataPublisher(properties.get(BrokerConstants.BROKER_CONF_AGENT_PROP_RECEIVER_URL),
+                                                  properties.get(BrokerConstants.BROKER_CONF_AGENT_PROP_USER_NAME),
+                                                  properties.get(BrokerConstants.BROKER_CONF_AGENT_PROP_PASSWORD),
+                                                  agent);
+            }
+        } catch (AuthenticationException e) {
+            throwBrokerEventProcessingException(brokerConfiguration, e);
+        } catch (AgentException e) {
+            throwBrokerEventProcessingException(brokerConfiguration, e);
+        } catch (TransportException e) {
+            throwBrokerEventProcessingException(brokerConfiguration, e);
+        } catch (MalformedURLException e) {
+            throwBrokerEventProcessingException(brokerConfiguration, e);
+        }
+        dataPublisherMap.put(brokerConfiguration, dataPublisher);
+        return dataPublisher;
+    }
+
+    private void throwBrokerEventProcessingException(BrokerConfiguration brokerConfiguration,
+                                                     Exception e)
+            throws BrokerEventProcessingException {
+        throw new BrokerEventProcessingException(
+                "Cannot create DataPublisher for the broker configuration:" + brokerConfiguration.getName(), e);
     }
 
     private void publishEvent(BrokerConfiguration brokerConfiguration, DataPublisher dataPublisher,

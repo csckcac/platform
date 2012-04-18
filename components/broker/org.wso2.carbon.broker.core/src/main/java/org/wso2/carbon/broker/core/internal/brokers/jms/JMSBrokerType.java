@@ -15,7 +15,6 @@
  */
 package org.wso2.carbon.broker.core.internal.brokers.jms;
 
-import org.apache.axiom.om.OMElement;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,8 +34,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class JMSBrokerType implements BrokerType {
 
     private static final Log log = LogFactory.getLog(JMSBrokerType.class);
-    protected BrokerTypeDto brokerTypeDto = null;
-    protected Map<String, Map<String, SubscriptionDetails>> brokerSubscriptionsMap;
+    private BrokerTypeDto brokerTypeDto = null;
+    private Map<String, Map<String, SubscriptionDetails>> brokerSubscriptionsMap;
 
 
     public BrokerTypeDto getBrokerTypeDto() {
@@ -158,8 +157,21 @@ public abstract class JMSBrokerType implements BrokerType {
             subscriptionDetails.close();
         } catch (JMSException e) {
             throw new BrokerEventProcessingException("Can not unsubscribe from the broker with" +
-                    "configuration " + brokerConfiguration.getName());
+                    "configuration " + brokerConfiguration.getName(),e);
         }
 
+    }
+
+    protected Map<String, Map<String, SubscriptionDetails>> getBrokerSubscriptionsMap() {
+        return brokerSubscriptionsMap;
+    }
+
+    protected void setBrokerSubscriptionsMap(
+            Map<String, Map<String, SubscriptionDetails>> brokerSubscriptionsMap) {
+        this.brokerSubscriptionsMap = brokerSubscriptionsMap;
+    }
+
+    protected void setBrokerTypeDto(BrokerTypeDto brokerTypeDto) {
+        this.brokerTypeDto = brokerTypeDto;
     }
 }

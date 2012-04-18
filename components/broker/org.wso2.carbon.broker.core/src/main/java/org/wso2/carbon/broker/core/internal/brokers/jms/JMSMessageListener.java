@@ -33,7 +33,7 @@ import java.io.ByteArrayInputStream;
 
 public class JMSMessageListener implements MessageListener {
     private static final Log log = LogFactory.getLog(JMSMessageListener.class);
-    BrokerListener brokerListener = null;
+    private BrokerListener brokerListener = null;
 
     public JMSMessageListener(BrokerListener brokerListener) {
         this.brokerListener = brokerListener;
@@ -47,8 +47,8 @@ public class JMSMessageListener implements MessageListener {
                 XMLStreamReader reader = StAXUtils.createXMLStreamReader(new ByteArrayInputStream(
                         textMessage.getText().getBytes()));
                 StAXOMBuilder builder = new StAXOMBuilder(reader);
-                OMElement OMMessage = builder.getDocumentElement();
-                brokerListener.onEvent(OMMessage);
+                OMElement omMessage = builder.getDocumentElement();
+                brokerListener.onEvent(omMessage);
             } catch (XMLStreamException e) {
                 if (log.isErrorEnabled()) {
                     log.error("Failed to get OMElement from " + textMessage, e);

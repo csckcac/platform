@@ -25,14 +25,16 @@ public interface BrokerListener {
 
     /**
      * when an event definition is defined broker proxy call this method with the recived event.
-     * @param object  - received event definition
+     *
+     * @param object - received event definition
      */
-    public void onEventDefinition(Object object) throws BrokerEventProcessingException;
+    void onEventDefinition(Object object) throws BrokerEventProcessingException;
 
     /**
      * when an event happens broker proxy call this method with the recived event.
-     * @param object  - received event
+     *
+     * @param object - received event
      */
-    public void onEvent(Object object) throws BrokerEventProcessingException;
-    
+    void onEvent(Object object) throws BrokerEventProcessingException;
+
 }

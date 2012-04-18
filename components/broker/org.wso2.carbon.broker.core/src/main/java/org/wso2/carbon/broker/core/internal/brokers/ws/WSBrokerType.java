@@ -20,31 +20,29 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.engine.AxisConfiguration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.broker.core.BrokerConfiguration;
 import org.wso2.carbon.broker.core.BrokerListener;
-import org.wso2.carbon.broker.core.Property;
 import org.wso2.carbon.broker.core.BrokerTypeDto;
+import org.wso2.carbon.broker.core.Property;
 import org.wso2.carbon.broker.core.exception.BrokerEventProcessingException;
 import org.wso2.carbon.broker.core.internal.BrokerType;
 import org.wso2.carbon.broker.core.internal.ds.BrokerServiceValueHolder;
-import org.wso2.carbon.broker.core.internal.util.BrokerConstants;
 import org.wso2.carbon.broker.core.internal.util.Axis2Util;
+import org.wso2.carbon.broker.core.internal.util.BrokerConstants;
 import org.wso2.carbon.event.client.broker.BrokerClient;
 import org.wso2.carbon.event.client.broker.BrokerClientException;
 import org.wso2.carbon.event.client.stub.generated.authentication.AuthenticationExceptionException;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
+import java.rmi.RemoteException;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
-import java.rmi.RemoteException;
 
-public class WSBrokerType implements BrokerType {
+public final class WSBrokerType implements BrokerType {
 
-    private static final Log log = LogFactory.getLog(WSBrokerType.class);
+//    private static final Log log = LogFactory.getLog(WSBrokerType.class);
 
     private static WSBrokerType instance = new WSBrokerType();
 
@@ -106,17 +104,17 @@ public class WSBrokerType implements BrokerType {
                 }
             }
 
-            if (!httpEpr.endsWith("/")) {
+            if (httpEpr != null && !httpEpr.endsWith("/")) {
                 httpEpr += "/";
             }
 
-            httpEpr += topicName.replaceAll("/","");
+            httpEpr += topicName.replaceAll("/", "");
 
             Map<String, String> properties = brokerConfiguration.getProperties();
             BrokerClient brokerClient =
                     new BrokerClient(properties.get(BrokerConstants.BROKER_CONF_WS_PROP_URI),
-                            properties.get(BrokerConstants.BROKER_CONF_WS_PROP_USERNAME),
-                            properties.get(BrokerConstants.BROKER_CONF_WS_PROP_PASSWORD));
+                                     properties.get(BrokerConstants.BROKER_CONF_WS_PROP_USERNAME),
+                                     properties.get(BrokerConstants.BROKER_CONF_WS_PROP_PASSWORD));
             brokerClient.subscribe(topicName, httpEpr);
 
             String subscriptionID = brokerClient.subscribe(topicName, httpEpr);
@@ -130,7 +128,7 @@ public class WSBrokerType implements BrokerType {
             }
 
             topicSubscriptionsMap.put(topicName, subscriptionID);
-            
+
         } catch (BrokerClientException e) {
             throw new BrokerEventProcessingException("Can not create the broker client", e);
         } catch (AuthenticationExceptionException e) {
@@ -148,13 +146,13 @@ public class WSBrokerType implements BrokerType {
         try {
             Map<String, String> properties = brokerConfiguration.getProperties();
             ConfigurationContextService configurationContextService =
-                BrokerServiceValueHolder.getConfigurationContextService();
+                    BrokerServiceValueHolder.getConfigurationContextService();
             BrokerClient brokerClient =
                     new BrokerClient(configurationContextService.getClientConfigContext(),
                                      properties.get(BrokerConstants.BROKER_CONF_WS_PROP_URI),
                                      properties.get(BrokerConstants.BROKER_CONF_WS_PROP_USERNAME),
                                      properties.get(BrokerConstants.BROKER_CONF_WS_PROP_PASSWORD));
-            brokerClient.publish(topicName, ((OMElement)message));
+            brokerClient.publish(topicName, ((OMElement) message));
         } catch (AuthenticationExceptionException e) {
             throw new BrokerEventProcessingException("Can not authenticate the broker client", e);
         } catch (AxisFault axisFault) {
@@ -165,7 +163,8 @@ public class WSBrokerType implements BrokerType {
 
     public void unsubscribe(String topicName,
                             BrokerConfiguration brokerConfiguration,
-                            AxisConfiguration axisConfiguration) throws BrokerEventProcessingException {
+                            AxisConfiguration axisConfiguration)
+            throws BrokerEventProcessingException {
         try {
             Axis2Util.removeOperation(topicName, brokerConfiguration, axisConfiguration);
         } catch (AxisFault axisFault) {
@@ -173,21 +172,21 @@ public class WSBrokerType implements BrokerType {
         }
 
         Map<String, String> topicSubscriptionsMap =
-                    this.brokerSubscriptionsMap.get(brokerConfiguration.getName());
-        if (topicSubscriptionsMap == null){
+                this.brokerSubscriptionsMap.get(brokerConfiguration.getName());
+        if (topicSubscriptionsMap == null) {
             throw new BrokerEventProcessingException("There is no subscription for broker "
-                    + brokerConfiguration.getName());
+                                                     + brokerConfiguration.getName());
         }
 
         String subscriptionID = topicSubscriptionsMap.remove(topicName);
-        if (subscriptionID == null){
+        if (subscriptionID == null) {
             throw new BrokerEventProcessingException("There is no subscriptions for this topic" + topicName);
         }
 
         try {
             Map<String, String> properties = brokerConfiguration.getProperties();
             ConfigurationContextService configurationContextService =
-                BrokerServiceValueHolder.getConfigurationContextService();
+                    BrokerServiceValueHolder.getConfigurationContextService();
             BrokerClient brokerClient =
                     new BrokerClient(configurationContextService.getClientConfigContext(),
                                      properties.get(BrokerConstants.BROKER_CONF_WS_PROP_URI),

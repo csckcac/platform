@@ -27,7 +27,9 @@ import java.util.Iterator;
 /**
  * helper class to parse the broker type details
  */
-public class BrokerTypeHelper {
+public final class BrokerTypeHelper {
+
+    private BrokerTypeHelper(){}
 
     public static BrokerTypeDto fromOM(OMElement omElement) {
 

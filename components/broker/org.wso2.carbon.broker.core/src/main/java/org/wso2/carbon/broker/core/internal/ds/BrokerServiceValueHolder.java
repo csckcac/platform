@@ -24,12 +24,14 @@ import org.wso2.carbon.event.core.EventBroker;
 /**
  * common place to hold some OSGI bundle references.
  */
-public class BrokerServiceValueHolder {
+public final class BrokerServiceValueHolder {
 
     private static ConfigurationContextService configurationContextService;
     private static EventBroker eventBroker;
     private static AgentServer agentServer;
     private static Agent agent;
+
+    private BrokerServiceValueHolder(){}
 
     public static void registerConfigurationContextService(
             ConfigurationContextService configurationContextService) {

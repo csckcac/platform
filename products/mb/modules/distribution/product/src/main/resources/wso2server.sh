@@ -271,7 +271,6 @@ do
     $JAVA_OPTS \
     -DandesConfig=qpid-config.xml \
     -Ddisable.cassandra.server.startup=true \
-    -Dimpl.prefix=Carbon \
     -Dcom.sun.management.jmxremote \
     -classpath "$CARBON_CLASSPATH" \
     -Djava.endorsed.dirs="$JAVA_ENDORSED_DIRS" \
@@ -279,7 +278,6 @@ do
     -Dcatalina.base="$CARBON_HOME/lib/tomcat" \
     -Dwso2.server.standalone=true \
     -Dcarbon.registry.root=/ \
-    -Dcarbon.xbootclasspath="$CARBON_XBOOTCLASSPATH" \
     -Djava.command="$JAVACMD" \
     -Dcarbon.home="$CARBON_HOME" \
     -Dwso2.transports.xml="$CARBON_HOME/repository/conf/mgt-transports.xml" \

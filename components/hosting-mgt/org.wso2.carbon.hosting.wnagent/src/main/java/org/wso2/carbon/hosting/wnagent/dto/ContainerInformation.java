@@ -1,14 +1,10 @@
 package org.wso2.carbon.hosting.wnagent.dto;
 
 public class ContainerInformation {
+	
+	private String containerId;
 
-	private String jailKeysFile;
-
-	private String template;
-
-	private String zone;
-
-	private String containerRoot;
+	private String containerRoot; 
 
 	private String netGateway;
 
@@ -18,38 +14,16 @@ public class ContainerInformation {
 
 	private String bridge;
 
-	private String memory;
+	private String type;
+	
+	private String containerKeysFile;
 
-	private String swap;
-
-	private String cpuShares;
-
-	private String cpuSetShares;
-
-	private String storage;
-
-	public String getJailKeysFile() {
-		return jailKeysFile;
+	public String getContainerKeysFile() {
+		return containerKeysFile;
 	}
 
-	public void setJailKeysFile(String jailKeysFile) {
-		this.jailKeysFile = jailKeysFile;
-	}
-
-	public String getTemplate() {
-		return template;
-	}
-
-	public void setTemplate(String template) {
-		this.template = template;
-	}
-
-	public String getCpuShares() {
-		return cpuShares;
-	}
-
-	public void setCpuShares(String cpuShares) {
-		this.cpuShares = cpuShares;
+	public void setContainerKeysFile(String containerKeysFIle) {
+		this.containerKeysFile = containerKeysFIle;
 	}
 
 	public String getNetGateway() {
@@ -66,14 +40,6 @@ public class ContainerInformation {
 
 	public void setContainerRoot(String containerRoot) {
 		this.containerRoot = containerRoot;
-	}
-
-	public String getCpuSetShares() {
-		return cpuSetShares;
-	}
-
-	public void setCpuSetShares(String cpuSetShares) {
-		this.cpuSetShares = cpuSetShares;
 	}
 
 	public String getIp() {
@@ -100,35 +66,20 @@ public class ContainerInformation {
 		this.bridge = bridge;
 	}
 
-	public String getMemory() {
-		return memory;
-	}
+	public String getContainerId() {
+    	return containerId;
+    }
 
-	public void setMemory(String memory) {
-		this.memory = memory;
-	}
+	public void setContainerId(String containerId) {
+    	this.containerId = containerId;
+    }
 
-	public String getSwap() {
-		return swap;
-	}
+	public String getType() {
+    	return type;
+    }
 
-	public void setSwap(String swap) {
-		this.swap = swap;
-	}
-
-	public String getStorage() {
-		return storage;
-	}
-
-	public void setStorage(String storage) {
-		this.storage = storage;
-	}
-
-	public String getZone() {
-		return zone;
-	}
-
-	public void setZone(String zone) {
-		this.zone = zone;
-	}
+	public void setType(String type) {
+    	this.type = type;
+    }	
+	
 }

@@ -8,7 +8,7 @@
 	License for the ~ specific language governing permissions and limitations 
 	~ under the License. -->
 <serviceGroup>
-	<service name="WorkerNodeAgentService" scope="transportsession">
+	<service name="AgentService" scope="transportsession">
 		<schema schemaNamespace="http://org.apache.axis2/xsd"
 			elementFormDefaultQualified="true" />
 		<transports>
@@ -17,12 +17,11 @@
 		<description>
 			Admin service for managing all hosting containers
         </description>
-		<parameter name="ServiceClass">org.wso2.carbon.hosting.wnagent.service.WorkerNodeAgentService
-		</parameter>
-
+		<parameter name="ServiceClass">org.wso2.carbon.hosting.wnagent.service.AgentService</parameter>
+		<!-- 
 		<excludeOperations>
 			<operation>registerWorkerNode</operation>
-		</excludeOperations>
+		</excludeOperations>  -->
 
 	</service>
 

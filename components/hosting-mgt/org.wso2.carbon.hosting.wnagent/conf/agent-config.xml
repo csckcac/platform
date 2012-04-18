@@ -1,0 +1,71 @@
+<agentConfig>
+	<workerNode>
+		<isAvailable>true</isAvailable>
+		<name>Worker-node-1</name>
+		<ip>192.168.20.1</ip> 
+		<zone>srilanka</zone>
+		<templatePath>/mnt/lxc</templatePath>
+		<template name="wso2php" domain="wso2.php.domain" />
+		<template name="wso2as1" domain="wso2.as1.domain" />
+		<template name="wso2as2" domain="wso2.as2.domain" />
+		<bridges>
+			<bridge>
+				<isAvailable>true</isAvailable>
+				<bridgeIp>192.168.20.4</bridgeIp>
+				<workerNode>Worker-node-1</workerNode>
+				<maxIpCount>21</maxIpCount>
+				<currentIpCount>2</currentIpCount>
+				<netmask>255.255.255.0</netmask>
+				<gateway>192.168.23.81</gateway>
+			</bridge>
+			<bridge>
+				<isAvailable>true</isAvailable>
+				<bridgeIp>192.168.20.5</bridgeIp>
+				<workerNode>Worker-node-1</workerNode>
+				<maxIpCount>13</maxIpCount>
+				<currentIpCount>2</currentIpCount>
+				<netmask>255.255.255.0</netmask>
+				<gateway>192.168.23.81</gateway>
+			</bridge>
+			<bridge>
+				<isAvailable>false</isAvailable>
+				<bridgeIp>192.168.20.6</bridgeIp>
+				<workerNode>Worker-node-1</workerNode>
+				<maxIpCount>21</maxIpCount>
+				<currentIpCount>0</currentIpCount>
+				<netmask>255.255.255.0</netmask>
+				<gateway>192.168.23.81</gateway>
+			</bridge>
+		</bridges>
+	</workerNode>
+	<resourcePlan>
+		<plan name="S">
+			<memory>512</memory>
+			<swap>10</swap>
+			<cpuShares>4</cpuShares>
+			<cpuSets>4</cpuSets>
+			<storage>1900</storage>
+		</plan> 
+		<plan name="L">
+			<memory>1024</memory>
+			<swap>20</swap>
+			<cpuShares>6</cpuShares>
+			<cpuSets>6</cpuSets>
+			<storage>4000</storage>
+		</plan>
+		<plan name="LX">
+			<memory>3122</memory>
+			<swap>20</swap>
+			<cpuShares>6</cpuShares>
+			<cpuSets>6</cpuSets>
+			<storage>4000</storage>
+		</plan>
+	</resourcePlan>
+
+	<!-- This points to the place where helper services such as AgentManagementService 
+		and AutoscalerService hosted. -->
+	<agentManagementHost url="http://127.0.0.1:9763/services/" />
+	<defaultPassword value="abc123"/>
+	<defaultUsername value="defaultUser"/>
+	<svnLocation url="">
+</agentConfig>

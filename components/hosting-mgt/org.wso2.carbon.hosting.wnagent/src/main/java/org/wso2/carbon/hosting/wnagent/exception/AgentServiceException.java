@@ -16,23 +16,16 @@
  * under the License.
  */
 
-package org.wso2.carbon.hosting.wnagent;
+package org.wso2.carbon.hosting.wnagent.exception;
 
-import org.wso2.carbon.utils.CarbonUtils;
+@SuppressWarnings("serial")
+public class AgentServiceException extends Exception {
 
-public class WNAgentConstants {
+	public AgentServiceException(String msg) {
+		super(msg);
+	}
 
-	public static final String CONTAINER_ACTION = "./container_action.sh";
-
-	public static final String CONTAINER_STOP_ACTION = "stop";
-
-	public static final String CONTAINER_START_ACTION = "start";
-
-	public static final String CONTAINER_DESTROY_ACTION = "destroy";
-
-	public static final String CONTAINER_CREATE_ACTION = "create";
-
-	public static final String WSO2_HOSTING_HOME = CarbonUtils.getCarbonHome(); // TODO get the bin folder 
-	// testing /home/wso2/work/testprojects/hosting-nonjava/source/hosting/container_setup
-
+	public AgentServiceException(String msg, Throwable t) {
+		super(msg, t);
+	}
 }

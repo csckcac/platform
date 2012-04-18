@@ -328,11 +328,11 @@ public class ProcessStoreImpl implements ProcessStore, MultiTenantProcessStore {
                                     DOMUtils.domToString(prop.getValue()));
                         }
                         conn.setVersion(pConf.getVersion());
-                    } catch (Throwable t) {
+                    } catch (Exception e) {
                         String errmsg = "Error persisting deployment record for "
                                 + pConf.getProcessId()
                                 + "; process will not be available after restart!";
-                        log.error(errmsg, t);
+                        log.error(errmsg, e);
                         return false;
                     }
                 }
@@ -619,9 +619,9 @@ public class ProcessStoreImpl implements ProcessStore, MultiTenantProcessStore {
         removeServicesPublishedByTenat(tenantId);
     }
 
-    public void hydrateTenantProcessStore(String tenantId) {
-
-    }
+//    public void hydrateTenantProcessStore(String tenantId) {
+//
+//    }
 
     public void setLocalBPELDeploymentUnitRepo(File bpelDURepo) {
         this.bpelDURepo = bpelDURepo;
@@ -647,18 +647,18 @@ public class ProcessStoreImpl implements ProcessStore, MultiTenantProcessStore {
         servicesPublishedByTenants.remove(tenantId);
     }
 
-    public void addServicePublishByTenant(Integer tenantId, QName serviceName) {
-        Map<QName, Object> services = servicesPublishedByTenants.get(tenantId);
-        if (services == null) {
-            services = new ConcurrentHashMap<QName, Object>();
-            services.put(serviceName, new Object());
-            servicesPublishedByTenants.put(tenantId, services);
-        } else {
-            services.put(serviceName, new Object());
-        }
-
-
-    }
+//    public void addServicePublishByTenant(Integer tenantId, QName serviceName) {
+//        Map<QName, Object> services = servicesPublishedByTenants.get(tenantId);
+//        if (services == null) {
+//            services = new ConcurrentHashMap<QName, Object>();
+//            services.put(serviceName, new Object());
+//            servicesPublishedByTenants.put(tenantId, services);
+//        } else {
+//            services.put(serviceName, new Object());
+//        }
+//
+//
+//    }
 
     /**
      * Get tenant id of the given process

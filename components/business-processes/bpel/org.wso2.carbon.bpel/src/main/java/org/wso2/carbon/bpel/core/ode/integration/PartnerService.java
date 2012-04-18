@@ -21,7 +21,6 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.description.TransportOutDescription;
-import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.httpclient.HttpConnectionManager;
 import org.apache.commons.logging.Log;
@@ -79,9 +78,6 @@ public class PartnerService implements PartnerRoleChannel {
 
     private String endpointUrl;
 
-    // Client side AxisConfiguration
-    private AxisConfiguration axisConfig;
-
     // WSDL Binding to use for this service invocation
     private Binding binding;
 
@@ -99,7 +95,6 @@ public class PartnerService implements PartnerRoleChannel {
         this.portName = portName;
         this.clientConfigCtx = clientConfigCtx;
         this.processConfiguration = pconf;
-        this.axisConfig = clientConfigCtx.getAxisConfiguration();
 
         inferBindingInformation();
 
@@ -225,7 +220,6 @@ public class PartnerService implements PartnerRoleChannel {
                             httpBindingHandler.invoke(partnerRoleMessageExchange, partnerInvocationContext);
 
                     if (isTwoWay) {
-                        final Operation operation = partnerRoleMessageExchange.getOperation();
                         MessageContext responseMessageContext = response.getReponseMessageContext();
                         partnerInvocationContext.setOutMessageContext(responseMessageContext);
                         MessageContext fltMessageContext = response.getFaultMessageContext();
@@ -237,11 +231,10 @@ public class PartnerService implements PartnerRoleChannel {
                         }
 
                         if (fltMessageContext != null) {
-                            replyHTTP(partnerInvocationContext, partnerRoleMessageExchange, operation,
-                                      fltMessageContext, true);
+                            replyHTTP(partnerInvocationContext, partnerRoleMessageExchange, true);
                         } else {
-                            replyHTTP(partnerInvocationContext, partnerRoleMessageExchange, operation,
-                                      responseMessageContext, response.isFault());
+                            replyHTTP(partnerInvocationContext, partnerRoleMessageExchange,
+                                    response.isFault());
                         }
 
                     } else {  /* one-way case */
@@ -332,10 +325,10 @@ public class PartnerService implements PartnerRoleChannel {
                 }
             }
 
-        } catch (Throwable t) {
+        } catch (Exception e) {
             String errmsg = Messages.msgErrorSendingMessageToAxisForODEMex(
                     partnerRoleMessageExchange.toString());
-            log.error(errmsg, t);
+            log.error(errmsg, e);
             replyWithFailure(partnerRoleMessageExchange,
                              MessageExchange.FailureType.COMMUNICATION_ERROR, errmsg);
         }
@@ -447,8 +440,7 @@ public class PartnerService implements PartnerRoleChannel {
     }
 
     private void replyHTTP(final BPELMessageContext partnerInvocationContext,
-                           final PartnerRoleMessageExchange odeMex, final Operation operation,
-                           final MessageContext reply, final boolean isFault) {
+                           final PartnerRoleMessageExchange odeMex, final boolean isFault) {
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Received response for MEX " + odeMex);

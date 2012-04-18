@@ -179,8 +179,8 @@ public class BPELServerImpl implements BPELServer {
                     log.debug("Shutting down BPEL server.");
                 }
                 odeBpelServer.shutdown();
-            } catch (Throwable t) {
-                log.warn("Error stopping services.", t);
+            } catch (Exception e) {
+                log.warn("Error stopping services.", e);
             } finally {
                 odeBpelServer = null;
             }
@@ -219,8 +219,8 @@ public class BPELServerImpl implements BPELServer {
                     log.debug("Shutting down process store.");
                 }
                 processStore.shutdown();
-            } catch (Throwable t) {
-                log.warn("Process store could not be shutdown.", t);
+            } catch (Exception e) {
+                log.warn("Process store could not be shutdown.", e);
             } finally {
                 processStore = null;
             }
@@ -229,8 +229,8 @@ public class BPELServerImpl implements BPELServer {
         if (daoConnectionFactory != null) {
             try {
                 daoConnectionFactory.shutdown();
-            } catch (Throwable t) {
-                log.warn("DAO shutdown failed.", t);
+            } catch (Exception e) {
+                log.warn("DAO shutdown failed.", e);
             } finally {
                 daoConnectionFactory = null;
             }
@@ -239,8 +239,8 @@ public class BPELServerImpl implements BPELServer {
         if (db != null) {
             try {
                 db.shutdown();
-            } catch (Throwable t) {
-                log.warn("DB shutdown failed.", t);
+            } catch (Exception e) {
+                log.warn("DB shutdown failed.", e);
             } finally {
                 db = null;
             }

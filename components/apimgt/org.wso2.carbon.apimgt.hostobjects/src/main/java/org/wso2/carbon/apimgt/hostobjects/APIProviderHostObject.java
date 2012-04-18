@@ -207,7 +207,8 @@ public class APIProviderHostObject extends ScriptableObject {
         }
     }
 
-    private static FileItem getThumbFile(HttpServletRequest request) throws IOException, FileUploadException {
+    private static FileItem getThumbFile(HttpServletRequest request)
+            throws IOException, FileUploadException {
         boolean isMultipart = ServletFileUpload.isMultipartContent(request);
         if (!isMultipart) {
             return null;
@@ -333,14 +334,16 @@ public class APIProviderHostObject extends ScriptableObject {
         }
     }
 
-    private static void createSynapseDef(Set<URITemplate> uriTemplates, String context, String name, String version, String status) throws Exception {
+    private static void createSynapseDef(Set<URITemplate> uriTemplates, String context, String name,
+                                         String version, String status) throws Exception {
         if (status.equals("PUBLISHED")) {
             List<URITemplate> resourceData = new ArrayList<URITemplate>(uriTemplates);
             addRestClient(name, version, context, resourceData);
         }
     }
 
-    private static void updateSynapseDef(Set<URITemplate> uriTemplates, String context, String name, String version, String status) throws Exception {
+    private static void updateSynapseDef(Set<URITemplate> uriTemplates, String context, String name,
+                                         String version, String status) throws Exception {
         if (status.equals("PUBLISHED")) {
             List<URITemplate> resourceData = new ArrayList<URITemplate>(uriTemplates);
             updateRestClient(name, version, context, resourceData);
@@ -361,7 +364,6 @@ public class APIProviderHostObject extends ScriptableObject {
                                                 Object[] args,
                                                 Function funObj) {
         NativeArray myn = new NativeArray(0);
-        NativeObject o = new NativeObject();
         try {
             String providerName;
             String apiName;
@@ -464,20 +466,7 @@ public class APIProviderHostObject extends ScriptableObject {
                     API api = (API) apiObject;
                     APIIdentifier apiIdentifier = api.getId();
                     row.put("apiName", row, apiIdentifier.getApiName());
-                    row.put("description", row, api.getDescription());
-                    row.put("endpoint", row, api.getUrl());
-                    row.put("wsdl", row, api.getWsdlUrl());
                     row.put("version", row, apiIdentifier.getVersion());
-                    row.put("updatedDate", row, api.getLastUpdated().toString());
-                    row.put("tier", row, api.getAvailableTiers().iterator().next().getName());
-                    StringBuffer tagsSet = new StringBuffer("");
-                    for (int k = 0; k < api.getTags().toArray().length; k++) {
-                        tagsSet.append(api.getTags().toArray()[k].toString());
-                        if (k != api.getTags().toArray().length - 1) {
-                            tagsSet.append(",");
-                        }
-                    }
-                    row.put("tags", row, tagsSet.toString());
                     row.put("status", row, checkValue(api.getStatus().toString()));
                     row.put("thumb", row, api.getThumbnailUrl());
                     row.put("subs", row, apiManagerImpl.getSubscribersOfAPI(api.getId()).size());
@@ -640,7 +629,8 @@ public class APIProviderHostObject extends ScriptableObject {
     }
 
     public static NativeArray jsFunction_getInlineContent(Context cx,
-                                                          Scriptable thisObj, Object[] args, Function funObj)
+                                                          Scriptable thisObj, Object[] args,
+                                                          Function funObj)
             throws ScriptException, APIManagementException, UnsupportedEncodingException {
         String apiName;
         String version;
@@ -656,7 +646,7 @@ public class APIProviderHostObject extends ScriptableObject {
             version = args[2].toString();
             docName = args[3].toString();
             APIIdentifier apiId = new APIIdentifier(providerName, apiName,
-                    version);
+                                                    version);
             try {
                 content = apiManagerImpl.getDocumentationContent(apiId, docName);
                 log.info(content);
@@ -685,7 +675,8 @@ public class APIProviderHostObject extends ScriptableObject {
     }
 
     public static void jsFunction_addInlineContent(Context cx,
-                                                   Scriptable thisObj, Object[] args, Function funObj)
+                                                   Scriptable thisObj, Object[] args,
+                                                   Function funObj)
             throws ScriptException, APIManagementException {
         String apiName;
         String version;
@@ -700,7 +691,7 @@ public class APIProviderHostObject extends ScriptableObject {
             docName = args[3].toString();
             docContent = args[4].toString();
             APIIdentifier apiId = new APIIdentifier(providerName, apiName,
-                    version);
+                                                    version);
             apiManagerImpl.addDocumentationContent(apiId, docName, docContent);
         } else {
             log.error("Wrong number of inputs and their types in adding document Content");
@@ -760,7 +751,9 @@ public class APIProviderHostObject extends ScriptableObject {
     }
 
     public static void jsFunction_createNewAPIVersion(Context cx, Scriptable thisObj,
-                                                      Object[] args, Function funObj) {
+                                                      Object[] args, Function funObj)
+
+    {
 
         try {
 
@@ -880,7 +873,8 @@ public class APIProviderHostObject extends ScriptableObject {
 
     }
 
-    public static NativeArray jsFunction_getAPIUsageTest(String APIname, String serverURL) throws ScriptException {
+    public static NativeArray jsFunction_getAPIUsageTest(String APIname, String serverURL)
+            throws ScriptException {
         List<ProviderAPIVersionDTO> list = null;
         try {
             APIMgtUsageQueryServiceClient client = new APIMgtUsageQueryServiceClient(serverURL);
@@ -889,23 +883,28 @@ public class APIProviderHostObject extends ScriptableObject {
             log.error("Backend-Error while querying BAM server", e);
         }
         NativeArray myn = new NativeArray(0);
-        Iterator it = list.iterator();
+        Iterator it = null;
+        if (list != null) {
+            it = list.iterator();
+        }
         int i = 0;
-        while (it.hasNext()) {
-            NativeObject row = new NativeObject();
-            Object usageObject = it.next();
-            ProviderAPIVersionDTO usage = (ProviderAPIVersionDTO) usageObject;
-            row.put("version", row, usage.getVersion());
-            row.put("count", row, usage.getCount());
-            myn.put(i, myn, row);
-            i++;
+        if (it != null) {
+            while (it.hasNext()) {
+                NativeObject row = new NativeObject();
+                Object usageObject = it.next();
+                ProviderAPIVersionDTO usage = (ProviderAPIVersionDTO) usageObject;
+                row.put("version", row, usage.getVersion());
+                row.put("count", row, usage.getCount());
+                myn.put(i, myn, row);
+                i++;
 
+            }
         }
         return myn;
     }
-    
+
     public static NativeArray jsFunction_getAllAPIUsage(String serverURL) throws ScriptException {
-    	log.info("jsFunction_getAllAPIUsage called "+serverURL);
+        log.info("jsFunction_getAllAPIUsage called " + serverURL);
         List<ProviderAPIUsage> list = null;
         try {
             APIMgtUsageQueryServiceClient client = new APIMgtUsageQueryServiceClient(serverURL);
@@ -914,17 +913,22 @@ public class APIProviderHostObject extends ScriptableObject {
             log.error("Backend-Error while querying BAM server for getting All API Usage", e);
         }
         NativeArray myn = new NativeArray(0);
-        Iterator it = list.iterator();
+        Iterator it = null;
+        if (list != null) {
+            it = list.iterator();
+        }
         int i = 0;
-        while (it.hasNext()) {
-            NativeObject row = new NativeObject();
-            Object usageObject = it.next();
-            ProviderAPIUsage usage = (ProviderAPIUsage) usageObject;
-            row.put("apiName", row, usage.getApiName());
-            row.put("count", row, usage.getCount());
-            myn.put(i, myn, row);
-            i++;
+        if (it != null) {
+            while (it.hasNext()) {
+                NativeObject row = new NativeObject();
+                Object usageObject = it.next();
+                ProviderAPIUsage usage = (ProviderAPIUsage) usageObject;
+                row.put("apiName", row, usage.getApiName());
+                row.put("count", row, usage.getCount());
+                myn.put(i, myn, row);
+                i++;
 
+            }
         }
         return myn;
     }
@@ -934,8 +938,8 @@ public class APIProviderHostObject extends ScriptableObject {
 
         new AuthAdminServiceClient();
         String adminCookie = AuthAdminServiceClient.login(AuthAdminServiceClient.HOST_NAME,
-                AuthAdminServiceClient.USER_NAME,
-                AuthAdminServiceClient.PASSWORD);
+                                                          AuthAdminServiceClient.USER_NAME,
+                                                          AuthAdminServiceClient.PASSWORD);
 
         Map testAPIMappings = new HashMap();
 
@@ -971,8 +975,8 @@ public class APIProviderHostObject extends ScriptableObject {
 
         new AuthAdminServiceClient();
         String adminCookie = AuthAdminServiceClient.login(AuthAdminServiceClient.HOST_NAME,
-                AuthAdminServiceClient.USER_NAME,
-                AuthAdminServiceClient.PASSWORD);
+                                                          AuthAdminServiceClient.USER_NAME,
+                                                          AuthAdminServiceClient.PASSWORD);
 
         Map testAPIMappings = new HashMap();
 

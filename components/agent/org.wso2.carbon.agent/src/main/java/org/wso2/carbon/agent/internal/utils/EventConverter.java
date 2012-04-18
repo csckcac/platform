@@ -30,9 +30,7 @@ import java.util.LinkedList;
  */
 public final class EventConverter {
 
-    private EventConverter(){
-
-    }
+    private EventConverter(){ }
 
     public static ThriftEventBundle toThriftEventBundle(Event event,
                                                         ThriftEventBundle eventBundle,

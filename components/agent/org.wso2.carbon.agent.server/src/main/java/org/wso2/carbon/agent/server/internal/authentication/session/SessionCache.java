@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Cache that contains all sessions
+ * Cache that contains all agent sessions
  */
 public class SessionCache {
 

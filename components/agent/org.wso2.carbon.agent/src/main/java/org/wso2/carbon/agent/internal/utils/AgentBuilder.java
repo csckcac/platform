@@ -36,7 +36,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
- * Helper class to build Agent
+ * Helper class to build Agent's configurations
  */
 public final class AgentBuilder {
 

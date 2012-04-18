@@ -19,6 +19,10 @@ package org.wso2.carbon.agent.server.internal.authentication;
 
 import org.wso2.carbon.identity.authentication.AuthenticationService;
 
+/**
+ * CarbonAuthenticationHandler implementation that authenticate Agents
+ * via Carbon AuthenticationService
+ */
 public class CarbonAuthenticationHandler implements AuthenticationHandler {
     private AuthenticationService authenticationService;
 

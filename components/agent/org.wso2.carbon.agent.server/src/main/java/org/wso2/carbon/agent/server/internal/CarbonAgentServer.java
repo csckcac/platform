@@ -50,7 +50,9 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
 
-
+/**
+ * Carbon based implementation of the agent server
+ */
 public class CarbonAgentServer implements AgentServer {
     private static Log log = LogFactory.getLog(CarbonAgentServer.class);
     private TServer authenticationServer;
@@ -65,6 +67,7 @@ public class CarbonAgentServer implements AgentServer {
      * @param authenticatorPort
      * @param receiverPort
      * @param authenticationHandler
+     * @param streamDefinitionStore
      */
     public CarbonAgentServer(int authenticatorPort, int receiverPort,
                              AuthenticationHandler authenticationHandler,
@@ -80,6 +83,7 @@ public class CarbonAgentServer implements AgentServer {
      *
      * @param receiverPort
      * @param authenticationHandler
+     * @param streamDefinitionStore
      */
     public CarbonAgentServer(int receiverPort,
                              AuthenticationHandler authenticationHandler,
@@ -95,6 +99,7 @@ public class CarbonAgentServer implements AgentServer {
      *
      * @param agentServerConfiguration
      * @param authenticationHandler
+     * @param streamDefinitionStore
      */
     public CarbonAgentServer(AgentServerConfiguration agentServerConfiguration,
                              AuthenticationHandler authenticationHandler,

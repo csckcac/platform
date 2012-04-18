@@ -21,10 +21,12 @@
 
 package org.wso2.carbon.agent.internal.utils;
 
+/**
+ * The Agent Constants
+ */
 public final class AgentConstants {
 
-    private AgentConstants() {
-    }
+    private AgentConstants() { }
 
     public static final String HOSTNAME_AND_PORT_SEPARATOR = ":";
 

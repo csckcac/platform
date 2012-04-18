@@ -33,7 +33,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * the util class that converts thrift objects to common format
+ * the util class that converts Events and its definitions in to various forms
  */
 public final class EventConverter {
     private static Gson gson = new Gson();

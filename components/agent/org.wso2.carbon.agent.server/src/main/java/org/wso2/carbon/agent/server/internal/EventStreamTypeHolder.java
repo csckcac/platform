@@ -22,6 +22,9 @@ import org.wso2.carbon.agent.commons.AttributeType;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Event stream data type holder
+ */
 public class EventStreamTypeHolder {
     private String domainName;
     private Map<String, AttributeType[]> metaDataTypeMap = new HashMap<String, AttributeType[]>();

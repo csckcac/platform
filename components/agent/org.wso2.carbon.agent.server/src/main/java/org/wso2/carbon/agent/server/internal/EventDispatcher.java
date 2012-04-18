@@ -39,8 +39,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Dispactches events  and their definitions subscribers
+ */
 public class EventDispatcher {
-
 
 //    private static final Log log = LogFactory.getLog(EventDispatcher.class);
 

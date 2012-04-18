@@ -19,7 +19,7 @@
 package org.wso2.carbon.agent.server.internal.authentication.session;
 
 /**
- * Type definitions related to a session
+ * Agent Client's session
  */
 public class AgentSession {
     private String sessionId;

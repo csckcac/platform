@@ -48,7 +48,7 @@ import org.wso2.carbon.agent.internal.utils.EventConverter;
 import java.util.concurrent.Semaphore;
 
 /**
- * The publisher who send all the arrived events to the Agent Server using a thread pool
+ * The publisher who sends all the arrived events to the Agent Server using a pool of threads
  */
 public class EventPublisher implements Runnable {
     private static Log log = LogFactory.getLog(EventPublisher.class);

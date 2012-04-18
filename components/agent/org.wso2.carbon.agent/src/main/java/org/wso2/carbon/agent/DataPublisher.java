@@ -38,8 +38,8 @@ import java.net.MalformedURLException;
 import java.util.concurrent.RejectedExecutionException;
 
 /**
- * Publisher will handle one connection, where it will connect to the server,
- * define type,send events and will get disconnect.
+ * Publisher will maintain a single connection to a server,
+ * and define/find event streams and send events.
  */
 public class DataPublisher {
 

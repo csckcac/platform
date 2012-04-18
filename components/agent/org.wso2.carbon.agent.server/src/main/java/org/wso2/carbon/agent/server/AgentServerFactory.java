@@ -22,6 +22,9 @@ import org.wso2.carbon.agent.server.datastore.StreamDefinitionStore;
 import org.wso2.carbon.agent.server.internal.CarbonAgentServer;
 import org.wso2.carbon.agent.server.internal.authentication.AuthenticationHandler;
 
+/**
+ * The falconry method that is used to create Agent server
+ */
 public class AgentServerFactory {
     public CarbonAgentServer createAgentServer(AgentServerConfiguration agentServerConfiguration,
                                                AuthenticationHandler authenticationHandler,StreamDefinitionStore streamDefinitionStore) {

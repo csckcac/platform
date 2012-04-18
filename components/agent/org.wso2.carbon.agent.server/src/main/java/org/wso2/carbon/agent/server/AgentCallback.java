@@ -24,6 +24,9 @@ import org.wso2.carbon.agent.commons.EventStreamDefinition;
 
 import java.util.List;
 
+/**
+ * The call back that notifies Event arrivals and EventStreamDefinition declarations
+ */
 public interface AgentCallback {
 
 

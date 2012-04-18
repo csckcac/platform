@@ -28,6 +28,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The in memory implementation of the Event Stream definition Store
+ */
 public class InMemoryStreamDefinitionStore implements StreamDefinitionStore {
 
     private Map<String, HashMap<String, String>> streamIdMap = new HashMap<String, HashMap<String, String>>();

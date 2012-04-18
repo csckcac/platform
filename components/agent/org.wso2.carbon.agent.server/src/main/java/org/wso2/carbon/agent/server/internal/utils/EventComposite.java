@@ -20,6 +20,9 @@ package org.wso2.carbon.agent.server.internal.utils;
 import org.wso2.carbon.agent.commons.thrift.data.ThriftEventBundle;
 import org.wso2.carbon.agent.server.internal.EventStreamTypeHolder;
 
+/**
+ * Event composite that's passed to the Queue Worker
+ */
 public class EventComposite {
     private EventStreamTypeHolder eventStreamTypeHolder;
     private ThriftEventBundle thriftEventBundle;

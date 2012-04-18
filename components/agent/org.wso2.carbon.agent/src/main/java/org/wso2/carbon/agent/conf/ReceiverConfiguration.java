@@ -22,7 +22,7 @@
 package org.wso2.carbon.agent.conf;
 
 /**
- * configuration details of Agent Server
+ * configuration details of Agent Server Endpoint
  */
 public class ReceiverConfiguration {
 

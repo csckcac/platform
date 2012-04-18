@@ -24,7 +24,7 @@ import org.wso2.carbon.agent.server.exception.StreamDefinitionNotFoundException;
 import java.util.List;
 
 /**
- * this class represents the interface between the agent server and wso2 agent
+ * this class represents as the interface between the agent server and agent
  * server implementations.
  */
 public interface AgentServer {

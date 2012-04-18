@@ -26,7 +26,9 @@ import org.wso2.carbon.agent.commons.thrift.authentication.exception.ThriftAuthe
 import org.wso2.carbon.agent.commons.thrift.authentication.service.ThriftAuthenticatorService;
 import org.wso2.carbon.agent.server.internal.authentication.Authenticator;
 
-
+/**
+ * The client implementation for ThriftAuthenticatorService
+ */
 public class ThriftAuthenticatorServiceImpl implements ThriftAuthenticatorService.Iface {
     private static final Log log = LogFactory.getLog(Authenticator.class);
 

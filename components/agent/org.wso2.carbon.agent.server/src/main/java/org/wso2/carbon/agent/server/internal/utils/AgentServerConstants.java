@@ -19,12 +19,12 @@
 package org.wso2.carbon.agent.server.internal.utils;
 
 
+/**
+ * Agent Server Constants
+ */
 public final class AgentServerConstants {
 
-
-    private AgentServerConstants(){
-
-    }
+    private AgentServerConstants(){ }
 
     public static final int NO_OF_WORKER_THREADS = 10;
     public static final int EVENT_CAPACITY = 10000;

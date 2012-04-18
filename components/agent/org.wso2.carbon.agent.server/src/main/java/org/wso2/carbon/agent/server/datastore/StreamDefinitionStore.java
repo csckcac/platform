@@ -24,6 +24,10 @@ import org.wso2.carbon.agent.server.exception.StreamDefinitionNotFoundException;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * The Event Stream Definition Store interface
+ * Used to persist Event Stream Definitions at the Agent Server
+ */
 public interface StreamDefinitionStore {
 
     boolean containsStreamDefinition(String domainName, String name, String version);

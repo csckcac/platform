@@ -39,15 +39,13 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Helper class to build Agent Server
+ * Helper class to build Agent Server Initial Configurations
  */
 public final class AgentServerBuilder {
 
     private static final Log log = LogFactory.getLog(AgentServerBuilder.class);
 
-    private AgentServerBuilder() {
-
-    }
+    private AgentServerBuilder() {}
 
     private static OMElement loadConfigXML() throws AgentServerConfigurationException {
 
@@ -87,7 +85,6 @@ public final class AgentServerBuilder {
             } catch (IOException e) {
                 String errorMessage = "Can not close the input stream";
                 log.error(errorMessage, e);
-                throw new AgentServerConfigurationException(errorMessage, e);
             }
         }
     }

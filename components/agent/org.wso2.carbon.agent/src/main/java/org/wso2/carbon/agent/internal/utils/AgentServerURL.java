@@ -20,6 +20,9 @@ package org.wso2.carbon.agent.internal.utils;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+/**
+ * The Agent server endpoint url
+ */
 public class AgentServerURL {
     private String protocol;
     private String host;

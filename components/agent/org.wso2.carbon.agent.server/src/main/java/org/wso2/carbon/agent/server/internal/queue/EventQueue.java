@@ -30,7 +30,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * The Event Queue class wraps a thread safe queue to
+ * The Event Queue class wraps a thread safe queue to,
  * queue and deque events in a scalable manner
  */
 public class EventQueue {

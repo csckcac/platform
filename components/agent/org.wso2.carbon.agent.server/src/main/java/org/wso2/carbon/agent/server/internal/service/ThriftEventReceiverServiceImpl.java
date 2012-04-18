@@ -34,6 +34,9 @@ import org.wso2.carbon.agent.server.internal.EventDispatcher;
 import org.wso2.carbon.agent.server.internal.authentication.Authenticator;
 import org.wso2.carbon.agent.server.internal.authentication.session.AgentSession;
 
+/**
+ * The client implementation for ThriftEventReceiverService
+ */
 public class ThriftEventReceiverServiceImpl implements ThriftEventReceiverService.Iface {
 
     private EventDispatcher eventDispatcher;

@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 /**
- * will removes the events from queues and send then to endpoints
+ * Will removes the events from queues and send then to the endpoints
  */
 public class QueueWorker implements Runnable {
 

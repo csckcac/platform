@@ -46,6 +46,7 @@ import org.wso2.carbon.humantask.client.api.types.TTaskAbstract;
 import org.wso2.carbon.humantask.client.api.types.TTaskAuthorisationParams;
 import org.wso2.carbon.humantask.client.api.types.TTaskDetails;
 import org.wso2.carbon.humantask.client.api.types.TTaskEventType;
+import org.wso2.carbon.humantask.client.api.types.TTaskEvents;
 import org.wso2.carbon.humantask.client.api.types.TTaskHistoryFilter;
 import org.wso2.carbon.humantask.client.api.types.TTaskInstanceData;
 import org.wso2.carbon.humantask.client.api.types.TTaskOperations;
@@ -857,6 +858,31 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+    }
+
+    @Override
+    public TTaskEvents loadTaskEvents(URI uri) throws IllegalArgumentFault, IllegalStateFault {
+        try {
+            final Long taskId = validateTaskId(uri);
+            return HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
+                    execTransaction(new Callable<TTaskEvents>() {
+                        public TTaskEvents call() throws Exception {
+                            HumanTaskEngine engine =
+                                    HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine();
+                            HumanTaskDAOConnection daoConn =
+                                    engine.getDaoConnectionFactory().getConnection();
+                            TaskDAO task = daoConn.getTask(taskId);
+                            return TransformerUtils.transformTaskEvents(task, getCaller());
+                        }
+                    });
+        } catch (IllegalArgumentFault iaf) {
+            log.error(iaf);
+            throw iaf;
+        } catch (Exception ex) {
+            String errMsg = "loadAuthorisationParams operation failed";
+            log.error(errMsg, ex);
+            throw new IllegalStateFault(errMsg, ex);
+        }
     }
 
     @Override

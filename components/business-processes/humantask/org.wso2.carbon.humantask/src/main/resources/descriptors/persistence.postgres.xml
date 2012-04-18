@@ -33,8 +33,6 @@
         <class>org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.PresentationParameter</class>
         <class>org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.PresentationSubject</class>
         <class>org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.Task</class>
-        <!--<class>org.wso2.carbon.humantask.olddaodao.oldjpajpa.model.Deadline</class>-->
-        <!--<class>org.wso2.carbon.humantask.olddaodao.oldjpajpa.model.Escalation</class>-->
         <properties>
             <property name="openjpa.jdbc.DBDictionary" value="org.apache.openjpa.jdbc.sql.PostgresDictionary"/>
 

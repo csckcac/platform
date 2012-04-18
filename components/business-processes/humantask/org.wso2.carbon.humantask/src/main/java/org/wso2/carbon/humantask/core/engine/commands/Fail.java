@@ -19,6 +19,7 @@ package org.wso2.carbon.humantask.core.engine.commands;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Element;
+import org.wso2.carbon.humantask.core.dao.EventDAO;
 import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
 import org.wso2.carbon.humantask.core.dao.TaskStatus;
 
@@ -80,6 +81,13 @@ public class Fail extends AbstractHumanTaskCommand {
         checkPostState(TaskStatus.FAILED, this.getClass());
     }
 
+    @Override
+    protected EventDAO createTaskEvent() {
+        EventDAO taskEvent = super.createTaskEvent();
+        taskEvent.setDetails("");
+        return taskEvent;
+    }
+
     /**
      * The method to execute the business logic for the specific command.
      */
@@ -89,6 +97,7 @@ public class Fail extends AbstractHumanTaskCommand {
         authorise();
         checkState();
         task.fail(faultName, faultElement);
+        task.persistEvent(createTaskEvent());
         checkPostConditions();
     }
 }

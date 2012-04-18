@@ -18,6 +18,7 @@ package org.wso2.carbon.humantask.core.engine.commands;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.humantask.core.dao.EventDAO;
 import org.wso2.carbon.humantask.core.dao.TaskStatus;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 
@@ -86,11 +87,19 @@ public class Exit extends AbstractHumanTaskCommand {
     }
 
     @Override
+    protected EventDAO createTaskEvent() {
+        EventDAO taskEvent = super.createTaskEvent();
+        taskEvent.setDetails("");
+        return taskEvent;
+    }
+
+    @Override
     public void execute() {
         checkPreConditions();
         authorise();
         checkState();
         task.exit();
+        task.persistEvent(createTaskEvent());
         checkPostConditions();
     }
 }

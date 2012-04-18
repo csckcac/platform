@@ -491,6 +491,7 @@ public class Task extends OpenJPAEntity implements TaskDAO {
         this.presentationSubjects = presentationSubjects;
     }
 
+    @Override
     public List<PresentationNameDAO> getPresentationNames() {
         return presentationNames;
     }
@@ -499,6 +500,7 @@ public class Task extends OpenJPAEntity implements TaskDAO {
         this.presentationNames = presentationNames;
     }
 
+    @Override
     public List<PresentationDescriptionDAO> getPresentationDescriptions() {
         return presentationDescriptions;
     }
@@ -508,20 +510,36 @@ public class Task extends OpenJPAEntity implements TaskDAO {
         this.presentationDescriptions = presentationDescriptions;
     }
 
+    @Override
     public List<DeadlineDAO> getDeadlines() {
         return deadlines;
     }
 
+    @Override
     public void addDeadline(DeadlineDAO deadlineDAO) {
         deadlines.add(deadlineDAO);
     }
 
+    @Override
     public List<EventDAO> getEvents() {
         return events;
     }
 
+    @Override
     public void setEvents(List<EventDAO> events) {
         this.events = events;
+    }
+
+    @Override
+    public void addEvent(EventDAO event) {
+        this.events.add(event);
+    }
+
+    @Override
+    public void persistEvent(EventDAO event) {
+        event.setTask(this);
+        this.getEvents().add(event);
+        getEntityManager().merge(this);
     }
 
     @Override
@@ -876,6 +894,8 @@ public class Task extends OpenJPAEntity implements TaskDAO {
         }
         this.release();
     }
+
+
 
     @PrePersist
     @PreUpdate

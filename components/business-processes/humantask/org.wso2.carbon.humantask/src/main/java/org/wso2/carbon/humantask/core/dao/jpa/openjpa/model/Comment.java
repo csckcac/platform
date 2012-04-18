@@ -20,7 +20,15 @@ import org.apache.commons.lang.Validate;
 import org.wso2.carbon.humantask.core.dao.CommentDAO;
 import org.wso2.carbon.humantask.core.dao.TaskDAO;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.util.Date;
 
 /**

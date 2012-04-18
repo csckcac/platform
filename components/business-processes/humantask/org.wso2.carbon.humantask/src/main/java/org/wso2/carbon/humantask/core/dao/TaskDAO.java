@@ -371,4 +371,28 @@ public interface TaskDAO {
      * @param orgEntities : The new list of organizational entities to be added to the human role
      */
     public void replaceOrgEntitiesForLogicalPeopleGroup(GenericHumanRoleDAO.GenericHumanRoleType type, List<OrganizationalEntityDAO> orgEntities);
+
+    /**
+     * Gets the task events for the particular task.
+     * @return : The list of task events for a particular task.
+     */
+    public List<EventDAO> getEvents();
+
+    /**
+     * TODO
+     * @param events
+     */
+    public void setEvents(List<EventDAO> events);
+
+    /**
+     * Adds a new event to the task.
+     *
+     * @param eventDAO : The new event to be added to the task.
+     */
+    public void addEvent(EventDAO eventDAO);
+
+    /**
+     * @param eventDAO : the event to be persisted.
+     */
+    public void persistEvent(EventDAO eventDAO);
 }

@@ -17,6 +17,7 @@
 package org.wso2.carbon.humantask.core.engine.commands;
 
 import org.wso2.carbon.humantask.core.dao.CommentDAO;
+import org.wso2.carbon.humantask.core.dao.EventDAO;
 import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
 
 import java.util.ArrayList;
@@ -75,12 +76,20 @@ public class AddComment extends AbstractHumanTaskCommand {
     }
 
     @Override
+    protected EventDAO createTaskEvent() {
+        EventDAO taskEvent = super.createTaskEvent();
+        taskEvent.setDetails("");
+        return taskEvent;
+    }
+
+    @Override
     public void execute() {
         checkPreConditions();
         authorise();
         checkState();
         persistedComment = task.persistComment(engine.getDaoConnectionFactory().
                 getConnection().getCommentDAO(commentString, caller.getName()));
+        task.persistEvent(createTaskEvent());
         checkPostConditions();
     }
 

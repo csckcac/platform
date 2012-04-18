@@ -80,6 +80,7 @@ public class HumanTaskDAOConnectionImpl implements HumanTaskDAOConnection {
         matchingTask.getPresentationNames();
         matchingTask.getPresentationSubjects();
         matchingTask.getPresentationParameters();
+        matchingTask.getEvents();
         return matchingTask;
     }
 
@@ -358,5 +359,18 @@ public class HumanTaskDAOConnectionImpl implements HumanTaskDAOConnection {
 
     public EntityManager getEntityManager() {
         return entityManager;
+    }
+
+    /**
+     * Creates a new EventDAO object.
+     *
+     * @return :
+     */
+    @Override
+    public EventDAO createNewEventObject(TaskDAO task) {
+        EventDAO eventDAO = new Event();
+        eventDAO.setTimeStamp(new Date());
+        eventDAO.setOldState(task.getStatus());
+        return eventDAO;
     }
 }

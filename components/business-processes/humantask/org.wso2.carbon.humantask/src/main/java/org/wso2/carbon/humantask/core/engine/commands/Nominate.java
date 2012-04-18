@@ -18,6 +18,7 @@ package org.wso2.carbon.humantask.core.engine.commands;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.humantask.core.dao.EventDAO;
 import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
 import org.wso2.carbon.humantask.core.dao.OrganizationalEntityDAO;
 import org.wso2.carbon.humantask.core.dao.TaskStatus;
@@ -86,6 +87,13 @@ public class Nominate extends AbstractHumanTaskCommand {
         }
     }
 
+    @Override
+    protected EventDAO createTaskEvent() {
+        EventDAO taskEvent = super.createTaskEvent();
+        taskEvent.setDetails("");
+        return taskEvent;
+    }
+
     /**
      * The method to execute the business logic for the specific command.
      */
@@ -95,6 +103,7 @@ public class Nominate extends AbstractHumanTaskCommand {
         authorise();
         checkState();
         task.nominate(nominees);
+        task.persistEvent(createTaskEvent());
         checkPostConditions();
     }
 }

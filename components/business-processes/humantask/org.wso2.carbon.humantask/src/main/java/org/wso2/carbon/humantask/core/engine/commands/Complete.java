@@ -22,6 +22,7 @@ import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.wso2.carbon.humantask.core.dao.EventDAO;
 import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
 import org.wso2.carbon.humantask.core.dao.MessageDAO;
 import org.wso2.carbon.humantask.core.dao.TaskStatus;
@@ -91,9 +92,9 @@ public class Complete extends AbstractHumanTaskCommand {
      */
     @Override
     public void execute() {
-     //   checkPreConditions();
-     //   authorise();
-    //    checkState();
+        //   checkPreConditions();
+        //   authorise();
+        //    checkState();
         task.complete(createMessage());
         TaskConfiguration taskConf = (TaskConfiguration) HumanTaskServiceComponent.
                 getHumanTaskServer().getTaskStoreManager().getHumanTaskStore(task.getTenantId()).
@@ -103,7 +104,15 @@ public class Complete extends AbstractHumanTaskCommand {
         } catch (Exception e) {
             throw new HumanTaskRuntimeException("Error occurred while invoking callback service", e);
         }
+        task.persistEvent(createTaskEvent());
         checkPostConditions();
+    }
+
+    @Override
+    protected EventDAO createTaskEvent() {
+        EventDAO taskEvent = super.createTaskEvent();
+        taskEvent.setDetails("");
+        return taskEvent;
     }
 
     private MessageDAO createMessage() {

@@ -19,6 +19,7 @@ package org.wso2.carbon.humantask.core.engine.commands;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.humantask.core.dao.EventDAO;
 import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
 import org.wso2.carbon.humantask.core.dao.OrganizationalEntityDAO;
 import org.wso2.carbon.humantask.core.dao.TaskDAO;
@@ -55,6 +56,11 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
     protected OrganizationalEntityDAO caller;
 
     /**
+     * The task event related to this command.
+     */
+    protected EventDAO event;
+
+    /**
      * @param callerId : The caller user id.
      * @param taskId   : The task id.
      */
@@ -64,6 +70,8 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
         this.caller = engine.getDaoConnectionFactory().getConnection().
                 createNewOrgEntityObject(callerId, OrganizationalEntityDAO.OrganizationalEntityType.USER);
         this.task = engine.getDaoConnectionFactory().getConnection().getTask(taskId);
+
+        this.event = engine.getDaoConnectionFactory().getConnection().createNewEventObject(task);
     }
 
     //checks the method caller is an actual user existing in the user store.
@@ -217,5 +225,19 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
      * Checks the post-conditions after executing the task operation.
      */
     protected abstract void checkPostConditions();
+
+    /**
+     * Creates the task event object corresponding the the command being executed.
+     *
+     * @return : The task event object.
+     */
+    protected EventDAO createTaskEvent() {
+        event.setTask(task);
+        //As the getClass method gives the run time class name we can directly set the operation type.
+        event.setType(this.getClass().getSimpleName().toLowerCase());
+        event.setUser(caller.getName());
+        event.setNewState(task.getStatus());
+        return event;
+    }
 
 }

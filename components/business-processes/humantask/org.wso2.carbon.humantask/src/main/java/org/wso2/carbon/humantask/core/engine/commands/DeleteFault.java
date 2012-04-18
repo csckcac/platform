@@ -16,6 +16,7 @@
 
 package org.wso2.carbon.humantask.core.engine.commands;
 
+import org.wso2.carbon.humantask.core.dao.EventDAO;
 import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
 import org.wso2.carbon.humantask.core.dao.TaskStatus;
 
@@ -36,7 +37,7 @@ public class DeleteFault extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkPreConditions() {
-                        checkForValidTask(this.getClass());
+        checkForValidTask(this.getClass());
     }
 
     /**
@@ -68,11 +69,19 @@ public class DeleteFault extends AbstractHumanTaskCommand {
     }
 
     @Override
+    protected EventDAO createTaskEvent() {
+        EventDAO taskEvent = super.createTaskEvent();
+        taskEvent.setDetails("");
+        return taskEvent;
+    }
+
+    @Override
     public void execute() {
         checkPreConditions();
         authorise();
         checkState();
         task.deleteFault();
+        task.persistEvent(createTaskEvent());
         checkPostConditions();
     }
 }

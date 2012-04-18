@@ -158,15 +158,17 @@
         <div class="tabs_task" id="tabsDown">
             <ul>
                 <%--<li><a onclick="selectTab({me:this,tabContainer:'tabsDown',tabContentContainer:'tabContentDown'})" class="selected" rel="commentsTab">Comments</a></li>--%>
-                <li><a class="selected" rel="commentsTab">Comments</a></li>
-                <li style="display:none;"><a onclick="selectTab({me:this,tabContainer:'tabsDown',tabContentContainer:'tabContentDown'})" rel="historyTab">History</a></li>
+                <li><a id="commentTabLink" onclick="HUMANTASK.handleTabSelection('commentsTab')" class="selected" rel="commentsTab">Comments</a></li>
+                <li><a id="eventTabLink" onclick="HUMANTASK.handleTabSelection('eventsTab')" rel="eventsTab">History</a></li>
             </ul>
         </div>
         <div class="tabContent" id="tabContentDown">
             <div id="commentsTab" tabindex="100" class="tabContentData">
                 <%-- The task comments are populated and appended at this div --%>
             </div>
-            <div id="historyTab" class="tabContentData" style="display:none;">History</div>
+            <div id="eventsTab" tabindex="101"  class="tabContentData" style="display:none;">
+                <%-- The task events are populated and appended at this div --%>
+            </div>
         </div>
 
     </div>

@@ -129,8 +129,16 @@ HUMANTASK.loadComments = function(taskId, taskClient) {
     var page = 'task-loading-ajaxprocessor.jsp?taskClient=' + taskClient + '&taskId=' + taskId + '&loadParam=taskComments';
     $.getJSON(page,
               function(commentJson) {
-                  //The post task auth param load actions should be called here.
                   HUMANTASK.populateComments(commentJson);
+              });
+};
+
+HUMANTASK.loadEvents = function(taskId, taskClient) {
+    jQuery('#eventsTab').empty();
+    var page = 'task-loading-ajaxprocessor.jsp?taskClient=' + taskClient + '&taskId=' + taskId + '&loadParam=taskEvents';
+    $.getJSON(page,
+              function(eventJson) {
+                  HUMANTASK.populateEvents(eventJson);
               });
 };
 
@@ -142,6 +150,14 @@ HUMANTASK.populateComments = function (commentJSONMap) {
     });
 };
 
+HUMANTASK.populateEvents = function (eventJSONMap) {
+
+    $.each(eventJSONMap, function(eventId, eventJSON) {
+        var eventDiv = HUMANTASK.createEventDiv(eventJSON);
+         jQuery('#eventsTab').append(eventDiv);
+    });
+};
+
 HUMANTASK.createCommentDiv = function(commentJSON) {
     var commentDiv = '<div class="commentBox">';
     commentDiv +=   '<a>' + commentJSON.commentAddedBy + '</a> added a comment - ' + commentJSON.commentAddedTime + HUMANTASK.createDeleteCommentLink(commentJSON) ;
@@ -149,6 +165,26 @@ HUMANTASK.createCommentDiv = function(commentJSON) {
     commentDiv += '</div>';
 
     return commentDiv;
+};
+
+HUMANTASK.createEventDiv = function(eventJSON) {
+    //TODO construct this properly!!!
+    var eventDiv = '<div class="commentBox">';
+    eventDiv +=   '<b> User : </b> ' + eventJSON.eventInitiator + '<br>';
+    eventDiv +=   '<b> Operation : </b> ' + eventJSON.eventType + '<br>';
+    eventDiv +=   '<b> Time : </b> ' + eventJSON.eventTime + '<br>';
+
+
+    if(eventJSON.oldState != eventJSON.newState) {
+        eventDiv +=   '<b> Old State : </b> ' + eventJSON.oldState + '<br>';
+        eventDiv +=   '<b> New State : </b> ' + eventJSON.newState + '<br>';
+    }
+    if(eventJSON.eventDetail) {
+        eventDiv +=   '<b> Details : </b> ' + eventJSON.eventDetail + '<br>';
+    }
+    eventDiv += '</div>';
+
+    return eventDiv;
 };
 
 HUMANTASK.createDeleteCommentLink = function(commentJSON) {
@@ -184,9 +220,6 @@ HUMANTASK.bindButtons = function() {
     jQuery('#completeTaskButton').click(HUMANTASK.completeTask);
 };
 
-
-HUMANTASK.loadEvents = function() {
-};
 
 HUMANTASK.claimTask = function() {
     var claimURL = 'task-operations-ajaxprocessor.jsp?operation=claim&taskClient=' +
@@ -305,6 +338,25 @@ HUMANTASK.addComment = function() {
                       return true;
                   }
               });
+};
+
+HUMANTASK.handleTabSelection = function (tabType) {
+
+    if (tabType == 'commentsTab') {
+        $('#eventsTab').hide();
+        $('#eventTabLink').removeClass('selected');
+
+        $('#commentsTab').show();
+        $('#commentTabLink').addClass('selected');
+        HUMANTASK.loadComments(HUMANTASK.taskId, HUMANTASK.taskClient);
+    } else if (tabType == 'eventsTab') {
+        $('#commentsTab').hide();
+        $('#commentTabLink').removeClass('selected');
+
+        $('#eventsTab').show();
+        $('#eventTabLink').addClass('selected');
+        HUMANTASK.loadEvents(HUMANTASK.taskId, HUMANTASK.taskClient);
+    }
 };
 
 

@@ -39,7 +39,9 @@ public interface HumanTaskDAOConnection {
     public TaskDAO createTask(TaskCreationContext creationContext) throws HumanTaskException;
 
     /**
-     * Retrieves the given task.
+     * Retrieves the given task with it's children ( comments, events, etc).
+     * Note: The returned task object contains all the lazy relationships.
+     * Hence call this only when all the relations need to be loaded.
      *
      * @param taskId : The id of the task to be retrieved.
      * @return : The retrieved task.
@@ -224,4 +226,11 @@ public interface HumanTaskDAOConnection {
      * @return EntityManager
      */
     public EntityManager getEntityManager();
+
+
+    /**
+     * Creates a new EventDAO object.
+     * @return :
+     */
+    public EventDAO createNewEventObject(TaskDAO task);
 }

@@ -18,6 +18,7 @@ package org.wso2.carbon.humantask.core.engine.commands;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.humantask.core.dao.EventDAO;
 
 /**
  * Forward operation.  : TODO  - complete this.
@@ -60,6 +61,14 @@ public class Forward extends AbstractHumanTaskCommand {
     @Override
     protected void checkPostConditions() {
 
+    }
+
+    @Override
+    protected EventDAO createTaskEvent() {
+        EventDAO taskEvent = super.createTaskEvent();
+        taskEvent.setDetails("");
+        task.persistEvent(createTaskEvent());
+        return taskEvent;
     }
 
     @Override

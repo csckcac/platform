@@ -176,7 +176,7 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.ntask.core</artifactId>
-                <version>${pom.version}</version>
+                <version>${wso2carbon.version.humantask}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -18,9 +18,9 @@ package org.wso2.carbon.humantask.core.engine.commands;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.humantask.core.dao.EventDAO;
 import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
 import org.wso2.carbon.humantask.core.dao.TaskStatus;
-import org.wso2.carbon.humantask.core.dao.TaskType;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 import org.wso2.carbon.humantask.core.engine.util.OperationAuthorizationUtil;
 
@@ -78,6 +78,13 @@ public class Claim extends AbstractHumanTaskCommand {
     }
 
     @Override
+    protected EventDAO createTaskEvent() {
+        EventDAO taskEvent = super.createTaskEvent();
+        taskEvent.setDetails("");
+        return taskEvent;
+    }
+
+    @Override
     public void execute() {
         if (log.isDebugEnabled()) {
             log.debug(String.format("User[%s] claiming task[%d]", caller.getName(), task
@@ -88,6 +95,7 @@ public class Claim extends AbstractHumanTaskCommand {
         checkState();
         authorise();
         task.claim(caller);
+        task.persistEvent(createTaskEvent());
         checkPostConditions();
     }
 }

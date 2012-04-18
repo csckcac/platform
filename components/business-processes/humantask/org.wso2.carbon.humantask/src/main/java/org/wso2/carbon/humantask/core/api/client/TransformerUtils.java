@@ -34,10 +34,13 @@ import org.wso2.carbon.humantask.client.api.types.TSimpleQueryInput;
 import org.wso2.carbon.humantask.client.api.types.TStatus;
 import org.wso2.carbon.humantask.client.api.types.TTaskAbstract;
 import org.wso2.carbon.humantask.client.api.types.TTaskAuthorisationParams;
+import org.wso2.carbon.humantask.client.api.types.TTaskEvent;
+import org.wso2.carbon.humantask.client.api.types.TTaskEvents;
 import org.wso2.carbon.humantask.client.api.types.TTaskSimpleQueryResultRow;
 import org.wso2.carbon.humantask.client.api.types.TTaskSimpleQueryResultSet;
 import org.wso2.carbon.humantask.client.api.types.TUser;
 import org.wso2.carbon.humantask.core.dao.CommentDAO;
+import org.wso2.carbon.humantask.core.dao.EventDAO;
 import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
 import org.wso2.carbon.humantask.core.dao.HumanTaskDAOConnection;
 import org.wso2.carbon.humantask.core.dao.OrganizationalEntityDAO;
@@ -56,7 +59,6 @@ import org.wso2.carbon.humantask.core.engine.util.OperationAuthorizationUtil;
 import org.wso2.carbon.humantask.core.internal.HumanTaskServiceComponent;
 import org.wso2.carbon.humantask.core.store.HumanTaskBaseConfiguration;
 import org.wso2.carbon.humantask.core.store.TaskConfiguration;
-import org.wso2.carbon.humantask.impl.TPresentationElementsImpl;
 
 import javax.xml.namespace.QName;
 import java.math.BigInteger;
@@ -557,5 +559,36 @@ public class TransformerUtils {
         authParams.setAuthorisedToUpdateComment(OperationAuthorizationUtil.authorisedToUpdateComment(task, caller, pqe));
 
         return authParams;
+    }
+
+    public static TTaskEvents transformTaskEvents(TaskDAO task, String caller) {
+        TTaskEvents taskEvents = new TTaskEvents();
+
+        if (task.getEvents() != null) {
+            for (EventDAO taskEvent : task.getEvents()) {
+                TTaskEvent tEvent = new TTaskEvent();
+                tEvent.setEventDetail(taskEvent.getDetails());
+                tEvent.setEventId(ConverterUtil.convertToURI(taskEvent.getId().toString()));
+
+
+                TUser user = new TUser();
+                user.setTUser(taskEvent.getUser());
+                tEvent.setEventInitiator(user);
+
+                //Set the created time
+                Calendar eventTime = Calendar.getInstance();
+                eventTime.setTime(taskEvent.getTimeStamp());
+                tEvent.setEventTime(eventTime);
+
+
+                tEvent.setEventType(taskEvent.getType());
+                tEvent.setNewState(transformStatus(taskEvent.getNewState()));
+                tEvent.setOldState(transformStatus(taskEvent.getOldState()));
+
+                taskEvents.addEvent(tEvent);
+            }
+        }
+
+        return taskEvents;
     }
 }

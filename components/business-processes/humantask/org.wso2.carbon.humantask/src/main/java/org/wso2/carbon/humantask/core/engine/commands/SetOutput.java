@@ -17,6 +17,7 @@
 package org.wso2.carbon.humantask.core.engine.commands;
 
 import org.w3c.dom.Element;
+import org.wso2.carbon.humantask.core.dao.EventDAO;
 import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
 import org.wso2.carbon.humantask.core.dao.TaskStatus;
 
@@ -74,6 +75,13 @@ public class SetOutput extends AbstractHumanTaskCommand {
         checkPostState(TaskStatus.IN_PROGRESS, this.getClass());
     }
 
+    @Override
+    protected EventDAO createTaskEvent() {
+        EventDAO taskEvent = super.createTaskEvent();
+        taskEvent.setDetails("");
+        return taskEvent;
+    }
+
     /**
      * The method to execute the business logic for the specific command.
      */
@@ -83,6 +91,7 @@ public class SetOutput extends AbstractHumanTaskCommand {
         authorise();
         checkState();
         task.persistOutput(outputName, outputData);
+        task.persistEvent(createTaskEvent());
         checkPostConditions();
     }
 }

@@ -684,6 +684,12 @@
             <faultActionMapping faultName="IllegalArgumentFault">http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/taskOperations/loadAuthorisationParams/Fault/illegalArgumentFault</faultActionMapping>
             <faultActionMapping faultName="IllegalArgumentFault_Exception">http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/taskOperations/loadAuthorisationParams/Fault/illegalArgumentFault</faultActionMapping>
         </operation>
+        <operation name="loadTaskEvents" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803">
+            <actionMapping>http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/loadTaskEvents</actionMapping>
+            <outputActionMapping>http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/taskOperations/loadTaskEventsResponse</outputActionMapping>
+            <faultActionMapping faultName="illegalArgumentFault">http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/taskOperations/loadTaskEvents/Fault/illegalArgumentFault</faultActionMapping>
+            <faultActionMapping faultName="IllegalStateFault">http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/taskOperations/loadTaskEvents/Fault/illegalStateFault</faultActionMapping>
+        </operation>
         <operation name="batchClaim" mep="http://www.w3.org/ns/wsdl/in-out" namespace="http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803">
             <actionMapping>http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/batchClaim</actionMapping>
             <outputActionMapping>http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/taskOperations/batchClaimResponse</outputActionMapping>

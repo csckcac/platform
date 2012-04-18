@@ -34,6 +34,7 @@ import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TComment;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TSimpleQueryInput;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskAbstract;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskAuthorisationParams;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvents;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskSimpleQueryResultSet;
 import org.wso2.carbon.humantask.ui.constants.HumanTaskUIConstants;
 
@@ -386,6 +387,34 @@ public class HumanTaskClientAPIServiceClient {
             throw e;
         } catch (IllegalAccessFault e) {
             log.error("Error occurred while performing release operation", e);
+            throw e;
+        }
+    }
+
+        /**
+     * Gets the list of comments associated with a given task.
+     *
+     * @param taskId : The task id.
+     * @return : The comments of the task.
+     * @throws RemoteException       :
+     * @throws IllegalStateFault:
+     * @throws IllegalOperationFault :
+     * @throws IllegalArgumentFault  :
+     * @throws IllegalAccessFault    :
+     */
+    public TTaskEvents getTaskEvents(URI taskId)
+            throws RemoteException, IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
+                   IllegalAccessFault {
+        try {
+            return stub.loadTaskEvents(taskId);
+        } catch (RemoteException e) {
+            log.error("Error occurred while performing get comments operation", e);
+            throw e;
+        } catch (IllegalStateFault e) {
+            log.error("Error occurred while performing get comments operation", e);
+            throw e;
+        } catch (IllegalArgumentFault e) {
+            log.error("Error occurred while performing get comments operation", e);
             throw e;
         }
     }

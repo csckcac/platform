@@ -16,7 +16,6 @@
 
 package org.wso2.carbon.humantask.core.engine.commands;
 
-import org.w3c.dom.Element;
 import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
 
 import java.util.ArrayList;
@@ -87,7 +86,7 @@ public class GetTaskDescription extends AbstractHumanTaskCommand {
         checkPostConditions();
     }
 
-    public String getTaskDescription(){
+    public String getTaskDescription() {
         return this.taskDescription;
     }
 }

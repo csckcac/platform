@@ -17,71 +17,131 @@
 package org.wso2.carbon.humantask.core.dao.jpa.openjpa.model;
 
 import org.wso2.carbon.humantask.core.dao.EventDAO;
+import org.wso2.carbon.humantask.core.dao.TaskDAO;
+import org.wso2.carbon.humantask.core.dao.TaskStatus;
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.sql.Timestamp;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import java.util.Date;
 
 /**
  * Row presentation of a human task event.
  */
 @Entity
-@Table(name="EVENT")
-public class Event implements EventDAO,Serializable {
+@Table(name = "EVENT")
+public class Event implements EventDAO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name="TIMESTAMP")
-    private Timestamp timeStamp;
+    @Column(name = "TIMESTAMP", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date timeStamp;
 
-    @Column(name="TYPE")
+    @Column(name = "TYPE", nullable = false)
     private String type;
 
-    @Column(name="DETAILS")
+    @Column(name = "DETAILS", nullable = true)
     private String details;
+
+    @Column(name = "USER", nullable = false)
+    private String user;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "OLD_STATE", nullable = true)
+    private TaskStatus oldState;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "NEW_STATE", nullable = true)
+    private TaskStatus newState;
 
     @ManyToOne
     private Task task;
+
+    public Event() {
+    }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Timestamp getTimeStamp() {
+    @Override
+    public Date getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(Timestamp timeStamp) {
+    @Override
+    public void setTimeStamp(Date timeStamp) {
         this.timeStamp = timeStamp;
     }
 
+    @Override
     public String getType() {
         return type;
     }
 
+    @Override
     public void setType(String type) {
         this.type = type;
     }
 
+    @Override
     public String getDetails() {
         return details;
     }
 
+    @Override
     public void setDetails(String details) {
         this.details = details;
     }
 
+    @Override
+    public String getUser() {
+        return user;
+    }
+
+    @Override
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    @Override
     public Task getTask() {
         return task;
     }
 
-    public void setTask(Task task) {
-        this.task = task;
+    @Override
+    public void setTask(TaskDAO task) {
+        this.task = (Task)task;
+    }
+
+    @Override
+    public TaskStatus getOldState() {
+        return oldState;
+    }
+
+    @Override
+    public void setOldState(TaskStatus oldState) {
+        this.oldState = oldState;
+    }
+
+    @Override
+    public TaskStatus getNewState() {
+        return newState;
+    }
+
+    @Override
+    public void setNewState(TaskStatus newState) {
+        this.newState = newState;
     }
 }

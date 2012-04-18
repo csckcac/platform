@@ -24,6 +24,8 @@ import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TPresentationName
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TPresentationSubject;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskAbstract;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskAuthorisationParams;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvent;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvents;
 
 import java.util.LinkedHashMap;
 
@@ -130,7 +132,7 @@ public class HumanTaskUIUtil {
             taskDetailsJSONObject.put("taskCreatedOn", task.getCreatedTime().getTime().toString());
             taskDetailsJSONObject.put("taskCreatedBy", "");
 
-            if(task.getUpdatedTime() != null) {
+            if (task.getUpdatedTime() != null) {
                 taskDetailsJSONObject.put("taskUpdatedOn", task.getUpdatedTime().getTime().toString());
             }
             taskDetailsJSONObject.put("taskUpdatedBy", "");
@@ -193,7 +195,7 @@ public class HumanTaskUIUtil {
     }
 
     /**
-     * Builds a JSON String to display the task comments.
+     * Builds a JSON representation of task comments.
      *
      * @param comments : The comment objects:
      * @return : The JSON string.
@@ -230,5 +232,44 @@ public class HumanTaskUIUtil {
         }
 
         return JSONObject.toJSONString(commentsMap);
+    }
+
+    /**
+     * Builds a JSON representation of task events.
+     * @param taskEvents : The task events list.
+     *
+     * @return : The json string for the given task events list.
+     */
+    public static String loadTaskEventsJSONString(TTaskEvents taskEvents) {
+        LinkedHashMap<String, JSONObject> taskEventsMap = new LinkedHashMap<String, JSONObject>();
+        if (taskEvents != null && taskEvents.getEvent() != null) {
+            for (TTaskEvent taskEvent : taskEvents.getEvent()) {
+                JSONObject eventJSON = new JSONObject();
+                eventJSON.put("eventId", taskEvent.getEventId().toString());
+                if (taskEvent.getEventDetail() != null) {
+                    eventJSON.put("eventDetail", taskEvent.getEventDetail());
+                }
+
+                if (taskEvent.getOldState() != null) {
+                    eventJSON.put("oldState", taskEvent.getOldState().toString());
+                }
+
+                if (taskEvent.getNewState() != null) {
+                    eventJSON.put("newState", taskEvent.getNewState().toString());
+                }
+
+                eventJSON.put("eventInitiator", taskEvent.getEventInitiator().getTUser());
+                eventJSON.put("eventType", taskEvent.getEventType());
+
+                if (taskEvent.getEventTime() != null) {
+                    eventJSON.put("eventTime",
+                                  taskEvent.getEventTime().getTime().toString());
+                }
+
+                taskEventsMap.put(taskEvent.getEventId().toString(), eventJSON);
+            }
+        }
+
+        return JSONObject.toJSONString(taskEventsMap);
     }
 }

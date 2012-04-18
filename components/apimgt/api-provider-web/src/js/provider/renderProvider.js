@@ -308,7 +308,7 @@ var renderAPIs = function (result) {
             currentPage = 1;
         }
     }
-    console.info(currentPage);
+    $('#pagination ul').html('');
     renderAPIsPaginator(result, currentPage, itemsPerPage);
     var prev = $('<li><a>Prev</a></li>');
     var next = $('<li><a>Next</a></li>');

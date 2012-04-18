@@ -117,10 +117,25 @@ var apiProviderApp = new function () {
             }
 
             jsonRes.data.apis = rec(jsonRes.data.apis);
+            $.cookie('currentPage', 1);
+            var numberOfResults = jsonRes.data.apis.length;
 
-            renderAPIs(jsonRes);
+            $('#searchMessageContainer').show();
+            if(numberOfResults == 0){
+                 $('#searchMessageContainer').addClass("alert-info");
+                $('#searchMessageContainer').removeClass("alert-success");
+                $('#searchMessage').html('Your search -  <strong>'+$('#apiSearch').val()+'</strong> - did not match any documents.'+
+                    '<br /><strong>Suggestions:</strong>'+
+
+                    '<ul><li>Make sure all words are spelled correctly.</li>'+
+                    '<li>Try different keywords.</li>'+
+                    '<li>Try more general keywords.');
+            }else{
+                $('#searchMessageContainer').removeClass("alert-info");
+                $('#searchMessageContainer').addClass("alert-success");
+                $('#searchMessage').html('Your search - <strong>'+$('#apiSearch').val()+'</strong> -  match <strong>'+numberOfResults+'</strong> results');
+                renderAPIs(jsonRes);
+            }
         });
-    }
-
-
+    };
 }

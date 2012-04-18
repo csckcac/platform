@@ -31,7 +31,8 @@ public class MySqlDatabaseManager implements DatabaseManager {
 
     private Connection connection;
 
-    public MySqlDatabaseManager(String jdbcUrl, String userName, String passWord) throws SQLException, ClassNotFoundException {
+    public MySqlDatabaseManager(String jdbcUrl, String userName, String passWord)
+            throws SQLException, ClassNotFoundException {
         Class.forName("com.mysql.jdbc.Driver");
         log.debug("JDBC Url: " + jdbcUrl);
         connection = DriverManager.getConnection(jdbcUrl, userName, passWord);
@@ -39,24 +40,47 @@ public class MySqlDatabaseManager implements DatabaseManager {
     }
 
     public void executeUpdate(String sql) throws SQLException {
-        Statement st = connection.createStatement();
-        log.debug(sql);
-        st.executeUpdate(sql.trim());
-        st.close();
+        Statement st = null;
+        try {
+            st = connection.createStatement();
+            log.debug(sql);
+            st.executeUpdate(sql.trim());
+        } finally {
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+                    //can do nothing
+                }
+            }
+
+        }
         log.debug("Sql update Success");
 
     }
 
     public void executeUpdate(File sqlFile) throws SQLException, IOException {
-        Statement st = connection.createStatement();
+        Statement st = null;
         String sql = FileManager.readFile(sqlFile).trim();
         log.debug("Query List:" + sql);
         String[] sqlQuery = sql.split(";");
-        for (String query : sqlQuery) {
-            log.debug(query);
-            st.executeUpdate(query.trim());
+        try {
+            st = connection.createStatement();
+            for (String query : sqlQuery) {
+                log.debug(query);
+                st.executeUpdate(query.trim());
+            }
+        } finally {
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+                    //can do nothing
+                }
+            }
+
         }
-        st.close();
+
         log.debug("Sql execution Success");
     }
 
@@ -70,9 +94,20 @@ public class MySqlDatabaseManager implements DatabaseManager {
     }
 
     public void execute(String sql) throws SQLException {
-        Statement st = connection.createStatement();
-        st.execute(sql);
-        st.close();
+        Statement st = null;
+        try {
+            st = connection.createStatement();
+            st.execute(sql);
+        } finally {
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+                    //can do nothing
+                }
+            }
+
+        }
         log.debug("Sql execution Success");
     }
 
@@ -81,7 +116,7 @@ public class MySqlDatabaseManager implements DatabaseManager {
         log.debug("Disconnected from database");
     }
 
-    protected void finalize() throws SQLException {
+    protected void finalize() throws Throwable {
         try {
             if (!connection.isClosed()) {
                 disconnect();
@@ -91,6 +126,7 @@ public class MySqlDatabaseManager implements DatabaseManager {
             log.error("Error while disconnecting from database");
             throw new SQLException("Error while disconnecting from database");
         }
+        super.finalize();
     }
 
 }

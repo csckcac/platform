@@ -40,25 +40,48 @@ public class OracleDatabaseManager implements DatabaseManager {
     }
 
     public void executeUpdate(String sql) throws SQLException {
-        Statement st = connection.createStatement();
-        log.debug(sql);
-        st.executeUpdate(sql.trim());
-        st.close();
-        log.info("Sql update Success");
+        Statement st = null;
+        try {
+            st = connection.createStatement();
+            log.debug(sql);
+            st.executeUpdate(sql.trim());
+        } finally {
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+                    //can do nothing
+                }
+            }
+
+        }
+        log.debug("Sql update Success");
 
     }
 
     public void executeUpdate(File sqlFile) throws SQLException, IOException {
-        Statement st = connection.createStatement();
+        Statement st = null;
         String sql = FileManager.readFile(sqlFile).trim();
         log.debug("Query List:" + sql);
         String[] sqlQuery = sql.split(";");
-        for (String query : sqlQuery) {
-            log.debug(query);
-            st.executeUpdate(query.trim());
+        try {
+            st = connection.createStatement();
+            for (String query : sqlQuery) {
+                log.debug(query);
+                st.executeUpdate(query.trim());
+            }
+        } finally {
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+                    //can do nothing
+                }
+            }
+
         }
-        st.close();
-        log.info("Sql execution Success");
+
+        log.debug("Sql execution Success");
     }
 
     public ResultSet executeQuery(String sql) throws SQLException {
@@ -71,10 +94,21 @@ public class OracleDatabaseManager implements DatabaseManager {
     }
 
     public void execute(String sql) throws SQLException {
-        Statement st = connection.createStatement();
-        st.execute(sql);
-        st.close();
-        log.info("Sql execution Success");
+        Statement st = null;
+        try {
+            st = connection.createStatement();
+            st.execute(sql);
+        } finally {
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+                    //can do nothing
+                }
+            }
+
+        }
+        log.debug("Sql execution Success");
     }
 
     public void disconnect() throws SQLException {
@@ -82,7 +116,7 @@ public class OracleDatabaseManager implements DatabaseManager {
         log.info("Disconnected from database");
     }
 
-    protected void finalize() throws SQLException {
+    protected void finalize() throws Throwable {
         try {
             if (!connection.isClosed()) {
                 disconnect();
@@ -92,5 +126,6 @@ public class OracleDatabaseManager implements DatabaseManager {
             log.error("Error while disconnecting from database");
             throw new SQLException("Error while disconnecting from database");
         }
+        super.finalize();
     }
 }

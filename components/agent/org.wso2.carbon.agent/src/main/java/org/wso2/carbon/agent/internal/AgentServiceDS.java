@@ -21,13 +21,14 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.agent.Agent;
+import org.wso2.carbon.agent.exception.AgentConfigurationException;
 import org.wso2.carbon.agent.internal.utils.AgentBuilder;
 
 /**
  * @scr.component name="agentservice.component" immediate="true"
  */
 public class AgentServiceDS {
-    private static final Log log = LogFactory.getLog(AgentServiceDS.class);
+    private static Log log = LogFactory.getLog(AgentServiceDS.class);
     private Agent agent;
     private ServiceRegistration agentServerService;
 
@@ -39,15 +40,10 @@ public class AgentServiceDS {
     protected void activate(ComponentContext context) {
 
         try {
-            if (null != AgentBuilder.loadAgentConfiguration()) {
-                agent = new Agent(AgentBuilder.loadAgentConfiguration());
-            } else {
-                agent = new Agent();
-            }
             agentServerService = context.getBundleContext().
-                    registerService(Agent.class.getName(), agent, null);
+                    registerService(Agent.class.getName(), new Agent(AgentBuilder.loadAgentConfiguration()), null);
             log.info("Successfully deployed Agent Client");
-        } catch (Throwable e) {
+        } catch (AgentConfigurationException e) {
             log.error("Can not create and start Agent ", e);
         }
     }

@@ -25,7 +25,9 @@ public class ThriftEventReceiverService {
 
     public interface Iface {
 
-        public String defineType(String sessionId, String streamDefinition) throws org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentTypeDefinitionAlreadyDefinedException, org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedTypeDefinitionException, org.wso2.carbon.agent.commons.thrift.exception.ThriftTypeDefinitionException, org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException, org.apache.thrift.TException;
+        public String defineEventStream(String sessionId, String streamDefinition) throws org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentStreamDefinitionAlreadyDefinedException, org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedStreamDefinitionException, org.wso2.carbon.agent.commons.thrift.exception.ThriftStreamDefinitionException, org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException, org.apache.thrift.TException;
+
+        public String findEventStreamId(String sessionId, String streamName, String streamVersion) throws org.wso2.carbon.agent.commons.thrift.exception.ThriftNoStreamDefinitionExistException, org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException, org.apache.thrift.TException;
 
         public void publish(org.wso2.carbon.agent.commons.thrift.data.ThriftEventBundle eventBundle) throws org.wso2.carbon.agent.commons.thrift.exception.ThriftUndefinedEventTypeException, org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException, org.apache.thrift.TException;
 
@@ -33,7 +35,9 @@ public class ThriftEventReceiverService {
 
     public interface AsyncIface {
 
-        public void defineType(String sessionId, String streamDefinition, org.apache.thrift.async.AsyncMethodCallback<AsyncClient.defineType_call> resultHandler) throws org.apache.thrift.TException;
+        public void defineEventStream(String sessionId, String streamDefinition, org.apache.thrift.async.AsyncMethodCallback<AsyncClient.defineEventStream_call> resultHandler) throws org.apache.thrift.TException;
+
+        public void findEventStreamId(String sessionId, String streamName, String streamVersion, org.apache.thrift.async.AsyncMethodCallback<AsyncClient.findEventStreamId_call> resultHandler) throws org.apache.thrift.TException;
 
         public void publish(org.wso2.carbon.agent.commons.thrift.data.ThriftEventBundle eventBundle, org.apache.thrift.async.AsyncMethodCallback<AsyncClient.publish_call> resultHandler) throws org.apache.thrift.TException;
 
@@ -59,24 +63,24 @@ public class ThriftEventReceiverService {
             super(iprot, oprot);
         }
 
-        public String defineType(String sessionId, String streamDefinition) throws org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentTypeDefinitionAlreadyDefinedException, org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedTypeDefinitionException, org.wso2.carbon.agent.commons.thrift.exception.ThriftTypeDefinitionException, org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException, org.apache.thrift.TException
+        public String defineEventStream(String sessionId, String streamDefinition) throws org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentStreamDefinitionAlreadyDefinedException, org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedStreamDefinitionException, org.wso2.carbon.agent.commons.thrift.exception.ThriftStreamDefinitionException, org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException, org.apache.thrift.TException
         {
-            send_defineType(sessionId, streamDefinition);
-            return recv_defineType();
+            send_defineEventStream(sessionId, streamDefinition);
+            return recv_defineEventStream();
         }
 
-        public void send_defineType(String sessionId, String streamDefinition) throws org.apache.thrift.TException
+        public void send_defineEventStream(String sessionId, String streamDefinition) throws org.apache.thrift.TException
         {
-            defineType_args args = new defineType_args();
+            defineEventStream_args args = new defineEventStream_args();
             args.setSessionId(sessionId);
             args.setStreamDefinition(streamDefinition);
-            sendBase("defineType", args);
+            sendBase("defineEventStream", args);
         }
 
-        public String recv_defineType() throws org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentTypeDefinitionAlreadyDefinedException, org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedTypeDefinitionException, org.wso2.carbon.agent.commons.thrift.exception.ThriftTypeDefinitionException, org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException, org.apache.thrift.TException
+        public String recv_defineEventStream() throws org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentStreamDefinitionAlreadyDefinedException, org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedStreamDefinitionException, org.wso2.carbon.agent.commons.thrift.exception.ThriftStreamDefinitionException, org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException, org.apache.thrift.TException
         {
-            defineType_result result = new defineType_result();
-            receiveBase(result, "defineType");
+            defineEventStream_result result = new defineEventStream_result();
+            receiveBase(result, "defineEventStream");
             if (result.isSetSuccess()) {
                 return result.success;
             }
@@ -92,7 +96,38 @@ public class ThriftEventReceiverService {
             if (result.se != null) {
                 throw result.se;
             }
-            throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "defineType failed: unknown result");
+            throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "defineEventStream failed: unknown result");
+        }
+
+        public String findEventStreamId(String sessionId, String streamName, String streamVersion) throws org.wso2.carbon.agent.commons.thrift.exception.ThriftNoStreamDefinitionExistException, org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException, org.apache.thrift.TException
+        {
+            send_findEventStreamId(sessionId, streamName, streamVersion);
+            return recv_findEventStreamId();
+        }
+
+        public void send_findEventStreamId(String sessionId, String streamName, String streamVersion) throws org.apache.thrift.TException
+        {
+            findEventStreamId_args args = new findEventStreamId_args();
+            args.setSessionId(sessionId);
+            args.setStreamName(streamName);
+            args.setStreamVersion(streamVersion);
+            sendBase("findEventStreamId", args);
+        }
+
+        public String recv_findEventStreamId() throws org.wso2.carbon.agent.commons.thrift.exception.ThriftNoStreamDefinitionExistException, org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException, org.apache.thrift.TException
+        {
+            findEventStreamId_result result = new findEventStreamId_result();
+            receiveBase(result, "findEventStreamId");
+            if (result.isSetSuccess()) {
+                return result.success;
+            }
+            if (result.tnde != null) {
+                throw result.tnde;
+            }
+            if (result.se != null) {
+                throw result.se;
+            }
+            throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "findEventStreamId failed: unknown result");
         }
 
         public void publish(org.wso2.carbon.agent.commons.thrift.data.ThriftEventBundle eventBundle) throws org.wso2.carbon.agent.commons.thrift.exception.ThriftUndefinedEventTypeException, org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException, org.apache.thrift.TException
@@ -139,38 +174,76 @@ public class ThriftEventReceiverService {
             super(protocolFactory, clientManager, transport);
         }
 
-        public void defineType(String sessionId, String streamDefinition, org.apache.thrift.async.AsyncMethodCallback<defineType_call> resultHandler) throws org.apache.thrift.TException {
+        public void defineEventStream(String sessionId, String streamDefinition, org.apache.thrift.async.AsyncMethodCallback<defineEventStream_call> resultHandler) throws org.apache.thrift.TException {
             checkReady();
-            defineType_call method_call = new defineType_call(sessionId, streamDefinition, resultHandler, this, ___protocolFactory, ___transport);
+            defineEventStream_call method_call = new defineEventStream_call(sessionId, streamDefinition, resultHandler, this, ___protocolFactory, ___transport);
             this.___currentMethod = method_call;
             ___manager.call(method_call);
         }
 
-        public static class defineType_call extends org.apache.thrift.async.TAsyncMethodCall {
+        public static class defineEventStream_call extends org.apache.thrift.async.TAsyncMethodCall {
             private String sessionId;
             private String streamDefinition;
-            public defineType_call(String sessionId, String streamDefinition, org.apache.thrift.async.AsyncMethodCallback<defineType_call> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+            public defineEventStream_call(String sessionId, String streamDefinition, org.apache.thrift.async.AsyncMethodCallback<defineEventStream_call> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
                 super(client, protocolFactory, transport, resultHandler, false);
                 this.sessionId = sessionId;
                 this.streamDefinition = streamDefinition;
             }
 
             public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-                prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("defineType", org.apache.thrift.protocol.TMessageType.CALL, 0));
-                defineType_args args = new defineType_args();
+                prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("defineEventStream", org.apache.thrift.protocol.TMessageType.CALL, 0));
+                defineEventStream_args args = new defineEventStream_args();
                 args.setSessionId(sessionId);
                 args.setStreamDefinition(streamDefinition);
                 args.write(prot);
                 prot.writeMessageEnd();
             }
 
-            public String getResult() throws org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentTypeDefinitionAlreadyDefinedException, org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedTypeDefinitionException, org.wso2.carbon.agent.commons.thrift.exception.ThriftTypeDefinitionException, org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException, org.apache.thrift.TException {
+            public String getResult() throws org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentStreamDefinitionAlreadyDefinedException, org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedStreamDefinitionException, org.wso2.carbon.agent.commons.thrift.exception.ThriftStreamDefinitionException, org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException, org.apache.thrift.TException {
                 if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
                     throw new IllegalStateException("Method call not finished!");
                 }
                 org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
                 org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-                return (new Client(prot)).recv_defineType();
+                return (new Client(prot)).recv_defineEventStream();
+            }
+        }
+
+        public void findEventStreamId(String sessionId, String streamName, String streamVersion, org.apache.thrift.async.AsyncMethodCallback<findEventStreamId_call> resultHandler) throws org.apache.thrift.TException {
+            checkReady();
+            findEventStreamId_call method_call = new findEventStreamId_call(sessionId, streamName, streamVersion, resultHandler, this, ___protocolFactory, ___transport);
+            this.___currentMethod = method_call;
+            ___manager.call(method_call);
+        }
+
+        public static class findEventStreamId_call extends org.apache.thrift.async.TAsyncMethodCall {
+            private String sessionId;
+            private String streamName;
+            private String streamVersion;
+            public findEventStreamId_call(String sessionId, String streamName, String streamVersion, org.apache.thrift.async.AsyncMethodCallback<findEventStreamId_call> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+                super(client, protocolFactory, transport, resultHandler, false);
+                this.sessionId = sessionId;
+                this.streamName = streamName;
+                this.streamVersion = streamVersion;
+            }
+
+            public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
+                prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("findEventStreamId", org.apache.thrift.protocol.TMessageType.CALL, 0));
+                findEventStreamId_args args = new findEventStreamId_args();
+                args.setSessionId(sessionId);
+                args.setStreamName(streamName);
+                args.setStreamVersion(streamVersion);
+                args.write(prot);
+                prot.writeMessageEnd();
+            }
+
+            public String getResult() throws org.wso2.carbon.agent.commons.thrift.exception.ThriftNoStreamDefinitionExistException, org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException, org.apache.thrift.TException {
+                if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+                    throw new IllegalStateException("Method call not finished!");
+                }
+                org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
+                org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+                return (new Client(prot)).recv_findEventStreamId();
             }
         }
 
@@ -219,30 +292,53 @@ public class ThriftEventReceiverService {
         }
 
         private static <I extends Iface> Map<String,  org.apache.thrift.ProcessFunction<I, ? extends  org.apache.thrift.TBase>> getProcessMap(Map<String,  org.apache.thrift.ProcessFunction<I, ? extends  org.apache.thrift.TBase>> processMap) {
-            processMap.put("defineType", new defineType());
+            processMap.put("defineEventStream", new defineEventStream());
+            processMap.put("findEventStreamId", new findEventStreamId());
             processMap.put("publish", new publish());
             return processMap;
         }
 
-        private static class defineType<I extends Iface> extends org.apache.thrift.ProcessFunction<I, defineType_args> {
-            public defineType() {
-                super("defineType");
+        private static class defineEventStream<I extends Iface> extends org.apache.thrift.ProcessFunction<I, defineEventStream_args> {
+            public defineEventStream() {
+                super("defineEventStream");
             }
 
-            protected defineType_args getEmptyArgsInstance() {
-                return new defineType_args();
+            protected defineEventStream_args getEmptyArgsInstance() {
+                return new defineEventStream_args();
             }
 
-            protected defineType_result getResult(I iface, defineType_args args) throws org.apache.thrift.TException {
-                defineType_result result = new defineType_result();
+            protected defineEventStream_result getResult(I iface, defineEventStream_args args) throws org.apache.thrift.TException {
+                defineEventStream_result result = new defineEventStream_result();
                 try {
-                    result.success = iface.defineType(args.sessionId, args.streamDefinition);
-                } catch (org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentTypeDefinitionAlreadyDefinedException ade) {
+                    result.success = iface.defineEventStream(args.sessionId, args.streamDefinition);
+                } catch (org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentStreamDefinitionAlreadyDefinedException ade) {
                     result.ade = ade;
-                } catch (org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedTypeDefinitionException mtd) {
+                } catch (org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedStreamDefinitionException mtd) {
                     result.mtd = mtd;
-                } catch (org.wso2.carbon.agent.commons.thrift.exception.ThriftTypeDefinitionException tde) {
+                } catch (org.wso2.carbon.agent.commons.thrift.exception.ThriftStreamDefinitionException tde) {
                     result.tde = tde;
+                } catch (org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException se) {
+                    result.se = se;
+                }
+                return result;
+            }
+        }
+
+        private static class findEventStreamId<I extends Iface> extends org.apache.thrift.ProcessFunction<I, findEventStreamId_args> {
+            public findEventStreamId() {
+                super("findEventStreamId");
+            }
+
+            protected findEventStreamId_args getEmptyArgsInstance() {
+                return new findEventStreamId_args();
+            }
+
+            protected findEventStreamId_result getResult(I iface, findEventStreamId_args args) throws org.apache.thrift.TException {
+                findEventStreamId_result result = new findEventStreamId_result();
+                try {
+                    result.success = iface.findEventStreamId(args.sessionId, args.streamName, args.streamVersion);
+                } catch (org.wso2.carbon.agent.commons.thrift.exception.ThriftNoStreamDefinitionExistException tnde) {
+                    result.tnde = tnde;
                 } catch (org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException se) {
                     result.se = se;
                 }
@@ -274,16 +370,16 @@ public class ThriftEventReceiverService {
 
     }
 
-    public static class defineType_args implements org.apache.thrift.TBase<defineType_args, defineType_args._Fields>, java.io.Serializable, Cloneable   {
-        private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("defineType_args");
+    public static class defineEventStream_args implements org.apache.thrift.TBase<defineEventStream_args, defineEventStream_args._Fields>, java.io.Serializable, Cloneable   {
+        private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("defineEventStream_args");
 
         private static final org.apache.thrift.protocol.TField SESSION_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("sessionId", org.apache.thrift.protocol.TType.STRING, (short)1);
         private static final org.apache.thrift.protocol.TField STREAM_DEFINITION_FIELD_DESC = new org.apache.thrift.protocol.TField("streamDefinition", org.apache.thrift.protocol.TType.STRING, (short)2);
 
         private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
         static {
-            schemes.put(StandardScheme.class, new defineType_argsStandardSchemeFactory());
-            schemes.put(TupleScheme.class, new defineType_argsTupleSchemeFactory());
+            schemes.put(StandardScheme.class, new defineEventStream_argsStandardSchemeFactory());
+            schemes.put(TupleScheme.class, new defineEventStream_argsTupleSchemeFactory());
         }
 
         public String sessionId; // required
@@ -359,13 +455,13 @@ public class ThriftEventReceiverService {
             tmpMap.put(_Fields.STREAM_DEFINITION, new org.apache.thrift.meta_data.FieldMetaData("streamDefinition", org.apache.thrift.TFieldRequirementType.DEFAULT,
                                                                                                 new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
             metaDataMap = Collections.unmodifiableMap(tmpMap);
-            org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(defineType_args.class, metaDataMap);
+            org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(defineEventStream_args.class, metaDataMap);
         }
 
-        public defineType_args() {
+        public defineEventStream_args() {
         }
 
-        public defineType_args(
+        public defineEventStream_args(
                 String sessionId,
                 String streamDefinition)
         {
@@ -377,7 +473,7 @@ public class ThriftEventReceiverService {
         /**
          * Performs a deep copy on <i>other</i>.
          */
-        public defineType_args(defineType_args other) {
+        public defineEventStream_args(defineEventStream_args other) {
             if (other.isSetSessionId()) {
                 this.sessionId = other.sessionId;
             }
@@ -386,8 +482,8 @@ public class ThriftEventReceiverService {
             }
         }
 
-        public defineType_args deepCopy() {
-            return new defineType_args(this);
+        public defineEventStream_args deepCopy() {
+            return new defineEventStream_args(this);
         }
 
         @Override
@@ -400,7 +496,7 @@ public class ThriftEventReceiverService {
             return this.sessionId;
         }
 
-        public defineType_args setSessionId(String sessionId) {
+        public defineEventStream_args setSessionId(String sessionId) {
             this.sessionId = sessionId;
             return this;
         }
@@ -424,7 +520,7 @@ public class ThriftEventReceiverService {
             return this.streamDefinition;
         }
 
-        public defineType_args setStreamDefinition(String streamDefinition) {
+        public defineEventStream_args setStreamDefinition(String streamDefinition) {
             this.streamDefinition = streamDefinition;
             return this;
         }
@@ -496,12 +592,12 @@ public class ThriftEventReceiverService {
         public boolean equals(Object that) {
             if (that == null)
                 return false;
-            if (that instanceof defineType_args)
-                return this.equals((defineType_args)that);
+            if (that instanceof defineEventStream_args)
+                return this.equals((defineEventStream_args)that);
             return false;
         }
 
-        public boolean equals(defineType_args that) {
+        public boolean equals(defineEventStream_args that) {
             if (that == null)
                 return false;
 
@@ -531,13 +627,13 @@ public class ThriftEventReceiverService {
             return 0;
         }
 
-        public int compareTo(defineType_args other) {
+        public int compareTo(defineEventStream_args other) {
             if (!getClass().equals(other.getClass())) {
                 return getClass().getName().compareTo(other.getClass().getName());
             }
 
             int lastComparison = 0;
-            defineType_args typedOther = (defineType_args)other;
+            defineEventStream_args typedOther = (defineEventStream_args)other;
 
             lastComparison = Boolean.valueOf(isSetSessionId()).compareTo(typedOther.isSetSessionId());
             if (lastComparison != 0) {
@@ -576,7 +672,7 @@ public class ThriftEventReceiverService {
 
         @Override
         public String toString() {
-            StringBuilder sb = new StringBuilder("defineType_args(");
+            StringBuilder sb = new StringBuilder("defineEventStream_args(");
             boolean first = true;
 
             sb.append("sessionId:");
@@ -618,15 +714,15 @@ public class ThriftEventReceiverService {
             }
         }
 
-        private static class defineType_argsStandardSchemeFactory implements SchemeFactory {
-            public defineType_argsStandardScheme getScheme() {
-                return new defineType_argsStandardScheme();
+        private static class defineEventStream_argsStandardSchemeFactory implements SchemeFactory {
+            public defineEventStream_argsStandardScheme getScheme() {
+                return new defineEventStream_argsStandardScheme();
             }
         }
 
-        private static class defineType_argsStandardScheme extends StandardScheme<defineType_args> {
+        private static class defineEventStream_argsStandardScheme extends StandardScheme<defineEventStream_args> {
 
-            public void read(org.apache.thrift.protocol.TProtocol iprot, defineType_args struct) throws org.apache.thrift.TException {
+            public void read(org.apache.thrift.protocol.TProtocol iprot, defineEventStream_args struct) throws org.apache.thrift.TException {
                 org.apache.thrift.protocol.TField schemeField;
                 iprot.readStructBegin();
                 while (true)
@@ -663,7 +759,7 @@ public class ThriftEventReceiverService {
                 struct.validate();
             }
 
-            public void write(org.apache.thrift.protocol.TProtocol oprot, defineType_args struct) throws org.apache.thrift.TException {
+            public void write(org.apache.thrift.protocol.TProtocol oprot, defineEventStream_args struct) throws org.apache.thrift.TException {
                 struct.validate();
 
                 oprot.writeStructBegin(STRUCT_DESC);
@@ -683,16 +779,16 @@ public class ThriftEventReceiverService {
 
         }
 
-        private static class defineType_argsTupleSchemeFactory implements SchemeFactory {
-            public defineType_argsTupleScheme getScheme() {
-                return new defineType_argsTupleScheme();
+        private static class defineEventStream_argsTupleSchemeFactory implements SchemeFactory {
+            public defineEventStream_argsTupleScheme getScheme() {
+                return new defineEventStream_argsTupleScheme();
             }
         }
 
-        private static class defineType_argsTupleScheme extends TupleScheme<defineType_args> {
+        private static class defineEventStream_argsTupleScheme extends TupleScheme<defineEventStream_args> {
 
             @Override
-            public void write(org.apache.thrift.protocol.TProtocol prot, defineType_args struct) throws org.apache.thrift.TException {
+            public void write(org.apache.thrift.protocol.TProtocol prot, defineEventStream_args struct) throws org.apache.thrift.TException {
                 TTupleProtocol oprot = (TTupleProtocol) prot;
                 BitSet optionals = new BitSet();
                 if (struct.isSetSessionId()) {
@@ -711,7 +807,7 @@ public class ThriftEventReceiverService {
             }
 
             @Override
-            public void read(org.apache.thrift.protocol.TProtocol prot, defineType_args struct) throws org.apache.thrift.TException {
+            public void read(org.apache.thrift.protocol.TProtocol prot, defineEventStream_args struct) throws org.apache.thrift.TException {
                 TTupleProtocol iprot = (TTupleProtocol) prot;
                 BitSet incoming = iprot.readBitSet(2);
                 if (incoming.get(0)) {
@@ -727,8 +823,8 @@ public class ThriftEventReceiverService {
 
     }
 
-    public static class defineType_result implements org.apache.thrift.TBase<defineType_result, defineType_result._Fields>, java.io.Serializable, Cloneable   {
-        private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("defineType_result");
+    public static class defineEventStream_result implements org.apache.thrift.TBase<defineEventStream_result, defineEventStream_result._Fields>, java.io.Serializable, Cloneable   {
+        private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("defineEventStream_result");
 
         private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRING, (short)0);
         private static final org.apache.thrift.protocol.TField ADE_FIELD_DESC = new org.apache.thrift.protocol.TField("ade", org.apache.thrift.protocol.TType.STRUCT, (short)1);
@@ -738,14 +834,14 @@ public class ThriftEventReceiverService {
 
         private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
         static {
-            schemes.put(StandardScheme.class, new defineType_resultStandardSchemeFactory());
-            schemes.put(TupleScheme.class, new defineType_resultTupleSchemeFactory());
+            schemes.put(StandardScheme.class, new defineEventStream_resultStandardSchemeFactory());
+            schemes.put(TupleScheme.class, new defineEventStream_resultTupleSchemeFactory());
         }
 
         public String success; // required
-        public org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentTypeDefinitionAlreadyDefinedException ade; // required
-        public org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedTypeDefinitionException mtd; // required
-        public org.wso2.carbon.agent.commons.thrift.exception.ThriftTypeDefinitionException tde; // required
+        public org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentStreamDefinitionAlreadyDefinedException ade; // required
+        public org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedStreamDefinitionException mtd; // required
+        public org.wso2.carbon.agent.commons.thrift.exception.ThriftStreamDefinitionException tde; // required
         public org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException se; // required
 
         /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
@@ -833,17 +929,17 @@ public class ThriftEventReceiverService {
             tmpMap.put(_Fields.SE, new org.apache.thrift.meta_data.FieldMetaData("se", org.apache.thrift.TFieldRequirementType.DEFAULT,
                                                                                  new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
             metaDataMap = Collections.unmodifiableMap(tmpMap);
-            org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(defineType_result.class, metaDataMap);
+            org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(defineEventStream_result.class, metaDataMap);
         }
 
-        public defineType_result() {
+        public defineEventStream_result() {
         }
 
-        public defineType_result(
+        public defineEventStream_result(
                 String success,
-                org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentTypeDefinitionAlreadyDefinedException ade,
-                org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedTypeDefinitionException mtd,
-                org.wso2.carbon.agent.commons.thrift.exception.ThriftTypeDefinitionException tde,
+                org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentStreamDefinitionAlreadyDefinedException ade,
+                org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedStreamDefinitionException mtd,
+                org.wso2.carbon.agent.commons.thrift.exception.ThriftStreamDefinitionException tde,
                 org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException se)
         {
             this();
@@ -857,26 +953,26 @@ public class ThriftEventReceiverService {
         /**
          * Performs a deep copy on <i>other</i>.
          */
-        public defineType_result(defineType_result other) {
+        public defineEventStream_result(defineEventStream_result other) {
             if (other.isSetSuccess()) {
                 this.success = other.success;
             }
             if (other.isSetAde()) {
-                this.ade = new org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentTypeDefinitionAlreadyDefinedException(other.ade);
+                this.ade = new org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentStreamDefinitionAlreadyDefinedException(other.ade);
             }
             if (other.isSetMtd()) {
-                this.mtd = new org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedTypeDefinitionException(other.mtd);
+                this.mtd = new org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedStreamDefinitionException(other.mtd);
             }
             if (other.isSetTde()) {
-                this.tde = new org.wso2.carbon.agent.commons.thrift.exception.ThriftTypeDefinitionException(other.tde);
+                this.tde = new org.wso2.carbon.agent.commons.thrift.exception.ThriftStreamDefinitionException(other.tde);
             }
             if (other.isSetSe()) {
                 this.se = new org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException(other.se);
             }
         }
 
-        public defineType_result deepCopy() {
-            return new defineType_result(this);
+        public defineEventStream_result deepCopy() {
+            return new defineEventStream_result(this);
         }
 
         @Override
@@ -892,7 +988,7 @@ public class ThriftEventReceiverService {
             return this.success;
         }
 
-        public defineType_result setSuccess(String success) {
+        public defineEventStream_result setSuccess(String success) {
             this.success = success;
             return this;
         }
@@ -912,11 +1008,11 @@ public class ThriftEventReceiverService {
             }
         }
 
-        public org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentTypeDefinitionAlreadyDefinedException getAde() {
+        public org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentStreamDefinitionAlreadyDefinedException getAde() {
             return this.ade;
         }
 
-        public defineType_result setAde(org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentTypeDefinitionAlreadyDefinedException ade) {
+        public defineEventStream_result setAde(org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentStreamDefinitionAlreadyDefinedException ade) {
             this.ade = ade;
             return this;
         }
@@ -936,11 +1032,11 @@ public class ThriftEventReceiverService {
             }
         }
 
-        public org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedTypeDefinitionException getMtd() {
+        public org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedStreamDefinitionException getMtd() {
             return this.mtd;
         }
 
-        public defineType_result setMtd(org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedTypeDefinitionException mtd) {
+        public defineEventStream_result setMtd(org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedStreamDefinitionException mtd) {
             this.mtd = mtd;
             return this;
         }
@@ -960,11 +1056,11 @@ public class ThriftEventReceiverService {
             }
         }
 
-        public org.wso2.carbon.agent.commons.thrift.exception.ThriftTypeDefinitionException getTde() {
+        public org.wso2.carbon.agent.commons.thrift.exception.ThriftStreamDefinitionException getTde() {
             return this.tde;
         }
 
-        public defineType_result setTde(org.wso2.carbon.agent.commons.thrift.exception.ThriftTypeDefinitionException tde) {
+        public defineEventStream_result setTde(org.wso2.carbon.agent.commons.thrift.exception.ThriftStreamDefinitionException tde) {
             this.tde = tde;
             return this;
         }
@@ -988,7 +1084,7 @@ public class ThriftEventReceiverService {
             return this.se;
         }
 
-        public defineType_result setSe(org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException se) {
+        public defineEventStream_result setSe(org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException se) {
             this.se = se;
             return this;
         }
@@ -1022,7 +1118,7 @@ public class ThriftEventReceiverService {
                     if (value == null) {
                         unsetAde();
                     } else {
-                        setAde((org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentTypeDefinitionAlreadyDefinedException)value);
+                        setAde((org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentStreamDefinitionAlreadyDefinedException)value);
                     }
                     break;
 
@@ -1030,7 +1126,7 @@ public class ThriftEventReceiverService {
                     if (value == null) {
                         unsetMtd();
                     } else {
-                        setMtd((org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedTypeDefinitionException)value);
+                        setMtd((org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedStreamDefinitionException)value);
                     }
                     break;
 
@@ -1038,7 +1134,7 @@ public class ThriftEventReceiverService {
                     if (value == null) {
                         unsetTde();
                     } else {
-                        setTde((org.wso2.carbon.agent.commons.thrift.exception.ThriftTypeDefinitionException)value);
+                        setTde((org.wso2.carbon.agent.commons.thrift.exception.ThriftStreamDefinitionException)value);
                     }
                     break;
 
@@ -1099,12 +1195,12 @@ public class ThriftEventReceiverService {
         public boolean equals(Object that) {
             if (that == null)
                 return false;
-            if (that instanceof defineType_result)
-                return this.equals((defineType_result)that);
+            if (that instanceof defineEventStream_result)
+                return this.equals((defineEventStream_result)that);
             return false;
         }
 
-        public boolean equals(defineType_result that) {
+        public boolean equals(defineEventStream_result that) {
             if (that == null)
                 return false;
 
@@ -1161,13 +1257,13 @@ public class ThriftEventReceiverService {
             return 0;
         }
 
-        public int compareTo(defineType_result other) {
+        public int compareTo(defineEventStream_result other) {
             if (!getClass().equals(other.getClass())) {
                 return getClass().getName().compareTo(other.getClass().getName());
             }
 
             int lastComparison = 0;
-            defineType_result typedOther = (defineType_result)other;
+            defineEventStream_result typedOther = (defineEventStream_result)other;
 
             lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(typedOther.isSetSuccess());
             if (lastComparison != 0) {
@@ -1236,7 +1332,7 @@ public class ThriftEventReceiverService {
 
         @Override
         public String toString() {
-            StringBuilder sb = new StringBuilder("defineType_result(");
+            StringBuilder sb = new StringBuilder("defineEventStream_result(");
             boolean first = true;
 
             sb.append("success:");
@@ -1302,15 +1398,15 @@ public class ThriftEventReceiverService {
             }
         }
 
-        private static class defineType_resultStandardSchemeFactory implements SchemeFactory {
-            public defineType_resultStandardScheme getScheme() {
-                return new defineType_resultStandardScheme();
+        private static class defineEventStream_resultStandardSchemeFactory implements SchemeFactory {
+            public defineEventStream_resultStandardScheme getScheme() {
+                return new defineEventStream_resultStandardScheme();
             }
         }
 
-        private static class defineType_resultStandardScheme extends StandardScheme<defineType_result> {
+        private static class defineEventStream_resultStandardScheme extends StandardScheme<defineEventStream_result> {
 
-            public void read(org.apache.thrift.protocol.TProtocol iprot, defineType_result struct) throws org.apache.thrift.TException {
+            public void read(org.apache.thrift.protocol.TProtocol iprot, defineEventStream_result struct) throws org.apache.thrift.TException {
                 org.apache.thrift.protocol.TField schemeField;
                 iprot.readStructBegin();
                 while (true)
@@ -1330,7 +1426,7 @@ public class ThriftEventReceiverService {
                             break;
                         case 1: // ADE
                             if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                                struct.ade = new org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentTypeDefinitionAlreadyDefinedException();
+                                struct.ade = new org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentStreamDefinitionAlreadyDefinedException();
                                 struct.ade.read(iprot);
                                 struct.setAdeIsSet(true);
                             } else {
@@ -1339,7 +1435,7 @@ public class ThriftEventReceiverService {
                             break;
                         case 2: // MTD
                             if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                                struct.mtd = new org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedTypeDefinitionException();
+                                struct.mtd = new org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedStreamDefinitionException();
                                 struct.mtd.read(iprot);
                                 struct.setMtdIsSet(true);
                             } else {
@@ -1348,7 +1444,7 @@ public class ThriftEventReceiverService {
                             break;
                         case 3: // TDE
                             if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                                struct.tde = new org.wso2.carbon.agent.commons.thrift.exception.ThriftTypeDefinitionException();
+                                struct.tde = new org.wso2.carbon.agent.commons.thrift.exception.ThriftStreamDefinitionException();
                                 struct.tde.read(iprot);
                                 struct.setTdeIsSet(true);
                             } else {
@@ -1375,7 +1471,7 @@ public class ThriftEventReceiverService {
                 struct.validate();
             }
 
-            public void write(org.apache.thrift.protocol.TProtocol oprot, defineType_result struct) throws org.apache.thrift.TException {
+            public void write(org.apache.thrift.protocol.TProtocol oprot, defineEventStream_result struct) throws org.apache.thrift.TException {
                 struct.validate();
 
                 oprot.writeStructBegin(STRUCT_DESC);
@@ -1410,16 +1506,16 @@ public class ThriftEventReceiverService {
 
         }
 
-        private static class defineType_resultTupleSchemeFactory implements SchemeFactory {
-            public defineType_resultTupleScheme getScheme() {
-                return new defineType_resultTupleScheme();
+        private static class defineEventStream_resultTupleSchemeFactory implements SchemeFactory {
+            public defineEventStream_resultTupleScheme getScheme() {
+                return new defineEventStream_resultTupleScheme();
             }
         }
 
-        private static class defineType_resultTupleScheme extends TupleScheme<defineType_result> {
+        private static class defineEventStream_resultTupleScheme extends TupleScheme<defineEventStream_result> {
 
             @Override
-            public void write(org.apache.thrift.protocol.TProtocol prot, defineType_result struct) throws org.apache.thrift.TException {
+            public void write(org.apache.thrift.protocol.TProtocol prot, defineEventStream_result struct) throws org.apache.thrift.TException {
                 TTupleProtocol oprot = (TTupleProtocol) prot;
                 BitSet optionals = new BitSet();
                 if (struct.isSetSuccess()) {
@@ -1456,7 +1552,7 @@ public class ThriftEventReceiverService {
             }
 
             @Override
-            public void read(org.apache.thrift.protocol.TProtocol prot, defineType_result struct) throws org.apache.thrift.TException {
+            public void read(org.apache.thrift.protocol.TProtocol prot, defineEventStream_result struct) throws org.apache.thrift.TException {
                 TTupleProtocol iprot = (TTupleProtocol) prot;
                 BitSet incoming = iprot.readBitSet(5);
                 if (incoming.get(0)) {
@@ -1464,21 +1560,1131 @@ public class ThriftEventReceiverService {
                     struct.setSuccessIsSet(true);
                 }
                 if (incoming.get(1)) {
-                    struct.ade = new org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentTypeDefinitionAlreadyDefinedException();
+                    struct.ade = new org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentStreamDefinitionAlreadyDefinedException();
                     struct.ade.read(iprot);
                     struct.setAdeIsSet(true);
                 }
                 if (incoming.get(2)) {
-                    struct.mtd = new org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedTypeDefinitionException();
+                    struct.mtd = new org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedStreamDefinitionException();
                     struct.mtd.read(iprot);
                     struct.setMtdIsSet(true);
                 }
                 if (incoming.get(3)) {
-                    struct.tde = new org.wso2.carbon.agent.commons.thrift.exception.ThriftTypeDefinitionException();
+                    struct.tde = new org.wso2.carbon.agent.commons.thrift.exception.ThriftStreamDefinitionException();
                     struct.tde.read(iprot);
                     struct.setTdeIsSet(true);
                 }
                 if (incoming.get(4)) {
+                    struct.se = new org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException();
+                    struct.se.read(iprot);
+                    struct.setSeIsSet(true);
+                }
+            }
+        }
+
+    }
+
+    public static class findEventStreamId_args implements org.apache.thrift.TBase<findEventStreamId_args, findEventStreamId_args._Fields>, java.io.Serializable, Cloneable   {
+        private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("findEventStreamId_args");
+
+        private static final org.apache.thrift.protocol.TField SESSION_ID_FIELD_DESC = new org.apache.thrift.protocol.TField("sessionId", org.apache.thrift.protocol.TType.STRING, (short)1);
+        private static final org.apache.thrift.protocol.TField STREAM_NAME_FIELD_DESC = new org.apache.thrift.protocol.TField("streamName", org.apache.thrift.protocol.TType.STRING, (short)2);
+        private static final org.apache.thrift.protocol.TField STREAM_VERSION_FIELD_DESC = new org.apache.thrift.protocol.TField("streamVersion", org.apache.thrift.protocol.TType.STRING, (short)3);
+
+        private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
+        static {
+            schemes.put(StandardScheme.class, new findEventStreamId_argsStandardSchemeFactory());
+            schemes.put(TupleScheme.class, new findEventStreamId_argsTupleSchemeFactory());
+        }
+
+        public String sessionId; // required
+        public String streamName; // required
+        public String streamVersion; // required
+
+        /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+        public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+            SESSION_ID((short)1, "sessionId"),
+            STREAM_NAME((short)2, "streamName"),
+            STREAM_VERSION((short)3, "streamVersion");
+
+            private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+            static {
+                for (_Fields field : EnumSet.allOf(_Fields.class)) {
+                    byName.put(field.getFieldName(), field);
+                }
+            }
+
+            /**
+             * Find the _Fields constant that matches fieldId, or null if its not found.
+             */
+            public static _Fields findByThriftId(int fieldId) {
+                switch(fieldId) {
+                    case 1: // SESSION_ID
+                        return SESSION_ID;
+                    case 2: // STREAM_NAME
+                        return STREAM_NAME;
+                    case 3: // STREAM_VERSION
+                        return STREAM_VERSION;
+                    default:
+                        return null;
+                }
+            }
+
+            /**
+             * Find the _Fields constant that matches fieldId, throwing an exception
+             * if it is not found.
+             */
+            public static _Fields findByThriftIdOrThrow(int fieldId) {
+                _Fields fields = findByThriftId(fieldId);
+                if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+                return fields;
+            }
+
+            /**
+             * Find the _Fields constant that matches name, or null if its not found.
+             */
+            public static _Fields findByName(String name) {
+                return byName.get(name);
+            }
+
+            private final short _thriftId;
+            private final String _fieldName;
+
+            _Fields(short thriftId, String fieldName) {
+                _thriftId = thriftId;
+                _fieldName = fieldName;
+            }
+
+            public short getThriftFieldId() {
+                return _thriftId;
+            }
+
+            public String getFieldName() {
+                return _fieldName;
+            }
+        }
+
+        // isset id assignments
+        public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+        static {
+            Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+            tmpMap.put(_Fields.SESSION_ID, new org.apache.thrift.meta_data.FieldMetaData("sessionId", org.apache.thrift.TFieldRequirementType.DEFAULT,
+                                                                                         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+            tmpMap.put(_Fields.STREAM_NAME, new org.apache.thrift.meta_data.FieldMetaData("streamName", org.apache.thrift.TFieldRequirementType.DEFAULT,
+                                                                                          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+            tmpMap.put(_Fields.STREAM_VERSION, new org.apache.thrift.meta_data.FieldMetaData("streamVersion", org.apache.thrift.TFieldRequirementType.DEFAULT,
+                                                                                             new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+            metaDataMap = Collections.unmodifiableMap(tmpMap);
+            org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(findEventStreamId_args.class, metaDataMap);
+        }
+
+        public findEventStreamId_args() {
+        }
+
+        public findEventStreamId_args(
+                String sessionId,
+                String streamName,
+                String streamVersion)
+        {
+            this();
+            this.sessionId = sessionId;
+            this.streamName = streamName;
+            this.streamVersion = streamVersion;
+        }
+
+        /**
+         * Performs a deep copy on <i>other</i>.
+         */
+        public findEventStreamId_args(findEventStreamId_args other) {
+            if (other.isSetSessionId()) {
+                this.sessionId = other.sessionId;
+            }
+            if (other.isSetStreamName()) {
+                this.streamName = other.streamName;
+            }
+            if (other.isSetStreamVersion()) {
+                this.streamVersion = other.streamVersion;
+            }
+        }
+
+        public findEventStreamId_args deepCopy() {
+            return new findEventStreamId_args(this);
+        }
+
+        @Override
+        public void clear() {
+            this.sessionId = null;
+            this.streamName = null;
+            this.streamVersion = null;
+        }
+
+        public String getSessionId() {
+            return this.sessionId;
+        }
+
+        public findEventStreamId_args setSessionId(String sessionId) {
+            this.sessionId = sessionId;
+            return this;
+        }
+
+        public void unsetSessionId() {
+            this.sessionId = null;
+        }
+
+        /** Returns true if field sessionId is set (has been assigned a value) and false otherwise */
+        public boolean isSetSessionId() {
+            return this.sessionId != null;
+        }
+
+        public void setSessionIdIsSet(boolean value) {
+            if (!value) {
+                this.sessionId = null;
+            }
+        }
+
+        public String getStreamName() {
+            return this.streamName;
+        }
+
+        public findEventStreamId_args setStreamName(String streamName) {
+            this.streamName = streamName;
+            return this;
+        }
+
+        public void unsetStreamName() {
+            this.streamName = null;
+        }
+
+        /** Returns true if field streamName is set (has been assigned a value) and false otherwise */
+        public boolean isSetStreamName() {
+            return this.streamName != null;
+        }
+
+        public void setStreamNameIsSet(boolean value) {
+            if (!value) {
+                this.streamName = null;
+            }
+        }
+
+        public String getStreamVersion() {
+            return this.streamVersion;
+        }
+
+        public findEventStreamId_args setStreamVersion(String streamVersion) {
+            this.streamVersion = streamVersion;
+            return this;
+        }
+
+        public void unsetStreamVersion() {
+            this.streamVersion = null;
+        }
+
+        /** Returns true if field streamVersion is set (has been assigned a value) and false otherwise */
+        public boolean isSetStreamVersion() {
+            return this.streamVersion != null;
+        }
+
+        public void setStreamVersionIsSet(boolean value) {
+            if (!value) {
+                this.streamVersion = null;
+            }
+        }
+
+        public void setFieldValue(_Fields field, Object value) {
+            switch (field) {
+                case SESSION_ID:
+                    if (value == null) {
+                        unsetSessionId();
+                    } else {
+                        setSessionId((String)value);
+                    }
+                    break;
+
+                case STREAM_NAME:
+                    if (value == null) {
+                        unsetStreamName();
+                    } else {
+                        setStreamName((String)value);
+                    }
+                    break;
+
+                case STREAM_VERSION:
+                    if (value == null) {
+                        unsetStreamVersion();
+                    } else {
+                        setStreamVersion((String)value);
+                    }
+                    break;
+
+            }
+        }
+
+        public Object getFieldValue(_Fields field) {
+            switch (field) {
+                case SESSION_ID:
+                    return getSessionId();
+
+                case STREAM_NAME:
+                    return getStreamName();
+
+                case STREAM_VERSION:
+                    return getStreamVersion();
+
+            }
+            throw new IllegalStateException();
+        }
+
+        /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+        public boolean isSet(_Fields field) {
+            if (field == null) {
+                throw new IllegalArgumentException();
+            }
+
+            switch (field) {
+                case SESSION_ID:
+                    return isSetSessionId();
+                case STREAM_NAME:
+                    return isSetStreamName();
+                case STREAM_VERSION:
+                    return isSetStreamVersion();
+            }
+            throw new IllegalStateException();
+        }
+
+        @Override
+        public boolean equals(Object that) {
+            if (that == null)
+                return false;
+            if (that instanceof findEventStreamId_args)
+                return this.equals((findEventStreamId_args)that);
+            return false;
+        }
+
+        public boolean equals(findEventStreamId_args that) {
+            if (that == null)
+                return false;
+
+            boolean this_present_sessionId = true && this.isSetSessionId();
+            boolean that_present_sessionId = true && that.isSetSessionId();
+            if (this_present_sessionId || that_present_sessionId) {
+                if (!(this_present_sessionId && that_present_sessionId))
+                    return false;
+                if (!this.sessionId.equals(that.sessionId))
+                    return false;
+            }
+
+            boolean this_present_streamName = true && this.isSetStreamName();
+            boolean that_present_streamName = true && that.isSetStreamName();
+            if (this_present_streamName || that_present_streamName) {
+                if (!(this_present_streamName && that_present_streamName))
+                    return false;
+                if (!this.streamName.equals(that.streamName))
+                    return false;
+            }
+
+            boolean this_present_streamVersion = true && this.isSetStreamVersion();
+            boolean that_present_streamVersion = true && that.isSetStreamVersion();
+            if (this_present_streamVersion || that_present_streamVersion) {
+                if (!(this_present_streamVersion && that_present_streamVersion))
+                    return false;
+                if (!this.streamVersion.equals(that.streamVersion))
+                    return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            return 0;
+        }
+
+        public int compareTo(findEventStreamId_args other) {
+            if (!getClass().equals(other.getClass())) {
+                return getClass().getName().compareTo(other.getClass().getName());
+            }
+
+            int lastComparison = 0;
+            findEventStreamId_args typedOther = (findEventStreamId_args)other;
+
+            lastComparison = Boolean.valueOf(isSetSessionId()).compareTo(typedOther.isSetSessionId());
+            if (lastComparison != 0) {
+                return lastComparison;
+            }
+            if (isSetSessionId()) {
+                lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.sessionId, typedOther.sessionId);
+                if (lastComparison != 0) {
+                    return lastComparison;
+                }
+            }
+            lastComparison = Boolean.valueOf(isSetStreamName()).compareTo(typedOther.isSetStreamName());
+            if (lastComparison != 0) {
+                return lastComparison;
+            }
+            if (isSetStreamName()) {
+                lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.streamName, typedOther.streamName);
+                if (lastComparison != 0) {
+                    return lastComparison;
+                }
+            }
+            lastComparison = Boolean.valueOf(isSetStreamVersion()).compareTo(typedOther.isSetStreamVersion());
+            if (lastComparison != 0) {
+                return lastComparison;
+            }
+            if (isSetStreamVersion()) {
+                lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.streamVersion, typedOther.streamVersion);
+                if (lastComparison != 0) {
+                    return lastComparison;
+                }
+            }
+            return 0;
+        }
+
+        public _Fields fieldForId(int fieldId) {
+            return _Fields.findByThriftId(fieldId);
+        }
+
+        public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+            schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
+        }
+
+        public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+            schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder("findEventStreamId_args(");
+            boolean first = true;
+
+            sb.append("sessionId:");
+            if (this.sessionId == null) {
+                sb.append("null");
+            } else {
+                sb.append(this.sessionId);
+            }
+            first = false;
+            if (!first) sb.append(", ");
+            sb.append("streamName:");
+            if (this.streamName == null) {
+                sb.append("null");
+            } else {
+                sb.append(this.streamName);
+            }
+            first = false;
+            if (!first) sb.append(", ");
+            sb.append("streamVersion:");
+            if (this.streamVersion == null) {
+                sb.append("null");
+            } else {
+                sb.append(this.streamVersion);
+            }
+            first = false;
+            sb.append(")");
+            return sb.toString();
+        }
+
+        public void validate() throws org.apache.thrift.TException {
+            // check for required fields
+        }
+
+        private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+            try {
+                write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+            } catch (org.apache.thrift.TException te) {
+                throw new java.io.IOException(te);
+            }
+        }
+
+        private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+            try {
+                read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+            } catch (org.apache.thrift.TException te) {
+                throw new java.io.IOException(te);
+            }
+        }
+
+        private static class findEventStreamId_argsStandardSchemeFactory implements SchemeFactory {
+            public findEventStreamId_argsStandardScheme getScheme() {
+                return new findEventStreamId_argsStandardScheme();
+            }
+        }
+
+        private static class findEventStreamId_argsStandardScheme extends StandardScheme<findEventStreamId_args> {
+
+            public void read(org.apache.thrift.protocol.TProtocol iprot, findEventStreamId_args struct) throws org.apache.thrift.TException {
+                org.apache.thrift.protocol.TField schemeField;
+                iprot.readStructBegin();
+                while (true)
+                {
+                    schemeField = iprot.readFieldBegin();
+                    if (schemeField.type == org.apache.thrift.protocol.TType.STOP) {
+                        break;
+                    }
+                    switch (schemeField.id) {
+                        case 1: // SESSION_ID
+                            if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                                struct.sessionId = iprot.readString();
+                                struct.setSessionIdIsSet(true);
+                            } else {
+                                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+                            }
+                            break;
+                        case 2: // STREAM_NAME
+                            if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                                struct.streamName = iprot.readString();
+                                struct.setStreamNameIsSet(true);
+                            } else {
+                                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+                            }
+                            break;
+                        case 3: // STREAM_VERSION
+                            if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                                struct.streamVersion = iprot.readString();
+                                struct.setStreamVersionIsSet(true);
+                            } else {
+                                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+                            }
+                            break;
+                        default:
+                            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+                    }
+                    iprot.readFieldEnd();
+                }
+                iprot.readStructEnd();
+
+                // check for required fields of primitive type, which can't be checked in the validate method
+                struct.validate();
+            }
+
+            public void write(org.apache.thrift.protocol.TProtocol oprot, findEventStreamId_args struct) throws org.apache.thrift.TException {
+                struct.validate();
+
+                oprot.writeStructBegin(STRUCT_DESC);
+                if (struct.sessionId != null) {
+                    oprot.writeFieldBegin(SESSION_ID_FIELD_DESC);
+                    oprot.writeString(struct.sessionId);
+                    oprot.writeFieldEnd();
+                }
+                if (struct.streamName != null) {
+                    oprot.writeFieldBegin(STREAM_NAME_FIELD_DESC);
+                    oprot.writeString(struct.streamName);
+                    oprot.writeFieldEnd();
+                }
+                if (struct.streamVersion != null) {
+                    oprot.writeFieldBegin(STREAM_VERSION_FIELD_DESC);
+                    oprot.writeString(struct.streamVersion);
+                    oprot.writeFieldEnd();
+                }
+                oprot.writeFieldStop();
+                oprot.writeStructEnd();
+            }
+
+        }
+
+        private static class findEventStreamId_argsTupleSchemeFactory implements SchemeFactory {
+            public findEventStreamId_argsTupleScheme getScheme() {
+                return new findEventStreamId_argsTupleScheme();
+            }
+        }
+
+        private static class findEventStreamId_argsTupleScheme extends TupleScheme<findEventStreamId_args> {
+
+            @Override
+            public void write(org.apache.thrift.protocol.TProtocol prot, findEventStreamId_args struct) throws org.apache.thrift.TException {
+                TTupleProtocol oprot = (TTupleProtocol) prot;
+                BitSet optionals = new BitSet();
+                if (struct.isSetSessionId()) {
+                    optionals.set(0);
+                }
+                if (struct.isSetStreamName()) {
+                    optionals.set(1);
+                }
+                if (struct.isSetStreamVersion()) {
+                    optionals.set(2);
+                }
+                oprot.writeBitSet(optionals, 3);
+                if (struct.isSetSessionId()) {
+                    oprot.writeString(struct.sessionId);
+                }
+                if (struct.isSetStreamName()) {
+                    oprot.writeString(struct.streamName);
+                }
+                if (struct.isSetStreamVersion()) {
+                    oprot.writeString(struct.streamVersion);
+                }
+            }
+
+            @Override
+            public void read(org.apache.thrift.protocol.TProtocol prot, findEventStreamId_args struct) throws org.apache.thrift.TException {
+                TTupleProtocol iprot = (TTupleProtocol) prot;
+                BitSet incoming = iprot.readBitSet(3);
+                if (incoming.get(0)) {
+                    struct.sessionId = iprot.readString();
+                    struct.setSessionIdIsSet(true);
+                }
+                if (incoming.get(1)) {
+                    struct.streamName = iprot.readString();
+                    struct.setStreamNameIsSet(true);
+                }
+                if (incoming.get(2)) {
+                    struct.streamVersion = iprot.readString();
+                    struct.setStreamVersionIsSet(true);
+                }
+            }
+        }
+
+    }
+
+    public static class findEventStreamId_result implements org.apache.thrift.TBase<findEventStreamId_result, findEventStreamId_result._Fields>, java.io.Serializable, Cloneable   {
+        private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("findEventStreamId_result");
+
+        private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRING, (short)0);
+        private static final org.apache.thrift.protocol.TField TNDE_FIELD_DESC = new org.apache.thrift.protocol.TField("tnde", org.apache.thrift.protocol.TType.STRUCT, (short)1);
+        private static final org.apache.thrift.protocol.TField SE_FIELD_DESC = new org.apache.thrift.protocol.TField("se", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+
+        private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
+        static {
+            schemes.put(StandardScheme.class, new findEventStreamId_resultStandardSchemeFactory());
+            schemes.put(TupleScheme.class, new findEventStreamId_resultTupleSchemeFactory());
+        }
+
+        public String success; // required
+        public org.wso2.carbon.agent.commons.thrift.exception.ThriftNoStreamDefinitionExistException tnde; // required
+        public org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException se; // required
+
+        /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+        public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+            SUCCESS((short)0, "success"),
+            TNDE((short)1, "tnde"),
+            SE((short)2, "se");
+
+            private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
+
+            static {
+                for (_Fields field : EnumSet.allOf(_Fields.class)) {
+                    byName.put(field.getFieldName(), field);
+                }
+            }
+
+            /**
+             * Find the _Fields constant that matches fieldId, or null if its not found.
+             */
+            public static _Fields findByThriftId(int fieldId) {
+                switch(fieldId) {
+                    case 0: // SUCCESS
+                        return SUCCESS;
+                    case 1: // TNDE
+                        return TNDE;
+                    case 2: // SE
+                        return SE;
+                    default:
+                        return null;
+                }
+            }
+
+            /**
+             * Find the _Fields constant that matches fieldId, throwing an exception
+             * if it is not found.
+             */
+            public static _Fields findByThriftIdOrThrow(int fieldId) {
+                _Fields fields = findByThriftId(fieldId);
+                if (fields == null) throw new IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+                return fields;
+            }
+
+            /**
+             * Find the _Fields constant that matches name, or null if its not found.
+             */
+            public static _Fields findByName(String name) {
+                return byName.get(name);
+            }
+
+            private final short _thriftId;
+            private final String _fieldName;
+
+            _Fields(short thriftId, String fieldName) {
+                _thriftId = thriftId;
+                _fieldName = fieldName;
+            }
+
+            public short getThriftFieldId() {
+                return _thriftId;
+            }
+
+            public String getFieldName() {
+                return _fieldName;
+            }
+        }
+
+        // isset id assignments
+        public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+        static {
+            Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+            tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT,
+                                                                                      new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+            tmpMap.put(_Fields.TNDE, new org.apache.thrift.meta_data.FieldMetaData("tnde", org.apache.thrift.TFieldRequirementType.DEFAULT,
+                                                                                   new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
+            tmpMap.put(_Fields.SE, new org.apache.thrift.meta_data.FieldMetaData("se", org.apache.thrift.TFieldRequirementType.DEFAULT,
+                                                                                 new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
+            metaDataMap = Collections.unmodifiableMap(tmpMap);
+            org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(findEventStreamId_result.class, metaDataMap);
+        }
+
+        public findEventStreamId_result() {
+        }
+
+        public findEventStreamId_result(
+                String success,
+                org.wso2.carbon.agent.commons.thrift.exception.ThriftNoStreamDefinitionExistException tnde,
+                org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException se)
+        {
+            this();
+            this.success = success;
+            this.tnde = tnde;
+            this.se = se;
+        }
+
+        /**
+         * Performs a deep copy on <i>other</i>.
+         */
+        public findEventStreamId_result(findEventStreamId_result other) {
+            if (other.isSetSuccess()) {
+                this.success = other.success;
+            }
+            if (other.isSetTnde()) {
+                this.tnde = new org.wso2.carbon.agent.commons.thrift.exception.ThriftNoStreamDefinitionExistException(other.tnde);
+            }
+            if (other.isSetSe()) {
+                this.se = new org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException(other.se);
+            }
+        }
+
+        public findEventStreamId_result deepCopy() {
+            return new findEventStreamId_result(this);
+        }
+
+        @Override
+        public void clear() {
+            this.success = null;
+            this.tnde = null;
+            this.se = null;
+        }
+
+        public String getSuccess() {
+            return this.success;
+        }
+
+        public findEventStreamId_result setSuccess(String success) {
+            this.success = success;
+            return this;
+        }
+
+        public void unsetSuccess() {
+            this.success = null;
+        }
+
+        /** Returns true if field success is set (has been assigned a value) and false otherwise */
+        public boolean isSetSuccess() {
+            return this.success != null;
+        }
+
+        public void setSuccessIsSet(boolean value) {
+            if (!value) {
+                this.success = null;
+            }
+        }
+
+        public org.wso2.carbon.agent.commons.thrift.exception.ThriftNoStreamDefinitionExistException getTnde() {
+            return this.tnde;
+        }
+
+        public findEventStreamId_result setTnde(org.wso2.carbon.agent.commons.thrift.exception.ThriftNoStreamDefinitionExistException tnde) {
+            this.tnde = tnde;
+            return this;
+        }
+
+        public void unsetTnde() {
+            this.tnde = null;
+        }
+
+        /** Returns true if field tnde is set (has been assigned a value) and false otherwise */
+        public boolean isSetTnde() {
+            return this.tnde != null;
+        }
+
+        public void setTndeIsSet(boolean value) {
+            if (!value) {
+                this.tnde = null;
+            }
+        }
+
+        public org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException getSe() {
+            return this.se;
+        }
+
+        public findEventStreamId_result setSe(org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException se) {
+            this.se = se;
+            return this;
+        }
+
+        public void unsetSe() {
+            this.se = null;
+        }
+
+        /** Returns true if field se is set (has been assigned a value) and false otherwise */
+        public boolean isSetSe() {
+            return this.se != null;
+        }
+
+        public void setSeIsSet(boolean value) {
+            if (!value) {
+                this.se = null;
+            }
+        }
+
+        public void setFieldValue(_Fields field, Object value) {
+            switch (field) {
+                case SUCCESS:
+                    if (value == null) {
+                        unsetSuccess();
+                    } else {
+                        setSuccess((String)value);
+                    }
+                    break;
+
+                case TNDE:
+                    if (value == null) {
+                        unsetTnde();
+                    } else {
+                        setTnde((org.wso2.carbon.agent.commons.thrift.exception.ThriftNoStreamDefinitionExistException)value);
+                    }
+                    break;
+
+                case SE:
+                    if (value == null) {
+                        unsetSe();
+                    } else {
+                        setSe((org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException)value);
+                    }
+                    break;
+
+            }
+        }
+
+        public Object getFieldValue(_Fields field) {
+            switch (field) {
+                case SUCCESS:
+                    return getSuccess();
+
+                case TNDE:
+                    return getTnde();
+
+                case SE:
+                    return getSe();
+
+            }
+            throw new IllegalStateException();
+        }
+
+        /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+        public boolean isSet(_Fields field) {
+            if (field == null) {
+                throw new IllegalArgumentException();
+            }
+
+            switch (field) {
+                case SUCCESS:
+                    return isSetSuccess();
+                case TNDE:
+                    return isSetTnde();
+                case SE:
+                    return isSetSe();
+            }
+            throw new IllegalStateException();
+        }
+
+        @Override
+        public boolean equals(Object that) {
+            if (that == null)
+                return false;
+            if (that instanceof findEventStreamId_result)
+                return this.equals((findEventStreamId_result)that);
+            return false;
+        }
+
+        public boolean equals(findEventStreamId_result that) {
+            if (that == null)
+                return false;
+
+            boolean this_present_success = true && this.isSetSuccess();
+            boolean that_present_success = true && that.isSetSuccess();
+            if (this_present_success || that_present_success) {
+                if (!(this_present_success && that_present_success))
+                    return false;
+                if (!this.success.equals(that.success))
+                    return false;
+            }
+
+            boolean this_present_tnde = true && this.isSetTnde();
+            boolean that_present_tnde = true && that.isSetTnde();
+            if (this_present_tnde || that_present_tnde) {
+                if (!(this_present_tnde && that_present_tnde))
+                    return false;
+                if (!this.tnde.equals(that.tnde))
+                    return false;
+            }
+
+            boolean this_present_se = true && this.isSetSe();
+            boolean that_present_se = true && that.isSetSe();
+            if (this_present_se || that_present_se) {
+                if (!(this_present_se && that_present_se))
+                    return false;
+                if (!this.se.equals(that.se))
+                    return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            return 0;
+        }
+
+        public int compareTo(findEventStreamId_result other) {
+            if (!getClass().equals(other.getClass())) {
+                return getClass().getName().compareTo(other.getClass().getName());
+            }
+
+            int lastComparison = 0;
+            findEventStreamId_result typedOther = (findEventStreamId_result)other;
+
+            lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(typedOther.isSetSuccess());
+            if (lastComparison != 0) {
+                return lastComparison;
+            }
+            if (isSetSuccess()) {
+                lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, typedOther.success);
+                if (lastComparison != 0) {
+                    return lastComparison;
+                }
+            }
+            lastComparison = Boolean.valueOf(isSetTnde()).compareTo(typedOther.isSetTnde());
+            if (lastComparison != 0) {
+                return lastComparison;
+            }
+            if (isSetTnde()) {
+                lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.tnde, typedOther.tnde);
+                if (lastComparison != 0) {
+                    return lastComparison;
+                }
+            }
+            lastComparison = Boolean.valueOf(isSetSe()).compareTo(typedOther.isSetSe());
+            if (lastComparison != 0) {
+                return lastComparison;
+            }
+            if (isSetSe()) {
+                lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.se, typedOther.se);
+                if (lastComparison != 0) {
+                    return lastComparison;
+                }
+            }
+            return 0;
+        }
+
+        public _Fields fieldForId(int fieldId) {
+            return _Fields.findByThriftId(fieldId);
+        }
+
+        public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+            schemes.get(iprot.getScheme()).getScheme().read(iprot, this);
+        }
+
+        public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+            schemes.get(oprot.getScheme()).getScheme().write(oprot, this);
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder("findEventStreamId_result(");
+            boolean first = true;
+
+            sb.append("success:");
+            if (this.success == null) {
+                sb.append("null");
+            } else {
+                sb.append(this.success);
+            }
+            first = false;
+            if (!first) sb.append(", ");
+            sb.append("tnde:");
+            if (this.tnde == null) {
+                sb.append("null");
+            } else {
+                sb.append(this.tnde);
+            }
+            first = false;
+            if (!first) sb.append(", ");
+            sb.append("se:");
+            if (this.se == null) {
+                sb.append("null");
+            } else {
+                sb.append(this.se);
+            }
+            first = false;
+            sb.append(")");
+            return sb.toString();
+        }
+
+        public void validate() throws org.apache.thrift.TException {
+            // check for required fields
+        }
+
+        private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+            try {
+                write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+            } catch (org.apache.thrift.TException te) {
+                throw new java.io.IOException(te);
+            }
+        }
+
+        private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
+            try {
+                read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+            } catch (org.apache.thrift.TException te) {
+                throw new java.io.IOException(te);
+            }
+        }
+
+        private static class findEventStreamId_resultStandardSchemeFactory implements SchemeFactory {
+            public findEventStreamId_resultStandardScheme getScheme() {
+                return new findEventStreamId_resultStandardScheme();
+            }
+        }
+
+        private static class findEventStreamId_resultStandardScheme extends StandardScheme<findEventStreamId_result> {
+
+            public void read(org.apache.thrift.protocol.TProtocol iprot, findEventStreamId_result struct) throws org.apache.thrift.TException {
+                org.apache.thrift.protocol.TField schemeField;
+                iprot.readStructBegin();
+                while (true)
+                {
+                    schemeField = iprot.readFieldBegin();
+                    if (schemeField.type == org.apache.thrift.protocol.TType.STOP) {
+                        break;
+                    }
+                    switch (schemeField.id) {
+                        case 0: // SUCCESS
+                            if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                                struct.success = iprot.readString();
+                                struct.setSuccessIsSet(true);
+                            } else {
+                                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+                            }
+                            break;
+                        case 1: // TNDE
+                            if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                                struct.tnde = new org.wso2.carbon.agent.commons.thrift.exception.ThriftNoStreamDefinitionExistException();
+                                struct.tnde.read(iprot);
+                                struct.setTndeIsSet(true);
+                            } else {
+                                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+                            }
+                            break;
+                        case 2: // SE
+                            if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                                struct.se = new org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException();
+                                struct.se.read(iprot);
+                                struct.setSeIsSet(true);
+                            } else {
+                                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+                            }
+                            break;
+                        default:
+                            org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+                    }
+                    iprot.readFieldEnd();
+                }
+                iprot.readStructEnd();
+
+                // check for required fields of primitive type, which can't be checked in the validate method
+                struct.validate();
+            }
+
+            public void write(org.apache.thrift.protocol.TProtocol oprot, findEventStreamId_result struct) throws org.apache.thrift.TException {
+                struct.validate();
+
+                oprot.writeStructBegin(STRUCT_DESC);
+                if (struct.success != null) {
+                    oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+                    oprot.writeString(struct.success);
+                    oprot.writeFieldEnd();
+                }
+                if (struct.tnde != null) {
+                    oprot.writeFieldBegin(TNDE_FIELD_DESC);
+                    struct.tnde.write(oprot);
+                    oprot.writeFieldEnd();
+                }
+                if (struct.se != null) {
+                    oprot.writeFieldBegin(SE_FIELD_DESC);
+                    struct.se.write(oprot);
+                    oprot.writeFieldEnd();
+                }
+                oprot.writeFieldStop();
+                oprot.writeStructEnd();
+            }
+
+        }
+
+        private static class findEventStreamId_resultTupleSchemeFactory implements SchemeFactory {
+            public findEventStreamId_resultTupleScheme getScheme() {
+                return new findEventStreamId_resultTupleScheme();
+            }
+        }
+
+        private static class findEventStreamId_resultTupleScheme extends TupleScheme<findEventStreamId_result> {
+
+            @Override
+            public void write(org.apache.thrift.protocol.TProtocol prot, findEventStreamId_result struct) throws org.apache.thrift.TException {
+                TTupleProtocol oprot = (TTupleProtocol) prot;
+                BitSet optionals = new BitSet();
+                if (struct.isSetSuccess()) {
+                    optionals.set(0);
+                }
+                if (struct.isSetTnde()) {
+                    optionals.set(1);
+                }
+                if (struct.isSetSe()) {
+                    optionals.set(2);
+                }
+                oprot.writeBitSet(optionals, 3);
+                if (struct.isSetSuccess()) {
+                    oprot.writeString(struct.success);
+                }
+                if (struct.isSetTnde()) {
+                    struct.tnde.write(oprot);
+                }
+                if (struct.isSetSe()) {
+                    struct.se.write(oprot);
+                }
+            }
+
+            @Override
+            public void read(org.apache.thrift.protocol.TProtocol prot, findEventStreamId_result struct) throws org.apache.thrift.TException {
+                TTupleProtocol iprot = (TTupleProtocol) prot;
+                BitSet incoming = iprot.readBitSet(3);
+                if (incoming.get(0)) {
+                    struct.success = iprot.readString();
+                    struct.setSuccessIsSet(true);
+                }
+                if (incoming.get(1)) {
+                    struct.tnde = new org.wso2.carbon.agent.commons.thrift.exception.ThriftNoStreamDefinitionExistException();
+                    struct.tnde.read(iprot);
+                    struct.setTndeIsSet(true);
+                }
+                if (incoming.get(2)) {
                     struct.se = new org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException();
                     struct.se.read(iprot);
                     struct.setSeIsSet(true);

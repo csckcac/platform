@@ -18,19 +18,19 @@
 package org.wso2.carbon.agent.server.internal.utils;
 
 import org.wso2.carbon.agent.commons.thrift.data.ThriftEventBundle;
-import org.wso2.carbon.agent.server.internal.StreamDefinitionHolder;
+import org.wso2.carbon.agent.server.internal.EventStreamTypeHolder;
 
 public class EventComposite {
-    StreamDefinitionHolder streamDefinitionHolder;
+    EventStreamTypeHolder eventStreamTypeHolder;
     ThriftEventBundle thriftEventBundle;
 
-    public EventComposite(ThriftEventBundle thriftEventBundle, StreamDefinitionHolder streamDefinitionHolder) {
-        this.streamDefinitionHolder = streamDefinitionHolder;
+    public EventComposite(ThriftEventBundle thriftEventBundle, EventStreamTypeHolder eventStreamTypeHolder) {
+        this.eventStreamTypeHolder = eventStreamTypeHolder;
         this.thriftEventBundle = thriftEventBundle;
     }
 
-    public StreamDefinitionHolder getStreamDefinitionHolder() {
-        return streamDefinitionHolder;
+    public EventStreamTypeHolder getEventStreamTypeHolder() {
+        return eventStreamTypeHolder;
     }
 
     public ThriftEventBundle getThriftEventBundle() {

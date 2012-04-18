@@ -16,6 +16,11 @@
 
 package org.wso2.carbon.agent.server;
 
+import org.wso2.carbon.agent.commons.EventStreamDefinition;
+import org.wso2.carbon.agent.server.exception.StreamDefinitionNotFoundException;
+
+import java.util.List;
+
 /**
  * this class represents the interface between the agent server and wso2 agent
  * server implementations.
@@ -27,7 +32,40 @@ public interface AgentServer {
      *
      * @param agentCallback callbacks of the subscribers
      */
-    public void subscribe(AgentCallback agentCallback);
+    void subscribe(AgentCallback agentCallback);
+
+    /**
+     * To get the stream definition
+     *
+     * @param domainName    the domain name
+     * @param streamName    the stream name
+     * @param streamVersion the stream version
+     * @return Event Stream Definition
+     */
+    EventStreamDefinition getStreamDefinition(String domainName, String streamName,
+                                              String streamVersion)
+            throws StreamDefinitionNotFoundException;
+
+    /**
+     * To get the stream definition
+     *
+     * @param domainName the domain name
+     * @param streamId   the stream id
+     * @return Event Stream Definition
+     */
+    EventStreamDefinition getStreamDefinition(String domainName, String streamId)
+            throws StreamDefinitionNotFoundException;
+
+    /**
+     * To get all stream definitions
+     *
+     * @param domainName the domain name
+     * @return list of Event Stream Definitions
+     * @throws StreamDefinitionNotFoundException
+     *
+     */
+    List<EventStreamDefinition> getAllStreamDefinition(String domainName)
+            throws StreamDefinitionNotFoundException;
 
 }
 

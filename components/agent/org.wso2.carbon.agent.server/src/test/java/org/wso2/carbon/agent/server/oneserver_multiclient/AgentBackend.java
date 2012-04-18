@@ -18,9 +18,11 @@
 package org.wso2.carbon.agent.server.oneserver_multiclient;
 
 import org.wso2.carbon.agent.commons.Event;
-import org.wso2.carbon.agent.commons.TypeDef;
+import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.agent.server.AgentCallback;
+import org.wso2.carbon.agent.server.KeyStoreUtil;
 import org.wso2.carbon.agent.server.conf.AgentServerConfiguration;
+import org.wso2.carbon.agent.server.datastore.InMemoryStreamDefinitionStore;
 import org.wso2.carbon.agent.server.exception.AgentServerException;
 import org.wso2.carbon.agent.server.internal.CarbonAgentServer;
 import org.wso2.carbon.agent.server.internal.authentication.AuthenticationHandler;
@@ -45,6 +47,9 @@ public class AgentBackend {
         }
 
         System.out.println("Event no=" + NO_OF_EVENTS);
+
+        KeyStoreUtil.setKeyStoreParams();
+
         AgentBackend server = new AgentBackend(0);
         server.start();
     }
@@ -61,7 +66,7 @@ public class AgentBackend {
             public boolean authenticate(String userName, String password) {
                 return true;// allays authenticate to true
             }
-        });
+        },new InMemoryStreamDefinitionStore());
         carbonAgentServer.subscribe(assignAgentCallback());
         carbonAgentServer.start();
 
@@ -72,10 +77,11 @@ public class AgentBackend {
         return new AgentCallback() {
             long startTime = -1;
             int size = 0;
-            private TypeDef typeDef;
+            private EventStreamDefinition eventStreamDefinition;
 
-            public void definedType(TypeDef typeDef, String sessionId) {
-                this.typeDef = typeDef;//not used here
+            public void definedEventStream(EventStreamDefinition eventStreamDefinition,
+                                           String sessionId) {
+                this.eventStreamDefinition = eventStreamDefinition;//not used here
             }
 
             public void receive(List<Event> eventList, String sessionId) {
@@ -99,7 +105,7 @@ public class AgentBackend {
     }
 
     private AgentServerConfiguration generateServerConf(int offset) {
-        AgentServerConfiguration agentServerConfiguration = new AgentServerConfiguration(7611 + offset,7711 + offset);
+        AgentServerConfiguration agentServerConfiguration = new AgentServerConfiguration(7711 + offset,7611 + offset);
         return agentServerConfiguration;
     }
 

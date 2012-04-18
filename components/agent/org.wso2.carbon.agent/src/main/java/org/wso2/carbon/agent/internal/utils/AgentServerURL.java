@@ -21,9 +21,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class AgentServerURL {
-    String protocol;
-    String host;
-    int port;
+    private String protocol;
+    private String host;
+    private int port;
 
     public AgentServerURL(String url) throws MalformedURLException {
         URL theUrl;

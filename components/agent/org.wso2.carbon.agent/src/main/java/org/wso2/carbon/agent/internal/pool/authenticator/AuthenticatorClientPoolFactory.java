@@ -33,8 +33,8 @@ import org.wso2.carbon.agent.internal.utils.AgentConstants;
 
 public class AuthenticatorClientPoolFactory extends BaseKeyedPoolableObjectFactory {
 
-    String trustStore;
-    String trustStorePassword;
+    private String trustStore;
+    private String trustStorePassword;
 
     public AuthenticatorClientPoolFactory(String trustStore, String trustStorePassword) {
         this.trustStore = trustStore;

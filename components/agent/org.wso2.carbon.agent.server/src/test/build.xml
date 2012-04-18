@@ -50,52 +50,8 @@
 
     <target name="main" depends="clean,compile"/>
 
-
-    <!--<target name="siddhiServer" depends="compile">-->
-        <!--<java classname="org.wso2.siddhi.sample.SiddhiServer"-->
-              <!--classpathref="classpath" fork="true">-->
-        <!--</java>-->
-    <!--</target>-->
-    <!--<target name="AgentServer" depends="compile">-->
-        <!--<java classname="org.wso2.siddhi.sample.AgentBackend"-->
-              <!--classpathref="classpath" fork="true">-->
-            <!--<arg value="${events}"/>-->
-        <!--</java>-->
-    <!--</target>-->
-    <!--<target name="AgentClient" depends="compile">-->
-        <!--<java classname="org.wso2.siddhi.sample.AgentClient"-->
-              <!--classpathref="classpath" fork="true">-->
-            <!--&lt;!&ndash;<jvmarg value="-Xdebug" />&ndash;&gt;-->
-            <!--&lt;!&ndash;<jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005" />&ndash;&gt;-->
-            <!--<arg value="${events}"/>-->
-            <!--<arg value="${clients}"/>-->
-        <!--</java>-->
-    <!--</target>-->
-    <!--<target name="AgentServerServer" depends="compile">-->
-        <!--<java classname="org.wso2.siddhi.sample.oneserver_multiclient.AgentBackend"-->
-              <!--classpathref="classpath" fork="true">-->
-            <!--<arg value="${events}"/>-->
-            <!--<arg value="${offset}"/>-->
-        <!--</java>-->
-    <!--</target>-->
-    <!--<target name="AgentServerServerM" depends="compile">-->
-        <!--<java classname="org.wso2.siddhi.sample.oneserver_multiclient.AgentBackendM"-->
-              <!--classpathref="classpath" fork="true">-->
-            <!--<arg value="${events}"/>-->
-            <!--<arg value="${servers}"/>-->
-        <!--</java>-->
-    <!--</target>-->
-    <!--<target name="AgentClientServer" depends="compile">-->
-        <!--<java classname="org.wso2.siddhi.sample.oneserver_multiclient.AgentClient"-->
-              <!--classpathref="classpath" fork="true">-->
-            <!--&lt;!&ndash;<jvmarg value="-Xdebug" />&ndash;&gt;-->
-            <!--&lt;!&ndash;<jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005" />&ndash;&gt;-->
-            <!--<arg value="${events}"/>-->
-            <!--<arg value="${servers}"/>-->
-        <!--</java>-->
-    <!--</target>-->
-
     <target name="MultiServerOneClient-Server" depends="compile">
+        <echo>To customize add -Devents=xxx -Dservers=xx</echo>
         <java classname="org.wso2.carbon.agent.server.multiserver_oneclient.AgentBackend"
               classpathref="classpath" fork="true">
             <!--<jvmarg value="-Xdebug" />-->
@@ -105,6 +61,7 @@
         </java>
     </target>
     <target name="MultiServerOneClient-Client" depends="compile">
+        <echo>To customize add -Devents=xxx -Dservers=xx</echo>
         <java classname="org.wso2.carbon.agent.server.multiserver_oneclient.AgentClient"
               classpathref="classpath" fork="true">
             <!--<jvmarg value="-Xdebug" />-->
@@ -114,12 +71,14 @@
         </java>
     </target>
     <target name="OneServerMultiClient-Server" depends="compile">
+        <echo>To customize add -Devents=xxx</echo>
         <java classname="org.wso2.carbon.agent.server.oneserver_multiclient.AgentBackend"
               classpathref="classpath" fork="true">
             <arg value="${events}"/>
         </java>
     </target>
     <target name="OneServerMultiClient-Client" depends="compile">
+        <echo>To customize add -Devents=xxx -Dclients=xx</echo>
         <java classname="org.wso2.carbon.agent.server.oneserver_multiclient.AgentClient"
               classpathref="classpath" fork="true">
             <!--<jvmarg value="-Xdebug" />-->

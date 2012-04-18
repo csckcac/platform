@@ -21,7 +21,7 @@
 package org.wso2.carbon.agent.commons.exception;
 
 public class WrongEventTypeException extends Exception {
-    public String errorMessage;
+    private String errorMessage;
 
     public WrongEventTypeException() {
     }

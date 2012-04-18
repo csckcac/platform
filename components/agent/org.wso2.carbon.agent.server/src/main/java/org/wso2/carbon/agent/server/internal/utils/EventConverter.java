@@ -23,7 +23,8 @@ import org.wso2.carbon.agent.commons.Attribute;
 import org.wso2.carbon.agent.commons.AttributeType;
 import org.wso2.carbon.agent.commons.Event;
 import org.wso2.carbon.agent.commons.thrift.data.ThriftEventBundle;
-import org.wso2.carbon.agent.server.internal.StreamDefinitionHolder;
+import org.wso2.carbon.agent.server.exception.EventConversionException;
+import org.wso2.carbon.agent.server.internal.EventStreamTypeHolder;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -31,7 +32,11 @@ import java.util.List;
 /**
  * the util class that converts thrift objects to common format
  */
-public class EventConverter {
+public final class EventConverter {
+
+    private EventConverter(){
+
+    }
 
     public static AttributeType[] generateAttributeTypeArray(List<Attribute> attributes) {
         if (attributes != null) {
@@ -40,10 +45,9 @@ public class EventConverter {
                 Attribute attribute = attributes.get(i);
                 attributeTypes[i] = attribute.getType();
             }
-
             return attributeTypes;
         } else {
-            return null;
+            return null;  //to improve performance
         }
     }
 
@@ -87,25 +91,31 @@ public class EventConverter {
     }
 
     public static List<Event> createEventList(ThriftEventBundle thriftEventBundle,
-                                              StreamDefinitionHolder streamDefinitionHolder) {
+                                              EventStreamTypeHolder eventStreamTypeHolder) {
 
         IndexCounter indexCounter = new IndexCounter();
         List<Event> eventList = new LinkedList<Event>();
-        for (int i = 0; i < thriftEventBundle.getEventNum(); i++) {
-            Event event = new Event();
-            String streamId = thriftEventBundle.getStringAttributeList().get(indexCounter.getStringCount());
-            indexCounter.incrementStringCount();
-            event.setStreamId(streamId);
-            long timeStamp = thriftEventBundle.getLongAttributeList().get(indexCounter.getLongCount());
-            indexCounter.incrementLongCount();
-            event.setTimeStamp(timeStamp);
-            AttributeType[] metaAttributeTypeOrder = streamDefinitionHolder.getMetaDataType(streamId);
-            AttributeType[] correlationAttributeTypeOrder = streamDefinitionHolder.getCorrelationDataType(streamId);
-            AttributeType[] payloadAttributeTypeOrder = streamDefinitionHolder.getPayloadDataType(streamId);
-            event.setMetaData(EventConverter.toObjectArray(thriftEventBundle, metaAttributeTypeOrder, indexCounter));
-            event.setCorrelationData(EventConverter.toObjectArray(thriftEventBundle, correlationAttributeTypeOrder, indexCounter));
-            event.setPayloadData(EventConverter.toObjectArray(thriftEventBundle, payloadAttributeTypeOrder, indexCounter));
-            eventList.add(event);
+        String streamId = null;
+        try {
+            for (int i = 0; i < thriftEventBundle.getEventNum(); i++) {
+                Event event = new Event();
+                streamId = thriftEventBundle.getStringAttributeList().get(indexCounter.getStringCount());
+                indexCounter.incrementStringCount();
+                event.setStreamId(streamId);
+                long timeStamp = thriftEventBundle.getLongAttributeList().get(indexCounter.getLongCount());
+                indexCounter.incrementLongCount();
+                event.setTimeStamp(timeStamp);
+                AttributeType[] metaAttributeTypeOrder = eventStreamTypeHolder.getMetaDataType(streamId);
+                AttributeType[] correlationAttributeTypeOrder = eventStreamTypeHolder.getCorrelationDataType(streamId);
+                AttributeType[] payloadAttributeTypeOrder = eventStreamTypeHolder.getPayloadDataType(streamId);
+                event.setMetaData(EventConverter.toObjectArray(thriftEventBundle, metaAttributeTypeOrder, indexCounter));
+                event.setCorrelationData(EventConverter.toObjectArray(thriftEventBundle, correlationAttributeTypeOrder, indexCounter));
+                event.setPayloadData(EventConverter.toObjectArray(thriftEventBundle, payloadAttributeTypeOrder, indexCounter));
+                eventList.add(event);
+
+            }
+        } catch (RuntimeException re) {
+            throw new EventConversionException("Error when converting " + streamId + " of event bundle with events " + thriftEventBundle.getEventNum(),re) ;
         }
         return eventList;
     }

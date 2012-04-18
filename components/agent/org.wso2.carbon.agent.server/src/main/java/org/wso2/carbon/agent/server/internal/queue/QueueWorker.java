@@ -21,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.agent.commons.Event;
 import org.wso2.carbon.agent.server.AgentCallback;
+import org.wso2.carbon.agent.server.exception.EventConversionException;
 import org.wso2.carbon.agent.server.internal.utils.EventComposite;
 import org.wso2.carbon.agent.server.internal.utils.EventConverter;
 
@@ -55,19 +56,23 @@ public class QueueWorker implements Runnable {
                           Thread.currentThread().getName() + " worker has polled queue");
             }
             EventComposite eventComposite = eventQueue.poll();
-            eventList = EventConverter.createEventList(eventComposite.getThriftEventBundle(),
-                                                       eventComposite.getStreamDefinitionHolder());
-            if (log.isDebugEnabled()) {
-                log.debug("Dispatching event to " + subscribers.size() + " subscriber(s)");
+            try {
+                eventList = EventConverter.createEventList(eventComposite.getThriftEventBundle(),
+                                                           eventComposite.getEventStreamTypeHolder());
+                if (log.isDebugEnabled()) {
+                    log.debug("Dispatching event to " + subscribers.size() + " subscriber(s)");
+                }
+                for (AgentCallback agentCallback : subscribers) {
+                    agentCallback.receive(eventList, eventComposite.getThriftEventBundle().getSessionId());
+                }
+                if (log.isDebugEnabled()) {
+                    log.debug(eventQueue.size() + " messages in queue after " +
+                              Thread.currentThread().getName() + " worker has finished work");
+                }
+            } catch (EventConversionException re) {
+                log.error("Wrongly formatted event sent for " + eventComposite.getEventStreamTypeHolder().getDomainName(), re);
             }
-            for (AgentCallback agentCallback : subscribers) {
-                agentCallback.receive(eventList, eventComposite.getThriftEventBundle().getSessionId());
-            }
-            if (log.isDebugEnabled()) {
-                log.debug(eventQueue.size() + " messages in queue after " +
-                          Thread.currentThread().getName() + " worker has finished work");
-            }
-        } catch (Throwable e) {
+        } catch (RuntimeException e) {
             log.error("Error in passing events " + eventList + " to subscribers " + subscribers, e);
         }
     }

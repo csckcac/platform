@@ -6,28 +6,27 @@
  */
 package org.wso2.carbon.agent.commons.thrift.exception;
 
+import org.apache.thrift.protocol.TTupleProtocol;
 import org.apache.thrift.scheme.IScheme;
 import org.apache.thrift.scheme.SchemeFactory;
 import org.apache.thrift.scheme.StandardScheme;
-
 import org.apache.thrift.scheme.TupleScheme;
-import org.apache.thrift.protocol.TTupleProtocol;
 
-import java.util.Map;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.EnumSet;
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
-public class ThriftDifferentTypeDefinitionAlreadyDefinedException extends Exception implements org.apache.thrift.TBase<ThriftDifferentTypeDefinitionAlreadyDefinedException, ThriftDifferentTypeDefinitionAlreadyDefinedException._Fields>, java.io.Serializable, Cloneable {
-  private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("ThriftDifferentTypeDefinitionAlreadyDefinedException");
+public class ThriftMalformedStreamDefinitionException extends Exception implements org.apache.thrift.TBase<ThriftMalformedStreamDefinitionException, ThriftMalformedStreamDefinitionException._Fields>, java.io.Serializable, Cloneable {
+  private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("ThriftMalformedStreamDefinitionException");
 
   private static final org.apache.thrift.protocol.TField MESSAGE_FIELD_DESC = new org.apache.thrift.protocol.TField("message", org.apache.thrift.protocol.TType.STRING, (short)1);
 
   private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
   static {
-    schemes.put(StandardScheme.class, new ThriftDifferentTypeDefinitionAlreadyDefinedExceptionStandardSchemeFactory());
-    schemes.put(TupleScheme.class, new ThriftDifferentTypeDefinitionAlreadyDefinedExceptionTupleSchemeFactory());
+    schemes.put(StandardScheme.class, new ThriftMalformedStreamDefinitionExceptionStandardSchemeFactory());
+    schemes.put(TupleScheme.class, new ThriftMalformedStreamDefinitionExceptionTupleSchemeFactory());
   }
 
   public String message; // required
@@ -97,13 +96,13 @@ public class ThriftDifferentTypeDefinitionAlreadyDefinedException extends Except
     tmpMap.put(_Fields.MESSAGE, new org.apache.thrift.meta_data.FieldMetaData("message", org.apache.thrift.TFieldRequirementType.REQUIRED, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMap);
-    org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(ThriftDifferentTypeDefinitionAlreadyDefinedException.class, metaDataMap);
+    org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(ThriftMalformedStreamDefinitionException.class, metaDataMap);
   }
 
-  public ThriftDifferentTypeDefinitionAlreadyDefinedException() {
+  public ThriftMalformedStreamDefinitionException() {
   }
 
-  public ThriftDifferentTypeDefinitionAlreadyDefinedException(
+  public ThriftMalformedStreamDefinitionException(
     String message)
   {
     this();
@@ -113,14 +112,14 @@ public class ThriftDifferentTypeDefinitionAlreadyDefinedException extends Except
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public ThriftDifferentTypeDefinitionAlreadyDefinedException(ThriftDifferentTypeDefinitionAlreadyDefinedException other) {
+  public ThriftMalformedStreamDefinitionException(ThriftMalformedStreamDefinitionException other) {
     if (other.isSetMessage()) {
       this.message = other.message;
     }
   }
 
-  public ThriftDifferentTypeDefinitionAlreadyDefinedException deepCopy() {
-    return new ThriftDifferentTypeDefinitionAlreadyDefinedException(this);
+  public ThriftMalformedStreamDefinitionException deepCopy() {
+    return new ThriftMalformedStreamDefinitionException(this);
   }
 
   @Override
@@ -132,7 +131,7 @@ public class ThriftDifferentTypeDefinitionAlreadyDefinedException extends Except
     return this.message;
   }
 
-  public ThriftDifferentTypeDefinitionAlreadyDefinedException setMessage(String message) {
+  public ThriftMalformedStreamDefinitionException setMessage(String message) {
     this.message = message;
     return this;
   }
@@ -191,12 +190,12 @@ public class ThriftDifferentTypeDefinitionAlreadyDefinedException extends Except
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof ThriftDifferentTypeDefinitionAlreadyDefinedException)
-      return this.equals((ThriftDifferentTypeDefinitionAlreadyDefinedException)that);
+    if (that instanceof ThriftMalformedStreamDefinitionException)
+      return this.equals((ThriftMalformedStreamDefinitionException)that);
     return false;
   }
 
-  public boolean equals(ThriftDifferentTypeDefinitionAlreadyDefinedException that) {
+  public boolean equals(ThriftMalformedStreamDefinitionException that) {
     if (that == null)
       return false;
 
@@ -217,13 +216,13 @@ public class ThriftDifferentTypeDefinitionAlreadyDefinedException extends Except
     return 0;
   }
 
-  public int compareTo(ThriftDifferentTypeDefinitionAlreadyDefinedException other) {
+  public int compareTo(ThriftMalformedStreamDefinitionException other) {
     if (!getClass().equals(other.getClass())) {
       return getClass().getName().compareTo(other.getClass().getName());
     }
 
     int lastComparison = 0;
-    ThriftDifferentTypeDefinitionAlreadyDefinedException typedOther = (ThriftDifferentTypeDefinitionAlreadyDefinedException)other;
+    ThriftMalformedStreamDefinitionException typedOther = (ThriftMalformedStreamDefinitionException)other;
 
     lastComparison = Boolean.valueOf(isSetMessage()).compareTo(typedOther.isSetMessage());
     if (lastComparison != 0) {
@@ -252,7 +251,7 @@ public class ThriftDifferentTypeDefinitionAlreadyDefinedException extends Except
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder("ThriftDifferentTypeDefinitionAlreadyDefinedException(");
+    StringBuilder sb = new StringBuilder("ThriftMalformedStreamDefinitionException(");
     boolean first = true;
 
     sb.append("message:");
@@ -289,15 +288,15 @@ public class ThriftDifferentTypeDefinitionAlreadyDefinedException extends Except
     }
   }
 
-  private static class ThriftDifferentTypeDefinitionAlreadyDefinedExceptionStandardSchemeFactory implements SchemeFactory {
-    public ThriftDifferentTypeDefinitionAlreadyDefinedExceptionStandardScheme getScheme() {
-      return new ThriftDifferentTypeDefinitionAlreadyDefinedExceptionStandardScheme();
+  private static class ThriftMalformedStreamDefinitionExceptionStandardSchemeFactory implements SchemeFactory {
+    public ThriftMalformedStreamDefinitionExceptionStandardScheme getScheme() {
+      return new ThriftMalformedStreamDefinitionExceptionStandardScheme();
     }
   }
 
-  private static class ThriftDifferentTypeDefinitionAlreadyDefinedExceptionStandardScheme extends StandardScheme<ThriftDifferentTypeDefinitionAlreadyDefinedException> {
+  private static class ThriftMalformedStreamDefinitionExceptionStandardScheme extends StandardScheme<ThriftMalformedStreamDefinitionException> {
 
-    public void read(org.apache.thrift.protocol.TProtocol iprot, ThriftDifferentTypeDefinitionAlreadyDefinedException struct) throws org.apache.thrift.TException {
+    public void read(org.apache.thrift.protocol.TProtocol iprot, ThriftMalformedStreamDefinitionException struct) throws org.apache.thrift.TException {
       org.apache.thrift.protocol.TField schemeField;
       iprot.readStructBegin();
       while (true)
@@ -326,7 +325,7 @@ public class ThriftDifferentTypeDefinitionAlreadyDefinedException extends Except
       struct.validate();
     }
 
-    public void write(org.apache.thrift.protocol.TProtocol oprot, ThriftDifferentTypeDefinitionAlreadyDefinedException struct) throws org.apache.thrift.TException {
+    public void write(org.apache.thrift.protocol.TProtocol oprot, ThriftMalformedStreamDefinitionException struct) throws org.apache.thrift.TException {
       struct.validate();
 
       oprot.writeStructBegin(STRUCT_DESC);
@@ -341,22 +340,22 @@ public class ThriftDifferentTypeDefinitionAlreadyDefinedException extends Except
 
   }
 
-  private static class ThriftDifferentTypeDefinitionAlreadyDefinedExceptionTupleSchemeFactory implements SchemeFactory {
-    public ThriftDifferentTypeDefinitionAlreadyDefinedExceptionTupleScheme getScheme() {
-      return new ThriftDifferentTypeDefinitionAlreadyDefinedExceptionTupleScheme();
+  private static class ThriftMalformedStreamDefinitionExceptionTupleSchemeFactory implements SchemeFactory {
+    public ThriftMalformedStreamDefinitionExceptionTupleScheme getScheme() {
+      return new ThriftMalformedStreamDefinitionExceptionTupleScheme();
     }
   }
 
-  private static class ThriftDifferentTypeDefinitionAlreadyDefinedExceptionTupleScheme extends TupleScheme<ThriftDifferentTypeDefinitionAlreadyDefinedException> {
+  private static class ThriftMalformedStreamDefinitionExceptionTupleScheme extends TupleScheme<ThriftMalformedStreamDefinitionException> {
 
     @Override
-    public void write(org.apache.thrift.protocol.TProtocol prot, ThriftDifferentTypeDefinitionAlreadyDefinedException struct) throws org.apache.thrift.TException {
+    public void write(org.apache.thrift.protocol.TProtocol prot, ThriftMalformedStreamDefinitionException struct) throws org.apache.thrift.TException {
       TTupleProtocol oprot = (TTupleProtocol) prot;
       oprot.writeString(struct.message);
     }
 
     @Override
-    public void read(org.apache.thrift.protocol.TProtocol prot, ThriftDifferentTypeDefinitionAlreadyDefinedException struct) throws org.apache.thrift.TException {
+    public void read(org.apache.thrift.protocol.TProtocol prot, ThriftMalformedStreamDefinitionException struct) throws org.apache.thrift.TException {
       TTupleProtocol iprot = (TTupleProtocol) prot;
       struct.message = iprot.readString();
       struct.setMessageIsSet(true);

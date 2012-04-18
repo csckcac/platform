@@ -22,13 +22,13 @@ import org.wso2.carbon.agent.commons.AttributeType;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StreamDefinitionHolder {
+public class EventStreamTypeHolder {
     private String domainName;
     private Map<String, AttributeType[]> metaDataTypeMap = new HashMap<String, AttributeType[]>();
     private Map<String, AttributeType[]> correlationDataTypeMap = new HashMap<String, AttributeType[]>();
     private Map<String, AttributeType[]> payloadDataTypeMap = new HashMap<String, AttributeType[]>();
 
-//    public StreamDefinitionHolder(String username) {
+//    public EventStreamTypeHolder(String username) {
 //        String[] userNameParts = username.split("@");
 //        if (userNameParts.length == 1) {
 //            this.domainName = "";
@@ -38,7 +38,7 @@ public class StreamDefinitionHolder {
 //    }
 
 
-    public StreamDefinitionHolder(String domainName) {
+    public EventStreamTypeHolder(String domainName) {
         this.domainName = domainName;
     }
 

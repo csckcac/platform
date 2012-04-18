@@ -22,7 +22,8 @@
 package org.wso2.carbon.agent.exception;
 
 public class TransportException extends Exception {
-    public String errorMessage;
+
+    private String errorMessage;
 
     public TransportException() {
     }

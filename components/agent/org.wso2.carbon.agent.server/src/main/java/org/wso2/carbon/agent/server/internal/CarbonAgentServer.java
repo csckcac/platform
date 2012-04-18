@@ -26,16 +26,20 @@ import org.apache.thrift.server.TThreadPoolServer;
 import org.apache.thrift.transport.TSSLTransportFactory;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TTransportException;
+import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.agent.commons.thrift.authentication.service.ThriftAuthenticatorService;
 import org.wso2.carbon.agent.commons.thrift.service.ThriftEventReceiverService;
 import org.wso2.carbon.agent.server.AgentCallback;
 import org.wso2.carbon.agent.server.AgentServer;
 import org.wso2.carbon.agent.server.conf.AgentServerConfiguration;
+import org.wso2.carbon.agent.server.datastore.StreamDefinitionStore;
 import org.wso2.carbon.agent.server.exception.AgentServerException;
+import org.wso2.carbon.agent.server.exception.StreamDefinitionNotFoundException;
 import org.wso2.carbon.agent.server.internal.authentication.Authenticator;
 import org.wso2.carbon.agent.server.internal.authentication.AuthenticationHandler;
 import org.wso2.carbon.agent.server.internal.service.ThriftAuthenticatorServiceImpl;
 import org.wso2.carbon.agent.server.internal.service.ThriftEventReceiverServiceImpl;
+import org.wso2.carbon.agent.server.internal.utils.AgentServerConstants;
 import org.wso2.carbon.base.ServerConfiguration;
 
 import java.net.InetAddress;
@@ -45,44 +49,55 @@ import java.util.List;
 
 public class CarbonAgentServer implements AgentServer {
     private static Log log = LogFactory.getLog(CarbonAgentServer.class);
-    TServer authenticationServer;
-    TServer eventReceiverServer;
-    EventDispatcher eventDispatcher;
-    AgentServerConfiguration agentServerConfiguration;
+    private TServer authenticationServer;
+    private TServer eventReceiverServer;
+    private EventDispatcher eventDispatcher;
+    private AgentServerConfiguration agentServerConfiguration;
+    private StreamDefinitionStore streamDefinitionStore;
 
     /**
      * Initialize Carbon Agent Server
+     *
      * @param authenticatorPort
      * @param receiverPort
      * @param authenticationHandler
      */
     public CarbonAgentServer(int authenticatorPort, int receiverPort,
-                             AuthenticationHandler authenticationHandler) {
+                             AuthenticationHandler authenticationHandler,
+                             StreamDefinitionStore streamDefinitionStore) {
+        this.streamDefinitionStore = streamDefinitionStore;
         Authenticator.getInstance().init(authenticationHandler);
-        this.eventDispatcher = new EventDispatcher();
+        this.eventDispatcher = new EventDispatcher(streamDefinitionStore);
         this.agentServerConfiguration = new AgentServerConfiguration(authenticatorPort, receiverPort);
     }
 
     /**
      * Initialize Carbon Agent Server
+     *
      * @param receiverPort
      * @param authenticationHandler
      */
     public CarbonAgentServer(int receiverPort,
-                             AuthenticationHandler authenticationHandler) {
+                             AuthenticationHandler authenticationHandler,
+                             StreamDefinitionStore streamDefinitionStore) {
+        this.streamDefinitionStore = streamDefinitionStore;
         Authenticator.getInstance().init(authenticationHandler);
-        this.eventDispatcher = new EventDispatcher();
-        this.agentServerConfiguration = new AgentServerConfiguration(receiverPort+100, receiverPort);
+        this.eventDispatcher = new EventDispatcher(streamDefinitionStore);
+        this.agentServerConfiguration = new AgentServerConfiguration(receiverPort + AgentServerConstants.AUTHENTICATOR_PORT_OFFSET, receiverPort);
     }
+
     /**
      * Initialize Carbon Agent Server
+     *
      * @param agentServerConfiguration
      * @param authenticationHandler
      */
     public CarbonAgentServer(AgentServerConfiguration agentServerConfiguration,
-                             AuthenticationHandler authenticationHandler) {
+                             AuthenticationHandler authenticationHandler,
+                             StreamDefinitionStore streamDefinitionStore) {
+        this.streamDefinitionStore = streamDefinitionStore;
         Authenticator.getInstance().init(authenticationHandler);
-        this.eventDispatcher = new EventDispatcher();
+        this.eventDispatcher = new EventDispatcher(streamDefinitionStore);
         this.agentServerConfiguration = agentServerConfiguration;
     }
 
@@ -93,6 +108,25 @@ public class CarbonAgentServer implements AgentServer {
      */
     public void subscribe(AgentCallback agentCallback) {
         eventDispatcher.addCallback(agentCallback);
+    }
+
+    @Override
+    public EventStreamDefinition getStreamDefinition(String domainName, String streamName,
+                                                     String streamVersion)
+            throws StreamDefinitionNotFoundException {
+        return streamDefinitionStore.getStreamDefinition(domainName, streamName, streamVersion);
+    }
+
+    @Override
+    public EventStreamDefinition getStreamDefinition(String domainName, String streamId)
+            throws StreamDefinitionNotFoundException {
+        return streamDefinitionStore.getStreamDefinition(domainName, streamId);
+    }
+
+    @Override
+    public List<EventStreamDefinition> getAllStreamDefinition(String domainName)
+            throws StreamDefinitionNotFoundException {
+        return streamDefinitionStore.getStreamDefinition(domainName);
     }
 
     /**
@@ -130,13 +164,13 @@ public class CarbonAgentServer implements AgentServer {
             params.setKeyStore(keyStore, keyStorePassword);
 
             TServerSocket serverTransport = TSSLTransportFactory.getServerSocket(
-                    port, 10000, InetAddress.getByName("localhost"), params);
+                    port, AgentServerConstants.THRIFT_CLIENT_TIMEOUT, InetAddress.getByName("localhost"), params);
 
             ThriftAuthenticatorService.Processor<ThriftAuthenticatorServiceImpl> processor =
                     new ThriftAuthenticatorService.Processor<ThriftAuthenticatorServiceImpl>(new ThriftAuthenticatorServiceImpl());
             authenticationServer = new TThreadPoolServer(
                     new TThreadPoolServer.Args(serverTransport).processor(processor));
-            Thread thread = new Thread(new ServerThread(port, authenticationServer));
+            Thread thread = new Thread(new ServerThread(authenticationServer));
             log.info("Thrift Authenticator port : " + port);
             thread.start();
         } catch (TTransportException e) {
@@ -155,7 +189,7 @@ public class CarbonAgentServer implements AgentServer {
                             new ThriftEventReceiverServiceImpl(eventDispatcher));
             eventReceiverServer = new TThreadPoolServer(
                     new TThreadPoolServer.Args(serverTransport).processor(processor));
-            Thread thread = new Thread(new ServerThread(port, eventReceiverServer));
+            Thread thread = new Thread(new ServerThread(eventReceiverServer));
             log.info("Thrift Server port : " + port);
             thread.start();
         } catch (TTransportException e) {
@@ -175,12 +209,10 @@ public class CarbonAgentServer implements AgentServer {
         return eventDispatcher.getSubscribers();
     }
 
-    class ServerThread implements Runnable {
-        int port;
-        TServer server;
+    static class ServerThread implements Runnable {
+        private TServer server;
 
-        ServerThread(int port, TServer server) {
-            this.port = port;
+        ServerThread(TServer server) {
             this.server = server;
         }
 

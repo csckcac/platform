@@ -22,7 +22,7 @@
 package org.wso2.carbon.agent.commons.exception;
 
 public class SessionTimeoutException extends Exception {
-    public String errorMessage;
+    private String errorMessage;
 
     public SessionTimeoutException() {
     }

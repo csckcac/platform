@@ -6,28 +6,27 @@
  */
 package org.wso2.carbon.agent.commons.thrift.exception;
 
+import org.apache.thrift.protocol.TTupleProtocol;
 import org.apache.thrift.scheme.IScheme;
 import org.apache.thrift.scheme.SchemeFactory;
 import org.apache.thrift.scheme.StandardScheme;
-
 import org.apache.thrift.scheme.TupleScheme;
-import org.apache.thrift.protocol.TTupleProtocol;
 
-import java.util.Map;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.EnumSet;
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
-public class ThriftTypeDefinitionException extends Exception implements org.apache.thrift.TBase<ThriftTypeDefinitionException, ThriftTypeDefinitionException._Fields>, java.io.Serializable, Cloneable {
-  private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("ThriftTypeDefinitionException");
+public class ThriftStreamDefinitionException extends Exception implements org.apache.thrift.TBase<ThriftStreamDefinitionException, ThriftStreamDefinitionException._Fields>, java.io.Serializable, Cloneable {
+  private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("ThriftStreamDefinitionException");
 
   private static final org.apache.thrift.protocol.TField MESSAGE_FIELD_DESC = new org.apache.thrift.protocol.TField("message", org.apache.thrift.protocol.TType.STRING, (short)1);
 
   private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
   static {
-    schemes.put(StandardScheme.class, new ThriftTypeDefinitionExceptionStandardSchemeFactory());
-    schemes.put(TupleScheme.class, new ThriftTypeDefinitionExceptionTupleSchemeFactory());
+    schemes.put(StandardScheme.class, new ThriftStreamDefinitionExceptionStandardSchemeFactory());
+    schemes.put(TupleScheme.class, new ThriftStreamDefinitionExceptionTupleSchemeFactory());
   }
 
   public String message; // required
@@ -97,13 +96,13 @@ public class ThriftTypeDefinitionException extends Exception implements org.apac
     tmpMap.put(_Fields.MESSAGE, new org.apache.thrift.meta_data.FieldMetaData("message", org.apache.thrift.TFieldRequirementType.REQUIRED, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMap);
-    org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(ThriftTypeDefinitionException.class, metaDataMap);
+    org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(ThriftStreamDefinitionException.class, metaDataMap);
   }
 
-  public ThriftTypeDefinitionException() {
+  public ThriftStreamDefinitionException() {
   }
 
-  public ThriftTypeDefinitionException(
+  public ThriftStreamDefinitionException(
     String message)
   {
     this();
@@ -113,14 +112,14 @@ public class ThriftTypeDefinitionException extends Exception implements org.apac
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public ThriftTypeDefinitionException(ThriftTypeDefinitionException other) {
+  public ThriftStreamDefinitionException(ThriftStreamDefinitionException other) {
     if (other.isSetMessage()) {
       this.message = other.message;
     }
   }
 
-  public ThriftTypeDefinitionException deepCopy() {
-    return new ThriftTypeDefinitionException(this);
+  public ThriftStreamDefinitionException deepCopy() {
+    return new ThriftStreamDefinitionException(this);
   }
 
   @Override
@@ -132,7 +131,7 @@ public class ThriftTypeDefinitionException extends Exception implements org.apac
     return this.message;
   }
 
-  public ThriftTypeDefinitionException setMessage(String message) {
+  public ThriftStreamDefinitionException setMessage(String message) {
     this.message = message;
     return this;
   }
@@ -191,12 +190,12 @@ public class ThriftTypeDefinitionException extends Exception implements org.apac
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof ThriftTypeDefinitionException)
-      return this.equals((ThriftTypeDefinitionException)that);
+    if (that instanceof ThriftStreamDefinitionException)
+      return this.equals((ThriftStreamDefinitionException)that);
     return false;
   }
 
-  public boolean equals(ThriftTypeDefinitionException that) {
+  public boolean equals(ThriftStreamDefinitionException that) {
     if (that == null)
       return false;
 
@@ -217,13 +216,13 @@ public class ThriftTypeDefinitionException extends Exception implements org.apac
     return 0;
   }
 
-  public int compareTo(ThriftTypeDefinitionException other) {
+  public int compareTo(ThriftStreamDefinitionException other) {
     if (!getClass().equals(other.getClass())) {
       return getClass().getName().compareTo(other.getClass().getName());
     }
 
     int lastComparison = 0;
-    ThriftTypeDefinitionException typedOther = (ThriftTypeDefinitionException)other;
+    ThriftStreamDefinitionException typedOther = (ThriftStreamDefinitionException)other;
 
     lastComparison = Boolean.valueOf(isSetMessage()).compareTo(typedOther.isSetMessage());
     if (lastComparison != 0) {
@@ -252,7 +251,7 @@ public class ThriftTypeDefinitionException extends Exception implements org.apac
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder("ThriftTypeDefinitionException(");
+    StringBuilder sb = new StringBuilder("ThriftStreamDefinitionException(");
     boolean first = true;
 
     sb.append("message:");
@@ -289,15 +288,15 @@ public class ThriftTypeDefinitionException extends Exception implements org.apac
     }
   }
 
-  private static class ThriftTypeDefinitionExceptionStandardSchemeFactory implements SchemeFactory {
-    public ThriftTypeDefinitionExceptionStandardScheme getScheme() {
-      return new ThriftTypeDefinitionExceptionStandardScheme();
+  private static class ThriftStreamDefinitionExceptionStandardSchemeFactory implements SchemeFactory {
+    public ThriftStreamDefinitionExceptionStandardScheme getScheme() {
+      return new ThriftStreamDefinitionExceptionStandardScheme();
     }
   }
 
-  private static class ThriftTypeDefinitionExceptionStandardScheme extends StandardScheme<ThriftTypeDefinitionException> {
+  private static class ThriftStreamDefinitionExceptionStandardScheme extends StandardScheme<ThriftStreamDefinitionException> {
 
-    public void read(org.apache.thrift.protocol.TProtocol iprot, ThriftTypeDefinitionException struct) throws org.apache.thrift.TException {
+    public void read(org.apache.thrift.protocol.TProtocol iprot, ThriftStreamDefinitionException struct) throws org.apache.thrift.TException {
       org.apache.thrift.protocol.TField schemeField;
       iprot.readStructBegin();
       while (true)
@@ -326,7 +325,7 @@ public class ThriftTypeDefinitionException extends Exception implements org.apac
       struct.validate();
     }
 
-    public void write(org.apache.thrift.protocol.TProtocol oprot, ThriftTypeDefinitionException struct) throws org.apache.thrift.TException {
+    public void write(org.apache.thrift.protocol.TProtocol oprot, ThriftStreamDefinitionException struct) throws org.apache.thrift.TException {
       struct.validate();
 
       oprot.writeStructBegin(STRUCT_DESC);
@@ -341,22 +340,22 @@ public class ThriftTypeDefinitionException extends Exception implements org.apac
 
   }
 
-  private static class ThriftTypeDefinitionExceptionTupleSchemeFactory implements SchemeFactory {
-    public ThriftTypeDefinitionExceptionTupleScheme getScheme() {
-      return new ThriftTypeDefinitionExceptionTupleScheme();
+  private static class ThriftStreamDefinitionExceptionTupleSchemeFactory implements SchemeFactory {
+    public ThriftStreamDefinitionExceptionTupleScheme getScheme() {
+      return new ThriftStreamDefinitionExceptionTupleScheme();
     }
   }
 
-  private static class ThriftTypeDefinitionExceptionTupleScheme extends TupleScheme<ThriftTypeDefinitionException> {
+  private static class ThriftStreamDefinitionExceptionTupleScheme extends TupleScheme<ThriftStreamDefinitionException> {
 
     @Override
-    public void write(org.apache.thrift.protocol.TProtocol prot, ThriftTypeDefinitionException struct) throws org.apache.thrift.TException {
+    public void write(org.apache.thrift.protocol.TProtocol prot, ThriftStreamDefinitionException struct) throws org.apache.thrift.TException {
       TTupleProtocol oprot = (TTupleProtocol) prot;
       oprot.writeString(struct.message);
     }
 
     @Override
-    public void read(org.apache.thrift.protocol.TProtocol prot, ThriftTypeDefinitionException struct) throws org.apache.thrift.TException {
+    public void read(org.apache.thrift.protocol.TProtocol prot, ThriftStreamDefinitionException struct) throws org.apache.thrift.TException {
       TTupleProtocol iprot = (TTupleProtocol) prot;
       struct.message = iprot.readString();
       struct.setMessageIsSet(true);

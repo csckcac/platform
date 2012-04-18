@@ -28,9 +28,10 @@ public class KeyStoreUtil {
         if (!filePath.exists()) {
             filePath = new File("org.wso2.carbon.agent.server/src/test/resources");
         }
+        if (!filePath.exists()) {
+            filePath = new File("resources");
+        }
         String trustStore = filePath.getAbsolutePath();
-//        String trustStore = "/home/suho/projects/wso2/trunk/graphite/components/agent/org.wso2.carbon.agent.server/src/test/resources";
-//        String trustStore = "/home/suho/projects/wso2/trunk/graphite/products/cep/modules/distribution/product/target/wso2cep-1.0.0-SNAPSHOT/repository/resources/security";
         System.setProperty("javax.net.ssl.trustStore", trustStore + "/client-truststore.jks");
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
 
@@ -41,9 +42,10 @@ public class KeyStoreUtil {
         if (!filePath.exists()) {
             filePath = new File("org.wso2.carbon.agent.server/src/test/resources");
         }
+        if (!filePath.exists()) {
+            filePath = new File("resources");
+        }
         String keyStore = filePath.getAbsolutePath();
-//        String keyStore = "/home/suho/projects/wso2/trunk/graphite/components/agent/org.wso2.carbon.agent.server/src/test/resources";
-//        String keyStore = "/home/suho/projects/wso2/trunk/graphite/products/cep/modules/distribution/product/target/wso2cep-1.0.0-SNAPSHOT/repository/resources/security";
         System.setProperty("Security.KeyStore.Location", keyStore + "/wso2carbon.jks");
         System.setProperty("Security.KeyStore.Password", "wso2carbon");
 

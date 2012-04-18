@@ -20,11 +20,11 @@ package org.wso2.carbon.agent.server.internal.utils;
 
 public class IndexCounter {
 
-    int intCount = 0;
-    int longCount = 0;
-    int boolCount = 0;
-    int stringCount = 0;
-    int doubleCount = 0;
+    private int intCount = 0;
+    private int longCount = 0;
+    private int boolCount = 0;
+    private int stringCount = 0;
+    private int doubleCount = 0;
 
     public int getIntCount() {
         return intCount;

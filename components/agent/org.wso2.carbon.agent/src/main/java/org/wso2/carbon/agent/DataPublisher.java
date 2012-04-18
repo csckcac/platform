@@ -21,10 +21,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.agent.commons.Event;
 import org.wso2.carbon.agent.commons.exception.AuthenticationException;
-import org.wso2.carbon.agent.commons.exception.DifferentTypeDefinitionAlreadyDefinedException;
-import org.wso2.carbon.agent.commons.exception.MalformedTypeDefinitionException;
-import org.wso2.carbon.agent.commons.exception.TypeDefinitionException;
-import org.wso2.carbon.agent.commons.exception.UndefinedEventTypeException;
+import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
+import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
+import org.wso2.carbon.agent.commons.exception.NoStreamDefinitionExistException;
+import org.wso2.carbon.agent.commons.exception.StreamDefinitionException;
 import org.wso2.carbon.agent.commons.exception.WrongEventTypeException;
 import org.wso2.carbon.agent.conf.DataPublisherConfiguration;
 import org.wso2.carbon.agent.conf.ReceiverConfiguration;
@@ -36,7 +36,6 @@ import org.wso2.carbon.agent.internal.publisher.EventPublisher;
 import org.wso2.carbon.agent.internal.utils.AgentServerURL;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.concurrent.RejectedExecutionException;
 
 /**
@@ -52,14 +51,40 @@ public class DataPublisher {
     private EventPublisher eventPublisher;
     private EventQueue<Event> eventQueue;
 
-    BoundedExecutor threadPool;
+    private BoundedExecutor threadPool;
 
+    /**
+     * To create the Data Publisher
+     * Here the Authenticator ip will be the same as receiver ip but its port will be 100+<receiver port>
+     * Here the new agent will be created for publishing events
+     *
+     * @param receiverUrl the event receiver url E.g tcp://localhost:6745
+     * @param userName    user name
+     * @param password    password
+     * @throws MalformedURLException
+     * @throws AgentException
+     * @throws AuthenticationException
+     * @throws TransportException
+     */
     public DataPublisher(String receiverUrl, String userName, String password)
             throws MalformedURLException, AgentException, AuthenticationException,
                    TransportException {
         this(receiverUrl, userName, password, new Agent());
     }
 
+    /**
+     * To create the Data Publisher
+     * Here the new agent will be created for publishing events
+     *
+     * @param authenticatorUrl the authenticator url E.g tcp://localhost:6745
+     * @param receiverUrl      the event receiver url E.g tcp://localhost:7775
+     * @param userName         user name
+     * @param password         password
+     * @throws MalformedURLException
+     * @throws AgentException
+     * @throws AuthenticationException
+     * @throws TransportException
+     */
     public DataPublisher(String authenticatorUrl, String receiverUrl, String userName,
                          String password)
             throws MalformedURLException, AgentException, AuthenticationException,
@@ -67,6 +92,19 @@ public class DataPublisher {
         this(authenticatorUrl, receiverUrl, userName, password, new Agent());
     }
 
+    /**
+     * To create the Data Publisher
+     * Here the Authenticator ip will be the same as receiver ip but its port will be 100+<receiver port>
+     *
+     * @param receiverUrl the event receiver url E.g tcp://localhost:6745
+     * @param userName    user name
+     * @param password    password
+     * @param agent       the underlining agent
+     * @throws MalformedURLException
+     * @throws AgentException
+     * @throws AuthenticationException
+     * @throws TransportException
+     */
     public DataPublisher(String receiverUrl, String userName,
                          String password, Agent agent)
             throws MalformedURLException, AgentException, AuthenticationException,
@@ -79,6 +117,19 @@ public class DataPublisher {
 
     }
 
+    /**
+     * To create the Data Publisher
+     *
+     * @param authenticatorUrl the authenticator url E.g tcp://localhost:6745
+     * @param receiverUrl      the event receiver url E.g tcp://localhost:7775
+     * @param userName         user name
+     * @param password         password
+     * @param agent            the underlining agent
+     * @throws MalformedURLException
+     * @throws AgentException
+     * @throws AuthenticationException
+     * @throws TransportException
+     */
     public DataPublisher(String authenticatorUrl, String receiverUrl, String userName,
                          String password, Agent agent)
             throws MalformedURLException, AgentException, AuthenticationException,
@@ -93,12 +144,26 @@ public class DataPublisher {
 
     }
 
+    /**
+     * to set the underlining agent
+     * which could be sheared by many data publishers
+     *
+     * @param agent the underlining agent
+     * @throws AgentException
+     * @throws AuthenticationException
+     * @throws TransportException
+     */
     public void setAgent(Agent agent)
             throws AgentException, AuthenticationException, TransportException {
         this.agent.shutdown(this);// to shutdown the old agent
         init(this.dataPublisherConfiguration.getReceiverConfiguration(), agent);
     }
 
+    /**
+     * to get the underlining agent
+     *
+     * @return agent
+     */
     public Agent getAgent() {
         return agent;
     }
@@ -118,34 +183,38 @@ public class DataPublisher {
     }
 
     /**
-     * Defining the streams that will be published by this DataPublisher
+     * Defining stream on which events will be published by this DataPublisher
      *
-     * @param eventStreamDefinition the type definition of Streams
-     * @return stream name
+     * @param eventStreamDefinition on json format
+     * @return the stream id
+     * @throws AgentException
+     * @throws DifferentStreamDefinitionAlreadyDefinedException
+     *
+     * @throws WrongEventTypeException
+     * @throws MalformedStreamDefinitionException
+     *
+     * @throws StreamDefinitionException
+     */
+    public String defineEventStream(String eventStreamDefinition)
+            throws AgentException, MalformedStreamDefinitionException, StreamDefinitionException,
+                   WrongEventTypeException, DifferentStreamDefinitionAlreadyDefinedException {
+        String sessionId = dataPublisherConfiguration.getSessionId();
+        return eventPublisher.defineEventStream(sessionId, eventStreamDefinition);
+    }
+
+    /**
+     * Finding already existing stream's Id to publish data
+     *
+     * @param name    the stream name
+     * @param version the version of the stream
+     * @return stream id
      * @throws org.wso2.carbon.agent.exception.AgentException
      *          if client cannot publish the type definition
-     * @throws org.wso2.carbon.agent.commons.exception.DifferentTypeDefinitionAlreadyDefinedException
-     *          if the session has expired
-     * @throws org.wso2.carbon.agent.commons.exception.UndefinedEventTypeException
-     *          if the type definition is not defined
-     * @throws org.wso2.carbon.agent.commons.exception.WrongEventTypeException
-     *          if the type definition is wrong
      */
-    public String defineEventStreamDefinition(String eventStreamDefinition)
-            throws UndefinedEventTypeException, AgentException,
-                   DifferentTypeDefinitionAlreadyDefinedException,
-                   WrongEventTypeException, MalformedTypeDefinitionException,
-                   TypeDefinitionException {
-        String streamId = null;
+    public String findEventStream(String name, String version)
+            throws AgentException, StreamDefinitionException, NoStreamDefinitionExistException {
         String sessionId = dataPublisherConfiguration.getSessionId();
-        try {
-            streamId = eventPublisher.defineType(sessionId, eventStreamDefinition);
-        } catch (DifferentTypeDefinitionAlreadyDefinedException e) {
-            log.warn("SessionTimeout for " + dataPublisherConfiguration.getPublisherKey());
-            eventPublisher.reconnect(3, sessionId);
-            streamId = eventPublisher.defineType(sessionId, eventStreamDefinition);
-        }
-        return streamId;
+        return eventPublisher.findEventStreamId(sessionId, name, version);
     }
 
 
@@ -171,12 +240,31 @@ public class DataPublisher {
         }
     }
 
+    /**
+     * Publishing events to the server
+     *
+     * @param streamId             of the stream on which the events are published
+     * @param metaDataArray        metadata array of the event
+     * @param correlationDataArray correlation data array of the event
+     * @param payloadDataArray     payload data array of the event
+     * @throws AgentException
+     */
     public void publish(String streamId, Object[] metaDataArray, Object[] correlationDataArray,
                         Object[] payloadDataArray)
             throws AgentException {
         publish(new Event(streamId, System.currentTimeMillis(), metaDataArray, correlationDataArray, payloadDataArray));
     }
 
+    /**
+     * Publishing events to the server
+     *
+     * @param streamId             of the stream on which the events are published
+     * @param timeStamp            time stamp of the event
+     * @param metaDataArray        metadata array of the event
+     * @param correlationDataArray correlation data array of the event
+     * @param payloadDataArray     payload data array of the event
+     * @throws AgentException
+     */
     public void publish(String streamId, long timeStamp, Object[] metaDataArray,
                         Object[] correlationDataArray, Object[] payloadDataArray)
             throws AgentException {

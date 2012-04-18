@@ -21,23 +21,23 @@
 
 package org.wso2.carbon.agent.commons.exception;
 
-public class TypeDefinitionException extends Exception {
-    public String errorMessage;
+public class StreamDefinitionException extends Exception {
+    private String errorMessage;
 
-    public TypeDefinitionException() {
+    public StreamDefinitionException() {
     }
 
-    public TypeDefinitionException(String message) {
+    public StreamDefinitionException(String message) {
         super(message);
         errorMessage = message;
     }
 
-    public TypeDefinitionException(String message, Throwable cause) {
+    public StreamDefinitionException(String message, Throwable cause) {
         super(message, cause);
         errorMessage = message;
     }
 
-    public TypeDefinitionException(Throwable cause) {
+    public StreamDefinitionException(Throwable cause) {
         super(cause);
     }
 

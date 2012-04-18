@@ -21,7 +21,8 @@
 package org.wso2.carbon.agent.exception;
 
 public class AgentConfigurationException extends Exception {
-    public String errorMessage;
+
+    private String errorMessage;
 
     public AgentConfigurationException() {
     }

@@ -20,7 +20,7 @@
 package org.wso2.carbon.agent.server.exception;
 
 public class AgentServerConfigurationException extends Exception {
-    public String errorMessage;
+    private String errorMessage;
 
     public AgentServerConfigurationException() {
     }

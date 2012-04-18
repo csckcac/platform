@@ -18,23 +18,24 @@
 package org.wso2.carbon.agent.server;
 
 import org.wso2.carbon.agent.server.conf.AgentServerConfiguration;
+import org.wso2.carbon.agent.server.datastore.StreamDefinitionStore;
 import org.wso2.carbon.agent.server.internal.CarbonAgentServer;
 import org.wso2.carbon.agent.server.internal.authentication.AuthenticationHandler;
 
 public class AgentServerFactory {
     public CarbonAgentServer createAgentServer(AgentServerConfiguration agentServerConfiguration,
-                                               AuthenticationHandler authenticationHandler) {
-        return new CarbonAgentServer(agentServerConfiguration, authenticationHandler);
+                                               AuthenticationHandler authenticationHandler,StreamDefinitionStore streamDefinitionStore) {
+        return new CarbonAgentServer(agentServerConfiguration, authenticationHandler,streamDefinitionStore);
     }
 
     public CarbonAgentServer createAgentServer(int authenticatorPort, int receiverPort,
-                                               AuthenticationHandler authenticationHandler) {
-        return new CarbonAgentServer(authenticatorPort, receiverPort, authenticationHandler);
+                                               AuthenticationHandler authenticationHandler,StreamDefinitionStore streamDefinitionStore) {
+        return new CarbonAgentServer(authenticatorPort, receiverPort, authenticationHandler,streamDefinitionStore);
     }
 
 
     public CarbonAgentServer createAgentServer(int receiverPort,
-                                               AuthenticationHandler authenticationHandler) {
-        return new CarbonAgentServer(receiverPort, authenticationHandler);
+                                               AuthenticationHandler authenticationHandler,StreamDefinitionStore streamDefinitionStore) {
+        return new CarbonAgentServer(receiverPort, authenticationHandler,streamDefinitionStore);
     }
 }

@@ -39,7 +39,8 @@ import org.wso2.carbon.agent.internal.utils.AgentConstants;
  * Authenticates all data publishers
  */
 public class AgentAuthenticator {
-    GenericKeyedObjectPool threadPool;
+
+    private GenericKeyedObjectPool threadPool;
 
     public AgentAuthenticator(KeyedPoolableObjectFactory factory,
                               int maxActive,

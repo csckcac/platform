@@ -1,6 +1,6 @@
 /**
  *
- * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -17,31 +17,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.agent.server;
-
-import org.wso2.carbon.agent.commons.Event;
-import org.wso2.carbon.agent.commons.EventStreamDefinition;
-
-import java.util.List;
-
-public interface AgentCallback {
 
 
-    /**
-     * will get called  when types are defined
-     *
-     * @param eventStreamDefinition   TypeDefinition of event streams
-     * @param sessionId Session Id of the connection
-     */
-    void definedEventStream(EventStreamDefinition eventStreamDefinition, String sessionId);
+package org.wso2.carbon.agent.commons.exception;
 
+public class MalformedStreamDefinitionException extends Exception {
+    private String errorMessage;
 
-    /**
-     * will get called when Events arrive
-     *
-     * @param eventList Arrived event list
-     * @param sessionId Session Id of the connection
-     */
-    void receive(List<Event> eventList, String sessionId);
+    public MalformedStreamDefinitionException() {
+    }
 
+    public MalformedStreamDefinitionException(String message) {
+        super(message);
+        errorMessage = message;
+    }
+
+    public MalformedStreamDefinitionException(String message, Throwable cause) {
+        super(message, cause);
+        errorMessage = message;
+    }
+
+    public MalformedStreamDefinitionException(Throwable cause) {
+        super(cause);
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
 }

@@ -51,7 +51,7 @@ public class Agent {
     private AgentAuthenticator agentAuthenticator;
     private List<DataPublisher> dataPublisherList;
     private BoundedExecutor threadPool;
-    long keepAliveTime = 20;
+    private long keepAliveTime = 20;
 
 
     public Agent() {

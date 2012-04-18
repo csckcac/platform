@@ -28,8 +28,11 @@ import java.util.LinkedList;
 /**
  * Util class used to convert Events to thrift format
  */
-public class EventConverter {
+public final class EventConverter {
 
+    private EventConverter(){
+
+    }
 
     public static ThriftEventBundle toThriftEventBundle(Event event,
                                                         ThriftEventBundle thriftEventBundle,
@@ -64,7 +67,7 @@ public class EventConverter {
                     if (!thriftEventBundle.isSetDoubleAttributeList()) {
                         thriftEventBundle.setDoubleAttributeList(new LinkedList<Double>());
                     }
-                    thriftEventBundle.addToDoubleAttributeList((Double) object);
+                    thriftEventBundle.addToDoubleAttributeList(((Float) object).doubleValue());
                 } else if (object instanceof Long) {
                     if (!thriftEventBundle.isSetLongAttributeList()) {
                         thriftEventBundle.setLongAttributeList(new LinkedList<Long>());

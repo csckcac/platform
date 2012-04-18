@@ -18,15 +18,15 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ThriftSessionExpiredException extends Exception implements org.apache.thrift.TBase<ThriftSessionExpiredException, ThriftSessionExpiredException._Fields>, java.io.Serializable, Cloneable {
-  private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("ThriftSessionExpiredException");
+public class ThriftNoStreamDefinitionExistException extends Exception implements org.apache.thrift.TBase<ThriftNoStreamDefinitionExistException, ThriftNoStreamDefinitionExistException._Fields>, java.io.Serializable, Cloneable {
+  private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("ThriftNoStreamDefinitionExistException");
 
   private static final org.apache.thrift.protocol.TField MESSAGE_FIELD_DESC = new org.apache.thrift.protocol.TField("message", org.apache.thrift.protocol.TType.STRING, (short)1);
 
   private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
   static {
-    schemes.put(StandardScheme.class, new ThriftSessionExpiredExceptionStandardSchemeFactory());
-    schemes.put(TupleScheme.class, new ThriftSessionExpiredExceptionTupleSchemeFactory());
+    schemes.put(StandardScheme.class, new ThriftNoStreamDefinitionExistExceptionStandardSchemeFactory());
+    schemes.put(TupleScheme.class, new ThriftNoStreamDefinitionExistExceptionTupleSchemeFactory());
   }
 
   public String message; // required
@@ -96,13 +96,13 @@ public class ThriftSessionExpiredException extends Exception implements org.apac
     tmpMap.put(_Fields.MESSAGE, new org.apache.thrift.meta_data.FieldMetaData("message", org.apache.thrift.TFieldRequirementType.REQUIRED, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
     metaDataMap = Collections.unmodifiableMap(tmpMap);
-    org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(ThriftSessionExpiredException.class, metaDataMap);
+    org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(ThriftNoStreamDefinitionExistException.class, metaDataMap);
   }
 
-  public ThriftSessionExpiredException() {
+  public ThriftNoStreamDefinitionExistException() {
   }
 
-  public ThriftSessionExpiredException(
+  public ThriftNoStreamDefinitionExistException(
     String message)
   {
     this();
@@ -112,14 +112,14 @@ public class ThriftSessionExpiredException extends Exception implements org.apac
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public ThriftSessionExpiredException(ThriftSessionExpiredException other) {
+  public ThriftNoStreamDefinitionExistException(ThriftNoStreamDefinitionExistException other) {
     if (other.isSetMessage()) {
       this.message = other.message;
     }
   }
 
-  public ThriftSessionExpiredException deepCopy() {
-    return new ThriftSessionExpiredException(this);
+  public ThriftNoStreamDefinitionExistException deepCopy() {
+    return new ThriftNoStreamDefinitionExistException(this);
   }
 
   @Override
@@ -131,7 +131,7 @@ public class ThriftSessionExpiredException extends Exception implements org.apac
     return this.message;
   }
 
-  public ThriftSessionExpiredException setMessage(String message) {
+  public ThriftNoStreamDefinitionExistException setMessage(String message) {
     this.message = message;
     return this;
   }
@@ -190,12 +190,12 @@ public class ThriftSessionExpiredException extends Exception implements org.apac
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof ThriftSessionExpiredException)
-      return this.equals((ThriftSessionExpiredException)that);
+    if (that instanceof ThriftNoStreamDefinitionExistException)
+      return this.equals((ThriftNoStreamDefinitionExistException)that);
     return false;
   }
 
-  public boolean equals(ThriftSessionExpiredException that) {
+  public boolean equals(ThriftNoStreamDefinitionExistException that) {
     if (that == null)
       return false;
 
@@ -216,13 +216,13 @@ public class ThriftSessionExpiredException extends Exception implements org.apac
     return 0;
   }
 
-  public int compareTo(ThriftSessionExpiredException other) {
+  public int compareTo(ThriftNoStreamDefinitionExistException other) {
     if (!getClass().equals(other.getClass())) {
       return getClass().getName().compareTo(other.getClass().getName());
     }
 
     int lastComparison = 0;
-    ThriftSessionExpiredException typedOther = (ThriftSessionExpiredException)other;
+    ThriftNoStreamDefinitionExistException typedOther = (ThriftNoStreamDefinitionExistException)other;
 
     lastComparison = Boolean.valueOf(isSetMessage()).compareTo(typedOther.isSetMessage());
     if (lastComparison != 0) {
@@ -251,7 +251,7 @@ public class ThriftSessionExpiredException extends Exception implements org.apac
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder("ThriftSessionExpiredException(");
+    StringBuilder sb = new StringBuilder("ThriftNoStreamDefinitionExistException(");
     boolean first = true;
 
     sb.append("message:");
@@ -288,15 +288,15 @@ public class ThriftSessionExpiredException extends Exception implements org.apac
     }
   }
 
-  private static class ThriftSessionExpiredExceptionStandardSchemeFactory implements SchemeFactory {
-    public ThriftSessionExpiredExceptionStandardScheme getScheme() {
-      return new ThriftSessionExpiredExceptionStandardScheme();
+  private static class ThriftNoStreamDefinitionExistExceptionStandardSchemeFactory implements SchemeFactory {
+    public ThriftNoStreamDefinitionExistExceptionStandardScheme getScheme() {
+      return new ThriftNoStreamDefinitionExistExceptionStandardScheme();
     }
   }
 
-  private static class ThriftSessionExpiredExceptionStandardScheme extends StandardScheme<ThriftSessionExpiredException> {
+  private static class ThriftNoStreamDefinitionExistExceptionStandardScheme extends StandardScheme<ThriftNoStreamDefinitionExistException> {
 
-    public void read(org.apache.thrift.protocol.TProtocol iprot, ThriftSessionExpiredException struct) throws org.apache.thrift.TException {
+    public void read(org.apache.thrift.protocol.TProtocol iprot, ThriftNoStreamDefinitionExistException struct) throws org.apache.thrift.TException {
       org.apache.thrift.protocol.TField schemeField;
       iprot.readStructBegin();
       while (true)
@@ -325,7 +325,7 @@ public class ThriftSessionExpiredException extends Exception implements org.apac
       struct.validate();
     }
 
-    public void write(org.apache.thrift.protocol.TProtocol oprot, ThriftSessionExpiredException struct) throws org.apache.thrift.TException {
+    public void write(org.apache.thrift.protocol.TProtocol oprot, ThriftNoStreamDefinitionExistException struct) throws org.apache.thrift.TException {
       struct.validate();
 
       oprot.writeStructBegin(STRUCT_DESC);
@@ -340,22 +340,22 @@ public class ThriftSessionExpiredException extends Exception implements org.apac
 
   }
 
-  private static class ThriftSessionExpiredExceptionTupleSchemeFactory implements SchemeFactory {
-    public ThriftSessionExpiredExceptionTupleScheme getScheme() {
-      return new ThriftSessionExpiredExceptionTupleScheme();
+  private static class ThriftNoStreamDefinitionExistExceptionTupleSchemeFactory implements SchemeFactory {
+    public ThriftNoStreamDefinitionExistExceptionTupleScheme getScheme() {
+      return new ThriftNoStreamDefinitionExistExceptionTupleScheme();
     }
   }
 
-  private static class ThriftSessionExpiredExceptionTupleScheme extends TupleScheme<ThriftSessionExpiredException> {
+  private static class ThriftNoStreamDefinitionExistExceptionTupleScheme extends TupleScheme<ThriftNoStreamDefinitionExistException> {
 
     @Override
-    public void write(org.apache.thrift.protocol.TProtocol prot, ThriftSessionExpiredException struct) throws org.apache.thrift.TException {
+    public void write(org.apache.thrift.protocol.TProtocol prot, ThriftNoStreamDefinitionExistException struct) throws org.apache.thrift.TException {
       TTupleProtocol oprot = (TTupleProtocol) prot;
       oprot.writeString(struct.message);
     }
 
     @Override
-    public void read(org.apache.thrift.protocol.TProtocol prot, ThriftSessionExpiredException struct) throws org.apache.thrift.TException {
+    public void read(org.apache.thrift.protocol.TProtocol prot, ThriftNoStreamDefinitionExistException struct) throws org.apache.thrift.TException {
       TTupleProtocol iprot = (TTupleProtocol) prot;
       struct.message = iprot.readString();
       struct.setMessageIsSet(true);

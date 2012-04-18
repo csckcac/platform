@@ -18,9 +18,11 @@
 package org.wso2.carbon.agent.server.multiserver_oneclient;
 
 import org.wso2.carbon.agent.commons.Event;
-import org.wso2.carbon.agent.commons.TypeDef;
+import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.agent.server.AgentCallback;
+import org.wso2.carbon.agent.server.KeyStoreUtil;
 import org.wso2.carbon.agent.server.conf.AgentServerConfiguration;
+import org.wso2.carbon.agent.server.datastore.InMemoryStreamDefinitionStore;
 import org.wso2.carbon.agent.server.exception.AgentServerException;
 import org.wso2.carbon.agent.server.internal.CarbonAgentServer;
 import org.wso2.carbon.agent.server.internal.authentication.AuthenticationHandler;
@@ -50,6 +52,9 @@ public class AgentBackend {
 
         System.out.println("Event no=" + NO_OF_EVENTS);
         System.out.println("Server no=" + NO_OF_SERVERS);
+
+        KeyStoreUtil.setKeyStoreParams();
+
         for (int i = 0; i < NO_OF_SERVERS; i++) {
             AgentBackend server = new AgentBackend(i);
             server.start();
@@ -70,7 +75,7 @@ public class AgentBackend {
                 return true;// allays authenticate to true
 
             }
-        });
+        },new InMemoryStreamDefinitionStore());
         carbonAgentServer.subscribe(assignAgentCallback());
         carbonAgentServer.start();
     }
@@ -80,10 +85,11 @@ public class AgentBackend {
         return new AgentCallback() {
             long startTime = -1;
             int size = 0;
-            private TypeDef typeDef;
+            private EventStreamDefinition eventStreamDefinition;
 
-            public void definedType(TypeDef typeDef, String sessionId) {
-                this.typeDef = typeDef;//not used here
+            public void definedEventStream(EventStreamDefinition eventStreamDefinition,
+                                           String sessionId) {
+                this.eventStreamDefinition = eventStreamDefinition;//not used here
             }
 
             public void receive(List<Event> eventList, String sessionId) {
@@ -107,8 +113,7 @@ public class AgentBackend {
     }
 
     private AgentServerConfiguration generateServerConf(int offset) {
-        AgentServerConfiguration agentServerConfiguration = new AgentServerConfiguration(7611 + offset,7711 + offset);
-        return agentServerConfiguration;
+        return new AgentServerConfiguration(7711 + offset,7611 + offset);
     }
 
     public void stop() {

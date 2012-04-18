@@ -21,23 +21,23 @@
 
 package org.wso2.carbon.agent.commons.exception;
 
-public class DifferentTypeDefinitionAlreadyDefinedException extends Exception {
-    public String errorMessage;
+public class DifferentStreamDefinitionAlreadyDefinedException extends Exception {
+    private String errorMessage;
 
-    public DifferentTypeDefinitionAlreadyDefinedException() {
+    public DifferentStreamDefinitionAlreadyDefinedException() {
     }
 
-    public DifferentTypeDefinitionAlreadyDefinedException(String message) {
+    public DifferentStreamDefinitionAlreadyDefinedException(String message) {
         super(message);
         errorMessage = message;
     }
 
-    public DifferentTypeDefinitionAlreadyDefinedException(String message, Throwable cause) {
+    public DifferentStreamDefinitionAlreadyDefinedException(String message, Throwable cause) {
         super(message, cause);
         errorMessage = message;
     }
 
-    public DifferentTypeDefinitionAlreadyDefinedException(Throwable cause) {
+    public DifferentStreamDefinitionAlreadyDefinedException(Throwable cause) {
         super(cause);
     }
 

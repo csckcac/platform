@@ -17,27 +17,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.wso2.carbon.agent.server.exception;
 
+public class StreamDefinitionNotFoundException extends Exception {
+    private String errorMessage;
 
-package org.wso2.carbon.agent.commons.exception;
-
-public class MalformedTypeDefinitionException extends Exception {
-    public String errorMessage;
-
-    public MalformedTypeDefinitionException() {
+    public StreamDefinitionNotFoundException() {
     }
 
-    public MalformedTypeDefinitionException(String message) {
+    public StreamDefinitionNotFoundException(String message) {
         super(message);
         errorMessage = message;
     }
 
-    public MalformedTypeDefinitionException(String message, Throwable cause) {
+    public StreamDefinitionNotFoundException(String message, Throwable cause) {
         super(message, cause);
         errorMessage = message;
     }
 
-    public MalformedTypeDefinitionException(Throwable cause) {
+    public StreamDefinitionNotFoundException(Throwable cause) {
         super(cause);
     }
 

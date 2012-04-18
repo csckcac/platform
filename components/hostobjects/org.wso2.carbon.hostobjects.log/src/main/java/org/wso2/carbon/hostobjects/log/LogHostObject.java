@@ -16,7 +16,7 @@ public class LogHostObject extends ScriptableObject {
     public static final String HOSTOBJECT_NAME = "Log";
     private static final String ROOT_LOGGER = "JAGGERY";
 
-    static Logger logger = Logger.getLogger(LogHostObject.class.getName());
+    private static Logger logger = Logger.getLogger(LogHostObject.class.getName());
 
     @Override
     public String getClassName() {

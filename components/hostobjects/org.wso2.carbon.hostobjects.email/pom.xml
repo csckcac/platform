@@ -32,6 +32,29 @@
             <groupId>org.wso2.wsf.javascript</groupId>
             <artifactId>axiom-e4x</artifactId>
         </dependency>
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4</version>
+        </dependency>
+<!--dependency>
+	<groupId>javax.mail</groupId>
+	<artifactId>javax.mail-api</artifactId>
+	<version>1.4.5</version>
+</dependency-->
+
+<dependency>
+	<groupId>org.apache.geronimo.specs</groupId>
+	<artifactId>geronimo-javamail_1.4_spec</artifactId>
+	<version>1.0</version>
+</dependency>
+            
+            
     </dependencies>
 
     <build>
@@ -49,17 +72,43 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>
+                            com.sun.mail.imap;version="2.0.0.wso2v1",
+                            com.sun.mail.pop3;version="2.0.0.wso2v1",
+                            com.sun.mail.smtp;version="2.0.0.wso2v1",
                             org.wso2.carbon.hostobjects.email.*;
                         </Export-Package>
-			<Import-Package>
-                                javax.activation.*;version="[0.0.0, 1.0.0)"
+                        <Import-Package>
+                            javax.net,
+                            javax.net.ssl,
+                            javax.security.auth.callback,
+                            javax.security.sasl,
+                            org.apache.axiom.om,
+                            org.apache.commons.logging,
+                            org.mozilla.javascript,
+                            org.wso2.carbon.hostobjects.file,
+                            org.wso2.carbon.scriptengine.exceptions,
+                            org.wso2.javascript.xmlimpl
                         </Import-Package>
-                        <DynamicImport-Package>*</DynamicImport-Package>
+                        <Embed-Dependency>
+			    mail;scope=compile|runtime;inline=false;,
+                            activation;scope=compile|runtime;inline=false;
+                        </Embed-Dependency>
+                        <Private-Package>
+                            com.sun.mail.handlers,
+                            com.sun.mail.iap,
+                            com.sun.mail.imap.protocol,
+			    com.sun.mail.util,
+		            com.sun.mail.smtp,
+			    com.sun.mail.pop3,
+		            com.sun.mail.imap
+                        </Private-Package>
                     </instructions>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
+    <properties>
+        <javax.mail.version>1.4</javax.mail.version>
+    </properties>
 </project>
 

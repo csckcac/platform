@@ -92,25 +92,6 @@ function invokeService(url, payload, action, opts) {
     }
 }
 
-function getAPIsFunc() {
-    var Services = new Array();
-    var servicesout = new Array();
-    Services = apiProvider.ListProvidersNames();
-    for (var k = 0; k < Services.length; k++) {
-        var elem = {
-            name:Services[k].name,
-            rate:Services[k].rates,
-            author:Services[k].author
-        };
-        servicesout.push(elem);
-
-    }
-    return {
-        error:false,
-        services:servicesout
-    };
-}
-
 //methods for usage monitoring 
 function getAPIUsageHostTestFunc(apiName,server) {
         var usage=  new Array();
@@ -231,56 +212,6 @@ function getAPIsByProviderFunc() {
 
 }
 
-
-function getAPIIdentifiersFunc() {
-    var Services = new Array();
-    var apiIdtsout = new Array();
-    Services = apiProvider.giveAPIIdentifiers();
-    for (var k = 0; k < Services.length; k++) {
-        var elem = {
-            name:Services[k].name,
-            provider:Services[k].provider,
-            version:Services[k].version
-        };
-        apiIdtsout.push(elem);
-
-    }
-    return {
-        error:false,
-        services:apiIdtsout
-    };
-}
-
-function getIdFunc() {
-    var id = apiProvider.id;
-    return {
-        error:false,
-        id:"" + id
-    };
-}
-function setIdFunc(id) {
-    apiProvider.setId(id);
-    return {
-        error:false,
-        message:"success",
-        id:id
-    };
-}
-
-
-function getProvidersFunc() {
-    var providers = new Array();
-    var arrayout = new Array();
-    providers = apiProvider.ListProvidersNames();
-    for (var k = 0; k < providers.length; k++) {
-        arrayout.push(providers[k]);
-    }
-    return {
-        error:false,
-        services:arrayout
-    };
-}
-
 function saveAPIFunc(apiName, version, description, endpoint, wsdl, tags, tier, thumbUrl, context, uriTemplateArr, uriMethodArr) {
     log("saveAPIFunc");
     var provider = getUserFunc().username;
@@ -321,8 +252,7 @@ function getSubscribersOfAPIFunc(apiName, version) {
     for (var k = 0; k < subscribersArray.length; k++) {
         var elem = {
             userName:subscribersArray[k].userName,
-            subscribedDate:subscribersArray[k].subscribedDate,
-            description:subscribersArray[k].description
+            subscribedDate:subscribersArray[k].subscribedDate
         };
         subscribersOut.push(elem);
     }
@@ -334,28 +264,29 @@ function getSubscribersOfAPIFunc(apiName, version) {
 }
 
 function getSubscribedAPIsFunc(username) {
-    log("getSubscribedAPIsFunc");
-    var apisOut = new Array();
-    var apis = new Array();
-    apis = apiProvider.getSubscribedAPIs(username);
-    for (var k = 0; k < apis.length; k++) {
-        var elem = {
-            name:apis[k].apiName,
-            description:apis[k].description,
-            endpoint:apis[k].endpoint,
-            wsdl:apis[k].wsdl,
-            version:apis[k].version,
-            lastUpdatedDate:apis[k].updatedDate,
-            availableTiers:apis[k].tier,
-            status:apis[k].status,
-            thumb:apis[k].thumb
+        log("getSubscribedAPIsFunc");
+        var apisOut = new Array();
+        var apis = new Array();
+        apis = apiProvider.getSubscribedAPIs(username);
+        if (apis == null) {
+        return {
+        error:true
         };
-        apisOut.push(elem);
-    }
-    return {
+}
+else {
+        for (var k = 0; k < apis.length; k++) {
+        var elem = {
+        name:apis[k].apiName,
+        version:apis[k].version,
+        lastUpdatedDate:apis[k].updatedDate
+        };
+apisOut.push(elem);
+}
+return {
         error:false,
         apis:apisOut
-    };
+        };
+}
 }
 
 function updateAPIFunc(apiName, version, description, imageUrl, endpoint, wsdl, tags, tier, status, resourceTemplate, resourceMethod, resourceUri, context, uriTemplateArr, uriMethodArr) {

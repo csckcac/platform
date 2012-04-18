@@ -9,27 +9,27 @@ import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.wso2.carbon.hostobjects.file.FileHostObject;
+import org.wso2.carbon.jaggery.core.ScriptParser;
 import org.wso2.carbon.jaggery.core.ScriptReader;
 import org.wso2.carbon.jaggery.core.modules.JaggeryHostObject;
+import org.wso2.carbon.jaggery.core.modules.JaggeryModule;
+import org.wso2.carbon.jaggery.core.modules.ModuleManager;
 import org.wso2.carbon.jaggery.core.plugins.WebAppFileManager;
 import org.wso2.carbon.scriptengine.cache.ScriptCachingContext;
 import org.wso2.carbon.scriptengine.engine.RhinoEngine;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
+import org.wso2.carbon.scriptengine.util.HostObjectUtil;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.net.JarURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class WebAppManager extends CommonManager {
 
@@ -45,10 +45,116 @@ public class WebAppManager extends CommonManager {
         init();
     }
 
+    public static void include(Context cx, Scriptable thisObj, Object[] args, Function funObj)
+            throws ScriptException {
+        String functionName = "include";
+        int argsCount = args.length;
+        if (argsCount != 1) {
+            HostObjectUtil.invalidNumberOfArgs(HOST_OBJECT_NAME, functionName, argsCount, false);
+        }
+        if (!(args[0] instanceof String)) {
+            HostObjectUtil.invalidArgsError(HOST_OBJECT_NAME, functionName, "1", "string", args[0], false);
+        }
+
+        JaggeryContext jaggeryContext = CommonManager.getJaggeryContext();
+        Stack<String> includesCallstack = jaggeryContext.getIncludesCallstack();
+        String parent = includesCallstack.lastElement();
+        String fileURL = (String) args[0];
+
+        if (isHTTP(fileURL) || isHTTP(parent)) {
+            CommonManager.include(cx, thisObj, args, funObj);
+            return;
+        }
+        executeScript(jaggeryContext, jaggeryContext.getScope(), fileURL, false, false);
+    }
+
+    private static ScriptableObject executeScript(JaggeryContext jaggeryContext, ScriptableObject scope,
+                                                  String fileURL, final boolean isJSON, boolean isBuilt)
+            throws ScriptException {
+        RhinoEngine engine = jaggeryContext.getEngine();
+        WebAppContext webAppContext = (WebAppContext) jaggeryContext;
+        Stack<String> includesCallstack = jaggeryContext.getIncludesCallstack();
+        ServletContext context = webAppContext.getServletConext();
+        String parent = includesCallstack.lastElement();
+
+        String keys[] = WebAppManager.getKeys(context.getContextPath(), parent, fileURL);
+        fileURL = keys[1] + keys[2];
+
+        ScriptReader source;
+        if(isBuilt) {
+            source = new ScriptReader(context.getResourceAsStream(fileURL)) {
+                @Override
+                protected void build() throws IOException {
+                        try {
+                            if(isJSON) {
+                                sourceReader = new StringReader("(" + HostObjectUtil.streamToString(sourceIn) + ")");
+                            } else {
+                                sourceReader = new StringReader(HostObjectUtil.streamToString(sourceIn));
+                            }
+                        } catch (ScriptException e) {
+                            throw new IOException(e);
+                        }
+                    }
+            };
+        } else {
+            source = new ScriptReader(context.getResourceAsStream(fileURL));
+        }
+
+        ScriptCachingContext sctx = new ScriptCachingContext(webAppContext.getTenantId(), keys[0], keys[1], keys[2]);
+        long lastModified = WebAppManager.getScriptLastModified(context, fileURL);
+        sctx.setSourceModifiedTime(lastModified);
+
+        includesCallstack.push(fileURL);
+        if(isJSON) {
+            scope = (ScriptableObject) engine.eval(source, scope, sctx);
+        } else {
+            engine.exec(source, scope, sctx);
+        }
+        includesCallstack.pop();
+        return scope;
+    }
+
+    public static ScriptableObject require(Context cx, Scriptable thisObj, Object[] args, Function funObj)
+            throws ScriptException, IOException {
+        String functionName = "require";
+        int argsCount = args.length;
+        if (argsCount != 1) {
+            HostObjectUtil.invalidNumberOfArgs(HOST_OBJECT_NAME, functionName, argsCount, false);
+        }
+        if (!(args[0] instanceof String)) {
+            HostObjectUtil.invalidArgsError(HOST_OBJECT_NAME, functionName, "1", "string", args[0], false);
+        }
+
+        String param = (String) args[0];
+        int dotIndex = param.lastIndexOf(".");
+        if(param.length() == dotIndex + 1) {
+            String msg = "Invalid file path for require method : " + param;
+            log.error(msg);
+            throw new ScriptException(msg);
+        }
+
+        if(dotIndex == -1) {
+            return CommonManager.require(cx, thisObj, args, funObj);
+        }
+
+        JaggeryContext jaggeryContext = CommonManager.getJaggeryContext();
+        ScriptableObject object = (ScriptableObject) RhinoEngine.newObject((ScriptableObject) thisObj);
+        String ext = param.substring(dotIndex + 1);
+        if(ext.equalsIgnoreCase("json")) {
+            return executeScript(jaggeryContext, object, param, true, true);
+        } else if(ext.equalsIgnoreCase("js")) {
+            return executeScript(jaggeryContext, object, param, false, true);
+        } else {
+            String msg = "Unsupported file type for require() method : ." + ext;
+            log.error(msg);
+            throw new ScriptException(msg);
+        }
+    }
+
     private void init() throws ScriptException {
         //define require() global method
         try {
-            Method method = CommonManager.class.getDeclaredMethod(
+            Method method = WebAppManager.class.getDeclaredMethod(
                     "require", Context.class, Scriptable.class, Object[].class, Function.class);
             getEngine().defineFunction("require", method, ScriptableObject.READONLY);
         } catch (NoSuchMethodException e) {

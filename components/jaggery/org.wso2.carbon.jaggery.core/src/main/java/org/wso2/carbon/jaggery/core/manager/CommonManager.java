@@ -34,7 +34,7 @@ public class CommonManager {
 
     private static final int BYTE_BUFFER_SIZE = 1024;
 
-	private static final Log log = LogFactory.getLog(CommonManager.class);
+    private static final Log log = LogFactory.getLog(CommonManager.class);
 
     public static final int ENV_WEBAPP = 0;
 
@@ -43,7 +43,7 @@ public class CommonManager {
     public static final String JAGGERY_PREFIX = "$j";
     public static final String JAGGERY_URLS_MAP = "jaggery.urls.map";
 
-    private static final String HOST_OBJECT_NAME = "CarbonTopLevel";
+    public static final String HOST_OBJECT_NAME = "CarbonTopLevel";
 
     private RhinoEngine engine = null;
     private ModuleManager moduleManager = null;
@@ -109,7 +109,7 @@ public class CommonManager {
     }
 
     public static void include(Context cx, Scriptable thisObj, Object[] args, Function funObj)
-            throws ScriptException, IOException {
+            throws ScriptException {
         String functionName = "include";
         int argsCount = args.length;
         if (argsCount != 1) {
@@ -120,18 +120,17 @@ public class CommonManager {
         }
         JaggeryContext jaggeryContext = CommonManager.getJaggeryContext();
         RhinoEngine engine = jaggeryContext.getEngine();
-        if(engine == null) {
-        	log.error("Rhino Engine in Jaggery context is null");
-        	throw new ScriptException("Rhino Engine in Jaggery context is null");
+        if (engine == null) {
+            log.error("Rhino Engine in Jaggery context is null");
+            throw new ScriptException("Rhino Engine in Jaggery context is null");
         }
         ScriptableObject scope = jaggeryContext.getScope();
-        ScriptCachingContext sctx = null;
         Stack<String> includesCallstack = jaggeryContext.getIncludesCallstack();
         String parent = includesCallstack.lastElement();
         String fileURL = (String) args[0];
         ScriptReader source;
         if (isHTTP(fileURL) || isHTTP(parent)) {
-            if(!isHTTP(fileURL)) {
+            if (!isHTTP(fileURL)) {
                 fileURL = parent + fileURL;
             }
             //this is a remote file url
@@ -151,46 +150,13 @@ public class CommonManager {
                 log.warn(msg, e);
                 throw new ScriptException(msg, e);
             }
-
         } else {
-            int env = jaggeryContext.getEnvironment();
-            if (env == CommonManager.ENV_WEBAPP) {
-                WebAppContext webAppContext = (WebAppContext) jaggeryContext;
-                ServletContext context = webAppContext.getServletConext();
-                if (context == null) {
-                    String msg = "ServletContext cannot be found";
-                    log.warn(msg);
-                    throw new ScriptException(msg);
-                }
-                String keys[] = WebAppManager.getKeys(context.getContextPath(), parent, fileURL);
-                fileURL = keys[1] + keys[2];
-                source = new ScriptReader(context.getResourceAsStream(fileURL));
-                sctx = new ScriptCachingContext(webAppContext.getTenantId(), keys[0], keys[1], keys[2]);
-                long lastModified = WebAppManager.getScriptLastModified(context, fileURL);
-                sctx.setSourceModifiedTime(lastModified);
-                includesCallstack.push(fileURL);
-                engine.exec(source, scope, sctx);
-                includesCallstack.pop();
-            } else if (env == CommonManager.ENV_COMMAND_LINE) {
-                if(fileURL.startsWith("/")) {
-                    fileURL = includesCallstack.firstElement() + fileURL;
-                } else {
-                    fileURL = FilenameUtils.getFullPath(parent) + fileURL;
-                }
-                fileURL = FilenameUtils.normalize(fileURL);
-                source = new ScriptReader(new FileInputStream(fileURL));
-                includesCallstack.push(fileURL);
-                engine.exec(source, scope, null);
-                includesCallstack.pop();
-            } else {
-                String msg = "Unknown value for Jaggery Environment : " + env;
-                throw new ScriptException(msg);
-            }
-
+            String msg = "Unsupported file include : " + fileURL;
+            throw new ScriptException(msg);
         }
     }
 
-    private static boolean isHTTP(String url) {
+    public static boolean isHTTP(String url) {
         return url.matches("^[hH][tT][tT][pP][sS]?.*");
     }
 
@@ -271,8 +237,8 @@ public class CommonManager {
             HostObjectUtil.invalidNumberOfArgs("CarbonTopLevel", functionName, argsCount, false);
         }
         OutputStream out = jaggeryContext.getOutputStream();
-        if(args[0] instanceof StreamHostObject) {
-            InputStream in = ((StreamHostObject)args[0]).getStream();
+        if (args[0] instanceof StreamHostObject) {
+            InputStream in = ((StreamHostObject) args[0]).getStream();
             try {
                 byte[] buffer = new byte[BYTE_BUFFER_SIZE];
                 int count;
@@ -284,7 +250,7 @@ public class CommonManager {
                 log.error(e.getMessage(), e);
                 throw new ScriptException(e);
             } finally {
-                if(in != null) {
+                if (in != null) {
                     try {
                         in.close();
                     } catch (IOException e) {

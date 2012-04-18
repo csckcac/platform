@@ -48,7 +48,7 @@ public final class CommandLineExecutor {
             RhinoEngine.enterContext();
 			FileInputStream fstream = new FileInputStream(fileURL);
             
-        	RhinoEngine engine = CommandLineManager.getEngine();
+        	RhinoEngine engine = CommandLineManager.getCommandLineEngine();
         	ScriptableObject scope = engine.getRuntimeScope();
         	
         	//initialize JaggeryContext
@@ -89,7 +89,7 @@ public final class CommandLineExecutor {
         	//Initialize the Rhino context
             RhinoEngine.enterContext();
 
-        	RhinoEngine engine = CommandLineManager.getEngine();
+        	RhinoEngine engine = CommandLineManager.getCommandLineEngine();
         	ScriptableObject scope = engine.getRuntimeScope();
         	
         	//initialize JaggeryContext

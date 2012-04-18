@@ -9,8 +9,8 @@ import java.io.StringReader;
 
 public class ScriptReader extends Reader {
 
-    private InputStream sourceIn = null;
-    private StringReader sourceReader = null;
+    protected InputStream sourceIn = null;
+    protected StringReader sourceReader = null;
     private boolean isBuilt = false;
 
     public ScriptReader(InputStream sourceIn) {
@@ -31,7 +31,7 @@ public class ScriptReader extends Reader {
         sourceReader.close();
     }
 
-    private void build() throws IOException {
+    protected void build() throws IOException {
         try {
             sourceReader = new StringReader(ScriptParser.parse(sourceIn));
         } catch (ScriptException e) {

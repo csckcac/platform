@@ -484,7 +484,7 @@
         <relay.transport.version>1.0.0-SNAPSHOT</relay.transport.version>
         <synapse.version>2.1.0-wso2v6</synapse.version>
         <appserver.version>4.5.0-SNAPSHOT</appserver.version>
-        <esb.version>4.0.0-SNAPSHOT</esb.version>
+        <esb.version>4.5.0-SNAPSHOT</esb.version>
         <governance.version>4.0.0-SNAPSHOT</governance.version>
         <identity.version>4.0.0-SNAPSHOT</identity.version>
         <gs.version>1.3.1-SNAPSHOT</gs.version>

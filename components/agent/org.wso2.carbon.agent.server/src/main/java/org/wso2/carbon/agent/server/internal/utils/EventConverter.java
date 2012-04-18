@@ -19,9 +19,12 @@
 package org.wso2.carbon.agent.server.internal.utils;
 
 
+import com.google.gson.Gson;
 import org.wso2.carbon.agent.commons.Attribute;
 import org.wso2.carbon.agent.commons.AttributeType;
 import org.wso2.carbon.agent.commons.Event;
+import org.wso2.carbon.agent.commons.EventStreamDefinition;
+import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
 import org.wso2.carbon.agent.commons.thrift.data.ThriftEventBundle;
 import org.wso2.carbon.agent.server.exception.EventConversionException;
 import org.wso2.carbon.agent.server.internal.EventStreamTypeHolder;
@@ -33,8 +36,9 @@ import java.util.List;
  * the util class that converts thrift objects to common format
  */
 public final class EventConverter {
+    private static Gson gson = new Gson();
 
-    private EventConverter(){
+    private EventConverter() {
 
     }
 
@@ -115,8 +119,41 @@ public final class EventConverter {
 
             }
         } catch (RuntimeException re) {
-            throw new EventConversionException("Error when converting " + streamId + " of event bundle with events " + thriftEventBundle.getEventNum(),re) ;
+            throw new EventConversionException("Error when converting " + streamId + " of event bundle with events " + thriftEventBundle.getEventNum(), re);
         }
         return eventList;
+    }
+
+    public static EventStreamDefinition convertFromJson(String streamDefinition)
+            throws MalformedStreamDefinitionException {
+        EventStreamDefinition tempEventStreamDefinition = gson.fromJson(streamDefinition.
+                replaceAll("(?i)int", "INT").replaceAll("(?i)long", "LONG").
+                replaceAll("(?i)float", "FLOAT").replaceAll("(?i)double", "DOUBLE").
+                replaceAll("(?i)bool", "BOOL").replaceAll("(?i)string", "STRING"), EventStreamDefinition.class);
+        String name = tempEventStreamDefinition.getName();
+        String version = tempEventStreamDefinition.getVersion();
+
+        if (version == null) {
+            version = "1.0.0";  //when populating the object using google gson the defaults are getting null values
+        }
+        if (name == null) {
+            throw new MalformedStreamDefinitionException("stream name is null");
+        }
+
+        EventStreamDefinition eventStreamDefinition = new EventStreamDefinition(name, version);
+
+        eventStreamDefinition.setMetaData(tempEventStreamDefinition.getMetaData());
+        eventStreamDefinition.setCorrelationData(tempEventStreamDefinition.getCorrelationData());
+        eventStreamDefinition.setPayloadData(tempEventStreamDefinition.getPayloadData());
+
+        eventStreamDefinition.setNickName(tempEventStreamDefinition.getNickName());
+        eventStreamDefinition.setDescription(tempEventStreamDefinition.getDescription());
+        eventStreamDefinition.setDescription(tempEventStreamDefinition.getDescription());
+        eventStreamDefinition.setTags(tempEventStreamDefinition.getTags());
+        return eventStreamDefinition;
+    }
+
+    public static String convertToJson(EventStreamDefinition existingDefinition) {
+        return gson.toJson(existingDefinition);
     }
 }

@@ -21,7 +21,6 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.agent.internal.utils.AgentConstants;
 import org.wso2.carbon.agent.server.conf.AgentServerConfiguration;
 import org.wso2.carbon.agent.server.exception.AgentServerConfigurationException;
 import org.wso2.carbon.base.api.ServerConfigurationService;
@@ -36,6 +35,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Helper class to build Agent Server
@@ -45,30 +46,6 @@ public final class AgentServerBuilder {
     private static final Log log = LogFactory.getLog(AgentServerBuilder.class);
 
     private AgentServerBuilder() {
-
-    }
-
-    /**
-     * Helper method to load the agent server config
-     *
-     * @param serverConfiguration
-     * @return Agent Server Configuration
-     * @throws org.wso2.carbon.agent.server.exception.AgentServerConfigurationException
-     *
-     */
-    public static AgentServerConfiguration loadAgentServerConfiguration(
-            ServerConfigurationService serverConfiguration)
-            throws AgentServerConfigurationException {
-
-        OMElement agentServerConfig = loadConfigXML();
-        if (agentServerConfig != null) {
-            if (!agentServerConfig.getQName().equals(
-                    new QName(AgentServerConstants.AGENT_SERVER_CONF_NAMESPACE, AgentServerConstants.AGENT_SERVER_CONF_ELE_ROOT))) {
-                throw new AgentServerConfigurationException("Invalid root element in agent server config");
-            }
-            return buildAgentServerConfiguration(agentServerConfig, serverConfiguration);
-        }
-        throw new AgentServerConfigurationException("Invalid agent server config");
 
     }
 
@@ -115,10 +92,26 @@ public final class AgentServerBuilder {
         }
     }
 
-    private static AgentServerConfiguration buildAgentServerConfiguration(
-            OMElement agentServerConfig, ServerConfigurationService serverConfiguration) {
+    private static void populateEventStreamDefinitions(OMElement agentServerConfig,
+                                                       List<String[]> eventStreamDefinitionList) {
+        OMElement eventStreamDefinitions = agentServerConfig.getFirstChildWithName(
+                new QName(AgentServerConstants.AGENT_SERVER_CONF_NAMESPACE,
+                          AgentServerConstants.EVENT_STREAM_DEFINITIONS));
+        if (eventStreamDefinitions != null) {
+            for (Iterator eventStreamDefinitionIterator = eventStreamDefinitions.getChildElements();
+                 eventStreamDefinitionIterator.hasNext(); ) {
+                OMElement eventStreamDefinition = (OMElement) eventStreamDefinitionIterator.next();
+                String domainName=eventStreamDefinition.getAttributeValue(new QName(AgentServerConstants.AGENT_SERVER_CONF_NAMESPACE,
+                                                                  AgentServerConstants.DOMAIN_NAME));
+
+                eventStreamDefinitionList.add(new String[]{domainName, eventStreamDefinition.getText()});
+            }
+        }
+    }
+
+    private static void populatePorts(OMElement agentServerConfig, ServerConfigurationService serverConfiguration,
+                                      AgentServerConfiguration agentServerConfiguration) {
         int portOffSet = readPortOffset(serverConfiguration);
-        AgentServerConfiguration agentServerConfiguration = new AgentServerConfiguration(AgentConstants.DEFAULT_RECEIVER_PORT+AgentConstants.AUTHENTICATOR_PORT_OFFSET, AgentConstants.DEFAULT_RECEIVER_PORT);
         OMElement authenticatorPort = agentServerConfig.getFirstChildWithName(
                 new QName(AgentServerConstants.AGENT_SERVER_CONF_NAMESPACE,
                           AgentServerConstants.AUTHENTICATOR_PORT));
@@ -131,7 +124,6 @@ public final class AgentServerBuilder {
         if (receiverPort != null) {
             agentServerConfiguration.setEventReceiverPort(Integer.parseInt(receiverPort.getText()) + portOffSet);
         }
-        return agentServerConfiguration;
     }
 
     private static int readPortOffset(ServerConfigurationService serverConfiguration) {
@@ -145,4 +137,20 @@ public final class AgentServerBuilder {
         }
     }
 
+    public static void populateConfigurations(ServerConfigurationService serverConfiguration,
+                                              AgentServerConfiguration agentServerConfiguration,
+                                              List<String[]> eventStreamDefinitions)
+            throws AgentServerConfigurationException {
+
+        OMElement agentServerConfig = loadConfigXML();
+        if (agentServerConfig != null) {
+            if (!agentServerConfig.getQName().equals(
+                    new QName(AgentServerConstants.AGENT_SERVER_CONF_NAMESPACE, AgentServerConstants.AGENT_SERVER_CONF_ELE_ROOT))) {
+                throw new AgentServerConfigurationException("Invalid root element in agent server config");
+            }
+            populatePorts(agentServerConfig, serverConfiguration, agentServerConfiguration);
+            populateEventStreamDefinitions(agentServerConfig, eventStreamDefinitions);
+        }
+        throw new AgentServerConfigurationException("Invalid agent server config");
+    }
 }

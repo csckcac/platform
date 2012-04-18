@@ -17,6 +17,8 @@
 package org.wso2.carbon.agent.server;
 
 import org.wso2.carbon.agent.commons.EventStreamDefinition;
+import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
+import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
 import org.wso2.carbon.agent.server.exception.StreamDefinitionNotFoundException;
 
 import java.util.List;
@@ -67,5 +69,13 @@ public interface AgentServer {
     List<EventStreamDefinition> getAllStreamDefinition(String domainName)
             throws StreamDefinitionNotFoundException;
 
+    /**
+     * Save new Event Stream Definitions
+     * @param domainName
+     * @param eventStreamDefinition
+     */
+    void saveEventStreamDefinition(String domainName, String eventStreamDefinition)
+            throws MalformedStreamDefinitionException,
+                   DifferentStreamDefinitionAlreadyDefinedException;
 }
 

@@ -21,6 +21,8 @@ package org.wso2.carbon.agent.server.internal.service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.thrift.TException;
+import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
+import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
 import org.wso2.carbon.agent.commons.thrift.data.ThriftEventBundle;
 import org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentStreamDefinitionAlreadyDefinedException;
 import org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedStreamDefinitionException;
@@ -51,7 +53,13 @@ public class ThriftEventReceiverServiceImpl implements ThriftEventReceiverServic
             log.info("session " + sessionId + " expired ");
             throw new ThriftSessionExpiredException(sessionId + " expired");
         }
-        return eventDispatcher.defineEventStream(streamDefinition, agentSession);
+        try {
+            return eventDispatcher.defineEventStream(streamDefinition, agentSession);
+        } catch (MalformedStreamDefinitionException e) {
+            throw new ThriftMalformedStreamDefinitionException("Malformed stream definition found " + e.getErrorMessage());
+        } catch (DifferentStreamDefinitionAlreadyDefinedException e) {
+            throw new ThriftDifferentStreamDefinitionAlreadyDefinedException("Similar stream already exist " + e.getErrorMessage());
+        }
     }
 
     @Override

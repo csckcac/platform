@@ -27,6 +27,8 @@ import org.apache.thrift.transport.TSSLTransportFactory;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TTransportException;
 import org.wso2.carbon.agent.commons.EventStreamDefinition;
+import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
+import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
 import org.wso2.carbon.agent.commons.thrift.authentication.service.ThriftAuthenticatorService;
 import org.wso2.carbon.agent.commons.thrift.service.ThriftEventReceiverService;
 import org.wso2.carbon.agent.internal.utils.AgentConstants;
@@ -36,11 +38,12 @@ import org.wso2.carbon.agent.server.conf.AgentServerConfiguration;
 import org.wso2.carbon.agent.server.datastore.StreamDefinitionStore;
 import org.wso2.carbon.agent.server.exception.AgentServerException;
 import org.wso2.carbon.agent.server.exception.StreamDefinitionNotFoundException;
-import org.wso2.carbon.agent.server.internal.authentication.Authenticator;
 import org.wso2.carbon.agent.server.internal.authentication.AuthenticationHandler;
+import org.wso2.carbon.agent.server.internal.authentication.Authenticator;
 import org.wso2.carbon.agent.server.internal.service.ThriftAuthenticatorServiceImpl;
 import org.wso2.carbon.agent.server.internal.service.ThriftEventReceiverServiceImpl;
 import org.wso2.carbon.agent.server.internal.utils.AgentServerConstants;
+import org.wso2.carbon.agent.server.internal.utils.EventConverter;
 import org.wso2.carbon.base.ServerConfiguration;
 
 import java.net.InetAddress;
@@ -128,6 +131,13 @@ public class CarbonAgentServer implements AgentServer {
     public List<EventStreamDefinition> getAllStreamDefinition(String domainName)
             throws StreamDefinitionNotFoundException {
         return streamDefinitionStore.getStreamDefinition(domainName);
+    }
+
+    @Override
+    public void saveEventStreamDefinition(String domainName, String eventStreamDefinition)
+            throws MalformedStreamDefinitionException,
+                   DifferentStreamDefinitionAlreadyDefinedException {
+        streamDefinitionStore.saveStreamDefinition(domainName, EventConverter.convertFromJson(eventStreamDefinition));
     }
 
     /**

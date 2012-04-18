@@ -18,6 +18,7 @@
 package org.wso2.carbon.agent.server.datastore;
 
 import org.wso2.carbon.agent.commons.EventStreamDefinition;
+import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
 import org.wso2.carbon.agent.server.exception.StreamDefinitionNotFoundException;
 
 import java.util.Collection;
@@ -32,7 +33,8 @@ public interface StreamDefinitionStore {
             throws StreamDefinitionNotFoundException;
 
     void saveStreamDefinition(String domainName,
-                              EventStreamDefinition eventStreamDefinition);
+                              EventStreamDefinition eventStreamDefinition)
+            throws DifferentStreamDefinitionAlreadyDefinedException;
 
     EventStreamDefinition getStreamDefinition(String domainName, String streamId)
             throws StreamDefinitionNotFoundException;

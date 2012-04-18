@@ -26,8 +26,7 @@ import org.wso2.carbon.agent.commons.AttributeType;
 import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
 import org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedStreamDefinitionException;
-import org.wso2.carbon.agent.server.datastore.InMemoryStreamDefinitionStore;
-import org.wso2.carbon.agent.server.internal.EventDispatcher;
+import org.wso2.carbon.agent.server.internal.utils.EventConverter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +34,9 @@ import java.util.List;
 public class DefinitionConversionTest {
 
     private static Gson gson;
-    private static EventDispatcher eventDispatcher;
 
     @BeforeClass
     public static void init() {
-        eventDispatcher = new EventDispatcher(new InMemoryStreamDefinitionStore());
         gson = new Gson();
     }
 
@@ -65,7 +62,7 @@ public class DefinitionConversionTest {
                             "}";
 
 
-        EventStreamDefinition eventStreamDefinition1 = eventDispatcher.convertFromJson(definition);
+        EventStreamDefinition eventStreamDefinition1 = EventConverter.convertFromJson(definition);
         Assert.assertTrue(null != eventStreamDefinition1.getStreamId());
 //        System.out.println(gson.toJson(eventStreamDefinition1));
 
@@ -107,7 +104,7 @@ public class DefinitionConversionTest {
                             "}";
 
 
-        EventStreamDefinition eventStreamDefinition1 = eventDispatcher.convertFromJson(definition);
+        EventStreamDefinition eventStreamDefinition1 = EventConverter.convertFromJson(definition);
         Assert.assertTrue(null != eventStreamDefinition1.getStreamId());
 //        System.out.println(gson.toJson(eventStreamDefinition1));
 

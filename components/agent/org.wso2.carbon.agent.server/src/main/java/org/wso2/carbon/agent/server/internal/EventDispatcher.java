@@ -19,11 +19,11 @@
 package org.wso2.carbon.agent.server.internal;
 
 
-import com.google.gson.Gson;
 import org.wso2.carbon.agent.commons.EventStreamDefinition;
+import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
+import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
 import org.wso2.carbon.agent.commons.thrift.data.ThriftEventBundle;
 import org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentStreamDefinitionAlreadyDefinedException;
-import org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedStreamDefinitionException;
 import org.wso2.carbon.agent.commons.thrift.exception.ThriftNoStreamDefinitionExistException;
 import org.wso2.carbon.agent.commons.thrift.exception.ThriftUndefinedEventTypeException;
 import org.wso2.carbon.agent.server.AgentCallback;
@@ -48,7 +48,6 @@ public class EventDispatcher {
     private StreamDefinitionStore streamDefinitionStore;
     private Map<String, EventStreamTypeHolder> eventStreamTypeCache = new HashMap<String, EventStreamTypeHolder>();
     private EventQueue eventQueue;
-    private Gson gson = new Gson();
 
     public EventDispatcher(StreamDefinitionStore streamDefinitionStore) {
         this.eventQueue = new EventQueue(subscribers);
@@ -61,8 +60,9 @@ public class EventDispatcher {
 
     public String defineEventStream(String streamDefinition, AgentSession agentSession)
             throws ThriftDifferentStreamDefinitionAlreadyDefinedException,
-                   ThriftMalformedStreamDefinitionException {
-        EventStreamDefinition eventStreamDefinition = convertFromJson(streamDefinition);
+                   MalformedStreamDefinitionException,
+                   DifferentStreamDefinitionAlreadyDefinedException {
+        EventStreamDefinition eventStreamDefinition = EventConverter.convertFromJson(streamDefinition);
 
         EventStreamDefinition existingEventStreamDefinition = null;
         try {
@@ -94,22 +94,7 @@ public class EventDispatcher {
         updateEventStreamTypeHolder(eventStreamTypeHolder, eventStreamDefinition);
     }
 
-    public EventStreamDefinition convertFromJson(String streamDefinition)
-            throws ThriftMalformedStreamDefinitionException {
-        EventStreamDefinition eventStreamDefinition = gson.fromJson(streamDefinition.
-                replaceAll("(?i)int", "INT").replaceAll("(?i)long", "LONG").
-                replaceAll("(?i)float", "FLOAT").replaceAll("(?i)double", "DOUBLE").
-                replaceAll("(?i)bool", "BOOL").replaceAll("(?i)string", "STRING"), EventStreamDefinition.class);
-        eventStreamDefinition.generateSteamId();
-        if (eventStreamDefinition.getName() == null) {
-            throw new ThriftMalformedStreamDefinitionException("Stream Name is null");
-        }
-        String versionPattern = "^\\d+\\.\\d+\\.\\d+$";
-        if (!eventStreamDefinition.getVersion().matches(versionPattern)) {
-            throw new ThriftMalformedStreamDefinitionException("version " + eventStreamDefinition.getVersion() + " does not adhere to the format x.x.x ");
-        }
-        return eventStreamDefinition;
-    }
+
 
     public void publish(ThriftEventBundle thriftEventBundle, AgentSession agentSession)
             throws ThriftUndefinedEventTypeException {

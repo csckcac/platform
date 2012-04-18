@@ -18,7 +18,9 @@
 package org.wso2.carbon.agent.server.datastore;
 
 import org.wso2.carbon.agent.commons.EventStreamDefinition;
+import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
 import org.wso2.carbon.agent.server.exception.StreamDefinitionNotFoundException;
+import org.wso2.carbon.agent.server.internal.utils.EventConverter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,12 +52,21 @@ public class InMemoryStreamDefinitionStore implements StreamDefinitionStore {
 
     @Override
     public void saveStreamDefinition(String domainName,
-                                     EventStreamDefinition eventStreamDefinition) {
+                                     EventStreamDefinition eventStreamDefinition)
+            throws DifferentStreamDefinitionAlreadyDefinedException {
         if (!streamIdMap.containsKey(domainName)) {
             streamIdMap.put(domainName, new HashMap<String, String>());
             streamDefinitionMap.put(domainName, new HashMap<String, EventStreamDefinition>());
         }
-        streamIdMap.get(domainName).put(constructNameVersionKey(eventStreamDefinition.getName(), eventStreamDefinition.getVersion()), eventStreamDefinition.getStreamId());
+        String key = constructNameVersionKey(eventStreamDefinition.getName(), eventStreamDefinition.getVersion());
+        EventStreamDefinition existingDefinition = streamDefinitionMap.get(domainName).get(key);
+        if (existingDefinition != null) {
+            if (!existingDefinition.equals(eventStreamDefinition)) {
+                throw new DifferentStreamDefinitionAlreadyDefinedException("Another Stream with same name and version exist :" + EventConverter.convertToJson(existingDefinition));
+            }
+        } else {
+            streamIdMap.get(domainName).put(key, eventStreamDefinition.getStreamId());
+        }
         streamDefinitionMap.get(domainName).put(eventStreamDefinition.getStreamId(), eventStreamDefinition);
     }
 

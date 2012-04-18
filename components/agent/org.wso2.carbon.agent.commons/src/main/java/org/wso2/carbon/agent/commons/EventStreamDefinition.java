@@ -45,16 +45,15 @@ public class EventStreamDefinition {
             throw new MalformedStreamDefinitionException("version " + version + " does not adhire to the format x.x.x ");
         }
         this.version = version;
+        generateSteamId();
     }
 
     public EventStreamDefinition(String name) {
         this.name = name;
+        generateSteamId();
     }
 
-    public void generateSteamId() {
-        if (version == null) {
-            this.version = "1.0.0";  //when populating the object using google gson the defaults are getting null values
-        }
+    private void generateSteamId() {
         if (streamId == null) {
             this.streamId = name + "-" + version + "-" + UUID.randomUUID();
         }
@@ -120,6 +119,13 @@ public class EventStreamDefinition {
         return payloadData;
     }
 
+    /**
+     * Stream Id is not used for comparing definitions
+     * This is because this method is used to identify duplicates
+     *
+     * @param o compared Object
+     * @return true if equal else false
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -150,6 +156,12 @@ public class EventStreamDefinition {
         return true;
     }
 
+    /**
+     * Stream Id is not used for comparing definitions
+     * This is because this method is used to identify duplicates
+     *
+     * @return hash code
+     */
     @Override
     public int hashCode() {
         int result = name.hashCode();

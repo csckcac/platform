@@ -35,6 +35,8 @@ public final class AgentServerConstants {
 
     public static final String AUTHENTICATOR_PORT = "authenticatorPort";
     public static final String EVENT_RECEIVER_PORT = "eventReceiverPort";
+    public static final String EVENT_STREAM_DEFINITIONS = "eventStreamDefinitions";
+    public static final String DOMAIN_NAME = "domainName";
 
     public static final int CARBON_DEFAULT_PORT_OFFSET = 0;
     public static final String CARBON_CONFIG_PORT_OFFSET_NODE = "Ports.Offset";

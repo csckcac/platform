@@ -16,12 +16,16 @@
 
 package org.wso2.carbon.agent.server.internal;
 
+import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
+import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
+import org.wso2.carbon.agent.internal.utils.AgentConstants;
 import org.wso2.carbon.agent.server.AgentServerFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.agent.server.AgentServer;
+import org.wso2.carbon.agent.server.conf.AgentServerConfiguration;
 import org.wso2.carbon.agent.server.datastore.InMemoryStreamDefinitionStore;
 import org.wso2.carbon.agent.server.exception.AgentServerConfigurationException;
 import org.wso2.carbon.agent.server.exception.AgentServerException;
@@ -29,6 +33,9 @@ import org.wso2.carbon.agent.server.internal.authentication.CarbonAuthentication
 import org.wso2.carbon.agent.server.internal.utils.AgentServerBuilder;
 import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.identity.authentication.AuthenticationService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @scr.component name="agentserverservice.component" immediate="true"
@@ -54,10 +61,23 @@ public class AgentServerServiceDS {
     protected void activate(ComponentContext context) {
 
         try {
+            AgentServerConfiguration agentServerConfiguration = new AgentServerConfiguration(AgentConstants.DEFAULT_RECEIVER_PORT + AgentConstants.AUTHENTICATOR_PORT_OFFSET, AgentConstants.DEFAULT_RECEIVER_PORT);
+            List<String[]> eventStreamDefinitions = new ArrayList<String[]>();
+            AgentServerBuilder.populateConfigurations(serverConfiguration, agentServerConfiguration, eventStreamDefinitions);
+
             carbonAgentServer = new AgentServerFactory().createAgentServer(
-                    AgentServerBuilder.loadAgentServerConfiguration(serverConfiguration),
-                    new CarbonAuthenticationHandler(authenticationService),new InMemoryStreamDefinitionStore());
+                    agentServerConfiguration,
+                    new CarbonAuthenticationHandler(authenticationService), new InMemoryStreamDefinitionStore());
             carbonAgentServer.start();
+            for (String[] streamDefinition : eventStreamDefinitions) {
+                try {
+                    carbonAgentServer.saveEventStreamDefinition(streamDefinition[0], streamDefinition[1]);
+                } catch (MalformedStreamDefinitionException e) {
+                    log.error("Malformed Stream Definition for " + streamDefinition[0] + ": " + streamDefinition[1], e);
+                } catch (DifferentStreamDefinitionAlreadyDefinedException e) {
+                    log.warn("Redefining event stream of " + streamDefinition[0] + ": " + streamDefinition[1], e);
+                }
+            }
             agentServerService = context.getBundleContext().
                     registerService(AgentServer.class.getName(), carbonAgentServer, null);
             log.info("Successfully deployed Agent Server ");

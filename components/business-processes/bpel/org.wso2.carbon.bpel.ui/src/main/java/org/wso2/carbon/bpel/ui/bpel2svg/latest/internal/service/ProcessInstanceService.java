@@ -34,9 +34,10 @@ public interface ProcessInstanceService<M>
     /**
      * Returns the ProcessInstance for the given instance ID.
      *
-     * @param instanceId
-     * @return
-     * @throws org.wso2.carbon.bpel.ui.bpel2svg.latest.wso2.service.InstanceNotFoundException
+     * @param instanceId Process instance id
+     * @return ProcessInstance
+     * @throws org.wso2.carbon.bpel.ui.bpel2svg.latest.wso2.service.InstanceNotFoundException If the
+     * instance is not found
      *
      */
     public ProcessInstance getProcessInstance(String instanceId) throws InstanceNotFoundException;
@@ -46,7 +47,7 @@ public interface ProcessInstanceService<M>
 	 *
 	 * @param processModels The {@link ProcessModel}s whose {@link ProcessInstance}s should be retrieved.
 	 * @return All {@link ProcessInstance}s stored in the workflow engine to the given {@link ProcessModel}s.
-	 * @throws BPIException
+	 * @throws BPIException If error occurred while fetching the process instances
 	 */
 	public List<ProcessInstance> getProcessInstances(List<ProcessModel> processModels) throws BPIException;
 
@@ -55,7 +56,7 @@ public interface ProcessInstanceService<M>
 	 * 
 	 * @param processModel The {@link ProcessModel} whose {@link ProcessInstance}s should be retrieved.
 	 * @return All {@link ProcessInstance}s stored in the workflow engine to the given {@link ProcessModel}.
-	 * @throws BPIException
+	 * @throws BPIException If error occurred while fetching the process instance
 	 */
 	public List<ProcessInstance> getProcessInstances(ProcessModel processModel) throws BPIException;
 
@@ -72,7 +73,7 @@ public interface ProcessInstanceService<M>
 		public ProcessInstanceService<?> createService() throws BPIException {
 			try {
                 return new ProcessInstanceServiceImpl();
-			} catch (Throwable t) {
+			} catch (Exception t) {
 				throw new BPIException(t);
 			}
 		}

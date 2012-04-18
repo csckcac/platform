@@ -33,7 +33,7 @@ public interface ProcessModelService<M>
 	 * Returns all {@link ProcessModel}s stored in the workflow engine.
 	 *
 	 * @return All {@link ProcessModel}s stored in the workflow engine.
-	 * @throws BPIException
+	 * @throws BPIException If an error occurred while fetching the process models
 	 */
 	public List<ProcessModel> getProcessModels() throws BPIException;
 
@@ -42,7 +42,7 @@ public interface ProcessModelService<M>
 	 *
 	 * @param pid The ID of the {@link ProcessModel}.
 	 * @return The {@link ProcessModel} with the given ID <code>null</code>.
-	 * @throws BPIException
+	 * @throws BPIException If an error occurred while fetching the process model
 	 */
 	public ProcessModel getProcessModel(String pid) throws BPIException;
 
@@ -59,7 +59,7 @@ public interface ProcessModelService<M>
 		public ProcessModelService<?> createService() throws BPIException {
 			try {
                 return new ProcessModelServiceImpl();
-			} catch (Throwable t) {
+			} catch (Exception t) {
 				throw new BPIException(t);
 			}
 		}

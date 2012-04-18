@@ -38,7 +38,7 @@ public interface EventService<M>
 	 *        retrieved.
 	 * @return All {@link ActivityExecEvent}s stored in the workflow engine to the given
 	 *         {@link ProcessInstance}.
-	 * @throws BPIException
+	 * @throws BPIException If an error occurred while fetching activity execution events
 	 */
 	public List<ActivityExecEvent> getActivityExecEvents(ProcessInstance processInstance)
 		throws BPIException;
@@ -52,14 +52,14 @@ public interface EventService<M>
 		implements ServiceFactory<EventService<?>> {
 
 		/** Property name of the {@link EventService}. */
-		private static final String SERVICE_PROPERTY = "dispatcher.service.event";
+//		private static final String SERVICE_PROPERTY = "dispatcher.service.event";
 
 		/** {@inheritDoc} */
 		@Override
 		public EventService<?> createService() throws BPIException {
 			try {
                 return new EventServiceImpl();
-			} catch (Throwable t) {
+			} catch (Exception t) {
 				throw new BPIException(t);
 			}
 		}

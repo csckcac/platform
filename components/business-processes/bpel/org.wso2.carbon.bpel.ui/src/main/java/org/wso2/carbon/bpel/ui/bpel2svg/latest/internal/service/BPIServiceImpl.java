@@ -37,8 +37,7 @@ import java.util.Map;
  * 
  * @author Gregor Latuske
  */
-class BPIServiceImpl
-	implements BPIService {
+class BPIServiceImpl implements BPIService {
 
     /** {@inheritDoc} */
     public String getProcessModelIDFromInstance(String instanceID) throws BPIException {
@@ -50,13 +49,8 @@ class BPIServiceImpl
     }
 
     public ProcessModel getProcessModelFromInstance(String instanceID) throws BPIException {
-        try {
-            String processModelID = getProcessModelIDFromInstance(instanceID);
-            ProcessModel model = getProcessModel(processModelID);
-            return model;
-        } catch (BPIException e) {
-            throw e;
-        }
+        String processModelID = getProcessModelIDFromInstance(instanceID);
+        return getProcessModel(processModelID);
     }
 
 	/** {@inheritDoc} */
@@ -81,8 +75,8 @@ class BPIServiceImpl
 			}
 
 			return processModels;
-		} catch (Throwable throwable) {
-			throw handelThrowable(throwable);
+		} catch (Exception e) {
+			throw handleException(e);
 		}
 	}
 
@@ -101,8 +95,8 @@ class BPIServiceImpl
 			processModel.setActivityRoot(BPELParser.parse(processModel));
 
 			return processModel;
-		} catch (Throwable throwable) {
-			throw handelThrowable(throwable);
+		} catch (Exception e) {
+			throw handleException(e);
 		}
 	}
 
@@ -125,7 +119,8 @@ class BPIServiceImpl
 	 * @param processInstance The {@link ProcessInstance} with the associated {@link ProcessModel},whose graph
 	 *        should be generated.
 	 * @param settings The settings associated with the current session.
-	 * @throws BPIException
+	 * @throws BPIException If an error occurred while generating the SVG
+     * @return SVG
 	 */
 	private SVG getSVG(ProcessModel processModel, ProcessInstance processInstance, Settings settings)
 		throws BPIException {
@@ -138,8 +133,8 @@ class BPIServiceImpl
 
 			// Finally generate the SVG
 			return SVGGenerator.generate(processModel.getActivityRoot(), settings);
-		} catch (Throwable throwable) {
-			throw handelThrowable(throwable);
+		} catch (Exception e) {
+			throw handleException(e);
 		}
 	}
 
@@ -150,9 +145,9 @@ class BPIServiceImpl
 	 * <p>
 	 * 2) The collected {@link ActivityExecEvent} will be aggregated to a {@link ActivityExecData}.
 	 * 
-	 * @param processInstance The {@link processInstance}, that {@link ActivityExecData} should be retrieved.
+	 * @param processInstance The processInstance, that {@link ActivityExecData} should be retrieved.
 	 * @return A map of {@link ActivityExecData} and the according activity name.
-	 * @throws BPIException
+	 * @throws BPIException If an error occurred while fetching activity execution event data
 	 */
 	private Map<String, ActivityExecData> getActivityExecData(ProcessInstance processInstance)
 		throws BPIException {
@@ -202,7 +197,7 @@ class BPIServiceImpl
 	 * @param throwable The {@link Throwable} to warp.
 	 * @return The wrapped {@link Throwable} as a {@link BPIException}.
 	 */
-	private BPIException handelThrowable(Throwable throwable) {
+	private BPIException handleException(Throwable throwable) {
 		if (throwable instanceof BPIException) {
 			return (BPIException) throwable;
 		}

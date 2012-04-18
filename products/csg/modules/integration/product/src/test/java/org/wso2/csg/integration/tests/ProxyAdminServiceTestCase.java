@@ -32,7 +32,7 @@ import static org.testng.Assert.*;
  */
 public class ProxyAdminServiceTestCase extends CSGIntegrationTestCase {
     private ProxyServiceAdminStub proxyServiceAdminStub;
-    private static final String PROXY_NAME = "SimpleStockQuoteService";
+    private static final String PROXY_NAME = "CSGTestProxy";
 
     public ProxyAdminServiceTestCase() {
         super("ProxyServiceAdmin");
@@ -72,7 +72,7 @@ public class ProxyAdminServiceTestCase extends CSGIntegrationTestCase {
 
     @Test(description = "Test deploying a CSG proxy.",
             expectedExceptions = {RemoteException.class, ProxyServiceAdminProxyAdminException.class})
-    public void testProxyManipulation()
+    public void testProxyOperations()
             throws RemoteException, ProxyServiceAdminProxyAdminException {
         String epr = "csg://testServer/SimpleStockQuoteService";
         if (FrameworkSettings.STRATOS.equalsIgnoreCase("true")) {
@@ -102,8 +102,9 @@ public class ProxyAdminServiceTestCase extends CSGIntegrationTestCase {
                 "<log level=\"full\"/>" +
                 "<drop/>" +
                 "</faultSequence>");
-//        proxyData.setWsdlKey("repository/samples/resources/proxy/sample_proxy_1.wsdl");
-
+        String wsdl = null;
+        // FIXME - the CSG proxy actually persist a WSDL into the registry and use that as the WSDL
+        // FIXME - of the proxy, add a test for that too
         try {
             proxyServiceAdminStub.addProxy(proxyData);
         } catch (Exception e) {

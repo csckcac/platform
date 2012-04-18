@@ -25,9 +25,10 @@ public class JavaScriptFileManagerImpl implements JavaScriptFileManager {
                 throw new ScriptException(e);
             }
         } else {
+            String oldPath = path;
             path = FilenameUtils.normalizeNoEndSeparator(path);
             if (path == null) {
-                String msg = "Invalid file path : " + path;
+                String msg = "Invalid file path : " + oldPath;
                 log.error(msg);
                 throw new ScriptException(msg);
             }

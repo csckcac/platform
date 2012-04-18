@@ -1,29 +1,12 @@
 package org.wso2.carbon.hostobjects.xhr;
 
 import org.apache.axiom.om.util.AXIOMUtil;
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethodBase;
-import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
-import org.apache.commons.httpclient.StatusLine;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.auth.AuthScope;
-import org.apache.commons.httpclient.cookie.CookiePolicy;
-import org.apache.commons.httpclient.methods.DeleteMethod;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.HeadMethod;
-import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
-import org.apache.commons.httpclient.methods.OptionsMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.PutMethod;
-import org.apache.commons.httpclient.methods.TraceMethod;
+import org.apache.commons.httpclient.methods.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Function;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.Undefined;
+import org.mozilla.javascript.*;
 import org.wso2.carbon.scriptengine.engine.RhinoEngine;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 import org.wso2.carbon.scriptengine.util.HostObjectUtil;
@@ -384,6 +367,7 @@ public class XMLHttpRequestHostObject extends ScriptableObject {
             return null;
         }
         // 5
+        StringBuffer hBuf = new StringBuffer();
         String headers = "";
         if (xhr.responseHeaders == null) {
             return headers;
@@ -393,8 +377,9 @@ public class XMLHttpRequestHostObject extends ScriptableObject {
             if (isInvalidHeader(header)) {
                 continue;
             }
-            headers += h.getName() + ": " + h.getValue() + "\r\n";
+            hBuf.append(h.getName() + ": " + h.getValue() + "\r\n");
         }
+        headers = hBuf.toString();
         return headers;
     }
 

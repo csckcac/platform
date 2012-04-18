@@ -18,6 +18,10 @@
 package org.wso2.automation.common.test.dss;
 
 import org.testng.annotations.AfterSuite;
+import org.wso2.automation.common.test.dss.datasource.DataSourceInitializationAtStartUp;
+import org.wso2.automation.common.test.dss.faultyservice.InvalidClosingTagFaultyServiceTest;
+import org.wso2.automation.common.test.dss.syntax.ReturnRequestStatusTest;
+import org.wso2.automation.common.test.dss.syntax.WhiteSpaceWithQueryParamsTest;
 import org.wso2.platform.test.core.utils.suiteutills.MasterTestSuite;
 import org.wso2.platform.test.core.utils.suiteutills.SuiteVariables;
 import org.wso2.automation.common.test.dss.faultyservice.EditFaultyDataServiceTest;
@@ -65,8 +69,13 @@ public class DSSTestSuite extends MasterTestSuite {
         suiteVariablesList.add(new SuiteVariables("FaultyServiceTest", FaultyServiceTest.class));
         suiteVariablesList.add(new SuiteVariables("ServiceFaultyTest", ServiceFaultyTest.class));
         suiteVariablesList.add(new SuiteVariables("EditFaultyDataServiceTest", EditFaultyDataServiceTest.class));
+        suiteVariablesList.add(new SuiteVariables("ReturnRequestStatusTest", ReturnRequestStatusTest.class));
+        suiteVariablesList.add(new SuiteVariables("WhiteSpaceWithQueryParamsTest", WhiteSpaceWithQueryParamsTest.class));
         suiteVariablesList.add(new SuiteVariables("AddScheduleTaskTest", AddScheduleTaskTest.class));
         suiteVariablesList.add(new SuiteVariables("ReScheduleTaskTest", ReScheduleTaskTest.class));
+
+        suiteVariablesList.add(new SuiteVariables("DataSourceInitializationAtStartUp", DataSourceInitializationAtStartUp.class));
+        suiteVariablesList.add(new SuiteVariables("InvalidClosingTagFaultyServiceTest", InvalidClosingTagFaultyServiceTest.class));
         superSuite("DataServiceServer",suiteVariablesList).run();
     }
 

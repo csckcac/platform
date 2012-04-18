@@ -237,7 +237,7 @@ function genHandlerUI(handlers){
                 if(handlers[i].status == "Successful"){
                     statusClass =   "handlerGreen";
                 }
-                htmlData+='<li class="'+statusClass+'" onmouseover="showHandlerDetails(\'details'+currentDepth+'-'+i+'\')" onmouseout="hideHandlerDetails(\'details'+currentDepth+'-'+i+'\')">'+handlers[i].handler.truncate(17, '..')+' <div class="details" id="details'+currentDepth+'-'+i+'" style="display:none"> <div class="detailsTitle">'+handlers[i].handler+'</div>'+handlers[i].status+'</div></li>';
+                htmlData+='<li class="'+statusClass+'" onmouseover="showHandlerDetails(\'handlerDetails'+currentDepth+'-'+i+'\')" onmouseout="hideHandlerDetails(\'handlerDetails'+currentDepth+'-'+i+'\')">'+handlers[i].handler.truncate(17, '..')+' <div class="handlerDetails" id="handlerDetails'+currentDepth+'-'+i+'" style="display:none"> <div class="handlerDetailsTitle">'+handlers[i].handler+'</div>'+handlers[i].status+'</div></li>';
                 if(handlers.length != (i+1) && (i % numDivs)!=(numDivs-1) ){
                     htmlData+='<li class="handlerArrow'+otherDirection+'"></li>';
                 }

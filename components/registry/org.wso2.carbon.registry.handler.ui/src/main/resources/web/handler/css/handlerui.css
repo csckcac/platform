@@ -90,7 +90,7 @@
 .toRight li,.toRight{
     float:right;    
 }
-.details{
+.handlerDetails{
     background-color:#f1efd7;
     border:1px solid #CCCCCC;
     margin-left:50px;
@@ -99,7 +99,7 @@
     position:absolute;
     line-height:20px;
 }
-.detailsTitle{
+.handlerDetailsTitle{
     font-weight:bold;
 }
 

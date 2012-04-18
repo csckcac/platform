@@ -36,7 +36,9 @@ public class WARCappDeployer implements AppDeploymentHandler {
     private static final Log log = LogFactory.getLog(WARCappDeployer.class);
 
     public static final String WAR_TYPE = "web/application";
+    public static final String JAX_WAR_TYPE = "webapp/jaxws";
     public static final String WAR_DIR = "webapps";
+    public static final String JAX_WAR_DIR = "jaxwebapps";
 
     private Map<String, Boolean> acceptanceList = null;
 
@@ -68,6 +70,8 @@ public class WARCappDeployer implements AppDeploymentHandler {
 
             if (WAR_TYPE.equals(artifact.getType())) {
                 destPath = repo + File.separator + WAR_DIR;
+            } else if (JAX_WAR_TYPE.equals(artifact.getType())) {
+                destPath = repo + File.separator + JAX_WAR_DIR;
             } else {
                 continue;
             }

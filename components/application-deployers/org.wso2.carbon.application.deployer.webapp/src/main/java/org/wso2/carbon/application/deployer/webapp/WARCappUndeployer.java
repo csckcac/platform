@@ -18,13 +18,14 @@
 package org.wso2.carbon.application.deployer.webapp;
 
 import org.apache.axis2.AxisFault;
-import org.wso2.carbon.application.deployer.handler.AppUndeploymentHandler;
+import org.apache.axis2.engine.AxisConfiguration;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.application.deployer.CarbonApplication;
 import org.wso2.carbon.application.deployer.config.Artifact;
 import org.wso2.carbon.application.deployer.config.CappFile;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.axis2.engine.AxisConfiguration;
+import org.wso2.carbon.application.deployer.handler.AppUndeploymentHandler;
+import org.wso2.carbon.jaxws.webapp.mgt.JaxwsWebappAdmin;
 import org.wso2.carbon.webapp.mgt.WebappAdmin;
 
 import java.util.List;
@@ -50,7 +51,8 @@ public class WARCappUndeployer implements AppUndeploymentHandler {
             if (artifact == null) {
                 continue;
             }
-            if (!WARCappDeployer.WAR_TYPE.equals(artifact.getType())) {
+            if (!WARCappDeployer.WAR_TYPE.equals(artifact.getType()) &&
+                !WARCappDeployer.JAX_WAR_TYPE.equals(artifact.getType())) {
                 continue;
             }
 
@@ -61,6 +63,16 @@ public class WARCappUndeployer implements AppUndeploymentHandler {
                 continue;
             }
             String fileName = artifact.getFiles().get(0).getName();
+            if (WARCappDeployer.JAX_WAR_TYPE.equals(artifact.getType())) {
+                JaxwsWebappAdmin jaxwsWebappAdmin = new JaxwsWebappAdmin();
+                try {
+                    jaxwsWebappAdmin.deleteWebapp(fileName);
+                } catch (AxisFault axisFault) {
+                    log.error("Error while deleting webapp artifact " + fileName, axisFault);
+                }
+                continue;
+            }
+
             WebappAdmin webappAdmin = new WebappAdmin();
             try {
                 webappAdmin.deleteWebapp(fileName);

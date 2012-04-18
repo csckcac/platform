@@ -65,72 +65,76 @@ public class CassandraServerDSComponent {
     private AuthenticationService authenticationService;
 
     protected void activate(ComponentContext componentContext) {
-        try{
+        try {
 
-        if (log.isDebugEnabled()) {
-            log.debug("Starting the Cassandra Server component");
-        }
+            if (log.isDebugEnabled()) {
+                log.debug("Starting the Cassandra Server component");
+            }
 
-        CassandraServerComponentManager.getInstance().init(realmService, authenticationService);
+            CassandraServerComponentManager.getInstance().init(realmService, authenticationService);
 
-        // initialize and start the Cassandra server
-        String cassandraConfLocation = DEFAULT_CONF;
-        if (isConfigurationExists()) {
-            cassandraConfLocation = "file:" + System.getProperty(ServerConstants.CARBON_HOME) + CASSANDRA_SERVER_CONF;
-        }
-        System.setProperty("cassandra.config", cassandraConfLocation);
-        System.setProperty("cassandra-foreground", "yes");
-        //set Cassnadra ports form carbon.xml
+            // initialize and start the Cassandra server
+            String cassandraConfLocation = DEFAULT_CONF;
+            if (isConfigurationExists()) {
+                cassandraConfLocation = "file:" + System.getProperty(ServerConstants.CARBON_HOME) + CASSANDRA_SERVER_CONF;
+            }
+            System.setProperty("cassandra.config", cassandraConfLocation);
+            System.setProperty("cassandra-foreground", "yes");
+            //set Cassnadra ports form carbon.xml
 
-        int rpcPort = 0;
-        String carbonCassandraRPCPort = readRPCPortFromCarbonConfig();
-        int carbonPortOffset = readPortOffset();
-
-        if(!carbonCassandraRPCPort.isEmpty()){
+            int rpcPort = 9160;
+            String carbonCassandraRPCPort = readRPCPortFromCarbonConfig();
+            int carbonPortOffset = readPortOffset();
             try {
-                rpcPort = Integer.parseInt(carbonCassandraRPCPort) + carbonPortOffset;
-                if( rpcPort > 0 &&  rpcPort< 65535){
+                if (!carbonCassandraRPCPort.isEmpty()) {
+                    rpcPort = Integer.parseInt(carbonCassandraRPCPort) + carbonPortOffset;
+                } else {
+                    rpcPort += carbonPortOffset;
+                }
+                if (rpcPort > 0 && rpcPort < 65535) {
                     System.setProperty("cassandra.rpcport", Integer.toString(rpcPort));
+                } else {
+                    log.error("Error setting Cassandra RPC port : Port out of range :" + rpcPort);
                 }
             } catch (NumberFormatException e) {
                 log.debug("Error Reading Cassandra RPC Port");
             }
-        }
 
-        int storagePort = 0;
-        String carbonCassandraStoragePort = readStoragePortFromCarbonConfig();
 
-        if(!carbonCassandraStoragePort.isEmpty()){
-            try {
-                storagePort = Integer.parseInt(carbonCassandraStoragePort) + carbonPortOffset;
-                if( storagePort > 0 &&  storagePort< 65535){
-                    System.setProperty("cassandra.storageport", Integer.toString(storagePort));
+            int storagePort = 0;
+            String carbonCassandraStoragePort = readStoragePortFromCarbonConfig();
+
+            if (!carbonCassandraStoragePort.isEmpty()) {
+                try {
+                    storagePort = Integer.parseInt(carbonCassandraStoragePort) + carbonPortOffset;
+                    if (storagePort > 0 && storagePort < 65535) {
+                        System.setProperty("cassandra.storageport", Integer.toString(storagePort));
+                    }
+                } catch (NumberFormatException e) {
+                    log.debug("Error Reading Cassandra RPC Port");
                 }
-            } catch (NumberFormatException e) {
-                log.debug("Error Reading Cassandra RPC Port");
             }
-        }
 
 
-        cassandraServerController = new CassandraServerController();
+            cassandraServerController = new CassandraServerController();
 
-        //register OSGI service
+            //register OSGI service
 
-        CassandraServerService  cassandraServerService =
-                new CassandraServerServiceImpl(cassandraServerController);
-        componentContext.getBundleContext().registerService(
+            CassandraServerService cassandraServerService =
+                    new CassandraServerServiceImpl(cassandraServerController);
+            componentContext.getBundleContext().registerService(
                     CassandraServerService.class.getName(), cassandraServerService, null);
 
-        String disableServerStartup = System.getProperty(DISABLE_CASSANDRA_SERVER_STARTUP);
+            String disableServerStartup = System.getProperty(DISABLE_CASSANDRA_SERVER_STARTUP);
 
 
-        if("true".equals(disableServerStartup)) {
-            log.debug("Cassandra server is not started in service activator");
-            return;
-        }
+            if ("true".equals(disableServerStartup)) {
+                log.debug("Cassandra server is not started in service activator");
+                return;
+            }
 
-        cassandraServerController.start();
-        }catch (Throwable throwable) {
+            cassandraServerController.start();
+        } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
     }

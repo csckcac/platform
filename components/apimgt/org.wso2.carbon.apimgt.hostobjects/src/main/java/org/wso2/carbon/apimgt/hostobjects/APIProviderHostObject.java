@@ -507,14 +507,8 @@ public class APIProviderHostObject extends ScriptableObject {
                 API api = (API) apiObject;
                 APIIdentifier apiIdentifier = api.getId();
                 row.put("apiName", row, apiIdentifier.getApiName());
-                row.put("description", row, api.getDescription());
-                row.put("endpoint", row, api.getUrl());
-                row.put("wsdl", row, api.getWsdlUrl());
                 row.put("version", row, apiIdentifier.getVersion());
                 row.put("updatedDate", row, api.getLastUpdated().toString());
-                row.put("tier", row, api.getAvailableTiers());
-                row.put("status", row, api.getStatus().toString());
-                row.put("thumb", row, api.getThumbnailUrl());
                 myn.put(i, myn, row);
                 i++;
 

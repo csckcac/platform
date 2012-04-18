@@ -98,7 +98,7 @@
             <name>print</name>
         </method>
         <method>
-            <className>org.wso2.carbon.jaggery.core.manager.CommonManager</className>
+            <className>org.wso2.carbon.jaggery.core.manager.WebAppManager</className>
             <name>include</name>
         </method>
         <!--method>

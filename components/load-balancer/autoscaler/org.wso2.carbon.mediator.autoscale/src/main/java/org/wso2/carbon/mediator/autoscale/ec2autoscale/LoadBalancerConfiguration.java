@@ -94,7 +94,7 @@ public class LoadBalancerConfiguration {
      * <property name="availabilityZone" value="us-east-1c"/>
      * <property name="payload" value="/mnt/payload.zip"/>
      * </loadBalancer>
-     * <p/>
+     *
      * <services>
      * <defaults>
      * <property name="payload" value="resources/cluster_node.zip"/>
@@ -121,7 +121,7 @@ public class LoadBalancerConfiguration {
      * <host>as.cloud-test.wso2.com</host>
      * </hosts>
      * <domain>wso2.as.domain</domain>
-     * <p/>
+     *
      * <property name="payload" value="resources/cluster_node.zip"/>
      * <property name="availabilityZone" value="us-east-1c"/>
      * </service>
@@ -130,7 +130,7 @@ public class LoadBalancerConfiguration {
      * <host>esb.cloud-test.wso2.com</host>
      * </hosts>
      * <domain>wso2.esb.domain</domain>
-     * <p/>
+     *
      * <property name="payload" value="resources/cluster_node.zip"/>
      * <property name="minAppInstances" value="1"/>
      * <property name="maxAppInstances" value="5"/>
@@ -173,7 +173,7 @@ public class LoadBalancerConfiguration {
         // Set all properties
         try {
             for (Iterator<OMElement> iter = loadBalancerConfigEle.getChildrenWithLocalName("property");
-                 iter.hasNext();) {
+                 iter.hasNext(); ) {
                 setProperty(this, iter.next());
             }
         } catch (Exception e) {
@@ -183,13 +183,13 @@ public class LoadBalancerConfiguration {
         // Set load balancer config
         OMElement loadBalancerEle =
                 loadBalancerConfigEle.getFirstChildWithName(new QName(SynapseConstants.SYNAPSE_NAMESPACE,
-                                                                      "loadBalancer"));
+                        "loadBalancer"));
         createLoadBalancerConfig(loadBalancerEle);
 
         // Set services config
         OMElement servicesEle =
                 loadBalancerConfigEle.getFirstChildWithName(new QName(SynapseConstants.SYNAPSE_NAMESPACE,
-                                                                      "services"));
+                        "services"));
         createServicesConfig(servicesEle);
     }
 
@@ -269,26 +269,26 @@ public class LoadBalancerConfiguration {
      */
     void createServicesConfig(OMElement servicesEle) {
         OMElement defaultsEle = servicesEle.getFirstChildWithName(new QName(SynapseConstants.SYNAPSE_NAMESPACE,
-                                                                            "defaults"));
+                "defaults"));
         if (defaultsEle != null) {
             createConfiguration(defaultsEle, defaultServiceConfig = new ServiceConfiguration(null));
         }
         for (Iterator<OMElement> iter = servicesEle.getChildrenWithLocalName("service");
-             iter.hasNext();) {
+             iter.hasNext(); ) {
             OMElement serviceEle = iter.next();
             OMElement domainEle = serviceEle.getFirstChildWithName(new QName(SynapseConstants.SYNAPSE_NAMESPACE,
-                                                                             "domain"));
+                    "domain"));
             String domain;
             if (domainEle == null || (domain = domainEle.getText()).isEmpty()) {
                 throw new RuntimeException("The mandatory domain element child of the service element is not specified");
             }
             OMElement hostsEle = serviceEle.getFirstChildWithName(new QName(SynapseConstants.SYNAPSE_NAMESPACE,
-                                                                            "hosts"));
+                    "hosts"));
             if (hostsEle == null) {
                 throw new RuntimeException("The mandatory hosts element child of the service element is not specified");
             }
             for (Iterator<OMElement> hostsIter = hostsEle.getChildrenWithLocalName("host");
-                 hostsIter.hasNext();) {
+                 hostsIter.hasNext(); ) {
                 OMElement hostEle = hostsIter.next();
                 String host;
                 if ((host = hostEle.getText()).isEmpty()) {
@@ -306,7 +306,7 @@ public class LoadBalancerConfiguration {
     }
 
     private void createConfiguration(OMElement configEle, Configuration config) {
-    /*    if (configEle == null) {
+        /* if (configEle == null) {
             throw new RuntimeException("The configuration element for " + config.getClass().getName() + " is null");
         }
         try {
@@ -321,8 +321,8 @@ public class LoadBalancerConfiguration {
     }
 
     private void setProperty(Object obj, OMElement propEle) throws IllegalAccessException,
-                                                                   InvocationTargetException,
-                                                                   NoSuchMethodException {
+            InvocationTargetException,
+            NoSuchMethodException {
         String name = propEle.getAttributeValue(new QName("name"));
         String value = propEle.getAttributeValue(new QName("value"));
         PropertyHelper.setInstanceProperty(name, value, obj);
@@ -552,7 +552,7 @@ public class LoadBalancerConfiguration {
         public void setMinAppInstances(int minAppInstances) {
             if (minAppInstances < 1) {
                 AutoscaleUtil.handleException("minAppInstances in the autoscaler task configuration " +
-                                              "should be at least 1");
+                        "should be at least 1");
             }
             this.minAppInstances = minAppInstances;
             this.minAppInstancesSet = true;
@@ -561,7 +561,7 @@ public class LoadBalancerConfiguration {
         public void setMaxAppInstances(int maxAppInstances) {
             if (maxAppInstances < 1) {
                 AutoscaleUtil.handleException("maxAppInstances in the autoscaler task configuration " +
-                                              "should be at least 1");
+                        "should be at least 1");
             }
             this.maxAppInstances = maxAppInstances;
             this.maxAppInstancesSet = true;
@@ -580,7 +580,7 @@ public class LoadBalancerConfiguration {
         public void setInstancesPerScaleUp(int instancesPerScaleUp) {
             if (instancesPerScaleUp < 1) {
                 AutoscaleUtil.handleException("instancesPerScaleUp in the autoscaler task configuration " +
-                                              "should be at least 1");
+                        "should be at least 1");
             }
             this.instancesPerScaleUp = instancesPerScaleUp;
             this.instancesPerScaleUpSet = true;
@@ -589,7 +589,7 @@ public class LoadBalancerConfiguration {
         public void setMessageExpiryTime(int messageExpiryTime) {
             if (messageExpiryTime < 1) {
                 AutoscaleUtil.handleException("messageExpiryTime in the autoscaler task configuration " +
-                                              "should be at least 1");
+                        "should be at least 1");
             }
             this.messageExpiryTime = messageExpiryTime;
             this.messageExpiryTimeSet = true;

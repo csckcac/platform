@@ -23,6 +23,8 @@ import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.agent.server.AgentServer;
 import org.wso2.carbon.agent.server.datastore.InMemoryStreamDefinitionStore;
+import org.wso2.carbon.agent.server.exception.AgentServerConfigurationException;
+import org.wso2.carbon.agent.server.exception.AgentServerException;
 import org.wso2.carbon.agent.server.internal.authentication.CarbonAuthenticationHandler;
 import org.wso2.carbon.agent.server.internal.utils.AgentServerBuilder;
 import org.wso2.carbon.base.api.ServerConfigurationService;
@@ -59,7 +61,9 @@ public class AgentServerServiceDS {
             agentServerService = context.getBundleContext().
                     registerService(AgentServer.class.getName(), carbonAgentServer, null);
             log.info("Successfully deployed Agent Server ");
-        } catch (Exception e) {
+        } catch (AgentServerConfigurationException e) {
+            log.error("Agent Server Configuration is not correct hence can not create and start Agent Server ", e);
+        } catch (AgentServerException e) {
             log.error("Can not create and start Agent Server ", e);
         }
     }

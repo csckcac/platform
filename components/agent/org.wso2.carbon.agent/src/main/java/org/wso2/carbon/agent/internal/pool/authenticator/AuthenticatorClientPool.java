@@ -37,12 +37,7 @@ public class AuthenticatorClientPool {
         if (socketPool == null) {
             synchronized (ClientPool.class) {
                 if (socketPool == null) {
-                    socketPool = new GenericKeyedObjectPool() {
-                        @Override
-                        public void close() throws Exception {
-                            super.close();
-                        }
-                    };
+                    socketPool = new GenericKeyedObjectPoolImpl();
                     socketPool.setFactory(factory);
                     socketPool.setMaxActive(maxActive);
                     socketPool.setTestOnBorrow(testOnBorrow);
@@ -55,4 +50,12 @@ public class AuthenticatorClientPool {
         }
         return socketPool;
     }
+
+    static class GenericKeyedObjectPoolImpl extends GenericKeyedObjectPool {
+        @Override
+        public void close() throws Exception {
+            super.close();
+        }
+    }
+
 }

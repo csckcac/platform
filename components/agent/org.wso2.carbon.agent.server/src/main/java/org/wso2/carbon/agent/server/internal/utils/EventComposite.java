@@ -21,8 +21,8 @@ import org.wso2.carbon.agent.commons.thrift.data.ThriftEventBundle;
 import org.wso2.carbon.agent.server.internal.EventStreamTypeHolder;
 
 public class EventComposite {
-    EventStreamTypeHolder eventStreamTypeHolder;
-    ThriftEventBundle thriftEventBundle;
+    private EventStreamTypeHolder eventStreamTypeHolder;
+    private ThriftEventBundle thriftEventBundle;
 
     public EventComposite(ThriftEventBundle thriftEventBundle, EventStreamTypeHolder eventStreamTypeHolder) {
         this.eventStreamTypeHolder = eventStreamTypeHolder;

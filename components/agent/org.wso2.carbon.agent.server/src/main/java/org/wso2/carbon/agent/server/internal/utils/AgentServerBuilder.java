@@ -21,6 +21,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.agent.internal.utils.AgentConstants;
 import org.wso2.carbon.agent.server.conf.AgentServerConfiguration;
 import org.wso2.carbon.agent.server.exception.AgentServerConfigurationException;
 import org.wso2.carbon.base.api.ServerConfigurationService;
@@ -39,7 +40,7 @@ import java.io.IOException;
 /**
  * Helper class to build Agent Server
  */
-public class AgentServerBuilder {
+public final class AgentServerBuilder {
 
     private static final Log log = LogFactory.getLog(AgentServerBuilder.class);
 
@@ -117,7 +118,7 @@ public class AgentServerBuilder {
     private static AgentServerConfiguration buildAgentServerConfiguration(
             OMElement agentServerConfig, ServerConfigurationService serverConfiguration) {
         int portOffSet = readPortOffset(serverConfiguration);
-        AgentServerConfiguration agentServerConfiguration = new AgentServerConfiguration(AgentServerConstants.THRIFT_DEFAULT_SSL_PORT, AgentServerConstants.THRIFT_DEFAULT_PORT);
+        AgentServerConfiguration agentServerConfiguration = new AgentServerConfiguration(AgentConstants.DEFAULT_RECEIVER_PORT+AgentConstants.AUTHENTICATOR_PORT_OFFSET, AgentConstants.DEFAULT_RECEIVER_PORT);
         OMElement authenticatorPort = agentServerConfig.getFirstChildWithName(
                 new QName(AgentServerConstants.AGENT_SERVER_CONF_NAMESPACE,
                           AgentServerConstants.AUTHENTICATOR_PORT));

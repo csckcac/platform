@@ -42,6 +42,7 @@ import org.wso2.carbon.agent.conf.DataPublisherConfiguration;
 import org.wso2.carbon.agent.exception.AgentException;
 import org.wso2.carbon.agent.exception.TransportException;
 import org.wso2.carbon.agent.internal.EventQueue;
+import org.wso2.carbon.agent.internal.utils.AgentConstants;
 import org.wso2.carbon.agent.internal.utils.EventConverter;
 
 import java.util.concurrent.Semaphore;
@@ -108,26 +109,14 @@ public class EventPublisher implements Runnable {
                       dataPublisherConfiguration.getPublisherKey(), e);
             transportPool.clear(dataPublisherConfiguration.getPublisherKey());
         } catch (ThriftSessionExpiredException e) {
-            reconnect(3, thriftEventBundle.getSessionId());
-            try {
-                thriftEventBundle.setSessionId(dataPublisherConfiguration.getSessionId());
-                client.publish(thriftEventBundle);
-            } catch (ThriftUndefinedEventTypeException ex) {
-                log.error("Wrongly typed event " + thriftEventBundle.toString() + " send events to " +
-                          dataPublisherConfiguration.getPublisherKey(), ex);
-            } catch (ThriftSessionExpiredException ex) {
-                log.error("Session timed out for " + dataPublisherConfiguration.getPublisherKey()
-                          + " even after reconnecting ", ex);
-            } catch (TException ex) {
-                log.error("Cannot send events to " + dataPublisherConfiguration.getPublisherKey() +
-                          " even after reconnecting ", ex);
-            }
+            log.info("Session timed out for " + dataPublisherConfiguration.getPublisherKey() + "," + e.getMessage());
+            thriftEventBundle.setSessionId(reconnect(thriftEventBundle.getSessionId()));
+            resendEvent(thriftEventBundle, client);
         } catch (TException e) {
             log.error("Cannot send events to " + dataPublisherConfiguration.getPublisherKey(), e);
         } catch (ThriftUndefinedEventTypeException e) {
             log.error("Wrongly typed event " + thriftEventBundle.toString() + " send events to " +
                       dataPublisherConfiguration.getPublisherKey(), e);
-
         }
 
         try {
@@ -138,15 +127,32 @@ public class EventPublisher implements Runnable {
         }
     }
 
+    private void resendEvent(ThriftEventBundle thriftEventBundle,
+                             ThriftEventReceiverService.Client client) {
+        try {
+            client.publish(thriftEventBundle);
+        } catch (ThriftUndefinedEventTypeException ex) {
+            log.error("Wrongly typed event " + thriftEventBundle.toString() + " send events to " +
+                      dataPublisherConfiguration.getPublisherKey(), ex);
+        } catch (ThriftSessionExpiredException ex) {
+            log.error("Session timed out for " + dataPublisherConfiguration.getPublisherKey()
+                      + " even after reconnecting ", ex);
+        } catch (TException ex) {
+            log.error("Cannot send events to " + dataPublisherConfiguration.getPublisherKey() +
+                      " even after reconnecting ", ex);
+        }
+    }
+
     public String defineEventStream(String sessionId, String eventStreamDefinition)
             throws AgentException, DifferentStreamDefinitionAlreadyDefinedException,
                    WrongEventTypeException, MalformedStreamDefinitionException,
                    StreamDefinitionException {
+        String currentSessionId = sessionId;
         String streamId = null;
         ThriftEventReceiverService.Client client = getThriftClient(
                 dataPublisherConfiguration.getPublisherKey());
         try {
-            streamId = client.defineEventStream(sessionId, eventStreamDefinition);
+            streamId = client.defineEventStream(currentSessionId, eventStreamDefinition);
             transportPool.returnObject(dataPublisherConfiguration.getPublisherKey(), client);
         } catch (ThriftStreamDefinitionException e) {
             throw new WrongEventTypeException("Invalid type definition for stream " +
@@ -154,32 +160,14 @@ public class EventPublisher implements Runnable {
         } catch (TException e) {
             throw new AgentException("Cannot define type " + eventStreamDefinition, e);
         } catch (ThriftSessionExpiredException e) {
-            log.info("Session timed out for " + dataPublisherConfiguration.getPublisherKey(), e);
-            reconnect(3, sessionId);
-            try {
-                sessionId = dataPublisherConfiguration.getSessionId();
-                client.defineEventStream(sessionId, eventStreamDefinition);
-            } catch (ThriftSessionExpiredException ex) {
-                log.error("Session timed out for " + dataPublisherConfiguration.getPublisherKey()
-                          + " even after reconnecting ", ex);
-            } catch (TException ex) {
-                log.error("Cannot send events to " + dataPublisherConfiguration.getPublisherKey() +
-                          " even after reconnecting ", ex);
-            } catch (ThriftDifferentStreamDefinitionAlreadyDefinedException e1) {
-                throw new DifferentStreamDefinitionAlreadyDefinedException("Type already defined when send event definitions to" +
-                                                                           dataPublisherConfiguration.getPublisherKey(), e);
-            } catch (ThriftStreamDefinitionException e1) {
-                throw new StreamDefinitionException("Wrongly event definition :" + eventStreamDefinition + " send event definitions to " +
-                                                    dataPublisherConfiguration.getPublisherKey(), e);
-            } catch (ThriftMalformedStreamDefinitionException e1) {
-                throw new MalformedStreamDefinitionException("Wrongly event definition :" + eventStreamDefinition + " send event definitions to " +
-                                                             dataPublisherConfiguration.getPublisherKey(), e);
-            }
+            log.info("Session timed out for " + dataPublisherConfiguration.getPublisherKey() + "," + e.getMessage());
+            currentSessionId = reconnect(currentSessionId);
+            redefineEventStream(eventStreamDefinition, currentSessionId, client);
         } catch (ThriftDifferentStreamDefinitionAlreadyDefinedException e) {
             throw new DifferentStreamDefinitionAlreadyDefinedException("Same stream id with different definition already defined before sending this event definitions to " +
                                                                        dataPublisherConfiguration.getPublisherKey(), e);
         } catch (ThriftMalformedStreamDefinitionException e) {
-            throw new MalformedStreamDefinitionException("Wrongly event definition :" + eventStreamDefinition + " send event definitions to " +
+            throw new MalformedStreamDefinitionException("Malformed event definition :" + eventStreamDefinition + " send  to " +
                                                          dataPublisherConfiguration.getPublisherKey(), e);
         } catch (Exception e) {
             log.warn("Error occurred while returning object to connection pool", e);
@@ -187,33 +175,57 @@ public class EventPublisher implements Runnable {
         return streamId;
     }
 
+    private void redefineEventStream(String eventStreamDefinition, String currentSessionId,
+                                     ThriftEventReceiverService.Client client)
+            throws DifferentStreamDefinitionAlreadyDefinedException, StreamDefinitionException,
+                   MalformedStreamDefinitionException {
+        try {
+            client.defineEventStream(currentSessionId, eventStreamDefinition);
+        } catch (ThriftSessionExpiredException ex) {
+            log.error("Session timed out for " + dataPublisherConfiguration.getPublisherKey()
+                      + " even after reconnecting ", ex);
+        } catch (TException ex) {
+            log.error("Cannot send events to " + dataPublisherConfiguration.getPublisherKey() +
+                      " even after reconnecting ", ex);
+        } catch (ThriftDifferentStreamDefinitionAlreadyDefinedException ex) {
+            throw new DifferentStreamDefinitionAlreadyDefinedException("Type already defined when send event definitions to" +
+                                                                       dataPublisherConfiguration.getPublisherKey(), ex);
+        } catch (ThriftStreamDefinitionException ex) {
+            throw new StreamDefinitionException("Wrongly defined event definition after reconnection  :" + eventStreamDefinition + " sent to " +
+                                                dataPublisherConfiguration.getPublisherKey(), ex);
+        } catch (ThriftMalformedStreamDefinitionException ex) {
+            throw new MalformedStreamDefinitionException("Malformed event definition after reconnection  :" + eventStreamDefinition + " sent to " +
+                                                         dataPublisherConfiguration.getPublisherKey(), ex);
+        }
+    }
+
 
     public String findEventStreamId(String sessionId, String name, String version)
             throws AgentException, StreamDefinitionException, NoStreamDefinitionExistException {
+        String currentSessionId = sessionId;
         String streamId = null;
         ThriftEventReceiverService.Client client = getThriftClient(
                 dataPublisherConfiguration.getPublisherKey());
         try {
-            streamId = client.findEventStreamId(sessionId, name, version);
+            streamId = client.findEventStreamId(currentSessionId, name, version);
             transportPool.returnObject(dataPublisherConfiguration.getPublisherKey(), client);
         } catch (ThriftNoStreamDefinitionExistException e) {
             throw new NoStreamDefinitionExistException("No stream id found for : " + name + " " + version, e);
         } catch (TException e) {
             throw new AgentException("Error when finding event stream definition for : " + name + " " + version, e);
         } catch (ThriftSessionExpiredException e) {
-            log.info("Session timed out for " + dataPublisherConfiguration.getPublisherKey(), e);
-            reconnect(3, sessionId);
+            log.info("Session timed out for " + dataPublisherConfiguration.getPublisherKey() + "," + e.getMessage());
+            currentSessionId = reconnect(currentSessionId);
             try {
-                sessionId = dataPublisherConfiguration.getSessionId();
-                streamId = client.findEventStreamId(sessionId, name, version);
+                streamId = client.findEventStreamId(currentSessionId, name, version);
             } catch (ThriftSessionExpiredException ex) {
                 log.error("Session timed out for " + dataPublisherConfiguration.getPublisherKey()
                           + " even after reconnecting ", ex);
             } catch (TException ex) {
                 log.error("Cannot send events to " + dataPublisherConfiguration.getPublisherKey() +
                           " even after reconnecting ", ex);
-            } catch (ThriftNoStreamDefinitionExistException e1) {
-                throw new NoStreamDefinitionExistException("No stream id found for : " + name + " " + version, e);
+            } catch (ThriftNoStreamDefinitionExistException ex) {
+                throw new NoStreamDefinitionExistException("No stream id found for : " + name + " " + version, ex);
             }
         } catch (Exception e) {
             log.warn("Error occurred while returning object to connection pool", e);
@@ -222,13 +234,17 @@ public class EventPublisher implements Runnable {
 
     }
 
+    private String reconnect(String currentSessionId) {
+        reconnect(AgentConstants.AGENT_RECONNECTION_TIMES, currentSessionId);
+        return dataPublisherConfiguration.getSessionId();
+    }
+
     public synchronized void reconnect(
-            int connectionTime, String sessionId) {
+            int reconnectionTime, String sessionId) {
         if (!dataPublisherConfiguration.getSessionId().equals(sessionId)) {
             return;
         }
-        if (connectionTime > 0) {
-            connectionTime--;
+        if (reconnectionTime > 0) {
             try {
                 dataPublisherConfiguration.setSessionId(
                         agentAuthenticator.connect(
@@ -238,9 +254,9 @@ public class EventPublisher implements Runnable {
                           " not authorised to access server at " +
                           dataPublisherConfiguration.getPublisherKey());
             } catch (TransportException e) {
-                reconnect(connectionTime, sessionId);
+                reconnect(reconnectionTime-1, sessionId);
             } catch (AgentException e) {
-                reconnect(connectionTime, sessionId);
+                reconnect(reconnectionTime-1, sessionId);
             }
         }
     }

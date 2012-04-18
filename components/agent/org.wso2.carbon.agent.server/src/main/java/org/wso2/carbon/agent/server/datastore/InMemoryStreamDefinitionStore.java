@@ -28,8 +28,8 @@ import java.util.Map;
 
 public class InMemoryStreamDefinitionStore implements StreamDefinitionStore {
 
-    Map<String, HashMap<String, String>> streamIdMap = new HashMap<String, HashMap<String, String>>();
-    Map<String, HashMap<String, EventStreamDefinition>> streamDefinitionMap = new HashMap<String, HashMap<String, EventStreamDefinition>>();
+    private Map<String, HashMap<String, String>> streamIdMap = new HashMap<String, HashMap<String, String>>();
+    private Map<String, HashMap<String, EventStreamDefinition>> streamDefinitionMap = new HashMap<String, HashMap<String, EventStreamDefinition>>();
 
     private String constructNameVersionKey(String name, String version) {
         return name + "::" + version;
@@ -93,7 +93,8 @@ public class InMemoryStreamDefinitionStore implements StreamDefinitionStore {
     }
 
     @Override
-    public List<EventStreamDefinition> getStreamDefinition(String domainName) throws StreamDefinitionNotFoundException {
+    public List<EventStreamDefinition> getStreamDefinition(String domainName)
+            throws StreamDefinitionNotFoundException {
         HashMap<String, EventStreamDefinition> map = streamDefinitionMap.get(domainName);
         if (map == null) {
             throw new StreamDefinitionNotFoundException("No definitions exist for " + domainName);

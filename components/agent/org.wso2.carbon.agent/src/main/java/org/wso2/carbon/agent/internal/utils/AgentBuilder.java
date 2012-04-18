@@ -38,10 +38,13 @@ import java.io.IOException;
 /**
  * Helper class to build Agent
  */
-public class AgentBuilder {
+public final class AgentBuilder {
 
     private static final Log log = LogFactory.getLog(AgentBuilder.class);
 
+    private AgentBuilder(){
+
+    }
     /**
      * Helper method to load the agent config
      *
@@ -113,7 +116,18 @@ public class AgentBuilder {
 
     private static AgentConfiguration buildAgentConfiguration(
             OMElement agentServerConfig) {
+
         AgentConfiguration agentConfiguration = new AgentConfiguration();
+
+        buildReceiverConfiguration(agentServerConfig, agentConfiguration);
+        buildAuthenticatorConfiguration(agentServerConfig, agentConfiguration);
+        buildKeyStoreConfiguration(agentServerConfig, agentConfiguration);
+
+        return agentConfiguration;
+    }
+
+    private static void buildReceiverConfiguration(OMElement agentServerConfig,
+                                                   AgentConfiguration agentConfiguration) {
         OMElement maxPoolSize = agentServerConfig.getFirstChildWithName(
                 new QName(AgentConstants.AGENT_CONF_NAMESPACE,
                           AgentConstants.MAX_POOL_SIZE));
@@ -142,21 +156,6 @@ public class AgentBuilder {
             agentConfiguration.setMinIdleTimeInPool(Integer.parseInt(minIdleTimeInPool.getText()));
         }
 
-        OMElement authenticatorMaxIdleConnections = agentServerConfig.getFirstChildWithName(
-                new QName(AgentConstants.AGENT_CONF_NAMESPACE,
-                          AgentConstants.AUTHENTICATION_MAX_IDLE_CONNECTIONS));
-        if (authenticatorMaxIdleConnections != null) {
-            agentConfiguration.setAuthenticatorMaxIdleConnections(
-                    Integer.parseInt(authenticatorMaxIdleConnections.getText()));
-        }
-
-        OMElement authenticatorMaxPoolSize = agentServerConfig.getFirstChildWithName(
-                new QName(AgentConstants.AGENT_CONF_NAMESPACE,
-                          AgentConstants.AUTHENTICATION_MAX_POOL_SIZE));
-        if (authenticatorMaxPoolSize != null) {
-            agentConfiguration.setAuthenticatorMaxPoolSize(
-                    Integer.parseInt(authenticatorMaxPoolSize.getText()));
-        }
 
         OMElement taskQueueSize = agentServerConfig.getFirstChildWithName(
                 new QName(AgentConstants.AGENT_CONF_NAMESPACE,
@@ -177,7 +176,10 @@ public class AgentBuilder {
         if (evictionTimePeriod != null) {
             agentConfiguration.setEvictionTimePeriod(Integer.parseInt(evictionTimePeriod.getText()));
         }
+    }
 
+    private static void buildKeyStoreConfiguration(OMElement agentServerConfig,
+                                                   AgentConfiguration agentConfiguration) {
         OMElement trustStore = agentServerConfig.getFirstChildWithName(
                 new QName(AgentConstants.AGENT_CONF_NAMESPACE,
                           AgentConstants.THRUST_STORE));
@@ -190,7 +192,25 @@ public class AgentBuilder {
         if (trustStorePassword != null) {
             agentConfiguration.setTrustStorePassword(trustStorePassword.getText());
         }
-        return agentConfiguration;
+    }
+
+    private static void buildAuthenticatorConfiguration(OMElement agentServerConfig,
+                                                        AgentConfiguration agentConfiguration) {
+        OMElement authenticatorMaxIdleConnections = agentServerConfig.getFirstChildWithName(
+                new QName(AgentConstants.AGENT_CONF_NAMESPACE,
+                          AgentConstants.AUTHENTICATION_MAX_IDLE_CONNECTIONS));
+        if (authenticatorMaxIdleConnections != null) {
+            agentConfiguration.setAuthenticatorMaxIdleConnections(
+                    Integer.parseInt(authenticatorMaxIdleConnections.getText()));
+        }
+
+        OMElement authenticatorMaxPoolSize = agentServerConfig.getFirstChildWithName(
+                new QName(AgentConstants.AGENT_CONF_NAMESPACE,
+                          AgentConstants.AUTHENTICATION_MAX_POOL_SIZE));
+        if (authenticatorMaxPoolSize != null) {
+            agentConfiguration.setAuthenticatorMaxPoolSize(
+                    Integer.parseInt(authenticatorMaxPoolSize.getText()));
+        }
     }
 
 }

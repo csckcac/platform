@@ -35,7 +35,7 @@ public class ThriftAuthenticatorServiceImpl implements ThriftAuthenticatorServic
         try {
             return Authenticator.getInstance().authenticate(username, password);
         } catch (AuthenticationException e) {
-            throw new ThriftAuthenticationException(username + " is not authorised to access the server ");
+            throw new ThriftAuthenticationException(username + " is not authorised to access the server "+e.getErrorMessage());
         }
     }
 

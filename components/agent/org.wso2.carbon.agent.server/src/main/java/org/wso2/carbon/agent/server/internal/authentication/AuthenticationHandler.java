@@ -18,5 +18,5 @@
 package org.wso2.carbon.agent.server.internal.authentication;
 
 public interface AuthenticationHandler {
-   public boolean authenticate(String userName, String password) ;
+    boolean authenticate(String userName, String password);
 }

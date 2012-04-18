@@ -17,8 +17,6 @@
 
 package org.wso2.carbon.agent;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.agent.commons.Event;
 import org.wso2.carbon.agent.commons.exception.AuthenticationException;
 import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
@@ -33,6 +31,7 @@ import org.wso2.carbon.agent.exception.TransportException;
 import org.wso2.carbon.agent.internal.EventQueue;
 import org.wso2.carbon.agent.internal.pool.BoundedExecutor;
 import org.wso2.carbon.agent.internal.publisher.EventPublisher;
+import org.wso2.carbon.agent.internal.utils.AgentConstants;
 import org.wso2.carbon.agent.internal.utils.AgentServerURL;
 
 import java.net.MalformedURLException;
@@ -44,7 +43,7 @@ import java.util.concurrent.RejectedExecutionException;
  */
 public class DataPublisher {
 
-    private static Log log = LogFactory.getLog(DataPublisher.class);
+//    private static Log log = LogFactory.getLog(DataPublisher.class);
 
     private Agent agent;
     private DataPublisherConfiguration dataPublisherConfiguration;
@@ -112,7 +111,7 @@ public class DataPublisher {
         AgentServerURL receiverURL = new AgentServerURL(receiverUrl);
         this.init(new ReceiverConfiguration(userName, password,
                                             receiverURL.getHost(), receiverURL.getPort(),
-                                            receiverURL.getHost(), receiverURL.getPort() + 100),
+                                            receiverURL.getHost(), receiverURL.getPort() + AgentConstants.AUTHENTICATOR_PORT_OFFSET),
                   agent);
 
     }
@@ -232,7 +231,7 @@ public class DataPublisher {
                 try {
                     threadPool.submitTask(eventPublisher);
                 } catch (RejectedExecutionException ignoreRejection) {
-                    System.out.println("Rejected ");
+//                    System.out.println("Rejected ");
                 }
             }
         } catch (InterruptedException e) {

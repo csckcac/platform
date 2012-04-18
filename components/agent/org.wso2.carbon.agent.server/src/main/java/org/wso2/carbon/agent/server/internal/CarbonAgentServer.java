@@ -29,6 +29,7 @@ import org.apache.thrift.transport.TTransportException;
 import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.agent.commons.thrift.authentication.service.ThriftAuthenticatorService;
 import org.wso2.carbon.agent.commons.thrift.service.ThriftEventReceiverService;
+import org.wso2.carbon.agent.internal.utils.AgentConstants;
 import org.wso2.carbon.agent.server.AgentCallback;
 import org.wso2.carbon.agent.server.AgentServer;
 import org.wso2.carbon.agent.server.conf.AgentServerConfiguration;
@@ -83,7 +84,7 @@ public class CarbonAgentServer implements AgentServer {
         this.streamDefinitionStore = streamDefinitionStore;
         Authenticator.getInstance().init(authenticationHandler);
         this.eventDispatcher = new EventDispatcher(streamDefinitionStore);
-        this.agentServerConfiguration = new AgentServerConfiguration(receiverPort + AgentServerConstants.AUTHENTICATOR_PORT_OFFSET, receiverPort);
+        this.agentServerConfiguration = new AgentServerConfiguration(receiverPort + AgentConstants.AUTHENTICATOR_PORT_OFFSET, receiverPort);
     }
 
     /**
@@ -164,7 +165,7 @@ public class CarbonAgentServer implements AgentServer {
             params.setKeyStore(keyStore, keyStorePassword);
 
             TServerSocket serverTransport = TSSLTransportFactory.getServerSocket(
-                    port, AgentServerConstants.THRIFT_CLIENT_TIMEOUT, InetAddress.getByName("localhost"), params);
+                    port, AgentServerConstants.THRIFT_CLIENT_TIMEOUT_MS, InetAddress.getByName("localhost"), params);
 
             ThriftAuthenticatorService.Processor<ThriftAuthenticatorServiceImpl> processor =
                     new ThriftAuthenticatorService.Processor<ThriftAuthenticatorServiceImpl>(new ThriftAuthenticatorServiceImpl());

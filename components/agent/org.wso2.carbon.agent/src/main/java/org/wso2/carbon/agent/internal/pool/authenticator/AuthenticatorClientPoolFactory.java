@@ -27,6 +27,7 @@ import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TSSLTransportFactory;
 import org.apache.thrift.transport.TTransport;
+import org.apache.thrift.transport.TTransportException;
 import org.wso2.carbon.agent.commons.exception.AuthenticationException;
 import org.wso2.carbon.agent.commons.thrift.authentication.service.ThriftAuthenticatorService;
 import org.wso2.carbon.agent.internal.utils.AgentConstants;
@@ -42,7 +43,8 @@ public class AuthenticatorClientPoolFactory extends BaseKeyedPoolableObjectFacto
     }
 
     @Override
-    public ThriftAuthenticatorService.Client makeObject(Object key) throws Exception {
+    public ThriftAuthenticatorService.Client makeObject(Object key)
+            throws AuthenticationException, TTransportException {
 
         String[] hostNameAndPort = key.toString().split(AgentConstants.HOSTNAME_AND_PORT_SEPARATOR);
 

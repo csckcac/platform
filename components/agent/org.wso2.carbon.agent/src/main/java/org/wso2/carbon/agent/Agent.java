@@ -29,6 +29,7 @@ import org.wso2.carbon.agent.internal.pool.authenticator.AuthenticatorClientPool
 import org.wso2.carbon.agent.internal.pool.client.ClientPool;
 import org.wso2.carbon.agent.internal.pool.client.ClientPoolFactory;
 import org.wso2.carbon.agent.internal.publisher.AgentAuthenticator;
+import org.wso2.carbon.agent.internal.utils.AgentConstants;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -51,8 +52,6 @@ public class Agent {
     private AgentAuthenticator agentAuthenticator;
     private List<DataPublisher> dataPublisherList;
     private BoundedExecutor threadPool;
-    private long keepAliveTime = 20;
-
 
     public Agent() {
         this(new AgentConfiguration());
@@ -73,7 +72,7 @@ public class Agent {
         this.threadPool = new BoundedExecutor(
                 new ThreadPoolExecutor(agentConfiguration.getCorePoolSize(),
                                        agentConfiguration.getMaxPoolSize(),
-                                       keepAliveTime, TimeUnit.SECONDS,
+                                       AgentConstants.DEFAULT_KEEP_ALIVE_TIME, TimeUnit.SECONDS,
                                        new ArrayBlockingQueue<Runnable>(
                                                agentConfiguration.getTaskQueueSize()
                                        )),

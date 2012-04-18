@@ -27,7 +27,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class EventQueue<E> {
     private LinkedBlockingQueue<Event> eventQueue = new LinkedBlockingQueue<Event>();
-    volatile private boolean isEventDispatching = false;
+    private volatile boolean isEventDispatching = false;
 
     public synchronized Event poll() {
         Event event = eventQueue.poll();

@@ -27,13 +27,14 @@ import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
+import org.apache.thrift.transport.TTransportException;
 import org.wso2.carbon.agent.commons.thrift.service.ThriftEventReceiverService;
 import org.wso2.carbon.agent.internal.utils.AgentConstants;
 
 public class ClientPoolFactory extends BaseKeyedPoolableObjectFactory {
 
     @Override
-    public ThriftEventReceiverService.Client makeObject(Object key) throws Exception {
+    public ThriftEventReceiverService.Client makeObject(Object key) throws TTransportException {
         String[] hostNameAndPort = key.toString().split(AgentConstants.HOSTNAME_AND_PORT_SEPARATOR);
 
         TTransport receiverTransport = new TSocket(hostNameAndPort[0],

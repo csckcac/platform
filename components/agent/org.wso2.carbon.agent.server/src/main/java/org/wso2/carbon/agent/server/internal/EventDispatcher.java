@@ -116,7 +116,7 @@ public class EventDispatcher {
         try {
             eventQueue.publish(new EventComposite(thriftEventBundle, getStreamDefinitionHolder(agentSession.getDomainName())));
         } catch (StreamDefinitionNotFoundException e) {
-            throw new ThriftUndefinedEventTypeException("No event stream definition exist " + e.toString());
+            throw new ThriftUndefinedEventTypeException("No event stream definition exist " + e.getErrorMessage());
         }
     }
 
@@ -150,7 +150,7 @@ public class EventDispatcher {
         try {
             return streamDefinitionStore.getStreamId(domainName, streamName, streamVersion);
         } catch (StreamDefinitionNotFoundException e) {
-            throw new ThriftNoStreamDefinitionExistException("No event stream definition exist " + e.toString());
+            throw new ThriftNoStreamDefinitionExistException("No event stream definition exist " + e.getErrorMessage());
         }
 
     }

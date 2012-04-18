@@ -19,7 +19,12 @@
 package org.wso2.carbon.agent.server.internal.utils;
 
 
-public class AgentServerConstants {
+public final class AgentServerConstants {
+
+
+    private AgentServerConstants(){
+
+    }
 
     public static final int NO_OF_WORKER_THREADS = 10;
     public static final int EVENT_CAPACITY = 10000;
@@ -31,10 +36,7 @@ public class AgentServerConstants {
     public static final String AUTHENTICATOR_PORT = "authenticatorPort";
     public static final String EVENT_RECEIVER_PORT = "eventReceiverPort";
 
-    public static final int THRIFT_DEFAULT_SSL_PORT = 7611;
-    public static final int THRIFT_DEFAULT_PORT = 7711;
     public static final int CARBON_DEFAULT_PORT_OFFSET = 0;
     public static final String CARBON_CONFIG_PORT_OFFSET_NODE = "Ports.Offset";
-    public static final int AUTHENTICATOR_PORT_OFFSET = 100;
-    public static final int THRIFT_CLIENT_TIMEOUT = 30000;
+    public static final int THRIFT_CLIENT_TIMEOUT_MS = 30000;
 }

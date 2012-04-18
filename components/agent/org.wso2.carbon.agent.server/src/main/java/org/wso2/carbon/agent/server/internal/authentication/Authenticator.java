@@ -24,18 +24,19 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.agent.commons.exception.AuthenticationException;
 import org.wso2.carbon.agent.server.internal.authentication.session.AgentSession;
 import org.wso2.carbon.agent.server.internal.authentication.session.SessionCache;
+import org.wso2.carbon.agent.server.internal.utils.AgentServerConstants;
 
 import java.util.UUID;
 
 /**
  * Authenticates all the incoming connections and manage sessions
  */
-public class Authenticator {
+public final class Authenticator {
 
     private static final Log log = LogFactory.getLog(Authenticator.class);
 
     private static Authenticator instance = new Authenticator();
-    private static SessionCache sessionCache = new SessionCache(30);
+    private static SessionCache sessionCache = new SessionCache(AgentServerConstants.THRIFT_CLIENT_TIMEOUT_MS /1000);
     private AuthenticationHandler authenticationHandler;
 
 

@@ -21,7 +21,11 @@
 
 package org.wso2.carbon.agent.internal.utils;
 
-public class AgentConstants {
+public final class AgentConstants {
+
+    private AgentConstants() {
+    }
+
     public static final String HOSTNAME_AND_PORT_SEPARATOR = ":";
 
     public static final String AGENT_CONF = "agent-config.xml";
@@ -43,4 +47,24 @@ public class AgentConstants {
 
     public static final String THRUST_STORE = "trustStore";
     public static final String THRUST_STORE_PASSWORD = "trustStorePassword";
+
+    public static final int AGENT_RECONNECTION_TIMES = 3;
+    public static final int AUTHENTICATOR_PORT_OFFSET = 100;
+    public static final int DEFAULT_RECEIVER_PORT = 7611;
+
+    public static final long DEFAULT_KEEP_ALIVE_TIME = 20;
+
+    //AgentConfiguration
+    public static final int DEFAULT_TASK_QUEUE_SIZE = 200;
+    public static final int DEFAULT_CORE_POOL_SIZE = 30;
+    public static final int DEFAULT_MAX_POOL_SIZE = 250;
+
+    public static final int DEFAULT_MAX_IDLE_CONNECTIONS = 250;
+    public static final long DEFAULT_EVICTION_IDLE_TIME_IN_POOL = 5500;
+    public static final long DEFAULT_MIN_IDLE_TIME_IN_POOL = 5000;
+
+    public static final int DEFAULT_MAX_MESSAGE_BUNDLE_SIZE = 100;
+
+    public static final int DEFAULT_AUTHENTICATOR_MAX_POOL_SIZE = 20;
+    public static final int DEFAULT_AUTHENTICATOR_MAX_IDLE_CONNECTIONS = 20;
 }

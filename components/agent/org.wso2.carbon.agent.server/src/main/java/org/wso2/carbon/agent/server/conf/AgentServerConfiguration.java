@@ -19,14 +19,16 @@
  */
 package org.wso2.carbon.agent.server.conf;
 
+import org.wso2.carbon.agent.internal.utils.AgentConstants;
+
 /**
  * configuration details related to AgentServer
  */
 public class AgentServerConfiguration {
-    private int authenticatorPort = 7611;
-    private int eventReceiverPort = 7711;
+    private int authenticatorPort = AgentConstants.DEFAULT_RECEIVER_PORT + AgentConstants.AUTHENTICATOR_PORT_OFFSET;
+    private int eventReceiverPort = AgentConstants.DEFAULT_RECEIVER_PORT;
 
-    public AgentServerConfiguration( int thriftDefaultSslPort,int thriftDefaultPort) {
+    public AgentServerConfiguration(int thriftDefaultSslPort, int thriftDefaultPort) {
         authenticatorPort = thriftDefaultSslPort;
         eventReceiverPort = thriftDefaultPort;
     }

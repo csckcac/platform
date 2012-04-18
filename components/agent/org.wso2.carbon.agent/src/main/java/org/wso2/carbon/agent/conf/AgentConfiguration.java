@@ -21,23 +21,25 @@
 
 package org.wso2.carbon.agent.conf;
 
+import org.wso2.carbon.agent.internal.utils.AgentConstants;
+
 /**
  * Configuration details of Agent
  */
 public class AgentConfiguration {
 
-    private int taskQueueSize = 200;
-    private int corePoolSize = 30;
-    private int maxPoolSize = 250;
+    private int taskQueueSize = AgentConstants.DEFAULT_TASK_QUEUE_SIZE;
+    private int corePoolSize = AgentConstants.DEFAULT_CORE_POOL_SIZE;
+    private int maxPoolSize = AgentConstants.DEFAULT_MAX_POOL_SIZE ;
 
-    private int maxIdleConnections = 250;
-    private long evictionTimePeriod = 5500;
-    private long minIdleTimeInPool = 5000;
+    private int maxIdleConnections = AgentConstants.DEFAULT_MAX_IDLE_CONNECTIONS ;
+    private long evictionTimePeriod = AgentConstants.DEFAULT_EVICTION_IDLE_TIME_IN_POOL ;
+    private long minIdleTimeInPool = AgentConstants.DEFAULT_MIN_IDLE_TIME_IN_POOL ;
 
-    private int maxMessageBundleSize = 100;
+    private int maxMessageBundleSize = AgentConstants.DEFAULT_MAX_MESSAGE_BUNDLE_SIZE ;
 
-    private int authenticatorMaxPoolSize = 20;
-    private int authenticatorMaxIdleConnections = 20;
+    private int authenticatorMaxPoolSize = AgentConstants.DEFAULT_AUTHENTICATOR_MAX_POOL_SIZE ;
+    private int authenticatorMaxIdleConnections = AgentConstants.DEFAULT_AUTHENTICATOR_MAX_IDLE_CONNECTIONS;
 
     private String trustStore=null;
     private String trustStorePassword=null;

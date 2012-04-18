@@ -34,7 +34,7 @@ public class BoundedExecutor {
     }
 
     public void submitTask(final Runnable command)
-            throws InterruptedException, RejectedExecutionException {
+            throws InterruptedException {
         semaphore.acquire();
         try {
             threadPoolExecutor.execute(new Runnable() {

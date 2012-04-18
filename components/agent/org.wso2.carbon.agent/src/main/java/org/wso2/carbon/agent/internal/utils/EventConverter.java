@@ -35,8 +35,9 @@ public final class EventConverter {
     }
 
     public static ThriftEventBundle toThriftEventBundle(Event event,
-                                                        ThriftEventBundle thriftEventBundle,
+                                                        ThriftEventBundle eventBundle,
                                                         String sessionId) {
+        ThriftEventBundle thriftEventBundle =eventBundle;
         if (thriftEventBundle == null) {
             thriftEventBundle = new ThriftEventBundle();
             thriftEventBundle.setStringAttributeList(new LinkedList<String>());//adding string list
@@ -58,6 +59,7 @@ public final class EventConverter {
                                                       Object[] attributes) {
         if (attributes != null) {
             for (Object object : attributes) {
+
                 if (object instanceof Integer) {
                     if (!thriftEventBundle.isSetIntAttributeList()) {
                         thriftEventBundle.setIntAttributeList(new LinkedList<Integer>());

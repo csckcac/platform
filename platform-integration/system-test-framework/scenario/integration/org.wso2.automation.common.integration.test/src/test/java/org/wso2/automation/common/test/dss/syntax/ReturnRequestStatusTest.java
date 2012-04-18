@@ -82,7 +82,8 @@ public class ReturnRequestStatusTest extends DataServiceTest {
         Assert.assertTrue(result.toString().contains("SUCCESSFUL"), "Response Not Successful");
         OMNamespace nameSpace = result.getNamespace();
         Assert.assertNotNull(nameSpace, "Response Message NameSpace not qualified");
-        Assert.assertEquals(nameSpace.getPrefix(), "axis2ns1", "Invalid prefix");
+        Assert.assertNotNull(nameSpace.getPrefix(), "Invalid prefix. prefix value null");
+        Assert.assertNotSame(nameSpace.getPrefix(), "", "Invalid prefix");
         Assert.assertEquals(nameSpace.getNamespaceURI(), "http://ws.wso2.org/dataservice", "Invalid NamespaceURI");
 
 
@@ -100,7 +101,8 @@ public class ReturnRequestStatusTest extends DataServiceTest {
 
         Assert.assertTrue(result.toString().contains("SUCCESSFUL"), "Response Not Successful");
         OMNamespace nameSpace = result.getNamespace();
-        Assert.assertEquals(nameSpace.getPrefix(), "axis2ns1", "Invalid prefix");
+        Assert.assertNotNull(nameSpace.getPrefix(), "Invalid prefix. prefix value null");
+        Assert.assertNotSame(nameSpace.getPrefix(), "", "Invalid prefix");
         Assert.assertEquals(nameSpace.getNamespaceURI(), "http://ws.wso2.org/dataservice", "Invalid NamespaceURI");
     }
 

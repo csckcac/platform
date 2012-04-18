@@ -26,7 +26,7 @@ import org.wso2.carbon.agent.DataPublisher;
 import org.wso2.carbon.agent.commons.Attribute;
 import org.wso2.carbon.agent.commons.AttributeType;
 import org.wso2.carbon.agent.commons.Event;
-import org.wso2.carbon.agent.commons.TypeDef;
+import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.agent.server.AgentCallback;
 import org.wso2.carbon.broker.core.BrokerConfiguration;
 import org.wso2.carbon.broker.core.BrokerListener;
@@ -49,16 +49,15 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AgentBrokerType implements BrokerType {
 
     private static final Log log = LogFactory.getLog(AgentBrokerType.class);
-    private Gson gson= new Gson();
+    private Gson gson = new Gson();
     private BrokerTypeDto brokerTypeDto = null;
     private static AgentBrokerType agentBrokerType = new AgentBrokerType();
 
     private Map<String, Map<BrokerConfiguration, BrokerListener>> brokerListenerMap =
             new ConcurrentHashMap<String, Map<BrokerConfiguration, BrokerListener>>();
-    private Map<String, TypeDef> inputTypeDefMap = new ConcurrentHashMap<String, TypeDef>();
-    private Map<String, TypeDef> outputTypeDefMap = new ConcurrentHashMap<String, TypeDef>();
-    private Map<BrokerConfiguration, DataPublisher> dataPublisherMap =
-            new ConcurrentHashMap<BrokerConfiguration, DataPublisher>();
+    private Map<String, EventStreamDefinition> inputTypeDefMap = new ConcurrentHashMap<String, EventStreamDefinition>();
+    private Map<String, EventStreamDefinition> outputTypeDefMap = new ConcurrentHashMap<String, EventStreamDefinition>();
+    private Map<BrokerConfiguration, DataPublisher> dataPublisherMap = new ConcurrentHashMap<BrokerConfiguration, DataPublisher>();
     private Agent agent;
 
     private AgentBrokerType() {
@@ -107,20 +106,21 @@ public class AgentBrokerType implements BrokerType {
 
     private AgentCallback assignAgentCallback() {
         return new AgentCallback() {
+
             @Override
-            public void definedType(TypeDef typeDef, String s) {
-                Map<BrokerConfiguration, BrokerListener> brokerListeners = brokerListenerMap.get(typeDef.getStreamId());
+            public void definedEventStream(EventStreamDefinition eventStreamDefinition, String s) {
+                Map<BrokerConfiguration, BrokerListener> brokerListeners = brokerListenerMap.get(eventStreamDefinition.getStreamId());
                 if (brokerListeners == null) {
                     brokerListeners = new HashMap<BrokerConfiguration, BrokerListener>();
-                    brokerListenerMap.put(typeDef.getStreamId(), brokerListeners);
+                    brokerListenerMap.put(eventStreamDefinition.getStreamId(), brokerListeners);
                 }
-                inputTypeDefMap.put(typeDef.getStreamId(), typeDef);
+                inputTypeDefMap.put(eventStreamDefinition.getStreamId(), eventStreamDefinition);
                 for (BrokerListener brokerListener : brokerListeners.values()) {
                     try {
-                        brokerListener.onEventDefinition(typeDef);
+                        brokerListener.onEventDefinition(eventStreamDefinition);
                     } catch (BrokerEventProcessingException e) {
                         log.error("Cannot send Stream Definition to a brokerListener subscribed to " +
-                                  typeDef.getStreamId(), e);
+                                  eventStreamDefinition.getStreamId(), e);
                     }
 
                 }
@@ -186,14 +186,13 @@ public class AgentBrokerType implements BrokerType {
                         "Cannot create DataPublisher for the broker configuration:" + brokerConfiguration.getName(), e);
             }
 
-
+            dataPublisherMap.put(brokerConfiguration, dataPublisher);
         }
-        dataPublisherMap.put(brokerConfiguration, dataPublisher);
 
         //Building the Common Object model Event
         String streamId = ((OMElement) message).getLocalName();
-        TypeDef typeDef = outputTypeDefMap.get(streamId);
-        if (typeDef == null) {
+        EventStreamDefinition eventStreamDefinition = outputTypeDefMap.get(streamId);
+        if (eventStreamDefinition == null) {
             List<Attribute> attributes = new ArrayList<Attribute>();
             List<String> values = new ArrayList<String>();
             Iterator iterator = ((OMElement) message).getChildElements();
@@ -203,16 +202,17 @@ public class AgentBrokerType implements BrokerType {
                 values.add(omElement.getText());
             }
 
-            typeDef = new TypeDef();
-            typeDef.setStreamId(streamId);
-            typeDef.setPayloadData(attributes);
-            outputTypeDefMap.put(streamId, typeDef);
+            eventStreamDefinition = new EventStreamDefinition(streamId);
+            eventStreamDefinition.setPayloadData(attributes);
+            outputTypeDefMap.put(streamId, eventStreamDefinition);
+
+            String eventStreamDefinitionString=gson.toJson(eventStreamDefinition);
             try {
-                dataPublisher.defineEventStreamDefinition(gson.toJson(typeDef));
+                dataPublisher.defineEventStream(eventStreamDefinitionString);
             } catch (Exception ex) {
                 throw new BrokerEventProcessingException(
                         "Cannot define type via DataPublisher for the broker configuration:" +
-                        brokerConfiguration.getName() + " on the typeDef " + typeDef, ex);
+                        brokerConfiguration.getName() + " on the eventStreamDefinition " + eventStreamDefinition, ex);
             }
 
             //Sending the first Event
@@ -223,9 +223,9 @@ public class AgentBrokerType implements BrokerType {
 
         } else {
             //Sending Events
-            Object[] data = new Object[typeDef.getPayloadData().size()];
-            List<Attribute> payloadAttributes = typeDef.getPayloadData();
-            for (int i = 0; i < typeDef.getPayloadData().size(); i++) {
+            Object[] data = new Object[eventStreamDefinition.getPayloadData().size()];
+            List<Attribute> payloadAttributes = eventStreamDefinition.getPayloadData();
+            for (int i = 0; i < eventStreamDefinition.getPayloadData().size(); i++) {
                 data[i] = ((OMElement) message).getChildrenWithLocalName(payloadAttributes.get(i).getName()).next();
             }
             Event event = new Event();

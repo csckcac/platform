@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ ~ Copyright (c) 2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ Licensed under the Apache License, Version 2.0 (the "License");
+ ~ you may not use this file except in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~      http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing, software
+ ~ distributed under the License is distributed on an "AS IS" BASIS,
+ ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ ~ See the License for the specific language governing permissions and
+ ~ limitations under the License.
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>org.wso2.carbon</groupId>
+        <artifactId>analytics-feature</artifactId>
+        <version>4.0.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>org.wso2.carbon.analytics.hive.server.feature</artifactId>
+    <packaging>pom</packaging>
+    <name>WSO2 Carbon - Hive Analytics Feature</name>
+    <url>http://wso2.org</url>
+    <description>This feature contains the bundles required for Hive analytics</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.hive.wso2</groupId>
+            <artifactId>hive</artifactId>
+	    <version>${hive.orbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>antlr.wso2</groupId>
+            <artifactId>antlr</artifactId>
+	    <version>${antlr.orbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr.wso2</groupId>
+            <artifactId>antlr-runtime</artifactId>
+	    <version>${antlr.orbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.zookeeper.wso2</groupId>
+            <artifactId>apache-zookeeper</artifactId>
+	    <version>${zookeeper.orbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>asm.wso2</groupId>
+            <artifactId>asm</artifactId>
+	    <version>${asm.orbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-cli.wso2</groupId>
+            <artifactId>commons-cli</artifactId>
+	    <version>${commons.cli.orbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec.wso2</groupId>
+            <artifactId>commons-codec</artifactId>
+	    <version>${commons.codec.orbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-collections.wso2</groupId>
+            <artifactId>commons-collections</artifactId>
+	    <version>${commons.collections.orbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-configuration.wso2</groupId>
+            <artifactId>commons-configuration</artifactId>
+	    <version>${commons.configuration.orbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-dbcp.wso2</groupId>
+            <artifactId>commons-dbcp</artifactId>
+	    <version>${commons.dbcp.orbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang.wso2</groupId>
+            <artifactId>commons-lang</artifactId>
+	    <version>${commons.lang.orbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-pool.wso2</groupId>
+            <artifactId>commons-pool</artifactId>
+	    <version>${commons.pool.orbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.datanucleus.wso2</groupId>
+            <artifactId>datanucleus-api-jdo</artifactId>
+	    <version>${datanucleus.orbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.datanucleus.wso2</groupId>
+            <artifactId>datanucleus-core</artifactId>
+	    <version>${datanucleus.orbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.datanucleus.wso2</groupId>
+            <artifactId>datanucleus-enhancer</artifactId>
+	    <version>${datanucleus.orbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.datanucleus.wso2</groupId>
+            <artifactId>datanucleus-rdbms</artifactId>
+	    <version>${datanucleus.orbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava.wso2</groupId>
+            <artifactId>guava</artifactId>
+	    <version>${guava.orbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop.wso2</groupId>
+            <artifactId>hadoop-core</artifactId>
+	    <version>${hadoop.orbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson.wso2</groupId>
+            <artifactId>jackson</artifactId>
+	    <version>${jackson.orbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.javaewah.wso2</groupId>
+            <artifactId>JavaEWAH</artifactId>
+	    <version>${javaewah.orbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.jdo.wso2</groupId>
+            <artifactId>jdo2-api</artifactId>
+	    <version>${jdo2.orbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json.wso2</groupId>
+            <artifactId>json</artifactId>
+	    <version>${json.orbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.thrift.wso2</groupId>
+            <artifactId>libfb303</artifactId>
+	    <version>${libfb303.orbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>libthrift.wso2</groupId>
+            <artifactId>libthrift</artifactId>
+	    <version>${libthrift.orbit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>slf4j.wso2</groupId>
+            <artifactId>slf4j</artifactId>
+	    <version>${slf4j.orbit.version}</version>
+        </dependency>
+    </dependencies>
+
+    <properties>
+        <hive.orbit.version>0.8.1-wso2v1</hive.orbit.version>
+        <antlr.orbit.version>3.0.1.wso2v1</antlr.orbit.version>
+        <zookeeper.orbit.version>3.3.4.wso2v1</zookeeper.orbit.version>
+        <asm.orbit.version>3.1.wso2v1</asm.orbit.version>
+        <commons.cli.orbit.version>1.2.0.wso2v1</commons.cli.orbit.version>
+	<commons.codec.orbit.version>1.4.0.wso2v1</commons.codec.orbit.version>
+	<commons.collections.orbit.version>3.2.0.wso2v1</commons.collections.orbit.version>
+	<commons.configuration.orbit.version>1.6.0.wso2v1</commons.configuration.orbit.version>
+	<commons.dbcp.orbit.version>1.4.0.wso2v1</commons.dbcp.orbit.version>
+	<commons.lang.orbit.version>2.6.0.wso2v1</commons.lang.orbit.version>
+	<commons.pool.orbit.version>1.5.6.wso2v1</commons.pool.orbit.version>
+	<datanucleus.orbit.version>3.0.1.wso2v1</datanucleus.orbit.version>
+	<guava.orbit.version>11.0.1.wso2v1</guava.orbit.version>
+	<hadoop.orbit.version>0.20.203.1.wso2v1</hadoop.orbit.version>
+	<jackson.orbit.version>1.0.1.wso2v1</jackson.orbit.version>
+	<javaewah.orbit.version>0.3.2.wso2v1</javaewah.orbit.version>
+	<jdo2.orbit.version>2.3-ec.wso2v1</jdo2.orbit.version>
+	<json.orbit.version>2.0.0.wso2v1</json.orbit.version>
+	<libfb303.orbit.version>0.7.0.wso2v1</libfb303.orbit.version>
+	<libthrift.orbit.version>0.7.wso2v1</libthrift.orbit.version>
+	<slf4j.orbit.version>1.5.10.wso2v1</slf4j.orbit.version>
+    </properties>
+
+    <build>
+	<plugins>
+            <plugin>
+                <groupId>org.wso2.maven</groupId>
+                <artifactId>carbon-p2-plugin</artifactId>
+                <version>${carbon.p2.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>4-p2-feature-generation</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>p2-feature-gen</goal>
+                        </goals>
+                        <configuration>
+                            <id>org.wso2.carbon.bam2.analyzer.server</id>
+                            <propertiesFile>../../etc/feature.properties</propertiesFile>
+                            <adviceFile>
+                                <properties>
+                                    <propertyDef>org.wso2.carbon.p2.category.type:server
+                                    </propertyDef>
+                                    <propertyDef>org.eclipse.equinox.p2.type.group:false
+                                    </propertyDef>
+                                </properties>
+                            </adviceFile>
+                            <bundles>
+                                <bundleDef>org.apache.hive.wso2:hive</bundleDef>
+                            </bundles>
+                            <importBundles>
+                                <importBundleDef>antlr.wso2:antlr</importBundleDef>
+				<importBundleDef>org.antlr.wso2:antlr-runtime</importBundleDef>
+				<importBundleDef>org.apache.zookeeper.wso2:apache-zookeeper</importBundleDef>
+                                <importBundleDef>antlr.wso2:antlr</importBundleDef>
+				<importBundleDef>org.antlr.wso2:antlr-runtime</importBundleDef>
+				<importBundleDef>org.apache.zookeeper.wso2:apache-zookeeper</importBundleDef>
+                                <importBundleDef>asm.wso2:asm</importBundleDef>
+				<importBundleDef>commons-cli.wso2:commons-cli</importBundleDef>
+				<importBundleDef>commons-codec.wso2:commons-codec</importBundleDef>
+                                <importBundleDef>commons-collections.wso2:commons-collections</importBundleDef>
+				<importBundleDef>commons-configuration.wso2:commons-configuration</importBundleDef>
+				<importBundleDef>commons-dbcp.wso2:commons-dbcp</importBundleDef>
+                                <importBundleDef>commons-lang.wso2:commons-lang</importBundleDef>
+				<importBundleDef>commons-pool.wso2:commons-pool</importBundleDef>
+                                <importBundleDef>org.datanucleus.wso2:datanucleus-api-jdo</importBundleDef>
+				<importBundleDef>org.datanucleus.wso2:datanucleus-core</importBundleDef>
+				<importBundleDef>org.datanucleus.wso2:datanucleus-enhancer</importBundleDef>
+                                <importBundleDef>org.datanucleus.wso2:datanucleus-rdbms</importBundleDef>
+				<importBundleDef>com.google.guava.wso2:guava</importBundleDef>
+				<importBundleDef>org.apache.hadoop.wso2:hadoop-core</importBundleDef>
+                                <importBundleDef>org.codehaus.jackson.wso2:jackson</importBundleDef>
+				<importBundleDef>com.googlecode.javaewah.wso2:JavaEWAH</importBundleDef>
+				<importBundleDef>javax.jdo.wso2:jdo2-api</importBundleDef>
+                                <importBundleDef>org.json.wso2:json</importBundleDef>
+				<importBundleDef>org.apache.thrift.wso2:libfb303</importBundleDef>
+				<importBundleDef>libthrift.wso2:libthrift</importBundleDef>
+                                <importBundleDef>slf4j.wso2:slf4j</importBundleDef>
+                            </importBundles>
+                            <!--<importFeatures>
+                                <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version.bam2}</importFeatureDef>
+				<importFeatureDef>org.wso2.carbon.cassandra.dataaccess:${wso2carbon.version.bam2}</importFeatureDef>
+				<importFeatureDef>org.wso2.carbon.cassandra.server:${wso2carbon.version.bam2}</importFeatureDef>
+				<importFeatureDef>org.wso2.carbon.task.server:${wso2carbon.version.bam2}</importFeatureDef>
+				<importFeatureDef>org.apache.synapse.wso2:${synapse.version}</importFeatureDef>
+                            </importFeatures>-->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

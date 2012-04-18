@@ -169,7 +169,8 @@ public class ActivityBox
         buttonPos1.setY((dimension.getHeight() / 2) - STATUS_BASED_ACTION_IMAGE().getHeight() / 2);
 
         //Creating the JSFunction to be executed
-        JSFunction retryFunction = new JSFunction("retryActivity", new String[]{instanceId, activityId});
+        JSFunction retryFunction = new JSFunction("retryActivity");
+        retryFunction.addInputParameters(new String[]{instanceId, activityId});
 
         append(new RetryButton(buttonPos1, retryFunction));
 
@@ -178,7 +179,8 @@ public class ActivityBox
         buttonPos2.setY((dimension.getHeight() / 2) - STATUS_BASED_ACTION_IMAGE().getHeight() / 2);
 
         //Creating the JSFunction to be executed
-        JSFunction cancelFunction = new JSFunction("cancelActivity", new String[]{instanceId, activityId});
+        JSFunction cancelFunction = new JSFunction("cancelActivity");
+        cancelFunction.addInputParameters(new String[]{instanceId, activityId});
 
         append(new CancelButton(buttonPos2, cancelFunction));
     }

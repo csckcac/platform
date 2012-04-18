@@ -1062,9 +1062,10 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
 
         scopeInfoWithEvents.setChildrenWithEvents(childScopesWithEvents);
         scopeInfoWithEvents.setVariablesWithEvents(getVariablesWithEvents(scope));         //TODO:
-        if (!scope.getCorrelationSets().isEmpty()) {
-//            scopeInfoWithEvents.setCorrelationSets(getCorrelationPropertires(scope)); //TODO: Just need to change the schema s.t. avoid CorrelationSets_type1 and remove the comment
-        }
+        //TODO: Just need to change the schema s.t. avoid CorrelationSets_type1 and remove the comment
+//        if (!scope.getCorrelationSets().isEmpty()) {
+////            scopeInfoWithEvents.setCorrelationSets(getCorrelationPropertires(scope));
+//        }
         scopeInfoWithEvents.setActivitiesWithEvents(getActivitiesWithEvents(scope));
 
     }

@@ -16,6 +16,10 @@
 
 package org.wso2.carbon.bpel.ui.bpel2svg.latest.wso2.svg.javascript;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * This class encapsulate a javaScript Function.
  * So it consists of a method name and a sequence of input parameters
@@ -24,29 +28,33 @@ public class JSFunction {
 
     private final String functionName;
 
-    private final String[] inputParameters;
+    private final List<String> inputParameters;
 
-    public JSFunction(String functionName, String[] inputParameters) {
+    public JSFunction(String functionName) {
+        this.inputParameters = new ArrayList<String>();
         this.functionName = functionName;
-        this.inputParameters = inputParameters;
     }
 
-    public String getFunctionName() {
-        return functionName;
+    public void addInputParameters(String[] inputParameters) {
+        Collections.addAll(this.inputParameters, inputParameters);
     }
 
-    public String[] getInputParameters() {
-        return inputParameters;
-    }
+//    public String getFunctionName() {
+//        return functionName;
+//    }
+
+//    public String[] getInputParameters() {
+//        return (String[]) inputParameters.toArray();
+//    }
 
     public String generateJSFunctionSignature () {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
 
-        for(int i = 0; i < inputParameters.length; i++) {
-            if (i != (inputParameters.length -1)) {
-                buf.append(inputParameters[i] + ", ");
+        for(int i = 0; i < inputParameters.size(); i++) {
+            if (i != (inputParameters.size() -1)) {
+                buf.append(inputParameters.get(i)).append(", ");
             } else {
-                buf.append(inputParameters[i]);
+                buf.append(inputParameters.get(i));
             }
         }
         return functionName + "(" + buf.toString() + ")";

@@ -16,10 +16,7 @@ package org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.frontend.model.componen
 
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.frontend.model.SVGDataModel;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * This class is the basis for all justing functions of activities in the SVG.
@@ -35,7 +32,7 @@ public class ActivityAdjuster
 	private Set<String> itemsLeft;
 
 	/** The selected item(s) on the right side. */
-	private String[] selectionRight;
+	private List<String> selectionRight;
 
 	/** The selectable items on the right side. */
 	private Set<String> itemsRight;
@@ -47,7 +44,8 @@ public class ActivityAdjuster
 	 */
 	public ActivityAdjuster(SVGDataModel dataModel) {
 		super(dataModel);
-	}
+        selectionRight = new ArrayList<String>();
+    }
 
 	/** {@inheritDoc} */
 	@Override
@@ -59,9 +57,6 @@ public class ActivityAdjuster
 
 	/**
 	 * Processes the 'add' AJAX event.
-	 * 
-	 * @param event The 'add' AJAX event.
-	 * @throws AbortProcessingException
 	 */
 	public void add() {
 		for (String selection : getSelection()) {
@@ -74,9 +69,6 @@ public class ActivityAdjuster
 
 	/**
 	 * Processes the 'remove' AJAX event.
-	 * 
-	 * @param event The 'remove' AJAX event.
-	 * @throws AbortProcessingException
 	 */
 	public void remove() {
 		for (String selection : getSelectionRight()) {
@@ -89,9 +81,6 @@ public class ActivityAdjuster
 
 	/**
 	 * Processes the 'addAll' AJAX event.
-	 * 
-	 * @param event The 'addAll' AJAX event.
-	 * @throws AbortProcessingException
 	 */
 	public void addAll() {
 		this.itemsRight.addAll(this.itemsLeft);
@@ -102,9 +91,6 @@ public class ActivityAdjuster
 
 	/**
 	 * Processes the 'removeAll' AJAX event.
-	 * 
-	 * @param event The 'removeAll' AJAX event.
-	 * @throws AbortProcessingException
 	 */
 	public void removeAll() {
 		this.itemsLeft.addAll(this.itemsRight);
@@ -168,7 +154,7 @@ public class ActivityAdjuster
 	 * @return The value of selectionRight.
 	 */
 	public String[] getSelectionRight() {
-		return this.selectionRight;
+		return (String[]) this.selectionRight.toArray();
 	}
 
 	/**
@@ -177,7 +163,7 @@ public class ActivityAdjuster
 	 * @param selectionRight The new value of selectionRight.
 	 */
 	public void setSelectionRight(String[] selectionRight) {
-		this.selectionRight = selectionRight;
+        Collections.addAll(this.selectionRight, selectionRight);
 	}
 
 }

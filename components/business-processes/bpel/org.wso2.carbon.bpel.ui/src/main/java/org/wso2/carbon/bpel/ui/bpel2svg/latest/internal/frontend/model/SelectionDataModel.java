@@ -78,7 +78,8 @@ public abstract class SelectionDataModel<C extends AbstractDataModel<?, ?>, U ex
 		this.filters = new ArrayList<Filter<?>>();
 
 		// Add filters
-		this.statusFilter = new StatusFilter(this, statusFilterProperty, statues);
+		this.statusFilter = new StatusFilter(this, statusFilterProperty);
+        this.statusFilter.addStatuses(statues);
 		this.filters.add(this.statusFilter);
 
 		this.idFilter = new TextFilter(this, idFilterProperty);

@@ -124,9 +124,9 @@ public class GlobalSettings {
 	 *
 	 * @param cssPath The new value of cssPath.
 	 */
-	public void setCssPath(String cssPath) {
-		this.cssPath = cssPath;
-	}
+//	public void setCssPath(String cssPath) {
+//		this.cssPath = cssPath;
+//	}
 
 	/**
 	 * Returns the value of jsPaths.
@@ -146,9 +146,9 @@ public class GlobalSettings {
 	 *
 	 * @param jsPaths The new value of jsPaths.
 	 */
-	public void setJsPaths(String[] jsPaths) {
-		this.jsPaths = jsPaths;
-	}
+//	public void setJsPaths(String[] jsPaths) {
+//		this.jsPaths = jsPaths;
+//	}
 
 	/**
 	 * Returns the value of fullMode.
@@ -168,9 +168,9 @@ public class GlobalSettings {
 	 *
 	 * @param fullMode The new value of fullMode.
 	 */
-	public void setFullMode(Dimension fullMode) {
-		this.fullMode = fullMode;
-	}
+//	public void setFullMode(Dimension fullMode) {
+//		this.fullMode = fullMode;
+//	}
 
 	/**
 	 * Returns the value of compactMode.
@@ -190,9 +190,9 @@ public class GlobalSettings {
 	 *
 	 * @param compactMode The new value of compactMode.
 	 */
-	public void setCompactMode(Dimension compactMode) {
-		this.compactMode = compactMode;
-	}
+//	public void setCompactMode(Dimension compactMode) {
+//		this.compactMode = compactMode;
+//	}
 
 	/**
 	 * Returns the value of typeImageSize.
@@ -212,9 +212,9 @@ public class GlobalSettings {
 	 *
 	 * @param typeImageSize The new value of typeImageSize.
 	 */
-	public void setTypeImageSize(Dimension typeImageSize) {
-		this.typeImageSize = typeImageSize;
-	}
+//	public void setTypeImageSize(Dimension typeImageSize) {
+//		this.typeImageSize = typeImageSize;
+//	}
 
 	/**
 	 * Returns the value of typeImagePath.
@@ -234,9 +234,9 @@ public class GlobalSettings {
 	 *
 	 * @param typeImagePath The new value of typeImagePath.
 	 */
-	public void setTypeImagePath(String typeImagePath) {
-		this.typeImagePath = typeImagePath;
-	}
+//	public void setTypeImagePath(String typeImagePath) {
+//		this.typeImagePath = typeImagePath;
+//	}
 
 	/**
 	 * Returns the value of typeImageExtension.
@@ -256,9 +256,9 @@ public class GlobalSettings {
 	 *
 	 * @param typeImageExtension The new value of typeImageExtension.
 	 */
-	public void setTypeImageExtension(String typeImageExtension) {
-		this.typeImageExtension = typeImageExtension;
-	}
+//	public void setTypeImageExtension(String typeImageExtension) {
+//		this.typeImageExtension = typeImageExtension;
+//	}
 
 	/**
 	 * Returns the value of statusImageSize.
@@ -278,9 +278,9 @@ public class GlobalSettings {
 	 *
 	 * @param statusImageSize The new value of statusImageSize.
 	 */
-	public void setStatusImageSize(Dimension statusImageSize) {
-		this.statusImageSize = statusImageSize;
-	}
+//	public void setStatusImageSize(Dimension statusImageSize) {
+//		this.statusImageSize = statusImageSize;
+//	}
 
 	/**
 	 * Returns the value of statusImagePath.
@@ -300,9 +300,9 @@ public class GlobalSettings {
 	 *
 	 * @param statusImagePath The new value of statusImagePath.
 	 */
-	public void setStatusImagePath(String statusImagePath) {
-		this.statusImagePath = statusImagePath;
-	}
+//	public void setStatusImagePath(String statusImagePath) {
+//		this.statusImagePath = statusImagePath;
+//	}
 
 	/**
 	 * Returns the value of statusImageExtension.
@@ -322,9 +322,9 @@ public class GlobalSettings {
 	 *
 	 * @param statusImageExtension The new value of statusImageExtension.
 	 */
-	public void setStatusImageExtension(String statusImageExtension) {
-		this.statusImageExtension = statusImageExtension;
-	}
+//	public void setStatusImageExtension(String statusImageExtension) {
+//		this.statusImageExtension = statusImageExtension;
+//	}
 
 	/**
 	 * Returns the value of dateImageSize.
@@ -355,9 +355,9 @@ public class GlobalSettings {
 	 *
 	 * @param dateImageSize The new value of dateImageSize.
 	 */
-	public void setDateImageSize(Dimension dateImageSize) {
-		this.dateImageSize = dateImageSize;
-	}
+//	public void setDateImageSize(Dimension dateImageSize) {
+//		this.dateImageSize = dateImageSize;
+//	}
 
 	/**
 	 * Returns the value of dateImagePath.
@@ -377,9 +377,9 @@ public class GlobalSettings {
 	 *
 	 * @param dateImagePath The new value of dateImagePath.
 	 */
-	public void setDateImagePath(String dateImagePath) {
-		this.dateImagePath = dateImagePath;
-	}
+//	public void setDateImagePath(String dateImagePath) {
+//		this.dateImagePath = dateImagePath;
+//	}
 
 	/**
 	 * Returns the value of dateImageExtension.
@@ -399,9 +399,9 @@ public class GlobalSettings {
 	 *
 	 * @param dateImageExtension The new value of dateImageExtension.
 	 */
-	public void setDateImageExtension(String dateImageExtension) {
-		this.dateImageExtension = dateImageExtension;
-	}
+//	public void setDateImageExtension(String dateImageExtension) {
+//		this.dateImageExtension = dateImageExtension;
+//	}
 
     /**
 	 * Returns the value of statusBasedActionImageExtension.

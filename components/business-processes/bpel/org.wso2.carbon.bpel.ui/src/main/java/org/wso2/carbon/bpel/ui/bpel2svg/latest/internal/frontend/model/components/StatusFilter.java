@@ -15,12 +15,12 @@
 package org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.frontend.model.components;
 
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.frontend.model.SelectionDataModel;
-import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.frontend.model.components.svg.SelectItem;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.ProcessInstance;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.ProcessModel;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.status.Status;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,19 +35,22 @@ public class StatusFilter
 	extends Filter<Status> {
 
 	/** The selectable status values. */
-	private final Status[] statues;
+	private final List<Status> statues;
 
 	/**
 	 * Constructor of StatusFilter.
 	 * 
 	 * @param dataModel The associated SeelctionDataModel.
 	 * @param filterProperty The filter property.
-	 * @param statues The selectable status values.
 	 */
-	public StatusFilter(SelectionDataModel<?,?, ?> dataModel, String filterProperty, Status[] statues) {
+	public StatusFilter(SelectionDataModel<?,?, ?> dataModel, String filterProperty) {
 		super(dataModel, filterProperty);
-		this.statues = statues;
+        this.statues = new ArrayList<Status>();
 	}
+
+    public void addStatuses(Status[] statues) {
+        Collections.addAll(this.statues, statues);
+    }
 
 	/** {@inheritDoc} */
 	@Override
@@ -75,15 +78,15 @@ public class StatusFilter
 	 * 
 	 * @return The list of selectable statuses.
 	 */
-	public List<SelectItem> getItems() {
-		List<SelectItem> items = new ArrayList<SelectItem>();
-		items.add(new SelectItem(null, "All"));
-
-		for (Status status : this.statues) {
-			items.add(new SelectItem(status, status.getName()));
-		}
-
-		return items;
-	}
+//	public List<SelectItem> getItems() {
+//		List<SelectItem> items = new ArrayList<SelectItem>();
+//		items.add(new SelectItem(null, "All"));
+//
+//		for (Status status : this.statues) {
+//			items.add(new SelectItem(status, status.getName()));
+//		}
+//
+//		return items;
+//	}
 
 }

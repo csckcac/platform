@@ -59,14 +59,15 @@ public class ActivityStateAndEventDocumentBuilder extends ActivityStateDocumentB
 
             ActivityInfoWithEventsDocument actinf = lookup(event);
             assert actinf != null;
-            if (event instanceof ActivityEnabledEvent) {
-
-            }
-            if (event instanceof ActivityExecStartEvent) {
-
-            } else if (event instanceof ActivityExecEndEvent) {
-
-            }
+            //TODO: Denis please fill the gaps
+//            if (event instanceof ActivityEnabledEvent) {
+//
+//            }
+//            if (event instanceof ActivityExecStartEvent) {
+//
+//            } else if (event instanceof ActivityExecEndEvent) {
+//
+//            }
 
         }
 

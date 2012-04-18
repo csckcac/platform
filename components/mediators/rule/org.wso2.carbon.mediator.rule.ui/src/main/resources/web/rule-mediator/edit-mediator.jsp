@@ -94,7 +94,7 @@
     boolean isInline = (rule.getSourceType() == null)
             || (rule.getSourceType().equals(""))
             || (rule.getSourceType().equals("inline"));
-    boolean isURL = rule.getSourceType().equals("url");
+    boolean isURL = (rule.getSourceType() != null) && (rule.getSourceType().equals("url"));
 
     // if the type is in line rule value is the script value
     // if the type is registry key, then value is regsitry key

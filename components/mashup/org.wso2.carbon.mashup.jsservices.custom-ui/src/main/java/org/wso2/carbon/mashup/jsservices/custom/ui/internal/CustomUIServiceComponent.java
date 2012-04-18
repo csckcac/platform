@@ -16,13 +16,13 @@
 
 package org.wso2.carbon.mashup.jsservices.custom.ui.internal;
 
-import org.wso2.carbon.base.ServerConfiguration;
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.core.util.MIMEType2FileExtensionMap;
 import org.wso2.carbon.utils.ConfigurationContextService;
-import org.osgi.service.component.ComponentContext;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.logging.Log;
-import org.apache.axis2.context.ConfigurationContext;
 
 /**
  * @scr.component name="mashup.jsservices.customui.dscomponent" immediate="true"
@@ -30,7 +30,7 @@ import org.apache.axis2.context.ConfigurationContext;
  * cardinality="1..1" policy="dynamic"  bind="setMIMEType2FileExtensionMap" unbind="unsetMIMEType2FileExtensionMap"
  * @scr.reference name="ConfigurationContextService.service" interface="org.wso2.carbon.utils.ConfigurationContextService"
  * cardinality="1..1" policy="dynamic"  bind="setConfigurationContextService" unbind="unsetConfigurationContextService"
- * @scr.reference name="ServerConfiguration.service" interface="org.wso2.carbon.base.ServerConfiguration"
+ * @scr.reference name="ServerConfiguration.service" interface="org.wso2.carbon.base.api.ServerConfigurationService"
  * cardinality="1..1" policy="dynamic"  bind="setServerConfiguration" unbind="unsetServerConfiguration"
  */
 public class CustomUIServiceComponent {
@@ -65,11 +65,11 @@ public class CustomUIServiceComponent {
         CustomUIServiceComponent.configurationContext = null;
     }
 
-    protected void setServerConfiguration(ServerConfiguration serverConfiguration) {
-        CustomUIServiceComponent.carbonContextRoot = serverConfiguration.getFirstProperty("WebContextRoot");
+    protected void setServerConfiguration(ServerConfigurationService serverConfigurationService) {
+        CustomUIServiceComponent.carbonContextRoot = serverConfigurationService.getFirstProperty("WebContextRoot");
     }
 
-    protected void unsetServerConfiguration(ServerConfiguration serverConfiguration) {
+    protected void unsetServerConfiguration(ServerConfigurationService serverConfiguration) {
         CustomUIServiceComponent.carbonContextRoot = null;
     }
 

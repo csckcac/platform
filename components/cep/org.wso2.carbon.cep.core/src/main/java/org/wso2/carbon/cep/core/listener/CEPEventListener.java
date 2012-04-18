@@ -18,13 +18,13 @@ package org.wso2.carbon.cep.core.listener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.agent.commons.TypeDef;
+import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.broker.core.BrokerConfiguration;
 import org.wso2.carbon.broker.core.BrokerService;
 import org.wso2.carbon.broker.core.exception.BrokerEventProcessingException;
-import org.wso2.carbon.cep.core.mapping.output.Output;
 import org.wso2.carbon.cep.core.internal.config.BrokerConfigurationHelper;
 import org.wso2.carbon.cep.core.internal.ds.CEPServiceValueHolder;
+import org.wso2.carbon.cep.core.mapping.output.Output;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 
 import java.util.List;
@@ -91,11 +91,11 @@ public class CEPEventListener {
      * this method is called by the back end runtime engine to pass
      * the event definition information
      *
-     * @param streamTypeDef - event type definition of the out events
+     * @param eventStreamDefinition - event type definition of the out events
      */
-    public void defineStream(TypeDef streamTypeDef) {
+    public void defineStream(EventStreamDefinition eventStreamDefinition) {
         if (this.output != null&& this.output.getOutputMapping() != null) {
-            this.output.getOutputMapping().defineStream(streamTypeDef);
+            this.output.getOutputMapping().defineStream(eventStreamDefinition);
         }
     }
 }

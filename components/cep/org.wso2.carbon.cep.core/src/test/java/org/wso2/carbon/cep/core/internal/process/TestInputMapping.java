@@ -23,7 +23,7 @@ import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.wso2.carbon.agent.commons.Attribute;
 import org.wso2.carbon.agent.commons.AttributeType;
 import org.wso2.carbon.agent.commons.Event;
-import org.wso2.carbon.agent.commons.TypeDef;
+import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.cep.core.XpathDefinition;
 import org.wso2.carbon.cep.core.exception.CEPEventProcessingException;
 import org.wso2.carbon.cep.core.internal.util.CEPConstants;
@@ -79,17 +79,16 @@ public class TestInputMapping extends TestCase {
         event.setPayloadData(new Object[]{"IBM", 145.4, 500});
 
         //TypeDef
-        TypeDef typeDef = new TypeDef();
-        typeDef.setStreamId("TestStream");
+        EventStreamDefinition eventStreamDefinition = new EventStreamDefinition("TestStream");
         List<Attribute> metaDataList = new ArrayList<Attribute>();
         metaDataList.add(new Attribute("ipAdd", AttributeType.STRING));
-        typeDef.setMetaData(metaDataList);
+        eventStreamDefinition.setMetaData(metaDataList);
 
         List<Attribute> payloadDataList = new ArrayList<Attribute>();
         payloadDataList.add(new Attribute("symbol", AttributeType.STRING));
         payloadDataList.add(new Attribute("price", AttributeType.DOUBLE));
         payloadDataList.add(new Attribute("volume", AttributeType.INT));
-        typeDef.setPayloadData(payloadDataList);
+        eventStreamDefinition.setPayloadData(payloadDataList);
 
         //Input Mapping
         List<TupleProperty> tupleProperties = new ArrayList<TupleProperty>();
@@ -103,7 +102,7 @@ public class TestInputMapping extends TestCase {
         tupleInputMapping.setProperties(tupleProperties);
 
         //Set definition
-        tupleInputMapping.setEventDefinition(typeDef);
+        tupleInputMapping.setEventDefinition(eventStreamDefinition);
 
         //Convert event
         Object convertedEvent=tupleInputMapping.convert(event);
@@ -121,17 +120,16 @@ public class TestInputMapping extends TestCase {
         event.setPayloadData(new Object[]{"IBM", 145.4, 500});
 
         //TypeDef
-        TypeDef typeDef = new TypeDef();
-        typeDef.setStreamId("TestStream");
+        EventStreamDefinition eventStreamDefinition = new EventStreamDefinition("TestStream");
         List<Attribute> metaDataList = new ArrayList<Attribute>();
         metaDataList.add(new Attribute("ipAdd", AttributeType.STRING));
-        typeDef.setMetaData(metaDataList);
+        eventStreamDefinition.setMetaData(metaDataList);
 
         List<Attribute> payloadDataList = new ArrayList<Attribute>();
         payloadDataList.add(new Attribute("symbol", AttributeType.STRING));
         payloadDataList.add(new Attribute("price", AttributeType.DOUBLE));
         payloadDataList.add(new Attribute("volume", AttributeType.INT));
-        typeDef.setPayloadData(payloadDataList);
+        eventStreamDefinition.setPayloadData(payloadDataList);
 
         //Input Mapping
         List<TupleProperty> tupleProperties = new ArrayList<TupleProperty>();
@@ -147,7 +145,7 @@ public class TestInputMapping extends TestCase {
         tupleInputMapping.setMappingClass(Map.class);
 
         //Set definition
-        tupleInputMapping.setEventDefinition(typeDef);
+        tupleInputMapping.setEventDefinition(eventStreamDefinition);
 
         //Convert event
         Object convertedEvent=tupleInputMapping.convert(event);

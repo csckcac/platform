@@ -18,7 +18,7 @@ package org.wso2.carbon.cep.core.mapping.output.mapping;
 
 import org.wso2.carbon.agent.commons.Attribute;
 import org.wso2.carbon.agent.commons.Event;
-import org.wso2.carbon.agent.commons.TypeDef;
+import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.cep.core.exception.CEPEventProcessingException;
 
 import java.beans.BeanInfo;
@@ -36,11 +36,11 @@ public abstract class OutputMapping {
     protected Map<Class, Map<String, Method>> methodCache;
 
     //For tuple Events
-    protected Map<String, TypeDef> typeDefMap;
+    protected Map<String, EventStreamDefinition> typeDefMap;
     protected Map<String, Map<String, Integer>> typeDefCache;
 
     protected OutputMapping() {
-        typeDefMap = new HashMap<String, TypeDef>();
+        typeDefMap = new HashMap<String, EventStreamDefinition>();
         methodCache = new HashMap<Class, Map<String, Method>>();
         typeDefCache = new HashMap<String, Map<String, Integer>>();
     }
@@ -113,8 +113,8 @@ public abstract class OutputMapping {
         this.methodCache = methodCache;
     }
 
-    public void defineStream(TypeDef streamTypeDef) {
-        typeDefMap.put(streamTypeDef.getStreamId(), streamTypeDef);
+    public void defineStream(EventStreamDefinition eventStreamDefinition) {
+        typeDefMap.put(eventStreamDefinition.getName(), eventStreamDefinition);
     }
 
 }

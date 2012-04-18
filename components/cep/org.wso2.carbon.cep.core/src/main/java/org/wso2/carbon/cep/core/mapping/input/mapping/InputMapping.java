@@ -17,7 +17,7 @@
 package org.wso2.carbon.cep.core.mapping.input.mapping;
 
 import org.wso2.carbon.agent.commons.Event;
-import org.wso2.carbon.agent.commons.TypeDef;
+import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.cep.core.exception.CEPEventProcessingException;
 
 import java.lang.reflect.Method;
@@ -31,7 +31,7 @@ public abstract class InputMapping {
     protected Class mappingClass ;
 
     protected Map<String, Method> writeMethodMap;
-    protected  TypeDef typeDef;
+    protected EventStreamDefinition eventStreamDefinition;
 
     protected InputMapping() {
         this.writeMethodMap = new HashMap<String, Method>();
@@ -88,6 +88,6 @@ public abstract class InputMapping {
     }
 
     public void setEventDefinition(Object eventDef) {
-        typeDef=(TypeDef)eventDef;
+        eventStreamDefinition =(EventStreamDefinition)eventDef;
     }
 }

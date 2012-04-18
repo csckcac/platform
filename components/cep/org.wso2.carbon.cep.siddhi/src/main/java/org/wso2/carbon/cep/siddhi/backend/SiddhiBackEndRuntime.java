@@ -21,14 +21,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.agent.commons.Attribute;
 import org.wso2.carbon.agent.commons.AttributeType;
-import org.wso2.carbon.agent.commons.TypeDef;
+import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.cep.core.Expression;
 import org.wso2.carbon.cep.core.backend.CEPBackEndRuntime;
 import org.wso2.carbon.cep.core.exception.CEPConfigurationException;
-import org.wso2.carbon.cep.core.mapping.input.Input;
-import org.wso2.carbon.cep.core.mapping.input.mapping.InputMapping;
 import org.wso2.carbon.cep.core.internal.ds.CEPServiceValueHolder;
 import org.wso2.carbon.cep.core.listener.CEPEventListener;
+import org.wso2.carbon.cep.core.mapping.input.Input;
+import org.wso2.carbon.cep.core.mapping.input.mapping.InputMapping;
 import org.wso2.carbon.cep.core.mapping.input.mapping.TupleInputMapping;
 import org.wso2.carbon.cep.core.mapping.input.mapping.XMLInputMapping;
 import org.wso2.carbon.cep.core.mapping.property.Property;
@@ -143,9 +143,8 @@ public class SiddhiBackEndRuntime implements CEPBackEndRuntime {
 
     }
 
-    private TypeDef createStreamTypeDef(EventStream eventStream) {
-        TypeDef typeDef = new TypeDef();
-        typeDef.setStreamId(eventStream.getStreamId());
+    private EventStreamDefinition createStreamTypeDef(EventStream eventStream) {
+        EventStreamDefinition typeDef = new EventStreamDefinition(eventStream.getStreamId());
         List<Attribute> attributeList = new ArrayList<Attribute>();
         String[] names = eventStream.getNames();
         for (int i = 0, namesLength = names.length; i < namesLength; i++) {

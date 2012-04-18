@@ -114,15 +114,15 @@ public class TupleInputMapping extends InputMapping {
         for (int i = 0, propertySize = properties.size(); i < propertySize; i++) {
             TupleProperty property = properties.get(i);
             if (property.getDataType().equals(CEPConstants.CEP_CONF_ELE_TUPLE_DATA_TYPE_PAYLOAD)) {
-                List<Attribute> payloadData = typeDef.getPayloadData();
+                List<Attribute> payloadData = eventStreamDefinition.getPayloadData();
                 propertyPositions[i][0] = 2;
                 propertyPositions[i][1] = getPosition(property, payloadData);
             } else if (property.getDataType().equals(CEPConstants.CEP_CONF_ELE_TUPLE_DATA_TYPE_META)) {
-                List<Attribute> metaData = typeDef.getMetaData();
+                List<Attribute> metaData = eventStreamDefinition.getMetaData();
                 propertyPositions[i][0] = 0;
                 propertyPositions[i][1] = getPosition(property, metaData);
             } else if (property.getDataType().equals(CEPConstants.CEP_CONF_ELE_TUPLE_DATA_TYPE_CORRELATION)) {
-                List<Attribute> correlationData = typeDef.getCorrelationData();
+                List<Attribute> correlationData = eventStreamDefinition.getCorrelationData();
                 propertyPositions[i][0] = 1;
                 propertyPositions[i][1] = getPosition(property, correlationData);
             }

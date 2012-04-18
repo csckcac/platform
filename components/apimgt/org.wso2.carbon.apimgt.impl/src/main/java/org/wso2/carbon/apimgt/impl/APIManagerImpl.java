@@ -232,19 +232,19 @@ public class APIManagerImpl implements APIManager {
      */
     @Override
     public Set<API> getAllPublishedAPIs() throws APIManagementException {
-        Set<API> apiSet = new HashSet<API>();
+        SortedSet<API> apiSortedSet = new TreeSet<API>(new APIComparator());
         try {
             artifactManager = getArtifactManager(APIConstants.API_KEY);
             GenericArtifact[] genericArtifacts = artifactManager.getAllGenericArtifacts();
             if (genericArtifacts == null || genericArtifacts.length == 0) {
-                return apiSet;
+                return apiSortedSet;
             }
             for (GenericArtifact artifact : genericArtifacts) {
                 // adding the API provider can mark the latest API .
                 String status = artifact.getAttribute(APIConstants.API_OVERVIEW_STATUS);
                 boolean latest = Boolean.valueOf(artifact.getAttribute(APIConstants.API_OVERVIEW_IS_LATEST));
                 if (status.equals(APIConstants.PUBLISHED) && latest) {
-                    apiSet.add(APIUtils.getAPI(artifact, registry));
+                    apiSortedSet.add(APIUtils.getAPI(artifact, registry));
                 }
             }
         } catch (RegistryException e) {
@@ -252,7 +252,7 @@ public class APIManagerImpl implements APIManager {
             log.error(msg, e);
             throw new APIManagementException(msg, e);
         }
-        return apiSet;
+        return apiSortedSet;
     }
 
     /**

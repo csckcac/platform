@@ -99,10 +99,15 @@ var urlString = '../tryitframe.jag?code='+codeSnip;
 </button>
 </p>
 
-     <div id="pageLinks">
+ <% hasMembers = false; %>
+<div id="pageLinks">
 <a class="navilink" href="#overview">Overview</a>
+    <%if(hasMembers) {%>
 <a class="navilink" href="#members">Members</a>
+        <%}%>
+        <%if(hasOps) {%>
 <a class="navilink" href="#operations">Operations</a>
+            <%}%>
 </div>
 
     <section id="overview">

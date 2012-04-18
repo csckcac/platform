@@ -71,11 +71,16 @@ function myFunc() {
 }
 %&gt;
 </pre>
-                <div id="pageLinks">
-                    <a class="navilink" href="#overview">Overview</a>
-                    <a class="navilink" href="#members">Members</a>
-                    <a class="navilink" href="#operations">Operations</a>
-                </div>
+ <% hasMembers = false; %>
+<div id="pageLinks">
+<a class="navilink" href="#overview">Overview</a>
+    <%if(hasMembers) {%>
+<a class="navilink" href="#members">Members</a>
+        <%}%>
+        <%if(hasOps) {%>
+<a class="navilink" href="#operations">Operations</a>
+            <%}%>
+</div>
 
                 <section id="overview">
                     <h4>Overview</h4>

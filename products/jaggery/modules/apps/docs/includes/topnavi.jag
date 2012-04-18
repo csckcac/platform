@@ -12,3 +12,9 @@
         </div>
     </div>
 </div>
+<%
+var hasMembers = true;
+var hasOps = true;
+%>
+
+

@@ -28,15 +28,20 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.neethi.Policy;
+import org.wso2.carbon.core.RegistryResources;
 import org.wso2.carbon.core.Resources;
 import org.wso2.carbon.core.persistence.PersistenceFactory;
 import org.wso2.carbon.core.persistence.PersistenceUtils;
 import org.wso2.carbon.core.persistence.file.ModuleFilePersistenceManager;
 import org.wso2.carbon.core.persistence.file.ServiceGroupFilePersistenceManager;
 import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.utils.ServerException;
 
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamWriter;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -95,9 +100,8 @@ public class SecurityServiceAdmin {
      */
     public void addSecurityPolicyToAllBindings(AxisService axisService, Policy policy)
 	    throws ServerException {
-
-
         String serviceGroupId = axisService.getAxisServiceGroup().getServiceGroupName();
+        boolean isProxyService = PersistenceUtils.isProxyService(axisService);
 	try {
         String policyString = policy.toString();
         ByteArrayInputStream bais = new ByteArrayInputStream(policyString.getBytes());
@@ -123,6 +127,9 @@ public class SecurityServiceAdmin {
                 "/"+Resources.POLICY+
                 PersistenceUtils.getXPathTextPredicate(Resources.ServiceProperties.POLICY_UUID, policy.getId());
         if (!sfpm.elementExists(serviceGroupId, policyResourcePath)) {
+
+//            todo use pf.getServicePM().persistServicePolicy method instead of below code chunk - kasung
+
             OMElement policyWrapperElement = omFactory.createOMElement(Resources.POLICY, null);
             policyWrapperElement.addAttribute(Resources.ServiceProperties.POLICY_TYPE,
                     "" + PolicyInclude.BINDING_POLICY, null);
@@ -157,6 +164,16 @@ public class SecurityServiceAdmin {
 //            }
         }
 
+        //to registry if proxy
+        if(isProxyService) {
+            String registryServicePath = RegistryResources.SERVICE_GROUPS
+                    + axisService.getAxisServiceGroup().getServiceGroupName()
+                    + RegistryResources.SERVICES + axisService.getName();
+
+            pf.getServicePM().persistPolicyToRegistry(policy,
+                    "" + PolicyInclude.BINDING_POLICY, registryServicePath);
+        }
+
         Map endPointMap = axisService.getEndpoints();
         List<String> lst = new ArrayList<String>();
         for (Object o : endPointMap.entrySet()) {
@@ -180,18 +197,23 @@ public class SecurityServiceAdmin {
                     "/"+Resources.ServiceProperties.BINDING_XML_TAG+
                     PersistenceUtils.getXPathAttrPredicate(Resources.NAME, bindingName);
 
-            OMElement bindingElement = null;
-            if (sfpm.elementExists(serviceGroupId, bindingElementPath)) {
-                bindingElement = (OMElement) sfpm.get(serviceGroupId, bindingElementPath);
-            } else {
-                bindingElement = omFactory.createOMElement(Resources.ServiceProperties.BINDINGS, null);
+            if (!sfpm.elementExists(serviceGroupId, bindingElementPath+
+                    "/"+Resources.ServiceProperties.POLICY_UUID+
+                    PersistenceUtils.getXPathTextPredicate(null, policy.getId())) ) {
+
+                OMElement bindingElement = null;
+                if (sfpm.elementExists(serviceGroupId, bindingElementPath)) {
+                    bindingElement = (OMElement) sfpm.get(serviceGroupId, bindingElementPath);
+                } else {
+                    bindingElement = omFactory.createOMElement(Resources.ServiceProperties.BINDINGS, null);
+                }
+
+                OMElement idElement = omFactory.createOMElement(Resources.ServiceProperties.POLICY_UUID, null);
+                idElement.setText("" + policy.getId());
+                bindingElement.addChild(idElement.cloneOMElement());
+
+                sfpm.put(serviceGroupId, bindingElement, serviceXPath+"/"+Resources.ServiceProperties.BINDINGS);
             }
-
-            OMElement idElement = omFactory.createOMElement(Resources.ServiceProperties.POLICY_UUID, null);
-            idElement.setText("" + policy.getId());
-            bindingElement.addChild(idElement.cloneOMElement());
-
-            sfpm.put(serviceGroupId, bindingElement, serviceXPath+"/"+Resources.ServiceProperties.BINDINGS);
         }
         if (!transactionStarted) {
             sfpm.commitTransaction(serviceGroupId);
@@ -206,11 +228,11 @@ public class SecurityServiceAdmin {
 
     public void removeSecurityPolicyFromAllBindings(AxisService axisService, String uuid)
 	    throws ServerException {
-
+        //todo apparently policyFromRegistry in bindings didn't got removed1 - kasung
         String serviceGroupId = axisService.getAxisServiceGroup().getServiceGroupName();
 	try {
         String serviceXPath = PersistenceUtils.getResourcePath(axisService);
-        String policiesPath = serviceXPath+"/"+Resources.POLICIES;
+//        String policiesPath = serviceXPath+"/"+Resources.POLICIES;
 
         // The following logic has been moved to SecurityConfigAdmin
         // Please verify and remove the following commented out block permanently
@@ -257,7 +279,7 @@ public class SecurityServiceAdmin {
         }
         // at axis2
 	} catch (Exception e) {
-	    log.error(e);
+	    log.error("", e);
         sfpm.rollbackTransaction(serviceGroupId);
 	    throw new ServerException("addPoliciesToService");
 	}

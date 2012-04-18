@@ -261,6 +261,7 @@ public class SecurityConfigAdmin {
     public void disableSecurityOnService(String serviceName) throws SecurityConfigException {
         AxisService service = axisConfig.getServiceForActivation(serviceName);
         String serviceGroupId = service.getAxisServiceGroup().getServiceGroupName();
+        boolean isProxyService = PersistenceUtils.isProxyService(service);
         try {
             if (service == null) {
                 throw new SecurityConfigException("AxisService is Null");
@@ -302,6 +303,14 @@ public class SecurityConfigAdmin {
                 sfpm.delete(serviceGroupId, secPolicyPath);
             }
 
+            if (isProxyService) {   //if proxy, delete the policy in registry as well.
+                String registrySecPolicyPath = PersistenceUtils.getRegistryResourcePath(service)
+                        + RegistryResources.POLICIES + scenario.getWsuId();
+                if (registry.resourceExists(registrySecPolicyPath)) {
+                    registry.delete(registrySecPolicyPath);
+                }
+            }
+
             String[] moduleNames = scenario.getModules().toArray(
                     new String[scenario.getModules().size()]);
 
@@ -329,6 +338,7 @@ public class SecurityConfigAdmin {
             if (!transactionStarted1) {
                 sfpm.commitTransaction(serviceGroupId);
             }
+            registry.commitTransaction();
 
             // remove poicy
             SecurityServiceAdmin admin = new SecurityServiceAdmin(axisConfig, registry);
@@ -456,6 +466,7 @@ public class SecurityConfigAdmin {
         } catch (AxisFault e) {
             log.error(e.getMessage(), e);
             sfpm.rollbackTransaction(serviceGroupId);
+            //why don't we throw a exception here? - kasung
         } catch (SecurityConfigException e) {
             log.error(e.getMessage(), e);
             sfpm.rollbackTransaction(serviceGroupId);
@@ -471,7 +482,6 @@ public class SecurityConfigAdmin {
     private KerberosConfigData readKerberosConfigurations(AxisService service) throws SecurityConfigException {
 
         String kerberosXPath = getKerberosConfigXPath(service);
-        ServiceGroupFilePersistenceManager sfpm = pf.getServiceGroupFilePM();
         String serviceGroupId = service.getAxisServiceGroup().getServiceGroupName();
         try {
             boolean isTransactionStarted = sfpm.isTransactionStarted(serviceGroupId);
@@ -480,6 +490,9 @@ public class SecurityConfigAdmin {
             }
             // First check whether an element path already exists
             if (!sfpm.elementExists(serviceGroupId, kerberosXPath)) {
+                if(!isTransactionStarted) {
+                    sfpm.rollbackTransaction(serviceGroupId); //no need to commit because no writes happened.
+                }
                  return null;
             }
             OMElement kerberosElement = (OMElement) sfpm.get(serviceGroupId, kerberosXPath);
@@ -660,8 +673,12 @@ public class SecurityConfigAdmin {
             boolean transactionStarted = sfpm.isTransactionStarted(serviceGroupId);
             if (!transactionStarted) {
                 sfpm.beginTransaction(serviceGroupId);
+            }
+            boolean registryTransactionStarted = Transaction.isStarted();
+            if(!registryTransactionStarted) {
                 registry.beginTransaction();         //is this really needed?
             }
+
             this.disableSecurityOnService(serviceName);
 
             // if the service is a ghost service, load the actual service
@@ -680,6 +697,8 @@ public class SecurityConfigAdmin {
             persistData(service, scenrioId, privateStore, trustedStores, userGroups, isRahasEngaged);
             if (!transactionStarted) {
                 sfpm.commitTransaction(serviceGroupId);
+            }
+            if(!registryTransactionStarted) {
                 registry.commitTransaction();
             }
             // finally update the ghost file if GD is used..
@@ -687,6 +706,7 @@ public class SecurityConfigAdmin {
                 updateSecScenarioInGhostFile(service.getFileName().getPath(), serviceName, scenrioId);
             }
         } catch (RegistryException e) {
+            log.error(e.getMessage(), e);
             sfpm.rollbackTransaction(serviceGroupId);
             try {
                 registry.rollbackTransaction();
@@ -694,6 +714,7 @@ public class SecurityConfigAdmin {
                 log.error("Error while rollback", ex);
             }
         } catch (PersistenceException e) {
+            log.error(e.getMessage(), e);
             sfpm.rollbackTransaction(serviceGroupId);
             try {
                 registry.rollbackTransaction();
@@ -751,7 +772,8 @@ public class SecurityConfigAdmin {
                         policyPath);
                 pathParam.setLocked(true);
                 service.addParameter(pathParam);
-                persistParameter(serviceGroupId, pathParam, serviceXPath);
+                pf.getServicePM().updateServiceParameter(service, pathParam);
+//                persistParameter(serviceGroupId, pathParam, serviceXPath);
             }
 
             // Collection coll =
@@ -1081,7 +1103,7 @@ public class SecurityConfigAdmin {
 
             return PolicyEngine.getPolicy(policyElement);
         } catch (Exception e) {
-            log.error(e);
+            log.error("loadingPolicy", e);
             throw new SecurityConfigException("loadingPolicy", e);
         }
 
@@ -1211,9 +1233,10 @@ public class SecurityConfigAdmin {
     /**
      * Expose this service only via the specified transport
      * 
-     * @param serviceId
-     * @param transportProtocols
+     * @param serviceId service name
+     * @param transportProtocols transport protocols to expose
      * @throws AxisFault
+     * @throws org.wso2.carbon.security.SecurityConfigException
      */
     public void setServiceTransports(String serviceId, List<String> transportProtocols)
             throws SecurityConfigException, AxisFault {
@@ -1242,7 +1265,7 @@ public class SecurityConfigAdmin {
      * @param policy
      *            service policy
      * @return returns true if the service should only be exposed in HTTPS
-     * @throws Exception
+     * @throws org.wso2.carbon.security.SecurityConfigException
      */
     public boolean isHttpsTransportOnly(Policy policy) throws SecurityConfigException {
 
@@ -1588,7 +1611,7 @@ public class SecurityConfigAdmin {
             cryptoProps.setProperty(ServerCrypto.PROP_ID_PRIVATE_STORE, privateKeyStore);
             cryptoProps.setProperty(ServerCrypto.PROP_ID_DEFAULT_ALIAS, keyAlias);
         }
-        StringBuffer trustStores = new StringBuffer();
+        StringBuilder trustStores = new StringBuilder();
 
         for (Object node : tstedStores) {
             OMElement assoc = (OMElement) node;

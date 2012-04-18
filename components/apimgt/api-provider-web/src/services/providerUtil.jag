@@ -215,13 +215,7 @@ function getAPIsByProviderFunc() {
         for (var k = 0; k < apis.length; k++) {
             var elem = {
                 name:apis[k].apiName,
-                description:apis[k].description,
-                endpoint:apis[k].endpoint,
-                wsdl:apis[k].wsdl,
                 version:apis[k].version,
-                lastUpdatedDate:apis[k].updatedDate,
-                availableTiers:apis[k].tier,
-                tags:apis[k].tags,
                 status:apis[k].status,
                 thumb:apis[k].thumb,
                 subs:apis[k].subs

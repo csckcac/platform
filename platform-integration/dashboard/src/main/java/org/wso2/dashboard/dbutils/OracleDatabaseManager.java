@@ -40,6 +40,7 @@ public class OracleDatabaseManager implements DatabaseManager {
         Statement st = connection.createStatement();
         log.debug(sql);
         st.executeUpdate(sql.trim());
+        st.close();
         log.info("Sql update Success");
 
     }
@@ -55,6 +56,7 @@ public class OracleDatabaseManager implements DatabaseManager {
     public void execute(String sql) throws SQLException {
         Statement st = connection.createStatement();
         st.execute(sql);
+        st.close();
         log.info("Sql execution Success");
     }
 

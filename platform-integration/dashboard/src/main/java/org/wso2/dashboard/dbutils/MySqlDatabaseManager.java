@@ -20,6 +20,7 @@ package org.wso2.dashboard.dbutils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import java.sql.*;
 
 public class MySqlDatabaseManager implements DatabaseManager {
@@ -27,7 +28,8 @@ public class MySqlDatabaseManager implements DatabaseManager {
 
     private Connection connection;
 
-    public MySqlDatabaseManager(String jdbcUrl, String userName, String passWord) throws SQLException, ClassNotFoundException {
+    public MySqlDatabaseManager(String jdbcUrl, String userName, String passWord)
+            throws SQLException, ClassNotFoundException {
         Class.forName("com.mysql.jdbc.Driver");
         log.debug("JDBC Url: " + jdbcUrl);
         connection = DriverManager.getConnection(jdbcUrl, userName, passWord);
@@ -38,6 +40,7 @@ public class MySqlDatabaseManager implements DatabaseManager {
         Statement st = connection.createStatement();
         log.debug(sql);
         st.executeUpdate(sql.trim());
+        st.close();
         log.debug("Sql update Success");
 
     }
@@ -52,6 +55,7 @@ public class MySqlDatabaseManager implements DatabaseManager {
     public void execute(String sql) throws SQLException {
         Statement st = connection.createStatement();
         st.execute(sql);
+        st.close();
         log.debug("Sql execution Success");
     }
 

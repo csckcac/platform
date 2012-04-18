@@ -31,7 +31,7 @@ import java.util.Hashtable;
 import java.util.Properties;
 
 public class DataProvider {
-    private static DatabaseManager con;
+    private static DatabaseManager con = null;
     private static final String DEFAULT_ENCODING = "UTF-8";
     private static BASE64Decoder dec = new BASE64Decoder();
 
@@ -67,6 +67,7 @@ public class DataProvider {
             objArray.add(object);
 
         }
+        rst.close();
         return objArray;
     }
 
@@ -92,6 +93,7 @@ public class DataProvider {
             objArray.add(object);
 
         }
+        rst.close();
         return objArray;
     }
 
@@ -117,6 +119,7 @@ public class DataProvider {
             objArray.add(object);
 
         }
+        rst.close();
         return objArray;
     }
 
@@ -137,6 +140,7 @@ public class DataProvider {
             objArray.add(object);
 
         }
+        rst.close();
         return objArray;
     }
 
@@ -152,6 +156,7 @@ public class DataProvider {
 
 
         }
+        rst.close();
         return object;
     }
 
@@ -174,6 +179,7 @@ public class DataProvider {
             buildInfo.add(customer);
 
         }
+        rst.close();
         return buildInfo;
     }
 
@@ -198,6 +204,7 @@ public class DataProvider {
             buildInfo.add(object);
 
         }
+        rst.close();
         return buildInfo;
     }
 
@@ -220,6 +227,7 @@ public class DataProvider {
 
 
         }
+        rst.close();
         return object;
     }
 
@@ -237,6 +245,7 @@ public class DataProvider {
             data.add(record);
 
         }
+        rst.close();
         return data;
     }
 
@@ -251,6 +260,7 @@ public class DataProvider {
             record.put(Constant.SKIP, getCount(rst.getInt("WA_BUILD_NUMBER"), "SKIP"));
 
         }
+        rst.close();
         return record;
     }
 
@@ -266,6 +276,7 @@ public class DataProvider {
             record.put(Constant.SKIP, getCount(rst.getInt("WA_BUILD_NUMBER"), "SKIP"));
 
         }
+        rst.close();
         return record;
     }
 
@@ -275,8 +286,8 @@ public class DataProvider {
         try {
             dbProps.load(is);//this may throw IOException
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            System.out.println("Database configuration not found");
+
+            System.err.println("Database configuration not found");
         }
         return dbProps.getProperty(key);
     }
@@ -303,6 +314,7 @@ public class DataProvider {
             record = rst.getInt(1);
 
         }
+        rst.close();
         return record;
     }
 
@@ -318,6 +330,7 @@ public class DataProvider {
             record = rst.getInt(1);
 
         }
+        rst.close();
         return record;
     }
 
@@ -330,6 +343,7 @@ public class DataProvider {
             record = rst.getDouble(1);
 
         }
+        rst.close();
         return record;
     }
 
@@ -340,7 +354,7 @@ public class DataProvider {
         Hashtable<String, String> record = new Hashtable<String, String>();
         while (rst.next()) {
             record.put("errorType", rst.getString("WA_ERROR_TYPE"));
-            record.put("message", new String(dec.decodeBuffer( rst.getString("WA_ERROR_MESSAGE") ),
+            record.put("message", new String(dec.decodeBuffer(rst.getString("WA_ERROR_MESSAGE")),
                                              DEFAULT_ENCODING));
             record.put("stackTrace", rst.getString("WA_EXCEPTION_ID"));
 
@@ -355,10 +369,11 @@ public class DataProvider {
         String record = "";
 
         while (rst.next()) {
-            record = new String(dec.decodeBuffer( rst.getString("WA_ERROR_DESCRIPTION") ),
+            record = new String(dec.decodeBuffer(rst.getString("WA_ERROR_DESCRIPTION")),
                                 DEFAULT_ENCODING);
 
         }
+        rst.close();
         return record;
 
     }
@@ -372,6 +387,7 @@ public class DataProvider {
             record.put(rst.getString("WA_BUILD_NUMBER"), rst.getString("WA_TEST_DURATION"));
 
         }
+        rst.close();
         return record;
 
     }

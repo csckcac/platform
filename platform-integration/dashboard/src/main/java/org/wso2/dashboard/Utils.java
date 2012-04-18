@@ -25,31 +25,34 @@ import java.util.Iterator;
 
 public class Utils {
     public static String getDataArray(JSONArray ja) {
-        String s = "[";
+        StringBuffer s = new StringBuffer();
+        s.append("[");
         if (ja != null && ja.size() > 0) {
             Iterator i = ja.iterator();
             while (i.hasNext()) {
                 JSONObject jo = (JSONObject) i.next();
-                s = s + "["
-                    + "'" + jo.getString("id") + "'" + ","
-                    + jo.getString(Constant.PASS) + ","
-                    + jo.getString(Constant.FAIL) + ","
-                    + jo.getString(Constant.SKIP)
-                    + "],";
+                s.append("[") ;
+                s.append(jo.getString("id") + "'" + "," );
+                s.append(jo.getString(Constant.PASS) + "," );
+                s.append(jo.getString(Constant.FAIL) + "," );
+                s.append(jo.getString(Constant.SKIP));
+                s.append( "],");
             }
         }
-        return s + "]";
+        s.append("]");
+        return s.toString();
     }
 
     public static String getDataAsAList(JSONArray ja, String key) {
-        String s = "";
+        StringBuffer s = new StringBuffer();
+        s.append("");
         if (ja != null && ja.size() > 0) {
             Iterator i = ja.iterator();
             int count = 0;
             while (i.hasNext()) {
                 JSONObject jo = (JSONObject) i.next();
                 if (jo.containsKey(key)) {
-                    s = s + jo.getString(key) + ",";
+                    s.append(jo.getString(key) + ",");
                 }
                 if(count == 5) {
                     break;
@@ -58,7 +61,7 @@ public class Utils {
 
             }
         }
-        return s;
+        return s.toString();
     }
 
     public static String getPieChartData(JSONObject jo) {

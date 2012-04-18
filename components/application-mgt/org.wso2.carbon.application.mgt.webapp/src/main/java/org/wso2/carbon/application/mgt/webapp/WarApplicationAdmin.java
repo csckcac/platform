@@ -18,23 +18,23 @@
 
 package org.wso2.carbon.application.mgt.webapp;
 
-import org.wso2.carbon.core.AbstractAdmin;
-import org.wso2.carbon.application.deployer.AppDeployerUtils;
-import org.wso2.carbon.application.deployer.CarbonApplication;
-import org.wso2.carbon.application.deployer.webapp.WARCappDeployer;
-import org.wso2.carbon.application.deployer.config.Artifact;
-import org.wso2.carbon.application.mgt.webapp.internal.WarAppServiceComponent;
-import org.wso2.carbon.utils.NetworkUtils;
-import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.carbon.CarbonConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.application.deployer.AppDeployerUtils;
+import org.wso2.carbon.application.deployer.CarbonApplication;
+import org.wso2.carbon.application.deployer.config.Artifact;
+import org.wso2.carbon.application.deployer.webapp.WARCappDeployer;
+import org.wso2.carbon.application.mgt.webapp.internal.WarAppServiceComponent;
+import org.wso2.carbon.core.AbstractAdmin;
+import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.utils.NetworkUtils;
 import org.wso2.carbon.webapp.mgt.WebApplication;
 import org.wso2.carbon.webapp.mgt.WebApplicationsHolder;
 
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
-import java.net.SocketException;
 
 public class WarApplicationAdmin extends AbstractAdmin {
 
@@ -141,6 +141,43 @@ public class WarApplicationAdmin extends AbstractAdmin {
             warCappMetadata.setHttpPort(httpPort);
         }
         return warCappMetadata;
+    }
+
+    public WarCappMetadata[] getJaxWSWarAppData(String appName) throws Exception {
+        String tenantId = AppDeployerUtils.getTenantIdString(getAxisConfig());
+
+        // Check whether there is an application in the system from the given name
+        ArrayList<CarbonApplication> appList
+                = WarAppServiceComponent.getAppManager().getCarbonApps(tenantId);
+        CarbonApplication currentApplication = null;
+        for (CarbonApplication application : appList) {
+            if (appName.equals(application.getAppName())) {
+                currentApplication = application;
+                break;
+            }
+        }
+
+        // If the app not found, throw an exception
+        if (currentApplication == null) {
+            String msg = "No Carbon Application found of the name : " + appName;
+            log.error(msg);
+            throw new Exception(msg);
+        }
+
+        // get all dependent artifacts of the cApp
+        List<Artifact.Dependency> deps = currentApplication.getAppConfig().
+                getApplicationArtifact().getDependencies();
+        // package list to return
+        List<WarCappMetadata> webappList = new ArrayList<WarCappMetadata>();
+
+        for (Artifact.Dependency dep : deps) {
+            Artifact artifact = dep.getArtifact();
+            if (WARCappDeployer.JAX_WAR_TYPE.equals(artifact.getType())) {
+                webappList.add(getWebappMetadata(artifact.getFiles().get(0).getName()));
+            }
+        }
+        // convert the List into an array and return
+        return webappList.toArray(new WarCappMetadata[webappList.size()]);
     }
 
 }

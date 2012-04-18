@@ -60,6 +60,15 @@ public class WarAppAdminClient {
         return null;
     }
 
+    public WarCappMetadata[] getJaxWSWarAppData(String appName) throws AxisFault {
+        try {
+            return stub.getJaxWSWarAppData(appName);
+        } catch (java.lang.Exception e) {
+            handleException(bundle.getString("cannot.get.service.data"), e);
+        }
+        return null;
+    }
+
     private void handleException(String msg, java.lang.Exception e) throws AxisFault {
         log.error(msg, e);
         throw new AxisFault(msg, e);

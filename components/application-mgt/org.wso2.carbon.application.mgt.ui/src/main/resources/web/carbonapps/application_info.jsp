@@ -306,6 +306,7 @@
                     if (CarbonUIUtil.isContextRegistered(config, "/war-apps/")) {
                 %>
                 <jsp:include page="../war-apps/index.jsp"/>
+                <jsp:include page="../war-apps/jaxws_info.jsp"/>
                 <%
                     }
 

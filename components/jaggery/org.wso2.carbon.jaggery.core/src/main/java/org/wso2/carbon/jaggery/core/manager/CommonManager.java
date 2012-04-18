@@ -100,6 +100,8 @@ public class CommonManager {
                     exposeModule(module);
                 } else {
                     ScriptableObject object = (ScriptableObject) this.engine.newObject();
+                    object.setPrototype(this.engine.getRuntimeScope());
+                    object.setParentScope(null);
                     exposeModule(cx, module, object);
                     this.engine.defineProperty(namespace, object, ScriptableObject.READONLY);
                 }
@@ -185,6 +187,8 @@ public class CommonManager {
         }
 
         ScriptableObject object = (ScriptableObject) RhinoEngine.newObject((ScriptableObject) thisObj);
+        object.setPrototype(thisObj);
+        object.setParentScope(null);
         exposeModule(cx, module, object);
         manager.initModule(moduleName, object, context);
         return object;

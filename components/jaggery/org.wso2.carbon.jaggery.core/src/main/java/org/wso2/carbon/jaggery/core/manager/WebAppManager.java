@@ -139,6 +139,8 @@ public class WebAppManager extends CommonManager {
 
         JaggeryContext jaggeryContext = CommonManager.getJaggeryContext();
         ScriptableObject object = (ScriptableObject) RhinoEngine.newObject((ScriptableObject) thisObj);
+        object.setPrototype(thisObj);
+        object.setParentScope(null);
         String ext = param.substring(dotIndex + 1);
         if(ext.equalsIgnoreCase("json")) {
             return executeScript(jaggeryContext, object, param, true, true);

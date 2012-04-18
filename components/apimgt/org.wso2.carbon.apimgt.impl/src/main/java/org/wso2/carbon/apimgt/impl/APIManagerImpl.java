@@ -242,8 +242,7 @@ public class APIManagerImpl implements APIManager {
             for (GenericArtifact artifact : genericArtifacts) {
                 // adding the API provider can mark the latest API .
                 String status = artifact.getAttribute(APIConstants.API_OVERVIEW_STATUS);
-                boolean latest = Boolean.valueOf(artifact.getAttribute(APIConstants.API_OVERVIEW_IS_LATEST));
-                if (status.equals(APIConstants.PUBLISHED) && latest) {
+                if (status.equals(APIConstants.PUBLISHED)) {
                     apiSortedSet.add(APIUtils.getAPI(artifact, registry));
                 }
             }
@@ -1043,19 +1042,15 @@ public class APIManagerImpl implements APIManager {
                 GenericArtifact artifact = artifactManager.getGenericArtifact(
                         apiSourceArtifact.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY));
 
-                boolean latest = Boolean.valueOf(artifact.getAttribute(APIConstants.API_OVERVIEW_IS_LATEST));
-
-                //Update the existing API version
-                if(latest){
-                    artifact.setAttribute(APIConstants.API_OVERVIEW_IS_LATEST, "false");
-                    artifactManager.updateGenericArtifact(artifact);
-                }
-
                 //Create new API version
                 artifact.setId(UUID.randomUUID().toString());
                 artifact.setAttribute(APIConstants.API_OVERVIEW_VERSION, newVersion);
-                if(latest){
-                    artifact.setAttribute(APIConstants.API_OVERVIEW_IS_LATEST, "true");
+
+                //Check the status of the existing api,if its not in 'CREATED' status set
+                //the new api status as "CREATED"
+                String status=artifact.getAttribute(APIConstants.API_OVERVIEW_STATUS);
+                if(!status.equals(APIConstants.CREATED)){
+                artifact.setAttribute(APIConstants.API_OVERVIEW_STATUS,APIConstants.CREATED);
                 }
                 artifactManager.addGenericArtifact(artifact);
                 registry.addAssociation(APIConstants.API_LOCATION + RegistryConstants.PATH_SEPARATOR

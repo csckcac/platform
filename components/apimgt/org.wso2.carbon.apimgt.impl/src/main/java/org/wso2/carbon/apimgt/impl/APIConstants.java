@@ -113,6 +113,7 @@ public class APIConstants {
             RegistryConstants.GOVERNANCE_COMPONENT_PATH +
             RegistryConstants.PATH_SEPARATOR + "config";
     public static final String PUBLISHED = "published";
+    public static final String CREATED = "created";
 
 
     public static class TokenStatus {

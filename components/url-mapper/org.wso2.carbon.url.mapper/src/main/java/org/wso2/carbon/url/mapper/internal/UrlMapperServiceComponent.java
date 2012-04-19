@@ -43,7 +43,7 @@ import static org.wso2.carbon.url.mapper.internal.util.HostUtil.getAllHostsFromR
  * adds the CarbonTomcatValve to TomcatContainer.
  *
  * @scr.component name="org.wso2.carbon.url.mapper" immediate="true"
- * @scr.reference name="tomcat.service.provider"
+ * @scr.reference name="tomcat.service.provider"  
  * interface="org.wso2.carbon.tomcat.api.CarbonTomcatService"
  * cardinality="1..1" policy="dynamic" bind="setCarbonTomcatService"
  * unbind="unsetCarbonTomcatService"
@@ -109,7 +109,7 @@ public class UrlMapperServiceComponent {
 
     protected void setRegistryService(RegistryService registryService) {
         try {
-            DataHolder.getInstance().setRegistry(registryService.getConfigSystemRegistry());
+            DataHolder.getInstance().setRegistry(registryService.getGovernanceSystemRegistry());
         } catch (Exception e) {
             log.error("Cannot  retrieve System Registry", e);
         }

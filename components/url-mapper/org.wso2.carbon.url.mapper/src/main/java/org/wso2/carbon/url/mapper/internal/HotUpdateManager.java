@@ -73,7 +73,7 @@ public class HotUpdateManager implements HotUpdateService {
             }
         } catch (Exception e) {
             log.error(e);
-            throw new UrlMapperException("error while deploying webApp in a host");
+            throw new UrlMapperException("error while deploying webApp in a host",e);
         }
     }
 
@@ -115,7 +115,7 @@ public class HotUpdateManager implements HotUpdateService {
             }
         } catch (Exception e) {
             log.error("error while un deploying webApp in a host", e);
-            throw new UrlMapperException("error while un deploying webApp in a host");
+            throw new UrlMapperException("error while un deploying webApp in a host",e);
         }
     }
 

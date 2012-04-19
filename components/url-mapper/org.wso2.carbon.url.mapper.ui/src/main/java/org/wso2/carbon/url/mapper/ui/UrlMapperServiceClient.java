@@ -46,55 +46,55 @@ public class UrlMapperServiceClient {
 
 	public boolean editHost(String newHost, String oldhost) throws Exception {
 		try {
-			return stub.editHost(newHost,oldhost);
-		}  catch (Exception e) {
+			return stub.editHost(newHost, oldhost);
+		} catch (Exception e) {
 			String msg = "Error occurred while editing  host. Backend service may be unavailable";
 			log.error(msg, e);
 			throw e;
 		}
 	}
-	
+
 	public void editServiceDomain(String newHost, String oldhost) throws Exception {
 		try {
 			stub.editServiceDomain(newHost, oldhost);
-		}  catch (Exception e) {
+		} catch (Exception e) {
 			String msg = "Error occurred while editing service host. Backend service may be unavailable";
 			log.error(msg, e);
 			throw e;
 		}
 	}
-	
+
 	public void removeServiceDomain(String host) throws Exception {
 		try {
 			stub.deleteServiceDomain(host);
-		}  catch (Exception e) {
+		} catch (Exception e) {
 			String msg = "Error occurred while deleting service host. Backend service may be unavailable";
 			log.error(msg, e);
 			throw e;
 		}
 	}
-	
-	public void addServiceDomain(String host,String epr) throws Exception {
+
+	public void addServiceDomain(String host, String epr) throws Exception {
 		try {
-			stub.addServiceDomain(host,epr);
-		}  catch (Exception e) {
-			String msg = "Error occurred while adding new domain to "+epr+". Backend service may be unavailable";
+			stub.addServiceDomain(host, epr);
+		} catch (Exception e) {
+			String msg = "Error occurred while adding new domain to " + epr
+					+ ". Backend service may be unavailable";
 			log.error(msg, e);
 			throw e;
 		}
 	}
-	
-	public boolean deleteHost(String host) throws Exception {
+
+	public void deleteHost(String host) throws Exception {
 		try {
-			
-			return stub.deleteHost(host);
-		}  catch (Exception e) {
+			stub.deleteHost(host);
+		} catch (Exception e) {
 			String msg = "Error occurred while deleting host. Backend service may be unavailable";
 			log.error(msg, e);
 			throw e;
 		}
 	}
-	
+
 	/**
 	 * @param appId
 	 *            the tenant specified application ID for a web app
@@ -105,8 +105,8 @@ public class UrlMapperServiceClient {
 	 */
 	public void addWebAppToHost(String appId, String context) throws Exception {
 		try {
-			String hostName = appId + stub.getDomain();
-			boolean isDomain = isDomainExists(hostName);
+			String hostName = appId;
+			boolean isDomain = isMappingExist(hostName);
 
 			if (isDomain) {
 			} else {
@@ -128,7 +128,7 @@ public class UrlMapperServiceClient {
 			throw e;
 		}
 	}
-	
+
 	public String[] getHostForEpr(String epr) throws Exception {
 		try {
 			return stub.getHostForEpr(epr);
@@ -139,9 +139,9 @@ public class UrlMapperServiceClient {
 		}
 	}
 
-	public boolean isDomainExists(String hostName) throws Exception {
+	public boolean isMappingExist(String mappingName) throws Exception {
 		try {
-			return stub.isDomainExists(hostName);
+			return stub.isMappingExist(mappingName);
 		} catch (Exception e) {
 			String msg = "Error occurred while checking domain exsistance. Backend service may be unavailable";
 			log.error(msg, e);

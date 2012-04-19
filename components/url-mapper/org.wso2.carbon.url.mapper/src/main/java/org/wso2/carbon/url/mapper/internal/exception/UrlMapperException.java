@@ -20,7 +20,12 @@ package org.wso2.carbon.url.mapper.internal.exception;
  */
 public class UrlMapperException extends Exception {
 
-    public UrlMapperException(String s) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public UrlMapperException(String s) {
         super(s);
     }
 

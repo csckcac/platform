@@ -28,7 +28,7 @@
         <%@ page import="org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext" %>
         <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
         <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
-        <script type="text/javascript" src="../admin/dialog/js/dialog.js"></script>
+<!--         <script type="text/javascript" src="../admin/dialog/js/dialog.js"></script> -->
         <%@ page import="org.wso2.carbon.utils.CarbonUtils" %>
         <%@ page import="org.wso2.carbon.url.mapper.ui.UrlMapperServiceClient" %>
 <%
@@ -72,7 +72,21 @@
 		resourceBundle="org.wso2.carbon.url.mapper.ui.i18n.Resources"
 		topPage="true" request="<%=request%>" />
 		<div id="middle">
-		  <script type="text/javascript">
+		<script type="text/javascript">
+			function showSucessMessage(msg,myepr) {
+				var failMsg = new RegExp("Failed to add URL Mapping.");
+            	if (msg.match(failMsg)) //if match sucess 
+				{	
+            		CARBON.showErrorDialog(msg);
+				} else {
+            		CARBON.showInfoDialog(msg, function(){
+   		  				document.location.href = "index.jsp?&carbonEndpoint=" + myepr;  				 
+   		  			 });
+				}
+			}
+		</script>
+		<script type="text/javascript">
+		  
    function add(myepr){
         CARBON.showInputDialog("Enter URL Mapping name :\n",function(inputVal){
             jQuery.ajax({
@@ -80,14 +94,13 @@
                             url: "contextMapper_ajaxprocessor.jsp",
                             data: "type=add&carbonEndpoint=" + myepr + "&userEndpoint=" + inputVal + "&endpointType=Endpoint_1",
                             success: function(msg){
-                            	 CARBON.showInfoDialog(msg, function(){
-               		  				document.location.href = "index.jsp?&carbonEndpoint=" + myepr;  				 
-               		  			 });
+                            	showSucessMessage(msg,myepr);
                             }
                         });
         });
     }   
 </script> 
+
  <script type="text/javascript">
    function edit(myepr,host){
         CARBON.showInputDialog("Enter URL Mapping name :\n",function(inputVal){
@@ -96,9 +109,7 @@
                             url: "contextMapper_ajaxprocessor.jsp",
                             data: "type=edit&carbonEndpoint=" + myepr + "&userEndpoint=" + inputVal +  "&oldHost=" + host + "&endpointType=Endpoint_1",
                             success: function(msg){
-                            	  CARBON.showInfoDialog(msg, function(){
-              		  				document.location.href = "index.jsp?&carbonEndpoint=" + myepr;  				 
-              		  			 });	
+                            	showSucessMessage(msg,myepr);	
                             }
                         });
         });
@@ -112,9 +123,7 @@
                             url: "contextMapper_ajaxprocessor.jsp",
                             data: "type=delete&carbonEndpoint=" + myepr +"&userEndpoint=" + host + "&endpointType=Endpoint_1",
                             success: function(msg){
-                            	 CARBON.showInfoDialog(msg, function(){
-               		  				document.location.href = "index.jsp?&carbonEndpoint=" + myepr ;  				 
-               		  			 });
+                            	showSucessMessage(msg,myepr);
                             }
                         });
         });

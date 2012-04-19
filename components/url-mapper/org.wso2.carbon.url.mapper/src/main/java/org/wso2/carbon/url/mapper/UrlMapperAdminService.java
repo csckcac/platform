@@ -15,15 +15,12 @@
  */
 package org.wso2.carbon.url.mapper;
 
-import org.apache.catalina.Container;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.url.mapper.internal.exception.UrlMapperException;
-import org.wso2.carbon.url.mapper.internal.util.DataHolder;
 import org.wso2.carbon.url.mapper.internal.util.HostUtil;
-import org.wso2.carbon.url.mapper.internal.util.UrlMapperConstants;
-
-import java.util.List;
 
 /**
  * Backend service to handle virtual host addition to registry and to tomcat.
@@ -68,27 +65,11 @@ public class UrlMapperAdminService {
     	return true;
     }
     
-    public boolean deleteHost (String hostName) {
-    	//TODO add the functionality taken frm the HostUtil
-    	return true;
+    public void deleteHost (String hostName) throws UrlMapperException {
+    	HostUtil.removeHostFromEngine(hostName);
     }
 
-    /**
-     * Checking whether the domain is existed in the tomcat engine
-     * @param hostName
-     *         The virtual host name
-     * @return whether the domain exists or not
-     */
-    public boolean isDomainExists(String hostName) {
-        Container[] host = DataHolder.getInstance().getCarbonTomcatService().getTomcat().getEngine().findChildren();
-        boolean isDomain = false;
-        for (Container container : host) {
-            isDomain = container.getName().contains(hostName);
-        }
-        return isDomain;
-    }
-
-    public String getDomain() {
-        return UrlMapperConstants.HostProperties.DOMAIN_NAME_PATTERN;
+    public boolean isMappingExist (String mappingName) throws UrlMapperException {
+    	return HostUtil.isMappingExist(mappingName);
     }
 }

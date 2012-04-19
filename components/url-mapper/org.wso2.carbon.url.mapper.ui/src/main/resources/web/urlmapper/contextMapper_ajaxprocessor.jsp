@@ -76,7 +76,7 @@
 		if (carbonEndpoint.contains("services")) {
 			if (carbonEndpoint != null && usergivenEndpoint != null && endpointType != null) {
 				try {
-					if (hostAdmin.isDomainExists(usergivenEndpoint)) {
+					if (hostAdmin.isMappingExist(usergivenEndpoint)) {
 					 %>Failed to add URL Mapping. Mapping already exist.<%
 					} else {
 							hostAdmin.addServiceDomain(usergivenEndpoint, carbonEndpoint);
@@ -84,8 +84,8 @@
 					}
 
 				} catch (Exception e) {
-				  %>Failed to add URL Mapping. Mapping already exsist.<%
-	}
+				  %>Failed to add URL Mapping. Mapping already exist.<%
+				}
 			} else {
 
 			}
@@ -94,7 +94,7 @@
 
 			if (carbonEndpoint != null && usergivenEndpoint != null && endpointType != null) {
 				try {
-					if (hostAdmin.isDomainExists(usergivenEndpoint)) {
+					if (hostAdmin.isMappingExist(usergivenEndpoint)) {
 						%>Failed to add URL Mapping. Mapping already exist.<%
 						} else {
 							hostAdmin.addWebAppToHost(usergivenEndpoint, carbonEndpoint);

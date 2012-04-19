@@ -72,7 +72,7 @@ public class UrlMapperValve implements CarbonTomcatValve {
                     String endUrl = UrlMapperConstants.HostProperties.SERVICE_IDENTIFIER+uri + "?" + queryString;
                     RequestDispatcher requestDispatcher = request.getRequestDispatcher(endUrl);
                     requestDispatcher.forward(request, response);
-                    return;
+                  
                 } catch (Exception e) {
                     log.error("error in forwarding the url", e);
                     throw e;
@@ -84,7 +84,7 @@ public class UrlMapperValve implements CarbonTomcatValve {
                 try {
 
                     patcher.forward(request, response);
-                    return;
+                   
                 } catch (Exception e) {
                     log.error("error in forwarding the url", e);
                     throw e;

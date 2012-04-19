@@ -105,7 +105,7 @@
         <enabled>false</enabled>
         <ZooKeeperHost>127.0.0.1</ZooKeeperHost>
         <ZooKeeperPort>2181</ZooKeeperPort>
-        <OnceInOrderSupportEnabled>true</OnceInOrderSupportEnabled>
+        <OnceInOrderSupportEnabled>false</OnceInOrderSupportEnabled>
 
 
         <coordination>

@@ -225,7 +225,7 @@ public class SqlDataSourceUtil {
 
     private void createUser() throws RSSAdminRSSDAOExceptionException, RemoteException {
         DatabaseUserEntry dbUser;
-        rSSAdminConsoleService.createUser(sessionCookie, databaseUser, databasePassword, rssInstanceId, dbInstanceId, userPrivilegeGroupId);
+        rSSAdminConsoleService.createUser(sessionCookie, databaseUser, databasePassword,  dbInstanceId, userPrivilegeGroupId);
         log.info("Database User Created");
 
         dbUser = rSSAdminConsoleService.getDatabaseUser(sessionCookie, databaseUser, dbInstanceId);

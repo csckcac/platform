@@ -94,7 +94,7 @@ public class EventingServiceTest extends DataServiceTest {
         addProduct(150);
         OMElement response = getProduct(150);
         Assert.assertNotNull(response, "Response null");
-        log.info("Porduct added");
+        log.info("Product added");
 
     }
 
@@ -262,15 +262,21 @@ public class EventingServiceTest extends DataServiceTest {
 
             OMElement target = proxyFile.getFirstElement();
             Iterator i = target.getChildrenWithName(new QName("endpoint"));
+            String serverUrl;
+            if (environment.isEnablePort()) {
+                serverUrl = "http://" + dssServer.getProductVariables().getHostName() + ":" + dssServer.getProductVariables().getHttpPort();
+            } else {
+                serverUrl = "http://" + dssServer.getProductVariables().getHostName();
+            }
             while (i.hasNext()) {
                 OMElement endpoint = (OMElement) i.next();
                 OMElement address = endpoint.getFirstElement();
                 OMAttribute uri = address.getAttribute(new QName("uri"));
 
                 if (environment.is_runningOnStratos()) {
-                    uri.setAttributeValue("http://" + dssServer.getProductVariables().getHostName() + "/services/t/" + userInfo.getDomain() + "/EventingTest/updateProductQuantity");
+                    uri.setAttributeValue(serverUrl + "/services/t/" + userInfo.getDomain() + "/EventingTest/updateProductQuantity");
                 } else {
-                    uri.setAttributeValue("http://" + dssServer.getProductVariables().getHostName() + ":" + dssServer.getProductVariables().getHttpPort() + "/services/EventingTest/updateProductQuantity");
+                    uri.setAttributeValue(serverUrl + "/services/EventingTest/updateProductQuantity");
                 }
             }
 
@@ -307,13 +313,13 @@ public class EventingServiceTest extends DataServiceTest {
 
         } catch (MalformedURLException e) {
             log.error(e);
-            Assert.fail("MalformedURLException : " + e.getMessage());
+            throw new RuntimeException("MalformedURLException : " + e.getMessage(), e);
         } catch (IOException e) {
             log.error(e);
-            Assert.fail("IOException : " + e.getMessage());
+            throw new RuntimeException("IOException : " + e.getMessage(), e);
         } catch (XMLStreamException e) {
             log.error(e);
-            Assert.fail("XMLStreamException : " + e.getMessage());
+            throw new RuntimeException("XMLStreamException : " + e.getMessage(), e);
         }
 
     }
@@ -321,7 +327,7 @@ public class EventingServiceTest extends DataServiceTest {
 
     private List<File> getSqlScript() {
         ArrayList<File> al = new ArrayList<File>();
-        al.add(new File(resourceFileLocation + File.separator + "sql" +  File.separator + "MySql" + File.separator + "CreateTables.sql"));
+        al.add(new File(resourceFileLocation + File.separator + "sql" + File.separator + "MySql" + File.separator + "CreateTables.sql"));
         return al;
     }
 }

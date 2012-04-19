@@ -223,13 +223,12 @@ public class RSSAdminConsoleService {
     }
 
     public void createUser(String sessionCookie, String userName, String password,
-                           int rssInstanceId, int databaseInstanceId, int privilegeGroupId)
+                            int databaseInstanceId, int privilegeGroupId)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
         new AuthenticateStub().authenticateStub(sessionCookie, consoleAdminStub);
         DatabaseUser user = new DatabaseUser();
         user.setUsername(userName);
         user.setPassword(password);
-        user.setRssInstanceId(rssInstanceId);
 
         log.debug("userName " + userName);
         log.debug("databaseInstanceId " + databaseInstanceId);

@@ -270,7 +270,6 @@ do
     -Xbootclasspath/a:"$CARBON_XBOOTCLASSPATH" \
     -Xms256m -Xmx512m -XX:MaxPermSize=256m \
     $JAVA_OPTS \
-    -Dimpl.prefix=Carbon \
     -Dcom.sun.management.jmxremote \
     -classpath "$CARBON_CLASSPATH" \
     -Djava.endorsed.dirs="$JAVA_ENDORSED_DIRS" \

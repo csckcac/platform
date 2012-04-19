@@ -31,6 +31,7 @@ import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyEngine;
 import org.apache.neethi.builders.xml.XmlPrimtiveAssertion;
 import org.wso2.carbon.core.AbstractAdmin;
+import org.wso2.carbon.core.RegistryResources;
 import org.wso2.carbon.core.Resources;
 import org.wso2.carbon.core.persistence.*;
 import org.wso2.carbon.core.persistence.file.*;
@@ -38,6 +39,7 @@ import org.wso2.carbon.registry.core.Association;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.jdbc.utils.Transaction;
 import org.wso2.carbon.throttle.InternalData;
 import org.wso2.carbon.throttle.ThrottleComponentConstants;
 import org.wso2.carbon.throttle.ThrottleComponentException;
@@ -68,6 +70,8 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
     private ModuleFilePersistenceManager mfpm;
     private PersistenceFactory pf;
 
+    private Registry registry;
+
     protected AxisConfiguration axisConfig = null;
 
     private Policy policyToUpdate = null;
@@ -91,6 +95,8 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
             pf = PersistenceFactory.getInstance(this.axisConfig);
             sfpm = pf.getServiceGroupFilePM();
             mfpm = pf.getModuleFilePM();
+
+            this.registry = getConfigSystemRegistry();
         } catch (Exception e) {
             log.error("Can't initialize ThrottleAdminService.", e);
         }
@@ -116,6 +122,7 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
         //get the axis serviceName from the axis configuration instance
         AxisService axisService = this.getAxisService(serviceName);
         String serviceGroupId = axisService.getAxisServiceGroup().getServiceGroupName();
+        boolean isProxyService = PersistenceUtils.isProxyService(axisService);
 
         //get the throttle module from the current axis config
         AxisModule module = axisService.getAxisConfiguration().getModule(
@@ -129,6 +136,11 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
             if (!transactionStarted) {
                 sfpm.beginTransaction(serviceGroupId);
             }
+            boolean registryTransactionStarted = Transaction.isStarted();
+            if (!registryTransactionStarted) {
+                registry.beginTransaction();
+            }
+
             try {
                 // Check if an association exist between servicePath and moduleResourcePath.
                 List associations = sfpm.getAll(serviceGroupId, serviceXPath +
@@ -179,6 +191,14 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
 
             //persist the throttle builtPolicy
             try {
+                //to registry
+                if(isProxyService) {
+                    String policyType = "" + PolicyInclude.AXIS_SERVICE_POLICY;
+                    String registryServicePath = PersistenceUtils.getRegistryResourcePath(axisService);
+                    pf.getServicePM().persistPolicyToRegistry(policyToPersist, policyType, registryServicePath);
+                }
+
+                //to file
                 OMFactory omFactory = OMAbstractFactory.getOMFactory();
                 OMElement policyWrapperElement = omFactory.createOMElement(Resources.POLICY, null);
                 policyWrapperElement.addAttribute(Resources.ServiceProperties.POLICY_TYPE,
@@ -215,14 +235,29 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
                 //            this.persistPoliciesToRegistry(policyToPersist, servicePath, servicePath, policyResource);
             } catch (Exception e) {
                 log.error("Error occurred while persisting", e);
+                sfpm.rollbackTransaction(serviceGroupId);
+                try {
+                    registry.rollbackTransaction();
+                } catch (RegistryException re) {
+                    log.error(e.getMessage(), re);
+                }
                 throw new ThrottleComponentException("errorSavingPolicy");
             }
 
             if (!transactionStarted) {
                 sfpm.commitTransaction(serviceGroupId);
             }
+            if (!registryTransactionStarted) {
+                registry.commitTransaction();
+            }
         } catch (Exception e) {
             log.error("Error occurred while saving the builtPolicy in registry", e);
+            sfpm.rollbackTransaction(serviceGroupId);
+            try {
+                registry.rollbackTransaction();
+            } catch (RegistryException re) {
+                log.error(e.getMessage(), re);
+            }
             throw new ThrottleComponentException("errorSavingPolicy");
         }
 
@@ -294,6 +329,7 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
 
             //persist the throttle builtPolicy into registry
             try {
+                //to file
                 OMFactory omFactory = OMAbstractFactory.getOMFactory();
                 OMElement policyWrapperElement = omFactory.createOMElement(Resources.POLICY, null);
                 policyWrapperElement.addAttribute(Resources.ServiceProperties.POLICY_TYPE,
@@ -381,6 +417,7 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
         //get the axis service from the axis configuration instance
         AxisService axisService = this.getAxisService(serviceName);
         String serviceGroupId = axisService.getAxisServiceGroup().getServiceGroupName();
+        boolean isProxyService = PersistenceUtils.isProxyService(axisService);
 
         //get the throttle module from the current axis config
         AxisModule module = axisService.getAxisConfiguration().getModule(
@@ -464,7 +501,19 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
             if (!isTransactionStarted) {
                 sfpm.beginTransaction(serviceGroupId);
             }
+            boolean registryTransactionStarted = Transaction.isStarted();
+            if (!registryTransactionStarted) {
+                registry.beginTransaction();
+            }
 
+            //to registry
+            if(isProxyService) {
+                String policyType = "" + PolicyInclude.AXIS_OPERATION_POLICY;
+                String registryServicePath = PersistenceUtils.getRegistryResourcePath(axisService);
+                pf.getServicePM().persistPolicyToRegistry(policyToPersist, policyType, registryServicePath);
+            }
+
+            //to file
             OMFactory omFactory = OMAbstractFactory.getOMFactory();
             OMElement policyWrapperElement = omFactory.createOMElement(Resources.POLICY, null);
             policyWrapperElement.addAttribute(Resources.ServiceProperties.POLICY_TYPE,
@@ -501,6 +550,10 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
             if (!isTransactionStarted) {
                 sfpm.beginTransaction(serviceGroupId);
             }
+            if (!registryTransactionStarted) {
+                registry.commitTransaction();
+            }
+
         } catch (Exception e) {
             log.error("Error occured while saving the builtPolicy in registry", e);
             throw new ThrottleComponentException("errorSavingPolicy");

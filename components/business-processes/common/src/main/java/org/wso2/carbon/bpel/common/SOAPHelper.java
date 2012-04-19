@@ -11,7 +11,10 @@ import java.util.Collection;
 /**
  * Utility methods related to SOAP
  */
-public class SOAPHelper {
+public final class SOAPHelper {
+    private SOAPHelper() {
+    }
+
     public static ExtensibilityElement getBindingExtension(Binding binding) {
         Collection bindings = new ArrayList();
         CollectionsX.filter(bindings, binding.getExtensibilityElements(), HTTPBinding.class);
@@ -24,8 +27,7 @@ public class SOAPHelper {
             throw new IllegalArgumentException("Multiple bindings: " + binding.getQName());
         } else {
             // retrieve the single element
-            ExtensibilityElement result = (ExtensibilityElement) bindings.iterator().next();
-            return result;
+            return (ExtensibilityElement) bindings.iterator().next();
         }
     }
 }

@@ -30,7 +30,7 @@ import java.util.Iterator;
 /**
  * OM Utility Methods
  */
-public class OMUtils {
+public final class OMUtils {
 
     // private constructor in-order to disable instantiation
     private OMUtils() {}
@@ -55,13 +55,15 @@ public class OMUtils {
             if (element.getAllDeclaredNamespaces() != null) {
                 for (Iterator i = element.getAllDeclaredNamespaces(); i.hasNext(); ) {
                     OMNamespace omns = (OMNamespace)i.next();
-                    if (omns.getPrefix().equals(""))
+                    if (omns.getPrefix().equals("")) {
                         domElement.setAttributeNS(DOMUtils.NS_URI_XMLNS, "xmlns",
                                                   omns.getNamespaceURI() == null ? "" :
                                                                             omns.getNamespaceURI());
-                    else
+                    }
+                    else {
                         domElement.setAttributeNS(DOMUtils.NS_URI_XMLNS, "xmlns:"+ omns.getPrefix(),
                                                   omns.getNamespaceURI());
+                    }
                 }
 
             }
@@ -114,19 +116,23 @@ public class OMUtils {
     }
 
     private static void buildNScontext(NSContext nscontext, OMElement element) {
-        if (element == null)
+        if (element == null) {
             return;
+        }
 
-        if (element.getParent() instanceof OMElement)
+        if (element.getParent() instanceof OMElement) {
             buildNScontext(nscontext, (OMElement) element.getParent());
-        
-        if (element.getAllDeclaredNamespaces() != null)
+        }
+
+        if (element.getAllDeclaredNamespaces() != null) {
             for (Iterator i=element.getAllDeclaredNamespaces(); i.hasNext(); ){
                 OMNamespace omn = (OMNamespace) i.next();
                 nscontext.register(omn.getPrefix(), omn.getNamespaceURI());
             }
+        }
 
-        if (element.getDefaultNamespace() != null)
+        if (element.getDefaultNamespace() != null) {
             nscontext.register("", element.getDefaultNamespace().getNamespaceURI());
+        }
     }
 }

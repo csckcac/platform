@@ -56,7 +56,6 @@ public class WSDLAwareSOAPProcessor {
     private SOAPFactory soapFactory;
     private QName serviceName;
     private String portName;
-    private Service wsdlServiceDef;
     private Binding wsdlBinding;
     //We just need the axisOperation name and the envelop
     private MessageContext inMessageCtx;
@@ -80,7 +79,7 @@ public class WSDLAwareSOAPProcessor {
                     serviceName.getLocalPart() + ".");
         }
 
-        wsdlServiceDef = wsdlDef.getService(serviceName);
+        Service wsdlServiceDef = wsdlDef.getService(serviceName);
         if (wsdlServiceDef == null) {
             throw new AxisFault("WSDL Service Definition not found for service " +
                     serviceName.getLocalPart());
@@ -197,7 +196,7 @@ public class WSDLAwareSOAPProcessor {
         List bodyParts = op.getInput().getMessage().getOrderedParts(soapBodyDef.getParts());
 
         if (isRPC) {
-            message.setRPC(true);
+//            message.setRPC(true);
             QName rpWrapperQName = new QName(wsdlBinding.getQName().getNamespaceURI(), rpcWrapper);
             OMElement partWrapper = inMessageCtx.getEnvelope().getBody().
                     getFirstChildWithName(rpWrapperQName);
@@ -225,7 +224,7 @@ public class WSDLAwareSOAPProcessor {
              * the parts defined in the binding. All the parts should be element-typed, otherwise
              * it is a mess.
              */
-            message.setRPC(false);
+//            message.setRPC(false);
             Iterator srcParts = inMessageCtx.getEnvelope().getBody().getChildElements();
             for (Object partDef : bodyParts) {
                 if (!srcParts.hasNext()) {
@@ -320,7 +319,9 @@ public class WSDLAwareSOAPProcessor {
             Message hdrMsg = wsdlDef.getMessage(headerDef.getMessage());
             for (Object o : hdrMsg.getParts().values()) {
                 Part p = (Part) o;
-                if (p.getElementName().equals(elementName)) return p.getName();
+                if (p.getElementName().equals(elementName)) {
+                    return p.getName();
+                }
             }
         }
         //The following commented fix, avoids adding any of the headers. So that reverting back to old fix

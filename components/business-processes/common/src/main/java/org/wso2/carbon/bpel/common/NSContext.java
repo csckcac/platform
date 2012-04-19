@@ -20,11 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.xml.namespace.NamespaceContext;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Map of namespace prefixes and corresponding namespaces.
@@ -33,13 +29,13 @@ import java.util.Set;
 public class NSContext implements NamespaceContext{
     private static final Log log = LogFactory.getLog(NSContext.class);
 
-    private HashMap<String, String> prefixToUriMap = new HashMap<String, String>();
+    private Map<String, String> prefixToUriMap = new HashMap<String, String>();
 
     public NSContext(){}
 
-    public NSContext(NSContext map){
-        this.prefixToUriMap.putAll(map.getPrefixToUriMap());
-    }
+//    public NSContext(NSContext map){
+//        this.prefixToUriMap.putAll(map.getPrefixToUriMap());
+//    }
 
     public String getNamespaceURI(String prefix) {
         return prefixToUriMap.get(prefix == null ? "" : prefix);
@@ -68,22 +64,26 @@ public class NSContext implements NamespaceContext{
         return matchedObjs.iterator();        
     }
 
-    public HashMap<String, String> getPrefixToUriMap(){
-        return prefixToUriMap;
-    }
+//    public HashMap<String, String> getPrefixToUriMap(){
+//        return prefixToUriMap;
+//    }
 
     public void register(String prefix, String nsUri){
-        if(prefix == null)
-            prefix = "";
-
-        if(nsUri == null)
-            nsUri = "";
-
-        if(log.isTraceEnabled()){
-            log.trace("Registering Namespace: Prefix pair - " + nsUri + ":" + prefix);
+        String tPrefix = prefix;
+        String tNsUri = nsUri;
+        if(tPrefix == null) {
+            tPrefix = "";
         }
 
-        prefixToUriMap.put(prefix, nsUri);
+        if(tNsUri == null) {
+            tNsUri = "";
+        }
+
+        if(log.isTraceEnabled()){
+            log.trace("Registering Namespace: Prefix pair - " + tNsUri + ":" + tPrefix);
+        }
+
+        prefixToUriMap.put(tPrefix, tNsUri);
     }
 
     /**

@@ -31,8 +31,8 @@ import org.xml.sax.SAXParseException;
  */
 public class LoggingErrorHandler implements ErrorHandler {
 
-  private static final Log __log = LogFactory.getLog(LoggingErrorHandler.class);
-  private Log _l;
+  private static final Log log = LogFactory.getLog(LoggingErrorHandler.class);
+  private Log l;
 
   private static final String WARNING = "WARNING";
   private static final String ERROR = "ERROR";
@@ -43,26 +43,15 @@ public class LoggingErrorHandler implements ErrorHandler {
    * channel defined by this class.
    */
   public LoggingErrorHandler() {
-    _l = __log;
-  }
-
-  /**
-   * Construct a new instance that dumps messages onto a specific logging
-   * channel.
-   *
-   * @param log
-   *          the <code>Log</code> on which to dump messages.
-   */
-  public LoggingErrorHandler(Log log) {
-    _l = log;
+    l = log;
   }
 
   /**
    * @see org.xml.sax.ErrorHandler#warning(org.xml.sax.SAXParseException)
    */
   public void warning(SAXParseException exception) throws SAXException {
-    if (_l.isDebugEnabled()) {
-      _l.debug(formatMessage(WARNING, exception));
+    if (l.isDebugEnabled()) {
+      l.debug(formatMessage(WARNING, exception));
     }
   }
 
@@ -70,8 +59,8 @@ public class LoggingErrorHandler implements ErrorHandler {
    * @see org.xml.sax.ErrorHandler#error(org.xml.sax.SAXParseException)
    */
   public void error(SAXParseException exception) throws SAXException {
-    if (_l.isDebugEnabled()) {
-      _l.debug(formatMessage(ERROR, exception));
+    if (l.isDebugEnabled()) {
+      l.debug(formatMessage(ERROR, exception));
     }
   }
 
@@ -79,13 +68,13 @@ public class LoggingErrorHandler implements ErrorHandler {
    * @see org.xml.sax.ErrorHandler#fatalError(org.xml.sax.SAXParseException)
    */
   public void fatalError(SAXParseException exception) throws SAXException {
-    if (_l.isDebugEnabled()) {
-      _l.debug(formatMessage(FATAL, exception));
+    if (l.isDebugEnabled()) {
+      l.debug(formatMessage(FATAL, exception));
     }
   }
 
   private String formatMessage(String level, SAXParseException spe) {
-    StringBuffer sb = new StringBuffer(64);
+      StringBuilder sb = new StringBuilder(64);
 
     if (spe.getSystemId() != null) {
       sb.append(spe.getSystemId());

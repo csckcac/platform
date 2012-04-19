@@ -17,8 +17,6 @@
 package org.wso2.carbon.bpel.common;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Element;
 
 import javax.xml.namespace.QName;
@@ -29,12 +27,10 @@ import java.util.Map;
  * Representation of WSDL input message to the HumanTask
  */
 public class WSDLAwareMessage {
-    private static Log log = LogFactory.getLog(WSDLAwareMessage.class);
 
     private Map<String, OMElement> headerParts = new HashMap<String, OMElement>();
     private Map<String, OMElement> bodyParts = new HashMap<String, OMElement>();
 
-    private boolean isRPC = false;
     private String operationName;
     private QName portTypeName;
 
@@ -46,30 +42,6 @@ public class WSDLAwareMessage {
 
     public void addHeaderPart(String partName, OMElement partElement) {
         headerParts.put(partName, partElement);
-    }
-
-    public Element getBodyPart(String partName) {
-        return OMUtils.toDOM(bodyParts.get(partName));
-    }
-
-    public Element getHeaderPart(String partName) {
-        return OMUtils.toDOM(headerParts.get(partName));
-    }
-
-    public Map<String, OMElement> getBodyParts() {
-        return bodyParts;
-    }
-
-    public Map<String, OMElement> getHeaderParts() {
-        return headerParts;
-    }
-
-    public boolean isRPC() {
-        return isRPC;
-    }
-
-    public void setRPC(boolean RPC) {
-        isRPC = RPC;
     }
 
     public String getOperationName() {

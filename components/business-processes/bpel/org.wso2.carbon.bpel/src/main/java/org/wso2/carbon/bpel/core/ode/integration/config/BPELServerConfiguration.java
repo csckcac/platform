@@ -401,8 +401,11 @@ public static void processACleanup(Set<ProcessConf.CLEANUP_CATEGORY> categories,
                 // Read Port Offset
                 portOffset = readPortOffset();
                 //applying port offset operation
-                String urlWithoutPort = dataSourceJNDIRepoProviderURL.substring(0, dataSourceJNDIRepoProviderURL.lastIndexOf(":") + 1);
-                dataSourceJNDIRepoProviderPort = Integer.parseInt(dataSourceJNDIRepoProviderURL.substring(urlWithoutPort.length())) + portOffset;
+                String urlWithoutPort = dataSourceJNDIRepoProviderURL.substring(0,
+                        dataSourceJNDIRepoProviderURL.lastIndexOf(":") + 1);
+                dataSourceJNDIRepoProviderPort = Integer.parseInt(
+                        dataSourceJNDIRepoProviderURL.substring(urlWithoutPort.length())) + portOffset;
+                dataSourceJNDIRepoProviderURL = urlWithoutPort + dataSourceJNDIRepoProviderPort;
 
             } else {
                 throw new RuntimeException("Data source configuration must contain JNDI " +

@@ -24,6 +24,9 @@ import org.wso2.carbon.rule.common.Output;
 import org.wso2.carbon.rule.mediator.config.RuleMediatorConfig;
 import org.wso2.carbon.rule.mediator.config.Source;
 import org.wso2.carbon.rule.mediator.config.Target;
+import org.wso2.carbon.sequences.ui.util.SequenceEditorHelper;
+import org.wso2.carbon.sequences.ui.util.ns.NameSpacesInformation;
+import org.wso2.carbon.sequences.ui.util.ns.NameSpacesInformationRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -201,6 +204,11 @@ public class RuleMediatorClientHelper {
     public static void updateInputFacts(HttpServletRequest request,
                                           RuleMediatorConfig ruleMediatorConfig,
                                           String id) {
+        NameSpacesInformationRepository repository =
+                (NameSpacesInformationRepository) request.getSession().getAttribute(
+                        NameSpacesInformationRepository.NAMESPACES_INFORMATION_REPOSITORY);
+        NameSpacesInformation information = null;
+        String ownerID = SequenceEditorHelper.getEditingMediatorPosition(request.getSession());
         String inputCountParameter = request.getParameter(id + "Count");
         if (inputCountParameter != null && !"".equals(inputCountParameter)) {
             int inputCount = 0;
@@ -215,6 +223,7 @@ public class RuleMediatorClientHelper {
                         String elementName = request.getParameter(id + "ElementName" + i);
                         String namespace = request.getParameter(id + "Namespace" + i);
                         String xpath = request.getParameter(id + "Xpath" + i);
+                        String nsID = id + "Value" + i;
                         if(type != null && !"".equals(type)){
 
                             inputFact = new Fact();
@@ -223,6 +232,13 @@ public class RuleMediatorClientHelper {
                             inputFact.setNamespace(namespace);
                             inputFact.setXpath(xpath);
                             input.addFact(inputFact);
+                        }
+                        if (repository != null) {
+
+                            information = repository.getNameSpacesInformation(ownerID, nsID);
+                            if (information != null) {
+                                inputFact.setPrefixToNamespaceMap(information.getNameSpaces());
+                            }
                         }
                     }
                 }

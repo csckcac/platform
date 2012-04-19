@@ -110,8 +110,12 @@ public final class AgentBrokerType implements BrokerType {
 
     private class AgentBrokerCallback implements AgentCallback {
 
+
         @Override
-        public void definedEventStream(EventStreamDefinition eventStreamDefinition, String s) {
+        public void definedEventStream(EventStreamDefinition eventStreamDefinition,
+                                       String userName,
+                                       String password,
+                                       String domainName) {
             Map<BrokerConfiguration, BrokerListener> brokerListeners = brokerListenerMap.get(eventStreamDefinition.getStreamId());
             if (brokerListeners == null) {
                 brokerListeners = new HashMap<BrokerConfiguration, BrokerListener>();
@@ -130,7 +134,8 @@ public final class AgentBrokerType implements BrokerType {
         }
 
         @Override
-        public void receive(List<Event> events, String s) {
+        public void receive(List<Event> events, String userName, String password,
+                            String domainName) {
             //Here all events are of same stream
             Map<BrokerConfiguration, BrokerListener> brokerListeners = brokerListenerMap.get(events.get(0).getStreamId());
             for (Event event : events) {

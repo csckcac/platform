@@ -65,8 +65,8 @@ public class HadoopJobRunnerProxy {
 		}
 	}
 	
-	public String listJars() {
-		String jarList = null;
+	public String[] listJars() {
+		String jarList[] = null;
 		try {
 			HadoopJobRunnerStub stub = new HadoopJobRunnerStub(configCtx, "https://127.0.0.1:9443/services/HadoopJobRunner");
 			setupClientSession(stub);

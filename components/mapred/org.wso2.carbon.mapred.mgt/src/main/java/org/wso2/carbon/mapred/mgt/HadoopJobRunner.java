@@ -9,7 +9,9 @@ import java.io.StringWriter;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.activation.DataHandler;
 import javax.servlet.http.HttpServletRequest;
@@ -23,17 +25,25 @@ import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.regexp.RE;
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceFactory;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.context.*;
+import org.wso2.carbon.registry.api.Collection;
 import org.wso2.carbon.registry.api.Registry;
 import org.wso2.carbon.registry.api.Resource;
 import org.wso2.carbon.registry.api.RegistryException;
+import org.wso2.carbon.registry.api.Tag;
+import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.identity.authenticator.krb5.stub.types.Krb5AuthenticatorStub;
 
 public class HadoopJobRunner extends AbstractAdmin {
 	private Log log = LogFactory.getLog(HadoopJobRunner.class);
 	public static final String HADOOP_CONFIG = System.getProperty(ServerConstants.CARBON_HOME)+File.separator+"repository"+File.separator+"conf"+File.separator+"advanced"+File.separator+"hadoop.properties";
+	public static final String REG_JAR_PATH = "/job/jar/";
 	public static final String DEFAULT_HADOOP_JAR_PATH = ".";
 	public static int DEFAULT_READ_LENGTH = 1024;
 	
@@ -73,7 +83,7 @@ public class HadoopJobRunner extends AbstractAdmin {
 		Registry reg = cc.getRegistry(RegistryType.USER_CONFIGURATION);
 		Resource resource = null;
 		try {
-			resource = reg.get(jarPath);
+			resource = reg.get(REG_JAR_PATH+jarPath);
 		} catch (RegistryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -104,13 +114,13 @@ public class HadoopJobRunner extends AbstractAdmin {
 		CarbonContext cc = CarbonContext.getCurrentContext();
 		Registry reg = cc.getRegistry(RegistryType.USER_CONFIGURATION);
 		try {
-			if (reg.resourceExists(friendlyName)) {
-				log.info("Deleting already exsiting "+friendlyName);
-				reg.delete(friendlyName);
+			if (reg.resourceExists(REG_JAR_PATH+friendlyName)) {
+				log.info("Deleting already exsiting "+REG_JAR_PATH+friendlyName);
+				reg.delete(REG_JAR_PATH+friendlyName);
 			}
 			Resource resource = reg.newResource();
 			resource.setContentStream(dataHandler.getInputStream());
-			String out = reg.put(friendlyName, resource);
+			String out = reg.put(REG_JAR_PATH+friendlyName, resource);
 			log.info(out);
 		} catch (RegistryException e) {
 			// TODO Auto-generated catch block
@@ -121,19 +131,30 @@ public class HadoopJobRunner extends AbstractAdmin {
 		}
 	}
 	
-	public String getJarList() {
+	public String[] getJarList() {
 		CarbonContext cc = CarbonContext.getCurrentContext();
 		Registry reg = cc.getRegistry(RegistryType.USER_CONFIGURATION);
-		String allResources = null;
+		String sql1 = "SELECT REG_PATH_ID,REG_NAME FROM REG_RESOURCE WHERE REG_NAME LIKE ?";
+		String[] paths = null;
 		try {
-			StringWriter strWriter = new StringWriter();
-			reg.dump("/", strWriter);
-			allResources = strWriter.toString();
-			System.out.println(allResources);
-			return allResources;
+			Resource query = reg.newResource();
+			query.setContent(sql1);
+			query.setMediaType(RegistryConstants.SQL_QUERY_MEDIA_TYPE);
+	        query.addProperty(RegistryConstants.RESULT_TYPE_PROPERTY_NAME, RegistryConstants.RESOURCES_RESULT_TYPE);
+	        reg.put(RegistryConstants.CONFIG_REGISTRY_BASE_PATH + RegistryConstants.QUERIES_COLLECTION_PATH + "/custom-queries", query);
+	        Map parameters = new HashMap();
+	        parameters.put("1", "%.jar");
+	        Resource result = reg.executeQuery(RegistryConstants.CONFIG_REGISTRY_BASE_PATH + RegistryConstants.QUERIES_COLLECTION_PATH + "/custom-queries", parameters);
+	        paths = (String[])result.getContent();
+	        for (int i=0; i<paths.length; i++) {
+	        	String[] subStrs = paths[i].split("/");
+	        	paths[i] = subStrs[subStrs.length - 1];
+	        }
+	        result.discard();
 		} catch (RegistryException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return allResources;
+		return paths;
 	}
 }

@@ -24,7 +24,7 @@
         <groupId>org.wso2.carbon</groupId>
         <artifactId>carbon-dependents</artifactId>
         <version>4.0.0-SNAPSHOT</version>
-	<relativePath>../../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -34,10 +34,9 @@
     <name>cassandra.wso2</name>
     <version>1.0.2.wso2v1</version>
     <description>
-        This bundle will represent org.apache.cassandra
+        This bundle represents org.apache.cassandra.
     </description>
     <url>http://wso2.org</url>
-
     <dependencies>
         <dependency>
             <groupId>org.apache.cassandra</groupId>
@@ -45,20 +44,18 @@
             <version>1.0.2-wso2v1</version>
             <optional>true</optional>
         </dependency>
-	<dependency>
+        <dependency>
             <groupId>org.apache.cassandra</groupId>
             <artifactId>apache-cassandra-thrift</artifactId>
             <version>1.0.2-wso2v1</version>
             <optional>true</optional>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
@@ -67,19 +64,12 @@
                         <Export-Package>
                             org.apache.cassandra.*;-split-package:=merge-first
                         </Export-Package>
-			<Import-Package>
-                            com.google.common.base.*,
-                            com.google.common.collect.*,
-                            !org.apache.cassandra.*,
-                            *;resolution:=optional
-                        </Import-Package>
-
-                        <!--Import-Package>
+                        <Import-Package>
                             com.google.common.base.*; version="${guava.osgi.version.range}",
                             com.google.common.collect.*; version="${guava.osgi.version.range}",
                             !org.apache.cassandra.*,
                             *;resolution:=optional
-                        </Import-Package-->
+                        </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
                 </configuration>
@@ -87,7 +77,6 @@
         </plugins>
     </build>
     <properties>
-        <guava.osgi.version.range>[0.5.0.wso2v1,0.8.0)</guava.osgi.version.range>
+        <guava.osgi.version.range>[11.0.1.wso2v1,11.0.1.wso2v1]</guava.osgi.version.range>
     </properties>
-
 </project>

@@ -1,12 +1,12 @@
-var getTopRatedAPIs = function (limit) {
+var getRecentlyAddedAPIs = function (limit) {
     var log = new Log();
     var store = require("/core/greg/greg.js").getAPIStoreObj();
 
     try {
         var list = [];
-        var apis = store.getTopRatedAPIs(limit);
+        var apis = store.getRecentlyAddedAPIs(limit);
         if (log.isDebugEnabled()) {
-            log.debug("getTopRatedAPIs : " + stringify(apis));
+            log.debug("getRecentlyAddedAPIs : " + stringify(apis));
         }
         var i, length = apis.length;
         for (i = 0; i < length; i++) {

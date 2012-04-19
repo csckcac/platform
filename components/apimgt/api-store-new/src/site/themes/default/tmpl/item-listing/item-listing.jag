@@ -1,0 +1,58 @@
+<% var list = getTemplateData(data, "item-listing"); %>
+<% var site = require("/site/conf/site.json"); %>
+<div id="service-list">
+    <div class="service-store-tabs" id="detailViewTabs">
+        <a class="tab selected" name="overview">APIs</a>
+    </div>
+    <%
+        var i, apis = list.apis, length = apis.length;
+        for(i = 0; i < length; i++) {
+            var api = apis[i];
+    %>
+    <div class="list-item">
+        <div class="list-item-top">
+            <a href="#" class="thumbnaillink">
+                <img src="<%=api.thumbURL%>" class="thumbnail" title="Image of <%=api.name%>"/>
+            </a>
+            <a href="#" class="service-name"><%=api.name%></a>
+            <div class="company-name"><%=api.provider%></div>
+            <div class="rating">
+            <%
+                var prefix = "/" + site.context + getThemePath() + "images/";
+
+                var getHTML = function(image) {
+                    return '<img src="' + prefix + image + '"/>';
+                };
+
+                var rating = api.rating;
+                var stars = Math.floor(rating);
+                var nonstars = 5 - (stars + 1);
+                nonstars = nonstars < 0 ? 0 : nonstars;
+                var fraction = rating - stars;
+
+                for(var j = 0; j < stars; j++) {
+                    print(getHTML("star-1.0.png"));
+                }
+                if(stars < 5) {
+                    var image;
+                    if(fraction >= 0.75) {
+                        image = "star-0.75.png";
+                    } else if(fraction >= 0.5) {
+                        image = getTemplatePath() + "star-0.5.png";
+                    } else if(fraction >= 0.25) {
+                        image = "star-0.25.png";
+                    } else {
+                        image = "star-0.png";
+                    }
+                }
+                print(getHTML(image));
+                for(j = 0; j < nonstars; j++) {
+                    print(getHTML("star-0.png"));
+                }
+            %>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+    <% } %>
+</div>

@@ -22,7 +22,7 @@
             var tag = tags[i];
             var count = parseInt(tag.count);
             var size = minPercent + ((max - (max - (count - min))) * multiplier) + "%";
+            print('<a class="cloud-link" style="font-size:' + size + '%">' + tag.name + '</a>');
+        }
     %>
-    <a class="cloud-link" style="font-size:<%=size%>;"><%=tag.name%></a>
-    <% } %>
 </div>

@@ -1,5 +1,5 @@
 <% include("/site/themes/utils.jag"); %>
-<% var site = site || require("/site/conf/site.json"); %>
+<% var site = require("/site/conf/site.json"); %>
 <% var page = getTemplateData(data, "page"); %>
 <!DOCTYPE html>
 <html>
@@ -36,41 +36,40 @@
         <link type="text/css" rel="stylesheet" href="/<%=site.context%>/site/themes/default/css/searchbox.css" />
         <link type="text/css" rel="stylesheet" href="/<%=site.context%>/site/themes/default/css/layout.css" />
         <link type="text/css" rel="stylesheet" href="/<%=site.context%>/site/themes/default/css/paginate-styles.css" />
-        <% var i, js = page.header.js;
+        <%
+            var i, js = page.header.js;
             if(js) {
                 var length = js.length;
                 for(i = 0; i < length; i++) {
                     var path = "/" + site.context + "/site/themes/default/" + js[i];
-        %>
-        <script type="text/javascript" src="<%=path%>"></script>
-        <%      }
-            } %>
+                    print('<script type="text/javascript" src="' + path + '"></script>');
+                }
+            }
 
-        <% var css = page.header.css;
+            var css = page.header.css;
             if(css) {
                 var length = css.length;
                 for(i = 0; i < length; i++) {
                     var path = "/" + site.context + "/site/themes/default/" + css[i];
-        %>
-                <link type="text/css" rel="stylesheet" href="<%=path%>"/>
-        <%      }
-            } %>
+                    print('<link type="text/css" rel="stylesheet" href="' + path + '"/>');
+                }
+            }
 
-        <% var code = page.header.code;
+            var code = page.header.code;
             if(code) {
                 var length = code.length;
-                for(i = 0; i < length; i++) { %>
-        <%=code[i]%>
-        <%      }
-            } %>
+                for(i = 0; i < length; i++) {
+                    print(code[i]);
+                }
+            }
 
-        <% var jags = page.header.jags;
+            var jags = page.header.jags;
             if(jags) {
                 var length = jags.length;
                 for(i = 0; i < length; i++) {
                     includeJag(jags[i]);
                 }
-             }
+            }
         %>
     </head>
     <body>

@@ -15,8 +15,8 @@ var includeJags = function (jags) {
 };
 
 var getThemePath = function () {
-    var conf = require("/site/conf/site.json");
-    return "/site/themes/" + conf.theme + "/";
+    var site = require("/site/conf/site.json");
+    return "/site/themes/" + site.theme + "/";
 };
 
 var getTemplatePath = function () {
@@ -35,7 +35,9 @@ var renderLayout = function (data, layout) {
 var initTemplate = function (data, template) {
     var prefix = getTemplatePath();
     var initializer = require(prefix + template + "/initializer.js");
-    initializer.initialize(data);
+    var args = Array.prototype.slice.call(arguments, 2);
+    args.unshift(data);
+    initializer.initialize.apply(this, args);
 };
 
 var addHeaderCSS = function (data, css) {

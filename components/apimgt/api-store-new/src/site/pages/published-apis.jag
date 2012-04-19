@@ -1,0 +1,14 @@
+<% include("/site/themes/utils.jag"); %>
+<% var site = require("/site/conf/site.json"); %>
+<%
+    data.page.title = "API Listing";
+
+    addTemplateData(data, "layout", "tmpl", "tmpl/item-listing/item-listing.jag");
+
+    var published = require("/core/published/published.js");
+    var result = published.getAllPublishedAPIs();
+    addTemplateData(data, "item-listing", "apis", result.apis);
+    initTemplate(data, "item-listing");
+
+    renderLayout(data, "layout0");
+%>

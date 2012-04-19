@@ -374,7 +374,7 @@ public class WebApplication {
     /**
      * Represents statistics corresponding to this webapp
      */
-    public static class Statistics {
+    public final static class Statistics {
 
         /**
          * The Tomcat Session Manager

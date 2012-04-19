@@ -1,0 +1,5 @@
+<% include("/site/themes/utils.jag"); %>
+<%
+    var layout0Middle = "item-info/general.jag";
+    includeJags("layouts/layout0/layout.jag");
+%>

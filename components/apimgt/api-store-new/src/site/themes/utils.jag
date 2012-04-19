@@ -1,0 +1,100 @@
+<%
+var data = data || {"page":{"header":{}}};
+
+var includeJags = function (jags) {
+    var i = 0;
+    var prefix = getThemePath();
+    if (typeof jags == "array") {
+        var length = jags.length;
+        for (i = 0; i < length; i++) {
+            include(prefix + jags[i]);
+        }
+    } else {
+        include(prefix + jags);
+    }
+};
+
+var getThemePath = function () {
+    var conf = require("/site/conf/site.json");
+    return "/site/themes/" + conf.theme + "/";
+};
+
+var getTemplatePath = function () {
+    return getThemePath() + "tmpl/";
+};
+
+var renderLayout = function (data, layout) {
+    addTemplateData(data, "page", "body", "layouts/layout0/layout0.jag");
+
+    var initializer = require(getThemePath() + "layouts/" + layout + "/initializer.js");
+    initializer.initialize(data);
+
+    includeJags("page.jag");
+};
+
+var initTemplate = function (data, template) {
+    var prefix = getTemplatePath();
+    var initializer = require(prefix + template + "/initializer.js");
+    initializer.initialize(data);
+};
+
+var addHeaderCSS = function (data, css) {
+    var header = data.page.header;
+    var list = header.css || [];
+    list.push(css);
+    header.css = list;
+};
+
+var addHeaderJS = function (data, js) {
+    var header = data.page.header;
+    var list = header.js || [];
+    list.push(js);
+    header.js = list;
+};
+
+var addHeaderJags = function (data, jags) {
+    var header = data.page.header;
+    var list = header.jags || [];
+    list.push(jags);
+    header.jags = list;
+};
+
+var addHeaderCode = function (data, code) {
+    var header = data.page.header;
+    var list = header.code || [];
+    list.push(code);
+    header.code = list;
+};
+
+var addTemplateData = function (data, template, key, value) {
+    template = template.replace("-", "_");
+    var obj = data[template] || {};
+    obj[key] = value;
+    data[template] = obj;
+};
+
+var getTemplateData = function (data, template, key) {
+    template = template.replace("-", "_");
+    var obj = data[template];
+    if (obj == null) {
+        return null;
+    }
+    return key ? obj[key] : obj;
+};
+
+/*
+var addLayoutData = function (data, layout, key, value) {
+    var obj = data.layouts[layout] || {};
+    obj[key] = value;
+    data.layouts[layout] = obj;
+};
+
+var getLayoutData = function (data, layout, key) {
+    var obj = data.layouts[layout];
+    if (obj == null) {
+        return null;
+    }
+    return key ? obj[key] : obj;
+};*/
+
+%>

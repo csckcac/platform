@@ -1,0 +1,6 @@
+<% include("/site/themes/utils.jag"); %>
+<%
+    data.page.title = "API Information";
+    addTemplateData(data, "layout", "tmpl", "tmpl/item-info/general.jag");
+    renderLayout(data, "layout0");
+%>

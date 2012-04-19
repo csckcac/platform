@@ -1,0 +1,38 @@
+<% var layout = getTemplateData(data, "layout"); %>
+<div class="wrapper">
+        <div class="header-strip-links" id="header-strip-links">
+            <% includeJags("tmpl/header-strips/header-strip.jag"); %>
+        </div>
+        <div class="container_16 content">
+            <div class="grid_16" id="header-strip-search">
+                <% includeJags("tmpl/search/search-strip.jag"); %>
+            </div>
+            <div class="grid_16">
+                <div class="breadcrumb" id="breadcrumb">APIs</div>
+            </div>
+            <div class="grid_16 title-main" id="titleMain">APIs</div>
+            <div class="grid_4 special-links" id="special-links">
+                <div id="services-store-tabs">
+                    <div class="service-store-tabs">
+                        <a name="topCharts" class="tab selected">Top Charts</a>
+                        <a name="categories" class="tab">Categories</a>
+                    </div>
+                    <div style="clear:both"></div>
+
+                    <div style="clear:both"></div>
+                    <div class="content-box-left-side">
+                        <% includeJags("tmpl/top-rated/top-rated.jag"); %>
+                        <% includeJags("tmpl/recently-added/recently-added.jag"); %>
+                    </div>
+                </div>
+            </div>
+            <div class="grid_9">
+                <div id="main-ajax-loader" style="display:none;"><img src="images/1.gif"/></div>
+                <div id="middle-container"><% includeJags(layout.tmpl); %></div>
+            </div>
+            <div class="grid_3 cloud" id="cloud">
+                <% includeJags("tmpl/tag-cloud/tag-cloud.jag"); %>
+            </div>
+        </div>
+    </div>
+</div>

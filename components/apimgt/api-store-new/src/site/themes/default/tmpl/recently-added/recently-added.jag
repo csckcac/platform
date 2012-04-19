@@ -1,0 +1,27 @@
+<% var recent = getTemplateData(data, "recently-added"); %>
+<div id="recently-added">
+    <div class="title">Recently Added</div>
+    <div class="content-wrapper">
+        <div class="element-wrapper">
+            <%
+                var i, apis = recent.apis, length = apis.length;
+                for(i = 0; i < length; i++) {
+                    var api = apis[i];
+            %>
+            <div class="list-items template tmpl-list">
+                <div class="list-items-box">
+                    <img alt="" src="images/list-item.png"/>
+                </div>
+                <div class="list-items-content">
+                    <a class="list-items-item-name"><%=api.name%></a>
+                    <a class="list-items-item-detail"><%=api.provider%></a>
+                </div>
+            </div>
+            <div style="clear: both;" class="tmpl-clear"></div>
+                    <% if(i + 1 != length) { %>
+            <hr class="line-seperator tmpl-separator"/>
+                    <% } %>
+            <% } %>
+        </div>
+    </div>
+</div>

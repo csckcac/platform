@@ -48,6 +48,7 @@ import java.util.Set;
  * This class represent the ApiMgtDAO.
  */
 public class ApiMgtDAO {
+
     Log log = LogFactory.getLog(Subscriber.class);
 
     /**

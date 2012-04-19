@@ -22,14 +22,10 @@ import org.wso2.carbon.apimgt.api.model.API;
 
 import java.util.Comparator;
 
-public class APIComparator implements Comparator{
+public class APIComparator implements Comparator<API> {
 
-    @Override
-    public int compare(Object api1, Object api2) {
-        API apiFirst = (API) api1;
-        API apiTwo = (API) api2;
-
-       return apiFirst.getId().getApiName().compareTo(apiTwo.getId().getApiName());
+    public int compare(API api1, API api2) {
+        return api1.getId().getApiName().compareTo(api2.getId().getApiName());
 
     }
 }

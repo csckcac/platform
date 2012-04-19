@@ -66,10 +66,12 @@ import java.util.regex.Pattern;
  * This class represent the implementation of APIManager interface.
  */
 public class APIManagerImpl implements APIManager {
-    Log log = LogFactory.getLog(APIManagerImpl.class);
+    
+    private static final Log log = LogFactory.getLog(APIManagerImpl.class);
+    
     private GenericArtifactManager artifactManager;
     private Registry registry;
-    RegistryKeepAliveThread keepAliveThread = new RegistryKeepAliveThread();
+    private RegistryKeepAliveThread keepAliveThread = new RegistryKeepAliveThread();
     private boolean active = true;  //This variable use to kill the Registry keep alive thread
 
     public APIManagerImpl(HttpServletRequest request, ServletConfig config)
@@ -81,22 +83,16 @@ public class APIManagerImpl implements APIManager {
             this.registry = GovernanceUtils.getGovernanceUserRegistry(
                     new WSRegistryServiceClient(backendServerURL, cookie),
                     (String) session.getAttribute("logged-user"));
+            keepAliveThread.start();
         } catch (RegistryException e) {
-            String msg = "Unable to obtain an instance of the registry.";
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
+            handleException("Unable to obtain an instance of the registry", e);
         }
-        keepAliveThread.start();
     }
 
     public APIManagerImpl(String user,
                           String pass,
                           String remoteAdd) throws APIManagementException {
-        try {
-            this.registry = getRegistry(user, pass, remoteAdd);
-        } catch (AxisFault axisFault) {
-            axisFault.printStackTrace();
-        }
+        this.registry = getRegistry(user, pass, remoteAdd);
         keepAliveThread.start();
     }
 
@@ -106,13 +102,15 @@ public class APIManagerImpl implements APIManager {
      */
     public void cleanup() {
         active = false;
-        keepAliveThread.interrupt();
+        if (keepAliveThread.isAlive()) {
+            keepAliveThread.interrupt();
+        }
     }
 
     /**
      * This thread class use to keep the Registry alive
      */
-    private class RegistryKeepAliveThread extends Thread{
+    private class RegistryKeepAliveThread extends Thread {
         @Override
         public void run() {
             try {
@@ -128,7 +126,7 @@ public class APIManagerImpl implements APIManager {
                     log.error(msg, e);
                 }
             } catch (RegistryException e){
-                String msg = "Registry error occured when Registry keep alive";
+                String msg = "Registry error occurred in the keep-alive task";
                 log.error(msg, e);
             }
         }
@@ -139,15 +137,12 @@ public class APIManagerImpl implements APIManager {
      * @return Subscriber
      * @throws APIManagementException if failed to get Subscriber
      */
-    @Override
     public Subscriber getSubscriber(String subscriberId) throws APIManagementException {
-        Subscriber subscriber;
+        Subscriber subscriber = null;
         try {
             subscriber = new ApiMgtDAO().getSubscriber(subscriberId);
         } catch (APIManagementException e) {
-            String msg = "Failed to get Subscriber";
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
+            handleException("Failed to get Subscriber", e);
         }
         return subscriber;
     }
@@ -159,7 +154,6 @@ public class APIManagerImpl implements APIManager {
      * @return set of API having the given tag name
      * @throws APIManagementException if failed to get set of API
      */
-    @Override
     public Set<API> getAPIsWithTag(String tag) throws APIManagementException {
         Set<API> apiSet = new HashSet<API>();
         try {
@@ -185,9 +179,7 @@ public class APIManagerImpl implements APIManager {
                 }
             }
         } catch (RegistryException e) {
-            String msg = "Failed to get API for tag " + tag;
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
+            handleException("Failed to get API for tag " + tag, e);
         }
         return apiSet;
     }
@@ -198,7 +190,6 @@ public class APIManagerImpl implements APIManager {
      * @return Set<Provider>
      * @throws APIManagementException if failed to get Providers
      */
-    @Override
     public Set<Provider> getAllProviders() throws APIManagementException {
         Set<Provider> providerSet = new HashSet<Provider>();
         artifactManager = getArtifactManager(APIConstants.PROVIDER_KEY);
@@ -215,9 +206,7 @@ public class APIManagerImpl implements APIManager {
                 providerSet.add(provider);
             }
         } catch (GovernanceException e) {
-            String msg = "Failed to get all providers";
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
+            handleException("Failed to get all providers", e);
         }
         return providerSet;
     }
@@ -230,7 +219,6 @@ public class APIManagerImpl implements APIManager {
      * @return set of API
      * @throws APIManagementException if failed to API set
      */
-    @Override
     public Set<API> getAllPublishedAPIs() throws APIManagementException {
         SortedSet<API> apiSortedSet = new TreeSet<API>(new APIComparator());
         try {
@@ -247,9 +235,7 @@ public class APIManagerImpl implements APIManager {
                 }
             }
         } catch (RegistryException e) {
-            String msg = "Failed to get all publishers";
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
+            handleException("Failed to get all publishers", e);
         }
         return apiSortedSet;
     }
@@ -262,7 +248,6 @@ public class APIManagerImpl implements APIManager {
      * @return set of API
      * @throws APIManagementException if failed to get set of API
      */
-    @Override
     public List<API> getAPIsByProvider(String providerId) throws APIManagementException {
 
         List<API> apiSortedList = new ArrayList<API>();
@@ -287,9 +272,7 @@ public class APIManagerImpl implements APIManager {
             }
 
         } catch (RegistryException e) {
-            String msg = "Failed to get APIs for provider : " + providerId;
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
+            handleException("Failed to get APIs for provider : " + providerId, e);
         }
         Collections.sort(apiSortedList, new APIComparator());
 
@@ -304,7 +287,6 @@ public class APIManagerImpl implements APIManager {
      * @return Set of API
      * @throws APIManagementException if failed to get top rated APIs
      */
-    @Override
     public Set<API> getTopRatedAPIs(int limit) throws APIManagementException {
         int returnLimit = 0;
         SortedSet<API> apiSortedSet = new TreeSet<API>(new APIComparator());
@@ -327,9 +309,7 @@ public class APIManagerImpl implements APIManager {
                 }
             }
         } catch (RegistryException e) {
-            String msg = "Failed to get top rated API";
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
+            handleException("Failed to get top rated API", e);
         }
         return apiSortedSet;
     }
@@ -341,7 +321,6 @@ public class APIManagerImpl implements APIManager {
      * @return set of API
      * @throws APIManagementException if failed to get recently added APIs
      */
-    @Override
     public Set<API> getRecentlyAddedAPIs(int limit) throws APIManagementException {
 
         int start = 0;
@@ -376,9 +355,7 @@ public class APIManagerImpl implements APIManager {
             }
 
         } catch (RegistryException e) {
-            String msg = "Failed to get recently added APIs";
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
+            handleException("Failed to get recently added APIs", e);
         }
         return apiSortedSet;
     }
@@ -387,7 +364,6 @@ public class APIManagerImpl implements APIManager {
      * @return a list of all Tags applied to all APIs published.
      * @throws APIManagementException if failed to get All the tags
      */
-    @Override
     public Set<Tag> getAllTags() throws APIManagementException {
         Set<Tag> tagSet = new HashSet<Tag>();
         try {
@@ -410,9 +386,7 @@ public class APIManagerImpl implements APIManager {
                 }
             }
         } catch (RegistryException e) {
-            String msg = "Failed to get all the tags";
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
+            handleException("Failed to get all the tags", e);
         }
         return tagSet;
     }
@@ -424,7 +398,6 @@ public class APIManagerImpl implements APIManager {
      * @param rating The rating provided by the subscriber
      * @throws APIManagementException If an error occurs while rating the API
      */
-    @Override
     public void rateAPI(APIIdentifier apiId, APIRating rating) throws APIManagementException {
         String path = APIUtils.getAPIPath(apiId);
         /*
@@ -435,9 +408,7 @@ public class APIManagerImpl implements APIManager {
         try {
             registry.rateResource(path, rating.getRating());
         } catch (RegistryException e) {
-            String msg = "Failed to rate API : " + path;
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
+            handleException("Failed to rate API : " + path, e);
         }
     }
 
@@ -448,7 +419,6 @@ public class APIManagerImpl implements APIManager {
      * @return Set<API>
      * @throws APIManagementException if failed to get APIs for given search term
      */
-    @Override
     public Set<API> searchAPI(String searchTerm) throws APIManagementException {
         Set<API> apiSet = new HashSet<API>();
         String regex = "[a-zA-Z0-9_.-|]*" + searchTerm + "[a-zA-Z0-9_.-|]*";
@@ -475,9 +445,7 @@ public class APIManagerImpl implements APIManager {
                 }
             }
         } catch (RegistryException e) {
-            String msg = "Failed to Search APIs";
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
+            handleException("Failed to Search APIs", e);
         }
         return apiSet;
     }
@@ -525,9 +493,7 @@ public class APIManagerImpl implements APIManager {
                 }
             }
         } catch (RegistryException e) {
-            String msg = "Failed to search APIs with type";
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
+            handleException("Failed to search APIs with type", e);
         }
         return apiSet;
     }
@@ -539,16 +505,13 @@ public class APIManagerImpl implements APIManager {
      * @return Set<API>
      * @throws APIManagementException if failed to get API for subscriber
      */
-    @Override
     public Set<SubscribedAPI> getSubscribedAPIs(Subscriber subscriber) throws APIManagementException {
-        Set<SubscribedAPI> subscribedAPIs;
+        Set<SubscribedAPI> subscribedAPIs = null;
         ApiMgtDAO ApiMgtDAO = new ApiMgtDAO();
         try {
             subscribedAPIs = ApiMgtDAO.getSubscribedAPIs(subscriber);
         } catch (APIManagementException e) {
-            String msg = "Failed to get APIs of " + subscriber.getName();
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
+            handleException("Failed to get APIs of " + subscriber.getName(), e);
         }
         return subscribedAPIs;
     }
@@ -581,9 +544,8 @@ public class APIManagerImpl implements APIManager {
      * @return API
      * @throws APIManagementException if failed get API from APIIdentifier
      */
-    @Override
     public API getAPI(APIIdentifier identifier) throws APIManagementException {
-        API api;
+        API api = null;
         String apiPath = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
                 identifier.getProviderName() + RegistryConstants.PATH_SEPARATOR +
                 identifier.getApiName() + RegistryConstants.PATH_SEPARATOR +
@@ -599,9 +561,7 @@ public class APIManagerImpl implements APIManager {
             api = APIUtils.getAPI(apiArtifact, registry);
 
         } catch (RegistryException e) {
-            String msg = "Failed to get API from : " + apiPath;
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
+            handleException("Failed to get API from : " + apiPath, e);
         }
 
         return api;
@@ -614,18 +574,15 @@ public class APIManagerImpl implements APIManager {
      * @return Set<Subscriber>
      * @throws APIManagementException if failed to get subscribed APIs of given provider
      */
-    @Override
     public Set<Subscriber> getSubscribersOfProvider(String providerId)
             throws APIManagementException {
 
-        Set<Subscriber> subscriberSet;
+        Set<Subscriber> subscriberSet = null;
         ApiMgtDAO ApiMgtDAO = new ApiMgtDAO();
         try {
             subscriberSet = ApiMgtDAO.getSubscribersOfProvider(providerId);
         } catch (APIManagementException e) {
-            String msg = "Failed to get Subscribers for : " + providerId;
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
+            handleException("Failed to get Subscribers for : " + providerId, e);
         }
         return subscriberSet;
     }
@@ -637,9 +594,8 @@ public class APIManagerImpl implements APIManager {
      * @return Provider
      * @throws APIManagementException if failed to get Provider
      */
-    @Override
     public Provider getProvider(String providerName) throws APIManagementException {
-        Provider provider;
+        Provider provider = null;
         String providerPath = RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
                 APIConstants.PROVIDERS_PATH + RegistryConstants.PATH_SEPARATOR + providerName;
         try {
@@ -654,9 +610,7 @@ public class APIManagerImpl implements APIManager {
             provider = APIUtils.getProvider(providerArtifact);
 
         } catch (RegistryException e) {
-            String msg = "Failed to get Provider form : " + providerName;
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
+            handleException("Failed to get Provider form : " + providerName, e);
         }
         return provider;
     }
@@ -668,18 +622,17 @@ public class APIManagerImpl implements APIManager {
      * @return true, if already exists. False, otherwise
      * @throws APIManagementException if failed to get API availability
      */
-    @Override
     public boolean isAPIAvailable(APIIdentifier identifier) throws APIManagementException {
         boolean availability = false;
-        String path = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +identifier.getProviderName() + RegistryConstants.PATH_SEPARATOR +
+        String path = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
+                identifier.getProviderName() + RegistryConstants.PATH_SEPARATOR +
                 identifier.getApiName() + RegistryConstants.PATH_SEPARATOR + identifier.getVersion();
         try {
             if (registry.resourceExists(path)) {
                 availability = true;
             }
         } catch (RegistryException e) {
-            String msg = "Failed to check availability of api :" + path;
-            throw new APIManagementException(msg, e);
+            handleException("Failed to check availability of api :" + path, e);
         }
         return availability;
     }
@@ -688,7 +641,6 @@ public class APIManagerImpl implements APIManager {
      * @param apiIdentifier APIIdentifier
      * @return Usage
      */
-    @Override
     public Usage getUsageByAPI(APIIdentifier apiIdentifier) {
         return null;
     }
@@ -698,7 +650,6 @@ public class APIManagerImpl implements APIManager {
      * @param apiName    name of the API
      * @return Usage
      */
-    @Override
     public Usage getAPIUsageByUsers(String providerId, String apiName) {
         return null;
     }
@@ -710,7 +661,6 @@ public class APIManagerImpl implements APIManager {
      * @param consumerEmail E-mal Address of consumer
      * @return Usage
      */
-    @Override
     public Usage getAPIUsageBySubscriber(APIIdentifier apiIdentifier, String consumerEmail) {
         return null;
     }
@@ -722,7 +672,6 @@ public class APIManagerImpl implements APIManager {
      * @param userId     id of the user
      * @throws APIManagementException if failed to add subscription details to database
      */
-    @Override
     public void addSubscription(APIIdentifier identifier, String userId, int applicationId)
             throws APIManagementException {
         ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
@@ -736,10 +685,9 @@ public class APIManagerImpl implements APIManager {
      * @param userId     id of the user
      * @throws APIManagementException if failed to add subscription details to database
      */
-    @Override
     public void removeSubscriber(APIIdentifier identifier, String userId)
             throws APIManagementException {
-        //TODO @sumedha : implment unsubscription
+        //TODO @sumedha : implement unsubscription
     }
 
     /**
@@ -749,18 +697,15 @@ public class APIManagerImpl implements APIManager {
      * @return Set<Subscriber>
      * @throws APIManagementException if failed to get Subscribers
      */
-    @Override
     public Set<Subscriber> getSubscribersOfAPI(APIIdentifier identifier)
             throws APIManagementException {
 
-        Set<Subscriber> subscriberSet;
+        Set<Subscriber> subscriberSet = null;
         ApiMgtDAO ApiMgtDAO = new ApiMgtDAO();
         try {
             subscriberSet = ApiMgtDAO.getSubscribersOfAPI(identifier);
         } catch (APIManagementException e) {
-            String msg = "Failed to get subscribers for API : " + identifier.getApiName();
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
+            handleException("Failed to get subscribers for API : " + identifier.getApiName(), e);
         }
         return subscriberSet;
     }
@@ -773,7 +718,6 @@ public class APIManagerImpl implements APIManager {
      * @return Set of version
      * @throws APIManagementException if failed to get version for api
      */
-    @Override
     public Set<String> getAPIVersions(String providerName, String apiName)
             throws APIManagementException {
 
@@ -792,12 +736,10 @@ public class APIManagerImpl implements APIManager {
                     versionSet.add(path.split(apiPath)[1]);
                 }
             } else {
-                throw new APIManagementException("api version should be a collection " + apiName);
+                throw new APIManagementException("API version should be a collection " + apiName);
             }
         } catch (RegistryException e) {
-            String msg = "Failed to get versions for api : " + apiName;
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
+            handleException("Failed to get versions for API: " + apiName, e);            
         }
         return versionSet;
     }
@@ -809,17 +751,14 @@ public class APIManagerImpl implements APIManager {
      * @return Set<APISubscriptionCount>
      * @throws APIManagementException if failed to get APISubscriptionCountByAPI
      */
-    @Override
     public long getAPISubscriptionCountByAPI(APIIdentifier identifier)
             throws APIManagementException {
-        long count;
+        long count = 0L;
         ApiMgtDAO ApiMgtDAO = new ApiMgtDAO();
         try {
             count = ApiMgtDAO.getAPISubscriptionCountByAPI(identifier);
         } catch (APIManagementException e) {
-            String msg = "Failed to get APISubscriptionCount for  ";
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
+            handleException("Failed to get APISubscriptionCount for: " + identifier.getApiName(), e);            
         }
         return count;
     }
@@ -851,7 +790,6 @@ public class APIManagerImpl implements APIManager {
      * @param password Password of the user
      * @return login status
      */
-    @Override
     public boolean login(String username, String password) {
         boolean result = false;
         //TODO this is not finish
@@ -872,7 +810,6 @@ public class APIManagerImpl implements APIManager {
      *
      * @param username name of the user
      */
-    @Override
     public void logout(String username) {
         //TODO this is not finish
         String epr = "";
@@ -892,7 +829,6 @@ public class APIManagerImpl implements APIManager {
      *
      * @return Set<Tier>
      */
-    @Override
     public Set<Tier> getTiers() {
         return null;
     }
@@ -902,19 +838,11 @@ public class APIManagerImpl implements APIManager {
      *
      * @throws APIManagementException if failed to update subscription
      */
-    @Override
     public void updateSubscriptions(APIIdentifier identifier, String userId, int applicationId)
             throws APIManagementException {
 
-        ApiMgtDAO ApiMgtDAO = new ApiMgtDAO();
-        try {
-            ApiMgtDAO.updateSubscriptions(identifier, userId, applicationId);
-        } catch (APIManagementException e) {
-            String msg = "Failed to update subscriber";
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
-        }
-
+        ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
+        apiMgtDAO.updateSubscriptions(identifier, userId, applicationId);
     }
 
     /**
@@ -923,7 +851,6 @@ public class APIManagerImpl implements APIManager {
      * @param api API
      * @throws APIManagementException if failed to add API
      */
-    @Override
     public void addAPI(API api) throws APIManagementException {
 
         artifactManager = getArtifactManager(APIConstants.API_KEY);
@@ -947,16 +874,13 @@ public class APIManagerImpl implements APIManager {
             Resource resource = registry.get(artifactPath);
             resource.setProperty(APIConstants.API_CONTEXT_ID, api.getContext());
             registry.put(artifactPath, resource);
-        } catch (GovernanceException e) {
-            String msg = "Failed to add API";
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
         } catch (RegistryException e) {
-            throw new APIManagementException(e);
+            handleException("Error while adding API", e);
         }
     }
 
-    public String addApiThumb(API api, FileItem fileItem) throws RegistryException, IOException, APIManagementException, UserStoreException, IdentityException {
+    public String addApiThumb(API api, FileItem fileItem) throws RegistryException, IOException,
+            APIManagementException, UserStoreException, IdentityException {
         Resource thumb = registry.newResource();
         thumb.setContentStream(fileItem.getInputStream());
         thumb.setMediaType(fileItem.getContentType());
@@ -970,7 +894,9 @@ public class APIManagerImpl implements APIManager {
         //AuthorizationManager accessControlAdmin =
         //CarbonContext.getCurrentContext().getUserRealm().getAuthorizationManager();
 
-        AuthorizationManager accessControlAdmin = APIManagerComponent.getRegistryService().getUserRealm(IdentityUtil.getTenantIdOFUser(api.getId().getProviderName())).getAuthorizationManager();
+        AuthorizationManager accessControlAdmin = APIManagerComponent.getRegistryService().
+                getUserRealm(IdentityUtil.getTenantIdOFUser(
+                        api.getId().getProviderName())).getAuthorizationManager();
 
         registry.put(thumbPath, thumb);
 
@@ -994,7 +920,6 @@ public class APIManagerImpl implements APIManager {
      * @param api API
      * @throws APIManagementException if failed to update API
      */
-    @Override
     public void updateAPI(API api) throws APIManagementException {
         if (api.getContext() == null) {
             APIIdentifier apiIdentifier = api.getId();
@@ -1002,12 +927,11 @@ public class APIManagerImpl implements APIManager {
             try {
                 Resource resource = registry.get(path);
                 api.setContext(resource.getProperty(APIConstants.API_CONTEXT_ID));
+                addAPI(api);
             } catch (RegistryException e) {
-                throw new APIManagementException("Failed set context id when updating the API", e);
+                handleException("Failed set context id when updating the API", e);
             }
         }
-        addAPI(api);
-
     }
 
     /**
@@ -1020,7 +944,6 @@ public class APIManagerImpl implements APIManager {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          If an error occurs while trying to create the new version of the API
      */
-    @Override
     public void createNewAPIVersion(API api, String newVersion) throws DuplicateAPIException,
             APIManagementException {
         String apiSourcePath = APIConstants.API_LOCATION + RegistryConstants.PATH_SEPARATOR +
@@ -1058,9 +981,9 @@ public class APIManagerImpl implements APIManager {
                         APIConstants.PROVIDER_ASSOCIATION);
             }
         } catch (RegistryException e) {
-            String msg = "Failed to create new version : " + newVersion + "of : "
+            String msg = "Failed to create new version : " + newVersion + " of : "
                     + api.getId().getApiName();
-            throw new APIManagementException(msg, e);
+            handleException(msg, e);
         }
     }
 
@@ -1071,11 +994,10 @@ public class APIManagerImpl implements APIManager {
      * @return List<Documentation>
      * @throws APIManagementException if failed to get Documentations
      */
-    @Override
     public List<Documentation> getAllDocumentation(APIIdentifier apiId) throws APIManagementException {
         List<Documentation> documentationList = new ArrayList<Documentation>();
-        String apiResourcePath = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR + apiId.getProviderName() +
-                RegistryConstants.PATH_SEPARATOR + apiId.getApiName() +
+        String apiResourcePath = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
+                apiId.getProviderName() + RegistryConstants.PATH_SEPARATOR + apiId.getApiName() +
                 RegistryConstants.PATH_SEPARATOR + apiId.getVersion() + APIConstants.API_RESOURCE_NAME;
         try {
             Association[] docAssociations = registry.getAssociations(apiResourcePath,
@@ -1091,7 +1013,7 @@ public class APIManagerImpl implements APIManager {
                 documentationList.add(doc);
             }
         } catch (RegistryException e) {
-            throw new APIManagementException("Failed to get documentations for api ", e);
+            handleException("Failed to get documentations for api ", e);
         }
         return documentationList;
     }
@@ -1105,7 +1027,6 @@ public class APIManagerImpl implements APIManager {
      * @return Documentation
      * @throws APIManagementException if failed to get Documentation
      */
-    @Override
     public Documentation getDocumentation(APIIdentifier apiId, DocumentationType docType,
                                           String docName) throws APIManagementException {
         Documentation documentation = null;
@@ -1122,9 +1043,7 @@ public class APIManagerImpl implements APIManager {
                 documentation = APIUtils.getDocumentation(artifact);
             }
         } catch (RegistryException e) {
-            String msg = "Failed to get documentation details";
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
+            handleException("Failed to get documentation details", e);
         }
         return documentation;
     }
@@ -1136,7 +1055,6 @@ public class APIManagerImpl implements APIManager {
      * @param documentationName, name of the inline documentation
      * @throws APIManagementException if the asking documentation content is unavailable
      */
-    @Override
     public String getDocumentationContent(APIIdentifier identifier, String documentationName)
             throws APIManagementException {
         String contentPath = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
@@ -1152,8 +1070,9 @@ public class APIManagerImpl implements APIManager {
         } catch (RegistryException e) {
             String msg = "No document content found for documentation : "
                     + documentationName + " of API :"+identifier.getApiName();
-            throw new APIManagementException(msg, e);
+            handleException(msg, e);
         }
+        return null;
     }
 
     /**
@@ -1164,23 +1083,22 @@ public class APIManagerImpl implements APIManager {
      * @param docName name of the document
      * @throws APIManagementException if failed to remove documentation
      */
-    @Override
     public void removeDocumentation(APIIdentifier apiId, String docName, String docType)
             throws APIManagementException {
-        String docPath = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR + apiId.getProviderName() + RegistryConstants.PATH_SEPARATOR +
+        String docPath = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
+                apiId.getProviderName() + RegistryConstants.PATH_SEPARATOR +
                 apiId.getApiName() + RegistryConstants.PATH_SEPARATOR + apiId.getVersion() +
-                RegistryConstants.PATH_SEPARATOR + APIConstants.DOC_DIR + RegistryConstants.PATH_SEPARATOR + docName;
+                RegistryConstants.PATH_SEPARATOR + APIConstants.DOC_DIR +
+                RegistryConstants.PATH_SEPARATOR + docName;
         try {
-            Association[] associations = registry.getAssociations(docPath, APIConstants.DOCUMENTATION_KEY);
+            Association[] associations = registry.getAssociations(docPath,
+                    APIConstants.DOCUMENTATION_KEY);
             for (Association association : associations) {
                 registry.delete(association.getDestinationPath());
             }
         } catch (RegistryException e) {
-            String msg = "Failed to delete documentation";
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
+            handleException("Failed to delete documentation", e);
         }
-
     }
 
     /**
@@ -1191,7 +1109,6 @@ public class APIManagerImpl implements APIManager {
      * @param documentation Documentation
      * @throws APIManagementException if failed to add documentation
      */
-    @Override
     public void addDocumentation(APIIdentifier apiId, Documentation documentation)
             throws APIManagementException {
         try {
@@ -1227,9 +1144,7 @@ public class APIManagerImpl implements APIManager {
             registry.addAssociation(apiPath, artifact.getPath(), APIConstants.DOCUMENTATION_ASSOCIATION);
 
         } catch (RegistryException e) {
-            String msg = "Failed to add documentation";
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
+            handleException("Failed to add documentation", e);
         }
     }
 
@@ -1241,7 +1156,6 @@ public class APIManagerImpl implements APIManager {
      * @param  text, content of the inline documentation
      * @throws APIManagementException if failed to add the document as a resource to registry
      */
-    @Override
     public void addDocumentationContent(APIIdentifier identifier, String documentationName, String text)
             throws APIManagementException {
         String documentationPath = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
@@ -1266,7 +1180,7 @@ public class APIManagerImpl implements APIManager {
         } catch (RegistryException e) {
             String msg = "Failed to add the documentation content of : "
                     + documentationName + " of API :"+identifier.getApiName();
-            throw new APIManagementException(msg, e);
+            handleException(msg, e);
         }
     }
 
@@ -1277,14 +1191,12 @@ public class APIManagerImpl implements APIManager {
      * @param documentation Documentation
      * @throws APIManagementException if failed to update docs
      */
-    @Override
     public void updateDocumentation(APIIdentifier apiId, Documentation documentation)
             throws APIManagementException {
         try {
             addDocumentation(apiId, documentation);
         } catch (APIManagementException e) {
-            String msg = "Failed to update doc";
-            throw new APIManagementException(msg, e);
+            handleException("Failed to update doc", e);
         }
     }
 
@@ -1295,7 +1207,6 @@ public class APIManagerImpl implements APIManager {
      * @param apiId     id of the APIIdentifier
      * @throws APIManagementException if failed to copy docs
      */
-    @Override
     public void copyAllDocumentation(APIIdentifier apiId, String toVersion)
             throws APIManagementException {
 
@@ -1319,9 +1230,7 @@ public class APIManagerImpl implements APIManager {
                 }
             }
         } catch (RegistryException e) {
-            String msg = "Failed to copy docs to new version : " + newVersion;
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
+            handleException("Failed to copy docs to new version : " + newVersion, e);
         }
 
     }
@@ -1334,7 +1243,6 @@ public class APIManagerImpl implements APIManager {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to get Subscriber from access token
      */
-    @Override
     public Subscriber getSubscriberById(String accessToken) throws APIManagementException {
         ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
         return apiMgtDAO.getSubscriberById(accessToken);
@@ -1345,16 +1253,13 @@ public class APIManagerImpl implements APIManager {
      * @param s          comment text
      * @throws APIManagementException if failed to add comment for API
      */
-    @Override
     public void addComment(APIIdentifier identifier, String s) throws APIManagementException {
         String apiPath = APIUtils.getAPIPath(identifier);
         Comment comment = new Comment(s);
         try {
             registry.addComment(apiPath, comment);
         } catch (RegistryException e) {
-            String msg = "Failed to add comment for api " + apiPath;
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
+            handleException("Failed to add comment for api " + apiPath, e);
         }
     }
 
@@ -1363,7 +1268,6 @@ public class APIManagerImpl implements APIManager {
      * @return Comments
      * @throws APIManagementException if failed to get comments for identifier
      */
-    @Override
     public org.wso2.carbon.apimgt.api.model.Comment[] getComments(APIIdentifier identifier)
             throws APIManagementException {
         List<org.wso2.carbon.apimgt.api.model.Comment> commentList =
@@ -1379,13 +1283,11 @@ public class APIManagerImpl implements APIManager {
                 comment1.setUser(comment.getUser());
                 commentList.add(comment1);
             }
-
+            return commentList.toArray(new org.wso2.carbon.apimgt.api.model.Comment[commentList.size()]);
         } catch (RegistryException e) {
-            String msg = "Failed to get comments for api " + apiPath;
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
+            handleException("Failed to get comments for api " + apiPath, e);
         }
-        return commentList.toArray(new org.wso2.carbon.apimgt.api.model.Comment[commentList.size()]);
+        return null;
     }
 
     /**
@@ -1406,19 +1308,21 @@ public class APIManagerImpl implements APIManager {
         return artifactManager;
     }
 
-    private Registry getRegistry(String user, String pass, String url) throws AxisFault {
+    private Registry getRegistry(String user, String pass, String url) throws APIManagementException {
         WSRegistryServiceClient client;
-        Registry registry1 = null;
+        Registry registry = null;
         try {
             client = new WSRegistryServiceClient(url, user, pass,
                     ConfigurationContextFactory.createConfigurationContextFromFileSystem(
                             ServerConfiguration.getInstance().
                                     getFirstProperty("Axis2Config.clientAxis2XmlLocation")));
-            registry1 = GovernanceUtils.getGovernanceUserRegistry(client, user);
+            registry = GovernanceUtils.getGovernanceUserRegistry(client, user);
         } catch (RegistryException e) {
-            e.printStackTrace();
+            handleException("Error while obtaining a registry instance", e);
+        } catch (AxisFault af) {
+            handleException("Error while initializing the WS registry client", af);
         }
-        return registry1;
+        return registry;
     }
 
     /**
@@ -1467,8 +1371,8 @@ public class APIManagerImpl implements APIManager {
     }
 
     /**
-     * @param providerName
-     * @return
+     * @param providerName Name of the API provider
+     * @return An array of UserApplicationAPIUsage instances
      */
     public UserApplicationAPIUsage[] getAllAPIUsageByProvider(String providerName) throws APIManagementException {
         ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
@@ -1478,8 +1382,8 @@ public class APIManagerImpl implements APIManager {
     /**
      * This method returns the set of APIs for given subscriber
      *
-     * @param subscriber subscriber
-     * @return Set<API>
+     * @param subscriber subscriber A valid Subscriber instance
+     * @return Set<API> A Set of APIs associated with the subscriber
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to get SubscribedAPIs
      */
@@ -1507,9 +1411,9 @@ public class APIManagerImpl implements APIManager {
     }
 
     /**
-     * @param application
-     * @param userId
-     * @throws APIManagementException
+     * @param application An Application instance to be added
+     * @param userId Current user ID
+     * @throws APIManagementException on error
      */
     public void addApplication(Application application, String userId) throws APIManagementException {
         ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
@@ -1517,8 +1421,8 @@ public class APIManagerImpl implements APIManager {
     }
 
     /**
-     * @param subscriber
-     * @return
+     * @param subscriber A valid Subscriber instance
+     * @return All applications associated with the provided subscriber
      * @throws APIManagementException
      */
     public Application[] getApplications(Subscriber subscriber) throws APIManagementException {
@@ -1526,21 +1430,18 @@ public class APIManagerImpl implements APIManager {
         return apiMgtDAO.getApplications(subscriber);
     }
 
-    @Override
     public void addSubscriber(Subscriber subscriber)
             throws APIManagementException {
         ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
         apiMgtDAO.addSubscriber(subscriber);
     }
 
-    @Override
     public void updateSubscriber(Subscriber subscriber)
             throws APIManagementException {
         ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
         apiMgtDAO.updateSubscriber(subscriber);
     }
 
-    @Override
     public Subscriber getSubscriber(int subscriberId)
             throws APIManagementException {
         ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
@@ -1550,11 +1451,12 @@ public class APIManagerImpl implements APIManager {
     public String getThumbAsString(String thumbPath) throws RegistryException, IOException {
         Resource res = registry.get(thumbPath);
         res.getContent();
-
-
         InputStreamReader r = new InputStreamReader(res.getContentStream());
-
         return IOUtils.toString(res.getContentStream(), r.getEncoding());
-
+    }
+    
+    private void handleException(String msg, Exception e) throws APIManagementException {
+        log.error(msg, e);
+        throw new APIManagementException(msg, e);
     }
 }

@@ -60,7 +60,7 @@ dataservice-samples-utils-2.5.0.jar                                             
 ehcache-1.5.0.wso2v1.jar                                                        bundle                   
 ezmorph-1.0.4.jar                                                               jarinbundle              
 flexTasks.jar                                                                   jar                      
-gdata-core-1.0.0.wso2v1.jar                                                     bundle                   
+gdata-core-1.47.0.wso2v1.jar                                                    bundle                   
 gdata-spreadsheet-3.0.0.wso2v1.jar                                              bundle                   
 geronimo-jaxws_2.1_spec-1.0.0.wso2v1.jar                                        bundle                   
 geronimo-jaxws_2.1_spec-1.0.jar                                                 bundle                   
@@ -69,7 +69,6 @@ geronimo-jta_1.1_spec-1.1.jar                                                   
 geronimo-saaj_1.3_spec-1.0.0.wso2v2.jar                                         bundle                   
 geronimo-stax-api_1.0_spec-1.0.1.wso2v1.jar                                     bundle                   
 geronimo-ws-metadata_2.0_spec-1.1.2.jar                                         bundle                   
-google-collect-1.0.0.wso2v2.jar                                                 bundle                   
 guice-2.0.jar                                                                   jarinbundle              
 h2-1.1.112.jar                                                                  bundle                   
 h2-1.1.112.jar                                                                  jarinbundle              

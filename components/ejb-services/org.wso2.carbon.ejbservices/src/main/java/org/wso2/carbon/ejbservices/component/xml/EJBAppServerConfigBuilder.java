@@ -38,12 +38,14 @@ public class EJBAppServerConfigBuilder extends ComponentConfigBuilder {
             OMElement idElement = configElement.getFirstChildWithName(
                     new QName(NS_WSO2CARBON, EJBConstants.ComponentConfig.ELE_ID));
             String id = null;
-            if (idElement != null)
+            if (idElement != null) {
                 id = idElement.getText().trim();
+            }
 
-            if (id == null)
+            if (id == null) {
                 throw new CarbonException("Mandatory attribute EJBApplicationServer/Id entry " +
                         "does not exist or is empty in the component.xml");
+            }
 
             //name element
             OMElement nameElement = configElement.getFirstChildWithName(
@@ -52,9 +54,10 @@ public class EJBAppServerConfigBuilder extends ComponentConfigBuilder {
             if (nameElement != null)
                 name = nameElement.getText().trim();
 
-            if (name == null)
+            if (name == null) {
                 throw new CarbonException("Mandatory attribute EJBApplicationServer/Name entry " +
                         "does not exist or is empty in the component.xml");
+            }
 
             //ProviderURL element
             OMElement providerURLElement = configElement.getFirstChildWithName(
@@ -63,21 +66,24 @@ public class EJBAppServerConfigBuilder extends ComponentConfigBuilder {
             if (providerURLElement != null)
                 providerURL = providerURLElement.getText().trim();
 
-            if (providerURL == null)
+            if (providerURL == null) {
                 throw new CarbonException("Mandatory attribute EJBApplicationServer/ProviderURL " +
                                           "entry does not exist or is empty in the component.xml");
+            }
 
             //JNDIContextClass element
             OMElement contextClassElement = configElement.getFirstChildWithName(
                     new QName(NS_WSO2CARBON, EJBConstants.ComponentConfig.ELE_JNDI_CONTEXT_CLASS));
             String jndiContextClass = null;
-            if (contextClassElement != null)
+            if (contextClassElement != null) {
                 jndiContextClass = contextClassElement.getText().trim();
+            }
 
-            if (jndiContextClass == null)
+            if (jndiContextClass == null) {
                 throw new CarbonException("Mandatory attribute EJBApplicationServer/" +
                                           "JNDIContextClass entry does not exist or is empty in " +
                                           "the component.xml");
+            }
 
             EJBAppServerConfig appServerConfig = new EJBAppServerConfig();
             appServerConfig.setId(id);

@@ -52,6 +52,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -68,7 +69,11 @@ public class EJBServicesAdmin extends AbstractAdmin {
     }
 
     public static void setEJBAppServerConfig(EJBAppServerConfig[] serverConfigs) {
-        appServerConfigs = serverConfigs;
+        if(serverConfigs == null) {
+            appServerConfigs = new EJBAppServerConfig[0];
+        } else {
+            appServerConfigs = Arrays.copyOf(serverConfigs, serverConfigs.length);
+        }
     }
 
     public void addApplicationServer(String providerURL,

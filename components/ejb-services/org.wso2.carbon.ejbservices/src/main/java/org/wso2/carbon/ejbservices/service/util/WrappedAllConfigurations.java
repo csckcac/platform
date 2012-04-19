@@ -15,6 +15,8 @@
  */
 package org.wso2.carbon.ejbservices.service.util;
 
+import java.util.Arrays;
+
 @SuppressWarnings("UnusedDeclaration")
 public class WrappedAllConfigurations {
     private EJBAppServerData[] appServerData;
@@ -26,7 +28,11 @@ public class WrappedAllConfigurations {
     }
 
     public void setAppServerNameList(EJBAppServerData[] appServerNameList) {
-        this.appServerNameList = appServerNameList;
+        if(appServerNameList == null) {
+            this.appServerNameList = new EJBAppServerData[0];
+        } else {
+            this.appServerNameList = Arrays.copyOf(appServerNameList, appServerNameList.length);
+        }
     }
 
     public EJBProviderData[] getEjbProviderData() {
@@ -34,7 +40,11 @@ public class WrappedAllConfigurations {
     }
 
     public void setEjbProviderData(EJBProviderData[] ejbProviderData) {
-        this.ejbProviderData = ejbProviderData;
+        if (ejbProviderData == null) {
+            this.ejbProviderData = new EJBProviderData[0];
+        } else {
+            this.ejbProviderData = Arrays.copyOf(ejbProviderData, ejbProviderData.length);
+        }
     }
 
     public EJBAppServerData[] getAppServerData() {
@@ -42,6 +52,10 @@ public class WrappedAllConfigurations {
     }
 
     public void setAppServerData(EJBAppServerData[] appServerData) {
-        this.appServerData = appServerData;
+        if (appServerData == null) {
+            this.appServerData = new EJBAppServerData[0];
+        } else {
+            this.appServerData = Arrays.copyOf(appServerData, appServerData.length);
+        }
     }
 }

@@ -26,7 +26,7 @@ import java.util.Map;
 @SuppressWarnings("UnusedDeclaration")
 public class EJBServicesAdminClient {
     private static final Log log = LogFactory.getLog(EJBServicesAdminClient.class);
-    public EJBProviderAdminStub stub;
+    private EJBProviderAdminStub stub;
 
     public EJBServicesAdminClient(javax.servlet.ServletContext servletContext,
                                   javax.servlet.http.HttpSession httpSession) throws Exception {

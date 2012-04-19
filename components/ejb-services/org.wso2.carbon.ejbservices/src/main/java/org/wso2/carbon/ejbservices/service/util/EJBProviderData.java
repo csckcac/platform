@@ -17,13 +17,13 @@ package org.wso2.carbon.ejbservices.service.util;
 
 @SuppressWarnings("UnusedDeclaration")
 public class EJBProviderData {
-    String providerURL;
-    String jndiContextClass;
-    String userName;
-    String password;
-    String beanJNDIName;
-    String remoteInterface;
-    String serviceName;
+    private String providerURL;
+    private String jndiContextClass;
+    private String userName;
+    private String password;
+    private String beanJNDIName;
+    private String remoteInterface;
+    private String serviceName;
 
     public String getServiceName() {
         return serviceName;

@@ -3,8 +3,12 @@ package org.wso2.carbon.lb.common;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class LBConfigParser {
@@ -17,24 +21,36 @@ public class LBConfigParser {
      *
      * @param configFileName - file name to convert
      * @return String with complete lb configuration
+     * @throws FileNotFoundException 
      */
-    public String createLBConfigString(String configFileName) {
-        String lbConfigString = "";
+    public String createLBConfigString(String configFileName) throws FileNotFoundException {
+        StringBuilder lbConfigString = new StringBuilder("");
 
         File configFile = new File(configFileName);
         Scanner scanner;
-        try {
-            scanner = new Scanner(configFile);
 
-            while (scanner.hasNextLine()) {
-                lbConfigString = lbConfigString + scanner.nextLine();
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        scanner = new Scanner(configFile);
+
+        while (scanner.hasNextLine()) {
+            lbConfigString.append(scanner.nextLine().trim() + "\n");
         }
 
+        return lbConfigString.toString().trim();
+    }
+    
+    public String createLBConfigString(InputStream configFileName) throws IOException {
+       
+        // read the stream with BufferedReader
+        BufferedReader br = new BufferedReader(new InputStreamReader(configFileName));
 
-        return lbConfigString;
+        StringBuilder sb = new StringBuilder();
+
+        String line;
+        while ((line = br.readLine()) != null) {
+            sb.append(line);
+        }
+        
+        return createLBConfigString(sb.toString());
     }
 
 
@@ -221,7 +237,7 @@ public class LBConfigParser {
             for (int i = 0; i < configSubString.length(); i++) {
                 char ch = configSubString.charAt(i);
 
-                // found "{" and pop in to stack
+                // found "{" and push in to stack
                 if (ch == '{') {
                     stack.push(ch);
                 }

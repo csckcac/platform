@@ -34,8 +34,7 @@ var saveAPI = function () {
             }
         });
     }
-    ;
-}
+};
 
 var getAPI = function (apiName, version) {
     apiProviderApp.call("action=getAPI&apiName=" + apiName + "&version=" + version, function (json) {
@@ -194,7 +193,7 @@ var deleteResource = function (id) {
 
     $('#resourceCount').val(rowNums);
 
-}
+};
 
 var createResourceRows = function (api) {
     if (api.templates.length > 0) {
@@ -231,7 +230,7 @@ var createResourceRows = function (api) {
             }
         }
     }
-}
+};
 
 var getAPIsByProvider = function (callbackFunc) {
     $('.loading').html('loading...');
@@ -281,7 +280,7 @@ var renderAPIsPaginator = function (result, currentPage, itemsPerPage) {
         $(".thumbnail h5 a", clone).attr("href", "?place=api-details&name=" + api.name + "&version=" + api.version);
         $(".status", clone).append(api.status);
     }
-}
+};
 var renderAPIs = function (result) {
     /*Pagination logic
      * itemsPerPage
@@ -377,31 +376,53 @@ var loadAllAPIUsageByProvider = function () {
 
 var renderUsers = function (result) {
     var users = result.data.subscribers;
-
+    var doc=document;
     for (var i = 0; i < users.length; i++) {
         var user = users[i];
-        var tabBody = document.getElementById("users");
-        var row = document.createElement("tr");
-        var cell1 = document.createElement("td");
-        var cell2 = document.createElement("td");
-        var cell3 = document.createElement("td");
-        var icon = document.createElement("i");
+        var tabBody = doc.getElementById("users");
+        var row = doc.createElement("tr");
+        var cell1 = doc.createElement("td");
+        var cell2 = doc.createElement("td");
+        var cell3 = doc.createElement("td");
+
+        var icon = doc.createElement("i");
         icon.setAttribute("class", "icon-user");
-        var a = document.createElement("a");
+        var a = doc.createElement("a");
         var userName = user.userName;
         a.setAttribute("href", "?place=user&uname=" + userName);
         a.innerHTML = userName;
         cell1.appendChild(icon);
         cell1.appendChild(a);
+
         cell2.innerHTML = user.application;
-        var a2 = document.createElement("a");
+
         var apiList = user.apis;
-        var apiArray = apiList.split("-");
-        var apiName = apiArray[0];
-        var version = apiArray[1];
+        var apiName;
+        var version;
+        var api;
+        if(apiList.indexOf(",")>=0){
+            var apis=apiList.split(",");
+            for(var n=0;n<apis.length;n++){
+            api=apis[n].split("-");
+            apiName=api[0];
+            version=api[1];
+            var eleArray=[];
+            eleArray[n] = doc.createElement("a");
+            eleArray[n].setAttribute("href", "?place=api-details&name=" + apiName + "&version=" + version);
+            eleArray[n].innerHTML=" "+apis[n];
+            if(n!=apis.length-1){eleArray[n].innerHTML+=" ,";}
+            cell3.appendChild(eleArray[n]);
+            }
+        }else{
+        api= apiList.split("-");
+        apiName = api[0];
+        version = api[1];
+        var a2 = doc.createElement("a");
         a2.setAttribute("href", "?place=api-details&name=" + apiName + "&version=" + version);
         a2.innerHTML = apiList;
         cell3.appendChild(a2);
+        }
+
         row.appendChild(cell1);
         row.appendChild(cell2);
         row.appendChild(cell3);
@@ -417,16 +438,17 @@ var loadSubscribersOfAPI = function (apiName, version) {
 
 var renderUsersList = function (result) {
     var users = result.data.subscribers;
+    var doc=document;
     for (var i = 0; i < users.length; i++) {
         var user = users[i];
-        var tabBody = document.getElementById("userList");
-        var row = document.createElement("tr");
-        var cell1 = document.createElement("td");
-        var cell2 = document.createElement("td");
-        var cell3 = document.createElement("td");
-        var icon = document.createElement("i");
+        var tabBody = doc.getElementById("userList");
+        var row = doc.createElement("tr");
+        var cell1 = doc.createElement("td");
+        var cell2 = doc.createElement("td");
+        var cell3 = doc.createElement("td");
+        var icon = doc.createElement("i");
         icon.setAttribute("class", "icon-user");
-        var a = document.createElement("a");
+        var a = doc.createElement("a");
         a.setAttribute("href", "?place=user&uname=" + user.userName);
         a.innerHTML = user.userName;
         cell1.appendChild(icon);
@@ -434,25 +456,25 @@ var renderUsersList = function (result) {
 
         cell2.innerHTML = user.subscribedDate;
 
-        var icon2 = document.createElement("i");
+        var icon2 = doc.createElement("i");
         icon2.setAttribute("class", "icon-edit");
-        var a2 = document.createElement("a");
+        var a2 = doc.createElement("a");
         a2.setAttribute("href", "#");
         a2.innerHTML = "Stats";
         cell3.appendChild(icon2);
         cell3.appendChild(a2);
 
-        var icon3 = document.createElement("i");
+        var icon3 = doc.createElement("i");
         icon3.setAttribute("class", "icon-trash");
-        var a3 = document.createElement("a");
+        var a3 = doc.createElement("a");
         a3.setAttribute("href", "#");
         a3.innerHTML = "Revoke Access";
         cell3.appendChild(icon3);
         cell3.appendChild(a3);
 
-        var icon4 = document.createElement("i");
+        var icon4 = doc.createElement("i");
         icon4.setAttribute("class", "icon-ban-circle");
-        var a4 = document.createElement("a");
+        var a4 = doc.createElement("a");
         a4.setAttribute("href", "#");
         a4.innerHTML = "Block";
         cell3.appendChild(icon4);
@@ -480,16 +502,17 @@ var getSubscribedAPIs = function (userName) {
 
 var renderSubscribedAPIs = function (result) {
     var apis = result.data.apis;
+    var doc=document;
     for (var i = 0; i < apis.length; i++) {
         var api = apis[i];
-        var tabBody = document.getElementById("userSubscribedAPIs");
-        var row = document.createElement("tr");
-        var cell1 = document.createElement("td");
-        var cell2 = document.createElement("td");
-        var cell3 = document.createElement("td");
-        var icon = document.createElement("i");
+        var tabBody = doc.getElementById("userSubscribedAPIs");
+        var row = doc.createElement("tr");
+        var cell1 = doc.createElement("td");
+        var cell2 = doc.createElement("td");
+        var cell3 = doc.createElement("td");
+        var icon = doc.createElement("i");
         icon.setAttribute("class", "icon-user");
-        var a = document.createElement("a");
+        var a = doc.createElement("a");
         a.setAttribute("href", "?place=api-details&name=" + api.name + "&version=" + api.version);
         a.innerHTML = api.name;
         cell1.appendChild(icon);
@@ -497,25 +520,25 @@ var renderSubscribedAPIs = function (result) {
 
         cell2.innerHTML = api.lastUpdatedDate;
 
-        var icon2 = document.createElement("i");
+        var icon2 = doc.createElement("i");
         icon2.setAttribute("class", "icon-edit");
-        var a2 = document.createElement("a");
+        var a2 = doc.createElement("a");
         a2.setAttribute("href", "#");
         a2.innerHTML = "Stats";
         cell3.appendChild(icon2);
         cell3.appendChild(a2);
 
-        var icon3 = document.createElement("i");
+        var icon3 = doc.createElement("i");
         icon3.setAttribute("class", "icon-trash");
-        var a3 = document.createElement("a");
+        var a3 = doc.createElement("a");
         a3.setAttribute("href", "#");
         a3.innerHTML = "Revoke Access";
         cell3.appendChild(icon3);
         cell3.appendChild(a3);
 
-        var icon4 = document.createElement("i");
+        var icon4 = doc.createElement("i");
         icon4.setAttribute("class", "icon-ban-circle");
-        var a4 = document.createElement("a");
+        var a4 = doc.createElement("a");
         a4.setAttribute("href", "#");
         a4.innerHTML = "Block";
         cell3.appendChild(icon4);
@@ -549,29 +572,30 @@ var loadDocs = function (apiName, version) {
 var renderDocs = function (result) {
     var docs = result.data.docs;
     $('#listDocs').html('');
+    var docVar=document;
     for (var i = 0; i < docs.length; i++) {
         var doc = docs[i];
-        var tabBody = document.getElementById("listDocs");
-        var row = document.createElement("tr");
+        var tabBody = docVar.getElementById("listDocs");
+        var row = docVar.createElement("tr");
         row.setAttribute("id", apiProviderApp.currentAPIName + '-' + doc.docName);
-        var cell1 = document.createElement("td");
-        var cell2 = document.createElement("td");
-        var cell3 = document.createElement("td");
-        var cell4 = document.createElement("td");
-        var cell5 = document.createElement("td");
-        var cell6 = document.createElement("td");
-        var icon = document.createElement("i");
+        var cell1 = docVar.createElement("td");
+        var cell2 = docVar.createElement("td");
+        var cell3 = docVar.createElement("td");
+        var cell4 = docVar.createElement("td");
+        var cell5 = docVar.createElement("td");
+        var cell6 = docVar.createElement("td");
+        var icon = docVar.createElement("i");
         icon.setAttribute("class", "icon-file");
-        var a = document.createElement("a");
+        var a = docVar.createElement("a");
         a.setAttribute("href", "#");
         a.appendChild(icon);
         a.innerHTML = doc.docName;
         cell1.appendChild(a);
 
         cell2.innerHTML = doc.docType;
-        var icon1 = document.createElement("i");
+        var icon1 = docVar.createElement("i");
         icon1.setAttribute("class", "icon-file");
-        var a1 = document.createElement("a");
+        var a1 =docVar.createElement("a");
         if (docs.sourceType == "url") {
             a1.setAttribute("href", "#");
         } else {
@@ -582,9 +606,9 @@ var renderDocs = function (result) {
 
         cell3.appendChild(a1);
 
-        var icon2 = document.createElement("i");
+        var icon2 = docVar.createElement("i");
         icon2.setAttribute("class", "icon-user");
-        var a2 = document.createElement("a");
+        var a2 = docVar.createElement("a");
         a2.setAttribute("href", "#");
         a2.appendChild(icon2);
         a2.innerHTML = $('#userNameShow').text();
@@ -592,35 +616,35 @@ var renderDocs = function (result) {
 
         cell5.innerHTML = doc.lastUpdated;
 
-        var icon3 = document.createElement("i");
+        var icon3 = docVar.createElement("i");
         icon3.setAttribute("class", "icon-edit");
-        var a3 = document.createElement("a");
+        var a3 = docVar.createElement("a");
         a3.setAttribute("href", 'javascript:updateDocumentation("' + apiProviderApp.currentAPIName + '","' + apiProviderApp.currentVersion + '","' + doc.docName + '","' + doc.docType + '","' + doc.summary + '","' + doc.docUrl + '")');
         a3.appendChild(icon3);
         a3.innerHTML = "Update | ";
 
         if (doc.sourceType == "INLINE") {
 
-            var icon6 = document.createElement("i");
+            var icon6 = docVar.createElement("i");
             icon6.setAttribute("class", "icon-edit");
-            var a6 = document.createElement("a");
+            var a6 = docVar.createElement("a");
             a6.setAttribute("href", 'javascript:editInlineContent("' + apiProviderApp.currentAPIName + '","' + apiProviderApp.currentVersion + '","' + doc.docName + '","' + doc.docType + '","' + doc.summary + '","' + doc.docUrl + '")');
             a6.appendChild(icon6);
             a6.innerHTML = "Edit Content | ";
             cell6.appendChild(a6);
         }
 
-        var icon4 = document.createElement("i");
+        var icon4 = docVar.createElement("i");
         icon4.setAttribute("class", "icon-trash");
-        var a4 = document.createElement("a");
+        var a4 = docVar.createElement("a");
 
         a4.setAttribute("href", 'javascript:removeDocumentation("' + apiProviderApp.currentAPIName + '","' + apiProviderApp.currentVersion + '","' + doc.docName + '","' + doc.docType + '")');
         a4.appendChild(icon4);
         a4.innerHTML = "Delete | ";
 
-        var icon5 = document.createElement("i");
+        var icon5 = docVar.createElement("i");
         icon5.setAttribute("class", "icon-share");
-        var a5 = document.createElement("a");
+        var a5 = docVar.createElement("a");
         a5.setAttribute("href", 'javascript:copyDocumentation("' + apiProviderApp.currentAPIName + '","' + apiProviderApp.currentVersion + '","' + doc.docName + '","' + doc.docType + '","' + doc.summary + '")');
         a5.appendChild(icon5);
         a5.innerHTML = "Copy";
@@ -708,9 +732,10 @@ var addNewDoc = function () {
 };
 
 var clearDocs = function () {
-    document.getElementById('docName').value = '';
-    document.getElementById('summary').value = '';
-    document.getElementById('docUrl').value = '';
+    var doc=document;
+    doc.getElementById('docName').value = '';
+    doc.getElementById('summary').value = '';
+    doc.getElementById('docUrl').value = '';
     $('#newDoc').hide('slow');
 };
 

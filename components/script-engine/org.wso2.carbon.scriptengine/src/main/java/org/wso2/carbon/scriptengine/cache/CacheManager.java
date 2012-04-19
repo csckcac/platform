@@ -104,7 +104,9 @@ public class CacheManager {
             ctx.setClassFilePath(classLocation);
         }
         try {
-            Object[] compiled = compiler.compileToClassFiles(HostObjectUtil.readerToString(scriptReader), "(wso2)", 1, className);
+            String scriptPath = sctx.getContext() + sctx.getPath() + sctx.getCacheKey();
+            Object[] compiled = compiler.compileToClassFiles(
+                    HostObjectUtil.readerToString(scriptReader), scriptPath, 1, className);
             writeClass(classLocation, (byte[]) compiled[1]);
             updateContexts(className, ctx, sctx);
             tenant.setCachingContext(ctx);

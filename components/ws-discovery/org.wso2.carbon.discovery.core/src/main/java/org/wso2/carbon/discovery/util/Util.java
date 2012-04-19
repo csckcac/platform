@@ -118,10 +118,7 @@ public class Util {
     public static void registerServiceObserver(AxisConfiguration axisConf) {
         TargetServiceObserver targetServiceObserver = new TargetServiceObserver();
         targetServiceObserver.init(axisConf);
-        // Add as the first observer
-        // This is to ensure that other observers (namely DeploymentInterceptor) cannot
-        // mess things up for us
-        axisConf.getObserversList().add(0, targetServiceObserver);
+        axisConf.addObservers(targetServiceObserver);
     }
 
     /**

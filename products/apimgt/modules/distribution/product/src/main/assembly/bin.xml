@@ -95,10 +95,19 @@
         </fileSet>
         <!-- Copying throttling policy -->
         <fileSet>
-            <directory>../../config/throttle-policies/car/</directory>
+            <directory>../../../config/throttle-policies/car/</directory>
             <outputDirectory>wso2am-${pom.version}/repository/deployment/server/carbonapps</outputDirectory>
             <includes>
-                <include>**/**.car</include>
+                <include>*.car</include>
+            </includes>
+        </fileSet>
+  
+        <!-- Copying BAM client -->
+        <fileSet>
+            <directory>../../../config/BAM/bamClient</directory>
+            <outputDirectory>wso2am-${pom.version}/StatClient</outputDirectory>
+            <includes>
+                <include>**/*</include>
             </includes>
         </fileSet>
         <fileSet>

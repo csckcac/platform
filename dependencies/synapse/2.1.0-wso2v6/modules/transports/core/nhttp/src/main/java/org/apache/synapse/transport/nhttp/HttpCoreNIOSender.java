@@ -112,8 +112,11 @@ public class HttpCoreNIOSender extends AbstractHandler implements TransportSende
     private boolean preserveUserAgentHeader = false;
     /** Weather Server header coming from server should be preserved */
     private boolean preserveServerHeader = true;
+    /** Socket timeout duration for HTTP connections */
+    private int socketTimeout = 0;
+
     /**
-     * Initialize the transport sender, and execute reactor in new seperate thread
+     * Initialize the transport sender, and execute reactor in new separate thread
      * @param cfgCtx the Axis2 configuration context
      * @param transportOut the description of the http/s transport from Axis2 configuration
      * @throws AxisFault thrown on an error
@@ -188,10 +191,11 @@ public class HttpCoreNIOSender extends AbstractHandler implements TransportSende
 
         metrics = new NhttpMetricsCollector(false, sslContext != null);
         handler = new ClientHandler(cfgCtx, params, metrics);
+        socketTimeout = HttpConnectionParams.getSoTimeout(params);
         final IOEventDispatch ioEventDispatch = getEventDispatch(
             handler, sslContext, sslIOSessionHandler, params, transportOut);
 
-        // start the Sender in a new seperate thread
+        // start the Sender in a new separate thread
         Thread t = new Thread(new Runnable() {
             public void run() {
                 try {
@@ -428,6 +432,7 @@ public class HttpCoreNIOSender extends AbstractHandler implements TransportSende
                     log.debug("A new connection established to : " + host + ":" + port);
                 }
             } else {
+                conn.setSocketTimeout(socketTimeout); // reinitialize timeouts for the pooled connection
                 try {
                     handler.submitRequest(conn, axis2Req);
                     if (log.isDebugEnabled()) {

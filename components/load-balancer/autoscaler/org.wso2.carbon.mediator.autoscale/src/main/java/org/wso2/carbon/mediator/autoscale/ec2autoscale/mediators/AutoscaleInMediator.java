@@ -19,10 +19,10 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.mediators.AbstractMediator;
-import org.wso2.carbon.mediator.autoscale.ec2autoscale.AppDomainContext;
+import org.wso2.carbon.lb.common.conf.LoadBalancerConfiguration;
 import org.wso2.carbon.mediator.autoscale.ec2autoscale.AutoscaleConstants;
 import org.wso2.carbon.mediator.autoscale.ec2autoscale.AutoscaleUtil;
-import org.wso2.carbon.mediator.autoscale.ec2autoscale.LoadBalancerConfiguration;
+import org.wso2.carbon.mediator.autoscale.ec2autoscale.context.AppDomainContext;
 
 import java.util.Map;
 
@@ -59,7 +59,9 @@ public class AutoscaleInMediator extends AbstractMediator {
         Map<String, AppDomainContext> appDomainContexts = AutoscaleUtil.getAppDomainContexts(configCtx,
                 LBConfig);
         String targetHost = AutoscaleUtil.getTargetHost(synCtx);
-        String domain = LBConfig.getDomain(targetHost);
+        int tenantId;
+        //TODO tenant aware fix should go here, and following line is commented thus far
+        String domain = "";//LBConfig.getDomain(targetHost, tenantId);
         synCtx.setProperty(AutoscaleConstants.TARGET_DOMAIN, domain);
         AppDomainContext appDomainContext = appDomainContexts.get(domain);
         if (appDomainContext != null) {

@@ -27,6 +27,9 @@ import org.apache.http.protocol.HTTP;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseException;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
+import org.wso2.carbon.lb.common.conf.LoadBalancerConfiguration;
+import org.wso2.carbon.mediator.autoscale.ec2autoscale.context.AppDomainContext;
+
 import sun.misc.BASE64Encoder;
 
 import java.io.File;
@@ -209,19 +212,19 @@ public final class AutoscaleUtil {
     }
 
     public static Map<String, AppDomainContext> getAppDomainContexts(ConfigurationContext configCtx,
-                                                                     LoadBalancerConfiguration ec2LBConfig) {
+                                                                     LoadBalancerConfiguration lbConfig) {
         Map<String, AppDomainContext> appDomainContexts =
                 (Map<String, AppDomainContext>) configCtx.getPropertyNonReplicable(AutoscaleConstants.APP_DOMAIN_CONTEXTS);
         if (appDomainContexts == null) {
             appDomainContexts = new HashMap<String, AppDomainContext>();
             ClusteringAgent clusteringAgent = configCtx.getAxisConfiguration().getClusteringAgent();
 
-            for (String domain :ec2LBConfig.getServiceDomains() ) {
+            for (String domain :lbConfig.getServiceDomains() ) {
                 if (clusteringAgent.getGroupManagementAgent(domain) == null) {
                     throw new SynapseException("Axis2 clustering GroupManagementAgent for domain " +
                                                domain + " has not been defined");
                 }
-                    appDomainContexts.put(domain, new AppDomainContext(ec2LBConfig.getServiceConfig(domain)));
+                    appDomainContexts.put(domain, new AppDomainContext(lbConfig.getServiceConfig(domain)));
 
             }
             configCtx.setNonReplicableProperty(AutoscaleConstants.APP_DOMAIN_CONTEXTS,

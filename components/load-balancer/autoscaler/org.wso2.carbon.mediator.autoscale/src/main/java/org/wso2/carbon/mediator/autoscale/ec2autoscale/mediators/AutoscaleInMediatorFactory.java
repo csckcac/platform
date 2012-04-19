@@ -20,7 +20,7 @@ import org.apache.synapse.Mediator;
 import org.apache.synapse.SynapseException;
 import org.apache.synapse.config.xml.AbstractMediatorFactory;
 import org.apache.synapse.config.xml.XMLConfigConstants;
-import org.wso2.carbon.mediator.autoscale.ec2autoscale.LoadBalancerConfiguration;
+import org.wso2.carbon.lb.common.conf.LoadBalancerConfiguration;
 
 import javax.xml.namespace.QName;
 import java.util.Properties;

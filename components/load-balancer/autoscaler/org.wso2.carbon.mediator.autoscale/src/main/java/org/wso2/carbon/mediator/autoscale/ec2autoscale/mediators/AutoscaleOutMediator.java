@@ -19,8 +19,8 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.mediators.AbstractMediator;
-import org.wso2.carbon.mediator.autoscale.ec2autoscale.AppDomainContext;
 import org.wso2.carbon.mediator.autoscale.ec2autoscale.AutoscaleConstants;
+import org.wso2.carbon.mediator.autoscale.ec2autoscale.context.AppDomainContext;
 
 import java.util.Map;
 

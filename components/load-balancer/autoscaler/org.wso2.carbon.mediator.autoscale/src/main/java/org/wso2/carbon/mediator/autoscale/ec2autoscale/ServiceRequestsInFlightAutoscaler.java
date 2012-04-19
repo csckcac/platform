@@ -17,16 +17,22 @@
 */
 package org.wso2.carbon.mediator.autoscale.ec2autoscale;
 
+import org.apache.axis2.clustering.Member;
+import org.apache.axis2.clustering.management.GroupManagementAgent;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.ManagedLifecycle;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.task.Task;
+import org.wso2.carbon.lb.common.conf.LoadBalancerConfiguration;
+import org.wso2.carbon.mediator.autoscale.ec2autoscale.context.LoadBalancerContext;
+import org.wso2.carbon.mediator.autoscale.ec2autoscale.context.AppDomainContext;
 import org.wso2.carbon.mediator.autoscale.ec2autoscale.util.ConfigHolder;
 
 import javax.rmi.CORBA.Util;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -92,9 +98,9 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
         try {
             isTaskRunning = true;
             sanityCheck();
-            //  if (!isPrimaryLoadBalancer) {
-            //    return;
-            // }
+            if (!isPrimaryLoadBalancer) {
+                return;
+            }
             autoscale();
         } finally {
             isTaskRunning = false;
@@ -116,19 +122,58 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
     }
 
     /**
-     * We compute the running & pending instances for the entire system using a single EC2 API
-     * call since we want to reduce the number of EC2 API calls. This is because it seems that
-     * AWS throttles the number of requests you can make in a given time
+       * We compute the number of running instances of a particular domain using clustering agent.
      */
     private void computeRunningAndPendingInstances() {
-        //Here we have to Set running lb instances to lb context
         String[] serviceDomains = loadBalancerConfig.getServiceDomains();
-        lbContext.getInstances();
 
+        int runningInstances;
+        
         for (String serviceDomain : serviceDomains) {
-            int currentInstances = ConfigHolder.getAgent().getGroupManagementAgent(serviceDomain).getMembers().size();
-            appDomainContexts.get(serviceDomain).setRunningInstanceCount(currentInstances);
+            runningInstances = ConfigHolder.getAgent().getGroupManagementAgent(serviceDomain).getMembers().size();
+            int diff;
+            
+            if((diff = 
+                 appDomainContexts.get(serviceDomain).setRunningInstanceCount(runningInstances)) 
+                         > 0){
+                // diff number of instances has been created after last execution, thus decrement
+                // that from pending instances count
+                appDomainContexts.get(serviceDomain).decrementPendingInstancesIfNotZero(diff);
+            }
         }
+        
+        // count this LB instance in.
+        runningInstances = 1;
+        
+//        //gets the domain of the LB
+//        String lbDomain = ConfigHolder.getAgent().getParameter("domain").getValue().toString();
+//        
+//        //gets LB group manager
+//        GroupManagementAgent lbGroupMgtAgent = ConfigHolder.getAgent().getGroupManagementAgent(lbDomain);
+        
+//        //check if there's any other LB instances than this
+//        if (lbGroupMgtAgent != null) {
+//            // find the running LB instances, FIXME: debug and see when there's another LB whether this returns 2
+//            runningInstances = lbGroupMgtAgent.getMembers().size();
+//        }
+        
+        //TODO: debug and see whether this is the way, use a LB cluster
+        
+        List<Member> members = ConfigHolder.getAgent().getMembers();
+        
+        if(!members.isEmpty()){
+            runningInstances += members.size();
+        }
+        
+        int diff;
+        
+        //set it in the LBContext
+        if ((diff = lbContext.setRunningInstanceCount(runningInstances)) > 0) {
+            // diff number of instances has been created after last execution, thus decrement
+            // that from pending instances count
+            lbContext.decrementPendingInstancesIfNotZero(diff);
+        }
+        
 
     }
 
@@ -140,16 +185,38 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
         int currentLBInstances = lbContext.getInstances();
         LoadBalancerConfiguration.LBConfiguration lbConfig = loadBalancerConfig.getLoadBalancerConfig();
         int requiredInstances = lbConfig.getInstances();
+        
         if (currentLBInstances < requiredInstances) {
             log.warn("LB Sanity check failed. Current LB instances: " + currentLBInstances +
-                    ". Required LB instances is: " + requiredInstances);
+                ". Required LB instances is: " + requiredInstances);
             int diff = requiredInstances - currentLBInstances;
+
+            // gets the domain of the LB
+            String lbDomain = ConfigHolder.getAgent().getParameter("domain").getValue().toString();
 
             // Launch diff number of LB instances
             log.info("Launching " + diff + " LB instances");
-            // runInstances(lbConfig, diff);
-            lbContext.resetRunningPendingInstances();
+            runInstances(lbContext, lbDomain, diff);
+            //lbContext.incrementPendingInstances(diff);
+            // lbContext.resetRunningPendingInstances();
         }
+    }
+
+    private int runInstances(LoadBalancerContext context, String domain, int diff) {
+        
+        int successfullyStartedInstanceCount = diff;
+
+        while (diff > 0) {
+            //TODO: call autoscaler service and ask to spawn an instance
+            // and increment pending instance count only if autoscaler service returns
+            // true. context.incrementPendingInstances(1)
+            // if it failed do successfullyStartedInstanceCount--
+                     
+            
+            diff--;
+        }
+        
+        return successfullyStartedInstanceCount;
     }
 
     /**
@@ -157,6 +224,7 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
      * This method assigns the elastic IP to this instance, if not already assigned.
      * The primary LB will do this once. The secondary LBs will check this from time to time, to see
      * whether the primary LB is still running
+     * FIXME: following check is not working at the moment. Discuss elastic IP thing.
      */
     private void nonPrimaryLBSanityCheck() {
         if (!isPrimaryLoadBalancer) {
@@ -197,7 +265,8 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
     private void appNodesSanityCheck(String serviceDomain) {
         AppDomainContext appDomainContext = appDomainContexts.get(serviceDomain);
         int currentInstances = appDomainContext.getRunningInstanceCount();
-        LoadBalancerConfiguration.ServiceConfiguration serviceConfig = loadBalancerConfig.getServiceConfig(serviceDomain);
+        LoadBalancerConfiguration.ServiceConfiguration serviceConfig = 
+                loadBalancerConfig.getServiceConfig(serviceDomain);
         int requiredInstances = serviceConfig.getMinAppInstances();
         if (currentInstances < requiredInstances) {
             log.warn("App domain Sanity check failed for [" + serviceDomain + "] . Current instances: " +
@@ -206,8 +275,10 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
 
             // Launch diff number of App instances
             log.info("Launching " + diff + " App instances for domain " + serviceDomain);
-            // runInstances(serviceConfig, serviceConfig.getInstancesPerScaleUp());
-            appDomainContext.resetRunningPendingInstances();
+            
+            //FIXME: should we need to consider serviceConfig.getInstancesPerScaleUp()?
+            runInstances(appDomainContext, serviceDomain, diff);
+            // appDomainContext.resetRunningPendingInstances();
         }
     }
 
@@ -230,12 +301,13 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
      */
     private void autoscale(String serviceDomain) {
         AppDomainContext appDomainContext = appDomainContexts.get(serviceDomain);
-        LoadBalancerConfiguration.ServiceConfiguration serviceConfig = appDomainContext.getServiceConfig();
+        LoadBalancerConfiguration.ServiceConfiguration serviceConfig =
+            appDomainContext.getServiceConfig();
 
         appDomainContext.recordRequestTokenListLength();
-        // if (!appDomainContext.canMakeScalingDecision()) {
-        //   return;
-        //}
+        if (!appDomainContext.canMakeScalingDecision()) {
+            return;
+        }
 
         long average = appDomainContext.getAverageRequestsInFlight();
         int runningAppInstances = appDomainContext.getRunningInstanceCount();
@@ -248,7 +320,7 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
             // current average is less than that can be handled by (current nodes - 1).
             scaleDown(serviceDomain);
         }
-        appDomainContext.resetRunningPendingInstances();
+        //appDomainContext.resetRunningPendingInstances();
     }
 
     /**
@@ -264,21 +336,33 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
         int maxAppInstances = serviceConfig.getMaxAppInstances();
         AppDomainContext appDomainContext = appDomainContexts.get(serviceDomain);
         int runningInstances = appDomainContext.getRunningInstanceCount();
-        int pendingInstances = appDomainContext.getPendingInstances();
+        int pendingInstances = appDomainContext.getPendingInstanceCount();
+        int failedInstances=0;
         if (runningInstances < maxAppInstances && pendingInstances == 0) {
             try {
                 int instancesPerScaleUp = serviceConfig.getInstancesPerScaleUp();
                 log.info("Domain: " + serviceDomain + " Going to start instance " + instancesPerScaleUp +
                         ". Running instances:" + runningInstances);
-                //here we have to add code to startup new instances
-                // runInstances(serviceConfig, instancesPerScaleUp);
+                
+                int successfullyStarted = 
+                        runInstances(appDomainContext, serviceDomain, instancesPerScaleUp);
+                
+                if(successfullyStarted != instancesPerScaleUp){
+                    failedInstances = instancesPerScaleUp - successfullyStarted;
+                    throw new Exception();
+                }
+                
+                //we increment the pending instance count
+                //appDomainContext.incrementPendingInstances(instancesPerScaleUp);
+                
                 log.info("Started " + instancesPerScaleUp + " new app instances in domain" +
                         serviceDomain);
             } catch (Exception e) {
-                log.error("Could not start new app instances for domain " + serviceDomain, e);
+                log.error("Could not start "+ failedInstances +" new app instances for domain " 
+                                + serviceDomain, e);
             }
         } else if (runningInstances > maxAppInstances) {
-            log.warn("Number of running EC2 instances has reached the maximum limit of " +
+            log.warn("Number of running instances has reached the maximum limit of " +
                     maxAppInstances + " in domain " + serviceDomain);
         }
     }
@@ -290,16 +374,21 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
      */
     private void scaleDown(String serviceDomain) {
         log.error("Stopped new instance =" + serviceDomain);
-        LoadBalancerConfiguration.ServiceConfiguration serviceConfig = loadBalancerConfig.getServiceConfig(serviceDomain);
+        LoadBalancerConfiguration.ServiceConfiguration serviceConfig = 
+                loadBalancerConfig.getServiceConfig(serviceDomain);
         AppDomainContext appDomainContext = appDomainContexts.get(serviceDomain);
         int runningInstances = appDomainContext.getRunningInstanceCount();
         int minAppInstances = serviceConfig.getMinAppInstances();
         if (runningInstances > minAppInstances) {
-            // Here we have to add code to terminate instance
+
+            log.debug("Domain: " + serviceDomain + ". Running instances:" 
+                    + runningInstances + ". Min instances:" + minAppInstances);
+            
+            // TODO call autoscaler service's scale down method
+            
         }
     }
-
-
+    
     private void expireRequestTokens(String serviceDomain) {
         appDomainContexts.get(serviceDomain).expireRequestTokens();
     }

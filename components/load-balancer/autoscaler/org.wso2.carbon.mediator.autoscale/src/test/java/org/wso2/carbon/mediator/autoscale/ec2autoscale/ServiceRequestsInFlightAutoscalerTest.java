@@ -17,27 +17,16 @@
 */
 package org.wso2.carbon.mediator.autoscale.ec2autoscale;
 
+
+import junit.framework.TestCase;
+
 /**
- * Contextual information related to the load balancer cluster
+ * Test for ServiceRequestsInFlightAutoscaler
  */
-public class LoadBalancerContext {
-    private int runningInstances;
-    private int pendingInstances;
+public class ServiceRequestsInFlightAutoscalerTest extends TestCase {
 
-    public synchronized void incrementRunningInstances() {
-        this.runningInstances++;
-    }
+    public void testInit() {
 
-    public synchronized void incrementPendingInstances() {
-        this.pendingInstances++;
-    }
-
-    public synchronized int getInstances() {
-        return runningInstances + pendingInstances;
-    }
-
-    public synchronized void resetRunningPendingInstances() {
-        runningInstances = 0;
-        pendingInstances = 0;
+        //new ServiceRequestsInFlightAutoscaler().init(new Axis2SynapseEnvironment());
     }
 }

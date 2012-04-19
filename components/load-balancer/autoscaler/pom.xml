@@ -26,14 +26,14 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>autoscaler</artifactId>
+    <artifactId>autoscaler-mediator</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Loadbalancer - Autoscaler Parent Module</name>
     <description>WSO2 Loadbalancer Autoscaler Parent Module</description>
     <url>http://wso2.org</url>
 
     <modules>
-        <module>org.wso2.carbon.autoscaler.mediator</module>
+        <module>org.wso2.carbon.mediator.autoscale</module>
     </modules>
 
 </project>

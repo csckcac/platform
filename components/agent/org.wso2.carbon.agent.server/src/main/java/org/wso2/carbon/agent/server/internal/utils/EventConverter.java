@@ -126,31 +126,37 @@ public final class EventConverter {
 
     public static EventStreamDefinition convertFromJson(String streamDefinition)
             throws MalformedStreamDefinitionException {
-        EventStreamDefinition tempEventStreamDefinition = gson.fromJson(streamDefinition.
-                replaceAll("(?i)int", "INT").replaceAll("(?i)long", "LONG").
-                replaceAll("(?i)float", "FLOAT").replaceAll("(?i)double", "DOUBLE").
-                replaceAll("(?i)bool", "BOOL").replaceAll("(?i)string", "STRING"), EventStreamDefinition.class);
-        String name = tempEventStreamDefinition.getName();
-        String version = tempEventStreamDefinition.getVersion();
+        try {
+            EventStreamDefinition tempEventStreamDefinition = gson.fromJson(streamDefinition.
+                    replaceAll("(?i)int", "INT").replaceAll("(?i)long", "LONG").
+                    replaceAll("(?i)float", "FLOAT").replaceAll("(?i)double", "DOUBLE").
+                    replaceAll("(?i)bool", "BOOL").replaceAll("(?i)string", "STRING"), EventStreamDefinition.class);
 
-        if (version == null) {
-            version = "1.0.0";  //when populating the object using google gson the defaults are getting null values
+            String name = tempEventStreamDefinition.getName();
+            String version = tempEventStreamDefinition.getVersion();
+
+
+            if (version == null) {
+                version = "1.0.0";  //when populating the object using google gson the defaults are getting null values
+            }
+            if (name == null) {
+                throw new MalformedStreamDefinitionException("stream name is null");
+            }
+
+            EventStreamDefinition eventStreamDefinition = new EventStreamDefinition(name, version);
+
+            eventStreamDefinition.setMetaData(tempEventStreamDefinition.getMetaData());
+            eventStreamDefinition.setCorrelationData(tempEventStreamDefinition.getCorrelationData());
+            eventStreamDefinition.setPayloadData(tempEventStreamDefinition.getPayloadData());
+
+            eventStreamDefinition.setNickName(tempEventStreamDefinition.getNickName());
+            eventStreamDefinition.setDescription(tempEventStreamDefinition.getDescription());
+            eventStreamDefinition.setDescription(tempEventStreamDefinition.getDescription());
+            eventStreamDefinition.setTags(tempEventStreamDefinition.getTags());
+            return eventStreamDefinition;
+        } catch (RuntimeException e) {
+            throw new MalformedStreamDefinitionException(" Malformed stream definition " + streamDefinition, e);
         }
-        if (name == null) {
-            throw new MalformedStreamDefinitionException("stream name is null");
-        }
-
-        EventStreamDefinition eventStreamDefinition = new EventStreamDefinition(name, version);
-
-        eventStreamDefinition.setMetaData(tempEventStreamDefinition.getMetaData());
-        eventStreamDefinition.setCorrelationData(tempEventStreamDefinition.getCorrelationData());
-        eventStreamDefinition.setPayloadData(tempEventStreamDefinition.getPayloadData());
-
-        eventStreamDefinition.setNickName(tempEventStreamDefinition.getNickName());
-        eventStreamDefinition.setDescription(tempEventStreamDefinition.getDescription());
-        eventStreamDefinition.setDescription(tempEventStreamDefinition.getDescription());
-        eventStreamDefinition.setTags(tempEventStreamDefinition.getTags());
-        return eventStreamDefinition;
     }
 
     public static String convertToJson(EventStreamDefinition existingDefinition) {

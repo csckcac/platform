@@ -51,7 +51,7 @@ public class EventTest extends TestCase {
         KeyStoreUtil.setTrustStoreParams();
 
         Thread.sleep(2000);
-        //according to the convention the authentication port will be 7611+100= 7711 and its host will be the same
+        //according to the convention the authentication port will be 7612+100= 7711 and its host will be the same
         DataPublisher dataPublisher = new DataPublisher("tcp://localhost:7612", "admin", "admin");
         String streamId = dataPublisher.defineEventStream("{" +
                                                           "  'name':'org.wso2.esb.MediatorStatistics'," +

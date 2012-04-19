@@ -65,26 +65,32 @@ public class AgentServerServiceDS {
             List<String[]> eventStreamDefinitions = new ArrayList<String[]>();
             AgentServerBuilder.populateConfigurations(serverConfiguration, agentServerConfiguration, eventStreamDefinitions);
 
-            carbonAgentServer = new AgentServerFactory().createAgentServer(
-                    agentServerConfiguration,
-                    new CarbonAuthenticationHandler(authenticationService), new InMemoryStreamDefinitionStore());
-            carbonAgentServer.start();
-            for (String[] streamDefinition : eventStreamDefinitions) {
-                try {
-                    carbonAgentServer.saveEventStreamDefinition(streamDefinition[0], streamDefinition[1]);
-                } catch (MalformedStreamDefinitionException e) {
-                    log.error("Malformed Stream Definition for " + streamDefinition[0] + ": " + streamDefinition[1], e);
-                } catch (DifferentStreamDefinitionAlreadyDefinedException e) {
-                    log.warn("Redefining event stream of " + streamDefinition[0] + ": " + streamDefinition[1], e);
+            if (carbonAgentServer == null) {
+                carbonAgentServer = new AgentServerFactory().createAgentServer(
+                        agentServerConfiguration,
+                        new CarbonAuthenticationHandler(authenticationService), new InMemoryStreamDefinitionStore());
+                carbonAgentServer.start();
+                for (String[] streamDefinition : eventStreamDefinitions) {
+                    try {
+                        carbonAgentServer.saveEventStreamDefinition(streamDefinition[0], streamDefinition[1]);
+                    } catch (MalformedStreamDefinitionException e) {
+                        log.error("Malformed Stream Definition for " + streamDefinition[0] + ": " + streamDefinition[1], e);
+                    } catch (DifferentStreamDefinitionAlreadyDefinedException e) {
+                        log.warn("Redefining event stream of " + streamDefinition[0] + ": " + streamDefinition[1], e);
+                    } catch (RuntimeException e) {
+                        log.error("Error in defining event stream " + streamDefinition[0] + ": " + streamDefinition[1], e);
+                    }
                 }
+                agentServerService = context.getBundleContext().
+                        registerService(AgentServer.class.getName(), carbonAgentServer, null);
+                log.info("Successfully deployed Agent Server ");
             }
-            agentServerService = context.getBundleContext().
-                    registerService(AgentServer.class.getName(), carbonAgentServer, null);
-            log.info("Successfully deployed Agent Server ");
         } catch (AgentServerConfigurationException e) {
             log.error("Agent Server Configuration is not correct hence can not create and start Agent Server ", e);
         } catch (AgentServerException e) {
             log.error("Can not create and start Agent Server ", e);
+        }  catch (RuntimeException e){
+            log.error("Error in starting Agent Server ", e);
         }
     }
 

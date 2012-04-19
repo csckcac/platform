@@ -94,12 +94,12 @@ public final class AgentServerBuilder {
         OMElement eventStreamDefinitions = agentServerConfig.getFirstChildWithName(
                 new QName(AgentServerConstants.AGENT_SERVER_CONF_NAMESPACE,
                           AgentServerConstants.EVENT_STREAM_DEFINITIONS));
+
         if (eventStreamDefinitions != null) {
             for (Iterator eventStreamDefinitionIterator = eventStreamDefinitions.getChildElements();
                  eventStreamDefinitionIterator.hasNext(); ) {
                 OMElement eventStreamDefinition = (OMElement) eventStreamDefinitionIterator.next();
-                String domainName=eventStreamDefinition.getAttributeValue(new QName(AgentServerConstants.AGENT_SERVER_CONF_NAMESPACE,
-                                                                  AgentServerConstants.DOMAIN_NAME));
+                String domainName=eventStreamDefinition.getAttributeValue(new QName(AgentServerConstants.DOMAIN_NAME));
 
                 eventStreamDefinitionList.add(new String[]{domainName, eventStreamDefinition.getText()});
             }
@@ -148,6 +148,5 @@ public final class AgentServerBuilder {
             populatePorts(agentServerConfig, serverConfiguration, agentServerConfiguration);
             populateEventStreamDefinitions(agentServerConfig, eventStreamDefinitions);
         }
-        throw new AgentServerConfigurationException("Invalid agent server config");
     }
 }

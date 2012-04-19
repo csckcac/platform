@@ -16,16 +16,27 @@
 package org.wso2.csg.integration.tests;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axis2.AxisFault;
 import org.apache.synapse.SynapseConstants;
 import org.testng.annotations.Test;
+import org.wso2.carbon.cloud.csg.common.CSGConstant;
+import org.wso2.carbon.cloud.csg.common.CSGUtils;
+import org.wso2.carbon.cloud.csg.common.thrift.CSGThriftClient;
+import org.wso2.carbon.cloud.csg.common.thrift.gen.Message;
+import org.wso2.carbon.cloud.csg.common.thrift.gen.NotAuthorizedException;
+import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
 import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminProxyAdminException;
 import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminStub;
 import org.wso2.carbon.proxyadmin.stub.types.carbon.ProxyData;
+import org.wso2.carbon.utils.NetworkUtils;
 import org.wso2.csg.integration.tests.util.StockQuoteClient;
 
+import java.io.File;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import static org.testng.Assert.*;
 
@@ -34,9 +45,8 @@ import static org.testng.Assert.*;
  * 1. Deploying and invoking a CSG services for a SOAP service, REST service, JSON service
  * 2. Dead message cleanup task of CSG server
  * 3. Test the operations(login, exchange) associated with the in-VM thrift server
- * 4. Test the CSG Agent functionality
- * 5. Test nhttp transport + message relay for receiving messages
- * 6. And list goes..
+ * 4. Test nhttp transport + message relay for receiving messages
+ * 5. And list goes..
  */
 public class CSGServiceTestCase extends CSGIntegrationTestCase {
 
@@ -47,6 +57,8 @@ public class CSGServiceTestCase extends CSGIntegrationTestCase {
     private static final String QUOTE_STRING = "CSG";
 
     private static final String CSG_SERVICE_NAME = "SimpleStockQuoteService";
+
+    public static final String CSG_SERVER_NAME = "TestServer";
 
     public CSGServiceTestCase() {
         super("ProxyServiceAdmin");
@@ -105,5 +117,47 @@ public class CSGServiceTestCase extends CSGIntegrationTestCase {
         assertEquals(response.toString(), responseString);
         // finally delete the proxy
         proxyServiceAdminStub.deleteProxyService(CSG_SERVICE_NAME);
+    }
+
+    @Test(groups = {"wso2.csg"},
+            description = "Test operations on the CSG in VM Thrift server operations(login, exchange" +
+                    " etc..")
+    public void testThriftServerOperations() throws Exception {
+        String trustStorePath = FrameworkSettings.TEST_FRAMEWORK_HOME + File.separator +
+                "repository" + File.separator + "resources" + File.separator +
+                "security" + File.separator + "client-truststore.jks";
+
+        // don't pass "localhost" as the host name since the thrift client can't connect
+        // it seems the thrift server binds into the ip address
+        CSGThriftClient client = new CSGThriftClient(CSGUtils.getCSGThriftClient(
+                NetworkUtils.getLocalHostname(), 15001, 20000, trustStorePath, "wso2carbon"));
+        String domainName;
+        if (FrameworkSettings.STRATOS.equalsIgnoreCase("false")) {
+            domainName = null;
+        } else {
+            domainName = FrameworkSettings.TENANT_NAME;
+        }
+        String queueName = CSGUtils.getCSGEPR(domainName, CSG_SERVER_NAME, CSG_SERVICE_NAME);
+        String token = null;
+        
+        // check login operation
+        try {
+            token = client.login(CSGConstant.DEFAULT_CSG_USER,
+                    CSGConstant.DEFAULT_CSG_USER_PASSWORD, queueName);
+        } catch (NotAuthorizedException e) {
+            fail("Login operation fails!. " + e.getMessage(), e);
+        }
+
+        BlockingQueue<Message> source = new LinkedBlockingQueue<Message>();
+
+        List<Message> requestMsgList = new ArrayList<Message>();
+        CSGUtils.moveElements(source, requestMsgList, 10);
+
+        // check exchange operation
+        try {
+            client.exchange(requestMsgList, 10, token);
+        } catch (Exception e) {
+            fail("Exchange operation fails!. " + e.getMessage(), e);
+        }
     }
 }

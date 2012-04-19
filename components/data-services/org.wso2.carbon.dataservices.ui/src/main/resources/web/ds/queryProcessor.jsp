@@ -199,7 +199,7 @@
                         query.setSparql(sparql);
                     } else if (con.getDataSourceType().equals("WEB_CONFIG")) {
                         query.setScraperVariable(scraperVariable);
-                    } else if (con.getDataSourceType().equals("CASSANDRA")) {
+                    } else if (con.getDataSourceType().equals("Cassandra")) {
                         query.setSql(cql);
                     }
                 }
@@ -307,7 +307,7 @@
                     query.setSparql(sparql);
                 } else if (con.getDataSourceType().equals("WEB_CONFIG")) {
                     query.setScraperVariable(scraperVariable);
-                } else if (con.getDataSourceType().equals("CASSANDRA")) {
+                } else if (con.getDataSourceType().equals("Cassandra")) {
                     query.setSql(cql);
                 }
             }

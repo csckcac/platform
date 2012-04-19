@@ -175,7 +175,7 @@ function validateAddDataSourceForm(){
             CARBON.showWarningDialog('Resource Name is mandatory');
             return false;
         }
-    } else if (document.getElementById('datasourceType').value == 'CASSANDRA') {
+    } else if (document.getElementById('datasourceType').value == 'Cassandra') {
         if(document.getElementById('org.wso2.ws.dataservice.driver').value ==  ''){
             CARBON.showWarningDialog('Database Driver is mandatory');
             return false;
@@ -459,7 +459,7 @@ function showTables(obj, document) {
         inputHeading = '';
         autoResponse ='';
     }
-    if (datasourceType == 'CASSANDRA') {
+    if (datasourceType == 'Cassandra') {
         cassandra = '';
         inputMappings = '';
         inputMappingsButton = '';

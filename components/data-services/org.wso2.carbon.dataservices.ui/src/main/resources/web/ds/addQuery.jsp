@@ -331,7 +331,7 @@
     </td>
 </tr>
 
-<tr id="CASSANDRARow" style="<%=(datasourceType.equals("CASSANDRA"))?"":"display:none"%>">
+<tr id="CASSANDRARow" style="<%=(datasourceType.equals("Cassandra"))?"":"display:none"%>">
     <td colspan="2">
         <table>
             <tr>
@@ -418,7 +418,7 @@
     </tr>--%>
 <tr id="addQueryProperties" style="<%=(datasourceType.equals("RDBMS") ||
                             datasourceType.equals("JNDI") || datasourceType.equals("CARBON_DATASOURCE") ||
-                            datasourceType.equals("CASSANDRA"))?"":"display:none"%>">
+                            datasourceType.equals("Cassandra"))?"":"display:none"%>">
         <%--<td colspan="2"><h3 class="mediator"><fmt:message key="dataservices.query.properties"/></h3></td>--%>
     <td class="middle-header" colspan="2"><a class="icon-link"
                                              style="background-image:url(images/plus.gif);"
@@ -542,7 +542,7 @@
 </tr>
 
 <% boolean inputMappingsSupported = (datasourceType.equals("RDBMS") || datasourceType.equals("JNDI") ||
-                                     datasourceType.equals("CARBON_DATASOURCE") || datasourceType.equals("RDF") || datasourceType.equals("SPARQL") || datasourceType.equals("CASSANDRA")); %>
+                                     datasourceType.equals("CARBON_DATASOURCE") || datasourceType.equals("RDF") || datasourceType.equals("SPARQL") || datasourceType.equals("Cassandra")); %>
 <tr style="<%=inputMappingsSupported ? "" : "display:none"%>">
    <td colspan="7" />                                                           
 </tr>                                                          

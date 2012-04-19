@@ -595,7 +595,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                    value="<%=passwordProvider%>"/>
             <input type="hidden" id="isXAType" name="isXAType" value="<%=isXAType%>"/>
             <input type="hidden" id="propertyCount" name="propertyCount" value="0"/>
-            <% if(dataSourceType.equals("CASSANDRA")) {%>
+            <% if(dataSourceType.equals("Cassandra")) {%>
                 <input type="hidden" id="org.wso2.ws.dataservice.driver" name="org.wso2.ws.dataservice.driver" value="org.apache.cassandra.cql.jdbc.CassandraDriver" />
             <% } %>
         </tr>
@@ -625,13 +625,13 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                     <%}%>
 
                     <%
-                        if (dataSourceType.equals("CASSANDRA")) {
+                        if (dataSourceType.equals("Cassandra")) {
                     %>
-                    <option value="CASSANDRA" selected="selected">CASSANDRA</option>
+                    <option value="Cassandra" selected="selected">Cassandra</option>
                     %>
                     <%
                     } else {%>
-                    <option value="CASSANDRA">CASSANDRA</option>
+                    <option value="Cassandra">Cassandra</option>
                     <%}%>
 
 
@@ -1073,19 +1073,18 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
          		    ||propertyName.equals("org.wso2.ws.dataservice.user")
          		    || propertyName.equals("org.wso2.ws.dataservice.password")) && !isXAType) {
          		%>
-         		<%--<tr> <% if(!(dataSourceType.equals("CASSANDRA") && propertyName.equals("org.wso2.ws.dataservice.driver"))){ %>--%>
                  <tr>
-                     <% if((dataSourceType.equals("CASSANDRA") && propertyName.equals("org.wso2.ws.dataservice.protocol"))) { %>
+                     <% if((dataSourceType.equals("Cassandra") && propertyName.equals("org.wso2.ws.dataservice.protocol"))) { %>
                         <td>Server URL<%=(isFieldMandatory(propertyName)?"<font color=\"red\">*</font>":"")%></td>
-                     <% } else if(!(propertyName.equals("org.wso2.ws.dataservice.driver") && dataSourceType.equals("CASSANDRA"))){ %>
+                     <% } else if(!(propertyName.equals("org.wso2.ws.dataservice.driver") && dataSourceType.equals("Cassandra"))){ %>
                         <td><fmt:message key="<%=propertyName%>"/><%=(isFieldMandatory(propertyName)?"<font color=\"red\">*</font>":"")%></td>
                      <% } %>
 	         		 <%if(propertyName.equals("org.wso2.ws.dataservice.password")) { %>
 	               		<td><input type="password" size="50" id="<%=propertyName%>" name="<%=propertyName%>" value="<%=propertyValue%>"/></td>
                 </tr>
 					<%} else {  %>
-                  <%  if(!(dataSourceType.equals("CASSANDRA") && propertyName.equals("org.wso2.ws.dataservice.driver"))) {%>
-                           <% if((dataSourceType.equals("CASSANDRA") && propertyName.equals("org.wso2.ws.dataservice.protocol"))) {
+                  <%  if(!(dataSourceType.equals("Cassandra") && propertyName.equals("org.wso2.ws.dataservice.driver"))) {%>
+                           <% if((dataSourceType.equals("Cassandra") && propertyName.equals("org.wso2.ws.dataservice.protocol"))) {
                                String cassandraServerUrl = propertyValue;
                                if (propertyValue != null && !propertyValue.equals("")) {
                                    cassandraServerUrl = propertyValue.substring(DBConstants.CASSANDRA.CASSANDRA_URL_PREFIX.length());
@@ -1350,7 +1349,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
 <table id="buttonTable" class="styledLeft noBorders" cellspacing="0" width="100%">
 <tr>
     <td class="buttonRow" colspan="2">
-        <%if ("RDBMS".equals(dataSourceType) || ("CASSANDRA".equals(dataSourceType))) {%>
+        <%if ("RDBMS".equals(dataSourceType) || ("Cassandra".equals(dataSourceType))) {%>
          <div id="connectionTestMsgDiv" style="display: none;"></div>
         <input class="button" type="button" value="<fmt:message key="datasource.test.connection"/>"
                onclick="testConnection();return false;"/>
@@ -1371,7 +1370,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                 var jdbcUrl;
                 var userName;
                 var password;
-                if(!document.getElementById('datasourceType').options[document.getElementById('datasourceType').selectedIndex].value == 'CASSANDRA'
+                if(!document.getElementById('datasourceType').options[document.getElementById('datasourceType').selectedIndex].value == 'Cassandra'
                         && document.getElementById("xaType").options[document.getElementById("xaType").selectedIndex].value == 'xaType') {
                     driver = document.getElementById('org.wso2.ws.dataservice.xa_datasource_class').value;
                     jdbcUrl = document.getElementById('URL').value;
@@ -1380,7 +1379,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                 } else{
                     driver = document.getElementById('org.wso2.ws.dataservice.driver').value;
                     jdbcUrl = document.getElementById('org.wso2.ws.dataservice.protocol').value;
-                    if(document.getElementById('datasourceType').options[document.getElementById('datasourceType').selectedIndex].value == 'CASSANDRA') {
+                    if(document.getElementById('datasourceType').options[document.getElementById('datasourceType').selectedIndex].value == 'Cassandra') {
                         jdbcUrl = "jdbc:cassandra://"+document.getElementById('org.wso2.ws.dataservice.protocol').value;
                     }
                     userName = document.getElementById('org.wso2.ws.dataservice.user').value;

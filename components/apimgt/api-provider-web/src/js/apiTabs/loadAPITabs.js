@@ -74,6 +74,7 @@ var resourcesCount = 1;
 var rowNums = new Array();
 
 var addResourcesToApi = function () {
+    $('#resourceTableError').hide('fast');
     $('#resourceRow').clone(true).attr('id', 'item-' + resourcesCount).insertAfter($('#resourceRow'));
     $('#item-' + resourcesCount + ' #resourceMethod').val($('#resourceMethod').val());
     $('#item-' + resourcesCount + ' #uriTemplate').attr('disabled', 'disabled');
@@ -111,6 +112,7 @@ var addResourcesToApi = function () {
 };
 
 var updateResourcesToApi = function () {
+    $('#resourceTableError').hide('fast');
     $('#resourceRow').clone(true).attr('id', 'item-' + resourcesCount).insertAfter($('#resourceRow'));
     $('#item-' + resourcesCount + ' #resourceMethod').val($('#resourceMethod').val());
     $('#item-' + resourcesCount + ' #uriTemplate').attr('disabled', 'disabled');

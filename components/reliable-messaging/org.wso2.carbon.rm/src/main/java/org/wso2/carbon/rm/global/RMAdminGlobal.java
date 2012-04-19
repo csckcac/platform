@@ -229,50 +229,9 @@ public class RMAdminGlobal extends AbstractAdmin {
 
         try {
             PersistenceFactory pf = PersistenceFactory.getInstance(getAxisConfig());
-            ModuleFilePersistenceManager mfpm = pf.getModuleFilePM();
-            OMFactory omFactory = OMAbstractFactory.getOMFactory();
-            OMElement policyWrapperEle = omFactory.createOMElement(Resources.POLICY, null);
-            policyWrapperEle.addAttribute(Resources.ServiceProperties.POLICY_TYPE,
-                    String.valueOf(PolicyInclude.AXIS_MODULE_POLICY), null);
-            OMElement idEle = omFactory.createOMElement(Resources.ServiceProperties.POLICY_UUID,
-                    null);
-            idEle.setText(sandeshaPolicy.getId());
-            policyWrapperEle.addChild(idEle);
-
-            policyWrapperEle.addAttribute(Resources.VERSION, sandeshaModule.getVersion().toString(),
-                    null);
-
-            OMElement policyEleToPersist = PersistenceUtils.createPolicyElement(sandeshaPolicy);
-            policyWrapperEle.addChild(policyEleToPersist);
-
-            boolean transactionStarted = mfpm.isTransactionStarted(sandeshaModule.getName());
-            if (!transactionStarted) {
-                mfpm.beginTransaction(sandeshaModule.getName());
-            }
-
-            //check if "policies" section exists otherwise create, and delete the existing policy if exists
-            if (!mfpm.elementExists(sandeshaModule.getName(), moduleResourcePath + "/" +
-                    Resources.POLICIES)) {
-                mfpm.put(sandeshaModule.getName(),
-                        omFactory.createOMElement(Resources.POLICIES, null), moduleResourcePath);
-
-            } else {
-                String pathToPolicy = moduleResourcePath + "/" + Resources.POLICIES + "/" +
-                        Resources.POLICY + PersistenceUtils.getXPathAttrPredicate(
-                        Resources.ServiceProperties.POLICY_UUID,
-                        sandeshaPolicy.getId());
-                if (mfpm.elementExists(sandeshaModule.getName(), pathToPolicy)) {
-                    mfpm.delete(sandeshaModule.getName(), pathToPolicy);
-                }
-            }
-
-            mfpm.put(sandeshaModule.getName(), policyWrapperEle,
-                    moduleResourcePath + "/" + Resources.POLICIES);
-
-            if (transactionStarted) {
-                mfpm.commitTransaction(sandeshaModule.getName());
-            }
-
+            pf.getModulePM().persistModulePolicy(sandeshaModule.getName(),
+                    sandeshaModule.getVersion().toString(), sandeshaPolicy, sandeshaPolicy.getId(),
+                    String.valueOf(PolicyInclude.AXIS_MODULE_POLICY), PersistenceUtils.getResourcePath(sandeshaModule));
         } catch (PersistenceException e) {
             throw new AxisFault("Problem when persisting updated policy");
         } catch (JaxenException e) {
@@ -280,31 +239,6 @@ public class RMAdminGlobal extends AbstractAdmin {
         } catch (Exception e) {
             throw new AxisFault("Problem when persisting updated policy");
         }
-
-        /*try {
-            String resourcePath = moduleResourcePath + RegistryResources.POLICIES + sandeshaPolicy.getId();
-            Resource policyResource = null;
-            if (registry.resourceExists(resourcePath)) {
-                policyResource = registry.get(resourcePath);
-            } else {
-                policyResource = registry.newResource();
-                policyResource.setProperty(RegistryResources.ServiceProperties.POLICY_TYPE,
-                        String.valueOf(PolicyInclude.SERVICE_POLICY));
-                policyResource.setProperty(RegistryResources.ServiceProperties.POLICY_UUID, "RMPolicy");
-            }
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            XMLStreamWriter writer = XMLOutputFactory.newInstance().createXMLStreamWriter(baos);
-            sandeshaPolicy.serialize(writer);
-            writer.flush();
-            policyResource.setContent(baos.toString());
-            registry.put(resourcePath, policyResource);
-
-        } catch (RegistryException e) {
-            throw new AxisFault("Problem when setting parameter values");
-        } catch (XMLStreamException e) {
-            throw new AxisFault("Problem when setting parameter values");
-        }*/
     }
 
 

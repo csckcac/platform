@@ -473,7 +473,15 @@ public class EndpointContext {
             Integer state = (Integer) cfgCtx.getPropertyNonReplicable(STATE_KEY);
             // state has not yet been replicated..
             // first replication occurs on first timeout or fault
-            return state == null || state == s;
+            boolean isState = false;
+            if (state == null) {
+                if (s == ST_ACTIVE) {
+                    isState = true;
+                }
+            } else {
+                isState = state == s;
+            }
+            return isState;
         } else {
             return localState == s;
         }

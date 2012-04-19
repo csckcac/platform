@@ -54,12 +54,6 @@
              <version>${rampart.mar.version}</version>
              <type>mar</type>
          </dependency>
-
-         <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.thread</artifactId>
-            <version>${carbon.platform.version}</version>
-        </dependency>
     </dependencies>
 
     <build>

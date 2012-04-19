@@ -103,7 +103,6 @@
           <version>1.8.1</version>
         </dependency>
 
-	<!--check version-->
         <dependency>
             <groupId>org.apache.directory.studio</groupId>
             <artifactId>org.apache.commons.lang</artifactId>
@@ -151,27 +150,19 @@
           <artifactId>guava</artifactId>
           <version>r08</version>
         </dependency>
-
+        
         <dependency>
-          <groupId>me.prettyprint</groupId>
-          <artifactId>hector-core</artifactId>
-          <version>0.8.0-2</version>
-        </dependency>
-
-        <dependency>
-          <groupId>me.prettyprint</groupId>
-          <artifactId>hector-core</artifactId>
-          <version>0.8.0-2</version>
-          <classifier>tests</classifier>
-        </dependency>
-
+	<groupId>me.prettyprint</groupId>
+	<artifactId>hector-core</artifactId>
+	<version>1.0-3</version>
+	</dependency>
+            
         <dependency>
             <groupId>com.github.stephenc.high-scale-lib</groupId>
             <artifactId>high-scale-lib</artifactId>
             <version>1.1.2</version>
         </dependency>
 
-	<!--check version-->
         <dependency>
             <groupId>javacc</groupId>
             <artifactId>javacc</artifactId>
@@ -214,13 +205,6 @@
           <version>3.8.1</version>
         </dependency>
 
-        <!--there's some problem with this -->
-        <!--dependency>
-            <groupId>org.python</groupId>
-            <artifactId>jython</artifactId>
-            <version>2.5.0</version>
-        </dependency-->
-
         <dependency>
           <groupId>org.apache.thrift</groupId>
           <artifactId>libthrift</artifactId>
@@ -250,13 +234,6 @@
           <artifactId>mina-filter-ssl</artifactId>
           <version>1.1.7</version>
         </dependency>
-
-        <!--there's some problem with this -->
-        <!--dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.framework</artifactId>
-            <version>2.0.5</version>
-        </dependency-->
 
 <!--eclipse set-->
 

@@ -41,13 +41,6 @@ xmlhttp.open("GET","serverreq.jag?q="+titletxt,true);
 xmlhttp.send();
 }   
 
- function moviesearch() {
-
-
- }
-
-
-
     </script>
 </head>
 <body>

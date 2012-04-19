@@ -919,13 +919,11 @@ public class APIManagerImpl implements APIManager {
             try {
                 Resource resource = registry.get(path);
                 api.setContext(resource.getProperty(APIConstants.API_CONTEXT_ID));
-                addAPI(api);
             } catch (RegistryException e) {
                 handleException("Failed set context id when updating the API", e);
             }
-        } else {
-            addAPI(api);
         }
+        addAPI(api);
     }
 
     /**

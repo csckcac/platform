@@ -85,7 +85,7 @@ public class CSGUtils {
 
             return new CSGService.Client(protocol);
         } catch (TTransportException e) {
-            handleException("Could not initialize the Thrift client", e);
+            handleException("Could not initialize the Thrift client. " + e.getMessage(), e);
         }
         return null;
     }

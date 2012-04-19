@@ -601,7 +601,7 @@ public class ServiceGroupAdmin extends AbstractAdmin {
         try {
             return ServiceArchiveCreator.createArchive(getConfigContext(), serviceGroupName);
         } catch (Exception ex) {
-            throw new AxisFault(ex.getMessage());
+            throw new AxisFault(ex.getMessage(), ex);
         }
 
     }

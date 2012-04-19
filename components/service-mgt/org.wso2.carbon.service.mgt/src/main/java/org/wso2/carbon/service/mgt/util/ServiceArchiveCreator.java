@@ -81,9 +81,11 @@ import java.util.Set;
  * Axis2
  */
 
-public class ServiceArchiveCreator {
+public final class ServiceArchiveCreator {
 
     private static Log log = LogFactory.getLog(ServiceArchiveCreator.class);
+
+    private ServiceArchiveCreator() {}
 
     /**
      * This method will generate an aar based on the information given.

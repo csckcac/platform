@@ -32,13 +32,15 @@ import java.io.File;
 /**
  *
  */
-public class Utils {
+public final class Utils {
 
     private static final Log log = LogFactory.getLog(Utils.class);
 
     private static boolean isServletTransport = false;
     private static boolean isServletTransportSet = false;
     private static final int SECONDS_PER_DAY = 3600 * 24;
+
+    private Utils() { }
 
     public static String[] getWsdlInformation(String serviceName,
                                               AxisConfiguration axisConfig) throws AxisFault {

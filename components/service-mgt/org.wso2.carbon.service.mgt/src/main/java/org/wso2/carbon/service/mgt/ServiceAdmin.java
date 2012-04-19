@@ -258,7 +258,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             disengageUnusedModuleFromAxisService(serviceName, removedModuleAssociations);
 
         } catch (Exception e) {
-            throw new Exception("errorRemovingServicePolicies");
+            throw new Exception("errorRemovingServicePolicies", e);
         }
     }
 
@@ -433,7 +433,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         }
         List<ServiceMetaData> serviceList = new ArrayList<ServiceMetaData>();
         TreeSet<String> serviceTypes = new TreeSet<String>();
-        serviceTypes.add("axis2");
+        serviceTypes.add("axis2" + Constants.SERVICE);
 
         HashMap<String, AxisService> axisServices = getAxisConfig().getServices();
         List<AxisService> axisServicesList = new ArrayList<AxisService>();
@@ -1094,7 +1094,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         } catch (AxisFault e) {
             String msg = "Cannot start service " + serviceName;
             log.error(msg, e);
-            throw new Exception(msg);
+            throw new Exception(msg, e);
         }
     }
 
@@ -1113,7 +1113,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         } catch (AxisFault e) {
             String msg = "Cannot stop service " + serviceName;
             log.error(msg, e);
-            throw new Exception(msg);
+            throw new Exception(msg, e);
         }
     }
 
@@ -1317,10 +1317,10 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
                     axisService.removeExposedTransport(transportProtocol);
                     registry.put(transportResource.getPath(), transportResource);
                 }
-            } else {
+            } /*else {
                 //TODO this should come from Transport component UI
                 //todo if uncommented, change it to not use registry for service metadata - kasung
-                /*ServiceTracker transportServiceTracker = new ServiceTracker(bundleContext,
+                ServiceTracker transportServiceTracker = new ServiceTracker(bundleContext,
                                                                             TransportAdmin.class.getName(),
                                                                             null);
                 try {
@@ -1359,8 +1359,8 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
                     throw new AxisFault(msg, e);
                 } finally {
                     transportServiceTracker.close();
-                }*/
-            }
+                }
+            }*/
 
             serviceElement.addAttribute(Resources.ServiceProperties.EXPOSED_ON_ALL_TANSPORTS,
                     String.valueOf(false), null);
@@ -1586,7 +1586,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
                 PolicyReference policyReference = (PolicyReference) policyElement;
 
                 String key = policyReference.getURI();
-                int pos = key.indexOf("#");
+                int pos = key.indexOf('#');
                 if (pos == 0) {
                     key = key.substring(1);
                 } else if (pos > 0) {
@@ -1596,8 +1596,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
                 PolicyComponent attachedPolicyComponent = modulePolicySubject
                         .getAttachedPolicyComponent(key);
 
-                if (attachedPolicyComponent != null
-                        && attachedPolicyComponent instanceof Policy) {
+                if (attachedPolicyComponent instanceof Policy) {
                     policy = (Policy) attachedPolicyComponent;
                 }
             }
@@ -2053,7 +2052,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
                 sfpm.commitTransaction(serviceGroupId);
             }
         } catch (Exception e) {
-            log.error(e);
+            log.error(e.getMessage());
             sfpm.rollbackTransaction(serviceGroupId);
             throw AxisFault.makeFault(e);
         }
@@ -2132,7 +2131,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
                 sfpm.commitTransaction(serviceGroupId);
             }
         } catch (Exception e) {
-            log.error(e);
+            log.error(e.getMessage());
             sfpm.rollbackTransaction(serviceGroupId);
             throw AxisFault.makeFault(e);
         }
@@ -2198,7 +2197,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
                 sfpm.commitTransaction(serviceGroupId);
             }
         } catch (Exception e) {
-            log.error(e);
+            log.error(e.getMessage());
             sfpm.rollbackTransaction(serviceGroupId);
             throw AxisFault.makeFault(e);
         }
@@ -2274,7 +2273,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
                 sfpm.commitTransaction(serviceGroupId);
             }
         } catch (Exception e) {
-            log.error(e);
+            log.error(e.getMessage());
             sfpm.rollbackTransaction(serviceGroupId);
             throw AxisFault.makeFault(e);
         }
@@ -2385,7 +2384,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
                 sfpm.commitTransaction(serviceGroupId);
             }
         } catch (Exception e) {
-            log.error(e);
+            log.error(e.getMessage());
             sfpm.rollbackTransaction(serviceGroupId);
             throw AxisFault.makeFault(e);
         }
@@ -2424,7 +2423,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             if (ipindex >= 0) {
                 ip = url.substring(ipindex + 2, url.length());
 
-                int seperatorIndex = ip.indexOf(":");
+                int seperatorIndex = ip.indexOf(':');
 
                 if (seperatorIndex > 0) {
                     ip = ip.substring(0, seperatorIndex);

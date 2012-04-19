@@ -41,10 +41,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class PolicyUtil {
+public final class PolicyUtil {
 
     private static final String EMPTY_POLICY =
             "<wsp:Policy xmlns:wsp=\"http://schemas.xmlsoap.org/ws/2004/09/policy\" />";
+
+    private PolicyUtil() {}
 
     public static OMElement getPolicyAsOMElement(Policy policy) {
 

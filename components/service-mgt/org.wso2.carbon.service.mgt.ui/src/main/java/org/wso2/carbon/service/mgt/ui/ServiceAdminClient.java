@@ -55,7 +55,7 @@ public class ServiceAdminClient {
     private static final Log log = LogFactory.getLog(ServiceAdminClient.class);
     private static final String BUNDLE = "org.wso2.carbon.service.mgt.ui.i18n.Resources";
     private ResourceBundle bundle;
-    public ServiceAdminStub stub;
+    private ServiceAdminStub stub;
 
     public ServiceAdminClient(String cookie,
                               String backendServerURL,

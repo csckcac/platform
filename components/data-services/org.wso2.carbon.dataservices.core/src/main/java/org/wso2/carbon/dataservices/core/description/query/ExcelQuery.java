@@ -30,8 +30,6 @@ import org.wso2.carbon.dataservices.core.DataServiceFault;
 import org.wso2.carbon.dataservices.core.description.config.ExcelConfig;
 import org.wso2.carbon.dataservices.core.description.event.EventTrigger;
 import org.wso2.carbon.dataservices.core.engine.*;
-import org.wso2.carbon.dataservices.core.listeners.RegistryServiceListener;
-import org.wso2.carbon.registry.core.service.RegistryService;
 
 import javax.xml.stream.XMLStreamWriter;
 import java.util.List;
@@ -40,7 +38,7 @@ import java.util.Map;
 /**
  * This class represents a Excel data services query.
  */
-public class ExcelQuery extends Query implements RegistryServiceListener {
+public class ExcelQuery extends Query {
 
     private ExcelConfig config;
 
@@ -186,20 +184,6 @@ public class ExcelQuery extends Query implements RegistryServiceListener {
         } catch (Exception e) {
             throw new DataServiceFault(e, "Error in ExcelQuery.runQuery.");
         }
-    }
-
-    public void setRegistryService(RegistryService registryService) {
-        try {
-            this.columnMappings = DBUtils.createColumnMappings(this.getHeader());
-        } catch (Exception e) {
-            log.error("Error in creating Excel column mappings.", e);
-        }
-
-    }
-
-    @Override
-    public int getTenantId() {
-        return this.getDataService().getTenantId();
     }
 
 }

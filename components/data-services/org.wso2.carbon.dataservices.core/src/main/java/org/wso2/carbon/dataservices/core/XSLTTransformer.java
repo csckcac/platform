@@ -24,7 +24,6 @@ import org.apache.axiom.om.impl.jaxp.OMSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.dataservices.common.DBConstants;
-import org.wso2.carbon.dataservices.core.listeners.RegistryServiceListener;
 import org.wso2.carbon.registry.core.service.RegistryService;
 
 import javax.xml.stream.XMLInputFactory;
@@ -42,7 +41,7 @@ import java.io.IOException;
 /**
  * This class is used in transforming data services result using XSLT.
  */
-public class XSLTTransformer implements RegistryServiceListener {
+public class XSLTTransformer {
 
     private static final Log log = LogFactory.getLog(DBUtils.class);
 
@@ -122,10 +121,5 @@ public class XSLTTransformer implements RegistryServiceListener {
             throw new DataServiceFault(e, msg);
         }
     }
-
-    @Override
-    public int getTenantId() {
-        return tenantId;
-	}
 
 }

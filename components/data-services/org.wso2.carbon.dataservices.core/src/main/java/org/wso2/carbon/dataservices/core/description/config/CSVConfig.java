@@ -26,8 +26,6 @@ import org.wso2.carbon.dataservices.common.DBConstants.DataSourceTypes;
 import org.wso2.carbon.dataservices.core.DBUtils;
 import org.wso2.carbon.dataservices.core.DataServiceFault;
 import org.wso2.carbon.dataservices.core.engine.DataService;
-import org.wso2.carbon.dataservices.core.listeners.RegistryServiceListener;
-import org.wso2.carbon.registry.core.service.RegistryService;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +35,7 @@ import java.util.Map;
 /**
  * This class represents a CSV based data source configuration.
  */
-public class CSVConfig extends Config implements RegistryServiceListener {
+public class CSVConfig extends Config {
 
     private static final Log log = LogFactory.getLog(CSVConfig.class);
 
@@ -155,14 +153,6 @@ public class CSVConfig extends Config implements RegistryServiceListener {
         }
     }
 
-    public void setRegistryService(RegistryService registryService) {
-        try {
-            this.columnMappings = DBUtils.createColumnMappings(this.getHeader());
-        } catch (Exception e) {
-            log.error("Error in creating CSV column mappings.", e);
-        }
-    }
-
     public char getColumnSeparator() {
         return columnSeparator;
     }
@@ -201,11 +191,6 @@ public class CSVConfig extends Config implements RegistryServiceListener {
 
     public void close() {
         /* nothing to close */
-    }
-
-
-    public int getTenantId() {
-        return this.getDataService().getTenantId();
     }
 
 }

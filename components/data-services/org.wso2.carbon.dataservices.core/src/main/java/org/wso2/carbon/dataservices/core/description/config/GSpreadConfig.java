@@ -31,8 +31,6 @@ import org.wso2.carbon.dataservices.core.DBUtils;
 import org.wso2.carbon.dataservices.core.DataServiceFault;
 import org.wso2.carbon.dataservices.core.engine.DataService;
 import org.wso2.carbon.dataservices.core.internal.DataServicesDSComponent;
-import org.wso2.carbon.dataservices.core.listeners.RegistryServiceListener;
-import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 
@@ -42,7 +40,7 @@ import java.util.Map;
 /**
  * This class represents a Google Spreadsheet based data source configuration.
  */
-public class GSpreadConfig extends Config implements RegistryServiceListener {
+public class GSpreadConfig extends Config {
 
 	private static final Log log = LogFactory.getLog(GSpreadConfig.class);
 	
@@ -208,21 +206,6 @@ public class GSpreadConfig extends Config implements RegistryServiceListener {
 		}
 		this.getService().setUserToken(userToken);
 	}
-
-    private void initRegistryService(RegistryService registryService) {
-        if (this.requiresAuth()) {
-            try {
-                this.authenticate(false,
-                        registryService.getConfigSystemRegistry(DBUtils.getCurrentTenantId()));
-            } catch (Exception e) {
-                log.error("Error in GData Spreadhsheet Authentication", e);
-            }
-        }
-    }
-
-    public void setRegistryService(RegistryService registryService) {
-        this.initRegistryService(registryService);
-    }
     
 	@Override
 	public boolean isActive() {
@@ -231,10 +214,6 @@ public class GSpreadConfig extends Config implements RegistryServiceListener {
 
 	public void close() {
 		/* nothing to close */
-	}
-    
-	public int getTenantId() {
-		return this.getDataService().getTenantId();
 	}
 
 }

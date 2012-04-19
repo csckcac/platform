@@ -745,7 +745,12 @@ var createDivContent = function(text) {
     var divContent;
     //Create a temporary <Div> to strip out HTML from text.
     var tmp = document.createElement("DIV");
-    tmp.innerHTML = text;
+    var type = typeof(text);
+    if (type == 'string' || type == 'number' || type == 'boolean') {
+        tmp.innerHTML = text;
+    } else {
+        tmp.innerHTML = '';
+    }
     //Retrieve either textContent or innerText of <Div> based on browser
     return divContent = tmp.textContent || tmp.innerText;
 

@@ -74,6 +74,7 @@ public class APIManagerImpl implements APIManager {
     
     private GenericArtifactManager artifactManager;
     private Registry registry;
+    private ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
     
     private ScheduledExecutorService scheduler;
     private Future keepAliveTask;
@@ -139,7 +140,7 @@ public class APIManagerImpl implements APIManager {
     public Subscriber getSubscriber(String subscriberId) throws APIManagementException {
         Subscriber subscriber = null;
         try {
-            subscriber = new ApiMgtDAO().getSubscriber(subscriberId);
+            subscriber = apiMgtDAO.getSubscriber(subscriberId);
         } catch (APIManagementException e) {
             handleException("Failed to get Subscriber", e);
         }
@@ -506,9 +507,8 @@ public class APIManagerImpl implements APIManager {
      */
     public Set<SubscribedAPI> getSubscribedAPIs(Subscriber subscriber) throws APIManagementException {
         Set<SubscribedAPI> subscribedAPIs = null;
-        ApiMgtDAO ApiMgtDAO = new ApiMgtDAO();
         try {
-            subscribedAPIs = ApiMgtDAO.getSubscribedAPIs(subscriber);
+            subscribedAPIs = apiMgtDAO.getSubscribedAPIs(subscriber);
         } catch (APIManagementException e) {
             handleException("Failed to get APIs of " + subscriber.getName(), e);
         }
@@ -577,9 +577,8 @@ public class APIManagerImpl implements APIManager {
             throws APIManagementException {
 
         Set<Subscriber> subscriberSet = null;
-        ApiMgtDAO ApiMgtDAO = new ApiMgtDAO();
         try {
-            subscriberSet = ApiMgtDAO.getSubscribersOfProvider(providerId);
+            subscriberSet = apiMgtDAO.getSubscribersOfProvider(providerId);
         } catch (APIManagementException e) {
             handleException("Failed to get Subscribers for : " + providerId, e);
         }
@@ -673,7 +672,6 @@ public class APIManagerImpl implements APIManager {
      */
     public void addSubscription(APIIdentifier identifier, String userId, int applicationId)
             throws APIManagementException {
-        ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
         apiMgtDAO.addSubscription(identifier, userId, applicationId);
     }
 
@@ -700,9 +698,8 @@ public class APIManagerImpl implements APIManager {
             throws APIManagementException {
 
         Set<Subscriber> subscriberSet = null;
-        ApiMgtDAO ApiMgtDAO = new ApiMgtDAO();
         try {
-            subscriberSet = ApiMgtDAO.getSubscribersOfAPI(identifier);
+            subscriberSet = apiMgtDAO.getSubscribersOfAPI(identifier);
         } catch (APIManagementException e) {
             handleException("Failed to get subscribers for API : " + identifier.getApiName(), e);
         }
@@ -753,9 +750,8 @@ public class APIManagerImpl implements APIManager {
     public long getAPISubscriptionCountByAPI(APIIdentifier identifier)
             throws APIManagementException {
         long count = 0L;
-        ApiMgtDAO ApiMgtDAO = new ApiMgtDAO();
         try {
-            count = ApiMgtDAO.getAPISubscriptionCountByAPI(identifier);
+            count = apiMgtDAO.getAPISubscriptionCountByAPI(identifier);
         } catch (APIManagementException e) {
             handleException("Failed to get APISubscriptionCount for: " + identifier.getApiName(), e);            
         }
@@ -774,9 +770,8 @@ public class APIManagerImpl implements APIManager {
 //            throws APIManagementException {
 //
 //        Set<SubscribedAPI> subscribedAPIs;
-//        ApiMgtDAO ApiMgtDAO = new ApiMgtDAO();
 //        try {
-//            subscribedAPIs = ApiMgtDAO.getSubscribedAPIsBySubscriber(subscriberEmail);
+//            subscribedAPIs = apiMgtDAO.getSubscribedAPIsBySubscriber(subscriberEmail);
 //        } catch (APIManagementException e) {
 //            String msg = "Failed to get Subscribed APIs By Subscriber" + subscriberEmail;
 //            throw new APIManagementException(msg, e);
@@ -839,8 +834,6 @@ public class APIManagerImpl implements APIManager {
      */
     public void updateSubscriptions(APIIdentifier identifier, String userId, int applicationId)
             throws APIManagementException {
-
-        ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
         apiMgtDAO.updateSubscriptions(identifier, userId, applicationId);
     }
 
@@ -930,6 +923,8 @@ public class APIManagerImpl implements APIManager {
             } catch (RegistryException e) {
                 handleException("Failed set context id when updating the API", e);
             }
+        } else {
+            addAPI(api);
         }
     }
 
@@ -1243,7 +1238,6 @@ public class APIManagerImpl implements APIManager {
      *          if failed to get Subscriber from access token
      */
     public Subscriber getSubscriberById(String accessToken) throws APIManagementException {
-        ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
         return apiMgtDAO.getSubscriberById(accessToken);
     }
 
@@ -1357,7 +1351,6 @@ public class APIManagerImpl implements APIManager {
      * @throws APIManagementException if failed to check the subscribed state
      */
     public boolean isSubscribed(APIIdentifier apiIdentifier, String userId) throws APIManagementException {
-        ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
         boolean isSubscribed;
         try {
             isSubscribed = apiMgtDAO.isSubscribed(apiIdentifier, userId);
@@ -1373,8 +1366,8 @@ public class APIManagerImpl implements APIManager {
      * @param providerName Name of the API provider
      * @return An array of UserApplicationAPIUsage instances
      */
-    public UserApplicationAPIUsage[] getAllAPIUsageByProvider(String providerName) throws APIManagementException {
-        ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
+    public UserApplicationAPIUsage[] getAllAPIUsageByProvider(
+            String providerName) throws APIManagementException {
         return apiMgtDAO.getAllAPIUsageByProvider(providerName);
     }
 
@@ -1388,7 +1381,6 @@ public class APIManagerImpl implements APIManager {
      */
     public Set<API> getSubscriberAPIs(Subscriber subscriber) throws APIManagementException {
         SortedSet<API> apiSortedSet = new TreeSet<API>(new APIComparator());
-        ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
         Set<SubscribedAPI> subscribedAPIs = apiMgtDAO.getSubscribedAPIs(subscriber);
 
         for (SubscribedAPI subscribedAPI : subscribedAPIs) {
@@ -1415,7 +1407,6 @@ public class APIManagerImpl implements APIManager {
      * @throws APIManagementException on error
      */
     public void addApplication(Application application, String userId) throws APIManagementException {
-        ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
         apiMgtDAO.addApplication(application, userId);
     }
 
@@ -1425,25 +1416,21 @@ public class APIManagerImpl implements APIManager {
      * @throws APIManagementException
      */
     public Application[] getApplications(Subscriber subscriber) throws APIManagementException {
-        ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
         return apiMgtDAO.getApplications(subscriber);
     }
 
     public void addSubscriber(Subscriber subscriber)
             throws APIManagementException {
-        ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
         apiMgtDAO.addSubscriber(subscriber);
     }
 
     public void updateSubscriber(Subscriber subscriber)
             throws APIManagementException {
-        ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
         apiMgtDAO.updateSubscriber(subscriber);
     }
 
     public Subscriber getSubscriber(int subscriberId)
             throws APIManagementException {
-        ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
         return apiMgtDAO.getSubscriber(subscriberId);
     }
 

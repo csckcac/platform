@@ -49,7 +49,7 @@ import java.util.Set;
  */
 public class ApiMgtDAO {
 
-    Log log = LogFactory.getLog(Subscriber.class);
+    private static final Log log = LogFactory.getLog(ApiMgtDAO.class);
 
     /**
      *
@@ -944,9 +944,8 @@ public class ApiMgtDAO {
     public boolean isSubscribed(APIIdentifier apiIdentifier, String userId)
             throws APIManagementException {
         boolean isSubscribed = false;
-
-        String apiId = apiIdentifier.getProviderName() + "_" + apiIdentifier.getApiName() + "_" + apiIdentifier.getVersion();
-
+        String apiId = apiIdentifier.getProviderName() + "_" + apiIdentifier.getApiName() + "_" +
+                apiIdentifier.getVersion();
 
         Connection conn = null;
         PreparedStatement ps = null;

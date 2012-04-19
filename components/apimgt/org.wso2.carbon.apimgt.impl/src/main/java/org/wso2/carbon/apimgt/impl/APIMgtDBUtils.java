@@ -17,67 +17,70 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class APIMgtDBUtils {
-    static Log log = LogFactory.getLog(APIMgtDBUtils.class);
-    static volatile BasicDataSource dataSource = null;
+    
+    private static Log log = LogFactory.getLog(APIMgtDBUtils.class);
+    private static volatile BasicDataSource dataSource = null;
 
     /**
-     * Initializes the datasource
+     * Initializes the data source
+     *
      * @param dbConfigurationPath db Config path
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException
+     * @throws APIManagementException if an error occurs while loading DB configuration
      */
     public static void initialize(String dbConfigurationPath) throws APIManagementException {
-        String jdbcURL;
-        String driver;
-        String username;
-        String password;
-        if (dataSource == null) {
-            synchronized (APIMgtDBUtils.class) {
-                if (dataSource == null) {
-                  DBConfiguration configuration =  getDBConfig(dbConfigurationPath);
-                        jdbcURL = configuration.getDbUrl();
-                        driver = configuration.getDriverName();
-                        username =configuration.getUserName();
-                        password = configuration.getPassword();
-                    if(jdbcURL==null || driver==null||username==null||password==null){
-                        throw new APIManagementException("DB configurations are not properly defined");
-                    }
-                    dataSource = new BasicDataSource();
-                    dataSource.setDriverClassName(driver);
-                    dataSource.setUrl(jdbcURL);
-                    dataSource.setUsername(username);
-                    dataSource.setPassword(password);
-                }
-            }
+        if (dataSource != null) {
+            return;
         }
+
+        synchronized (APIMgtDBUtils.class) {
+            if (dataSource == null) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Initializing data source");
+                }
+                DBConfiguration configuration = getDBConfig(dbConfigurationPath);
+                String dbUrl = configuration.getDbUrl();
+                String driver = configuration.getDriverName();
+                String username = configuration.getUserName();
+                String password = configuration.getPassword();
+                if (dbUrl == null || driver == null || username == null || password == null) {
+                    throw new APIManagementException("Required DB configuration parameters unspecified");
+                }
+                dataSource = new BasicDataSource();
+                dataSource.setDriverClassName(driver);
+                dataSource.setUrl(dbUrl);
+                dataSource.setUsername(username);
+                dataSource.setPassword(password);
+            }
+        }        
     }
 
 
     /**
      * Utility method to get a new database connection
+     *
      * @return Connection
      * @throws java.sql.SQLException if failed to get Connection
      */
     public static Connection getConnection() throws SQLException {
-        if(dataSource != null && !(dataSource.isClosed())){
+        if (dataSource != null && !dataSource.isClosed()) {
             return dataSource.getConnection();
-        }else{
-            throw new SQLException("Datasource is not configured properly.");
-       }
+        }
+        throw new SQLException("Data source is not configured properly.");
     }
 
-    public static void closeAllConnections(PreparedStatement preparedStatement , Connection  connection,
-                                        ResultSet resultSet  ){
+    public static void closeAllConnections(PreparedStatement preparedStatement, Connection connection,
+                                           ResultSet resultSet) {
         closeConnection(connection);
         closeResultSet(resultSet);
         closeStatement(preparedStatement);
-        
     }
+
     public static void closeConnection(Connection dbConnection) {
         if (dbConnection != null) {
             try {
                 dbConnection.close();
             } catch (SQLException e) {
-                log.error("Database error. Could not close statement. Continuing with others. - " +
+                log.warn("Database error. Could not close statement. Continuing with others. - " +
                         e.getMessage(), e);
             }
         }
@@ -88,7 +91,7 @@ public class APIMgtDBUtils {
             try {
                 rs.close();
             } catch (SQLException e) {
-                log.error("Database error. Could not close result set  - " + e.getMessage(), e);
+                log.warn("Database error. Could not close result set  - " + e.getMessage(), e);
             }
         }
 
@@ -99,7 +102,7 @@ public class APIMgtDBUtils {
             try {
                 preparedStatement.close();
             } catch (SQLException e) {
-                log.error("Database error. Could not close statement. Continuing with others. - " +
+                log.warn("Database error. Could not close statement. Continuing with others. - " +
                         e.getMessage(), e);
             }
         }
@@ -112,7 +115,7 @@ public class APIMgtDBUtils {
             String config = FileUtil.readFileToString(configPath);
 
             OMElement omElement = AXIOMUtil.stringToOM(config);
-            OMElement dbConfigOMElement= omElement.getFirstChildWithName(new QName("dbConfig"));
+            OMElement dbConfigOMElement = omElement.getFirstChildWithName(new QName("dbConfig"));
             dbConfiguration.setDbUrl(
                     dbConfigOMElement.getFirstChildWithName(new QName("url")).getText());
             dbConfiguration.setDriverName(
@@ -122,11 +125,15 @@ public class APIMgtDBUtils {
             dbConfiguration.setPassword(
                     dbConfigOMElement.getFirstChildWithName(new QName("password")).getText());
         } catch (XMLStreamException e) {
-            String msg = "Failed to get db configuration";
-            throw new APIManagementException(msg, e);
+            handleException("Failed to get db configuration", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            handleException("Error while reading the configuration file: " + configPath, e);
         }
         return dbConfiguration;
+    }
+    
+    private static void handleException(String msg, Exception e) throws APIManagementException {
+        log.error(msg,e);
+        throw new APIManagementException(msg, e);
     }
 }

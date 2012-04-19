@@ -70,10 +70,6 @@ public class ScenarioConfigurationParser {
     }
 
     private void readConfig() {
-        //read framework resource location
-        if (ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION == null) {
-            log.error("System property: system.test.sample.location cannot be null");
-        }
         //get test configuration file path
         String testConfigFilePath = ArtifactReader.SYSTEM_TEST_RESOURCE_LOCATION +
                                     File.separator + "conf" + File.separator + "testconfig.xml";

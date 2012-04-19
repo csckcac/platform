@@ -46,4 +46,7 @@ public class NameSpacesInformation {
     public String toString() {
         return nameSpaces.toString();
     }
+    public Map<String, String> getNameSpaces(){
+        return nameSpaces;
+    }
 }

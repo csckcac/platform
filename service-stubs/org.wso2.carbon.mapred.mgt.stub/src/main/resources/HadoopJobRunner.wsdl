@@ -1,206 +1,174 @@
-
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://mgt.mapred.carbon.wso2.org" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://mgt.mapred.carbon.wso2.org"> 
-    <wsdl:documentation>HadoopJobRunner</wsdl:documentation> 
-    <wsdl:types> 
-        <xs:schema xmlns:ns="http://org.apache.axis2/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd"> 
-            <xs:element name="setCookie"> 
-                <xs:complexType> 
-                    <xs:sequence> 
-                        <xs:element minOccurs="0" name="cookie" nillable="true" type="xs:string" /> 
-                    </xs:sequence> 
-                </xs:complexType> 
-            </xs:element> 
-            <xs:element name="runJob"> 
-                <xs:complexType> 
-                    <xs:sequence> 
-                        <xs:element minOccurs="0" name="jarName" nillable="true" type="xs:string" /> 
-                        <xs:element minOccurs="0" name="className" nillable="true" type="xs:string" /> 
-                        <xs:element minOccurs="0" name="args" nillable="true" type="xs:string" /> 
-                    </xs:sequence> 
-                </xs:complexType> 
-            </xs:element> 
-            <xs:element name="putJar"> 
-                <xs:complexType> 
-                    <xs:sequence> 
-                        <xs:element minOccurs="0" name="friendlyName" nillable="true" type="xs:string" /> 
-                        <xs:element minOccurs="0" name="dataHandler" nillable="true" type="xs:base64Binary" /> 
-                    </xs:sequence> 
-                </xs:complexType> 
-            </xs:element> 
-            <xs:element name="getJarList"> 
-                <xs:complexType> 
-                    <xs:sequence /> 
-                </xs:complexType> 
-            </xs:element> 
-            <xs:element name="getJarListResponse"> 
-                <xs:complexType> 
-                    <xs:sequence> 
-                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" /> 
-                    </xs:sequence> 
-                </xs:complexType> 
-            </xs:element> 
-            <xs:element name="getJar"> 
-                <xs:complexType> 
-                    <xs:sequence> 
-                        <xs:element minOccurs="0" name="jarPath" nillable="true" type="xs:string" /> 
-                    </xs:sequence> 
-                </xs:complexType> 
-            </xs:element> 
-        </xs:schema> 
-    </wsdl:types> 
-    <wsdl:message name="putJarRequest"> 
-        <wsdl:part name="parameters" element="ns1:putJar" /> 
-    </wsdl:message> 
-    <wsdl:message name="runJobRequest"> 
-        <wsdl:part name="parameters" element="ns1:runJob" /> 
-    </wsdl:message> 
-    <wsdl:message name="setCookieRequest"> 
-        <wsdl:part name="parameters" element="ns1:setCookie" /> 
-    </wsdl:message> 
-    <wsdl:message name="getJarRequest"> 
-        <wsdl:part name="parameters" element="ns1:getJar" /> 
-    </wsdl:message> 
-    <wsdl:message name="getJarListRequest"> 
-        <wsdl:part name="parameters" element="ns1:getJarList" /> 
-    </wsdl:message> 
-    <wsdl:message name="getJarListResponse"> 
-        <wsdl:part name="parameters" element="ns1:getJarListResponse" /> 
-    </wsdl:message> 
-    <wsdl:portType name="HadoopJobRunnerPortType"> 
-        <wsdl:operation name="putJar"> 
-            <wsdl:input message="tns:putJarRequest" wsaw:Action="urn:putJar" /> 
-        </wsdl:operation> 
-        <wsdl:operation name="runJob"> 
-            <wsdl:input message="tns:runJobRequest" wsaw:Action="urn:runJob" /> 
-        </wsdl:operation> 
-        <wsdl:operation name="setCookie"> 
-            <wsdl:input message="tns:setCookieRequest" wsaw:Action="urn:setCookie" /> 
-        </wsdl:operation> 
-        <wsdl:operation name="getJar"> 
-            <wsdl:input message="tns:getJarRequest" wsaw:Action="urn:getJar" /> 
-        </wsdl:operation> 
-        <wsdl:operation name="getJarList"> 
-            <wsdl:input message="tns:getJarListRequest" wsaw:Action="urn:getJarList" /> 
-            <wsdl:output message="tns:getJarListResponse" wsaw:Action="urn:getJarListResponse" /> 
-        </wsdl:operation> 
-    </wsdl:portType> 
-    <wsdl:binding name="HadoopJobRunnerSoap11Binding" type="tns:HadoopJobRunnerPortType"> 
-        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" /> 
-        <wsdl:operation name="putJar"> 
-            <soap:operation soapAction="urn:putJar" style="document" /> 
-            <wsdl:input> 
-                <soap:body use="literal" /> 
-            </wsdl:input> 
-        </wsdl:operation> 
-        <wsdl:operation name="runJob"> 
-            <soap:operation soapAction="urn:runJob" style="document" /> 
-            <wsdl:input> 
-                <soap:body use="literal" /> 
-            </wsdl:input> 
-        </wsdl:operation> 
-        <wsdl:operation name="setCookie"> 
-            <soap:operation soapAction="urn:setCookie" style="document" /> 
-            <wsdl:input> 
-                <soap:body use="literal" /> 
-            </wsdl:input> 
-        </wsdl:operation> 
-        <wsdl:operation name="getJar"> 
-            <soap:operation soapAction="urn:getJar" style="document" /> 
-            <wsdl:input> 
-                <soap:body use="literal" /> 
-            </wsdl:input> 
-        </wsdl:operation> 
-        <wsdl:operation name="getJarList"> 
-            <soap:operation soapAction="urn:getJarList" style="document" /> 
-            <wsdl:input> 
-                <soap:body use="literal" /> 
-            </wsdl:input> 
-            <wsdl:output> 
-                <soap:body use="literal" /> 
-            </wsdl:output> 
-        </wsdl:operation> 
-    </wsdl:binding> 
-    <wsdl:binding name="HadoopJobRunnerSoap12Binding" type="tns:HadoopJobRunnerPortType"> 
-        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" /> 
-        <wsdl:operation name="putJar"> 
-            <soap12:operation soapAction="urn:putJar" style="document" /> 
-            <wsdl:input> 
-                <soap12:body use="literal" /> 
-            </wsdl:input> 
-        </wsdl:operation> 
-        <wsdl:operation name="runJob"> 
-            <soap12:operation soapAction="urn:runJob" style="document" /> 
-            <wsdl:input> 
-                <soap12:body use="literal" /> 
-            </wsdl:input> 
-        </wsdl:operation> 
-        <wsdl:operation name="setCookie"> 
-            <soap12:operation soapAction="urn:setCookie" style="document" /> 
-            <wsdl:input> 
-                <soap12:body use="literal" /> 
-            </wsdl:input> 
-        </wsdl:operation> 
-        <wsdl:operation name="getJar"> 
-            <soap12:operation soapAction="urn:getJar" style="document" /> 
-            <wsdl:input> 
-                <soap12:body use="literal" /> 
-            </wsdl:input> 
-        </wsdl:operation> 
-        <wsdl:operation name="getJarList"> 
-            <soap12:operation soapAction="urn:getJarList" style="document" /> 
-            <wsdl:input> 
-                <soap12:body use="literal" /> 
-            </wsdl:input> 
-            <wsdl:output> 
-                <soap12:body use="literal" /> 
-            </wsdl:output> 
-        </wsdl:operation> 
-    </wsdl:binding> 
-    <wsdl:binding name="HadoopJobRunnerHttpBinding" type="tns:HadoopJobRunnerPortType"> 
-        <http:binding verb="POST" /> 
-        <wsdl:operation name="putJar"> 
-            <http:operation location="putJar" /> 
-            <wsdl:input> 
-                <mime:content type="text/xml" part="parameters" /> 
-            </wsdl:input> 
-        </wsdl:operation> 
-        <wsdl:operation name="runJob"> 
-            <http:operation location="runJob" /> 
-            <wsdl:input> 
-                <mime:content type="text/xml" part="parameters" /> 
-            </wsdl:input> 
-        </wsdl:operation> 
-        <wsdl:operation name="setCookie"> 
-            <http:operation location="setCookie" /> 
-            <wsdl:input> 
-                <mime:content type="text/xml" part="parameters" /> 
-            </wsdl:input> 
-        </wsdl:operation> 
-        <wsdl:operation name="getJar"> 
-            <http:operation location="getJar" /> 
-            <wsdl:input> 
-                <mime:content type="text/xml" part="parameters" /> 
-            </wsdl:input> 
-        </wsdl:operation> 
-        <wsdl:operation name="getJarList"> 
-            <http:operation location="getJarList" /> 
-            <wsdl:input> 
-                <mime:content type="text/xml" part="parameters" /> 
-            </wsdl:input> 
-            <wsdl:output> 
-                <mime:content type="text/xml" part="parameters" /> 
-            </wsdl:output> 
-        </wsdl:operation> 
-    </wsdl:binding> 
-    <wsdl:service name="HadoopJobRunner"> 
-        <wsdl:port name="HadoopJobRunnerHttpsSoap11Endpoint" binding="tns:HadoopJobRunnerSoap11Binding"> 
-            <soap:address location="https://localhost:9443/services/HadoopJobRunner.HadoopJobRunnerHttpsSoap11Endpoint/" /> 
-        </wsdl:port> 
-        <wsdl:port name="HadoopJobRunnerHttpsSoap12Endpoint" binding="tns:HadoopJobRunnerSoap12Binding"> 
-            <soap12:address location="https://localhost:9443/services/HadoopJobRunner.HadoopJobRunnerHttpsSoap12Endpoint/" /> 
-        </wsdl:port> 
-        <wsdl:port name="HadoopJobRunnerHttpsEndpoint" binding="tns:HadoopJobRunnerHttpBinding"> 
-            <http:address location="https://localhost:9443/services/HadoopJobRunner.HadoopJobRunnerHttpsEndpoint/" /> 
-        </wsdl:port> 
-    </wsdl:service> 
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://mgt.mapred.carbon.wso2.org" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://mgt.mapred.carbon.wso2.org">
+    <wsdl:documentation>HadoopJobRunner</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ns="http://org.apache.axis2/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+            <xs:element name="runJob">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="jarName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="className" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="args" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="putJar">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="friendlyName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="dataHandler" nillable="true" type="xs:base64Binary" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getJarList">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getJarListResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getJar">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="jarPath" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="putJarRequest">
+        <wsdl:part name="parameters" element="ns1:putJar" />
+    </wsdl:message>
+    <wsdl:message name="runJobRequest">
+        <wsdl:part name="parameters" element="ns1:runJob" />
+    </wsdl:message>
+    <wsdl:message name="getJarRequest">
+        <wsdl:part name="parameters" element="ns1:getJar" />
+    </wsdl:message>
+    <wsdl:message name="getJarListRequest">
+        <wsdl:part name="parameters" element="ns1:getJarList" />
+    </wsdl:message>
+    <wsdl:message name="getJarListResponse">
+        <wsdl:part name="parameters" element="ns1:getJarListResponse" />
+    </wsdl:message>
+    <wsdl:portType name="HadoopJobRunnerPortType">
+        <wsdl:operation name="putJar">
+            <wsdl:input message="tns:putJarRequest" wsaw:Action="urn:putJar" />
+        </wsdl:operation>
+        <wsdl:operation name="runJob">
+            <wsdl:input message="tns:runJobRequest" wsaw:Action="urn:runJob" />
+        </wsdl:operation>
+        <wsdl:operation name="getJar">
+            <wsdl:input message="tns:getJarRequest" wsaw:Action="urn:getJar" />
+        </wsdl:operation>
+        <wsdl:operation name="getJarList">
+            <wsdl:input message="tns:getJarListRequest" wsaw:Action="urn:getJarList" />
+            <wsdl:output message="tns:getJarListResponse" wsaw:Action="urn:getJarListResponse" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="HadoopJobRunnerSoap11Binding" type="tns:HadoopJobRunnerPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="putJar">
+            <soap:operation soapAction="urn:putJar" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="runJob">
+            <soap:operation soapAction="urn:runJob" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getJar">
+            <soap:operation soapAction="urn:getJar" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getJarList">
+            <soap:operation soapAction="urn:getJarList" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="HadoopJobRunnerSoap12Binding" type="tns:HadoopJobRunnerPortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="putJar">
+            <soap12:operation soapAction="urn:putJar" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="runJob">
+            <soap12:operation soapAction="urn:runJob" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getJar">
+            <soap12:operation soapAction="urn:getJar" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getJarList">
+            <soap12:operation soapAction="urn:getJarList" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="HadoopJobRunnerHttpBinding" type="tns:HadoopJobRunnerPortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="putJar">
+            <http:operation location="putJar" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="runJob">
+            <http:operation location="runJob" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getJar">
+            <http:operation location="getJar" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getJarList">
+            <http:operation location="getJarList" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="HadoopJobRunner">
+        <wsdl:port name="HadoopJobRunnerHttpsSoap11Endpoint" binding="tns:HadoopJobRunnerSoap11Binding">
+            <soap:address location="https://10.150.3.61:9443/services/HadoopJobRunner.HadoopJobRunnerHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="HadoopJobRunnerHttpsSoap12Endpoint" binding="tns:HadoopJobRunnerSoap12Binding">
+            <soap12:address location="https://10.150.3.61:9443/services/HadoopJobRunner.HadoopJobRunnerHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="HadoopJobRunnerHttpsEndpoint" binding="tns:HadoopJobRunnerHttpBinding">
+            <http:address location="https://10.150.3.61:9443/services/HadoopJobRunner.HadoopJobRunnerHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
 </wsdl:definitions>

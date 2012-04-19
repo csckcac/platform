@@ -32,23 +32,12 @@ import org.apache.sandesha2.policy.SandeshaPolicyBean;
 import org.apache.sandesha2.storage.jdbc.PersistentStorageManager;
 import org.jaxen.JaxenException;
 import org.wso2.carbon.core.AbstractAdmin;
-import org.wso2.carbon.core.RegistryResources;
 import org.wso2.carbon.core.Resources;
-import org.wso2.carbon.core.persistence.file.*;
 import org.wso2.carbon.core.persistence.ModulePersistenceManager;
 import org.wso2.carbon.core.persistence.PersistenceException;
 import org.wso2.carbon.core.persistence.PersistenceFactory;
 import org.wso2.carbon.core.persistence.PersistenceUtils;
-import org.wso2.carbon.registry.core.Registry;
-import org.wso2.carbon.registry.core.Resource;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.utils.WSO2Constants;
-
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import org.wso2.carbon.core.persistence.file.ModuleFilePersistenceManager;
 
 
 public class RMAdminGlobal extends AbstractAdmin {
@@ -69,10 +58,10 @@ public class RMAdminGlobal extends AbstractAdmin {
 //        String moduleResourcePath = Resources.ModuleProperties + "sandesha2/" + moduleVersion;
 
         updateParameter(moduleResourcePath, "db.connectionstring", parameters.getConnectionString(),
-                        sandeshaModule);
+                sandeshaModule);
         updateParameter(moduleResourcePath, "db.driver", parameters.getDriverName(), sandeshaModule);
         updateParameter(moduleResourcePath, "db.user", parameters.getUserName(), sandeshaModule);
-        updateParameter(moduleResourcePath, "db.password", parameters.getPassword() , sandeshaModule);
+        updateParameter(moduleResourcePath, "db.password", parameters.getPassword(), sandeshaModule);
 
         // getting the policy bean to update
         SandeshaPolicyBean sandeshaPolicyBean
@@ -95,7 +84,7 @@ public class RMAdminGlobal extends AbstractAdmin {
         // if it has set the storage as permenent the we need to initiate storage and put to the
         // configuration context.
         if ((parameters.getStorageManager() != null)
-                && (parameters.getStorageManager().equals(Sandesha2Constants.PERMANENT_STORAGE_MANAGER))){
+                && (parameters.getStorageManager().equals(Sandesha2Constants.PERMANENT_STORAGE_MANAGER))) {
             sandeshaPolicyBean.setPermanentStorageManagerClass(PersistentStorageManager.class.getName());
             // creating the persistace storage.
             PersistentStorageManager persistentStorageManager = new PersistentStorageManager(configurationContext);
@@ -108,9 +97,9 @@ public class RMAdminGlobal extends AbstractAdmin {
             }
             // change the permenetent storage manager.
             axisConfiguration.addParameter(Sandesha2Constants.PERMANENT_STORAGE_MANAGER,
-                                           persistentStorageManager);
+                    persistentStorageManager);
 
-        } 
+        }
 
         // this parameter should load at the module init.
         Parameter storageManagerParameter = axisConfiguration.getParameter(
@@ -119,7 +108,7 @@ public class RMAdminGlobal extends AbstractAdmin {
             axisConfiguration.removeParameter(storageManagerParameter);
         }
         axisConfiguration.addParameter(Sandesha2Constants.STORAGE_MANAGER_PARAMETER,
-                                       parameters.getStorageManager());
+                parameters.getStorageManager());
         MessageContext.getCurrentMessageContext().getConfigurationContext().
                 setProperty("storageManagerInstance", null);
 
@@ -130,7 +119,7 @@ public class RMAdminGlobal extends AbstractAdmin {
 
     }
 
-    public RMParameterBean getParameters() throws AxisFault  {
+    public RMParameterBean getParameters() throws AxisFault {
 
         AxisConfiguration axisConfiguration = getAxisConfig();
         AxisModule sandeshaModule = axisConfiguration.getModule("sandesha2");
@@ -164,7 +153,7 @@ public class RMAdminGlobal extends AbstractAdmin {
                     sandeshaPolicyBean.getMaximumRetransmissionCount());
         }
 
-        if (axisConfiguration.getParameter(Sandesha2Constants.STORAGE_MANAGER_PARAMETER) != null){
+        if (axisConfiguration.getParameter(Sandesha2Constants.STORAGE_MANAGER_PARAMETER) != null) {
             rmParameterBean.setStorageManager(
                     (String) axisConfiguration.getParameter(
                             Sandesha2Constants.STORAGE_MANAGER_PARAMETER).getValue());
@@ -174,9 +163,9 @@ public class RMAdminGlobal extends AbstractAdmin {
 
     }
 
-    private String getParameterValue(String parameterName, ParameterInclude parameterInclude){
+    private String getParameterValue(String parameterName, ParameterInclude parameterInclude) {
         String parameterValue = null;
-        if (parameterInclude.getParameter(parameterName) != null){
+        if (parameterInclude.getParameter(parameterName) != null) {
             parameterValue = (String) parameterInclude.getParameter(parameterName).getValue();
         }
         return parameterValue;
@@ -187,11 +176,11 @@ public class RMAdminGlobal extends AbstractAdmin {
                                  String paramValue,
                                  AxisModule axisModule) throws AxisFault {
 
-        if (axisModule.getParameter(paramName) != null){
+        if (axisModule.getParameter(paramName) != null) {
             Parameter param = axisModule.getParameter(paramName);
             param.setValue(paramValue);
         } else {
-            axisModule.addParameter(new Parameter(paramName,paramValue));
+            axisModule.addParameter(new Parameter(paramName, paramValue));
         }
 
         PersistenceFactory persistenceFactory = new PersistenceFactory(getAxisConfig());
@@ -203,9 +192,9 @@ public class RMAdminGlobal extends AbstractAdmin {
 
 
         } catch (PersistenceException e) {
-            throw new AxisFault("Problem when setting parameter values" , e);
+            throw new AxisFault("Problem when setting parameter values", e);
         } catch (Exception e) {
-            throw new AxisFault("Problem when setting parameter values" , e);
+            throw new AxisFault("Problem when setting parameter values", e);
         }
 
         /*Registry registry = getConfigSystemRegistry();
@@ -244,14 +233,14 @@ public class RMAdminGlobal extends AbstractAdmin {
             OMFactory omFactory = OMAbstractFactory.getOMFactory();
             OMElement policyWrapperEle = omFactory.createOMElement(Resources.POLICY, null);
             policyWrapperEle.addAttribute(Resources.ServiceProperties.POLICY_TYPE,
-                                          String.valueOf(PolicyInclude.AXIS_MODULE_POLICY), null);
+                    String.valueOf(PolicyInclude.AXIS_MODULE_POLICY), null);
             OMElement idEle = omFactory.createOMElement(Resources.ServiceProperties.POLICY_UUID,
-                                                        null);
+                    null);
             idEle.setText(sandeshaPolicy.getId());
             policyWrapperEle.addChild(idEle);
 
             policyWrapperEle.addAttribute(Resources.VERSION, sandeshaModule.getVersion().toString(),
-                                          null);
+                    null);
 
             OMElement policyEleToPersist = PersistenceUtils.createPolicyElement(sandeshaPolicy);
             policyWrapperEle.addChild(policyEleToPersist);
@@ -263,22 +252,22 @@ public class RMAdminGlobal extends AbstractAdmin {
 
             //check if "policies" section exists otherwise create, and delete the existing policy if exists
             if (!mfpm.elementExists(sandeshaModule.getName(), moduleResourcePath + "/" +
-                                                              Resources.POLICIES)) {
+                    Resources.POLICIES)) {
                 mfpm.put(sandeshaModule.getName(),
-                         omFactory.createOMElement(Resources.POLICIES, null),moduleResourcePath);
+                        omFactory.createOMElement(Resources.POLICIES, null), moduleResourcePath);
 
             } else {
-                String pathToPolicy = moduleResourcePath +"/" + Resources.POLICIES + "/" +
-                                      Resources.POLICY + PersistenceUtils.getXPathAttrPredicate(
-                                              Resources.ServiceProperties.POLICY_UUID,
-                                              sandeshaPolicy.getId());
+                String pathToPolicy = moduleResourcePath + "/" + Resources.POLICIES + "/" +
+                        Resources.POLICY + PersistenceUtils.getXPathAttrPredicate(
+                        Resources.ServiceProperties.POLICY_UUID,
+                        sandeshaPolicy.getId());
                 if (mfpm.elementExists(sandeshaModule.getName(), pathToPolicy)) {
                     mfpm.delete(sandeshaModule.getName(), pathToPolicy);
                 }
             }
 
             mfpm.put(sandeshaModule.getName(), policyWrapperEle,
-                     moduleResourcePath + "/" + Resources.POLICIES);
+                    moduleResourcePath + "/" + Resources.POLICIES);
 
             if (transactionStarted) {
                 mfpm.commitTransaction(sandeshaModule.getName());

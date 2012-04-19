@@ -35,24 +35,13 @@ import org.apache.sandesha2.storage.jdbc.PersistentStorageManager;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.core.RegistryResources;
 import org.wso2.carbon.core.Resources;
-import org.wso2.carbon.core.persistence.file.*;
-import org.wso2.carbon.core.persistence.PersistenceDataNotFoundException;
 import org.wso2.carbon.core.persistence.PersistenceException;
 import org.wso2.carbon.core.persistence.PersistenceFactory;
 import org.wso2.carbon.core.persistence.PersistenceUtils;
-import org.wso2.carbon.registry.core.Association;
-import org.wso2.carbon.registry.core.Registry;
-import org.wso2.carbon.registry.core.Resource;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.core.persistence.file.ServiceGroupFilePersistenceManager;
 
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.List;
-
 
 public class RMAdminService extends AbstractAdmin {
 
@@ -62,7 +51,7 @@ public class RMAdminService extends AbstractAdmin {
     PersistenceFactory pf;
     ServiceGroupFilePersistenceManager sfpm;
 
-    public RMAdminService() throws Exception{
+    public RMAdminService() throws Exception {
         pf = PersistenceFactory.getInstance(getAxisConfig());
         sfpm = pf.getServiceGroupFilePM();
     }
@@ -84,26 +73,26 @@ public class RMAdminService extends AbstractAdmin {
         // engage at registry
         try {
             boolean transactionStarted = sfpm.isTransactionStarted(serviceGroupId);
-                if(!transactionStarted) {
+            if (!transactionStarted) {
                 sfpm.beginTransaction(serviceGroupId);
             }
 
             // Check if an association exist between servicePath and moduleResourcePath.
             List associations = sfpm.getAll(serviceGroupId, serviceXPath +
-                                        "/" + Resources.ModuleProperties.MODULE_XML_TAG +
-                                        PersistenceUtils.getXPathAttrPredicate(
-                                                Resources.ModuleProperties.TYPE,
-                                                Resources.Associations.ENGAGED_MODULES));
+                    "/" + Resources.ModuleProperties.MODULE_XML_TAG +
+                    PersistenceUtils.getXPathAttrPredicate(
+                            Resources.ModuleProperties.TYPE,
+                            Resources.Associations.ENGAGED_MODULES));
             boolean associationExist = false;
             String version = sandesahModule.getVersion().toString();
-            if(sandesahModule.getVersion() == null) {
+            if (sandesahModule.getVersion() == null) {
                 version = Resources.ModuleProperties.UNDEFINED;
             }
             for (Object node : associations) {
                 OMElement association = (OMElement) node;
                 if (association.getAttributeValue(new QName(Resources.NAME)).equals(
                         sandesahModule.getName()) &&
-                    association.getAttributeValue(new QName(Resources.VERSION)).equals(version) ) {
+                        association.getAttributeValue(new QName(Resources.VERSION)).equals(version)) {
                     associationExist = true;
                     break;
                 }
@@ -112,12 +101,12 @@ public class RMAdminService extends AbstractAdmin {
             //if RM is not found, add a new association
             if (!associationExist) {
                 sfpm.put(serviceGroupId,
-                         PersistenceUtils.createModule(sandesahModule.getName(),version,
-                                                       Resources.Associations.ENGAGED_MODULES),
-                         serviceXPath);
+                        PersistenceUtils.createModule(sandesahModule.getName(), version,
+                                Resources.Associations.ENGAGED_MODULES),
+                        serviceXPath);
             }
 
-            if(!transactionStarted) {
+            if (!transactionStarted) {
                 sfpm.commitTransaction(serviceGroupId);
             }
 
@@ -159,19 +148,19 @@ public class RMAdminService extends AbstractAdmin {
 
         ServiceGroupFilePersistenceManager sfpm = pf.getServiceGroupFilePM();
 
-        try{
+        try {
             boolean transactionStarted = sfpm.isTransactionStarted(serviceGroupId);
             if (!transactionStarted) {
                 sfpm.beginTransaction(serviceGroupId);
             }
 
-            sfpm.delete(serviceGroupId, PersistenceUtils.getResourcePath(axisService)+
-                                        "/"+Resources.ModuleProperties.MODULE_XML_TAG+
-                                        PersistenceUtils.getXPathAttrPredicate(
-                                                Resources.NAME,sandesahModule.getName())+
-                                        PersistenceUtils.getXPathAttrPredicate(
-                                                Resources.ModuleProperties.TYPE,
-                                                Resources.Associations.ENGAGED_MODULES));
+            sfpm.delete(serviceGroupId, PersistenceUtils.getResourcePath(axisService) +
+                    "/" + Resources.ModuleProperties.MODULE_XML_TAG +
+                    PersistenceUtils.getXPathAttrPredicate(
+                            Resources.NAME, sandesahModule.getName()) +
+                    PersistenceUtils.getXPathAttrPredicate(
+                            Resources.ModuleProperties.TYPE,
+                            Resources.Associations.ENGAGED_MODULES));
 
             if (!transactionStarted) {
                 sfpm.commitTransaction(serviceGroupId);
@@ -202,26 +191,26 @@ public class RMAdminService extends AbstractAdmin {
     }
 
     public void setParameters(String serviceName, RMParameterBean parameters) throws AxisFault {
-        AxisConfiguration axisConfiguration = getAxisConfig() ;
+        AxisConfiguration axisConfiguration = getAxisConfig();
         AxisService axisService = axisConfiguration.getServiceForActivation(serviceName);
         if (parameters != null) {
             Parameter sandeshaPolicyBeanParameter = axisService.getParameter(
                     Sandesha2Constants.SANDESHA_PROPERTY_BEAN);
 
             SandeshaPolicyBean sandeshaPolicyBean;
-            if (sandeshaPolicyBeanParameter != null){
+            if (sandeshaPolicyBeanParameter != null) {
                 sandeshaPolicyBean = (SandeshaPolicyBean) sandeshaPolicyBeanParameter.getValue();
-                if (sandeshaPolicyBean.getParent() == null){
+                if (sandeshaPolicyBean.getParent() == null) {
                     sandeshaPolicyBean = new SandeshaPolicyBean();
                     sandeshaPolicyBean.setParent(
                             (SandeshaPolicyBean) sandeshaPolicyBeanParameter.getValue());
                     axisService.addParameter(Sandesha2Constants.SANDESHA_PROPERTY_BEAN,
-                                             sandeshaPolicyBean);
+                            sandeshaPolicyBean);
                 }
             } else {
                 sandeshaPolicyBean = new SandeshaPolicyBean();
                 axisService.addParameter(Sandesha2Constants.SANDESHA_PROPERTY_BEAN,
-                                         sandeshaPolicyBean);
+                        sandeshaPolicyBean);
             }
 
             sandeshaPolicyBean.setInactiveTimeoutInterval(
@@ -255,25 +244,25 @@ public class RMAdminService extends AbstractAdmin {
         sandeshaPolicy.setName(RM_POLICY_ID);
         sandeshaPolicy.addPolicyComponent(sandeshaPolicyBean);
 
-        try{
+        try {
 
-        OMFactory omFactory = OMAbstractFactory.getOMFactory();
-        OMElement policyWrapperEle = omFactory.createOMElement(Resources.POLICY, null);
-        policyWrapperEle.addAttribute(Resources.ServiceProperties.POLICY_TYPE,
-                                          String.valueOf(PolicyInclude.AXIS_SERVICE_POLICY), null);
+            OMFactory omFactory = OMAbstractFactory.getOMFactory();
+            OMElement policyWrapperEle = omFactory.createOMElement(Resources.POLICY, null);
+            policyWrapperEle.addAttribute(Resources.ServiceProperties.POLICY_TYPE,
+                    String.valueOf(PolicyInclude.AXIS_SERVICE_POLICY), null);
 
-        OMElement idEle = omFactory.createOMElement(Resources.ServiceProperties.POLICY_UUID, null);
-        idEle.setText(sandeshaPolicy.getId());
-        policyWrapperEle.addChild(idEle);
+            OMElement idEle = omFactory.createOMElement(Resources.ServiceProperties.POLICY_UUID, null);
+            idEle.setText(sandeshaPolicy.getId());
+            policyWrapperEle.addChild(idEle);
 
-        OMElement policyEleToPersist = PersistenceUtils.createPolicyElement(sandeshaPolicy);
-        policyWrapperEle.addChild(policyEleToPersist);
+            OMElement policyEleToPersist = PersistenceUtils.createPolicyElement(sandeshaPolicy);
+            policyWrapperEle.addChild(policyEleToPersist);
 
-        String serviceGroupId = axisService.getAxisServiceGroup().getServiceGroupName();
+            String serviceGroupId = axisService.getAxisServiceGroup().getServiceGroupName();
 
-        ServiceGroupFilePersistenceManager sfpm = pf.getServiceGroupFilePM();
+            ServiceGroupFilePersistenceManager sfpm = pf.getServiceGroupFilePM();
 
-        String serviceXPath = PersistenceUtils.getResourcePath(axisService);
+            String serviceXPath = PersistenceUtils.getResourcePath(axisService);
 
 
             boolean transactionStarted = sfpm.isTransactionStarted(serviceGroupId);
@@ -282,23 +271,23 @@ public class RMAdminService extends AbstractAdmin {
             }
 
             //check if "policies" section exists otherwise create, and delete the existing policy if exists
-            if (!sfpm.elementExists(serviceGroupId, serviceXPath+"/"+Resources.POLICIES)) {
+            if (!sfpm.elementExists(serviceGroupId, serviceXPath + "/" + Resources.POLICIES)) {
                 sfpm.put(serviceGroupId,
-                         omFactory.createOMElement(Resources.POLICIES, null), serviceXPath);
+                        omFactory.createOMElement(Resources.POLICIES, null), serviceXPath);
             } else {
                 //you must manually delete the existing policy before adding new one.
-                String pathToPolicy = serviceXPath+"/"+Resources.POLICIES+
-                                      "/"+Resources.POLICY+
-                                      PersistenceUtils.getXPathTextPredicate(
-                                              Resources.ServiceProperties.POLICY_UUID,
-                                              sandeshaPolicy.getId() );
+                String pathToPolicy = serviceXPath + "/" + Resources.POLICIES +
+                        "/" + Resources.POLICY +
+                        PersistenceUtils.getXPathTextPredicate(
+                                Resources.ServiceProperties.POLICY_UUID,
+                                sandeshaPolicy.getId());
                 if (sfpm.elementExists(serviceGroupId, pathToPolicy)) {
                     sfpm.delete(serviceGroupId, pathToPolicy);
                 }
             }
 
             //put the policy
-            sfpm.put(serviceGroupId, policyWrapperEle, serviceXPath+ "/" + Resources.POLICIES);
+            sfpm.put(serviceGroupId, policyWrapperEle, serviceXPath + "/" + Resources.POLICIES);
 
             if (!transactionStarted) {
                 sfpm.commitTransaction(serviceGroupId);
@@ -349,9 +338,9 @@ public class RMAdminService extends AbstractAdmin {
 
         Parameter sandeshaPolicyBeanParameter = axisService.getParameter(
                 Sandesha2Constants.SANDESHA_PROPERTY_BEAN);
-        if (sandeshaPolicyBeanParameter != null){
+        if (sandeshaPolicyBeanParameter != null) {
             SandeshaPolicyBean sandeshaPolicyBean =
-                    (SandeshaPolicyBean)sandeshaPolicyBeanParameter.getValue();
+                    (SandeshaPolicyBean) sandeshaPolicyBeanParameter.getValue();
 
             // sandesha policy bean stored them in miliseconds so we make them seconds to display users.
             rmParameterBean.setInactivityTimeoutInterval(
@@ -409,12 +398,12 @@ public class RMAdminService extends AbstractAdmin {
 
         Parameter permenentStorage = axisConfiguration.getParameter(
                 Sandesha2Constants.PERMANENT_STORAGE_MANAGER);
-        if (permenentStorage != null){
+        if (permenentStorage != null) {
             axisConfiguration.removeParameter(permenentStorage);
         }
         // change the permenetent storage manager.
         axisConfiguration.addParameter(Sandesha2Constants.PERMANENT_STORAGE_MANAGER,
-                                       persistentStorageManager);
+                persistentStorageManager);
 
 
     }

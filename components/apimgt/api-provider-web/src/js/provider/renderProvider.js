@@ -103,11 +103,11 @@ var renderAPI = function (result) {
 
     apiProviderApp.currentAPI = api;
 
-    if ($.isEmptyObject(api.name)) {
+    if (typeof api.name != "string") {
         location.href="login.jag";
     }
 
-    if ($.isEmptyObject(api.description)) {
+    if (typeof api.description != "string") {
         $("div#apiView").text('');
     } else {
         $("div#apiView").text(api.description);
@@ -118,7 +118,7 @@ var renderAPI = function (result) {
     $("td#tierAvb").text(api.availableTiers);
     $("span#status").append("&nbsp;" + api.status);
     $("span#version").append("&nbsp;v" + api.version);
-    if ($.isEmptyObject(api.thumb)) {
+    if (typeof api.thumb != "string") {
         $("img#apiThumb").attr("src", "images/api-default.png");
     } else {
         $("img#apiThumb").attr("src", api.thumb);
@@ -134,7 +134,7 @@ var renderAPI = function (result) {
     $("#editEndpoint").attr("value", api.endpoint);
     $("#editWsdl").attr("value", api.wsdl);
     $("#editTags").attr("value", api.tags);
-    if ($.isEmptyObject(api.thumb)) {
+    if (typeof api.thumb) {
         $("img#apiEditThumb").attr("src", "images/api-default.png");
         //$("#imageUrl").attr("value", "images/api-default.png");
     } else {
@@ -267,7 +267,7 @@ var renderAPIsPaginator = function (result, currentPage, itemsPerPage) {
         ew.append(clone);
         $(".thumbnail a", clone).attr("href", "?place=api-details&name=" + api.name + "&version=" + api.version);
 
-        if ($.isEmptyObject(api.thumb)) {
+        if (typeof api.thumb == "object") {
             $(".thumb", clone).attr("src", "images/api-default.png");
         } else {
             $(".thumb", clone).attr("src", api.thumb);

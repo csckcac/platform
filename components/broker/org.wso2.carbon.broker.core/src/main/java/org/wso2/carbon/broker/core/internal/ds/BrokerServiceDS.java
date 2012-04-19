@@ -60,6 +60,8 @@ public class BrokerServiceDS {
             log.info("Successfully deployed the broker service");
         } catch (BrokerConfigException e) {
             log.error("Can not create the broker service ", e);
+        } catch (RuntimeException e) {
+            log.error("Can not create broker service ", e);
         }
     }
 

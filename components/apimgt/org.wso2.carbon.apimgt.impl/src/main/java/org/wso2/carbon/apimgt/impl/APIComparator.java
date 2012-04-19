@@ -26,6 +26,5 @@ public class APIComparator implements Comparator<API> {
 
     public int compare(API api1, API api2) {
         return api1.getId().getApiName().compareTo(api2.getId().getApiName());
-
     }
 }

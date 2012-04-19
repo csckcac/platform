@@ -59,6 +59,7 @@ import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -69,10 +70,13 @@ public class APIManagerImpl implements APIManager {
     
     private static final Log log = LogFactory.getLog(APIManagerImpl.class);
     
+    private static final long KEEP_ALIVE_TASK_PERIOD = 950000L;
+    
     private GenericArtifactManager artifactManager;
     private Registry registry;
-    private RegistryKeepAliveThread keepAliveThread = new RegistryKeepAliveThread();
-    private boolean active = true;  //This variable use to kill the Registry keep alive thread
+    
+    private ScheduledExecutorService scheduler;
+    private Future keepAliveTask;
 
     public APIManagerImpl(HttpServletRequest request, ServletConfig config)
             throws APIManagementException {
@@ -83,7 +87,7 @@ public class APIManagerImpl implements APIManager {
             this.registry = GovernanceUtils.getGovernanceUserRegistry(
                     new WSRegistryServiceClient(backendServerURL, cookie),
                     (String) session.getAttribute("logged-user"));
-            keepAliveThread.start();
+            startKeepAliveTask();
         } catch (RegistryException e) {
             handleException("Unable to obtain an instance of the registry", e);
         }
@@ -93,44 +97,39 @@ public class APIManagerImpl implements APIManager {
                           String pass,
                           String remoteAdd) throws APIManagementException {
         this.registry = getRegistry(user, pass, remoteAdd);
-        keepAliveThread.start();
+        startKeepAliveTask();
+    }
+
+    private void startKeepAliveTask() {
+        scheduler = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
+            public Thread newThread(Runnable r) {
+                return new Thread(r, "am-registry-keep-alive-task");
+            }
+        });
+        keepAliveTask = scheduler.scheduleAtFixedRate(new Runnable() {
+            public void run() {
+                if (log.isDebugEnabled()) {
+                    log.debug("Executing registry keep-alive task");
+                }
+                try {
+                    registry.resourceExists("/");
+                } catch (RegistryException e) {
+                    log.warn("Error occurred while checking registry availability", e);
+                }
+            }
+        }, KEEP_ALIVE_TASK_PERIOD, KEEP_ALIVE_TASK_PERIOD, TimeUnit.MILLISECONDS);
     }
 
     /**
-     * This method use to clean up the spawn
-     * RegistryKeepAliveThread thread in a server shutdown
+     * This method use to clean up the spawned
+     * RegistryKeepAliveTask thread in a server shutdown
      */
     public void cleanup() {
-        active = false;
-        if (keepAliveThread.isAlive()) {
-            keepAliveThread.interrupt();
+        if (keepAliveTask != null) {
+            keepAliveTask.cancel(true);
         }
-    }
-
-    /**
-     * This thread class use to keep the Registry alive
-     */
-    private class RegistryKeepAliveThread extends Thread {
-        @Override
-        public void run() {
-            try {
-                while(active){
-                    synchronized (this) {
-                        this.wait(950000);  //Registry WS timeout - 1000000
-                    }
-                    registry.resourceExists("/");  //Invoke Registry service
-                }
-            } catch (InterruptedException e) {
-                if (active) {
-                    String msg = "Registry keep alive thread interrupted";
-                    log.error(msg, e);
-                }
-            } catch (RegistryException e){
-                String msg = "Registry error occurred in the keep-alive task";
-                log.error(msg, e);
-            }
-        }
-    }
+        scheduler.shutdownNow();
+    }    
 
     /**
      * @param subscriberId id of the Subscriber

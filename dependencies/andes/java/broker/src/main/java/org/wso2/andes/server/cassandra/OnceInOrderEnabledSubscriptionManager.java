@@ -38,6 +38,7 @@ public class OnceInOrderEnabledSubscriptionManager implements ClusteringEnabledS
     private Map<String,CassandraReliableMessageCoordinator> workMap =
             new ConcurrentHashMap<String,CassandraReliableMessageCoordinator>();
     private Queue<String> subscriptionQueue = new ConcurrentLinkedQueue<String>();
+
     private static Log log = LogFactory.getLog(OnceInOrderEnabledSubscriptionManager.class);
 
     private ExecutorService executor = null;

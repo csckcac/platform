@@ -137,7 +137,6 @@ public class ClusterManager {
          * Just add the A Global Queue Worker
          */
         if(!config.isClusteringEnabled()) {
-            System.out.println("Cluster not enabled");
             globalQueueManager.addGlobalQueue(queueName);
             return;
         }

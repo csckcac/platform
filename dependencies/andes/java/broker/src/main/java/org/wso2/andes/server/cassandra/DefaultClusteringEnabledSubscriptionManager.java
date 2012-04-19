@@ -18,18 +18,19 @@
 package org.wso2.andes.server.cassandra;
 
 import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.andes.server.AMQChannel;
 import org.wso2.andes.server.ClusterResourceHolder;
 import org.wso2.andes.server.cluster.ClusterManager;
 import org.wso2.andes.server.queue.AMQQueue;
 import org.wso2.andes.server.store.CassandraMessageStore;
-import org.mortbay.log.LogFactory;
 
 import java.util.*;
 import java.util.concurrent.*;
 
 public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEnabledSubscriptionManager{
 
+    private static Log log = LogFactory.getLog(DefaultClusteringEnabledSubscriptionManager.class);
 
     private Map<String,CassandraMessageFlusher> workMap =
             new ConcurrentHashMap<String,CassandraMessageFlusher>();
@@ -55,7 +56,6 @@ public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEn
     private Map<AMQChannel, Map<Long, Semaphore>> unAckedMessagelocks =
             new ConcurrentHashMap<AMQChannel, Map<Long, Semaphore>>();
 
-    private Log log = LogFactory.getLog(DefaultClusteringEnabledSubscriptionManager.class);
 
     public void init()  {
         executor =  Executors.newFixedThreadPool(ClusterResourceHolder.getInstance().getClusterConfiguration().

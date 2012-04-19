@@ -300,15 +300,16 @@ public class Broker
             if (ClusterResourceHolder.getInstance().getClusterConfiguration().isOnceInOrderSupportEnabled()) {
                 ClusteringEnabledSubscriptionManager subscriptionManager =
                         new OnceInOrderEnabledSubscriptionManager();
-                subscriptionManager.init();
                 ClusterResourceHolder.getInstance().setSubscriptionManager(subscriptionManager);
+                subscriptionManager.init();
+
             } else {
                 ClusteringEnabledSubscriptionManager subscriptionManager =
                         new DefaultClusteringEnabledSubscriptionManager();
-                subscriptionManager.init();
                 ClusterResourceHolder.getInstance().setSubscriptionManager(subscriptionManager);
-            }
+                subscriptionManager.init();
 
+            }
             CurrentActor.get().message(BrokerMessages.READY());
         }
         finally

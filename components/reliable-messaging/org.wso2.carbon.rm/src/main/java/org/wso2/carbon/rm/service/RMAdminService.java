@@ -20,11 +20,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.description.AxisModule;
-import org.apache.axis2.description.AxisService;
-import org.apache.axis2.description.ModuleConfiguration;
-import org.apache.axis2.description.Parameter;
-import org.apache.axis2.description.PolicyInclude;
+import org.apache.axis2.description.*;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -39,6 +35,9 @@ import org.wso2.carbon.core.persistence.PersistenceException;
 import org.wso2.carbon.core.persistence.PersistenceFactory;
 import org.wso2.carbon.core.persistence.PersistenceUtils;
 import org.wso2.carbon.core.persistence.file.ServiceGroupFilePersistenceManager;
+import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.jdbc.utils.Transaction;
 
 import javax.xml.namespace.QName;
 import java.util.List;
@@ -48,12 +47,16 @@ public class RMAdminService extends AbstractAdmin {
     private static final Log log = LogFactory.getLog(RMAdminService.class);
 
     private static final String RM_POLICY_ID = "RMPolicy";
-    PersistenceFactory pf;
-    ServiceGroupFilePersistenceManager sfpm;
+    private PersistenceFactory persistenceFactory;
+    private ServiceGroupFilePersistenceManager serviceGroupFilePM;
+
+    private Registry registry;
 
     public RMAdminService() throws Exception {
-        pf = PersistenceFactory.getInstance(getAxisConfig());
-        sfpm = pf.getServiceGroupFilePM();
+        persistenceFactory = PersistenceFactory.getInstance(getAxisConfig());
+        serviceGroupFilePM = persistenceFactory.getServiceGroupFilePM();
+
+        registry = getConfigSystemRegistry();
     }
 
     public boolean isRMEnabled(String serviceName) throws AxisFault {
@@ -72,13 +75,13 @@ public class RMAdminService extends AbstractAdmin {
         String serviceXPath = PersistenceUtils.getResourcePath(axisService);
         // engage at registry
         try {
-            boolean transactionStarted = sfpm.isTransactionStarted(serviceGroupId);
+            boolean transactionStarted = serviceGroupFilePM.isTransactionStarted(serviceGroupId);
             if (!transactionStarted) {
-                sfpm.beginTransaction(serviceGroupId);
+                serviceGroupFilePM.beginTransaction(serviceGroupId);
             }
 
             // Check if an association exist between servicePath and moduleResourcePath.
-            List associations = sfpm.getAll(serviceGroupId, serviceXPath +
+            List associations = serviceGroupFilePM.getAll(serviceGroupId, serviceXPath +
                     "/" + Resources.ModuleProperties.MODULE_XML_TAG +
                     PersistenceUtils.getXPathAttrPredicate(
                             Resources.ModuleProperties.TYPE,
@@ -100,14 +103,14 @@ public class RMAdminService extends AbstractAdmin {
 
             //if RM is not found, add a new association
             if (!associationExist) {
-                sfpm.put(serviceGroupId,
+                serviceGroupFilePM.put(serviceGroupId,
                         PersistenceUtils.createModule(sandesahModule.getName(), version,
                                 Resources.Associations.ENGAGED_MODULES),
                         serviceXPath);
             }
 
             if (!transactionStarted) {
-                sfpm.commitTransaction(serviceGroupId);
+                serviceGroupFilePM.commitTransaction(serviceGroupId);
             }
 
 /*            Association[] associations = registry.getAssociations(servicePath,
@@ -146,7 +149,7 @@ public class RMAdminService extends AbstractAdmin {
                 + axisService.getAxisServiceGroup().getServiceGroupName()
                 + RegistryResources.SERVICES + serviceName;
 
-        ServiceGroupFilePersistenceManager sfpm = pf.getServiceGroupFilePM();
+        ServiceGroupFilePersistenceManager sfpm = persistenceFactory.getServiceGroupFilePM();
 
         try {
             boolean transactionStarted = sfpm.isTransactionStarted(serviceGroupId);
@@ -244,8 +247,23 @@ public class RMAdminService extends AbstractAdmin {
         sandeshaPolicy.setName(RM_POLICY_ID);
         sandeshaPolicy.addPolicyComponent(sandeshaPolicyBean);
 
-        try {
+        String serviceGroupId = axisService.getAxisServiceGroup().getServiceGroupName();
+        boolean isProxyService = PersistenceUtils.isProxyService(axisService);
 
+        try {
+            //to registry
+            boolean registryTransactionStarted = true;
+            registryTransactionStarted = Transaction.isStarted();
+            if (isProxyService && !registryTransactionStarted) {
+                registry.beginTransaction();
+            }
+            if (isProxyService) {
+                String policyType = "" + PolicyInclude.AXIS_SERVICE_POLICY;
+                String servicePath = PersistenceUtils.getRegistryResourcePath(axisService);
+                persistenceFactory.getServicePM().persistPolicyToRegistry(sandeshaPolicy, policyType, servicePath);
+            }
+
+            //to file
             OMFactory omFactory = OMAbstractFactory.getOMFactory();
             OMElement policyWrapperEle = omFactory.createOMElement(Resources.POLICY, null);
             policyWrapperEle.addAttribute(Resources.ServiceProperties.POLICY_TYPE,
@@ -258,21 +276,15 @@ public class RMAdminService extends AbstractAdmin {
             OMElement policyEleToPersist = PersistenceUtils.createPolicyElement(sandeshaPolicy);
             policyWrapperEle.addChild(policyEleToPersist);
 
-            String serviceGroupId = axisService.getAxisServiceGroup().getServiceGroupName();
-
-            ServiceGroupFilePersistenceManager sfpm = pf.getServiceGroupFilePM();
-
             String serviceXPath = PersistenceUtils.getResourcePath(axisService);
-
-
-            boolean transactionStarted = sfpm.isTransactionStarted(serviceGroupId);
+            boolean transactionStarted = serviceGroupFilePM.isTransactionStarted(serviceGroupId);
             if (!transactionStarted) {
-                sfpm.beginTransaction(serviceGroupId);
+                serviceGroupFilePM.beginTransaction(serviceGroupId);
             }
 
             //check if "policies" section exists otherwise create, and delete the existing policy if exists
-            if (!sfpm.elementExists(serviceGroupId, serviceXPath + "/" + Resources.POLICIES)) {
-                sfpm.put(serviceGroupId,
+            if (!serviceGroupFilePM.elementExists(serviceGroupId, serviceXPath + "/" + Resources.POLICIES)) {
+                serviceGroupFilePM.put(serviceGroupId,
                         omFactory.createOMElement(Resources.POLICIES, null), serviceXPath);
             } else {
                 //you must manually delete the existing policy before adding new one.
@@ -281,23 +293,41 @@ public class RMAdminService extends AbstractAdmin {
                         PersistenceUtils.getXPathTextPredicate(
                                 Resources.ServiceProperties.POLICY_UUID,
                                 sandeshaPolicy.getId());
-                if (sfpm.elementExists(serviceGroupId, pathToPolicy)) {
-                    sfpm.delete(serviceGroupId, pathToPolicy);
+                if (serviceGroupFilePM.elementExists(serviceGroupId, pathToPolicy)) {
+                    serviceGroupFilePM.delete(serviceGroupId, pathToPolicy);
                 }
             }
 
             //put the policy
-            sfpm.put(serviceGroupId, policyWrapperEle, serviceXPath + "/" + Resources.POLICIES);
+            serviceGroupFilePM.put(serviceGroupId, policyWrapperEle, serviceXPath + "/" + Resources.POLICIES);
 
             if (!transactionStarted) {
-                sfpm.commitTransaction(serviceGroupId);
+                serviceGroupFilePM.commitTransaction(serviceGroupId);
             }
-
+            if (isProxyService && !registryTransactionStarted) {
+                registry.commitTransaction();
+            }
         } catch (PersistenceException e) {
             log.error("Problem when setting parameter values", e);
+            serviceGroupFilePM.rollbackTransaction(serviceGroupId);
+            if (isProxyService) {
+                try {
+                    registry.rollbackTransaction();
+                } catch (RegistryException re) {
+                    log.error(e.getMessage(), e);
+                }
+            }
             throw new AxisFault("Problem when setting parameter values");
         } catch (Exception e) {
             log.error("Problem when setting parameter values", e);
+            serviceGroupFilePM.rollbackTransaction(serviceGroupId);
+            if (isProxyService) {
+                try {
+                    registry.rollbackTransaction();
+                } catch (RegistryException re) {
+                    log.error(e.getMessage(), e);
+                }
+            }
             throw new AxisFault("Problem when setting parameter values");
         }
 

@@ -382,7 +382,7 @@ public class EJBServicesAdmin extends AbstractAdmin {
             }
         } catch (Exception e) {
             throw new AxisFault("A Service exists for the provided JNDI name(" +
-                    beanJNDIName + ") and JNP Url(" + jnpProviderUrl + ").");
+                    beanJNDIName + ") and JNP Url(" + jnpProviderUrl + ").", e);
         }
 
         addEJBConfiguration(serviceName,
@@ -757,7 +757,7 @@ public class EJBServicesAdmin extends AbstractAdmin {
                 if (jnpProviderUrl.equals(configResource.getProperty(
                         EJBConstants.AppServerProperties.PROVIDER_URL))) {
                     appServerData = new EJBAppServerData();
-                    password = configResource.getProperty(EJBConstants.AppServerProperties.PASSWORD);
+//                    password = configResource.getProperty(EJBConstants.AppServerProperties.PASSWORD);
                     appServerData.setAppServerType(configResource.getProperty(
                             EJBConstants.AppServerProperties.APP_SERVER_TYPE));
                     appServerData.setProviderURL(configResource.getProperty(

@@ -40,7 +40,8 @@ public class EJBServicesAdminClient {
             options.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, cookie);
             options.setManageSession(true);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
+            throw e;
         }
     }
 

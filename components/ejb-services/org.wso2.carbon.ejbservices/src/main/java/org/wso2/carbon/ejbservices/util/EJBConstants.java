@@ -16,6 +16,8 @@
 package org.wso2.carbon.ejbservices.util;
 
 public class EJBConstants {
+    private EJBConstants() { }
+
     public static final String ROOT = "/repository/components/";
     public static final String EJB_SERVICES = ROOT + "org.wso2.carbon.ejbservices/";
     public static final String APP_SERVERS = EJB_SERVICES + "app.servers/";
@@ -26,7 +28,7 @@ public class EJBConstants {
         public static final String JNDI_CONTEXT_CLASS = "jndiContextClass";
         public static final String USER_NAME = "userName";
         public static final String PASSWORD = "password";
-        public static final String APP_SERVER_TYPE = "appServerType";        
+        public static final String APP_SERVER_TYPE = "appServerType";
     }
 
     public static final class ConfigProperties {

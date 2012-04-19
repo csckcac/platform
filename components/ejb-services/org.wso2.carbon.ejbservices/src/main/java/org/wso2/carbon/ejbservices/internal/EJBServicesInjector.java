@@ -28,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
 @SuppressWarnings("UnusedDeclaration")
 public class EJBServicesInjector {
     private static Log log = LogFactory.getLog(EJBServicesInjector.class);
-    private ComponentContext ctxt;
+//    private ComponentContext ctxt;
 
     public EJBServicesInjector(){
     }

@@ -51,8 +51,9 @@ public class EJBAppServerConfigBuilder extends ComponentConfigBuilder {
             OMElement nameElement = configElement.getFirstChildWithName(
                     new QName(NS_WSO2CARBON, EJBConstants.ComponentConfig.ELE_NAME));
             String name = null;
-            if (nameElement != null)
+            if (nameElement != null) {
                 name = nameElement.getText().trim();
+            }
 
             if (name == null) {
                 throw new CarbonException("Mandatory attribute EJBApplicationServer/Name entry " +
@@ -63,8 +64,9 @@ public class EJBAppServerConfigBuilder extends ComponentConfigBuilder {
             OMElement providerURLElement = configElement.getFirstChildWithName(
                     new QName(NS_WSO2CARBON, EJBConstants.ComponentConfig.ELE_PROVIDER_URL));
             String providerURL = null;
-            if (providerURLElement != null)
+            if (providerURLElement != null) {
                 providerURL = providerURLElement.getText().trim();
+            }
 
             if (providerURL == null) {
                 throw new CarbonException("Mandatory attribute EJBApplicationServer/ProviderURL " +

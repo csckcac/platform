@@ -39,7 +39,7 @@ public class ArtifactCleaner {
                                  FrameworkProperties frameworkProperties)
             throws UnknownArtifactTypeException, Exception {
 
-      //  EnvironmentVariables environmentVariables = artifactDeployerUtil.getProductEnvironment(productName, userId);
+        //  EnvironmentVariables environmentVariables = artifactDeployerUtil.getProductEnvironment(productName, userId);
         EnvironmentBuilder builder = new EnvironmentBuilder();
         EnvironmentVariables environmentVariables = null;
         if (builder.getFrameworkSettings().getEnvironmentSettings().isClusterEnable()) {
@@ -88,7 +88,6 @@ public class ArtifactCleaner {
             case spring:
                 artifactCleanerUtil.deleteAllServicesByType(sessionCookie, ArtifactTypeFactory.getTypeInString
                         (ArtifactType.spring), backendURL);
-
             case bpel:
                 break;
             case dbs:

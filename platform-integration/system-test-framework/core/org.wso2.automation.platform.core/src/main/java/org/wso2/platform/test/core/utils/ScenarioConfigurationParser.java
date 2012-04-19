@@ -32,13 +32,33 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
+/**
+ * Parse the testconfig.xml and store the scenarios in TestScenarioConfig object.
+ */
 public class ScenarioConfigurationParser {
 
     private static Log log = LogFactory.getLog(ScenarioConfigurationParser.class);
 
     private static ScenarioConfigurationParser instance = new ScenarioConfigurationParser();
+    private static final String SCENARIO = "scenario";
+    private static final String TEST_NAME = "testName";
+    private static final String PRODUCT = "product";
+    private static final String PRODUCT_NAME = "name";
+    private static final String ARTIFACTS = "artifacts";
+    private static final String USER_ID = "userId";
+    private static final String ARTIFACT = "artifact";
+    private static final String ARTIFACT_NAME = "name";
+    private static final String ARTIFACT_TYPE = "type";
+    private static final String DEPENDENCY = "dependency";
+    private static final String DEPENDENCY_NAME = "name";
+    private static final String DEPENDENCY_TYPE = "dependencyType";
+    private static final String ASSOCIATION = "association";
+    private static final String ASSOCIATION_NAME = "name";
+    private static final String ASSOCIATION_VALUE = "value";
     private TestScenarioConfig testScenarioConfig = new TestScenarioConfig();
 
     public ScenarioConfigurationParser() {
@@ -50,15 +70,14 @@ public class ScenarioConfigurationParser {
     }
 
     private void readConfig() {
-
-
+        //read framework resource location
         if (ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION == null) {
             log.error("System property: system.test.sample.location cannot be null");
         }
-
+        //get test configuration file path
         String testConfigFilePath = ArtifactReader.SYSTEM_TEST_RESOURCE_LOCATION +
-                                    File.separator + "conf" + File.separator + "testconfig-new.xml";
-
+                                    File.separator + "conf" + File.separator + "testconfig.xml";
+        //parse the test configuration xml file
         OMElement documentElement;
         FileInputStream inputStream = null;
         File file = new File(testConfigFilePath);
@@ -68,8 +87,8 @@ public class ScenarioConfigurationParser {
                 XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(inputStream);
                 StAXOMBuilder builder = new StAXOMBuilder(parser);
                 documentElement = builder.getDocumentElement();
-
                 processScenarioConfigurationElements(documentElement);
+
             } catch (FileNotFoundException ignored) {
                 log.error("Config file not found");
             } catch (XMLStreamException ignored) {
@@ -86,33 +105,37 @@ public class ScenarioConfigurationParser {
         }
     }
 
+    /**
+     * iterate though the document and store elements to testScenarioConfig object
+     *
+     * @param documentElement - OMElement of processed test configuration file.
+     */
     private void processScenarioConfigurationElements(OMElement documentElement) {
-        for (Iterator itrScenario = documentElement.getChildrenWithName(new QName("scenario")); itrScenario.hasNext(); ) {
+        for (Iterator itrScenario = documentElement.getChildrenWithName(new QName(SCENARIO)); itrScenario.hasNext(); ) {
             OMElement OmClassDocument = (OMElement) itrScenario.next();
 
-            OMAttribute testMethodAttr = OmClassDocument.getAttribute(new QName("testName"));
+            OMAttribute testMethodAttr = OmClassDocument.getAttribute(new QName(TEST_NAME));
 
             List<ProductConfig> productMapList = new ArrayList<ProductConfig>();
-            for (Iterator itrProduct = OmClassDocument.getChildrenWithName(new QName("product")); itrProduct.hasNext(); ) {
+            for (Iterator itrProduct = OmClassDocument.getChildrenWithName(new QName(PRODUCT)); itrProduct.hasNext(); ) {
                 OMElement omProduct = (OMElement) itrProduct.next();
-                OMAttribute omProductAttr = omProduct.getAttribute(new QName("name"));
+                OMAttribute omProductAttr = omProduct.getAttribute(new QName(PRODUCT_NAME));
 
                 ProductConfig productConfig = new ProductConfig();
                 productConfig.setProductName(omProductAttr.getAttributeValue());
 
-
                 List<Artifact> artifactMapList = new ArrayList<Artifact>();
 
-                for (Iterator itrArtifacts = omProduct.getChildrenWithName(new QName("artifacts"));
+                for (Iterator itrArtifacts = omProduct.getChildrenWithName(new QName(ARTIFACTS));
                      itrArtifacts.hasNext(); ) {
                     OMElement omArtifacts = (OMElement) itrArtifacts.next();
-                    OMAttribute omUserIdAttr = omArtifacts.getAttribute(new QName("userId"));
+                    OMAttribute omUserIdAttr = omArtifacts.getAttribute(new QName(USER_ID));
 
-                    for (Iterator itrArtifact = omArtifacts.getChildrenWithName(new QName("artifact"));
+                    for (Iterator itrArtifact = omArtifacts.getChildrenWithName(new QName(ARTIFACT));
                          itrArtifact.hasNext(); ) {
                         OMElement omArtifact = (OMElement) itrArtifact.next();
-                        OMAttribute omArtifactNameAttr = omArtifact.getAttribute(new QName("name"));
-                        OMAttribute omArtifactTypeAttr = omArtifact.getAttribute(new QName("type"));
+                        OMAttribute omArtifactNameAttr = omArtifact.getAttribute(new QName(ARTIFACT_NAME));
+                        OMAttribute omArtifactTypeAttr = omArtifact.getAttribute(new QName(ARTIFACT_TYPE));
 
                         Artifact artifact = new Artifact();
 
@@ -124,14 +147,13 @@ public class ScenarioConfigurationParser {
                         List<ArtifactDependency> depMapList = new ArrayList<ArtifactDependency>();
                         List<ArtifactAssociation> assoMapList = new ArrayList<ArtifactAssociation>();
 
-                        for (Iterator itrDependency = omArtifact.getChildrenWithName(new QName("dependency"));
+                        for (Iterator itrDependency = omArtifact.getChildrenWithName(new QName(DEPENDENCY));
                              itrDependency.hasNext(); ) {
                             OMElement omDependency = (OMElement) itrDependency.next();
-                            OMAttribute omDependencyNameAttr = omDependency.getAttribute(new QName("name"));
-                            OMAttribute omDependencyTypeAttr = omDependency.getAttribute(new QName("dependencyType"));
+                            OMAttribute omDependencyNameAttr = omDependency.getAttribute(new QName(DEPENDENCY_NAME));
+                            OMAttribute omDependencyTypeAttr = omDependency.getAttribute(new QName(DEPENDENCY_TYPE));
 
                             ArtifactDependency artifactDependencies = new ArtifactDependency();
-
 
                             if (omDependencyNameAttr != null && omDependencyTypeAttr != null) {
                                 artifactDependencies.setDepArtifactName(omDependencyNameAttr.getAttributeValue());
@@ -142,13 +164,12 @@ public class ScenarioConfigurationParser {
                             } else {
                                 artifact.setDependencyArtifactList(null);
                             }
-
                         }
 
-                        for (Iterator itrAssociation = omArtifact.getChildrenWithName(new QName("association")); itrAssociation.hasNext(); ) {
+                        for (Iterator itrAssociation = omArtifact.getChildrenWithName(new QName(ASSOCIATION)); itrAssociation.hasNext(); ) {
                             OMElement omAssociation = (OMElement) itrAssociation.next();
-                            OMAttribute omAssoNameAttr = omAssociation.getAttribute(new QName("name"));
-                            OMAttribute omAssoValueAttr = omAssociation.getAttribute(new QName("value"));
+                            OMAttribute omAssoNameAttr = omAssociation.getAttribute(new QName(ASSOCIATION_NAME));
+                            OMAttribute omAssoValueAttr = omAssociation.getAttribute(new QName(ASSOCIATION_VALUE));
 
                             ArtifactAssociation association = new ArtifactAssociation();
 
@@ -160,11 +181,9 @@ public class ScenarioConfigurationParser {
                             } else {
                                 artifact.setAssociationList(null);
                             }
-
                         }
                         artifactMapList.add(artifact);
                     }
-
                     productConfig.setProductArtifactList(artifactMapList);
                 }
                 productMapList.add(productConfig);

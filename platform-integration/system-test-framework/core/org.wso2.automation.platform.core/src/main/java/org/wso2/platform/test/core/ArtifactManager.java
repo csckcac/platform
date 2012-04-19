@@ -19,123 +19,145 @@ package org.wso2.platform.test.core;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.jarservices.stub.DuplicateServiceExceptionException;
-import org.wso2.carbon.jarservices.stub.DuplicateServiceGroupExceptionException;
-import org.wso2.carbon.jarservices.stub.JarUploadExceptionException;
-import org.wso2.carbon.rule.service.stub.fileupload.ExceptionException;
-import org.wso2.platform.test.core.utils.*;
+import org.wso2.platform.test.core.utils.Artifact;
+import org.wso2.platform.test.core.utils.ArtifactAssociation;
+import org.wso2.platform.test.core.utils.ArtifactDependency;
+import org.wso2.platform.test.core.utils.ArtifactType;
+import org.wso2.platform.test.core.utils.ProductConfig;
+import org.wso2.platform.test.core.utils.ScenarioConfigurationParser;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkFactory;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkProperties;
 
-import java.rmi.RemoteException;
 import java.util.List;
 
+/**
+ * Managing artifact deployment and removing.
+ */
 public class ArtifactManager {
     private static final Log log = LogFactory.getLog(ArtifactManager.class);
-    ScenarioConfigurationParser scenarioConfig = ScenarioConfigurationParser.getInstance();
-    private ArtifactDeployer deployer = new ArtifactDeployer();
-    private ArtifactCleaner cleaner = new ArtifactCleaner();
+    private ScenarioConfigurationParser scenarioConfig;
+    private ArtifactDeployer deployer;
+    private ArtifactCleaner cleaner;
     public static final boolean ARTIFACT_DEPLOYMENT_STATUS = true;
     public static final boolean ARTIFACT_CLEANER_STATUS = false;
     private String testCaseName = null;
 
     public ArtifactManager(String testCaseName) {
         this.testCaseName = testCaseName;
-
+        deployer = new ArtifactDeployer();
+        cleaner = new ArtifactCleaner();
+        scenarioConfig = ScenarioConfigurationParser.getInstance();
     }
 
-    public void deployArtifacts() throws Exception, UnknownArtifactTypeException {
+    /**
+     * deploying artifacts before executing the test case
+     *
+     * @throws Exception - artifact deployment exception
+     */
+    public void deployArtifacts() throws Exception {
         log.info("Deploying Artifacts required for scenario...");
         artifactTraverser(ARTIFACT_DEPLOYMENT_STATUS);
     }
 
-    public void cleanArtifacts() throws Exception, UnknownArtifactTypeException {
+    /**
+     * Clean artifacts after each test run
+     *
+     * @throws Exception - throws artifact removal exception
+     */
+    public void cleanArtifacts() throws Exception {
         log.info("Cleaning Artifacts...");
         artifactTraverser(ARTIFACT_CLEANER_STATUS);
-
     }
 
-    private void cleanArtifactByType(ArtifactType type, String productName, String artifactName,
-                                     int userId,
-                                     List<ArtifactDependency> artifactDependencyList,
-                                     List<ArtifactAssociation> artifactAssociationList) throws
-                                                                                        UnknownArtifactTypeException,
-                                                                                        Exception {
-
-        FrameworkProperties frameworkProperties = FrameworkFactory.getFrameworkProperties(productName);
-        cleaner.cleanArtifact(userId, productName, artifactName, type, artifactDependencyList, artifactAssociationList, frameworkProperties);
-
-    }
-
-    private void deployArtifactByType(ArtifactType type, String productName, String artifactName,
-                                      int userId,
-                                      List<ArtifactDependency> artifactDependencyList,
-                                      List<ArtifactAssociation> artifactAssociationList) throws
-                                                                                         UnknownArtifactTypeException,
-                                                                                         Exception,
-                                                                                         DuplicateServiceGroupExceptionException,
-                                                                                         JarUploadExceptionException,
-                                                                                         RemoteException,
-                                                                                         DuplicateServiceExceptionException,
-                                                                                         ExceptionException,
-                                                                                         org.wso2.carbon.mashup.jsservices.stub.fileupload.ExceptionException,
-                                                                                         InterruptedException {
-
-
-
-        FrameworkProperties frameworkProperties = FrameworkFactory.getFrameworkProperties(productName);
-        deployer.deployArtifact(userId, productName, artifactName, type, artifactDependencyList, artifactAssociationList, frameworkProperties);
-
-    }
-
-
+    /**
+     * Traverse though product configuration list and call for appropriate deployers and undeployers based on
+     * the provided deployment status
+     *
+     * @param deploymentStatus true or false to check execute artifact deployer or undeployer
+     * @throws Exception if artifact deployment error occurred.
+     */
     private void artifactTraverser(boolean deploymentStatus)
-            throws UnknownArtifactTypeException, Exception {
+            throws Exception {
 
         List<ProductConfig> productConfig = scenarioConfig.getProductConfigList(testCaseName);
         if (productConfig != null) {
-            for (int i = 0, n = productConfig.size(); i < n; i++) {
-                List<Artifact> artifactList = productConfig.get(i).getProductArtifactList();
+            for (ProductConfig aProductConfig : productConfig) {
+                List<Artifact> artifactList = aProductConfig.getProductArtifactList();
 
-                for (int a = 0, n1 = artifactList.size(); a < n1; a++) {
+                for (Artifact anArtifactList : artifactList) {
 
-                    List<ArtifactDependency> artifactDependencyList = artifactList.get(a).getDependencyArtifactList();
-                    List<ArtifactAssociation> artifactAssociationList = artifactList.get(a).getAssociationList();
+                    List<ArtifactDependency> artifactDependencyList = anArtifactList.getDependencyArtifactList();
+                    List<ArtifactAssociation> artifactAssociationList = anArtifactList.getAssociationList();
 
                     if (deploymentStatus) {
-                        log.info("Deploying : " + artifactList.get(a).getArtifactName() + " of type : "
-                                 + artifactList.get(a).getArtifactType().toString().toUpperCase()
-                                 + " on :" + productConfig.get(i).getProductName().toUpperCase()
-                                 + " by user :" + artifactList.get(a).getUserId());
-                        deployArtifactByType(artifactList.get(a).getArtifactType(),
-                                             productConfig.get(i).getProductName(),
-                                             artifactList.get(a).getArtifactName(),
-                                             artifactList.get(a).getUserId(),
+                        log.info("Deploying : " + anArtifactList.getArtifactName() + " of type : "
+                                 + anArtifactList.getArtifactType().toString().toUpperCase()
+                                 + " on :" + aProductConfig.getProductName().toUpperCase()
+                                 + " by user :" + anArtifactList.getUserId());
+                        deployArtifactByType(anArtifactList.getArtifactType(),
+                                             aProductConfig.getProductName(),
+                                             anArtifactList.getArtifactName(),
+                                             anArtifactList.getUserId(),
                                              artifactDependencyList, artifactAssociationList);
 
                     } else {
-                        log.info("UnDeploying :" + artifactList.get(a).getArtifactName() + " of type : "
-                                 + artifactList.get(a).getArtifactType().toString().toUpperCase() +
-                                 " on :" + productConfig.get(i).getProductName().toUpperCase()
-                                 + " by user : " + artifactList.get(a).getUserId());
-                        cleanArtifactByType(artifactList.get(a).getArtifactType(),
-                                            productConfig.get(i).getProductName(),
-                                            artifactList.get(a).getArtifactName(),
-                                            artifactList.get(a).getUserId(),
+                        log.info("UnDeploying :" + anArtifactList.getArtifactName() + " of type : "
+                                 + anArtifactList.getArtifactType().toString().toUpperCase() +
+                                 " on :" + aProductConfig.getProductName().toUpperCase()
+                                 + " by user : " + anArtifactList.getUserId());
+                        cleanArtifactByType(anArtifactList.getArtifactType(),
+                                            aProductConfig.getProductName(),
+                                            anArtifactList.getArtifactName(),
+                                            anArtifactList.getUserId(),
                                             artifactDependencyList, artifactAssociationList);
-                    }
-
-                    for (int b = 0, n2 = artifactDependencyList.size(); b < n2; b++) {
-//                        System.out.println(artifactDependencyList.get(b).getDepArtifactName());
-//                        System.out.println(artifactDependencyList.get(b).getDepArtifactType());
-                    }
-
-                    for (int asso = 0, size = artifactAssociationList.size(); asso < size; asso++) {
-//                        System.out.println(artifactAssociationList.get(asso).getAssociationName());
-//                        System.out.println(artifactAssociationList.get(asso).getAssociationValue());
                     }
                 }
             }
         }
+    }
+
+    /**
+     * calls for artifact undeployment after test scenario execution.
+     *
+     * @param type                    artifact type
+     * @param productName             name of the product
+     * @param artifactName            name of the artifact to be undeployed
+     * @param userId                  user do the undeployment
+     * @param artifactDependencyList  artifact dependencies if any
+     * @param artifactAssociationList artifact associations if any
+     * @throws Exception if artifact undeployment error
+     */
+    private void cleanArtifactByType(ArtifactType type, String productName, String artifactName,
+                                     int userId, List<ArtifactDependency> artifactDependencyList,
+                                     List<ArtifactAssociation> artifactAssociationList)
+            throws Exception {
+
+        FrameworkProperties frameworkProperties = FrameworkFactory.getFrameworkProperties(productName);
+        cleaner.cleanArtifact(userId, productName, artifactName, type, artifactDependencyList,
+                              artifactAssociationList, frameworkProperties);
+
+    }
+
+    /**
+     * calls for artifact deployment before test scenario execution.
+     *
+     * @param type                    artifact type
+     * @param productName             name of the product
+     * @param artifactName            name of the artifact to be deployed
+     * @param userId                  user do the deployment
+     * @param artifactDependencyList  artifact dependencies if any
+     * @param artifactAssociationList artifact associations if any
+     * @throws Exception if artifact deployment error
+     */
+    private void deployArtifactByType(ArtifactType type, String productName, String artifactName,
+                                      int userId,
+                                      List<ArtifactDependency> artifactDependencyList,
+                                      List<ArtifactAssociation> artifactAssociationList)
+            throws Exception {
+
+        FrameworkProperties frameworkProperties = FrameworkFactory.getFrameworkProperties(productName);
+        deployer.deployArtifact(userId, productName, artifactName, type, artifactDependencyList,
+                                artifactAssociationList, frameworkProperties);
+
     }
 }

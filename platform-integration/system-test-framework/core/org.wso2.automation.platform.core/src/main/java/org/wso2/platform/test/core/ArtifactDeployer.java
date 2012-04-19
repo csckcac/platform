@@ -19,7 +19,6 @@ package org.wso2.platform.test.core;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.admin.service.AdminServiceAuthentication;
 import org.wso2.platform.test.core.utils.ArtifactAssociation;
 import org.wso2.platform.test.core.utils.ArtifactDependency;
 import org.wso2.platform.test.core.utils.ArtifactDeployerUtil;
@@ -33,24 +32,36 @@ import java.io.File;
 import java.net.URL;
 import java.util.List;
 
+/**
+ * This class deploys the test artifacts defined under each scenarios in testConfig-new.xml file.
+ */
 public class ArtifactDeployer {
     private static final Log log = LogFactory.getLog(ArtifactDeployer.class);
-    static ArtifactDeployerUtil deployerUtil = new ArtifactDeployerUtil();
 
+    /**
+     * Deploy each test artifact defined in the scenario configuration
+     *
+     * @param userId                  userID of the user the artifact is to be deployed by.
+     * @param productName             Name of the product which artifacts will be deployed
+     * @param artifactName            Name of the test artifacts.
+     * @param type                    artifact type
+     * @param artifactDependencyList  list of dependencies the artifact needs.
+     * @param artifactAssociationList list of associations that is specific to particular artifact
+     * @param frameworkProperties     test framework properties
+     * @throws Exception - Artifact deployment exception
+     */
     protected void deployArtifact(int userId, String productName, String artifactName,
                                   ArtifactType type,
                                   List<ArtifactDependency> artifactDependencyList,
                                   List<ArtifactAssociation> artifactAssociationList,
-                                  FrameworkProperties frameworkProperties) throws
-                                                                           Exception {
+                                  FrameworkProperties frameworkProperties) throws Exception {
+
+        ArtifactDeployerUtil deployerUtil = new ArtifactDeployerUtil();
         EnvironmentBuilder builder = new EnvironmentBuilder();
-        EnvironmentVariables environmentVariables = null;
+        EnvironmentVariables environmentVariables;
         String artifactLocation = ProductConstant.getResourceLocations(productName);
-        if (builder.getFrameworkSettings().getEnvironmentSettings().isClusterEnable()) {
-            environmentVariables = deployerUtil.getClusterEnvironment(productName, userId);
-        } else {
-            environmentVariables = deployerUtil.getProductEnvironment(productName, userId);
-        }
+        environmentVariables = getEnvironment(userId, productName, deployerUtil, builder);
+
         String sessionCookie = environmentVariables.getSessionCookie();
         String backendURL = environmentVariables.getBackEndUrl();
         log.debug("Server backend URL " + backendURL);
@@ -104,15 +115,18 @@ public class ArtifactDeployer {
 
             case spring:
                 deployerUtil.springServiceUpload(sessionCookie, artifactName, artifactLocation,
-                                                 artifactDependencyList, artifactAssociationList,backendURL);
+                                                 artifactDependencyList, artifactAssociationList, backendURL);
                 break;
 
             case dbs:
                 deployerUtil.dbsFileUploader(sessionCookie, backendURL, artifactName, artifactLocation,
-                                             artifactDependencyList, artifactAssociationList, frameworkProperties, userId);
+                                             artifactDependencyList, artifactAssociationList,
+                                             frameworkProperties, userId);
                 break;
+
             case synapseconfig:
-                deployerUtil.updateESBConfiguration(sessionCookie, backendURL, artifactName, artifactLocation, productName);
+                deployerUtil.updateESBConfiguration(sessionCookie, backendURL, artifactName,
+                                                    artifactLocation, productName);
                 break;
 
             default:
@@ -121,10 +135,15 @@ public class ArtifactDeployer {
         }
     }
 
-    protected static String login(String userName, String password, String backendURL) {
-        AdminServiceAuthentication loginClient = new AdminServiceAuthentication(backendURL);
-        return loginClient.login(userName, password, backendURL);
+    private EnvironmentVariables getEnvironment(int userId, String productName,
+                                                ArtifactDeployerUtil deployerUtil,
+                                                EnvironmentBuilder builder) {
+        EnvironmentVariables environmentVariables;
+        if (builder.getFrameworkSettings().getEnvironmentSettings().isClusterEnable()) {
+            environmentVariables = deployerUtil.getClusterEnvironment(productName, userId);
+        } else {
+            environmentVariables = deployerUtil.getProductEnvironment(productName, userId);
+        }
+        return environmentVariables;
     }
-
-
 }

@@ -19,6 +19,7 @@ package org.wso2.carbon.agent.server.internal.utils;
 
 import org.wso2.carbon.agent.commons.thrift.data.ThriftEventBundle;
 import org.wso2.carbon.agent.server.internal.EventStreamTypeHolder;
+import org.wso2.carbon.agent.server.internal.authentication.session.AgentSession;
 
 /**
  * Event composite that's passed to the Queue Worker
@@ -26,10 +27,13 @@ import org.wso2.carbon.agent.server.internal.EventStreamTypeHolder;
 public class EventComposite {
     private EventStreamTypeHolder eventStreamTypeHolder;
     private ThriftEventBundle thriftEventBundle;
+    private  AgentSession agentSession;
 
-    public EventComposite(ThriftEventBundle thriftEventBundle, EventStreamTypeHolder eventStreamTypeHolder) {
+    public EventComposite(ThriftEventBundle thriftEventBundle,
+                          EventStreamTypeHolder eventStreamTypeHolder, AgentSession agentSession) {
         this.eventStreamTypeHolder = eventStreamTypeHolder;
         this.thriftEventBundle = thriftEventBundle;
+        this.agentSession=agentSession;
     }
 
     public EventStreamTypeHolder getEventStreamTypeHolder() {
@@ -38,5 +42,9 @@ public class EventComposite {
 
     public ThriftEventBundle getThriftEventBundle() {
         return thriftEventBundle;
+    }
+
+    public AgentSession getAgentSession() {
+        return agentSession;
     }
 }

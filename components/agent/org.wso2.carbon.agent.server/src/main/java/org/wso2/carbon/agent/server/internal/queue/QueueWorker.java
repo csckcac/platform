@@ -63,7 +63,9 @@ public class QueueWorker implements Runnable {
                     log.debug("Dispatching event to " + subscribers.size() + " subscriber(s)");
                 }
                 for (AgentCallback agentCallback : subscribers) {
-                    agentCallback.receive(eventList, eventComposite.getThriftEventBundle().getSessionId());
+                    agentCallback.receive(eventList, eventComposite.getAgentSession().getUsername(),
+                                          eventComposite.getAgentSession().getPassword(),
+                                          eventComposite.getAgentSession().getDomainName());
                 }
                 if (log.isDebugEnabled()) {
                     log.debug(eventQueue.size() + " messages in queue after " +

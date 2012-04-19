@@ -55,12 +55,14 @@ public class TestServer extends TestCase {
             int totalSize = 0;
 
             public void definedEventStream(EventStreamDefinition eventStreamDefinition,
-                                           String sessionId) {
-                log.info("EventStreamDefinition " + sessionId);
+                                           String userName, String password, String domainName) {
+                log.info("EventStreamDefinition " + userName);
             }
 
-            public void receive(List<Event> eventList, String sessionId) {
-                log.info("eventListSize=" + eventList.size() + " eventList " + eventList + " for sessionId " + sessionId);
+            @Override
+            public void receive(List<Event> eventList, String userName, String password,
+                                String domainName) {
+                log.info("eventListSize=" + eventList.size() + " eventList " + eventList + " for username " + userName);
             }
 
         });

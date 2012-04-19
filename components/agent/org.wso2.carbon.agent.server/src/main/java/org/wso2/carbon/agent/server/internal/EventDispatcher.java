@@ -79,7 +79,7 @@ public class EventDispatcher {
         }
 
         for (AgentCallback agentCallback : subscribers) {
-            agentCallback.definedEventStream(eventStreamDefinition, agentSession.getSessionId());
+            agentCallback.definedEventStream(eventStreamDefinition, agentSession.getUsername(), agentSession.getPassword(),agentSession.getDomainName());
         }
         return eventStreamDefinition.getStreamId();
     }
@@ -101,7 +101,7 @@ public class EventDispatcher {
     public void publish(ThriftEventBundle thriftEventBundle, AgentSession agentSession)
             throws ThriftUndefinedEventTypeException {
         try {
-            eventQueue.publish(new EventComposite(thriftEventBundle, getStreamDefinitionHolder(agentSession.getDomainName())));
+            eventQueue.publish(new EventComposite(thriftEventBundle, getStreamDefinitionHolder(agentSession.getDomainName()),agentSession));
         } catch (StreamDefinitionNotFoundException e) {
             throw new ThriftUndefinedEventTypeException("No event stream definition exist " + e.getErrorMessage());
         }

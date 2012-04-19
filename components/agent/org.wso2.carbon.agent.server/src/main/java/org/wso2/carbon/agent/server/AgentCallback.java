@@ -34,17 +34,23 @@ public interface AgentCallback {
      * will get called  when types are defined
      *
      * @param eventStreamDefinition   TypeDefinition of event streams
-     * @param sessionId Session Id of the connection
+     * @param userName of the user defining the event stream definition
+     * @param password of the user defining the event stream definition
+     * @param domainName to which the event stream is defined
      */
-    void definedEventStream(EventStreamDefinition eventStreamDefinition, String sessionId);
+    void definedEventStream(EventStreamDefinition eventStreamDefinition, String userName,
+                            String password, String domainName);
 
 
     /**
      * will get called when Events arrive
      *
      * @param eventList Arrived event list
-     * @param sessionId Session Id of the connection
+     * @param userName of the user sending the events
+     * @param password of the user sending the events
+     * @param domainName to which the events is sent
      */
-    void receive(List<Event> eventList, String sessionId);
+    void receive(List<Event> eventList, String userName,
+                 String password, String domainName);
 
 }

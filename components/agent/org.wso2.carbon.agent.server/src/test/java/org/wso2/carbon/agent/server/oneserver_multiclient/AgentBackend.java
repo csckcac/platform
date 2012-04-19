@@ -61,12 +61,12 @@ public class AgentBackend {
     public void start() throws AgentServerException, InterruptedException {
 
         AgentServerConfiguration agentServerConfiguration = generateServerConf(offset);
-        carbonAgentServer = new CarbonAgentServer(agentServerConfiguration,new AuthenticationHandler() {
+        carbonAgentServer = new CarbonAgentServer(agentServerConfiguration, new AuthenticationHandler() {
             @Override
             public boolean authenticate(String userName, String password) {
                 return true;// allays authenticate to true
             }
-        },new InMemoryStreamDefinitionStore());
+        }, new InMemoryStreamDefinitionStore());
         carbonAgentServer.subscribe(assignAgentCallback());
         carbonAgentServer.start();
 
@@ -80,11 +80,13 @@ public class AgentBackend {
             private EventStreamDefinition eventStreamDefinition;
 
             public void definedEventStream(EventStreamDefinition eventStreamDefinition,
-                                           String sessionId) {
+                                           String userName, String password, String domainName) {
                 this.eventStreamDefinition = eventStreamDefinition;//not used here
             }
 
-            public void receive(List<Event> eventList, String sessionId) {
+            @Override
+            public void receive(List<Event> eventList, String userName, String password,
+                                String domainName) {
                 addCount(eventList);
                 if (size <= STABLE && size > STABLE - 200) {
                     startTime = System.currentTimeMillis();
@@ -105,7 +107,7 @@ public class AgentBackend {
     }
 
     private AgentServerConfiguration generateServerConf(int offset) {
-        AgentServerConfiguration agentServerConfiguration = new AgentServerConfiguration(7711 + offset,7611 + offset);
+        AgentServerConfiguration agentServerConfiguration = new AgentServerConfiguration(7711 + offset, 7611 + offset);
         return agentServerConfiguration;
     }
 

@@ -75,7 +75,7 @@ public class AgentBackend {
                 return true;// allays authenticate to true
 
             }
-        },new InMemoryStreamDefinitionStore());
+        }, new InMemoryStreamDefinitionStore());
         carbonAgentServer.subscribe(assignAgentCallback());
         carbonAgentServer.start();
     }
@@ -88,11 +88,13 @@ public class AgentBackend {
             private EventStreamDefinition eventStreamDefinition;
 
             public void definedEventStream(EventStreamDefinition eventStreamDefinition,
-                                           String sessionId) {
+                                           String userName, String password, String domainName) {
                 this.eventStreamDefinition = eventStreamDefinition;//not used here
             }
 
-            public void receive(List<Event> eventList, String sessionId) {
+            @Override
+            public void receive(List<Event> eventList, String userName, String password,
+                                String domainName) {
                 addCount(eventList);
                 if (size <= STABLE && size > STABLE - 500) {
                     startTime = System.currentTimeMillis();
@@ -113,7 +115,7 @@ public class AgentBackend {
     }
 
     private AgentServerConfiguration generateServerConf(int offset) {
-        return new AgentServerConfiguration(7711 + offset,7611 + offset);
+        return new AgentServerConfiguration(7711 + offset, 7611 + offset);
     }
 
     public void stop() {

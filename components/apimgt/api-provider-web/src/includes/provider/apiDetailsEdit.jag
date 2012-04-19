@@ -92,9 +92,6 @@
                     </select>
 
                     <div class="resourceTableDiv" id="resourceTableDiv">
-                          <div class="alert alert-error" id="resourceTableError" style="display:none">
-                            <span>Sorry. This row can not be deleted.</span>
-                        </div>
                         <table class="table table-bordered table-striped" id="resourceTable">
 
                             <thead>
@@ -127,6 +124,9 @@
                             </tbody>
                         </table>
                         <!--a class="btn btn-primary" id="resourceAddBtn" onClick="updateResourcesToApi()"><i class="icon-plus icon-white"></i> Add</a-->
+                    </div>
+                    <div class="alert alert-error" id="resourceTableError" style="display:none">
+                        <span>Sorry. This row can not be deleted. Atleast one resource entry has to be available.</span>
                     </div>
                 </div>
                 <br/>

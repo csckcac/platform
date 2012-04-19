@@ -183,11 +183,14 @@ var renderAPI = function (result) {
 };
 
 var deleteResource = function (id) {
+    rowNums.splice(rowNums.indexOf(id),1);
+    if(rowNums.length==0){
+        $('#resourceTableError').show('fast');
+        return;
+    }
     $('#item-' + id).remove();
     $('[name=resourceMethod-' + id + ']').remove();
     $('[name=uriTemplate-' + id + ']').remove();
-
-    rowNums.splice(rowNums.indexOf(id),1);
 
     $('#resourceCount').val(rowNums);
 

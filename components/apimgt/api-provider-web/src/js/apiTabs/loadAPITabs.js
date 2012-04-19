@@ -70,7 +70,7 @@ console.log("test Version Click");
     }
 });
 
-var resourcesCount = 0;
+var resourcesCount = 1;
 var rowNums = new Array();
 
 var addResourcesToApi = function () {
@@ -79,6 +79,9 @@ var addResourcesToApi = function () {
     $('#item-' + resourcesCount + ' #uriTemplate').attr('disabled', 'disabled');
     $('#item-' + resourcesCount + ' #resourceMethod').attr('disabled', 'disabled');
     $('#item-' + resourcesCount + ' td#buttons a#resourceAddBtn').remove();
+    if($('#item-' + resourcesCount + ' td#buttons a#resourceDelBtn').length>0){
+    $('#item-' + resourcesCount + ' td#buttons a#resourceDelBtn').remove();
+    }
     $('#item-' + resourcesCount + ' td#buttons').append("<a class=\"btn btn-danger\" onclick=\"deleteResource(" + resourcesCount + ")\"><i class=\"icon-trash icon-white\"></i> Delete</a>");
 
 

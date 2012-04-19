@@ -52,8 +52,8 @@
             <artifactId>gdata-spreadsheet</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.google.common.wso2</groupId>
-            <artifactId>google-collect</artifactId>
+            <groupId>com.google.guava.wso2</groupId>
+            <artifactId>guava</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.poi.wso2</groupId>
@@ -159,7 +159,7 @@
                                 </bundleDef>
                                 <bundleDef>com.google.gdata.wso2:gdata-core</bundleDef>
                                 <bundleDef>com.google.gdata.wso2:gdata-spreadsheet</bundleDef>
-                                <bundleDef>com.google.common.wso2:google-collect</bundleDef>
+                                <bundleDef>com.google.guava.wso2:guava</bundleDef>
                                 <bundleDef>org.apache.poi.wso2:poi</bundleDef>
                                 <bundleDef>org.apache.poi.wso2:poi-ooxml</bundleDef>
                                 <bundleDef>org.apache.poi.wso2:ooxml-spreadsheet-schemas</bundleDef>

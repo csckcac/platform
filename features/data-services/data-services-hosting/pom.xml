@@ -130,7 +130,6 @@
 
     <properties>
         <wso2carbon.version.dataservices>${carbon.platform.version}</wso2carbon.version.dataservices>
-        <gdata-core.wso2.version.data-services>1.0.0.wso2v1</gdata-core.wso2.version.data-services>
         <gdata-spreadsheet.wso2.version.data-services>3.0.0.wso2v1
         </gdata-spreadsheet.wso2.version.data-services>
         <poi.wso2.version.data-services>3.5.0.wso2v1</poi.wso2.version.data-services>

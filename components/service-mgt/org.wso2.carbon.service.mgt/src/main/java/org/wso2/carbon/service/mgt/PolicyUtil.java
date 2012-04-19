@@ -23,7 +23,6 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
-import org.apache.axiom.om.impl.llom.factory.OMXMLBuilderFactory;
 import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyEngine;
 import org.apache.neethi.PolicyReference;
@@ -59,8 +58,9 @@ public final class PolicyUtil {
             XMLStreamReader xmlStreamReader =
                     XMLInputFactory.newInstance().createXMLStreamReader(bais);
             StAXOMBuilder staxOMBuilder =
-                    OMXMLBuilderFactory.createStAXOMBuilder(OMAbstractFactory.getOMFactory(),
-                                                            xmlStreamReader);
+                    org.apache.axiom.om.impl.llom.factory.OMXMLBuilderFactory.createStAXOMBuilder(
+                            OMAbstractFactory.getOMFactory(), xmlStreamReader);
+//            StAXOMBuilder stAXOMBuilder2 = OMXMLBuilderFactory.createOMBuilder()
             return staxOMBuilder.getDocumentElement();
 
         } catch (Exception ex) {
@@ -107,7 +107,7 @@ public final class PolicyUtil {
     }
 
     public static String[] processPolicyElements(Iterator policyIterator, PolicyRegistry registry) {
-        List policyList = new ArrayList();
+        List<String> policyList = new ArrayList<String>();
         while (policyIterator.hasNext()) {
             Object value = policyIterator.next();
 
@@ -127,7 +127,7 @@ public final class PolicyUtil {
             }
         }
 
-        return (String[]) policyList.toArray(new String[policyList.size()]);
+        return policyList.toArray(new String[policyList.size()]);
 
     }
 

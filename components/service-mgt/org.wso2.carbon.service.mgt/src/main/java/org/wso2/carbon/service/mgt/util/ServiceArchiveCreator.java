@@ -23,6 +23,8 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.Constants;
+import org.apache.axis2.addressing.AddressingHelper;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.deployment.DeploymentConstants;
@@ -56,8 +58,6 @@ import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.FileManipulator;
 import org.wso2.carbon.utils.NetworkUtils;
 import org.wso2.carbon.utils.ServerConstants;
-import org.wso2.carbon.utils.WSO2Constants;
-
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
@@ -126,8 +126,8 @@ public final class ServiceArchiveCreator {
         URL axisServiceGroupURL = null;
         // Filtering axis1 services and data services from creating archives
         //TODO AxisServiceGroup should have a getFileURL method;
-        for (Iterator iterator = axisServiceGroup.getServices(); iterator.hasNext();) {
-            AxisService as = (AxisService) iterator.next();
+        for (Iterator<AxisService> iterator = axisServiceGroup.getServices(); iterator.hasNext();) {
+            AxisService as = iterator.next();
             for (Parameter parameter : as.getParameters()) {
                 String name = parameter.getName();
 
@@ -214,21 +214,20 @@ public final class ServiceArchiveCreator {
             });
 
             if (oldWsdls != null) {
-                for (int i = 0; i < oldWsdls.length; i++) {
-                    File oldWsdl = oldWsdls[i];
+                for (File oldWsdl : oldWsdls) {
                     if (oldWsdl.exists() && !oldWsdl.delete()) {
                         log.warn("Could not delete " + oldWsdl.getAbsolutePath());
                     }
                 }
             }
             //Creating wsdls
-            for (Iterator iterator = axisServiceGroup.getServices(); iterator.hasNext();) {
-                AxisService axisService = (AxisService) iterator.next();
+            for (Iterator<AxisService> iterator = axisServiceGroup.getServices(); iterator.hasNext();) {
+                AxisService axisService = iterator.next();
 
                 boolean isRpcMessageReceiver = false;
-                for (Iterator ops = axisService.getOperations(); ops.hasNext();) {
+                for (Iterator<AxisOperation> ops = axisService.getOperations(); ops.hasNext();) {
                     MessageReceiver receiver =
-                            ((AxisOperation) ops.next()).getMessageReceiver();
+                            (ops.next()).getMessageReceiver();
                     isRpcMessageReceiver =
                             receiver instanceof RPCMessageReceiver || receiver instanceof RPCInOnlyMessageReceiver;
                 }
@@ -257,11 +256,11 @@ public final class ServiceArchiveCreator {
                     .getCurrentMessageContext().getConfigurationContext();
 
             Map fileResourcesMap =
-                    (Map) superTenantConfigContext.getProperty(WSO2Constants.FILE_RESOURCE_MAP);
+                    (Map) superTenantConfigContext.getProperty(ServerConstants.FILE_RESOURCE_MAP);
 
             if (fileResourcesMap == null) {
                 fileResourcesMap = new Hashtable();
-                superTenantConfigContext.setProperty(WSO2Constants.FILE_RESOURCE_MAP, fileResourcesMap);
+                superTenantConfigContext.setProperty(ServerConstants.FILE_RESOURCE_MAP, fileResourcesMap);
             }
 
             File[] files = fout.listFiles(new FileFilter() {
@@ -274,7 +273,7 @@ public final class ServiceArchiveCreator {
                 fileResourcesMap.put(uuid, files[0].getAbsoluteFile().getAbsolutePath());
             }
 
-            return WSO2Constants.ContextPaths.DOWNLOAD_PATH + "?id=" + uuid;
+            return ServerConstants.ContextPaths.DOWNLOAD_PATH + "?id=" + uuid;
 
         } catch (IOException e) {
             String msg = "IOException occurred while trying to create service archive for service "
@@ -304,7 +303,8 @@ public final class ServiceArchiveCreator {
         OMAttribute nameAttr = createOMAttribute(fac, ns, DeploymentConstants.ATTRIBUTE_NAME,
                                                  axisService.getName());
         OMAttribute wsAddAttr = createOMAttribute(fac, ns,
-                                                  DeploymentConstants.ATTRIBUTE_WSADDRESSING, axisService.getWSAddressingFlag());
+                                                  DeploymentConstants.ATTRIBUTE_WSADDRESSING,
+                                                  AddressingHelper.getAddressingRequirementParemeterValue(axisService));
         OMAttribute targetNsAttr = createOMAttribute(fac, ns,
                                                      DeploymentConstants.TARGET_NAME_SPACE, axisService.getTargetNamespace());
         OMAttribute scopeAttr = createOMAttribute(fac, ns, DeploymentConstants.ATTRIBUTE_SCOPE,
@@ -321,7 +321,7 @@ public final class ServiceArchiveCreator {
 
         OMElement schemaEle = createOMElement(fac, ns, DeploymentConstants.SCHEMA);
         OMAttribute schemaNsAttr = createOMAttribute(fac, ns,
-                                                     DeploymentConstants.SCHEMA_NAME_SPACE, axisService.getSchematargetNamespace());
+                                                     DeploymentConstants.SCHEMA_NAME_SPACE, axisService.getSchemaTargetNamespace());
         OMAttribute schemaEleQualifiedAttr = createOMAttribute(fac, ns,
                                                                DeploymentConstants.SCHEMA_ELEMENT_QUALIFIED,
                                                                (axisService.isElementFormDefault() ? "true" : "false"));
@@ -333,8 +333,8 @@ public final class ServiceArchiveCreator {
         Map p2nMap = axisService.getP2nMap();
         if (p2nMap != null) {
             Set entrySet = p2nMap.entrySet();
-            for (Iterator iterator = entrySet.iterator(); iterator.hasNext();) {
-                Map.Entry me = (Map.Entry) iterator.next();
+            for (Object anEntrySet : entrySet) {
+                Map.Entry me = (Map.Entry) anEntrySet;
                 String packageKey = (String) me.getKey();
                 String namesapceValue = (String) me.getValue();
                 OMElement mapping = createOMElement(fac, ns, DeploymentConstants.MAPPING);
@@ -351,19 +351,17 @@ public final class ServiceArchiveCreator {
         if (!axisService.isEnableAllTransports()) {
             OMElement transportsEle = createOMElement(fac, ns, DeploymentConstants.TAG_TRANSPORTS);
             serviceEle.addChild(transportsEle);
-            for (Iterator iterator = axisService.getExposedTransports().iterator(); iterator
-                    .hasNext();) {
-                String t = (String) iterator.next();
+            for (String transport : axisService.getExposedTransports()) {
                 OMElement transportEle = createOMElement(fac, ns,
-                                                         DeploymentConstants.TAG_TRANSPORT, t);
+                                                         DeploymentConstants.TAG_TRANSPORT, transport);
                 transportsEle.addChild(transportEle);
 
             }
         }
 
         //operations
-        for (Iterator iterator = axisService.getOperations(); iterator.hasNext();) {
-            AxisOperation operation = (AxisOperation) iterator.next();
+        for (Iterator<AxisOperation> iterator = axisService.getOperations(); iterator.hasNext();) {
+            AxisOperation operation = iterator.next();
 
             if (!operation.isControlOperation()) {
                 OMElement operationEle = createOMElement(fac, ns, DeploymentConstants.TAG_OPERATION);
@@ -384,12 +382,11 @@ public final class ServiceArchiveCreator {
                                 .getClass().getName());
                 opMREle.addAttribute(opMRClassAttr);
 
-                List mappingList = operation.getWSAMappingList();
+                List<String> mappingList = operation.getWSAMappingList();
                 if (mappingList != null) {
-                    for (int i = 0; i < mappingList.size(); i++) {
+                    for (String aMappingList : mappingList) {
                         OMElement mappingEle = createOMElement(fac, ns,
-                                                               org.apache.axis2.Constants.ACTION_MAPPING, (String) mappingList
-                                        .get(i));
+                                                               Constants.ACTION_MAPPING, aMappingList);
                         operationEle.addChild(mappingEle);
 
                     }
@@ -403,27 +400,25 @@ public final class ServiceArchiveCreator {
 
                 String[] faultActions = operation.getFaultActionNames();
                 if (faultActions != null) {
-                    for (int i = 0; i < faultActions.length; i++) {
+                    for (String faultAction : faultActions) {
                         OMElement faultActionEle = createOMElement(fac, ns,
-                                                                   org.apache.axis2.Constants.FAULT_ACTION_MAPPING);
+                                                                   Constants.FAULT_ACTION_MAPPING);
                         operationEle.addChild(faultActionEle);
                         OMAttribute faultActionAttr = createOMAttribute(fac, ns,
-                                                                        org.apache.axis2.Constants.FAULT_ACTION_NAME, faultActions[i]);
+                                                                        Constants.FAULT_ACTION_NAME, faultAction);
                         faultActionEle.addAttribute(faultActionAttr);
 
                     }
                 }
 
-                List operationParameterList = operation.getParameters();
+                List<Parameter> operationParameterList = operation.getParameters();
                 serializeParameterList(operationParameterList, operationEle, fac, ns);
 
-                Collection operationLevelEngagedModulesCollection = operation.getEngagedModules();
-                Collection axisServiceLevelEngagedModuleCollection = axisService
+                Collection<AxisModule> operationLevelEngagedModulesCollection = operation.getEngagedModules();
+                Collection<AxisModule> axisServiceLevelEngagedModuleCollection = axisService
                         .getEngagedModules();
-                List aoOnlyModuleList = new ArrayList();
-                for (Iterator iterator1 = operationLevelEngagedModulesCollection.iterator(); iterator1
-                        .hasNext();) {
-                    AxisModule axisModule = (AxisModule) iterator1.next();
+                List<AxisModule> aoOnlyModuleList = new ArrayList<AxisModule>();
+                for (AxisModule axisModule : operationLevelEngagedModulesCollection) {
                     if (axisServiceLevelEngagedModuleCollection.contains(axisModule)) {
                         continue;
                     }
@@ -431,19 +426,18 @@ public final class ServiceArchiveCreator {
                 }
                 serializeModules(aoOnlyModuleList, operationEle, fac, ns, operation);
 
-                Map axisMessagesMap = new AxisMessageLookup().lookup(operation);
-                Set axisMessagesSet = axisMessagesMap.entrySet();
-                for (Iterator iterator1 = axisMessagesSet.iterator(); iterator1.hasNext();) {
-                    Map.Entry me = (Map.Entry) iterator1.next();
-                    String lableKey = (String) me.getKey();
-                    AxisMessage axisMessage = (AxisMessage) me.getValue();
+                Map<String, AxisMessage> axisMessagesMap = new AxisMessageLookup().lookup(operation);
+                Set<Map.Entry<String,AxisMessage>> axisMessagesSet = axisMessagesMap.entrySet();
+                for (Map.Entry<String, AxisMessage> me : axisMessagesSet) {
+                    String lableKey = me.getKey();
+                    AxisMessage axisMessage = me.getValue();
                     OMElement axisMessageEle = createOMElement(fac, ns,
                                                                DeploymentConstants.TAG_MESSAGE);
                     OMAttribute axisMessageLableAttr = createOMAttribute(fac, ns,
                                                                          DeploymentConstants.TAG_LABEL, lableKey);
                     axisMessageEle.addAttribute(axisMessageLableAttr);
 
-                    List axisMessageParameterList = axisMessage.getParameters();
+                    List<Parameter> axisMessageParameterList = axisMessage.getParameters();
                     serializeParameterList(axisMessageParameterList, axisMessageEle, fac, ns);
 
                     PolicyInclude policyInclude = operation.getPolicyInclude();
@@ -467,17 +461,16 @@ public final class ServiceArchiveCreator {
 
         }
 
-        List serviceParameterList = axisService.getParameters();
+        List<Parameter> serviceParameterList = axisService.getParameters();
         serializeParameterList(serviceParameterList, serviceEle, fac, ns);
 
         //service level engaged modules.
-        Collection serviceEngagedModuleCollection = axisService.getEngagedModules();
+        Collection<AxisModule> serviceEngagedModuleCollection = axisService.getEngagedModules();
         AxisDescription parent = axisService.getParent();
         AxisServiceGroup asg = (AxisServiceGroup) parent;
-        Collection asgEngagedModulesCollection = asg.getEngagedModules();
-        List asOnlyModuleList = new ArrayList();
-        for (Iterator iterator = serviceEngagedModuleCollection.iterator(); iterator.hasNext();) {
-            AxisModule axisModule = (AxisModule) iterator.next();
+        Collection<AxisModule> asgEngagedModulesCollection = asg.getEngagedModules();
+        List<AxisModule> asOnlyModuleList = new ArrayList<AxisModule>();
+        for (AxisModule axisModule : serviceEngagedModuleCollection) {
             if (asgEngagedModulesCollection.contains(axisModule.getName())) {
                 continue;
             }
@@ -494,8 +487,8 @@ public final class ServiceArchiveCreator {
             if (typeTable != null) {
                 Map complexSchemaMap = typeTable.getComplexSchemaMap();
                 Set complexSchemaSet = complexSchemaMap.entrySet();
-                for (Iterator iterator = complexSchemaSet.iterator(); iterator.hasNext();) {
-                    Map.Entry me = (Map.Entry) iterator.next();
+                for (Object aComplexSchemaSet : complexSchemaSet) {
+                    Map.Entry me = (Map.Entry) aComplexSchemaSet;
                     String packageKey = (String) me.getKey();
                     QName qName = (QName) me.getValue();
                     OMElement mapping = createOMElement(fac, ns, DeploymentConstants.TAG_MAPPING);
@@ -535,15 +528,15 @@ public final class ServiceArchiveCreator {
                                                            axisServiceGroup.getServiceGroupName());
           serviceGroupEle.addAttribute(serviceGroupName);*/
 
-        List parameterList = axisServiceGroup.getParameters();
+        List<Parameter> parameterList = axisServiceGroup.getParameters();
         serializeParameterList(parameterList, serviceGroupEle, fac, ns);
 
-        Collection axisServiceGroupModuleCollection = axisServiceGroup.getEngagedModules();
+        Collection<AxisModule> axisServiceGroupModuleCollection = axisServiceGroup.getEngagedModules();
         serializeModules(axisServiceGroupModuleCollection, serviceGroupEle, fac, ns,
                          axisServiceGroup);
 
-        for (Iterator iterator = axisServiceGroup.getServices(); iterator.hasNext();) {
-            AxisService axisService = (AxisService) iterator.next();
+        for (Iterator<AxisService> iterator = axisServiceGroup.getServices(); iterator.hasNext();) {
+            AxisService axisService = iterator.next();
             OMElement axisServiceEle = createServicesXMLInfoset(axisService);
             serviceGroupEle.addChild(axisServiceEle);
         }
@@ -552,8 +545,7 @@ public final class ServiceArchiveCreator {
 
     protected static void serializePolicyIncludes(OMElement parent, List policyList,
                                                   PolicyRegistry policyRegistry) {
-        for (Iterator iterator = policyList.iterator(); iterator.hasNext();) {
-            Object obj = iterator.next();
+        for (Object obj : policyList) {
             if (obj instanceof Policy) {
                 Policy policy = (Policy) obj;
                 parent.addChild((PolicyUtil.getPolicyAsOMElement(policy)));
@@ -573,13 +565,12 @@ public final class ServiceArchiveCreator {
 
     }
 
-    protected static void serializeModules(Collection moduleCollection, OMElement parent,
+    protected static void serializeModules(Collection<AxisModule> moduleCollection, OMElement parent,
                                            OMFactory fac, OMNamespace ns,
                                            AxisDescription axisDesc) {
         if (moduleCollection != null) {
 
-            for (Iterator iterator = moduleCollection.iterator(); iterator.hasNext();) {
-                AxisModule axisModule = (AxisModule) iterator.next();
+            for (AxisModule axisModule : moduleCollection) {
                 String moduleName = axisModule.getName();
                 if (SystemFilter.isFilteredOutModule(moduleName)
                     || axisDesc.getParent().isEngaged(axisModule)) {
@@ -612,7 +603,7 @@ public final class ServiceArchiveCreator {
                                                                          DeploymentConstants.ATTRIBUTE_NAME, moduleConfig.getModuleName());
                     moduleConfigEle.addAttribute(moduleConfigNameAttr);
                     parent.addChild(moduleConfigEle);
-                    List paramsList = moduleConfig.getParameters();
+                    List<Parameter> paramsList = moduleConfig.getParameters();
                     serializeParameterList(paramsList, moduleConfigEle, fac, ns);
                 }
             }
@@ -620,11 +611,10 @@ public final class ServiceArchiveCreator {
 
     }
 
-    protected static void serializeParameterList(List parameterList, OMElement parent,
+    protected static void serializeParameterList(List<Parameter> parameterList, OMElement parent,
                                                  OMFactory fac, OMNamespace ns) {
         if (parameterList != null) {
-            for (int j = 0; j < parameterList.size(); j++) {
-                Parameter parm = (Parameter) parameterList.get(j);
+            for (Parameter parm : parameterList) {
                 //TODO a check to see, whether this param is a control or not
                 serializeParameter(parm, parent, fac, ns);
             }
@@ -697,8 +687,8 @@ public final class ServiceArchiveCreator {
      * TODO Find better way via Axis2. Introduce a new method getMessages to AxisOperation.
      */
     protected static class AxisMessageLookup {
-        protected Map lookup(AxisOperation axisOperation) {
-            Map axisMessageMap = new HashMap();
+        protected Map<String, AxisMessage> lookup(AxisOperation axisOperation) {
+            Map<String, AxisMessage> axisMessageMap = new HashMap<String, AxisMessage>();
             if (axisOperation instanceof InOnlyAxisOperation) {
                 axisMessageMap.put(WSDLConstants.MESSAGE_LABEL_IN_VALUE, axisOperation
                         .getMessage(WSDLConstants.MESSAGE_LABEL_IN_VALUE));

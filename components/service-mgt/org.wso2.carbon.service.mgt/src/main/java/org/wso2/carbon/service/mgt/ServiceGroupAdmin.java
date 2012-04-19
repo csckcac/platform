@@ -18,7 +18,7 @@
 package org.wso2.carbon.service.mgt;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.impl.llom.util.AXIOMUtil;
+import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.context.ConfigurationContext;
@@ -45,6 +45,7 @@ import java.util.*;
 /**
  * Admin service to manage service groups
  */
+@SuppressWarnings("unused")
 public class ServiceGroupAdmin extends AbstractAdmin {
     private static Log log = LogFactory.getLog(ServiceGroupAdmin.class);
 
@@ -227,7 +228,7 @@ public class ServiceGroupAdmin extends AbstractAdmin {
     /**
      * Return service group details for a given service group
      *
-     * @param serviceGroupName
+     * @param serviceGroupName axis service group name
      * @return ServiceGroupMetaData
      * @throws AxisFault
      */
@@ -256,8 +257,8 @@ public class ServiceGroupAdmin extends AbstractAdmin {
         if (engagedModules != null && engagedModules.size() > 0) {
             int i = 0;
             engagedModuleNames = new String[engagedModules.size()];
-            for (Iterator iterator = engagedModules.iterator(); iterator.hasNext(); ) {
-                AxisModule module = (AxisModule) iterator.next();
+            for (Object engagedModule : engagedModules) {
+                AxisModule module = (AxisModule) engagedModule;
                 engagedModuleNames[i++] = module.getName();
             }
         }
@@ -528,8 +529,8 @@ public class ServiceGroupAdmin extends AbstractAdmin {
      */
     public void setServiceGroupParameters(String serviceGroupId, String[] parameterElement)
             throws AxisFault {
-        for (int i = 0; i < parameterElement.length; i++) {
-            setServiceGroupParameter(serviceGroupId, parameterElement[i]);
+        for (String aParameterElement : parameterElement) {
+            setServiceGroupParameter(serviceGroupId, aParameterElement);
         }
     }
 

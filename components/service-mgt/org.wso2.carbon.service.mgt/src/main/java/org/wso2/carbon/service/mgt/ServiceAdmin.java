@@ -22,7 +22,7 @@ import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axiom.om.util.StAXUtils;
-import org.apache.axiom.om.util.UUIDGenerator;
+import org.apache.axiom.util.UIDGenerator;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.context.ConfigurationContext;
@@ -38,7 +38,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.neethi.*;
 import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.core.Resources;
 import org.wso2.carbon.core.persistence.*;
@@ -76,8 +75,8 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
     private static final Log log = LogFactory.getLog(ServiceAdmin.class);
 
     private static final String SERVICE_MUST_CONTAIN_AT_LEAST_ONE_TRANSPORT =
-            "Cannot remove transport binding. "
-                    + "<br/>A service must contain at least one transport binding!";
+            "Cannot remove transport binding. " +
+            "<br/>A service must contain at least one transport binding!";
 
     private static final int DEFAULT_ITEMS_PER_PAGE = 10;
     public static final String DISABLE_TRY_IT_PARAM = "disableTryIt";
@@ -130,7 +129,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 
         if (policy.getId() == null) {
             // Generate an ID
-            policy.setId(UUIDGenerator.getUUID());
+            policy.setId(UIDGenerator.generateUID());
             //todo this MUST be a element instead of an attribute. That's how the core is designed.
             policyWrapperElement.addAttribute(Resources.ServiceProperties.POLICY_UUID, "" + policy.getId(), null);
             OMElement policyElement = PersistenceUtils.createPolicyElement(policy);
@@ -324,7 +323,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
                         serviceGroupId,
                         serviceXPath +
                                 "/" + Resources.ModuleProperties.MODULE_XML_TAG +
-                                PersistenceUtils.getXPathAttrPredicate(Resources.ModuleProperties.TYPE.toString(),
+                                PersistenceUtils.getXPathAttrPredicate(Resources.ModuleProperties.TYPE,
                                         Resources.Associations.ENGAGED_MODULES));
                 for (Object obj : serviceAss) {
                     OMElement moduleAss = (OMElement) obj;
@@ -433,7 +432,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         }
         List<ServiceMetaData> serviceList = new ArrayList<ServiceMetaData>();
         TreeSet<String> serviceTypes = new TreeSet<String>();
-        serviceTypes.add("axis2" + Constants.SERVICE);
+        serviceTypes.add("axis2");
 
         HashMap<String, AxisService> axisServices = getAxisConfig().getServices();
         List<AxisService> axisServicesList = new ArrayList<AxisService>();
@@ -444,8 +443,8 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         Map<String, AxisService> clonedTransitGhosts = new HashMap<String, AxisService>();
         clonedTransitGhosts.putAll(originalTransitGhosts);
 
-        for (Map.Entry entry : axisServices.entrySet()) {
-            AxisService axisService = (AxisService) entry.getValue();
+        for (Map.Entry<String, AxisService> entry : axisServices.entrySet()) {
+            AxisService axisService = entry.getValue();
             // Filtering the admin services
             if (SystemFilter.isAdminService(axisService) || SystemFilter.isHiddenService(axisService)) {
                 continue;  // No advancement of currentIndex
@@ -467,8 +466,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             // Filter out services based on serviceSearchString
             if (serviceSearchString != null &&
                     serviceSearchString.trim().length() > 0 &&
-                    axisService.getName().toLowerCase().
-                            indexOf(serviceSearchString.toLowerCase()) == -1) {
+                    !axisService.getName().toLowerCase().contains(serviceSearchString.toLowerCase())) {
                 continue;
             }
             axisServicesList.add(axisService);
@@ -503,8 +501,8 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 //        for (int i = startIndex; i < endIndex && i < axisServicesList.size(); i++) {
 //            axisServicesRequiredForPage.add(axisServicesList.get(i));
 //        }
-        for (int i = 0; i < axisServicesList.size(); i++) {
-            axisServicesRequiredForPage.add(axisServicesList.get(i));
+        for (AxisService anAxisServicesList : axisServicesList) {
+            axisServicesRequiredForPage.add(anAxisServicesList);
         }
 
         for (AxisService axisService : axisServicesRequiredForPage) {
@@ -621,7 +619,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         Map<String, AxisService> services = getAxisConfig().getServices();
         for (AxisService service : services.values()) {
             if (!SystemFilter.isFilteredOutService((AxisServiceGroup) service.getParent()) &&
-                    !service.isActive()) {
+                !service.isActive()) {
                 inactiveServices++;
             }
         }
@@ -741,15 +739,15 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             log.debug("Deleting faulty service archive " + archiveName);
         }
         boolean isDeleted = false;
-        if (archiveName != null && archiveName.trim().length() != 0) {
+        if (archiveName.trim().length() != 0) {
             File file = new File(archiveName);
             if (file.exists()) {
                 if (!((file.isDirectory() && FileManipulator.deleteDir(file)) || file
                         .delete())) {
                     throw new AxisFault("Faulty service archive deletion failed. "
-                            + "Due to a JVM issue on MS-Windows, "
-                            + "service archive files cannot be deleted. "
-                            + "Please stop the server and manually delete this file.");
+                                        + "Due to a JVM issue on MS-Windows, "
+                                        + "service archive files cannot be deleted. "
+                                        + "Please stop the server and manually delete this file.");
                 } else {
                     isDeleted = true;
                     getAxisConfig().getFaultyServices().remove(archiveName);
@@ -761,8 +759,8 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
     }
 
     public void deleteAllNonAdminServiceGroups() throws AxisFault {
-        for (Iterator iter = getAxisConfig().getServiceGroups(); iter.hasNext(); ) {
-            AxisServiceGroup asGroup = (AxisServiceGroup) iter.next();
+        for (Iterator<AxisServiceGroup> iter = getAxisConfig().getServiceGroups(); iter.hasNext();) {
+            AxisServiceGroup asGroup = iter.next();
             if (!SystemFilter.isFilteredOutService(asGroup)) {
                 deleteServiceGroup(asGroup.getServiceGroupName());
             }
@@ -770,9 +768,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
     }
 
     public void deleteAllFaultyServiceGroups() throws AxisFault {
-        for (Iterator iter = getAxisConfig().getFaultyServices().values().iterator();
-             iter.hasNext(); ) {
-            String fileName = (String) iter.next();
+        for (String fileName : getAxisConfig().getFaultyServices().values()) {
             deleteFaultyServiceGroup(fileName);
         }
     }
@@ -785,7 +781,6 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
      * @throws AxisFault on error
      */
     public boolean checkForGroupedServices(String[] serviceGroupsList) throws AxisFault {
-        //toDo implement logic
         AxisConfiguration axisConfig = getAxisConfig();
         for (String serviceGroup : serviceGroupsList) {
             AxisServiceGroup asGroup = axisConfig.getServiceGroup(serviceGroup);
@@ -803,7 +798,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 
     public void deleteServiceGroups(String[] serviceGroups) throws AxisFault {
         //remove duplicates
-        Set serviceGroupsSet = new HashSet(Arrays.asList(serviceGroups));
+        Set<String> serviceGroupsSet = new HashSet<String>(Arrays.asList(serviceGroups));
         String[] serviceGroupsArray = new String[serviceGroupsSet.size()];
         serviceGroupsSet.toArray(serviceGroupsArray);
         for (String serviceGroup : serviceGroupsArray) {
@@ -833,8 +828,8 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         }
 
         String fileName = null;
-        for (Iterator serviceIter = asGroup.getServices(); serviceIter.hasNext(); ) {
-            AxisService axisService = (AxisService) serviceIter.next();
+        for (Iterator<AxisService> serviceIter = asGroup.getServices(); serviceIter.hasNext(); ) {
+            AxisService axisService = serviceIter.next();
             URL fn = axisService.getFileName();
             if (fn != null) {
                 fileName = fn.getPath();
@@ -925,8 +920,8 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 
         String serviceType = getServiceType(service);
         List<String> ops = new ArrayList<String>();
-        for (Iterator opIter = service.getOperations(); opIter.hasNext(); ) {
-            AxisOperation axisOperation = (AxisOperation) opIter.next();
+        for (Iterator<AxisOperation> opIter = service.getOperations(); opIter.hasNext(); ) {
+            AxisOperation axisOperation = opIter.next();
 
             if (axisOperation.getName() != null) {
                 ops.add(axisOperation.getName().getLocalPart());
@@ -1063,8 +1058,8 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
                 flag.trim());
         service.addParameter(parameter);
 
-        for (Iterator iterator1 = service.getOperations(); iterator1.hasNext(); ) {
-            AxisOperation axisOperation = (AxisOperation) iterator1.next();
+        for (Iterator<AxisOperation> iterator1 = service.getOperations(); iterator1.hasNext(); ) {
+            AxisOperation axisOperation = iterator1.next();
             axisOperation.
                     addParameter(ParameterUtil.createParameter(Constants.Configuration.ENABLE_MTOM,
                             (String) parameter.getValue()));
@@ -1243,7 +1238,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
                 new AxisEvent(CarbonConstants.AxisEvent.TRANSPORT_BINDING_ADDED, axisService),
                 axisService);
         return "Successfully added " + transportProtocol + " transport binding to service "
-                + serviceId;
+               + serviceId;
     }
 
     public String removeTransportBinding(String serviceId, String transportProtocol)
@@ -1426,10 +1421,9 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             }
 
             // at axis2
-            Map endPointMap = service.getEndpoints();
-            for (Object o : endPointMap.entrySet()) {
-                Map.Entry entry = (Map.Entry) o;
-                AxisEndpoint point = (AxisEndpoint) entry.getValue();
+            Map<String, AxisEndpoint> endPointMap = service.getEndpoints();
+            for (Map.Entry<String, AxisEndpoint> o : endPointMap.entrySet()) {
+                AxisEndpoint point = o.getValue();
                 AxisBinding binding = point.getBinding();
                 PolicySubject subject = binding.getPolicySubject();
                 subject.detachPolicyComponent(policyKey);
@@ -1577,11 +1571,10 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 
         // Get the merged module policy
         Policy policy = null;
-        for (Iterator iterator = policyList.iterator(); iterator.hasNext(); ) {
-            Object policyElement = iterator.next();
+        for (PolicyComponent policyElement : policyList) {
             if (policyElement instanceof Policy) {
                 policy = (policy == null) ? (Policy) policyElement
-                        : policy.merge((Policy) policyElement);
+                                          : policy.merge((Policy) policyElement);
             } else {
                 PolicyReference policyReference = (PolicyReference) policyElement;
 
@@ -1616,7 +1609,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 
         if (policy.getId() == null) {
             // Generate an ID
-            policy.setId(UUIDGenerator.getUUID());
+            policy.setId(UIDGenerator.generateUID());
         }
 
         // At axis2
@@ -1755,19 +1748,17 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             policyDataArray.add(policyData);
         }
 
-        for (Iterator iterator = axisService.getEndpoints().values().iterator();
-             iterator.hasNext(); ) {
-            AxisEndpoint axisEndpoint = (AxisEndpoint) iterator.next();
+        for (AxisEndpoint axisEndpoint : axisService.getEndpoints().values()) {
             policyList = new ArrayList<PolicyComponent>(axisEndpoint.getPolicySubject()
-                    .getAttachedPolicyComponents());
+                                                                .getAttachedPolicyComponents());
 
             if (!policyList.isEmpty()) {
                 PolicyMetaData policyData = new PolicyMetaData();
                 policyData.setWrapper("Policies that are applicable for " + axisEndpoint.getName()
-                        + " endpoint");
+                                      + " endpoint");
                 policyData.setPolycies(PolicyUtil.processPolicyElements(policyList.iterator(),
-                        new PolicyLocator(
-                                axisService)));
+                                                                        new PolicyLocator(
+                                                                                axisService)));
                 policyDataArray.add(policyData);
             }
         }
@@ -1840,10 +1831,9 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         AxisBinding axisBinding = null;
 
         // at axis2
-        Map endPointMap = axisService.getEndpoints();
-        for (Object o : endPointMap.entrySet()) {
-            Map.Entry entry = (Map.Entry) o;
-            AxisEndpoint point = (AxisEndpoint) entry.getValue();
+        Map<String, AxisEndpoint> endPointMap = axisService.getEndpoints();
+        for (Map.Entry<String, AxisEndpoint> o : endPointMap.entrySet()) {
+            AxisEndpoint point = o.getValue();
             if (point.getBinding().getName().getLocalPart().equals(bindingName)) {
                 axisBinding = point.getBinding();
                 break;
@@ -1912,9 +1902,9 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         }
 
         Policy bindingOperationMessagePolicy = null;
-        Iterator operations = axisBinding.getChildren();
+        Iterator<AxisBindingOperation> operations = axisBinding.getChildren();
         while (operations.hasNext()) {
-            AxisBindingOperation currentOperation = (AxisBindingOperation) operations.next();
+            AxisBindingOperation currentOperation = operations.next();
             if (currentOperation.getName().toString().equals(operationName)) {
                 PolicySubject bindingOperationMessagePolicySubject =
                         currentOperation.getChild(messageType).getPolicySubject();
@@ -1949,7 +1939,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 
         if (policy.getId() == null) {
             // Generate an ID
-            policy.setId(UUIDGenerator.getUUID());
+            policy.setId(UIDGenerator.generateUID());
         }
 
         // persistence
@@ -2012,7 +2002,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 
         if (policy.getId() == null) {
             // Generate an ID
-            policy.setId(UUIDGenerator.getUUID());
+            policy.setId(UIDGenerator.generateUID());
         }
 
         try {
@@ -2078,7 +2068,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 
         if (policy.getId() == null) {
             // Generate an ID
-            policy.setId(UUIDGenerator.getUUID());
+            policy.setId(UIDGenerator.generateUID());
         }
 
         try {
@@ -2144,7 +2134,6 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 
     }
 
-    //todo start from here on tuesday 12/3
     public void setBindingPolicy(String serviceName, String bindingName, String policyString)
             throws Exception {
 
@@ -2157,7 +2146,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 
         if (policy.getId() == null) {
             // Generate an ID
-            policy.setId(UUIDGenerator.getUUID());
+            policy.setId(UIDGenerator.generateUID());
         }
 
         try {
@@ -2181,9 +2170,9 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 
             // Update the binding resource to point to this merged policy
             sfpm.put(serviceGroupId, idElement.cloneOMElement(), PersistenceUtils.getResourcePath(axisService) +
-                    "/" + Resources.ServiceProperties.BINDINGS +
-                    "/" + Resources.ServiceProperties.BINDING_XML_TAG +
-                    PersistenceUtils.getXPathAttrPredicate(Resources.NAME, bindingName));   //add it to binding element
+                                                                 "/" + Resources.ServiceProperties.BINDINGS +
+                                                                 "/" + Resources.ServiceProperties.BINDING_XML_TAG +
+                                                                 PersistenceUtils.getXPathAttrPredicate(Resources.NAME, bindingName));   //add it to binding element
 
             String policiesPath = PersistenceUtils.
                     getResourcePath(axisService) + "/" + Resources.POLICIES;
@@ -2203,10 +2192,9 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         }
 
         // at axis2
-        Map endPointMap = axisService.getEndpoints();
-        for (Object o : endPointMap.entrySet()) {
-            Map.Entry entry = (Map.Entry) o;
-            AxisEndpoint point = (AxisEndpoint) entry.getValue();
+        Map<String, AxisEndpoint> endPointMap = axisService.getEndpoints();
+        for (Map.Entry<String, AxisEndpoint> o : endPointMap.entrySet()) {
+            AxisEndpoint point = o.getValue();
             AxisBinding binding = point.getBinding();
 
             if (binding.getName().getLocalPart().equals(bindingName)) {
@@ -2230,7 +2218,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 
         if (policy.getId() == null) {
             // Generate an ID
-            policy.setId(UUIDGenerator.getUUID());
+            policy.setId(UIDGenerator.generateUID());
         }
 
         try {
@@ -2279,10 +2267,9 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         }
 
         // at axis2
-        Map endPointMap = axisService.getEndpoints();
-        for (Object o : endPointMap.entrySet()) {
-            Map.Entry entry = (Map.Entry) o;
-            AxisEndpoint point = (AxisEndpoint) entry.getValue();
+        Map<String, AxisEndpoint> endPointMap = axisService.getEndpoints();
+        for (Map.Entry<String, AxisEndpoint> o : endPointMap.entrySet()) {
+            AxisEndpoint point = o.getValue();
             AxisBinding binding = point.getBinding();
 
             if (binding.getName().getLocalPart().equals(bindingName)) {
@@ -2314,7 +2301,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 
         if (policy.getId() == null) {
             // Generate an ID
-            policy.setId(UUIDGenerator.getUUID());
+            policy.setId(UIDGenerator.generateUID());
         }
 
         String servicePath = Resources.SERVICE_GROUPS
@@ -2390,17 +2377,16 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         }
 
         // at axis2
-        Map endPointMap = axisService.getEndpoints();
-        for (Object o : endPointMap.entrySet()) {
-            Map.Entry entry = (Map.Entry) o;
-            AxisEndpoint point = (AxisEndpoint) entry.getValue();
+        Map<String, AxisEndpoint> endPointMap = axisService.getEndpoints();
+        for (Map.Entry<String, AxisEndpoint> o : endPointMap.entrySet()) {
+            AxisEndpoint point = o.getValue();
             AxisBinding binding = point.getBinding();
 
             if (binding.getName().getLocalPart().equals(bindingName)) {
-                Iterator operations = binding.getChildren();
+                Iterator<AxisBindingOperation> operations = binding.getChildren();
                 while (operations.hasNext()) {
                     AxisBindingOperation currentOperation =
-                            (AxisBindingOperation) operations.next();
+                            operations.next();
                     if (currentOperation.getName().toString().equals(operationName)) {
                         currentOperation.getChild(messageType).getPolicySubject().clear();
                         currentOperation.getChild(messageType).getPolicySubject().attachPolicy(policy);
@@ -2469,7 +2455,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             Map.Entry entry = (Map.Entry) o;
             AxisEndpoint point = (AxisEndpoint) entry.getValue();
 
-            String currentBinding = point.getBinding().getName().getLocalPart().toString();
+            String currentBinding = point.getBinding().getName().getLocalPart();
             if ((!currentBinding.contains("HttpBinding")) &&
                     (!bindingsList.contains(currentBinding))) {
                 bindingsList.add(currentBinding);
@@ -2495,8 +2481,8 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         AxisConfiguration axisConfig = getAxisConfig();
         AxisServiceGroup asGroup = axisConfig.getServiceGroup(serviceGroupName);
         String fileName = null;
-        for (Iterator serviceIter = asGroup.getServices(); serviceIter.hasNext(); ) {
-            AxisService axisService = (AxisService) serviceIter.next();
+        for (Iterator<AxisService> serviceIter = asGroup.getServices(); serviceIter.hasNext(); ) {
+            AxisService axisService = serviceIter.next();
             URL fn = axisService.getFileName();
             if (fn != null) {
                 fileName = fn.getPath();

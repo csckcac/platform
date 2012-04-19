@@ -27,7 +27,7 @@ public class WrappedAllConfigurations {
         return appServerNameList;
     }
 
-    public void setAppServerNameList(EJBAppServerData[] appServerNameList) {
+    public void setAppServerNameList(EJBAppServerData[] appServerNameListParam) {
         if(appServerNameList == null) {
             this.appServerNameList = new EJBAppServerData[0];
         } else {
@@ -39,7 +39,7 @@ public class WrappedAllConfigurations {
         return ejbProviderData;
     }
 
-    public void setEjbProviderData(EJBProviderData[] ejbProviderData) {
+    public void setEjbProviderData(EJBProviderData[] ejbProviderDataParam) {
         if (ejbProviderData == null) {
             this.ejbProviderData = new EJBProviderData[0];
         } else {
@@ -51,7 +51,7 @@ public class WrappedAllConfigurations {
         return appServerData;
     }
 
-    public void setAppServerData(EJBAppServerData[] appServerData) {
+    public void setAppServerData(EJBAppServerData[] appServerDataParam) {
         if (appServerData == null) {
             this.appServerData = new EJBAppServerData[0];
         } else {

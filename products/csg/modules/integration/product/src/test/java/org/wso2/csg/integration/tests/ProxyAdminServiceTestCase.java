@@ -102,7 +102,7 @@ public class ProxyAdminServiceTestCase extends CSGIntegrationTestCase {
                 "<log level=\"full\"/>" +
                 "<drop/>" +
                 "</faultSequence>");
-        String wsdl = null;
+
         // FIXME - the CSG proxy actually persist a WSDL into the registry and use that as the WSDL
         // FIXME - of the proxy, add a test for that too
         try {

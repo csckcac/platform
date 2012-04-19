@@ -41,8 +41,15 @@
                 <configuration>
                     <includes>
                         <include>**/*TestServerManager.java</include>
-                        <include>**/*TestCase.java</include>
+                        <!--<include>**/*TestCase.java</include>-->
+                        <!--<include>**/ProxyAdminServiceTestCase.java</include>-->
+                        <include>**/CSGServiceTestCase.java</include>
                     </includes>
+                    <!-- uncomment following and define any test that need to execlude -->
+                    <excludes>
+                        <exclude>ProxyAdminServiceTestCase.java</exclude>
+                        <!--<exclude>CSGServiceTestCase.java</exclude>-->
+                    </excludes>
                     <systemProperties>
                         <sec.verifier.dir>${basedir}/../../../../integration/security-verifier/</sec.verifier.dir>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
@@ -128,6 +135,46 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.integration.framework</artifactId>
             <version>4.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.rampart.wso2</groupId>
+            <artifactId>rampart-core</artifactId>
+            <version>${rampart.osgi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.rampart.wso2</groupId>
+            <artifactId>rampart-policy</artifactId>
+            <version>${rampart.osgi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.rampart.wso2</groupId>
+            <artifactId>rampart-trust</artifactId>
+            <version>${rampart.osgi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.security.wso2</groupId>
+            <artifactId>wss4j</artifactId>
+            <version>${wss4j.osgi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>opensaml.wso2</groupId>
+            <artifactId>opensaml2</artifactId>
+            <version>2.4.1.wso2v1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.security.mgt.ui</artifactId>
+            <version>${carbon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.rm</artifactId>
+            <version>${carbon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.rm.stub</artifactId>
+            <version>${carbon.version}</version>
         </dependency>
     </dependencies>
 </project>

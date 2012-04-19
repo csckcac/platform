@@ -75,7 +75,7 @@ public abstract class CSGIntegrationTestCase {
             port = FrameworkSettings.HTTP_PORT;
         }
 
-        String url = "https://" + FrameworkSettings.HOST_NAME + ":" + port + "/services";
+        String url = "http://" + FrameworkSettings.HOST_NAME + ":" + port + "/services/";
         if (FrameworkSettings.STRATOS.equalsIgnoreCase("false")) {
             return url + service;
         } else {

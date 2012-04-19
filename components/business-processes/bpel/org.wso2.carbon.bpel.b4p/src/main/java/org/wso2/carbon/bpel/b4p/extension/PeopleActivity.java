@@ -410,8 +410,7 @@ public class PeopleActivity {
     public String invoke(ExtensionContext extensionContext) throws FaultException {
         BPELMessageContext taskMessageContext = new BPELMessageContext(hiWSDL);
         try {
-            SOAPHelper soapHelper = new SOAPHelper(hiWSDL, getBinding(),
-                    getServiceName().getLocalPart(), getServicePort(), getSoapFactory(), isRPC);
+            SOAPHelper soapHelper = new SOAPHelper(hiWSDL, getBinding(), getSoapFactory(), isRPC);
             MessageContext messageContext = new MessageContext();
             soapHelper.createSoapRequest(messageContext,
                     (Element) extensionContext.readVariable(inputVarName), getOperation(extensionContext));

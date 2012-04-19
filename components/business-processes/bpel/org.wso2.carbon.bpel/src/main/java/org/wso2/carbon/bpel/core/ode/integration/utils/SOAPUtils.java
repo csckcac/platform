@@ -17,37 +17,25 @@
  */
 package org.wso2.carbon.bpel.core.ode.integration.utils;
 
-import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.OMNode;
 import org.apache.axiom.soap.*;
-import org.apache.axiom.soap.SOAPBody;
-import org.apache.axiom.soap.SOAPFault;
-import org.apache.axiom.soap.SOAPHeader;
-import org.apache.axiom.soap.impl.llom.soap11.SOAP11HeaderBlockImpl;
 import org.apache.axis2.AxisFault;
-import org.apache.ode.bpel.iapi.*;
+import org.apache.ode.bpel.iapi.MessageExchange;
+import org.apache.ode.bpel.iapi.MyRoleMessageExchange;
+import org.apache.ode.bpel.iapi.PartnerRoleMessageExchange;
 import org.apache.ode.il.OMUtils;
 import org.apache.ode.utils.DOMUtils;
 import org.apache.ode.utils.NSContext;
 import org.apache.ode.utils.Namespaces;
 import org.apache.ode.utils.stl.CollectionsX;
 import org.apache.ode.utils.wsdl.WsdlUtils;
-import org.w3c.dom.Attr;
-import org.w3c.dom.CDATASection;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
+import org.w3c.dom.*;
 import org.wso2.carbon.bpel.core.ode.integration.BPELFault;
 import org.wso2.carbon.bpel.core.ode.integration.BPELMessageContext;
 
 import javax.wsdl.*;
-import javax.wsdl.Message;
 import javax.wsdl.extensions.ElementExtensible;
 import javax.wsdl.extensions.mime.MIMEContent;
 import javax.wsdl.extensions.soap12.SOAP12Body;
@@ -114,7 +102,7 @@ public class SOAPUtils {
      * @param bpelMessageContext        DTO containing details about current message flow
      * @param odePartnerMessageExchange ODE PartnerRoleMessageExchange containing information about
      *                                  current external service invocation.
-     * @throws AxisFault
+     * @throws AxisFault If an error occurred while creating the SOAP request
      */
     public static void createSOAPRequest(
             final BPELMessageContext bpelMessageContext,
@@ -276,46 +264,6 @@ public class SOAPUtils {
         return soapFactory.createOMElement(wrapperElementName, soapBody);
     }
 
-    @SuppressWarnings("unchecked")
-    private static void generateSOAPBody(
-            final BPELMessageContext bpelMessageContext,
-            final MessageExchange odeMessageexchange,
-            final BindingOutput bindingOutput) throws BPELFault {
-        javax.wsdl.extensions.soap.SOAPBody soapBody = getSOAP11Body(bindingOutput);
-        if (soapBody != null) {
-            SOAPEnvelope soapEnv = bpelMessageContext.getOutMessageContext().getEnvelope();
-            SOAPFactory soapFactory = bpelMessageContext.getSoapFactoryForCurrentMessageFlow();
-            org.apache.axiom.soap.SOAPBody axiomSOAPBody =
-                    soapEnv.getBody() == null
-                            ? soapFactory.createSOAPBody(soapEnv) : soapEnv.getBody();
-            String rpcWrapper = odeMessageexchange.getOperationName();
-
-            OMElement partHolder = bpelMessageContext.isRPCStyleOperation() ? soapFactory
-                    .createOMElement(new QName(soapBody.getNamespaceURI(), rpcWrapper, "odens"),
-                            axiomSOAPBody) : axiomSOAPBody;
-
-            List<Part> parts = odeMessageexchange.getOperation().getOutput().getMessage()
-                    .getOrderedParts(soapBody.getParts());
-
-            for (Part part : parts) {
-                Element srcPartEl = DOMUtils.findChildByName(
-                        odeMessageexchange.getResponse().getMessage(),
-                        new QName(null, part.getName()));
-
-                if (srcPartEl == null)
-                    throw new BPELFault("Missing required part in ODE Message: " +
-                            new QName(null, part.getName()));
-
-                OMElement omPart = OMUtils.toOM(srcPartEl, soapFactory);
-                if (bpelMessageContext.isRPCStyleOperation()) partHolder.addChild(omPart);
-                else for (Iterator<OMNode> i = omPart.getChildren(); i.hasNext(); )
-                    partHolder.addChild(i.next());
-            }
-
-
-        }
-    }
-
     private static void populateSOAPHeaders(
             org.apache.ode.bpel.iapi.Message messageFromOde,
             SOAPEnvelope soapEnvelope,
@@ -354,17 +302,17 @@ public class SOAPUtils {
             final Node headerNode,
             final SOAPFactory soapFactory) {
         if (soapHeader.getFirstChildWithName(new QName(headerNode.getNamespaceURI(),
-                                                       headerNode.getLocalName())) == null) {
+                headerNode.getLocalName())) == null) {
             OMNamespace ns = null;
-            if(headerNode.getNamespaceURI() != null){
-                if(headerNode.getPrefix() != null){
+            if (headerNode.getNamespaceURI() != null) {
+                if (headerNode.getPrefix() != null) {
                     ns = soapFactory.createOMNamespace(headerNode.getNamespaceURI(), headerNode.getPrefix());
-                }else {
-                    ns = soapFactory.createOMNamespace(headerNode.getNamespaceURI(),"");
+                } else {
+                    ns = soapFactory.createOMNamespace(headerNode.getNamespaceURI(), "");
                 }
             }
             SOAPHeaderBlock hb = soapHeader.addHeaderBlock(headerNode.getLocalName(),
-                                                           ns);
+                    ns);
             NSContext nscontext = DOMUtils.getMyNSContext((Element) headerNode);
             injectNamespaces(hb, nscontext.toMap());
 
@@ -373,7 +321,7 @@ public class SOAPUtils {
                 Attr attr = (Attr) attrs.item(i);
 
                 if (attr.getLocalName().equals("xmlns")
-                    || (attr.getNamespaceURI() != null && attr.getNamespaceURI().equals(DOMUtils.NS_URI_XMLNS))) {
+                        || (attr.getNamespaceURI() != null && attr.getNamespaceURI().equals(DOMUtils.NS_URI_XMLNS))) {
                     continue;
                 }
                 OMNamespace attrOmNs = null;
@@ -393,10 +341,10 @@ public class SOAPUtils {
                 Node node = childNodes.item(i);
                 switch (childNodes.item(i).getNodeType()) {
                     case Node.CDATA_SECTION_NODE:
-                        hb.addChild(soapFactory.createOMText(((CDATASection) node).getTextContent(), XMLStreamConstants.CDATA));
+                        hb.addChild(soapFactory.createOMText(node.getTextContent(), XMLStreamConstants.CDATA));
                         break;
                     case Node.TEXT_NODE:
-                        hb.addChild(soapFactory.createOMText(((Text) node).getTextContent(), XMLStreamConstants.CHARACTERS));
+                        hb.addChild(soapFactory.createOMText(node.getTextContent(), XMLStreamConstants.CHARACTERS));
                         break;
                     case Node.ELEMENT_NODE:
                         OMUtils.toOM((Element) node, soapFactory, hb);
@@ -526,7 +474,9 @@ public class SOAPUtils {
 
         // If header is not part of the payload and if header element is null,
         // just ignore this case.
-        if (partElement == null) return;
+        if (partElement == null) {
+            return;
+        }
 
         org.apache.axiom.soap.SOAPHeader soapHeader = soapEnvelope.getHeader();
         if (soapHeader == null) {
@@ -563,8 +513,9 @@ public class SOAPUtils {
         SOAPFaultReason reason = soapFactory.createSOAPFaultReason(fault);
         reason.setText(odeMessageContext.getFault());
         SOAPFaultDetail soapDetail = soapFactory.createSOAPFaultDetail(fault);
-        if (detail != null)
+        if (detail != null) {
             soapDetail.addDetailEntry(detail);
+        }
         return fault;
     }
 
@@ -576,32 +527,43 @@ public class SOAPUtils {
         Operation operation = odeMessageContext.getOperation();
         SOAPFactory soapFactory = bpelMessageContext.getSoapFactoryForCurrentMessageFlow();
 
-        if (faultName.getNamespaceURI() == null)
+        if (faultName.getNamespaceURI() == null) {
             return toFaultDetail(message, soapFactory);
+        }
         Fault f = operation.getFault(faultName.getLocalPart());
-        if (f == null)
+        if (f == null) {
             return toFaultDetail(message, soapFactory);
+        }
 
         // For faults, there will be exactly one part.
         Part p = (Part) f.getMessage().getParts().values().iterator().next();
-        if (p == null)
+        if (p == null) {
             return toFaultDetail(message, soapFactory);
+        }
         Element partEl = DOMUtils.findChildByName(message, new QName(null, p.getName()));
-        if (partEl == null)
+        if (partEl == null) {
             return toFaultDetail(message, soapFactory);
+        }
         Element detail = DOMUtils.findChildByName(partEl, p.getElementName());
-        if (detail == null)
+        if (detail == null) {
             return toFaultDetail(message, soapFactory);
+        }
 
         return OMUtils.toOM(detail, soapFactory);
     }
 
     private static OMElement toFaultDetail(final Element message, final SOAPFactory soapFactory) {
-        if (message == null) return null;
+        if (message == null) {
+            return null;
+        }
         Element firstPart = DOMUtils.getFirstChildElement(message);
-        if (firstPart == null) return null;
+        if (firstPart == null) {
+            return null;
+        }
         Element detail = DOMUtils.getFirstChildElement(firstPart);
-        if (detail == null) return OMUtils.toOM(firstPart, soapFactory);
+        if (detail == null) {
+            return OMUtils.toOM(firstPart, soapFactory);
+        }
         return OMUtils.toOM(detail, soapFactory);
     }
 
@@ -691,7 +653,6 @@ public class SOAPUtils {
         throw new IllegalArgumentException("WSO2 BPS only support HTTP binding with mime output.");
     }
 
-    @SuppressWarnings("unchecked")
     private static void extractSOAPBodyParts(
             MessageExchange partnerRoleMessageExchange,
             org.apache.ode.bpel.iapi.Message messageToODE,
@@ -778,24 +739,29 @@ public class SOAPUtils {
         boolean requiredHeader = payloadMessageHeader
                 || (headerdef.getRequired() != null && headerdef.getRequired());
 
-        if (requiredHeader && header == null)
+        if (requiredHeader && header == null) {
             throw new BPELFault("SOAP Header missing required element.");
-
-        if (header == null)
+        }
+        if (header == null) {
             return;
+        }
 
         Message hdrMsg = wsdl.getMessage(headerdef.getMessage());
-        if (hdrMsg == null)
+        if (hdrMsg == null) {
             return;
+        }
         Part p = hdrMsg.getPart(headerdef.getPart());
-        if (p == null || p.getElementName() == null)
+        if (p == null || p.getElementName() == null) {
             return;
-
+        }
         OMElement headerEl = header.getFirstChildWithName(p.getElementName());
-        if (requiredHeader && headerEl == null)
+        if (requiredHeader && headerEl == null) {
             throw new BPELFault("SOAP Header missing required element: " + p.getElementName());
+        }
 
-        if (headerEl == null) return;
+        if (headerEl == null) {
+            return;
+        }
 
         odeMessage.setHeaderPart(p.getName(), OMUtils.toDOM(headerEl));
     }
@@ -807,7 +773,9 @@ public class SOAPUtils {
             Message hdrMsg = wsdl.getMessage(headerDef.getMessage());
             for (Object o : hdrMsg.getParts().values()) {
                 Part p = (Part) o;
-                if (p.getElementName().equals(elmtName)) return p.getName();
+                if (p.getElementName().equals(elmtName)) {
+                    return p.getName();
+                }
             }
         }
         return elmtName.getLocalPart();
@@ -818,8 +786,9 @@ public class SOAPUtils {
         SOAPFault flt = envelope.getBody().getFault();
         SOAPFaultDetail detail = flt.getDetail();
         Fault fdef = inferFault(operation, flt);
-        if (fdef == null)
+        if (fdef == null) {
             return null;
+        }
 
         Part pdef = (Part) fdef.getMessage().getParts().values().iterator().next();
         Element partel = odeMsgEl.getOwnerDocument().createElementNS(null, pdef.getName());

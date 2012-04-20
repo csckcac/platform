@@ -666,7 +666,15 @@ public class APIStoreHostObject extends ScriptableObject {
         row.put("endpoint", row, api.getUrl());
         row.put("wsdl", row, "http://appserver/services/echo?wsdl");
         row.put("updatedDate", row, api.getLastUpdated().toString());
-        row.put("tier", row, api.getAvailableTiers());
+
+        //TODO : need to pass in the full available tier list to front end
+        Set<Tier> tiers = api.getAvailableTiers();
+        if(tiers.size() > 0){
+            Tier tier = tiers.iterator().next();
+            row.put("tier", row, tier.getName());
+        }
+
+        row.put("status", row, "Deployed"); // api.getStatus().toString()
         row.put("status", row, "Deployed"); // api.getStatus().toString()
         row.put("subscribed", row, isSubscribed);
         if (api.getThumbnailUrl() == null) {
@@ -998,21 +1006,25 @@ public class APIStoreHostObject extends ScriptableObject {
 		String providerName = "";
 		String apiName = "";
 		String version = "";
-		int applicationId = -1;
+		String tier = "";
+        int applicationId = -1;
 		String userId = "";
         if(!(args[0] instanceof String) ||
                 !(args[1] instanceof String) ||
                 !(args[2] instanceof String) ||
-                (!(args[3] instanceof Double) && !(args[3] instanceof Integer) ||
-                !(args[4] instanceof String))) {
+                !(args[3] instanceof String) ||
+                (!(args[4] instanceof Double) && !(args[4] instanceof Integer) ||
+                !(args[5] instanceof String))) {
             return false;
         }
         providerName = args[0].toString();
         apiName = args[1].toString();
         version = args[2].toString();
-        applicationId = ((Number) args[3]).intValue();
-        userId = args[4].toString();
+        tier = args[3].toString();
+        applicationId = ((Number) args[4]).intValue();
+        userId = args[5].toString();
 		APIIdentifier apiIdentifyer = new APIIdentifier(providerName, apiName, version);
+        apiIdentifyer.setTier(tier);
 
 		try {
 			apiManagerImpl.addSubscription(apiIdentifyer, userId, applicationId);

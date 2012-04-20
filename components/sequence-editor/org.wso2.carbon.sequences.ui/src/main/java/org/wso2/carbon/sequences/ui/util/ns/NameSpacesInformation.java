@@ -16,6 +16,7 @@
 
 package org.wso2.carbon.sequences.ui.util.ns;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -48,5 +49,15 @@ public class NameSpacesInformation {
     }
     public Map<String, String> getNameSpaces(){
         return nameSpaces;
+    }
+     public void setNameSpaces(Map<String, String> namespaceMap) {
+        Collection<String> prefixes = namespaceMap.keySet();
+        if (!prefixes.isEmpty()) {
+            for (String prefix : prefixes) {
+                String uri = namespaceMap.get(prefix);
+                nameSpaces.put(prefix, uri);
+            }
+        }
+
     }
 }

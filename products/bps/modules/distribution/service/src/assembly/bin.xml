@@ -71,6 +71,7 @@
                 <include>**/qpid-config.xml</include>
                 <include>**/qpid-jmxremote.access</include>
                 <include>**/qpid-virtualhosts.xml</include>
+				<include>**/coordination-client-config.xml</include>
             </includes>
         </fileSet>
         <!--copying registry dbscripts-->
@@ -313,6 +314,11 @@
         </file>
         <file>
             <source>conf/bps.xml</source>
+            <outputDirectory>wso2stratos-bps-${pom.version}/repository/conf</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>conf/humantask.xml</source>
             <outputDirectory>wso2stratos-bps-${pom.version}/repository/conf</outputDirectory>
             <fileMode>644</fileMode>
         </file>

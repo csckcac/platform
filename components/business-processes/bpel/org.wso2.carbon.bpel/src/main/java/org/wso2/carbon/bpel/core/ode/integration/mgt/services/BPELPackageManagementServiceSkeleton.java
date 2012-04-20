@@ -85,6 +85,7 @@ public class BPELPackageManagementServiceSkeleton extends AbstractAdmin
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
 
+        int tPage = page;
         List<BPELPackageInfo> packages;
         DeployedPackagesPaginated paginatedPackages = new DeployedPackagesPaginated();
         TenantProcessStoreImpl tenantProcessStore = getTenantProcessStore();
@@ -100,11 +101,11 @@ public class BPELPackageManagementServiceSkeleton extends AbstractAdmin
 
         if (packages != null) {
             // Calculating pagination information
-            if (page < 0 || page == Integer.MAX_VALUE) {
-                page = 0;
+            if (tPage < 0 || tPage == Integer.MAX_VALUE) {
+                tPage = 0;
             }
-            int startIndex = page * BPELConstants.ITEMS_PER_PAGE;
-            int endIndex = (page + 1) * BPELConstants.ITEMS_PER_PAGE;
+            int startIndex = tPage * BPELConstants.ITEMS_PER_PAGE;
+            int endIndex = (tPage + 1) * BPELConstants.ITEMS_PER_PAGE;
 
             int numberOfPackages = packages.size();
             int pages = (int) Math.ceil((double) numberOfPackages / BPELConstants.ITEMS_PER_PAGE);

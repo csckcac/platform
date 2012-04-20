@@ -24,7 +24,10 @@ import java.io.File;
 import java.text.MessageFormat;
 import java.net.MalformedURLException;
 
-public class Messages {
+public final class Messages {
+    private Messages() {
+    }
+
     public static String msgRegistryInitializationFailure() {
         return "Process Store creation failed due to Registry creation failure.";
     }

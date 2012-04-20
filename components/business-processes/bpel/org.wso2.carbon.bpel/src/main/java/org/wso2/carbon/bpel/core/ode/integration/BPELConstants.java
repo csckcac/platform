@@ -16,7 +16,10 @@
 
 package org.wso2.carbon.bpel.core.ode.integration;
 
-public class BPELConstants {
+public final class BPELConstants {
+    private BPELConstants() {
+    }
+
     public static final String BPEL_PKG_CONFIG_NS = "http://wso2.org/bps/bpel/package/config";
 
     public static final String BPEL_PKG_ENDPOINT_CONFIG_NS = "http://wso2.org/bps/bpel/endpoint/config";

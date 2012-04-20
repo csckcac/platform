@@ -20,7 +20,10 @@ import org.wso2.carbon.registry.core.RegistryConstants;
 
 import java.io.File;
 
-public class BPELConstants {
+public final class BPELConstants {
+    private BPELConstants() {
+    }
+
     public static final String BPEL_PKG_CONFIG_NS = "http://wso2.org/bps/bpel/package/config";
 
     public static final String BPEL_PKG_ENDPOINT_CONFIG_NS = "http://wso2.org/bps/bpel/endpoint/config";
@@ -271,4 +274,6 @@ public class BPELConstants {
     public static final String BPEL_PROCESS_INMEMORY         =  "bpel.process.inmemory: ";
     public static final String BPEL_PROCESS_STATE            =  "bpel.process.state: ";
     public static final String BPEL_PROCESS_SCOPE_EVENT = "bpel.process.scope.event:";
+
+    public static final String PORTS_OFFSET = "Ports.Offset";
 }

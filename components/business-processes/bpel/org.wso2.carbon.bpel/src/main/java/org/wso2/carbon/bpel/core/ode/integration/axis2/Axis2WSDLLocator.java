@@ -32,21 +32,21 @@ import java.io.FileInputStream;
  */
 public class Axis2WSDLLocator implements WSDLLocator {
     private static final Log log = LogFactory.getLog(Axis2WSDLLocator.class);
-    private URI _baseUri;
-    private String _latest;
+    private URI baseUri;
+    private String latest;
 
     public Axis2WSDLLocator(URI baseUri) throws URISyntaxException {
-        _baseUri = baseUri;
+        this.baseUri = baseUri;
     }
 
     public InputSource getBaseInputSource() {
         try {
             InputSource is = new InputSource();
-            is.setByteStream(openResource(_baseUri));
-            is.setSystemId(_baseUri.toString());
+            is.setByteStream(openResource(baseUri));
+            is.setSystemId(baseUri.toString());
             return is;
         } catch (IOException e) {
-            log.error("Unable to create InputSource for " + _baseUri, e);
+            log.error("Unable to create InputSource for " + baseUri, e);
             return null;
         }
     }
@@ -54,9 +54,9 @@ public class Axis2WSDLLocator implements WSDLLocator {
     public InputSource getImportInputSource(String parent, String imprt) {
         URI uri;
         try {
-            uri = parent == null ? _baseUri.resolve(imprt) : new URI(parent).resolve(imprt);
+            uri = parent == null ? baseUri.resolve(imprt) : new URI(parent).resolve(imprt);
         } catch (URISyntaxException e1) {
-            log.error("URI syntax error: parent="+parent+" error="+e1);
+            log.error("URI syntax error: parent=" + parent, e1);
             return null;
         }
         if (log.isDebugEnabled()) {
@@ -71,16 +71,16 @@ public class Axis2WSDLLocator implements WSDLLocator {
             return null;
         }
         is.setSystemId(uri.toString());
-        _latest = uri.toString();
+        latest = uri.toString();
         return is;
     }
 
     public String getBaseURI() {
-        return _baseUri.toString();
+        return baseUri.toString();
     }
 
     public String getLatestImportURI() {
-        return _latest;
+        return latest;
     }
 
     public void close() {
@@ -98,7 +98,7 @@ public class Axis2WSDLLocator implements WSDLLocator {
 
         // Note that if we get an absolute URI, the relativize operation will simply
         // return the absolute URI.
-        URI relative = _baseUri.relativize(uri);
+        URI relative = baseUri.relativize(uri);
 
         if (relative.isAbsolute() && relative.getScheme().equals("http")) {
             try {
@@ -114,7 +114,7 @@ public class Axis2WSDLLocator implements WSDLLocator {
             return null;
         }
 
-        File f = new File(_baseUri.getPath(), relative.getPath());
+        File f = new File(baseUri.getPath(), relative.getPath());
         if (!f.exists()) {
             log.error("openResource: file not found " + f);
             return null;

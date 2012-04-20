@@ -361,7 +361,7 @@ public class BPELProcessProxy {
             String errorMsg = "Timeout or execution error when waiting for response to MEX "
                     + odeMessageExchange + " " + e.toString();
             log.error(errorMsg, e);
-            throw new BPELFault(errorMsg);
+            throw new BPELFault(errorMsg, e);
         }
     }
 

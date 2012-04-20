@@ -29,21 +29,23 @@ import javax.xml.namespace.QName;
 
 /**
  * This utility class is inspired by Apache Synapse AnonymousServiceFactory.
- *
+ * <p/>
  * Responsible for creating AxisServices to send out messages
  */
 
-public class AnonymousServiceFactory {
+public final class AnonymousServiceFactory {
     private static Log log = LogFactory.getLog(AnonymousServiceFactory.class);
+
+    private AnonymousServiceFactory() {
+    }
 
     /**
      * Create AxisService for the requested endpoint config to sending out messages to external services.
      *
-     *
-     * @param serviceName    External service QName
-     * @param servicePort    service port
-     * @param axisConfig     AxisConfiguration object
-     * @param caller
+     * @param serviceName External service QName
+     * @param servicePort service port
+     * @param axisConfig  AxisConfiguration object
+     * @param caller      the process who needs the service
      * @return AxisService
      */
     public static AxisService getAnonymousService(QName serviceName, String servicePort,

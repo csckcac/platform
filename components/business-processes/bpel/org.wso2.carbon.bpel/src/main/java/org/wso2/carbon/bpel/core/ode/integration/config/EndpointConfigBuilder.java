@@ -30,9 +30,11 @@ import java.util.Iterator;
  * Builds the endpoint configuration {@link EndpointConfiguration}
  * using the endpoint details from the deployment descriptor (i.e. deploy.xml)
  */
-public class EndpointConfigBuilder {
-
+public final class EndpointConfigBuilder {
     private static Log log = LogFactory.getLog(EndpointConfigBuilder.class);
+
+    private EndpointConfigBuilder() {
+    }
 
     public static EndpointConfiguration buildEndpointConfiguration(OMElement ele, String basePath) {
         EndpointConfiguration endPointConfig = new EndpointConfiguration();
@@ -45,15 +47,15 @@ public class EndpointConfigBuilder {
 
         if (ele.getFirstChildWithName(
                 new QName(UnifiedEndpointConstants.WSA_NS, UnifiedEndpointConstants.UNIFIED_EPR)) !=
-                                        null) {
+                null) {
             log.info("Found in-line unified endpoint. This will take precedence over the reference");
             endPointConfig.setUepOM(ele.getFirstChildWithName(
                     new QName(UnifiedEndpointConstants.WSA_NS, UnifiedEndpointConstants.UNIFIED_EPR)));
         }
 
         String mexTimeout = getElementAttributeValue(BPELConstants.MEX_TIMEOUT,
-                                                     BPELConstants.VALUE,
-                                                     ele);
+                BPELConstants.VALUE,
+                ele);
         if (mexTimeout != null) {
             endPointConfig.setMexTimeout(mexTimeout);
         }
@@ -64,9 +66,9 @@ public class EndpointConfigBuilder {
     /**
      * Get attribute value of the element when attribute name and element is given.
      *
-     * @param elementName element name
-     * @param attributeName  attribute name of the element.
-     * @param parentEle OMElement 
+     * @param elementName   element name
+     * @param attributeName attribute name of the element.
+     * @param parentEle     OMElement
      * @return Value of the attribute as a String
      */
     private static String getElementAttributeValue(String elementName, String attributeName,

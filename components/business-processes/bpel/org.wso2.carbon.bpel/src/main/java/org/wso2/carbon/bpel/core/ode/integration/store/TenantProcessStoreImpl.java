@@ -78,7 +78,7 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
             new ConcurrentHashMap<String, DeploymentUnitDir>();
 
     // BPEL Processes in this tenant
-    private final Map<QName, ProcessConfigurationImpl> processes =
+    private final Map<QName, ProcessConfigurationImpl> processConfigMap =
             new ConcurrentHashMap<QName, ProcessConfigurationImpl>();
 
     private final Map<String, List<QName>> processesInDeploymentUnit =
@@ -121,8 +121,8 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
 
         try {
             repository.restoreBPELArchive(repository.getBPELPackageInfo(
-                                                      BPELConstants.REG_PATH_OF_BPEL_PACKAGES +
-                                                                bpelPackageName));
+                    BPELConstants.REG_PATH_OF_BPEL_PACKAGES +
+                            bpelPackageName));
         } catch (Exception e) {
             log.error("Error occurred while deploying: " + bpelPackageName, e);
         }
@@ -136,7 +136,7 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
     public void handleBPELProcessStateChangedNotification(QName pid, ProcessState processState) {
         if (log.isDebugEnabled()) {
             log.debug("Changing state of the process " + pid + " to " +
-                       processState);
+                    processState);
         }
         if (!isProcessExist(pid)) {
             String errMsg = "Process " + pid + " not found. Process state change failed.";
@@ -177,13 +177,13 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
         log.info("Deploying BPEL archive: " + bpelArchive.getAbsolutePath());
 
         long versionForThisDeployment = parentProcessStore.getCurrentVersion();
-        
+
         BPELDeploymentContext deploymentContext =
                 new BPELDeploymentContext(
-                                tenantId,
-                                parentProcessStore.getLocalDeploymentUnitRepo().getAbsolutePath(),
-                                bpelArchive,
-                                versionForThisDeployment);
+                        tenantId,
+                        parentProcessStore.getLocalDeploymentUnitRepo().getAbsolutePath(),
+                        bpelArchive,
+                        versionForThisDeployment);
         boolean isExistingPackage = repository.isExistingBPELPackage(deploymentContext);
         boolean isLoadOnly = repository.isBPELPackageReload(deploymentContext);
 
@@ -213,7 +213,7 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
                 reloadExistingVersionsOfBPELPackage(deploymentContext);
                 // attach this bpel archive with cApp
                 attachWithCapp(deploymentContext.getArchiveName(),
-                               deploymentContext.getBpelPackageName(), tenantId);
+                        deploymentContext.getBpelPackageName(), tenantId);
                 return; // Once we finish reloading exit from the normal flow.
             } // Else this is a update of existing BPEL package
         }
@@ -249,7 +249,7 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
 
         // attach this bpel archive with cApp
         attachWithCapp(deploymentContext.getArchiveName(),
-                       deploymentContext.getBpelPackageName(), tenantId);
+                deploymentContext.getBpelPackageName(), tenantId);
 
         // We should use the deployment synchronizer instead of the below code
 //        parentProcessStore.sendProcessDeploymentNotificationsToCluster(
@@ -323,7 +323,7 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
 
             for (QName pid : getProcessesInPackage(nameWithVersion)) {
                 ProcessConfigurationImpl processConf =
-                        (ProcessConfigurationImpl)getProcessConfiguration(pid);
+                        (ProcessConfigurationImpl) getProcessConfiguration(pid);
                 // This property is read when we removing the axis service for this process.
                 // So that we can decide whether we should persist service QOS configs
                 processConf.setUndeploying(true);
@@ -361,7 +361,8 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
 
     /**
      * Update the local instance of the BPS server regarding the undeployment of the bpel package.
-     * @param bpelPackageName Name of the BPEL package
+     *
+     * @param bpelPackageName      Name of the BPEL package
      * @param versionsOfThePackage List of deployed versions of the package
      */
     public void updateLocalInstanceWithUndeployment(String bpelPackageName,
@@ -422,7 +423,7 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
     }
 
     public ProcessConf getProcessConfiguration(QName pid) {
-        return processes.get(pid);
+        return processConfigMap.get(pid);
     }
 
     public void setState(QName pid, ProcessState processState)
@@ -450,19 +451,19 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
     }
 
     private Boolean isProcessExist(QName pid) {
-        return processes.containsKey(pid);
+        return processConfigMap.containsKey(pid);
     }
 
     public BPELPackageRepository getBPELPackageRepository() {
         return repository;
     }
 
-    public Map<QName, ProcessConfigurationImpl> getProcesses() {
-        return processes;
+    public Map<QName, ProcessConfigurationImpl> getProcessConfigMap() {
+        return processConfigMap;
     }
 
     public ProcessConf removeProcessConfiguration(QName pid) {
-        return processes.remove(pid);
+        return processConfigMap.remove(pid);
     }
 
     public List<QName> getProcessesInPackage(String packageName) {
@@ -474,7 +475,7 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
     }
 
     public Boolean containsProcess(QName pid) {
-        return processes.containsKey(pid);
+        return processConfigMap.containsKey(pid);
     }
 
     public void setBpelArchiveRepo(File bpelArchiveRepo) {
@@ -584,15 +585,15 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
         deploymentUnits.put(du.getName(), du);
         processesInDeploymentUnit.put(du.getName(), processIds);
         for (ProcessConfigurationImpl processConf : processConfs) {
-            processes.put(processConf.getProcessId(), processConf);
+            processConfigMap.put(processConf.getProcessId(), processConf);
             deploymentContext.addProcessId(processConf.getProcessId());
         }
         try {
             parentProcessStore.onBPELPackageDeployment(
-                 tenantId,
-                 du.getName(),
-                 BPELPackageRepositoryUtils.getResourcePathForBPELPackageContent(deploymentContext),
-                 processConfs);
+                    tenantId,
+                    du.getName(),
+                    BPELPackageRepositoryUtils.getResourcePathForBPELPackageContent(deploymentContext),
+                    processConfs);
         } catch (ContextException ce) {
             handleDeploymentErrorsAtODELayer(deploymentContext, du.getName());
             deploymentContext.setDeploymentFailureCause("BPEL Package deployment failed at " +
@@ -618,9 +619,9 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
     private void validateBPELPackage(DeploymentUnitDir du)
             throws BPELDeploymentException {
         DeployDocument dd = du.getDeploymentDescriptor();
-        for(TDeployment.Process processDD : dd.getDeploy().getProcessList()){
+        for (TDeployment.Process processDD : dd.getDeploy().getProcessList()) {
             QName processId = Utils.toPid(processDD.getName(), du.getVersion());
-            if (processes.containsKey(processId)) {
+            if (processConfigMap.containsKey(processId)) {
                 String logMessage = "Aborting deployment. Duplicate process ID " + processId + ".";
                 log.error(logMessage);
                 throw new BPELDeploymentException(logMessage);
@@ -644,7 +645,7 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
         deploymentUnits.remove(duName);
         processesInDeploymentUnit.remove(duName);
         for (QName pid : deploymentContext.getProcessIdsForCurrentDeployment()) {
-            processes.remove(pid);
+            processConfigMap.remove(pid);
         }
 
     }
@@ -689,10 +690,10 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
             pConf.setAbsolutePathForBpelArchive(bpelPackage.getAbsolutePath());
             pConf.setState(pConfDAO.getState());
             processIds.add(pConfDAO.getPID());
-	// if the deployment descriptor is updated at runtime, first load the updated data in
-	// registry and use them with the specific process
+            // if the deployment descriptor is updated at runtime, first load the updated data in
+            // registry and use them with the specific process
             repository.readPropertiesOfUpdatedDeploymentInfo(pConf, bpelPackageName);
-            processes.put(pConf.getProcessId(), pConf);
+            processConfigMap.put(pConf.getProcessId(), pConf);
             loaded.add(pConf);
         }
 
@@ -731,7 +732,7 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
                         registryCollectionPath += RegistryConstants.PATH_SEPARATOR + duName;
                         deployedOnCarbon310 = true;
                         if (log.isDebugEnabled()) {
-                                log.debug("Found a carbon 3.1.0 compatible deployment unit at " +
+                            log.debug("Found a carbon 3.1.0 compatible deployment unit at " +
                                     registryCollectionPath);
                         }
                     }
@@ -850,8 +851,8 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
     private void attachWithCapp(String bpelArchiveName, String bpelPackageName, int tenantId) {
         // attach with cApp
         AppDeployerUtils.attachArtifactToOwnerApp(bpelArchiveName,
-                                                  BPELConstants.BPEL_TYPE,
-                                                  bpelPackageName, tenantId);
+                BPELConstants.BPEL_TYPE,
+                bpelPackageName, tenantId);
     }
 
     public Map<QName, Object> getDeployedServices() {

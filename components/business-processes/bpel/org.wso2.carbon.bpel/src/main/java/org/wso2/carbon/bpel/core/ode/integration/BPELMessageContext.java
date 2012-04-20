@@ -75,9 +75,9 @@ public class BPELMessageContext {
         return bpelServiceWSDLDefinition;
     }
 
-    public void setBpelServiceWSDLDefinition(Definition bpelServiceWSDLDefinition) {
-        this.bpelServiceWSDLDefinition = bpelServiceWSDLDefinition;
-    }
+//    public void setBpelServiceWSDLDefinition(Definition bpelServiceWSDLDefinition) {
+//        this.bpelServiceWSDLDefinition = bpelServiceWSDLDefinition;
+//    }
 
     public Binding getWsdlBindingForCurrentMessageFlow() {
         return wsdlBindingForCurrentMessageFlow;
@@ -115,8 +115,8 @@ public class BPELMessageContext {
         return isRPCStyleOperation;
     }
 
-    public void setRPCStyleOperation(boolean RPCStyleOperation) {
-        isRPCStyleOperation = RPCStyleOperation;
+    public void setRPCStyleOperation(boolean rpcStyleOperation) {
+        isRPCStyleOperation = rpcStyleOperation;
     }
 
     public WSDLAwareMessage getRequestMessage() {

@@ -843,8 +843,8 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
                     if (cleanUp.getOn().getValue().equalsIgnoreCase("success")) {
                         CategoryListType sucCategoryListType = cleanUp.getCategoryList();
                         if (sucCategoryListType != null && sucCategoryListType.getCategory() != null) {
-                            for (Category_type1 category_type1 : sucCategoryListType.getCategory()) {
-                                sucessCategoryList.add(TCleanup.Category.Enum.forString(category_type1.getValue()));
+                            for (Category_type1 categoryType1 : sucCategoryListType.getCategory()) {
+                                sucessCategoryList.add(TCleanup.Category.Enum.forString(categoryType1.getValue()));
                             }
                             ProcessCleanupConfImpl.processACleanup(processCleanupConfImpl.getCleanupCategories(true), sucessCategoryList);
                         }
@@ -852,8 +852,8 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
                     if (cleanUp.getOn().getValue().equalsIgnoreCase("failure")) {
                         CategoryListType failCategoryListType = cleanUp.getCategoryList();
                         if (failCategoryListType != null && failCategoryListType.getCategory() != null) {
-                            for (Category_type1 category_type1 : failCategoryListType.getCategory()) {
-                                failCategoryList.add(TCleanup.Category.Enum.forString(category_type1.getValue()));
+                            for (Category_type1 categoryType1 : failCategoryListType.getCategory()) {
+                                failCategoryList.add(TCleanup.Category.Enum.forString(categoryType1.getValue()));
                             }
                             ProcessCleanupConfImpl.processACleanup(processCleanupConfImpl.getCleanupCategories(false), failCategoryList);
                         }

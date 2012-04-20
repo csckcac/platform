@@ -15,25 +15,19 @@
  */
 package org.wso2.carbon.bpel.core.ode.integration.axis2;
 
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.logging.Log;
 import org.apache.axiom.om.OMElement;
-import org.apache.ode.il.OMUtils;
-import org.w3c.dom.Element;
 
 import javax.wsdl.Binding;
 import java.util.HashMap;
 import java.util.Map;
 
 public class WSDLAwareMessage {
-    private static Log log = LogFactory.getLog(WSDLAwareMessage.class);
-
     private Map<String, OMElement> headerParts = new HashMap<String, OMElement>();
     private Map<String, OMElement> bodyParts = new HashMap<String, OMElement>();
 
     private boolean isRPC = false;
-    private String serviceName;
-    private String portName;
+//    private String serviceName;
+//    private String portName;
     private Binding binding;
 
     public void addBodyPart(String partName, OMElement partElement){
@@ -44,13 +38,13 @@ public class WSDLAwareMessage {
         headerParts.put(partName, partElement);
     }
 
-    public Element getBodyPart(String partName){
-        return OMUtils.toDOM(bodyParts.get(partName));
-    }
-
-    public Element getHeaderPart(String partName){
-        return OMUtils.toDOM(headerParts.get(partName));
-    }
+//    public Element getBodyPart(String partName){
+//        return OMUtils.toDOM(bodyParts.get(partName));
+//    }
+//
+//    public Element getHeaderPart(String partName){
+//        return OMUtils.toDOM(headerParts.get(partName));
+//    }
 
     public Map<String, OMElement> getBodyParts(){
         return bodyParts;
@@ -64,29 +58,29 @@ public class WSDLAwareMessage {
         return isRPC;
     }
 
-    public void setRPC(boolean RPC) {
-        isRPC = RPC;
+    public void setRPC(boolean rpc) {
+        isRPC = rpc;
     }
 
-    public String getServiceName() {
-        return serviceName;
-    }
-
-    public void setServiceName(String serviceName) {
-        this.serviceName = serviceName;
-    }
-
-    public String getPortName() {
-        return portName;
-    }
-
-    public void setPortName(String portName) {
-        this.portName = portName;
-    }
-
-    public Binding getBinding() {
-        return binding;
-    }
+//    public String getServiceName() {
+//        return serviceName;
+//    }
+//
+//    public void setServiceName(String serviceName) {
+//        this.serviceName = serviceName;
+//    }
+//
+//    public String getPortName() {
+//        return portName;
+//    }
+//
+//    public void setPortName(String portName) {
+//        this.portName = portName;
+//    }
+//
+//    public Binding getBinding() {
+//        return binding;
+//    }
 
     public void setBinding(Binding binding) {
         this.binding = binding;

@@ -64,11 +64,11 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
     private BPELServerImpl bpelServer = BPELServerImpl.getInstance();
     private Calendar calendar = Calendar.getInstance();
 
-    private static HashMap<ScopeStateEnum, ScopeStatusType> scopeStatusMap =
+    private static Map<ScopeStateEnum, ScopeStatusType> scopeStatusMap =
             new HashMap<ScopeStateEnum, ScopeStatusType>();
-    private static HashMap<TScopeStatus.Enum, ScopeStatusType> tscopeStatusMap =
+    private static Map<TScopeStatus.Enum, ScopeStatusType> tscopeStatusMap =
             new HashMap<TScopeStatus.Enum, ScopeStatusType>();
-    private static HashMap<TActivityStatus.Enum, ActivityStatusType> activityStatusMap =
+    private static Map<TActivityStatus.Enum, ActivityStatusType> activityStatusMap =
             new HashMap<TActivityStatus.Enum, ActivityStatusType>();
 
     public static final String INSTANCE_STATUS_ACTIVE = "active";
@@ -107,20 +107,20 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
                 getMultiTenantProcessStore().getTenantsProcessStore(tenantId);
 
         instanceSummary.setActive(getInstanceCountByState(
-                getTenantsProcessList(tenantProcessStore.getProcesses().keySet()),
-                                 INSTANCE_STATUS_ACTIVE).intValue());
+                getTenantsProcessList(tenantProcessStore.getProcessConfigMap().keySet()),
+                INSTANCE_STATUS_ACTIVE).intValue());
         instanceSummary.setCompleted(getInstanceCountByState(
-                getTenantsProcessList(tenantProcessStore.getProcesses().keySet()),
-                                 INSTANCE_STATUS_COMPLETED).intValue());
+                getTenantsProcessList(tenantProcessStore.getProcessConfigMap().keySet()),
+                INSTANCE_STATUS_COMPLETED).intValue());
         instanceSummary.setFailed(getInstanceCountByState(
-                getTenantsProcessList(tenantProcessStore.getProcesses().keySet()),
-                                 INSTANCE_STATUS_FAILED).intValue());
+                getTenantsProcessList(tenantProcessStore.getProcessConfigMap().keySet()),
+                INSTANCE_STATUS_FAILED).intValue());
         instanceSummary.setSuspended(getInstanceCountByState(
-                getTenantsProcessList(tenantProcessStore.getProcesses().keySet()),
-                                 INSTANCE_STATUS_SUSPENDED).intValue());
+                getTenantsProcessList(tenantProcessStore.getProcessConfigMap().keySet()),
+                INSTANCE_STATUS_SUSPENDED).intValue());
         instanceSummary.setTerminated(getInstanceCountByState(
-                getTenantsProcessList(tenantProcessStore.getProcesses().keySet()),
-                                 INSTANCE_STATUS_TERMINATED).intValue());
+                getTenantsProcessList(tenantProcessStore.getProcessConfigMap().keySet()),
+                INSTANCE_STATUS_TERMINATED).intValue());
 
         return instanceSummary;
     }
@@ -129,9 +129,11 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
      * Verify whether there are proceses exist or not based on the input string
      * This method is introduced inorder to avoid sending erroneous filter strings
      * (e.g - " pid= status=active") to ODE backend.
-     *
+     * <p/>
      * if input string is similar to " pid= " means there are no processes
      * else input string is similar to " pid = $PID1|$PID2" means some processes exist
+     *
+     * @param processList process list to be checked
      * @return isProcessListEmpty?
      */
     private boolean isProcessListEmpty(String processList) {
@@ -140,20 +142,20 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
 
     private Long getInstanceCountByState(String processList, String instanceState)
             throws InstanceManagementException {
-        if(isProcessListEmpty(processList)){
-            return Long.valueOf(0);
+        if (isProcessListEmpty(processList)) {
+            return (long) 0;
         }
         final List<Long> instanceCountList = new ArrayList<Long>();
-        StringBuffer filter = new StringBuffer();
+        StringBuilder filter = new StringBuilder();
 
-        if(!isProcessListEmpty(processList)) {
+        if (!isProcessListEmpty(processList)) {
             filter.append(processList);
         }
         filter.append("status=");
         filter.append(instanceState);
 
         final InstanceFilter instanceFilter = new InstanceFilter(filter.toString(), null,
-                                                                 Integer.MAX_VALUE);
+                Integer.MAX_VALUE);
 
         try {
             BpelDatabase bpelDb = bpelServer.getODEBPELServer().getBpelDb();
@@ -177,11 +179,11 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
     /**
      * Get paginated instance list
      *
-     * @param filter Instance filter
+     * @param filter Instance tFilter
      * @param order  The field on which to be ordered
      * @param limit  The maximum number of instances to be fetched
      * @param page   The page number
-     * @return Instances that are filtered through "filter", ordered by "order" that fits into
+     * @return Instances that are filtered through "tFilter", ordered by "order" that fits into
      *         'page'th page
      * @throws InstanceManagementException When an error occurs
      */
@@ -191,24 +193,26 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
 
+        String tFilter = filter;
+
         final PaginatedInstanceList instanceList = new PaginatedInstanceList();
         Integer tenantId = MultitenantUtils.getTenantId(getConfigContext());
         TenantProcessStoreImpl tenantProcessStore = (TenantProcessStoreImpl) bpelServer.
                 getMultiTenantProcessStore().getTenantsProcessStore(tenantId);
 
-        if (tenantProcessStore.getProcesses().size() <= 0) {
+        if (tenantProcessStore.getProcessConfigMap().size() <= 0) {
             instanceList.setPages(0);
             return instanceList;
         }
 
-        if (filter.indexOf(" pid=") == -1) {
-            filter = filter + getTenantsProcessList(tenantProcessStore.getProcesses().keySet());
+        if (!tFilter.contains(" pid=")) {
+            tFilter = tFilter + getTenantsProcessList(tenantProcessStore.getProcessConfigMap().keySet());
         }
         if (log.isDebugEnabled()) {
-            log.debug("Instance Filter:" + filter);
+            log.debug("Instance Filter:" + tFilter);
         }
 
-        final InstanceFilter instanceFilter = new InstanceFilter(filter, order, limit);
+        final InstanceFilter instanceFilter = new InstanceFilter(tFilter, order, limit);
 
         try {
             BpelDatabase bpelDb = bpelServer.getODEBPELServer().getBpelDb();
@@ -264,13 +268,13 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
         TenantProcessStoreImpl tenantProcessStore = (TenantProcessStoreImpl) bpelServer.
                 getMultiTenantProcessStore().getTenantsProcessStore(tenantId);
 
-        if (tenantProcessStore.getProcesses().size() <= 0) {
+        if (tenantProcessStore.getProcessConfigMap().size() <= 0) {
             return longRunningInstances.toArray(new LimitedInstanceInfoType[longRunningInstances.size()]);
         }
 
         String filter = "status=ACTIVE";
-        if (filter.indexOf(" pid=") == -1) {
-            filter = filter + getTenantsProcessList(tenantProcessStore.getProcesses().keySet());
+        if (!filter.contains(" pid=")) {
+            filter = filter + getTenantsProcessList(tenantProcessStore.getProcessConfigMap().keySet());
         }
         if (log.isDebugEnabled()) {
             log.debug("Instance Filter:" + filter);
@@ -299,7 +303,7 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
             throw new InstanceManagementException(errMsg, e);
         }
 
-         return longRunningInstances.toArray(new LimitedInstanceInfoType[longRunningInstances.size()]);
+        return longRunningInstances.toArray(new LimitedInstanceInfoType[longRunningInstances.size()]);
     }
 
     /**
@@ -311,15 +315,18 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
     public InstanceInfoType getInstanceInfo(long iid) throws InstanceManagementException {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-
         try {
             isOperationIsValidForTheCurrentTenant(iid);
         } catch (IllegalAccessException ex) {
-            String errMsg = "You are trying to carry out unauthorized operation!";
-            log.error(errMsg);
-            throw new InstanceManagementException(errMsg, ex);
+            return handleError(ex);
         }
         return getInstanceInformation(iid);
+    }
+
+    private InstanceInfoType handleError(IllegalAccessException ex) throws InstanceManagementException {
+        String errMsg = "You are trying to carry out unauthorized operation!";
+        log.error(errMsg);
+        throw new InstanceManagementException(errMsg, ex);
     }
 
     /**
@@ -336,9 +343,7 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
         try {
             isOperationIsValidForTheCurrentTenant(iid);
         } catch (IllegalAccessException ex) {
-            String errMsg = "You are trying to carry out unauthorized operation!";
-            log.error(errMsg);
-            throw new InstanceManagementException(errMsg, ex);
+            handleError(ex);
         }
         return getInstanceInformationWithEvents(iid);
     }
@@ -357,9 +362,7 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
         try {
             isOperationIsValidForTheCurrentTenant(iid);
         } catch (IllegalAccessException ex) {
-            String errMsg = "You are trying to carry out unauthorized operation!";
-            log.error(errMsg);
-            throw new InstanceManagementException(errMsg, ex);
+            handleError(ex);
         }
         return getActivityLifeCycleEvents(iid);
     }
@@ -380,13 +383,14 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
             dbexec(new BpelDatabase.Callable<QName>() {
                 public QName run(BpelDAOConnection conn) throws Exception {
                     ProcessInstanceDAO instance = conn.getInstance(iid);
-                    if (instance == null)
+                    if (instance == null) {
                         return null;
+                    }
                     for (ActivityRecoveryDAO recovery : instance.getActivityRecoveries()) {
                         if (recovery.getActivityId() == aid) {
                             BpelProcess process = ((BpelEngineImpl) bpelServer.getODEBPELServer().
                                     getEngine()).
-                            _activeProcesses.get(instance.getProcess().getProcessId());
+                                    _activeProcesses.get(instance.getProcess().getProcessId());
                             if (process != null) {
                                 if (action == Action_type1.cancel) {
                                     process.recoverActivity(instance, recovery.getChannel(), aid,
@@ -395,7 +399,7 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
                                             " of instance: " + iid);
                                 } else if (action == Action_type1.retry) {
                                     process.recoverActivity(instance, recovery.getChannel(), aid,
-                                                            Action_type1.retry.getValue(), null);
+                                            Action_type1.retry.getValue(), null);
                                     log.info("Activity is retried for activity: " + aid +
                                             " of instance: " + iid);
                                 } else {
@@ -428,8 +432,9 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
                 ProcessInstanceDAO instance = conn.getInstance(iid);
 
                 if (instance == null) {
-                    log.error("Instance " + iid + " not found.");
-                    throw new InstanceManagementException("Instance " + iid + " not found.");
+                    String errMsg = "Instance " + iid + " not found.";
+                    log.error(errMsg);
+                    throw new InstanceManagementException(errMsg);
                 }
 
                 fillActivityLifeCycleEvents(activityLifeCycleEvents, instance);
@@ -514,7 +519,7 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
             info.setTimestamp(tInfo.getTimestamp());
             info.setActivityId(tInfo.getActivityId());
             info.setActivityName(tInfo.getActivityName());
-            if(tInfo.getName().equals("ActivityFailureEvent")) {
+            if (tInfo.getName().equals("ActivityFailureEvent")) {
                 if (isFaultMap.get(tInfo.getActivityId()) == null) {
                     isFaultMap.put(tInfo.getActivityId(), true);
                 }
@@ -544,7 +549,7 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
      *
      * @param iid Instance Id
      * @throws InstanceManagementException If the instance cannot be resumed due to the
-     * unavailability of Debugger support
+     *                                     unavailability of Debugger support
      */
     public void resumeInstance(long iid) throws InstanceManagementException {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
@@ -553,9 +558,7 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
         try {
             isOperationIsValidForTheCurrentTenant(iid);
         } catch (IllegalAccessException ex) {
-            String errMsg = "You are trying to carry out unauthorized operation!";
-            log.error(errMsg);
-            throw new InstanceManagementException(errMsg, ex);
+            handleError(ex);
         }
         /*
         We need debugger support in order to resume (since we have to force
@@ -564,9 +567,9 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
         */
         DebuggerSupport debugSupport = getDebugger(iid);
         if (debugSupport == null) {
-            log.error("Cannot resume the instance " + iid + ", Debugger support not available");
-            throw new InstanceManagementException("Cannot resume the instance " + iid +
-                    ", Debugger " + "support not available");
+            String errMsg = "Cannot resume the instance " + iid + ", Debugger support not available";
+            log.error(errMsg);
+            throw new InstanceManagementException(errMsg);
         }
         debugSupport.resume(iid);
     }
@@ -576,7 +579,7 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
      *
      * @param iid Instance Id
      * @throws InstanceManagementException If the instance cannot be suspended due to the
-     *                                    unavailability of Debugger support
+     *                                     unavailability of Debugger support
      */
     public void suspendInstance(long iid) throws InstanceManagementException {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
@@ -585,16 +588,14 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
         try {
             isOperationIsValidForTheCurrentTenant(iid);
         } catch (IllegalAccessException ex) {
-            String errMsg = "You are trying to carry out unauthorized operation!";
-            log.error(errMsg);
-            throw new InstanceManagementException(errMsg, ex);
+            handleError(ex);
         }
 
         DebuggerSupport debugSupport = getDebugger(iid);
         if (debugSupport == null) {
-            log.error("Cannot suspend the instance " + iid + ", Debugger support not available");
-            throw new InstanceManagementException("Cannot suspend the instance " + iid +
-                    ", Debugger support not available");
+            String errMsg = "Cannot suspend the instance " + iid + ", Debugger support not available";
+            log.error(errMsg);
+            throw new InstanceManagementException(errMsg);
         }
         debugSupport.suspend(iid);
     }
@@ -604,7 +605,7 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
      *
      * @param iid Instance Id
      * @throws InstanceManagementException If the instance cannot be terminated due to the
-     *                                    unavailability of Debugger support
+     *                                     unavailability of Debugger support
      */
 
     public void terminateInstance(long iid) throws InstanceManagementException {
@@ -612,17 +613,15 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
                 getCurrentCarbonContextHolder().getTenantId());
 
         try {
-        isOperationIsValidForTheCurrentTenant(iid);
+            isOperationIsValidForTheCurrentTenant(iid);
         } catch (IllegalAccessException ex) {
-            String errMsg = "You are trying to carry out unauthorized operation!";
-            log.error(errMsg);
-            throw new InstanceManagementException(errMsg, ex);
+            handleError(ex);
         }
         DebuggerSupport debugSupport = getDebugger(iid);
         if (debugSupport == null) {
-            log.error("Cannot terminate the instance " + iid + ", Debugger support not available");
-            throw new InstanceManagementException("Cannot terminate the instance " + iid +
-                    ", Debugger support not available");
+            String erMsg = "Cannot terminate the instance " + iid + ", Debugger support not available";
+            log.error(erMsg);
+            throw new InstanceManagementException(erMsg);
         }
         debugSupport.terminate(iid);
     }
@@ -633,35 +632,36 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
      * @param filter Instance filter
      * @return Number of instances deleted
      * @throws InstanceManagementException If the filter is invalid or an exception occurred during
-     * instance deletion
+     *                                     instance deletion
      */
     public int deleteInstances(String filter, final boolean deleteMessageExchanges)
             throws InstanceManagementException {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
 
+        String tFilter = filter;
         Integer tenantId = MultitenantUtils.getTenantId(getConfigContext());
         TenantProcessStoreImpl tenantProcessStore = (TenantProcessStoreImpl) bpelServer.
                 getMultiTenantProcessStore().getTenantsProcessStore(tenantId);
 
-        if (isInvalidFilter(filter)) {
-            String errMsg = "Invalid instance filter: " +filter;
+        if (isInvalidFilter(tFilter)) {
+            String errMsg = "Invalid instance filter: " + tFilter;
             log.error(errMsg);
             throw new InstanceManagementException(errMsg);
         }
 
-        if(!isSecureFilter(new InstanceFilter(filter), tenantProcessStore.getProcesses().keySet())){
+        if (!isSecureFilter(new InstanceFilter(tFilter), tenantProcessStore.getProcessConfigMap().keySet())) {
             String errMsg = "Instance deletion operation not permitted due to insecure filter: " +
-                    filter;
+                    tFilter;
             log.error(errMsg);
-             throw new InstanceManagementException(errMsg);
+            throw new InstanceManagementException(errMsg);
         }
 
-        if (filter.indexOf(" pid=") == -1) {
-            filter = filter + getTenantsProcessList(tenantProcessStore.getProcesses().keySet());
+        if (!tFilter.contains(" pid=")) {
+            tFilter = tFilter + getTenantsProcessList(tenantProcessStore.getProcessConfigMap().keySet());
         }
 
-        final InstanceFilter instanceFilter = new InstanceFilter(filter);
+        final InstanceFilter instanceFilter = new InstanceFilter(tFilter);
 
         final List<Long> ret = new LinkedList<Long>();
         try {
@@ -678,7 +678,7 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
 
                     for (ProcessInstanceDAO instance : instances) {
                         instance.delete(EnumSet.allOf(ProcessConf.CLEANUP_CATEGORY.class),
-                                        deleteMessageExchanges);
+                                deleteMessageExchanges);
                         ret.add(instance.getInstanceId());
                     }
                     return null;
@@ -713,7 +713,6 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
      */
     private QName getProcess(final Long iid) {
         QName processId;
-
         try {
             processId = dbexec(new BpelDatabase.Callable<QName>() {
                 public QName run(BpelDAOConnection conn) throws Exception {
@@ -724,8 +723,7 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
         } catch (Exception e) {
             String errMsg = "Exception during instance: " + iid + " retrieval";
             log.error(errMsg, e);
-            throw new ProcessingException(errMsg + ": " + e.toString());
-
+            throw new ProcessingException(errMsg + ": " + e.toString(), e);
         }
 
         return processId;
@@ -742,7 +740,6 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
      */
     private DebuggerSupport getDebugger(final Long iid) throws InstanceManagementException {
         QName processId;
-
         try {
             processId = bpelServer.getODEBPELServer().getBpelDb().exec(new BpelDatabase.Callable<QName>() {
                 public QName run(BpelDAOConnection conn) throws Exception {
@@ -827,7 +824,7 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
                                   ProcessInstanceDAO processInstance)
             throws InstanceManagementException {
 
-       // ((ProcessConfigurationImpl) getTenantProcessForCurrentSession().getProcessConfiguration(QName.valueOf(instanceInfo.getPid()))).getEventsEnabled();
+        // ((ProcessConfigurationImpl) getTenantProcessForCurrentSession().getProcessConfiguration(QName.valueOf(instanceInfo.getPid()))).getEventsEnabled();
 
         instanceInfo.setIid(processInstance.getInstanceId().toString());
         instanceInfo.setPid(processInstance.getProcess().getProcessId().toString());
@@ -866,7 +863,7 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
      * Use fillFaultAndFailure(ProcessInstanceDAO, InstanceInfoType) to fill the
      * instanceInfoWithEvents
      *
-     * @param instance Process Instance DAO
+     * @param instance               Process Instance DAO
      * @param instanceInfoWithEvents Instance info with events
      */
     private void fillFaultAndFailure(ProcessInstanceDAO instance,
@@ -1347,18 +1344,18 @@ public class InstanceManagementServiceSkeleton extends AbstractAdmin
                 .getMultiTenantProcessStore().getTenantsProcessStore(tenantId);
     }
 
-    private boolean isSecureFilter(InstanceFilter filter, Set<QName> processIds){
+    private boolean isSecureFilter(InstanceFilter filter, Set<QName> processIds) {
         List<String> pids = filter.getPidFilter();
         Set<String> strPids = new HashSet<String>();
 
-        if(pids != null) {
+        if (pids != null) {
 
-            for(QName pidQName : processIds){
+            for (QName pidQName : processIds) {
                 strPids.add(pidQName.toString());
             }
 
-            for(String pid : pids){
-                if(!strPids.contains(pid)){
+            for (String pid : pids) {
+                if (!strPids.contains(pid)) {
                     return false;
                 }
             }

@@ -47,7 +47,7 @@ import java.util.*;
  * Utility class which contains methods for creating response SOAP messages and
  * SOAP faults.
  */
-public class SOAPUtils {
+public final class SOAPUtils {
 
     // Utility classes should not have a public or default constructor.
 
@@ -55,7 +55,7 @@ public class SOAPUtils {
     }
 
     /**
-     * Create SOAP Response message from response returned by ODE engine.
+     * Create SOAP Response message from response returned byBPELServer ODE engine.
      *
      * @param bpelMessageContext DTO contains details on current messageflow.
      * @param odeMessageExchange ODE MyRoleMessageExchange contains data on the current process
@@ -456,7 +456,7 @@ public class SOAPUtils {
             try {
                 partElement = (Element) headerParts.get(soapHeaderElementDefinition.getPart());
             } catch (ClassCastException e) {
-                throw new BPELFault("SOAP Header must be a DOM Element.");
+                throw new BPELFault("SOAP Header must be a DOM Element.", e);
             }
         }
 
@@ -715,8 +715,9 @@ public class SOAPUtils {
                                                List<javax.wsdl.extensions.soap.SOAPHeader> headerDefs,
                                                Message msg) throws BPELFault {
         // Checking that the definitions we have are at least there
-        for (javax.wsdl.extensions.soap.SOAPHeader headerDef : headerDefs)
+        for (javax.wsdl.extensions.soap.SOAPHeader headerDef : headerDefs) {
             handleSoapHeaderPartDef(message, wsdl, soapHeader, headerDef, msg);
+        }
 
         // Extracting whatever header elements we find in the message, binding and abstract parts
         // aren't reliable enough given what people do out there.

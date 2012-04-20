@@ -44,7 +44,7 @@ import java.util.zip.ZipInputStream;
 /**
  * Utility methods for the process store
  */
-public class Utils {
+public final class Utils {
     private static Log log = LogFactory.getLog(Utils.class);
     private static final String HEXES = "0123456789ABCDEF";
 
@@ -56,9 +56,9 @@ public class Utils {
             new Comparator<String>() {
                 public int compare(String o1, String o2) {
                     String[] nameParts1 = o1.split("/");
-                    String version1 = nameParts1[0].substring(nameParts1[0].lastIndexOf("-") + 1);
+                    String version1 = nameParts1[0].substring(nameParts1[0].lastIndexOf('-') + 1);
                     String[] nameParts2 = o2.split("/");
-                    String version2 = nameParts2[0].substring(nameParts2[0].lastIndexOf("-") + 1);
+                    String version2 = nameParts2[0].substring(nameParts2[0].lastIndexOf('-') + 1);
 
                     return Integer.parseInt(version1) - Integer.parseInt(version2);
                 }

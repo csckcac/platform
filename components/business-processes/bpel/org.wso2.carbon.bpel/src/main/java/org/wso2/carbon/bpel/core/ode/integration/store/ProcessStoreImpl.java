@@ -241,7 +241,7 @@ public class ProcessStoreImpl implements ProcessStore, MultiTenantProcessStore {
         }
     }
 
-    public void removeFromProcessToTenantMap(QName pid){
+    public void removeFromProcessToTenantMap(QName pid) {
         processToTenantMap.remove(pid);
     }
 
@@ -472,9 +472,8 @@ public class ProcessStoreImpl implements ProcessStore, MultiTenantProcessStore {
         // method does not get called frequently. So ignore
         // the performance impact.
         //////////////////////////////////////////////////
-        String duName;
-        if ((duName = processToDeploymentUnitMap.get(pid)) != null) {
-            return duName;
+        if ((processToDeploymentUnitMap.get(pid)) != null) {
+            return processToDeploymentUnitMap.get(pid);
         }
 
         for (Map.Entry<String, ArrayList<QName>> entry : deploymentUnitToProcessesMap.entrySet()) {
@@ -522,7 +521,7 @@ public class ProcessStoreImpl implements ProcessStore, MultiTenantProcessStore {
         ProcessConfigurationImpl pConf = (ProcessConfigurationImpl) getProcessConfiguration(pid);
         pConf.setState(processState);
 
-        if (old != null && old != processState) {
+        if (old != null && !old.equals(processState)) {
             fireStateChange(pid, processState, duName);
         }
     }
@@ -750,7 +749,7 @@ public class ProcessStoreImpl implements ProcessStore, MultiTenantProcessStore {
     }
 
     private static class SimpleThreadFactory implements ThreadFactory {
-        int threadNumber = 0;
+        private int threadNumber = 0;
 
         public Thread newThread(Runnable r) {
             threadNumber += 1;

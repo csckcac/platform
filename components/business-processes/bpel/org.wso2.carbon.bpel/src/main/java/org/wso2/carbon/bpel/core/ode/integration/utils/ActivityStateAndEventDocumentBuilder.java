@@ -16,17 +16,16 @@
 
 package org.wso2.carbon.bpel.core.ode.integration.utils;
 
-import org.apache.ode.bpel.evt.*;
+import org.apache.ode.bpel.evt.ActivityEvent;
+import org.apache.ode.bpel.evt.BpelEvent;
 import org.apache.ode.bpel.evtproc.ActivityStateDocumentBuilder;
 import org.apache.ode.bpel.iapi.BpelEventListener;
-import org.apache.ode.bpel.pmapi.*;
+import org.apache.ode.bpel.pmapi.ActivityInfoDocument;
+import org.apache.ode.bpel.pmapi.EventInfoListDocument;
+import org.apache.ode.bpel.pmapi.TEventInfo;
+import org.apache.ode.bpel.pmapi.TEventInfoList;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Initiate, update the ActivityInfoWithEventsDocument objects so,
@@ -37,15 +36,15 @@ public class ActivityStateAndEventDocumentBuilder extends ActivityStateDocumentB
      * Keep a list of the activity info with events objects, so we can return
      * them in the order of creation.
      */
-    private ArrayList<ActivityInfoWithEventsDocument> activitiesWithEventsOrdered = new ArrayList<ActivityInfoWithEventsDocument>();
-    private HashMap<Long, ActivityInfoWithEventsDocument> activitiesWithEvents = new HashMap<Long, ActivityInfoWithEventsDocument>();
+    private List<ActivityInfoWithEventsDocument> activitiesWithEventsOrdered = new ArrayList<ActivityInfoWithEventsDocument>();
+    private Map<Long, ActivityInfoWithEventsDocument> activitiesWithEvents = new HashMap<Long, ActivityInfoWithEventsDocument>();
 
-    private boolean removeCompleted = false;
+//    private boolean removeCompleted = false;
 
     /**
      * Update activitiesWithEventsOrdered and activitiesWithEvents based on the event
      *
-     * @param be
+     * @param be BPEL Event
      */
     public void onEvent(BpelEvent be) {
         super.onEvent(be);
@@ -78,8 +77,8 @@ public class ActivityStateAndEventDocumentBuilder extends ActivityStateDocumentB
      * Need to be done as event-info can be stored only in activitiesWithEvents and activitiesWithEventsOrdered
      * (parent class doesn't support for event-info management)
      *
-     * @param be
-     * @param infoDocList
+     * @param be          Activity Event
+     * @param infoDocList Activity Information Document
      */
     private void fillActivityInfo(ActivityEvent be, List<ActivityInfoDocument> infoDocList) {
         ActivityInfoDocument infoDoc = null;
@@ -92,26 +91,26 @@ public class ActivityStateAndEventDocumentBuilder extends ActivityStateDocumentB
             activitiesWithEvents.put(be.getActivityId(), new ActivityInfoWithEventsDocument(infoDoc));
         }
 
-        addActivitiesWithEventOrdered(String.valueOf(be.getActivityId()), infoDoc);
+        addActivitiesWithEventOrdered(infoDoc);
     }
 
-    private void completed(ActivityInfoWithEventsDocument ainf) {
-        if (removeCompleted) {
-            activitiesWithEventsOrdered.remove(ainf);
-            activitiesWithEvents.values().remove(ainf);
-        }
-    }
+//    private void completed(ActivityInfoWithEventsDocument ainf) {
+//        if (removeCompleted) {
+//            activitiesWithEventsOrdered.remove(ainf);
+//            activitiesWithEvents.values().remove(ainf);
+//        }
+//    }
 
     /**
      * return the ActivityInfoWithEventsDocument object for a particular event
      * Then take it and fill it with particular event info
      * Note - this must be used after fillActivityInfo method, else aInfo will return a null ref.
      *
-     * @param event
+     * @param event Activity Event
      * @return updated element due to event input
      */
     private ActivityInfoWithEventsDocument lookup(ActivityEvent event) {
-        ActivityInfoWithEventsDocument actEvtInfoDoc = activitiesWithEvents.get(Long.valueOf(event.getActivityId()));
+        ActivityInfoWithEventsDocument actEvtInfoDoc = activitiesWithEvents.get(event.getActivityId());
         ActivityInfoDocument aInfo = actEvtInfoDoc.getActivityInfoDoc();
         EventInfoListDocument aEventList = actEvtInfoDoc.getEventInfoList();
 
@@ -138,12 +137,13 @@ public class ActivityStateAndEventDocumentBuilder extends ActivityStateDocumentB
     /**
      * Use to verify the new addition to activitiesWithEventsOrdered
      *
-     * @param infoDoc
+     * @param infoDoc Activity Information Document
      */
-    private void addActivitiesWithEventOrdered(String activityID, ActivityInfoDocument infoDoc) {
+    private void addActivitiesWithEventOrdered(ActivityInfoDocument infoDoc) {
         boolean isExist = false;
-        for (int i = 0; i < activitiesWithEventsOrdered.size(); i++) {
-            if (activitiesWithEventsOrdered.get(i).getActivityInfoDoc().getActivityInfo().getAiid().equals(infoDoc.getActivityInfo().getAiid())) {
+        for (ActivityInfoWithEventsDocument anActivitiesWithEventsOrdered : activitiesWithEventsOrdered) {
+            if (anActivitiesWithEventsOrdered.getActivityInfoDoc().getActivityInfo().
+                    getAiid().equals(infoDoc.getActivityInfo().getAiid())) {
                 isExist = true;
                 break;
             }
@@ -156,22 +156,24 @@ public class ActivityStateAndEventDocumentBuilder extends ActivityStateDocumentB
     /**
      * Update activitiesWithEventsOrdered using infoWithEventsDoc
      *
-     * @param event
-     * @param infoWithEventsDoc
+     * @param event             Activity Event
+     * @param infoWithEventsDoc ActivityInfoWithEventsDocument
      */
     private void addActivitiesWithEventOrdered(ActivityEvent event,
                                                ActivityInfoWithEventsDocument infoWithEventsDoc) {
         boolean isExist = false;
-        for (int i = 0; i < activitiesWithEventsOrdered.size(); i++) {
-            if (activitiesWithEventsOrdered.get(i).getActivityInfoDoc().getActivityInfo().getAiid().equals(infoWithEventsDoc.getActivityInfoDoc().getActivityInfo().getAiid())) {
+        for (ActivityInfoWithEventsDocument anActivitiesWithEventsOrdered :
+                activitiesWithEventsOrdered) {
+            if (anActivitiesWithEventsOrdered.getActivityInfoDoc().getActivityInfo().getAiid().
+                    equals(infoWithEventsDoc.getActivityInfoDoc().getActivityInfo().getAiid())) {
                 isExist = true;
 
-                EventInfoListDocument aEventList = activitiesWithEventsOrdered.get(i).getEventInfoList();
+                EventInfoListDocument aEventList = anActivitiesWithEventsOrdered.getEventInfoList();
 
                 if (aEventList == null) {
                     aEventList = EventInfoListDocument.Factory.newInstance();
-                    activitiesWithEventsOrdered.get(i).setEventInfoList(aEventList);
-                    aEventList = activitiesWithEventsOrdered.get(i).getEventInfoList();
+                    anActivitiesWithEventsOrdered.setEventInfoList(aEventList);
+                    aEventList = anActivitiesWithEventsOrdered.getEventInfoList();
                 }
                 TEventInfo eventInfo;
                 if (aEventList.getEventInfoList() == null) {
@@ -192,8 +194,8 @@ public class ActivityStateAndEventDocumentBuilder extends ActivityStateDocumentB
     /**
      * Fill the event info from an event.
      *
-     * @param info
-     * @param event
+     * @param info  Event Info
+     * @param event ActivityEvent
      */
     private void fillEventInfo(TEventInfo info, ActivityEvent event) {
 

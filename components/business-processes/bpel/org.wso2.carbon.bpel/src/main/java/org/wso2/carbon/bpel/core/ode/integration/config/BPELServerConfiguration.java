@@ -23,30 +23,14 @@ import org.apache.ode.bpel.iapi.Scheduler;
 import org.apache.ode.il.config.OdeConfigProperties;
 import org.apache.ode.utils.CronExpression;
 import org.apache.xmlbeans.XmlException;
+import org.wso2.carbon.bpel.config.*;
 import org.wso2.carbon.bpel.core.BPELConstants;
-import org.wso2.carbon.bpel.config.TBPS;
-import org.wso2.carbon.bpel.config.TCleanup;
-import org.wso2.carbon.bpel.config.TDataBaseConfig;
-import org.wso2.carbon.bpel.config.TEventListeners;
-import org.wso2.carbon.bpel.config.TExtensionBundles;
-import org.wso2.carbon.bpel.config.TMexInterceptors;
-import org.wso2.carbon.bpel.config.TMultithreadedHttpConnectionManagerConfig;
-import org.wso2.carbon.bpel.config.TOpenJPAConfig;
-import org.wso2.carbon.bpel.config.TProcessDehydration;
-import org.wso2.carbon.bpel.config.TSchedules;
-import org.wso2.carbon.bpel.config.WSO2BPSDocument;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Properties;
-import java.util.Set;
-import java.util.EnumSet;
+import java.util.*;
 
 /**
  * The class which represents the BPEL configuration file, bps.xml
@@ -71,12 +55,6 @@ public class BPELServerConfiguration {
 
     private String dataSourceJNDIRepoProviderURL;
 
-    private int dataSourceJNDIRepoProviderPort;
-
-    private static int CARBON_DEFAULT_PORT_OFFSET = 0;
-
-    private static String CARBON_CONFIG_PORT_OFFSET_NODE = "Ports.Offset";
-
     private int processDehydrationMaxAge;
 
     private boolean isProcessDehydrationEnabled = false;
@@ -85,17 +63,17 @@ public class BPELServerConfiguration {
 
     private String transactionFactoryClass = "org.apache.ode.il.EmbeddedGeronimoFactory";
 
-    private ArrayList<String> eventListeners = new ArrayList<String>();
+    private List<String> eventListeners = new ArrayList<String>();
 
-    private ArrayList<String> mexInterceptors = new ArrayList<String>();
+    private List<String> mexInterceptors = new ArrayList<String>();
 
-    private ArrayList<String> extensionBundleRuntimes = new ArrayList<String>();
+    private List<String> extensionBundleRuntimes = new ArrayList<String>();
 
-    private ArrayList<String> extensionCorrelationFilters = new ArrayList<String>();
+    private List<String> extensionCorrelationFilters = new ArrayList<String>();
 
-    private ArrayList<String> extensionBundleValidators = new ArrayList<String>();
+    private List<String> extensionBundleValidators = new ArrayList<String>();
 
-    private HashMap<String, String> openJpaProperties = new HashMap<String, String>();
+    private Map<String, String> openJpaProperties = new HashMap<String, String>();
 
     // Message exchange timeout in milliseconds
     private int mexTimeOut = BPELConstants.DEFAULT_TIMEOUT;
@@ -107,18 +85,14 @@ public class BPELServerConfiguration {
 
     private int maxTotalConnections = 100;
 
-    // Life time in days
-    private int completedInstanceLifeTime = 3;
-
-    // Life time in days
-    private int failedInstanceLifeTime = 5;
+//    // Life time in days
+//    private int completedInstanceLifeTime = 3;
+//
+//    // Life time in days
+//    private int failedInstanceLifeTime = 5;
 
     // Use Debug on transaction manager or not
     private boolean debugOnTransactionManager = false;
-
-    private boolean acquireTransactionLocks = false;
-
-    private int portOffset = 0;
 
     private boolean syncWithRegistry = false;
 
@@ -167,27 +141,27 @@ public class BPELServerConfiguration {
         return transactionFactoryClass;
     }
 
-    public ArrayList<String> getEventListeners() {
+    public List<String> getEventListeners() {
         return eventListeners;
     }
 
-    public ArrayList<String> getMexInterceptors() {
+    public List<String> getMexInterceptors() {
         return mexInterceptors;
     }
 
-    public ArrayList<String> getExtensionBundleRuntimes() {
+    public List<String> getExtensionBundleRuntimes() {
         return extensionBundleRuntimes;
     }
 
-    public ArrayList<String> getExtensionCorrelationFilters() {
+    public List<String> getExtensionCorrelationFilters() {
         return extensionCorrelationFilters;
     }
 
-    public ArrayList<String> getExtensionBundleValidators() {
-        return extensionBundleValidators;
-    }
+//    public List<String> getExtensionBundleValidators() {
+//        return extensionBundleValidators;
+//    }
 
-    public HashMap<String, String> getOpenJpaProperties() {
+    public Map<String, String> getOpenJpaProperties() {
         return openJpaProperties;
     }
 
@@ -207,46 +181,46 @@ public class BPELServerConfiguration {
         return maxTotalConnections;
     }
 
-    public int getCompletedInstanceLifeTime() {
-        return completedInstanceLifeTime;
-    }
-
-    public int getFailedInstanceLifeTime() {
-        return failedInstanceLifeTime;
-    }
+//    public int getCompletedInstanceLifeTime() {
+//        return completedInstanceLifeTime;
+//    }
+//
+//    public int getFailedInstanceLifeTime() {
+//        return failedInstanceLifeTime;
+//    }
 
     public boolean isDebugOnTransactionManager() {
         return debugOnTransactionManager;
     }
 
-    public List<ProcessConf.CronJob> getSystemCleanupCronJobs(){
+    public List<ProcessConf.CronJob> getSystemCleanupCronJobs() {
         List<ProcessConf.CronJob> jobs = new ArrayList<ProcessConf.CronJob>();
         TSchedules schedules = bpsConfigDocument.getWSO2BPS().getSchedules();
 
-        if(schedules != null &&
+        if (schedules != null &&
                 schedules.getScheduleArray() != null &&
-                schedules.getScheduleArray().length > 0){
-            for(org.wso2.carbon.bpel.config.TSchedule schedule : schedules.getScheduleArray()){
+                schedules.getScheduleArray().length > 0) {
+            for (org.wso2.carbon.bpel.config.TSchedule schedule : schedules.getScheduleArray()) {
                 ProcessConf.CronJob job = new ProcessConf.CronJob();
 
-                try{
+                try {
                     job.setCronExpression(new CronExpression(schedule.getWhen()));
-                    for(final TCleanup aCleanup : schedule.getCleanupArray()){
+                    for (final TCleanup aCleanup : schedule.getCleanupArray()) {
                         ProcessConf.CleanupInfo cleanupInfo = new ProcessConf.CleanupInfo();
-                        assert  !(aCleanup.getFilterArray().length == 0);
+                        assert !(aCleanup.getFilterArray().length == 0);
                         cleanupInfo.setFilters(Arrays.asList(aCleanup.getFilterArray()));
                         processACleanup(cleanupInfo.getCategories(),
-                                        Arrays.asList(aCleanup.getCategoryArray()));
+                                Arrays.asList(aCleanup.getCategoryArray()));
 
                         Scheduler.JobDetails runnableDetails = new Scheduler.JobDetails();
 
                         runnableDetails.getDetailsExt().put(BPELConstants.ODE_DETAILS_EXT_CLEAN_UP_INFO,
-                                                            cleanupInfo);
+                                cleanupInfo);
                         runnableDetails.getDetailsExt().put(BPELConstants.ODE_DETAILS_EXT_TRANSACTION_SIZE, 10);
                         job.getRunnableDetailList().add(runnableDetails);
 
                         log.info("SYSTEM CRON configuration added a runtime data cleanup: " +
-                                 runnableDetails);
+                                runnableDetails);
                     }
                     jobs.add(job);
                 } catch (ParseException e) {
@@ -259,14 +233,14 @@ public class BPELServerConfiguration {
         return jobs;
     }
 
-public static void processACleanup(Set<ProcessConf.CLEANUP_CATEGORY> categories,
-                                   List<TCleanup.Category.Enum> categoryList) {
-        if( categoryList.isEmpty() ) {
+    public static void processACleanup(Set<ProcessConf.CLEANUP_CATEGORY> categories,
+                                       List<TCleanup.Category.Enum> categoryList) {
+        if (categoryList.isEmpty()) {
             // add all categories
             categories.addAll(EnumSet.allOf(ProcessConf.CLEANUP_CATEGORY.class));
         } else {
-            for( TCleanup.Category.Enum aCategory : categoryList ) {
-                if( aCategory == TCleanup.Category.ALL) {
+            for (TCleanup.Category.Enum aCategory : categoryList) {
+                if (aCategory == TCleanup.Category.ALL) {
                     // add all categories
                     categories.addAll(EnumSet.allOf(ProcessConf.CLEANUP_CATEGORY.class));
                 } else {
@@ -279,6 +253,7 @@ public static void processACleanup(Set<ProcessConf.CLEANUP_CATEGORY> categories,
 
     /**
      * Make the BPEL Configuration file ODE readable
+     *
      * @return Properties object which is expected from ODE environment as configuration
      */
     public Properties toODEConfigProperties() {
@@ -287,16 +262,16 @@ public static void processACleanup(Set<ProcessConf.CLEANUP_CATEGORY> categories,
         odeConfig.setProperty(addPrefix(OdeConfigProperties.PROP_DB_MODE), dsType.toString());
         if (dsType == DataSourceType.EXTERNAL) {
             odeConfig.setProperty(addPrefix(OdeConfigProperties.PROP_DB_EXTERNAL_DS),
-                                  dataSourceName);
+                    dataSourceName);
             odeConfig.setProperty(addPrefix(BPELConstants.PROP_DB_EXTERNAL_JNDI_CTX_FAC),
-                                  dataSourceJNDIRepoInitialContextFactory);
+                    dataSourceJNDIRepoInitialContextFactory);
             odeConfig.setProperty(addPrefix(BPELConstants.PROP_DB_EXTERNAL_JNDI_PROVIDER_URL),
-                                  dataSourceJNDIRepoProviderURL);
+                    dataSourceJNDIRepoProviderURL);
         }
 
         if (transactionFactoryClass != null) {
             odeConfig.setProperty(addPrefix(OdeConfigProperties.PROP_TX_FACTORY_CLASS),
-                                  transactionFactoryClass);
+                    transactionFactoryClass);
         }
 
         if (openJpaProperties.size() > 0) {
@@ -305,14 +280,15 @@ public static void processACleanup(Set<ProcessConf.CLEANUP_CATEGORY> categories,
             }
         }
 
+        boolean acquireTransactionLocks = false;
         odeConfig.setProperty(addPrefix(BPELConstants.ODE_ACQUIRE_TRANSACTION_LOCKS),
-                              Boolean.toString(acquireTransactionLocks));
+                Boolean.toString(acquireTransactionLocks));
 
         odeConfig.setProperty(addPrefix(OdeConfigProperties.PROP_MEX_INMEM_TTL),
-                              Integer.toString(inMemoryInstanceTTL));
+                Integer.toString(inMemoryInstanceTTL));
 
         odeConfig.setProperty(addPrefix(OdeConfigProperties.PROP_THREAD_POOL_SIZE),
-                              Integer.toString(odeSchedulerThreadPoolSize));
+                Integer.toString(odeSchedulerThreadPoolSize));
 
         return odeConfig;
     }
@@ -329,7 +305,7 @@ public static void processACleanup(Set<ProcessConf.CLEANUP_CATEGORY> categories,
 
         if (!bpsConfigFile.exists()) {
             log.warn("Cannot find BPEL configuration file: " + bpsConfigPath +
-                     " Default values are used.");
+                    " Default values are used.");
             return;
         }
 
@@ -343,7 +319,7 @@ public static void processACleanup(Set<ProcessConf.CLEANUP_CATEGORY> categories,
             log.error(errMsg);
             throw new RuntimeException(errMsg, e);
         } catch (IOException e) {
-            String errMsg = "Error reading bps configuration file."+
+            String errMsg = "Error reading bps configuration file." +
                     BPELConstants.BPEL_CONFIGURATION_FILE_NAME + " can be found at " +
                     bpsConfigPath;
             log.error(errMsg);
@@ -399,11 +375,11 @@ public static void processACleanup(Set<ProcessConf.CLEANUP_CATEGORY> categories,
                 dataSourceJNDIRepoProviderURL = jndiConfig.getProviderURL().trim();
 
                 // Read Port Offset
-                portOffset = readPortOffset();
+                int portOffset = readPortOffset();
                 //applying port offset operation
                 String urlWithoutPort = dataSourceJNDIRepoProviderURL.substring(0,
-                        dataSourceJNDIRepoProviderURL.lastIndexOf(":") + 1);
-                dataSourceJNDIRepoProviderPort = Integer.parseInt(
+                        dataSourceJNDIRepoProviderURL.lastIndexOf(':') + 1);
+                int dataSourceJNDIRepoProviderPort = Integer.parseInt(
                         dataSourceJNDIRepoProviderURL.substring(urlWithoutPort.length())) + portOffset;
                 dataSourceJNDIRepoProviderURL = urlWithoutPort + dataSourceJNDIRepoProviderPort;
 
@@ -415,13 +391,13 @@ public static void processACleanup(Set<ProcessConf.CLEANUP_CATEGORY> categories,
     }
 
     private int readPortOffset() {
-
-        String portOffset = CarbonUtils.getServerConfiguration().getFirstProperty(CARBON_CONFIG_PORT_OFFSET_NODE);
-
+        String offSet =
+                CarbonUtils.getServerConfiguration().getFirstProperty(BPELConstants.PORTS_OFFSET);
         try {
-            return ((portOffset != null) ? Integer.parseInt(portOffset.trim()) : CARBON_DEFAULT_PORT_OFFSET);
+            return ((offSet != null) ? Integer.parseInt(offSet.trim()) : 0);
         } catch (NumberFormatException e) {
-            return CARBON_DEFAULT_PORT_OFFSET;
+            log.warn("Incorrect port offset: " + offSet + " resetting offset to 0");
+            return 0;
         }
     }
 
@@ -448,18 +424,18 @@ public static void processACleanup(Set<ProcessConf.CLEANUP_CATEGORY> categories,
     }
 
     private void populateEventListeners() {
-        TEventListeners eventListeners = bpsConfigDocument.getWSO2BPS().getEventListeners();
-        if (eventListeners != null) {
-            for (TEventListeners.Listener listener : eventListeners.getListenerArray()) {
+        TEventListeners eventListenerList = bpsConfigDocument.getWSO2BPS().getEventListeners();
+        if (eventListenerList != null) {
+            for (TEventListeners.Listener listener : eventListenerList.getListenerArray()) {
                 this.eventListeners.add(listener.getClass1());
             }
         }
     }
 
     private void populateMexInterceptors() {
-        TMexInterceptors mexInterceptors = bpsConfigDocument.getWSO2BPS().getMexInterceptors();
-        if (mexInterceptors != null) {
-            for (TMexInterceptors.Interceptor interceptor : mexInterceptors.getInterceptorArray()) {
+        TMexInterceptors mexInterceptorList = bpsConfigDocument.getWSO2BPS().getMexInterceptors();
+        if (mexInterceptorList != null) {
+            for (TMexInterceptors.Interceptor interceptor : mexInterceptorList.getInterceptorArray()) {
                 this.mexInterceptors.add(interceptor.getClass1());
             }
         }
@@ -501,9 +477,9 @@ public static void processACleanup(Set<ProcessConf.CLEANUP_CATEGORY> categories,
     }
 
     private void populateMexTimeoutField() {
-        TBPS.MexTimeOut mexTimeOut = bpsConfigDocument.getWSO2BPS().getMexTimeOut();
-        if (mexTimeOut != null) {
-            this.mexTimeOut = mexTimeOut.getValue();
+        TBPS.MexTimeOut timeOut = bpsConfigDocument.getWSO2BPS().getMexTimeOut();
+        if (timeOut != null) {
+            this.mexTimeOut = timeOut.getValue();
         }
     }
 
@@ -527,14 +503,13 @@ public static void processACleanup(Set<ProcessConf.CLEANUP_CATEGORY> categories,
     }
 
 
-
     private void populateDebugOnTransactionManagerProp() {
         this.debugOnTransactionManager = bpsConfigDocument.getWSO2BPS().getDebugTransactions();
     }
 
-    private void populateAcquireTransactionLocksProp() {
-        this.acquireTransactionLocks = bpsConfigDocument.getWSO2BPS().getAquireTransactionLocks();
-    }
+//    private void populateAcquireTransactionLocksProp() {
+//        this.acquireTransactionLocks = bpsConfigDocument.getWSO2BPS().getAquireTransactionLocks();
+//    }
 
     private void populateInMemoryInstanceTTL() {
         this.inMemoryInstanceTTL = bpsConfigDocument.getWSO2BPS().getInMemoryInstanceTimeToLive();

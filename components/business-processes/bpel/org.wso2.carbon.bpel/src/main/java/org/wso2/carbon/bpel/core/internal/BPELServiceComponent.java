@@ -59,7 +59,7 @@ public class BPELServiceComponent {
         } catch (Throwable t) {
             log.error("Failed to activate BPEL Core bundle", t);
         }
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("BPEL Core bundle is activated.");
         }
     }
@@ -94,22 +94,22 @@ public class BPELServiceComponent {
         BPELServerHolder.getInstance().setRegistryService(null);
     }
 
-    public static TenantRegistryLoader getTenantRegistryLoader(){
+    public static TenantRegistryLoader getTenantRegistryLoader() {
         return BPELServerHolder.getInstance().getRegistryLoader();
     }
 
-    public static RegistryService getRegistryService(){
+    public static RegistryService getRegistryService() {
         return BPELServerHolder.getInstance().getRegistryService();
     }
 
-    public static BPELServer getBPELServer(){
+    public static BPELServer getBPELServer() {
         return BPELServerHolder.getInstance().getBpelServer();
     }
 
-    private void registerAxis2ConfigurationContextObserver(){
+    private void registerAxis2ConfigurationContextObserver() {
         this.bundleContext.registerService(Axis2ConfigurationContextObserver.class.getName(),
-                                           new Axis2ConfigurationContextObserverImpl(),
-                                           null);
+                new Axis2ConfigurationContextObserverImpl(),
+                null);
     }
 
     private static void initializeBPELServer() throws Exception {
@@ -121,10 +121,10 @@ public class BPELServiceComponent {
         Runtime.getRuntime().addShutdownHook(new BPELServerShutDown(BPELServerHolder.getInstance().
                 getBpelServer()));
     }
-    
+
     private void registerBPELServerService() {
         registration = this.bundleContext.registerService(BPELEngineService.class.getName(),
-                                           new BPELEngineServiceImpl(), null);
+                new BPELEngineServiceImpl(), null);
     }
 
     protected void deactivate(ComponentContext componentContext) throws Exception {
@@ -135,7 +135,7 @@ public class BPELServiceComponent {
         componentContext.getBundleContext().ungetService(registration.getReference());
     }
 
-    private static class BPELServerShutDown extends Thread {
+    private final static class BPELServerShutDown extends Thread {
         private BPELServerImpl bpsServer;
 
         private BPELServerShutDown(BPELServerImpl bpsServer) {

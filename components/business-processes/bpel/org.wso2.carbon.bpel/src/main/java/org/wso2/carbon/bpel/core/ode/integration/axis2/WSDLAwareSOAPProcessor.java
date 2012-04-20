@@ -111,9 +111,9 @@ public class WSDLAwareSOAPProcessor {
         ExtensibilityElement bindingType = getBindingExtension(wsdlBinding);
 
         if (!(bindingType instanceof SOAPBinding || bindingType instanceof SOAP12Binding ||
-              bindingType instanceof HTTPBinding)) {
+                bindingType instanceof HTTPBinding)) {
             throw new AxisFault("WSDL Binding not supported.");
-        }                
+        }
 
         isRPC = isRPC(bindingType);
 
@@ -139,10 +139,10 @@ public class WSDLAwareSOAPProcessor {
             return ((SOAP12Binding) bindingType).getStyle() != null &&
                     ((SOAP12Binding) bindingType).getStyle().equals(WSDL_BINDING_STYLE_RPC);
         }
-            /**
-             * We are using Document literal style binding inside Axis2 when we got a request
-             * via HTTPbinding.
-             */
+        /**
+         * We are using Document literal style binding inside Axis2 when we got a request
+         * via HTTPbinding.
+         */
 
         return false;
     }
@@ -204,7 +204,7 @@ public class WSDLAwareSOAPProcessor {
          * Local part of the axis Operation's name equals to WSDL Operation name.
          */
         Operation op = wsdlBinding.getPortType().getOperation(axisOperationName.getLocalPart(),
-                                                              null, null);
+                null, null);
         String rpcWrapper = op.getName();
         List bodyParts = op.getInput().getMessage().getOrderedParts(parts);
 
@@ -290,9 +290,9 @@ public class WSDLAwareSOAPProcessor {
                                          org.apache.axiom.soap.SOAPHeader soapHeader)
             throws AxisFault {
         boolean payloadMessageHeader = headerDef.getMessage() == null ||
-                                       headerDef.getMessage().equals(msgType.getQName());
+                headerDef.getMessage().equals(msgType.getQName());
         boolean requiredHeader = payloadMessageHeader || (headerDef.getRequired() != null &&
-                                 headerDef.getRequired());
+                headerDef.getRequired());
 
 
         if (requiredHeader && soapHeader == null) {
@@ -331,7 +331,9 @@ public class WSDLAwareSOAPProcessor {
             Message hdrMsg = wsdlDef.getMessage(headerDef.getMessage());
             for (Object o : hdrMsg.getParts().values()) {
                 Part p = (Part) o;
-                if (p.getElementName().equals(elementName)) return p.getName();
+                if (p.getElementName().equals(elementName)) {
+                    return p.getName();
+                }
             }
         }
         //The following commented fix, avoids adding any of the headers. So that reverting back to old fix
@@ -344,8 +346,8 @@ public class WSDLAwareSOAPProcessor {
     @SuppressWarnings("unchecked")
     public static List<SOAPHeader> getSOAPHeaders(ElementExtensible eee) {
         return CollectionsX.filter(new ArrayList<SOAPHeader>(),
-                                   (Collection<Object>) eee.getExtensibilityElements(),
-                                   SOAPHeader.class);
+                (Collection<Object>) eee.getExtensibilityElements(),
+                SOAPHeader.class);
     }
 
     public static <T> T getFirstExtensibilityElement(ElementExtensible parent, Class<T> cls) {

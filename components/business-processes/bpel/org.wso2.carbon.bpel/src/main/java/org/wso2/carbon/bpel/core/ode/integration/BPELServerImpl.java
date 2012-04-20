@@ -44,7 +44,6 @@ import org.wso2.carbon.utils.CarbonUtils;
 import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -53,7 +52,7 @@ import java.util.concurrent.ThreadFactory;
 /**
  * BPELServer implementation. All the ODE BPEL Engine initialization is handled here.
  */
-public class BPELServerImpl implements BPELServer {
+public final class BPELServerImpl implements BPELServer {
     private static Log log = LogFactory.getLog(BPELServerImpl.class);
 
     /* ODE BPEL Server instance*/
@@ -82,7 +81,7 @@ public class BPELServerImpl implements BPELServer {
 
     private CronScheduler cronScheduler;
 
-    protected IdleConnectionTimeoutThread idleConnectionTimeoutThread;
+    private IdleConnectionTimeoutThread idleConnectionTimeoutThread;
 
     /* BPEL Server Configuration */
     private BPELServerConfiguration bpelServerConfiguration;
@@ -160,7 +159,7 @@ public class BPELServerImpl implements BPELServer {
             throw new Exception(errMsg, e);
         }
 
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("Starting scheduler..");
         }
         scheduler.start();
@@ -349,9 +348,9 @@ public class BPELServerImpl implements BPELServer {
             //axisConfiguration.addParameter("ode.transaction.manager", transactionManager);
         } catch (Exception e) {
             log.fatal("Couldn't initialize a transaction manager with factory: "
-                      + txFactoryName, e);
+                    + txFactoryName, e);
             throw new BPELEngineException("Couldn't initialize a transaction manager with factory: "
-                                          + txFactoryName, e);
+                    + txFactoryName, e);
         }
     }
 
@@ -392,7 +391,7 @@ public class BPELServerImpl implements BPELServer {
 
         // In carbon, embedded H2 database for ODE is located at CARBON_HOME/repository/database
         String dbRoot = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator
-                        + "database";
+                + "database";
         File dbRootDir = new File(dbRoot);
 
         if (dbRootDir.exists() && dbRootDir.isDirectory()) {
@@ -418,12 +417,12 @@ public class BPELServerImpl implements BPELServer {
      */
     private void initDAO() throws BPELEngineException {
         log.info("Using DAO Connection Factory class: " +
-                 odeConfigurationProperties.getDAOConnectionFactory());
+                odeConfigurationProperties.getDAOConnectionFactory());
         try {
             daoConnectionFactory = db.createDaoCF();
         } catch (Exception e) {
             String errMsg = "Error instantiating DAO Connection Factory class " +
-                            odeConfigurationProperties.getDAOConnectionFactory();
+                    odeConfigurationProperties.getDAOConnectionFactory();
             log.error(errMsg, e);
             throw new BPELEngineException(errMsg, e);
         }
@@ -437,8 +436,8 @@ public class BPELServerImpl implements BPELServer {
      */
     private void initProcessStore(EndpointReferenceContext eprContext) throws Exception {
         processStore = new ProcessStoreImpl(eprContext,
-                                            db.getDataSource(),
-                                            odeConfigurationProperties);
+                db.getDataSource(),
+                odeConfigurationProperties);
         processStore.setLocalBPELDeploymentUnitRepo(new File(CarbonUtils.getCarbonHome() +
                 File.separator + "repository" + File.separator + "bpel"));
         processStore.registerListener(new ProcessStoreListenerImpl());
@@ -535,17 +534,17 @@ public class BPELServerImpl implements BPELServer {
     }
 
     private Scheduler createScheduler() {
-        SimpleScheduler scheduler = new SimpleScheduler(new GUID().toString(),
-                                                        new JdbcDelegate(db.getDataSource()),
-                                                        odeConfigurationProperties.getProperties());
-        scheduler.setExecutorService(executorService);
-        scheduler.setTransactionManager(transactionManager);
-        return scheduler;
+        SimpleScheduler simpleScheduler = new SimpleScheduler(new GUID().toString(),
+                new JdbcDelegate(db.getDataSource()),
+                odeConfigurationProperties.getProperties());
+        simpleScheduler.setExecutorService(executorService);
+        simpleScheduler.setTransactionManager(transactionManager);
+        return simpleScheduler;
     }
 
     private ThreadFactory createThreadFactory() {
         return new ThreadFactory() {
-            int threadNumber = 0;
+            private int threadNumber = 0;
 
             public Thread newThread(Runnable r) {
                 threadNumber += 1;
@@ -569,21 +568,21 @@ public class BPELServerImpl implements BPELServer {
 
     private void initHttpConnectionManager() throws Exception {
         httpConnectionManager = new MultiThreadedHttpConnectionManager();
-        int max_per_host = bpelServerConfiguration.getMaxConnectionsPerHost();
-        int max_total = bpelServerConfiguration.getMaxTotalConnections();
+        int maxConnectionsPerHost = bpelServerConfiguration.getMaxConnectionsPerHost();
+        int maxTotalConnections = bpelServerConfiguration.getMaxTotalConnections();
         if (log.isDebugEnabled()) {
-            log.debug(HttpConnectionManagerParams.MAX_HOST_CONNECTIONS + "=" + max_per_host);
-            log.debug(HttpConnectionManagerParams.MAX_TOTAL_CONNECTIONS + "=" + max_total);
+            log.debug(HttpConnectionManagerParams.MAX_HOST_CONNECTIONS + "=" + maxConnectionsPerHost);
+            log.debug(HttpConnectionManagerParams.MAX_TOTAL_CONNECTIONS + "=" + maxTotalConnections);
         }
-        if (max_per_host < 1 || max_total < 1) {
+        if (maxConnectionsPerHost < 1 || maxTotalConnections < 1) {
             String errmsg = HttpConnectionManagerParams.MAX_HOST_CONNECTIONS + " and " +
                     HttpConnectionManagerParams.MAX_TOTAL_CONNECTIONS
                     + " must be positive integers!";
             log.error(errmsg);
             throw new Exception(errmsg);
         }
-        httpConnectionManager.getParams().setDefaultMaxConnectionsPerHost(max_per_host);
-        httpConnectionManager.getParams().setMaxTotalConnections(max_total);
+        httpConnectionManager.getParams().setDefaultMaxConnectionsPerHost(maxConnectionsPerHost);
+        httpConnectionManager.getParams().setMaxTotalConnections(maxTotalConnections);
 
         // TODO: Modify this and move configuration to bps.xml
         // Register the connection manager to a idle check thread
@@ -612,7 +611,7 @@ public class BPELServerImpl implements BPELServer {
         odeBpelServer.registerBpelEventListener(new DebugBpelEventListener());
 //        bpelServer.registerBpelEventListener(new CustomEventListener());
 
-        ArrayList<String> eventListeners = bpelServerConfiguration.getEventListeners();
+        List<String> eventListeners = bpelServerConfiguration.getEventListeners();
         if (!eventListeners.isEmpty()) {
             for (String listenerCN : eventListeners) {
                 try {
@@ -628,7 +627,7 @@ public class BPELServerImpl implements BPELServer {
     }
 
     private void registerMexInterceptors() {
-        ArrayList<String> mexInterceptors = bpelServerConfiguration.getMexInterceptors();
+        List<String> mexInterceptors = bpelServerConfiguration.getMexInterceptors();
         if (!mexInterceptors.isEmpty()) {
             for (String interceptorCN : mexInterceptors) {
                 try {
@@ -638,7 +637,7 @@ public class BPELServerImpl implements BPELServer {
                     log.info("Registered message exchange interceptor: " + interceptorCN);
                 } catch (Exception e) {
                     log.warn("Couldn't register the message exchange interceptor " + interceptorCN
-                            + ", the class couldn't be " + "loaded properly: " + e);
+                            + ", the class couldn't be " + "loaded properly.", e);
                 }
             }
         }
@@ -866,7 +865,6 @@ public class BPELServerImpl implements BPELServer {
             super(cause);
         }
     }
-
 
 
 }

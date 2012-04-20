@@ -65,8 +65,11 @@ import java.util.Iterator;
  * This class contains utility functions used by ODE-Carbon Integration Layer to create,
  * and configure AxisServices.
  */
-public class AxisServiceUtils {
+public final class AxisServiceUtils {
     private static final Log log = LogFactory.getLog(AxisServiceUtils.class);
+
+    private AxisServiceUtils() {
+    }
 
     /**
      * Build the underlying Axis Service from Service QName and Port Name of interest using given WSDL
@@ -205,25 +208,26 @@ public class AxisServiceUtils {
     }
 
     private static void handleException(QName pid, String errorMessage, Exception e) throws AxisFault {
-        errorMessage = "Error creating axis service for process " + pid + ".Cause: " + errorMessage;
-        log.error(errorMessage, e);
-        throw new AxisFault(errorMessage, e);
+        String tErrorMessage = "Error creating axis service for process " + pid + ".Cause: " +
+                errorMessage;
+        log.error(tErrorMessage, e);
+        throw new AxisFault(tErrorMessage, e);
     }
 
-    public static void engageModules(AxisDescription description, String... modules)
-            throws AxisFault {
-        for (String m : modules) {
-            if (description.getAxisConfiguration().getModule(m) != null) {
-                if (!description.getAxisConfiguration().isEngaged(m) && !description.isEngaged(m)) {
-                    description.engageModule(description.getAxisConfiguration().getModule(m));
-                }
-            } else {
-                if (log.isDebugEnabled()) {
-                    log.debug("Module " + m + " is not available.");
-                }
-            }
-        }
-    }
+//    public static void engageModules(AxisDescription description, String... modules)
+//            throws AxisFault {
+//        for (String m : modules) {
+//            if (description.getAxisConfiguration().getModule(m) != null) {
+//                if (!description.getAxisConfiguration().isEngaged(m) && !description.isEngaged(m)) {
+//                    description.engageModule(description.getAxisConfiguration().getModule(m));
+//                }
+//            } else {
+//                if (log.isDebugEnabled()) {
+//                    log.debug("Module " + m + " is not available.");
+//                }
+//            }
+//        }
+//    }
 
     /**
      * Axis2 monkey patching to force the usage of the read(element,baseUri) method
@@ -234,22 +238,22 @@ public class AxisServiceUtils {
             super(in, serviceName, portName);
         }
 
-        public WSDL11ToAxisPatchedBuilder(Definition def, QName serviceName, String portName) {
-            super(def, serviceName, portName);
-        }
-
-        public WSDL11ToAxisPatchedBuilder(Definition def, QName serviceName, String portName,
-                                          boolean isAllPorts) {
-            super(def, serviceName, portName, isAllPorts);
-        }
-
-        public WSDL11ToAxisPatchedBuilder(InputStream in, AxisService service) {
-            super(in, service);
-        }
-
-        public WSDL11ToAxisPatchedBuilder(InputStream in) {
-            super(in);
-        }
+//        public WSDL11ToAxisPatchedBuilder(Definition def, QName serviceName, String portName) {
+//            super(def, serviceName, portName);
+//        }
+//
+//        public WSDL11ToAxisPatchedBuilder(Definition def, QName serviceName, String portName,
+//                                          boolean isAllPorts) {
+//            super(def, serviceName, portName, isAllPorts);
+//        }
+//
+//        public WSDL11ToAxisPatchedBuilder(InputStream in, AxisService service) {
+//            super(in, service);
+//        }
+//
+//        public WSDL11ToAxisPatchedBuilder(InputStream in) {
+//            super(in);
+//        }
 
         protected XmlSchema getXMLSchema(Element element, String baseUri) {
             XmlSchemaCollection schemaCollection = new XmlSchemaCollection();
@@ -342,25 +346,25 @@ public class AxisServiceUtils {
         if (input != null) {
             Object actionQName = input.getExtensionAttribute(new QName(Namespaces.WS_ADDRESSING_NS,
                     "Action"));
-            if (actionQName != null && actionQName instanceof QName) {
+            if (actionQName instanceof QName) {
                 return ((QName) actionQName).getLocalPart();
             }
 
             actionQName = input.getExtensionAttribute(new QName(BPELConstants.WS_ADDRESSING_NS2,
                     "Action"));
-            if (actionQName != null && actionQName instanceof QName) {
+            if (actionQName instanceof QName) {
                 return ((QName) actionQName).getLocalPart();
             }
 
             actionQName = input.getExtensionAttribute(new QName(BPELConstants.WS_ADDRESSING_NS3,
                     "Action"));
-            if (actionQName != null && actionQName instanceof QName) {
+            if (actionQName instanceof QName) {
                 return ((QName) actionQName).getLocalPart();
             }
 
             actionQName = input.getExtensionAttribute(new QName(BPELConstants.WS_ADDRESSING_NS4,
                     "Action"));
-            if (actionQName != null && actionQName instanceof QName) {
+            if (actionQName instanceof QName) {
                 return ((QName) actionQName).getLocalPart();
             }
         }
@@ -396,7 +400,7 @@ public class AxisServiceUtils {
     }
 
     public static OperationClient getOperationClient(BPELMessageContext partnerMessageContext,
-                                                      ConfigurationContext clientConfigCtx)
+                                                     ConfigurationContext clientConfigCtx)
             throws AxisFault {
         AxisService anonymousService =
                 AnonymousServiceFactory.getAnonymousService(partnerMessageContext.getService(),

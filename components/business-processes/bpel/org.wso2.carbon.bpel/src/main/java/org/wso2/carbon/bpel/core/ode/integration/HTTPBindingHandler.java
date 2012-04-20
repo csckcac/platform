@@ -27,7 +27,7 @@ import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.OperationClient;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
-import org.apache.axis2.description.*;
+import org.apache.axis2.description.WSDL2Constants;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.axis2.wsdl.WSDLConstants;
 import org.apache.ode.bpel.epr.MutableEndpoint;
@@ -36,7 +36,6 @@ import org.apache.ode.il.OMUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.wso2.carbon.bpel.core.ode.integration.axis2.WSDLAwareSOAPProcessor;
-import org.wso2.carbon.bpel.core.ode.integration.utils.AnonymousServiceFactory;
 import org.wso2.carbon.bpel.core.ode.integration.utils.AxisServiceUtils;
 import org.wso2.carbon.bpel.core.ode.integration.utils.Messages;
 
@@ -46,53 +45,53 @@ import javax.wsdl.extensions.http.HTTPAddress;
 import javax.wsdl.extensions.http.HTTPBinding;
 import javax.wsdl.extensions.http.HTTPOperation;
 import javax.xml.namespace.QName;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class HTTPBindingHandler {
     private ConfigurationContext configurationContext;
-    private AxisService service;
     private QName serviceName;
     private String portName;
     private Binding httpBinding;
-    private Map<QName, AxisOperation> operations = new HashMap<QName, AxisOperation>();
     private Definition wsdl;
-    private String caller;
 
     public HTTPBindingHandler(ConfigurationContext configurationContext,
                               QName serviceName,
                               String portName,
-                              Definition wsdl, String caller) throws AxisFault {
+                              Definition wsdl) throws AxisFault {
         this.configurationContext = configurationContext;
         this.serviceName = serviceName;
         this.portName = portName;
         this.wsdl = wsdl;
-        this.caller = caller;
 
         inferBinding();
     }
 
     public HTTPBindingResponse invoke(final PartnerRoleMessageExchange partnerRoleMessageExchange,
-                       final BPELMessageContext bpelMessageContext) throws AxisFault {
+                                      final BPELMessageContext bpelMessageContext) throws AxisFault {
 
         MessageContext messageContext;
 
-        OperationClient operationClient = AxisServiceUtils.getOperationClient(bpelMessageContext, configurationContext);
+        OperationClient operationClient = AxisServiceUtils.getOperationClient(bpelMessageContext,
+                configurationContext);
         operationClient.getOptions().setAction("\"\"");
         operationClient.getOptions().setExceptionToBeThrownOnSOAPFault(true);
 
 
-        addPropertyToOperationClient(operationClient, WSDL2Constants.ATTR_WHTTP_QUERY_PARAMETER_SEPARATOR, "&");
+        addPropertyToOperationClient(operationClient,
+                WSDL2Constants.ATTR_WHTTP_QUERY_PARAMETER_SEPARATOR, "&");
         addPropertyToOperationClient(operationClient, Constants.Configuration.ENABLE_REST, true);
-        addPropertyToOperationClient(operationClient, Constants.Configuration.HTTP_METHOD, getVerb().trim());
+        addPropertyToOperationClient(operationClient,
+                Constants.Configuration.HTTP_METHOD, getVerb().trim());
         addPropertyToOperationClient(operationClient,
                 WSDL2Constants.ATTR_WHTTP_LOCATION,
                 getHTTPLocation(partnerRoleMessageExchange.getOperationName()));
-        addPropertyToOperationClient(operationClient, Constants.Configuration.CONTENT_TYPE, inferContentType(getVerb()));
-        addPropertyToOperationClient(operationClient, Constants.Configuration.MESSAGE_TYPE, inferContentType(getVerb()));
+        addPropertyToOperationClient(operationClient,
+                Constants.Configuration.CONTENT_TYPE, inferContentType(getVerb()));
+        addPropertyToOperationClient(operationClient,
+                Constants.Configuration.MESSAGE_TYPE, inferContentType(getVerb()));
 
-        SOAPEnvelope soapEnvelope = getFactory(operationClient.getOptions().getSoapVersionURI()).getDefaultEnvelope();
+        SOAPEnvelope soapEnvelope =
+                getFactory(operationClient.getOptions().getSoapVersionURI()).getDefaultEnvelope();
         messageContext = new MessageContext();
 
         populateSOAPBody(soapEnvelope, partnerRoleMessageExchange);
@@ -101,35 +100,40 @@ public class HTTPBindingHandler {
         operationClient.addMessageContext(messageContext);
 
         String mexEndpointUrl =
-                            ((MutableEndpoint) partnerRoleMessageExchange.getEndpointReference())
-                                    .getUrl();
+                ((MutableEndpoint) partnerRoleMessageExchange.getEndpointReference())
+                        .getUrl();
 
-        if(!mexEndpointUrl.equals(getServiceLocation(getPortDefinition()))){
+        if (!mexEndpointUrl.equals(getServiceLocation())) {
             operationClient.getOptions().setTo(new EndpointReference(mexEndpointUrl));
         }
         operationClient.getOptions().setTo(bpelMessageContext.getUep());
 
         operationClient.execute(true);
 
-        MessageContext responseMessageContext = operationClient.getMessageContext(WSDLConstants.MESSAGE_LABEL_IN_VALUE);
-        MessageContext faultMessageContext = operationClient.getMessageContext(WSDLConstants.MESSAGE_LABEL_FAULT_VALUE);
+        MessageContext responseMessageContext =
+                operationClient.getMessageContext(WSDLConstants.MESSAGE_LABEL_IN_VALUE);
+        MessageContext faultMessageContext =
+                operationClient.getMessageContext(WSDLConstants.MESSAGE_LABEL_FAULT_VALUE);
 
         return new HTTPBindingResponse(responseMessageContext, faultMessageContext);
     }
 
 
-    private void populateSOAPBody(SOAPEnvelope soapEnvelope, PartnerRoleMessageExchange partnerRoleMessageExchange) {
+    private void populateSOAPBody(SOAPEnvelope soapEnvelope,
+                                  PartnerRoleMessageExchange partnerRoleMessageExchange) {
         org.apache.ode.bpel.iapi.Message messageToSend = partnerRoleMessageExchange.getRequest();
         if (messageToSend.getParts().size() == 1) {
-            soapEnvelope.getBody().addChild(OMUtils.toOM(getPartContent(messageToSend.getPart(messageToSend.getParts().get(0))), soapEnvelope.getOMFactory()));
+            soapEnvelope.getBody().addChild(OMUtils.toOM(
+                    getPartContent(messageToSend.getPart(messageToSend.getParts().get(0))),
+                    soapEnvelope.getOMFactory()));
         } else {
             throw new IllegalArgumentException("HTTP Binding doesn't support multiple message part as the input.");
         }
     }
 
-    private Element getPartContent(Element part){
-        if(part.getFirstChild().getNodeType() == Node.ELEMENT_NODE){
-            return (Element)part.getFirstChild();
+    private Element getPartContent(Element part) {
+        if (part.getFirstChild().getNodeType() == Node.ELEMENT_NODE) {
+            return (Element) part.getFirstChild();
         }
 
         throw new IllegalArgumentException("Cannot find message content in part element of ODE request to " +
@@ -150,8 +154,8 @@ public class HTTPBindingHandler {
 
     private String getVerb() {
         ExtensibilityElement extElement = WSDLAwareSOAPProcessor.getBindingExtension(httpBinding);
-        if(extElement instanceof HTTPBinding){
-            return ((HTTPBinding)extElement).getVerb();
+        if (extElement instanceof HTTPBinding) {
+            return ((HTTPBinding) extElement).getVerb();
         }
 
         throw new IllegalArgumentException("Current binding is not a HTTP Binding.");
@@ -168,13 +172,13 @@ public class HTTPBindingHandler {
     private String getHTTPLocation(String operationName) {
         for (Object bindingOperation : httpBinding.getBindingOperations()) {
             if (((BindingOperation) bindingOperation).getName().equals(operationName)) {
-                List<Object> extElements = ((BindingOperation)bindingOperation).getExtensibilityElements();
-                if(extElements.size() == 0){
+                List<Object> extElements = ((BindingOperation) bindingOperation).getExtensibilityElements();
+                if (extElements.size() == 0) {
                     throw new RuntimeException();
-                } else if(extElements.size() > 1){
+                } else if (extElements.size() > 1) {
                     throw new RuntimeException();
                 } else {
-                    return ((HTTPOperation)extElements.get(0)).getLocationURI();
+                    return ((HTTPOperation) extElements.get(0)).getLocationURI();
                 }
             }
         }
@@ -194,13 +198,13 @@ public class HTTPBindingHandler {
         addPropertyToOperationClient(operationClient, propertyKey, Boolean.valueOf(value));
     }
 
-    protected void addPropertyToOperationClient(OperationClient operationClient,
-                                                String propertyKey,
-                                                int value) {
-        addPropertyToOperationClient(operationClient, propertyKey, Integer.valueOf(value));
-    }
+//    protected void addPropertyToOperationClient(OperationClient operationClient,
+//                                                String propertyKey,
+//                                                int value) {
+//        addPropertyToOperationClient(operationClient, propertyKey, Integer.valueOf(value));
+//    }
 
-    private String getServiceLocation(Port protDefinition) {
+    private String getServiceLocation() {
         for (Object extElement : getPortDefinition().getExtensibilityElements()) {
             if (extElement instanceof HTTPAddress) {
                 return ((HTTPAddress) extElement).getLocationURI();
@@ -239,68 +243,69 @@ public class HTTPBindingHandler {
         }
     }
 
-    private void populateAxisService() {
-        service = AnonymousServiceFactory.getAnonymousService(serviceName,
-                portName,
-                configurationContext.getAxisConfiguration(), caller);
+//    private void populateAxisService() {
+//        service = AnonymousServiceFactory.getAnonymousService(serviceName,
+//                portName,
+//                configurationContext.getAxisConfiguration(), caller);
+//
+//        String targetNamesapce = getTargetNamesapce();
+//
+//        List<BindingOperation> bindingOperations = httpBinding.getBindingOperations();
+//        for (BindingOperation bindingOperation : bindingOperations) {
+//            String operationName = bindingOperation.getName();
+//            AxisOperation operation = createAxisOperation(operationName, targetNamesapce, isOutOnly(bindingOperation));
+//            operations.put(new QName(targetNamesapce, operationName), operation);
+//            service.addOperation(operation);
+//        }
+//    }
 
-        String targetNamesapce = getTargetNamesapce();
+//    private boolean isOutOnly(BindingOperation bindingOperation) {
+//        if (bindingOperation.getBindingInput() != null && bindingOperation.getBindingOutput() == null) {
+//            return true;
+//        } else if (bindingOperation.getBindingOutput() != null && bindingOperation.getBindingInput() == null) {
+//            throw new IllegalArgumentException("Outonly services are not supported.");
+//        }
+//
+//        return false;
+//
+//    }
 
-        List<BindingOperation> bindingOperations = httpBinding.getBindingOperations();
-        for (BindingOperation bindingOperation : bindingOperations) {
-            String operationName = bindingOperation.getName();
-            AxisOperation operation = createAxisOperation(operationName, targetNamesapce, isOutOnly(bindingOperation));
-            operations.put(new QName(targetNamesapce, operationName), operation);
-            service.addOperation(operation);
-        }
-    }
+//    private String getTargetNamesapce() {
+//        return httpBinding.getQName().getNamespaceURI();
+//    }
+//
+//    private AxisOperation createAxisOperation(String name, String nsUrl, boolean outOnly) {
+//        AxisOperation operation;
+//
+//        if (outOnly) {
+//            operation = new OutOnlyAxisOperation();
+//        } else {
+//            operation = new OutInAxisOperation();
+//        }
+//
+//        operation.setName(new QName(nsUrl, name));
+//        return operation;
+//    }
 
-    private boolean isOutOnly(BindingOperation bindingOperation) {
-        if (bindingOperation.getBindingInput() != null && bindingOperation.getBindingOutput() == null) {
-            return true;
-        } else if (bindingOperation.getBindingOutput() != null && bindingOperation.getBindingInput() == null) {
-            throw new IllegalArgumentException("Outonly services are not supported.");
-        }
-
-        return false;
-
-    }
-
-    private String getTargetNamesapce() {
-        return httpBinding.getQName().getNamespaceURI();
-    }
-
-    private AxisOperation createAxisOperation(String name, String nsUrl, boolean outOnly) {
-        AxisOperation operation;
-
-        if (outOnly) {
-            operation = new OutOnlyAxisOperation();
-        } else {
-            operation = new OutInAxisOperation();
-        }
-
-        operation.setName(new QName(nsUrl, name));
-        return operation;
-    }
-
-    public static class HTTPBindingResponse{
+    public static class HTTPBindingResponse {
         private MessageContext responseMessageContext;
         private MessageContext faultMessageContext;
 
-        public HTTPBindingResponse(MessageContext responseMessageContext, MessageContext faultMessageContext){
+        public HTTPBindingResponse(MessageContext responseMessageContext,
+                                   MessageContext faultMessageContext) {
             this.responseMessageContext = responseMessageContext;
             this.faultMessageContext = faultMessageContext;
         }
 
-        public boolean isFault(){
+        public boolean isFault() {
             return faultMessageContext != null;
         }
 
-        public MessageContext getReponseMessageContext(){
+        public MessageContext getReponseMessageContext() {
             return responseMessageContext;
         }
 
-        public MessageContext getFaultMessageContext(){
+        public MessageContext getFaultMessageContext() {
             return faultMessageContext;
         }
     }

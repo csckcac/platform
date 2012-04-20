@@ -214,8 +214,8 @@ public class PartnerService implements PartnerRoleChannel {
 
                     HTTPBindingHandler httpBindingHandler =
                             new HTTPBindingHandler(clientConfigCtx, serviceName, portName,
-                                                   wsdlDefinition,
-                                                   processConfiguration.getProcessId().getLocalPart());
+                                                   wsdlDefinition
+                            );
                     HTTPBindingHandler.HTTPBindingResponse response =
                             httpBindingHandler.invoke(partnerRoleMessageExchange, partnerInvocationContext);
 

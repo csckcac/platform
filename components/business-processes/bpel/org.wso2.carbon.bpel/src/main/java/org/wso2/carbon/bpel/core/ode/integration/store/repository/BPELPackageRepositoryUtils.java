@@ -31,14 +31,17 @@ package org.wso2.carbon.bpel.core.ode.integration.store.repository;
 /**
  * Utility methods to use in BPEL package repository implementation.
  */
-public class BPELPackageRepositoryUtils {
+public final class BPELPackageRepositoryUtils {
 
-     /* The following method returns the packagelocation of an deploy descriptor info updated bpel package
-     *  @param packageName - the bpel package
-     *  @param versionlessPackageName - the package name after removing the version tag
-     *  @return packagelocation - location to the bpel package
-     *
-     */
+    private BPELPackageRepositoryUtils() {
+    }
+
+    /* The following method returns the packagelocation of an deploy descriptor info updated bpel package
+    *  @param packageName - the bpel package
+    *  @param versionlessPackageName - the package name after removing the version tag
+    *  @return packagelocation - location to the bpel package
+    *
+    */
      public static  String getResourcePathForDeployInfoUpdatedBPELPackage(String packageName, String versionlessPackageName){
  
          return BPELConstants.REG_PATH_OF_BPEL_PACKAGES + versionlessPackageName + BPELConstants.BPEL_PACKAGE_VERSIONS + packageName ;
@@ -114,7 +117,7 @@ public class BPELPackageRepositoryUtils {
                 successCleanUpsList = successCleanUpsList.concat(category.name() + ",");
             }
             if(!successCleanUpsList.equalsIgnoreCase("")){
-                successCleanUpsList = successCleanUpsList.substring(0, successCleanUpsList.lastIndexOf(","));
+                successCleanUpsList = successCleanUpsList.substring(0, successCleanUpsList.lastIndexOf(','));
             }
         }
         return  successCleanUpsList;
@@ -127,7 +130,7 @@ public class BPELPackageRepositoryUtils {
                 failureCleanUpsList = failureCleanUpsList.concat(category.name() + ",");
             }
             if(!failureCleanUpsList.equalsIgnoreCase("")){
-                failureCleanUpsList = failureCleanUpsList.substring(0, failureCleanUpsList.lastIndexOf(","));
+                failureCleanUpsList = failureCleanUpsList.substring(0, failureCleanUpsList.lastIndexOf(','));
             }
         }
         return  failureCleanUpsList;
@@ -160,11 +163,11 @@ public class BPELPackageRepositoryUtils {
     *
     */
     public static String getVersionlessPackageName(String packageName) throws ProcessManagementException {
-
-        if(packageName != null){
-        packageName = packageName.substring(0, packageName.lastIndexOf("-"));
+        String tPackageName = packageName;
+        if(tPackageName != null){
+        tPackageName = tPackageName.substring(0, tPackageName.lastIndexOf('-'));
         }
-        return packageName;
+        return tPackageName;
     }
 
     public static EnableEventListType getEnabledEventsListFromString(String processEventsInString) {
@@ -199,8 +202,8 @@ public class BPELPackageRepositoryUtils {
         CategoryListType categoryList = new CategoryListType();
 
         for(String category : successCategories){
-            Category_type1 category_type1 = Category_type1.Factory.fromValue(category.toLowerCase());
-            categoryList.addCategory(category_type1);
+            Category_type1 categoryType1 = Category_type1.Factory.fromValue(category.toLowerCase());
+            categoryList.addCategory(categoryType1);
         }
         successCleanUp.setOn(On_type1.success);
         successCleanUp.setCategoryList(categoryList);
@@ -213,8 +216,8 @@ public class BPELPackageRepositoryUtils {
         CategoryListType categoryList = new CategoryListType();
 
         for(String category : failureCategories){
-            Category_type1 category_type1 = Category_type1.Factory.fromValue(category.toLowerCase());
-            categoryList.addCategory(category_type1);
+            Category_type1 categoryType1 = Category_type1.Factory.fromValue(category.toLowerCase());
+            categoryList.addCategory(categoryType1);
         }
         failureCleanUp.setOn(On_type1.failure);
         failureCleanUp.setCategoryList(categoryList);

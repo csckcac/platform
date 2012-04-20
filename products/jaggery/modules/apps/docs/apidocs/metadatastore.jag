@@ -58,12 +58,12 @@ include('/includes/topnavi.jag');
         </div>
         <div class="span12">
             <div class="content" id="email" name="email">
-                <h3>Registry</h3>
+                <h3>MetadataStore</h3>
         <pre class="prettyprint linenums">
 &lt%
-     var dataStore = new MetaDataStore("admin", "admin");
+     var dataStore = new MetadataStore("admin", "admin");
      var resource = dataStore.newResource();
-     resource.content = "<a>Hello Jaggery</a>";
+     resource.content = "&lt;a&gt;Hello Jaggery&lt/a&gt;";
      resource.addProperty("url", "http://wso2.com");
      resource.addProperty("company", "WSO2 Inc.");
      dataStore.put("wso2products.xml", resource);
@@ -84,9 +84,9 @@ include('/includes/topnavi.jag');
 </pre>
                 <%
                 var regCode = '&lt%'
-                + '\n var dataStore = new MetaDataStore("admin", "admin");'
+                + '\n var dataStore = new MetadataStore("admin", "admin");'
                 + '\n var resource = dataStore.newResource();'
-                + '\n resource.content = "&lt%a&gt%Hello Jaggery&lt%/a&gt%";'
+                + '\n resource.content = "&lt;a&gt;Hello Jaggery&lt;/a&gt;";'
                 + '\n resource.addProperty("url", "http://wso2.com");'
                 + '\n resource.addProperty("company", "WSO2 Inc.");'
                 + '\n dataStore.put("wso2products.xml", resource);'
@@ -138,7 +138,7 @@ include('/includes/topnavi.jag');
                         <td>Boolean</td>
                         <td>
 <pre class="prettyprint">
-var dataStore = new MetaDataStore("username", "password");
+var dataStore = new MetadataStore("username", "password");
 boolean existance = dataStore.resourceExists("middleware/wso2/products");
 </pre>
                             This method returns true or false depending on the existence of either a Resource or a

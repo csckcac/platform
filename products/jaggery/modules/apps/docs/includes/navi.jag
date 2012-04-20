@@ -95,7 +95,7 @@
             <a href="/docs/apidocs/rdb.jag">Database</a>
         </li>
         <li id="reg">
-            <a href="/docs/apidocs/registry.jag">Registry</a>
+            <a href="/docs/apidocs/metadatastore.jag">MetadataStore</a>
         </li>
     </ul>
 

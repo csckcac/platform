@@ -56,9 +56,6 @@ public class HumanTaskClientAPIServiceClient {
      */
     private TaskOperationsStub stub;
 
-    private HumanTaskClientAPIServiceClient() {
-    }
-
     /**
      * The class constructor.
      *
@@ -143,22 +140,23 @@ public class HumanTaskClientAPIServiceClient {
     public void complete(URI taskId, String payLoad)
             throws RemoteException, IllegalAccessFault, IllegalArgumentFault, IllegalStateFault,
                    IllegalOperationFault, XMLStreamException {
+        String errMsg = "Error occurred while performing complete operation";
         try {
             stub.complete(taskId, payLoad);
         } catch (RemoteException e) {
-            log.error("Error occurred while performing complete operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalAccessFault illegalAccessFault) {
-            log.error("Error occurred while performing complete operation", illegalAccessFault);
+            log.error(errMsg, illegalAccessFault);
             throw illegalAccessFault;
         } catch (IllegalArgumentFault e) {
-            log.error("Error occurred while performing complete operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalStateFault e) {
-            log.error("Error occurred while performing complete operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalOperationFault e) {
-            log.error("Error occurred while performing complete operation", e);
+            log.error(errMsg, e);
             throw e;
         }
     }
@@ -179,26 +177,27 @@ public class HumanTaskClientAPIServiceClient {
     public OMElement loadTaskInput(URI taskId)
             throws RemoteException, IllegalStateFault, IllegalOperationFault, IllegalAccessFault,
                    IllegalArgumentFault, XMLStreamException {
+        String errMsg = "Error occurred while performing loadTaskInput operation";
         try {
             String input = (String) stub.getInput(taskId, null);
             return AXIOMUtil.stringToOM(input);
         } catch (RemoteException e) {
-            log.error("Error occurred while performing loadTaskInput operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalStateFault e) {
-            log.error("Error occurred while performing loadTaskInput operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalOperationFault e) {
-            log.error("Error occurred while performing loadTaskInput operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalArgumentFault e) {
-            log.error("Error occurred while performing loadTaskInput operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalAccessFault e) {
-            log.error("Error occurred while performing loadTaskInput operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (XMLStreamException e) {
-            log.error("Error occurred while performing loadTaskInput operation", e);
+            log.error(errMsg, e);
             throw e;
         }
     }
@@ -220,26 +219,27 @@ public class HumanTaskClientAPIServiceClient {
     public OMElement loadTaskOutput(URI taskId)
             throws RemoteException, IllegalStateFault, IllegalOperationFault, IllegalAccessFault,
                    IllegalArgumentFault, XMLStreamException {
+        String errMsg = "Error occurred while performing loadTaskOutput operation";
         try {
             String output = (String) stub.getOutput(taskId, null);
             return AXIOMUtil.stringToOM(output);
         } catch (RemoteException e) {
-            log.error("Error occurred while performing loadTaskOutput operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalStateFault e) {
-            log.error("Error occurred while performing loadTaskOutput operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalOperationFault e) {
-            log.error("Error occurred while performing loadTaskOutput operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalArgumentFault e) {
-            log.error("Error occurred while performing loadTaskOutput operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalAccessFault e) {
-            log.error("Error occurred while performing loadTaskOutput operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (XMLStreamException e) {
-            log.error("Error occurred while performing loadTaskOutput operation", e);
+            log.error(errMsg, e);
             throw e;
         }
     }
@@ -256,22 +256,23 @@ public class HumanTaskClientAPIServiceClient {
      */
     public void claim(URI taskId) throws IllegalArgumentFault, IllegalAccessFault,
                                          IllegalStateFault, RemoteException, IllegalOperationFault {
+        String errMsg = "Error occurred while performing claim operation";
         try {
             stub.claim(taskId);
         } catch (RemoteException e) {
-            log.error("Error occurred while performing claim operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalStateFault e) {
-            log.error("Error occurred while performing claim operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalOperationFault e) {
-            log.error("Error occurred while performing claim operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalArgumentFault e) {
-            log.error("Error occurred while performing claim operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalAccessFault e) {
-            log.error("Error occurred while performing claim operation", e);
+            log.error(errMsg, e);
             throw e;
         }
     }
@@ -288,16 +289,17 @@ public class HumanTaskClientAPIServiceClient {
     public TTaskAuthorisationParams getTaskParams(URI taskId)
             throws RemoteException, IllegalStateFault, IllegalArgumentFault {
 
+        String errMsg = "Error occurred while performing getTaskParams operation";
         try {
             return stub.loadAuthorisationParams(taskId);
         } catch (RemoteException e) {
-            log.error("Error occurred while performing getTaskParams operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalStateFault e) {
-            log.error("Error occurred while performing getTaskParams operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalArgumentFault e) {
-            log.error("Error occurred while performing getTaskParams operation", e);
+            log.error(errMsg, e);
             throw e;
         }
     }
@@ -305,22 +307,23 @@ public class HumanTaskClientAPIServiceClient {
     public void start(URI taskId)
             throws RemoteException, IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
                    IllegalAccessFault {
+        String errMsg = "Error occurred while performing start operation";
         try {
             stub.start(taskId);
         } catch (RemoteException e) {
-            log.error("Error occurred while performing start operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalStateFault e) {
-            log.error("Error occurred while performing start operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalOperationFault e) {
-            log.error("Error occurred while performing start operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalArgumentFault e) {
-            log.error("Error occurred while performing start operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalAccessFault e) {
-            log.error("Error occurred while performing start operation", e);
+            log.error(errMsg, e);
             throw e;
         }
     }
@@ -338,22 +341,23 @@ public class HumanTaskClientAPIServiceClient {
     public void stop(URI taskId)
             throws RemoteException, IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
                    IllegalAccessFault {
+        String errMsg = "Error occurred while performing stop operation";
         try {
             stub.stop(taskId);
         } catch (RemoteException e) {
-            log.error("Error occurred while performing stop operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalStateFault e) {
-            log.error("Error occurred while performing stop operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalOperationFault e) {
-            log.error("Error occurred while performing stop operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalArgumentFault e) {
-            log.error("Error occurred while performing stop operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalAccessFault e) {
-            log.error("Error occurred while performing stop operation", e);
+            log.error(errMsg, e);
             throw e;
         }
     }
@@ -371,22 +375,23 @@ public class HumanTaskClientAPIServiceClient {
     public void release(URI taskId)
             throws RemoteException, IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
                    IllegalAccessFault {
+        String errMsg = "Error occurred while performing release operation";
         try {
             stub.release(taskId);
         } catch (RemoteException e) {
-            log.error("Error occurred while performing release operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalStateFault e) {
-            log.error("Error occurred while performing release operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalOperationFault e) {
-            log.error("Error occurred while performing release operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalArgumentFault e) {
-            log.error("Error occurred while performing release operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalAccessFault e) {
-            log.error("Error occurred while performing release operation", e);
+            log.error(errMsg, e);
             throw e;
         }
     }
@@ -433,22 +438,23 @@ public class HumanTaskClientAPIServiceClient {
     public TComment[] getComments(URI taskId)
             throws RemoteException, IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
                    IllegalAccessFault {
+        String errMsg = "Error occurred while performing get comments operation";
         try {
             return stub.getComments(taskId);
         } catch (RemoteException e) {
-            log.error("Error occurred while performing get comments operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalStateFault e) {
-            log.error("Error occurred while performing get comments operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalOperationFault e) {
-            log.error("Error occurred while performing get comments operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalArgumentFault e) {
-            log.error("Error occurred while performing get comments operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalAccessFault e) {
-            log.error("Error occurred while performing get comments operation", e);
+            log.error(errMsg, e);
             throw e;
         }
     }
@@ -468,22 +474,23 @@ public class HumanTaskClientAPIServiceClient {
     public URI addComment(URI taskId, String commentText)
             throws RemoteException, IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
                    IllegalAccessFault {
+        String errMsg = "Error occurred while performing add comment operation";
         try {
             return stub.addComment(taskId, commentText);
         } catch (RemoteException e) {
-            log.error("Error occurred while performing add comment operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalStateFault e) {
-            log.error("Error occurred while performing add comment operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalOperationFault e) {
-            log.error("Error occurred while performing add comment operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalArgumentFault e) {
-            log.error("Error occurred while performing add comment operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalAccessFault e) {
-            log.error("Error occurred while performing add comment operation", e);
+            log.error(errMsg, e);
             throw e;
         }
     }
@@ -503,22 +510,23 @@ public class HumanTaskClientAPIServiceClient {
             throws RemoteException, IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
                    IllegalAccessFault {
 
+        String errMsg = "Error occurred while performing delete comment operation";
         try {
             stub.deleteComment(taskId, commentId);
         } catch (RemoteException e) {
-            log.error("Error occurred while performing delete comment operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalStateFault e) {
-            log.error("Error occurred while performing delete comment  operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalOperationFault e) {
-            log.error("Error occurred while performing delete comment  operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalArgumentFault e) {
-            log.error("Error occurred while performing delete comment  operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalAccessFault e) {
-            log.error("Error occurred while performing delete comment  operation", e);
+            log.error(errMsg, e);
             throw e;
         }
     }
@@ -535,22 +543,23 @@ public class HumanTaskClientAPIServiceClient {
     public void suspend(URI taskId)
             throws RemoteException, IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
                    IllegalAccessFault {
+        String errMsg = "Error occurred while performing suspend operation";
         try {
             stub.suspend(taskId);
         } catch (RemoteException e) {
-            log.error("Error occurred while performing suspend operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalStateFault e) {
-            log.error("Error occurred while performing suspend operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalOperationFault e) {
-            log.error("Error occurred while performing suspend operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalArgumentFault e) {
-            log.error("Error occurred while performing suspend operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalAccessFault e) {
-            log.error("Error occurred while performing suspend operation", e);
+            log.error(errMsg, e);
             throw e;
         }
     }
@@ -568,22 +577,23 @@ public class HumanTaskClientAPIServiceClient {
     public void resume(URI taskId)
             throws RemoteException, IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
                    IllegalAccessFault {
+        String errMsg = "Error occurred while performing resume operation";
         try {
             stub.resume(taskId);
         } catch (RemoteException e) {
-            log.error("Error occurred while performing resume operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalStateFault e) {
-            log.error("Error occurred while performing resume operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalOperationFault e) {
-            log.error("Error occurred while performing resume operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalArgumentFault e) {
-            log.error("Error occurred while performing resume operation", e);
+            log.error(errMsg, e);
             throw e;
         } catch (IllegalAccessFault e) {
-            log.error("Error occurred while performing resume operation", e);
+            log.error(errMsg, e);
             throw e;
         }
     }

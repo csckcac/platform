@@ -24,7 +24,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.humantask.stub.mgt.HumanTaskPackageManagementStub;
 import org.wso2.carbon.humantask.stub.mgt.PackageManagementException;
-import org.wso2.carbon.humantask.stub.mgt.types.DeployedPackagesPaginated;
 import org.wso2.carbon.humantask.stub.mgt.types.DeployedTaskDefinitionsPaginated;
 import org.wso2.carbon.humantask.stub.mgt.types.Task_type0;
 import org.wso2.carbon.humantask.stub.mgt.types.UndeployStatus_type0;
@@ -46,9 +45,6 @@ public class HumanTaskPackageManagementServiceClient {
      * The stub
      */
     private HumanTaskPackageManagementStub stub;
-
-    private HumanTaskPackageManagementServiceClient() {
-    }
 
     /**
      * @param cookie           :
@@ -77,7 +73,7 @@ public class HumanTaskPackageManagementServiceClient {
      * @throws RemoteException            :
      * @throws PackageManagementException :
      */
-    public DeployedPackagesPaginated getPaginatedPackageList(int page)
+    /*public DeployedPackagesPaginated getPaginatedPackageList(int page)
             throws RemoteException, PackageManagementException {
         try {
             return stub.listDeployedPackagesPaginated(page);
@@ -88,7 +84,7 @@ public class HumanTaskPackageManagementServiceClient {
             log.error("listDeployedPackagesPaginated operation failed.", e);
             throw e;
         }
-    }
+    } */
 
     /**
      * Returns the deployed package list for the given page number.
@@ -103,10 +99,10 @@ public class HumanTaskPackageManagementServiceClient {
         try {
             return stub.listDeployedTaskDefinitionsPaginated(page);
         } catch (RemoteException e) {
-            log.error("listDeployedPackagesPaginated operation invocation failed.", e);
+            log.error("listDeployedTaskDefinitionsPaginated operation invocation failed.", e);
             throw e;
         } catch (PackageManagementException e) {
-            log.error("listDeployedPackagesPaginated operation failed.", e);
+            log.error("listDeployedTaskDefinitionsPaginated operation failed.", e);
             throw e;
         }
     }

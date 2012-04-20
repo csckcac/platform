@@ -34,7 +34,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 /**
- * test
+ * HumanTask archive upload executor
  */
 public class HumanTaskUploadExecutor extends AbstractFileUploadExecutor {
 
@@ -51,8 +50,6 @@ public class HumanTaskUploadExecutor extends AbstractFileUploadExecutor {
 
     private static final String[] ALLOWED_FILE_EXTENSIONS =
             new String[]{".zip"};
-
-    private static final int BUFFER = 2048;
 
 
     public boolean execute(HttpServletRequest request,
@@ -94,8 +91,8 @@ public class HumanTaskUploadExecutor extends AbstractFileUploadExecutor {
                     //Check file extension.
                     checkServiceFileExtensionValidity(fileName, ALLOWED_FILE_EXTENSIONS);
 
-                    if (fileName.lastIndexOf("\\") != -1) {
-                        int indexOfColon = fileName.lastIndexOf("\\") + 1;
+                    if (fileName.lastIndexOf('\\') != -1) {
+                        int indexOfColon = fileName.lastIndexOf('\\') + 1;
                         fileName = fileName.substring(indexOfColon, fileName.length());
                     }
                     if (fieldData.getFileItem().getFieldName().equals("humantaskFileName")) {
@@ -149,7 +146,7 @@ public class HumanTaskUploadExecutor extends AbstractFileUploadExecutor {
             throw new Exception("Error occurred while writing file item to file system.", e);
         }
 
-        String destinationDir = serviceUploadDir + fileItemName.substring(0, fileItemName.lastIndexOf("."));
+        String destinationDir = serviceUploadDir + fileItemName.substring(0, fileItemName.lastIndexOf('.'));
         if (log.isDebugEnabled()) {
             log.debug("[HumanTaskUI]HumanTask package location: " + destinationDir);
         }
@@ -161,17 +158,6 @@ public class HumanTaskUploadExecutor extends AbstractFileUploadExecutor {
         }
 
         return new SaveExtractReturn(uploadedFile.getAbsolutePath(), destinationDir);
-    }
-
-    private void zip(String zipFile, String sourceDir) throws Exception {
-        File dirObj = new File(sourceDir);
-        int len = dirObj.getAbsolutePath().length() + 1;
-        ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipFile));
-        if (log.isDebugEnabled()) {
-            log.debug("Creating: " + zipFile);
-        }
-        addDir(dirObj, out, len);
-        out.close();
     }
 
     private static void addDir(File dirObj, ZipOutputStream out, int basePathLen) throws Exception {
@@ -206,18 +192,6 @@ public class HumanTaskUploadExecutor extends AbstractFileUploadExecutor {
         String uuid = generateUUID();
         String tmpDir = "humantaskTemp";
         return getWorkingDir() + File.separator + tmpDir + File.separator + uuid + File.separator;
-    }
-
-    private boolean onlyOneChildDir(String location, String dirNameToCheck) {
-        File parentDir = new File(location);
-        if (parentDir.isDirectory()) {
-            String[] entries = parentDir.list();
-            if (entries.length == 1 && entries[0].equals(dirNameToCheck)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public void validateHumanTaskPackage(String directoryPath) throws Exception {

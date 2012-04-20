@@ -22,53 +22,65 @@ import java.io.*;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipEntry;
 
-public class ArchiveExtractor {
+public final class ArchiveExtractor {
     private static Log log = LogFactory.getLog(ArchiveExtractor.class);
 
-     private static void copyInputStream(InputStream in, OutputStream out)
+    private ArchiveExtractor() {
+    }
+
+    private static void copyInputStream(InputStream in, OutputStream out)
             throws IOException {
         byte[] buffer = new byte[1024];
         int len;
-        while ((len = in.read(buffer)) >= 0)
+        while ((len = in.read(buffer)) >= 0) {
             out.write(buffer, 0, len);
-
+        }
         out.close();
     }
 
-    public static void extract(File file, String destination) throws Exception{
-        try{
+    public static void extract(File file, String destination) throws Exception {
+        try {
             ZipInputStream zipStream = new ZipInputStream(new FileInputStream(file));
             ZipEntry entry;
 
-            while((entry = zipStream.getNextEntry()) != null){
-                if(entry.isDirectory()){
-                    if(log.isDebugEnabled()){
+            while ((entry = zipStream.getNextEntry()) != null) {
+                if (entry.isDirectory()) {
+                    if (log.isDebugEnabled()) {
                         log.debug("Extracting directory " + entry.getName());
                     }
 
-                    new File(destination, entry.getName()).mkdir();
+                    if (!(new File(destination, entry.getName()).mkdir())) {
+                        String errMsg = "Creating directory: " +
+                                entry.getName() + " while extracting the archive: " + file.getName();
+                        log.error(errMsg);
+                        throw new Exception(errMsg);
+                    }
                     continue;
                 }
 
-                if(log.isDebugEnabled()){
+                if (log.isDebugEnabled()) {
                     log.debug("Extracting file " + entry.getName());
                 }
 
                 File destFile = new File(destination, entry.getName());
-                if(!destFile.getParentFile().exists()){
-                    destFile.getParentFile().mkdirs();
+                if (!destFile.getParentFile().exists()) {
+                    if(!(destFile.getParentFile().mkdirs())) {
+                        String errMsg = "Creating directory: " +
+                                destFile.getParentFile().getName() +
+                                " while extracting the archive: " + file.getName();
+                        log.error(errMsg);
+                        throw new Exception(errMsg);
+                    }
                 }
                 copyInputStream(zipStream, new BufferedOutputStream(new FileOutputStream(destFile)));
             }
 
             zipStream.close();
-        } catch (IOException e){
+        } catch (IOException e) {
             log.error("Error occurred during archive extracting.", e);
             throw new Exception("Error occurred during archive extracting.", e);
         }
     }
-
-
 
 
 }

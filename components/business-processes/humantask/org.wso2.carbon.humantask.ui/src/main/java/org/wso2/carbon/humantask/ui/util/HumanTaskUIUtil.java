@@ -32,9 +32,12 @@ import java.util.LinkedHashMap;
 /**
  * The utility methods used in the human task ui bundle.
  */
-public class HumanTaskUIUtil {
+public final class HumanTaskUIUtil {
 
     private static Log log = LogFactory.getLog(HumanTaskUIUtil.class);
+
+    private HumanTaskUIUtil() {
+    }
 
     /**
      * Returns the unDeploy link of the human task package.
@@ -44,20 +47,6 @@ public class HumanTaskUIUtil {
      */
     public static String getUnDeployLink(String packageName) {
         return "humantask_definition_list.jsp?operation=unDeploy&packageName=" + packageName;
-    }
-
-
-    public static String encodeXML(String xmlString) {
-        if (xmlString != null && xmlString.length() != 0) {
-            xmlString = xmlString.replaceAll("<", "&lt;");
-            xmlString = xmlString.replaceAll(">", "&gt;");
-            xmlString = xmlString.replaceAll("\n", "");
-        }
-        return xmlString;
-    }
-
-    public static void logInfo(String string) {
-        log.info(string);
     }
 
     public static void logError(Object error, Throwable ex) {

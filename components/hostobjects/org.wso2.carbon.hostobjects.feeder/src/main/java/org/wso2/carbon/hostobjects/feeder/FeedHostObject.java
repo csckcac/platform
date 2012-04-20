@@ -7,11 +7,9 @@ import java.net.URL;
 import org.apache.abdera.Abdera;
 import org.apache.abdera.factory.Factory;
 import org.apache.abdera.i18n.iri.IRISyntaxException;
-import org.apache.abdera.model.Document;
+
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.model.Feed;
-import org.apache.abdera.parser.ParseException;
-import org.apache.abdera.parser.Parser;
 import org.apache.abdera.parser.stax.util.FOMHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,7 +20,14 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.NativeArray;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
+import org.wso2.carbon.scriptengine.util.HostObjectUtil;
 import org.wso2.javascript.xmlimpl.XML;
+
+import com.sun.syndication.feed.synd.SyndEntry;
+import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.io.SyndFeedInput;
+import com.sun.syndication.io.XmlReader;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -38,9 +43,12 @@ import java.util.List;
 public class FeedHostObject extends ScriptableObject {
 
 	private static Feed feed;
+	private static SyndFeed rssFeed;
+	private static FeedHostObject feedHostObject;
 	private static Abdera abdera;
 	private static Entry entry;
-
+	private static final String HoST_OBJECT_NAME = "Feeder";
+	private static boolean isRssFeed;
 	private static Log log = LogFactory.getLog(FeedHostObject.class);
 
 	@Override
@@ -51,14 +59,45 @@ public class FeedHostObject extends ScriptableObject {
 	/**
 	 * Constructor the user will be using inside javaScript
 	 */
-	public Scriptable jsConstructor() {
+	public static Scriptable jsConstructor(Context cx, Object[] args,
+			Function ctorObj, boolean inNewExpr) throws ScriptException {
+		int argsCount = args.length;
+		
+		if (argsCount > 2) {
+			HostObjectUtil.invalidNumberOfArgs(HoST_OBJECT_NAME, HoST_OBJECT_NAME,
+					argsCount, true);
+		}
+		if (argsCount == 0) {
+			Abdera abdera = new Abdera();
+			Factory factory = abdera.getFactory();
+			feed = factory.newFeed();
+			feedHostObject = new FeedHostObject();
+			return feedHostObject;
+		}
+		if (argsCount == 1) {
+			if (!(args[0] instanceof String)) {
+				HostObjectUtil.invalidArgsError(HoST_OBJECT_NAME, HoST_OBJECT_NAME,
+						"1", "string", args[0], true);
+			}
+
+		
+			Abdera abdera = new Abdera();
+			Factory factory = abdera.getFactory();
+			feed = factory.newFeed();
+			feedHostObject = new FeedHostObject();
+			FeedHostObject.jsFunction_getFeed(cx, null, args, null);
+		}
+		return feedHostObject;
+	}
+
+	public Scriptable feedConstructor() {
 		Abdera abdera = new Abdera();
 		Factory factory = abdera.getFactory();
 		feed = factory.newFeed();
 		return this;
 	}
 
-	synchronized public static void jsFunction_setFeed(Context cx,
+	synchronized public static void jsFunction_getFeed(Context cx,
 			Scriptable thisObj, Object[] arguments, Function funObj)
 			throws ScriptException {
 		if (arguments.length != 1) {
@@ -68,12 +107,39 @@ public class FeedHostObject extends ScriptableObject {
 		if (arguments[0] instanceof String) {
 
 			feed = null;
+			URL url = null;
 			try {
 
-				URL url = new URL((String) arguments[0]);
+				url = new URL((String) arguments[0]);
 				feed = (Feed) Abdera.getNewParser().parse(url.openStream())
 						.getRoot();
+				isRssFeed = false;
+			} catch (ClassCastException e) {
 
+				XmlReader reader = null;
+
+				try {
+					reader = new XmlReader(url);
+					rssFeed = new SyndFeedInput().build(reader);
+					isRssFeed = true;
+
+					for (Iterator i = rssFeed.getEntries().iterator(); i
+							.hasNext();) {
+						SyndEntry entry = (SyndEntry) i.next();
+
+					}
+				} catch (IOException e1) {
+					throw new ScriptException(e1);
+				} catch (Exception e1) {
+					throw new ScriptException(e1);
+				} finally {
+					if (reader != null)
+						try {
+							reader.close();
+						} catch (IOException e1) {
+							throw new ScriptException(e1);
+						}
+				}
 			} catch (IRISyntaxException e) {
 				throw new ScriptException(e);
 			} catch (MalformedURLException e) {
@@ -82,16 +148,29 @@ public class FeedHostObject extends ScriptableObject {
 				throw new ScriptException(e);
 			}
 
+		} else {
+			throw new ScriptException(
+					"Invalid parameter, It is must to be a String");
 		}
 	}
 
 	public String jsGet_author() {
-		String author = feed.getAuthor().toString();
+		String author;
+		if (isRssFeed) {
+			author = rssFeed.getAuthor().toString();
+		} else {
+			author = feed.getAuthor().toString();
+		}
 		return author;
 	}
 
 	public String jsGet_title() {
-		String title = feed.getTitle();
+		String title;
+		if (isRssFeed) {
+			title = rssFeed.getTitle().toString();
+		} else {
+			title = feed.getTitle();
+		}
 		return title;
 	}
 
@@ -106,37 +185,14 @@ public class FeedHostObject extends ScriptableObject {
 	}
 
 	public String jsGet_entriesAsString() {
-		String entries = feed.getEntries().toString();
-		return entries;
-	}
+		String entries = null;
+		if (isRssFeed) {
+			entries = rssFeed.getEntries().toString();
+		} else {
 
-	public NativeArray jsGet_entries() {
-		List<Entry> entries = feed.getEntries();
-		EntryHostObject[] retEntries = null;
-
-		// Retrieving the entries from our feed
-		// List tempEntries = feed.getEntries();
-		Iterator tempEntryIterator = entries.iterator();
-
-		// Creating a list to store converted Entries
-		ArrayList<ScriptableObject> convertedEntries = new ArrayList();
-
-		Entry currentEntry;
-		NativeArray nativeArray = new NativeArray(0);
-
-		// Converting the list of Abdera Entries to AtomEntryHostObjects
-		while (tempEntryIterator.hasNext()) {
-			currentEntry = (Entry) tempEntryIterator.next();
-			EntryHostObject newAtomEntry = new EntryHostObject();
-			newAtomEntry.setEntry(currentEntry);
-			convertedEntries.add(newAtomEntry);
-			nativeArray.put(0, nativeArray, newAtomEntry);
+			entries = feed.getEntries().toString();
 		}
-
-		retEntries = new EntryHostObject[convertedEntries.size()];
-		convertedEntries.toArray(retEntries);
-		return nativeArray;
-
+		return entries;
 	}
 
 	public static Entry jsFunction_getEntry(Context cx, Scriptable thisObj,
@@ -145,13 +201,12 @@ public class FeedHostObject extends ScriptableObject {
 		if (arguments[0] instanceof String) {
 
 			try {
-								
+
 				List<Entry> entry = feed.getEntries();
 				Object[] entryArray = entry.toArray();
 				int x = Integer.parseInt((String) arguments[0]);
 				entryOut = (Entry) entryArray[x];
-				
-			
+
 			} catch (IRISyntaxException e) {
 				throw new ScriptException(e);
 			}
@@ -162,18 +217,26 @@ public class FeedHostObject extends ScriptableObject {
 		return entryOut;
 	}
 
-	public static Entry[] jsFunction_getAllEntry(Context cx,
-			Scriptable thisObj, Object[] arguments, Function funObj)
-			throws ScriptException {
+	public Entry[] jsGet_entries() throws ScriptException {
 		Entry[] entryOut = null;
-
+		List<Entry> entry = null;
+		Object[] entryArray = null;
+		int entryCount = 0;
 		try {
-			
-		
-			List<Entry> entry = feed.getEntries();
-			Object[] entryArray = entry.toArray();
-			entryOut = new Entry[entry.size()];
-			for (int i = 0; i < entry.size(); i++) {
+
+			if (isRssFeed) {
+				List rssEntry = rssFeed.getEntries();
+				entryArray = rssEntry.toArray();
+				entryCount = rssEntry.size();
+			} else {
+				entry = feed.getEntries();
+				entryArray = entry.toArray();
+				entryCount = entry.size();
+			}
+
+			// Object[] entryArray = entry.toArray();
+			entryOut = new Entry[entryCount];
+			for (int i = 0; i < entryCount; i++) {
 				entryOut[i] = (Entry) entryArray[i];
 			}
 		} catch (IRISyntaxException e) {
@@ -183,46 +246,46 @@ public class FeedHostObject extends ScriptableObject {
 		return entryOut;
 	}
 
-	public static Entry jsFunction_addEntries(Context cx, Scriptable thisObj,
-			Object[] arguments, Function funObj) throws ScriptException {
+	public void jsSet_entries(Object entryList) throws ScriptException {
 
-		NativeArray fields = (NativeArray) arguments[0];
+		
 
-		if (arguments[0] instanceof NativeArray ) {
-			 for (Object o : fields.getIds()) {
+		if (entryList instanceof NativeArray) {
+			NativeArray fields = (NativeArray) entryList;
+			for (Object o : fields.getIds()) {
 
-                 int index = (Integer) o;                    
-                 Object nativeObject = fields.get(index, null);
-                 Object[] argumentsPass = new Object[1];
-                 argumentsPass[0]=nativeObject;
-                 jsFunction_addEntry(cx, thisObj,argumentsPass, funObj);
-             }
+				int index = (Integer) o;
+				Object nativeObject = fields.get(index, null);			
+				addEntry(nativeObject);
+			}
 
-	
-		}else {
+		} else {
+		
+		throw new ScriptException("Invalid parameter");
 		}
-			throw new ScriptException("Invalid parameter");
-		}
+	}
 
-	public static Entry jsFunction_addEntry(Context cx, Scriptable thisObj,
-			Object[] arguments, Function funObj) throws ScriptException {
+	public void addEntry(Object entryObject) throws ScriptException {
 
 		abdera = new Abdera();
 		Factory factory = abdera.getFactory();
 		entry = factory.newEntry();
-
-		if (arguments[0] instanceof NativeObject ) {
+		if (entryObject instanceof EntryHostObject) {
+			EntryHostObject entryHostObject = (EntryHostObject) entryObject;
+			entry = entryHostObject.getEntry();
+			feed.addEntry(entry);
+		} else if (entryObject instanceof NativeObject) {
 
 			try {
-				NativeObject nativeObject = (NativeObject) arguments[0];
-			
-				ScriptableObject so = (ScriptableObject) nativeObject;
+				NativeObject nativeObject = (NativeObject) entryObject;
+
+				ScriptableObject scriptableObject = (ScriptableObject) nativeObject;
 
 				// author and authors processing
 				Object authorProperty = ScriptableObject.getProperty(
 						nativeObject, "author");
 				if (authorProperty instanceof String) {
-				
+
 					entry.addAuthor((String) (authorProperty));
 				}
 				Object authorsProperty = ScriptableObject.getProperty(
@@ -234,7 +297,7 @@ public class FeedHostObject extends ScriptableObject {
 						int indexx = (Integer) o1;
 						String name = authorsPropertyArray.get(indexx, null)
 								.toString();
-						
+
 						entry.addAuthor(name);
 					}
 
@@ -244,7 +307,7 @@ public class FeedHostObject extends ScriptableObject {
 				Object categoryProperty = ScriptableObject.getProperty(
 						nativeObject, "category");
 				if (categoryProperty instanceof String) {
-					
+
 					entry.addCategory((String) (categoryProperty));
 				}
 				Object categoriesProperty = ScriptableObject.getProperty(
@@ -256,7 +319,7 @@ public class FeedHostObject extends ScriptableObject {
 						int indexC = (Integer) o1;
 						String name = categoriesPropertyArray.get(indexC, null)
 								.toString();
-						
+
 						entry.addCategory(name);
 					}
 
@@ -288,7 +351,7 @@ public class FeedHostObject extends ScriptableObject {
 						int index = (Integer) o1;
 						String name = contributorsPropertyArray
 								.get(index, null).toString();
-						
+
 						entry.addContributor(name);
 					}
 				}
@@ -318,7 +381,7 @@ public class FeedHostObject extends ScriptableObject {
 						int index = (Integer) o1;
 						String name = linksPropertyArray.get(index, null)
 								.toString();
-						
+
 						entry.addLink(name);
 					}
 				}
@@ -378,14 +441,11 @@ public class FeedHostObject extends ScriptableObject {
 			} catch (IRISyntaxException e) {
 				throw new ScriptException(e);
 			}
-		} else {
+		} else if (!(entryObject instanceof EntryHostObject)) {
 			throw new ScriptException("Invalid parameter");
 		}
-		//for testing will be removed
-		log.info("New Added Entry"+entry);
-		return entry;
+		// for testing will be removed
+		log.info("New Added Entry" + entry);
 	}
-
-
 
 }

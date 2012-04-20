@@ -134,7 +134,7 @@
                                                         <div class="span8">
                                                             <input type="submit" value="Try it >>" id="tryitbtn"
                                                             class="btn primary" onclick="Tryit.call('')" style="float:left;">
-                                                            <a href="#" class="label success" id="querybtn" title="Insert a query string for samples that need request parameters">+ Add Query String</a>
+                                                            <a href="#" class="label success" id="querybtn" title="Insert a query string for samples, that need request parameters">+ Add Query String</a>
                                                             <span style="margin-top:-3px;" class="hidden" id="queryblock"> <label style="float:left;">QueryString :</label>
                                                                 <input type="text" class="span6" id="qString">
                                                                 <a href="#" id="queryremove" class="label important"> X </a>  </span>

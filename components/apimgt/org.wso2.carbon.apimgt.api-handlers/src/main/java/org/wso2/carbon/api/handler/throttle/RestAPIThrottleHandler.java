@@ -15,6 +15,7 @@
 * specific language governing permissions and limitations
 * under the License.
 */
+
 package org.wso2.carbon.api.handler.throttle;
 
 import org.apache.axiom.om.OMElement;
@@ -34,7 +35,7 @@ import org.apache.synapse.rest.RESTConstants;
 import org.apache.synapse.transport.nhttp.NhttpConstants;
 import org.wso2.carbon.api.handler.throttle.rolebase.AuthenticationFuture;
 import org.wso2.carbon.api.handler.throttle.rolebase.AuthenticatorFactory;
-import org.wso2.carbon.api.handler.throttle.rolebase.UserPriviligesHandler;
+import org.wso2.carbon.api.handler.throttle.rolebase.UserPrivilegesHandler;
 import org.wso2.carbon.api.handler.throttle.utils.StatCollector;
 import org.wso2.throttle.*;
 
@@ -44,29 +45,30 @@ import java.util.Map;
 public class RestAPIThrottleHandler extends AbstractHandler {
 
     public static final String O_AUTH_HEADER = CarbonAPIThrottleConstants._O_AUTH_HEADER;
-    Log log = LogFactory.getLog(RestAPIThrottleHandler.class);
 
-    /* The key for getting the throttling policy - key refers to a/an [registry] entry    */
+    private static final Log log = LogFactory.getLog(RestAPIThrottleHandler.class);
+
+    /** The key for getting the throttling policy - key refers to a/an [registry] entry    */
     private String policyKey = null;
-    /* The concurrect access control group id */
+    /** The concurrent access control group id */
     private String id;
-    /* Access rate controller - limit the remote caller access*/
-    private AccessRateController accessControler;
+    /** Access rate controller - limit the remote caller access*/
+    private AccessRateController accessController;
 
     private RoleBasedAccessRateController roleBasedAccessController;
 
-    /* ConcurrentAccessController - limit the remote calleres concurrent access */
+    /** ConcurrentAccessController - limit the remote callers concurrent access */
     private ConcurrentAccessController concurrentAccessController = null;
-    /* The property key that used when the ConcurrentAccessController
+    /** The property key that used when the ConcurrentAccessController
        look up from ConfigurationContext */
     private String key;
-    /* Is this env. support clustering*/
+    /** Is this env. support clustering*/
     private boolean isClusteringEnable = false;
-    /* The Throttle object - holds all runtime and configuration data */
+    /** The Throttle object - holds all runtime and configuration data */
     private Throttle throttle;
-    /* Lock used to ensure thread-safe creation of the throttle */
+    /** Lock used to ensure thread-safe creation of the throttle */
     private final Object throttleLock = new Object();
-    /* Last version of dynamic policy resource*/
+    /** Last version of dynamic policy resource*/
     private long version;
 
     private AuthenticatorFactory authFactoryForThrottling = CarbonAPIThrottleConstants._DEFAULT_AUTH_FACTORY;
@@ -74,10 +76,9 @@ public class RestAPIThrottleHandler extends AbstractHandler {
     private String  authFactory = CarbonAPIThrottleConstants._AUTH_FACTORY;
 
     public RestAPIThrottleHandler() {
-        this.accessControler = new AccessRateController();
+        this.accessController = new AccessRateController();
         this.roleBasedAccessController = new RoleBasedAccessRateController();
     }
-
 
     public boolean mediate(MessageContext synCtx) {
         boolean isResponse = synCtx.isResponse();
@@ -87,23 +88,19 @@ public class RestAPIThrottleHandler extends AbstractHandler {
         if (log.isDebugEnabled()) {
             log.debug("Start : Throttle API handler");
         }
-        // To ensure the creation of throttle is thread safe Ã¢â‚¬â€œ It is possible create same throttle
+
+        // To ensure the creation of throttle is thread safe - It is possible create same throttle
         // object multiple times  by multiple threads.
-
         synchronized (throttleLock) {
-
             // get Axis2 MessageContext and ConfigurationContext
             axisMC = ((Axis2MessageContext) synCtx).getAxis2MessageContext();
             cc = axisMC.getConfigurationContext();
 
             //To ensure check for clustering environment only happens one time
-            if ((throttle == null && !isResponse) || (isResponse
-                    && concurrentAccessController == null)) {
+            if ((throttle == null && !isResponse) || (isResponse && concurrentAccessController == null)) {
                 ClusteringAgent clusteringAgent = cc.getAxisConfiguration().getClusteringAgent();
-                if (clusteringAgent != null &&
-                        clusteringAgent.getStateManager() != null) {
-                    isClusteringEnable = true;
-                }
+                isClusteringEnable = (clusteringAgent != null &&
+                        clusteringAgent.getStateManager() != null);
             }
 
             // Throttle only will be created ,if the massage flow is IN
@@ -111,15 +108,12 @@ public class RestAPIThrottleHandler extends AbstractHandler {
                 //check the availability of the ConcurrentAccessController
                 //if this is a clustered environment
                 if (isClusteringEnable) {
-                    concurrentAccessController =
-                            (ConcurrentAccessController) cc.getProperty(key);
+                    concurrentAccessController = (ConcurrentAccessController) cc.getProperty(key);
                 }
                 // for request messages, read the policy for throttling and initialize
                 if (policyKey != null) {
-
                     // If the policy has specified as a registry key.
                     // load or re-load policy from registry or local entry if not already available
-
                     Entry entry = synCtx.getConfiguration().getEntryDefinition(policyKey);
                     if (entry == null) {
                         handleException("Cannot find throttling policy using key : "
@@ -138,15 +132,13 @@ public class RestAPIThrottleHandler extends AbstractHandler {
                         if (reCreate || throttle == null) {
                             Object entryValue = synCtx.getEntry(policyKey);
                             if (entryValue == null) {
-                                handleException(
-                                        "Null throttling policy returned by Entry : "
+                                handleException("Null throttling policy returned by Entry : "
                                                 + policyKey, synCtx);
 
                             } else {
                                 if (!(entryValue instanceof OMElement)) {
                                     handleException("Policy returned from key : " + policyKey +
                                             " is not an OMElement", synCtx);
-
                                 } else {
                                     //Check for reload in a cluster environment Ã¢â‚¬â€œ
                                     // For clustered environment ,if the concurrent access controller
@@ -186,10 +178,9 @@ public class RestAPIThrottleHandler extends AbstractHandler {
                     }
                 }
             } else {
-                // if the message flow path is OUT , then must lookp from ConfigurationContext -
+                // if the message flow path is OUT , then must lookup from ConfigurationContext -
                 // never create ,just get the existing one
-                concurrentAccessController =
-                        (ConcurrentAccessController) cc.getProperty(key);
+                concurrentAccessController = (ConcurrentAccessController) cc.getProperty(key);
             }
         }
         //perform concurrency throttling
@@ -200,7 +191,7 @@ public class RestAPIThrottleHandler extends AbstractHandler {
         if (throttle != null && !isResponse && canAccess) {
             canAccess = throttleByAccessRate(synCtx, axisMC, cc);
 
-            if(canAccess){
+            if (canAccess){
                 doRoleBasedAccessThrottling(synCtx, axisMC, cc);
             }
         }
@@ -220,6 +211,7 @@ public class RestAPIThrottleHandler extends AbstractHandler {
                 }
             }
         }
+
         if (!canAccess) {
             handleException("Rejected throttling for API", synCtx);
         }
@@ -234,9 +226,9 @@ public class RestAPIThrottleHandler extends AbstractHandler {
      * @return true if the caller can access ,o.w. false
      */
     private boolean doThrottleByConcurrency(boolean isResponse) {
-        boolean canAcess = true;
+        boolean canAccess = true;
         if (concurrentAccessController != null) {
-            // do the concurrecy throttling
+            // do the concurrency throttling
             int concurrentLimit = concurrentAccessController.getLimit();
             if (log.isDebugEnabled()) {
                 log.debug("Concurrent access controller for ID : " + id +
@@ -245,10 +237,10 @@ public class RestAPIThrottleHandler extends AbstractHandler {
             int available;
             if (!isResponse) {
                 available = concurrentAccessController.getAndDecrement();
-                canAcess = available > 0;
+                canAccess = available > 0;
                 if (log.isDebugEnabled()) {
                     log.debug("Concurrency Throttle : Access " +
-                            (canAcess ? "allowed" : "denied") + " :: " + available
+                            (canAccess ? "allowed" : "denied") + " :: " + available
                             + " of available of " + concurrentLimit + " connections");
                 }
             } else {
@@ -259,7 +251,7 @@ public class RestAPIThrottleHandler extends AbstractHandler {
                 }
             }
         }
-        return canAcess;
+        return canAccess;
     }
 
     /**
@@ -300,7 +292,7 @@ public class RestAPIThrottleHandler extends AbstractHandler {
                     callerId = config.getConfigurationKeyOfCaller(domainName);
                     if (callerId != null) {  // there is configuration for this domain name
 
-                        //If this is a clusterred env.
+                        //If this is a clustered env.
                         if (isClusteringEnable) {
                             context.setConfigurationContext(cc);
                             context.setThrottleId(id);
@@ -308,7 +300,7 @@ public class RestAPIThrottleHandler extends AbstractHandler {
 
                         try {
                             //Checks for access state
-                            AccessInformation accessInformation = accessControler.canAccess(context,
+                            AccessInformation accessInformation = accessController.canAccess(context,
                                     callerId, ThrottleConstants.DOMAIN_BASE);
                             canAccess = accessInformation.isAccessAllowed();
                             StatCollector.collect(accessInformation, domainName, ThrottleConstants.DOMAIN_BASE);
@@ -370,7 +362,7 @@ public class RestAPIThrottleHandler extends AbstractHandler {
                                     context.setThrottleId(id);
                                 }
                                 //Checks access state
-                                AccessInformation accessInformation = accessControler.canAccess(
+                                AccessInformation accessInformation = accessController.canAccess(
                                         context,
                                         callerId,
                                         ThrottleConstants.IP_BASE);
@@ -397,7 +389,7 @@ public class RestAPIThrottleHandler extends AbstractHandler {
                         }
                     }
                 } catch (ThrottleException e) {
-                    handleException("Error occurd during throttling", e, synCtx);
+                    handleException("Error occurred during throttling", e, synCtx);
                 }
             }
         }
@@ -408,12 +400,13 @@ public class RestAPIThrottleHandler extends AbstractHandler {
      * Helper method for handling role based Access throttling
      *
      *
-     * @param synCtx
-     * @param messageContext             MessageContext - message level states
-     * @param cc
+     * @param synCtx Message to be throttled
+     * @param messageContext MessageContext - message level states
+     * @param cc System configuration context
      * @return true if access is allowed through concurrent throttling ,o.w false
      */
-    private boolean doRoleBasedAccessThrottling(MessageContext synCtx, org.apache.axis2.context.MessageContext messageContext,
+    private boolean doRoleBasedAccessThrottling(MessageContext synCtx, 
+                                                org.apache.axis2.context.MessageContext messageContext,
                                                 ConfigurationContext cc) {
 
         boolean canAccess = true;
@@ -423,7 +416,7 @@ public class RestAPIThrottleHandler extends AbstractHandler {
             //skip role base throttling
             return canAccess;
         }
-//        String throttleId = throttle.getId();
+
         ConcurrentAccessController cac = null;
         if (isClusteringEnable) {
             // for clustered  env.,gets it from axis configuration context
@@ -444,11 +437,15 @@ public class RestAPIThrottleHandler extends AbstractHandler {
 //                consumerKey = Utils.extractCustomerKeyFromAuthHeader(oAuthHeader);
 //                roleID = Utils.extractCustomerKeyFromAuthHeader(oAuthHeader);
                 Map settings = new HashMap(headersMap);
-                settings.put(RESTConstants.SYNAPSE_REST_API,synCtx.getProperty(RESTConstants.SYNAPSE_REST_API));
-                settings.put(RESTConstants.SYNAPSE_REST_API_VERSION,synCtx.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION));
-                settings.put(RESTConstants.REST_FULL_REQUEST_PATH,synCtx.getProperty(RESTConstants.REST_FULL_REQUEST_PATH));
-                settings.put(RESTConstants.REST_API_CONTEXT,synCtx.getProperty(RESTConstants.REST_API_CONTEXT));
-                UserPriviligesHandler handler = authFactoryForThrottling.createAuthenticationHandler(settings);
+                settings.put(RESTConstants.SYNAPSE_REST_API,
+                        synCtx.getProperty(RESTConstants.SYNAPSE_REST_API));
+                settings.put(RESTConstants.SYNAPSE_REST_API_VERSION,
+                        synCtx.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION));
+                settings.put(RESTConstants.REST_FULL_REQUEST_PATH,
+                        synCtx.getProperty(RESTConstants.REST_FULL_REQUEST_PATH));
+                settings.put(RESTConstants.REST_API_CONTEXT,
+                        synCtx.getProperty(RESTConstants.REST_API_CONTEXT));
+                UserPrivilegesHandler handler = authFactoryForThrottling.createAuthenticationHandler(settings);
                 AuthenticationFuture authFuture = handler.getAuthenticator();
 
                 consumerKey = authFuture.getAPIKey();
@@ -458,7 +455,7 @@ public class RestAPIThrottleHandler extends AbstractHandler {
                 isAuthenticated = authFuture.isAuthenticated();
 
                 if (isAuthenticated) {
-                    //get feedback from the authenritcator
+                    //get feedback from the authenticator
                     roleID = (String) authFuture.getAuthorizedRoles().get(0);
                 }
             }
@@ -471,7 +468,7 @@ public class RestAPIThrottleHandler extends AbstractHandler {
             }
             // Domain name based throttling
                 //check whether a configuration has been defined for this role name or not
-                String consumerRoleID = null;
+                String consumerRoleID;
                 if (consumerKey != null && isAuthenticated) {
                     //loads the ThrottleContext
                     ThrottleContext context =
@@ -488,16 +485,18 @@ public class RestAPIThrottleHandler extends AbstractHandler {
                                     context.setConfigurationContext(cc);
                                     context.setThrottleId(id);
                                 }
-                                AccessInformation infor =  null;
+                                AccessInformation info;
                                 try {
-                                    infor = roleBasedAccessController.canAccess(context, consumerKey,
+                                    info = roleBasedAccessController.canAccess(context, consumerKey,
                                                                         consumerRoleID);
                                 } catch (ThrottleException e) {
-                                    handleException("Exception ocurred while performing role based throttling",e, synCtx);
+                                    handleException("Exception occurred while performing role " +
+                                            "based throttling",e, synCtx);
+                                    return false;
                                 }
-                                StatCollector.collect(infor, consumerKey, ThrottleConstants.ROLE_BASE);
+                                StatCollector.collect(info, consumerKey, ThrottleConstants.ROLE_BASE);
                                 //check for the permission for access
-                                if (!infor.isAccessAllowed()) {
+                                if (!info.isAccessAllowed()) {
 
                                     //In the case of both of concurrency throttling and
                                     //rate based throttling have enabled ,
@@ -526,7 +525,7 @@ public class RestAPIThrottleHandler extends AbstractHandler {
                                     handleException(" Access deny for a " +
                                                     "caller with consumerKey " + consumerKey + " with Role :"
                                                     + consumerRoleID +
-                                                    " : Reason : " + infor.getFaultReason(), synCtx);
+                                                    " : Reason : " + info.getFaultReason(), synCtx);
                                 }
                             } else {
                                 if (log.isDebugEnabled()) {
@@ -545,7 +544,6 @@ public class RestAPIThrottleHandler extends AbstractHandler {
         }
         return canAccess;
     }
-
 
     public void setId(String id) {
         this.id = id;
@@ -579,9 +577,6 @@ public class RestAPIThrottleHandler extends AbstractHandler {
         throw new SynapseException(msg);
     }
 
-
-
-
     public boolean handleRequest(MessageContext messageContext) {
         return mediate(messageContext);
     }
@@ -602,7 +597,7 @@ public class RestAPIThrottleHandler extends AbstractHandler {
                 authFactoryForThrottling = (AuthenticatorFactory) Class.forName(authFactory).newInstance();
             }
         } catch (Exception e) {
-            log.warn("unable to create factory instnace for authentication handling for class: " +
+            log.warn("unable to create factory instance for authentication handling for class: " +
                      authFactory + " Error :" + e.getMessage());
         }
     }

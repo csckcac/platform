@@ -23,18 +23,16 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.rest.RESTConstants;
 import org.wso2.carbon.api.handler.throttle.RestAPIThrottleHandler;
 import org.wso2.carbon.api.handler.throttle.rolebase.AuthenticatorFactory;
-import org.wso2.carbon.api.handler.throttle.rolebase.UserPriviligesHandler;
+import org.wso2.carbon.api.handler.throttle.rolebase.UserPrivilegesHandler;
 import org.wso2.carbon.api.handler.throttle.rolebase.impl.basic.BasicAPIOAuthHandler;
 import org.wso2.carbon.api.handler.throttle.rolebase.impl.basic.BasicOAuthAuthenticator;
-import org.wso2.carbon.api.handler.throttle.rolebase.impl.dummy.DummyAuthenticator;
-import org.wso2.carbon.api.handler.throttle.rolebase.impl.dummy.DummyHandler;
 
 import java.util.Map;
 
 public class BasicOAuthAuthenticatorFactory implements AuthenticatorFactory{
 
     static Log log = LogFactory.getLog(BasicOAuthAuthenticatorFactory.class);
-    public UserPriviligesHandler createAuthenticationHandler(Map settings) {
+    public UserPrivilegesHandler createAuthenticationHandler(Map settings) {
         String oAuthHeader = (String) settings.get(RestAPIThrottleHandler.O_AUTH_HEADER);
         String apiVersion = (String) settings.get(RESTConstants.SYNAPSE_REST_API_VERSION);
         String context = (String) settings.get(RESTConstants.REST_API_CONTEXT);

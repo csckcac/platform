@@ -17,9 +17,7 @@
 */
 package org.wso2.carbon.api.handler.throttle.rolebase;
 
-import org.wso2.carbon.api.handler.throttle.rolebase.AuthenticationFuture;
-
-public interface UserPriviligesHandler {
+public interface UserPrivilegesHandler {
 
     public boolean authenticateUser();
 

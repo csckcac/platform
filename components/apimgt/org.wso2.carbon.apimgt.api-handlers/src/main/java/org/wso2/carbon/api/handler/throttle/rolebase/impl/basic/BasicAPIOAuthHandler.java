@@ -19,13 +19,13 @@ package org.wso2.carbon.api.handler.throttle.rolebase.impl.basic;
 
 import org.apache.axis2.AxisFault;
 import org.wso2.carbon.api.handler.throttle.rolebase.AuthenticationFuture;
-import org.wso2.carbon.api.handler.throttle.rolebase.UserPriviligesHandler;
+import org.wso2.carbon.api.handler.throttle.rolebase.UserPrivilegesHandler;
 import org.wso2.carbon.apimgt.impl.dto.xsd.APIKeyValidationInfoDTO;
 import org.wso2.carbon.apimgt.keymgt.stub.validator.APIKeyValidationServiceStub;
 
 import java.util.ArrayList;
 
-public class BasicAPIOAuthHandler implements UserPriviligesHandler{
+public class BasicAPIOAuthHandler implements UserPrivilegesHandler {
 
     private AuthenticationFuture callback = null ;
 

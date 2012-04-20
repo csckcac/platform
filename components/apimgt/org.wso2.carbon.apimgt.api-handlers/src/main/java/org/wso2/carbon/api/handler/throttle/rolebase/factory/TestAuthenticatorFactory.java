@@ -19,14 +19,14 @@ package org.wso2.carbon.api.handler.throttle.rolebase.factory;
 
 import org.wso2.carbon.api.handler.throttle.RestAPIThrottleHandler;
 import org.wso2.carbon.api.handler.throttle.rolebase.AuthenticatorFactory;
-import org.wso2.carbon.api.handler.throttle.rolebase.UserPriviligesHandler;
+import org.wso2.carbon.api.handler.throttle.rolebase.UserPrivilegesHandler;
 import org.wso2.carbon.api.handler.throttle.rolebase.impl.dummy.DummyAuthenticator;
 import org.wso2.carbon.api.handler.throttle.rolebase.impl.dummy.DummyHandler;
 
 import java.util.Map;
 
 public class TestAuthenticatorFactory implements AuthenticatorFactory{
-    public UserPriviligesHandler createAuthenticationHandler(Map settings) {
+    public UserPrivilegesHandler createAuthenticationHandler(Map settings) {
         String oAuthHeader = (String) settings.get(RestAPIThrottleHandler.O_AUTH_HEADER);
 //                consumerKey = Utils.extractCustomerKeyFromAuthHeader(oAuthHeader);
 //                roleID = Utils.extractCustomerKeyFromAuthHeader(oAuthHeader);

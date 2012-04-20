@@ -21,5 +21,5 @@ import java.util.Map;
 
 public interface AuthenticatorFactory {
 
-    public UserPriviligesHandler createAuthenticationHandler(Map settings);
+    public UserPrivilegesHandler createAuthenticationHandler(Map settings);
 }

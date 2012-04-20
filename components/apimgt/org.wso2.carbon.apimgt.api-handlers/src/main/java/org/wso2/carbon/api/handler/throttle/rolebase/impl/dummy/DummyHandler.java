@@ -18,14 +18,14 @@
 package org.wso2.carbon.api.handler.throttle.rolebase.impl.dummy;
 
 import org.wso2.carbon.api.handler.throttle.rolebase.AuthenticationFuture;
-import org.wso2.carbon.api.handler.throttle.rolebase.UserPriviligesHandler;
+import org.wso2.carbon.api.handler.throttle.rolebase.UserPrivilegesHandler;
 
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DummyHandler implements UserPriviligesHandler {
+public class DummyHandler implements UserPrivilegesHandler {
     private static String[] TIERS = {"bronze","silver","platinum"};
     public static Map apiKey2roleMap = new ConcurrentHashMap();
 

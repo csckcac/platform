@@ -65,10 +65,15 @@ var log = new Log();
 log.info("This is an INFO level log");
 %&gt
 </pre>
+ <% hasMembers = false; %>
 <div id="pageLinks">
 <a class="navilink" href="#overview">Overview</a>
+    <%if(hasMembers) {%>
 <a class="navilink" href="#members">Members</a>
+        <%}%>
+        <%if(hasOps) {%>
 <a class="navilink" href="#operations">Operations</a>
+            <%}%>
 </div>
 
 <section id="overview">
@@ -78,33 +83,6 @@ log.info("This is an INFO level log");
                 </p>
          </section>
 
-<section id="members">
-
-                   <table class="clsStd member-table">
-
-                       <tbody>
-
-                       <tr>
-                           <th>Member</th>
-                           <th>&nbsp;&nbsp;Type&nbsp;&nbsp;</th>
-                           <th>Description</th>
-                       </tr>
-                      <tr>
-
-                        <td><code>isDebugEnabeld</code></td>
-                        <td>boolean</td>
-                        <td>
-                           <pre class="prettyprint">log.isDebugEnabled</pre>
-                            Returns true if Debug level is enabled. Default is true
-
-                        </td>
-
-                    </tr>
-
-                       </tbody>
-                       </table>
-
-               </section>
                 <section id="operations">
                     <h4>Operations</h4>
                 <table class="clsStd operations-table">
@@ -179,6 +157,28 @@ log.fatal("this is a fatal message")
  prints a fatal message to the console
 
                         </td>
+                    </tr>
+                    <tr>
+
+                        <td><code>isDebugEnabeld()</code></td>
+                        <td>boolean</td>
+                        <td>
+                           <pre class="prettyprint">log.isDebugEnabled()</pre>
+                            Returns true if Debug level is enabled. Default is true
+
+                        </td>
+
+                    </tr>
+                                        <tr>
+
+                        <td><code>isTraceEnabled()</code></td>
+                        <td>boolean</td>
+                        <td>
+                           <pre class="prettyprint">log.isTraceEnabled()</pre>
+                            Returns true if Trace level is enabled. Default is false
+
+                        </td>
+
                     </tr>
                     </tbody>
                 </table>

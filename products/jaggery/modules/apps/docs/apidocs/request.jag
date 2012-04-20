@@ -62,8 +62,8 @@ include('/includes/topnavi.jag');
         <pre class="prettyprint linenums">
 &lt%
     print("&lthtml&gt&ltbody&gt");
-    print("Method : " + request.method + "&ltbr/&gt");
-    print("Protocol : " + request.protocol + "&ltbr/&gt");
+    print("Method : " + request.getMethod() + "&ltbr/&gt");
+    print("Protocol : " + request.getProtocol() + "&ltbr/&gt");
     print("User-Agent : " + request.getHeader("User-Agent"));
     print("&lt/body&gt&lt/html&gt");
 %&gt
@@ -71,8 +71,8 @@ include('/includes/topnavi.jag');
                 <%
                 var reqCode = '&lt%'
                 + '\n print("&lthtml&gt&ltbody&gt");'
-                + '\n print("Method : " + request.method + "&lt;br/&gt");'
-                + '\n print("Protocol : " + request.protocol + "&lt;br/&gt");'
+                + '\n print("Method : " + request.getMethod() + "&lt;br/&gt");'
+                + '\n print("Protocol : " + request.getProtocol() + "&lt;br/&gt");'
                 + '\n print("User-Agent : " + request.getHeader("User-Agent"));'
                 + '\n print("&lt/body&gt&lt/html&gt");'
                 + '\n %&gt';
@@ -83,113 +83,25 @@ include('/includes/topnavi.jag');
                 include('/includes/tryit_but.jag');
                 %>
 
+ <% hasMembers = false; %>
 <div id="pageLinks">
 <a class="navilink" href="#overview">Overview</a>
+    <%if(hasMembers) {%>
 <a class="navilink" href="#members">Members</a>
+        <%}%>
+        <%if(hasOps) {%>
 <a class="navilink" href="#operations">Operations</a>
-</div>            <section id="overview">
+            <%}%>
+</div>
+<section id="overview">
 
                    <h4>Overview</h4>
                    <p class="description">
                 Object that provides the properties and functions of HTTP Request</p>
                </section>
-               <section id="members">
-                   <h4>Members</h4>
-                   <table class="clsStd member-table">
-
-                       <tbody>
-
-                       <tr>
-                           <th>Member</th>
-                           <th>&nbsp;&nbsp;Type&nbsp;&nbsp;</th>
-                           <th>Description</th>
-                       </tr>
-                      <tr>
-
-                        <td><code>method</code></td>
-                        <td>String</td>
-                        <td>
-                           <pre class="prettyprint">request.method</pre>
-                            Returns the HTTP method of the request
-
-                        </td>
-
-                    </tr>
-                     <tr>
-
-                        <td><code>protocol</code></td>
-                        <td>String</td>
-                        <td>
-                            <pre class="prettyprint">request.protocol</pre>
-                            Returns the protocol of the request
-                        </td>
-
-                    </tr>
-                    <tr>
-
-                        <td><code>queryString</code></td>
-                          <td>String</td>
-                        <td>
-                            <pre class="prettyprint">request.queryString</pre>
-                            Returns the query string of the request
-                        </td>
-
-                    </tr>
-                    <tr>
-
-                        <td><code>content</code></td>
-                        <td>String | Object</td>
-                        <td><pre class="prettyprint">request.content</pre>
-                            <p>Returns the content of the request.</p><p>If the request content type is either
-                            <code>application/json</code> or <code>application/json/badgerfish</code>,
-                            then content is returned as an object. Otherwise, it is
-                            returned as a string.</p>
-                        </td>
-
-                    </tr>
-                    <tr>
-
-                        <td><code>contentType</code></td>
-                        <td>String</td>
-                        <td><pre class="prettyprint">request.contentType</pre>
-                            Returns the content Type of the request
-
-                        </td>
-
-                    </tr>
-
-                    <tr>
-
-                        <td><code>contentLength</code>
-                        </td>
-                        <td>Number</td>
-                        <td>
-                            <pre class="prettyprint">request.contentLength</pre>
-                            Returns the content length of the request
-                        </td>
-
-                    </tr>
-                    <tr>
-
-                        <td><code>uri</code>
-                        </td>
-                        <td>String</td>
-                        <td>
-                            <pre class="prettyprint">request.uri</pre>
-                            Returns the request uri
-                        </td>
-
-                    </tr>
-                       </tbody>
-                       </table>
-                   
-               </section>
-
-
                 <section id="operations">
 
                     <h4>Operations</h4>
-                    
                 <table class="clsStd operations-table">
 
                     <tbody>
@@ -201,9 +113,82 @@ include('/includes/topnavi.jag');
                         <th>Description</th>
 
                     </tr>
+                      <tr>
 
+                        <td><code>getMethod()</code></td>
+                        <td>String</td>
+                        <td>
+                           <pre class="prettyprint">request.getMethod()</pre>
+                            Returns the HTTP method of the request
 
+                        </td>
 
+                    </tr>
+                     <tr>
+
+                        <td><code>getProtocol()</code></td>
+                        <td>String</td>
+                        <td>
+                            <pre class="prettyprint">request.getProtocol()</pre>
+                            Returns the protocol of the request
+                        </td>
+
+                    </tr>
+                    <tr>
+
+                        <td><code>getQueryString()</code></td>
+                          <td>String</td>
+                        <td>
+                            <pre class="prettyprint">request.getQueryString()</pre>
+                            Returns the query string of the request
+                        </td>
+
+                    </tr>
+                    <tr>
+
+                        <td><code>getContent()</code></td>
+                        <td>String | Object</td>
+                        <td><pre class="prettyprint">request.getContent()</pre>
+                            <p>Returns the content of the request.</p><p>If the request content type is either
+                            <code>application/json</code> or <code>application/json/badgerfish</code>,
+                            then content is returned as an object. Otherwise, it is
+                            returned as a string.</p>
+                        </td>
+
+                    </tr>
+                    <tr>
+
+                        <td><code>getContentType()</code></td>
+                        <td>String</td>
+                        <td><pre class="prettyprint">request.getContentType()</pre>
+                            Returns the content Type of the request
+
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td><code>getContentLength()</code>
+                        </td>
+                        <td>Number</td>
+                        <td>
+                            <pre class="prettyprint">request.getContentLength()</pre>
+                            Returns the content length of the request
+                        </td>
+
+                    </tr>
+                    <tr>
+
+                        <td><code>getRequestURI()</code>
+                        </td>
+                        <td>String</td>
+                        <td>
+                            <pre class="prettyprint">request.getRequestURI()</pre>
+                            Returns the request uri
+                        </td>
+
+                    </tr>
 
                     <tr>
 

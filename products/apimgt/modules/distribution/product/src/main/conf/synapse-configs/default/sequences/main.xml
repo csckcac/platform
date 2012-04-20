@@ -44,6 +44,15 @@
 	<property name="NO_ENTITY_BODY" scope="axis2" action="remove"/>
 	<property name="messageType" value="application/xml" scope="axis2"/>
 	<property name="ContentType" scope="axis2" action="remove"/>
+	<property name="Authorization" scope="transport" action="remove"/>
+	<property name="Host" scope="transport" action="remove"/>
+        <property name="Accept" scope="transport" action="remove"/>
 	<send/>
     </in>
+    <out>
+	<log level="full">
+	    <property name="STATUS" value="Unexpected response message in out flow"/>
+	</log>
+	<drop/>
+    </out>
 </sequence>

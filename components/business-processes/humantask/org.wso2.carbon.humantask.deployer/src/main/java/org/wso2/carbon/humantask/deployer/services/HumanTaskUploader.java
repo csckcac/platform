@@ -48,7 +48,7 @@ public class HumanTaskUploader extends AbstractAdmin {
         }
 
         //Writting the artifacts to the proper location
-        String humantaskDirectory = repo + HumanTaskConstants.HUMANTASK_REPO_DIRECTORY;
+        String humantaskDirectory = getHumanTaskLocation(repo);
 
         String humantaskTemp = CarbonUtils.getCarbonHome() + File.separator +
                                HumanTaskConstants.HUMANTASK_PACKAGE_TEMP_DIRECTORY;
@@ -127,6 +127,15 @@ public class HumanTaskUploader extends AbstractAdmin {
             c.close();
         } catch (IOException e) {
             log.warn("Can't close file streams.", e);
+        }
+    }
+
+    // Get the human task repository location.
+    private String getHumanTaskLocation(String repoLocation) {
+        if (repoLocation.endsWith(File.separator)){
+            return  repoLocation +    HumanTaskConstants.HUMANTASK_REPO_DIRECTORY;
+        }   else {
+            return repoLocation + File.separator + HumanTaskConstants.HUMANTASK_REPO_DIRECTORY;
         }
     }
 }

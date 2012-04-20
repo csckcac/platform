@@ -1,6 +1,8 @@
 package org.wso2.carbon.humantask.core.integration;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
 import org.wso2.carbon.humantask.core.dao.HumanTaskDAOConnection;
@@ -8,8 +10,11 @@ import org.wso2.carbon.humantask.core.dao.OrganizationalEntityDAO;
 import org.wso2.carbon.humantask.core.engine.PeopleQueryEvaluator;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 import org.wso2.carbon.humantask.core.internal.HumanTaskServiceComponent;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.service.RegistryService;
+import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.user.core.UserStoreException;
-import org.wso2.carbon.user.core.service.RealmService;
+import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,15 +26,17 @@ import java.util.List;
  */
 public class UserManagerBasedPeopleQueryEvaluator implements PeopleQueryEvaluator {
 
-    RealmService realmSvc;
+    private static Log log = LogFactory.getLog(UserManagerBasedPeopleQueryEvaluator.class);
+
+    RegistryService registryService;
 
     public UserManagerBasedPeopleQueryEvaluator() {
-        this.realmSvc = HumanTaskServiceComponent.getRealmService();
+        this.registryService = HumanTaskServiceComponent.getRegistryService();
     }
 
     public boolean isExistingUser(String userName) {
         try {
-            return realmSvc.getBootstrapRealm().getUserStoreManager().isExistingUser(userName);
+            return getUserRealm().getUserStoreManager().isExistingUser(userName);
         } catch (UserStoreException e) {
             throw new HumanTaskRuntimeException("Error occurred while calling to realm service", e);
         }
@@ -44,7 +51,7 @@ public class UserManagerBasedPeopleQueryEvaluator implements PeopleQueryEvaluato
     @Override
     public boolean isExistingRole(String roleName) {
         try {
-            return realmSvc.getBootstrapRealm().getUserStoreManager().isExistingRole(roleName);
+            return getUserRealm().getUserStoreManager().isExistingRole(roleName);
         } catch (UserStoreException e) {
             throw new HumanTaskRuntimeException("Error occurred while calling to realm service " +
                                                 "for operation isExistingRole", e);
@@ -60,7 +67,7 @@ public class UserManagerBasedPeopleQueryEvaluator implements PeopleQueryEvaluato
     public List<String> getUserNameListForRole(String roleName) {
         if (isExistingRole(roleName)) {
             try {
-                return new ArrayList<String>(Arrays.asList(realmSvc.getBootstrapRealm().
+                return new ArrayList<String>(Arrays.asList(getUserRealm().
                         getUserStoreManager().getUserListOfRole(roleName)));
             } catch (UserStoreException e) {
                 throw new HumanTaskRuntimeException("Error occurred while calling" +
@@ -80,7 +87,7 @@ public class UserManagerBasedPeopleQueryEvaluator implements PeopleQueryEvaluato
                 try {
                     matchingRoleNames.addAll(
                             Arrays.asList(
-                                    realmSvc.getBootstrapRealm().getUserStoreManager().
+                                    getUserRealm().getUserStoreManager().
                                             getRoleListOfUser(userName)));
                 } catch (UserStoreException ex) {
                     throw new HumanTaskRuntimeException("Error occurred while calling" +
@@ -198,5 +205,23 @@ public class UserManagerBasedPeopleQueryEvaluator implements PeopleQueryEvaluato
     private HumanTaskDAOConnection getConnection() {
         return HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().
                 getDaoConnectionFactory().getConnection();
+    }
+
+    private UserRealm getUserRealm() {
+        Integer tenantId = CarbonContextHolder.getThreadLocalCarbonContextHolder().getTenantId();
+
+        if (tenantId < 0) {
+            log.warn("Invalid Tenant Id " + tenantId);
+            return null;
+        }
+
+        try {
+            // TODO - add null check for the user realm.
+            return this.registryService.getUserRealm(tenantId);
+        } catch (RegistryException e) {
+            throw new HumanTaskRuntimeException("Error occurred while retrieving " +
+                                                "User Realm for tenant :" + tenantId);
+        }
+
     }
 }

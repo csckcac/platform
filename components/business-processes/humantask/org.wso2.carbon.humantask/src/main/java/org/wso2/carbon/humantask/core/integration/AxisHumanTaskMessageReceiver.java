@@ -33,6 +33,7 @@ import org.wso2.carbon.bpel.common.WSDLAwareSOAPProcessor;
 import org.wso2.carbon.humantask.core.HumanTaskConstants;
 import org.wso2.carbon.humantask.core.engine.HumanTaskEngine;
 import org.wso2.carbon.humantask.core.engine.HumanTaskException;
+import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 
 /**
  * Message receiver for the humantasks exposed as services.
@@ -43,6 +44,10 @@ public class AxisHumanTaskMessageReceiver extends AbstractMessageReceiver {
     HumanTaskEngine humanTaskEngine;
     @Override
     protected void invokeBusinessLogic(MessageContext messageContext) throws AxisFault {
+
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
+
         if (log.isDebugEnabled()) {
             if (messageContext != null) {
                 log.debug("Message received: " + messageContext.getEnvelope());

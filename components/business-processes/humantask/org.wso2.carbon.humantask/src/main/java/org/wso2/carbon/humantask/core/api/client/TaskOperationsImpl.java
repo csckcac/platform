@@ -26,6 +26,7 @@ import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.wso2.carbon.context.CarbonContext;
+import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.humantask.client.api.IllegalAccessFault;
 import org.wso2.carbon.humantask.client.api.IllegalArgumentFault;
 import org.wso2.carbon.humantask.client.api.IllegalOperationFault;
@@ -91,6 +92,7 @@ import org.wso2.carbon.humantask.core.engine.commands.UpdateComment;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 import org.wso2.carbon.humantask.core.internal.HumanTaskServiceComponent;
 import org.wso2.carbon.humantask.core.utils.DOMUtils;
+import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 
 import javax.xml.namespace.QName;
 import java.util.List;
@@ -99,13 +101,17 @@ import java.util.concurrent.Callable;
 /**
  * The implementation of the WS Human Task API Operations.
  */
-public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
+public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsSkeletonInterface {
 
     private static Log log = LogFactory.getLog(TaskOperationsImpl.class);
 
     @Override
     public TTaskSimpleQueryResultSet simpleQuery(final TSimpleQueryInput tSimpleQueryInput)
             throws IllegalStateFault, IllegalArgumentFault {
+
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
+
         try {
             List<TaskDAO> matchingTasks = HumanTaskServiceComponent.getHumanTaskServer().
                     getTaskEngine().getScheduler().execTransaction(new Callable<List<TaskDAO>>() {
@@ -150,6 +156,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
 
     @Override
     public TBatchResponse[] batchStop(URI[] uris) {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
@@ -157,12 +165,16 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public TTaskAbstract[] getMyTaskAbstracts(String s, String s1, String s2, TStatus[] tStatuses,
                                               String s3, String s4, String s5, int i, int i1)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
     @Override
     public void stop(final URI uri) throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             validateTaskId(uri);
             HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
@@ -182,6 +194,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
 
     @Override
     public TBatchResponse[] batchComplete(URI[] uris, OMElement o) {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
@@ -189,6 +203,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public void resume(final URI uri)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             validateTaskId(uri);
             HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
@@ -221,6 +237,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
 
     @Override
     public QName[] getRenderingTypes(URI uri) throws IllegalArgumentFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
@@ -228,6 +246,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public void setTaskCompletionDeadlineExpression(URI uri, NCName ncName, String s)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         validateTaskId(uri);
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
@@ -236,6 +256,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public void setOutput(URI uri, NCName ncName, OMElement o)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             final Long taskId = validateTaskId(uri);
             if (ncName != null && o != null) {
@@ -273,17 +295,23 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     @Override
     public TTaskOperations getTaskOperations(URI uri)
             throws IllegalOperationFault, IllegalArgumentFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         validateTaskId(uri);
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
     @Override
     public TBatchResponse[] batchRelease(URI[] uris) {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
     @Override
     public TTaskDetails getTaskDetails(URI uri) throws IllegalArgumentFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         validateTaskId(uri);
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
@@ -293,6 +321,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
         validateTaskId(uri);
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
@@ -301,6 +331,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
         validateTaskId(uri);
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         // As we do not support sub task with this release.
         return false;
     }
@@ -309,6 +341,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public void suspend(final URI uri)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             validateTaskId(uri);
             HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
@@ -343,6 +377,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public void updateComment(final URI uri, final URI uri1, final String s)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             final Long taskId = validateTaskId(uri);
             HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
@@ -375,6 +411,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
 
     @Override
     public TTaskAbstract loadTask(URI uri) throws IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             final Long taskId = validateTaskId(uri);
             TaskDAO task = HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
@@ -400,11 +438,15 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public TTaskDetails[] getMyTaskDetails(String s, String s1, String s2, TStatus[] tStatuses,
                                            String s3, String s4, String s5, int i, int i1)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
     @Override
     public TBatchResponse[] batchNominate(URI[] uris) {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
@@ -412,17 +454,23 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public URI[] getSubtaskIdentifiers(URI uri)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
     @Override
     public String getOutcome(URI uri) throws IllegalOperationFault, IllegalArgumentFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         validateTaskId(uri);
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
     @Override
     public Object getRendering(URI uri, QName qName) throws IllegalArgumentFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         validateTaskId(uri);
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
@@ -430,6 +478,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     @Override
     public void skip(URI uri) throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             final Long taskId = validateTaskId(uri);
             HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
@@ -461,6 +511,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
 
     @Override
     public TBatchResponse[] batchFail(URI[] uris, TFault tFault) {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
@@ -468,6 +520,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public void setTaskCompletionDurationExpression(URI uri, NCName ncName, String s)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
@@ -475,6 +529,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public void start(final URI uri)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             validateTaskId(uri);
             HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
@@ -508,6 +564,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public void fail(final URI uri, final TFault tFault)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             final Long taskID = validateTaskId(uri);
 
@@ -548,6 +606,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public void activate(URI uri)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             final Long taskID = validateTaskId(uri);
 
@@ -582,6 +642,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public URI addComment(final URI uri, final String s)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             validateTaskId(uri);
             Validate.notEmpty(s, "The comment string cannot be empty");
@@ -622,6 +684,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public void deleteComment(final URI uri, final URI uri1)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             final Long taskId = validateTaskId(uri);
 
@@ -657,6 +721,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public void delegate(final URI uri, final TOrganizationalEntity tOrganizationalEntity)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             RecipientNotAllowedException, IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             validateTaskId(uri);
             if (tOrganizationalEntity == null) {
@@ -700,6 +766,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public TComment[] getComments(URI uri)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             final Long taskId = validateTaskId(uri);
             return HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
@@ -735,6 +803,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public TTaskInstanceData getTaskInstanceData(URI uri, String s,
                                                  TRenderingTypes[] tRenderingTypeses)
             throws IllegalOperationFault, IllegalArgumentFault, IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
@@ -742,6 +812,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public TTaskDetails getParentTask(URI uri)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
@@ -749,16 +821,22 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public URI addAttachment(URI uri, String s, String s1, String s2, Object o)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
     @Override
     public TBatchResponse[] batchResume(URI[] uris) {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
     @Override
     public TBatchResponse[] batchRemove(URI[] uris) {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
@@ -766,6 +844,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public TAttachment[] getAttachment(URI uri, URI uri1)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
@@ -773,12 +853,16 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public TAttachmentInfo[] getAttachmentInfos(URI uri)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
     @Override
     public void remove(URI uri)
             throws IllegalOperationFault, IllegalArgumentFault, IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             final Long notificationId = validateTaskId(uri);
             HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
@@ -807,6 +891,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
 
     @Override
     public TBatchResponse[] batchStart(URI[] uris) {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
@@ -814,12 +900,16 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public URI instantiateSubtask(URI uri, String s)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
     @Override
     public TTaskAuthorisationParams loadAuthorisationParams(URI uri)
             throws IllegalStateFault, IllegalArgumentFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             final Long taskId = validateTaskId(uri);
             return HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
@@ -850,6 +940,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public TTaskEventType[] getTaskHistory(URI uri, TTaskHistoryFilter tTaskHistoryFilter, int i,
                                            int i1, boolean b)
             throws IllegalOperationFault, IllegalArgumentFault, IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
@@ -857,11 +949,15 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public void setTaskStartDeadlineExpression(URI uri, NCName ncName, String s)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
     @Override
     public TTaskEvents loadTaskEvents(URI uri) throws IllegalArgumentFault, IllegalStateFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             final Long taskId = validateTaskId(uri);
             return HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
@@ -887,12 +983,16 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
 
     @Override
     public TBatchResponse[] batchDelegate(URI[] uris, TOrganizationalEntity tOrganizationalEntity) {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
     @Override
     public TBatchResponse[] batchSetGenericHumanRole(URI[] uris, String s,
                                                      TOrganizationalEntity tOrganizationalEntity) {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
@@ -900,6 +1000,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public void setGenericHumanRole(URI uri, String s, TOrganizationalEntity tOrganizationalEntity)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         validateTaskId(uri);
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
@@ -908,6 +1010,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public Object getInput(final URI uri, final NCName ncName)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             validateTaskId(uri);
             return HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
@@ -946,6 +1050,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
 
     @Override
     public TBatchResponse[] batchSkip(URI[] uris) {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
@@ -953,6 +1059,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public void complete(final URI uri, final String o)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             final Long taskId = validateTaskId(uri);
             HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
@@ -987,12 +1095,16 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public boolean hasSubtasks(URI uri)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         validateTaskId(uri);
         return false;
     }
 
     @Override
     public TBatchResponse[] batchActivate(URI[] uris) {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
@@ -1000,6 +1112,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public void claim(final URI uri)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             final Long taskId = validateTaskId(uri);
             HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
@@ -1032,16 +1146,22 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     @Override
     public TTaskQueryResultSet query(String s, String s1, String s2, int i, int i1)
             throws IllegalStateFault, IllegalArgumentFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
     @Override
     public TBatchResponse[] batchClaim(URI[] uris) {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
     @Override
     public TBatchResponse[] batchSetPriority(URI[] uris, TPriority tPriority) {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
@@ -1049,6 +1169,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public void setFault(final URI uri, final TFault tFault)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             final Long taskId = validateTaskId(uri);
             HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
@@ -1088,6 +1210,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public void suspendUntil(URI uri, TTime tTime)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         validateTaskId(uri);
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
@@ -1096,12 +1220,16 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public void setTaskStartDurationExpression(URI uri, NCName ncName, String s)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         validateTaskId(uri);
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
     @Override
     public String getTaskDescription(final URI uri, final String s) throws IllegalArgumentFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             final Long taskId = validateTaskId(uri);
             return HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
@@ -1134,6 +1262,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public void deleteAttachment(URI uri, URI uri1)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         validateTaskId(uri);
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
@@ -1142,6 +1272,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public void nominate(final URI uri, final TOrganizationalEntity tOrganizationalEntity)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             final Long taskId = validateTaskId(uri);
             HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
@@ -1177,6 +1309,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public void deleteOutput(final URI uri)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             final Long taskId = validateTaskId(uri);
             HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
@@ -1214,6 +1348,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     @Override
     public TBatchResponse[] batchSuspend(URI[] uris) {
 
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
@@ -1221,6 +1357,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public TTaskDetails[] getSubtasks(URI uri)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         validateTaskId(uri);
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
@@ -1229,6 +1367,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public void deleteFault(final URI uri)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             final Long taskId = validateTaskId(uri);
             HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
@@ -1262,6 +1402,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public Object getOutput(final URI uri, final NCName ncName)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             final Long taskId = validateTaskId(uri);
             return HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
@@ -1307,6 +1449,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public void release(final URI uri)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             validateTaskId(uri);
             HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
@@ -1341,6 +1485,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public TFault getFault(URI uri)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             final Long taskId = validateTaskId(uri);
             return HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
@@ -1380,6 +1526,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public void setPriority(final URI uri, final TPriority tPriority)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         try {
             final Long taskId = validateTaskId(uri);
             HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
@@ -1413,6 +1561,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
 
     @Override
     public TBatchResponse[] batchSuspendUntil(URI[] uris, TTime tTime) {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
     }
 
@@ -1420,6 +1570,8 @@ public class TaskOperationsImpl implements TaskOperationsSkeletonInterface {
     public URI getParentTaskIdentifier(URI uri)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
         throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
 
     }

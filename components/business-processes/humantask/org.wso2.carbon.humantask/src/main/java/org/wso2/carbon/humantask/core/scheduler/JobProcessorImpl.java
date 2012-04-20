@@ -26,10 +26,15 @@ import org.wso2.carbon.humantask.core.dao.*;
 import org.wso2.carbon.humantask.core.engine.HumanTaskException;
 import org.wso2.carbon.humantask.core.engine.runtime.ExpressionEvaluationContext;
 import org.wso2.carbon.humantask.core.engine.runtime.api.EvaluationContext;
+import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 import org.wso2.carbon.humantask.core.internal.HumanTaskServerHolder;
 import org.wso2.carbon.humantask.core.internal.HumanTaskServiceComponent;
 import org.wso2.carbon.humantask.core.store.HumanTaskBaseConfiguration;
 import org.wso2.carbon.humantask.core.store.TaskConfiguration;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.service.RegistryService;
+import org.wso2.carbon.user.core.UserRealm;
+import org.wso2.carbon.user.core.UserStoreException;
 
 import javax.xml.namespace.QName;
 import java.util.*;
@@ -201,6 +206,12 @@ public class JobProcessorImpl implements Scheduler.JobProcessor {
 
                     HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().
                             getPeopleQueryEvaluator().isExistingRole(roleName);
+
+                    if(!isExistingRole(roleName, task.getTenantId())) {
+                        log.warn("Role name " + roleName  + " does not exist for tenant id" + task.getTenantId() );
+                    }
+
+
                     List<OrganizationalEntityDAO> orgEntities = new ArrayList<OrganizationalEntityDAO>();
                     OrganizationalEntityDAO orgEntity = HumanTaskServiceComponent.getHumanTaskServer().
                             getDaoConnectionFactory().getConnection().
@@ -222,5 +233,16 @@ public class JobProcessorImpl implements Scheduler.JobProcessor {
     private boolean evaluateCondition(String exp, String expLang, EvaluationContext evalCtx) {
         return HumanTaskServerHolder.getInstance().getHtServer().getTaskEngine().
                 getExpressionLanguageRuntime(expLang).evaluateAsBoolean(exp, evalCtx);
+    }
+
+    // Checks the particular role name exists.
+    private boolean isExistingRole(String roleName, Integer tenantId) {
+        RegistryService registryService = HumanTaskServiceComponent.getRegistryService();
+        try {
+            UserRealm userRealm= registryService.getUserRealm(tenantId);
+            return userRealm.getUserStoreManager().isExistingRole(roleName);
+        } catch (Exception e) {
+            throw new HumanTaskRuntimeException("Cannot retrieve user realm for tenantId :" + tenantId, e);
+        }
     }
 }

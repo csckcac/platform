@@ -48,15 +48,7 @@
         <hostObject>
             <className>org.wso2.carbon.hostobjects.feed.Feed</className>
             <name>Feed</name>
-        </hostObject>
-        <hostObject>
-            <className>org.wso2.carbon.hostobjects.feed.FeedReader</className>
-            <name>FeedReader</name>
-        </hostObject>
-        <hostObject>
-            <className>org.wso2.carbon.hostobjects.feed.MediaModule</className>
-            <name>MediaModule</name>
-        </hostObject>
+        </hostObject>      
         <hostObject>
             <className>org.wso2.carbon.hostobjects.atom.APPClientHostObject</className>
             <name>APPClient</name>

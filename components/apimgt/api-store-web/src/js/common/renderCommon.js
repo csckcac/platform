@@ -22,20 +22,24 @@ var renderServices = function(result) {
             var name = $(this).data("api").name;
             var version = $(this).data("api").version;
             var provider = $(this).data("api").provider;
+            var context = $(this).data("api").context;
             activePage = "serviceInfo";
             ServiceStoreApp.currentApiProvider = provider;
             ServiceStoreApp.currentApiName = name;
             ServiceStoreApp.currentApiVersion = version;
+            ServiceStoreApp.currentApiContext = context;
             loadService();
         });
         $(".thumbnaillink", clone).data("api", service ).click(function() {
         	 var name = $(this).data("api").name;
              var version = $(this).data("api").version;
              var provider = $(this).data("api").provider;
+             var context = $(this).data("api").context;
              activePage = "serviceInfo";
              ServiceStoreApp.currentApiProvider = provider;
              ServiceStoreApp.currentApiName = name;
              ServiceStoreApp.currentApiVersion = version;
+             ServiceStoreApp.currentApiContext = context;
              loadService();
         });
         $(".company-name", clone).text(service.provider);
@@ -228,10 +232,12 @@ var renderTopRated = function(result) {
         	 var name = $(this).data("api").name;
         	 var version = $(this).data("api").version;
         	 var provider = $(this).data("api").author;
+        	 var context = $(this).data("api").context;
         	 activePage = "serviceInfo";
         	 ServiceStoreApp.currentApiProvider = provider;
         	 ServiceStoreApp.currentApiName = name;
         	 ServiceStoreApp.currentApiVersion = version;
+        	 ServiceStoreApp.currentApiContext = context;
         	 loadService();
         });
         $(".list-items-item-detail", clone).text(service.author);
@@ -259,10 +265,12 @@ var renderRecentlyAdded = function(result) {
          var name = $(this).data("api").name;
        	 var version = $(this).data("api").version;
        	 var provider = $(this).data("api").author;
+       	 var context = $(this).data("api").context;
        	 activePage = "serviceInfo";
        	 ServiceStoreApp.currentApiProvider = provider;
        	 ServiceStoreApp.currentApiName = name;
        	 ServiceStoreApp.currentApiVersion = version;
+       	 ServiceStoreApp.currentApiContext = context;
        	 loadService();
         });
         $(".list-items-item-detail", clone).text(service.author);
@@ -429,6 +437,7 @@ var loadSubscriptions = function() {
                                         "providerName=" + ServiceStoreApp.currentApiProvider + "&" +
                                         "apiName=" + ServiceStoreApp.currentApiName + "&" +
                                         "version=" + ServiceStoreApp.currentApiVersion + "&" +
+                                        "context=" + ServiceStoreApp.currentApiContext + "&" +
                                         "application=" + application, function(result) {
                             if (result.error == "true") {
                                 ServiceStoreApp.showLogin();
@@ -831,12 +840,13 @@ ServiceStoreAppSearchBar = new function () {
 $("#commentBoxBtn").click(function() {
 	console.log("commentBoxBtn Click");});
 
-var generateKey = function(provider, api, version, application, callback) {
+var generateKey = function(provider, api, version, context, application, callback) {
     ServiceStoreApp.call(
             "action=getKey&" +
                     "providerName=" + provider + "&" +
                     "apiName=" + api + "&" +
                     "version=" + version + "&" +
+                    "context=" + context + "&" +
                     "application=" + application, function(result) {
         if (result.error == "true") {
             ServiceStoreApp.showLogin();
@@ -971,6 +981,7 @@ var loadAllSubscriptions = function() {
                     ServiceStoreApp.currentApiProvider = api.provider;
                     ServiceStoreApp.currentApiName = api.name;
                     ServiceStoreApp.currentApiVersion = api.version;
+                    ServiceStoreApp.currentApiContext = api.context;
                     loadService();
                     viewTab("subscriptions");
                 }).data("api", sub);

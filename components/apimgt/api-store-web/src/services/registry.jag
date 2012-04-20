@@ -30,8 +30,9 @@ if (action != null) {
         var version = request.getParameter("version");
         var provider = request.getParameter("providerName");
         var application = request.getParameter("application");
+        var context = request.getParameter("context");
         if (api != null && version != null && provider != null && application != null) {
-            print(getKey(api, version, provider, application));
+            print(getKey(api, version, provider, context, application));
         }
     }
     else if (action == "getAverageRating") {

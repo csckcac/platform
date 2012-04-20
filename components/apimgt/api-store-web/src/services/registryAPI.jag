@@ -45,8 +45,8 @@ function getDescription(path) {
     return getDataJSON(getDescriptionFunc(path, "all"), null, "Error while getting service description");
 }
 
-function getKey(api, version, provider, application) {
-    return getDataJSON(getKeyFunc(api, version, provider, application, getUserFunc().username), null, "Error while getting API Key");
+function getKey(api, version, provider, context, application) {
+    return getDataJSON(getKeyFunc(api, version, provider,context, application, getUserFunc().username), null, "Error while getting API Key");
 }
 
 function getAuthor(path) {

@@ -1218,9 +1218,9 @@ var apiProvider = new apistoreObj.APIProvider();
  * return a key of String params are apiname ,api version, subscriber for api
  * 
  */
-function getKeyFunc(api, version, provider, application, username){
+function getKeyFunc(api, version, provider, context, application, username){
 
-	var apiKey = apiStore.getKey(provider, api, version, application, username);
+	var apiKey = apiStore.getKey(provider, api, version, context, application, username);
 
 	return {
       error : false,
@@ -1257,6 +1257,7 @@ function getAllPublishedAPIsFunc(){
       	description:apis[k].description,                         
       	rates:apis[k].rates,
       	purchased:"false",
+      	context:apis[k].context,
       	thumbURL:apis[k].thumbnailurl
       };
       apisout.push(elem);
@@ -1656,6 +1657,7 @@ var k=0;
       purchased:"false",
       thumbURL:api[k].thumbnailurl,
       tier:api[k].tier,
+      context:api[k].context,
       subscribed : api[k].subscribed,
      /*
 		 * parentPath:xml.ns::["return"].ax2430::parentPath.text().toString(),

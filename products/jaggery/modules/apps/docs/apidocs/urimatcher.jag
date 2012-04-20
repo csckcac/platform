@@ -65,7 +65,7 @@ include('/includes/topnavi.jag');
 var uriMatcher = new URIMatcher(request.uri);
 
 if(uriMatcher.match('/{context}/{dir}/{page}')) {
-	print(uriMatcher.elements.id)
+	print(uriMatcher.elements().id)
 }
 %&gt
 </pre>
@@ -104,11 +104,16 @@ if(uriMatcher.match('/{context}/{dir}/{page}')) {
                 </p>
 
 
-<div id="pageLinks">
+        <% hasMembers = false; %>
+            <div id="pageLinks">
                 <a class="navilink" href="#overview">Overview</a>
-                <a class="navilink" href="#members">Members</a>
-                <a class="navilink" href="#operations">Operations</a>
-                </div>
+                <%if(hasMembers) {%>
+                    <a class="navilink" href="#members">Members</a>
+                    <%}%>
+                    <%if(hasOps) {%>
+                        <a class="navilink" href="#operations">Operations</a>
+                        <%}%>
+                        </div>
                  <section id="overview">
 
 
@@ -116,27 +121,6 @@ if(uriMatcher.match('/{context}/{dir}/{page}')) {
                 <p class="description"> <code>URIMatcher</code> provides the functionality of comparing a given uri with a
                 template. This API function will be useful for REST service composition</p>
                 </section>
-
-                <section id="members">
-                <h4>Members</h4>
-                <table class="clsStd member-table">
-                    <tbody>
-                    <tr>
-                        <th>Member</th>
-                        <th>Type</th>
-                        <th>Description</th>
-                    </tr>
-                    <tr>
-                        <td><code>elements</code></td>
-                        <td>Object</td>
-                        <td>returns the set of elements, which were matched with the provided uri, and provided template
-                            <br><br>
-                            <pre class="prettyprint">uriMatcher.elements</pre>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-             </section>
                 <section id="operations">
                     <h4>Operations</h4>
                     <table class="clsStd operations-table">
@@ -167,6 +151,14 @@ if(uriMatcher.match('/{context}/{dir}/{page}')) {
                                 </td>
 
                             </tr>
+                                    <tr>
+                                        <td><code>elements()</code></td>
+                                        <td>Object</td>
+                                        <td>returns the set of elements, which were matched with the provided uri, and provided template
+                                            <br><br>
+                                                <pre class="prettyprint">uriMatcher.elements();</pre>
+                                            </td>
+                                            </tr>
                         </tbody>
                     </table>
                 </section>

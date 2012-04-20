@@ -14,8 +14,6 @@
 */
 package org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.segment;
 
-import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Dimension;
-
 /**
  * This class represents the footer segment.
  *
@@ -27,9 +25,8 @@ public class Footer
 	/**
 	 * Constructor of Footer.
 	 *
-	 * @param dimension The {@link Dimension} of the footer segment.
-	 */
-	public Footer(Dimension dimension) {
+     */
+	public Footer() {
 		super();
 
 		append("</svg>");

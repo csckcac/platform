@@ -23,110 +23,126 @@ import java.util.Set;
  * @author Gregor Latuske
  */
 public class ActivityRoot
-	extends ActivityChoice {
+        extends ActivityChoice {
 
-	/** Serial version UID */
-	private static final long serialVersionUID = -5757720168043930991L;
+    /**
+     * Serial version UID
+     */
+    private static final long serialVersionUID = -5757720168043930991L;
 
-	/** The set of links assigned to all flow activities. */
-	private final Set<Link> links;
+    /**
+     * The set of links assigned to all flow activities.
+     */
+    private final Set<Link> links;
 
-	/** A set of the used activity types. */
-	private final Set<String> activityTypes;
+    /**
+     * A set of the used activity types.
+     */
+    private final Set<String> activityTypes;
 
-	/** A set of the activity names. */
-	private final Set<String> activityNames;
+    /**
+     * A set of the activity names.
+     */
+    private final Set<String> activityNames;
 
-	/** The maximum depth of child activities. */
-	private int maxDepth;
+    /**
+     * The maximum depth of child activities.
+     */
+    private int maxDepth;
 
-	/**
-	 * Constructor of RootActivity.
-	 *
-	 * @param name The name of the activity.
-	 */
-	public ActivityRoot(String name) {
-		super(name, "root", null, null);
+    /**
+     * Constructor of RootActivity.
+     *
+     * @param name The name of the activity.
+     */
+    public ActivityRoot(String name) {
+        super(name, "root", null, null);
 
-		this.links = new HashSet<Link>();
-		this.activityTypes = new HashSet<String>();
-		this.activityNames = new HashSet<String>();
-		this.maxDepth = 0;
-	}
+        this.links = new HashSet<Link>();
+        this.activityTypes = new HashSet<String>();
+        this.activityNames = new HashSet<String>();
+        this.maxDepth = 0;
+    }
 
-	/**
-	 * Returns the value of links.
-	 *
-	 * @return The value of links.
-	 */
-	public Set<Link> getLinks() {
-		return this.links;
-	}
+    /**
+     * Returns the value of links.
+     *
+     * @return The value of links.
+     */
+    public Set<Link> getLinks() {
+        return this.links;
+    }
 
-	/**
-	 * Returns the value of activityTypes.
-	 *
-	 * @return The value of activityTypes.
-	 */
-	public Set<String> getActivityTypes() {
-		return this.activityTypes;
-	}
+    /**
+     * Returns the value of activityTypes.
+     *
+     * @return The value of activityTypes.
+     */
+    public Set<String> getActivityTypes() {
+        return this.activityTypes;
+    }
 
-	/**
-	 * Returns the value of activityNames.
-	 *
-	 * @return The value of activityNames.
-	 */
-	public Set<String> getActivityNames() {
-		return this.activityNames;
-	}
+    /**
+     * Returns the value of activityNames.
+     *
+     * @return The value of activityNames.
+     */
+    public Set<String> getActivityNames() {
+        return this.activityNames;
+    }
 
-	/**
-	 * Returns the value of maxDepth.
-	 *
-	 * @return The value of maxDepth.
-	 */
-	public int getMaxDepth() {
-		return this.maxDepth;
-	}
+    /**
+     * Returns the value of maxDepth.
+     *
+     * @return The value of maxDepth.
+     */
+    public int getMaxDepth() {
+        return this.maxDepth;
+    }
 
-	/**
-	 * Sets the value of maxDepth to maxDepth.
-	 *
-	 * @param maxDepth The new value of maxDepth.
-	 */
-	public void setMaxDepth(int maxDepth) {
-		this.maxDepth = maxDepth;
-	}
+    /**
+     * Sets the value of maxDepth to maxDepth.
+     *
+     * @param maxDepth The new value of maxDepth.
+     */
+    public void setMaxDepth(int maxDepth) {
+        this.maxDepth = maxDepth;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof ActivityRoot)) {
-			return false;
-		} else if (getName() == null || getName().isEmpty()) {
-			return super.equals(obj);
-		}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ActivityRoot)) {
+            return false;
+        } else if (getName() == null || getName().isEmpty()) {
+            return super.equals(obj);
+        }
 
-		ActivityRoot root = (ActivityRoot) obj;
+        ActivityRoot root = (ActivityRoot) obj;
 
-		return getName().equals(root.getName());
-	}
+        return getName().equals(root.getName());
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public int hashCode() {
-		if (getName() == null || getName().isEmpty()) {
-			return super.hashCode();
-		}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        if (getName() == null || getName().isEmpty()) {
+            return super.hashCode();
+        }
 
-		return getName().hashCode() * 11;
-	}
+        return getName().hashCode() * 11;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public String toString() {
-		return "Name: " + getName();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return "Name: " + getName();
+    }
 
 }

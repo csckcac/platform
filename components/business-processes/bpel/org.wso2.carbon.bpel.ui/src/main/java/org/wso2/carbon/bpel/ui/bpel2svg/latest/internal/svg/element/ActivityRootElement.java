@@ -27,8 +27,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Dimension.TYPE_IMAGE;
-
 /**
  * The SVG wrapper for the {@link ActivityRoot}.
  * 
@@ -66,12 +64,12 @@ public class ActivityRootElement
 
 		// Start icon
 		Position iconPos1 = new Position();
-		iconPos1.setX((getDimension().getWidthWithMargin() - TYPE_IMAGE().getWidth()) / 2);
-		iconPos1.setY(TYPE_IMAGE().getMarginVertical());
+		iconPos1.setX((getDimension().getWidthWithMargin() - getDimension().getWidth()) / 2);
+		iconPos1.setY(getDimension().getMarginVertical());
 		svg.append(new TypeImage("start", iconPos1));
 
 		// Positions pointer
-		Position pos = new Position(0, TYPE_IMAGE().getHeightWithMargin());
+		Position pos = new Position(0, getDimension().getHeightWithMargin());
 
 		// Iterate over child activities
 		for (ActivityElement<?> child : getChildren()) {
@@ -120,11 +118,11 @@ public class ActivityRootElement
 
 		// End icon
 		Position iconPos2 = iconPos1.makeCopy();
-		iconPos2.setY(getDimension().getHeightWithMargin() - TYPE_IMAGE().getHeight() - iconPos2.getY());
+		iconPos2.setY(getDimension().getHeightWithMargin() - getDimension().getHeight() - iconPos2.getY());
 		svg.append(new TypeImage("end", iconPos2));
 
 		// Footer
-		svg.append(new Footer(getDimension()));
+		svg.append(new Footer());
 
 		return svg;
 	}
@@ -134,7 +132,7 @@ public class ActivityRootElement
 	public Position getTopPosition() {
 		Position pos = new Position();
 		pos.setX(getDimension().getWidthWithMargin() / 2);
-		pos.setY(TYPE_IMAGE().getHeight() + TYPE_IMAGE().getMarginVertical());
+		pos.setY(getDimension().getHeight() + getDimension().getMarginVertical());
 
 		return pos;
 	}
@@ -144,8 +142,8 @@ public class ActivityRootElement
 	public Position getBottomPosition() {
 		Position pos = new Position();
 		pos.setX(getDimension().getWidthWithMargin() / 2);
-		pos.setY(getDimension().getHeightWithMargin() - TYPE_IMAGE().getHeight()
-			- TYPE_IMAGE().getMarginVertical());
+		pos.setY(getDimension().getHeightWithMargin() - getDimension().getHeight()
+			- getDimension().getMarginVertical());
 
 		return pos;
 	}

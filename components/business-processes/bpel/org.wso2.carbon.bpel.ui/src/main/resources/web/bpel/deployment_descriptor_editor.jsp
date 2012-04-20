@@ -50,7 +50,7 @@
     String processID = request.getParameter("Pid");
     String operation = request.getParameter("operation");
     ProcessManagementServiceClient processMgtClient;
-    ProcessDeployDetailsList_type0 processDeployDetailsList_type0;
+    ProcessDeployDetailsList_type0 processDeployDetailsListType;
     ArrayList<String> scopeNames = new ArrayList<String>();
 
 
@@ -81,18 +81,18 @@
      *  Obtain deployment descriptor(deploy.xml) information to be displayed in editor
      */
     try {
+        processDeployDetailsListType = processMgtClient.getProcessDeploymentInfo(pid);
 
-        processDeployDetailsList_type0 = processMgtClient.getProcessDeploymentInfo(pid);
-
-        if (processDeployDetailsList_type0 != null && processDeployDetailsList_type0.getProcessEventsList() != null && processDeployDetailsList_type0.getProcessEventsList().getScopeEventsList() != null
-                && processDeployDetailsList_type0.getProcessEventsList().getScopeEventsList().getScopeEvent() != null) {
-            for (ScopeEventType scopeEventType : processDeployDetailsList_type0.getProcessEventsList().getScopeEventsList().getScopeEvent()) {
+        if (processDeployDetailsListType != null &&
+                processDeployDetailsListType.getProcessEventsList() != null &&
+                processDeployDetailsListType.getProcessEventsList().getScopeEventsList() != null &&
+                processDeployDetailsListType.getProcessEventsList().getScopeEventsList().getScopeEvent() != null) {
+            for (ScopeEventType scopeEventType :
+                    processDeployDetailsListType.getProcessEventsList().getScopeEventsList().getScopeEvent()) {
                 scopeNames.add(scopeEventType.getScope()); //scope names in the scope level events is taken into
                                                            // arrayllist to be used after it is updated
             }
         }
-
-
     } catch (Exception e) {
         response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
         CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
@@ -112,7 +112,8 @@
         // when the submit button of editor form is clicked, this will update backend
         try {
             String[] selecttype = request.getParameterValues("scopeevents");
-            BpelUIUtil.updateBackEnd(processMgtClient, processDeployDetailsList_type0, deployDescriptorUpdater, selecttype, scopeNames);
+            BpelUIUtil.updateBackEnd(processMgtClient, processDeployDetailsListType,
+                    deployDescriptorUpdater, selecttype, scopeNames);
         } catch (Exception e) {
             e.printStackTrace();
             response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
@@ -126,9 +127,9 @@
 } else {
     try {
 
-        if (processDeployDetailsList_type0 != null) {  //create a new bean instance with processDeployDetailsList_type0 data
-
-            BpelUIUtil.configureDeploymentDescriptorUpdater(processDeployDetailsList_type0, deployDescriptorUpdater);
+        if (processDeployDetailsListType != null) {  //create a new bean instance with processDeployDetailsList_type0 data
+            BpelUIUtil.configureDeploymentDescriptorUpdater(processDeployDetailsListType,
+                    deployDescriptorUpdater);
         }
 
     } catch (Exception e) {

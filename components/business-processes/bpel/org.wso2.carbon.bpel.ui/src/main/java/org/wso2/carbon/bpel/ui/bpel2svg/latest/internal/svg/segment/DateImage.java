@@ -17,7 +17,7 @@ package org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.segment;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.GlobalSettings;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Position;
 
-import static org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Dimension.DATE_IMAGE;
+import static org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Dimension.getDateImageDimension;
 
 /**
  * This class represents a date image segment.
@@ -36,7 +36,7 @@ public class DateImage
 	 */
 	public DateImage(String name, Position position, boolean enabled) {
 		super(GlobalSettings.getInstance().getDateImagePath(), name, GlobalSettings.getInstance()
-			.getDateImageExtension(), DATE_IMAGE(), position, enabled);
+			.getDateImageExtension(), getDateImageDimension(), position, enabled);
 	}
 
 }

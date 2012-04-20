@@ -18,7 +18,10 @@ package org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.frontend.util;
 
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.frontend.MainBean;
 
-public class ChangeSettingsUtil {
+public final class ChangeSettingsUtil {
+    private ChangeSettingsUtil() {
+    }
+
     public static void selectProcessModel(MainBean bean, int rowIndexOfProcessModel) {
         /* Simulate original AJAX request */
         bean.getPmDataModel().getItems().setRowIndex(rowIndexOfProcessModel);

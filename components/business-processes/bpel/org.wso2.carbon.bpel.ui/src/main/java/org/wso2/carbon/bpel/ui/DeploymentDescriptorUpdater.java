@@ -63,21 +63,21 @@ public class DeploymentDescriptorUpdater {
         return inmemorystatus;
     }
 
-    public String[] getEvents() {
-        return (String[]) events.toArray();
+    public List<String> getEvents() {
+        return events;
     }
 
     public String getGentype() {
         return gentype;
     }
 
-    public String[] getSuccesstypecleanups() {
-        return (String[]) successtypecleanups.toArray();
+    public List<String> getSuccesstypecleanups() {
+        return successtypecleanups;
     }
 
 
-    public String[] getFailuretypecleanups() {
-        return (String[]) failuretypecleanups.toArray();
+    public List<String> getFailuretypecleanups() {
+        return failuretypecleanups;
     }
 
     public InvokeServiceListType getInvokedServiceList() {
@@ -96,8 +96,8 @@ public class DeploymentDescriptorUpdater {
         return propertyList;
     }
 
-    public ScopeEventType[] getScopeEvents() {
-        return (ScopeEventType[]) scopeEvents.toArray();
+    public List<ScopeEventType> getScopeEvents() {
+        return scopeEvents;
     }
 
     public String getProcessstate() {
@@ -368,7 +368,5 @@ public class DeploymentDescriptorUpdater {
         } else {
             return "";
         }
-
-
     }
 }

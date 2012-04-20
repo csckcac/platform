@@ -42,60 +42,55 @@ public class ProcessInstance
 	/** The date of the last activity of the process instance. */
 	private Calendar lastActivityDate;
 
-	/** The date since the process instance is in error status. */
-	private Calendar errorSinceDate;
-
-	/** The associated process model. */
+    /** The associated process model. */
 	private final ProcessModel processModel;
 
-	/**
-	 * Constructor of ProcessInstance.
-	 *
-	 * @param iid The ID of the process instance.
-	 * @param status The status of the process instance.
-	 * @param startDate The date of the last activity of the process instance.
-	 * @param lastActiveDate The date of the last activity of the process instance.
-	 * @param processModel The associated process model.
-	 */
-	public ProcessInstance(String iid, ProcessInstanceStatus status, Calendar startDate,
-		Calendar lastActiveDate, ProcessModel processModel) {
-		this(iid, status, startDate, lastActiveDate, null, processModel);
-	}
+//	/**
+//	 * Constructor of ProcessInstance.
+//	 *
+//	 * @param iid The ID of the process instance.
+//	 * @param status The status of the process instance.
+//	 * @param startDate The date of the last activity of the process instance.
+//	 * @param lastActiveDate The date of the last activity of the process instance.
+//	 * @param processModel The associated process model.
+//	 */
+//	public ProcessInstance(String iid, ProcessInstanceStatus status, Calendar startDate,
+//		Calendar lastActiveDate, ProcessModel processModel) {
+//		this(iid, status, startDate, lastActiveDate, null, processModel);
+//	}
 
 	/**
 	 * Constructor of ProcessInstance.
 	 *
-	 * @param iid The ID of the process instance.
-	 * @param status The status of the process instance.
-	 * @param startDate The date of the last activity of the process instance.
-	 * @param lastActiveDate The date of the last activity of the process instance.
-	 * @param errorSinceDate The date since the process instance is in error status.
-	 * @param processModel The associated process model.
-	 */
+     * @param iid The ID of the process instance.
+     * @param status The status of the process instance.
+     * @param startDate The date of the last activity of the process instance.
+     * @param lastActiveDate The date of the last activity of the process instance.
+     * @param processModel The associated process model.
+     */
 	public ProcessInstance(String iid, ProcessInstanceStatus status, Calendar startDate,
-		Calendar lastActiveDate, Calendar errorSinceDate, ProcessModel processModel) {
+                           Calendar lastActiveDate, ProcessModel processModel) {
 		this.iid = iid;
 		this.status = status;
 		this.startDate = startDate;
 		this.lastActivityDate = lastActiveDate;
-		this.errorSinceDate = errorSinceDate;
-		this.processModel = processModel;
+        this.processModel = processModel;
 	}
 
-	/**
-	 * Returns the name of the associated {@link ProcessModel}.
-	 *
-	 * @return The name of the associated {@link ProcessModel}.
-	 */
-	public String getProcessModelName() {
-		String name = "";
-
-		if (this.processModel != null) {
-			name = this.processModel.getName();
-		}
-
-		return name;
-	}
+//	/**
+//	 * Returns the name of the associated {@link ProcessModel}.
+//	 *
+//	 * @return The name of the associated {@link ProcessModel}.
+//	 */
+//	public String getProcessModelName() {
+//		String name = "";
+//
+//		if (this.processModel != null) {
+//			name = this.processModel.getName();
+//		}
+//
+//		return name;
+//	}
 
 	/**
 	 * Returns the value of iid.
@@ -133,14 +128,14 @@ public class ProcessInstance
 		return this.startDate;
 	}
 
-	/**
-	 * Set the value of startDate to startDate.
-	 *
-	 * @param startDate The new value of startDate.
-	 */
-	public void setStartDate(Calendar startDate) {
-		this.startDate = startDate;
-	}
+//	/**
+//	 * Set the value of startDate to startDate.
+//	 *
+//	 * @param startDate The new value of startDate.
+//	 */
+//	public void setStartDate(Calendar startDate) {
+//		this.startDate = startDate;
+//	}
 
 	/**
 	 * Returns the value of lastActiveDate.
@@ -151,32 +146,32 @@ public class ProcessInstance
 		return this.lastActivityDate;
 	}
 
-	/**
-	 * Set the value of lastActiveDate to lastActiveDate.
-	 *
-	 * @param lastActiveDate The new value of lastActiveDate.
-	 */
-	public void setLastActivityDate(Calendar lastActiveDate) {
-		this.lastActivityDate = lastActiveDate;
-	}
+//	/**
+//	 * Set the value of lastActiveDate to lastActiveDate.
+//	 *
+//	 * @param lastActiveDate The new value of lastActiveDate.
+//	 */
+//	public void setLastActivityDate(Calendar lastActiveDate) {
+//		this.lastActivityDate = lastActiveDate;
+//	}
 
-	/**
-	 * Returns the value of errorSinceDate.
-	 *
-	 * @return The value of errorSinceDate.
-	 */
-	public Calendar getErrorSinceDate() {
-		return this.errorSinceDate;
-	}
+//	/**
+//	 * Returns the value of errorSinceDate.
+//	 *
+//	 * @return The value of errorSinceDate.
+//	 */
+//	public Calendar getErrorSinceDate() {
+//		return this.errorSinceDate;
+//	}
 
-	/**
-	 * Set the value of errorSinceDate to errorSinceDate.
-	 *
-	 * @param errorSinceDate The new value of errorSinceDate.
-	 */
-	public void setErrorSinceDate(Calendar errorSinceDate) {
-		this.errorSinceDate = errorSinceDate;
-	}
+//	/**
+//	 * Set the value of errorSinceDate to errorSinceDate.
+//	 *
+//	 * @param errorSinceDate The new value of errorSinceDate.
+//	 */
+//	public void setErrorSinceDate(Calendar errorSinceDate) {
+//		this.errorSinceDate = errorSinceDate;
+//	}
 
 	/**
 	 * Returns the value of processModel.
@@ -190,7 +185,7 @@ public class ProcessInstance
 	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
-		if (obj != null && obj instanceof ProcessInstance && getIid() != null && getProcessModel() != null) {
+		if (obj instanceof ProcessInstance && getIid() != null && getProcessModel() != null) {
 			ProcessInstance instance = (ProcessInstance) obj;
 			return getIid().equals(instance.getIid()) && getProcessModel().equals(instance.getProcessModel());
 		}

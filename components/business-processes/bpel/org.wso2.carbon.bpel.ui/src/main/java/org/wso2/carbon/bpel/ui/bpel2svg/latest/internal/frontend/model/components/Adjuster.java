@@ -34,7 +34,7 @@ public abstract class Adjuster {
 	/** The logger instance. */
 	private static final Log LOG = LogFactory.getLog(Adjuster.class);
 
-	/** The associated SeelctionDataModel. */
+	/** The associated SelectionDataModel. */
 	private final SelectionDataModel<?, ?, ?> dataModel;
 
 	/**
@@ -49,8 +49,7 @@ public abstract class Adjuster {
 	/**
 	 * Adjust the list of values.
 	 * 
-	 * @param entries The list of values.
-	 * @return The adjusted list of values.
+	 * @param values ProcessItems
 	 */
 	public abstract void adjust(List<ProcessItem<?>> values);
 
@@ -70,21 +69,21 @@ public abstract class Adjuster {
 	 * If something went wrong during the execution <code>null</code> will be returned.
 	 * 
 	 * @param object The object that provides the method.
-	 * @return The result of the invocation or <code>null</code>, if something went wrong during the
+	 * @param property Property
+     * @return The result of the invocation or <code>null</code>, if something went wrong during the
 	 *         execution.
 	 */
-	@SuppressWarnings("unchecked")
 	protected Comparable<Object> invokeMethod(Object object, String property) {
 		Comparable<Object> value = null;
-
+        String tProperty = property;
 		// Create getter method
-		if (!property.startsWith("get") && !property.startsWith("is")) {
-			property = "get" + property.substring(0, 1).toUpperCase() + property.substring(1);
+		if (!tProperty.startsWith("get") && !tProperty.startsWith("is")) {
+			tProperty = "get" + tProperty.substring(0, 1).toUpperCase() + tProperty.substring(1);
 		}
 
 		// Invoke method
 		try {
-			Method method = object.getClass().getMethod(property);
+			Method method = object.getClass().getMethod(tProperty);
 			value = (Comparable<Object>) method.invoke(object);
 		} catch (Exception exception) {
 			LOG.error("Could not invoke method (" + property + ") of class (" + object.getClass() + ").",

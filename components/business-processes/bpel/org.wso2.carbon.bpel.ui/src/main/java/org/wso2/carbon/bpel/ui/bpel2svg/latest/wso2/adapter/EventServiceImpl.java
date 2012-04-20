@@ -37,11 +37,6 @@ import java.util.List;
  */
 public class EventServiceImpl implements EventService<ActivityStatusType> {
 
-    /**
-     * The property name of the process instance management WebService.
-     */
-    String INSTANCE_MGT_SERVICE = "InstanceManagementService";
-
     private static Log log = LogFactory.getLog(EventServiceImpl.class);
 
     /**
@@ -88,12 +83,14 @@ public class EventServiceImpl implements EventService<ActivityStatusType> {
             * Get all the information of the instance by calling the WebService. Get a list of
             * activities and events of that instance.
             */
-            InstanceInfoWithEventsType instance = getStub().getInstanceInfoWithEvents(Long.valueOf(processInstance.getIid()));
+            InstanceInfoWithEventsType instance =
+                    getStub().getInstanceInfoWithEvents(Long.valueOf(processInstance.getIid()));
 
             ScopeInfoWithEventsType rootScope = instance.getRootScope();
 
             //This will capture all the available event details generated inside root scope.
-            activityEvents.addAll(getEventListForScopeIncludingDescendants(processInstance, rootScope));
+            activityEvents.addAll(getEventListForScopeIncludingDescendants(processInstance,
+                    rootScope));
 
         } catch (org.wso2.carbon.bpel.stub.mgt.InstanceManagementException e) {
             log.error("An error occurred with the operation \"getInstanceInfoWithEvents\"", e);
@@ -108,16 +105,18 @@ public class EventServiceImpl implements EventService<ActivityStatusType> {
      * This will capture all the available event details generated inside the given scope and its descendants
      *
      * @param processInstance is used as a reference in each ActivityExecEvent returned by this method.
-     * @param scope
+     * @param scope Scope with event info
      * @return a list of events generated for the given scope
      */
-    private ArrayList<ActivityExecEvent> getEventListForScopeIncludingDescendants(ProcessInstance processInstance, ScopeInfoWithEventsType scope) {
+    private List<ActivityExecEvent> getEventListForScopeIncludingDescendants(
+            ProcessInstance processInstance, ScopeInfoWithEventsType scope) {
         //Initializing the ActivityExecEvent list which will be filled with all the events generated
         // from the given scope and its descendants
         ArrayList<ActivityExecEvent> activityEvents = new ArrayList<ActivityExecEvent>();
 
         //The activities included in the given scope
-        ActivityInfoWithEventsType[] activities = scope.getActivitiesWithEvents().getActivityInfoWithEvents();
+        ActivityInfoWithEventsType[] activities =
+                scope.getActivitiesWithEvents().getActivityInfoWithEvents();
 
         //Fill event info from activities
         for (ActivityInfoWithEventsType activity : activities) {
@@ -158,7 +157,8 @@ public class EventServiceImpl implements EventService<ActivityStatusType> {
         //Fill event info from child-scopes recursively
         if (childScopes != null) { //if childScopes is null, i.e. there're no childScopes for the given scope.
             for (ScopeInfoWithEventsType childScope : childScopes) {
-                activityEvents.addAll(getEventListForScopeIncludingDescendants(processInstance, childScope));
+                activityEvents.addAll(getEventListForScopeIncludingDescendants(processInstance,
+                        childScope));
             }
         }
 
@@ -169,16 +169,18 @@ public class EventServiceImpl implements EventService<ActivityStatusType> {
      * Creates an {@link InstanceManagementServiceStub} of the process instances management WebService.
      *
      * @return The {@link InstanceManagementServiceStub}
-     * @throws RemoteException
+     * @throws RemoteException If stub operation invocation fail
      */
     private InstanceManagementServiceStub getStub() throws RemoteException {
+        String INSTANCE_MGT_SERVICE = "InstanceManagementService";
         String serviceURL = AuthenticationManager.getBackendServerURL() + INSTANCE_MGT_SERVICE;
 
         InstanceManagementServiceStub stub = new InstanceManagementServiceStub(null, serviceURL);
         ServiceClient client = stub._getServiceClient();
         Options option = client.getOptions();
         option.setManageSession(true);
-        option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, AuthenticationManager.getCookie());
+        option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING,
+                AuthenticationManager.getCookie());
 
         return stub;
     }

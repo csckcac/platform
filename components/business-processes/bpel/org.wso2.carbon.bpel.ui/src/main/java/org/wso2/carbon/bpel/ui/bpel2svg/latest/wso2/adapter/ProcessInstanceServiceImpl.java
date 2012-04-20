@@ -42,11 +42,6 @@ import java.util.List;
  */
 public class ProcessInstanceServiceImpl implements ProcessInstanceService<String> {
 
-    /**
-     * The property name of process instance management WebService.
-     */
-    String INSTANCE_MGT_SERVICE = "InstanceManagementService";
-
     private static Log log = LogFactory.getLog(ProcessInstanceServiceImpl.class);
 
     public ProcessInstance getProcessInstance(String instanceId) throws InstanceNotFoundException {
@@ -55,14 +50,17 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService<String
             InstanceInfoType instanceBean = getInstanceInfo(Long.parseLong(instanceId));
 
             //Retrieved the ProcessModel from the ProcessID
-            ProcessModelService pmService = new ProcessModelService.ProcessModelServiceFactory().createService();
+            ProcessModelService pmService =
+                    new ProcessModelService.ProcessModelServiceFactory().createService();
             ProcessModel model = pmService.getProcessModel(instanceBean.getPid());
 
-            ProcessInstance instance = new ProcessInstance(instanceBean.getIid(), mapToStatus(instanceBean.getStatus().toString()), instanceBean.getDateStarted(), instanceBean.getDateLastActive(), instanceBean.getDateErrorSince(), model);
-            return instance;
+            return new ProcessInstance(instanceBean.getIid(),
+                    mapToStatus(instanceBean.getStatus().toString()), instanceBean.getDateStarted(),
+                    instanceBean.getDateLastActive(), model);
 
         } catch (Exception e) {
-            throw new InstanceNotFoundException("Process instance could not found for id:" + instanceId, e);
+            throw new InstanceNotFoundException("Process instance could not found for id:" +
+                    instanceId, e);
         }
     }
 
@@ -96,7 +94,7 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService<String
         try {
 
             int currentPage = 0;
-            int maxPage = 0;
+            int maxPage;
             do {
                 /* Retrieve the list of process instances */
                 PaginatedInstanceList instanceList = getPaginatedInstanceList("", "", 200, currentPage);
@@ -114,7 +112,6 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService<String
                                                 * The rest of the instance-info is available without this call (maybe avoidable in
                                                 * future releases)
                                                 */
-                                InstanceInfoType instanceInfo = getInstanceInfo(Long.parseLong(instance.getIid()));
 
                                 /* Create an the internal representation */
                                 ProcessInstance processInstance = new ProcessInstance(
@@ -122,7 +119,6 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService<String
                                         mapToStatus(instance.getStatus().toString()),
                                         instance.getDateStarted(),
                                         instance.getDateLastActive(),
-                                        instanceInfo.getDateErrorSince(),
                                         processModel);
 
                                 /* Add the process instance to the list of process instances */
@@ -163,9 +159,13 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService<String
      * @param limit  The limit of instances that should be retrieved
      * @param page   The number of the page that should be retrieved
      * @return A list of process instances
-     * @throws RemoteException
+     * @throws RemoteException If stub operation invocation fail
+     * @throws org.wso2.carbon.bpel.stub.mgt.InstanceManagementException If error occurred while
+     * reading the process list from the backend
      */
-    private PaginatedInstanceList getPaginatedInstanceList(String filter, String order, int limit, int page) throws RemoteException, InstanceManagementException {
+    private PaginatedInstanceList getPaginatedInstanceList(String filter, String order, int limit,
+                                                           int page)
+            throws RemoteException, InstanceManagementException {
         /* Call WebService */
         return getStub().getPaginatedInstanceList(filter, order, limit, page);
     }
@@ -175,9 +175,12 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService<String
      *
      * @param iid The id of the instance
      * @return An {@link InstanceInfoType} that holds information about the instance
-     * @throws RemoteException
+     * @throws RemoteException If stub operation invocation fail
+     * @throws org.wso2.carbon.bpel.stub.mgt.InstanceManagementException If error occurred while
+     * reading the process list from the backend
      */
-    private InstanceInfoType getInstanceInfo(long iid) throws RemoteException, InstanceManagementException {
+    private InstanceInfoType getInstanceInfo(long iid)
+            throws RemoteException, InstanceManagementException {
         /* Call WebService */
         return getStub().getInstanceInfo(iid);
     }
@@ -186,16 +189,18 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService<String
      * Creates an {@link InstanceManagementServiceStub} of the process instances management WebService.
      *
      * @return The {@link InstanceManagementServiceStub}
-     * @throws RemoteException
+     * @throws RemoteException If stub operation invocation fail
      */
     private InstanceManagementServiceStub getStub() throws RemoteException {
+        String INSTANCE_MGT_SERVICE = "InstanceManagementService";
         String serviceURL = AuthenticationManager.getBackendServerURL() + INSTANCE_MGT_SERVICE;
 
         InstanceManagementServiceStub stub = new InstanceManagementServiceStub(null, serviceURL);
         ServiceClient client = stub._getServiceClient();
         Options option = client.getOptions();
         option.setManageSession(true);
-        option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, AuthenticationManager.getCookie());
+        option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING,
+                AuthenticationManager.getCookie());
 
         return stub;
     }

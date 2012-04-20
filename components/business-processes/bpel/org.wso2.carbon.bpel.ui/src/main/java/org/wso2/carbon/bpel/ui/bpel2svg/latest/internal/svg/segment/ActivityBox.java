@@ -119,12 +119,12 @@ public class ActivityBox
 	 */
 	private void createType(String type, Dimension dimension) {
 		Position iconPos = new Position();
-		iconPos.setX(TYPE_IMAGE().getMarginHorizontal());
-		iconPos.setY((dimension.getHeight() / 6) - (TYPE_IMAGE().getHeight() / 2));
+		iconPos.setX(getTypeImageDimension().getMarginHorizontal());
+		iconPos.setY((dimension.getHeight() / 6) - (getTypeImageDimension().getHeight() / 2));
 		append(new TypeImage(type, iconPos));
 
 		Position textPos = new Position();
-		textPos.setX(TYPE_IMAGE().getWidthWithMargin());
+		textPos.setX(getTypeImageDimension().getWidthWithMargin());
 		textPos.setY((dimension.getHeight() / 6) + (8 / 2));
 		append(new Text(type, 13, textPos, "type"));
 	}
@@ -137,8 +137,8 @@ public class ActivityBox
 	 */
 	private void createTypeCompact(String type, Dimension dimension) {
 		Position iconPos = new Position();
-		iconPos.setX(TYPE_IMAGE().getMarginHorizontal());
-		iconPos.setY(dimension.getHeight() / 2 - TYPE_IMAGE().getHeight() / 2);
+		iconPos.setX(getTypeImageDimension().getMarginHorizontal());
+		iconPos.setY(dimension.getHeight() / 2 - getTypeImageDimension().getHeight() / 2);
 		append(new TypeImage(type, iconPos));
 	}
 
@@ -150,12 +150,12 @@ public class ActivityBox
 	 */
 	private void createStatus(ActivityExecStatus status, Dimension dimension) {
 		Position iconPos = new Position();
-		iconPos.setX(dimension.getWidth() / 2 + STATUS_IMAGE().getMarginHorizontal());
-		iconPos.setY((dimension.getHeight() / 6) - (STATUS_IMAGE().getHeight() / 2));
+		iconPos.setX(dimension.getWidth() / 2 + getStatusImageDimension().getMarginHorizontal());
+		iconPos.setY((dimension.getHeight() / 6) - (getStatusImageDimension().getHeight() / 2));
 		append(new StatusImage(status, iconPos));
 
 		Position textPos = new Position();
-		textPos.setX(dimension.getWidth() / 2 + STATUS_IMAGE().getWidthWithMargin());
+		textPos.setX(dimension.getWidth() / 2 + getStatusImageDimension().getWidthWithMargin());
 		textPos.setY((dimension.getHeight() / 6) + (8 / 2));
 		append(new Text(status.getName(), textPos, "status"));
     }
@@ -165,8 +165,8 @@ public class ActivityBox
      */
     private void createActivityAction(String activityId, String instanceId, Dimension dimension) {
         Position buttonPos1 = new Position();
-        buttonPos1.setX((dimension.getWidth() * 8) / 10 + STATUS_BASED_ACTION_IMAGE().getMarginHorizontal());
-        buttonPos1.setY((dimension.getHeight() / 2) - STATUS_BASED_ACTION_IMAGE().getHeight() / 2);
+        buttonPos1.setX((dimension.getWidth() * 8) / 10 + getStatusBasedActionImageDimension().getMarginHorizontal());
+        buttonPos1.setY((dimension.getHeight() / 2) - getStatusBasedActionImageDimension().getHeight() / 2);
 
         //Creating the JSFunction to be executed
         JSFunction retryFunction = new JSFunction("retryActivity");
@@ -175,8 +175,8 @@ public class ActivityBox
         append(new RetryButton(buttonPos1, retryFunction));
 
         Position buttonPos2 = new Position();
-        buttonPos2.setX((dimension.getWidth() * 83) / 100 + STATUS_BASED_ACTION_IMAGE().getWidthWithMargin());
-        buttonPos2.setY((dimension.getHeight() / 2) - STATUS_BASED_ACTION_IMAGE().getHeight() / 2);
+        buttonPos2.setX((dimension.getWidth() * 83) / 100 + getStatusBasedActionImageDimension().getWidthWithMargin());
+        buttonPos2.setY((dimension.getHeight() / 2) - getStatusBasedActionImageDimension().getHeight() / 2);
 
         //Creating the JSFunction to be executed
         JSFunction cancelFunction = new JSFunction("cancelActivity");
@@ -193,8 +193,8 @@ public class ActivityBox
 	 */
 	private void createStatusCompact(ActivityExecStatus status, Dimension dimension) {
 		Position iconPos = new Position();
-		iconPos.setX(dimension.getWidth() - STATUS_IMAGE().getWidthWithMargin());
-		iconPos.setY(dimension.getHeight() / 2 - STATUS_IMAGE().getHeight() / 2);
+		iconPos.setX(dimension.getWidth() - getStatusImageDimension().getWidthWithMargin());
+		iconPos.setY(dimension.getHeight() / 2 - getStatusImageDimension().getHeight() / 2);
 		append(new StatusImage(status, iconPos));
 	}
 
@@ -232,11 +232,11 @@ public class ActivityBox
 	 */
 	private void createStartDate(Calendar start, Dimension dimension) {
 		Position iconPos = new Position();
-		iconPos.setX(DATE_IMAGE().getMarginHorizontal());
-		iconPos.setY(Math.round((dimension.getHeight() / 6.0f) * 5.0f) - (DATE_IMAGE().getHeight() / 2));
+		iconPos.setX(getDateImageDimension().getMarginHorizontal());
+		iconPos.setY(Math.round((dimension.getHeight() / 6.0f) * 5.0f) - (getDateImageDimension().getHeight() / 2));
 
 		Position textPos = new Position();
-		textPos.setX(DATE_IMAGE().getWidthWithMargin());
+		textPos.setX(getDateImageDimension().getWidthWithMargin());
 		textPos.setY(Math.round((dimension.getHeight() / 6.0f) * 5.0f) + (8 / 2));
 
 		append(new DateImage("Start", iconPos, start != null));
@@ -251,11 +251,11 @@ public class ActivityBox
 	 */
 	private void createEndDate(Calendar end, Dimension dimension) {
 		Position iconPos = new Position();
-		iconPos.setX(DATE_IMAGE().getMarginHorizontal() + dimension.getWidth() / 2);
-		iconPos.setY(Math.round((dimension.getHeight() / 6.0f) * 5.0f) - (DATE_IMAGE().getHeight() / 2));
+		iconPos.setX(getDateImageDimension().getMarginHorizontal() + dimension.getWidth() / 2);
+		iconPos.setY(Math.round((dimension.getHeight() / 6.0f) * 5.0f) - (getDateImageDimension().getHeight() / 2));
 
 		Position textPos = new Position();
-		textPos.setX(DATE_IMAGE().getWidthWithMargin() + dimension.getWidth() / 2);
+		textPos.setX(getDateImageDimension().getWidthWithMargin() + dimension.getWidth() / 2);
 		textPos.setY(Math.round((dimension.getHeight() / 6.0f) * 5.0f) + (8 / 2));
 
 		append(new DateImage("End", iconPos, end != null));

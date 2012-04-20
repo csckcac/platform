@@ -26,7 +26,6 @@ import org.wso2.carbon.utils.xml.XMLPrettyPrinter;
 import javax.xml.namespace.QName;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.rmi.RemoteException;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.*;
@@ -34,23 +33,12 @@ import java.util.*;
 /**
  * Some common UI functionalities, used in org.wso2.carbon.bpel.ui
  */
-public class BpelUIUtil {
+public final class BpelUIUtil {
     private static Log log = LogFactory.getLog("bpel.ui");
     private static final String DISABLED = "disabled";
     private static final String CHECKED = "checked";
 
-
-    public static String encodeXML(String xmlString) {
-
-        if (xmlString != null && xmlString.length() != 0) {
-            log.info(xmlString);
-            log.info("     gg");
-            // System.out.println(xmlString);
-            xmlString = xmlString.replaceAll("<", "&lt;");
-            xmlString = xmlString.replaceAll(">", "&gt;");
-            xmlString = xmlString.replaceAll("\n", "");
-        }
-        return xmlString;
+    private BpelUIUtil() {
     }
 
     public static String encodeHTML(String aText) {
@@ -135,20 +123,21 @@ public class BpelUIUtil {
     }
 
     public static String prettyPrint(String rawXML) {
-        rawXML = rawXML.replaceAll("\n|\\r|\\f|\\t", "");
-        rawXML = rawXML.replaceAll("> +<", "><");
-        InputStream xmlIn = new ByteArrayInputStream(rawXML.getBytes());
+        String tRawXML = rawXML;
+        tRawXML = tRawXML.replaceAll("\n|\\r|\\f|\\t", "");
+        tRawXML = tRawXML.replaceAll("> +<", "><");
+        InputStream xmlIn = new ByteArrayInputStream(tRawXML.getBytes());
         XMLPrettyPrinter xmlPrettyPrinter = new XMLPrettyPrinter(xmlIn);
-        rawXML = xmlPrettyPrinter.xmlFormat();
+        tRawXML = xmlPrettyPrinter.xmlFormat();
 //        rawXML = rawXML.replaceAll("\n", "<br>");
 
-        return rawXML;
+        return tRawXML;
     }
 
-    public static TreeMap<String, QName> getEndpointRefsMap(ProcessInfoType info) {
+    public static Map<String, QName> getEndpointRefsMap(ProcessInfoType info) {
         EndpointRef_type0[] endpoints = info.getEndpoints().getEndpointRef();
 
-        TreeMap<String, QName> pLinkServiceMap = new TreeMap<String, QName>();
+        Map<String, QName> pLinkServiceMap = new TreeMap<String, QName>();
         for (EndpointRef_type0 ref : endpoints) {
             pLinkServiceMap.put(ref.getPartnerLink(), ref.getService());
         }
@@ -164,21 +153,6 @@ public class BpelUIUtil {
         }
 
         return pLinkEprMap;
-    }
-
-    public static String makeCommaSeparatedListOfPackageVersions(String[] versionArray) {
-        if (versionArray == null) {
-            return "";
-        }
-
-        StringBuilder strBuilder = new StringBuilder();
-        for (String version : versionArray) {
-            strBuilder.append(version);
-            strBuilder.append(", ");
-        }
-
-        String finalString = strBuilder.toString();
-        return finalString.substring(0, finalString.lastIndexOf(","));
     }
 
     public static String getUndeployLink(String packageName, int pageNumber) {
@@ -359,7 +333,6 @@ public class BpelUIUtil {
     }
 
 
-
     private static void generateFirstPartOfTheLink(StringBuilder strBuilder, String iid,
                                                    String operation) {
         strBuilder.append("<a id='instance");
@@ -418,26 +391,27 @@ public class BpelUIUtil {
 
         return totalInstances;
     }
-    
+
 
     public static String getInstanceFilterURL(String processId) {
         StringBuilder strBuilder = new StringBuilder();
         strBuilder.append("list_instances.jsp?filter=pid=");
         strBuilder.append(processId);
         strBuilder.
-            append(" status=active|completed|suspended|terminated|failed|error&order=-last-active");
+                append(" status=active|completed|suspended|terminated|failed|error&order=-last-active");
 
         return strBuilder.toString();
     }
 
     /**
      * Create instance summary JSON object from process instances array.
+     *
      * @param processInstances process instance array
      * @return instance summary object
      */
     public static JSONObject createInstanceSummaryJSONObject(Instances_type0[] processInstances) {
         JSONObject summary = new JSONObject();
-        int totalInstances  = 0;
+        int totalInstances = 0;
         for (Instances_type0 processInstance : processInstances) {
             String state = processInstance.getState().getValue();
             if (state.equals(BPELUIConstant.INSTANCE_STATE_ACTIVE)) {
@@ -462,6 +436,7 @@ public class BpelUIUtil {
     /**
      * Create instance summary JSON object from return value of getInstanceSummary operation
      * of instance management web service.
+     *
      * @param globalInstanceSummary instance summary from instance management API(global counts)
      * @return global instance count
      */
@@ -477,7 +452,7 @@ public class BpelUIUtil {
         return summary;
     }
 
-    public static JSONObject getMemoryInfoJSONObject(Metric usedMem, Metric totalMem){
+    public static JSONObject getMemoryInfoJSONObject(Metric usedMem, Metric totalMem) {
         JSONObject memInfo = new JSONObject();
 
         memInfo.put("UsedMemoryValue", usedMem.getValue());
@@ -495,15 +470,15 @@ public class BpelUIUtil {
             for (LimitedInstanceInfoType instance : longRunningInstances.getInstance()) {
                 JSONObject instanceJson = new JSONObject();
                 long instanceLifetimeTillLastActive =
-                                (instance.getDateLastActive().getTime().getTime() -
+                        (instance.getDateLastActive().getTime().getTime() -
                                 instance.getDateStarted().getTime().getTime());
                 long instanceLifetimeFromLastActiveToNow =
-                                (new Date().getTime() -
-                                 instance.getDateLastActive().getTime().getTime());
+                        (new Date().getTime() -
+                                instance.getDateLastActive().getTime().getTime());
                 instanceJson.put(BPELUIConstant.INSTANCE_LIFETIME_TILL_LASTACTIVE,
-                                 instanceLifetimeTillLastActive);
+                        instanceLifetimeTillLastActive);
                 instanceJson.put(BPELUIConstant.INSTANCE_LIFETIME_FROM_LASTACTIVE_TO_NOW,
-                                 instanceLifetimeFromLastActiveToNow);
+                        instanceLifetimeFromLastActiveToNow);
                 longRunning.put(instance.getIid(), instanceJson);
             }
         }
@@ -511,13 +486,14 @@ public class BpelUIUtil {
     }
 
 
-    private static String[] setEnabledEventsList(ProcessDeployDetailsList_type0 processDeployDetailsList_type0) {
-
+    private static String[] setEnabledEventsList(
+            ProcessDeployDetailsList_type0 processDeployDetailsListType) {
         String[] enabledEvents = null;
-        if (processDeployDetailsList_type0.getProcessEventsList() != null &&
-                processDeployDetailsList_type0.getProcessEventsList().getEnableEventsList() != null) {
+        if (processDeployDetailsListType.getProcessEventsList() != null &&
+                processDeployDetailsListType.getProcessEventsList().getEnableEventsList() != null) {
 
-            EnableEventListType enableEventListType = processDeployDetailsList_type0.getProcessEventsList().getEnableEventsList();
+            EnableEventListType enableEventListType =
+                    processDeployDetailsListType.getProcessEventsList().getEnableEventsList();
             if (enableEventListType.getEnableEvent() != null) {
                 enabledEvents = enableEventListType.getEnableEvent();
             }
@@ -526,13 +502,14 @@ public class BpelUIUtil {
         return enabledEvents;
     }
 
-    public static ScopeEventType[] setScopeEventsList(ProcessDeployDetailsList_type0 processDeployDetailsList_type0) {
-
+    public static ScopeEventType[] setScopeEventsList(
+            ProcessDeployDetailsList_type0 processDeployDetailsListType) {
         ScopeEventType[] scopeEnabledEvents = null;
-        if (processDeployDetailsList_type0.getProcessEventsList() != null &&
-                processDeployDetailsList_type0.getProcessEventsList().getScopeEventsList() != null) {
+        if (processDeployDetailsListType.getProcessEventsList() != null &&
+                processDeployDetailsListType.getProcessEventsList().getScopeEventsList() != null) {
 
-            ScopeEventListType scopeEnableEventListType = processDeployDetailsList_type0.getProcessEventsList().getScopeEventsList();
+            ScopeEventListType scopeEnableEventListType =
+                    processDeployDetailsListType.getProcessEventsList().getScopeEventsList();
             if (scopeEnableEventListType.getScopeEvent() != null) {
                 scopeEnabledEvents = scopeEnableEventListType.getScopeEvent();
             }
@@ -542,23 +519,24 @@ public class BpelUIUtil {
     }
 
 
-    private static String[] setSuccessTypeCleanups(ProcessDeployDetailsList_type0 processDeployDetailsList_type0) {
-
+    private static String[] setSuccessTypeCleanups(
+            ProcessDeployDetailsList_type0 processDeployDetailsListType) {
         List<String> successCategories = null;
-        if (processDeployDetailsList_type0.getCleanUpList() != null &&
-                processDeployDetailsList_type0.getCleanUpList().getCleanUp() != null) {
+        if (processDeployDetailsListType.getCleanUpList() != null &&
+                processDeployDetailsListType.getCleanUpList().getCleanUp() != null) {
             successCategories = new ArrayList<String>();
-            CleanUpType[] cleanUpTypes = processDeployDetailsList_type0.getCleanUpList().getCleanUp();
+            CleanUpType[] cleanUpTypes = processDeployDetailsListType.getCleanUpList().getCleanUp();
 
 
             for (CleanUpType cleanUpType : cleanUpTypes) {
-                if (cleanUpType.getOn().getValue().equalsIgnoreCase("success") && cleanUpType.getCategoryList() != null) {
+                if (cleanUpType.getOn().getValue().equalsIgnoreCase("success") &&
+                        cleanUpType.getCategoryList() != null) {
 
                     CategoryListType categoryList = cleanUpType.getCategoryList();
                     if (categoryList.getCategory() != null) {
                         Category_type1[] categories = categoryList.getCategory();
-                        for (Category_type1 category_type1 : categories) {
-                            successCategories.add(category_type1.getValue());
+                        for (Category_type1 categoryType1 : categories) {
+                            successCategories.add(categoryType1.getValue());
 
                         }
                     }
@@ -574,21 +552,22 @@ public class BpelUIUtil {
         return successList;
     }
 
-    private static String[] setFailureTypeCleanups(ProcessDeployDetailsList_type0 processDeployDetailsList_type0) {
-
+    private static String[] setFailureTypeCleanups(
+            ProcessDeployDetailsList_type0 processDeployDetailsListType) {
         List<String> failureCategories = null;
-        if (processDeployDetailsList_type0.getCleanUpList() != null &&
-                processDeployDetailsList_type0.getCleanUpList().getCleanUp() != null) {
+        if (processDeployDetailsListType.getCleanUpList() != null &&
+                processDeployDetailsListType.getCleanUpList().getCleanUp() != null) {
             failureCategories = new ArrayList<String>();
-            CleanUpType[] cleanUpTypes = processDeployDetailsList_type0.getCleanUpList().getCleanUp();
+            CleanUpType[] cleanUpTypes = processDeployDetailsListType.getCleanUpList().getCleanUp();
             for (CleanUpType cleanUpType : cleanUpTypes) {
-                if (cleanUpType.getOn().getValue().equalsIgnoreCase("failure") && cleanUpType.getCategoryList() != null) {
+                if (cleanUpType.getOn().getValue().equalsIgnoreCase("failure") &&
+                        cleanUpType.getCategoryList() != null) {
                     CategoryListType categoryList = cleanUpType.getCategoryList();
                     if (categoryList.getCategory() != null) {
                         Category_type1[] categories = categoryList.getCategory();
 
-                        for (Category_type1 category_type1 : categories) {
-                            failureCategories.add(category_type1.getValue());
+                        for (Category_type1 categoryType1 : categories) {
+                            failureCategories.add(categoryType1.getValue());
                         }
                     }
 
@@ -601,65 +580,74 @@ public class BpelUIUtil {
             failureList = failureCategories.toArray(new String[failureCategories.size()]);
         }
 
-
         return failureList;
-
     }
 
-    private static String setGenerateType(ProcessDeployDetailsList_type0 processDeployDetailsList_type0) {
-
+    private static String setGenerateType(
+            ProcessDeployDetailsList_type0 processDeployDetailsListType) {
         String type = null;
-        if (processDeployDetailsList_type0.getProcessEventsList() == null) {
-            type = "all";
+        String all = "all";
+        if (processDeployDetailsListType.getProcessEventsList() == null) {
+            type = all;
         } else {
-            if (processDeployDetailsList_type0.getProcessEventsList().getGenerate() != null) {
-                if (processDeployDetailsList_type0.getProcessEventsList().getGenerate().getValue().equalsIgnoreCase("all")) {
-                    type = "all";
+            if (processDeployDetailsListType.getProcessEventsList().getGenerate() != null) {
+                if (processDeployDetailsListType.getProcessEventsList().getGenerate().
+                        getValue().equalsIgnoreCase(all)) {
+                    type = all;
                 }
-                if (processDeployDetailsList_type0.getProcessEventsList().getGenerate().getValue().equalsIgnoreCase("none")) {
+                if (processDeployDetailsListType.getProcessEventsList().getGenerate().
+                        getValue().equalsIgnoreCase("none")) {
                     type = "none";
                 }
             } else {
-                if (processDeployDetailsList_type0.getProcessEventsList().getEnableEventsList() != null
-                        && processDeployDetailsList_type0.getProcessEventsList().getEnableEventsList().getEnableEvent() != null) {
-                    List<String> events = Arrays.asList(processDeployDetailsList_type0.getProcessEventsList().getEnableEventsList().getEnableEvent());
+                if (processDeployDetailsListType.getProcessEventsList().getEnableEventsList() != null
+                        && processDeployDetailsListType.getProcessEventsList().
+                        getEnableEventsList().getEnableEvent() != null) {
+                    List<String> events =
+                            Arrays.asList(processDeployDetailsListType.getProcessEventsList().
+                                    getEnableEventsList().getEnableEvent());
                     if (events.contains("instanceLifecycle") && events.contains("activityLifecycle")
-                            && events.contains("dataHandling") && events.contains("correlation") && !events.contains("scopeHandling")) {
-                        type = "all";
+                            && events.contains("dataHandling") && events.contains("correlation") &&
+                            !events.contains("scopeHandling")) {
+                        type = all;
                     } else {
                         type = "selected";
                     }
-
-
                 } else {
-                    type = "all";
+                    type = all;
                 }
             }
         }
         return type;
     }
 
-    public static void updateBackEnd(ProcessManagementServiceClient processMgtClient, ProcessDeployDetailsList_type0 processDeployDetailsList_type0, DeploymentDescriptorUpdater deployDescriptorUpdater, String[] selecttype, ArrayList<String> scopeNames) throws org.wso2.carbon.bpel.stub.mgt.ProcessManagementException, RemoteException {
-
+    public static void updateBackEnd(ProcessManagementServiceClient processMgtClient,
+                                     ProcessDeployDetailsList_type0 processDeployDetailsListType,
+                                     DeploymentDescriptorUpdater deployDescriptorUpdater,
+                                     String[] selecttype, List<String> scopeNames)
+            throws Exception {
         updateScopeEvents(selecttype, scopeNames, deployDescriptorUpdater);
-        ProcessStatus processStatus = ProcessStatus.Factory.fromValue(deployDescriptorUpdater.getProcessstate().toUpperCase());
-        processDeployDetailsList_type0.setProcessState(processStatus);
-        processDeployDetailsList_type0.setIsInMemory(Boolean.parseBoolean(deployDescriptorUpdater.getInmemorystatus()));
+        ProcessStatus processStatus = ProcessStatus.Factory.
+                fromValue(deployDescriptorUpdater.getProcessstate().toUpperCase());
+        processDeployDetailsListType.setProcessState(processStatus);
+        processDeployDetailsListType.setIsInMemory(Boolean.parseBoolean(deployDescriptorUpdater.
+                getInmemorystatus()));
 
         ProcessEventsListType processEventsListType = new ProcessEventsListType();
         EnableEventListType enableEventListType = new EnableEventListType();
         ScopeEventListType scopeEventListType = new ScopeEventListType();
-        enableEventListType.setEnableEvent(deployDescriptorUpdater.getEvents());
-        scopeEventListType.setScopeEvent(deployDescriptorUpdater.getScopeEvents());
+        enableEventListType.setEnableEvent(deployDescriptorUpdater.getEvents().
+                toArray(new String[deployDescriptorUpdater.getEvents().size()]));
+        scopeEventListType.setScopeEvent(deployDescriptorUpdater.getScopeEvents().
+                toArray(new ScopeEventType[deployDescriptorUpdater.getScopeEvents().size()]));
         processEventsListType.setEnableEventsList(enableEventListType);
         processEventsListType.setScopeEventsList(scopeEventListType);
-
 
         if (!deployDescriptorUpdater.getGentype().equalsIgnoreCase("selected")) {
             Generate_type1 generate = Generate_type1.Factory.fromValue(deployDescriptorUpdater.getGentype());
             processEventsListType.setGenerate(generate);
         }
-        processDeployDetailsList_type0.setProcessEventsList(processEventsListType);
+        processDeployDetailsListType.setProcessEventsList(processEventsListType);
 
         CleanUpListType cleanUpList = new CleanUpListType();
         CleanUpType successCleanUpType = new CleanUpType();
@@ -667,104 +655,103 @@ public class BpelUIUtil {
         successCleanUpType.setOn(successOn);
         CategoryListType successCategoryList = new CategoryListType();
 
-        String[] sCategories = deployDescriptorUpdater.getSuccesstypecleanups();
+        String[] sCategories = deployDescriptorUpdater.getSuccesstypecleanups().
+                toArray(new String[deployDescriptorUpdater.getSuccesstypecleanups().size()]);
         if (sCategories != null) {
-            for (String categoryname : sCategories) {
-                Category_type1 category_type1 = Category_type1.Factory.fromValue(categoryname);
-                successCategoryList.addCategory(category_type1);
-
+            for (String categoryName : sCategories) {
+                Category_type1 categoryType1 = Category_type1.Factory.fromValue(categoryName);
+                successCategoryList.addCategory(categoryType1);
             }
-
         }
         successCleanUpType.setCategoryList(successCategoryList);
         cleanUpList.addCleanUp(successCleanUpType);
-
 
         CleanUpType failureCleanUpType = new CleanUpType();
         On_type1 failureOn = On_type1.failure;
         failureCleanUpType.setOn(failureOn);
         CategoryListType failureCategoryList = new CategoryListType();
 
-        String[] fCategories = deployDescriptorUpdater.getFailuretypecleanups();
+        String[] fCategories = deployDescriptorUpdater.getFailuretypecleanups().
+                toArray(new String[deployDescriptorUpdater.getFailuretypecleanups().size()]);
         if (fCategories != null) {
-            for (String categoryname : fCategories) {
-                Category_type1 category_type1 = Category_type1.Factory.fromValue(categoryname);
-                failureCategoryList.addCategory(category_type1);
+            for (String categoryName : fCategories) {
+                Category_type1 categoryType1 = Category_type1.Factory.fromValue(categoryName);
+                failureCategoryList.addCategory(categoryType1);
             }
         }
         failureCleanUpType.setCategoryList(failureCategoryList);
         cleanUpList.addCleanUp(failureCleanUpType);
-        processDeployDetailsList_type0.setCleanUpList(cleanUpList);
+        processDeployDetailsListType.setCleanUpList(cleanUpList);
 
-        processMgtClient.updateDeployInfo(processDeployDetailsList_type0);
+        processMgtClient.updateDeployInfo(processDeployDetailsListType);
     }
 
-    public static void configureDeploymentDescriptorUpdater(ProcessDeployDetailsList_type0 processDeployDetailsList_type0, DeploymentDescriptorUpdater deployDescriptorUpdater) {
-
-        deployDescriptorUpdater.setProcessstate(processDeployDetailsList_type0.getProcessState().getValue());
-        deployDescriptorUpdater.setInmemorystatus(String.valueOf(processDeployDetailsList_type0.getIsInMemory()));
-        deployDescriptorUpdater.setInvokedServiceList(processDeployDetailsList_type0.getInvokeServiceList());
-        deployDescriptorUpdater.setProvideServiceList(processDeployDetailsList_type0.getProvideServiceList());
-        deployDescriptorUpdater.setMexInterceptors(processDeployDetailsList_type0.getMexInterperterList());
-        deployDescriptorUpdater.setPropertyList(processDeployDetailsList_type0.getPropertyList());
-        deployDescriptorUpdater.setScopeEvents(setScopeEventsList(processDeployDetailsList_type0));
-        deployDescriptorUpdater.setGentype(setGenerateType(processDeployDetailsList_type0));
-        deployDescriptorUpdater.setEvents(setEnabledEventsList(processDeployDetailsList_type0));
-        deployDescriptorUpdater.setSuccesstypecleanups(setSuccessTypeCleanups(processDeployDetailsList_type0));
-        deployDescriptorUpdater.setFailuretypecleanups(setFailureTypeCleanups(processDeployDetailsList_type0));
-
+    public static void configureDeploymentDescriptorUpdater(
+            ProcessDeployDetailsList_type0 processDeployDetailsListType,
+            DeploymentDescriptorUpdater deployDescriptorUpdater) {
+        deployDescriptorUpdater.setProcessstate(processDeployDetailsListType.getProcessState().getValue());
+        deployDescriptorUpdater.setInmemorystatus(String.valueOf(processDeployDetailsListType.getIsInMemory()));
+        deployDescriptorUpdater.setInvokedServiceList(processDeployDetailsListType.getInvokeServiceList());
+        deployDescriptorUpdater.setProvideServiceList(processDeployDetailsListType.getProvideServiceList());
+        deployDescriptorUpdater.setMexInterceptors(processDeployDetailsListType.getMexInterperterList());
+        deployDescriptorUpdater.setPropertyList(processDeployDetailsListType.getPropertyList());
+        deployDescriptorUpdater.setScopeEvents(setScopeEventsList(processDeployDetailsListType));
+        deployDescriptorUpdater.setGentype(setGenerateType(processDeployDetailsListType));
+        deployDescriptorUpdater.setEvents(setEnabledEventsList(processDeployDetailsListType));
+        deployDescriptorUpdater.setSuccesstypecleanups(setSuccessTypeCleanups(processDeployDetailsListType));
+        deployDescriptorUpdater.setFailuretypecleanups(setFailureTypeCleanups(processDeployDetailsListType));
     }
-
 
 
     public static String isElementDisabled(boolean authorizedToManageProcesses) {
-          if(!authorizedToManageProcesses){
-             return DISABLED;
-          }else {
-              return "" ;
-          }
+        if (!authorizedToManageProcesses) {
+            return DISABLED;
+        } else {
+            return "";
+        }
     }
 
-    public static String isProcessStateChecked(DeploymentDescriptorUpdater deployDescriptorUpdater, String processState) {
+    public static String isProcessStateChecked(DeploymentDescriptorUpdater deployDescriptorUpdater,
+                                               String processState) {
 
-        if(deployDescriptorUpdater.getProcessstate() != null){
-            if(deployDescriptorUpdater.getProcessstate().equalsIgnoreCase(processState)){
-                return  CHECKED;
+        if (deployDescriptorUpdater.getProcessstate() != null) {
+            if (deployDescriptorUpdater.getProcessstate().equalsIgnoreCase(processState)) {
+                return CHECKED;
             }
         }
         return "";
     }
 
-    public static String isGenerateTypeChecked(DeploymentDescriptorUpdater deployDescriptorUpdater, String genType) {
-        if(deployDescriptorUpdater.getGentype() != null){
-            if(deployDescriptorUpdater.getGentype().equalsIgnoreCase(genType)){
-                return  CHECKED;
+    public static String isGenerateTypeChecked(DeploymentDescriptorUpdater deployDescriptorUpdater,
+                                               String genType) {
+        if (deployDescriptorUpdater.getGentype() != null) {
+            if (deployDescriptorUpdater.getGentype().equalsIgnoreCase(genType)) {
+                return CHECKED;
             }
         }
         return "";
     }
 
     public static String isGivenEventChecked(String[] eventsList, String enabledEvent) {
-
-        if(eventsList!= null){
-               for(String targetEvent : eventsList){
-                    if(targetEvent.equalsIgnoreCase(enabledEvent)){
-                        return CHECKED;
-                    }
-               }
-        }
-        return "";
-    }
-    public static String isInMemoryTypeChecked(DeploymentDescriptorUpdater deployDescriptorUpdater, String inMemory) {
-
-        if(deployDescriptorUpdater.getInmemorystatus() != null){
-            if(deployDescriptorUpdater.getInmemorystatus().equalsIgnoreCase(inMemory)){
-                return  CHECKED;
+        if (eventsList != null) {
+            for (String targetEvent : eventsList) {
+                if (targetEvent.equalsIgnoreCase(enabledEvent)) {
+                    return CHECKED;
+                }
             }
         }
         return "";
     }
 
+    public static String isInMemoryTypeChecked(DeploymentDescriptorUpdater deployDescriptorUpdater,
+                                               String inMemory) {
+        if (deployDescriptorUpdater.getInmemorystatus() != null) {
+            if (deployDescriptorUpdater.getInmemorystatus().equalsIgnoreCase(inMemory)) {
+                return CHECKED;
+            }
+        }
+        return "";
+    }
 
 
     /**
@@ -773,8 +760,9 @@ public class BpelUIUtil {
      * eg - http://api.jquery.com/animated-selector/
      * So we should use html ids which should non-conflicted with jQuery api.
      * This method is used to generate non-conflcting html ids w.r.t jQuery api
-     * @param originalId
-     * @return
+     *
+     * @param originalId Id to be converted into a JS compliant ID
+     * @return JS compliant ID
      */
     public static String generateJQueryCompliantID(String originalId) {
         String validId = originalId;
@@ -782,7 +770,7 @@ public class BpelUIUtil {
         String[] metaCharacters = {":", ".", "-"};
         for (String character : metaCharacters) {
             if (originalId.contains(character)) {
-                 // replaces the meta charaters in a bpel package name with double underscores
+                // replaces the meta charaters in a bpel package name with double underscores
                 validId = validId.replace(character, "__");
             }
         }
@@ -795,47 +783,44 @@ public class BpelUIUtil {
     * categories into (5 for each) groups. Then these events list is again written back to the corresponding scope event
     *
     */
-    public static void updateScopeEvents(String[] selecttype, ArrayList<String> scopeNames, DeploymentDescriptorUpdater deployDescriptorUpdater) {
-        ArrayList<String> valueArray = selecttype!=null?new ArrayList<String>(Arrays.asList(selecttype)):new ArrayList<String>();
-            ListIterator<String> it = valueArray.listIterator();
-            while (it.hasNext()) {
-
-                String nextVal = it.next();
-                if (!nextVal.equalsIgnoreCase("0")) {
-                    if (it.hasNext()) {
-                        it.next();
-                        it.remove();
-                    }
+    public static void updateScopeEvents(String[] selecttype, List<String> scopeNames,
+                                         DeploymentDescriptorUpdater deployDescriptorUpdater) {
+        ArrayList<String> valueArray = selecttype != null ?
+                new ArrayList<String>(Arrays.asList(selecttype)) : new ArrayList<String>();
+        ListIterator<String> it = valueArray.listIterator();
+        while (it.hasNext()) {
+            String nextVal = it.next();
+            if (!nextVal.equalsIgnoreCase("0")) {
+                if (it.hasNext()) {
+                    it.next();
+                    it.remove();
                 }
-
             }
+        }
 
-            String[] allEnabledEvents = valueArray.toArray(new String[valueArray.size()]);
-            int i=0;
-            ScopeEventType[] scopeEventTypes = new ScopeEventType[scopeNames.size()];
-            for (int j=0;j< scopeNames.size(); j++) {
-                ScopeEventType scopeEventType = new ScopeEventType();
-                scopeEventType.setScope(scopeNames.get(j));
-                String[] events = new String[5];
-                for(int k=0; k<5; k++){
-                    events[k]= allEnabledEvents[i];
-                    i++;
+        String[] allEnabledEvents = valueArray.toArray(new String[valueArray.size()]);
+        int i = 0;
+        ScopeEventType[] scopeEventTypes = new ScopeEventType[scopeNames.size()];
+        for (int j = 0; j < scopeNames.size(); j++) {
+            ScopeEventType scopeEventType = new ScopeEventType();
+            scopeEventType.setScope(scopeNames.get(j));
+            String[] events = new String[5];
+            System.arraycopy(allEnabledEvents, 0, events, 0, 5);
+            ArrayList<String> actualEventsList = new ArrayList<String>();
+            for (String event : events) {
+                if (!event.equalsIgnoreCase("0")) {
+                    actualEventsList.add(event);
                 }
-                ArrayList<String> actualEventsList = new ArrayList<String>();
-                for(String event: events){
-                    if(!event.equalsIgnoreCase("0")){
-                       actualEventsList.add(event);
-                    }
-                }
-                String[] eventsArray = actualEventsList.toArray(new String[actualEventsList.size()]);
-
-                EnableEventListType enableEventListType = new EnableEventListType();
-                enableEventListType.setEnableEvent(eventsArray);
-                scopeEventType.setEnabledEventList(enableEventListType);
-
-                scopeEventTypes[j] = scopeEventType;
             }
-            deployDescriptorUpdater.setScopeEvents(scopeEventTypes);
+            String[] eventsArray = actualEventsList.toArray(new String[actualEventsList.size()]);
+
+            EnableEventListType enableEventListType = new EnableEventListType();
+            enableEventListType.setEnableEvent(eventsArray);
+            scopeEventType.setEnabledEventList(enableEventListType);
+
+            scopeEventTypes[j] = scopeEventType;
+        }
+        deployDescriptorUpdater.setScopeEvents(scopeEventTypes);
 
     }
 }

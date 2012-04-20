@@ -18,18 +18,15 @@ package org.wso2.carbon.bpel.ui;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.servlet.http.HttpServletRequest;
-
-public class InstanceFilterUtil {
+public final class InstanceFilterUtil {
     private static Log log = LogFactory.getLog(InstanceFilterUtil.class);
 
     private InstanceFilterUtil() {
-
     }
 
     public static String createInstanceFilterStringFromFormData(final InstanceFilter filterData) {
-        if(!isValidFilter(filterData)) {
-            if(log.isDebugEnabled()) {
+        if (!isValidFilter(filterData)) {
+            if (log.isDebugEnabled()) {
                 log.debug("Invalid Instance Filter.");
             }
             /*
@@ -39,20 +36,21 @@ public class InstanceFilterUtil {
         }
 
         StringBuilder filterBuilder = new StringBuilder();
-   // Sending space to back-end. Workaround to handle multi-tenant case.
+        // Sending space to back-end. Workaround to handle multi-tenant case.
         // Decide to remove "name}}* namespace=*" filter used earlier to get all instances.
 
         filterBuilder.append(" ");
 
-        if(filterData.getPid() != null && !filterData.getPid().equals("all") && !filterData.getPid().equals("noprocesses")) {
+        if (filterData.getPid() != null && !filterData.getPid().equals("all") &&
+                !filterData.getPid().equals("noprocesses")) {
             filterBuilder.append("pid=");
             filterBuilder.append(filterData.getPid());
             filterBuilder.append(" ");
         }
 
-        if(filterData.getStatus() != null && filterData.getStatus().length > 0) {
+        if (filterData.getStatus() != null && filterData.getStatus().length > 0) {
             filterBuilder.append("status=");
-            for(String status : filterData.getStatus()) {
+            for (String status : filterData.getStatus()) {
                 filterBuilder.append(status);
                 filterBuilder.append("|");
             }
@@ -61,9 +59,9 @@ public class InstanceFilterUtil {
             filterBuilder.append(" ");
         }
 
-        if(filterData.getStarteddate() != null && filterData.getStarteddate().trim().length() == 16) {
+        if (filterData.getStarteddate() != null && filterData.getStarteddate().trim().length() == 16) {
             filterBuilder.append("started");
-            if(filterData.getStartedopt() != null && filterData.getStartedopt().equals("onb")) {
+            if (filterData.getStartedopt() != null && filterData.getStartedopt().equals("onb")) {
                 filterBuilder.append("<=");
             } else if (filterData.getStartedopt() != null) {
                 filterBuilder.append(">=");
@@ -71,13 +69,13 @@ public class InstanceFilterUtil {
                 filterBuilder.append("=");
             }
             filterBuilder.append(filterData.getStarteddate().trim());
-            filterBuilder.append(" ");            
+            filterBuilder.append(" ");
         }
 
-        if(filterData.getLadate() != null && filterData.getLadate().trim().length() == 16) {
+        if (filterData.getLadate() != null && filterData.getLadate().trim().length() == 16) {
             filterBuilder.append("last-active");
-            if(filterData.getLadateopt() != null && filterData.getLadateopt().equals("onb")) {
-             filterBuilder.append("<=");
+            if (filterData.getLadateopt() != null && filterData.getLadateopt().equals("onb")) {
+                filterBuilder.append("<=");
             } else if (filterData.getLadateopt() != null) {
                 filterBuilder.append(">=");
             } else {
@@ -98,8 +96,8 @@ public class InstanceFilterUtil {
     public static String getOrderByFromFormData(final InstanceFilter filterData) {
         StringBuilder filterBuilder = new StringBuilder();
 
-        if(filterData.getOrderby() != null && filterData.getAsdec() != null) {
-            if(filterData.getAsdec().equals("Ascending")) {
+        if (filterData.getOrderby() != null && filterData.getAsdec() != null) {
+            if (filterData.getAsdec().equals("Ascending")) {
                 filterBuilder.append("-");
             } else {
                 filterBuilder.append("+");
@@ -116,10 +114,11 @@ public class InstanceFilterUtil {
         return filterBuilder.toString();
     }
 
-    private static boolean isValidFilter(final InstanceFilter filterData){
-        return !((filterData.getPid() == null || filterData.getPid().equals("all")) && filterData.getStatus() == null
-                && filterData.getStarteddate() == null && filterData.getStartedopt() == null
-                && filterData.getLadate() == null && filterData.getLadateopt() == null);
+    private static boolean isValidFilter(final InstanceFilter filterData) {
+        return !((filterData.getPid() == null || filterData.getPid().equals("all")) &&
+                filterData.getStatus() == null && filterData.getStarteddate() == null &&
+                filterData.getStartedopt() == null && filterData.getLadate() == null &&
+                filterData.getLadateopt() == null);
     }
-    
+
 }

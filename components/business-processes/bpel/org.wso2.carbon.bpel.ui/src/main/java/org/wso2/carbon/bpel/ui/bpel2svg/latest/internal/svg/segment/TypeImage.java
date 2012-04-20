@@ -17,7 +17,7 @@ package org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.segment;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.GlobalSettings;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Position;
 
-import static org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Dimension.TYPE_IMAGE;
+import static org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Dimension.getTypeImageDimension;
 
 /**
  * This class represents a type image segment.
@@ -35,7 +35,7 @@ public class TypeImage
 	 */
 	public TypeImage(String name, Position position) {
 		super(GlobalSettings.getInstance().getTypeImagePath(), name, GlobalSettings.getInstance()
-			.getTypeImageExtension(), TYPE_IMAGE(), position, true);
+			.getTypeImageExtension(), getTypeImageDimension(), position, true);
 	}
 
 }

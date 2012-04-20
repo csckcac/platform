@@ -18,7 +18,10 @@ package org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.frontend.util;
 
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.frontend.MainBean;
 
-public class MainBeanUtil {
+public final class MainBeanUtil {
+    private MainBeanUtil() {
+    }
+
     public static String generateMainBeanId(String id) {
         return MainBean.NAME + "-" + id;
     }

@@ -17,7 +17,8 @@
 package org.wso2.carbon.bpel.ui;
 
 public final class BPELUIConstant {
-    public static final int MAX_INSTANCES_TO_BE_FETCHED = 200;
+    private BPELUIConstant() {
+    }
 
     public static final String INSTANCE_STATE_ACTIVE = "ACTIVE";
     public static final String INSTANCE_STATE_COMPLETED = "COMPLETED";

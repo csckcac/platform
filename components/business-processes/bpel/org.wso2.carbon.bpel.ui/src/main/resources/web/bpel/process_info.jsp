@@ -57,7 +57,7 @@
     String totalNoOfInstances = null;
     ProcessManagementServiceClient processMgtClient;
 
-    TreeMap<String, QName> refMap = new TreeMap<String, QName>(); //Used to get partnerlinks
+    Map<String, QName> refMap = new TreeMap<String, QName>(); //Used to get partnerlinks
     Map<String, EndpointRef_type0> partnerLinkEprMap = new HashMap<String, EndpointRef_type0>();
 
     String userAgent = request.getHeader( "User-Agent" );

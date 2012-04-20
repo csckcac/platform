@@ -129,23 +129,23 @@ public class ProcessManagementServiceClient {
         }
     }
 
-    public ProcessDeployDetailsList_type0 getProcessDeploymentInfo(QName pid) throws RemoteException, ProcessManagementException {
-       try{
-           return  stub.getProcessDeploymentInfo(pid);
-       }  catch (RemoteException e) {
+    public ProcessDeployDetailsList_type0 getProcessDeploymentInfo(QName pid)
+            throws Exception {
+        try {
+            return stub.getProcessDeploymentInfo(pid);
+        } catch (Exception e) {
             log.error("getProcessDeploymentInfo operation failed", e);
             throw e;
-       }
-
-
+        }
     }
 
-    public void updateDeployInfo(ProcessDeployDetailsList_type0 processDeployDetailsList_type0) throws RemoteException, ProcessManagementException {
-
-        stub.updateDeployInfo (processDeployDetailsList_type0);
-
-
+    public void updateDeployInfo(ProcessDeployDetailsList_type0 processDeployDetailsList)
+            throws Exception {
+        try {
+            stub.updateDeployInfo(processDeployDetailsList);
+        } catch (Exception e) {
+            log.error("updateDeployInfo operation failed", e);
+            throw e;
+        }
     }
-
-
 }

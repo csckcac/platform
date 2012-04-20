@@ -35,7 +35,7 @@ public abstract class Adjuster<S> {
 
 	/**
 	 * Constructor of Adjuster.
-	 * 
+	 *
 	 * @param dataModel The associated SVGDataModel.
 	 */
 	public Adjuster(SVGDataModel dataModel) {
@@ -71,7 +71,7 @@ public abstract class Adjuster<S> {
 	/**
 	 * Sets the value of leftSelection to selection.
 	 * 
-	 * @param leftSelection The new value of selection.
+	 * @param selection selection
 	 */
 	public void setSelection(S selection) {
 		this.selection = selection;

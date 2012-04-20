@@ -19,14 +19,13 @@ import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.frontend.model.SVGDataMo
 import java.util.*;
 
 /**
- * This class is the basis for all justing functions of activities in the SVG.
+ * This class is the basis for all adjusting functions of activities in the SVG.
  * This class has been adapted for the WSO2 Carbon version to work without JavaServer Faces.
  * 
  * @author Gregor Latuske
  * @author Jakob Krein
  */
-public class ActivityAdjuster
-	extends Adjuster<String[]> {
+public class ActivityAdjuster extends Adjuster<String[]> {
 
 	/** The selectable items on the left side. */
 	private Set<String> itemsLeft;

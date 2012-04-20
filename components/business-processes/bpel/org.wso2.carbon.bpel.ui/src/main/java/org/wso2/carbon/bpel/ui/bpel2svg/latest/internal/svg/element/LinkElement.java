@@ -14,8 +14,6 @@
  */
 package org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.element;
 
-import java.io.Serializable;
-
 /**
  * This class represents a link between two elements.
  * 
@@ -125,7 +123,7 @@ public class LinkElement /*implements Serializable*/ {
 	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof LinkElement)) {
+		if (!(obj instanceof LinkElement)) {
 			return false;
 		}
 

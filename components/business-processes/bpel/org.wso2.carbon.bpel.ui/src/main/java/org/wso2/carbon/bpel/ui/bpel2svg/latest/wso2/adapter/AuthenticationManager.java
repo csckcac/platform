@@ -16,10 +16,13 @@
 
 package org.wso2.carbon.bpel.ui.bpel2svg.latest.wso2.adapter;
 
-public class AuthenticationManager {
+public final class AuthenticationManager {
     private static String cookie = null;
 
     private static String backendServerURL = null;
+
+    private AuthenticationManager() {
+    }
 
     public static void init(String backendServerURL, String cookie) {
         setBackendServerURL(backendServerURL);

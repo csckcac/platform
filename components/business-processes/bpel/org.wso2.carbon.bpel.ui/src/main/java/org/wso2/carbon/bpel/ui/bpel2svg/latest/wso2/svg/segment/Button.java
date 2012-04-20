@@ -22,7 +22,7 @@ import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.GlobalSetti
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Position;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.wso2.svg.javascript.JSFunction;
 
-import static org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Dimension.STATUS_BASED_ACTION_IMAGE;
+import static org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Dimension.getStatusBasedActionImageDimension;
 
 public abstract class Button extends Segment {
 
@@ -32,7 +32,7 @@ public abstract class Button extends Segment {
     }
 
     public Button(String name, JSFunction jsFunction, Position buttonPos) {
-        this(GlobalSettings.getInstance().getStatusBasedActionImagePath(), name, GlobalSettings.getInstance().getStatusBasedActionImageExtension(), STATUS_BASED_ACTION_IMAGE(), buttonPos, jsFunction);
+        this(GlobalSettings.getInstance().getStatusBasedActionImagePath(), name, GlobalSettings.getInstance().getStatusBasedActionImageExtension(), getStatusBasedActionImageDimension(), buttonPos, jsFunction);
     }
 
     /**

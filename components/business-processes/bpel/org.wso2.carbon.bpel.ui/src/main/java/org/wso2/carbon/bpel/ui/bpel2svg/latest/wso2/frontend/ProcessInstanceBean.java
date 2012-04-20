@@ -35,35 +35,37 @@ import java.util.List;
  * This Class is used for maintain process instance based Beans
  */
 public class ProcessInstanceBean extends MainBean {
-    /** The logger instance. */
-	private static final Log log = LogFactory.getLog(ProcessInstanceBean.class);
+    /**
+     * The logger instance.
+     */
+    private static final Log log = LogFactory.getLog(ProcessInstanceBean.class);
 
     public ProcessInstanceBean(String instanceID) throws ClassNotFoundException, URISyntaxException, BPIException {
         this.svgDataModelMap = new HashMap<String, SVGDataModel>();
 
-		this.svgDataModel = new SVGDataModel();
-		this.piDataModel = new ProcessInstanceDataModel(this.svgDataModel);
-		this.pmDataModel = new ProcessModelDataModel(this.piDataModel);
+        this.svgDataModel = new SVGDataModel();
+        this.piDataModel = new ProcessInstanceDataModel(this.svgDataModel);
+        this.pmDataModel = new ProcessModelDataModel(this.piDataModel);
 
-		// Initial refresh
-		refresh(instanceID);
+        // Initial refresh
+        refresh(instanceID);
     }
 
     private String refresh(String instanceID) {
         try {
-			BPIService service = new BPIService.BPIServiceFactory().createService();
+            BPIService service = new BPIService.BPIServiceFactory().createService();
 
             //Prepare the List required for pmDataModel.update
             ProcessModel model = service.getProcessModelFromInstance(instanceID);
             List<ProcessModel> modelList = new ArrayList<ProcessModel>();
             modelList.add(model);
 
-			this.pmDataModel.update(modelList);
-		} catch (BPIException exception) {
-			log.error("Could not update process data model.", exception);
-		}
+            this.pmDataModel.update(modelList);
+        } catch (BPIException exception) {
+            log.error("Could not update process data model.", exception);
+        }
 
-		return "";
+        return "";
 
     }
 }

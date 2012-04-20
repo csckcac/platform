@@ -21,8 +21,7 @@ import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.frontend.model.SVGDataMo
  * 
  * @author Gregor Latuske
  */
-public abstract class Slider
-	extends Adjuster<String> {
+public abstract class Slider extends Adjuster<String> {
 
 	/**
 	 * Constructor of ProcessModelSlider.

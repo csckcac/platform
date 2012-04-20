@@ -21,36 +21,38 @@ import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.activity.*;
  *
  * @author Gregor Latuske
  */
-public class BPELActivityFactory {
+public final class BPELActivityFactory {
+    private BPELActivityFactory() {
+    }
 
-	/**
-	 * Creates on the basis of the type an according {@link Activity}.
-	 *
-	 * @param name The name of the activity.
-	 * @param type The type of the activity.
-	 * @param parent The parent activity of this activity.
-	 * @param root The root of all activities.
-	 * @return The created {@link Activity} or <code>null</code>, if the type does not match to an existing
-	 *         one.
-	 */
-	public static Activity createActivity(String type, String name, ActivityComplex parent, ActivityRoot root) {
-		Activity activity = null;
+    /**
+     * Creates on the basis of the type an according {@link Activity}.
+     *
+     * @param name   The name of the activity.
+     * @param type   The type of the activity.
+     * @param parent The parent activity of this activity.
+     * @param root   The root of all activities.
+     * @return The created {@link Activity} or <code>null</code>, if the type does not match to an existing
+     *         one.
+     */
+    public static Activity createActivity(String type, String name, ActivityComplex parent, ActivityRoot root) {
+        Activity activity = null;
 
-		for (BPELActivityType bpelType : BPELActivityType.values()) {
-			if (bpelType.getName().equalsIgnoreCase(type)) {
+        for (BPELActivityType bpelType : BPELActivityType.values()) {
+            if (bpelType.getName().equalsIgnoreCase(type)) {
 
-				if (bpelType.getType().equals(ActivitySimple.class)) {
-					activity = new ActivitySimple(name, bpelType.getName(), parent, root);
-				} else if (bpelType.getType().equals(ActivityFlow.class)) {
-					activity = new ActivityFlow(name, bpelType.getName(), parent, root);
-				} else if (bpelType.getType().equals(ActivitySequence.class)) {
-					activity = new ActivitySequence(name, bpelType.getName(), parent, root);
-				} else if (bpelType.getType().equals(ActivityChoice.class)) {
-					activity = new ActivityChoice(name, bpelType.getName(), parent, root);
-				}
-			}
-		}
+                if (bpelType.getType().equals(ActivitySimple.class)) {
+                    activity = new ActivitySimple(name, bpelType.getName(), parent, root);
+                } else if (bpelType.getType().equals(ActivityFlow.class)) {
+                    activity = new ActivityFlow(name, bpelType.getName(), parent, root);
+                } else if (bpelType.getType().equals(ActivitySequence.class)) {
+                    activity = new ActivitySequence(name, bpelType.getName(), parent, root);
+                } else if (bpelType.getType().equals(ActivityChoice.class)) {
+                    activity = new ActivityChoice(name, bpelType.getName(), parent, root);
+                }
+            }
+        }
 
-		return activity;
-	}
+        return activity;
+    }
 }

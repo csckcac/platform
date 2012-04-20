@@ -237,7 +237,7 @@ public class ProcessModel
 	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
-		if (obj != null && obj instanceof ProcessModel && getPid() != null) {
+		if (obj instanceof ProcessModel && getPid() != null) {
 			ProcessModel process = (ProcessModel) obj;
 			return getPid().equals(process.getPid());
 		}

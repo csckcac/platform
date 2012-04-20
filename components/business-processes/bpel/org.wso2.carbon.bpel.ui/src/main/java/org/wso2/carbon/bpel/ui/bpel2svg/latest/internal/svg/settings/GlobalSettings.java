@@ -19,7 +19,7 @@ package org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings;
  *
  * @author Gregor Latuske
  */
-public class GlobalSettings {
+public final class GlobalSettings {
 
 	/** The instance of {@link GlobalSettings} */
 	private static GlobalSettings instance;

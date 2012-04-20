@@ -18,7 +18,7 @@ import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.status.ActivityExe
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.GlobalSettings;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Position;
 
-import static org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Dimension.STATUS_IMAGE;
+import static org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Dimension.getStatusImageDimension;
 
 /**
  * This class represents a status image segment.
@@ -36,7 +36,7 @@ public class StatusImage
 	 */
 	public StatusImage(ActivityExecStatus status, Position pos) {
 		super(GlobalSettings.getInstance().getStatusImagePath(), status.getName(), GlobalSettings
-			.getInstance().getStatusImageExtension(), STATUS_IMAGE(), pos, !status
+			.getInstance().getStatusImageExtension(), getStatusImageDimension(), pos, !status
 			.equals(ActivityExecStatus.OUTSTANDING));
 	}
 

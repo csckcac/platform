@@ -21,8 +21,7 @@ import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.frontend.model.SVGDataMo
  * 
  * @author Gregor Latuske
  */
-public class CompactModeAdjuster
-	extends Adjuster<Boolean> {
+public class CompactModeAdjuster extends Adjuster<Boolean> {
 
 	/**
 	 * Constructor of ViewModeAdjuster.

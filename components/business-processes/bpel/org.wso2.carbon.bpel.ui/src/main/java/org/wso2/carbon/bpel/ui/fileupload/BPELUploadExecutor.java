@@ -52,9 +52,6 @@ public class BPELUploadExecutor extends AbstractFileUploadExecutor {
 
     private static final String[] ALLOWED_FILE_EXTENSIONS =
             new String[]{".zip"};
-    private String tmpDir = "bpelTemp";
-
-    private static final int BUFFER = 2048;
 
 
     public boolean execute(HttpServletRequest request,
@@ -73,51 +70,51 @@ public class BPELUploadExecutor extends AbstractFileUploadExecutor {
             String msg = "File uploading failed.";
             log.error(msg);
             out.write("<textarea>" +
-                      "(function(){i18n.fileUplodedFailed();})();" +
-                      "</textarea>");
+                    "(function(){i18n.fileUplodedFailed();})();" +
+                    "</textarea>");
             return true;
         }
         BPELUploaderClient uploaderClient = new BPELUploaderClient(configurationContext,
-                                                                   serverURL + "BPELUploader", cookie);
-    
+                serverURL + "BPELUploader", cookie);
+
         try {
-                    for (FileItemData fieldData : fileItemsMap.get("bpelFileName")) {
-                        String fileName = getFileName(fieldData.getFileItem().getName());
-                        //Check filename for \ charactors. This cannot be handled at the lower stages.
-                        if (fileName.matches("(.*[\\\\].*[/].*|.*[/].*[\\\\].*)")) {
-                            log.error("BPEL Package Validation Failure: one or many of the following illegal characters are in " +
-                                    "the package.\n ~!@#$;%^*()+={}[]| \\<>");
-                            throw new Exception("BPEL Package Validation Failure: one or many of the following illegal characters " +
-                                    "are in the package. ~!@#$;%^*()+={}[]| \\<>");
-                        }
-                        //Check file extension.
-                        checkServiceFileExtensionValidity(fileName, ALLOWED_FILE_EXTENSIONS);
+            for (FileItemData fieldData : fileItemsMap.get("bpelFileName")) {
+                String fileName = getFileName(fieldData.getFileItem().getName());
+                //Check filename for \ charactors. This cannot be handled at the lower stages.
+                if (fileName.matches("(.*[\\\\].*[/].*|.*[/].*[\\\\].*)")) {
+                    log.error("BPEL Package Validation Failure: one or many of the following illegal characters are in " +
+                            "the package.\n ~!@#$;%^*()+={}[]| \\<>");
+                    throw new Exception("BPEL Package Validation Failure: one or many of the following illegal characters " +
+                            "are in the package. ~!@#$;%^*()+={}[]| \\<>");
+                }
+                //Check file extension.
+                checkServiceFileExtensionValidity(fileName, ALLOWED_FILE_EXTENSIONS);
 
-                        if (fileName.lastIndexOf("\\") != -1) {
-                            int indexOfColon = fileName.lastIndexOf("\\") + 1;
-                            fileName = fileName.substring(indexOfColon, fileName.length());
-                        }
-                        if (fieldData.getFileItem().getFieldName().equals("bpelFileName")) {
-                            SaveExtractReturn uploadedFiles = saveAndExtractUploadedFile(fieldData.getFileItem());
+                if (fileName.lastIndexOf('\\') != -1) {
+                    int indexOfColon = fileName.lastIndexOf('\\') + 1;
+                    fileName = fileName.substring(indexOfColon, fileName.length());
+                }
+                if (fieldData.getFileItem().getFieldName().equals("bpelFileName")) {
+                    SaveExtractReturn uploadedFiles =
+                            saveAndExtractUploadedFile(fieldData.getFileItem());
+                    validateBPELPackage(uploadedFiles.extractedFile);
+                    DataSource dataSource = new FileDataSource(uploadedFiles.zipFile);
+                    uploaderClient.addUploadedFileItem(new DataHandler(dataSource), fileName, "zip");
 
-                            validateBPELPackage(uploadedFiles.extractedFile);
-                            DataSource dataSource = new FileDataSource(uploadedFiles.zipFile);
-                            uploaderClient.addUploadedFileItem(new DataHandler(dataSource), fileName, "zip");
-
-                        }
-                    }
+                }
+            }
             uploaderClient.uploadFileItems();
             String msg = "Your BPEL package been uploaded successfully. Please refresh this page in a" +
-                         " while to see the status of the new process.";
+                    " while to see the status of the new process.";
             CarbonUIMessage.sendCarbonUIMessage(msg, CarbonUIMessage.INFO, request,
-                                                response, getContextRoot(request) + "/" + webContext + "/bpel/process_list.jsp");
+                    response, getContextRoot(request) + "/" + webContext + "/bpel/process_list.jsp");
 
             return true;
         } catch (Exception e) {
             errMsg = "File upload failed.";
             log.error(errMsg, e);
             CarbonUIMessage.sendCarbonUIMessage(errMsg, CarbonUIMessage.ERROR, request,
-                                                response, getContextRoot(request) + "/" + webContext + "/bpel/upload_bpel.jsp");
+                    response, getContextRoot(request) + "/" + webContext + "/bpel/upload_bpel.jsp");
         }
 
         return false;
@@ -145,7 +142,8 @@ public class BPELUploadExecutor extends AbstractFileUploadExecutor {
             throw new Exception("Erorr occurred while writing file item to file system.", e);
         }
 
-        String destinationDir = serviceUploadDir + File.separator + fileItemName.substring(0, fileItemName.lastIndexOf("."));
+        String destinationDir = serviceUploadDir + File.separator +
+                fileItemName.substring(0, fileItemName.lastIndexOf('.'));
         if (log.isDebugEnabled()) {
             log.debug("[BPELUI]Bpel package location: " + destinationDir);
         }
@@ -160,17 +158,20 @@ public class BPELUploadExecutor extends AbstractFileUploadExecutor {
         // we need to convert it to new format and upload.
         File deployXml = new File(destinationDir, "deploy.xml");
         if (!deployXml.exists()) {
-            String depXmlSrc = fileItemName.substring(0, fileItemName.lastIndexOf(".")) + File.separator + "deploy.xml";
+            String depXmlSrc = fileItemName.substring(0, fileItemName.lastIndexOf('.')) +
+                    File.separator + "deploy.xml";
             deployXml = new File(destinationDir, depXmlSrc);
             if (deployXml.exists() &&
-                onlyOneChildDir(destinationDir, fileItemName.substring(0, fileItemName.lastIndexOf(".")))) {
+                    onlyOneChildDir(destinationDir, fileItemName.substring(0,
+                            fileItemName.lastIndexOf('.')))) {
                 String tempUploadDir = getTempUploadDir();
                 File tempDir = new File(tempUploadDir);
                 if (!tempDir.exists() && !tempDir.mkdirs()) {
                     throw new IOException("Fail to create the directory: " + tempDir.getAbsolutePath());
                 }
 
-                String filesToZipParent = destinationDir + File.separator + fileItemName.substring(0, fileItemName.lastIndexOf("."));
+                String filesToZipParent = destinationDir + File.separator +
+                        fileItemName.substring(0, fileItemName.lastIndexOf('.'));
                 String zipLocation = tempDir.getAbsolutePath() + File.separator + fileItemName;
                 try {
                     zip(zipLocation, filesToZipParent);
@@ -229,7 +230,8 @@ public class BPELUploadExecutor extends AbstractFileUploadExecutor {
 
     private String getTempUploadDir() {
         String uuid = generateUUID();
-        return getWorkingDir() + File.separator + this.tmpDir + File.separator + uuid + File.separator;
+        String tmpDir = "bpelTemp";
+        return getWorkingDir() + File.separator + tmpDir + File.separator + uuid + File.separator;
     }
 
     private boolean onlyOneChildDir(String location, String dirNameToCheck) {
@@ -250,7 +252,7 @@ public class BPELUploadExecutor extends AbstractFileUploadExecutor {
             du = new DeploymentUnitDir(new File(directoryPath));
         } catch (IllegalArgumentException iae) {
             log.error("BPEL Package Validation Failure.", iae);
-            throw new Exception("BPEL Package Validation Failure.");
+            throw new Exception("BPEL Package Validation Failure.", iae);
         }
 
         //check package for illegal charactors which registry does not support. (~!@#$;%^*()+={}[]|\<>)
@@ -258,9 +260,9 @@ public class BPELUploadExecutor extends AbstractFileUploadExecutor {
         for (File packageFile : packageFiles) {
             if (!packageFile.getName().matches("[^\\~\\!\\@\\#\\$\\;\\%\\^\\*\\(\\)\\+ /\\=\\{\\}\\[\\]\\\\|\\<\\>\"\\'\\`]+")) {
                 log.error("BPEL Package Validation Failure: one or many of the following illegal characters are in " +
-                          "the package.\n ~!@#$;%^*()+={}[]| \\<>\"'`");
+                        "the package.\n ~!@#$;%^*()+={}[]| \\<>\"'`");
                 throw new Exception("BPEL Package Validation Failure: one or many of the following illegal characters " +
-                                    "are in the package. ~!@#$;%^*()+={}[]| \\<>\"'`");
+                        "are in the package. ~!@#$;%^*()+={}[]| \\<>\"'`");
             }
         }
 
@@ -268,10 +270,10 @@ public class BPELUploadExecutor extends AbstractFileUploadExecutor {
             du.compile();
         } catch (RuntimeException ce) {
             log.error("BPEL Process Compilation Failure.", ce);
-            throw new Exception("BPEL Compilation Failure!");
+            throw new Exception("BPEL Compilation Failure!", ce);
         } catch (Exception e) {
             log.error("BPEL Process Compilation Failure.", e);
-            throw new Exception("BPEL Compilation Failure!");
+            throw new Exception("BPEL Compilation Failure!", e);
         }
 
         du.scan();
@@ -283,7 +285,7 @@ public class BPELUploadExecutor extends AbstractFileUploadExecutor {
             if (cbpInfo == null) {
                 //removeDeploymentArtifacts(deploymentContext, du);
                 String logMessage = "Aborting deployment. Cannot find Process definition for type "
-                                    + processType + ".";
+                        + processType + ".";
                 log.error(logMessage);
                 throw new Exception(logMessage);
             }
@@ -314,6 +316,5 @@ public class BPELUploadExecutor extends AbstractFileUploadExecutor {
             this.extractedFile = extractedFile;
         }
     }
-
 }
 

@@ -39,192 +39,198 @@ import java.util.Map;
  *
  * @author Gregor Latuske
  */
-public class BPELParser {
+public final class BPELParser {
 
-	/** The cached data. */
-	private static final Map<ProcessModel, ActivityRoot> DATA_MAP = new HashMap<ProcessModel, ActivityRoot>();
+    /**
+     * The cached data.
+     */
+    private static final Map<ProcessModel, ActivityRoot> DATA_MAP = new HashMap<ProcessModel, ActivityRoot>();
 
-	/**
-	 * Parses the BPEL document of the given {@link ProcessModel} and returns the {@link ActivityRoot}.
-	 *
-	 * @param processModel The {@link ProcessModel} to parse.
-	 * @return The created {@link ActivityRoot}.
-	 * @throws IOException
-	 * @throws ParserConfigurationException
-	 * @throws SAXException
-	 */
-	public static ActivityRoot parse(ProcessModel processModel)
-		throws IOException, ParserConfigurationException, SAXException {
+    private BPELParser() {
+    }
 
-		if (DATA_MAP.get(processModel) == null) {
-			DATA_MAP.put(processModel, parseRootNode(processModel));
-		}
+    /**
+     * Parses the BPEL document of the given {@link ProcessModel} and returns the {@link ActivityRoot}.
+     *
+     * @param processModel The {@link ProcessModel} to parse.
+     * @return The created {@link ActivityRoot}.
+     * @throws IOException
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     */
+    public static ActivityRoot parse(ProcessModel processModel)
+            throws IOException, ParserConfigurationException, SAXException {
 
-		return DATA_MAP.get(processModel);
-	}
+        if (DATA_MAP.get(processModel) == null) {
+            DATA_MAP.put(processModel, parseRootNode(processModel));
+        }
 
-	/**
-	 * Parses the given {@link Node}, creates an {@link ActivityRoot} and parses the child {@link Node}s
-	 * recursively.
-	 *
-	 * @param node The {@link Node} to parse.
-	 * @param processModel The associated {@link ProcessModel}.
-	 * @throws IOException
-	 * @throws ParserConfigurationException
-	 * @throws SAXException
-	 */
-	private static ActivityRoot parseRootNode(ProcessModel processModel)
-		throws IOException, SAXException, ParserConfigurationException {
-		InputStream is = null;
+        return DATA_MAP.get(processModel);
+    }
 
-		try {
-			if(processModel.getDocument() != null) {
-				is = processModel.getDocument().openStream();
-			} else {
-				is = new ByteArrayInputStream(processModel.getDefinition().getBytes());
-			}
-			
-			// Create and configure DocumentFactory
-			DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-			builderFactory.setNamespaceAware(true);
+    /**
+     * Parses the given {@link Node}, creates an {@link ActivityRoot} and parses the child {@link Node}s
+     * recursively.
+     *
+     * @param processModel The associated {@link ProcessModel}.
+     * @return Root Activity
+     * @throws IOException
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     */
+    private static ActivityRoot parseRootNode(ProcessModel processModel)
+            throws IOException, SAXException, ParserConfigurationException {
+        InputStream is = null;
 
-			// Create Document and load DocumentElement
-			Document document = builderFactory.newDocumentBuilder().parse(is);
-			Element element = document.getDocumentElement();
+        try {
+            if (processModel.getDocument() != null) {
+                is = processModel.getDocument().openStream();
+            } else {
+                is = new ByteArrayInputStream(processModel.getDefinition().getBytes());
+            }
 
-			ActivityRoot root = new ActivityRoot(processModel.getPid());
-			parseChildNodes(element, root, root);
+            // Create and configure DocumentFactory
+            DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+            builderFactory.setNamespaceAware(true);
 
-			return root;
-		} finally {
-			if (is != null) {
-				is.close();
-			}
-		}
-	}
+            // Create Document and load DocumentElement
+            Document document = builderFactory.newDocumentBuilder().parse(is);
+            Element element = document.getDocumentElement();
 
-	/**
-	 * Parses the given {@link Node}, creates an {@link Activity} and parses the child {@link Node}s
-	 * recursively.
-	 *
-	 * @param node The {@link Node} to parse.
-	 * @param parent The parent {@link Activity}.
-	 * @param root The {@link ActivityRoot}.
-	 */
-	private static void parseNode(Node node, ActivityComplex parent, ActivityRoot root) {
-		Activity activity = BPELActivityFactory.createActivity(getType(node), getName(node), parent, root);
+            ActivityRoot root = new ActivityRoot(processModel.getPid());
+            parseChildNodes(element, root, root);
 
-		// Parse children
-		if (activity != null) {
-			parseChildNodes(node, activity, root);
-		}
-	}
+            return root;
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+        }
+    }
 
-	/**
-	 * Parses the child nodes and creates child activities or add links.
-	 *
-	 * @param node The {@link Node} with the children to parse.
-	 * @param activity The created {@link Activity}.
-	 * @param root The {@link ActivityRoot}.
-	 */
-	private static void parseChildNodes(Node node, Activity activity, ActivityRoot root) {
-		// Iterate over child nodes
-		NodeList nodeList = node.getChildNodes();
-		for (int i = 0; i < nodeList.getLength(); i++) {
+    /**
+     * Parses the given {@link Node}, creates an {@link Activity} and parses the child {@link Node}s
+     * recursively.
+     *
+     * @param node   The {@link Node} to parse.
+     * @param parent The parent {@link Activity}.
+     * @param root   The {@link ActivityRoot}.
+     */
+    private static void parseNode(Node node, ActivityComplex parent, ActivityRoot root) {
+        Activity activity = BPELActivityFactory.createActivity(getType(node), getName(node), parent, root);
 
-			Node child = nodeList.item(i);
-			String tag = child.getLocalName();
+        // Parse children
+        if (activity != null) {
+            parseChildNodes(node, activity, root);
+        }
+    }
 
-			// Parse child node
-			if (tag != null && !tag.isEmpty()) {
+    /**
+     * Parses the child nodes and creates child activities or add links.
+     *
+     * @param node     The {@link Node} with the children to parse.
+     * @param activity The created {@link Activity}.
+     * @param root     The {@link ActivityRoot}.
+     */
+    private static void parseChildNodes(Node node, Activity activity, ActivityRoot root) {
+        // Iterate over child nodes
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
 
-				if (tag.equalsIgnoreCase("sources") || tag.equalsIgnoreCase("targets")) {
-					addLinks(child, activity, root);
-				} else if (activity instanceof ActivityComplex) {
-					parseNode(nodeList.item(i), (ActivityComplex) activity, root);
-				}
-			}
-		}
-	}
+            Node child = nodeList.item(i);
+            String tag = child.getLocalName();
 
-	/**
-	 * Determines the name of the node.
-	 *
-	 * @param node The given node.
-	 * @return The name of the node.
-	 */
-	private static String getName(Node node) {
-		String name = "";
-		if (node.getAttributes() != null) {
+            // Parse child node
+            if (tag != null && !tag.isEmpty()) {
 
-			Node nameNode = node.getAttributes().getNamedItem("name");
-			if (nameNode != null) {
-				name = nameNode.getTextContent();
-			}
-		}
+                if (tag.equalsIgnoreCase("sources") || tag.equalsIgnoreCase("targets")) {
+                    addLinks(child, activity, root);
+                } else if (activity instanceof ActivityComplex) {
+                    parseNode(nodeList.item(i), (ActivityComplex) activity, root);
+                }
+            }
+        }
+    }
 
-		return name;
-	}
+    /**
+     * Determines the name of the node.
+     *
+     * @param node The given node.
+     * @return The name of the node.
+     */
+    private static String getName(Node node) {
+        String name = "";
+        if (node.getAttributes() != null) {
 
-	/**
-	 * Determines the type (tag name) of the node.
-	 *
-	 * @param node The given node.
-	 * @return The type (tag name) of the node.
-	 */
-	private static String getType(Node node) {
-		return node.getLocalName() == null ? "" : node.getLocalName();
-	}
+            Node nameNode = node.getAttributes().getNamedItem("name");
+            if (nameNode != null) {
+                name = nameNode.getTextContent();
+            }
+        }
 
-	/**
-	 * Adjust the links of the flow activities (set the targets or sources).
-	 *
-	 * @param node The node with the targets or sources.
-	 * @param activity The activity that is the target or source.
-	 */
-	private static void addLinks(Node node, Activity activity, ActivityRoot root) {
-		NodeList nodeList = node.getChildNodes();
-		for (int i = 0; i < nodeList.getLength(); i++) {
+        return name;
+    }
 
-			// Get target node
-			Node child = nodeList.item(i);
-			String name = child.getLocalName();
-			if (name != null && child.getAttributes() != null) {
+    /**
+     * Determines the type (tag name) of the node.
+     *
+     * @param node The given node.
+     * @return The type (tag name) of the node.
+     */
+    private static String getType(Node node) {
+        return node.getLocalName() == null ? "" : node.getLocalName();
+    }
 
-				// Link name node
-				Node linkNameNode = child.getAttributes().getNamedItem("linkName");
-				if (linkNameNode != null) {
+    /**
+     * Adjust the links of the flow activities (set the targets or sources).
+     *
+     * @param node     The node with the targets or sources.
+     * @param activity The activity that is the target or source.
+     * @param root     Activity Root
+     */
+    private static void addLinks(Node node, Activity activity, ActivityRoot root) {
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
 
-					// Link name
-					String linkName = linkNameNode.getTextContent();
-					if (linkName != null && !linkName.isEmpty()) {
+            // Get target node
+            Node child = nodeList.item(i);
+            String name = child.getLocalName();
+            if (name != null && child.getAttributes() != null) {
 
-						Link link = new Link(linkName);
-						boolean contains = false;
+                // Link name node
+                Node linkNameNode = child.getAttributes().getNamedItem("linkName");
+                if (linkNameNode != null) {
 
-						// Check for new link
-						for (Link existingLink : root.getLinks()) {
-							if (existingLink.equals(link)) {
-								link = existingLink;
-								contains = true;
-							}
-						}
+                    // Link name
+                    String linkName = linkNameNode.getTextContent();
+                    if (linkName != null && !linkName.isEmpty()) {
 
-						// Add link if not exists
-						if (!contains) {
-							root.getLinks().add(link);
-						}
+                        Link link = new Link(linkName);
+                        boolean contains = false;
 
-						// Set source or target
-						if (name.equalsIgnoreCase("source")) {
-							link.setSource(activity);
-						} else if (name.equalsIgnoreCase("target")) {
-							link.setTarget(activity);
-						}
-					}
-				}
-			}
-		}
-	}
+                        // Check for new link
+                        for (Link existingLink : root.getLinks()) {
+                            if (existingLink.equals(link)) {
+                                link = existingLink;
+                                contains = true;
+                            }
+                        }
+
+                        // Add link if not exists
+                        if (!contains) {
+                            root.getLinks().add(link);
+                        }
+
+                        // Set source or target
+                        if (name.equalsIgnoreCase("source")) {
+                            link.setSource(activity);
+                        } else if (name.equalsIgnoreCase("target")) {
+                            link.setTarget(activity);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 }

@@ -39,21 +39,20 @@ public class Text
 	/**
 	 * Constructor of SVGText.
 	 *
-	 * @param text The text that should be displayed.
+	 * @param title The text that should be displayed.
 	 * @param maxLength The maximum length of the text (-1 stands for full lenght)
 	 * @param position The {@link Position} of the text.
 	 * @param cssClass The CSS class of the text.
 	 * @param attributes Additional attributes.
 	 */
-	public Text(String text, int maxLength, Position position, String cssClass, String... attributes) {
-		String title = text;
-
-		// Cut text
+	public Text(String title, int maxLength, Position position, String cssClass, String... attributes) {
+		String text = title;
+		// Cut title
 		if (maxLength >= 0 && text.length() > maxLength) {
 			text = text.substring(0, maxLength) + "...";
 		}
 
-		// XLink is used to show tool tip (title element does not work yet)
+		// XLink is used to show tool tip (text element does not work yet)
 		append("<a xlink:title=\"" + title + "\">\n");
 		append("<text class=\"" + cssClass + "\" ");
 		append("x=\"" + position.getX() + "\" y=\"" + position.getY() + "\"");

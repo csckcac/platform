@@ -23,12 +23,16 @@ import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Settings;
  *
  * @author Gregor Latuske
  */
-public class SVGGenerator {
+public final class SVGGenerator {
+    private SVGGenerator() {
+    }
 
-	/**
+    /**
 	 * Generates the SVG.
 	 *
-	 * @return The generated SVG.
+	 * @param root Root Activity
+     * @param settings Settings
+     * @return The generated SVG.
 	 */
 	public static SVG generate(ActivityRoot root, Settings settings) {
 		ActivityRootElement rootElement = new ActivityRootElement(root, settings);

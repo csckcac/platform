@@ -18,146 +18,156 @@ import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.element.ActivityElem
 
 /**
  * This class represents the width and the height of an {@link ActivityElement}.
- * 
+ *
  * @author Gregor Latuske
  */
 public class Dimension {
 
-	/** The width of the element in pixels. */
-	private int width;
+    /**
+     * The width of the element in pixels.
+     */
+    private int width;
 
-	/** The height of the element in pixels. */
-	private int height;
+    /**
+     * The height of the element in pixels.
+     */
+    private int height;
 
-	/** The left and right margin of the element in pixels. */
-	private int marginHorizontal;
+    /**
+     * The left and right margin of the element in pixels.
+     */
+    private int marginHorizontal;
 
-	/** The top and bottom margin of the element in pixels. */
-	private int marginVertical;
+    /**
+     * The top and bottom margin of the element in pixels.
+     */
+    private int marginVertical;
 
-	/**
-	 * Returns the {@link Dimension} of a type image.
-	 * 
-	 * @return The {@link Dimension} of a type image.
-	 */
-	public static Dimension TYPE_IMAGE() {
-		return GlobalSettings.getInstance().getTypeImageSize();
-	}
+    /**
+     * Returns the {@link Dimension} of a type image.
+     *
+     * @return The {@link Dimension} of a type image.
+     */
+    public static Dimension getTypeImageDimension() {
+        return GlobalSettings.getInstance().getTypeImageSize();
+    }
 
-	/**
-	 * Returns the {@link Dimension} of a status image.
-	 * 
-	 * @return The {@link Dimension} of a status image.
-	 */
-	public static Dimension STATUS_IMAGE() {
-		return GlobalSettings.getInstance().getStatusImageSize();
-	}
+    /**
+     * Returns the {@link Dimension} of a status image.
+     *
+     * @return The {@link Dimension} of a status image.
+     */
+    public static Dimension getStatusImageDimension() {
+        return GlobalSettings.getInstance().getStatusImageSize();
+    }
 
-	/**
-	 * Returns the {@link Dimension} of a date image.
-	 * 
-	 * @return The {@link Dimension} of a date image.
-	 */
-	public static Dimension DATE_IMAGE() {
-		return GlobalSettings.getInstance().getDateImageSize();
-	}
+    /**
+     * Returns the {@link Dimension} of a date image.
+     *
+     * @return The {@link Dimension} of a date image.
+     */
+    public static Dimension getDateImageDimension() {
+        return GlobalSettings.getInstance().getDateImageSize();
+    }
 
-    public static Dimension STATUS_BASED_ACTION_IMAGE() {
+    public static Dimension getStatusBasedActionImageDimension() {
         return GlobalSettings.getInstance().getStatusBasedActionImageSize();
     }
 
-	/**
-	 * Constructor of SVGDimension.
-	 * 
-	 * @param width The width of the element.
-	 * @param marginHorizontal The left and right margin of the element.
-	 * @param height The height of the element.
-	 * @param marginVertical The top and bottom margin of the element.
-	 */
-	public Dimension(int width, int marginHorizontal, int height, int marginVertical) {
-		this.width = width;
-		this.marginHorizontal = marginHorizontal;
-		this.height = height;
-		this.marginVertical = marginVertical;
-	}
+    /**
+     * Constructor of SVGDimension.
+     *
+     * @param width            The width of the element.
+     * @param marginHorizontal The left and right margin of the element.
+     * @param height           The height of the element.
+     * @param marginVertical   The top and bottom margin of the element.
+     */
+    public Dimension(int width, int marginHorizontal, int height, int marginVertical) {
+        this.width = width;
+        this.marginHorizontal = marginHorizontal;
+        this.height = height;
+        this.marginVertical = marginVertical;
+    }
 
-	/**
-	 * Returns the value of width.
-	 * 
-	 * @return The value of width.
-	 */
-	public int getWidth() {
-		return this.width;
-	}
+    /**
+     * Returns the value of width.
+     *
+     * @return The value of width.
+     */
+    public int getWidth() {
+        return this.width;
+    }
 
-	/**
-	 * Returns the value of width + marginHorizontal * 2.
-	 * 
-	 * @return The value of width + marginHorizontal.
-	 */
-	public int getWidthWithMargin() {
-		return getWidth() + getMarginHorizontal() * 2;
-	}
+    /**
+     * Returns the value of width + marginHorizontal * 2.
+     *
+     * @return The value of width + marginHorizontal.
+     */
+    public int getWidthWithMargin() {
+        return getWidth() + getMarginHorizontal() * 2;
+    }
 
-	/**
-	 * Adds the value to the width.
-	 * 
-	 * @param width The value that should be added to the width.
-	 */
-	public void appendToWidth(int width) {
-		this.width += width;
-	}
+    /**
+     * Adds the value to the width.
+     *
+     * @param width The value that should be added to the width.
+     */
+    public void appendToWidth(int width) {
+        this.width += width;
+    }
 
-	/**
-	 * Returns the value of height.
-	 * 
-	 * @return The value of height.
-	 */
-	public int getHeight() {
-		return this.height;
-	}
+    /**
+     * Returns the value of height.
+     *
+     * @return The value of height.
+     */
+    public int getHeight() {
+        return this.height;
+    }
 
-	/**
-	 * Returns the value of height + marginVertical * 2.
-	 * 
-	 * @return The value of height + marginVertical * 2.
-	 */
-	public int getHeightWithMargin() {
-		return getHeight() + getMarginVertical() * 2;
-	}
+    /**
+     * Returns the value of height + marginVertical * 2.
+     *
+     * @return The value of height + marginVertical * 2.
+     */
+    public int getHeightWithMargin() {
+        return getHeight() + getMarginVertical() * 2;
+    }
 
-	/**
-	 * Adds the value to the height.
-	 * 
-	 * @param width The value that should be added to the height.
-	 */
-	public void appendToHeight(int height) {
-		this.height += height;
-	}
+    /**
+     * Adds the value to the height.
+     *
+     * @param height The value that should be added to the height.
+     */
+    public void appendToHeight(int height) {
+        this.height += height;
+    }
 
-	/**
-	 * Returns the value of marginHorizontal.
-	 * 
-	 * @return The value of marginHorizontal.
-	 */
-	public int getMarginHorizontal() {
-		return this.marginHorizontal;
-	}
+    /**
+     * Returns the value of marginHorizontal.
+     *
+     * @return The value of marginHorizontal.
+     */
+    public int getMarginHorizontal() {
+        return this.marginHorizontal;
+    }
 
-	/**
-	 * Returns the value of marginVertical.
-	 * 
-	 * @return The value of marginVertical.
-	 */
-	public int getMarginVertical() {
-		return this.marginVertical;
-	}
+    /**
+     * Returns the value of marginVertical.
+     *
+     * @return The value of marginVertical.
+     */
+    public int getMarginVertical() {
+        return this.marginVertical;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public String toString() {
-		return "Width: " + getWidth() + ", Height: " + getHeight() + ", Margin: " + getMarginHorizontal()
-			+ " " + getMarginVertical();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return "Width: " + getWidth() + ", Height: " + getHeight() + ", Margin: " + getMarginHorizontal()
+                + " " + getMarginVertical();
+    }
 
 }

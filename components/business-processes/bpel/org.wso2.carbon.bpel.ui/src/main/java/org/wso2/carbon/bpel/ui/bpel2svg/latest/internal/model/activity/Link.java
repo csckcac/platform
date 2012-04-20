@@ -54,14 +54,14 @@ public class Link
 		return this.name;
 	}
 
-	/**
-	 * Sets the value of name to name.
-	 *
-	 * @param name The new value of name.
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+//	/**
+//	 * Sets the value of name to name.
+//	 *
+//	 * @param name The new value of name.
+//	 */
+//	public void setName(String name) {
+//		this.name = name;
+//	}
 
 	/**
 	 * Returns the value of source.
@@ -102,7 +102,7 @@ public class Link
 	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof Link)) {
+		if (!(obj instanceof Link)) {
 			return false;
 		}
 

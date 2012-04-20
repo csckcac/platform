@@ -25,8 +25,11 @@ import java.util.zip.ZipEntry;
 /**
  * Basic archive extracting operations
  */
-public class ArchiveExtractor {
+public final class ArchiveExtractor {
     private static Log log = LogFactory.getLog(ArchiveExtractor.class);
+
+    private ArchiveExtractor() {
+    }
 
     private static void copyInputStream(InputStream in, OutputStream out)
             throws IOException {
@@ -65,7 +68,8 @@ public class ArchiveExtractor {
 
                 File destFile = new File(destination, entry.getName());
                 if (!destFile.getParentFile().exists() && !destFile.getParentFile().mkdirs()) {
-                    throw new IOException("Fail to create the directory: " + destFile.getParentFile().getAbsolutePath());
+                    throw new IOException("Fail to create the directory: " +
+                            destFile.getParentFile().getAbsolutePath());
                 }
                 copyInputStream(zipStream, new BufferedOutputStream(new FileOutputStream(destFile)));
             }

@@ -40,11 +40,6 @@ import java.util.List;
  */
 public class ProcessModelServiceImpl implements ProcessModelService<String> {
 
-    /**
-     * The property name of the process management WebService.
-     */
-    String PROCESS_MGT_SERVICE = "ProcessManagementService";
-
     private static Log log = LogFactory.getLog(ProcessModelServiceImpl.class);
 
     /**
@@ -72,18 +67,18 @@ public class ProcessModelServiceImpl implements ProcessModelService<String> {
     @Override
     public List<ProcessModel> getProcessModels() throws BPIException {
 
-        PaginatedProcessInfoList processList = null;
+        PaginatedProcessInfoList processList;
         ArrayList<ProcessModel> processModels = new ArrayList<ProcessModel>();
 
         try {
             /* Retrieve the list of process models */
             processList = getPaginatedProcessList("name}}* namespace=*", "deployed name", 0);
         } catch (ProcessManagementException e) {
-            throw  new BPIException("Error occurred in back-end service while getting the paginated " +
-                                    "process list.", e);
+            throw new BPIException("Error occurred in back-end service while getting the paginated " +
+                    "process list.", e);
         } catch (RemoteException e) {
             throw new BPIException("Error occurred during communication with back-end while getting " +
-                                   "the paginated process list.", e);
+                    "the paginated process list.", e);
         }
 
         /* Transform each process model into an internal representation of the model */
@@ -91,7 +86,7 @@ public class ProcessModelServiceImpl implements ProcessModelService<String> {
         if (processes != null) {
             for (LimitedProcessInfoType process : processes) {
 
-                ProcessInfoType processInfo = null;
+                ProcessInfoType processInfo;
                 try {
                     /* Get additional information for the current process model by calling the WebService */
                     processInfo = getProcessInfo(process.getPid());
@@ -125,7 +120,7 @@ public class ProcessModelServiceImpl implements ProcessModelService<String> {
         ProcessModel processModel = null;
 
 
-        ProcessInfoType processInfo = null;
+        ProcessInfoType processInfo;
 
 
         try {
@@ -156,9 +151,13 @@ public class ProcessModelServiceImpl implements ProcessModelService<String> {
      * @param orderBy    The order of the list
      * @param pageNumber The number of the page that should be retrieved
      * @return A list of process models
-     * @throws RemoteException
+     * @throws RemoteException If stub operation invocation fail
+     * @throws org.wso2.carbon.bpel.stub.mgt.ProcessManagementException If error occurred while
+     * reading the process list from the backend
      */
-    private PaginatedProcessInfoList getPaginatedProcessList(String filter, String orderBy, int pageNumber) throws RemoteException, ProcessManagementException {
+    private PaginatedProcessInfoList getPaginatedProcessList(String filter, String orderBy,
+                                                             int pageNumber)
+            throws RemoteException, ProcessManagementException {
         /* Call Web-Service */
         return getStub().getPaginatedProcessList(filter, orderBy, pageNumber);
     }
@@ -169,9 +168,12 @@ public class ProcessModelServiceImpl implements ProcessModelService<String> {
      *
      * @param pid The id of the process model
      * @return A {@link ProcessInfoType} that holds information about the process model
-     * @throws RemoteException
+     * @throws RemoteException If stub operation invocation fail
+     * @throws org.wso2.carbon.bpel.stub.mgt.ProcessManagementException If error occurred while
+     * reading the process list from the backend
      */
-    private ProcessInfoType getProcessInfo(String pid) throws RemoteException, ProcessManagementException {
+    private ProcessInfoType getProcessInfo(String pid)
+            throws RemoteException, ProcessManagementException {
         /* Call Web-Service */
         return getStub().getProcessInfo(QName.valueOf(pid));
     }
@@ -180,16 +182,18 @@ public class ProcessModelServiceImpl implements ProcessModelService<String> {
      * Creates a {@link ProcessManagementServiceStub} of the process management WebService.
      *
      * @return The {@link ProcessManagementServiceStub}
-     * @throws RemoteException
+     * @throws RemoteException If stub operation invocation fail
      */
     private ProcessManagementServiceStub getStub() throws RemoteException {
+        String PROCESS_MGT_SERVICE = "ProcessManagementService";
         String serviceURL = AuthenticationManager.getBackendServerURL() + PROCESS_MGT_SERVICE;
 
         ProcessManagementServiceStub stub = new ProcessManagementServiceStub(null, serviceURL);
         ServiceClient client = stub._getServiceClient();
         Options option = client.getOptions();
         option.setManageSession(true);
-        option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, AuthenticationManager.getCookie());
+        option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING,
+                AuthenticationManager.getCookie());
 
         return stub;
     }

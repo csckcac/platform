@@ -48,7 +48,7 @@ public class ActivityExecData
 
     /**
      * Returns the activity ID
-     * @return
+     * @return Activity Id
      */
     public String getActivityId() {
         return activityId;
@@ -57,7 +57,8 @@ public class ActivityExecData
 	/**
 	 * Constructor of ActivityExecData.
 	 * 
-	 * @param status The status of the activity.
+	 * @param activityId Activity ID
+     * @param status The status of the activity.
 	 * @param processInstance The associated process instance.
 	 */
 	public ActivityExecData(String activityId, ActivityExecStatus status, ProcessInstance processInstance) {
@@ -132,7 +133,7 @@ public class ActivityExecData
 	/** {@inheritDoc} */
 	@Override
 	public boolean equals(Object obj) {
-		if (obj != null && obj instanceof ActivityExecData && getProcessInstance() != null) {
+		if (obj instanceof ActivityExecData && getProcessInstance() != null) {
 
 			ActivityExecData data = (ActivityExecData) obj;
 			return getStatus().equals(data.getStatus())

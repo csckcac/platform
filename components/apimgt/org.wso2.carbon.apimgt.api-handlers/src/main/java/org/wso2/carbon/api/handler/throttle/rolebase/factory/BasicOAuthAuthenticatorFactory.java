@@ -31,7 +31,8 @@ import java.util.Map;
 
 public class BasicOAuthAuthenticatorFactory implements AuthenticatorFactory{
 
-    static Log log = LogFactory.getLog(BasicOAuthAuthenticatorFactory.class);
+    private static final Log log = LogFactory.getLog(BasicOAuthAuthenticatorFactory.class);
+
     public UserPrivilegesHandler createAuthenticationHandler(Map settings) {
         String oAuthHeader = (String) settings.get(RestAPIThrottleHandler.O_AUTH_HEADER);
         String apiVersion = (String) settings.get(RESTConstants.SYNAPSE_REST_API_VERSION);

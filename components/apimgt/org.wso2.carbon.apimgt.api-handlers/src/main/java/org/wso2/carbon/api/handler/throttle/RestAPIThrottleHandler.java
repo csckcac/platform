@@ -45,6 +45,7 @@ import java.util.Map;
 public class RestAPIThrottleHandler extends AbstractHandler {
 
     public static final String O_AUTH_HEADER = CarbonAPIThrottleConstants._O_AUTH_HEADER;
+    private static final String MESSAGE_THROTTLED_OUT = "MESSAGE_THROTTLED_OUT";
 
     private static final Log log = LogFactory.getLog(RestAPIThrottleHandler.class);
 
@@ -189,11 +190,8 @@ public class RestAPIThrottleHandler extends AbstractHandler {
         //if the access is success through concurrency throttle and if this is a request message
         //then do access rate based throttling
         if (throttle != null && !isResponse && canAccess) {
-            canAccess = throttleByAccessRate(synCtx, axisMC, cc);
-
-            if (canAccess){
-                doRoleBasedAccessThrottling(synCtx, axisMC, cc);
-            }
+            canAccess = throttleByAccessRate(synCtx, axisMC, cc) && 
+                    doRoleBasedAccessThrottling(synCtx, axisMC, cc);
         }
         // all the replication functionality of the access rate based throttling handles by itself
         // Just replicate the current state of ConcurrentAccessController
@@ -213,6 +211,7 @@ public class RestAPIThrottleHandler extends AbstractHandler {
         }
 
         if (!canAccess) {
+            synCtx.setProperty(MESSAGE_THROTTLED_OUT, Boolean.TRUE);
             handleException("Rejected throttling for API", synCtx);
         }
 
@@ -321,7 +320,7 @@ public class RestAPIThrottleHandler extends AbstractHandler {
                                 }
                             }
                         } catch (ThrottleException e) {
-                            handleException("Error occurd during throttling", e, synCtx);
+                            handleException("Error occurred during throttling", e, synCtx);
                         }
                     }
                 }
@@ -584,7 +583,6 @@ public class RestAPIThrottleHandler extends AbstractHandler {
     public boolean handleResponse(MessageContext messageContext) {
         return mediate(messageContext);
     }
-
 
     public String  getAuthFactory() {
         return authFactory;

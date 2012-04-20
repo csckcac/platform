@@ -76,6 +76,13 @@ public class StockQuoteClient {
         serviceClient.setOptions(options);
         return serviceClient.sendReceive(createStandardRequest(symbol));
     }
+    
+    public void sendAndForgetSimpleStockQuoteRequest(String trpUrl, String addUrl,
+                                                         String symbol) throws AxisFault{
+        Options options = getOptions(trpUrl, addUrl);
+        serviceClient.setOptions(options);
+        serviceClient.fireAndForget(createStandardRequest(symbol));
+    }
 
     public OMElement sendSecuredSimpleStockQuoteRequest(String trpUrl, String addUrl,
                                                         String symbol, String policyPath) throws Exception {

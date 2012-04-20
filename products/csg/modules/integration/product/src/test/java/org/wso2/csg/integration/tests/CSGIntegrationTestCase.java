@@ -18,9 +18,11 @@ package org.wso2.csg.integration.tests;
 import org.apache.axis2.client.Stub;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.synapse.SynapseConstants;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
+import org.wso2.carbon.proxyadmin.stub.types.carbon.ProxyData;
 import org.wso2.carbon.utils.CarbonUtils;
 
 /**
@@ -80,7 +82,7 @@ public abstract class CSGIntegrationTestCase {
             return url + service;
         } else {
             // FIXME - fix this to return the "correct(?)" url for stratos
-            return url + FrameworkSettings.TENANT_NAME + "/";
+            return url + "/t/" + FrameworkSettings.TENANT_NAME + "/" + service;
         }
     }
 
@@ -119,5 +121,47 @@ public abstract class CSGIntegrationTestCase {
     protected void authenticate(Stub stub) {
         CarbonUtils.setBasicAccessSecurityHeaders(FrameworkSettings.USER_NAME,
                 FrameworkSettings.PASSWORD, stub._getServiceClient());
+    }
+
+    /**
+     * Create a proxy data object for the proxy
+     *
+     * @param proxyName proxy service name
+     * @param epr       EPR of the proxy
+     * @return the created proxy data object
+     */
+    protected ProxyData createProxyData(String proxyName, String epr) {
+        ProxyData proxyData = new ProxyData();
+        proxyData.setName(proxyName);
+        proxyData.setInSeqXML("<inSequence xmlns=\"" + SynapseConstants.SYNAPSE_NAMESPACE + "\">" +
+                "<property name=\"transportNonBlocking\" scope=\"axis2\" action=\"remove\"/>" +
+                "<property name=\"preserveProcessedHeaders\" value=\"true\"/> + " +
+                "<property name=\"OUT_ONLY\" scope=\"axis2\" action=\"set\" value=\"true\"/>" +
+                "</inSequence>");
+
+        proxyData.setOutSeqXML("<outSequence xmlns=\"http://ws.apache.org/ns/synapse\"><send /></outSequence>");
+        proxyData.setEndpointXML("<endpoint xmlns=\"" + SynapseConstants.SYNAPSE_NAMESPACE + "\">" +
+                "<address uri=\"" + epr + "\">" +
+                "<suspendOnFailure>" +
+                "<errorCodes>400207</errorCodes>" +
+                "<initialDuration>1000</initialDuration>" +
+                "<progressionFactor>2</progressionFactor>" +
+                "<maximumDuration>64000</maximumDuration>" +
+                "</suspendOnFailure>" +
+                "</address>" +
+                "</endpoint>");
+        proxyData.setFaultSeqXML("<faultSequence xmlns=\"" + SynapseConstants.SYNAPSE_NAMESPACE + "\">" +
+                "<log level=\"full\"/>" +
+                "<drop/>" +
+                "</faultSequence>");
+        return proxyData;
+    }
+
+    protected String getTestProxyEPR(String serviceName, String serverName, String domainName) {
+        String epr = "csg://" + serverName + "/" + serviceName;
+        if (FrameworkSettings.STRATOS.equalsIgnoreCase("true")) {
+            epr = "csg://" + domainName + "/" + serverName + "/"+ serviceName;
+        }
+        return epr;
     }
 }

@@ -16,9 +16,7 @@
 package org.wso2.csg.integration.tests;
 
 import org.apache.axis2.AxisFault;
-import org.apache.synapse.SynapseConstants;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
 import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminProxyAdminException;
 import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminStub;
 import org.wso2.carbon.proxyadmin.stub.types.carbon.ProxyData;
@@ -32,7 +30,6 @@ import static org.testng.Assert.*;
  */
 public class ProxyAdminServiceTestCase extends CSGIntegrationTestCase {
     private ProxyServiceAdminStub proxyServiceAdminStub;
-    private static final String PROXY_NAME = "CSGTestProxy";
 
     public ProxyAdminServiceTestCase() {
         super("ProxyServiceAdmin");
@@ -70,66 +67,41 @@ public class ProxyAdminServiceTestCase extends CSGIntegrationTestCase {
         assertTrue(httpFound && httpsFound);
     }
 
-    @Test(description = "Test deploying a CSG proxy.",
-            expectedExceptions = {RemoteException.class, ProxyServiceAdminProxyAdminException.class})
+    @Test(groups = {"wso2.csg"},
+            description = "Test deploying a CSG proxy.")
     public void testProxyOperations()
             throws RemoteException, ProxyServiceAdminProxyAdminException {
-        String epr = "csg://testServer/SimpleStockQuoteService";
-        if (FrameworkSettings.STRATOS.equalsIgnoreCase("true")) {
-            epr = "csg://testDomain/testServer/SimpleStockQuoteService";
-        }
 
-        ProxyData proxyData = new ProxyData();
-        proxyData.setName(PROXY_NAME);
-        proxyData.setInSeqXML("<inSequence xmlns=\"" + SynapseConstants.SYNAPSE_NAMESPACE + "\">" +
-                "<property name=\"transportNonBlocking\" scope=\"axis2\" action=\"remove\"/>" +
-                "<property name=\"preserveProcessedHeaders\" value=\"true\"/> + " +
-                "<property name=\"OUT_ONLY\" scope=\"axis2\" action=\"set\" value=\"true\"/>" +
-                "</inSequence>");
-
-        proxyData.setOutSeqXML("<outSequence xmlns=\"http://ws.apache.org/ns/synapse\"><send /></outSequence>");
-        proxyData.setEndpointXML("<endpoint xmlns=\"" + SynapseConstants.SYNAPSE_NAMESPACE + "\">" +
-                "<address uri=\"" + epr + "\">" +
-                "<suspendOnFailure>" +
-                "<errorCodes>400207</errorCodes>" +
-                "<initialDuration>1000</initialDuration>" +
-                "<progressionFactor>2</progressionFactor>" +
-                "<maximumDuration>64000</maximumDuration>" +
-                "</suspendOnFailure>" +
-                "</address>" +
-                "</endpoint>");
-        proxyData.setFaultSeqXML("<faultSequence xmlns=\"" + SynapseConstants.SYNAPSE_NAMESPACE + "\">" +
-                "<log level=\"full\"/>" +
-                "<drop/>" +
-                "</faultSequence>");
+        String proxyName = "TestProxy";
 
         // FIXME - the CSG proxy actually persist a WSDL into the registry and use that as the WSDL
         // FIXME - of the proxy, add a test for that too
         try {
-            proxyServiceAdminStub.addProxy(proxyData);
+            proxyServiceAdminStub.addProxy(
+                    createProxyData(proxyName, getTestProxyEPR(
+                            proxyName, "testServer", "testDomain")));
         } catch (Exception e) {
             fail("Deploying proxy failed!", e);
         }
-        assertNotNull(proxyServiceAdminStub.getProxy(PROXY_NAME));
+        assertNotNull(proxyServiceAdminStub.getProxy(proxyName));
 
-        proxyServiceAdminStub.enableStatistics(PROXY_NAME);
-        ProxyData newProxy = proxyServiceAdminStub.getProxy(PROXY_NAME);
+        proxyServiceAdminStub.enableStatistics(proxyName);
+        ProxyData newProxy = proxyServiceAdminStub.getProxy(proxyName);
         assertTrue(newProxy.getEnableStatistics());
 
-        proxyServiceAdminStub.disableStatistics(PROXY_NAME);
-        newProxy = proxyServiceAdminStub.getProxy(PROXY_NAME);
+        proxyServiceAdminStub.disableStatistics(proxyName);
+        newProxy = proxyServiceAdminStub.getProxy(proxyName);
         assertFalse(newProxy.getEnableStatistics());
 
-        proxyServiceAdminStub.enableTracing(PROXY_NAME);
-        newProxy = proxyServiceAdminStub.getProxy(PROXY_NAME);
+        proxyServiceAdminStub.enableTracing(proxyName);
+        newProxy = proxyServiceAdminStub.getProxy(proxyName);
         assertTrue(newProxy.getEnableTracing());
 
-        proxyServiceAdminStub.disableTracing(PROXY_NAME);
-        newProxy = proxyServiceAdminStub.getProxy(PROXY_NAME);
+        proxyServiceAdminStub.disableTracing(proxyName);
+        newProxy = proxyServiceAdminStub.getProxy(proxyName);
         assertFalse(newProxy.getEnableTracing());
 
-        proxyServiceAdminStub.deleteProxyService(PROXY_NAME);
+        proxyServiceAdminStub.deleteProxyService(proxyName);
 
-        assertNull(proxyServiceAdminStub.getProxy(PROXY_NAME));
     }
 }

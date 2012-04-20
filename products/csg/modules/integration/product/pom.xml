@@ -44,10 +44,9 @@
                         <include>**/*TestCase.java</include>
                     </includes>
                     <!-- uncomment the following and define any test that need to exclude -->
-                    <excludes>
-                        <exclude>CSGServiceTestCase.java</exclude>
-                        <exclude>CSGServiceTestCase.java</exclude>
-                    </excludes>
+                    <!--<excludes>-->
+                        <!--<exclude>CSGServerTestCase.java</exclude>-->
+                    <!--</excludes>-->
                     <systemProperties>
                         <sec.verifier.dir>${basedir}/../../../../integration/security-verifier/</sec.verifier.dir>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>

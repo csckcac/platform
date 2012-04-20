@@ -119,7 +119,9 @@ var F = File;
     };
 
     File = function (path) {
+    log(path);
         path = 'file:///tmp' + path;
+    log(path);
         return new F(path);
     };
 

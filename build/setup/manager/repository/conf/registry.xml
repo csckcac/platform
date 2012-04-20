@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <!--
-  ~ Copyright 2005-2011 WSO2, Inc. (http://wso2.com)
+  ~ Copyright 2005-2009 WSO2, Inc. (http://wso2.com)
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -28,14 +28,69 @@
     <registryRoot>/</registryRoot>
 
     <dbConfig name="wso2registry">
-        <url>jdbc:h2:repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE</url>
+               <url>jdbc:h2:H2_DATABASE_ABSOLUTE_PATH/repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE</url>
         <userName>wso2carbon</userName>
         <password>wso2carbon</password>
         <driverName>org.h2.Driver</driverName>
-        <maxActive>50</maxActive>
-        <maxWait>60000</maxWait>
+        <maxActive>150</maxActive>
+        <maxWait>360000</maxWait>
         <minIdle>5</minIdle>
     </dbConfig>
+
+    <dbConfig name="governance">
+        <url>jdbc:mysql://localhost:3306/governance?autoReconnect=true</url>
+        <userName>registry</userName>
+        <password>password</password>
+        <driverName>com.mysql.jdbc.Driver</driverName>
+        <maxActive>150</maxActive>
+        <maxWait>360000</maxWait>
+        <minIdle>5</minIdle>
+        <validationQuery>SELECT 1</validationQuery>
+    </dbConfig>
+
+    <remoteInstance url="https://governance.cloud-test.wso2.com">
+        <id>governance</id>
+        <dbConfig>governance</dbConfig>
+        <readOnly>false</readOnly>
+        <registryRoot>/</registryRoot>
+               <enableCache>true</enableCache>
+    </remoteInstance>
+
+    <mount path="/_system/governance" overwrite="virtual">
+        <instanceId>governance</instanceId>
+        <targetPath>/_system/governance</targetPath>
+    </mount>
+    <mount path="/_system/config" overwrite="virtual">
+        <instanceId>governance</instanceId>
+        <targetPath>/_system/config</targetPath>
+    </mount>
+  <!--dbConfig name="governance">
+      <url>jdbc:mysql://mysql.stratoslive.wso2.com:3306/governance?autoReconnect=true</url>
+      <userName>registry</userName>
+              <password>3HLw31L9KtdtaUQqdBbE3ujm8CL5uogMis1zBg2z</password>
+      <driverName>com.mysql.jdbc.Driver</driverName>
+      <maxActive>150</maxActive>
+      <maxWait>360000</maxWait>
+      <minIdle>5</minIdle>
+      <validationQuery>SELECT 1</validationQuery>
+   </dbConfig-->
+
+ <!--remoteInstance url="https://governance.stratoslive.wso2.com">
+       <id>governance</id>
+        <dbConfig>governance</dbConfig>
+        <readOnly>false</readOnly>
+        <registryRoot>/</registryRoot>
+               <enableCache>true</enableCache>
+    </remoteInstance-->
+
+  <!--mount path="/_system/governance" overwrite="virtual">
+        <instanceId>governance</instanceId>
+        <targetPath>/_system/governance</targetPath>
+    </mount-->
+  <!--mount path="/_system/config" overwrite="virtual">
+        <instanceId>governance</instanceId>
+        <targetPath>/_system/manager_config</targetPath>
+    </mount-->
 
    <!--<handler class="org.wso2.carbon.registry.extensions.handlers.SynapseRepositoryHandler">
         <filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher">
@@ -92,8 +147,8 @@
         <targetPath>/_system/nodes</targetPath>
     </mount-->
 
-    
-    <versionResourcesOnChange>true</versionResourcesOnChange>
+
+    <versionResourcesOnChange>false</versionResourcesOnChange>
 
     <!-- NOTE: You can edit the options under "StaticConfiguration" only before the
      startup. -->

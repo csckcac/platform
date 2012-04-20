@@ -42,12 +42,26 @@ public class SessionHostObject extends ScriptableObject {
         return hostObjectName;
     }
 
-    public long jsGet_created() throws ScriptException {
-        return session.getCreationTime();
+    public static long jsFunction_getCreationTime(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+        String functionName = "getCreationTime";
+        int argsCount = args.length;
+        if (argsCount != 0) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+
+        SessionHostObject sho = (SessionHostObject) thisObj;
+        return sho.session.getCreationTime();
     }
 
-    public long jsGet_lastAccessed() throws ScriptException {
-        return session.getLastAccessedTime();
+    public static long jsFunction_getLastAccessedTime(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+        String functionName = "getLastAccessedTime";
+        int argsCount = args.length;
+        if (argsCount != 0) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+
+        SessionHostObject sho = (SessionHostObject) thisObj;
+        return sho.session.getLastAccessedTime();
     }
 
     public long jsGet_maxInactive() throws ScriptException {
@@ -61,8 +75,15 @@ public class SessionHostObject extends ScriptableObject {
         session.setMaxInactiveInterval((Integer) object);
     }
 
-    public boolean jsGet_isNew() throws ScriptException {
-        return session.isNew();
+    public static boolean jsFunction_isNew(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+        String functionName = "isNew";
+        int argsCount = args.length;
+        if (argsCount != 0) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+
+        SessionHostObject sho = (SessionHostObject) thisObj;
+        return sho.session.isNew();
     }
 
     public static void jsFunction_put(Context cx, Scriptable thisObj, Object[] args, Function funObj)

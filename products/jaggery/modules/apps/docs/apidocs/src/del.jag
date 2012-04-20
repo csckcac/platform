@@ -1,5 +1,0 @@
-    <%
-    del(url, { param1 : "value1", param2 : "value2" }, "text", { header1 : "value1", header2 : "value2" }, function(data, xhr) {
-    log("Response received");
-    });
-    %>

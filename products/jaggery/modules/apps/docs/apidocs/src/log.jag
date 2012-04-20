@@ -1,7 +1,0 @@
-        <%
-        log("This is an INFO level log", "info");
-        log("This is an WARN level log", "warn");
-        log("This is an DEBUG level log", "debug");
-        log("This is an ERROR level log", "error");
-        log("This is an FATAL level log", "fatal");
-        %>

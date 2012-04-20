@@ -1,7 +1,0 @@
-<html>
-    <body>
-    <%
-        print('Hi, &lt;h3&gt; Jaggery &lt;/h3&gt;');
-    %>
-   </body>
-   </html>

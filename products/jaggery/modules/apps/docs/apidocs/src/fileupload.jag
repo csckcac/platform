@@ -1,9 +1,0 @@
-<%
-var fUpload = new FileUpload(request);
-var items = fUpload.getFileItems();
-
-fUpload.save('/tmp', new Array(items[1]));
-
-print(items[1] + 'is saved in /tmp');
-
-%>

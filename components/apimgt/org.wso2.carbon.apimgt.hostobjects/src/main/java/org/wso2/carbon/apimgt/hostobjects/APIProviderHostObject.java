@@ -1008,7 +1008,7 @@ public class APIProviderHostObject extends ScriptableObject {
 
         Map testHandlerMappings_1 = new HashMap();
         testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER, "org.wso2.carbon.api.handler.throttle.RestAPIThrottleHandler");
-        testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER_POLICY_KEY, "conf:/throttle.policy.xml");
+        testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER_POLICY_KEY, "conf:/basic-throttle-policy.xml");
 
         List<Map> handlerMappings = new ArrayList<Map>();
         handlerMappings.add(testHandlerMappings_1);

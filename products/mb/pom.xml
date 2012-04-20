@@ -84,9 +84,9 @@
                 <version>${axiom.osgi.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.qpid.wso2</groupId>
-                <artifactId>qpid-client</artifactId>
-                <version>${orbit.version.qpid-client}</version>
+                <groupId>org.wso2.andes.wso2</groupId>
+                <artifactId>andes-client</artifactId>
+                <version>${orbit.version.andes-client}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.geronimo.specs.wso2</groupId>

@@ -27,11 +27,6 @@
 
     <modules>
         <module>deploy</module>
-        <module>builtins</module>
-        <module>ql</module>
-        <module>metastore</module>
-	<module>serde</module>
-        <module>shims</module>
     </modules>
 
     <properties>

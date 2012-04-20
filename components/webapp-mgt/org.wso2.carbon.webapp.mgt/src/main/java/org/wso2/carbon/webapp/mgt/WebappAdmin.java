@@ -215,6 +215,7 @@ public class WebappAdmin extends AbstractAdmin {
                 continue;
             }
             WebappMetadata webappMetadata = new WebappMetadata();
+            webappMetadata.setDisplayName(webapp.getDisplayName());
             webappMetadata.setContext(webapp.getContextName());
             webappMetadata.setLastModifiedTime(webapp.getLastModifiedTime());
             webappMetadata.setWebappFile(webapp.getWebappFile().getName());

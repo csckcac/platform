@@ -22,6 +22,10 @@ public final class WebappsConstants {
     public static final String WEBAPP_PREFIX = "webapps";
     public static final String WEBAPP_DEPLOYMENT_FOLDER = "webapps";
     public static final String WEBAPP_EXTENSION = "war";
+    public static final String WEBAPP_INFO_JSP_PAGE = "/webapp-mgt/webapp_info.jsp";
+    public static final int MAX_DEPTH = 10;
+    public static final String JAX_WEBAPP_FILTER_PROP = "jaxWebapp";
+    public static final String JAX_WEBAPP_REPO = "jaxwebapps";
 
     /**
      * This is to filter out custom webapp types. If a custom webapp deployer is added, it should

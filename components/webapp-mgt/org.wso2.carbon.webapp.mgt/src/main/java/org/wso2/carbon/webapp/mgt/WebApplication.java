@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.utils.FileManipulator;
+import org.wso2.carbon.webapp.mgt.utils.GhostWebappDeployerUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,6 +46,9 @@ public class WebApplication {
     private long lastModifiedTime;
     private Exception faultReason;
     private Map<String, Object> properties = new HashMap<String, Object>();
+
+    // We need this variable to use in the Statistics inner class which is static
+    private static boolean isThisGhost = false;
 
     public WebApplication(Context context, File webappFile) {
         this.context = context;
@@ -83,6 +87,10 @@ public class WebApplication {
 
     public String getDisplayName() {
         return context.getDisplayName();
+    }
+
+    public void setDisplayName(String name) {
+        context.setDisplayName(name);
     }
 
     public void setLastModifiedTime(long lastModifiedTime) {
@@ -195,13 +203,12 @@ public class WebApplication {
     public void undeploy() throws CarbonException {
         lazyUnload();
         File webappDir = new File(getAppBase(), context.getBaseName());
-        if(TomcatUtil.checkUnpackWars() && webappDir.exists() && !FileManipulator.deleteDir(webappDir)) {
+        if (TomcatUtil.checkUnpackWars() && webappDir.exists() && !FileManipulator.deleteDir(webappDir)) {
             throw new CarbonException("exploded Webapp directory " + webappDir + " deletion failed");
         }
     }
 
     /**
-     *
      * Completely delete & destroy this Web application
      *
      * @throws CarbonException If an error occurs while undeploying this webapp
@@ -406,7 +413,15 @@ public class WebApplication {
         }
 
         public int getActiveSessions() {
-            return sessionManager.getActiveSessions();
+            if (GhostWebappDeployerUtils.isGhostOn()) {
+                //If this webapp is in ghost from then we return 0
+                if (isThisGhost || sessionManager == null) {
+                    return 0;
+                }
+                return sessionManager.getActiveSessions();
+            } else {
+                return sessionManager.getActiveSessions();
+            }
         }
 
         public long getExpiredSessions() {
@@ -456,5 +471,16 @@ public class WebApplication {
      */
     public Context getContext() {
         return this.context;
+    }
+
+    /**
+     * We need this method in ghost mode because, this will set a static variable which indicates
+     * whether this Webapp is a ghost. We need a static variable to use it in the Statistics inner
+     * class, which is a static class.
+     *
+     * @param isThisGhost boolean parameter to set the static variable
+     */
+    public void setIsGhostWebapp(boolean isThisGhost) {
+        this.isThisGhost = isThisGhost;
     }
 }

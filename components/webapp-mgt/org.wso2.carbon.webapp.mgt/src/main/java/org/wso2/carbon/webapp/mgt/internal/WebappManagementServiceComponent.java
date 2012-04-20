@@ -27,10 +27,20 @@ import org.wso2.carbon.tomcat.ext.valves.TomcatValveContainer;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.ConfigurationContextService;
-import org.wso2.carbon.webapp.mgt.*;
+import org.wso2.carbon.webapp.mgt.DataHolder;
+import org.wso2.carbon.webapp.mgt.TenantLazyLoaderValve;
+import org.wso2.carbon.webapp.mgt.TomcatGhostValve;
+import org.wso2.carbon.webapp.mgt.WebApplication;
+import org.wso2.carbon.webapp.mgt.WebApplicationsHolder;
+import org.wso2.carbon.webapp.mgt.WebContextParameter;
+import org.wso2.carbon.webapp.mgt.multitenancy.WebappUnloader;
+import org.wso2.carbon.webapp.mgt.utils.GhostWebappDeployerUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @scr.component name="org.wso2.carbon.webapp.mgt.internal.WebappManagementServiceComponent"
@@ -46,6 +56,8 @@ import java.util.List;
  */
 public class WebappManagementServiceComponent {
     private static final Log log = LogFactory.getLog(WebappManagementServiceComponent.class);
+    private static final ScheduledExecutorService webappsCleanupExec
+            = Executors.newScheduledThreadPool(1);
 
 
     protected void activate(ComponentContext ctx) {
@@ -53,33 +65,45 @@ public class WebappManagementServiceComponent {
             // Register the valves with Tomcat
             ArrayList<CarbonTomcatValve> valves = new ArrayList<CarbonTomcatValve>();
             valves.add(new TenantLazyLoaderValve());
+            valves.add(new TomcatGhostValve());
             TomcatValveContainer.addValves(valves);
 
-            // Adding server url as a parameter to webapps servlet context init parameter
-            ConfigurationContext configurationContext = DataHolder.getServerConfigContext();
+            if (!GhostWebappDeployerUtils.isGhostOn()) {
+                // Adding server url as a parameter to webapps servlet context init parameter
+                ConfigurationContext configurationContext = DataHolder.getServerConfigContext();
 
-            WebApplicationsHolder webApplicationsHolder = (WebApplicationsHolder)
-                    configurationContext.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
+                WebApplicationsHolder webApplicationsHolder = (WebApplicationsHolder)
+                        configurationContext.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
 
-            WebContextParameter serverUrlParam =
-                    new WebContextParameter("webServiceServerURL", CarbonUtils.
-                            getServerURL(ServerConfiguration.getInstance(), configurationContext));
+                WebContextParameter serverUrlParam =
+                        new WebContextParameter("webServiceServerURL", CarbonUtils.
+                                getServerURL(ServerConfiguration.getInstance(),
+                                             configurationContext));
 
-            List<WebContextParameter> servletContextParameters =
-                    (ArrayList<WebContextParameter>) configurationContext.
-                            getProperty(CarbonConstants.SERVLET_CONTEXT_PARAMETER_LIST);
+                List<WebContextParameter> servletContextParameters =
+                        (ArrayList<WebContextParameter>) configurationContext.
+                                getProperty(CarbonConstants.SERVLET_CONTEXT_PARAMETER_LIST);
 
-            if (servletContextParameters != null) {
-                servletContextParameters.add(serverUrlParam);
-            }
-
-            if (webApplicationsHolder != null) {
-                for (WebApplication application : webApplicationsHolder.getStartedWebapps().values()) {
-                    application.getContext().getServletContext().
-                            setInitParameter(serverUrlParam.getName(), serverUrlParam.getValue());
+                if (servletContextParameters != null) {
+                    servletContextParameters.add(serverUrlParam);
                 }
-            }
 
+                if (webApplicationsHolder != null) {
+                    for (WebApplication application :
+                            webApplicationsHolder.getStartedWebapps().values()) {
+                        application.getContext().getServletContext().
+                                setInitParameter(serverUrlParam.getName(),
+                                                 serverUrlParam.getValue());
+                    }
+                }
+            } else {
+                WebappUnloader webappUnloader = new WebappUnloader(DataHolder.
+                        getServerConfigContext());
+                webappsCleanupExec.scheduleAtFixedRate(webappUnloader,
+                                                       CarbonConstants.WEBAPP_CLEANUP_PERIOD_SECS,
+                                                       CarbonConstants.WEBAPP_CLEANUP_PERIOD_SECS,
+                                                       TimeUnit.SECONDS);
+            }
         } catch (Throwable e) {
             log.error("Error occurred while activating WebappManagementServiceComponent", e);
         }
@@ -87,6 +111,7 @@ public class WebappManagementServiceComponent {
 
     protected void deactivate(ComponentContext ctx) {
 //         TomcatValveContainer.removeValves();
+        webappsCleanupExec.shutdownNow();
     }
 
     protected void setConfigurationContextService(ConfigurationContextService contextService) {

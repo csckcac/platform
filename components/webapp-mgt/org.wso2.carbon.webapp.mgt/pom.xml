@@ -94,7 +94,9 @@
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.carbon.webapp.mgt.internal,
-                            org.wso2.carbon.webapp.mgt
+                            org.wso2.carbon.webapp.mgt,
+                            org.wso2.carbon.webapp.mgt.utils,
+                            org.wso2.carbon.webapp.mgt.multitenancy
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                         <!--<Require-CarbonUIComponents>

@@ -181,12 +181,6 @@
 
         <dependency>
             <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.hostobjects.atom</artifactId>
-
-        </dependency>
-
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.hostobjects.db</artifactId>
 
         </dependency>
@@ -372,7 +366,6 @@
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.stream</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.extra</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.xhr</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.atom</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.db</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.ws</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.hostobjects.feed</bundleDef>

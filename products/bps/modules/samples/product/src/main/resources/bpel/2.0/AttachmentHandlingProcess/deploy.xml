@@ -18,7 +18,9 @@
   -->
 <deploy xmlns="http://www.apache.org/ode/schemas/dd/2007/03"
 	xmlns:pns="http://ode/bpel/unit-test" 
-	xmlns:wns="http://ode/bpel/unit-test.wsdl">
+	xmlns:wns="http://ode/bpel/unit-test.wsdl"
+        xmlns:apprv="http://www.example.com/claims/"
+        xmlns:b4p="http://docs.oasis-open.org/ns/bpel4people/bpel4people/200803" >
 
 
 	<process name="pns:AttachmentHandlingProcess">
@@ -26,5 +28,15 @@
 		<provide partnerLink="helloPartnerLink">
 			<service name="wns:AttachmentHandlingProcessService" port="HelloPort"/>
 		</provide>
+
+		<provide partnerLink="b4pPartnerLink" correlationFilter="b4p:b4pFilter">
+			<service name="apprv:ClaimServiceCB" port="ClaimPortCB"/>
+		</provide>
+		<invoke partnerLink="b4pPartnerLink">
+			<service name="apprv:ClaimService" port="ClaimPort"/>
+		</invoke>
+		<invoke partnerLink="b4pNPartnerLink">
+			<service name="apprv:ClaimReminderService" port="ClaimReminderPort"/>
+		</invoke>
 	</process>
 </deploy>

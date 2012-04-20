@@ -20,17 +20,16 @@ package org.wso2.carbon.humantask.cleanup.scheduler.internal;
 
 import org.wso2.carbon.humantask.core.HumanTaskServer;
 import org.wso2.carbon.ntask.core.service.TaskService;
-import org.wso2.carbon.registry.core.service.TenantRegistryLoader;
 
 /**
  * Data holder for the HumanTaskServiceComponent
  */
-public class HumanTaskCleanupSchedulerContentHolder {
+public final class HumanTaskCleanupSchedulerContentHolder {
     private static HumanTaskCleanupSchedulerContentHolder instance;
 
     private HumanTaskServer humantaskServer;
 
-    private TenantRegistryLoader registryLoader;
+//    private TenantRegistryLoader registryLoader;
 
     private TaskService taskService;
 
@@ -57,13 +56,13 @@ public class HumanTaskCleanupSchedulerContentHolder {
         }
     }
 
-    public TenantRegistryLoader getRegistryLoader() {
-        return registryLoader;
-    }
+//    public TenantRegistryLoader getRegistryLoader() {
+//        return registryLoader;
+//    }
 
-    public void setRegistryLoader(TenantRegistryLoader registryLoader) {
-        this.registryLoader = registryLoader;
-    }
+//    public void setRegistryLoader(TenantRegistryLoader registryLoader) {
+//        this.registryLoader = registryLoader;
+//    }
 
 
     public TaskService getTaskService() {

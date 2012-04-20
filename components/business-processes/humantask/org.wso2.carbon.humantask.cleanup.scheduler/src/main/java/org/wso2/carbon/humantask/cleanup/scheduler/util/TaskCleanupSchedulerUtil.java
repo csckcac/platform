@@ -36,9 +36,12 @@ import java.util.Map;
 /**
  * Utility methods related to task clean up scheduler.
  */
-public class TaskCleanupSchedulerUtil {
+public final class TaskCleanupSchedulerUtil {
 
     private static Log log = LogFactory.getLog(TaskCleanupSchedulerUtil.class);
+
+    private TaskCleanupSchedulerUtil() {
+    }
 
     /**
      * Initialises the task clean up task.

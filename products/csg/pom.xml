@@ -34,8 +34,8 @@
     <packaging>pom</packaging>
     <version>1.0.0-alpha</version>
     <name>WSO2 CSG - Aggregator Module</name>
-    <!--<url>http://wso2.com/products/enterprise-service-bus</url>-->
-    <!--<description>WSO2 Enterprise Service Bus (ESB)</description>-->
+    <url>http://wso2.com/cloud/connectors/services-gateway/</url>
+    <description>WSO2 Cloud Services Gateway</description>
 
     <licenses>
         <license>

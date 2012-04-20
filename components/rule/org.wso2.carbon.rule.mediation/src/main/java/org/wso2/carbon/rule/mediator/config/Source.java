@@ -42,6 +42,15 @@ public class Source {
         if (this.value != null){
             sourceElement.setText(this.value);
         }
+        if(this.prefixToNamespaceMap != null){
+
+            for (String prefix : this.prefixToNamespaceMap.keySet()){
+
+                String nsURI = this.prefixToNamespaceMap.get(prefix);
+                sourceElement.declareNamespace(nsURI, prefix);
+
+            }
+        }
 
         return sourceElement;
     }

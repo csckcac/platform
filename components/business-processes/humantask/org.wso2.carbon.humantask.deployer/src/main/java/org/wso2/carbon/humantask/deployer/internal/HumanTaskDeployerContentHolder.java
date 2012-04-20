@@ -24,17 +24,17 @@ import org.wso2.carbon.registry.core.service.TenantRegistryLoader;
 /**
  * Data holder for the HumanTaskServiceComponent
  */
-public class HumnTaskDeployerContentHolder {
-    private static HumnTaskDeployerContentHolder instance;
+public final class HumanTaskDeployerContentHolder {
+    private static HumanTaskDeployerContentHolder instance;
 
     private HumanTaskServer humantaskServer;
     private TenantRegistryLoader registryLoader;
 
-    private HumnTaskDeployerContentHolder() {}
+    private HumanTaskDeployerContentHolder() {}
 
-    public static HumnTaskDeployerContentHolder getInstance() {
+    public static HumanTaskDeployerContentHolder getInstance() {
         if(instance == null) {
-            instance = new HumnTaskDeployerContentHolder();
+            instance = new HumanTaskDeployerContentHolder();
         }
         return instance;
     }

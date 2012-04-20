@@ -19,12 +19,10 @@ package org.wso2.carbon.humantask.deployer.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.humantask.core.HumanTaskEngineService;
 import org.wso2.carbon.humantask.core.HumanTaskServer;
 import org.wso2.carbon.registry.core.service.TenantRegistryLoader;
-import org.wso2.carbon.utils.Utils;
 
 /**
  * @scr.component name="org.wso2.carbon.humantask.HumanTaskDeployerServiceComponent" immediate="true"
@@ -39,18 +37,8 @@ import org.wso2.carbon.utils.Utils;
 
 public class HumanTaskDeployerServiceComponent {
     private static Log log = LogFactory.getLog(HumanTaskDeployerServiceComponent.class);
-    private BundleContext bundleContext;
-    private boolean dataSourceInfoRepoProvided = false;
 
     protected void activate(ComponentContext ctxt) {
-        try {
-            this.bundleContext = ctxt.getBundleContext();
-            if (dataSourceInfoRepoProvided) {
-                Utils.registerDeployerServices(this.bundleContext);
-            }
-        } catch (Throwable t) {
-            log.error("Failed to activate the HumanTaskDeployerServiceComponent", t);
-        }
         if(log.isDebugEnabled()) {
             log.debug("HumanTask Deployer bundle is activated.");
         }
@@ -60,7 +48,7 @@ public class HumanTaskDeployerServiceComponent {
         if (log.isDebugEnabled()) {
             log.debug("DataSourceInformationRepositoryService bound to the HumanTask component");
         }
-        HumnTaskDeployerContentHolder.getInstance().setHumanTaskServer(humantaskEngineService);
+        HumanTaskDeployerContentHolder.getInstance().setHumanTaskServer(humantaskEngineService);
     }
 
     protected void unsetHumanTaskServer(
@@ -68,22 +56,22 @@ public class HumanTaskDeployerServiceComponent {
         if (log.isDebugEnabled()) {
             log.debug("HumanTaskServerService unbound from the HumanTask Deployer component");
         }
-        HumnTaskDeployerContentHolder.getInstance().setHumanTaskServer(null);
+        HumanTaskDeployerContentHolder.getInstance().setHumanTaskServer(null);
     }
 
     protected void setTenantRegistryLoader(TenantRegistryLoader tenantRegLoader) {
-        HumnTaskDeployerContentHolder.getInstance().setRegistryLoader(tenantRegLoader);
+        HumanTaskDeployerContentHolder.getInstance().setRegistryLoader(tenantRegLoader);
     }
 
     protected void unsetTenantRegistryLoader(TenantRegistryLoader tenantRegLoader) {
-        HumnTaskDeployerContentHolder.getInstance().setRegistryLoader(null);
+        HumanTaskDeployerContentHolder.getInstance().setRegistryLoader(null);
     }
 
     public static HumanTaskServer getHumanTaskServer() {
-        return HumnTaskDeployerContentHolder.getInstance().getHumanTaskServer();
+        return HumanTaskDeployerContentHolder.getInstance().getHumanTaskServer();
     }
 
     public static TenantRegistryLoader getTenantRegistryLoader(){
-        return HumnTaskDeployerContentHolder.getInstance().getRegistryLoader();
+        return HumanTaskDeployerContentHolder.getInstance().getRegistryLoader();
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <artifacts>
-    <artifact name="basic-throttle-policy.xml" version="1.0.0" type="registry/resource" serverRole="GovernanceRegistry">
+    <artifact name="basic-throttle-policy.xml" version="1.0.0" type="registry/resource" serverRole="APIManager">
         <item>
             <file>basic-throttle-policy.xml</file>
             <path>/_system/config</path>

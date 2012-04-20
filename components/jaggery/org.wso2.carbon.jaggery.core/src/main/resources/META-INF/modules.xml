@@ -7,7 +7,7 @@
         </hostObject>
         <hostObject>
             <className>org.wso2.carbon.hostobjects.registry.RegistryHostObject</className>
-            <name>MetaDataStore</name>
+            <name>MetadataStore</name>
         </hostObject>
         <hostObject>
             <className>org.wso2.carbon.hostobjects.log.LogHostObject</className>

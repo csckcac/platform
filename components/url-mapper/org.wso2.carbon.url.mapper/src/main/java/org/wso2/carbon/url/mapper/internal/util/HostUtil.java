@@ -15,6 +15,7 @@
  */
 package org.wso2.carbon.url.mapper.internal.util;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -23,6 +24,7 @@ import java.util.regex.Pattern;
 import org.apache.catalina.Container;
 import org.apache.catalina.Engine;
 import org.apache.catalina.Host;
+import org.apache.catalina.LifecycleException;
 import org.apache.catalina.core.StandardHost;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -77,7 +79,8 @@ public class HostUtil {
 	}
 
 	public static boolean isMappingExist(String mappingName) throws UrlMapperException {
-		mappingName = UrlMapperConstants.HostProperties.FILE_SERPERATOR+UrlMapperConstants.HostProperties.HOSTINFO+mappingName;
+		mappingName = UrlMapperConstants.HostProperties.FILE_SERPERATOR
+				+ UrlMapperConstants.HostProperties.HOSTINFO + mappingName;
 		List<String> mappings = getAllHostsFromRegistry();
 		boolean isExist = false;
 		if (mappings != null) {
@@ -221,8 +224,6 @@ public class HostUtil {
 		}
 	}
 
-	
-	
 	/**
 	 * Add host to engine.
 	 * 
@@ -243,28 +244,47 @@ public class HostUtil {
 		engine.addChild(host);
 		return host;
 	}
-	
-	
-	
+
+	public static void deleteHostDirectory(String hostName) {
+		String filePath = CarbonUtils.getCarbonCatalinaHome()+"/"+hostName;
+		File file = new File(filePath);
+		if (file.isDirectory()) {
+			// make sure tomcat engine has removed folder structure inside the
+			// host folder
+			if (file.list().length == 0) {
+				file.delete();
+			}
+		}
+
+	}
+
 	public static void removeHostFromEngine(String hostName) throws UrlMapperException {
-		
-		Container[] hosts =  DataHolder.getInstance().getCarbonTomcatService().getTomcat().getEngine().findChildren();
+
+		Container[] hosts = DataHolder.getInstance().getCarbonTomcatService().getTomcat()
+				.getEngine().findChildren();
 		CarbonTomcatService carbonTomcatService = DataHolder.getInstance().getCarbonTomcatService();
 		Engine engine = carbonTomcatService.getTomcat().getEngine();
 		for (Container host : hosts) {
 			if (host.getName().contains(hostName)) {
-				engine.removeChild(host);
+				try {
+					host.stop();
+					engine.removeChild(host);
+					
+				} catch (LifecycleException e) {
+					throw new UrlMapperException("Error when removing host from tomcat engine.",e);
+				}
+				
 			}
 		}
-	
-		
-		//TODO remove it from the hostname folder. when you remove the host from the engine only data inside the hostname folder get deleted 
-		//however, the hostname folder inside catalina will be there.
+		// host name should be deleted explicitly because when host is deleted
+		// from tomcat engine the folder with the host name will not get
+		// removed.
+		deleteHostDirectory(hostName);
 		try {
 			registryManager.removeFromRegistry(hostName);
 		} catch (Exception e) {
 			log.error("error in adding the domain to the resitry", e);
-			throw new UrlMapperException("error in adding the domain to the resitry");
+			throw new UrlMapperException("error in adding the domain to the resitry",e);
 		}
 	}
 

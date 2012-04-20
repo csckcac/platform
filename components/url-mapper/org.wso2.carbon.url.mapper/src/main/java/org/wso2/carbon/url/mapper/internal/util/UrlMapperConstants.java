@@ -32,6 +32,7 @@ public final class UrlMapperConstants {
         public static final String SERVICE_EPR="service.epr";
         public final static String DOMAIN_NAME_PATTERN = ".com";
         public static final String WEB_APPS = "webapps";
+        public static final String HOST_DIR = "lib/tomcat/work/Catalina";
         public static final String SERVICE_IDENTIFIER="/services";
         public static final String CATALINA_HOME = CarbonUtils.getCarbonHome() + "/lib/tomcat/work/Catalina/";
     }

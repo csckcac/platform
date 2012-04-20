@@ -75,7 +75,7 @@ echo Using WSO2AppServer_HOME:   %WSO2AppServer_HOME%
 echo Using JAVA_HOME:    %JAVA_HOME%
 set _RUNJAVA="%JAVA_HOME%\bin\java"
 
-%_RUNJAVA% %JAVA_OPTS% -Dwso2appserver.home="%WSO2AppServer_HOME%" -cp "%CLIENT_CLASSPATH%" -Djava.endorsed.dirs="%WSO2AppServer_HOME%\lib\endorsed";"%JAVA_HOME%\jre\lib\endorsed";"%JAVA_HOME%\lib\endorsed" org.wso2.appserver.jibx.Client %*
+%_RUNJAVA% %JAVA_OPTS% -XX:-UseSplitVerifier -Dwso2appserver.home="%WSO2AppServer_HOME%" -cp "%CLIENT_CLASSPATH%" -Djava.endorsed.dirs="%WSO2AppServer_HOME%\lib\endorsed";"%JAVA_HOME%\jre\lib\endorsed";"%JAVA_HOME%\lib\endorsed" org.wso2.appserver.jibx.Client %*
 cd %CURRENT_DIR%
 endlocal
 :end

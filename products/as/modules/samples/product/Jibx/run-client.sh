@@ -85,6 +85,6 @@ echo Using JAVA_HOME    : $JAVA_HOME
 CLIENT_CLASSPATH="$WSO2AppServer_HOME/samples/Jibx/temp/classes":\
 "$WSO2AppServer_HOME/samples/Jibx/conf":$CLIENT_CLASSPATH
 
-$JAVA_HOME/bin/java -Dwso2appserver.home="$WSO2AppServer_HOME" -classpath "$CLIENT_CLASSPATH" \
+$JAVA_HOME/bin/java -XX:-UseSplitVerifier -Dwso2appserver.home="$WSO2AppServer_HOME" -classpath "$CLIENT_CLASSPATH" \
 -Djava.endorsed.dirs="$WSO2AppServer_HOME/lib/endorsed":"$JAVA_HOME/jre/lib/endorsed":"$JAVA_HOME/lib/endorsed" \
 org.wso2.appserver.jibx.Client $*

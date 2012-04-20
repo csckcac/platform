@@ -28,9 +28,9 @@ import org.wso2.carbon.agent.internal.utils.AgentConstants;
  */
 public class AgentConfiguration {
 
-    private int taskQueueSize = AgentConstants.DEFAULT_TASK_QUEUE_SIZE;
-    private int corePoolSize = AgentConstants.DEFAULT_CORE_POOL_SIZE;
-    private int maxPoolSize = AgentConstants.DEFAULT_MAX_POOL_SIZE ;
+    private int bufferedEventsSize = AgentConstants.DEFAULT_BUFFERED_EVENTS_SIZE;
+    private int poolSize = AgentConstants.DEFAULT_POOL_SIZE;
+    private int maxTransportPoolSize = AgentConstants.DEFAULT_MAX_TRANSPORT_POOL_SIZE;
 
     private int maxIdleConnections = AgentConstants.DEFAULT_MAX_IDLE_CONNECTIONS ;
     private long evictionTimePeriod = AgentConstants.DEFAULT_EVICTION_IDLE_TIME_IN_POOL ;
@@ -77,28 +77,28 @@ public class AgentConfiguration {
         this.minIdleTimeInPool = minIdleTimeInPool;
     }
 
-    public int getTaskQueueSize() {
-        return taskQueueSize;
+    public int getBufferedEventsSize() {
+        return bufferedEventsSize;
     }
 
-    public void setTaskQueueSize(int taskQueueSize) {
-        this.taskQueueSize = taskQueueSize;
+    public void setBufferedEventsSize(int bufferedEventsSize) {
+        this.bufferedEventsSize = bufferedEventsSize;
     }
 
-    public int getMaxPoolSize() {
-        return maxPoolSize;
+    public int getMaxTransportPoolSize() {
+        return maxTransportPoolSize;
     }
 
-    public void setMaxPoolSize(int maxPoolSize) {
-        this.maxPoolSize = maxPoolSize;
+    public void setMaxTransportPoolSize(int maxTransportPoolSize) {
+        this.maxTransportPoolSize = maxTransportPoolSize;
     }
 
-    public int getCorePoolSize() {
-        return corePoolSize;
+    public int getPoolSize() {
+        return poolSize;
     }
 
-    public void setCorePoolSize(int corePoolSize) {
-        this.corePoolSize = corePoolSize;
+    public void setPoolSize(int poolSize) {
+        this.poolSize = poolSize;
     }
 
     public int getAuthenticatorMaxPoolSize() {

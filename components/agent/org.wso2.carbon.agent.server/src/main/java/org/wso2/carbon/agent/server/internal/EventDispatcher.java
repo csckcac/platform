@@ -66,7 +66,7 @@ public class EventDispatcher {
                    DifferentStreamDefinitionAlreadyDefinedException {
         EventStreamDefinition eventStreamDefinition = EventConverter.convertFromJson(streamDefinition);
 
-        EventStreamDefinition existingEventStreamDefinition = null;
+        EventStreamDefinition existingEventStreamDefinition;
         try {
             existingEventStreamDefinition = streamDefinitionStore.getStreamDefinition(agentSession.getDomainName(), eventStreamDefinition.getName(), eventStreamDefinition.getVersion());
             if (!existingEventStreamDefinition.equals(eventStreamDefinition)) {

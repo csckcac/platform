@@ -74,12 +74,6 @@ public class AgentClient implements Runnable {
                 e.printStackTrace();
             }
         }
-        try {
-            Thread.sleep(20000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        agent.shutdown();
     }
 
     class EventSender implements Runnable {
@@ -112,6 +106,12 @@ public class AgentClient implements Runnable {
                 for (int i = 0; i < NO_OF_EVENTS + STABLE; i++) {
                     dataPublisher.publish(generateEvent(streamId));
                 }
+                try {
+                    Thread.sleep(20000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                dataPublisher.stop();
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -107,8 +107,7 @@ public class AgentBackend {
     }
 
     private AgentServerConfiguration generateServerConf(int offset) {
-        AgentServerConfiguration agentServerConfiguration = new AgentServerConfiguration(7711 + offset, 7611 + offset);
-        return agentServerConfiguration;
+        return new AgentServerConfiguration(7711 + offset, 7611 + offset);
     }
 
     public void stop() {

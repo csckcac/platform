@@ -128,11 +128,11 @@ public final class AgentBuilder {
 
     private static void buildReceiverConfiguration(OMElement agentServerConfig,
                                                    AgentConfiguration agentConfiguration) {
-        OMElement maxPoolSize = agentServerConfig.getFirstChildWithName(
+        OMElement maxTransportPoolSize = agentServerConfig.getFirstChildWithName(
                 new QName(AgentConstants.AGENT_CONF_NAMESPACE,
-                          AgentConstants.MAX_POOL_SIZE));
-        if (maxPoolSize != null) {
-            agentConfiguration.setMaxPoolSize(Integer.parseInt(maxPoolSize.getText()));
+                          AgentConstants.MAX_TRANSPORT_POOL_SIZE));
+        if (maxTransportPoolSize != null) {
+            agentConfiguration.setMaxTransportPoolSize(Integer.parseInt(maxTransportPoolSize.getText()));
         }
 
         OMElement maxIdleConnections = agentServerConfig.getFirstChildWithName(
@@ -157,18 +157,18 @@ public final class AgentBuilder {
         }
 
 
-        OMElement taskQueueSize = agentServerConfig.getFirstChildWithName(
+        OMElement bufferedEventsSize = agentServerConfig.getFirstChildWithName(
                 new QName(AgentConstants.AGENT_CONF_NAMESPACE,
-                          AgentConstants.TASK_QUEUE_SIZE));
-        if (taskQueueSize != null) {
-            agentConfiguration.setTaskQueueSize(Integer.parseInt(taskQueueSize.getText()));
+                          AgentConstants.BUFFERED_EVENTS_SIZE));
+        if (bufferedEventsSize != null) {
+            agentConfiguration.setBufferedEventsSize(Integer.parseInt(bufferedEventsSize.getText()));
         }
 
-        OMElement corePoolSize = agentServerConfig.getFirstChildWithName(
+        OMElement poolSize = agentServerConfig.getFirstChildWithName(
                 new QName(AgentConstants.AGENT_CONF_NAMESPACE,
-                          AgentConstants.CORE_POOL_SIZE));
-        if (corePoolSize != null) {
-            agentConfiguration.setCorePoolSize(Integer.parseInt(corePoolSize.getText()));
+                          AgentConstants.POOL_SIZE));
+        if (poolSize != null) {
+            agentConfiguration.setPoolSize(Integer.parseInt(poolSize.getText()));
         }
         OMElement evictionTimePeriod = agentServerConfig.getFirstChildWithName(
                 new QName(AgentConstants.AGENT_CONF_NAMESPACE,

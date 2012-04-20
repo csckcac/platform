@@ -24,7 +24,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.wso2.carbon.agent.conf.AgentConfiguration;
-import org.wso2.carbon.agent.internal.pool.BoundedExecutor;
 import org.wso2.carbon.agent.internal.pool.authenticator.AuthenticatorClientPoolFactory;
 import org.wso2.carbon.agent.internal.pool.client.ClientPool;
 import org.wso2.carbon.agent.internal.pool.client.ClientPoolFactory;
@@ -33,7 +32,7 @@ import org.wso2.carbon.agent.internal.utils.AgentConstants;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -51,7 +50,7 @@ public class Agent {
     private Semaphore queueSemaphore;
     private AgentAuthenticator agentAuthenticator;
     private List<DataPublisher> dataPublisherList;
-    private BoundedExecutor threadPool;
+    private ThreadPoolExecutor threadPool;
 
     public Agent() {
         this(new AgentConfiguration());
@@ -60,7 +59,7 @@ public class Agent {
     public Agent(AgentConfiguration agentConfiguration) {
         this.agentConfiguration = agentConfiguration;
         this.transportPool = new ClientPool().getClientPool(
-                new ClientPoolFactory(), agentConfiguration.getMaxPoolSize(),
+                new ClientPoolFactory(), agentConfiguration.getMaxTransportPoolSize(),
                 agentConfiguration.getMaxIdleConnections(), true, agentConfiguration.getEvictionTimePeriod(),
                 agentConfiguration.getMinIdleTimeInPool());
         this.agentAuthenticator = new AgentAuthenticator(
@@ -68,15 +67,14 @@ public class Agent {
                 agentConfiguration.getAuthenticatorMaxIdleConnections(), true, agentConfiguration.getEvictionTimePeriod(),
                 agentConfiguration.getMinIdleTimeInPool());
         this.dataPublisherList = new LinkedList<DataPublisher>();
-        this.queueSemaphore = new Semaphore(agentConfiguration.getTaskQueueSize());
-        this.threadPool = new BoundedExecutor(
-                new ThreadPoolExecutor(agentConfiguration.getCorePoolSize(),
-                                       agentConfiguration.getMaxPoolSize(),
-                                       AgentConstants.DEFAULT_KEEP_ALIVE_TIME, TimeUnit.SECONDS,
-                                       new ArrayBlockingQueue<Runnable>(
-                                               agentConfiguration.getTaskQueueSize()
-                                       )),
-                agentConfiguration.getTaskQueueSize());
+        this.queueSemaphore = new Semaphore(agentConfiguration.getBufferedEventsSize());
+        //for the unbounded queue implementation the maximum pool size irrelevant and
+        // only the CorePoolSize number of threads will be created
+        this.threadPool = new ThreadPoolExecutor(agentConfiguration.getPoolSize(),
+                                                 Integer.MAX_VALUE,
+                                                 AgentConstants.DEFAULT_KEEP_ALIVE_TIME, TimeUnit.SECONDS,
+                                                 new LinkedBlockingQueue<Runnable>()
+        );
     }
 
     void addDataPublisher(DataPublisher dataPublisher) {
@@ -90,7 +88,7 @@ public class Agent {
     /**
      * To shutdown Agent and DataPublishers
      */
-    void shutdown(DataPublisher dataPublisher) {
+    synchronized void shutdown(DataPublisher dataPublisher) {
         removeDataPublisher(dataPublisher);
         if (dataPublisherList.size() == 0) {
             shutdown();
@@ -129,7 +127,7 @@ public class Agent {
         return dataPublisherList;
     }
 
-    BoundedExecutor getThreadPool() {
+    ThreadPoolExecutor getThreadPool() {
         return threadPool;
     }
 }

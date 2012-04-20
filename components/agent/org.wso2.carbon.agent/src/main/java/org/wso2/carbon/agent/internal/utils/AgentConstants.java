@@ -34,9 +34,9 @@ public final class AgentConstants {
     public static final String AGENT_CONF_NAMESPACE = "http://wso2.org/carbon/agent";
     public static final String AGENT_CONF_ELE_ROOT = "agentConfiguration";
 
-    public static final String TASK_QUEUE_SIZE = "taskQueueSize";
-    public static final String CORE_POOL_SIZE = "corePoolSize";
-    public static final String MAX_POOL_SIZE = "maxPoolSize";
+    public static final String BUFFERED_EVENTS_SIZE = "bufferedEventsSize";
+    public static final String POOL_SIZE = "poolSize";
+    public static final String MAX_TRANSPORT_POOL_SIZE = "maxTransportPoolSize";
     public static final String MAX_IDLE_CONNECTIONS = "maxIdleConnections";
 
     public static final String AUTHENTICATION_MAX_POOL_SIZE = "authenticatorMaxPoolSize";
@@ -57,9 +57,9 @@ public final class AgentConstants {
     public static final long DEFAULT_KEEP_ALIVE_TIME = 20;
 
     //AgentConfiguration
-    public static final int DEFAULT_TASK_QUEUE_SIZE = 200;
-    public static final int DEFAULT_CORE_POOL_SIZE = 30;
-    public static final int DEFAULT_MAX_POOL_SIZE = 250;
+    public static final int DEFAULT_BUFFERED_EVENTS_SIZE = 200;
+    public static final int DEFAULT_POOL_SIZE = 30;
+    public static final int DEFAULT_MAX_TRANSPORT_POOL_SIZE = 250;
 
     public static final int DEFAULT_MAX_IDLE_CONNECTIONS = 250;
     public static final long DEFAULT_EVICTION_IDLE_TIME_IN_POOL = 5500;

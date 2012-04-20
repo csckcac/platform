@@ -46,6 +46,7 @@ import org.wso2.carbon.agent.internal.utils.AgentConstants;
 import org.wso2.carbon.agent.internal.utils.EventConverter;
 
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * The publisher who sends all the arrived events to the Agent Server using a pool of threads
@@ -59,13 +60,14 @@ public class EventPublisher implements Runnable {
     private int maxMessageBundleSize;
     private DataPublisherConfiguration dataPublisherConfiguration;
     private AgentAuthenticator agentAuthenticator;
+    private ThreadPoolExecutor threadPool;
 
     public EventPublisher(EventQueue<Event> eventQueue,
                           GenericKeyedObjectPool transportPool,
                           Semaphore queueSemaphore,
                           int maxMessageBundleSize,
                           DataPublisherConfiguration dataPublisherConfiguration,
-                          AgentAuthenticator agentAuthenticator) {
+                          AgentAuthenticator agentAuthenticator, ThreadPoolExecutor threadPool) {
 
         this.eventQueue = eventQueue;
         this.transportPool = transportPool;
@@ -73,6 +75,7 @@ public class EventPublisher implements Runnable {
         this.maxMessageBundleSize = maxMessageBundleSize;
         this.dataPublisherConfiguration = dataPublisherConfiguration;
         this.agentAuthenticator = agentAuthenticator;
+        this.threadPool = threadPool;
     }
 
     public void run() {
@@ -85,14 +88,28 @@ public class EventPublisher implements Runnable {
                         toThriftEventBundle(event,
                                             thriftEventBundle,
                                             dataPublisherConfiguration.getSessionId());
-                if (thriftEventBundle != null && thriftEventBundle.eventNum >= maxMessageBundleSize) {
+
+                //Sending the event bundle when maxMessageBundleSize is reached
+                if (thriftEventBundle.eventNum >= maxMessageBundleSize) {
                     sendEvent(thriftEventBundle);
-                    thriftEventBundle = null;
+
+                    //checking if all threads in the pool are NOT active
+                    if (threadPool.getActiveCount() < threadPool.getCorePoolSize()) {
+                        //starts building another event bundle with the same thread
+                        thriftEventBundle = null;
+                    } else {
+                        //submit the remaining task to the end of the taskQueue
+                        // and exit
+                        threadPool.submit(this);
+                        break;
+                    }
                 }
             } else {
+                //When the queue is empty
                 if (thriftEventBundle != null) {
                     sendEvent(thriftEventBundle);
                 }
+                //Since no more events are available to dispatch, exit
                 break;
             }
         }
@@ -154,15 +171,15 @@ public class EventPublisher implements Runnable {
         try {
             streamId = client.defineEventStream(currentSessionId, eventStreamDefinition);
             transportPool.returnObject(dataPublisherConfiguration.getPublisherKey(), client);
+        } catch (ThriftSessionExpiredException e) {
+            log.info("Session timed out for " + dataPublisherConfiguration.getPublisherKey() + "," + e.getMessage());
+            currentSessionId = reconnect(currentSessionId);
+            redefineEventStream(eventStreamDefinition, currentSessionId, client);
         } catch (ThriftStreamDefinitionException e) {
             throw new WrongEventTypeException("Invalid type definition for stream " +
                                               eventStreamDefinition, e);
         } catch (TException e) {
             throw new AgentException("Cannot define type " + eventStreamDefinition, e);
-        } catch (ThriftSessionExpiredException e) {
-            log.info("Session timed out for " + dataPublisherConfiguration.getPublisherKey() + "," + e.getMessage());
-            currentSessionId = reconnect(currentSessionId);
-            redefineEventStream(eventStreamDefinition, currentSessionId, client);
         } catch (ThriftDifferentStreamDefinitionAlreadyDefinedException e) {
             throw new DifferentStreamDefinitionAlreadyDefinedException("Same stream id with different definition already defined before sending this event definitions to " +
                                                                        dataPublisherConfiguration.getPublisherKey(), e);
@@ -254,9 +271,9 @@ public class EventPublisher implements Runnable {
                           " not authorised to access server at " +
                           dataPublisherConfiguration.getPublisherKey());
             } catch (TransportException e) {
-                reconnect(reconnectionTime-1, sessionId);
+                reconnect(reconnectionTime - 1, sessionId);
             } catch (AgentException e) {
-                reconnect(reconnectionTime-1, sessionId);
+                reconnect(reconnectionTime - 1, sessionId);
             }
         }
     }

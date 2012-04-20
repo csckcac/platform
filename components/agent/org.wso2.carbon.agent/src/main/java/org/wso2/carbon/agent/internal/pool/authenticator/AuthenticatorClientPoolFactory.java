@@ -71,9 +71,7 @@ public class AuthenticatorClientPoolFactory extends BaseKeyedPoolableObjectFacto
                 getClientSocket(hostNameAndPort[0], Integer.parseInt(hostNameAndPort[1]), 0, params);
 
         TProtocol protocol = new TBinaryProtocol(receiverTransport);
-        ThriftAuthenticatorService.Client client = new ThriftAuthenticatorService.Client(protocol);
-//        receiverTransport.open();
-        return client;
+        return new ThriftAuthenticatorService.Client(protocol);
     }
 
     @Override

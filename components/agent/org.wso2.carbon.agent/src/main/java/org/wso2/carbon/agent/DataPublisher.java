@@ -29,13 +29,13 @@ import org.wso2.carbon.agent.conf.ReceiverConfiguration;
 import org.wso2.carbon.agent.exception.AgentException;
 import org.wso2.carbon.agent.exception.TransportException;
 import org.wso2.carbon.agent.internal.EventQueue;
-import org.wso2.carbon.agent.internal.pool.BoundedExecutor;
 import org.wso2.carbon.agent.internal.publisher.EventPublisher;
 import org.wso2.carbon.agent.internal.utils.AgentConstants;
 import org.wso2.carbon.agent.internal.utils.AgentServerURL;
 
 import java.net.MalformedURLException;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * Publisher will maintain a single connection to a server,
@@ -50,7 +50,7 @@ public class DataPublisher {
     private EventPublisher eventPublisher;
     private EventQueue<Event> eventQueue;
 
-    private BoundedExecutor threadPool;
+    private ThreadPoolExecutor threadPool;
 
     /**
      * To create the Data Publisher
@@ -109,10 +109,10 @@ public class DataPublisher {
             throws MalformedURLException, AgentException, AuthenticationException,
                    TransportException {
         AgentServerURL receiverURL = new AgentServerURL(receiverUrl);
-        this.init(new ReceiverConfiguration(userName, password,
-                                            receiverURL.getHost(), receiverURL.getPort(),
-                                            receiverURL.getHost(), receiverURL.getPort() + AgentConstants.AUTHENTICATOR_PORT_OFFSET),
-                  agent);
+        this.start(new ReceiverConfiguration(userName, password,
+                                             receiverURL.getHost(), receiverURL.getPort(),
+                                             receiverURL.getHost(), receiverURL.getPort() + AgentConstants.AUTHENTICATOR_PORT_OFFSET),
+                   agent);
 
     }
 
@@ -136,10 +136,10 @@ public class DataPublisher {
         AgentServerURL authenticatorURL = new AgentServerURL(authenticatorUrl);
         AgentServerURL receiverURL = new AgentServerURL(receiverUrl);
 
-        this.init(new ReceiverConfiguration(userName, password,
-                                            receiverURL.getHost(), receiverURL.getPort(),
-                                            authenticatorURL.getHost(), authenticatorURL.getPort()),
-                  agent);
+        this.start(new ReceiverConfiguration(userName, password,
+                                             receiverURL.getHost(), receiverURL.getPort(),
+                                             authenticatorURL.getHost(), authenticatorURL.getPort()),
+                   agent);
 
     }
 
@@ -155,7 +155,7 @@ public class DataPublisher {
     public void setAgent(Agent agent)
             throws AgentException, AuthenticationException, TransportException {
         this.agent.shutdown(this);// to shutdown the old agent
-        init(this.dataPublisherConfiguration.getReceiverConfiguration(), agent);
+        start(this.dataPublisherConfiguration.getReceiverConfiguration(), agent);
     }
 
     /**
@@ -167,7 +167,7 @@ public class DataPublisher {
         return agent;
     }
 
-    private void init(ReceiverConfiguration receiverConfiguration, Agent agent)
+    private void start(ReceiverConfiguration receiverConfiguration, Agent agent)
             throws AgentException, AuthenticationException, TransportException {
         agent.addDataPublisher(this);
         this.agent = agent;
@@ -176,7 +176,9 @@ public class DataPublisher {
         this.threadPool = agent.getThreadPool();
         this.eventPublisher = new EventPublisher(eventQueue, agent.getTransportPool(), agent.getQueueSemaphore(),
                                                  agent.getAgentConfiguration().getMaxMessageBundleSize(),
-                                                 dataPublisherConfiguration, agent.getAgentAuthenticator());
+                                                 dataPublisherConfiguration, agent.getAgentAuthenticator(),
+                                                 agent.getThreadPool());
+        //Connect to the server
         dataPublisherConfiguration.setSessionId(agent.getAgentAuthenticator().connect(
                 dataPublisherConfiguration.getReceiverConfiguration()));
     }
@@ -226,16 +228,18 @@ public class DataPublisher {
      */
     public void publish(Event event) throws AgentException {
         try {
-            agent.getQueueSemaphore().acquire();
-            if (eventQueue.put(event)) {
+            agent.getQueueSemaphore().acquire();//control the total number of buffered events
+
+            //Adds event to the queue and checks whether its scheduled for event dispatching
+            if (!eventQueue.put(event)) {
                 try {
-                    threadPool.submitTask(eventPublisher);
-                } catch (RejectedExecutionException ignoreRejection) {
-//                    System.out.println("Rejected ");
+                    //if not schedule for event dispatching
+                    threadPool.submit(eventPublisher);
+                } catch (RejectedExecutionException ignored) {
                 }
             }
         } catch (InterruptedException e) {
-            throw new AgentException("Cannot and to event queue", e);
+            throw new AgentException("Cannot add " + event + " to event queue", e);
         }
     }
 

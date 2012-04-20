@@ -23,25 +23,40 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Queue containing the incoming events of a DataPublisher.
+ *
  * @param <E>
  */
 public class EventQueue<E> {
     private LinkedBlockingQueue<Event> eventQueue = new LinkedBlockingQueue<Event>();
-    private volatile boolean isEventDispatching = false;
+    private volatile boolean isScheduledForEventDispatching = false;
 
+    /**
+     * Polls the event queue and updates the dispatching state of the queue
+     *
+     * @return event if exist
+     */
     public synchronized Event poll() {
         Event event = eventQueue.poll();
         if (null == event) {
-            isEventDispatching = false;
+            //no more events ot dispatch
+            isScheduledForEventDispatching = false;
         }
         return event;
     }
 
+    /**
+     * Puts the event to the Queue and informs the dispatching state of the queue
+     *
+     * @param event to be sent
+     * @return true if event queue is scheduled to be dispatches else false
+     * @throws InterruptedException
+     */
     public synchronized boolean put(Event event) throws InterruptedException {
         eventQueue.put(event);
-        if (!isEventDispatching) {
-            isEventDispatching = true;
+        if (!isScheduledForEventDispatching) {
+            isScheduledForEventDispatching = true;
+            return false;
         }
-        return isEventDispatching;
+        return isScheduledForEventDispatching;
     }
 }

@@ -52,6 +52,14 @@
             <groupId>rome.wso2</groupId>
             <artifactId>rome</artifactId>
         </dependency>
+		<dependency>
+            <groupId>org.apache.abdera.wso2</groupId>
+            <artifactId>abdera</artifactId>
+        </dependency>
+		<dependency>
+            <groupId>org.apache.abdera.wso2</groupId>
+            <artifactId>abdera-extensions</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -69,7 +77,7 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>
-                            org.wso2.carbon.hostobjects.feed.*;
+                            org.wso2.carbon.hostobjects.feeder.*;
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>

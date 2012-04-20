@@ -127,12 +127,13 @@ public class APIProviderHostObject extends ScriptableObject {
      * @param funObj  Function object
      * @throws ScriptException Wrapped exception by org.wso2.carbon.scriptengine.exceptions.ScriptException
      */
-    public static void jsFunction_addAPI(Context cx, Scriptable thisObj,
+    public static boolean jsFunction_addAPI(Context cx, Scriptable thisObj,
                                          Object[] args,
                                          Function funObj) throws ScriptException {
         if (args.length == 0) {
             throw new ScriptException("Invalid number of input parameters.");
         }
+        boolean success=false;
         String provider = (String) args[0];
         String name = (String) args[1];
         String version = (String) args[2];
@@ -194,7 +195,7 @@ public class APIProviderHostObject extends ScriptableObject {
             api.setContext(context);
 
             apiManagerImpl.addAPI(api);
-
+            success=true;
             FileItem fi = getThumbFile(req);
 
             if (fi != null) {
@@ -207,6 +208,7 @@ public class APIProviderHostObject extends ScriptableObject {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+        return success;
 
     }
 
@@ -237,13 +239,14 @@ public class APIProviderHostObject extends ScriptableObject {
     }
 
 
-    public static void jsFunction_updateAPI(Context cx, Scriptable thisObj,
+    public static boolean jsFunction_updateAPI(Context cx, Scriptable thisObj,
                                             Object[] args,
                                             Function funObj) throws ScriptException {
 
         if (args.length == 0) {
             throw new ScriptException("Invalid number of input parameters.");
         }
+        boolean success=false;
         String provider = (String) args[0];
         String name = (String) args[1];
         String version = (String) args[2];
@@ -323,12 +326,14 @@ public class APIProviderHostObject extends ScriptableObject {
                 api.setThumbnailUrl(apiManagerImpl.addApiThumb(api, fi));
                 apiManagerImpl.updateAPI(api);
             }
+            success=true;
 
         } catch (APIManagementException e) {
             log.error("Error from registry while updating the API :" + name + "-" + version, e);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+        return success;
     }
 
     private static void createSynapseDef(Set<URITemplate> uriTemplates, String context, String name,
@@ -473,7 +478,7 @@ public class APIProviderHostObject extends ScriptableObject {
 
                 }
             } catch (APIManagementException e) {
-                log.error("Error from registry while getting all the APIs information", e);
+                log.error("Error from registry while getting all the APIs information for the provider: "+providerName, e);
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
 
@@ -512,7 +517,7 @@ public class APIProviderHostObject extends ScriptableObject {
 
             }
         } catch (APIManagementException e) {
-            log.error("Error from registry while getting the subscribed APIs information", e);
+            log.error("Error from registry while getting the subscribed APIs information for the subscriber"+userName, e);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -527,11 +532,12 @@ public class APIProviderHostObject extends ScriptableObject {
             throws ScriptException {
 
         NativeArray myn = new NativeArray(0);
+        String providerName = null;
         try {
             if (args.length == 0) {
                 throw new ScriptException("Invalid number of input parameters.");
             }
-            String providerName = (String) args[0];
+            providerName = (String) args[0];
             if (providerName != null) {
                 UserApplicationAPIUsage[] apiUsages = apiManagerImpl.getAllAPIUsageByProvider(providerName);
                 for (int i = 0; i < apiUsages.length; i++) {
@@ -554,7 +560,7 @@ public class APIProviderHostObject extends ScriptableObject {
                 }
             }
         } catch (APIManagementException e) {
-            log.error("Error from registry while getting subscribers", e);
+            log.error("Error from registry while getting subscribers of the provider: "+providerName, e);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
 
@@ -567,8 +573,8 @@ public class APIProviderHostObject extends ScriptableObject {
     public static NativeArray jsFunction_getAllDocumentation(Context cx, Scriptable thisObj,
                                                              Object[] args, Function funObj)
             throws ScriptException {
-        String apiName;
-        String version;
+        String apiName = null;
+        String version = null;
         String providerName;
         NativeArray myn = new NativeArray(0);
         try {
@@ -606,10 +612,9 @@ public class APIProviderHostObject extends ScriptableObject {
             }
 
         } catch (APIManagementException e) {
-            log.error("Error from registry while getting document information", e);
+            log.error("Error from registry while getting document information for the api: "+apiName+"-"+version, e);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new ScriptException(e);
         }
         return myn;
 
@@ -688,12 +693,13 @@ public class APIProviderHostObject extends ScriptableObject {
 
     }
 
-    public static void jsFunction_addDocumentation(Context cx, Scriptable thisObj,
+    public static boolean jsFunction_addDocumentation(Context cx, Scriptable thisObj,
                                                    Object[] args, Function funObj)
             throws ScriptException {
         if (args.length < 5 && !isStringValues(args)) {
             throw new ScriptException("Invalid number of parameters and their types.");
         }
+        boolean success=false;
         String providerName = args[0].toString();
         String apiName = args[1].toString();
         String version = args[2].toString();
@@ -715,19 +721,20 @@ public class APIProviderHostObject extends ScriptableObject {
         doc.setSourceUrl(sourceURL);
         try {
             apiManagerImpl.addDocumentation(apiId, doc);
+            success=true;
         } catch (APIManagementException e) {
             log.error("Error from registry while adding the document :" + docName + "for the api :" + apiName + "-" + version, e);
         }
-
-
+        return success;
     }
 
-    public static void jsFunction_removeDocumentation(Context cx, Scriptable thisObj,
+    public static boolean jsFunction_removeDocumentation(Context cx, Scriptable thisObj,
                                                       Object[] args, Function funObj)
             throws ScriptException {
         if (args.length != 5 && !isStringValues(args)) {
             throw new ScriptException("Invalid number of parameters and their types.");
         }
+        boolean success=false;
         String providerName = args[0].toString();
         String apiName = args[1].toString();
         String version = args[2].toString();
@@ -738,19 +745,20 @@ public class APIProviderHostObject extends ScriptableObject {
 
         try {
             apiManagerImpl.removeDocumentation(apiId, docName, docType);
+            success=true;
         } catch (APIManagementException e) {
             log.error("Error from registry while removing the document :" + docName + "for the api :" + apiName + "-" + version, e);
         }
-
+        return success;
 
     }
 
-    public static void jsFunction_createNewAPIVersion(Context cx, Scriptable thisObj,
+    public static boolean jsFunction_createNewAPIVersion(Context cx, Scriptable thisObj,
                                                       Object[] args, Function funObj)
             throws ScriptException
 
     {
-
+        boolean success=false;
         if (args.length != 4 && !isStringValues(args)) {
             throw new ScriptException("Invalid number of parameters and their types.");
         }
@@ -763,15 +771,15 @@ public class APIProviderHostObject extends ScriptableObject {
         API api = new API(apiId);
         try {
             apiManagerImpl.createNewAPIVersion(api, newVersion);
-
-
+            success=true;
         } catch (APIManagementException e) {
-            log.error("Error from registry while creating a new api version", e);
+            log.error("Error from registry while creating a new api version: "+ newVersion, e);
         } catch (DuplicateAPIException e) {
             log.error("Duplicate versioning error while create a new api version", e);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+        return success;
 
     }
 

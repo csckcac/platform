@@ -16,9 +16,11 @@
 
 <agentConfiguration xmlns="http://wso2.org/carbon/agent">
 
-    <taskQueueSize>200</taskQueueSize>
-    <corePoolSize>30</corePoolSize>
-    <maxPoolSize>250</maxPoolSize>
+    <bufferedEventsSize>200</bufferedEventsSize>
+
+    <poolSize>50</poolSize>
+
+    <maxTransportPoolSize>250</maxTransportPoolSize>
     <maxIdleConnections>250</maxIdleConnections>
 
     <authenticatorMaxPoolSize>20</authenticatorMaxPoolSize>

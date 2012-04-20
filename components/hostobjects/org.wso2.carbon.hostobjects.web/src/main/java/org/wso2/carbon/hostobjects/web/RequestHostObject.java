@@ -48,21 +48,28 @@ public class RequestHostObject extends ScriptableObject {
         return hostObjectName;
     }
 
-    public Object jsGet_content() throws ScriptException {
+    public static Object jsFunction_getContent(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+        String functionName = "getContent";
+        int argsCount = args.length;
+        if (argsCount != 0) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+
+        RequestHostObject rho = (RequestHostObject) thisObj;
         try {
-            if (content != null) {
-                return content;
+            if (rho.content != null) {
+                return rho.content;
             }
-            String data = HostObjectUtil.streamToString(request.getInputStream());
-            String contentType = request.getContentType();
+            String data = HostObjectUtil.streamToString(rho.request.getInputStream());
+            String contentType = rho.request.getContentType();
             if (contentType != null && (
                     contentType.equals("application/json") ||
                             contentType.equals("application/json/badgerfish"))) {
-                content = cx.evaluateString(this, data, "wso2js", 1, null);
+                rho.content = cx.evaluateString(thisObj, data, "wso2js", 1, null);
             } else {
-                content = data;
+                rho.content = data;
             }
-            return content;
+            return rho.content;
         } catch (IOException e) {
             String msg = "Error occurred while reading Servlet InputStream";
             log.warn(msg, e);
@@ -70,28 +77,70 @@ public class RequestHostObject extends ScriptableObject {
         }
     }
 
-    public String jsGet_method() throws ScriptException {
-        return request.getMethod();
+    public static String jsFunction_getMethod(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+        String functionName = "getMethod";
+        int argsCount = args.length;
+        if (argsCount != 0) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+
+        RequestHostObject rho = (RequestHostObject) thisObj;
+        return rho.request.getMethod();
     }
 
-    public String jsGet_protocol() throws ScriptException {
-        return request.getProtocol();
+    public static String jsFunction_getProtocol(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+        String functionName = "getProtocol";
+        int argsCount = args.length;
+        if (argsCount != 0) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+
+        RequestHostObject rho = (RequestHostObject) thisObj;
+        return rho.request.getProtocol();
     }
 
-    public String jsGet_queryString() throws ScriptException {
-        return request.getQueryString();
+    public static String jsFunction_getQueryString(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+        String functionName = "getQueryString";
+        int argsCount = args.length;
+        if (argsCount != 0) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+
+        RequestHostObject rho = (RequestHostObject) thisObj;
+        return rho.request.getQueryString();
     }
 
-    public String jsGet_contentType() throws ScriptException {
-        return request.getContentType();
+    public static String jsFunction_getContentType(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+        String functionName = "getContentType";
+        int argsCount = args.length;
+        if (argsCount != 0) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+
+        RequestHostObject rho = (RequestHostObject) thisObj;
+        return rho.request.getContentType();
     }
 
-    public int jsGet_contentLength() throws ScriptException {
-        return request.getContentLength();
+    public static int jsFunction_getContentLength(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+        String functionName = "getContentLength";
+        int argsCount = args.length;
+        if (argsCount != 0) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+
+        RequestHostObject rho = (RequestHostObject) thisObj;
+        return rho.request.getContentLength();
     }
 
-    public String jsGet_uri() throws ScriptException {
-        return request.getRequestURI();
+    public static String jsFunction_getRequestURI(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+        String functionName = "getRequestURI";
+        int argsCount = args.length;
+        if (argsCount != 0) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+
+        RequestHostObject rho = (RequestHostObject) thisObj;
+        return rho.request.getRequestURI();
     }
 
     public static String jsFunction_getHeader(Context cx, Scriptable thisObj, Object[] args, Function funObj)

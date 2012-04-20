@@ -116,12 +116,12 @@ public class LogHostObject extends ScriptableObject {
     }
 
     //check if debug is enabled
-    public boolean jsGet_isDebugEnabled() throws ScriptException {
+    public boolean jsFunction_isDebugEnabled() throws ScriptException {
         return this.logger.isDebugEnabled();
     }
 
     //check if trace is anabled
-    public boolean jsGet_isTraceEnabled() throws ScriptException {
+    public boolean jsFunction_isTraceEnabled() throws ScriptException {
         return this.logger.isTraceEnabled();
     }
 }

@@ -115,18 +115,18 @@ log.info("This is an INFO level log");
                         <th>Description</th>
                     </tr>
                     <tr>
-                        <td><code>Log()</code></td>
+                        <td><code>Log([logger])</code></td>
 			<td>Log</td>
                         <td>
 <pre class="prettyprint">
-var log = new Log();
+var log = new Log("MYAPP");
 </pre>
- Returns a Log object
+ Returns a Log object with "MYAPP" named logger if empty, log will take script name as the default logger
 
                         </td>
                     </tr>
                                         <tr>
-                        <td><code>debug()</code></td>
+                        <td><code>debug(String | Object)</code></td>
 <td>None</td>
                         <td>
 <pre class="prettyprint">
@@ -137,7 +137,7 @@ log.debug("this is a debug message")
                         </td>
                     </tr>
                                                             <tr>
-                        <td><code>info()</code></td>
+                        <td><code>info(String | Object)</code></td>
 <td>None</td>
                         <td>
 <pre class="prettyprint">
@@ -148,13 +148,35 @@ log.info("this is a info message")
                         </td>
                     </tr>
                                                             <tr>
-                        <td><code>warn()</code></td>
+                        <td><code>warn(String | Object)</code></td>
 <td>None</td>
                         <td>
 <pre class="prettyprint">
 log.warn("this is a warn message")
 </pre>
  prints a warn message to the console
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>error(String | Object)</code></td>
+<td>None</td>
+                        <td>
+<pre class="prettyprint">
+log.error("this is a error message")
+</pre>
+ prints a error message to the console
+
+                        </td>
+                    </tr>
+                                        <tr>
+                        <td><code>fatal(String | Object)</code></td>
+<td>None</td>
+                        <td>
+<pre class="prettyprint">
+log.fatal("this is a fatal message")
+</pre>
+ prints a fatal message to the console
 
                         </td>
                     </tr>

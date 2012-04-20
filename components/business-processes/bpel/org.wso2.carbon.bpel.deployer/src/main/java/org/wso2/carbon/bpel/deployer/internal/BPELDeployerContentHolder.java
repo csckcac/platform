@@ -25,7 +25,7 @@ import org.wso2.carbon.registry.core.service.TenantRegistryLoader;
 /**
  * Data holder for the BPELServiceComponent
  */
-public class BPELDeployerContentHolder {
+public final class BPELDeployerContentHolder {
     private static BPELDeployerContentHolder instance;
 
     private BPELServer bpelServer;

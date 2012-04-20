@@ -19,12 +19,10 @@ package org.wso2.carbon.bpel.deployer.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.bpel.core.BPELEngineService;
 import org.wso2.carbon.bpel.core.ode.integration.BPELServer;
 import org.wso2.carbon.registry.core.service.TenantRegistryLoader;
-import org.wso2.carbon.utils.Utils;
 
 /**
  * @scr.component name="org.wso2.carbon.bpel.BPELDeployerServiceComponent" immediate="true"
@@ -39,18 +37,8 @@ import org.wso2.carbon.utils.Utils;
 
 public class BPELDeployerServiceComponent {
     private static Log log = LogFactory.getLog(BPELDeployerServiceComponent.class);
-    private BundleContext bundleContext;
-    private boolean dataSourceInfoRepoProvided = false;
 
     protected void activate(ComponentContext ctxt) {
-        try {
-            this.bundleContext = ctxt.getBundleContext();
-            if (dataSourceInfoRepoProvided) {
-                Utils.registerDeployerServices(this.bundleContext);
-            }
-        } catch (Throwable t) {
-            log.error("Failed to activate the BPELDeployerServiceComponent", t);
-        }
         if(log.isDebugEnabled()) {
             log.debug("BPEL Deployer bundle is activated.");
         }

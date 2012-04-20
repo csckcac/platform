@@ -33,7 +33,7 @@ import java.nio.channels.FileChannel;
  * BPEL package uploader admin service
  */
 public class BPELUploader extends AbstractAdmin {
-    private static final Log log = LogFactory.getLog(BPELUploader.class);
+    private static Log log = LogFactory.getLog(BPELUploader.class);
 
     public void uploadService(UploadedFileItem[] fileItems) throws AxisFault {
 
@@ -72,7 +72,7 @@ public class BPELUploader extends AbstractAdmin {
                 try {
                     writeResource(uploadedFile.getDataHandler(), bpelTemp, fileName, bpelDir);
                 } catch (IOException e) {
-                    throw new AxisFault("IOError: Writing resource failed.");
+                    throw new AxisFault("IOError: Writing resource failed.", e);
                 }
             } else {
                 throw new AxisFault("Invalid file type : " + uploadedFile.getFileType() + " ." +

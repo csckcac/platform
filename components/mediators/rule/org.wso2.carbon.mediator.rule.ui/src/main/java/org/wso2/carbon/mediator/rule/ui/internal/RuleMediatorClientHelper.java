@@ -263,14 +263,14 @@ public class RuleMediatorClientHelper {
                         String type = request.getParameter(id + "Type" + i);
                         String elementName = request.getParameter(id + "ElementName" + i);
                         String namespace = request.getParameter(id + "Namespace" + i);
-                        String xpath = request.getParameter(id + "Xpath" + i);
+//                        String xpath = request.getParameter(id + "Xpath" + i);
                         if(type != null && !"".equals(type)){
 
                             outputFact = new Fact();
                             outputFact.setType(type);
                             outputFact.setElementName(elementName);
                             outputFact.setNamespace(namespace);
-                            outputFact.setXpath(xpath);
+//                            outputFact.setXpath(xpath);
                             outPut.addFact(outputFact);
                         }
                     }

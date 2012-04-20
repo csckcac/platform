@@ -369,8 +369,8 @@ function addFact(category) {
     factTypeTD.innerHTML = "<input type='text' name='" + category + "Type" + i + "' id='" +
         category + "Type" + i + "'" + "  />";
 
-    var factSelectorTD = document.createElement("td");
-    factSelectorTD.appendChild(createFactEditorLLink(category, i));
+//    var factSelectorTD = document.createElement("td");
+//    factSelectorTD.appendChild(createFactEditorLLink(category, i));
 
     var elementNameTD = document.createElement("td");
     elementNameTD.innerHTML = "<input type='text' name='" + category + "ElementName" + i + "' id='" +
@@ -391,11 +391,13 @@ function addFact(category) {
     deleteTD.appendChild(createFactDeleteLink(category, i));
 
     factRaw.appendChild(factTypeTD);
-    factRaw.appendChild(factSelectorTD);
+   // factRaw.appendChild(factSelectorTD);
     factRaw.appendChild(elementNameTD);
     factRaw.appendChild(namespaceTD);
-    factRaw.appendChild(xpathTD);
-    factRaw.appendChild(nsBrowserTD);
+    if(category == 'fact'){
+        factRaw.appendChild(xpathTD);
+        factRaw.appendChild(nsBrowserTD);
+    }
     factRaw.appendChild(deleteTD);
     facttbody.appendChild(factRaw);
     return true;

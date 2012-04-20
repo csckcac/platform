@@ -156,7 +156,7 @@
                 </td>
             </tr>
             <tr>
-                <td><fmt:message key="mediator.rule.source.value"/>
+                <td><fmt:message key="mediator.rule.source.xpath"/>
                 </td>
                 <td>
                     <input type="text" id="mediator.rule.source.xpath"
@@ -218,77 +218,6 @@
 <tr>
     <td><h3 class="mediator"><fmt:message key="mediator.rule.executionset"/></h3></td>
 </tr>
-    <%--
-    <tr>
-        <td>
-            <table class="normal">
-                <tr>
-                    <td>
-                        <select id="mediator.rule.inline"
-                                name="mediator.rule.inline"
-                                onchange="onScriptSourceModeSelectionChange();">
-                            <%
-                                if (isInline) {
-                            %>
-                            <option id="inline" value="inline" selected="true"><fmt:message
-                                    key="in-lined"/></option>
-                            </option>
-                            <option id="registrykeylookup" value="registrykey">
-                                <fmt:message key="registry.lookup"/>
-                            </option>
-                            <%
-                            } else {
-                            %>
-                            <option id="registrykeylookup" value="registrykey"
-                                    selected="true"><fmt:message key="registry.lookup"/>
-                            </option>
-                            <option id="inline" value="inline"><fmt:message key="in-lined"/></option>
-                            <%
-                                }
-                            %>
-                        </select>
-                    </td>
-                </tr>
-                    &lt;%&ndash;<tr>&ndash;%&gt;
-
-                    &lt;%&ndash;<td id="inline_rulescript" style="<%=!isInline?"display:none" : ""%>">&ndash;%&gt;
-                    &lt;%&ndash;<a&ndash;%&gt;
-                    &lt;%&ndash;href="#ruleScriptBrowserLink" class="policie-icon-link"&ndash;%&gt;
-                    &lt;%&ndash;style="padding-left:40px"&ndash;%&gt;
-                    &lt;%&ndash;onclick="showInLinedRuleScriptPolicyEditor('<%=ruleScriptID%>');"><fmt:message&ndash;%&gt;
-                    &lt;%&ndash;key="ruleScript.policy.editor"/></a>&ndash;%&gt;
-                    &lt;%&ndash;</td>&ndash;%&gt;
-
-                    &lt;%&ndash;<td id="regkey_rulescript" style="<%=isInline? "display:none;" : ""%>">&ndash;%&gt;
-                    &lt;%&ndash;<input type="text" class="longInput" id="mediator.rule.key"&ndash;%&gt;
-                    &lt;%&ndash;name="mediator.rule.key" value="<%=ruleRegistryKeyValue%>"&ndash;%&gt;
-                    &lt;%&ndash;readonly="true"/>&ndash;%&gt;
-                    &lt;%&ndash;</td>&ndash;%&gt;
-                    &lt;%&ndash;<td id="regbrowser_rulescript"&ndash;%&gt;
-                    &lt;%&ndash;style="<%=isInline? "display:none;" : ""%>">&ndash;%&gt;
-                    &lt;%&ndash;<a href="#registryBrowserLink" class="registry-picker-icon-link"&ndash;%&gt;
-                    &lt;%&ndash;style="padding-left:20px;padding-left:20px"&ndash;%&gt;
-                    &lt;%&ndash;onclick="showRegistryBrowser('mediator.rule.key','/_system/config');"><fmt:message&ndash;%&gt;
-                    &lt;%&ndash;key="registry.conf.keys"/></a>&ndash;%&gt;
-                    &lt;%&ndash;<a href="#registryBrowserLink" class="registry-picker-icon-link"&ndash;%&gt;
-                    &lt;%&ndash;style="padding-left:20px"&ndash;%&gt;
-                    &lt;%&ndash;onclick="showRegistryBrowser('mediator.rule.key','/_system/governance');"><fmt:message&ndash;%&gt;
-                    &lt;%&ndash;key="registry.gov.keys"/></a>&ndash;%&gt;
-                    &lt;%&ndash;</td>&ndash;%&gt;
-                    &lt;%&ndash;</tr>&ndash;%&gt;
-                    &lt;%&ndash;<tr>&ndash;%&gt;
-                    &lt;%&ndash;<td>&ndash;%&gt;
-                    &lt;%&ndash;<a name="ruleScriptBrowserLink"></a>&ndash;%&gt;
-
-                    &lt;%&ndash;<div id="ruleScriptBrowser" style="display:none;"></div>&ndash;%&gt;
-                    &lt;%&ndash;</td>&ndash;%&gt;
-                    &lt;%&ndash;</tr>&ndash;%&gt;
-            </table>
-        </td>
-    </tr>--%>
-    <%--<%=RuleMediatorClientHelper.getPropertyXML("creation", creationProperties, request.getLocale())%>--%>
-    <%--<%=RuleMediatorClientHelper.getPropertyXML("registration", registrationIterator, request.getLocale())%>--%>
-    <%--<%=RuleMediatorClientHelper.getPropertyXML("deregistration", deRegistrationIterator, request.getLocale())%>--%>
 
     <%-- Add RuleSet with radio buttons  --%>
 <tr>
@@ -405,7 +334,7 @@
             <thead>
             <tr>
                 <th width="10%"><fmt:message key="th.parameter.type"/></th>
-                <th width="10%"><fmt:message key="th.fact.selector"/></th>
+                <%--<th width="10%"><fmt:message key="th.fact.selector"/></th>--%>
                 <th width="10%"><fmt:message key="th.parameter.elementName"/></th>
                 <th width="10%"><fmt:message key="th.parameter.namespace"/></th>
                 <th width="10%"><fmt:message key="th.parameter.xpath"/></th>
@@ -429,12 +358,12 @@
                            id="factType<%=k%>" value="<%=factType%>"
                            type="text"/>
                 </td>
-                <td>
+  <%--              <td>
                     <a class="fact-selector-icon-link" href="#factEditorLink"
                        style="padding-left:40px"
                        onclick="showFactEditor('fact','<%=k%>')"><fmt:message
                             key="fact.type"/></a>
-                </td>
+                </td>--%>
                 <td>
                     <input name="factElementName<%=k%>"
                            id="factElementName<%=k%>" value="<%=factElementName%>"
@@ -493,11 +422,11 @@
             <thead>
             <tr>
                 <th width="10%"><fmt:message key="th.parameter.type"/></th>
-                <th width="10%"><fmt:message key="th.result.selector"/></th>
+                <%--<th width="10%"><fmt:message key="th.result.selector"/></th>--%>
                 <th width="10%"><fmt:message key="th.parameter.elementName"/></th>
                 <th width="10%"><fmt:message key="th.parameter.namespace"/></th>
-                <th width="10%"><fmt:message key="th.parameter.xpath"/></th>
-                <th id="resultns-edior-th"><fmt:message key="namespaceeditor"/></th>
+                <%--<th width="10%"><fmt:message key="th.parameter.xpath"/></th>--%>
+                <%--<th id="resultns-edior-th"><fmt:message key="namespaceeditor"/></th>--%>
                 <th><fmt:message key="th.action"/></th>
             </tr>
             <tbody id="resulttbody">
@@ -517,12 +446,12 @@
                            id="resultType<%=j%>" value="<%=resultType%>"
                            type="text"/>
                 </td>
-                <td>
+       <%--         <td>
                     <a class="fact-selector-icon-link" href="#factEditorLink"
                        style="padding-left:40px"
                        onclick="showFactEditor('result','<%=j%>')"><fmt:message
                             key="result.type"/></a>
-                </td>
+                </td>--%>
 
                 <td>
                     <input name="resultElementName<%=j%>"
@@ -536,18 +465,18 @@
                            type="text"/>
                 </td>
 
-                <td>
-                    <input name="resultXpath<%=j%>"
-                           id="resultXpath<%=j%>" value="<%=resultXpath%>"
-                           type="text"/>
-                </td>
+                <%--<td>--%>
+                    <%--<input name="resultXpath<%=j%>"--%>
+                           <%--id="resultXpath<%=j%>" value="<%=resultXpath%>"--%>
+                           <%--type="text"/>--%>
+                <%--</td>--%>
 
-                <td id="resultNsEditorButtonTD<%=j%>">
-                    <a href="#nsEditorLink" class="nseditor-icon-link"
-                       style="padding-left:40px"
-                       onclick="showNameSpaceEditor('resultValue<%=j%>')"><fmt:message
-                            key="namespaces"/></a>
-                </td>
+                <%--<td id="resultNsEditorButtonTD<%=j%>">--%>
+                    <%--<a href="#nsEditorLink" class="nseditor-icon-link"--%>
+                       <%--style="padding-left:40px"--%>
+                       <%--onclick="showNameSpaceEditor('resultValue<%=j%>')"><fmt:message--%>
+                            <%--key="namespaces"/></a>--%>
+                <%--</td>--%>
 
                 <td><a href="#" href="#" class="delete-icon-link" style="padding-left:40px"
                        onclick="deleteFact('result','<%=j%>')"><fmt:message

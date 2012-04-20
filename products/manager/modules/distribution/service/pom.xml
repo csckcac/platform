@@ -45,6 +45,11 @@
             <version>${features-dashboard.war.version}</version>
             <type>war</type>
         </dependency>
+        <dependency>
+            <groupId>com.h2database.wso2</groupId>
+            <artifactId>h2-database-engine</artifactId>
+            <version>${orbit.version.h2.engine}</version>
+        </dependency>
 
     </dependencies>
 
@@ -112,6 +117,37 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.1</version>
                 <executions>
+                    <execution>
+                        <id>1-run-ant</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <path id="h2.classpath">
+                                    <path refid="maven.compile.classpath"/>
+                                </path>
+                                <echo
+                                        message="########### Create Billing Database ##############"/>
+                                <sql
+                                        driver="org.h2.Driver"
+                                        url="jdbc:h2:${basedir}/target/database/WSO2BILLING_DB"
+                                        userid="wso2carbon" password="wso2carbon" autocommit="true"
+                                        onerror="continue">
+                                    <classpath>
+                                        <path refid="h2.classpath"/>
+                                    </classpath>
+                                    <fileset file="../../../billing-script/billing-h2.sql"/>
+									<fileset file="${basedir}/resources/dbscripts/bam/bam_schema_h2.sql"/>
+									<fileset file="${basedir}/resources/dbscripts/metering_h2.sql"/>
+                                </sql>
+                                <echo
+                                        message="##################### END ########################"/>
+                            </tasks>
+                        </configuration>
+                    </execution>
+
                     <execution>
                         <id>3-extract-docs-from-components</id>
                         <phase>package</phase>
@@ -188,6 +224,7 @@
                                 <delete file="target/${project.artifactId}-${project.version}.jar"/>
                                 <delete dir="target/sources"/>
                                 <delete dir="target/site"/>
+                                <delete dir="target/database"/>
                                 <delete dir="src/site"/>
                             </tasks>
                         </configuration>

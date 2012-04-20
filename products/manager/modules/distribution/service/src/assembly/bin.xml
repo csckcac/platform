@@ -224,7 +224,13 @@
             <includes>
                 <include>**/**.sql</include>
             </includes>
-        </fileSet>
+		</fileSet>
+
+		<!-- copy the billing h2 db -->
+		<fileSet>
+			<directory>target/database</directory>
+			<outputDirectory>${pom.artifactId}-${pom.version}/repository/database</outputDirectory>
+		</fileSet> 
     </fileSets>
 
     <dependencySets>

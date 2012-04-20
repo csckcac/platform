@@ -14,13 +14,13 @@ var apikey = "e9r83r3qcp3hdghg8qpu5kf3";
 
  // Creating an instance of AtomFeed
  var feed = new AtomFeed();
+ if (moviesJSON.data.movies[0] != null && moviesJSON.data.movies[0] != 'undefined') {
  var videotitle = encodeURI(moviesJSON.data.movies[0].title);  //encode the full movie title for youtube search
  // Retrieving and online feed
  feed = client.getFeed("http://gdata.youtube.com/feeds/api/videos?q="+videotitle+"video&start-index=1&max-results=6&v=2");
 
  // Getting an array of individual entries from the feed
  var entries = feed.getEntries();
- if (moviesJSON.data.movies[0] != null) {
 %>
         <div class="results" id="results" >
 

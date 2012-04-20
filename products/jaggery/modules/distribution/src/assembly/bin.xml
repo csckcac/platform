@@ -69,6 +69,14 @@
                 <exclude>**/target/**</exclude>
             </excludes>
         </fileSet>
+ 	<!--  copying smodules xml -->
+        <fileSet>
+            <directory>src/resources/jaggery</directory>
+            <outputDirectory>jaggery-${carbon.product.version}/jaggery/</outputDirectory>
+	    <includes>
+                <include>modules.xml</include>
+            </includes>
+        </fileSet>
         <fileSet>
             <directory>../apps/</directory>
             <outputDirectory>jaggery-${carbon.product.version}/repository/deployment/server/jaggeryapps/

@@ -61,13 +61,14 @@ include('/includes/navi.jag');
                 <br/>
 <pre class="prettyprint linenums">
 &lt;%
-var core = require("CORE");
-core.log("Required the module");
+var core = require("core");
+var log = new core.Log();
+log.info("Required the module");
 
 function myFunc() {
-    var ws = require("WS");
+    var ws = require("ws");
     var client = new ws.WSRequest();
-    core.log("Required within a function");
+    log.info("Required within a function");
 }
 %&gt;
 </pre>
@@ -104,7 +105,7 @@ function myFunc() {
                             <td>Object</td>
                             <td>
 <pre class="prettyprint">
-var module = require("MODULE_NAME");
+var module = require("module_name");
 </pre>
                                 Returns a module object with keyed references to all methods and objects of the module.
                             </td>

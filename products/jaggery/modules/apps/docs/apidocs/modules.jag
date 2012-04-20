@@ -61,13 +61,13 @@ include('/includes/navi.jag');
                <p>modules.xml is used to configure the modules that need to be loaded when the server is started up.
                    A module can be a set of JavaScript objects and functions defined either via
                    <a href="http://wso2.org/library/tutorials/writing-custom-hostobject" target="_blank">Rhino Hostobjects</a> or
-                   just as *.js files which reside in &lt;JAGGERY_HOME&gt;/jaggery directory.</p>
+                   just as *.js files which reside in &lt;JAGGERY_HOME&gt;/jaggery directory. </p>
 
                 <p>The structure of modules.xml is shown below.</p>
 
 <pre class="prettyprint">
 &lt;modules xmlns="http://wso2.org/projects/jaggery/modules.xml"&gt;
-    &lt;module name="MODULE_NAME" namespace="ns" expose="true"&gt;
+    &lt;module name="module_name" namespace="ns" expose="true"&gt;
         &lt;!-- Hostobjects --&gt;
         &lt;hostObject&gt;
             &lt;className&gt;org.wso2.carbon.hostobjects.xhr.XMLHttpRequest&lt;/className&gt;

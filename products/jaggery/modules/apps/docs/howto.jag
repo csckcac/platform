@@ -71,7 +71,7 @@ include('/includes/topnavi.jag');
 	        <p>
 	            Jaggery Server is the Runtime that host Jaggery applications.
 	            <br/>  <br/>
-	            It contains a management console, for Admins to manger (deploy, reload, stop and start) Jaggery Apps. Using the management console, admins can gather basic statistics about the
+	            It contains a management console, for admins to mange (deploy, reload, stop and start) Jaggery apps. Using the management console, admins can gather basic statistics about the
 	            deployed applications.
 	             <br/><br/>
 	            Jaggery Server is powered by WSO2 carbon OSGi Runtime
@@ -89,10 +89,7 @@ include('/includes/topnavi.jag');
 
             <p>In-order to compose a Jaggery script you have to make it a <span class="label notice"> .jag</span> extension.</p>
 
-            <p>There are no restrictions for the directory structure, add your <code>.jag</code> files where ever you want,
-            zip them all together, rename the .zip to .war <b>(Just for now
-                in M3)</b> and deploy at <i>{JAGGERY_HOME}/repository/deployment/server/jaggeryapps</i>
-            </p>
+            <p>There are no restrictions for the directory structure, add your <code>.jag</code> files where ever you want, zip them all together, rename the .zip to .war <b>(Just for now in M3)</b> and deploy at <i>{JAGGERY_HOME}/repository/deployment/server/jaggeryapps</i></p>
             
             <p>Also Jaggery app .war file can be uploaded through the management console as follows. This can be found under Add link in Jaggery Applications section.</p>
             <br/>

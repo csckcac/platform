@@ -119,7 +119,7 @@ include('/includes/topnavi.jag');
                 
 <section id="overview">
     <h4>Overview</h4>
-          <p class="description">In-built function <code>print() </code> will write serverside output to the document.</p>
+          <p class="description">In-built function <code>print() </code> will write server-side output to the document.</p>
 </section>
 
 <section id="operations">
@@ -145,7 +145,7 @@ var obj = {"name": "Madhuka", "company":"WSO2"};<br>
 print(obj);
 // return a JSON object
         </pre>
-                            Passing a Javascript object to <code>print()</code> will be return as JSON object.
+                            Passing a Javascript object to <code>print()</code> will return a JSON object.
                         </td>
                     </tr>
                     <tr>

@@ -69,7 +69,7 @@ include('/includes/topnavi.jag');
                 <%
                 var resCode = '&lt%'
                 + '\n response.addHeader("custom-header", "jaggery_response");'
-                + '\n response.write("Hello World");'
+                + '\n print("Hello World");'
                 + '\n %&gt';
 
                 var codeSnip = encodeURIComponent(resCode);
@@ -132,7 +132,7 @@ include('/includes/topnavi.jag');
                         <td>
                             <pre class="prettyprint">response.content = { products : ["Jaggery", "ESB"] };</pre>
                             <pre class="prettyprint">response.content = "My response content";</pre>
-                            <p>Sets response content type.</p>
+                            <p>Sets response content</p>
                             <p>If any thing other that strings are assigned, then they will be automatically serialized.</p>
                         </td>
 

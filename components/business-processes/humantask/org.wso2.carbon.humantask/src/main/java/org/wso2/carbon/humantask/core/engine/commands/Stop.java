@@ -19,9 +19,7 @@ package org.wso2.carbon.humantask.core.engine.commands;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.humantask.core.dao.EventDAO;
-import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
-import org.wso2.carbon.humantask.core.dao.TaskStatus;
+import org.wso2.carbon.humantask.core.dao.*;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 import org.wso2.carbon.humantask.core.engine.util.OperationAuthorizationUtil;
 
@@ -33,7 +31,6 @@ import java.util.List;
  * Stop operation logic..
  */
 public class Stop extends AbstractHumanTaskCommand {
-
     private static final Log log = LogFactory.getLog(Stop.class);
 
     public Stop(String callerId, Long taskId) {
@@ -53,15 +50,17 @@ public class Stop extends AbstractHumanTaskCommand {
      */
     @Override
     protected void authorise() {
+        TaskDAO task = getTask();
+        OrganizationalEntityDAO caller = getCaller();
         List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles =
                 new ArrayList<GenericHumanRoleDAO.GenericHumanRoleType>();
         allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
 
-        if (!OperationAuthorizationUtil.authoriseUser(this.task, caller, allowedRoles,
-                                                      engine.getPeopleQueryEvaluator())) {
+        if (!OperationAuthorizationUtil.authoriseUser(task, caller, allowedRoles,
+                getEngine().getPeopleQueryEvaluator())) {
             String errMsg = String.format("The user[%s] cannot perform [%s] operation on task[id:%d] as he is not in " +
-                                          "task roles[%s]", caller.getName(), Stop.class.getSimpleName(), task.getId(),
-                                          allowedRoles);
+                    "task roles[%s]", caller.getName(), Stop.class.getSimpleName(), task.getId(),
+                    allowedRoles);
             log.error(errMsg);
             throw new HumanTaskRuntimeException(errMsg);
         }
@@ -72,13 +71,14 @@ public class Stop extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkState() {
+        TaskDAO task = getTask();
         checkPreState(TaskStatus.IN_PROGRESS, Stop.class);
         if (!TaskStatus.IN_PROGRESS.equals(task.getStatus())) {
 
             String errMsg = String.format("User[%s] cannot claim task[%d] as the task is in state[%s]. " +
-                                          "Only tasks in [%s] can be claimed!",
-                                          caller.getName(), task.getId(),
-                                          task.getStatus(), TaskStatus.IN_PROGRESS);
+                    "Only tasks in [%s] can be claimed!",
+                    getCaller().getName(), task.getId(),
+                    task.getStatus(), TaskStatus.IN_PROGRESS);
             log.error(errMsg);
             throw new HumanTaskRuntimeException(errMsg);
         }
@@ -101,6 +101,7 @@ public class Stop extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
+        TaskDAO task = getTask();
         checkPreConditions();
         authorise();
         checkState();

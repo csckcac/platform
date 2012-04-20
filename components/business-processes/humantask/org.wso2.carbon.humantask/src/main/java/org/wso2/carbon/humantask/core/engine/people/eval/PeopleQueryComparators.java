@@ -17,7 +17,6 @@
 package org.wso2.carbon.humantask.core.engine.people.eval;
 
 import org.wso2.carbon.humantask.core.dao.OrganizationalEntityDAO;
-import org.wso2.carbon.humantask.core.engine.PeopleQueryEvaluator;
 
 import java.text.Collator;
 import java.util.Comparator;
@@ -26,7 +25,9 @@ import java.util.Locale;
 /**
  * TODO
  */
-public class PeopleQueryComparators {
+public final class PeopleQueryComparators {
+    private PeopleQueryComparators() {
+    }
 
     public static Comparator<OrganizationalEntityDAO> peopleNameComparator() {
         return new Comparator<OrganizationalEntityDAO>() {

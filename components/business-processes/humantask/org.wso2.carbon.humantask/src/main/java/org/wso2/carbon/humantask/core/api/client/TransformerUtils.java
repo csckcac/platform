@@ -21,36 +21,8 @@ import org.apache.axis2.databinding.utils.ConverterUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.humantask.client.api.types.TComment;
-import org.wso2.carbon.humantask.client.api.types.TGroup;
-import org.wso2.carbon.humantask.client.api.types.TOrganizationalEntity;
-import org.wso2.carbon.humantask.client.api.types.TOrganizationalEntityChoice;
-import org.wso2.carbon.humantask.client.api.types.TPresentationDescription;
-import org.wso2.carbon.humantask.client.api.types.TPresentationName;
-import org.wso2.carbon.humantask.client.api.types.TPresentationSubject;
-import org.wso2.carbon.humantask.client.api.types.TPriority;
-import org.wso2.carbon.humantask.client.api.types.TSimpleQueryCategory;
-import org.wso2.carbon.humantask.client.api.types.TSimpleQueryInput;
-import org.wso2.carbon.humantask.client.api.types.TStatus;
-import org.wso2.carbon.humantask.client.api.types.TTaskAbstract;
-import org.wso2.carbon.humantask.client.api.types.TTaskAuthorisationParams;
-import org.wso2.carbon.humantask.client.api.types.TTaskEvent;
-import org.wso2.carbon.humantask.client.api.types.TTaskEvents;
-import org.wso2.carbon.humantask.client.api.types.TTaskSimpleQueryResultRow;
-import org.wso2.carbon.humantask.client.api.types.TTaskSimpleQueryResultSet;
-import org.wso2.carbon.humantask.client.api.types.TUser;
-import org.wso2.carbon.humantask.core.dao.CommentDAO;
-import org.wso2.carbon.humantask.core.dao.EventDAO;
-import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
-import org.wso2.carbon.humantask.core.dao.HumanTaskDAOConnection;
-import org.wso2.carbon.humantask.core.dao.OrganizationalEntityDAO;
-import org.wso2.carbon.humantask.core.dao.PresentationDescriptionDAO;
-import org.wso2.carbon.humantask.core.dao.PresentationNameDAO;
-import org.wso2.carbon.humantask.core.dao.PresentationSubjectDAO;
-import org.wso2.carbon.humantask.core.dao.SimpleQueryCriteria;
-import org.wso2.carbon.humantask.core.dao.TaskDAO;
-import org.wso2.carbon.humantask.core.dao.TaskStatus;
-import org.wso2.carbon.humantask.core.dao.TaskType;
+import org.wso2.carbon.humantask.client.api.types.*;
+import org.wso2.carbon.humantask.core.dao.*;
 import org.wso2.carbon.humantask.core.engine.HumanTaskEngine;
 import org.wso2.carbon.humantask.core.engine.PeopleQueryEvaluator;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
@@ -70,9 +42,12 @@ import java.util.List;
  * Data transformer util. Contains methods transforming adb data types
  * to human task engine's objects and vice versa.
  */
-public class TransformerUtils {
+public final class TransformerUtils {
 
     public static final Log log = LogFactory.getLog(TransformerUtils.class);
+
+    private TransformerUtils() {
+    }
 
     /**
      * Transforms the given list of CommentDAO to a list of TComment.
@@ -128,21 +103,21 @@ public class TransformerUtils {
         return transformedComment;
     }
 
-    /**
-     * @param matchingTasks :
-     * @return :
-     */
-    public static TTaskSimpleQueryResultSet createSimpleQueryResultSet(
-            List<TaskDAO> matchingTasks) {
-
-        TTaskSimpleQueryResultSet resultSet = new TTaskSimpleQueryResultSet();
-
-        for (TaskDAO matchingTask : matchingTasks) {
-            resultSet.addRow(transformToSimpleQueryRow(matchingTask));
-        }
-
-        return resultSet;
-    }
+//    /**
+//     * @param matchingTasks :
+//     * @return :
+//     */
+//    public static TTaskSimpleQueryResultSet createSimpleQueryResultSet(
+//            List<TaskDAO> matchingTasks) {
+//
+//        TTaskSimpleQueryResultSet resultSet = new TTaskSimpleQueryResultSet();
+//
+//        for (TaskDAO matchingTask : matchingTasks) {
+//            resultSet.addRow(transformToSimpleQueryRow(matchingTask));
+//        }
+//
+//        return resultSet;
+//    }
 
     /**
      * @param matchingTask :
@@ -156,7 +131,8 @@ public class TransformerUtils {
         try {
             row.setId(new URI(matchingTask.getId().toString()));
         } catch (URI.MalformedURIException e) {
-            throw new HumanTaskRuntimeException("The task id :[" + matchingTask.getId() + "] is invalid");
+            throw new HumanTaskRuntimeException("The task id :[" + matchingTask.getId() +
+                    "] is invalid", e);
         }
         Calendar createdTime = Calendar.getInstance();
         createdTime.setTime(matchingTask.getCreatedOn());
@@ -171,8 +147,10 @@ public class TransformerUtils {
         TStatus taskStatus = new TStatus();
         taskStatus.setTStatus(matchingTask.getStatus().toString());
         row.setStatus(taskStatus);
-        row.setPresentationSubject((transformPresentationSubject(CommonTaskUtil.getDefaultPresentationSubject(matchingTask))));
-        row.setPresentationName(transformPresentationName(CommonTaskUtil.getDefaultPresentationName(matchingTask)));
+        row.setPresentationSubject((transformPresentationSubject(CommonTaskUtil.
+                getDefaultPresentationSubject(matchingTask))));
+        row.setPresentationName(transformPresentationName(CommonTaskUtil.
+                getDefaultPresentationName(matchingTask)));
 
         return row;
     }
@@ -208,7 +186,7 @@ public class TransformerUtils {
 
             if (org.h2.util.StringUtils.isNullOrEmpty(userName) || type == null) {
                 throw new HumanTaskRuntimeException("Cannot extract OrganizationalEntity from :"
-                                                    + tOEntity);
+                        + tOEntity);
             }
             OrganizationalEntityDAO orgEntity = daoConn.createNewOrgEntityObject(userName, type);
             organizationalEntities.add(orgEntity);
@@ -228,7 +206,7 @@ public class TransformerUtils {
 
         if (tSimpleQueryInput == null) {
             throw new IllegalArgumentException("TSimpleQueryInput parameter passed to " +
-                                               "transformSimpleTaskQuery cannot be null");
+                    "transformSimpleTaskQuery cannot be null");
         }
 
         SimpleQueryCriteria simpleQueryCriteria = new SimpleQueryCriteria();
@@ -245,7 +223,8 @@ public class TransformerUtils {
         simpleQueryCriteria.setPageSize(tSimpleQueryInput.getPageSize());
         simpleQueryCriteria.setTaskName(tSimpleQueryInput.getTaskName());
 
-        simpleQueryCriteria.setSimpleQueryType(transformQueryCategory(tSimpleQueryInput.getSimpleQueryCategory()));
+        simpleQueryCriteria.setSimpleQueryType(transformQueryCategory(
+                tSimpleQueryInput.getSimpleQueryCategory()));
 
 
         return simpleQueryCriteria;
@@ -341,32 +320,32 @@ public class TransformerUtils {
         taskAbstract.setHasPotentialOwners(CommonTaskUtil.hasPotentialOwners(task));
 
         if (CommonTaskUtil.getUserEntityForRole(task,
-                                                GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER) != null) {
+                GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER) != null) {
             taskAbstract.setActualOwner(createTUser(
                     CommonTaskUtil.getUserEntityForRole(task,
-                                                        GenericHumanRoleDAO.
-                                                                GenericHumanRoleType.ACTUAL_OWNER)));
+                            GenericHumanRoleDAO.
+                                    GenericHumanRoleType.ACTUAL_OWNER)));
         }
         taskAbstract.setPotentialOwners(
                 transformOrganizationalEntityList(
                         CommonTaskUtil.getOrgEntitiesForRole(task,
-                                                             GenericHumanRoleDAO.
-                                                                     GenericHumanRoleType.POTENTIAL_OWNERS)));
+                                GenericHumanRoleDAO.
+                                        GenericHumanRoleType.POTENTIAL_OWNERS)));
         taskAbstract.setBusinessAdministrators(
                 transformOrganizationalEntityList(
                         CommonTaskUtil.getOrgEntitiesForRole(task,
-                                                             GenericHumanRoleDAO.
-                                                                     GenericHumanRoleType.BUSINESS_ADMINISTRATORS)));
+                                GenericHumanRoleDAO.
+                                        GenericHumanRoleType.BUSINESS_ADMINISTRATORS)));
         taskAbstract.setNotificationRecipients(
                 transformOrganizationalEntityList(
                         CommonTaskUtil.getOrgEntitiesForRole(task,
-                                                             GenericHumanRoleDAO.
-                                                                     GenericHumanRoleType.NOTIFICATION_RECIPIENTS)));
+                                GenericHumanRoleDAO.
+                                        GenericHumanRoleType.NOTIFICATION_RECIPIENTS)));
         taskAbstract.setTaskStakeholders(
                 transformOrganizationalEntityList(
                         CommonTaskUtil.getOrgEntitiesForRole(task,
-                                                             GenericHumanRoleDAO.
-                                                                     GenericHumanRoleType.STAKEHOLDERS)));
+                                GenericHumanRoleDAO.
+                                        GenericHumanRoleType.STAKEHOLDERS)));
         taskAbstract.setTaskInitiator(createTUser(
                 CommonTaskUtil.getUserEntityForRole(task, GenericHumanRoleDAO.
                         GenericHumanRoleType.TASK_INITIATOR)));
@@ -374,7 +353,7 @@ public class TransformerUtils {
         HumanTaskBaseConfiguration baseConfiguration = CommonTaskUtil.getTaskConfiguration(task);
         if (baseConfiguration == null) {
             throw new HumanTaskRuntimeException("There's not matching task configuration for " +
-                                                "task" + task.getName());
+                    "task" + task.getName());
         }
 
         taskAbstract.setPackageName(baseConfiguration.getPackageName());
@@ -407,11 +386,13 @@ public class TransformerUtils {
             for (int i = 0; i < orgEntitiesForRole.size(); i++) {
                 TOrganizationalEntityChoice choice = new TOrganizationalEntityChoice();
                 OrganizationalEntityDAO orgEntity = orgEntitiesForRole.get(i);
-                if (OrganizationalEntityDAO.OrganizationalEntityType.USER.equals(orgEntity.getOrgEntityType())) {
+                if (OrganizationalEntityDAO.OrganizationalEntityType.USER.equals
+                        (orgEntity.getOrgEntityType())) {
                     TUser user = new TUser();
                     user.setTUser(orgEntity.getName());
                     choice.setUser(user);
-                } else if (OrganizationalEntityDAO.OrganizationalEntityType.USER.equals(orgEntity.getOrgEntityType())) {
+                } else if (OrganizationalEntityDAO.OrganizationalEntityType.USER.equals(
+                        orgEntity.getOrgEntityType())) {
                     TGroup group = new TGroup();
                     group.setTGroup(orgEntity.getName());
                     choice.setGroup(group);
@@ -433,9 +414,10 @@ public class TransformerUtils {
     public static TPresentationSubject transformPresentationSubject(
             PresentationSubjectDAO presentationSubjectDAO) {
         if (presentationSubjectDAO != null
-            && StringUtils.isNotEmpty(presentationSubjectDAO.getValue())) {
+                && StringUtils.isNotEmpty(presentationSubjectDAO.getValue())) {
             TPresentationSubject presentationSubject = new TPresentationSubject();
-            presentationSubject.setTPresentationSubject(presentationSubjectDAO.getValue().replaceAll("\\s+", " "));
+            presentationSubject.setTPresentationSubject(presentationSubjectDAO.getValue().
+                    replaceAll("\\s+", " "));
             return presentationSubject;
         }
         return null;
@@ -450,7 +432,7 @@ public class TransformerUtils {
     public static TPresentationDescription transformPresentationDescription(
             PresentationDescriptionDAO presentationDescription) {
         if (presentationDescription != null
-            && StringUtils.isNotEmpty(presentationDescription.getValue())) {
+                && StringUtils.isNotEmpty(presentationDescription.getValue())) {
             TPresentationDescription pDesc = new TPresentationDescription();
             pDesc.setTPresentationDescription(presentationDescription.getValue().replaceAll("\\s+", " "));
             return pDesc;
@@ -467,7 +449,7 @@ public class TransformerUtils {
     public static TPresentationName transformPresentationName(
             PresentationNameDAO presentationNameDAO) {
         if (presentationNameDAO != null &&
-            StringUtils.isNotEmpty(presentationNameDAO.getValue())) {
+                StringUtils.isNotEmpty(presentationNameDAO.getValue())) {
             TPresentationName presentationName = new TPresentationName();
             presentationName.setTPresentationName(presentationNameDAO.getValue().replaceAll("\\s+", " "));
             return presentationName;

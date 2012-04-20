@@ -43,12 +43,15 @@ import javax.xml.namespace.QName;
  * This class contains utility functions used by HumanTask Axis integration Layer to create,
  * and configure AxisServices.
  */
-public class AxisServiceUtils {
+public final class AxisServiceUtils {
     private static Log log = LogFactory.getLog(AxisServiceUtils.class);
     public static final String WS_ADDRESSING_NS = "http://www.w3.org/2005/08/addressing";
     public static final String WS_ADDRESSING_NS2 = "http://www.w3.org/2006/05/addressing/wsdl";
     public static final String WS_ADDRESSING_NS3 = "http://www.w3.org/2006/02/addressing/wsdl";
     public static final String WS_ADDRESSING_NS4 = "http://schemas.xmlsoap.org/ws/2004/08/addressing";
+
+    private AxisServiceUtils() {
+    }
 
     public static void invokeService(ServiceInvocationContext partnerInvocationContext,
                                      ConfigurationContext configContext)
@@ -110,7 +113,7 @@ public class AxisServiceUtils {
         return axisAnonymousOperation.createClient(serviceCtx, clientOptions);
     }
 
-     /**
+    /**
      * Extracts the action to be used for the given operation.  It first checks to see
      * if a value is specified using WS-Addressing in the portType, it then falls back onto
      * getting it from the SOAP Binding.
@@ -131,7 +134,6 @@ public class AxisServiceUtils {
      * When WS-Addressing is being used by a service provider, the "Action" is specified in the
      * portType->operation instead of the SOAP binding->operation.
      *
-     *
      * @param partnerMessageContext BPELMessageContext
      * @return the SOAPAction value if one is specified, otherwise empty string
      */
@@ -146,25 +148,25 @@ public class AxisServiceUtils {
         if (input != null) {
             Object actionQName = input.getExtensionAttribute(new QName(WS_ADDRESSING_NS,
                     "Action"));
-            if (actionQName != null && actionQName instanceof QName) {
+            if (actionQName instanceof QName) {
                 return ((QName) actionQName).getLocalPart();
             }
 
             actionQName = input.getExtensionAttribute(new QName(WS_ADDRESSING_NS2,
                     "Action"));
-            if (actionQName != null && actionQName instanceof QName) {
+            if (actionQName instanceof QName) {
                 return ((QName) actionQName).getLocalPart();
             }
 
             actionQName = input.getExtensionAttribute(new QName(WS_ADDRESSING_NS3,
                     "Action"));
-            if (actionQName != null && actionQName instanceof QName) {
+            if (actionQName instanceof QName) {
                 return ((QName) actionQName).getLocalPart();
             }
 
             actionQName = input.getExtensionAttribute(new QName(WS_ADDRESSING_NS4,
                     "Action"));
-            if (actionQName != null && actionQName instanceof QName) {
+            if (actionQName instanceof QName) {
                 return ((QName) actionQName).getLocalPart();
             }
         }
@@ -174,7 +176,7 @@ public class AxisServiceUtils {
     /**
      * Attempts to extract the SOAP Action is defined in the WSDL document.
      *
-     * @param partnerMessageContext    BPELMessageContext
+     * @param partnerMessageContext BPELMessageContext
      * @return the SOAPAction value if one is specified, otherwise empty string
      */
     public static String getSoapAction(ServiceInvocationContext partnerMessageContext) {

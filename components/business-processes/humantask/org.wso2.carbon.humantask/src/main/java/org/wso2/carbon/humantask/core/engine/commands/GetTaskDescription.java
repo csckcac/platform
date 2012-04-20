@@ -25,11 +25,9 @@ import java.util.List;
  *
  */
 public class GetTaskDescription extends AbstractHumanTaskCommand {
-
     private String taskDescription;
 
     private String mimeType = "text/plain";
-
 
     public GetTaskDescription(String callerId, Long taskId, String contentType) {
         super(callerId, taskId);
@@ -82,7 +80,7 @@ public class GetTaskDescription extends AbstractHumanTaskCommand {
         checkPreConditions();
         authorise();
         checkState();
-        taskDescription = task.getTaskDescription(mimeType);
+        taskDescription = getTask().getTaskDescription(mimeType);
         checkPostConditions();
     }
 

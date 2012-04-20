@@ -20,16 +20,15 @@ import org.wso2.carbon.humantask.HumanInteractionsDocument;
 import org.wso2.carbon.humantask.core.deployment.config.HTDeploymentConfigDocument;
 
 import javax.wsdl.Definition;
-import java.net.URI;
 import java.util.List;
 
 public abstract class HumanTaskDeploymentUnitBuilder {
-    protected HumanTaskDeploymentUnit htDeploymentUnit;
+    private HumanTaskDeploymentUnit htDeploymentUnit;
 
-    public HumanTaskDeploymentUnit getHumanTaskDeploymentUnit() {
-
-        return htDeploymentUnit;
-    }
+    //    public HumanTaskDeploymentUnit getHumanTaskDeploymentUnit() {
+//
+//        return htDeploymentUnit;
+//    }
 
     public HumanTaskDeploymentUnit createNewHumanTaskDeploymentUnit()
             throws HumanTaskDeploymentException {

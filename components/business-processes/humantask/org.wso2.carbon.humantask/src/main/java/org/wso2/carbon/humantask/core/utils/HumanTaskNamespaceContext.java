@@ -29,10 +29,6 @@ public class HumanTaskNamespaceContext implements javax.xml.namespace.NamespaceC
     public HumanTaskNamespaceContext() {
     }
 
-    public HumanTaskNamespaceContext(HumanTaskNamespaceContext nsCtx) {
-        prefixToUriMap.putAll(nsCtx.getPrefixToUriMap());
-    }
-
     public String getNamespaceURI(String prefix) {
         return prefixToUriMap.get(prefix == null ? "" : prefix);
     }
@@ -60,31 +56,21 @@ public class HumanTaskNamespaceContext implements javax.xml.namespace.NamespaceC
         return matchedObjs.iterator();
     }
 
-    public Map<String, String> getPrefixToUriMap() {
-        return prefixToUriMap;
-    }
-
     public void register(String prefix, String nsUri) {
-        if (prefix == null)
-            prefix = "";
-
-        if (nsUri == null)
-            nsUri = "";
-
-        if (log.isTraceEnabled()) {
-            log.trace("Registering Namespace: Prefix pair - " + nsUri + ":" + prefix);
+        String tPrefix = prefix;
+        String tNsUri = nsUri;
+        if (tPrefix == null) {
+            tPrefix = "";
         }
 
-        prefixToUriMap.put(prefix, nsUri);
-    }
+        if (tNsUri == null) {
+            tNsUri = "";
+        }
 
-    /**
-     * Get all the URIs with a prefix mapping in this context
-     *
-     * @return{@link Set} of URI {@link String}s with a prefix mapping in this
-     * context
-     */
-    public Set<String> getUriSet() {
-        return new HashSet<String>(prefixToUriMap.values());
+        if (log.isTraceEnabled()) {
+            log.trace("Registering Namespace: Prefix pair - " + tNsUri + ":" + tPrefix);
+        }
+
+        prefixToUriMap.put(tPrefix, tNsUri);
     }
 }

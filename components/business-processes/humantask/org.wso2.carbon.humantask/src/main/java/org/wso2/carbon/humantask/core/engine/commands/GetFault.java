@@ -80,7 +80,7 @@ public class GetFault extends AbstractHumanTaskCommand {
         checkPreConditions();
         authorise();
         checkState();
-        MessageDAO faultMessage = task.getFailureMessage();
+        MessageDAO faultMessage = getTask().getFailureMessage();
         this.faultName = faultMessage.getName().toString();
         this.faultData = faultMessage.getBodyData();
         checkPostConditions();

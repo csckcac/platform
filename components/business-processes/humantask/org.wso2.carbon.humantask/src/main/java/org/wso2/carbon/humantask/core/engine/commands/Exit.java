@@ -19,6 +19,7 @@ package org.wso2.carbon.humantask.core.engine.commands;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.humantask.core.dao.EventDAO;
+import org.wso2.carbon.humantask.core.dao.TaskDAO;
 import org.wso2.carbon.humantask.core.dao.TaskStatus;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 
@@ -54,20 +55,20 @@ public class Exit extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkState() {
-
+        TaskDAO task = getTask();
         boolean isInFinalState = false;
         if (TaskStatus.EXITED.equals(task.getStatus()) || TaskStatus.ERROR.equals(task.getStatus())
-            || TaskStatus.FAILED.equals(task.getStatus()) || TaskStatus.OBSOLETE.equals(task.getStatus()) ||
-            TaskStatus.COMPLETED.equals(task.getStatus())) {
+                || TaskStatus.FAILED.equals(task.getStatus()) || TaskStatus.OBSOLETE.equals(task.getStatus()) ||
+                TaskStatus.COMPLETED.equals(task.getStatus())) {
             isInFinalState = true;
         }
         if (isInFinalState) {
             String errMsg = String.format("User[%s] cannot perform [%s] operation on task[%d] as the task is in state[%s]. " +
-                                          "[%s] operation can be performed only on tasks not in states[%s,%s,%s,%s,%s]",
-                                          caller.getName(), Exit.class, task.getId(),
-                                          task.getStatus(), Exit.class, TaskStatus.EXITED,
-                                          TaskStatus.ERROR, TaskStatus.FAILED, TaskStatus.OBSOLETE,
-                                          TaskStatus.COMPLETED);
+                    "[%s] operation can be performed only on tasks not in states[%s,%s,%s,%s,%s]",
+                    getCaller().getName(), Exit.class, task.getId(),
+                    task.getStatus(), Exit.class, TaskStatus.EXITED,
+                    TaskStatus.ERROR, TaskStatus.FAILED, TaskStatus.OBSOLETE,
+                    TaskStatus.COMPLETED);
             log.error(errMsg);
             throw new HumanTaskRuntimeException(errMsg);
         }
@@ -78,9 +79,10 @@ public class Exit extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkPostConditions() {
+        TaskDAO task = getTask();
         if (!TaskStatus.EXITED.equals(task.getStatus())) {
             String errMsg = String.format("The task[id:%d] did not exit successfully as " +
-                                          "it's state is still in [%s]", task.getId(), task.getStatus());
+                    "it's state is still in [%s]", task.getId(), task.getStatus());
             log.error(errMsg);
             throw new HumanTaskRuntimeException(errMsg);
         }
@@ -95,6 +97,7 @@ public class Exit extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
+        TaskDAO task = getTask();
         checkPreConditions();
         authorise();
         checkState();

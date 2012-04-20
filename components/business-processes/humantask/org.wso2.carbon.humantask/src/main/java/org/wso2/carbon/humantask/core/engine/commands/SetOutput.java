@@ -19,6 +19,7 @@ package org.wso2.carbon.humantask.core.engine.commands;
 import org.w3c.dom.Element;
 import org.wso2.carbon.humantask.core.dao.EventDAO;
 import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
+import org.wso2.carbon.humantask.core.dao.TaskDAO;
 import org.wso2.carbon.humantask.core.dao.TaskStatus;
 
 import java.util.ArrayList;
@@ -28,11 +29,9 @@ import java.util.List;
  * Set output operation.
  */
 public class SetOutput extends AbstractHumanTaskCommand {
-
     private Element outputData;
 
     private String outputName;
-
 
     public SetOutput(String callerId, Long taskId, String outputName, Element outputData) {
         super(callerId, taskId);
@@ -87,6 +86,7 @@ public class SetOutput extends AbstractHumanTaskCommand {
      */
     @Override
     public void execute() {
+        TaskDAO task = getTask();
         checkPreConditions();
         authorise();
         checkState();

@@ -21,16 +21,17 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.wso2.carbon.humantask.*;
+import org.wso2.carbon.humantask.HumanInteractionsDocument;
+import org.wso2.carbon.humantask.TDeadlines;
+import org.wso2.carbon.humantask.TPresentationElements;
+import org.wso2.carbon.humantask.TPriorityExpr;
 import org.wso2.carbon.humantask.core.HumanTaskConstants;
 import org.wso2.carbon.humantask.core.utils.HumanTaskNamespaceContext;
 
 import javax.wsdl.Definition;
 import javax.wsdl.PortType;
 import javax.xml.namespace.QName;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Base class for Task and Notification definitions. Contains the common properties of Tasks and Notifications.
@@ -69,8 +70,8 @@ public abstract class HumanTaskBaseConfiguration {
     private String packageName;
 
 
-
-    public HumanTaskBaseConfiguration(){}
+    public HumanTaskBaseConfiguration() {
+    }
 
 
     public HumanTaskBaseConfiguration(HumanInteractionsDocument humanInteractionsDocument,
@@ -95,25 +96,25 @@ public abstract class HumanTaskBaseConfiguration {
         return targetNamespace;
     }
 
-    public HumanInteractionsDocument getHumanInteractionsDocument() {
-        return humanInteractionsDocument;
-    }
+//    public HumanInteractionsDocument getHumanInteractionsDocument() {
+//        return humanInteractionsDocument;
+//    }
 
     public String getExpressionLanguage() {
         return defaultExpressionLanguage;
     }
 
-    public void setDefaultExpressionLanguage(String defaultExpressionLanguage) {
-        this.defaultExpressionLanguage = defaultExpressionLanguage;
-    }
-
-    public String getHumanTaskArtifactName() {
-        return humanTaskArtifactName;
-    }
-
-    public void setHumanTaskArtifactName(String humanTaskArtifactName) {
-        this.humanTaskArtifactName = humanTaskArtifactName;
-    }
+//    public void setDefaultExpressionLanguage(String defaultExpressionLanguage) {
+//        this.defaultExpressionLanguage = defaultExpressionLanguage;
+//    }
+//
+//    public String getHumanTaskArtifactName() {
+//        return humanTaskArtifactName;
+//    }
+//
+//    public void setHumanTaskArtifactName(String humanTaskArtifactName) {
+//        this.humanTaskArtifactName = humanTaskArtifactName;
+//    }
 
     public HumanTaskNamespaceContext getNamespaceContext() {
         return namespaceContext;
@@ -131,13 +132,13 @@ public abstract class HumanTaskBaseConfiguration {
         this.wsdl = wsdl;
     }
 
-    public boolean isTask(){
+    public boolean isTask() {
         return task;
     }
 
-    public AxisConfiguration getTenantAxisConf() {
-        return tenantAxisConf;
-    }
+//    public AxisConfiguration getTenantAxisConf() {
+//        return tenantAxisConf;
+//    }
 
     public abstract QName getPortType();
 
@@ -151,13 +152,11 @@ public abstract class HumanTaskBaseConfiguration {
 
     public abstract TPriorityExpr getPriorityExpression();
 
-    protected Definition findWSDLDefinition(List<Definition> wsdls, QName portType, String operation){
-         for (Definition wsdl : wsdls) {
-            PortType port;
-            if ((port = wsdl.getPortType(portType)) != null) {
-                if (port.getOperation(operation, null, null) != null) {
-                    return wsdl;
-                }
+    protected Definition findWSDLDefinition(List<Definition> wsdls, QName portType, String operation) {
+        for (Definition wsdlDef : wsdls) {
+            PortType port = wsdlDef.getPortType(portType);
+            if (port != null && port.getOperation(operation, null, null) != null) {
+                return wsdlDef;
             }
         }
         return null;
@@ -190,33 +189,34 @@ public abstract class HumanTaskBaseConfiguration {
         }
     }
 
-    public Map<String, QName> getLogicalPeopleGroupParams(String name) {
-        Map<String, QName> params = new HashMap<String, QName>();
-        TLogicalPeopleGroup[] logicalPeopleGroups = humanInteractionsDocument.
-                getHumanInteractions().getLogicalPeopleGroups().getLogicalPeopleGroupArray();
-        for (TLogicalPeopleGroup lpg : logicalPeopleGroups) {
-            if (lpg.getName().equals(name)) {
-                TParameter[] paramsArray = lpg.getParameterArray();
-                for (TParameter param : paramsArray) {
-                    params.put(param.getName(), param.getType());
-                }
-            }
-        }
-        return params;
-    }
+//    public Map<String, QName> getLogicalPeopleGroupParams(String name) {
+//        Map<String, QName> params = new HashMap<String, QName>();
+//        TLogicalPeopleGroup[] logicalPeopleGroups = humanInteractionsDocument.
+//                getHumanInteractions().getLogicalPeopleGroups().getLogicalPeopleGroupArray();
+//        for (TLogicalPeopleGroup lpg : logicalPeopleGroups) {
+//            if (lpg.getName().equals(name)) {
+//                TParameter[] paramsArray = lpg.getParameterArray();
+//                for (TParameter param : paramsArray) {
+//                    params.put(param.getName(), param.getType());
+//                }
+//            }
+//        }
+//        return params;
+//    }
 
     public String getPackageName() {
         return packageName;
     }
 
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
-    }
+//    public void setPackageName(String packageName) {
+//        this.packageName = packageName;
+//    }
 
     public abstract TPresentationElements getPresentationElements();
 
     /**
      * Deadline configuration of task.
+     *
      * @return The task deadlines.
      */
     public abstract TDeadlines getDeadlines();

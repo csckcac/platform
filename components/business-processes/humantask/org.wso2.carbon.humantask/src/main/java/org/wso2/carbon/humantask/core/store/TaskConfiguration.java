@@ -17,8 +17,6 @@
 package org.wso2.carbon.humantask.core.store;
 
 import org.apache.axis2.engine.AxisConfiguration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.wso2.carbon.humantask.*;
@@ -36,8 +34,6 @@ import java.util.List;
  * related properties such as deadlines, presentation parameters, etc.
  */
 public class TaskConfiguration extends HumanTaskBaseConfiguration {
-     private static Log log = LogFactory.getLog(TaskConfiguration.class);
-
     // Task definition
     private TTask task;
 
@@ -51,14 +47,12 @@ public class TaskConfiguration extends HumanTaskBaseConfiguration {
     private boolean useOneWSDL = false;
 
     // Whether this task definition is a sub task of a another task
-    private boolean subTask;
+//    private boolean subTask;
 
     // TODO: Do we want to keep a reference to child tasks
-    private TaskConfiguration parent;
+//    private TaskConfiguration parent;
 
     private CallBackService callBackService;
-
-    public TaskConfiguration(TTask task){}
 
     public TaskConfiguration(TTask task,
                              THTDeploymentConfig.Task taskDeploymentConfiguration,
@@ -83,11 +77,9 @@ public class TaskConfiguration extends HumanTaskBaseConfiguration {
                 (Element) task.getDomNode() : null, nsContext);
         setNamespaceContext(nsContext);
 
-        PortType portType;
-        if ((portType = getWSDL().getPortType(getResponsePortType())) != null) {
-            if (portType.getOperation(getResponseOperation(), null, null) != null) {
-                useOneWSDL = true;
-            }
+        PortType portType = getWSDL().getPortType(getResponsePortType());
+        if (portType != null && portType.getOperation(getResponseOperation(), null, null) != null) {
+            useOneWSDL = true;
         }
 
         if (!useOneWSDL) {
@@ -103,49 +95,49 @@ public class TaskConfiguration extends HumanTaskBaseConfiguration {
         this.task = task;
     }
 
-    public THTDeploymentConfig.Task getTaskDeploymentConfiguration() {
-        return taskDeploymentConfiguration;
-    }
+//    public THTDeploymentConfig.Task getTaskDeploymentConfiguration() {
+//        return taskDeploymentConfiguration;
+//    }
 
-    public void setTaskDeploymentConfiguration(THTDeploymentConfig.Task taskDeploymentConfiguration) {
-        this.taskDeploymentConfiguration = taskDeploymentConfiguration;
-    }
-
-    public boolean isSubTask() {
-        return subTask;
-    }
-
-    public void setSubTask(boolean subTask) {
-        this.subTask = subTask;
-    }
-
-    public TaskConfiguration getParent() {
-        return parent;
-    }
-
-    public void setParent(TaskConfiguration parent) {
-        this.parent = parent;
-    }
+//    public void setTaskDeploymentConfiguration(THTDeploymentConfig.Task taskDeploymentConfiguration) {
+//        this.taskDeploymentConfiguration = taskDeploymentConfiguration;
+//    }
+//
+//    public boolean isSubTask() {
+//        return subTask;
+//    }
+//
+//    public void setSubTask(boolean subTask) {
+//        this.subTask = subTask;
+//    }
+//
+//    public TaskConfiguration getParent() {
+//        return parent;
+//    }
+//
+//    public void setParent(TaskConfiguration parent) {
+//        this.parent = parent;
+//    }
 
     public Definition getResponseWSDL() {
         if (!useOneWSDL) {
-        return responseWSDL;
+            return responseWSDL;
         } else {
             return getWSDL();
         }
     }
 
-    public void setResponseWSDL(Definition responseWSDL) {
-        this.responseWSDL = responseWSDL;
-    }
-
-    public boolean isUseOneWSDL() {
-        return useOneWSDL;
-    }
-
-    public void setUseOneWSDL(boolean useOneWSDL) {
-        this.useOneWSDL = useOneWSDL;
-    }
+//    public void setResponseWSDL(Definition responseWSDL) {
+//        this.responseWSDL = responseWSDL;
+//    }
+//
+//    public boolean isUseOneWSDL() {
+//        return useOneWSDL;
+//    }
+//
+//    public void setUseOneWSDL(boolean useOneWSDL) {
+//        this.useOneWSDL = useOneWSDL;
+//    }
 
     public QName getResponsePortType() {
         return task.getInterface().getResponsePortType();
@@ -165,13 +157,13 @@ public class TaskConfiguration extends HumanTaskBaseConfiguration {
         return task.getInterface().getOperation();
     }
 
-    public QName getCallbackPortType() {
-        return task.getInterface().getResponsePortType();
-    }
-
-    public String getCallbackOperation() {
-        return task.getInterface().getResponseOperation();
-    }
+//    public QName getCallbackPortType() {
+//        return task.getInterface().getResponsePortType();
+//    }
+//
+//    public String getCallbackOperation() {
+//        return task.getInterface().getResponseOperation();
+//    }
 
     @Override
     public QName getName() {
@@ -213,7 +205,7 @@ public class TaskConfiguration extends HumanTaskBaseConfiguration {
      */
     @Override
     public TDeadlines getDeadlines() {
-            return task.getDeadlines();
+        return task.getDeadlines();
     }
 
     /**
@@ -223,7 +215,7 @@ public class TaskConfiguration extends HumanTaskBaseConfiguration {
      * @return The task deadlines.
      */
     public TDeadline getDeadline(String name) {
-            TDeadlines deadlines = getDeadlines();
+        TDeadlines deadlines = getDeadlines();
         for (TDeadline deadline : deadlines.getStartDeadlineArray()) {
             if (deadline.getName().equals(name)) {
                 return deadline;

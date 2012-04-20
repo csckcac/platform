@@ -40,7 +40,7 @@ public class HumanTaskWSDLLocator implements WSDLLocator {
         this.baseUri = baseUri;
     }
 
-    public HumanTaskWSDLLocator(){
+    public HumanTaskWSDLLocator() {
         this.baseUri = null;
     }
 
@@ -140,7 +140,7 @@ public class HumanTaskWSDLLocator implements WSDLLocator {
         try {
             uri = parent == null ? baseUri.resolve(imprt) : new URI(parent).resolve(imprt);
         } catch (URISyntaxException e1) {
-            log.error("URI syntax error: parent="+parent+" error="+e1);
+            log.error("URI syntax error: parent=" + parent, e1);
             return null;
         }
         if (log.isDebugEnabled()) {

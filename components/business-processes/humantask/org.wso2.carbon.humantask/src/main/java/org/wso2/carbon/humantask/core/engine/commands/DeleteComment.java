@@ -18,6 +18,7 @@ package org.wso2.carbon.humantask.core.engine.commands;
 
 import org.wso2.carbon.humantask.core.dao.EventDAO;
 import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
+import org.wso2.carbon.humantask.core.dao.TaskDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +27,7 @@ import java.util.List;
  * delete comment command.
  */
 public class DeleteComment extends AbstractHumanTaskCommand {
-
-
-    public Long updatingCommentId;
+    private Long updatingCommentId;
 
     public DeleteComment(String callerId, Long taskId, Long commentId) {
         super(callerId, taskId);
@@ -83,6 +82,7 @@ public class DeleteComment extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
+        TaskDAO task = getTask();
         checkPreConditions();
         authorise();
         checkState();

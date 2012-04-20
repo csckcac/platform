@@ -77,7 +77,7 @@ public class HumanTaskServer {
 
     private void initScheduler() {
         ThreadFactory threadFactory = new ThreadFactory() {
-            int threadNumber = 0;
+            private int threadNumber = 0;
 
             public Thread newThread(Runnable r) {
                 threadNumber += 1;
@@ -90,7 +90,7 @@ public class HumanTaskServer {
         ExecutorService executorService = Executors.
                 newFixedThreadPool(serverConfig.getThreadPoolMaxSize(), threadFactory);
 
-        SimpleScheduler simpleScheduler = new SimpleScheduler(new GUID().toString(), null);
+        SimpleScheduler simpleScheduler = new SimpleScheduler(new GUID().toString());
         simpleScheduler.setExecutorService(executorService);
         simpleScheduler.setTransactionManager(tnxManager);
         taskEngine.setScheduler(simpleScheduler);

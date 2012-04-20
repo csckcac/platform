@@ -16,15 +16,12 @@
 
 package org.wso2.carbon.humantask.core.deployment;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.humantask.*;
 import org.wso2.carbon.humantask.core.deployment.config.HTDeploymentConfigDocument;
 import org.wso2.carbon.humantask.core.deployment.config.THTDeploymentConfig;
 
 import javax.wsdl.Definition;
 import javax.xml.namespace.QName;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +30,6 @@ import java.util.List;
  * to task definitions this also contains wsdls, xml schemas and human task artifact meta-data.
  */
 public class HumanTaskDeploymentUnit {
-    private static final Log log = LogFactory.getLog(HumanTaskDeploymentUnit.class);
 
     private HumanInteractionsDocument humanInteraction;
 
@@ -45,23 +41,23 @@ public class HumanTaskDeploymentUnit {
 
     private String targetNamespace;
 
-    private URI uIResourceProviderURI;
+//    private URI uIResourceProviderURI;
 
 
-    public void setHumanInteractionsDefinition(HumanInteractionsDocument hiDefinition){
+    public void setHumanInteractionsDefinition(HumanInteractionsDocument hiDefinition) {
         this.humanInteraction = hiDefinition;
         this.targetNamespace = hiDefinition.getHumanInteractions().getTargetNamespace();
     }
 
-    public void setName(String name){
+    public void setName(String name) {
         this.name = name;
     }
 
-    public void setWSDLs(List<Definition> wsdls){
+    public void setWSDLs(List<Definition> wsdls) {
         this.wsdls = wsdls;
     }
 
-    public void setDeploymentConfiguration(HTDeploymentConfigDocument configDocument){
+    public void setDeploymentConfiguration(HTDeploymentConfigDocument configDocument) {
         this.deploymentConfiguration = configDocument;
     }
 
@@ -69,19 +65,19 @@ public class HumanTaskDeploymentUnit {
         return name;
     }
 
-    public HumanInteractionsDocument getHumanInteractionsDefinition(){
+    public HumanInteractionsDocument getHumanInteractionsDefinition() {
         return humanInteraction;
     }
 
-    public List<Definition> getWSDLs(){
+    public List<Definition> getWSDLs() {
         return wsdls;
     }
 
-    public String getNamespace(){
+    public String getNamespace() {
         return targetNamespace;
     }
 
-    public HTDeploymentConfigDocument getDeploymentConfiguration(){
+    public HTDeploymentConfigDocument getDeploymentConfiguration() {
         return deploymentConfiguration;
     }
 
@@ -124,19 +120,19 @@ public class HumanTaskDeploymentUnit {
     }
 
 
-    /**
-     * @return : The URI of the UI Resource Provider.
-     */
-    public URI getUIResourceProviderURI() {
-        return uIResourceProviderURI;
-    }
-
-    /**
-     * @param uiResourceProviderURI : The Custom UI resource provider URI to set.
-     */
-    public void setUIResourceProviderURI(URI uiResourceProviderURI) {
-        this.uIResourceProviderURI = uiResourceProviderURI;
-    }
+//    /**
+//     * @return : The URI of the UI Resource Provider.
+//     */
+//    public URI getUIResourceProviderURI() {
+//        return uIResourceProviderURI;
+//    }
+//
+//    /**
+//     * @param uiResourceProviderURI : The Custom UI resource provider URI to set.
+//     */
+//    public void setUIResourceProviderURI(URI uiResourceProviderURI) {
+//        this.uIResourceProviderURI = uiResourceProviderURI;
+//    }
 
     public List<TNotification> getInlineNotifications() {
         List<TNotification> notifications = new ArrayList<TNotification>();

@@ -24,12 +24,7 @@ import org.w3c.dom.Document;
 import org.wso2.carbon.humantask.HumanInteractionsDocument;
 import org.wso2.carbon.humantask.core.HumanTaskConstants;
 import org.wso2.carbon.humantask.core.deployment.config.HTDeploymentConfigDocument;
-import org.wso2.carbon.humantask.core.internal.HumanTaskServiceComponent;
 import org.wso2.carbon.humantask.core.utils.FileUtils;
-import org.wso2.carbon.registry.core.Collection;
-import org.wso2.carbon.registry.core.Registry;
-import org.wso2.carbon.registry.core.Resource;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.xml.sax.SAXException;
 
@@ -38,16 +33,7 @@ import javax.wsdl.WSDLException;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLReader;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URI;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,7 +50,7 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
 
     private static final String JAVAX_WSDL_VERBOSE_MODE_KEY = "javax.wsdl.verbose";
 
-    File humantaskDir;
+    private File humantaskDir;
 
     private String fileName;
 
@@ -99,7 +85,7 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
     public ArchiveBasedHumanTaskDeploymentUnitBuilder(File hiArchiveZip, int tenantId)
             throws HumanTaskDeploymentException {
         String hiArchiveZipName = hiArchiveZip.getName();
-        this.fileName = hiArchiveZipName.substring(0, hiArchiveZipName.lastIndexOf("."));
+        this.fileName = hiArchiveZipName.substring(0, hiArchiveZipName.lastIndexOf('.'));
         humantaskDir = extractBPELArchive(hiArchiveZip, tenantId);
         buildHumanInteractionDocuments();
         buildDeploymentConfiguration();
@@ -111,14 +97,14 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
     public void buildHumanInteractionDocuments() throws HumanTaskDeploymentException {
         if (hiDefinition == null) {
             List<File> hiDefinitionFiles = FileUtils.directoryEntriesInPath(humantaskDir,
-                                                                            humantaskFilter);
+                    humantaskFilter);
             if (hiDefinitionFiles.size() != 1) {
                 String errMsg;
                 if (hiDefinitionFiles.size() == 0) {
                     errMsg = "No human task definition files were found in " + fileName;
                 } else {
                     errMsg = hiDefinitionFiles.size() +
-                             " human task definition files were found in " + fileName;
+                            " human task definition files were found in " + fileName;
                 }
                 log.error(errMsg);
                 throw new HumanTaskDeploymentException(errMsg);
@@ -129,7 +115,7 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
             } catch (FileNotFoundException e) {
                 log.error(e.getMessage());
                 throw new HumanTaskDeploymentException("Error building humantask archive; " +
-                                                       fileName, e);
+                        fileName, e);
             }
         }
     }
@@ -148,7 +134,7 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
             } catch (FileNotFoundException e) {
                 log.error(e.getMessage());
                 throw new HumanTaskDeploymentException("Error building humantask archive: " +
-                                                       fileName, e);
+                        fileName, e);
             }
         }
     }
@@ -162,7 +148,7 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
             } catch (FileNotFoundException e) {
                 log.error(e.getMessage());
                 throw new HumanTaskDeploymentException("Error building humantask archive: " +
-                                                       fileName, e);
+                        fileName, e);
             }
             wsdlsMap.put(file.getName(), is);
         }
@@ -177,7 +163,7 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
             } catch (FileNotFoundException e) {
                 log.error(e.getMessage());
                 throw new HumanTaskDeploymentException("Error building humantask archive: " +
-                                                       fileName, e);
+                        fileName, e);
             }
             schemasMap.put(file.getName(), is);
         }
@@ -205,7 +191,7 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
             hiConf = HTDeploymentConfigDocument.Factory.parse(hiConfiguration);
         } catch (Exception e) {
             String errMsg = "Error occurred while parsing the human interaction configuration " +
-                            "file: htconfig.xml";
+                    "file: htconfig.xml";
             log.error(errMsg, e);
             throw new HumanTaskDeploymentException(errMsg, e);
         }
@@ -218,39 +204,39 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
         return fileName;
     }
 
-    public InputStream getHiDefinition() throws HumanTaskDeploymentException {
-        try {
-            hiDefinition.reset();
-        } catch (IOException e) {
-            String errMsg = "Error reading hiDefinition";
-            log.error(errMsg, e);
-            throw new HumanTaskDeploymentException(errMsg, e);
-        }
-        return hiDefinition;
-    }
+//    public InputStream getHiDefinition() throws HumanTaskDeploymentException {
+//        try {
+//            hiDefinition.reset();
+//        } catch (IOException e) {
+//            String errMsg = "Error reading hiDefinition";
+//            log.error(errMsg, e);
+//            throw new HumanTaskDeploymentException(errMsg, e);
+//        }
+//        return hiDefinition;
+//    }
 
-    public InputStream getHiConfiguration() throws HumanTaskDeploymentException {
-        try {
-            hiConfiguration.reset();
-        } catch (IOException e) {
-            String errMsg = "Error reading hiConfiguration";
-            log.error(errMsg, e);
-            throw new HumanTaskDeploymentException(errMsg, e);
-        }
-        return hiConfiguration;
-    }
+//    public InputStream getHiConfiguration() throws HumanTaskDeploymentException {
+//        try {
+//            hiConfiguration.reset();
+//        } catch (IOException e) {
+//            String errMsg = "Error reading hiConfiguration";
+//            log.error(errMsg, e);
+//            throw new HumanTaskDeploymentException(errMsg, e);
+//        }
+//        return hiConfiguration;
+//    }
 
     public List<Definition> getWsdlDefinitions() throws HumanTaskDeploymentException {
         if (wsdlDefinitions.size() == 0) {
             for (Map.Entry<String, InputStream> wsdl : wsdlsMap.entrySet()) {
                 try {
                     wsdlDefinitions.add(readInTheWSDLFile(wsdl.getValue(),
-                                                          HumanTaskConstants.HT_DEP_UNITS_REPO_LOCATION +
-                                                          this.fileName + "/" +
-                                                          wsdl.getKey(), false));
+                            HumanTaskConstants.HT_DEP_UNITS_REPO_LOCATION +
+                                    this.fileName + "/" +
+                                    wsdl.getKey(), false));
                 } catch (WSDLException e) {
                     String errMsg = "Error occurred while converting the wsdl input stream to " +
-                                    "wsdl definition";
+                            "wsdl definition";
                     log.error(errMsg, e);
                     throw new HumanTaskDeploymentException(errMsg, e);
                 }
@@ -259,9 +245,9 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
         return wsdlDefinitions;
     }
 
-    public String getFileName() {
-        return fileName;
-    }
+//    public String getFileName() {
+//        return fileName;
+//    }
 
     /**
      * Read the WSDL file given the input stream for the WSDL source
@@ -287,14 +273,14 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
             doc = XMLUtils.newDocument(in);
         } catch (ParserConfigurationException e) {
             throw new WSDLException(WSDLException.PARSER_ERROR,
-                                    "Parser Configuration Error", e);
+                    "Parser Configuration Error", e);
         } catch (SAXException e) {
             throw new WSDLException(WSDLException.PARSER_ERROR,
-                                    "Parser SAX Error", e);
+                    "Parser SAX Error", e);
 
         } catch (IOException e) {
             throw new WSDLException(WSDLException.INVALID_WSDL, "IO Error",
-                                    e);
+                    e);
         }
 
         // Log when and from where the WSDL is loaded.
@@ -304,7 +290,7 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
         }
         if (fromRegistry) {
             throw new UnsupportedOperationException("This operation is not currently " +
-                                                    "supported in this version of WSO2 BPS.");
+                    "supported in this version of WSO2 BPS.");
         } else {
             def = reader.readWSDL(entryName, doc.getDocumentElement());
         }
@@ -313,108 +299,108 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
 
     }
 
-    public void persist() throws HumanTaskDeploymentException {
-        //create a collection for the DU n create relevent associations
-        Registry configRegistry;
-        try {
-            configRegistry = HumanTaskServiceComponent.getRegistryService().getConfigSystemRegistry();
-        } catch (RegistryException e) {
-            String errMsg = "Error while getting config registry";
-            log.error(errMsg, e);
-            throw new HumanTaskDeploymentException(errMsg, e);
-        }
+//    public void persist() throws HumanTaskDeploymentException {
+//        //create a collection for the DU n create relevent associations
+//        Registry configRegistry;
+//        try {
+//            configRegistry = HumanTaskServiceComponent.getRegistryService().getConfigSystemRegistry();
+//        } catch (RegistryException e) {
+//            String errMsg = "Error while getting config registry";
+//            log.error(errMsg, e);
+//            throw new HumanTaskDeploymentException(errMsg, e);
+//        }
+//
+//        String zipName = getFileName();
+//        Collection du;
+//        try {
+//            if (configRegistry.resourceExists(HumanTaskConstants.HT_DEP_UNITS_REPO_LOCATION + zipName)) {
+//                String errMsg = zipName + " is already exist.";
+//                log.error(errMsg);
+//                throw new HumanTaskDeploymentException(errMsg);
+//            }
+//            du = configRegistry.newCollection();
+//        } catch (RegistryException e) {
+//            //TODO Roleback WSDLS n Schemas in Governance Registry
+//            String errMsg = "Error accessing registry";
+//            log.error(errMsg, e);
+//            throw new HumanTaskDeploymentException(errMsg, e);
+//        }
+//
+//        if (du != null) {
+//            String errMsg = "Error puting the collection to registry";
+//            try {
+//                du.addProperty("WSDL_COUNT", Integer.toString(wsdlsMap.size()));
+//                //du.addProperty("STATUS", "DEPLOYED");
+//                configRegistry.put(HumanTaskConstants.HT_DEP_UNITS_REPO_LOCATION + zipName + "/", du);
+//            } catch (RegistryException e) {
+//                //TODO Roleback WSDLS n Schemas in Governance Registry
+//                log.error(errMsg, e);
+//                throw new HumanTaskDeploymentException(errMsg, e);
+//            }
+//
+//            try {
+//                for (Map.Entry<String, InputStream> wsdlEntry : wsdlsMap.entrySet()) {
+//                    Resource wsdlResource = configRegistry.newResource();
+//                    wsdlResource.setContentStream(getWsdlInputStream(wsdlEntry));
+//                    configRegistry.put(HumanTaskConstants.HT_DEP_UNITS_REPO_LOCATION +
+//                                       this.fileName + "/" + wsdlEntry.getKey(), wsdlResource);
+//                }
+//
+//                for (Map.Entry<String, InputStream> schemaEntry : schemasMap.entrySet()) {
+//                    Resource schemaResource = configRegistry.newResource();
+//                    schemaResource.setContentStream(getSchemaInputStream(schemaEntry));
+//                    configRegistry.put(HumanTaskConstants.HT_DEP_UNITS_REPO_LOCATION +
+//                                       this.fileName + "/" + schemaEntry.getKey(), schemaResource);
+//                }
+//            } catch (RegistryException e) {
+//                log.error(errMsg, e);
+//                throw new HumanTaskDeploymentException(errMsg, e);
+//            } catch (IOException e) {
+//                log.error(errMsg, e);
+//                throw new HumanTaskDeploymentException(errMsg, e);
+//            }
+//
+//            Resource fileResource;
+//            try {
+//                fileResource = configRegistry.newResource();
+//            } catch (RegistryException e) {
+//                String erMsg = "Error creating new resource";
+//                log.error(erMsg, e);
+//                throw new HumanTaskDeploymentException(erMsg, e);
+//            }
+//
+//            if (fileResource != null) {
+//                try {
+//                    fileResource.setContent(hiDefinition);
+//                    configRegistry.put(HumanTaskConstants.HT_DEP_UNITS_REPO_LOCATION + zipName +
+//                                       "/" + "htDefinition.ht", fileResource);
+//                    fileResource.setContentStream(hiConfiguration);
+//                    configRegistry.put(HumanTaskConstants.HT_DEP_UNITS_REPO_LOCATION + zipName +
+//                                       "/" + "htconfig.xml", fileResource);
+//                } catch (RegistryException e) {
+//                    String erMsg = "Error puting resource to registry";
+//                    log.error(erMsg, e);
+//                    throw new HumanTaskDeploymentException(erMsg, e);
+//                }
+//            }
+//        }
+//    }
 
-        String zipName = getFileName();
-        Collection du;
-        try {
-            if (configRegistry.resourceExists(HumanTaskConstants.HT_DEP_UNITS_REPO_LOCATION + zipName)) {
-                String errMsg = zipName + " is already exist.";
-                log.error(errMsg);
-                throw new HumanTaskDeploymentException(errMsg);
-            }
-            du = configRegistry.newCollection();
-        } catch (RegistryException e) {
-            //TODO Roleback WSDLS n Schemas in Governance Registry
-            String errMsg = "Error accessing registry";
-            log.error(errMsg, e);
-            throw new HumanTaskDeploymentException(errMsg, e);
-        }
-
-        if (du != null) {
-            String errMsg = "Error puting the collection to registry";
-            try {
-                du.addProperty("WSDL_COUNT", Integer.toString(wsdlsMap.size()));
-                //du.addProperty("STATUS", "DEPLOYED");
-                configRegistry.put(HumanTaskConstants.HT_DEP_UNITS_REPO_LOCATION + zipName + "/", du);
-            } catch (RegistryException e) {
-                //TODO Roleback WSDLS n Schemas in Governance Registry
-                log.error(errMsg, e);
-                throw new HumanTaskDeploymentException(errMsg, e);
-            }
-
-            try {
-                for (Map.Entry<String, InputStream> wsdlEntry : wsdlsMap.entrySet()) {
-                    Resource wsdlResource = configRegistry.newResource();
-                    wsdlResource.setContentStream(getWsdlInputStream(wsdlEntry));
-                    configRegistry.put(HumanTaskConstants.HT_DEP_UNITS_REPO_LOCATION +
-                                       this.fileName + "/" + wsdlEntry.getKey(), wsdlResource);
-                }
-
-                for (Map.Entry<String, InputStream> schemaEntry : schemasMap.entrySet()) {
-                    Resource schemaResource = configRegistry.newResource();
-                    schemaResource.setContentStream(getSchemaInputStream(schemaEntry));
-                    configRegistry.put(HumanTaskConstants.HT_DEP_UNITS_REPO_LOCATION +
-                                       this.fileName + "/" + schemaEntry.getKey(), schemaResource);
-                }
-            } catch (RegistryException e) {
-                log.error(errMsg, e);
-                throw new HumanTaskDeploymentException(errMsg, e);
-            } catch (IOException e) {
-                log.error(errMsg, e);
-                throw new HumanTaskDeploymentException(errMsg, e);
-            }
-
-            Resource fileResource;
-            try {
-                fileResource = configRegistry.newResource();
-            } catch (RegistryException e) {
-                String erMsg = "Error creating new resource";
-                log.error(erMsg, e);
-                throw new HumanTaskDeploymentException(erMsg, e);
-            }
-
-            if (fileResource != null) {
-                try {
-                    fileResource.setContent(hiDefinition);
-                    configRegistry.put(HumanTaskConstants.HT_DEP_UNITS_REPO_LOCATION + zipName +
-                                       "/" + "htDefinition.ht", fileResource);
-                    fileResource.setContentStream(hiConfiguration);
-                    configRegistry.put(HumanTaskConstants.HT_DEP_UNITS_REPO_LOCATION + zipName +
-                                       "/" + "htconfig.xml", fileResource);
-                } catch (RegistryException e) {
-                    String erMsg = "Error puting resource to registry";
-                    log.error(erMsg, e);
-                    throw new HumanTaskDeploymentException(erMsg, e);
-                }
-            }
-        }
-    }
-
-    public InputStream getWsdlInputStream(Map.Entry<String, InputStream> wsdlEntry)
-            throws IOException {
-        InputStream wsdl = wsdlEntry.getValue();
-        if (wsdl.markSupported()) {
-            wsdl.reset();
-        }
-        return wsdl;
-    }
-
-    public InputStream getSchemaInputStream(Map.Entry<String, InputStream> schemaEntry)
-            throws IOException {
-        InputStream schema = schemaEntry.getValue();
-        schema.reset();
-        return schema;
-    }
+//    public InputStream getWsdlInputStream(Map.Entry<String, InputStream> wsdlEntry)
+//            throws IOException {
+//        InputStream wsdl = wsdlEntry.getValue();
+//        if (wsdl.markSupported()) {
+//            wsdl.reset();
+//        }
+//        return wsdl;
+//    }
+//
+//    public InputStream getSchemaInputStream(Map.Entry<String, InputStream> schemaEntry)
+//            throws IOException {
+//        InputStream schema = schemaEntry.getValue();
+//        schema.reset();
+//        return schema;
+//    }
 
     /**
      * Extract HumanTask archive to tenant's Humantask file system repository.
@@ -428,10 +414,10 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
             throws HumanTaskDeploymentException {
         try {
             String humantaskExtractionLocation = CarbonUtils.getCarbonHome() + File.separator +
-                                                 "repository" + File.separator +
-                                                 HumanTaskConstants.HUMANTASK_REPO_DIRECTORY +
-                                                 File.separator + tenantId + File.separator +
-                                                 FilenameUtils.removeExtension(archiveFile.getName());
+                    "repository" + File.separator +
+                    HumanTaskConstants.HUMANTASK_REPO_DIRECTORY +
+                    File.separator + tenantId + File.separator +
+                    FilenameUtils.removeExtension(archiveFile.getName());
             ZipInputStream zipStream = new ZipInputStream(new FileInputStream(archiveFile));
             ZipEntry entry;
 
@@ -443,9 +429,9 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
                     if (!new File(humantaskExtractionLocation, entry.getName()).mkdirs()) {
                         if (!new File(humantaskExtractionLocation, entry.getName()).exists()) {
                             throw new HumanTaskDeploymentException("Archive extraction failed. " +
-                                                                   "Cannot create directory: "
-                                                                   + new File(humantaskExtractionLocation,
-                                                                              entry.getName()).getAbsolutePath() + ".");
+                                    "Cannot create directory: "
+                                    + new File(humantaskExtractionLocation,
+                                    entry.getName()).getAbsolutePath() + ".");
                         }
                     }
                     continue;
@@ -459,12 +445,12 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
                 if (!destFile.getParentFile().exists()) {
                     if (!destFile.getParentFile().mkdirs()) {
                         throw new HumanTaskDeploymentException("Archive extraction failed. " +
-                                                               "Cannot create directory: "
-                                                               + destFile.getParentFile().getAbsolutePath());
+                                "Cannot create directory: "
+                                + destFile.getParentFile().getAbsolutePath());
                     }
                 }
                 copyInputStream(zipStream,
-                                new BufferedOutputStream(new FileOutputStream(destFile)));
+                        new BufferedOutputStream(new FileOutputStream(destFile)));
             }
 
             zipStream.close();

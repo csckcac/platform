@@ -18,6 +18,7 @@ package org.wso2.carbon.humantask.core.engine.commands;
 
 import org.wso2.carbon.humantask.core.dao.EventDAO;
 import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
+import org.wso2.carbon.humantask.core.dao.TaskDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +27,7 @@ import java.util.List;
  * Set priority operation
  */
 public class SetPriority extends AbstractHumanTaskCommand {
-
-
     private Integer newPriority;
-
 
     public SetPriority(String callerId, Long taskId, Integer newPriority) {
         super(callerId, taskId);
@@ -82,6 +80,7 @@ public class SetPriority extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
+        TaskDAO task = getTask();
         checkPreConditions();
         authorise();
         checkState();

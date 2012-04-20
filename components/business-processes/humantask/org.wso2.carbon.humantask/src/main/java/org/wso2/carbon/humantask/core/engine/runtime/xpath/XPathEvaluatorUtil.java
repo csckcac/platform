@@ -27,7 +27,9 @@ import java.math.BigDecimal;
  *
  *
  */
-public class XPathEvaluatorUtil {
+public final class XPathEvaluatorUtil {
+    private XPathEvaluatorUtil() {
+    }
 
     public static void evaluatePresentationParamXPath(PresentationParameterDAO param,
                                                       String expression, String expLang,

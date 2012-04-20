@@ -33,8 +33,11 @@ import javax.xml.namespace.QName;
  * Responsible for creating AxisServices to send out messages
  */
 
-public class AnonymousServiceFactory {
+public final class AnonymousServiceFactory {
     private static Log log = LogFactory.getLog(AnonymousServiceFactory.class);
+
+    private AnonymousServiceFactory() {
+    }
 
     /**
      * Create AxisService for the requested endpoint config to sending out messages to external services.

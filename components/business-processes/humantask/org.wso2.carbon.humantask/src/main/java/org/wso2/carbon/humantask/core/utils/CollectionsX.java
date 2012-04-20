@@ -16,59 +16,58 @@
 
 package org.wso2.carbon.humantask.core.utils;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Iterator;
 
-public class CollectionsX {
-
-
-    public static <T> Collection<T> insert(Collection<T> coll, Enumeration<? extends T> e) {
-        while (e.hasMoreElements()) {
-            coll.add(e.nextElement());
-        }
-        return coll;
+public final class CollectionsX {
+    private CollectionsX() {
     }
 
-    public static <T> Collection<T> insert(Collection<T> coll, Iterator<? extends T> i) {
-        while (i.hasNext()) {
-            coll.add(i.next());
-        }
-        return coll;
-    }
+//    public static <T> Collection<T> insert(Collection<T> coll, Enumeration<? extends T> e) {
+//        while (e.hasMoreElements()) {
+//            coll.add(e.nextElement());
+//        }
+//        return coll;
+//    }
 
-    public static <T> Collection<T> insert(Collection<T> coll, Collection<? extends T> src) {
-        return insert(coll, src.iterator());
-    }
+//    public static <T> Collection<T> insert(Collection<T> coll, Iterator<? extends T> i) {
+//        while (i.hasNext()) {
+//            coll.add(i.next());
+//        }
+//        return coll;
+//    }
+
+//    public static <T> Collection<T> insert(Collection<T> coll, Collection<? extends T> src) {
+//        return insert(coll, src.iterator());
+//    }
 
 
-    public static <C extends Collection<T>, S, T extends S> C filter(C dest, Collection<S> src, Class<T> t) {
-        return filter(dest, src.iterator(), t);
-    }
+//    public static <C extends Collection<T>, S, T extends S> C filter(C dest, Collection<S> src, Class<T> t) {
+//        return filter(dest, src.iterator(), t);
+//    }
 
-    public static <C extends Collection<T>, S, T extends S> C filter(C newList, Iterator<S> iterator, Class<T> t) {
-        while (iterator.hasNext()) {
-            S next = iterator.next();
-            if (t.isAssignableFrom(next.getClass())) {
-                newList.add((T) next);
-            }
-        }
-        return newList;
-    }
+//    public static <C extends Collection<T>, S, T extends S> C filter(C newList, Iterator<S> iterator, Class<T> t) {
+//        while (iterator.hasNext()) {
+//            S next = iterator.next();
+//            if (t.isAssignableFrom(next.getClass())) {
+//                newList.add((T) next);
+//            }
+//        }
+//        return newList;
+//    }
 
-    /**
-     * Filter a collection by member class.
-     *
-     * @param src    source collection
-     * @param aClass requested class
-     * @return collection consisting of the members of the input that are
-     *         assignable to the given class
-     */
-    @SuppressWarnings("unchecked")
-    public static <T> Collection<T> filter(Collection src, final Class<T> aClass) {
-        return filter(new ArrayList<T>(src.size()), src.iterator(), aClass);
-    }
+//    /**
+//     * Filter a collection by member class.
+//     *
+//     * @param src    source collection
+//     * @param aClass requested class
+//     * @return collection consisting of the members of the input that are
+//     *         assignable to the given class
+//     */
+//    @SuppressWarnings("unchecked")
+//    public static <T> Collection<T> filter(Collection src, final Class<T> aClass) {
+//        return filter(new ArrayList<T>(src.size()), src.iterator(), aClass);
+//    }
 
     /**
      * Remove elements from collection based on the results of specified unary

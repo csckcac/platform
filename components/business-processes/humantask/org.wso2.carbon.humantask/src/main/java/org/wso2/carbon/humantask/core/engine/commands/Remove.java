@@ -18,6 +18,7 @@ package org.wso2.carbon.humantask.core.engine.commands;
 
 import org.wso2.carbon.humantask.core.dao.EventDAO;
 import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
+import org.wso2.carbon.humantask.core.dao.TaskDAO;
 import org.wso2.carbon.humantask.core.dao.TaskStatus;
 
 import java.util.ArrayList;
@@ -28,8 +29,6 @@ import java.util.List;
  * Note : only for notification types.
  */
 public class Remove extends AbstractHumanTaskCommand {
-
-
     public Remove(String callerId, Long taskId) {
         super(callerId, taskId);
     }
@@ -80,6 +79,7 @@ public class Remove extends AbstractHumanTaskCommand {
      */
     @Override
     public void execute() {
+        TaskDAO task = getTask();
         checkPreConditions();
         authorise();
         checkState();

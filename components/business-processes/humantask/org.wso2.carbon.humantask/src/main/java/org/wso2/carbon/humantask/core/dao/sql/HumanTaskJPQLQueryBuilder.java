@@ -34,12 +34,24 @@ import java.util.List;
  */
 public class HumanTaskJPQLQueryBuilder {
 
+    private static final String SELECT_TASKS = " SELECT t FROM org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.Task t ";
+    private static final String JOIN_HUMAN_ROLES_JOIN_ORG_ENTITIES = " JOIN t.humanRoles hr JOIN hr.orgEntities oe WHERE  ";
+    private static final String OE_NAME_IN_NAMES = " oe.name IN :names ";
+    private static final String AND = " AND ";
+    private static final String HR_TYPE_ROLE_TYPE = " hr.type = :roleType ";
+    private static final String T_TYPE_TASK_TYPE = " t.type = :taskType ";
+    private static final String T_TENANT_ID_TENANT_ID = " t.tenantId = :tenantId ";
+    private static final String ORDER_BY_T_CREATED_ON_DESC = " ORDER BY t.createdOn DESC ";
+    private static final String T_STATUS_IN_TASK_STATUSES = " t.status IN :taskStatuses ";
+    private static final String T_STATUS_NOT_IN_TASK_STATUSES = " t.status NOT IN :taskStatuses ";
+    private static final String NAMES = "names";
+    private static final String TENANT_ID = "tenantId";
+    private static final String ROLE_TYPE = "roleType";
+    private static final String TASK_TYPE = "taskType";
+    private static final String TASK_STATUSES = "taskStatuses";
     private SimpleQueryCriteria queryCriteria;
 
     private EntityManager em;
-
-    private HumanTaskJPQLQueryBuilder() {
-    }
 
     /**
      * @param criteria : The query criteria on which the tasks will be filtered.
@@ -75,102 +87,102 @@ public class HumanTaskJPQLQueryBuilder {
 
     private Query buildAdministrableTasksQuery() {
 
-        Query administrableTasksQuery = em.createQuery(" SELECT t FROM org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.Task t " +
-                                                       " JOIN t.humanRoles hr JOIN hr.orgEntities oe WHERE  " +
-                                                       " oe.name IN :names " +
-                                                       " AND " +
-                                                       " hr.type = :roleType " +
-                                                       " AND " +
-                                                       " t.type = :taskType " +
-                                                       " AND " +
-                                                       " t.tenantId = :tenantId " +
-                                                       " ORDER BY t.createdOn DESC ");
+        Query administrableTasksQuery = em.createQuery(SELECT_TASKS +
+                JOIN_HUMAN_ROLES_JOIN_ORG_ENTITIES +
+                OE_NAME_IN_NAMES +
+                AND +
+                HR_TYPE_ROLE_TYPE +
+                AND +
+                T_TYPE_TASK_TYPE +
+                AND +
+                T_TENANT_ID_TENANT_ID +
+                ORDER_BY_T_CREATED_ON_DESC);
 
         List<String> rolesAndNamesList = getNameListForUser(queryCriteria.getCaller(), true);
-        administrableTasksQuery.setParameter("names", rolesAndNamesList);
-        administrableTasksQuery.setParameter("tenantId", queryCriteria.getCallerTenantId());
-        administrableTasksQuery.setParameter("roleType", GenericHumanRoleDAO.GenericHumanRoleType.BUSINESS_ADMINISTRATORS);
-        administrableTasksQuery.setParameter("taskType", TaskType.TASK);
+        administrableTasksQuery.setParameter(NAMES, rolesAndNamesList);
+        administrableTasksQuery.setParameter(TENANT_ID, queryCriteria.getCallerTenantId());
+        administrableTasksQuery.setParameter(ROLE_TYPE, GenericHumanRoleDAO.GenericHumanRoleType.BUSINESS_ADMINISTRATORS);
+        administrableTasksQuery.setParameter(TASK_TYPE, TaskType.TASK);
         return administrableTasksQuery;
     }
 
     private Query buildClaimableQuery() {
 
-        Query claimableTasksQuery = em.createQuery(" SELECT t FROM org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.Task t " +
-                                                   " JOIN t.humanRoles hr JOIN hr.orgEntities oe WHERE  " +
-                                                   " oe.name IN :names " +
-                                                   " AND " +
-                                                   " hr.type = :roleType " +
-                                                   " AND " +
-                                                   " t.type = :taskType " +
-                                                   " AND " +
-                                                   " t.tenantId = :tenantId " +
-                                                   " AND " +
-                                                   " t.status IN :taskStatuses " +
-                                                   " ORDER BY t.createdOn DESC ");
+        Query claimableTasksQuery = em.createQuery(SELECT_TASKS +
+                JOIN_HUMAN_ROLES_JOIN_ORG_ENTITIES +
+                OE_NAME_IN_NAMES +
+                AND +
+                HR_TYPE_ROLE_TYPE +
+                AND +
+                T_TYPE_TASK_TYPE +
+                AND +
+                T_TENANT_ID_TENANT_ID +
+                AND +
+                T_STATUS_IN_TASK_STATUSES +
+                ORDER_BY_T_CREATED_ON_DESC);
 
         List<String> rolesAndNamesList = getNameListForUser(queryCriteria.getCaller(), false);
-        claimableTasksQuery.setParameter("names", rolesAndNamesList);
-        claimableTasksQuery.setParameter("tenantId", queryCriteria.getCallerTenantId());
-        claimableTasksQuery.setParameter("roleType", GenericHumanRoleDAO.GenericHumanRoleType.POTENTIAL_OWNERS);
-        claimableTasksQuery.setParameter("taskType", TaskType.TASK);
+        claimableTasksQuery.setParameter(NAMES, rolesAndNamesList);
+        claimableTasksQuery.setParameter(TENANT_ID, queryCriteria.getCallerTenantId());
+        claimableTasksQuery.setParameter(ROLE_TYPE, GenericHumanRoleDAO.GenericHumanRoleType.POTENTIAL_OWNERS);
+        claimableTasksQuery.setParameter(TASK_TYPE, TaskType.TASK);
         List<TaskStatus> statusList = Arrays.asList(TaskStatus.READY);
-        claimableTasksQuery.setParameter("taskStatuses", statusList);
+        claimableTasksQuery.setParameter(TASK_STATUSES, statusList);
         return claimableTasksQuery;
     }
 
     private Query buildAllTasksQuery() {
 
         Query allTasksQuery = em.createQuery(" SELECT DISTINCT t FROM org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.Task t " +
-                                             " JOIN t.humanRoles hr JOIN hr.orgEntities oe WHERE  " +
-                                             " oe.name IN :names " +
-                                             " AND " +
-                                             " t.status NOT IN :taskStatuses " +
-                                             " AND " +
-                                             " t.type = :taskType " +
-                                             " AND " +
-                                             " t.tenantId = :tenantId " +
-                                             " ORDER BY t.createdOn DESC ");
+                JOIN_HUMAN_ROLES_JOIN_ORG_ENTITIES +
+                OE_NAME_IN_NAMES +
+                AND +
+                T_STATUS_NOT_IN_TASK_STATUSES +
+                AND +
+                T_TYPE_TASK_TYPE +
+                AND +
+                T_TENANT_ID_TENANT_ID +
+                ORDER_BY_T_CREATED_ON_DESC);
 
         List<String> rolesAndNamesList = getNameListForUser(queryCriteria.getCaller(), true);
-        allTasksQuery.setParameter("names", rolesAndNamesList);
-        allTasksQuery.setParameter("tenantId", queryCriteria.getCallerTenantId());
+        allTasksQuery.setParameter(NAMES, rolesAndNamesList);
+        allTasksQuery.setParameter(TENANT_ID, queryCriteria.getCallerTenantId());
         List<TaskStatus> statusList = Arrays.asList(TaskStatus.OBSOLETE);
-        allTasksQuery.setParameter("taskStatuses", statusList);
-        allTasksQuery.setParameter("taskType", TaskType.TASK);
+        allTasksQuery.setParameter(TASK_STATUSES, statusList);
+        allTasksQuery.setParameter(TASK_TYPE, TaskType.TASK);
         return allTasksQuery;
     }
 
     //Creates the JPQL query to list tasks assigned for the particular user.
     private Query buildAssignedToMeQuery() {
 
-        Query assignedToMeQuery = em.createQuery(" SELECT t FROM org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.Task t " +
-                                                 " JOIN t.humanRoles hr JOIN hr.orgEntities oe WHERE  " +
-                                                 " oe.name = :name " +
-                                                 " AND " +
-                                                 " hr.type = :roleType " +
-                                                 " AND " +
-                                                 " t.tenantId = :tenantId " +
-                                                 " AND " +
-                                                 " t.type = :taskType " +
-                                                 " AND " +
-                                                 " t.status NOT IN :taskStatuses " +
-                                                 " ORDER BY t.createdOn DESC ");
+        Query assignedToMeQuery = em.createQuery(SELECT_TASKS +
+                JOIN_HUMAN_ROLES_JOIN_ORG_ENTITIES +
+                " oe.name = :name " +
+                AND +
+                HR_TYPE_ROLE_TYPE +
+                AND +
+                T_TENANT_ID_TENANT_ID +
+                AND +
+                T_TYPE_TASK_TYPE +
+                AND +
+                T_STATUS_NOT_IN_TASK_STATUSES +
+                ORDER_BY_T_CREATED_ON_DESC);
 
-        assignedToMeQuery.setParameter("tenantId", queryCriteria.getCallerTenantId());
+        assignedToMeQuery.setParameter(TENANT_ID, queryCriteria.getCallerTenantId());
         assignedToMeQuery.setParameter("name", queryCriteria.getCaller());
-        assignedToMeQuery.setParameter("taskType", TaskType.TASK);
-        assignedToMeQuery.setParameter("roleType", GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
+        assignedToMeQuery.setParameter(TASK_TYPE, TaskType.TASK);
+        assignedToMeQuery.setParameter(ROLE_TYPE, GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
         List<TaskStatus> statusList = Arrays.asList(TaskStatus.COMPLETED, TaskStatus.OBSOLETE);
-        assignedToMeQuery.setParameter("taskStatuses", statusList);
+        assignedToMeQuery.setParameter(TASK_STATUSES, statusList);
         return assignedToMeQuery;
     }
 
     private Query buildRemoveTasksQuery() {
         Query removeTasksQuery = em.createQuery(" DELETE FROM  org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.Task t  " +
-                                                " WHERE t.status in :removableStatuses" );
+                " WHERE t.status in :removableStatuses");
 
-        removeTasksQuery.setParameter("removableStatuses" , queryCriteria.getStatuses());
+        removeTasksQuery.setParameter("removableStatuses", queryCriteria.getStatuses());
         return removeTasksQuery;
     }
 
@@ -178,22 +190,22 @@ public class HumanTaskJPQLQueryBuilder {
     //Creates the JPQL query to list notifications applicable for a particular user.
     private Query buildNotificationsQuery() {
 
-        Query notificationsQuery = em.createQuery(" SELECT t FROM org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.Task t " +
-                                                  " JOIN t.humanRoles hr JOIN hr.orgEntities oe WHERE  " +
-                                                  " oe.name IN :names " +
-                                                  " AND " +
-                                                  " hr.type = :roleType " +
-                                                  " AND " +
-                                                  " t.tenantId = :tenantId " +
-                                                  " AND " +
-                                                  " t.type = :taskType " +
-                                                  " ORDER BY t.createdOn DESC ");
+        Query notificationsQuery = em.createQuery(SELECT_TASKS +
+                JOIN_HUMAN_ROLES_JOIN_ORG_ENTITIES +
+                OE_NAME_IN_NAMES +
+                AND +
+                HR_TYPE_ROLE_TYPE +
+                AND +
+                T_TENANT_ID_TENANT_ID +
+                AND +
+                T_TYPE_TASK_TYPE +
+                ORDER_BY_T_CREATED_ON_DESC);
 
-        notificationsQuery.setParameter("tenantId", queryCriteria.getCallerTenantId());
+        notificationsQuery.setParameter(TENANT_ID, queryCriteria.getCallerTenantId());
         List<String> rolesAndNamesList = getNameListForUser(queryCriteria.getCaller(), true);
-        notificationsQuery.setParameter("names", rolesAndNamesList);
-        notificationsQuery.setParameter("roleType", GenericHumanRoleDAO.GenericHumanRoleType.NOTIFICATION_RECIPIENTS);
-        notificationsQuery.setParameter("taskType", TaskType.NOTIFICATION);
+        notificationsQuery.setParameter(NAMES, rolesAndNamesList);
+        notificationsQuery.setParameter(ROLE_TYPE, GenericHumanRoleDAO.GenericHumanRoleType.NOTIFICATION_RECIPIENTS);
+        notificationsQuery.setParameter(TASK_TYPE, TaskType.NOTIFICATION);
         return notificationsQuery;
     }
 

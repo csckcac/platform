@@ -18,7 +18,9 @@ package org.wso2.carbon.humantask.core;
 
 import java.io.File;
 
-public class HumanTaskConstants {
+public final class HumanTaskConstants {
+    private HumanTaskConstants() {
+    }
 
     public static final String HUMANTASK_CONFIG_FILE = "humantask.xml";
 
@@ -45,13 +47,7 @@ public class HumanTaskConstants {
     public static final String HUMANTASK_TASK_TYPE =  "humantaskType";
 
     public static final String HUMANTASK_CLEANUP_JOB = "humantaskCleanupJob";
-
-    public interface XPathConstants {
-
-
-
-
-    }
+    public static final String CARBON_CONFIG_PORT_OFFSET_NODE = "Ports.Offset";
 
     public static final Integer DEFAULT_TASK_PRIORITY = 5;
 

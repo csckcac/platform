@@ -18,6 +18,7 @@ package org.wso2.carbon.humantask.core.engine.commands;
 
 import org.wso2.carbon.humantask.core.dao.EventDAO;
 import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
+import org.wso2.carbon.humantask.core.dao.TaskDAO;
 import org.wso2.carbon.humantask.core.dao.TaskStatus;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 import org.wso2.carbon.humantask.core.engine.util.CommonTaskUtil;
@@ -40,6 +41,7 @@ public class Activate extends AbstractHumanTaskCommand {
     @Override
     protected void checkPreConditions() {
         checkForValidTask(this.getClass());
+        TaskDAO task = getTask();
         if (task.getActivationTime() == null) {
             throw new HumanTaskRuntimeException(
                     String.format("The task[id:%d] does not have a defined activation time.", task.getId()));
@@ -52,9 +54,9 @@ public class Activate extends AbstractHumanTaskCommand {
 
         if (CommonTaskUtil.
                 getOrgEntitiesForRole(task,
-                                      GenericHumanRoleDAO.GenericHumanRoleType.POTENTIAL_OWNERS).size() < 1) {
+                        GenericHumanRoleDAO.GenericHumanRoleType.POTENTIAL_OWNERS).size() < 1) {
             throw new HumanTaskRuntimeException(String.format("The are no matching users for the " +
-                                                              "task's[id:%d] potential owners", task.getId()));
+                    "task's[id:%d] potential owners", task.getId()));
         }
     }
 
@@ -100,8 +102,8 @@ public class Activate extends AbstractHumanTaskCommand {
         checkPreConditions();
         authorise();
         checkState();
-        task.activate();
-        task.persistEvent(createTaskEvent());
+        getTask().activate();
+        getTask().persistEvent(createTaskEvent());
         checkPostConditions();
     }
 }

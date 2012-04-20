@@ -54,16 +54,16 @@ public class JobProcessorImpl implements Scheduler.JobProcessor {
      *
      */
     public void onScheduledJob(Scheduler.JobInfo jobInfo) throws Scheduler.JobProcessorException {
-        log.info("Executing Deadline: " + jobInfo.name + " :: " + jobInfo.taskId + " :: " +
-                jobInfo.jobId + " :: " + jobInfo.type);
+        log.info("Executing Deadline: " + jobInfo.getName() + " :: " + jobInfo.getTaskId() +
+                " :: " + jobInfo.getJobId() + " :: " + jobInfo.getType());
 
         try {
-            switch (jobInfo.type) {
+            switch (jobInfo.getType()) {
                 case TIMER_DEADLINE:
-                    executeDeadline(jobInfo.taskId, jobInfo.name);
+                    executeDeadline(jobInfo.getTaskId(), jobInfo.getName());
                     break;
                 case TIMER_SUSPEND:
-                    executeSuspend(jobInfo.taskId);
+                    executeSuspend(jobInfo.getTaskId());
                     break;
             }
         } catch (Exception ex) {

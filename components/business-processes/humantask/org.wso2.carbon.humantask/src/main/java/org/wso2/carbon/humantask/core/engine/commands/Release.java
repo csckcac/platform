@@ -16,11 +16,7 @@
 
 package org.wso2.carbon.humantask.core.engine.commands;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.humantask.core.dao.EventDAO;
-import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
-import org.wso2.carbon.humantask.core.dao.TaskStatus;
+import org.wso2.carbon.humantask.core.dao.*;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 import org.wso2.carbon.humantask.core.engine.util.OperationAuthorizationUtil;
 
@@ -32,8 +28,6 @@ import java.util.List;
  */
 public class Release extends AbstractHumanTaskCommand {
 
-    private static final Log log = LogFactory.getLog(Release.class);
-
     public Release(String callerId, Long taskId) {
         super(callerId, taskId);
     }
@@ -43,6 +37,8 @@ public class Release extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkPreConditions() {
+        TaskDAO task = getTask();
+        OrganizationalEntityDAO caller = getCaller();
         checkForValidTask(Release.class);
         //if the task is in progress status we need to stop it first before releasing it!
         if (TaskStatus.IN_PROGRESS.equals(task.getStatus())) {
@@ -51,11 +47,11 @@ public class Release extends AbstractHumanTaskCommand {
                     <GenericHumanRoleDAO.GenericHumanRoleType>();
             allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
 
-            if (!OperationAuthorizationUtil.authoriseUser(this.task, caller, allowedRoles,
-                                                          engine.getPeopleQueryEvaluator())) {
+            if (!OperationAuthorizationUtil.authoriseUser(task, caller, allowedRoles,
+                    getEngine().getPeopleQueryEvaluator())) {
                 throw new HumanTaskRuntimeException(String.format("The user[%s] cannot perform [%s]" +
-                                                                  " operation as he is not in task roles[%s]",
-                                                                  caller.getName(), Release.class, allowedRoles));
+                        " operation as he is not in task roles[%s]",
+                        caller.getName(), Release.class, allowedRoles));
             }
 
             task.stop();
@@ -68,15 +64,17 @@ public class Release extends AbstractHumanTaskCommand {
      */
     @Override
     protected void authorise() {
-        List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles = new ArrayList
-                <GenericHumanRoleDAO.GenericHumanRoleType>();
+        TaskDAO task = getTask();
+        OrganizationalEntityDAO caller = getCaller();
+        List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles =
+                new ArrayList<GenericHumanRoleDAO.GenericHumanRoleType>();
         allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
 
-        if (!OperationAuthorizationUtil.authoriseUser(this.task, caller, allowedRoles,
-                                                      engine.getPeopleQueryEvaluator())) {
+        if (!OperationAuthorizationUtil.authoriseUser(task, caller, allowedRoles,
+                getEngine().getPeopleQueryEvaluator())) {
             throw new HumanTaskRuntimeException(String.format("The user[%s] cannot perform [%s]" +
-                                                              " operation as he is not in task roles[%s]",
-                                                              caller.getName(), Release.class, allowedRoles));
+                    " operation as he is not in task roles[%s]",
+                    caller.getName(), Release.class, allowedRoles));
         }
     }
 
@@ -105,6 +103,7 @@ public class Release extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
+        TaskDAO task = getTask();
         checkPreConditions();
         authorise();
         checkState();

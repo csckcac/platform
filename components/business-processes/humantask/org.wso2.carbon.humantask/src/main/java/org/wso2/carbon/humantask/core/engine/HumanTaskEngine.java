@@ -16,8 +16,6 @@
 
 package org.wso2.carbon.humantask.core.engine;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.bpel.common.WSDLAwareMessage;
 import org.wso2.carbon.humantask.core.api.scheduler.Scheduler;
 import org.wso2.carbon.humantask.core.dao.HumanTaskDAOConnectionFactory;
@@ -37,13 +35,14 @@ import java.util.concurrent.Callable;
  * The human task engine.
  */
 public class HumanTaskEngine {
-
-    private static final Log log = LogFactory.getLog(HumanTaskEngine.class);
-
-    /** The DAO connection factory as an abstraction to the underlying persistence implementation  */
+    /**
+     * The DAO connection factory as an abstraction to the underlying persistence implementation
+     */
     private HumanTaskDAOConnectionFactory daoConnectionFactory;
 
-    /** The people query evaluator */
+    /**
+     * The people query evaluator
+     */
     private PeopleQueryEvaluator peopleQueryEvaluator;
 
     private Map<String, ExpressionLanguageRuntime> expressionLanguageRuntimeRegistry;
@@ -89,10 +88,10 @@ public class HumanTaskEngine {
         TaskDAO task = scheduler.execTransaction(new Callable<TaskDAO>() {
             public TaskDAO call() throws Exception {
                 HumanTaskStore taskStore = HumanTaskServiceComponent.getHumanTaskServer().
-                getTaskStoreManager().getHumanTaskStore(message.getTenantId());
+                        getTaskStoreManager().getHumanTaskStore(message.getTenantId());
                 return createTask(message, taskStore.getTaskConfiguration(message.getPortTypeName(),
-                                                                          message.getOperationName()),
-                                  message.getTenantId());
+                        message.getOperationName()),
+                        message.getTenantId());
             }
         });
 
@@ -129,9 +128,7 @@ public class HumanTaskEngine {
     }
 
     /**
-     *
      * @param language : The required type of the expression language.
-     *
      * @return : The ExpressionLanguageRuntime object.
      */
     public ExpressionLanguageRuntime getExpressionLanguageRuntime(String language) {

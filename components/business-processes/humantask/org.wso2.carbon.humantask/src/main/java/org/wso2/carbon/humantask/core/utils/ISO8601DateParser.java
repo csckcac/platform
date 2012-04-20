@@ -21,16 +21,18 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-/***
+/**
  * ISO 8601 date parsing utility. Most date parsing libraries only apply one pattern but
  * can't be used to parse ISO 8601 that are a set a pattern (mostly elements can be omitted
  * like time of just seconds).
  */
-public class ISO8601DateParser {
+public final class ISO8601DateParser {
+    private ISO8601DateParser() {
+    }
 
     public static Date parse(String date) throws java.text.ParseException {
         String pattern;
-        StringBuffer buffer = new StringBuffer(date.trim());
+        StringBuilder buffer = new StringBuilder(date.trim());
         boolean timezoned = false;
 
         switch (buffer.length()) {
@@ -70,12 +72,14 @@ public class ISO8601DateParser {
                 }
                 if (buffer.charAt(19) == '.' && (buffer.length() < 22 ||
                         (buffer.lastIndexOf("-") < 23 && buffer.lastIndexOf("-") > 19) ||
-                        (buffer.lastIndexOf("+") < 23 && buffer.lastIndexOf("+") > 0)))
+                        (buffer.lastIndexOf("+") < 23 && buffer.lastIndexOf("+") > 0))) {
                     buffer.insert(20, "0");
+                }
                 if (buffer.charAt(19) == '.' && (buffer.length() < 22 ||
                         (buffer.lastIndexOf("-") < 23 && buffer.lastIndexOf("-") > 19) ||
-                        (buffer.lastIndexOf("+") < 23 && buffer.lastIndexOf("+") > 0)))
+                        (buffer.lastIndexOf("+") < 23 && buffer.lastIndexOf("+") > 0))) {
                     buffer.insert(20, "0");
+                }
                 if (buffer.length() > 23) {
                     // append timezone
                     pattern = pattern + "Z";
@@ -93,7 +97,9 @@ public class ISO8601DateParser {
 
         // always set time zone on formatter
         SimpleDateFormat format = new SimpleDateFormat(pattern);
-        if (timezoned) format.setTimeZone(TimeZone.getTimeZone("UTC"));
+        if (timezoned) {
+            format.setTimeZone(TimeZone.getTimeZone("UTC"));
+        }
 
         return format.parse(buffer.toString());
     }
@@ -105,15 +111,16 @@ public class ISO8601DateParser {
         return cal;
     }
 
-    public static String format( Date date ) {
+    public static String format(Date date) {
         TimeZone timeZone = TimeZone.getDefault();
-        boolean utc = TimeZone.getTimeZone("UTC").equals(timeZone) || TimeZone.getTimeZone("GMT").equals(timeZone);
+        boolean utc = TimeZone.getTimeZone("UTC").equals(timeZone) ||
+                TimeZone.getTimeZone("GMT").equals(timeZone);
 
         String pattern = utc ? "yyyy-MM-dd'T'HH:mm:ss'Z'" : "yyyy-MM-dd'T'HH:mm:ssZ";
         SimpleDateFormat format = new SimpleDateFormat(pattern);
         format.setTimeZone(timeZone);
 
-        StringBuffer buffer = new StringBuffer(format.format(date));
+        StringBuilder buffer = new StringBuilder(format.format(date));
         if (!utc) {
             buffer.insert(buffer.length() - 2, ':');
         }

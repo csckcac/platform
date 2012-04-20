@@ -46,9 +46,12 @@ import java.util.List;
 /**
  * Common utility method for all the TaskDAO objects.
  */
-public class CommonTaskUtil {
+public final class CommonTaskUtil {
+    private CommonTaskUtil() {
+    }
 
     private static final Log log = LogFactory.getLog(CommonTaskUtil.class);
+
     /**
      * Checks whether the provided task has sub tasks.
      *
@@ -217,7 +220,7 @@ public class CommonTaskUtil {
             } else {
                 for (PresentationNameDAO presentationName : task.getPresentationNames()) {
                     if (StringUtils.isNotEmpty(presentationName.getXmlLang()) &&
-                        presentationName.getXmlLang().toLowerCase().contains("en")) {
+                            presentationName.getXmlLang().toLowerCase().contains("en")) {
                         defaultPresentationName = presentationName;
                         break;
                     }
@@ -233,31 +236,30 @@ public class CommonTaskUtil {
         return defaultPresentationName;
     }
 
-    /**
-     * Gets the presentation name of the task for the given language.
-     *
-     * @param task    : The task object.
-     * @param xmlLang : The xml lang to filter.
-     * @return : The matching PresentationNameDAO if one exists, else null.
-     */
-    public static PresentationNameDAO getPresentationName(TaskDAO task, String xmlLang) {
-        PresentationNameDAO defaultPresentationName = null;
-        if (task.getPresentationNames() != null && task.getPresentationNames().size() > 0) {
-            for (PresentationNameDAO presentationName : task.getPresentationNames()) {
-                if (StringUtils.isNotEmpty(presentationName.getXmlLang()) &&
-                    presentationName.getXmlLang().toLowerCase().contains(xmlLang)) {
-                    defaultPresentationName = presentationName;
-                    break;
-                }
-            }
-        }
-        return defaultPresentationName;
-    }
+//    /**
+//     * Gets the presentation name of the task for the given language.
+//     *
+//     * @param task    : The task object.
+//     * @param xmlLang : The xml lang to filter.
+//     * @return : The matching PresentationNameDAO if one exists, else null.
+//     */
+//    public static PresentationNameDAO getPresentationName(TaskDAO task, String xmlLang) {
+//        PresentationNameDAO defaultPresentationName = null;
+//        if (task.getPresentationNames() != null && task.getPresentationNames().size() > 0) {
+//            for (PresentationNameDAO presentationName : task.getPresentationNames()) {
+//                if (StringUtils.isNotEmpty(presentationName.getXmlLang()) &&
+//                        presentationName.getXmlLang().toLowerCase().contains(xmlLang)) {
+//                    defaultPresentationName = presentationName;
+//                    break;
+//                }
+//            }
+//        }
+//        return defaultPresentationName;
+//    }
 
     /**
-     *
-     * @param task
-     * @return
+     * @param task TaskDAO
+     * @return PresentationSubjectDAO
      */
     public static PresentationSubjectDAO getDefaultPresentationSubject(TaskDAO task) {
         PresentationSubjectDAO defaultPresentationSubject = null;
@@ -268,7 +270,7 @@ public class CommonTaskUtil {
             } else {
                 for (PresentationSubjectDAO subject : task.getPresentationSubjects()) {
                     if (StringUtils.isNotEmpty(subject.getXmlLang()) &&
-                        subject.getXmlLang().toLowerCase().contains("en")) {
+                            subject.getXmlLang().toLowerCase().contains("en")) {
                         defaultPresentationSubject = subject;
                         break;
                     }
@@ -290,7 +292,7 @@ public class CommonTaskUtil {
      * @param task : The task object
      * @return : The default presentation description.
      */
-        public static PresentationDescriptionDAO getDefaultPresentationDescription(TaskDAO task) {
+    public static PresentationDescriptionDAO getDefaultPresentationDescription(TaskDAO task) {
         PresentationDescriptionDAO presentationDescriptionDAO = null;
         if (task.getPresentationDescriptions() != null && task.getPresentationDescriptions().size() > 0) {
 
@@ -299,7 +301,7 @@ public class CommonTaskUtil {
             } else {
                 for (PresentationDescriptionDAO description : task.getPresentationDescriptions()) {
                     if (StringUtils.isNotEmpty(description.getXmlLang()) &&
-                        description.getXmlLang().toLowerCase().contains("en")) {
+                            description.getXmlLang().toLowerCase().contains("en")) {
                         presentationDescriptionDAO = description;
                         break;
                     }
@@ -315,26 +317,26 @@ public class CommonTaskUtil {
         return presentationDescriptionDAO;
     }
 
-    /**
-     * Gets the presentation name of the task for the given language.
-     *
-     * @param task    : The task object.
-     * @param xmlLang : The xml lang to filter.
-     * @return : The matching PresentationNameDAO if one exists, else null.
-     */
-    public static PresentationSubjectDAO getPresentationSubject(TaskDAO task, String xmlLang) {
-        PresentationSubjectDAO matchingSubject = null;
-        if (task.getPresentationSubjects() != null && task.getPresentationSubjects().size() > 0) {
-            for (PresentationSubjectDAO subjectDAO : task.getPresentationSubjects()) {
-                if (StringUtils.isNotEmpty(subjectDAO.getXmlLang()) &&
-                    subjectDAO.getXmlLang().toLowerCase().contains(xmlLang)) {
-                    matchingSubject = subjectDAO;
-                    break;
-                }
-            }
-        }
-        return matchingSubject;
-    }
+//    /**
+//     * Gets the presentation name of the task for the given language.
+//     *
+//     * @param task    : The task object.
+//     * @param xmlLang : The xml lang to filter.
+//     * @return : The matching PresentationNameDAO if one exists, else null.
+//     */
+//    public static PresentationSubjectDAO getPresentationSubject(TaskDAO task, String xmlLang) {
+//        PresentationSubjectDAO matchingSubject = null;
+//        if (task.getPresentationSubjects() != null && task.getPresentationSubjects().size() > 0) {
+//            for (PresentationSubjectDAO subjectDAO : task.getPresentationSubjects()) {
+//                if (StringUtils.isNotEmpty(subjectDAO.getXmlLang()) &&
+//                        subjectDAO.getXmlLang().toLowerCase().contains(xmlLang)) {
+//                    matchingSubject = subjectDAO;
+//                    break;
+//                }
+//            }
+//        }
+//        return matchingSubject;
+//    }
 
     /**
      * Nominates the given task to a matching actual owner, if there's only 1 user in the potential owners list. In that case
@@ -357,7 +359,7 @@ public class CommonTaskUtil {
                                 // task for that particular user.
                                 GenericHumanRoleDAO actualOwnerRole =
                                         pqe.createGHRForRoleName(roleName,
-                                                                 GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
+                                                GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
                                 actualOwnerRole.setTask(task);
                                 task.addHumanRole(actualOwnerRole);
                                 task.setStatus(TaskStatus.RESERVED);
@@ -390,8 +392,8 @@ public class CommonTaskUtil {
 
         if (priorityDef != null) {
             String expLang = priorityDef.getExpressionLanguage() == null ?
-                             taskConfig.getExpressionLanguage() :
-                             priorityDef.getExpressionLanguage();
+                    taskConfig.getExpressionLanguage() :
+                    priorityDef.getExpressionLanguage();
             ExpressionLanguageRuntime expLangRuntime = HumanTaskServiceComponent.getHumanTaskServer().
                     getTaskEngine().getExpressionLanguageRuntime(expLang);
 
@@ -399,8 +401,8 @@ public class CommonTaskUtil {
                     getTextValue().trim(), evalCtx);
             if (priority.intValue() > 10 || priority.intValue() < 1) {
                 log.warn(String.format("Ignoring the task priority value " +
-                                       ":[%d] The task priority has to be with 1 and 10. ",
-                                       priority.intValue()));
+                        ":[%d] The task priority has to be with 1 and 10. ",
+                        priority.intValue()));
             } else {
                 taskPriorityInt = priority.intValue();
             }
@@ -498,7 +500,7 @@ public class CommonTaskUtil {
             TDeadline[] startDeadlines = deadlines.getStartDeadlineArray();
             TDeadline[] completionDeadlines = deadlines.getCompletionDeadlineArray();
 
-            for(TDeadline deadline: startDeadlines){
+            for (TDeadline deadline : startDeadlines) {
                 DeadlineDAO startDeadline = HumanTaskServiceComponent.getHumanTaskServer().
                         getTaskEngine().getDaoConnectionFactory().getConnection().createDeadline();
                 startDeadline.setStatus(TaskStatus.IN_PROGRESS);
@@ -525,7 +527,7 @@ public class CommonTaskUtil {
                                               EvaluationContext evalCtx) {
         if (deadline.getUntil() != null) {
             String expLang = deadline.getUntil().getExpressionLanguage() == null ?
-                             taskConf.getExpressionLanguage() :
+                    taskConf.getExpressionLanguage() :
                     deadline.getUntil().getExpressionLanguage();
             return HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().
                     getExpressionLanguageRuntime(expLang).evaluateAsDate(deadline.getUntil().
@@ -550,7 +552,7 @@ public class CommonTaskUtil {
         for (DeadlineDAO deadline : deadlines) {
             HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
                     scheduleJob(System.currentTimeMillis(), deadline.getDeadlineDate().getTime(),
-                    Scheduler.JobType.TIMER_DEADLINE, null, task.getId(), deadline.getName());
+                            Scheduler.JobType.TIMER_DEADLINE, null, task.getId(), deadline.getName());
         }
     }
 }

@@ -48,46 +48,35 @@ public class SimpleScheduler implements Scheduler, TaskRunner {
      * Jobs scheduled with a time that is between [now, now+immediateInterval] will be assigned to the current node, and placed
      * directly on the todo queue.
      */
-    long immediateInterval = 30000;
+    private long immediateInterval = 30000;
 
     /**
      * Jobs scheduled with a time that is between (now+immediateInterval,now+nearFutureInterval) will be assigned to the current
      * node, but will not be placed on the todo queue (the promoter will pick them up).
      */
-    long nearFutureInterval = 60 * 1000;
+    private long nearFutureInterval = 60 * 1000;
 //    long _nearFutureInterval = 10 * 60 * 1000;
 
-    /**
-     * 10s of no communication and you are deemed dead.
-     */
-    long staleInterval = 10000;
+//    /**
+//     * 10s of no communication and you are deemed dead.
+//     */
+//    private long staleInterval = 10000;
 
-    /**
-     * Duration used to log a warning if a job scheduled at a date D is queued at D'>D+_warningDelay
-     */
-    long warningDelay = 0;
-//    long _warningDelay = 5*60*1000;
+    //    long _warningDelay = 5*60*1000;
 
-    /**
-     * Estimated sustained transaction per second capacity of the system.
-     * e.g. 100 means the system can process 100 jobs per seconds, on average
-     * This number is used to determine how many jobs to load from the database at once.
-     */
-    int tps = 100;
+    private ExecutorService exec;
 
-    ExecutorService _exec;
-
-    String nodeId;
+    private String nodeId;
 
     /**
      * Maximum number of jobs in the "near future" / todo queue.
      */
-    int todoLimit = 10000;
+    private int todoLimit = 10000;
 
     /**
      * The object that actually handles the jobs.
      */
-    volatile JobProcessor jobProcessor;
+    private volatile JobProcessor jobProcessor;
 
 //    volatile JobProcessor _polledRunnableProcessor;
 
@@ -124,23 +113,23 @@ public class SimpleScheduler implements Scheduler, TaskRunner {
      */
     private AtomicLong nextUpgrade = new AtomicLong();
 
-    private Random random = new Random();
+//    private Random random = new Random();
 
-//    private long _pollIntervalForPolledRunnable = Long.getLong("org.apache.ode.polledRunnable.pollInterval", 10 * 60 * 1000);
+//    private long pollIntervalForPolledRunnable = Long.getLong("org.apache.ode.polledRunnable.pollInterval", 10 * 60 * 1000);
 
-    /**
-     * Number of immediate retries when the transaction fails *
-     */
-    private int _immediateTransactionRetryLimit = 3;
+//    /**
+//     * Number of immediate retries when the transaction fails *
+//     */
+//    private int immediateTransactionRetryLimit = 3;
+//
+//    /**
+//     * Interval between immediate retries when the transaction fails *
+//     */
+//    private long immediateTransactionRetryInterval = 1000;
 
-    /**
-     * Interval between immediate retries when the transaction fails *
-     */
-    private long _immediateTransactionRetryInterval = 1000;
+    private TransactionManager transactionManager;
 
-    TransactionManager transactionManager;
-
-    public SimpleScheduler(String nodeId, Properties conf) {
+    public SimpleScheduler(String nodeId) {
         this.nodeId = nodeId;
         todo = new SchedulerThread(this);
     }
@@ -154,7 +143,7 @@ public class SimpleScheduler implements Scheduler, TaskRunner {
             Job job = (Job) task;
             runJob(job);
         } else if (task instanceof SchedulerTask) {
-            _exec.submit(new Callable<Void>() {
+            exec.submit(new Callable<Void>() {
                 public Void call() throws Exception {
                     try {
                         ((SchedulerTask) task).run();
@@ -173,12 +162,12 @@ public class SimpleScheduler implements Scheduler, TaskRunner {
      * @param job job to run.
      */
     protected void runJob(final Job job) {
-        _exec.submit(new RunJob(job, jobProcessor));
+        exec.submit(new RunJob(job, jobProcessor));
     }
 
     class RunJob implements Callable<Void> {
-        final Job job;
-        final JobProcessor processor;
+        private final Job job;
+        private final JobProcessor processor;
 
         RunJob(Job job, JobProcessor processor) {
             this.job = job;
@@ -194,7 +183,7 @@ public class SimpleScheduler implements Scheduler, TaskRunner {
                 try {
                     execTransaction(new Callable<Void>() {
                         public Void call() throws Exception {
-                            job.jobDAO = getConnection().getEntityManager().find(job.jobDAO.getClass(),job.jobDAO.getId());
+                            job.jobDAO = getConnection().getEntityManager().find(job.jobDAO.getClass(), job.jobDAO.getId());
                             getConnection().getEntityManager().remove(job.jobDAO);
 //                            job.jobDAO.delete();
 //                                try {
@@ -306,10 +295,12 @@ public class SimpleScheduler implements Scheduler, TaskRunner {
             try {
                 success = doLoadImmediate();
             } finally {
-                if (success)
-                    todo.enqueue(new LoadImmediateTask(System.currentTimeMillis() + (long) (immediateInterval * .90)));
-                else
+                if (success) {
+                    todo.enqueue(new LoadImmediateTask(System.currentTimeMillis() +
+                            (long) (immediateInterval * .90)));
+                } else {
                     todo.enqueue(new LoadImmediateTask(System.currentTimeMillis() + 1000));
+                }
             }
         }
 
@@ -328,7 +319,9 @@ public class SimpleScheduler implements Scheduler, TaskRunner {
         List<Job> jobs = new ArrayList<Job>();
         try {
             // don't load more than we can chew
-            final int batch = Math.min((int) (immediateInterval * tps / 1000), todoLimit - outstandingJobs.size());
+            int tps = 100;
+            final int batch = Math.min((int) (immediateInterval * tps / 1000),
+                    todoLimit - outstandingJobs.size());
 
             // jobs might have been enqueued by #addTodoList meanwhile
             if (batch <= 0) {
@@ -348,7 +341,7 @@ public class SimpleScheduler implements Scheduler, TaskRunner {
             List<HumanTaskJobDAO> htJobs = execTransaction(new Callable<List<HumanTaskJobDAO>>() {
                 public List<HumanTaskJobDAO> call() throws Exception {
                     return getConnection().dequeueImmediate(nodeId,
-                    System.currentTimeMillis() + immediateInterval, batch);
+                            System.currentTimeMillis() + immediateInterval, batch);
                 }
             });
 
@@ -360,6 +353,7 @@ public class SimpleScheduler implements Scheduler, TaskRunner {
                 log.debug("loaded " + jobs.size() + " jobs from db");
             }
 
+            long warningDelay = 0;
             long delayedTime = System.currentTimeMillis() - warningDelay;
             int delayedCount = 0;
             boolean runningLate;
@@ -368,7 +362,8 @@ public class SimpleScheduler implements Scheduler, TaskRunner {
                 // jobs might have been enqueued by #addTodoList meanwhile
                 if (outstandingJobs.size() >= todoLimit) {
                     if (log.isDebugEnabled()) {
-                        log.debug("Max capacity reached: " + outstandingJobs.size() + " jobs dispacthed i.e. queued or being executed");
+                        log.debug("Max capacity reached: " + outstandingJobs.size() +
+                                " jobs dispacthed i.e. queued or being executed");
                     }
                     break;
                 }
@@ -453,10 +448,12 @@ public class SimpleScheduler implements Scheduler, TaskRunner {
             try {
                 success = doUpgrade();
             } finally {
-                long future = System.currentTimeMillis() + (success ? (long) (nearFutureInterval * .50) : 1000);
+                long future = System.currentTimeMillis() +
+                        (success ? (long) (nearFutureInterval * .50) : 1000);
                 nextUpgrade.set(future);
                 todo.enqueue(new UpgradeJobsTask(future));
-                log.debug("UPGRADE completed, success = " + success + "; next time in " + (future - ctime) + "ms");
+                log.debug("UPGRADE completed, success = " + success + "; next time in " +
+                        (future - ctime) + "ms");
             }
         }
     }
@@ -465,10 +462,10 @@ public class SimpleScheduler implements Scheduler, TaskRunner {
         if (log.isDebugEnabled()) {
             log.debug("UPGRADE started");
         }
-        final ArrayList<String> knownNodes = new ArrayList<String>(this.knownNodes);
+        final ArrayList<String> nodes = new ArrayList<String>(this.knownNodes);
         // Don't forget about self.
-        knownNodes.add(nodeId);
-        Collections.sort(knownNodes);
+        nodes.add(nodeId);
+        Collections.sort(nodes);
 
         // We're going to try to upgrade near future jobs using the db only.
         // We assume that the distribution of the trailing digits in the
@@ -477,12 +474,12 @@ public class SimpleScheduler implements Scheduler, TaskRunner {
         // This can be done in a single update statement.
         final long maxtime = System.currentTimeMillis() + nearFutureInterval;
         try {
-            final int numNodes = knownNodes.size();
+            final int numNodes = nodes.size();
 
             return execTransaction(new Callable<Boolean>() {
                 public Boolean call() throws Exception {
                     for (int i = 0; i < numNodes; ++i) {
-                        String node = knownNodes.get(i);
+                        String node = nodes.get(i);
 
                         getConnection().updateAssignToNode(node, i, numNodes, maxtime);
                         //_db.updateAssignToNode(node, i, numNodes, maxtime);
@@ -569,10 +566,12 @@ public class SimpleScheduler implements Scheduler, TaskRunner {
     }
 
     public void start() {
-        if (running)
+        if (running) {
             return;
+        }
 
-        if (Boolean.parseBoolean(System.getProperty("org.wso2.carbon.humantask.scheduler.deleteJobsOnStart", "false"))) {
+        if (Boolean.parseBoolean(System.
+                getProperty("org.wso2.carbon.humantask.scheduler.deleteJobsOnStart", "false"))) {
             if (log.isDebugEnabled()) {
                 log.debug("DeleteJobsOnStart");
             }
@@ -593,8 +592,9 @@ public class SimpleScheduler implements Scheduler, TaskRunner {
             }
         }
 
-        if (_exec == null)
-            _exec = Executors.newCachedThreadPool();
+        if (exec == null) {
+            exec = Executors.newCachedThreadPool();
+        }
 
         todo.clearTasks(UpgradeJobsTask.class);
         todo.clearTasks(LoadImmediateTask.class);
@@ -637,13 +637,14 @@ public class SimpleScheduler implements Scheduler, TaskRunner {
         running = true;
     }
 
-    private long randomMean(long mean) {
-        return (long) random.nextDouble() * mean + (mean / 2);
-    }
+//    private long randomMean(long mean) {
+//        return (long) random.nextDouble() * mean + (mean / 2);
+//    }
 
     public void stop() {
-        if (!running)
+        if (!running) {
             return;
+        }
 
         todo.stop();
         todo.clearTasks(UpgradeJobsTask.class);
@@ -665,32 +666,32 @@ public class SimpleScheduler implements Scheduler, TaskRunner {
         todo = null;
     }
 
-    public void setNodeId(String nodeId) {
-        this.nodeId = nodeId;
-    }
+//    public void setNodeId(String nodeId) {
+//        this.nodeId = nodeId;
+//    }
 
-    public void setStaleInterval(long staleInterval) {
-        this.staleInterval = staleInterval;
-    }
+//    public void setStaleInterval(long staleInterval) {
+//        this.staleInterval = staleInterval;
+//    }
 
-    public void setImmediateInterval(long immediateInterval) {
-        this.immediateInterval = immediateInterval;
-    }
-
-    public void setNearFutureInterval(long nearFutureInterval) {
-        this.nearFutureInterval = nearFutureInterval;
-    }
-
-    public void setTransactionsPerSecond(int tps) {
-        this.tps = tps;
-    }
+//    public void setImmediateInterval(long immediateInterval) {
+//        this.immediateInterval = immediateInterval;
+//    }
+//
+//    public void setNearFutureInterval(long nearFutureInterval) {
+//        this.nearFutureInterval = nearFutureInterval;
+//    }
+//
+//    public void setTransactionsPerSecond(int tps) {
+//        this.tps = tps;
+//    }
 
 //    public void setDatabaseDelegate(DatabaseDelegate dbd) {
 //        _db = dbd;
 //    }
 
     public void setExecutorService(ExecutorService executorService) {
-        _exec = executorService;
+        exec = executorService;
     }
 
     public long scheduleJob(long now, long scheduledTime, JobType type, String details,
@@ -791,7 +792,8 @@ public class SimpleScheduler implements Scheduler, TaskRunner {
             //Loading/Refresh the job here, in-order to update the job for the latest changes.
             //Otherwise when the next immediate load task runs, it still fetch the job with the
             // old updates.
-            ParameterizedType genericSuperClass = (ParameterizedType) getConnection().getClass().getGenericSuperclass();
+            ParameterizedType genericSuperClass =
+                    (ParameterizedType) getConnection().getClass().getGenericSuperclass();
             Class entityClass = (Class) genericSuperClass.getActualTypeArguments()[0];
             HumanTaskJobDAO updatedJob = (HumanTaskJobDAO) getEntityManager().find(entityClass, jobId);
             getEntityManager().refresh(updatedJob);
@@ -880,7 +882,9 @@ public class SimpleScheduler implements Scheduler, TaskRunner {
                 ex = e;
             } finally {
                 if (ex == null) {
-                    if (log.isDebugEnabled()) log.debug("Committing on " + txm + "...");
+                    if (log.isDebugEnabled()) {
+                        log.debug("Committing on " + txm + "...");
+                    }
                     try {
                         txm.commit();
                     } catch (Exception e2) {

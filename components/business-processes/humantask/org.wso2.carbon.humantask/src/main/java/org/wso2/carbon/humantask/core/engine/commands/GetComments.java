@@ -27,7 +27,7 @@ import java.util.List;
  */
 public class GetComments extends AbstractHumanTaskCommand {
 
-    List<CommentDAO> comments = new ArrayList<CommentDAO>();
+    private List<CommentDAO> comments = new ArrayList<CommentDAO>();
 
     public GetComments(String callerId, Long taskId) {
         super(callerId, taskId);
@@ -77,7 +77,7 @@ public class GetComments extends AbstractHumanTaskCommand {
         checkPreConditions();
         authorise();
         checkState();
-        this.comments.addAll(task.getComments());
+        this.comments.addAll(getTask().getComments());
         checkPostConditions();
     }
 

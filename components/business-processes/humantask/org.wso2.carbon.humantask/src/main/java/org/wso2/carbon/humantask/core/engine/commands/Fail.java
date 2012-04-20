@@ -16,11 +16,10 @@
 
 package org.wso2.carbon.humantask.core.engine.commands;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Element;
 import org.wso2.carbon.humantask.core.dao.EventDAO;
 import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
+import org.wso2.carbon.humantask.core.dao.TaskDAO;
 import org.wso2.carbon.humantask.core.dao.TaskStatus;
 
 import java.util.ArrayList;
@@ -31,10 +30,6 @@ import java.util.List;
  *
  */
 public class Fail extends AbstractHumanTaskCommand {
-
-
-    private static final Log log = LogFactory.getLog(Claim.class);
-
     private Element faultElement;
 
     private String faultName;
@@ -93,6 +88,7 @@ public class Fail extends AbstractHumanTaskCommand {
      */
     @Override
     public void execute() {
+        TaskDAO task = getTask();
         checkPreConditions();
         authorise();
         checkState();

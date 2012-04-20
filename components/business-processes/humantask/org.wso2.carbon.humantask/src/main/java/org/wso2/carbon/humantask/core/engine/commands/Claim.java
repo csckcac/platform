@@ -18,9 +18,7 @@ package org.wso2.carbon.humantask.core.engine.commands;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.humantask.core.dao.EventDAO;
-import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
-import org.wso2.carbon.humantask.core.dao.TaskStatus;
+import org.wso2.carbon.humantask.core.dao.*;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 import org.wso2.carbon.humantask.core.engine.util.OperationAuthorizationUtil;
 
@@ -41,7 +39,7 @@ public class Claim extends AbstractHumanTaskCommand {
     @Override
     protected void checkPreConditions() {
         checkForValidTask(this.getClass());
-
+        TaskDAO task = getTask();
         for (GenericHumanRoleDAO humanRole : task.getHumanRoles()) {
             if (GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER.equals(humanRole.getType())
                 && humanRole.getOrgEntities().size() > 0) {
@@ -58,11 +56,11 @@ public class Claim extends AbstractHumanTaskCommand {
                 <GenericHumanRoleDAO.GenericHumanRoleType>();
         allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.POTENTIAL_OWNERS);
 
-        if (!OperationAuthorizationUtil.authoriseUser(this.task, caller, allowedRoles,
-                                                      engine.getPeopleQueryEvaluator())) {
+        if (!OperationAuthorizationUtil.authoriseUser(getTask(), getCaller(), allowedRoles,
+                                                      getEngine().getPeopleQueryEvaluator())) {
             throw new HumanTaskRuntimeException(String.format("The user[%s] cannot perform [%s]" +
                                                               " operation as he is not in task roles[%s]",
-                                                              caller.getName(), Claim.class.getSimpleName(),
+                                                              getCaller().getName(), Claim.class.getSimpleName(),
                                                               allowedRoles));
         }
     }
@@ -86,6 +84,8 @@ public class Claim extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
+        OrganizationalEntityDAO caller = getCaller();
+        TaskDAO task = getTask();
         if (log.isDebugEnabled()) {
             log.debug(String.format("User[%s] claiming task[%d]", caller.getName(), task
                     .getId()));

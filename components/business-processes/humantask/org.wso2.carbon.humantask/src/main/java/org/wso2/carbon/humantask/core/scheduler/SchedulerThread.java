@@ -16,8 +16,6 @@
 
 package org.wso2.carbon.humantask.core.scheduler;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.humantask.core.utils.CollectionsX;
 import org.wso2.carbon.humantask.core.utils.MemberOfFunction;
 
@@ -28,67 +26,69 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Implements the "todo" queue and prioritized scheduling mechanism.
- *
- *
  */
 class SchedulerThread implements Runnable {
 
-    private static final Log log = LogFactory.getLog(SchedulerThread.class);
-
     private static final int TODO_QUEUE_INITIAL_CAPACITY = 200;
 
-    /** Jobs ready for immediate execution. */
-    private PriorityBlockingQueue<Task> _todo;
+    /**
+     * Jobs ready for immediate execution.
+     */
+    private PriorityBlockingQueue<Task> todo;
 
-    /** Lock for managing the queue */
-    private ReentrantLock _lock = new ReentrantLock();
+    /**
+     * Lock for managing the queue
+     */
+    private ReentrantLock lock = new ReentrantLock();
 
-    private Condition _activity = _lock.newCondition();
+    private Condition activity = lock.newCondition();
 
-    private volatile boolean _done;
+    private volatile boolean done;
 
-    private TaskRunner _taskrunner;
+    private TaskRunner taskrunner;
 
-    private Thread _thread;
+    private Thread thread;
 
     SchedulerThread(TaskRunner runner) {
-        _todo = new PriorityBlockingQueue<Task>(TODO_QUEUE_INITIAL_CAPACITY,
+        todo = new PriorityBlockingQueue<Task>(TODO_QUEUE_INITIAL_CAPACITY,
                 new JobComparatorByDate());
-        _taskrunner = runner;
+        taskrunner = runner;
     }
 
     void start() {
-        if (_thread != null)
+        if (thread != null) {
             return;
+        }
 
-        _done = false;
-        _thread = new Thread(this, "HTScheduler");
-        _thread.start();
+        done = false;
+        thread = new Thread(this, "HTScheduler");
+        thread.start();
     }
 
     /**
      * Shutdown the thread.
      */
     void stop() {
-        if (_thread == null)
+        if (thread == null) {
             return;
+        }
 
-        _done = true;
-        _lock.lock();
+        done = true;
+        lock.lock();
         try {
-            _activity.signal();
+            activity.signal();
         } finally {
-            _lock.unlock();
+            lock.unlock();
 
         }
 
-        while (_thread != null)
+        while (thread != null) {
             try {
-                _thread.join();
-                _thread = null;
-            } catch (InterruptedException e) {
-                ;
+                thread.join();
+                thread = null;
+            } catch (InterruptedException ignored) {
             }
+        }
 
     }
 
@@ -98,12 +98,12 @@ class SchedulerThread implements Runnable {
      * @param task Task/Job
      */
     void enqueue(Task task) {
-        _lock.lock();
+        lock.lock();
         try {
-            _todo.add(task);
-            _activity.signal();
+            todo.add(task);
+            activity.signal();
         } finally {
-            _lock.unlock();
+            lock.unlock();
         }
     }
 
@@ -113,44 +113,44 @@ class SchedulerThread implements Runnable {
      * @param task Task/Job
      */
     void dequeue(Task task) {
-        _lock.lock();
+        lock.lock();
         try {
-            _todo.remove(task);
-            _activity.signal();
+            todo.remove(task);
+            activity.signal();
         } finally {
-            _lock.unlock();
+            lock.unlock();
         }
     }
 
     /**
      * Get the size of the todo queue.
      *
-     * @return
+     * @return Size of the todo queue
      */
     public int size() {
-        return _todo.size();
+        return todo.size();
     }
 
     /**
      * Pop items off the todo queue, and send them to the task runner for processing.
      */
     public void run() {
-        while (!_done) {
-            _lock.lock();
+        while (!done) {
+            lock.lock();
             try {
-                long nextjob;
-                while ((nextjob = nextJobTime()) > 0 && !_done) {
-                    _activity.await(nextjob, TimeUnit.MILLISECONDS);
+                long nextjob = nextJobTime();
+                while ((nextjob) > 0 && !done) {
+                    activity.await(nextjob, TimeUnit.MILLISECONDS);
+                    nextjob = nextJobTime();
                 }
 
-                if (!_done && nextjob == 0) {
-                    Task task = _todo.take();
-                    _taskrunner.runTask(task);
+                if (!done && nextjob == 0) {
+                    Task task = todo.take();
+                    taskrunner.runTask(task);
                 }
             } catch (InterruptedException ignore) {
-                ; // ignore
             } finally {
-                _lock.unlock();
+                lock.unlock();
             }
         }
     }
@@ -162,23 +162,25 @@ class SchedulerThread implements Runnable {
      *         really large number if there are no jobs to speak of
      */
     private long nextJobTime() {
-        assert _lock.isLocked();
+        assert lock.isLocked();
 
-        Task job = _todo.peek();
-        if (job == null)
+        Task job = todo.peek();
+        if (job == null) {
             return Long.MAX_VALUE;
+        }
 
         return Math.max(0, job.schedDate - System.currentTimeMillis());
     }
 
     /**
      * Remove the tasks of a given type from the list.
+     *
      * @param tasktype type of task
      */
     public void clearTasks(final Class<? extends Task> tasktype) {
-        _lock.lock();
+        lock.lock();
         try {
-            CollectionsX.remove_if(_todo, new MemberOfFunction<Task>() {
+            CollectionsX.remove_if(todo, new MemberOfFunction<Task>() {
                 @Override
                 public boolean isMember(Task o) {
                     return tasktype.isAssignableFrom(o.getClass());
@@ -186,7 +188,7 @@ class SchedulerThread implements Runnable {
 
             });
         } finally {
-            _lock.unlock();
+            lock.unlock();
         }
     }
 }

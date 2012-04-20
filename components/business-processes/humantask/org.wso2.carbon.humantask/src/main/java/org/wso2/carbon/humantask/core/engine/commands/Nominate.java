@@ -18,10 +18,7 @@ package org.wso2.carbon.humantask.core.engine.commands;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.humantask.core.dao.EventDAO;
-import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
-import org.wso2.carbon.humantask.core.dao.OrganizationalEntityDAO;
-import org.wso2.carbon.humantask.core.dao.TaskStatus;
+import org.wso2.carbon.humantask.core.dao.*;
 import org.wso2.carbon.humantask.core.engine.PeopleQueryEvaluator;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 
@@ -32,11 +29,9 @@ import java.util.List;
  * task nomination operation.
  */
 public class Nominate extends AbstractHumanTaskCommand {
-
     private static Log log = LogFactory.getLog(Nominate.class);
 
-    List<OrganizationalEntityDAO> nominees = new ArrayList<OrganizationalEntityDAO>();
-
+    private List<OrganizationalEntityDAO> nominees = new ArrayList<OrganizationalEntityDAO>();
 
     public Nominate(String callerId, Long taskId, List<OrganizationalEntityDAO> nominees) {
         super(callerId, taskId);
@@ -52,7 +47,7 @@ public class Nominate extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkPreConditions() {
-        PeopleQueryEvaluator pqe = engine.getPeopleQueryEvaluator();
+        PeopleQueryEvaluator pqe = getEngine().getPeopleQueryEvaluator();
         pqe.checkOrgEntitiesExist(nominees);
     }
 
@@ -80,6 +75,7 @@ public class Nominate extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkPostConditions() {
+        TaskDAO task = getTask();
         if (!(TaskStatus.RESERVED.equals(task.getStatus()) || TaskStatus.READY.equals(task.getStatus()))) {
             String errMsg = String.format("The task nomination failed. Task status is not in Reserved or Ready.");
             log.error(errMsg);
@@ -99,6 +95,7 @@ public class Nominate extends AbstractHumanTaskCommand {
      */
     @Override
     public void execute() {
+        TaskDAO task = getTask();
         checkPreConditions();
         authorise();
         checkState();

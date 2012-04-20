@@ -48,8 +48,6 @@ public class HumanTaskPackageManagementSkeleton extends AbstractAdmin
 
     private static Log log = LogFactory.getLog(HumanTaskPackageManagementSkeleton.class);
 
-    private static Integer ITEMS_PER_PAGE = 10;
-
     /**
      * @param page : The page number.
      * @return :
@@ -92,15 +90,17 @@ public class HumanTaskPackageManagementSkeleton extends AbstractAdmin
     @Override
     public DeployedTaskDefinitionsPaginated listDeployedTaskDefinitionsPaginated(int page)
             throws PackageManagementException {
+        int tPage = page;
         try {
             DeployedTaskDefinitionsPaginated paginatedTaskDefs = new DeployedTaskDefinitionsPaginated();
 
-            if (page < 0 || page == Integer.MAX_VALUE) {
-                page = 0;
+            if (tPage < 0 || tPage == Integer.MAX_VALUE) {
+                tPage = 0;
             }
 
-            Integer startIndexForCurrentPage = page * ITEMS_PER_PAGE;
-            Integer endIndexForCurrentPage = (page + 1) * ITEMS_PER_PAGE;
+            Integer ITEMS_PER_PAGE = 10;
+            Integer startIndexForCurrentPage = tPage * ITEMS_PER_PAGE;
+            Integer endIndexForCurrentPage = (tPage + 1) * ITEMS_PER_PAGE;
 
 
             List<SimpleTaskDefinitionInfo> taskConfigs = getTenantTaskStore().getTaskConfigurationInfoList();

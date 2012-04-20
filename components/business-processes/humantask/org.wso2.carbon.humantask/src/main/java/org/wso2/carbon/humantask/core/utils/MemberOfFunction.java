@@ -21,7 +21,7 @@ package org.wso2.carbon.humantask.core.utils;
 /**
  * Interface used for defining object filters/selectors, classes that are used
  * to determine whether a given object belong in a set.
- *
+ * <p/>
  * <p>
  * Created on Feb 4, 2004 at 4:48:55 PM.
  * </p>
@@ -33,8 +33,7 @@ public abstract class MemberOfFunction<E> implements UnaryFunction<E, Boolean> {
     /**
      * A unary function that tests whether an element is the member of a set.
      *
-     * @param o
-     *            element to test
+     * @param o element to test
      * @return <code>true</code> if element is a member
      */
     public abstract boolean isMember(E o);
@@ -43,25 +42,11 @@ public abstract class MemberOfFunction<E> implements UnaryFunction<E, Boolean> {
      * Implementation of {@link UnaryFunction} method defering to
      * {@link #isMember(E)}.
      *
-     * @param x
-     *            element to test
-     * @return {@link Boolean.TRUE} if isMemeber returns <code>true</code>,
+     * @param x element to test
+     * @return {@ref Boolean.TRUE} if isMemeber returns <code>true</code>,
      *         <code>false</code> otherwise
      */
     public final Boolean apply(E x) {
         return isMember(x) ? Boolean.TRUE : Boolean.FALSE;
     }
-
-
-    public static class InstanceOf extends MemberOfFunction {
-        private Class _cls;
-        public InstanceOf(Class cls) { _cls = cls; }
-
-        @Override
-        public boolean isMember(Object o) {
-            return _cls.isInstance(o);
-        }
-
-    }
-
 }

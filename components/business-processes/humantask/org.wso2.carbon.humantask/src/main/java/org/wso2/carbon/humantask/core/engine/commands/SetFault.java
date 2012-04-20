@@ -19,6 +19,7 @@ package org.wso2.carbon.humantask.core.engine.commands;
 import org.w3c.dom.Element;
 import org.wso2.carbon.humantask.core.dao.EventDAO;
 import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
+import org.wso2.carbon.humantask.core.dao.TaskDAO;
 import org.wso2.carbon.humantask.core.dao.TaskStatus;
 
 import java.util.ArrayList;
@@ -28,12 +29,9 @@ import java.util.List;
  * Set fault operation.
  */
 public class SetFault extends AbstractHumanTaskCommand {
-
-
     private Element faultElement;
 
     private String faultName;
-
 
     public SetFault(String callerId, Long taskId, String faultName, Element faultData) {
         super(callerId, taskId);
@@ -88,6 +86,7 @@ public class SetFault extends AbstractHumanTaskCommand {
      */
     @Override
     public void execute() {
+        TaskDAO task = getTask();
         checkPreConditions();
         authorise();
         checkState();

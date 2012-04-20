@@ -16,7 +16,10 @@
 
 package org.wso2.carbon.humantask.core.dao;
 
-public class Constants {
+public final class Constants {
+    private Constants() {
+    }
+
     public static final String DAO_FACTORY_CLASS_PROP = "org.wso2.carbon.humantask.DAOFactory";
     public static final String DATA_SOURCE_PROP = "org.wso2.carbon.humantask.DataSource";
     public static final String PROP_ENABLE_SQL_TRACING = "org.wso2.carbon.humantask.SQLTracing";

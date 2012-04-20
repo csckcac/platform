@@ -41,7 +41,8 @@ import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 public class AxisHumanTaskMessageReceiver extends AbstractMessageReceiver {
     private static Log log = LogFactory.getLog(AxisHumanTaskMessageReceiver.class);
 
-    HumanTaskEngine humanTaskEngine;
+    private HumanTaskEngine humanTaskEngine;
+
     @Override
     protected void invokeBusinessLogic(MessageContext messageContext) throws AxisFault {
 
@@ -125,8 +126,8 @@ public class AxisHumanTaskMessageReceiver extends AbstractMessageReceiver {
                 payLoadEle);
         OMElement taskIDEle =
                 fbOMFactory.createOMElement(HumanTaskConstants.B4P_CORRELATION_HEADER_ATTRIBUTE,
-                fbOMFactory.createOMNamespace(HumanTaskConstants.B4P_NAMESPACE, null),
-                        hiFeedbackEle) ;
+                        fbOMFactory.createOMNamespace(HumanTaskConstants.B4P_NAMESPACE, null),
+                        hiFeedbackEle);
         taskIDEle.setText(taskID);
         return payLoadEle;
     }

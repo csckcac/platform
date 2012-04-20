@@ -18,10 +18,7 @@ package org.wso2.carbon.humantask.core.engine.commands;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.humantask.core.dao.EventDAO;
-import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
-import org.wso2.carbon.humantask.core.dao.OrganizationalEntityDAO;
-import org.wso2.carbon.humantask.core.dao.TaskStatus;
+import org.wso2.carbon.humantask.core.dao.*;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 
 import java.util.ArrayList;
@@ -48,12 +45,13 @@ public class Delegate extends AbstractHumanTaskCommand {
     protected void checkPreConditions() {
 
         checkForValidTask(this.getClass());
-
+        OrganizationalEntityDAO caller = getCaller();
+        TaskDAO task = getTask();
         //if the delegatee is not an existing user
-        if (!engine.getPeopleQueryEvaluator().isExistingUser(delegatee.getName())) {
+        if (!getEngine().getPeopleQueryEvaluator().isExistingUser(delegatee.getName())) {
             String errMsg = String.format("The user[%s] cannot delegate task[id:%d] to the given" +
-                                          " delegatee[name:%s] as he/she does not exist in the user store",
-                                          caller.getName(), task.getId(), delegatee.getName());
+                    " delegatee[name:%s] as he/she does not exist in the user store",
+                    caller.getName(), task.getId(), delegatee.getName());
             log.error(errMsg);
             throw new HumanTaskRuntimeException(errMsg);
         }
@@ -70,10 +68,10 @@ public class Delegate extends AbstractHumanTaskCommand {
                 authoriseRoles(allowedRoles, this.getClass());
             } catch (Exception ex) {
                 String err = String.format("The task[id:%d] can be only delegated after it's released. " +
-                                           "But for the task to be released you need to be a business " +
-                                           "administrator or the actual owner of the task. " +
-                                           "Given user[%s] is not in those roles!",
-                                           task.getId(), caller.getName());
+                        "But for the task to be released you need to be a business " +
+                        "administrator or the actual owner of the task. " +
+                        "Given user[%s] is not in those roles!",
+                        task.getId(), caller.getName());
                 log.error(err);
                 throw new HumanTaskRuntimeException(err, ex);
             }
@@ -85,8 +83,8 @@ public class Delegate extends AbstractHumanTaskCommand {
         GenericHumanRoleDAO potentialOwnersRole = task.getGenericHumanRole(
                 GenericHumanRoleDAO.GenericHumanRoleType.POTENTIAL_OWNERS);
 
-        if (engine.getPeopleQueryEvaluator().isOrgEntityInRole(delegatee,
-                                                               potentialOwnersRole)) {
+        if (getEngine().getPeopleQueryEvaluator().isOrgEntityInRole(delegatee,
+                potentialOwnersRole)) {
             task.persistToPotentialOwners(delegatee);
         }
     }
@@ -134,6 +132,7 @@ public class Delegate extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
+        TaskDAO task = getTask();
         checkPreConditions();
         authorise();
         checkState();

@@ -109,8 +109,9 @@ public class AbstractJPAVendorAdapter implements JPAVendorAdapter {
             if (metaData != null) {
                 String dbProductName = metaData.getDatabaseProductName().toLowerCase();
                 int dbMajorVer = metaData.getDatabaseMajorVersion();
-                if (log.isDebugEnabled())
+                if (log.isDebugEnabled()) {
                     log.debug("Using database " + dbProductName + " major version " + dbMajorVer);
+                }
                 if (dbProductName.contains("db2")) {
                     dbType = DatabaseType.DB2;
                 } else if (dbProductName.contains("oracle")) {

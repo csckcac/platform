@@ -43,11 +43,31 @@ public interface Scheduler {
      */
     public static class JobInfo implements Serializable {
         private static final long serialVersionUID = 1L;
-        public final long jobId;
-        public final long scheduledTime;
-        public final long taskId;
-        public final String name;
-        public final JobType type;
+        private final long jobId;
+        private final long scheduledTime;
+        private final long taskId;
+        private final String name;
+        private final JobType type;
+
+        public long getJobId() {
+            return jobId;
+        }
+
+        public long getScheduledTime() {
+            return scheduledTime;
+        }
+
+        public long getTaskId() {
+            return taskId;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public JobType getType() {
+            return type;
+        }
 
         public JobInfo(long jobId, long scheduledTime, long taskId, String name, String type) {
             this.jobId = jobId;

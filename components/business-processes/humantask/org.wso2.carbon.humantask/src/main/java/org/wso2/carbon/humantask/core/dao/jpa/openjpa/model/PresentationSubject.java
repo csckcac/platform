@@ -20,7 +20,6 @@ import org.wso2.carbon.humantask.core.dao.PresentationSubjectDAO;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import java.io.Serializable;
 
 /**
  * Domain Object for Presentation Subject.
@@ -31,8 +30,9 @@ public final class PresentationSubject extends PresentationElement implements Pr
 
     @Override
     public void setValue(String value) {
-        if(value.length() > 254)
+        if(value.length() > 254) {
             throw new IllegalArgumentException("Presentation subjects length is greater than 254.");
+        }
         super.setValue(value);
     }
 }

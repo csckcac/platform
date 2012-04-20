@@ -52,40 +52,43 @@ public class JaxpFunctionResolver implements XPathFunctionResolver {
             String localPart = functionName.getLocalPart();
             if (localPart.equals(XPath2Constants.FUNCTION_GET_POTENTIAL_OWNERS)) {
                 return new GetPotentialOwners();
-            } else if (localPart.equals(XPath2Constants.FUNCTION_GET_ACTUAL_OWNER)) {
-                throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
-
-            } else if (localPart.equals(XPath2Constants.FUNCTION_GET_BUSINESS_ADMINISTRATORS)) {
-                throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
-
-            } else if (localPart.equals(XPath2Constants.FUNCTION_GET_EXCLUDED_OWNERS)) {
-                throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
-
-            } else if (localPart.equals(XPath2Constants.FUNCTION_GET_INPUT)) {
-                return new GetInput();
-            } else if (localPart.equals(XPath2Constants.FUNCTION_GET_TASK_INITIATOR)) {
-                throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
-
-            } else if (localPart.equals(XPath2Constants.FUNCTION_GET_TASK_PRIORITY)) {
-                throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
-
-            } else if (localPart.equals(XPath2Constants.FUNCTION_GET_TASK_STAKEHOLDERS)) {
-                throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
-
-            } else if (localPart.equals(XPath2Constants.FUNCTION_GET_LOGICAL_PEOPLE_GROUP)) {
-                throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
-
-            } else if (localPart.equals(XPath2Constants.FUNCTION_INTERSECT)) {
-                throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
-
-            } else if (localPart.equals(XPath2Constants.FUNCTION_UNION)) {
-                throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
-
-            } else if (localPart.equals(XPath2Constants.FUNCTION_EXCEPT)) {
-                throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
-
             } else {
-                throw new IllegalArgumentException("Unknown Human Task Function: " + localPart);
+                String errMsg = "This operation is not currently supported in this version of WSO2 BPS.";
+                if (localPart.equals(XPath2Constants.FUNCTION_GET_ACTUAL_OWNER)) {
+                    throw new UnsupportedOperationException(errMsg);
+
+                } else if (localPart.equals(XPath2Constants.FUNCTION_GET_BUSINESS_ADMINISTRATORS)) {
+                    throw new UnsupportedOperationException(errMsg);
+
+                } else if (localPart.equals(XPath2Constants.FUNCTION_GET_EXCLUDED_OWNERS)) {
+                    throw new UnsupportedOperationException(errMsg);
+
+                } else if (localPart.equals(XPath2Constants.FUNCTION_GET_INPUT)) {
+                    return new GetInput();
+                } else if (localPart.equals(XPath2Constants.FUNCTION_GET_TASK_INITIATOR)) {
+                    throw new UnsupportedOperationException(errMsg);
+
+                } else if (localPart.equals(XPath2Constants.FUNCTION_GET_TASK_PRIORITY)) {
+                    throw new UnsupportedOperationException(errMsg);
+
+                } else if (localPart.equals(XPath2Constants.FUNCTION_GET_TASK_STAKEHOLDERS)) {
+                    throw new UnsupportedOperationException(errMsg);
+
+                } else if (localPart.equals(XPath2Constants.FUNCTION_GET_LOGICAL_PEOPLE_GROUP)) {
+                    throw new UnsupportedOperationException(errMsg);
+
+                } else if (localPart.equals(XPath2Constants.FUNCTION_INTERSECT)) {
+                    throw new UnsupportedOperationException(errMsg);
+
+                } else if (localPart.equals(XPath2Constants.FUNCTION_UNION)) {
+                    throw new UnsupportedOperationException(errMsg);
+
+                } else if (localPart.equals(XPath2Constants.FUNCTION_EXCEPT)) {
+                    throw new UnsupportedOperationException(errMsg);
+
+                } else {
+                    throw new IllegalArgumentException("Unknown Human Task Function: " + localPart);
+                }
             }
 
         }
@@ -103,7 +106,7 @@ public class JaxpFunctionResolver implements XPathFunctionResolver {
             Node matchingElement = null;
             if (StringUtils.isNullOrEmpty(partName)) {
                 throw new HumanTaskRuntimeException("The getInput function should be provided with" +
-                                                    " the part name");
+                        " the part name");
             }
 
             if (inputMsg.getBodyData().hasChildNodes()) {
@@ -118,7 +121,7 @@ public class JaxpFunctionResolver implements XPathFunctionResolver {
 
             if (matchingElement == null || matchingElement.getFirstChild() == null) {
                 throw new HumanTaskRuntimeException("Cannot find a matching Element for " +
-                                                    "expression evaluation: getInput");
+                        "expression evaluation: getInput");
             }
 
             return matchingElement.getFirstChild();

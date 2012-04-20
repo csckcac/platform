@@ -1,12 +1,9 @@
 package org.wso2.carbon.humantask.core.dao.jpa.openjpa;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.humantask.core.dao.Constants;
 import org.wso2.carbon.humantask.core.dao.HumanTaskDAOConnection;
 import org.wso2.carbon.humantask.core.dao.HumanTaskDAOConnectionFactoryJDBC;
 import org.wso2.carbon.humantask.core.dao.jpa.JPAVendorAdapter;
-import org.wso2.carbon.humantask.core.dao.jpa.openjpa.HumanTaskDAOConnectionImpl;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -24,9 +21,7 @@ import java.util.Map;
  */
 public class HumanTaskDAOConnectionFactoryImpl implements HumanTaskDAOConnectionFactoryJDBC {
 
-    private static final Log log = LogFactory.getLog(HumanTaskDAOConnectionFactoryImpl.class);
-
-    protected EntityManagerFactory entityManagerFactory;
+    private EntityManagerFactory entityManagerFactory;
 
     private DataSource dataSource;
 
@@ -67,16 +62,17 @@ public class HumanTaskDAOConnectionFactoryImpl implements HumanTaskDAOConnection
             tnxManager.getTransaction().registerSynchronization(new Synchronization() {
                 // OpenJPA allows cross-transaction entity managers, which we don't want
                 public void afterCompletion(int i) {
-                    if (connections.get() != null)
+                    if (connections.get() != null) {
                         connections.get().getEntityManager().close();
+                    }
                     connections.set(null);
                 }
                 public void beforeCompletion() { }
             });
         } catch (RollbackException e) {
-            throw new RuntimeException("Coulnd't register synchronizer!");
+            throw new RuntimeException("Coulnd't register synchronizer!", e);
         } catch (SystemException e) {
-            throw new RuntimeException("Coulnd't register synchronizer!");
+            throw new RuntimeException("Coulnd't register synchronizer!", e);
         }
 
         if (connections.get() != null) {

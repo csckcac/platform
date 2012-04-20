@@ -17,15 +17,10 @@
 package org.wso2.carbon.humantask.core.engine.commands;
 
 import org.apache.axis2.util.XMLUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.wso2.carbon.humantask.core.dao.EventDAO;
-import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
-import org.wso2.carbon.humantask.core.dao.MessageDAO;
-import org.wso2.carbon.humantask.core.dao.TaskStatus;
+import org.wso2.carbon.humantask.core.dao.*;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 import org.wso2.carbon.humantask.core.internal.HumanTaskServiceComponent;
 import org.wso2.carbon.humantask.core.store.TaskConfiguration;
@@ -39,10 +34,7 @@ import java.util.List;
  * Task completion logic.
  */
 public class Complete extends AbstractHumanTaskCommand {
-    private static Log log = LogFactory.getLog(Nominate.class);
-
-    Element taskOutput;
-
+    private Element taskOutput;
 
     public Complete(String callerId, Long taskId, Element output) {
         super(callerId, taskId);
@@ -92,6 +84,7 @@ public class Complete extends AbstractHumanTaskCommand {
      */
     @Override
     public void execute() {
+        TaskDAO task = getTask();
         //   checkPreConditions();
         //   authorise();
         //    checkState();
@@ -116,9 +109,9 @@ public class Complete extends AbstractHumanTaskCommand {
     }
 
     private MessageDAO createMessage() {
-        MessageDAO output = engine.getDaoConnectionFactory().getConnection().createMessage();
+        MessageDAO output = getEngine().getDaoConnectionFactory().getConnection().createMessage();
         output.setMessageType(MessageDAO.MessageType.OUTPUT);
-        output.setTask(this.task);
+        output.setTask(getTask());
         Document doc = DOMUtils.newDocument();
         Element message = doc.createElement("message");
         doc.appendChild(message);

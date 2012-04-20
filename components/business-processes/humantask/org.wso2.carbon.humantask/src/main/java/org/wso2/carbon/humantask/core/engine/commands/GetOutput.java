@@ -29,11 +29,9 @@ import java.util.List;
  * Get output operation.
  */
 public class GetOutput extends AbstractHumanTaskCommand {
-
     private String partName;
 
     private Element outputData;
-
 
     public GetOutput(String callerId, Long taskId, String partName) {
         super(callerId, taskId);
@@ -84,7 +82,7 @@ public class GetOutput extends AbstractHumanTaskCommand {
         checkPreConditions();
         authorise();
         checkState();
-        MessageDAO outputMessage = task.getOutputMessage();
+        MessageDAO outputMessage = getTask().getOutputMessage();
         if (StringUtils.isNotEmpty(partName)) {
             this.outputData = CommonTaskUtil.getMessagePart(outputMessage, partName);
         } else {

@@ -20,7 +20,6 @@ package org.wso2.carbon.humantask.core.integration.utils;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.impl.llom.soap12.SOAP12Factory;
 import org.apache.axis2.context.MessageContext;
-import org.wso2.carbon.bpel.common.WSDLAwareMessage;
 import org.wso2.carbon.unifiedendpoint.core.UnifiedEndpoint;
 
 import javax.wsdl.Binding;
@@ -43,11 +42,11 @@ public class ServiceInvocationContext {
     private MessageContext inMessageContext;
 
     // faultMessageContext
-    private MessageContext faultMessageContext;
+//    private MessageContext faultMessageContext;
 
-    private boolean isRPCStyleOperation;
-
-    private WSDLAwareMessage requestMessage;
+//    private boolean isRPCStyleOperation;
+//
+//    private WSDLAwareMessage requestMessage;
 
     private UnifiedEndpoint uep;
 
@@ -69,13 +68,13 @@ public class ServiceInvocationContext {
         this.wsdlBindingForCurrentMessageFlow = wsdlBindingForCurrentMessageFlow;
     }
 
-    public SOAPFactory getSoapFactoryForCurrentMessageFlow() {
-        return soapFactoryForCurrentMessageFlow;
-    }
-
-    public void setSoapFactoryForCurrentMessageFlow(SOAPFactory soapFactoryForCurrentMessageFlow) {
-        this.soapFactoryForCurrentMessageFlow = soapFactoryForCurrentMessageFlow;
-    }
+//    public SOAPFactory getSoapFactoryForCurrentMessageFlow() {
+//        return soapFactoryForCurrentMessageFlow;
+//    }
+//
+//    public void setSoapFactoryForCurrentMessageFlow(SOAPFactory soapFactoryForCurrentMessageFlow) {
+//        this.soapFactoryForCurrentMessageFlow = soapFactoryForCurrentMessageFlow;
+//    }
 
     public MessageContext getInMessageContext() {
         return inMessageContext;
@@ -85,33 +84,33 @@ public class ServiceInvocationContext {
         this.inMessageContext = inMessageContext;
     }
 
-    public boolean isRPCStyleOperation() {
-        return isRPCStyleOperation;
-    }
-
-    public void setRPCStyleOperation(boolean RPCStyleOperation) {
-        isRPCStyleOperation = RPCStyleOperation;
-    }
-
-    public WSDLAwareMessage getRequestMessage() {
-        return requestMessage;
-    }
-
-    public void setRequestMessage(WSDLAwareMessage requestMessage) {
-        this.requestMessage = requestMessage;
-    }
+//    public boolean isRPCStyleOperation() {
+//        return isRPCStyleOperation;
+//    }
+//
+//    public void setRPCStyleOperation(boolean rpcStyleOperation) {
+//        isRPCStyleOperation = rpcStyleOperation;
+//    }
+//
+//    public WSDLAwareMessage getRequestMessage() {
+//        return requestMessage;
+//    }
+//
+//    public void setRequestMessage(WSDLAwareMessage requestMessage) {
+//        this.requestMessage = requestMessage;
+//    }
 
     public boolean isSoap12() {
         return soapFactoryForCurrentMessageFlow instanceof SOAP12Factory;
     }
 
-    public MessageContext getFaultMessageContext() {
-        return faultMessageContext;
-    }
-
-    public void setFaultMessageContext(MessageContext faultMessageContext) {
-        this.faultMessageContext = faultMessageContext;
-    }
+//    public MessageContext getFaultMessageContext() {
+//        return faultMessageContext;
+//    }
+//
+//    public void setFaultMessageContext(MessageContext faultMessageContext) {
+//        this.faultMessageContext = faultMessageContext;
+//    }
 
     public UnifiedEndpoint getUep() {
         return uep;
@@ -133,9 +132,9 @@ public class ServiceInvocationContext {
         return isTwoWay;
     }
 
-    public void setTwoWay(boolean twoWay) {
-        isTwoWay = twoWay;
-    }
+//    public void setTwoWay(boolean twoWay) {
+//        isTwoWay = twoWay;
+//    }
 
     public QName getService() {
         return service;

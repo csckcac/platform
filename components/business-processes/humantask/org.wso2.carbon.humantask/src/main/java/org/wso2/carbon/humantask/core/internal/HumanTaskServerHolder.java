@@ -23,7 +23,7 @@ import org.wso2.carbon.user.core.service.RealmService;
 /**
  * Data Holder for the HumanTaskServiceComponent
  */
-public class HumanTaskServerHolder {
+public final class HumanTaskServerHolder {
     private static HumanTaskServerHolder instance = new HumanTaskServerHolder();
 
     private RealmService realmService = null;
@@ -38,7 +38,6 @@ public class HumanTaskServerHolder {
 
     private HumanTaskServerHolder() {
     }
-
 
     public static HumanTaskServerHolder getInstance() {
         return instance;

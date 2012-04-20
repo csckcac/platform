@@ -19,9 +19,10 @@
 
 package org.wso2.carbon.humantask.core.utils;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.math.BigInteger;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * This class is used to generate globally unique IDs. The requirements for
@@ -52,9 +53,11 @@ import java.util.Set;
 public final class GUID implements Cloneable, Comparable, java.io.Serializable {
     static final long serialVersionUID = -7977671257884186039L;
 
-    static String PROP_PORT = "org.apache.ode.uid.port";
+    private static Log log = LogFactory.getLog(GUID.class);
 
-    static int port = Integer.getInteger(PROP_PORT, 33666);
+    private static String propertyPort = "org.wso2.carbon.humantask.uid.port";
+
+    private static int port = Integer.getInteger(propertyPort, 33666);
 
     // 32 bits
     private static final byte[] ipadd = {127, 0, 0, 1};
@@ -65,11 +68,11 @@ public final class GUID implements Cloneable, Comparable, java.io.Serializable {
     // 32 bits
     private static short cnt = Short.MIN_VALUE;
 
-    private static GUID _VM_GUID;
-
-    static {
-        _VM_GUID = new GUID();
-    }
+//    private static GUID vmGuid;
+//
+//    static {
+//        vmGuid = new GUID();
+//    }
 
     private final byte[] id;
 
@@ -97,33 +100,33 @@ public final class GUID implements Cloneable, Comparable, java.io.Serializable {
                 (byte) (c & 0xff)};
     }
 
-    /**
-     * Reconstitute a GUID from it's string representation
-     *
-     * @param str DOCUMENTME
-     * @throws MalformedGuidException DOCUMENTME
-     */
-    public GUID(String str) throws MalformedGuidException {
-        if (str == null) {
-            throw new MalformedGuidException("String is null");
-        }
+//    /**
+//     * Reconstitute a GUID from it's string representation
+//     *
+//     * @param str DOCUMENTME
+//     * @throws MalformedGuidException DOCUMENTME
+//     */
+//    public GUID(String str) throws MalformedGuidException {
+//        if (str == null) {
+//            throw new MalformedGuidException("String is null");
+//        }
+//
+//        id = new byte[14];
+//        stringToBytes(str);
+//    }
 
-        id = new byte[14];
-        stringToBytes(str);
-    }
-
-    /**
-     * Get the GUID bytes.
-     *
-     * @return byte[]
-     */
-    public byte[] getGuid() {
-        return id.clone();
-    }
-
-    public static GUID getVMGUID() {
-        return _VM_GUID;
-    }
+//    /**
+//     * Get the GUID bytes.
+//     *
+//     * @return byte[]
+//     */
+//    public byte[] getGuid() {
+//        return id.clone();
+//    }
+//
+//    public static GUID getVMGUID() {
+//        return vmGuid;
+//    }
 
     public int compareTo(Object o) {
         if (o == this) {
@@ -147,10 +150,7 @@ public final class GUID implements Cloneable, Comparable, java.io.Serializable {
     }
 
     public boolean equals(Object o) {
-        if (!(o instanceof GUID)) {
-            return false;
-        }
-        return compareTo(o) == 0;
+        return o instanceof GUID && compareTo(o) == 0;
     }
 
     public int hashCode() {
@@ -163,29 +163,29 @@ public final class GUID implements Cloneable, Comparable, java.io.Serializable {
         return ret;
     }
 
-    public static void main(String[] argv) throws Exception {
-        Set<GUID> set = new HashSet<GUID>();
-
-        for (int i = 0; i < 100000; ++i) {
-            GUID g = new GUID();
-
-            if (set.contains(g)) {
-                System.out.println("CONFLICT>>>");
-            }
-
-            set.add(g);
-
-            GUID ng = new GUID(g.toString());
-
-            if (!ng.toString().equals(g.toString()) || !ng.equals(g)) {
-                System.out.println("INEQUALITY>>>");
-                System.out.println(ng.toString());
-                System.out.println(g.toString());
-            } else {
-                System.out.println(g.toString());
-            }
-        }
-    }
+//    public static void main(String[] argv) throws Exception {
+//        Set<GUID> set = new HashSet<GUID>();
+//
+//        for (int i = 0; i < 100000; ++i) {
+//            GUID g = new GUID();
+//
+//            if (set.contains(g)) {
+//                System.out.println("CONFLICT>>>");
+//            }
+//
+//            set.add(g);
+//
+//            GUID ng = new GUID(g.toString());
+//
+//            if (!ng.toString().equals(g.toString()) || !ng.equals(g)) {
+//                System.out.println("INEQUALITY>>>");
+//                System.out.println(ng.toString());
+//                System.out.println(g.toString());
+//            } else {
+//                System.out.println(g.toString());
+//            }
+//        }
+//    }
 
     /**
      * Convert a GUID to it's string representation. This will return a string
@@ -207,16 +207,15 @@ public final class GUID implements Cloneable, Comparable, java.io.Serializable {
         try {
             pm.lock();
         } catch (InterruptedException ie) {
-            System.err
-                    .println("ERROR: Could not establish unique starttime using\n"
-                            + "       TCP port "
-                            + port
-                            + " for synchronization. \n"
-                            + "       Perhaps this port is used by anotherprocess? \n"
-                            + "       Check the '"
-                            + PROP_PORT
-                            + "' JAVA system property. \n");
-            throw new RuntimeException("GUID.getSystemUniqId() FAILED!!!");
+            log.error("ERROR: Could not establish unique starttime using\n"
+                    + "       TCP port "
+                    + port
+                    + " for synchronization. \n"
+                    + "       Perhaps this port is used by anotherprocess? \n"
+                    + "       Check the '"
+                    + propertyPort
+                    + "' JAVA system property. \n", ie);
+            throw new RuntimeException("GUID.getSystemUniqId() FAILED!!!", ie);
         }
 
         long uid = System.currentTimeMillis();
@@ -233,33 +232,35 @@ public final class GUID implements Cloneable, Comparable, java.io.Serializable {
         return bigInt.toString(34);
     }
 
-    private void stringToBytes(String s) {
-        BigInteger bigInt = new BigInteger(s, 34);
-        byte[] bytes = bigInt.toByteArray();
-        for (int i = 0; i < id.length; ++i)
-            id[i] = bytes[i];
-    }
+//    private void stringToBytes(String s) {
+//        BigInteger bigInt = new BigInteger(s, 34);
+//        byte[] bytes = bigInt.toByteArray();
+//        System.arraycopy(bytes, 0, id, 0, id.length);
+//    }
+//
+//    public static class MalformedGuidException extends Exception {
+//
+//        private static final long serialVersionUID = -8922336058603571809L;
+//
+//        public MalformedGuidException(String guid) {
+//            super("Malformed guid: " + guid);
+//        }
+//    }
 
-    public static class MalformedGuidException extends Exception {
-
-        private static final long serialVersionUID = -8922336058603571809L;
-
-        public MalformedGuidException(String guid) {
-            super("Malformed guid: " + guid);
-        }
-    }
-
-    public static String makeGUID(String digest) {
-        String val = "0";
-        int maxlen = 32;
-        int base = 34;
-        int prime = 31;
-        for (int i = 0; i < digest.length(); i++) {
-            char c = digest.charAt(i);
-            val = new BigInteger(val, base).add(BigInteger.valueOf((long) c)).multiply(BigInteger.valueOf(prime)).toString(base);
-            if (val.length() > maxlen) val = val.substring(0, maxlen);
-        }
-
-        return val;
-    }
+//    public static String makeGUID(String digest) {
+//        String val = "0";
+//        int maxlen = 32;
+//        int base = 34;
+//        int prime = 31;
+//        for (int i = 0; i < digest.length(); i++) {
+//            char c = digest.charAt(i);
+//            val = new BigInteger(val, base).add(BigInteger.valueOf((long) c)).
+//                    multiply(BigInteger.valueOf(prime)).toString(base);
+//            if (val.length() > maxlen) {
+//                val = val.substring(0, maxlen);
+//            }
+//        }
+//
+//        return val;
+//    }
 }

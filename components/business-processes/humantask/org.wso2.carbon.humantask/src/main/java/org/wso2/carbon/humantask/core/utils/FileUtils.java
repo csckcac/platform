@@ -22,7 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
-public class FileUtils {
+public final class FileUtils {
+    private FileUtils() {
+    }
+
     /**
      * Recursively collect all Files in the given directory and all its
      * subdirectories, applying the given FileFilter. The FileFilter is also applied to the given rootDirectory.

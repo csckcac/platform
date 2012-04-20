@@ -203,7 +203,7 @@ public class Task extends OpenJPAEntity implements TaskDAO {
      * Task presentation parameters.
      */
     @OneToMany(targetEntity = PresentationParameter.class, mappedBy = "task",
-               fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+            fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private List<PresentationParameterDAO> presentationParameters =
             new ArrayList<PresentationParameterDAO>();
 
@@ -211,21 +211,21 @@ public class Task extends OpenJPAEntity implements TaskDAO {
      * Task presentation subjects.
      */
     @OneToMany(targetEntity = PresentationSubject.class, mappedBy = "task",
-               fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+            fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     private List<PresentationSubjectDAO> presentationSubjects = new ArrayList<PresentationSubjectDAO>();
 
     /**
      * Task presentation names.
      */
     @OneToMany(targetEntity = PresentationName.class, mappedBy = "task",
-               fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+            fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     private List<PresentationNameDAO> presentationNames = new ArrayList<PresentationNameDAO>();
 
     /**
      *
      */
     @OneToMany(targetEntity = PresentationDescription.class, mappedBy = "task",
-               fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+            fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     private List<PresentationDescriptionDAO> presentationDescriptions =
             new ArrayList<PresentationDescriptionDAO>();
 
@@ -277,11 +277,11 @@ public class Task extends OpenJPAEntity implements TaskDAO {
     /**
      * This method assumes that external modules only set input message at the creation of task
      *
-     * @param input
+     * @param input Input MessageDAO
      */
     @Override
     public void setInputMessage(MessageDAO input) {
-        inputMessage = (Message) input;
+        inputMessage = input;
     }
 
     @Override
@@ -487,28 +487,28 @@ public class Task extends OpenJPAEntity implements TaskDAO {
         return presentationSubjects;
     }
 
-    public void setPresentationSubjects(List<PresentationSubjectDAO> presentationSubjects) {
-        this.presentationSubjects = presentationSubjects;
-    }
+//    public void setPresentationSubjects(List<PresentationSubjectDAO> presentationSubjects) {
+//        this.presentationSubjects = presentationSubjects;
+//    }
 
     @Override
     public List<PresentationNameDAO> getPresentationNames() {
         return presentationNames;
     }
 
-    public void setPresentationNames(List<PresentationNameDAO> presentationNames) {
-        this.presentationNames = presentationNames;
-    }
+//    public void setPresentationNames(List<PresentationNameDAO> presentationNames) {
+//        this.presentationNames = presentationNames;
+//    }
 
     @Override
     public List<PresentationDescriptionDAO> getPresentationDescriptions() {
         return presentationDescriptions;
     }
 
-    public void setPresentationDescriptions(
-            List<PresentationDescriptionDAO> presentationDescriptions) {
-        this.presentationDescriptions = presentationDescriptions;
-    }
+//    public void setPresentationDescriptions(
+//            List<PresentationDescriptionDAO> presentationDescriptions) {
+//        this.presentationDescriptions = presentationDescriptions;
+//    }
 
     @Override
     public List<DeadlineDAO> getDeadlines() {
@@ -749,9 +749,9 @@ public class Task extends OpenJPAEntity implements TaskDAO {
         return inputMessage;
     }
 
-    public void setComments(List<CommentDAO> comments) {
-        this.comments = comments;
-    }
+//    public void setComments(List<CommentDAO> comments) {
+//        this.comments = comments;
+//    }
 
     @Override
     public void setSkipable(Boolean skipable) {
@@ -801,12 +801,12 @@ public class Task extends OpenJPAEntity implements TaskDAO {
     @Override
     public void fail(String faultName, Element faultData) {
         if (faultData != null && StringUtils.isNotEmpty(faultName)) {
-            MessageDAO failureMessage = new Message();
-            failureMessage.setMessageType(MessageDAO.MessageType.FAILURE);
-            failureMessage.setData(faultData);
-            failureMessage.setName(QName.valueOf(faultName));
-            failureMessage.setTask(this);
-            this.setFailureMessage(failureMessage);
+            MessageDAO faultMessage = new Message();
+            faultMessage.setMessageType(MessageDAO.MessageType.FAILURE);
+            faultMessage.setData(faultData);
+            faultMessage.setName(QName.valueOf(faultName));
+            faultMessage.setTask(this);
+            this.setFailureMessage(faultMessage);
         }
         this.setStatus(TaskStatus.FAILED);
         this.getEntityManager().merge(this);
@@ -829,12 +829,12 @@ public class Task extends OpenJPAEntity implements TaskDAO {
     @Override
     public void persistFault(String faultName, Element faultData) {
         if (StringUtils.isNotEmpty(faultName) && faultData != null) {
-            MessageDAO failureMessage = new Message();
-            failureMessage.setMessageType(MessageDAO.MessageType.FAILURE);
-            failureMessage.setData(faultData);
-            failureMessage.setName(QName.valueOf(faultName));
-            failureMessage.setTask(this);
-            this.setFailureMessage(failureMessage);
+            MessageDAO faultMessage = new Message();
+            faultMessage.setMessageType(MessageDAO.MessageType.FAILURE);
+            faultMessage.setData(faultData);
+            faultMessage.setName(QName.valueOf(faultName));
+            faultMessage.setTask(this);
+            this.setFailureMessage(faultMessage);
             this.getEntityManager().merge(this);
         }
     }
@@ -842,12 +842,12 @@ public class Task extends OpenJPAEntity implements TaskDAO {
     @Override
     public void persistOutput(String outputName, Element outputData) {
         if (StringUtils.isNotEmpty(outputName) && outputData != null) {
-            MessageDAO outputMessage = new Message();
-            outputMessage.setMessageType(MessageDAO.MessageType.OUTPUT);
-            outputMessage.setData(outputData);
-            outputMessage.setName(QName.valueOf(outputName));
-            outputMessage.setTask(this);
-            this.setOutputMessage(outputMessage);
+            MessageDAO message = new Message();
+            message.setMessageType(MessageDAO.MessageType.OUTPUT);
+            message.setData(outputData);
+            message.setName(QName.valueOf(outputName));
+            message.setTask(this);
+            this.setOutputMessage(message);
             this.getEntityManager().merge(this);
         }
     }
@@ -896,10 +896,9 @@ public class Task extends OpenJPAEntity implements TaskDAO {
     }
 
 
-
     @PrePersist
     @PreUpdate
     private void persistLastUpdated() {
-            this.setUpdatedOn(new Date());
+        this.setUpdatedOn(new Date());
     }
 }

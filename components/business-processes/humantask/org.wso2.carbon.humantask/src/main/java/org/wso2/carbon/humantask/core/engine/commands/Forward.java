@@ -16,16 +16,13 @@
 
 package org.wso2.carbon.humantask.core.engine.commands;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.humantask.core.dao.EventDAO;
+import org.wso2.carbon.humantask.core.dao.TaskDAO;
 
 /**
  * Forward operation.  : TODO  - complete this.
  */
 public class Forward extends AbstractHumanTaskCommand {
-
-    private static final Log log = LogFactory.getLog(Forward.class);
 
     public Forward(String callerId, Long taskId) {
         super(callerId, taskId);
@@ -65,9 +62,10 @@ public class Forward extends AbstractHumanTaskCommand {
 
     @Override
     protected EventDAO createTaskEvent() {
+        TaskDAO task = getTask();
         EventDAO taskEvent = super.createTaskEvent();
         taskEvent.setDetails("");
-        task.persistEvent(createTaskEvent());
+        task.persistEvent(taskEvent);
         return taskEvent;
     }
 

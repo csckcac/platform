@@ -18,6 +18,7 @@ package org.wso2.carbon.humantask.core.engine.commands;
 
 import org.wso2.carbon.humantask.core.dao.EventDAO;
 import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
+import org.wso2.carbon.humantask.core.dao.TaskDAO;
 import org.wso2.carbon.humantask.core.dao.TaskStatus;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 
@@ -28,7 +29,6 @@ import java.util.List;
  * Skip operation.
  */
 public class Skip extends AbstractHumanTaskCommand {
-
     public Skip(String callerId, Long taskId) {
         super(callerId, taskId);
     }
@@ -38,6 +38,7 @@ public class Skip extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkPreConditions() {
+        TaskDAO task = getTask();
         checkForValidTask(this.getClass());
         if (!task.isSkipable()) {
             throw new HumanTaskRuntimeException(
@@ -89,6 +90,7 @@ public class Skip extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
+        TaskDAO task = getTask();
         checkPreConditions();
         authorise();
         checkState();

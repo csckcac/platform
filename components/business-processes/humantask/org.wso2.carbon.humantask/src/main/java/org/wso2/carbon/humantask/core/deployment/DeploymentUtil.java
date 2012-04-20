@@ -27,7 +27,9 @@ import java.util.List;
 /**
  * The utility class for converting SimpleTaskDefinitionInfo to HumanTaskBaseConfiguration object back and forth.
  */
-public class DeploymentUtil {
+public final class DeploymentUtil {
+    private DeploymentUtil() {
+    }
 
     /**
      * Converts the given list of HumanTaskBaseConfiguration objects to SimpleTaskDefinitionInfo.

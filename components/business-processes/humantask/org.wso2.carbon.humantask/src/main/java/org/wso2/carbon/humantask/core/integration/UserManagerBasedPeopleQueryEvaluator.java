@@ -25,7 +25,6 @@ import java.util.List;
  * of arguments as defined in human interaction file's logical people groups
  */
 public class UserManagerBasedPeopleQueryEvaluator implements PeopleQueryEvaluator {
-
     private static Log log = LogFactory.getLog(UserManagerBasedPeopleQueryEvaluator.class);
 
     RegistryService registryService;
@@ -80,15 +79,16 @@ public class UserManagerBasedPeopleQueryEvaluator implements PeopleQueryEvaluato
 
     @Override
     public List<String> getRoleNameListForUser(String userName) {
+        String tUserName  = userName;
         List<String> matchingRoleNames = new ArrayList<String>();
-        if (StringUtils.isNotEmpty(userName)) {
-            userName = userName.trim();
-            if (isExistingUser(userName)) {
+        if (StringUtils.isNotEmpty(tUserName)) {
+            tUserName = tUserName.trim();
+            if (isExistingUser(tUserName)) {
                 try {
                     matchingRoleNames.addAll(
                             Arrays.asList(
                                     getUserRealm().getUserStoreManager().
-                                            getRoleListOfUser(userName)));
+                                            getRoleListOfUser(tUserName)));
                 } catch (UserStoreException ex) {
                     throw new HumanTaskRuntimeException("Error occurred while calling" +
                                                         " to realm service for operation isExistingRole", ex);
@@ -100,11 +100,11 @@ public class UserManagerBasedPeopleQueryEvaluator implements PeopleQueryEvaluato
 
     @Override
     public OrganizationalEntityDAO createGroupOrgEntityForRole(String roleName) {
-        roleName = roleName.trim();
-        if (isExistingRole(roleName)) {
-            return getConnection().createNewOrgEntityObject(roleName, OrganizationalEntityDAO.OrganizationalEntityType.GROUP);
+        String tRoleName = roleName.trim();
+        if (isExistingRole(tRoleName)) {
+            return getConnection().createNewOrgEntityObject(tRoleName, OrganizationalEntityDAO.OrganizationalEntityType.GROUP);
         } else {
-            throw new HumanTaskRuntimeException(String.format("The role name[%s] does not exist.", roleName));
+            throw new HumanTaskRuntimeException(String.format("The role name[%s] does not exist.", tRoleName));
         }
     }
 

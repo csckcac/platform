@@ -31,7 +31,9 @@ import java.util.List;
 /**
  * Common functionality used in operation authentications
  */
-public class OperationAuthorizationUtil {
+public final class OperationAuthorizationUtil {
+    private OperationAuthorizationUtil() {
+    }
 
     /**
      * @param task             : The task against which the user being validated.
@@ -64,7 +66,7 @@ public class OperationAuthorizationUtil {
                 List<OrganizationalEntityDAO> orgEntities = getUserOrganizationalEntities(role);
                 Collections.sort(orgEntities, PeopleQueryComparators.peopleNameComparator());
                 if (Collections.binarySearch(orgEntities, validatee,
-                                             PeopleQueryComparators.peopleNameComparator()) >= 0) {
+                        PeopleQueryComparators.peopleNameComparator()) >= 0) {
                     return true;
                 }
             }
@@ -155,8 +157,8 @@ public class OperationAuthorizationUtil {
                                               PeopleQueryEvaluator pqe) {
 
         if (!TaskStatus.IN_PROGRESS.equals(task.getStatus()) &&
-            !TaskStatus.READY.equals(task.getStatus()) &&
-            !TaskStatus.RESERVED.equals(task.getStatus())) {
+                !TaskStatus.READY.equals(task.getStatus()) &&
+                !TaskStatus.RESERVED.equals(task.getStatus())) {
             return false;
         }
 
@@ -232,9 +234,9 @@ public class OperationAuthorizationUtil {
         }
 
         if (!TaskStatus.CREATED.equals(task.getStatus())
-            || !TaskStatus.READY.equals(task.getStatus())
-            || !TaskStatus.RESERVED.equals(task.getStatus())
-            || !TaskStatus.IN_PROGRESS.equals(task.getStatus())) {
+                || !TaskStatus.READY.equals(task.getStatus())
+                || !TaskStatus.RESERVED.equals(task.getStatus())
+                || !TaskStatus.IN_PROGRESS.equals(task.getStatus())) {
             return false;
         }
 
@@ -316,8 +318,8 @@ public class OperationAuthorizationUtil {
         }
 
         if (!TaskStatus.IN_PROGRESS.equals(task.getStatusBeforeSuspension()) &&
-            !TaskStatus.READY.equals(task.getStatusBeforeSuspension()) &&
-            !TaskStatus.RESERVED.equals(task.getStatusBeforeSuspension())) {
+                !TaskStatus.READY.equals(task.getStatusBeforeSuspension()) &&
+                !TaskStatus.RESERVED.equals(task.getStatusBeforeSuspension())) {
             return false;
         }
 
@@ -342,7 +344,7 @@ public class OperationAuthorizationUtil {
                                               PeopleQueryEvaluator pqe) {
         List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles = new ArrayList<GenericHumanRoleDAO.GenericHumanRoleType>();
         if (TaskStatus.IN_PROGRESS.equals(task.getStatus()) ||
-            TaskStatus.RESERVED.equals(task.getStatus())) {
+                TaskStatus.RESERVED.equals(task.getStatus())) {
             allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
             return authoriseUser(task, caller, allowedRoles, pqe);
         } else {
@@ -474,8 +476,8 @@ public class OperationAuthorizationUtil {
     public static boolean authorisedToExit(TaskDAO task, OrganizationalEntityDAO caller,
                                            PeopleQueryEvaluator pqe) {
         if (TaskStatus.EXITED.equals(task.getStatus()) || TaskStatus.ERROR.equals(task.getStatus())
-            || TaskStatus.FAILED.equals(task.getStatus()) || TaskStatus.OBSOLETE.equals(task.getStatus()) ||
-            TaskStatus.COMPLETED.equals(task.getStatus())) {
+                || TaskStatus.FAILED.equals(task.getStatus()) || TaskStatus.OBSOLETE.equals(task.getStatus()) ||
+                TaskStatus.COMPLETED.equals(task.getStatus())) {
             return false;
         }
         List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles = new ArrayList<GenericHumanRoleDAO.GenericHumanRoleType>();
@@ -551,7 +553,7 @@ public class OperationAuthorizationUtil {
                                                PeopleQueryEvaluator pqe) {
 
         if (!TaskStatus.READY.equals(task.getStatus()) || !TaskStatus.IN_PROGRESS.equals(task.getStatus()) ||
-            !TaskStatus.RESERVED.equals(task.getStatus())) {
+                !TaskStatus.RESERVED.equals(task.getStatus())) {
             return false;
         }
         List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles = new ArrayList<GenericHumanRoleDAO.GenericHumanRoleType>();

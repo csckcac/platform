@@ -19,6 +19,7 @@ package org.wso2.carbon.humantask.core.engine.commands;
 import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Element;
 import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
+import org.wso2.carbon.humantask.core.dao.TaskDAO;
 import org.wso2.carbon.humantask.core.engine.util.CommonTaskUtil;
 
 import java.util.ArrayList;
@@ -81,6 +82,7 @@ public class GetInput extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
+        TaskDAO task = getTask();
         checkPreConditions();
         authorise();
         checkState();

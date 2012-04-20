@@ -19,7 +19,6 @@ package org.wso2.carbon.humantask.core.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.datasource.DataSourceInformationRepositoryService;
 import org.wso2.carbon.humantask.core.Axis2ConfigurationContextObserverImpl;
@@ -47,24 +46,15 @@ import org.wso2.carbon.utils.Axis2ConfigurationContextObserver;
  */
 
 public class HumanTaskServiceComponent {
-
-
     /**
      * Class Logger
      */
     private static final Log log = LogFactory.getLog(HumanTaskServiceComponent.class);
 
-
-    /**
-     * The service registration.
-     */
-    private ServiceRegistration registration;
-
     /**
      * The bundle context.
      */
     private BundleContext bundleContext;
-
 
     /**
      * Bundle activation method.
@@ -176,15 +166,15 @@ public class HumanTaskServiceComponent {
         return HumanTaskServerHolder.getInstance().getHtServer();
     }
 
-    /**
-     * @return : The HumanTaskUIResourceProvider.
-     */
-    public static HumanTaskUIResourceProvider getHumanTaskUIResourceProvider() {
-        return HumanTaskServerHolder.getInstance().getHumanTaskUIResourceProvider();
-    }
+//    /**
+//     * @return : The HumanTaskUIResourceProvider.
+//     */
+//    public static HumanTaskUIResourceProvider getHumanTaskUIResourceProvider() {
+//        return HumanTaskServerHolder.getInstance().getHumanTaskUIResourceProvider();
+//    }
 
     private void registerHumanTaskServerService() {
-        registration = this.bundleContext.registerService(HumanTaskEngineService.class.getName(),
+        this.bundleContext.registerService(HumanTaskEngineService.class.getName(),
                                                           new HumanTaskEngineServiceImpl(), null);
     }
 }

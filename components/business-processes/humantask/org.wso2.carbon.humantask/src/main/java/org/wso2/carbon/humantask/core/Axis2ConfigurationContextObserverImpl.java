@@ -19,7 +19,6 @@ package org.wso2.carbon.humantask.core;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.humantask.core.internal.HumanTaskServiceComponent;
 import org.wso2.carbon.utils.AbstractAxis2ConfigurationContextObserver;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
@@ -27,10 +26,7 @@ public class Axis2ConfigurationContextObserverImpl extends
         AbstractAxis2ConfigurationContextObserver {
     private static Log log = LogFactory.getLog(Axis2ConfigurationContextObserverImpl.class);
 
-    private HumanTaskServer htServer;
-
     public Axis2ConfigurationContextObserverImpl() {
-        htServer = HumanTaskServiceComponent.getHumanTaskServer();
     }
 
     public void createdConfigurationContext(ConfigurationContext configurationContext) {

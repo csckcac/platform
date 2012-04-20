@@ -29,14 +29,14 @@ import javax.transaction.TransactionManager;
  */
 public class TransactionManagerProvider implements ManagedRuntime {
 
-    private TransactionManager _txMgr;
+    private TransactionManager txMgr;
 
     public TransactionManagerProvider(TransactionManager txMgr) {
-        _txMgr = txMgr;
+        this.txMgr = txMgr;
     }
 
     public TransactionManager getTransactionManager() throws Exception {
-        return _txMgr;
+        return txMgr;
     }
 
     public void setRollbackOnly(Throwable cause) throws Exception {
@@ -50,19 +50,18 @@ public class TransactionManagerProvider implements ManagedRuntime {
     }
 
     public Object getTransactionKey() throws Exception, SystemException {
-        return _txMgr.getTransaction();
+        return txMgr.getTransaction();
     }
 
     public void doNonTransactionalWork(java.lang.Runnable runnable) throws NotSupportedException {
-        TransactionManager tm = null;
-        Transaction transaction = null;
+        TransactionManager tm;
+        Transaction transaction;
 
         try {
             tm = getTransactionManager();
             transaction = tm.suspend();
         } catch (Exception e) {
-            NotSupportedException nse =
-                new NotSupportedException(e.getMessage());
+            NotSupportedException nse = new NotSupportedException(e.getMessage());
             nse.initCause(e);
             throw nse;
         }
@@ -74,12 +73,10 @@ public class TransactionManagerProvider implements ManagedRuntime {
         } catch (Exception e) {
             try {
                 transaction.setRollbackOnly();
-            }
-            catch(SystemException se2) {
+            } catch (SystemException se2) {
                 throw new GeneralException(se2);
             }
-            NotSupportedException nse =
-                new NotSupportedException(e.getMessage());
+            NotSupportedException nse = new NotSupportedException(e.getMessage());
             nse.initCause(e);
             throw nse;
         }

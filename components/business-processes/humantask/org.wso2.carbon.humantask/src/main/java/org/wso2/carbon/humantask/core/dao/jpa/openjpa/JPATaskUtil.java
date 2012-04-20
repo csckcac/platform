@@ -16,29 +16,9 @@
 
 package org.wso2.carbon.humantask.core.dao.jpa.openjpa;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.humantask.TDescription;
-import org.wso2.carbon.humantask.TGenericHumanRoleAssignment;
-import org.wso2.carbon.humantask.TNotification;
-import org.wso2.carbon.humantask.TPotentialOwnerAssignment;
-import org.wso2.carbon.humantask.TPresentationElements;
-import org.wso2.carbon.humantask.TPresentationParameter;
-import org.wso2.carbon.humantask.TPresentationParameters;
-import org.wso2.carbon.humantask.TTask;
-import org.wso2.carbon.humantask.TText;
-import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
-import org.wso2.carbon.humantask.core.dao.OrganizationalEntityDAO;
-import org.wso2.carbon.humantask.core.dao.PresentationDescriptionDAO;
-import org.wso2.carbon.humantask.core.dao.PresentationNameDAO;
-import org.wso2.carbon.humantask.core.dao.PresentationParameterDAO;
-import org.wso2.carbon.humantask.core.dao.TaskCreationContext;
-import org.wso2.carbon.humantask.core.dao.TaskDAO;
-import org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.GenericHumanRole;
-import org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.PresentationDescription;
-import org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.PresentationName;
-import org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.PresentationParameter;
-import org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.PresentationSubject;
+import org.wso2.carbon.humantask.*;
+import org.wso2.carbon.humantask.core.dao.*;
+import org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.*;
 import org.wso2.carbon.humantask.core.engine.HumanTaskException;
 import org.wso2.carbon.humantask.core.engine.PeopleQueryEvaluator;
 import org.wso2.carbon.humantask.core.engine.runtime.xpath.XPathEvaluatorUtil;
@@ -57,9 +37,9 @@ import java.util.List;
  *
  * @see CommonTaskUtil : The common utility method class.
  */
-public class JPATaskUtil {
-
-    private static final Log log = LogFactory.getLog(JPATaskUtil.class);
+public final class JPATaskUtil {
+    private JPATaskUtil() {
+    }
 
     public static void processGenericHumanRoles(TaskDAO task,
                                                 HumanTaskBaseConfiguration taskConfiguration,

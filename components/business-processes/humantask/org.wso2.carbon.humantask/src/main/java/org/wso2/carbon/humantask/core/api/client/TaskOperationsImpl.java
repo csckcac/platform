@@ -127,7 +127,6 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
             });
 
             int pageNumber = tSimpleQueryInput.getPageNumber();
-            int pageSize = tSimpleQueryInput.getPageSize();
 
             if (pageNumber < 0 || pageNumber == Integer.MAX_VALUE) {
                 pageNumber = 0;
@@ -158,7 +157,13 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
     public TBatchResponse[] batchStop(URI[] uris) {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return new TBatchResponse[0];
+    }
+
+	private void handleUnsupportedOperation() {
+        throw new UnsupportedOperationException("This operation is not currently supported in " +
+                "this version of WSO2 BPS.");
     }
 
     @Override
@@ -167,7 +172,8 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return new TTaskAbstract[0];
     }
 
     @Override
@@ -196,7 +202,8 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
     public TBatchResponse[] batchComplete(URI[] uris, OMElement o) {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return new TBatchResponse[0];
     }
 
     @Override
@@ -216,22 +223,20 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             return null;
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (IllegalOperationFault iof) {
-            log.error(iof);
-            throw iof;
-        } catch (IllegalStateFault isf) {
-            log.error(isf);
-            throw isf;
-        } catch (IllegalAccessFault iaf) {
-            log.error(iaf);
-            throw iaf;
         } catch (Exception ex) {
             String errMsg = "resume operation failed";
             log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalOperationFault) {
+                throw (IllegalOperationFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
+            } else if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
         }
     }
 
@@ -239,7 +244,8 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
     public QName[] getRenderingTypes(URI uri) throws IllegalArgumentFault {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return new QName[0];
     }
 
     @Override
@@ -249,7 +255,7 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
         validateTaskId(uri);
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
     }
 
     @Override
@@ -276,19 +282,20 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
             } else {
                 throw new IllegalArgumentFault("The output data cannot be empty!");
             }
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (IllegalOperationFault iof) {
-            log.error(iof);
-            throw iof;
-        } catch (IllegalStateFault isf) {
-            log.error(isf);
-            throw isf;
         } catch (Exception ex) {
             String errMsg = "setOutput operation failed";
             log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalOperationFault) {
+                throw (IllegalOperationFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
+            } else if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
         }
     }
 
@@ -298,14 +305,16 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
         validateTaskId(uri);
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return null;
     }
 
     @Override
     public TBatchResponse[] batchRelease(URI[] uris) {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return new TBatchResponse[0];
     }
 
     @Override
@@ -313,17 +322,18 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
         validateTaskId(uri);
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return null;
     }
 
     @Override
     public void forward(URI uri, TOrganizationalEntity tOrganizationalEntity)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
-        validateTaskId(uri);
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        validateTaskId(uri);
+        handleUnsupportedOperation();
     }
 
     @Override
@@ -354,22 +364,20 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             return null;
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (IllegalOperationFault iof) {
-            log.error(iof);
-            throw iof;
-        } catch (IllegalStateFault isf) {
-            log.error(isf);
-            throw isf;
-        } catch (IllegalAccessFault iaf) {
-            log.error(iaf);
-            throw iaf;
         } catch (Exception ex) {
             String errMsg = "suspend operation failed";
             log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalOperationFault) {
+                throw (IllegalOperationFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
+            } else if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
         }
     }
 
@@ -390,22 +398,20 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             return null;
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (IllegalOperationFault iof) {
-            log.error(iof);
-            throw iof;
-        } catch (IllegalStateFault isf) {
-            log.error(isf);
-            throw isf;
-        } catch (IllegalAccessFault iaf) {
-            log.error(iaf);
-            throw iaf;
         } catch (Exception ex) {
             String errMsg = "updateComment operation failed";
             log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalOperationFault) {
+                throw (IllegalOperationFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
+            } else if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
         }
     }
 
@@ -424,13 +430,14 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                         }
                     });
             return TransformerUtils.transformTask(task, getCaller());
-        } catch (IllegalAccessFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (Exception ex) {
+        }  catch (Exception ex) {
             String errMsg = "loadTask operation failed";
             log.error(errMsg, ex);
-            throw new IllegalAccessFault(errMsg, ex);
+            if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalAccessFault(errMsg, ex);
+            }
         }
     }
 
@@ -440,14 +447,16 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return new TTaskDetails[0];
     }
 
     @Override
     public TBatchResponse[] batchNominate(URI[] uris) {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return new TBatchResponse[0];
     }
 
     @Override
@@ -456,7 +465,8 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
             IllegalAccessFault {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return new URI[0];
     }
 
     @Override
@@ -464,7 +474,8 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
         validateTaskId(uri);
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return null;
     }
 
     @Override
@@ -472,7 +483,8 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
         validateTaskId(uri);
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return null;
     }
 
     @Override
@@ -490,22 +502,20 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             return null;
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (IllegalOperationFault iof) {
-            log.error(iof);
-            throw iof;
-        } catch (IllegalStateFault isf) {
-            log.error(isf);
-            throw isf;
-        } catch (IllegalAccessFault iaf) {
-            log.error(iaf);
-            throw iaf;
         } catch (Exception ex) {
             String errMsg = "skip operation failed";
             log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalOperationFault) {
+                throw (IllegalOperationFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
+            } else if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
         }
     }
 
@@ -513,7 +523,8 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
     public TBatchResponse[] batchFail(URI[] uris, TFault tFault) {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return new TBatchResponse[0];
     }
 
     @Override
@@ -522,7 +533,7 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
             IllegalAccessFault {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
     }
 
     @Override
@@ -541,22 +552,20 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             return null;
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (IllegalOperationFault iof) {
-            log.error(iof);
-            throw iof;
-        } catch (IllegalStateFault isf) {
-            log.error(isf);
-            throw isf;
-        } catch (IllegalAccessFault iaf) {
-            log.error(iaf);
-            throw iaf;
         } catch (Exception ex) {
             String errMsg = "start operation failed";
             log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalOperationFault) {
+                throw (IllegalOperationFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
+            } else if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
         }
     }
 
@@ -583,22 +592,20 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             return null;
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (IllegalOperationFault iof) {
-            log.error(iof);
-            throw iof;
-        } catch (IllegalStateFault isf) {
-            log.error(isf);
-            throw isf;
-        } catch (IllegalAccessFault iaf) {
-            log.error(iaf);
-            throw iaf;
         } catch (Exception ex) {
             String errMsg = "fail operation failed";
             log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalOperationFault) {
+                throw (IllegalOperationFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
+            } else if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
         }
     }
 
@@ -619,22 +626,20 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             return null;
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (IllegalOperationFault iof) {
-            log.error(iof);
-            throw iof;
-        } catch (IllegalStateFault isf) {
-            log.error(isf);
-            throw isf;
-        } catch (IllegalAccessFault iaf) {
-            log.error(iaf);
-            throw iaf;
         } catch (Exception ex) {
             String errMsg = "activate operation failed";
             log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalOperationFault) {
+                throw (IllegalOperationFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
+            } else if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
         }
     }
 
@@ -661,22 +666,20 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             }
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (IllegalOperationFault iof) {
-            log.error(iof);
-            throw iof;
-        } catch (IllegalStateFault isf) {
-            log.error(isf);
-            throw isf;
-        } catch (IllegalAccessFault iaf) {
-            log.error(iaf);
-            throw iaf;
         } catch (Exception ex) {
             String errMsg = "addComment operation failed";
             log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalOperationFault) {
+                throw (IllegalOperationFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
+            } else if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
         }
     }
 
@@ -698,22 +701,20 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             return null;
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (IllegalOperationFault iof) {
-            log.error(iof);
-            throw iof;
-        } catch (IllegalStateFault isf) {
-            log.error(isf);
-            throw isf;
-        } catch (IllegalAccessFault iaf) {
-            log.error(iaf);
-            throw iaf;
         } catch (Exception ex) {
             String errMsg = "deleteComment operation failed";
             log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalOperationFault) {
+                throw (IllegalOperationFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
+            } else if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
         }
     }
 
@@ -743,22 +744,20 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             return null;
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (IllegalOperationFault iof) {
-            log.error(iof);
-            throw iof;
-        } catch (IllegalStateFault isf) {
-            log.error(isf);
-            throw isf;
-        } catch (IllegalAccessFault iaf) {
-            log.error(iaf);
-            throw iaf;
         } catch (Exception ex) {
             String errMsg = "delegate operation failed";
             log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalOperationFault) {
+                throw (IllegalOperationFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
+            } else if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
         }
     }
 
@@ -780,22 +779,20 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             return comments.toArray(new TComment[comments.size()]);
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (IllegalOperationFault iof) {
-            log.error(iof);
-            throw iof;
-        } catch (IllegalStateFault isf) {
-            log.error(isf);
-            throw isf;
-        } catch (IllegalAccessFault iaf) {
-            log.error(iaf);
-            throw iaf;
         } catch (Exception ex) {
             String errMsg = "getComments operation failed";
             log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalOperationFault) {
+                throw (IllegalOperationFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
+            } else if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
         }
     }
 
@@ -805,7 +802,8 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
             throws IllegalOperationFault, IllegalArgumentFault, IllegalAccessFault {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return null;
     }
 
     @Override
@@ -814,7 +812,8 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
             IllegalAccessFault {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return null;
     }
 
     @Override
@@ -823,21 +822,24 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
             IllegalAccessFault {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return null;
     }
 
     @Override
     public TBatchResponse[] batchResume(URI[] uris) {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return new TBatchResponse[0];
     }
 
     @Override
     public TBatchResponse[] batchRemove(URI[] uris) {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return new TBatchResponse[0];
     }
 
     @Override
@@ -846,7 +848,8 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
             IllegalAccessFault {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return new TAttachment[0];
     }
 
     @Override
@@ -855,7 +858,8 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
             IllegalAccessFault {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return new TAttachmentInfo[0];
     }
 
     @Override
@@ -873,19 +877,18 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             return null;
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (IllegalOperationFault iof) {
-            log.error(iof);
-            throw iof;
-        } catch (IllegalAccessFault iaf) {
-            log.error(iaf);
-            throw iaf;
         } catch (Exception ex) {
             String errMsg = "remove operation failed";
             log.error(errMsg, ex);
-            throw new IllegalAccessFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalOperationFault) {
+                throw (IllegalOperationFault) ex;
+            } else if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalAccessFault(errMsg, ex);
+            }
         }
     }
 
@@ -893,7 +896,8 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
     public TBatchResponse[] batchStart(URI[] uris) {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return new TBatchResponse[0];
     }
 
     @Override
@@ -902,7 +906,8 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
             IllegalAccessFault {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return null;
     }
 
     @Override
@@ -923,16 +928,16 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             return TransformerUtils.transformTaskAuthorization(task, getCaller());
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (IllegalStateFault isf) {
-            log.error(isf);
-            throw isf;
         } catch (Exception ex) {
             String errMsg = "loadAuthorisationParams operation failed";
             log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
         }
     }
 
@@ -942,7 +947,8 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
             throws IllegalOperationFault, IllegalArgumentFault, IllegalAccessFault {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return new TTaskEventType[0];
     }
 
     @Override
@@ -951,7 +957,7 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
             IllegalAccessFault {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
     }
 
     @Override
@@ -971,13 +977,16 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             return TransformerUtils.transformTaskEvents(task, getCaller());
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
         } catch (Exception ex) {
             String errMsg = "loadAuthorisationParams operation failed";
             log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
         }
     }
 
@@ -985,7 +994,8 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
     public TBatchResponse[] batchDelegate(URI[] uris, TOrganizationalEntity tOrganizationalEntity) {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return new TBatchResponse[0];
     }
 
     @Override
@@ -993,7 +1003,8 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                                                      TOrganizationalEntity tOrganizationalEntity) {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return new TBatchResponse[0];
     }
 
     @Override
@@ -1003,7 +1014,7 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
         validateTaskId(uri);
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
     }
 
     @Override
@@ -1029,22 +1040,20 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             return DOMUtils.domToString(input);
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (IllegalOperationFault iof) {
-            log.error(iof);
-            throw iof;
-        } catch (IllegalStateFault isf) {
-            log.error(isf);
-            throw isf;
-        } catch (IllegalAccessFault iaf) {
-            log.error(iaf);
-            throw iaf;
         } catch (Exception ex) {
             String errMsg = "getInput operation failed";
             log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalOperationFault) {
+                throw (IllegalOperationFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
+            } else if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
         }
     }
 
@@ -1052,7 +1061,8 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
     public TBatchResponse[] batchSkip(URI[] uris) {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return new TBatchResponse[0];
     }
 
     @Override
@@ -1072,22 +1082,20 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             return null;
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (IllegalOperationFault iof) {
-            log.error(iof);
-            throw iof;
-        } catch (IllegalStateFault isf) {
-            log.error(isf);
-            throw isf;
-        } catch (IllegalAccessFault iaf) {
-            log.error(iaf);
-            throw iaf;
         } catch (Exception ex) {
             String errMsg = "complete operation failed";
             log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalOperationFault) {
+                throw (IllegalOperationFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
+            } else if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
         }
     }
 
@@ -1105,7 +1113,8 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
     public TBatchResponse[] batchActivate(URI[] uris) {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return new TBatchResponse[0];
     }
 
     @Override
@@ -1124,22 +1133,20 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             return null;
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (IllegalOperationFault iof) {
-            log.error(iof);
-            throw iof;
-        } catch (IllegalStateFault isf) {
-            log.error(isf);
-            throw isf;
-        } catch (IllegalAccessFault iaf) {
-            log.error(iaf);
-            throw iaf;
         } catch (Exception ex) {
             String errMsg = "claim operation failed";
             log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalOperationFault) {
+                throw (IllegalOperationFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
+            } else if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
         }
     }
 
@@ -1148,21 +1155,24 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
             throws IllegalStateFault, IllegalArgumentFault {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return null;
     }
 
     @Override
     public TBatchResponse[] batchClaim(URI[] uris) {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return new TBatchResponse[0];
     }
 
     @Override
     public TBatchResponse[] batchSetPriority(URI[] uris, TPriority tPriority) {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return new TBatchResponse[0];
     }
 
     @Override
@@ -1187,22 +1197,20 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             return null;
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (IllegalOperationFault iof) {
-            log.error(iof);
-            throw iof;
-        } catch (IllegalStateFault isf) {
-            log.error(isf);
-            throw isf;
-        } catch (IllegalAccessFault iaf) {
-            log.error(iaf);
-            throw iaf;
         } catch (Exception ex) {
             String errMsg = "setFault operation failed";
             log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalOperationFault) {
+                throw (IllegalOperationFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
+            } else if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
         }
     }
 
@@ -1213,7 +1221,7 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
         validateTaskId(uri);
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
     }
 
     @Override
@@ -1223,7 +1231,7 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
         validateTaskId(uri);
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
     }
 
     @Override
@@ -1248,13 +1256,14 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             return taskDescriptionCommand.getTaskDescription();
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
         } catch (Exception ex) {
             String errMsg = "getTaskDescription operation failed";
             log.error(errMsg, ex);
-            throw new IllegalArgumentFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else {
+                throw new IllegalArgumentFault(errMsg, ex);
+            }
         }
     }
 
@@ -1265,7 +1274,7 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
         validateTaskId(uri);
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
     }
 
     @Override
@@ -1286,22 +1295,20 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             return null;
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (IllegalOperationFault iof) {
-            log.error(iof);
-            throw iof;
-        } catch (IllegalStateFault isf) {
-            log.error(isf);
-            throw isf;
-        } catch (IllegalAccessFault iaf) {
-            log.error(iaf);
-            throw iaf;
         } catch (Exception ex) {
             String errMsg = "nominate operation failed";
             log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalOperationFault) {
+                throw (IllegalOperationFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
+            } else if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
         }
     }
 
@@ -1321,36 +1328,37 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             return null;
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (IllegalOperationFault iof) {
-            log.error(iof);
-            throw iof;
-        } catch (IllegalStateFault isf) {
-            log.error(isf);
-            throw isf;
-        } catch (IllegalAccessFault iaf) {
-            log.error(iaf);
-            throw iaf;
         } catch (Exception ex) {
             String errMsg = "deleteOutput operation failed";
             log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalOperationFault) {
+                throw (IllegalOperationFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
+            } else if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
         }
     }
 
     @Override
     public TBatchResponse[] batchForward(URI[] uris, TOrganizationalEntity tOrganizationalEntity) {
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
+        handleUnsupportedOperation();
+        return new TBatchResponse[0];
     }
 
     @Override
     public TBatchResponse[] batchSuspend(URI[] uris) {
-
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return new TBatchResponse[0];
     }
 
     @Override
@@ -1360,7 +1368,8 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
         validateTaskId(uri);
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return new TTaskDetails[0];
     }
 
     @Override
@@ -1379,22 +1388,20 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             return null;
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (IllegalOperationFault iof) {
-            log.error(iof);
-            throw iof;
-        } catch (IllegalStateFault isf) {
-            log.error(isf);
-            throw isf;
-        } catch (IllegalAccessFault iaf) {
-            log.error(iaf);
-            throw iaf;
         } catch (Exception ex) {
             String errMsg = "deleteFault operation failed";
             log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalOperationFault) {
+                throw (IllegalOperationFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
+            } else if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
         }
     }
 
@@ -1426,22 +1433,20 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             }
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (IllegalOperationFault iof) {
-            log.error(iof);
-            throw iof;
-        } catch (IllegalStateFault isf) {
-            log.error(isf);
-            throw isf;
-        } catch (IllegalAccessFault iaf) {
-            log.error(iaf);
-            throw iaf;
         } catch (Exception ex) {
             String errMsg = "getOutput operation failed";
             log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalOperationFault) {
+                throw (IllegalOperationFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
+            } else if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
         }
     }
 
@@ -1462,22 +1467,20 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             return null;
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (IllegalOperationFault iof) {
-            log.error(iof);
-            throw iof;
-        } catch (IllegalStateFault isf) {
-            log.error(isf);
-            throw isf;
-        } catch (IllegalAccessFault iaf) {
-            log.error(iaf);
-            throw iaf;
         } catch (Exception ex) {
             String errMsg = "release operation failed";
             log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalOperationFault) {
+                throw (IllegalOperationFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
+            } else if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
         }
     }
 
@@ -1503,22 +1506,20 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             return fault;
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (IllegalOperationFault iof) {
-            log.error(iof);
-            throw iof;
-        } catch (IllegalStateFault isf) {
-            log.error(isf);
-            throw isf;
-        } catch (IllegalAccessFault iaf) {
-            log.error(iaf);
-            throw iaf;
         } catch (Exception ex) {
             String errMsg = "getFault operation failed";
             log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalOperationFault) {
+                throw (IllegalOperationFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
+            } else if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
         }
     }
 
@@ -1540,22 +1541,20 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                             return null;
                         }
                     });
-        } catch (IllegalArgumentFault iaf) {
-            log.error(iaf);
-            throw iaf;
-        } catch (IllegalOperationFault iof) {
-            log.error(iof);
-            throw iof;
-        } catch (IllegalStateFault isf) {
-            log.error(isf);
-            throw isf;
-        } catch (IllegalAccessFault iaf) {
-            log.error(iaf);
-            throw iaf;
         } catch (Exception ex) {
             String errMsg = "setPriority operation failed";
             log.error(errMsg, ex);
-            throw new IllegalStateFault(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalOperationFault) {
+                throw (IllegalOperationFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
+            } else if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
         }
     }
 
@@ -1563,7 +1562,8 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
     public TBatchResponse[] batchSuspendUntil(URI[] uris, TTime tTime) {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return new TBatchResponse[0];
     }
 
     @Override
@@ -1572,7 +1572,8 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
             IllegalAccessFault {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        throw new UnsupportedOperationException("This operation is not currently supported in this version of WSO2 BPS.");
+        handleUnsupportedOperation();
+        return null;
 
     }
 
@@ -1585,7 +1586,7 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
         try {
             return Long.valueOf(taskId.toString());
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("The task id must be a number");
+            throw new IllegalArgumentException("The task id must be a number", e);
         }
     }
 

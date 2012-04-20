@@ -16,8 +16,6 @@
 
 package org.wso2.carbon.humantask.core.engine.runtime;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Node;
 import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
 import org.wso2.carbon.humantask.core.dao.MessageDAO;
@@ -30,19 +28,14 @@ import javax.xml.namespace.NamespaceContext;
 /**
  *
  */
-public class ExpressionEvaluationContext implements EvaluationContext{
-
-    private static final Log log = LogFactory.getLog(ExpressionEvaluationContext.class);
-
+public class ExpressionEvaluationContext implements EvaluationContext {
     private HumanTaskBaseConfiguration taskConfig;
 
     private TaskDAO task;
 
-
     /**
-     *
-     * @param taskDAO
-     * @param taskConfig
+     * @param taskDAO    TaskDAO
+     * @param taskConfig Task Configuration
      */
     public ExpressionEvaluationContext(TaskDAO taskDAO, HumanTaskBaseConfiguration taskConfig) {
         this.task = taskDAO;

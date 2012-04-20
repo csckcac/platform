@@ -30,7 +30,7 @@ public class AddComment extends AbstractHumanTaskCommand {
 
     private String commentString;
 
-    public CommentDAO persistedComment;
+    private CommentDAO persistedComment;
 
     public AddComment(String callerId, Long taskId, String commentString) {
         super(callerId, taskId);
@@ -87,9 +87,9 @@ public class AddComment extends AbstractHumanTaskCommand {
         checkPreConditions();
         authorise();
         checkState();
-        persistedComment = task.persistComment(engine.getDaoConnectionFactory().
-                getConnection().getCommentDAO(commentString, caller.getName()));
-        task.persistEvent(createTaskEvent());
+        persistedComment = getTask().persistComment(getEngine().getDaoConnectionFactory().
+                getConnection().getCommentDAO(commentString, getCaller().getName()));
+        getTask().persistEvent(createTaskEvent());
         checkPostConditions();
     }
 

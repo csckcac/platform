@@ -26,7 +26,6 @@ import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -37,27 +36,31 @@ import java.io.StringWriter;
 /**
  * DOM Utility Methods
  */
-public class DOMUtils {
+public final class DOMUtils {
 
-    private static ThreadLocal<DocumentBuilder> __builders = new ThreadLocal();
-    private static DocumentBuilderFactory __documentBuilderFactory ;
+    private static ThreadLocal<DocumentBuilder> builders = new ThreadLocal();
+    private final static DocumentBuilderFactory documentBuilderFactory =
+            new DocumentBuilderFactoryImpl();
     private static Log log = LogFactory.getLog(DOMUtils.class);
 
     public static final String NS_URI_XMLNS = "http://www.w3.org/2000/xmlns/";
-    
+
 
     static {
         initDocumentBuilderFactory();
     }
 
+    private DOMUtils() {
+    }
+
     /**
-     * Initialize the document-builder factory.
+     * Initialize the document-builder factory.                 documentBuilderFactory = f;
+
      */
     private static void initDocumentBuilderFactory() {
 //        DocumentBuilderFactory f = XMLParserUtils.getDocumentBuilderFactory();
-        DocumentBuilderFactory f = new DocumentBuilderFactoryImpl();
-        f.setNamespaceAware(true);
-        __documentBuilderFactory = f;
+//        DocumentBuilderFactory f = new DocumentBuilderFactoryImpl();
+        documentBuilderFactory.setNamespaceAware(true);
     }
 
     public static Document newDocument() {
@@ -66,47 +69,40 @@ public class DOMUtils {
     }
 
     private static DocumentBuilder getBuilder() {
-        DocumentBuilder builder = __builders.get();
+        DocumentBuilder builder = builders.get();
         if (builder == null) {
-            synchronized (__documentBuilderFactory) {
+            synchronized (documentBuilderFactory) {
                 try {
-                    builder = __documentBuilderFactory.newDocumentBuilder();
+                    builder = documentBuilderFactory.newDocumentBuilder();
                     builder.setErrorHandler(new SAXLoggingErrorHandler());
                 } catch (ParserConfigurationException e) {
-                    log.error(e);
+                    log.error(e.getMessage(), e);
                     throw new RuntimeException(e);
                 }
             }
-            __builders.set(builder);
+            builders.set(builder);
         }
         return builder;
     }
 
-    public static void injectNamespaces(Element domElement, NSContext nscontext) {
-        for (String uri : nscontext.getUriSet()) {
-            String prefix = nscontext.getPrefix(uri);
-            if (prefix == null || "".equals(prefix))
-                domElement.setAttributeNS(DOMUtils.NS_URI_XMLNS, "xmlns", uri);
-            else
-                domElement.setAttributeNS(DOMUtils.NS_URI_XMLNS, "xmlns:"+ prefix, uri);
-        }
-    }
-
     /**
      * Convert a DOM node to a stringified XML representation.
+     *
+     * @param node DOM Node
+     * @return String
      */
     static public String domToString(Node node) {
         if (node == null) {
             throw new IllegalArgumentException("Cannot stringify null Node!");
         }
 
-        String value = null;
+        String value;
         short nodeType = node.getNodeType();
         if (nodeType == Node.ELEMENT_NODE || nodeType == Node.DOCUMENT_NODE) {
             // serializer doesn't handle Node type well, only Element
             DOMSerializerImpl ser = new DOMSerializerImpl();
             ser.setParameter(Constants.DOM_NAMESPACES, Boolean.TRUE);
-            ser.setParameter(Constants.DOM_WELLFORMED, Boolean.FALSE );
+            ser.setParameter(Constants.DOM_WELLFORMED, Boolean.FALSE);
             ser.setParameter(Constants.DOM_VALIDATE, Boolean.FALSE);
 
             // create a proper XML encoding header based on the input document;
@@ -144,11 +140,9 @@ public class DOMUtils {
      * Parse a String into a DOM.
      *
      * @param s DOCUMENTME
-     *
      * @return DOCUMENTME
-     *
      * @throws org.xml.sax.SAXException DOCUMENTME
-     * @throws java.io.IOException DOCUMENTME
+     * @throws java.io.IOException      DOCUMENTME
      */
     static public Element stringToDOM(String s) throws SAXException, IOException {
         return parse(new InputSource(new StringReader(s))).getDocumentElement();
@@ -157,47 +151,58 @@ public class DOMUtils {
     /**
      * Parse an XML document located using an {@link org.xml.sax.InputSource} using the
      * pooled document builder.
+     *
+     * @param inputSource Input Source to parse
+     * @return Parsed document
+     * @throws java.io.IOException      If an error occurred while reading from the input source
+     * @throws org.xml.sax.SAXException if the content in the input source is invalid
      */
-    public static Document parse(InputSource inputSource) throws SAXException,IOException{
+    public static Document parse(InputSource inputSource) throws SAXException, IOException {
         DocumentBuilder db = getBuilder();
         return db.parse(inputSource);
     }
 
-    public static Element findChildByName(Element parent, QName name) {
-        return findChildByName(parent, name, false);
-    }
+//    public static Element findChildByName(Element parent, QName name) {
+//        return findChildByName(parent, name, false);
+//    }
 
-    public static Element findChildByName(Element parent, QName name, boolean recurse) {
-        if (parent == null)
-            throw new IllegalArgumentException("null parent");
-        if (name == null)
-            throw new IllegalArgumentException("null name");
-
-        NodeList nl = parent.getChildNodes();
-        for (int i = 0; i < nl.getLength(); ++i) {
-            Node c = nl.item(i);
-            if(c.getNodeType() != Node.ELEMENT_NODE)
-                continue;
-            // For a reason that I can't fathom, when using in-mem DAO we actually get elements with
-            // no localname.
-            String nodeName = c.getLocalName() != null ? c.getLocalName() : c.getNodeName();
-            if (new QName(c.getNamespaceURI(),nodeName).equals(name))
-                return (Element) c;
-        }
-
-        if(recurse){
-            NodeList cnl = parent.getChildNodes();
-            for (int i = 0; i < cnl.getLength(); ++i) {
-                Node c = cnl.item(i);
-                if(c.getNodeType() != Node.ELEMENT_NODE)
-                    continue;
-                Element result = findChildByName((Element)c, name, recurse);
-                if(result != null)
-                    return result;
-            }
-        }
-        return null;
-    }
+//    public static Element findChildByName(Element parent, QName name, boolean recurse) {
+//        if (parent == null) {
+//            throw new IllegalArgumentException("null parent");
+//        }
+//        if (name == null) {
+//            throw new IllegalArgumentException("null name");
+//        }
+//
+//        NodeList nl = parent.getChildNodes();
+//        for (int i = 0; i < nl.getLength(); ++i) {
+//            Node c = nl.item(i);
+//            if(c.getNodeType() != Node.ELEMENT_NODE) {
+//                continue;
+//            }
+//            // For a reason that I can't fathom, when using in-mem DAO we actually get elements with
+//            // no localname.
+//            String nodeName = c.getLocalName() != null ? c.getLocalName() : c.getNodeName();
+//            if (new QName(c.getNamespaceURI(),nodeName).equals(name)) {
+//                return (Element) c;
+//            }
+//        }
+//
+//        if(recurse){
+//            NodeList cnl = parent.getChildNodes();
+//            for (int i = 0; i < cnl.getLength(); ++i) {
+//                Node c = cnl.item(i);
+//                if(c.getNodeType() != Node.ELEMENT_NODE) {
+//                    continue;
+//                }
+//                Element result = findChildByName((Element)c, name, recurse);
+//                if(result != null) {
+//                    return result;
+//                }
+//            }
+//        }
+//        return null;
+//    }
 
 //    public static void copyNSContext(Element source, Element dest) {
 //        Map<String, String> sourceNS = getParentNamespaces(source);
@@ -293,48 +298,50 @@ public class DOMUtils {
 //        return a.getName().substring(a.getPrefix().length()+1);
 //    }
 
-    public static Element findChildElement(Element element) {
-        return (Element)findChildNode(element, Node.ELEMENT_NODE, false);
-    }
+//    public static Element findChildElement(Element element) {
+//        return (Element)findChildNode(element, Node.ELEMENT_NODE, false);
+//    }
 
-    public static Node findChildNode(Element parent, short nodeType, boolean recurse) {
-        if (parent == null)
-            throw new IllegalArgumentException("null parent");
-
-        NodeList nl = parent.getChildNodes();
-        for (int i = 0; i < nl.getLength(); ++i) {
-            Node c = nl.item(i);
-            if(c.getNodeType() != nodeType) {
-                continue;
-            }
-            return c;
-        }
-
-        if(recurse){
-            NodeList cnl = parent.getChildNodes();
-            for (int i = 0; i < cnl.getLength(); ++i) {
-                Node c = cnl.item(i);
-                if(c.getNodeType() != Node.ELEMENT_NODE)
-                    continue;
-                Node result = findChildNode((Element)c, nodeType, recurse);
-                if(result != null)
-                    return result;
-            }
-        }
-        return null;
-    }
+//    public static Node findChildNode(Element parent, short nodeType, boolean recurse) {
+//        if (parent == null) {
+//            throw new IllegalArgumentException("null parent");
+//        }
+//
+//        NodeList nl = parent.getChildNodes();
+//        for (int i = 0; i < nl.getLength(); ++i) {
+//            Node c = nl.item(i);
+//            if(c.getNodeType() != nodeType) {
+//                continue;
+//            }
+//            return c;
+//        }
+//
+//        if(recurse){
+//            NodeList cnl = parent.getChildNodes();
+//            for (int i = 0; i < cnl.getLength(); ++i) {
+//                Node c = cnl.item(i);
+//                if(c.getNodeType() != Node.ELEMENT_NODE) {
+//                    continue;
+//                }
+//                Node result = findChildNode((Element)c, nodeType, recurse);
+//                if(result != null) {
+//                    return result;
+//                }
+//            }
+//        }
+//        return null;
+//    }
 
     // We added this method as a dummy because we need to test the functionality.
     // We have an issue right now due to xsd:anyType usage returning Objects.
     //This method creates an element if the object cannot be cast to type Element.
     public static Element getElementFromObject(Object data) {
-
         Element dataElement = null;
 
         try {
             dataElement = (Element) data;
         } catch (Exception e) {
-
+            log.warn("Object is not an Element. Trying to create the Element explicitly.", e);
             try {
                 //We need a Document
                 DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
@@ -357,9 +364,8 @@ public class DOMUtils {
 
                 dataElement.appendChild(text);
             } catch (Exception ex) {
-                System.out.println("ERROR" + e);
+                log.error("Error while creating the element.", ex);
             }
-
         }
 
         return dataElement;

@@ -18,6 +18,7 @@ package org.wso2.carbon.humantask.core.engine.commands;
 
 import org.wso2.carbon.humantask.core.dao.EventDAO;
 import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
+import org.wso2.carbon.humantask.core.dao.TaskDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +27,9 @@ import java.util.List;
  * Update comment operation.
  */
 public class UpdateComment extends AbstractHumanTaskCommand {
-
     private String updatedCommentString;
 
-    public Long updatingCommentId;
+    private Long updatingCommentId;
 
     public UpdateComment(String callerId, Long taskId, Long commentId, String commentString) {
         super(callerId, taskId);
@@ -84,10 +84,11 @@ public class UpdateComment extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
+        TaskDAO task = getTask();
         checkPreConditions();
         authorise();
         checkState();
-        task.updateAndPersistComment(updatingCommentId, updatedCommentString, caller.getName());
+        task.updateAndPersistComment(updatingCommentId, updatedCommentString, getCaller().getName());
         task.persistEvent(createTaskEvent());
         checkPostConditions();
     }

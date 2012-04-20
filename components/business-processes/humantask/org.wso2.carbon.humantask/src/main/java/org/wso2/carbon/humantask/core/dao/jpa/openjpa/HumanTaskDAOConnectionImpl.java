@@ -2,7 +2,6 @@ package org.wso2.carbon.humantask.core.dao.jpa.openjpa;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.bpel.common.WSDLAwareMessage;
 import org.wso2.carbon.humantask.core.api.scheduler.InvalidJobsInDbException;
 import org.wso2.carbon.humantask.core.dao.*;
 import org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.*;
@@ -131,15 +130,13 @@ public class HumanTaskDAOConnectionImpl implements HumanTaskDAOConnection {
     public List<TaskDAO> simpleTaskQuery(SimpleQueryCriteria simpleQueryCriteria) {
         Query taskQuery = entityManager.createQuery("SELECT t FROM org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.Task t WHERE t.status <> :obsoleteStatus ").
                 setParameter("obsoleteStatus", TaskStatus.OBSOLETE);
-        List<TaskDAO> matchingTasks = taskQuery.getResultList();
-        return matchingTasks;
+        return taskQuery.getResultList();
     }
 
     public List<TaskDAO> searchTasks(SimpleQueryCriteria queryCriteria) {
         HumanTaskJPQLQueryBuilder queryBuilder = new HumanTaskJPQLQueryBuilder(queryCriteria, entityManager);
         Query taskQuery =queryBuilder.build();
-        List<TaskDAO> matchingTasks = taskQuery.getResultList();
-        return matchingTasks;
+        return taskQuery.getResultList();
     }
 
     public void removeTasks(SimpleQueryCriteria queryCriteria) {
@@ -168,9 +165,8 @@ public class HumanTaskDAOConnectionImpl implements HumanTaskDAOConnection {
      * @return HumanTaskJobDAO
      */
     public HumanTaskJobDAO createHumanTaskJobDao() {
-        HumanTaskJob humanTaskJob = new HumanTaskJob();
-//        entityManager.merge(humanTaskJob);
-        return humanTaskJob;
+        //        entityManager.merge(humanTaskJob);
+        return new HumanTaskJob();
     }
 
     /**

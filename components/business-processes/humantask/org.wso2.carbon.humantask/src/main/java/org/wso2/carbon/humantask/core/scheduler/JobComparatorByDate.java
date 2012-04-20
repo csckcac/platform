@@ -21,14 +21,17 @@ import java.io.Serializable;
 
 /**
  * Compare jobs, using scheduled date as sort criteria.
- *
  */
 class JobComparatorByDate implements Comparator<Task>, Serializable {
 
     public int compare(Task o1, Task o2) {
         long diff = o1.schedDate - o2.schedDate;
-        if (diff < 0) return -1;
-        if (diff > 0) return 1;
+        if (diff < 0) {
+            return -1;
+        }
+        if (diff > 0) {
+            return 1;
+        }
         return 0;
     }
 

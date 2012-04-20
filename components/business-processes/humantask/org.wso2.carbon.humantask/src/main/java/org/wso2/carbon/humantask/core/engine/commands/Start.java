@@ -17,9 +17,7 @@ package org.wso2.carbon.humantask.core.engine.commands;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.humantask.core.dao.EventDAO;
-import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
-import org.wso2.carbon.humantask.core.dao.TaskStatus;
+import org.wso2.carbon.humantask.core.dao.*;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 import org.wso2.carbon.humantask.core.engine.util.OperationAuthorizationUtil;
 
@@ -30,7 +28,6 @@ import java.util.List;
  * The start command
  */
 public class Start extends AbstractHumanTaskCommand {
-
     private static final Log log = LogFactory.getLog(Start.class);
 
     public Start(String callerId, Long taskId) {
@@ -42,7 +39,8 @@ public class Start extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkPreConditions() {
-
+        TaskDAO task = getTask();
+        OrganizationalEntityDAO caller = getCaller();
         checkForValidTask(this.getClass());
 
         if (TaskStatus.READY.equals(task.getStatus())) {
@@ -50,11 +48,11 @@ public class Start extends AbstractHumanTaskCommand {
                     <GenericHumanRoleDAO.GenericHumanRoleType>();
             allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.POTENTIAL_OWNERS);
 
-            if (!OperationAuthorizationUtil.authoriseUser(this.task, caller, allowedRoles,
-                                                          engine.getPeopleQueryEvaluator())) {
+            if (!OperationAuthorizationUtil.authoriseUser(task, caller, allowedRoles,
+                    getEngine().getPeopleQueryEvaluator())) {
                 throw new HumanTaskRuntimeException(String.format("The user[%s] cannot perform [%s]" +
-                                                                  " operation as he is not in task roles[%s]",
-                                                                  caller.getName(), Claim.class, allowedRoles));
+                        " operation as he is not in task roles[%s]",
+                        caller.getName(), Claim.class, allowedRoles));
             }
 
             task.claim(caller);
@@ -67,15 +65,15 @@ public class Start extends AbstractHumanTaskCommand {
      */
     @Override
     protected void authorise() {
-
+        OrganizationalEntityDAO caller = getCaller();
         List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles =
                 new ArrayList<GenericHumanRoleDAO.GenericHumanRoleType>();
         allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
 
-        if (!OperationAuthorizationUtil.authoriseUser(this.task, caller, allowedRoles,
-                                                      engine.getPeopleQueryEvaluator())) {
+        if (!OperationAuthorizationUtil.authoriseUser(getTask(), caller, allowedRoles,
+                getEngine().getPeopleQueryEvaluator())) {
             String errMsg = String.format("The user[%s] cannot perform [%s] operation as he is not in " +
-                                          "task roles[%s]", caller.getName(), Start.class, allowedRoles);
+                    "task roles[%s]", caller.getName(), Start.class, allowedRoles);
             log.error(errMsg);
             throw new HumanTaskRuntimeException(errMsg);
         }
@@ -86,11 +84,12 @@ public class Start extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkState() {
+        TaskDAO task = getTask();
         if (!TaskStatus.RESERVED.equals(task.getStatus())) {
             String errMsg = String.format("User[%s] cannot perform [%s] operation on task[%d] as the task is in state[%s]. " +
-                                          "[%s] operation can be performed only on tasks in [%s] state",
-                                          caller.getName(), Start.class, task.getId(),
-                                          task.getStatus(), Start.class, TaskStatus.RESERVED);
+                    "[%s] operation can be performed only on tasks in [%s] state",
+                    getCaller().getName(), Start.class, task.getId(),
+                    task.getStatus(), Start.class, TaskStatus.RESERVED);
             log.error(errMsg);
             throw new HumanTaskRuntimeException(errMsg);
         }
@@ -101,9 +100,10 @@ public class Start extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkPostConditions() {
+        TaskDAO task = getTask();
         if (!TaskStatus.IN_PROGRESS.equals(task.getStatus())) {
             String errMsg = String.format("The task[id:%d] did not start successfully as " +
-                                          "it's state is still in [%s]", task.getId(), task.getStatus());
+                    "it's state is still in [%s]", task.getId(), task.getStatus());
             log.error(errMsg);
             throw new HumanTaskRuntimeException(errMsg);
         }
@@ -119,6 +119,7 @@ public class Start extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
+        TaskDAO task = getTask();
         checkPreConditions();
         authorise();
         checkState();

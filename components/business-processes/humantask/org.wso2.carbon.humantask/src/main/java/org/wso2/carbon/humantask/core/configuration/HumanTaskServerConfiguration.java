@@ -21,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xmlbeans.XmlException;
 import org.quartz.CronExpression;
+import org.wso2.carbon.humantask.core.HumanTaskConstants;
 import org.wso2.carbon.humantask.core.dao.TaskStatus;
 import org.wso2.carbon.humantask.server.config.*;
 import org.wso2.carbon.utils.CarbonUtils;
@@ -53,24 +54,18 @@ public class HumanTaskServerConfiguration {
 
     private String daoConnectionFactoryClass;
 
-    private int portOffset = 0;
-
     private String peopleQueryEvaluatorClass;
 
-	private int threadPoolMaxSize = 50;
+    private int threadPoolMaxSize = 50;
 
-    private static int CARBON_DEFAULT_PORT_OFFSET = 0;
-
-    private static String CARBON_CONFIG_PORT_OFFSET_NODE = "Ports.Offset";
-
-//    private String transactionFactoryClass = "com.atomikos.icatch.jta.UserTransactionManager";
+    //    private String transactionFactoryClass = "com.atomikos.icatch.jta.UserTransactionManager";
     private String transactionFactoryClass = "org.apache.ode.il.EmbeddedGeronimoFactory";
 
     private List<TaskStatus> removableTaskStatuses = Collections.emptyList();
 
     private String taskCleanupCronExpression;
 
-    private boolean enableTaskEventPersistence = false;
+//    private boolean enableTaskEventPersistence = false;
 
 
     /**
@@ -105,7 +100,7 @@ public class HumanTaskServerConfiguration {
             log.error("Error parsing human task server configuration.", e);
         } catch (FileNotFoundException e) {
             log.info("Cannot find the human task server configuration in specified location "
-                     + htServerConfiguration.getPath() + " . Loads the default configuration.");
+                    + htServerConfiguration.getPath() + " . Loads the default configuration.");
         } catch (IOException e) {
             log.error("Error reading human task server configuration file" + htServerConfiguration.getPath() + " .");
         }
@@ -136,33 +131,33 @@ public class HumanTaskServerConfiguration {
             initTransactionManagerConfig(tHumanTaskServerConfig.getTransactionManagerConfig());
         }
 
-        if(tHumanTaskServerConfig.getTaskCleanupConfig() != null) {
+        if (tHumanTaskServerConfig.getTaskCleanupConfig() != null) {
             iniTaskCleanupConfig(tHumanTaskServerConfig.getTaskCleanupConfig());
         }
     }
 
     private void iniTaskCleanupConfig(TTaskCleanupConfig taskCleanupConfig) {
 
-        if(taskCleanupConfig != null) {
-            if(StringUtils.isNotEmpty(taskCleanupConfig.getCronExpression())) {
-                if(CronExpression.isValidExpression(taskCleanupConfig.getCronExpression().trim())) {
+        if (taskCleanupConfig != null) {
+            if (StringUtils.isNotEmpty(taskCleanupConfig.getCronExpression())) {
+                if (CronExpression.isValidExpression(taskCleanupConfig.getCronExpression().trim())) {
                     this.taskCleanupCronExpression = taskCleanupConfig.getCronExpression();
                 } else {
                     String warnMsg = String.format("The task clean up cron expression[%s] is invalid." +
-                                                   " Ignoring task clean up configurations! ",
-                                                   taskCleanupConfig.getCronExpression());
+                            " Ignoring task clean up configurations! ",
+                            taskCleanupConfig.getCronExpression());
                     log.warn(warnMsg);
                     return;
                 }
             }
 
-            if(StringUtils.isNotEmpty(taskCleanupConfig.getStatuses())) {
+            if (StringUtils.isNotEmpty(taskCleanupConfig.getStatuses())) {
                 String[] removableStatusesArray = taskCleanupConfig.getStatuses().split(",");
 
                 List<TaskStatus> removableTaskStatusList = new ArrayList<TaskStatus>();
-                for(String removableStatus : removableStatusesArray) {
-                    for (TaskStatus taskStatusEnum : TaskStatus.values() ) {
-                        if(taskStatusEnum.toString().equals(removableStatus.trim())) {
+                for (String removableStatus : removableStatusesArray) {
+                    for (TaskStatus taskStatusEnum : TaskStatus.values()) {
+                        if (taskStatusEnum.toString().equals(removableStatus.trim())) {
                             removableTaskStatusList.add(taskStatusEnum);
                             break;
                         }
@@ -202,15 +197,15 @@ public class HumanTaskServerConfiguration {
         }
         if (tPersistenceConfig.getJNDIProviderUrl() != null) {
             this.dataSourceJNDIRepoProviderURL = tPersistenceConfig.getJNDIProviderUrl().trim();
-            this.portOffset = getCarbonPortOffset();
+            int portOffset = getCarbonPortOffset();
 
             // We need to adjust the port value according to the offset defined in the carbon configuration.
             String portValueString = dataSourceJNDIRepoProviderURL.substring(
-                    dataSourceJNDIRepoProviderURL.lastIndexOf(":") + 1,
+                    dataSourceJNDIRepoProviderURL.lastIndexOf(':') + 1,
                     dataSourceJNDIRepoProviderURL.length());
 
             String urlWithoutPort = dataSourceJNDIRepoProviderURL
-                    .substring(0, dataSourceJNDIRepoProviderURL.lastIndexOf(":") + 1);
+                    .substring(0, dataSourceJNDIRepoProviderURL.lastIndexOf(':') + 1);
 
 
             int actualPortValue = Integer.parseInt(portValueString);
@@ -230,14 +225,17 @@ public class HumanTaskServerConfiguration {
     //gets the carbon port offset value.
     private int getCarbonPortOffset() {
 
-        String portOffset = CarbonUtils.getServerConfiguration().getFirstProperty(
-                CARBON_CONFIG_PORT_OFFSET_NODE);
+        String offset = CarbonUtils.getServerConfiguration().getFirstProperty(
+                HumanTaskConstants.CARBON_CONFIG_PORT_OFFSET_NODE);
 
         try {
-            return ((portOffset != null) ? Integer.parseInt(portOffset.trim()) :
-                    CARBON_DEFAULT_PORT_OFFSET);
+            return ((offset != null) ? Integer.parseInt(offset.trim()) :
+                    0);
         } catch (NumberFormatException e) {
-            return CARBON_DEFAULT_PORT_OFFSET;
+            log.warn("Error occurred while reading port offset. Invalid port offset: " +
+                    offset + " Setting the port offset to 0",
+                    e);
+            return 0;
         }
     }
 
@@ -284,32 +282,32 @@ public class HumanTaskServerConfiguration {
         return taskCleanupCronExpression;
     }
 
-    public void setTaskCleanupCronExpression(String taskCleanupCronExpression) {
-        this.taskCleanupCronExpression = taskCleanupCronExpression;
-    }
+//    public void setTaskCleanupCronExpression(String taskCleanupCronExpression) {
+//        this.taskCleanupCronExpression = taskCleanupCronExpression;
+//    }
 
     public List<TaskStatus> getRemovableTaskStatuses() {
         return removableTaskStatuses;
     }
 
-    public void setRemovableTaskStatuses(List<TaskStatus> removableTaskStatuses) {
-        this.removableTaskStatuses = removableTaskStatuses;
-    }
-
-    public boolean isEnableTaskEventPersistence() {
-        return enableTaskEventPersistence;
-    }
-
-    public void setEnableTaskEventPersistence(boolean enableTaskEventPersistence) {
-        this.enableTaskEventPersistence = enableTaskEventPersistence;
-    }
+//    public void setRemovableTaskStatuses(List<TaskStatus> removableTaskStatuses) {
+//        this.removableTaskStatuses = removableTaskStatuses;
+//    }
+//
+//    public boolean isEnableTaskEventPersistence() {
+//        return enableTaskEventPersistence;
+//    }
+//
+//    public void setEnableTaskEventPersistence(boolean enableTaskEventPersistence) {
+//        this.enableTaskEventPersistence = enableTaskEventPersistence;
+//    }
 
     /**
      * @return :  true if we have a valid task cleanup configuration parameters. False otherwise.
      */
     public boolean isTaskCleanupEnabled() {
         return StringUtils.isNotEmpty(this.taskCleanupCronExpression) &&
-               CronExpression.isValidExpression(taskCleanupCronExpression) &&
-               removableTaskStatuses.size()>0;
+                CronExpression.isValidExpression(taskCleanupCronExpression) &&
+                removableTaskStatuses.size() > 0;
     }
 }

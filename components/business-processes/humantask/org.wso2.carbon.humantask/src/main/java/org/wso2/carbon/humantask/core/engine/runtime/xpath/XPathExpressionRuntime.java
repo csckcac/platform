@@ -45,6 +45,8 @@ public class XPathExpressionRuntime implements ExpressionLanguageRuntime {
      * Xpath 2 name space
      */
     public static final String ns = XPath2Constants.WSHT_EXP_LANG_XPATH20;
+    private static final String JAVAX_XML_XPATH_XPATH_FACTORY = "javax.xml.xpath.XPathFactory:";
+    private static final String NET_SF_SAXON_XPATH_XPATH_FACTORY_IMPL = "net.sf.saxon.xpath.XPathFactoryImpl";
 
 
     /**
@@ -93,8 +95,9 @@ public class XPathExpressionRuntime implements ExpressionLanguageRuntime {
             }
         } else if (someRes instanceof NodeList) {
             NodeList retVal = (NodeList) someRes;
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Returned node list of size " + retVal.getLength());
+            }
             result = new ArrayList(retVal.getLength());
             for (int m = 0; m < retVal.getLength(); ++m) {
                 Node val = retVal.item(m);
@@ -121,17 +124,17 @@ public class XPathExpressionRuntime implements ExpressionLanguageRuntime {
 
     private Object evaluate(String exp, EvaluationContext evalCtx, QName type) {
         try {
-            System.setProperty("javax.xml.xpath.XPathFactory:" + NamespaceConstant.OBJECT_MODEL_SAXON,
-                    "net.sf.saxon.xpath.XPathFactoryImpl");
+            System.setProperty(JAVAX_XML_XPATH_XPATH_FACTORY + NamespaceConstant.OBJECT_MODEL_SAXON,
+                    NET_SF_SAXON_XPATH_XPATH_FACTORY_IMPL);
             // JAXP based XPath 1.0 runtime does not work anymore after a XPath 2.0 has been evaluated if this is set.
             // System.setProperty("javax.xml.xpath.XPathFactory:"+XPathConstants.DOM_OBJECT_MODEL,
             //        "net.sf.saxon.xpath.XPathFactoryImpl");
-            System.setProperty("javax.xml.xpath.XPathFactory:" + NamespaceConstant.OBJECT_MODEL_JDOM,
-                    "net.sf.saxon.xpath.XPathFactoryImpl");
-            System.setProperty("javax.xml.xpath.XPathFactory:" + NamespaceConstant.OBJECT_MODEL_XOM,
-                    "net.sf.saxon.xpath.XPathFactoryImpl");
-            System.setProperty("javax.xml.xpath.XPathFactory:" + NamespaceConstant.OBJECT_MODEL_DOM4J,
-                    "net.sf.saxon.xpath.XPathFactoryImpl");
+            System.setProperty(JAVAX_XML_XPATH_XPATH_FACTORY + NamespaceConstant.OBJECT_MODEL_JDOM,
+                    NET_SF_SAXON_XPATH_XPATH_FACTORY_IMPL);
+            System.setProperty(JAVAX_XML_XPATH_XPATH_FACTORY + NamespaceConstant.OBJECT_MODEL_XOM,
+                    NET_SF_SAXON_XPATH_XPATH_FACTORY_IMPL);
+            System.setProperty(JAVAX_XML_XPATH_XPATH_FACTORY + NamespaceConstant.OBJECT_MODEL_DOM4J,
+                    NET_SF_SAXON_XPATH_XPATH_FACTORY_IMPL);
             XPathFactory xpf = XPathFactory.newInstance(NamespaceConstant.OBJECT_MODEL_SAXON);
             JaxpFunctionResolver funcResolve = new JaxpFunctionResolver(evalCtx);
             xpf.setXPathFunctionResolver(funcResolve);
@@ -200,7 +203,9 @@ public class XPathExpressionRuntime implements ExpressionLanguageRuntime {
         }
 
         Object date = literal.get(0);
-        if (date instanceof Calendar) return (Calendar) date;
+        if (date instanceof Calendar) {
+            return (Calendar) date;
+        }
         if (date instanceof Date) {
             Calendar cal = Calendar.getInstance();
             cal.setTime((Date) date);
@@ -218,8 +223,8 @@ public class XPathExpressionRuntime implements ExpressionLanguageRuntime {
             return ISO8601DateParser.parseCal(date.toString());
         } catch (Exception ex) {
             String errmsg = "Invalid date format: " + literal;
-            log.error(errmsg);
-            throw new IllegalArgumentException(errmsg);
+            log.error(errmsg, ex);
+            throw new IllegalArgumentException(errmsg, ex);
         }
     }
 
@@ -245,7 +250,7 @@ public class XPathExpressionRuntime implements ExpressionLanguageRuntime {
             String errmsg = "Invalid duration: " + exp;
             //String errmsg = "Invalid duration: " + literal;
             log.error(errmsg, ex);
-            throw new IllegalArgumentException(errmsg);
+            throw new IllegalArgumentException(errmsg, ex);
         }
     }
 
@@ -320,8 +325,9 @@ public class XPathExpressionRuntime implements ExpressionLanguageRuntime {
                 if (colonIdx > 0) {
                     String prefix = attr.getValue().substring(0, colonIdx);
                     String attrValNs = src.lookupPrefix(prefix);
-                    if (attrValNs != null)
+                    if (attrValNs != null) {
                         lval.setAttributeNS(DOMUtils.NS_URI_XMLNS, "xmlns:" + prefix, attrValNs);
+                    }
                 }
             }
         }
@@ -337,12 +343,18 @@ public class XPathExpressionRuntime implements ExpressionLanguageRuntime {
      * @return a List
      */
     public static List<Node> toList(Object nl) {
-        if (nl == null) return null;
-        if (nl instanceof List) return (List<Node>) nl;
+        if (nl == null) {
+            return null;
+        }
+        if (nl instanceof List) {
+            return (List<Node>) nl;
+        }
 
         NodeList cnl = (NodeList) nl;
         LinkedList<Node> ll = new LinkedList<Node>();
-        for (int m = 0; m < cnl.getLength(); m++) ll.add(cnl.item(m));
+        for (int m = 0; m < cnl.getLength(); m++) {
+            ll.add(cnl.item(m));
+        }
         return ll;
     }
 }

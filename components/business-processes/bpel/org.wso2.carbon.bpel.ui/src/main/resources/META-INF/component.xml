@@ -153,20 +153,7 @@
     </FileUploadConfig>
 
     <servlets>
-		<servlet id="PNGGenarateServlet">
-			<servlet-name>PNGGenarateServlet</servlet-name>
-		        <url-pattern>/carbon/png</url-pattern>
-			<display-name>PNGGenarateServlet</display-name>
-			<servlet-class>org.wso2.carbon.bpel.ui.bpel2svg.old.PNGGenarateServlet</servlet-class>
-		</servlet>
-        <servlet id="SVGGenerateServlet">
-			<servlet-name>SVGGenerateServlet</servlet-name>
-		        <url-pattern>/carbon/svg</url-pattern>
-			<display-name>SVGGenerateServlet</display-name>
-			<servlet-class>org.wso2.carbon.bpel.ui.bpel2svg.old.SVGGenerateServlet</servlet-class>
-		</servlet>
-
-        <servlet id="SVG Servlet">
+		<servlet id="SVG Servlet">
 			<servlet-name>SVG Servlet</servlet-name>
 			<url-pattern>/carbon/bpel/svg</url-pattern>
 			<display-name>SVG Servlet</display-name>

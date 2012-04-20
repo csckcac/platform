@@ -70,7 +70,7 @@ public class APIStoreHostObject extends ScriptableObject {
 			Object[] args, Function funObj) throws ScriptException {
 		int argsCount = args.length;
         String methodName = "getKey";
-        if(argsCount != 5) {
+        if(argsCount != 6) {
             HostObjectUtil.invalidNumberOfArgs(hostObjectName, methodName, argsCount, false);
         }
         if(!(args[0] instanceof String)) {
@@ -88,12 +88,16 @@ public class APIStoreHostObject extends ScriptableObject {
         if(!(args[4] instanceof String)) {
             HostObjectUtil.invalidArgsError(hostObjectName, methodName, "5", "string", args[4], false);
         }
+        if(!(args[5] instanceof String)) {
+            HostObjectUtil.invalidArgsError(hostObjectName, methodName, "6", "string", args[5], false);
+        }
         APIInfoDTO apiInfo = new APIInfoDTO();
         apiInfo.setProviderId((String) args[0]);
         apiInfo.setApiName((String) args[1]);
         apiInfo.setVersion((String) args[2]);
+        apiInfo.setContext((String) args[3]);
         try {
-            return keyMgtClient.getAccessKey((String) args[4], apiInfo, (String) args[3]);
+            return keyMgtClient.getAccessKey((String) args[5], apiInfo, (String) args[4]);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new ScriptException(e);
@@ -580,6 +584,7 @@ public class APIStoreHostObject extends ScriptableObject {
 			row.put("wsdl", row, "http://appserver/services/echo?wsdl");
 			row.put("updatedDate", row, api.getLastUpdated().toString());
 			row.put("tier", row, api.getAvailableTiers());
+            row.put("context",row,api.getContext());
 			row.put("status", row, "Deployed"); // api.getStatus().toString()
 			if (api.getThumbnailUrl() == null) {
 				row.put("thumbnailurl", row, "images/api-default.png");
@@ -666,6 +671,7 @@ public class APIStoreHostObject extends ScriptableObject {
         row.put("endpoint", row, api.getUrl());
         row.put("wsdl", row, "http://appserver/services/echo?wsdl");
         row.put("updatedDate", row, api.getLastUpdated().toString());
+        row.put("context",row,api.getContext());
 
         //TODO : need to pass in the full available tier list to front end
         Set<Tier> tiers = api.getAvailableTiers();

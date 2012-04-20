@@ -97,7 +97,7 @@ public final class Authenticator {
         sessionCache.removeSession(sessionId);
     }
 
-    public AgentSession getSessionTypeDef(String sessionId) {
+    public AgentSession getSession(String sessionId) {
         return sessionCache.getSession(sessionId);
     }
 }

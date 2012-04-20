@@ -47,30 +47,35 @@ public class EventReceiverService {
 
             DifferentStreamDefinitionAlreadyDefinedException,
             MalformedStreamDefinitionException, SessionTimeoutException {
-        AgentSession agentSession = Authenticator.getInstance().getSessionTypeDef(sessionId);
-        if (agentSession.getCreatedAt() == 0) {
-            log.info("session " + sessionId + " expired ");
+        AgentSession agentSession = Authenticator.getInstance().getSession(sessionId);
+        if (agentSession.getUsername() == null) {
+            if (log.isDebugEnabled()) {
+                log.debug("session " + sessionId + " expired ");
+            }
             throw new SessionTimeoutException(sessionId + " expired");
         }
         try {
             return eventDispatcher.defineEventStream(streamDefinition, agentSession);
         } catch (MalformedStreamDefinitionException e) {
-            throw new MalformedStreamDefinitionException("Malformed stream definition found " + e.getErrorMessage());
+            throw new MalformedStreamDefinitionException(e.getErrorMessage(), e);
         } catch (DifferentStreamDefinitionAlreadyDefinedException e) {
-            throw new DifferentStreamDefinitionAlreadyDefinedException("Similar stream already exist " + e.getErrorMessage());
+            throw new DifferentStreamDefinitionAlreadyDefinedException(e.getErrorMessage(), e);
         }
     }
 
     public String findEventStreamId(String sessionId, String streamName, String streamVersion)
-            throws NoStreamDefinitionExistException, SessionTimeoutException                    {
+            throws NoStreamDefinitionExistException, SessionTimeoutException {
         AgentSession agentSession = Authenticator.getInstance().
-                getSessionTypeDef(sessionId);
-        if (agentSession.getCreatedAt() == 0) {
-            log.info("session " + sessionId + " expired ");
+                getSession(sessionId);
+        if (agentSession.getUsername() == null) {
+            if (log.isDebugEnabled()) {
+                log.debug("session " + sessionId + " expired ");
+            }
             throw new SessionTimeoutException(sessionId + " expired");
         }
         try {
-            return eventDispatcher.findEventStreamId(agentSession.getDomainName(), streamName, streamVersion);
+            return eventDispatcher.findEventStreamId(agentSession.getDomainName(), streamName,
+                                                     streamVersion);
         } catch (StreamDefinitionNotFoundException e) {
             throw new NoStreamDefinitionExistException(e.getErrorMessage(), e);
         }
@@ -80,10 +85,11 @@ public class EventReceiverService {
 
     public void publish(Object eventBundle, String sessionId)
             throws UndefinedEventTypeException, SessionTimeoutException {
-        AgentSession agentSession = Authenticator.getInstance().
-                getSessionTypeDef(sessionId);
-        if (agentSession.getCreatedAt() == 0) {
-            log.info("session " + sessionId + " expired ");
+        AgentSession agentSession = Authenticator.getInstance().getSession(sessionId);
+        if (agentSession.getUsername() == null) {
+            if (log.isDebugEnabled()) {
+                log.debug("session " + sessionId + " expired ");
+            }
             throw new SessionTimeoutException(sessionId + " expired");
         }
         eventDispatcher.publish(eventBundle, agentSession);

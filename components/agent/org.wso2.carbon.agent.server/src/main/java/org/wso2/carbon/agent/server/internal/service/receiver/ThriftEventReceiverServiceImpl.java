@@ -18,8 +18,6 @@
 
 package org.wso2.carbon.agent.server.internal.service.receiver;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.thrift.TException;
 import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
 import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
@@ -34,7 +32,6 @@ import org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredExcept
 import org.wso2.carbon.agent.commons.thrift.exception.ThriftUndefinedEventTypeException;
 import org.wso2.carbon.agent.commons.thrift.service.ThriftEventReceiverService;
 import org.wso2.carbon.agent.server.internal.EventDispatcher;
-import org.wso2.carbon.agent.server.internal.authentication.Authenticator;
 
 /**
  * The client implementation for ThriftEventReceiverService
@@ -42,7 +39,6 @@ import org.wso2.carbon.agent.server.internal.authentication.Authenticator;
 public class ThriftEventReceiverServiceImpl implements ThriftEventReceiverService.Iface {
 
     private EventReceiverService eventReceiverService;
-    private static final Log log = LogFactory.getLog(Authenticator.class);
 
     public ThriftEventReceiverServiceImpl(EventDispatcher eventDispatcher) {
         this.eventReceiverService = new EventReceiverService(eventDispatcher);

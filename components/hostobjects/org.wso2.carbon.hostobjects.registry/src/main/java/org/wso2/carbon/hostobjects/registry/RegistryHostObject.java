@@ -40,7 +40,7 @@ public class RegistryHostObject extends ScriptableObject {
 
     private static final Log log = LogFactory.getLog(RegistryHostObject.class);
 
-    private static final String hostObjectName = "Request";
+    private static final String hostObjectName = "MetaDataStore";
 
     private Registry registry = null;
 
@@ -51,19 +51,12 @@ public class RegistryHostObject extends ScriptableObject {
     public static Scriptable jsConstructor(Context cx, Object[] args, Function ctorObj,
                                            boolean inNewExpr) throws ScriptException {
         int argsCount = args.length;
-        String registryType = null;
-        if (args.length == 0) {
-            registryType = "LOCAL_REPOSITORY";
-        } else if (args.length == 1) {
-            if (!(args[0] instanceof String)) {
-                HostObjectUtil.invalidArgsError(hostObjectName, hostObjectName, "1", "string", args[0], true);
-            }
-            registryType = (String) args[0];
-        } else {
+        if (args.length != 2 && (args[0] instanceof String) && (args[1] instanceof String)) {
             HostObjectUtil.invalidNumberOfArgs(hostObjectName, hostObjectName, argsCount, true);
         }
+
         RegistryHostObject rho = new RegistryHostObject();
-        rho.registry = getRegistry(registryType);
+        rho.registry = getRegistry((String) args[0], (String) args[1]);
         return rho;
     }
 
@@ -71,7 +64,7 @@ public class RegistryHostObject extends ScriptableObject {
      * Type to be used for this object inside the javascript.
      */
     public String getClassName() {
-        return "Registry";
+        return hostObjectName;
     }
 
     public static void jsFunction_remove(Context cx, Scriptable thisObj, Object[] arguments,
@@ -214,30 +207,17 @@ public class RegistryHostObject extends ScriptableObject {
         }
     }
 
-    private static Registry getRegistry(String registryType) throws ScriptException {
+    private static Registry getRegistry(String username, String password) throws ScriptException {
         Registry registry;
         RegistryService registryService = RegistryHostObjectContext.getRegistryService();
         try {
-            if (registryType.equals("LOCAL_REPOSITORY")) {
-                registry = registryService.getLocalRepository();
-            } else if (registryType.equals("SYSTEM_GOVERNANCE")) {
-                registry = registryService.getGovernanceSystemRegistry();
-            } else if (registryType.equals("SYSTEM_CONFIGURATION")) {
-                registry = registryService.getConfigSystemRegistry();
-            } else if (registryType.equals("USER_GOVERNANCE")) {
-                registry = registryService.getGovernanceUserRegistry();
-            } else if (registryType.equals("USER_CONFIGURATION")) {
-                registry = registryService.getConfigUserRegistry();
-            } else {
-                String msg = "Invalid registry type in Registry Hostobject constructor : " + registryType;
-                throw new ScriptException(msg);
-            }
+            registry = registryService.getGovernanceUserRegistry(username, password);
         } catch (org.wso2.carbon.registry.core.exceptions.RegistryException e) {
             log.error(e.getMessage(), e);
             throw new ScriptException(e);
         }
-        if(registry == null) {
-            String msg = "Specified registry cannot be retrieved : " + registryType;
+        if (registry == null) {
+            String msg = "User governance registry cannot be retrieved";
             throw new ScriptException(msg);
         }
         return registry;

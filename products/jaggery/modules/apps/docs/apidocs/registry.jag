@@ -61,39 +61,38 @@ include('/includes/topnavi.jag');
                 <h3>Registry</h3>
         <pre class="prettyprint linenums">
 &lt%
-	//LOCAL_REPOSITORY, SYSTEM_GOVERNANCE, SYSTEM_CONFIGURATION, USER_GOVERNANCE, USER_CONFIGURATION
-	var registry = new Registry("SYSTEM_CONFIGURATION");
-	var resource = registry.newResource();
-	resource.content = "Hello Jaggery";
-	resource.addProperty("url", "http://wso2.com");
-	resource.addProperty("company", "WSO2 Inc.");
-	registry.put("wso2products.xml", resource);
+     var dataStore = new MetaDataStore("admin", "admin");
+     var resource = dataStore.newResource();
+     resource.content = "<a>Hello Jaggery</a>";
+     resource.addProperty("url", "http://wso2.com");
+     resource.addProperty("company", "WSO2 Inc.");
+     dataStore.put("wso2products.xml", resource);
 
-	//now we read the resource again
-	var res = registry.get("wso2products.xml");
+     //now we read the resource again
+     var res = dataStore.get("wso2products.xml");
 
-	//html to show the result
-	var resource = {};
-    resource.content = res.content.toXMLString();
-    resource.props = {};
-    resource.props.url = res.getProperty("url");
-    resource.props.company = res.getProperty("company")
+     //html to show the result
+     var resource = {};
+     resource.content = res.content.toXMLString();
+     resource.props = {};
+     resource.props.url = res.getProperty("url");
+     resource.props.company = res.getProperty("company");
 
-    print(resource);
+     print(resource);
+
 %&gt
 </pre>
                 <%
                 var regCode = '&lt%'
-                + '\n //LOCAL_REPOSITORY, SYSTEM_GOVERNANCE, SYSTEM_CONFIGURATION, USER_GOVERNANCE, USER_CONFIGURATION'
-                + '\n var registry = new Registry("SYSTEM_CONFIGURATION");'
-                + '\n var resource = registry.newResource();'
-                + '\n resource.content = "Hello Jaggery";'
+                + '\n var dataStore = new MetaDataStore("admin", "admin");'
+                + '\n var resource = dataStore.newResource();'
+                + '\n resource.content = "&lt%a&gt%Hello Jaggery&lt%/a&gt%";'
                 + '\n resource.addProperty("url", "http://wso2.com");'
                 + '\n resource.addProperty("company", "WSO2 Inc.");'
-                + '\n registry.put("wso2products.xml", resource);'
+                + '\n dataStore.put("wso2products.xml", resource);'
                 + '\n '
                 + '\n //now we read the resource again'
-                + '\n var res = registry.get("wso2products.xml");'
+                + '\n var res = dataStore.get("wso2products.xml");'
                 + '\n'
                 + '\n //html to show the result'
                 + '\n var resource = {};'
@@ -119,7 +118,7 @@ include('/includes/topnavi.jag');
 
 
 <h4>Overview</h4>
-<p class="description">This enables data manipulation through registry resources. </p>
+<p class="description">This enables data manipulation through registry (metadata store) resources. </p>
 
 </section>
 
@@ -139,8 +138,8 @@ include('/includes/topnavi.jag');
                         <td>Boolean</td>
                         <td>
 <pre class="prettyprint">
-var registry = new Registry();
-boolean existance = registry.resourceExists("middleware/wso2/products");
+var dataStore = new MetaDataStore("username", "password");
+boolean existance = dataStore.resourceExists("middleware/wso2/products");
 </pre>
                             This method returns true or false depending on the existence of either a Resource or a
                             Collection in the specified path.<br><br>
@@ -168,7 +167,7 @@ boolean existance = registry.resourceExists("middleware/wso2/products");
                         </td>
                         <td>None</td>
                         <td>This method removes the resource in the specified path from
-                            the Registry.
+                            the Metadata store.
                         </td>
                     </tr>
                     <tr>
@@ -177,7 +176,7 @@ boolean existance = registry.resourceExists("middleware/wso2/products");
                         </td>
                         <td>String</td>
                         <td>This method adds either a Resource or a Collection into the
-                            specified path in the registry.
+                            specified path in the Metadata store.
                         </td>
                     </tr>
                     <tr>
@@ -185,7 +184,7 @@ boolean existance = registry.resourceExists("middleware/wso2/products");
                             <code>newResource();</code>
                         </td>
                         <td>Resource</td>
-                        <td>Whe you insert a new Resource into the registry, then you
+                        <td>Whe you insert a new Resource into the Metadata store, then you
                             should use this method to create the initial Resource object.<br><br>
                         </td>
                     </tr>
@@ -194,7 +193,7 @@ boolean existance = registry.resourceExists("middleware/wso2/products");
                             <code>newCollection();</code>
                         </td>
                         <td>Collection</td>
-                        <td>Whe you insert a new Resource into the registry, then you
+                        <td>Whe you insert a new Resource into the Metadata store, then you
                             should use this method to create the initial Resource object.
                         </td>
                     </tr>

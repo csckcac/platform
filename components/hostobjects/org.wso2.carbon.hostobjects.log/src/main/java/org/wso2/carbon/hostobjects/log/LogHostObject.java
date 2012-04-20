@@ -29,7 +29,7 @@ public class LogHostObject extends ScriptableObject {
      * i.e if resource is /foo/bar/mar.jag
      * the loger name will be
      * JAGGERY.foo.bar.mar
-     *
+     * <p/>
      * by default the log level is set to debug
      *
      * @param cx
@@ -41,9 +41,17 @@ public class LogHostObject extends ScriptableObject {
      */
     public static Scriptable jsConstructor(Context cx, Object[] args, Function ctorObj,
                                            boolean inNewExpr) throws ScriptException {
-        String requestString = ((WebAppContext) cx.getThreadLocal("jaggeryContext")).getServletRequest().getRequestURI();
-        String loggerName = ROOT_LOGGER + requestString.replace("/", ".").replace(".jag", "");
-
+        int argsCount = args.length;
+        if (argsCount > 1) {
+            HostObjectUtil.invalidNumberOfArgs(HOSTOBJECT_NAME, HOSTOBJECT_NAME, argsCount, true);
+        }
+        String loggerName;
+        if (argsCount == 1 && (args[0] instanceof String)) {
+            loggerName = (String) args[0];
+        } else {
+            String requestString = ((WebAppContext) cx.getThreadLocal("jaggeryContext")).getServletRequest().getRequestURI();
+            loggerName = ROOT_LOGGER + requestString.replace(".jag", ":jag").replace(".js", ":js").replace("/", ".");
+        }
         LogHostObject logObj = new LogHostObject();
         logObj.logger = Logger.getLogger(loggerName);
 

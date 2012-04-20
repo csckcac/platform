@@ -100,8 +100,14 @@ public class URIMatcherHostObject extends ScriptableObject {
         return nobj;
     }
 
-    public NativeObject jsGet_elements() {
-        return uriParts;
+    public static NativeObject jsFunction_elements(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+        String functionName = "elements";
+        int argsCount = args.length;
+        if (argsCount != 0) {
+            HostObjectUtil.invalidNumberOfArgs("CarbonTopLevel", functionName, argsCount, false);
+        }
+        URIMatcherHostObject uriho = (URIMatcherHostObject) thisObj;
+        return uriho.uriParts;
     }
 
 

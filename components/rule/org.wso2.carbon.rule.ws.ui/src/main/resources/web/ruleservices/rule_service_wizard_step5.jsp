@@ -15,14 +15,13 @@
  ~ specific language governing permissions and limitations
  ~ under the License.
  -->
-<%@ page import="org.wso2.carbon.rule.ws.ui.ns.NameSpacesRegistrar" %>
+<%@ page import="org.wso2.carbon.rule.common.*" %>
+<%@ page import="org.wso2.carbon.rule.ws.ui.ns.NameSpacesInformation" %>
+<%@ page import="org.wso2.carbon.rule.ws.ui.ns.NameSpacesInformationRepository" %>
 <%@ page import="org.wso2.carbon.rule.ws.ui.wizard.RuleServiceAdminClient" %>
-<%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
-<%@ page import="org.wso2.carbon.rule.common.*" %>
-<%@ page import="org.wso2.carbon.rule.common.Operation" %>
-<%@ page import="org.wso2.carbon.rule.common.Fact" %>
+<%@ page import="java.util.Map" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <script type="text/javascript" src="js/rule-services.js"></script>
@@ -109,6 +108,7 @@
                     <input type="text" name="operationName" id="operationName"
                            value="<%=opname.trim()%>"/>
                 </td>
+                <td> <input type="hidden" id="<%=opname%>" name="opName" value="<%=opname%>"/></td>
             </tr>
         </table>
     </td>
@@ -211,6 +211,17 @@
                             String name = property.getElementName();
                             String namespace = property.getNamespace();
                             String xpath = property.getXpath();
+                            Map<String, String> nsMap = property.getPrefixToNamespaceMap();
+                            NameSpacesInformationRepository repository = (NameSpacesInformationRepository) session.getAttribute(
+            NameSpacesInformationRepository.NAMESPACES_INFORMATION_REPOSITORY);
+                            if(nsMap != null && repository== null){
+                                NameSpacesInformation   nameSpacesInformation = new NameSpacesInformation();
+                                nameSpacesInformation.setNameSpaces(nsMap);
+                                repository = new NameSpacesInformationRepository();
+                                repository.addNameSpacesInformation(opname,"inputFactValue"+k, nameSpacesInformation);
+        session.setAttribute(NameSpacesInformationRepository.NAMESPACES_INFORMATION_REPOSITORY, repository);
+
+                            }
                             if (name == null) {
                                 name = "";
                             }

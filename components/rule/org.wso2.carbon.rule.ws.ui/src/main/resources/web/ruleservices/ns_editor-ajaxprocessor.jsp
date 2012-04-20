@@ -37,9 +37,11 @@
 
     String opName = request.getParameter("opName");
     if (opName == null || "".equals(opName)) {
+        opName = request.getParameter("opname");
+    }
+    if (opName == null || "".equals(opName)) {
         opName = "default";
     }
-
     String linkID = request.getParameter("linkID");
     if (linkID == null || "".equals(linkID)) {
         linkID = "null";
@@ -109,7 +111,7 @@
                             %>
                             <tr id="nsTR<%=i%>">
                                 <td align="left">
-                                    <input type="text" name="prefix<%=i%>" id="prefix<%=i%>"
+                                    <input type="text" size="6" name="prefix<%=i%>" id="prefix<%=i%>"
                                            value="<%=prefix%>"/>
                                 </td>
                                 <td>

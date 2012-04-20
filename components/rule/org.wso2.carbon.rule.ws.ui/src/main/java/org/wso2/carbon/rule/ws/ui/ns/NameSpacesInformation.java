@@ -46,7 +46,19 @@ public class NameSpacesInformation {
     public String toString() {
         return nameSpaces.toString();
     }
-    public Map<String, String> getNameSpaces(){
+
+    public Map<String, String> getNameSpaces() {
         return nameSpaces;
+    }
+
+    public void setNameSpaces(Map<String, String> namespaceMap) {
+        Collection<String> prefixes = namespaceMap.keySet();
+        if (!prefixes.isEmpty()) {
+            for (String prefix : prefixes) {
+                String uri = namespaceMap.get(prefix);
+                nameSpaces.put(prefix, uri);
+            }
+        }
+
     }
 }

@@ -212,7 +212,7 @@ public class RuleServiceManagementHelper {
 
         String stepID = request.getParameter("stepID");
         if (!"step5".equals(stepID)) {
-            return;
+                        return;
         }
 
         String operationName = request.getParameter("operationName");

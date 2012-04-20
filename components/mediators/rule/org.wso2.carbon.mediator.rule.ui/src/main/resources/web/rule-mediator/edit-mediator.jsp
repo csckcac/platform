@@ -24,11 +24,9 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="org.wso2.carbon.rule.mediator.config.RuleMediatorConfig" %>
-<%@ page import="org.wso2.carbon.rule.common.RuleSet" %>
-<%@ page import="org.wso2.carbon.rule.common.Fact" %>
 <%@ page import="org.wso2.carbon.rule.mediator.config.Target" %>
 <%@ page import="org.wso2.carbon.rule.mediator.config.Source" %>
-<%@ page import="org.wso2.carbon.rule.common.Rule" %>
+<%@ page import="org.wso2.carbon.rule.common.*" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
 <%--
   ~  Copyright (c) 2008, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -121,8 +119,20 @@
 //        Collection<PropertyDescription> deRegistrationIterator = setDescription.getDeregistrationProperties();
 //        RuleMediatorClientHelper.registerNameSpaces(deRegistrationIterator, "deregistrationpropertyValue", session);
 
-    //Inputs/outputs
-    List<Fact> inputFacts = ruleMediatorConfig.getInput().getFacts();
+    //Inputs
+    Input input = ruleMediatorConfig.getInput();
+    String inputWrapperName = input.getWrapperElementName();
+    inputWrapperName = inputWrapperName == null ? "" : inputWrapperName;
+    String inputNameSpace = input.getNameSpace();
+    inputNameSpace = inputNameSpace == null ? "" : inputNameSpace;
+    List<Fact> inputFacts = input.getFacts();
+
+    //Outputs
+    Output output = ruleMediatorConfig.getOutput();
+    String outputWrapperName = output.getWrapperElementName();
+    outputWrapperName = outputWrapperName == null ? "" : outputWrapperName;
+    String outputNameSpace = output.getNameSpace();
+    outputNameSpace = outputNameSpace == null ? "" : outputNameSpace;
     List<Fact> outputFacts = ruleMediatorConfig.getOutput().getFacts();
 
     String inputTableStyle = inputFacts.isEmpty() ? "display:none;" : "";
@@ -162,6 +172,12 @@
                     <input type="text" id="mediator.rule.source.xpath"
                            name="mediator.rule.source.xpath"
                            style="width:300px;" value='<%=sourceXpath%>'/>
+                </td>
+                <td id="sourceNsEditorButtonTD">
+                    <a href="#nsEditorLink" class="nseditor-icon-link"
+                       style="padding-left:40px"
+                       onclick="showNameSpaceEditor('sourceValue')"><fmt:message
+                            key="namespaces"/></a>
                 </td>
             </tr>
         </table>
@@ -329,6 +345,29 @@
     <td><h3 class="mediator"><fmt:message key="mediator.rule.inputs"/></h3></td>
 </tr>
 <tr>
+    <td class="formRaw">
+    <table class="normal">
+            <tr>
+                <td><fmt:message key="wrapper"/>
+                </td>
+
+                <td>
+                    <input type="text" name="inputWrapperName" id="inputWrapperName"
+                           value="<%=inputWrapperName%>"/>
+                </td>
+                <td><fmt:message key="namespace"/>
+                </td>
+                <td>
+                    <input type="text" name="inputNameSpace" id="inputNameSpace"
+                           value="<%=inputNameSpace%>"/>
+                </td>
+            </tr>
+        </table>
+    </td>
+
+
+</tr>
+<tr>
     <td>
         <table id="facttable" class="styledInner" style="<%=inputTableStyle%>;">
             <thead>
@@ -415,6 +454,29 @@
 </tr>
 <tr>
     <td><h3 class="mediator"><fmt:message key="mediator.rule.outputs"/></h3></td>
+</tr>
+<tr>
+    <td class="formRaw">
+    <table class="normal">
+            <tr>
+                <td><fmt:message key="wrapper"/>
+                </td>
+
+                <td>
+                    <input type="text" name="outputWrapperName" id="outputWrapperName"
+                           value="<%=outputWrapperName%>"/>
+                </td>
+                <td><fmt:message key="namespace"/>
+                </td>
+                <td>
+                    <input type="text" name="outputNameSpace" id="outputNameSpace"
+                           value="<%=outputNameSpace%>"/>
+                </td>
+            </tr>
+        </table>
+    </td>
+
+
 </tr>
 <tr>
     <td>

@@ -41,6 +41,8 @@
             ruleMediator.setRuleMediatorConfig(ruleMediatorConfig);
         }
 
+        //Initialize RuleMediatorClientHelper
+        RuleMediatorClientHelper.init(request);
         // set the source details
         RuleMediatorClientHelper.populateSource(request, ruleMediatorConfig);
         RuleMediatorClientHelper.populateTarget(request, ruleMediatorConfig);

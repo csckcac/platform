@@ -19,18 +19,10 @@
  */
 package org.wso2.carbon.agent.server.internal;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.thrift.server.TServer;
-import org.apache.thrift.server.TThreadPoolServer;
-import org.apache.thrift.transport.TSSLTransportFactory;
-import org.apache.thrift.transport.TServerSocket;
-import org.apache.thrift.transport.TTransportException;
 import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
 import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
-import org.wso2.carbon.agent.commons.thrift.authentication.service.ThriftAuthenticatorService;
-import org.wso2.carbon.agent.commons.thrift.service.ThriftEventReceiverService;
+import org.wso2.carbon.agent.exception.TransportException;
 import org.wso2.carbon.agent.internal.utils.AgentConstants;
 import org.wso2.carbon.agent.server.AgentCallback;
 import org.wso2.carbon.agent.server.AgentServer;
@@ -40,23 +32,16 @@ import org.wso2.carbon.agent.server.exception.AgentServerException;
 import org.wso2.carbon.agent.server.exception.StreamDefinitionNotFoundException;
 import org.wso2.carbon.agent.server.internal.authentication.AuthenticationHandler;
 import org.wso2.carbon.agent.server.internal.authentication.Authenticator;
-import org.wso2.carbon.agent.server.internal.service.ThriftAuthenticatorServiceImpl;
-import org.wso2.carbon.agent.server.internal.service.ThriftEventReceiverServiceImpl;
-import org.wso2.carbon.agent.server.internal.utils.AgentServerConstants;
 import org.wso2.carbon.agent.server.internal.utils.EventConverter;
 import org.wso2.carbon.base.ServerConfiguration;
 
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
 
 /**
  * Carbon based implementation of the agent server
  */
-public class CarbonAgentServer implements AgentServer {
-    private static Log log = LogFactory.getLog(CarbonAgentServer.class);
-    private TServer authenticationServer;
-    private TServer eventReceiverServer;
+public abstract class AbstractAgentServer implements AgentServer {
     private EventDispatcher eventDispatcher;
     private AgentServerConfiguration agentServerConfiguration;
     private StreamDefinitionStore streamDefinitionStore;
@@ -69,9 +54,9 @@ public class CarbonAgentServer implements AgentServer {
      * @param authenticationHandler
      * @param streamDefinitionStore
      */
-    public CarbonAgentServer(int authenticatorPort, int receiverPort,
-                             AuthenticationHandler authenticationHandler,
-                             StreamDefinitionStore streamDefinitionStore) {
+    public AbstractAgentServer(int authenticatorPort, int receiverPort,
+                               AuthenticationHandler authenticationHandler,
+                               StreamDefinitionStore streamDefinitionStore) {
         this.streamDefinitionStore = streamDefinitionStore;
         Authenticator.getInstance().init(authenticationHandler);
         this.eventDispatcher = new EventDispatcher(streamDefinitionStore);
@@ -85,9 +70,9 @@ public class CarbonAgentServer implements AgentServer {
      * @param authenticationHandler
      * @param streamDefinitionStore
      */
-    public CarbonAgentServer(int receiverPort,
-                             AuthenticationHandler authenticationHandler,
-                             StreamDefinitionStore streamDefinitionStore) {
+    public AbstractAgentServer(int receiverPort,
+                               AuthenticationHandler authenticationHandler,
+                               StreamDefinitionStore streamDefinitionStore) {
         this.streamDefinitionStore = streamDefinitionStore;
         Authenticator.getInstance().init(authenticationHandler);
         this.eventDispatcher = new EventDispatcher(streamDefinitionStore);
@@ -101,9 +86,9 @@ public class CarbonAgentServer implements AgentServer {
      * @param authenticationHandler
      * @param streamDefinitionStore
      */
-    public CarbonAgentServer(AgentServerConfiguration agentServerConfiguration,
-                             AuthenticationHandler authenticationHandler,
-                             StreamDefinitionStore streamDefinitionStore) {
+    public AbstractAgentServer(AgentServerConfiguration agentServerConfiguration,
+                               AuthenticationHandler authenticationHandler,
+                               StreamDefinitionStore streamDefinitionStore) {
         this.streamDefinitionStore = streamDefinitionStore;
         Authenticator.getInstance().init(authenticationHandler);
         this.eventDispatcher = new EventDispatcher(streamDefinitionStore);
@@ -148,13 +133,16 @@ public class CarbonAgentServer implements AgentServer {
     /**
      * To start the Agent server
      *
-     * @throws AgentServerException if the agent server cannot be started
+     * @throws org.wso2.carbon.agent.server.exception.AgentServerException if the agent server cannot be started
      */
     public void start()
             throws AgentServerException {
         startAgentAuthenticator(agentServerConfiguration.getAuthenticatorPort());
-        startEventReceiver(agentServerConfiguration.getEventReceiverPort());
+        startEventReceiver(agentServerConfiguration.getEventReceiverPort(),eventDispatcher);
     }
+
+    protected abstract void startEventReceiver(int eventReceiverPort,
+                                               EventDispatcher eventDispatcher) throws AgentServerException;
 
     private void startAgentAuthenticator(int port) throws AgentServerException {
         try {
@@ -164,77 +152,36 @@ public class CarbonAgentServer implements AgentServer {
             if (keyStore == null) {
                 keyStore = System.getProperty("Security.KeyStore.Location");
                 if (keyStore == null) {
-                    throw new AgentServerException("Cannot start Thrift server, not valid Security.KeyStore.Location is null");
+                    throw new AgentServerException("Cannot start agent server, not valid Security.KeyStore.Location is null");
                 }
             }
             String keyStorePassword = serverConfig.getFirstProperty("Security.KeyStore.Password");
             if (keyStorePassword == null) {
                 keyStorePassword = System.getProperty("Security.KeyStore.Password");
                 if (keyStorePassword == null) {
-                    throw new AgentServerException("Cannot start Thrift server, not valid Security.KeyStore.Password is null ");
+                    throw new AgentServerException("Cannot start agent server, not valid Security.KeyStore.Password is null ");
                 }
             }
 
-            TSSLTransportFactory.TSSLTransportParameters params =
-                    new TSSLTransportFactory.TSSLTransportParameters();
-            params.setKeyStore(keyStore, keyStorePassword);
-
-            TServerSocket serverTransport = TSSLTransportFactory.getServerSocket(
-                    port, AgentServerConstants.THRIFT_CLIENT_TIMEOUT_MS, InetAddress.getByName("localhost"), params);
-
-            ThriftAuthenticatorService.Processor<ThriftAuthenticatorServiceImpl> processor =
-                    new ThriftAuthenticatorService.Processor<ThriftAuthenticatorServiceImpl>(new ThriftAuthenticatorServiceImpl());
-            authenticationServer = new TThreadPoolServer(
-                    new TThreadPoolServer.Args(serverTransport).processor(processor));
-            Thread thread = new Thread(new ServerThread(authenticationServer));
-            log.info("Thrift Authenticator port : " + port);
-            thread.start();
-        } catch (TTransportException e) {
-            throw new AgentServerException("Cannot start Thrift server on port " + port, e);
+            startAgentAuthenticator(port, keyStore, keyStorePassword);
+        } catch (TransportException e) {
+            throw new AgentServerException("Cannot start agent server on port " + port, e);
         } catch (UnknownHostException e) {
             //ignore since localhost
         }
     }
 
-    private void startEventReceiver(int port)
-            throws AgentServerException {
-        try {
-            TServerSocket serverTransport = new TServerSocket(port);
-            ThriftEventReceiverService.Processor<ThriftEventReceiverServiceImpl> processor =
-                    new ThriftEventReceiverService.Processor<ThriftEventReceiverServiceImpl>(
-                            new ThriftEventReceiverServiceImpl(eventDispatcher));
-            eventReceiverServer = new TThreadPoolServer(
-                    new TThreadPoolServer.Args(serverTransport).processor(processor));
-            Thread thread = new Thread(new ServerThread(eventReceiverServer));
-            log.info("Thrift Server port : " + port);
-            thread.start();
-        } catch (TTransportException e) {
-            throw new AgentServerException("Cannot start Thrift server on port " + port, e);
-        }
-    }
+    protected abstract void startAgentAuthenticator(int port, String keyStore,
+                                                    String keyStorePassword)
+            throws TransportException, UnknownHostException;
 
-    /**
-     * To stop the server
-     */
-    public void stop() {
-        authenticationServer.stop();
-        eventReceiverServer.stop();
-    }
+
 
     public List<AgentCallback> getSubscribers() {
         return eventDispatcher.getSubscribers();
     }
 
-    static class ServerThread implements Runnable {
-        private TServer server;
 
-        ServerThread(TServer server) {
-            this.server = server;
-        }
-
-        public void run() {
-            this.server.serve();
-        }
-    }
+    public abstract void stop();
 }
 

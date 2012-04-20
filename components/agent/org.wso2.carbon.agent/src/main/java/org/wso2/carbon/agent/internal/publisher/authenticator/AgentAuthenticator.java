@@ -18,18 +18,15 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.agent.internal.publisher;
+package org.wso2.carbon.agent.internal.publisher.authenticator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool.KeyedPoolableObjectFactory;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
-import org.apache.thrift.TException;
-import org.apache.thrift.transport.TTransportException;
 import org.wso2.carbon.agent.commons.exception.AuthenticationException;
-import org.wso2.carbon.agent.commons.thrift.authentication.exception.ThriftAuthenticationException;
-import org.wso2.carbon.agent.commons.thrift.authentication.service.ThriftAuthenticatorService;
 import org.wso2.carbon.agent.conf.ReceiverConfiguration;
+import org.wso2.carbon.agent.exception.AgentAuthenticatorException;
 import org.wso2.carbon.agent.exception.AgentException;
 import org.wso2.carbon.agent.exception.TransportException;
 import org.wso2.carbon.agent.internal.pool.authenticator.AuthenticatorClientPool;
@@ -38,7 +35,7 @@ import org.wso2.carbon.agent.internal.utils.AgentConstants;
 /**
  * Authenticates all data publishers
  */
-public class AgentAuthenticator {
+public abstract class AgentAuthenticator {
 
     private GenericKeyedObjectPool threadPool;
 
@@ -57,22 +54,18 @@ public class AgentAuthenticator {
 
     public String connect(ReceiverConfiguration receiverConfiguration)
             throws AuthenticationException, TransportException, AgentException {
-        ThriftAuthenticatorService.Client client = null;
+        Object client = null;
         String key = receiverConfiguration.getAuthenticatorIp() +
                      AgentConstants.HOSTNAME_AND_PORT_SEPARATOR +
                      receiverConfiguration.getAuthenticatorPort();
         try {
-            client = (ThriftAuthenticatorService.Client) threadPool.borrowObject(key);
-            return client.connect(receiverConfiguration.getUserName(),
-                                  receiverConfiguration.getPassword());
-        } catch (ThriftAuthenticationException e) {
+            client = threadPool.borrowObject(key);
+            return connect(client, receiverConfiguration.getUserName(),
+                           receiverConfiguration.getPassword());
+        } catch (AgentAuthenticatorException e) {
             throw new AuthenticationException("Access denied for user " +
                                               receiverConfiguration.getUserName() + " to login " +
                                               key, e);
-        } catch (TTransportException e) {
-            throw new TransportException("Cannot connect to the server at " + key, e);
-        } catch (TException e) {
-            throw new TransportException("Cannot connect to the server at " + key, e);
         } catch (Exception e) {
             throw new AgentException("Cannot borrow client for " + key, e);
         } finally {
@@ -86,16 +79,20 @@ public class AgentAuthenticator {
 
     }
 
+    protected abstract String connect(Object client, String userName, String password)
+            throws AuthenticationException, AgentAuthenticatorException;
+
+
     public void disconnect(String sessionId, ReceiverConfiguration receiverConfiguration) {
-        ThriftAuthenticatorService.Client client = null;
+        Object client = null;
         String key = receiverConfiguration.getAuthenticatorIp() +
                      AgentConstants.HOSTNAME_AND_PORT_SEPARATOR +
                      receiverConfiguration.getAuthenticatorPort();
         try {
-            client = (ThriftAuthenticatorService.Client) threadPool.borrowObject(key);
-            client.disconnect(sessionId);
+            client = threadPool.borrowObject(key);
+            disconnect(client, sessionId);
         } catch (Exception e) {
-            log.error("Cannot connect to the server at " + key + "thriftAuthenticator", e);
+            log.error("Cannot connect to the server at " + key + "Authenticator", e);
         } finally {
             try {
                 threadPool.returnObject(key, client);
@@ -105,4 +102,8 @@ public class AgentAuthenticator {
         }
 
     }
+
+    protected abstract void disconnect(Object client, String sessionId)
+            throws AgentAuthenticatorException;
+
 }

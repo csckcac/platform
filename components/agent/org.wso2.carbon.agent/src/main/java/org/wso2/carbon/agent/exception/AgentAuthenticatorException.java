@@ -17,35 +17,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.agent.server.conf;
 
-import org.wso2.carbon.agent.internal.utils.AgentConstants;
+package org.wso2.carbon.agent.exception;
 
-/**
- * configuration details related to AgentServer
- */
-public class AgentServerConfiguration {
-    private int authenticatorPort = AgentConstants.DEFAULT_RECEIVER_PORT + AgentConstants.AUTHENTICATOR_PORT_OFFSET;
-    private int eventReceiverPort = AgentConstants.DEFAULT_RECEIVER_PORT;
+public class AgentAuthenticatorException extends Exception {
 
-    public AgentServerConfiguration(int defaultSslPort, int defaultPort) {
-        authenticatorPort = defaultSslPort;
-        eventReceiverPort = defaultPort;
+    private String errorMessage;
+
+    public AgentAuthenticatorException() {
     }
 
-    public int getEventReceiverPort() {
-        return eventReceiverPort;
+    public AgentAuthenticatorException(String message) {
+        super(message);
+        errorMessage = message;
     }
 
-    public void setEventReceiverPort(int eventReceiverPort) {
-        this.eventReceiverPort = eventReceiverPort;
+    public AgentAuthenticatorException(String message, Throwable cause) {
+        super(message, cause);
+        errorMessage = message;
     }
 
-    public int getAuthenticatorPort() {
-        return authenticatorPort;
+    public AgentAuthenticatorException(Throwable cause) {
+        super(cause);
     }
 
-    public void setAuthenticatorPort(int authenticatorPort) {
-        this.authenticatorPort = authenticatorPort;
+    public String getErrorMessage() {
+        return errorMessage;
     }
 }

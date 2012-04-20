@@ -25,14 +25,15 @@ import org.wso2.carbon.agent.commons.Event;
 import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.agent.server.datastore.InMemoryStreamDefinitionStore;
 import org.wso2.carbon.agent.server.exception.AgentServerException;
-import org.wso2.carbon.agent.server.internal.CarbonAgentServer;
+import org.wso2.carbon.agent.server.internal.AbstractAgentServer;
+import org.wso2.carbon.agent.server.internal.ThriftAgentServer;
 import org.wso2.carbon.agent.server.internal.authentication.AuthenticationHandler;
 
 import java.util.List;
 
 public class TestServer extends TestCase {
     Logger log=Logger.getLogger(TestServer.class);
-    CarbonAgentServer carbonAgentServer;
+    AbstractAgentServer agentServer;
 
     public void testServerTest() throws AgentServerException, InterruptedException {
         TestServer testServer = new TestServer();
@@ -44,14 +45,14 @@ public class TestServer extends TestCase {
     public void start(int receiverPort) throws AgentServerException {
         KeyStoreUtil.setKeyStoreParams();
 
-        carbonAgentServer = new CarbonAgentServer(receiverPort, new AuthenticationHandler() {
+        agentServer = new ThriftAgentServer(receiverPort, new AuthenticationHandler() {
             @Override
             public boolean authenticate(String userName, String password) {
                 return true;// allays authenticate to true
             }
         },new InMemoryStreamDefinitionStore());
 
-        carbonAgentServer.subscribe(new AgentCallback() {
+        agentServer.subscribe(new AgentCallback() {
             int totalSize = 0;
 
             public void definedEventStream(EventStreamDefinition eventStreamDefinition,
@@ -66,12 +67,12 @@ public class TestServer extends TestCase {
             }
 
         });
-        carbonAgentServer.start();
+        agentServer.start();
         log.info("Test Server Started");
     }
 
     public void stop() {
-        carbonAgentServer.stop();
+        agentServer.stop();
         log.info("Test Server Stopped");
     }
 }

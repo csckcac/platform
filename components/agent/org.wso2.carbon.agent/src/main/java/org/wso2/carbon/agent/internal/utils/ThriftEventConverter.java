@@ -28,9 +28,9 @@ import java.util.LinkedList;
 /**
  * Util class used to convert Events to thrift format
  */
-public final class EventConverter {
+public final class ThriftEventConverter {
 
-    private EventConverter(){ }
+    private ThriftEventConverter(){ }
 
     public static ThriftEventBundle toThriftEventBundle(Event event,
                                                         ThriftEventBundle eventBundle,

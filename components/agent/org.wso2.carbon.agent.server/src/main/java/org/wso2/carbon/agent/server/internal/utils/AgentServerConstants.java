@@ -40,5 +40,5 @@ public final class AgentServerConstants {
 
     public static final int CARBON_DEFAULT_PORT_OFFSET = 0;
     public static final String CARBON_CONFIG_PORT_OFFSET_NODE = "Ports.Offset";
-    public static final int THRIFT_CLIENT_TIMEOUT_MS = 30000;
+    public static final int CLIENT_TIMEOUT_MS = 30000;
 }

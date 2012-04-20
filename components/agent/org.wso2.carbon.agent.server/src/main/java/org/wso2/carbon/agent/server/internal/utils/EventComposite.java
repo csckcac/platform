@@ -17,7 +17,6 @@
 */
 package org.wso2.carbon.agent.server.internal.utils;
 
-import org.wso2.carbon.agent.commons.thrift.data.ThriftEventBundle;
 import org.wso2.carbon.agent.server.internal.EventStreamTypeHolder;
 import org.wso2.carbon.agent.server.internal.authentication.session.AgentSession;
 
@@ -26,22 +25,22 @@ import org.wso2.carbon.agent.server.internal.authentication.session.AgentSession
  */
 public class EventComposite {
     private EventStreamTypeHolder eventStreamTypeHolder;
-    private ThriftEventBundle thriftEventBundle;
-    private  AgentSession agentSession;
+    private Object eventBundle;
+    private AgentSession agentSession;
 
-    public EventComposite(ThriftEventBundle thriftEventBundle,
+    public EventComposite(Object eventBundle,
                           EventStreamTypeHolder eventStreamTypeHolder, AgentSession agentSession) {
         this.eventStreamTypeHolder = eventStreamTypeHolder;
-        this.thriftEventBundle = thriftEventBundle;
-        this.agentSession=agentSession;
+        this.eventBundle = eventBundle;
+        this.agentSession = agentSession;
     }
 
     public EventStreamTypeHolder getEventStreamTypeHolder() {
         return eventStreamTypeHolder;
     }
 
-    public ThriftEventBundle getThriftEventBundle() {
-        return thriftEventBundle;
+    public Object getEventBundle() {
+        return eventBundle;
     }
 
     public AgentSession getAgentSession() {

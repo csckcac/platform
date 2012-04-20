@@ -16,78 +16,76 @@
 * under the License.
 */
 
-package org.wso2.carbon.agent.server.internal.service;
+package org.wso2.carbon.agent.server.internal.service.receiver;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.thrift.TException;
 import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
 import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
-import org.wso2.carbon.agent.commons.thrift.data.ThriftEventBundle;
-import org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentStreamDefinitionAlreadyDefinedException;
-import org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedStreamDefinitionException;
-import org.wso2.carbon.agent.commons.thrift.exception.ThriftNoStreamDefinitionExistException;
-import org.wso2.carbon.agent.commons.thrift.exception.ThriftSessionExpiredException;
-import org.wso2.carbon.agent.commons.thrift.exception.ThriftUndefinedEventTypeException;
-import org.wso2.carbon.agent.commons.thrift.service.ThriftEventReceiverService;
+import org.wso2.carbon.agent.commons.exception.NoStreamDefinitionExistException;
+import org.wso2.carbon.agent.commons.exception.SessionTimeoutException;
+import org.wso2.carbon.agent.commons.exception.UndefinedEventTypeException;
+import org.wso2.carbon.agent.server.exception.StreamDefinitionNotFoundException;
 import org.wso2.carbon.agent.server.internal.EventDispatcher;
 import org.wso2.carbon.agent.server.internal.authentication.Authenticator;
 import org.wso2.carbon.agent.server.internal.authentication.session.AgentSession;
 
 /**
- * The client implementation for ThriftEventReceiverService
+ * The client implementation for EventReceiverService
  */
-public class ThriftEventReceiverServiceImpl implements ThriftEventReceiverService.Iface {
+public class EventReceiverService {
 
     private EventDispatcher eventDispatcher;
     private static final Log log = LogFactory.getLog(Authenticator.class);
 
-    public ThriftEventReceiverServiceImpl(EventDispatcher eventDispatcher) {
+    public EventReceiverService(EventDispatcher eventDispatcher) {
         this.eventDispatcher = eventDispatcher;
     }
 
-    @Override
     public String defineEventStream(String sessionId, String streamDefinition)
-            throws TException, ThriftSessionExpiredException,
-                   ThriftDifferentStreamDefinitionAlreadyDefinedException,
-                   ThriftMalformedStreamDefinitionException {
+            throws
+
+            DifferentStreamDefinitionAlreadyDefinedException,
+            MalformedStreamDefinitionException, SessionTimeoutException {
         AgentSession agentSession = Authenticator.getInstance().getSessionTypeDef(sessionId);
         if (agentSession.getCreatedAt() == 0) {
             log.info("session " + sessionId + " expired ");
-            throw new ThriftSessionExpiredException(sessionId + " expired");
+            throw new SessionTimeoutException(sessionId + " expired");
         }
         try {
             return eventDispatcher.defineEventStream(streamDefinition, agentSession);
         } catch (MalformedStreamDefinitionException e) {
-            throw new ThriftMalformedStreamDefinitionException("Malformed stream definition found " + e.getErrorMessage());
+            throw new MalformedStreamDefinitionException("Malformed stream definition found " + e.getErrorMessage());
         } catch (DifferentStreamDefinitionAlreadyDefinedException e) {
-            throw new ThriftDifferentStreamDefinitionAlreadyDefinedException("Similar stream already exist " + e.getErrorMessage());
+            throw new DifferentStreamDefinitionAlreadyDefinedException("Similar stream already exist " + e.getErrorMessage());
         }
     }
 
-    @Override
     public String findEventStreamId(String sessionId, String streamName, String streamVersion)
-            throws ThriftNoStreamDefinitionExistException, ThriftSessionExpiredException,
-                   TException {
+            throws NoStreamDefinitionExistException, SessionTimeoutException                    {
         AgentSession agentSession = Authenticator.getInstance().
                 getSessionTypeDef(sessionId);
         if (agentSession.getCreatedAt() == 0) {
             log.info("session " + sessionId + " expired ");
-            throw new ThriftSessionExpiredException(sessionId + " expired");
+            throw new SessionTimeoutException(sessionId + " expired");
         }
-        return eventDispatcher.findEventStreamId(agentSession.getDomainName(), streamName, streamVersion);
+        try {
+            return eventDispatcher.findEventStreamId(agentSession.getDomainName(), streamName, streamVersion);
+        } catch (StreamDefinitionNotFoundException e) {
+            throw new NoStreamDefinitionExistException(e.getErrorMessage(), e);
+        }
 
     }
 
 
-    public void publish(ThriftEventBundle thriftEventBundle)
-            throws ThriftUndefinedEventTypeException, ThriftSessionExpiredException, TException {
+    public void publish(Object eventBundle, String sessionId)
+            throws UndefinedEventTypeException, SessionTimeoutException {
         AgentSession agentSession = Authenticator.getInstance().
-                getSessionTypeDef(thriftEventBundle.getSessionId());
+                getSessionTypeDef(sessionId);
         if (agentSession.getCreatedAt() == 0) {
-            log.info("session " + thriftEventBundle.getSessionId() + " expired ");
-            throw new ThriftSessionExpiredException(thriftEventBundle.sessionId + " expired");
+            log.info("session " + sessionId + " expired ");
+            throw new SessionTimeoutException(sessionId + " expired");
         }
-        eventDispatcher.publish(thriftEventBundle, agentSession);
+        eventDispatcher.publish(eventBundle, agentSession);
     }
 }

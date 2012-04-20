@@ -49,7 +49,7 @@ import java.util.List;
 public class AgentServerServiceDS {
     private static final Log log = LogFactory.getLog(AgentServerServiceDS.class);
     private AuthenticationService authenticationService;
-    private CarbonAgentServer carbonAgentServer;
+    private AbstractAgentServer agentServer;
     private ServiceRegistration agentServerService;
     private ServerConfigurationService serverConfiguration;
 
@@ -65,14 +65,14 @@ public class AgentServerServiceDS {
             List<String[]> eventStreamDefinitions = new ArrayList<String[]>();
             AgentServerBuilder.populateConfigurations(serverConfiguration, agentServerConfiguration, eventStreamDefinitions);
 
-            if (carbonAgentServer == null) {
-                carbonAgentServer = new AgentServerFactory().createAgentServer(
+            if (agentServer == null) {
+                agentServer = new AgentServerFactory().createAgentServer(
                         agentServerConfiguration,
                         new CarbonAuthenticationHandler(authenticationService), new InMemoryStreamDefinitionStore());
-                carbonAgentServer.start();
+                agentServer.start();
                 for (String[] streamDefinition : eventStreamDefinitions) {
                     try {
-                        carbonAgentServer.saveEventStreamDefinition(streamDefinition[0], streamDefinition[1]);
+                        agentServer.saveEventStreamDefinition(streamDefinition[0], streamDefinition[1]);
                     } catch (MalformedStreamDefinitionException e) {
                         log.error("Malformed Stream Definition for " + streamDefinition[0] + ": " + streamDefinition[1], e);
                     } catch (DifferentStreamDefinitionAlreadyDefinedException e) {
@@ -82,7 +82,7 @@ public class AgentServerServiceDS {
                     }
                 }
                 agentServerService = context.getBundleContext().
-                        registerService(AgentServer.class.getName(), carbonAgentServer, null);
+                        registerService(AgentServer.class.getName(), agentServer, null);
                 log.info("Successfully deployed Agent Server ");
             }
         } catch (AgentServerConfigurationException e) {
@@ -97,7 +97,7 @@ public class AgentServerServiceDS {
 
     protected void deactivate(ComponentContext context) {
         context.getBundleContext().ungetService(agentServerService.getReference());
-        carbonAgentServer.stop();
+        agentServer.stop();
         if (log.isDebugEnabled()) {
             log.debug("Successfully stopped agent server");
         }

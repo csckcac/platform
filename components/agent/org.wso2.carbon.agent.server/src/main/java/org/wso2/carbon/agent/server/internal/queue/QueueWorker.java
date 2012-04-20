@@ -57,7 +57,7 @@ public class QueueWorker implements Runnable {
             }
             EventComposite eventComposite = eventQueue.poll();
             try {
-                eventList = EventConverter.createEventList(eventComposite.getThriftEventBundle(),
+                eventList = EventConverter.createEventList(eventComposite.getEventBundle(),
                                                            eventComposite.getEventStreamTypeHolder());
                 if (log.isDebugEnabled()) {
                     log.debug("Dispatching event to " + subscribers.size() + " subscriber(s)");

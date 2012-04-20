@@ -24,10 +24,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.wso2.carbon.agent.conf.AgentConfiguration;
-import org.wso2.carbon.agent.internal.pool.authenticator.AuthenticatorClientPoolFactory;
 import org.wso2.carbon.agent.internal.pool.client.ClientPool;
 import org.wso2.carbon.agent.internal.pool.client.ClientPoolFactory;
-import org.wso2.carbon.agent.internal.publisher.AgentAuthenticator;
+import org.wso2.carbon.agent.internal.publisher.authenticator.AgentAuthenticator;
+import org.wso2.carbon.agent.internal.publisher.authenticator.AgentAuthenticatorFactory;
 import org.wso2.carbon.agent.internal.utils.AgentConstants;
 
 import java.util.LinkedList;
@@ -62,10 +62,7 @@ public class Agent {
                 new ClientPoolFactory(), agentConfiguration.getMaxTransportPoolSize(),
                 agentConfiguration.getMaxIdleConnections(), true, agentConfiguration.getEvictionTimePeriod(),
                 agentConfiguration.getMinIdleTimeInPool());
-        this.agentAuthenticator = new AgentAuthenticator(
-                new AuthenticatorClientPoolFactory(agentConfiguration.getTrustStore(), agentConfiguration.getTrustStorePassword()), agentConfiguration.getAuthenticatorMaxPoolSize(),
-                agentConfiguration.getAuthenticatorMaxIdleConnections(), true, agentConfiguration.getEvictionTimePeriod(),
-                agentConfiguration.getMinIdleTimeInPool());
+        this.agentAuthenticator = AgentAuthenticatorFactory.getAgentAuthenticator(agentConfiguration);
         this.dataPublisherList = new LinkedList<DataPublisher>();
         this.queueSemaphore = new Semaphore(agentConfiguration.getBufferedEventsSize());
         //for the unbounded queue implementation the maximum pool size irrelevant and
@@ -107,19 +104,19 @@ public class Agent {
         }
     }
 
-    AgentConfiguration getAgentConfiguration() {
+    public AgentConfiguration getAgentConfiguration() {
         return agentConfiguration;
     }
 
-    GenericKeyedObjectPool getTransportPool() {
+    public GenericKeyedObjectPool getTransportPool() {
         return transportPool;
     }
 
-    Semaphore getQueueSemaphore() {
+    public Semaphore getQueueSemaphore() {
         return queueSemaphore;
     }
 
-    AgentAuthenticator getAgentAuthenticator() {
+    public AgentAuthenticator getAgentAuthenticator() {
         return agentAuthenticator;
     }
 
@@ -127,7 +124,7 @@ public class Agent {
         return dataPublisherList;
     }
 
-    ThreadPoolExecutor getThreadPool() {
+    public ThreadPoolExecutor getThreadPool() {
         return threadPool;
     }
 }

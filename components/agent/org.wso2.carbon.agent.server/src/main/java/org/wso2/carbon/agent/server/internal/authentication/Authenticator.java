@@ -36,7 +36,7 @@ public final class Authenticator {
     private static final Log log = LogFactory.getLog(Authenticator.class);
 
     private static Authenticator instance = new Authenticator();
-    private static SessionCache sessionCache = new SessionCache(AgentServerConstants.THRIFT_CLIENT_TIMEOUT_MS /1000);
+    private static SessionCache sessionCache = new SessionCache(AgentServerConstants.CLIENT_TIMEOUT_MS /1000);
     private AuthenticationHandler authenticationHandler;
 
 

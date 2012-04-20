@@ -19,7 +19,7 @@
 package org.wso2.carbon.agent.server.internal.utils;
 
 /**
- * Counter used to dematerialise Thrift event bundle
+ * Counter used to dematerialise event bundle
  */
 public class IndexCounter {
 

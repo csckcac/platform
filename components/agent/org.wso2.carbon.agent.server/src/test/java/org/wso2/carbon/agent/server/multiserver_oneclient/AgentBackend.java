@@ -24,7 +24,8 @@ import org.wso2.carbon.agent.server.KeyStoreUtil;
 import org.wso2.carbon.agent.server.conf.AgentServerConfiguration;
 import org.wso2.carbon.agent.server.datastore.InMemoryStreamDefinitionStore;
 import org.wso2.carbon.agent.server.exception.AgentServerException;
-import org.wso2.carbon.agent.server.internal.CarbonAgentServer;
+import org.wso2.carbon.agent.server.internal.AbstractAgentServer;
+import org.wso2.carbon.agent.server.internal.ThriftAgentServer;
 import org.wso2.carbon.agent.server.internal.authentication.AuthenticationHandler;
 
 import java.util.List;
@@ -33,7 +34,7 @@ import java.util.List;
  * Server of single client multiple server test
  */
 public class AgentBackend {
-    CarbonAgentServer carbonAgentServer;
+    AbstractAgentServer agentServer;
     static int NO_OF_EVENTS = 100000;
     static int NO_OF_SERVERS = 2;
     static int STABLE = 1000000;
@@ -68,7 +69,7 @@ public class AgentBackend {
     public void start() throws AgentServerException, InterruptedException {
 
         AgentServerConfiguration agentServerConfiguration = generateServerConf(offset);
-        carbonAgentServer = new CarbonAgentServer(agentServerConfiguration, new AuthenticationHandler() {
+        agentServer = new ThriftAgentServer(agentServerConfiguration, new AuthenticationHandler() {
             @Override
             public boolean authenticate(String userName,
                                         String password) {
@@ -76,8 +77,8 @@ public class AgentBackend {
 
             }
         }, new InMemoryStreamDefinitionStore());
-        carbonAgentServer.subscribe(assignAgentCallback());
-        carbonAgentServer.start();
+        agentServer.subscribe(assignAgentCallback());
+        agentServer.start();
     }
 
     private AgentCallback assignAgentCallback() {
@@ -119,6 +120,6 @@ public class AgentBackend {
     }
 
     public void stop() {
-        carbonAgentServer.stop();
+        agentServer.stop();
     }
 }

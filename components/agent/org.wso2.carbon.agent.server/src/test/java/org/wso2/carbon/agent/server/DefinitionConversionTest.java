@@ -25,7 +25,6 @@ import org.wso2.carbon.agent.commons.Attribute;
 import org.wso2.carbon.agent.commons.AttributeType;
 import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
-import org.wso2.carbon.agent.commons.thrift.exception.ThriftMalformedStreamDefinitionException;
 import org.wso2.carbon.agent.server.internal.utils.EventConverter;
 
 import java.util.ArrayList;
@@ -42,7 +41,7 @@ public class DefinitionConversionTest {
 
     @Test
     public void testDefinitionConversion()
-            throws ThriftMalformedStreamDefinitionException, MalformedStreamDefinitionException {
+            throws MalformedStreamDefinitionException {
         String definition = "{" +
                             "  'name':'org.wso2.esb.MediatorStatistics'," +
                             "  'version':'2.3.0'," +
@@ -83,8 +82,7 @@ public class DefinitionConversionTest {
 
     @Test
     public void testDefinitionConversionWithoutVersion()
-            throws ThriftMalformedStreamDefinitionException,
-                   MalformedStreamDefinitionException {
+            throws MalformedStreamDefinitionException {
         String definition = "{" +
                             "  'name':'org.wso2.esb.MediatorStatistics'," +
 //                            "  'version':'2.3.0'," +

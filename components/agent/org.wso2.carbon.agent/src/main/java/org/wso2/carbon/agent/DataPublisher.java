@@ -29,7 +29,8 @@ import org.wso2.carbon.agent.conf.ReceiverConfiguration;
 import org.wso2.carbon.agent.exception.AgentException;
 import org.wso2.carbon.agent.exception.TransportException;
 import org.wso2.carbon.agent.internal.EventQueue;
-import org.wso2.carbon.agent.internal.publisher.EventPublisher;
+import org.wso2.carbon.agent.internal.publisher.client.EventPublisher;
+import org.wso2.carbon.agent.internal.publisher.client.EventPublisherFactory;
 import org.wso2.carbon.agent.internal.utils.AgentConstants;
 import org.wso2.carbon.agent.internal.utils.AgentServerURL;
 
@@ -174,10 +175,7 @@ public class DataPublisher {
         this.dataPublisherConfiguration = new DataPublisherConfiguration(receiverConfiguration);
         this.eventQueue = new EventQueue<Event>();
         this.threadPool = agent.getThreadPool();
-        this.eventPublisher = new EventPublisher(eventQueue, agent.getTransportPool(), agent.getQueueSemaphore(),
-                                                 agent.getAgentConfiguration().getMaxMessageBundleSize(),
-                                                 dataPublisherConfiguration, agent.getAgentAuthenticator(),
-                                                 agent.getThreadPool());
+        this.eventPublisher = EventPublisherFactory.getEventPublisher(dataPublisherConfiguration, eventQueue, agent);
         //Connect to the server
         dataPublisherConfiguration.setSessionId(agent.getAgentAuthenticator().connect(
                 dataPublisherConfiguration.getReceiverConfiguration()));

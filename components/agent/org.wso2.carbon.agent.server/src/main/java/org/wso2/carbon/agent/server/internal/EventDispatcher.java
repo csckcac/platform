@@ -22,10 +22,7 @@ package org.wso2.carbon.agent.server.internal;
 import org.wso2.carbon.agent.commons.EventStreamDefinition;
 import org.wso2.carbon.agent.commons.exception.DifferentStreamDefinitionAlreadyDefinedException;
 import org.wso2.carbon.agent.commons.exception.MalformedStreamDefinitionException;
-import org.wso2.carbon.agent.commons.thrift.data.ThriftEventBundle;
-import org.wso2.carbon.agent.commons.thrift.exception.ThriftDifferentStreamDefinitionAlreadyDefinedException;
-import org.wso2.carbon.agent.commons.thrift.exception.ThriftNoStreamDefinitionExistException;
-import org.wso2.carbon.agent.commons.thrift.exception.ThriftUndefinedEventTypeException;
+import org.wso2.carbon.agent.commons.exception.UndefinedEventTypeException;
 import org.wso2.carbon.agent.server.AgentCallback;
 import org.wso2.carbon.agent.server.datastore.StreamDefinitionStore;
 import org.wso2.carbon.agent.server.exception.StreamDefinitionNotFoundException;
@@ -61,16 +58,16 @@ public class EventDispatcher {
     }
 
     public String defineEventStream(String streamDefinition, AgentSession agentSession)
-            throws ThriftDifferentStreamDefinitionAlreadyDefinedException,
-                   MalformedStreamDefinitionException,
-                   DifferentStreamDefinitionAlreadyDefinedException {
+            throws
+            MalformedStreamDefinitionException,
+            DifferentStreamDefinitionAlreadyDefinedException {
         EventStreamDefinition eventStreamDefinition = EventConverter.convertFromJson(streamDefinition);
 
         EventStreamDefinition existingEventStreamDefinition;
         try {
             existingEventStreamDefinition = streamDefinitionStore.getStreamDefinition(agentSession.getDomainName(), eventStreamDefinition.getName(), eventStreamDefinition.getVersion());
             if (!existingEventStreamDefinition.equals(eventStreamDefinition)) {
-                throw new ThriftDifferentStreamDefinitionAlreadyDefinedException("Similar event stream for " + eventStreamDefinition + " with the same name and version already exist: " + streamDefinitionStore.getStreamDefinition(agentSession.getDomainName(), eventStreamDefinition.getName(), eventStreamDefinition.getVersion()));
+                throw new DifferentStreamDefinitionAlreadyDefinedException("Similar event stream for " + eventStreamDefinition + " with the same name and version already exist: " + streamDefinitionStore.getStreamDefinition(agentSession.getDomainName(), eventStreamDefinition.getName(), eventStreamDefinition.getVersion()));
             }
             eventStreamDefinition = existingEventStreamDefinition;
         } catch (StreamDefinitionNotFoundException e) {
@@ -79,7 +76,7 @@ public class EventDispatcher {
         }
 
         for (AgentCallback agentCallback : subscribers) {
-            agentCallback.definedEventStream(eventStreamDefinition, agentSession.getUsername(), agentSession.getPassword(),agentSession.getDomainName());
+            agentCallback.definedEventStream(eventStreamDefinition, agentSession.getUsername(), agentSession.getPassword(), agentSession.getDomainName());
         }
         return eventStreamDefinition.getStreamId();
     }
@@ -97,13 +94,12 @@ public class EventDispatcher {
     }
 
 
-
-    public void publish(ThriftEventBundle thriftEventBundle, AgentSession agentSession)
-            throws ThriftUndefinedEventTypeException {
+    public void publish(Object eventBundle, AgentSession agentSession)
+            throws UndefinedEventTypeException {
         try {
-            eventQueue.publish(new EventComposite(thriftEventBundle, getStreamDefinitionHolder(agentSession.getDomainName()),agentSession));
+            eventQueue.publish(new EventComposite(eventBundle, getStreamDefinitionHolder(agentSession.getDomainName()), agentSession));
         } catch (StreamDefinitionNotFoundException e) {
-            throw new ThriftUndefinedEventTypeException("No event stream definition exist " + e.getErrorMessage());
+            throw new UndefinedEventTypeException("No event stream definition exist " + e.getErrorMessage());
         }
     }
 
@@ -133,11 +129,11 @@ public class EventDispatcher {
     }
 
     public String findEventStreamId(String domainName, String streamName, String streamVersion)
-            throws ThriftNoStreamDefinitionExistException {
+            throws StreamDefinitionNotFoundException {
         try {
             return streamDefinitionStore.getStreamId(domainName, streamName, streamVersion);
         } catch (StreamDefinitionNotFoundException e) {
-            throw new ThriftNoStreamDefinitionExistException("No event stream definition exist " + e.getErrorMessage());
+            throw new StreamDefinitionNotFoundException("No event stream definition exist " + e.getErrorMessage());
         }
 
     }

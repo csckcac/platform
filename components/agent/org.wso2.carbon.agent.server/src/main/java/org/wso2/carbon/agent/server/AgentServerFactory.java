@@ -19,26 +19,26 @@ package org.wso2.carbon.agent.server;
 
 import org.wso2.carbon.agent.server.conf.AgentServerConfiguration;
 import org.wso2.carbon.agent.server.datastore.StreamDefinitionStore;
-import org.wso2.carbon.agent.server.internal.CarbonAgentServer;
+import org.wso2.carbon.agent.server.internal.ThriftAgentServer;
 import org.wso2.carbon.agent.server.internal.authentication.AuthenticationHandler;
 
 /**
  * The falconry method that is used to create Agent server
  */
 public class AgentServerFactory {
-    public CarbonAgentServer createAgentServer(AgentServerConfiguration agentServerConfiguration,
+    public ThriftAgentServer createAgentServer(AgentServerConfiguration agentServerConfiguration,
                                                AuthenticationHandler authenticationHandler,StreamDefinitionStore streamDefinitionStore) {
-        return new CarbonAgentServer(agentServerConfiguration, authenticationHandler,streamDefinitionStore);
+        return new ThriftAgentServer(agentServerConfiguration, authenticationHandler,streamDefinitionStore);
     }
 
-    public CarbonAgentServer createAgentServer(int authenticatorPort, int receiverPort,
+    public ThriftAgentServer createAgentServer(int authenticatorPort, int receiverPort,
                                                AuthenticationHandler authenticationHandler,StreamDefinitionStore streamDefinitionStore) {
-        return new CarbonAgentServer(authenticatorPort, receiverPort, authenticationHandler,streamDefinitionStore);
+        return new ThriftAgentServer(authenticatorPort, receiverPort, authenticationHandler,streamDefinitionStore);
     }
 
 
-    public CarbonAgentServer createAgentServer(int receiverPort,
+    public ThriftAgentServer createAgentServer(int receiverPort,
                                                AuthenticationHandler authenticationHandler,StreamDefinitionStore streamDefinitionStore) {
-        return new CarbonAgentServer(receiverPort, authenticationHandler,streamDefinitionStore);
+        return new ThriftAgentServer(receiverPort, authenticationHandler,streamDefinitionStore);
     }
 }

@@ -16,7 +16,7 @@
 * under the License.
 */
 
-package org.wso2.carbon.agent.server.internal.service;
+package org.wso2.carbon.agent.server.internal.service.authenticator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,16 +33,18 @@ public class ThriftAuthenticatorServiceImpl implements ThriftAuthenticatorServic
     private static final Log log = LogFactory.getLog(Authenticator.class);
 
     public String connect(String username, String password) throws ThriftAuthenticationException {
-        log.info(username + " connected");
         try {
-            return Authenticator.getInstance().authenticate(username, password);
+            return AuthenticatorService.connect(username, password);
         } catch (AuthenticationException e) {
-            throw new ThriftAuthenticationException(username + " is not authorised to access the server "+e.getErrorMessage());
+            throw new ThriftAuthenticationException(e.getErrorMessage());
         }
     }
 
     public void disconnect(String sessionId) throws TException {
-        log.info(sessionId + " disconnected");
-        Authenticator.getInstance().logout(sessionId);
+        try {
+            AuthenticatorService.disconnect(sessionId);
+        } catch (Exception e) {
+            throw new TException(e.getMessage());
+        }
     }
 }

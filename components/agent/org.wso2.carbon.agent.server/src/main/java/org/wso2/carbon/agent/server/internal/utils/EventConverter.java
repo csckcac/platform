@@ -94,7 +94,17 @@ public final class EventConverter {
         }
     }
 
-    public static List<Event> createEventList(ThriftEventBundle thriftEventBundle,
+    public static List<Event> createEventList(Object eventBundle,
+                                              EventStreamTypeHolder eventStreamTypeHolder) {
+        if (eventBundle instanceof ThriftEventBundle) {
+            return createEventList((ThriftEventBundle) eventBundle, eventStreamTypeHolder);
+        } else {
+            throw new EventConversionException("Wrong type event relieved " + eventBundle.getClass());
+        }
+
+    }
+
+    private static List<Event> createEventList(ThriftEventBundle thriftEventBundle,
                                               EventStreamTypeHolder eventStreamTypeHolder) {
 
         IndexCounter indexCounter = new IndexCounter();

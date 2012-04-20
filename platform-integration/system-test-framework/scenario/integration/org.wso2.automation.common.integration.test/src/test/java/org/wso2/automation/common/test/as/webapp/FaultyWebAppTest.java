@@ -32,7 +32,8 @@ import java.io.File;
 
 
 /*
-Deploy Axis2 service with the schema of the wsdl is stored in governance service of the tenant
+Deploy faulty webapp and then redeploy the correct webapp. After redeployment, do a HTTP GET
+and verirfy whether the expected output is present.
  */
 public class FaultyWebAppTest {
 

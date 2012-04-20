@@ -19,19 +19,31 @@
 
 <!-- Default main sequence shipped with the WSO2 ESB -->
 <sequence xmlns="http://ws.apache.org/ns/synapse" name="main">
-    <description>The main sequence for the message mediation</description>
+    <description>The default main sequence for API manager - Returns 404 Not Found</description>
     <in>
-        <!-- Log all messages passing through -->
-        <log level="full"/>
-
-        <!-- ensure that the default configuration only sends if it is one of samples -->
-        <!-- Otherwise Synapse would be an open proxy by default (BAD!)               -->
-        <filter source="get-property('To')" regex="http://localhost:9000.*">
-            <!-- Send the messages where they have been sent (i.e. implicit "To" EPR) -->
-            <send/>
-        </filter>
+        <log level="custom">
+	    <property name="STATUS" value="Message dispatched to the main sequence. Invalid URL."/>
+	    <property name="RESOURCE" expression="fn:concat('/', $axis2:REST_URL_POSTFIX)"/>
+ 	</log>
+	<property name="HTTP_SC" value="404" scope="axis2"/>
+	<property name="RESPONSE" value="true"/>
+	<header name="To" action="remove"/>
+	<payloadFactory>
+	    <format>
+		<am:fault xmlns:am="http://wso2.org/apimanager">
+		   <am:code>404</am:code>
+		   <am:type>Status report</am:type>
+		   <am:message>Not Found</am:message>	
+		   <am:description>The requested resource (/$1) is not available.</am:description>
+		</am:fault>
+	    </format>
+	    <args>
+		<arg expression="$axis2:REST_URL_POSTFIX"/>
+	    </args>
+	</payloadFactory>
+	<property name="NO_ENTITY_BODY" scope="axis2" action="remove"/>
+	<property name="messageType" value="application/xml" scope="axis2"/>
+	<property name="ContentType" scope="axis2" action="remove"/>
+	<send/>
     </in>
-    <out>
-        <send/>
-    </out>
 </sequence>

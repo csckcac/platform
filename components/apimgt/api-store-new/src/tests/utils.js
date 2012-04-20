@@ -1,8 +1,10 @@
 var failure = function(method, result) {
-    log("FAILURE : " + method);
-    log("=====================================================================================");
+    var log = new Log();
+    log.error("FAILURE : " + method);
+    log.info("=========================================================================================== : " + method);
 };
 
 var success = function(method, result) {
-    log("SUCCESS : " + method);
+    var log = new Log();
+    log.info("SUCCESS : " + method);
 };

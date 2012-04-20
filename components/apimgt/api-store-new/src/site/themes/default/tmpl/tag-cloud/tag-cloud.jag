@@ -1,8 +1,4 @@
 <% var tcloud = getTemplateData(data, "tag-cloud"); %>
-<div class="service-store-tabs">
-    <a name="overview" class="tab selected">Tags</a>
-</div>
-<div style="clear:both"></div>
 <div id="tag-cloud" class="content-box">
     <%
         var i, tags = tcloud.tags, length = tags.length;

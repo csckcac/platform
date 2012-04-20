@@ -1,68 +1,100 @@
 <%
-var data = data || {"page":{"header":{}}};
+var data = data || { "$":{ "page":{ "header":{} }, "layout":{} } };
 
 var includeJags = function (jags) {
     var i = 0;
-    var prefix = getThemePath();
     if (typeof jags == "array") {
         var length = jags.length;
         for (i = 0; i < length; i++) {
-            include(prefix + jags[i]);
+            include(getThemeFile(jags[i]));
         }
     } else {
-        include(prefix + jags);
+        include(getThemeFile(jags));
     }
+};
+
+var getTheme = function () {
+    //TODO : remove following lines if theme switching need to be avoided
+    var theme = request.getParameter("theme");
+    if (theme) {
+        return theme;
+    }
+    var site = require("/site/conf/site.json");
+    return site.theme;
+};
+
+var getThemesPath = function () {
+    return "/site/themes/";
 };
 
 var getThemePath = function () {
     var site = require("/site/conf/site.json");
-    return "/site/themes/" + site.theme + "/";
+    return getThemesPath() + getTheme() + "/";
+};
+
+var getDefaultThemePath = function () {
+    return getThemesPath() + "default/";
 };
 
 var getTemplatePath = function () {
     return getThemePath() + "tmpl/";
 };
 
-var renderLayout = function (data, layout) {
-    addTemplateData(data, "page", "body", "layouts/layout0/layout0.jag");
-
-    var initializer = require(getThemePath() + "layouts/" + layout + "/initializer.js");
-    initializer.initialize(data);
-
-    includeJags("page.jag");
+var getThemeFile = function (path) {
+    var prefix = getThemePath();
+    var def = getDefaultThemePath();
+    var tmpPath = prefix + path;
+    var file = new File(tmpPath);
+    return file.exists ? tmpPath : def + path;
 };
 
-var initTemplate = function (data, template) {
-    var prefix = getTemplatePath();
-    var initializer = require(prefix + template + "/initializer.js");
+var renderLayout = function (data, layout) {
+    addTemplateData(data, "page", "body", "layouts/" + layout + "/" + layout + ".jag");
+    initLayout(data, layout);
+    includeJags("layouts/page.jag");
+};
+
+var initLayout = function (data, layout, theme) {
+    var path = "layouts/" + layout + "/initializer.js";
+    path = theme ? getThemesPath() + theme + "/" + path : getThemeFile(path);
+    var initializer = require(path);
+    initializer.initialize(data);
+};
+
+var initTemplate = function (data, template, theme) {
+    var path = "tmpl/" + template + "/initializer.js";
+    path = theme ? getThemesPath() + theme + "/" + path : getThemeFile(path);
+    var initializer = require(path);
     var args = Array.prototype.slice.call(arguments, 2);
     args.unshift(data);
     initializer.initialize.apply(this, args);
 };
 
 var addHeaderCSS = function (data, css) {
-    var header = data.page.header;
+    css = getThemeFile(css);
+    var header = data.$.page.header;
     var list = header.css || [];
     list.push(css);
     header.css = list;
 };
 
 var addHeaderJS = function (data, js) {
-    var header = data.page.header;
+    js = getThemeFile(js);
+    var header = data.$.page.header;
     var list = header.js || [];
     list.push(js);
     header.js = list;
 };
 
 var addHeaderJags = function (data, jags) {
-    var header = data.page.header;
+    var header = data.$.page.header;
     var list = header.jags || [];
     list.push(jags);
     header.jags = list;
 };
 
 var addHeaderCode = function (data, code) {
-    var header = data.page.header;
+    var header = data.$.page.header;
     var list = header.code || [];
     list.push(code);
     header.code = list;
@@ -84,19 +116,20 @@ var getTemplateData = function (data, template, key) {
     return key ? obj[key] : obj;
 };
 
-/*
-var addLayoutData = function (data, layout, key, value) {
-    var obj = data.layouts[layout] || {};
-    obj[key] = value;
-    data.layouts[layout] = obj;
+var addPageData = function (data, key, value) {
+    data.$.page[key] = value;
 };
 
-var getLayoutData = function (data, layout, key) {
-    var obj = data.layouts[layout];
-    if (obj == null) {
-        return null;
-    }
-    return key ? obj[key] : obj;
-};*/
+var getPageData = function (data, key) {
+    return key ? data.$.page[key] : data.$.page;
+};
+
+var addLayoutData = function (data, key, value) {
+    data.$.layout[key] = value;
+};
+
+var getLayoutData = function (data, key) {
+    return key ? data.$.layout[key] : data.$.layout;
+};
 
 %>

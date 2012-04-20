@@ -1,9 +1,9 @@
 <% include("/site/themes/utils.jag"); %>
 <% var site = require("/site/conf/site.json"); %>
 <%
-    data.page.title = "API Listing";
+    addPageData(data, "title", "API Listing");
 
-    addTemplateData(data, "layout", "tmpl", "tmpl/item-listing/item-listing.jag");
+    addLayoutData(data, "tmpl", "tmpl/item-listing/item-listing.jag");
 
     var published = require("/core/published/published.js");
     var result = published.getAllPublishedAPIs();

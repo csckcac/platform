@@ -1,0 +1,77 @@
+<div id="overview" class="content-box" style="display: block;">
+    <ul class="content-list template tmpl-overview">
+        <li>
+            <div class="title" id="serviceName">API1</div>
+            <div class="service-image"><img src="" id="thumbnail" class="thumbnail"></div>
+            <div class="service-rating-data">
+                <div id="ratingValueDisplay" style="display: none;">0.0</div>
+                <div class="ratingDetails">
+                    <div id="ratingDetails-fistRow">
+                        <span>Your rating:</span>
+                        <span id="ratingStars">
+                            <a class="star-1"></a>
+                            <a class="star-1"></a>
+                            <a class="star-1"></a>
+                            <a class="star-1"></a>
+                            <a class="star-0"></a>
+                        </span>
+                        <a id="myRatingTemp">4</a>
+                    /5
+                        <a title="Remove My Rating" id="myRatingRemove" style="display: none;"></a>
+                    </div>
+
+                    <div id="ratingDetails-secondRow" style="display: none;">Average Rating:
+                        <strong id="ratingValueDisplay-small">0.0</strong>
+                    /5 </div>
+                    <div style="" id="ratingDetails-thirdRow">(awaiting 5 votes)</div>
+                    <div class="apps-wrapper" style="display: none;">
+                        <label ref="app-selection">Applications</label>
+                        <select id="app-selection">
+                            <option value="">--Select--</option>
+                            <option value="myapp">MyApp</option>
+                        </select>
+                    </div>
+                    <div class="content-label">
+                        <a class="buy-button">Subscribe</a>
+                    </div>
+                </div>
+
+                <div style="clear:both"></div>
+             </div>
+
+            <div style="clear:both"></div>
+        </li>
+        <li>
+            <div class="content-label">Version:</div>
+            <div class="content-value" id="version">1.0.0</div>
+        </li>
+        <li>
+            <div class="content-label">Provider:</div>
+            <div class="content-value" id="provider">admin</div>
+        </li>
+        <!--li>
+            <div class="content-label">Provider Link:</div>
+            <div id="providerLink" class="content-value">http:\/\/provider/fsf.com </div>
+        </li-->
+        <li>
+        <div class="content-label">Description:</div>
+        <div class="content-value" id="description">This is the description of API1</div>
+    </li>
+    <li id="supportForumURLList" style="display: none;">
+        <div class="content-label" id="supportForumURLLabel"></div>
+        <div href="#" class="content-value" id="supportForumURL"></div>
+    </li>
+
+    <li style="display:none;" id="commentsArea">
+        <div class="content-label">Comments:</div>
+        <div class="content-value">
+            <textarea class="comment-textarea"></textarea>
+            <a id="commentBoxBtn" class="button">Add</a>
+        </div>
+        <div style="display:none;" id="comment-ajax-loader"><img src="images/1.gif"></div>
+        <div class="comment-list" style=""></div>
+        <!--<div id="commentsPagination"></div>-->
+    </li>
+
+    </ul>
+</div>

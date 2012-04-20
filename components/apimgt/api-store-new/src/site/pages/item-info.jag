@@ -1,9 +1,9 @@
 <% include("/site/themes/utils.jag"); %>
 <% var site = require("/site/conf/site.json"); %>
 <%
-    data.page.title = "API Information";
+    addPageData(data, "title", "API Information");
 
-    addTemplateData(data, "layout", "tmpl", "tmpl/item-info/general.jag");
+    addLayoutData(data, "tmpl", "tmpl/item-info/overview.jag");
     //initTemplate("item-info");
 
     renderLayout(data, "layout0");

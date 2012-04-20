@@ -1,4 +1,4 @@
-<% var layout = getTemplateData(data, "layout"); %>
+<% var layout = getLayoutData(data); %>
 <div class="wrapper">
         <div class="header-strip-links" id="header-strip-links">
             <% includeJags("tmpl/header-strips/header-strip.jag"); %>
@@ -19,9 +19,13 @@
                     </div>
                     <div style="clear:both"></div>
 
-                    <div style="clear:both"></div>
                     <div class="content-box-left-side">
-                        <% includeJags("tmpl/top-rated/top-rated.jag"); %>
+                        <%
+                            var length = getTemplateData(data, "top-rated").apis.length;
+                            if(length && length > 0) {
+                                includeJags("tmpl/top-rated/top-rated.jag");
+                            }
+                        %>
                         <% includeJags("tmpl/recently-added/recently-added.jag"); %>
                     </div>
                 </div>
@@ -31,6 +35,10 @@
                 <div id="middle-container"><% includeJags(layout.tmpl); %></div>
             </div>
             <div class="grid_3 cloud" id="cloud">
+                <div class="service-store-tabs">
+                    <a name="overview" class="tab selected">Tags</a>
+                </div>
+                <div style="clear:both"></div>
                 <% includeJags("tmpl/tag-cloud/tag-cloud.jag"); %>
             </div>
         </div>

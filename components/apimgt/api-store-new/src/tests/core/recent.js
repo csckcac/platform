@@ -1,9 +1,9 @@
 
 var test0 = function() {
-    var name = "login";
+    var name = "getRecentlyAddedAPIs";
     var utils = require("/tests/utils.js");
-    var user = require("/core/user/user.js");
-    var result = user.login("admin", "admin");
+    var recent = require("/core/recent/recent.js");
+    var result = recent[name](5);
     if(result.error) {
         utils.failure(name, result);
         return;

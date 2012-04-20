@@ -1,6 +1,4 @@
-<% include("/site/themes/utils.jag"); %>
-<% var site = require("/site/conf/site.json"); %>
-<% var page = getTemplateData(data, "page"); %>
+<% var page = getPageData(data); %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -40,8 +38,9 @@
             var i, js = page.header.js;
             if(js) {
                 var length = js.length;
+                var context = site.context;
                 for(i = 0; i < length; i++) {
-                    var path = "/" + site.context + "/site/themes/default/" + js[i];
+                    var path = "/" + context + js[i];
                     print('<script type="text/javascript" src="' + path + '"></script>');
                 }
             }
@@ -49,8 +48,9 @@
             var css = page.header.css;
             if(css) {
                 var length = css.length;
+                var context = site.context;
                 for(i = 0; i < length; i++) {
-                    var path = "/" + site.context + "/site/themes/default/" + css[i];
+                    var path = "/" + context + css[i];
                     print('<link type="text/css" rel="stylesheet" href="' + path + '"/>');
                 }
             }

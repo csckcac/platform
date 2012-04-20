@@ -9,7 +9,7 @@ var get, post, put, del, head, options, trace, connect;
  */
 (function() {
     var formatData = function(xhr, type) {
-        var data = xhr.responseText;
+        var data = xhr.getResponseText();
         type = type.toLowerCase();
         if (type === "xml") {
 			return new XML(data.replace(/<\?xml.*?\?>/, "").replace(/<!--[\s\S]*?-->/g, ""));
@@ -178,7 +178,7 @@ var get, post, put, del, head, options, trace, connect;
 
         if (callback) {
             xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
+                if (xhr.readyState() === 4 && xhr.getStatusCode() === 200) {
                     callback.call(that, formatData(xhr, dataType), xhr);
                 }
             };

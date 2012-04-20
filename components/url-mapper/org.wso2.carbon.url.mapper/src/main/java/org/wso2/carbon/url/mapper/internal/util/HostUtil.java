@@ -15,6 +15,12 @@
  */
 package org.wso2.carbon.url.mapper.internal.util;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.catalina.Container;
 import org.apache.catalina.Engine;
 import org.apache.catalina.Host;
 import org.apache.catalina.core.StandardHost;
@@ -29,11 +35,6 @@ import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * util class which is doing add host to engine and getting resources from the
@@ -246,16 +247,19 @@ public class HostUtil {
 	
 	
 	public static void removeHostFromEngine(String hostName) throws UrlMapperException {
-		String hostBaseDir = CarbonUtils.getCarbonRepository()
-				+ UrlMapperConstants.HostProperties.WEB_APPS;
+		
+		Container[] hosts =  DataHolder.getInstance().getCarbonTomcatService().getTomcat().getEngine().findChildren();
 		CarbonTomcatService carbonTomcatService = DataHolder.getInstance().getCarbonTomcatService();
 		Engine engine = carbonTomcatService.getTomcat().getEngine();
-		StandardHost host = new StandardHost();
-		host.setAppBase(hostBaseDir);
-		host.setName(hostName);
-		host.setUnpackWARs(false);
-		engine.removeChild(host);
-		//TODO remove it from the folder structure.
+		for (Container host : hosts) {
+			if (host.getName().contains(hostName)) {
+				engine.removeChild(host);
+			}
+		}
+	
+		
+		//TODO remove it from the hostname folder. when you remove the host from the engine only data inside the hostname folder get deleted 
+		//however, the hostname folder inside catalina will be there.
 		try {
 			registryManager.removeFromRegistry(hostName);
 		} catch (Exception e) {

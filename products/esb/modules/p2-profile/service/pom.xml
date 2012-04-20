@@ -177,7 +177,8 @@
 
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.ec2.client.feature:${carbon.version}</featureArtifactDef>
 								
-								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.deployment.synchronizer.server.feature:${carbon.version}</featureArtifactDef>
+				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.deployment.synchronizer.server.feature:${carbon.version}</featureArtifactDef>
+				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.deployment.synchronizer.subversion.feature:${carbon.version}</featureArtifactDef>
                                 <!-- reporting features -->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.reporting.feature:${carbon.version}</featureArtifactDef>
                                 <!-- end reporting features -->
@@ -514,10 +515,14 @@
                                      <version>${carbon.version}</version>
 								 </feature>
 									
-								<feature>
-									<id>org.wso2.carbon.deployment.synchronizer.server.feature.group</id>
-									<version>${carbon.platform.version}</version>
-								</feature>
+				<feature>
+				    <id>org.wso2.carbon.deployment.synchronizer.server.feature.group</id>
+				    <version>${carbon.platform.version}</version>
+				</feature>
+				<feature>
+                                    <id>org.wso2.carbon.deployment.synchronizer.subversion.feature.group</id>
+                                    <version>${carbon.platform.version}</version>
+                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.reporting.feature.group</id>
                                     <version>${carbon.version}</version>

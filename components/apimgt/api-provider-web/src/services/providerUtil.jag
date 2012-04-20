@@ -35,7 +35,7 @@ function loginFunc(username, password, remoteAddress) {
     var cookie = result.client.getResponseHeader("Set-Cookie");
     log(cookie);
     cookie = cookie.split(';')[0];
-    session.put("username", username);
+session.put("username", username);
     session.put("cookie", cookie);
     return {
         error:false,
@@ -85,14 +85,14 @@ function invokeService(url, payload, action, opts) {
         };
     } catch (e) {
         log("Error invoking service " + url + ", action : " + options.action + ", " + e.toString());
-        return {
-            client:client,
-            error:e
+return {
+        client:client,
+        error:e
         };
-    }
+}
 }
 
-//methods for usage monitoring 
+//methods for usage monitoring
 function getAPIUsageHostTestFunc(apiName,server) {
         var usage=  new Array();
         var usageout=  new Array();
@@ -102,7 +102,7 @@ function getAPIUsageHostTestFunc(apiName,server) {
         version:usage[k].version,
         count:usage[k].count
         };
-        usageout.push(elem);
+usageout.push(elem);
 
 
 }
@@ -113,153 +113,173 @@ return {
 }
 
 function getAllAPIUsageFunc(server) {
-	log("getAllAPIUsageFunc "+server);
-    var usage=  new Array();
-    var usageout=  new Array();
-    usage= apiProvider.getAllAPIUsage(server);
-    for (var k = 0; k < usage.length ; k++){
-    var elem = {
-    apiName:usage[k].apiName,
-    count:usage[k].count
-    };
-    usageout.push(elem);
+        log("getAllAPIUsageFunc " + server);
+        var usage=  new Array();
+        var usageout=  new Array();
+        usage= apiProvider.getAllAPIUsage(server);
+        if (usage == null) {
+        return {
+        error:true
+        };
+
+}else{
+        for (var k = 0; k < usage.length ; k++){
+        var elem = {
+        apiName:usage[k].apiName,
+        count:usage[k].count
+        };
+usageout.push(elem);
 
 
 }
 return {
-    error:false,
-    usage:usageout
-    };
+        error:false,
+        usage:usageout
+        };}
 }
 
-//methods for usage monitoring 
+//methods for usage monitoring
 function rateAPIFunc() {
-    log("rateAPIFunc");
-    apiProvider.setRating();
-    return {
+        log("rateAPIFunc");
+        apiProvider.setRating();
+        return {
         error:false,
         message:"success"
-    };
+        };
 }
 function getAPIFunc(apiName, version) {
-    log("getAPIFunc");
-    var providerName = getUserFunc().username;
-    var apiOut = new Array();
-    var apii = new Array();
-    apii = apiProvider.getAPI(providerName, apiName, version);
+        log("getAPIFunc");
+        var providerName = getUserFunc().username;
+        var apiOut = new Array();
+        var apii = new Array();
+        apii = apiProvider.getAPI(providerName, apiName, version);
 
-    var temps = new Array();
+        var temps = new Array();
 
-    if (apii == null) {
+        if (apii == null) {
         return {
-            error:true
+        error:true
         };
 
-    } else {
+} else {
         var elem = {
-            name:apii[0],
-            description:apii[1],
-            endpoint:apii[2],
-            wsdl:apii[3],
-            version:apii[4],
-            tags:apii[5],
-            availableTiers:apii[6],
-            status:apii[7],
-            thumb:apii[8],
-            context:apii[9],
-            lastUpdated:apii[10],
-            subs:apii[11],
-            templates:apii[12]
+        name:apii[0],
+        description:apii[1],
+        endpoint:apii[2],
+        wsdl:apii[3],
+        version:apii[4],
+        tags:apii[5],
+        availableTiers:apii[6],
+        status:apii[7],
+        thumb:apii[8],
+        context:apii[9],
+        lastUpdated:apii[10],
+        subs:apii[11],
+        templates:apii[12]
 
         };
-        apiOut.push(elem);
+apiOut.push(elem);
 
-        return {
-            error:false,
-            api:apiOut
+return {
+        error:false,
+        api:apiOut
         };
-    }
+}
 }
 
 function getAPIsByProviderFunc() {
-    log("getAPIsByProviderFunc");
-    var apisOut = new Array();
-    var apis = new Array();
-    var provider = getUserFunc().username;
-    apis = apiProvider.getAPIsByProvider(provider);
-    if (apis == null) {
+        log("getAPIsByProviderFunc");
+        var apisOut = new Array();
+        var apis = new Array();
+        var provider = getUserFunc().username;
+        apis = apiProvider.getAPIsByProvider(provider);
+        if (apis == null) {
         return {
-            error:true
+        error:true
         };
-    }
-    else {
+}
+else {
         for (var k = 0; k < apis.length; k++) {
-            var elem = {
-                name:apis[k].apiName,
-                version:apis[k].version,
-                status:apis[k].status,
-                thumb:apis[k].thumb,
-                subs:apis[k].subs
+        var elem = {
+        name:apis[k].apiName,
+        version:apis[k].version,
+        status:apis[k].status,
+        thumb:apis[k].thumb,
+        subs:apis[k].subs
 
-            };
-            apisOut.push(elem);
-        }
-        return {
-            error:false,
-            apis:apisOut
         };
-    }
+apisOut.push(elem);
+}
+return {
+        error:false,
+        apis:apisOut
+        };
+}
 
 }
 
 function saveAPIFunc(apiName, version, description, endpoint, wsdl, tags, tier, thumbUrl, context, uriTemplateArr, uriMethodArr) {
-    log("saveAPIFunc");
-    var provider = getUserFunc().username;
-    apiProvider.addAPI(provider, apiName, version, description, endpoint, wsdl, tags, tier, thumbUrl, context, request, uriTemplateArr, uriMethodArr);
-    return {
-        error:false,
-        message:"success"
-    };
-   }
+        log("saveAPIFunc");
+        var provider = getUserFunc().username;
+        var success=apiProvider.addAPI(provider, apiName, version, description, endpoint, wsdl, tags, tier, thumbUrl, context, request, uriTemplateArr, uriMethodArr);
+        if(success){return {
+        error:false
+        };}else{return {
+        error:true
+        };}
+}
 
 function getAllAPIUsageByProviderFunc() {
-    log("getAllAPIUsageByProviderFunc");
-    var subscribersOut = new Array();
-    var subscribersArray = new Array();
-    var provider = getUserFunc().username;
-    subscribersArray = apiProvider.getAllAPIUsageByProvider(provider);
-    for (var k = 0; k < subscribersArray.length; k++) {
-        var elem = {
-            userName:subscribersArray[k].userName,
-            application:subscribersArray[k].application,
-            apis:subscribersArray[k].apis
+        log("getAllAPIUsageByProviderFunc");
+        var subscribersOut = new Array();
+        var subscribersArray = new Array();
+        var provider = getUserFunc().username;
+        subscribersArray = apiProvider.getAllAPIUsageByProvider(provider);
+        if (subscribersArray == null) {
+        return {
+        error:true
         };
-        subscribersOut.push(elem);
-    }
-    return {
+
+}else{
+        for (var k = 0; k < subscribersArray.length; k++) {
+        var elem = {
+        userName:subscribersArray[k].userName,
+        application:subscribersArray[k].application,
+        apis:subscribersArray[k].apis
+        };
+subscribersOut.push(elem);
+}
+return {
         error:false,
         subscribers:subscribersOut
-    };
+        }; }
 
 }
 
 function getSubscribersOfAPIFunc(apiName, version) {
-    log("getSubscribersOfAPIFunc");
-    var providerName = getUserFunc().username;
-    var subscribersOut = new Array();
-    var subscribersArray = new Array();
-    subscribersArray = apiProvider.getSubscribersOfAPI(providerName, apiName, version);
-    for (var k = 0; k < subscribersArray.length; k++) {
-        var elem = {
-            userName:subscribersArray[k].userName,
-            subscribedDate:subscribersArray[k].subscribedDate
+        log("getSubscribersOfAPIFunc");
+        var providerName = getUserFunc().username;
+        var subscribersOut = new Array();
+        var subscribersArray = new Array();
+        subscribersArray = apiProvider.getSubscribersOfAPI(providerName, apiName, version);
+        if (subscribersArray == null) {
+        return {
+        error:true
         };
-        subscribersOut.push(elem);
-    }
-    return {
+
+}else{
+        for (var k = 0; k < subscribersArray.length; k++) {
+        var elem = {
+        userName:subscribersArray[k].userName,
+        subscribedDate:subscribersArray[k].subscribedDate
+        };
+subscribersOut.push(elem);
+}
+return {
         error:false,
         subscribers:subscribersOut
-    };
+        };
+}
 
 }
 
@@ -290,129 +310,143 @@ return {
 }
 
 function updateAPIFunc(apiName, version, description, imageUrl, endpoint, wsdl, tags, tier, status, resourceTemplate, resourceMethod, resourceUri, context, uriTemplateArr, uriMethodArr) {
-    log("updateAPIFunc");
-    var providerName = getUserFunc().username;
-    apiProvider.updateAPI(providerName, apiName, version, description, imageUrl, endpoint, wsdl, tags, tier, status, resourceTemplate, resourceMethod, resourceUri, context, request, uriTemplateArr, uriMethodArr);
-    return {
-        error:false,
-        message:"success"
-    };
+        log("updateAPIFunc");
+        var providerName = getUserFunc().username;
+        var success=apiProvider.updateAPI(providerName, apiName, version, description, imageUrl, endpoint, wsdl, tags, tier, status, resourceTemplate, resourceMethod, resourceUri, context, request, uriTemplateArr, uriMethodArr);
+        if(success){
+        return {
+        error:false
+        };}else{return {
+        error:true
+
+        };}
 
 }
 
 function getAllDocumentationFunc(apiName, version) {
-    log("getAllDocumentationFunc");
-    var providerName = getUserFunc().username;
-    var docsOut = new Array();
-    var docs = new Array();
-    docs = apiProvider.getAllDocumentation(providerName, apiName, version);
-    for (var k = 0; k < docs.length; k++) {
-    	
-    	
-        var elem = {
-            docName:docs[k].docName,
-            docType:docs[k].docType,
-            sourceType:docs[k].sourceType,
-            summary:docs[k].summary,
-            lastUpdated:docs[k].docLastUpdated
+        log("getAllDocumentationFunc");
+        var providerName = getUserFunc().username;
+        var docsOut = new Array();
+        var docs = new Array();
+        docs = apiProvider.getAllDocumentation(providerName, apiName, version);
+        if (docs == null) {
+        return {
+        error:true
         };
-        if(docs[k].sourceUrl != null) {
-            elem.docUrl = docs[k].sourceUrl;
+
+}else{
+        for (var k = 0; k < docs.length; k++) {
+
+        var elem = {
+        docName:docs[k].docName,
+        docType:docs[k].docType,
+        sourceType:docs[k].sourceType,
+        summary:docs[k].summary,
+        lastUpdated:docs[k].docLastUpdated
+        };
+if(docs[k].sourceUrl != null) {
+        elem.docUrl = docs[k].sourceUrl;
         }
-        docsOut.push(elem);
-    }
-    return {
+docsOut.push(elem);
+}
+return {
         error:false,
         docs:docsOut
-    };
+        }; }
 
 }
 
 function getInlineContentFunc(apiName, version,docName) {
-    log("getInlineContentFunc");
-    var providerName = getUserFunc().username;
-    var docOut = new Array();
-    var doc = new Array();
-    doc = apiProvider.getInlineContent(providerName, apiName, version,docName);
-    var k=0;
-    	log('doc[k].content '+doc[k].content);
-    	log(doc[k].content.length);
+        log("getInlineContentFunc");
+        var providerName = getUserFunc().username;
+        var docOut = new Array();
+        var doc = new Array();
+        doc = apiProvider.getInlineContent(providerName, apiName, version,docName);
+        var k=0;
+        log('doc[k].content '+doc[k].content);
+        log(doc[k].content.length);
         var elem = {
-        	apiProvider:providerName,
-        	apiName:apiName,
-        	apiVersion:version,
-            docName:doc[k].docName,
-            docContent:doc[k].content
+        apiProvider:providerName,
+        apiName:apiName,
+        apiVersion:version,
+        docName:doc[k].docName,
+        docContent:doc[k].content
         };
-       
-        docOut.push(elem);
-    
-    return {
+
+docOut.push(elem);
+
+return {
         error:false,
         doc:docOut
-    };
+        };
 
 }
 
 function addInlineContentFunc(apiName, version,docName,docContent) {
-    log("addInlineContentFunc"+apiName+ version+docName+docContent);
-    var providerName = getUserFunc().username;
-    var docOut = new Array();
-    var doc = new Array();
-    apiProvider.addInlineContent(providerName, apiName, version,docName,docContent);
+        log("addInlineContentFunc" + apiName + version + docName + docContent);
+        var providerName = getUserFunc().username;
+        var docOut = new Array();
+        var doc = new Array();
+        apiProvider.addInlineContent(providerName, apiName, version,docName,docContent);
 
         return {
-            error:false,
-            message:"success"
+        error:false,
+        message:"success"
         };
 
 }
 
 function addDocumentationFunc(apiName, version, docName, docType, summary, sourceType, sourceUrl) {
-    log("addDocumentationFunc"+sourceType);
-    var providerName = getUserFunc().username;
-    apiProvider.addDocumentation(providerName, apiName, version, docName, docType, summary, sourceType, sourceUrl);
-    if(sourceType=="inline"){
-    	addInlineContentFunc(apiName, version,docName,"");
-    }
-    return {
-        error:false,
-        message:"success"
-    };
+        log("addDocumentationFunc" + sourceType);
+        var providerName = getUserFunc().username;
+        var success=apiProvider.addDocumentation(providerName, apiName, version, docName, docType, summary, sourceType, sourceUrl);
+        if(sourceType=="inline"){
+        addInlineContentFunc(apiName, version,docName,"");
+        }
+if(success){
+        return {
+        error:false
+        };}else{return {
+        error:true
+        };}
 
 
 }
 
 function removeDocumentationFunc(apiName, version, docName, docType) {
-    log("removeDocumentationFunc");
-    var providerName = getUserFunc().username;
-    apiProvider.removeDocumentation(providerName, apiName, version, docName, docType);
-    log(docName + " removed")
-    return {
-        error:false,
-        message:"success"
-    };
+        log("removeDocumentationFunc");
+        var providerName = getUserFunc().username;
+        var success=apiProvider.removeDocumentation(providerName, apiName, version, docName, docType);
+        if(success){
+        return {
+        error:false
+        };}else{return {
+        error:true
+        };}
 }
 
 function createNewAPIVersionFunc(apiName, version, newVersion) {
-    log("createNewAPIVersionFunc");
-    var providerName = getUserFunc().username;
-    apiProvider.createNewAPIVersion(providerName, apiName, version, newVersion);
-    return {
-        error:false,
-        message:"success"
-    };
+        log("createNewAPIVersionFunc");
+        var providerName = getUserFunc().username;
+        var success=apiProvider.createNewAPIVersion(providerName, apiName, version, newVersion);
+        if(success){
+        return {
+        error:false
+        };}else{
+        return {
+        error:true
 
-
+        };
+}
 }
 
 function isContextExistFunc(context) {
-    log("isContextExistFunc");
-    var contextExist = apiProvider.isContextExist(context);
-    return {
+        log("isContextExistFunc");
+        var contextExist = apiProvider.isContextExist(context);
+        return {
         error:false,
         contextExist:contextExist
-    };
+        };
 
 }
 

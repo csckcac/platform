@@ -92,7 +92,7 @@ function removeDocumentation(apiName,version,docName,docType) {
     return getDataJSON(removeDocumentationFunc(apiName,version,docName,docType), null, "Error while adding a new documentation");
 }
 function createNewAPIVersion(apiName,version,newVersion) {
-    return getDataJSON(createNewAPIVersionFunc(apiName,version,newVersion), null, "Error while adding creating a new version of API");
+    return getDataJSON(createNewAPIVersionFunc(apiName,version,newVersion), null, "Error while creating a new version of API");
 }
 function isContextExist(context) {
     return getDataJSON(isContextExistFunc(context), null, "Error while adding creating a new version of API");

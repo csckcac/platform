@@ -105,7 +105,7 @@ public class RegistryProvider {
         EnvironmentBuilder env = new EnvironmentBuilder();
          FrameworkProperties gregProperties = FrameworkFactory.getFrameworkProperties(productName);
         if (env.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
-            serverURL = "https://" + gregProperties.getProductVariables().getHostName() + "/t/" + tenantDomain + File.separator + "services" + File.separator;
+            serverURL = "https://" + gregProperties.getProductVariables().getHostName() + "/t/" + tenantDomain + "/" + "services" + "/";
         } else {
             serverURL = gregProperties.getProductVariables().getBackendUrl();
         }

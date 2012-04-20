@@ -35,12 +35,12 @@ public class GRegBackEndURLEvaluator {
 
         if (gregProperties.getWebContextRoot() != null) {
             baseUrl = "https://" + gregProperties.getHostName() + ":" + gregProperties.getHttpsPort()
-                      + File.separator + gregProperties.getWebContextRoot() + File.separator
-                      + "carbon" + File.separator;
+                      + "/" + gregProperties.getWebContextRoot() + "/"
+                      + "carbon" + "/";
         } else {
             baseUrl = "https://" + properties.getProductVariables().getHostName() + ":" +
-                      properties.getProductVariables().getHttpsPort() + File.separator +
-                      "carbon" + File.separator;
+                      properties.getProductVariables().getHttpsPort() + "/" +
+                      "carbon" + "/";
 
         }
         return baseUrl;

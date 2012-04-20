@@ -135,26 +135,6 @@ include('/includes/topnavi.jag');
 
                     <tr>
 
-                        <td><code>created</code></td>
-                       <td>String</td>
-                        <td><pre class="prettyprint">session.created</pre>
-                            Returns the session created time
-                        </td>
-
-                    </tr>
-                    <tr>
-
-                        <td><code>lastAccessed</code></td>
-                        <td>String</td>
-                        <td>
-                            <pre class="prettyprint">session.lastAccessed</pre>
-                            Returns the last accessed time of the session
-                            
-                        </td>
-
-                    </tr>
-                    <tr>
-
                         <td><code>maxInactive</code></td>
                          <td>Number</td>
                         <td>
@@ -164,19 +144,6 @@ include('/includes/topnavi.jag');
                         </td>
 
                     </tr>
-                    <tr>
-
-                        <td><code>isNew</code></td>
-                            <td>Boolean</td>
-                        <td>
-                            <pre class="prettyprint">session.isNew</pre>
-                            Returns the true|false
-                            
-                        </td>
-
-                    </tr>
-
-
 
                     </tbody>
                 </table>
@@ -191,7 +158,26 @@ include('/includes/topnavi.jag');
                          <th>Returns</th>
                          <th>Description</th>
                      </tr>
+                                        <tr>
 
+                        <td><code>getCreationTime()</code></td>
+                       <td>String</td>
+                        <td><pre class="prettyprint">session.getCreationTime()</pre>
+                            Returns the session created time
+                        </td>
+
+                    </tr>
+                    <tr>
+
+                        <td><code>getLastAccessedTime()</code></td>
+                        <td>String</td>
+                        <td>
+                            <pre class="prettyprint">session.getLastAccessedTime()</pre>
+                            Returns the last accessed time of the session
+
+                        </td>
+
+                    </tr>
                     <tr>
 
                         <td><code>put(key, value)</code>
@@ -240,6 +226,17 @@ include('/includes/topnavi.jag');
                             <pre class="prettyprint">session.invalidate()</pre>
                             invalidates the session
                             <br/>
+                        </td>
+
+                    </tr>
+                                        <tr>
+
+                        <td><code>isNew()</code></td>
+                            <td>Boolean</td>
+                        <td>
+                            <pre class="prettyprint">session.isNew()</pre>
+                            Returns the true|false
+
                         </td>
 
                     </tr>

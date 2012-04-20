@@ -273,10 +273,11 @@ if (action != null) {
     	var providerName = request.getParameter("providerName");
     	var apiName = request.getParameter("apiName");
     	var version = request.getParameter("version");
+    	var tier = request.getParameter("tier");
     	var applicationId = parseInt(request.getParameter("applicationId"), 10);
 
         if (providerName && apiName && version && applicationId) {
-        	 print(addSubscription(providerName, apiName, version, applicationId));
+        	 print(addSubscription(providerName, apiName, version, tier, applicationId));
         }
     }
     else if (action == "removeSubscriber") {

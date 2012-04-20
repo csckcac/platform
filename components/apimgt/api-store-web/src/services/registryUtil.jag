@@ -1597,8 +1597,8 @@ return {
 };
 }
 
-function addSubscriptionFunc(providerName, apiName, version, applicationId, userId) {
-    var status = apiStore.addSubscription(providerName, apiName, version, applicationId, userId);
+function addSubscriptionFunc(providerName, apiName, version, tier, applicationId, userId) {
+    var status = apiStore.addSubscription(providerName, apiName, version, tier, applicationId, userId);
     return {
         error:false,
         subscribed : status
@@ -1655,6 +1655,7 @@ var k=0;
       averageRating:api[k].rates,
       purchased:"false",
       thumbURL:api[k].thumbnailurl,
+      tier:api[k].tier,
       subscribed : api[k].subscribed,
      /*
 		 * parentPath:xml.ns::["return"].ax2430::parentPath.text().toString(),

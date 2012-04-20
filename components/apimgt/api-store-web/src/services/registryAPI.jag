@@ -231,8 +231,8 @@ function getAPIDescription(name,version,provider) {
     return getDataJSON(getAPIDescriptionFunc(name,version,provider), null, "Error while getting service description");
 }
 
-function addSubscription(providerName, apiName, version, applicationId) {
-    return getDataJSON(addSubscriptionFunc(providerName, apiName, version, applicationId, getUserFunc().username), null, "Error while adding Subscriber");
+function addSubscription(providerName, apiName, version, tier, applicationId) {
+    return getDataJSON(addSubscriptionFunc(providerName, apiName, version, tier, applicationId, getUserFunc().username), null, "Error while adding Subscriber");
 }
 
 function removeSubscriber(providerName, apiName, version, application) {

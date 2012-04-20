@@ -333,7 +333,8 @@ var renderServiceInfo = function(result) {
     $(".buy-button", overview).data({
         provider : description.author,
         name : description.name,
-        version : description.version
+        version : description.version,
+        tier : description.tier
     }).unbind("click").click(subscribe);
 
     //$("#detailViewTabs a[name=subscriptions]").unbind("click", getSubscriptions).click(getSubscriptions);
@@ -674,6 +675,7 @@ var subscribe = function() {
                     "providerName=" + data.provider + "&" +
                     "apiName=" + data.name + "&" +
                     "version=" + data.version + "&" +
+                    "tier=" + data.tier + "&" +
                     "applicationId=" + applicationId, function(result) {
         if (result.error == "true") {
             ServiceStoreApp.showLogin();

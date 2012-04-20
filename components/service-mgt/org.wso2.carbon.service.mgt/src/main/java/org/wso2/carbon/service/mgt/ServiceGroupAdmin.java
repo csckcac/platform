@@ -22,13 +22,19 @@ import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.description.*;
+import org.apache.axis2.description.AxisModule;
+import org.apache.axis2.description.AxisOperation;
+import org.apache.axis2.description.AxisService;
+import org.apache.axis2.description.AxisServiceGroup;
+import org.apache.axis2.description.Parameter;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.core.AbstractAdmin;
-import org.wso2.carbon.core.persistence.*;
+import org.wso2.carbon.core.persistence.PersistenceException;
+import org.wso2.carbon.core.persistence.PersistenceFactory;
+import org.wso2.carbon.core.persistence.PersistenceUtils;
+import org.wso2.carbon.core.persistence.ServiceGroupPersistenceManager;
 import org.wso2.carbon.core.persistence.file.ServiceGroupFilePersistenceManager;
 import org.wso2.carbon.core.util.ParameterUtil;
 import org.wso2.carbon.core.util.SystemFilter;
@@ -39,8 +45,13 @@ import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.utils.ServerException;
 
 import javax.xml.stream.XMLStreamException;
-import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.TreeSet;
 
 /**
  * Admin service to manage service groups
@@ -107,9 +118,8 @@ public class ServiceGroupAdmin extends AbstractAdmin {
                 }
             }
             if (serviceGroupSearchString != null &&
-                    serviceGroupSearchString.trim().length() > 0 &&
-                    serviceGroup.getServiceGroupName().toLowerCase().
-                            indexOf(serviceGroupSearchString.toLowerCase()) == -1) {
+                serviceGroupSearchString.trim().length() > 0 &&
+                !serviceGroup.getServiceGroupName().toLowerCase().contains(serviceGroupSearchString.toLowerCase())) {
                 continue;
             }
             boolean isClientSide = false;
@@ -149,8 +159,8 @@ public class ServiceGroupAdmin extends AbstractAdmin {
 //        for (int i = startIndex; i < endIndex && i < axisServiceGroupList.size(); i++) {
 //            axisServiceGroupsRequiredForPage.add(axisServiceGroupList.get(i));
 //        }
-        for (int i = 0; i < axisServiceGroupList.size(); i++) {
-          axisServiceGroupsRequiredForPage.add(axisServiceGroupList.get(i));
+        for (AxisServiceGroup anAxisServiceGroupList : axisServiceGroupList) {
+            axisServiceGroupsRequiredForPage.add(anAxisServiceGroupList);
         }
         for (AxisServiceGroup serviceGroup : axisServiceGroupsRequiredForPage) {
             String serviceType = "axis2";
@@ -220,8 +230,8 @@ public class ServiceGroupAdmin extends AbstractAdmin {
         } catch (Exception e) {
             throw new AxisFault("Cannot get active services from ServiceAdmin", e);
         }
-    //   DataPaginator.doPaging(pageNumber, axisServiceGroupList, sgList, wrapper);
-        DataPaginator.doPaging(pageNumber,  sgList, wrapper);
+        //   DataPaginator.doPaging(pageNumber, axisServiceGroupList, sgList, wrapper);
+        DataPaginator.doPaging(pageNumber, sgList, wrapper);
         return wrapper;
     }
 
@@ -318,10 +328,10 @@ public class ServiceGroupAdmin extends AbstractAdmin {
         // get the declared parameters
         parameters = serviceGroup.getParameters();
 
-        for (Iterator params = parameters.iterator(); params.hasNext(); ) {
-            Parameter parameter = (Parameter) params.next();
+        for (Object parameter1 : parameters) {
+            Parameter parameter = (Parameter) parameter1;
             if (parameter.getParameterType() == Parameter.TEXT_PARAMETER
-                    && parameter.getValue().toString().equals(Constants.Configuration.ENABLE_MTOM)) {
+                && parameter.getValue().toString().equals(Constants.Configuration.ENABLE_MTOM)) {
                 parameter.setValue(flag.trim());
                 found = true;
                 break;
@@ -358,7 +368,7 @@ public class ServiceGroupAdmin extends AbstractAdmin {
                     // this is definitely existing
                     if (!axisOperation.isControlOperation()) {
                         persistenceManager.updateParameter(serviceGroupName, parameter,
-                                PersistenceUtils.getResourcePath(axisOperation));
+                                                           PersistenceUtils.getResourcePath(axisOperation));
                     }
                 }
             }
@@ -406,7 +416,7 @@ public class ServiceGroupAdmin extends AbstractAdmin {
             }
         } catch (Exception e) {
             String msg = "Error occured while updating parameters of service group: "
-                    + serviceGroupName;
+                         + serviceGroupName;
             log.error(msg, e);
             throw new ServerException("updateServiceParameters", e);
         }
@@ -439,7 +449,7 @@ public class ServiceGroupAdmin extends AbstractAdmin {
             persistenceManager.updateServiceGroupParameter(serviceGroup, parameter);
         } catch (Exception e) {
             String msg = "Error occured while updating parameters of service group: "
-                    + serviceGroupName;
+                         + serviceGroupName;
             log.error(msg, e);
             throw new ServerException("updateServiceParameters", e);
         }
@@ -476,7 +486,7 @@ public class ServiceGroupAdmin extends AbstractAdmin {
 
         } catch (Exception e) {
             String msg = "Error occured while getting parameters of service group : "
-                    + serviceGroupName;
+                         + serviceGroupName;
             log.error(msg, e);
             throw new ServerException("getServiceParameters", e);
         }
@@ -516,7 +526,7 @@ public class ServiceGroupAdmin extends AbstractAdmin {
 
         } catch (Exception e) {
             String msg = "Error occured while gettig parameter " + paramName
-                    + " of service group : " + serviceGroupName;
+                         + " of service group : " + serviceGroupName;
             log.error(msg, e);
             throw new ServerException("getServiceParameter", e);
         }
@@ -566,7 +576,7 @@ public class ServiceGroupAdmin extends AbstractAdmin {
             persistenceManager.updateServiceGroupParameter(axisServiceGroup, parameter);
         } catch (Exception e) {
             String msg = "Cannot persist service group parameter change for service group "
-                    + serviceGroupId;
+                         + serviceGroupId;
             log.error(msg, e);
             throw new AxisFault(msg, e);
         }
@@ -583,7 +593,7 @@ public class ServiceGroupAdmin extends AbstractAdmin {
 
         if (axisServiceGroup == null) {
             throw new AxisFault("invalid service group name service group not found" +
-                    serviceGroupId);
+                                serviceGroupId);
         }
 
         axisServiceGroup.removeParameter(ParameterUtil.createParameter(parameterName, null));

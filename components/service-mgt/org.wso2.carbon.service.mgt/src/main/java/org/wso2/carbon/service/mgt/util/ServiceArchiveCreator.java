@@ -58,6 +58,7 @@ import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.FileManipulator;
 import org.wso2.carbon.utils.NetworkUtils;
 import org.wso2.carbon.utils.ServerConstants;
+
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
@@ -85,7 +86,8 @@ public final class ServiceArchiveCreator {
 
     private static Log log = LogFactory.getLog(ServiceArchiveCreator.class);
 
-    private ServiceArchiveCreator() {}
+    private ServiceArchiveCreator() {
+    }
 
     /**
      * This method will generate an aar based on the information given.
@@ -118,7 +120,7 @@ public final class ServiceArchiveCreator {
 
         //TODO until a proper way to find the service type from Axis2, following workaround has
         // TODO been applied to JIRA - 378
-        if (serviceGroupName.indexOf(".jar") > -1 || serviceGroupName.indexOf(".class") > -1) {
+        if (serviceGroupName.contains(".jar") || serviceGroupName.contains(".class")) {
             String message = "Archive creation not supported for " + serviceGroupName;
             log.error(message);
             throw new AxisFault(message);
@@ -126,7 +128,7 @@ public final class ServiceArchiveCreator {
         URL axisServiceGroupURL = null;
         // Filtering axis1 services and data services from creating archives
         //TODO AxisServiceGroup should have a getFileURL method;
-        for (Iterator<AxisService> iterator = axisServiceGroup.getServices(); iterator.hasNext();) {
+        for (Iterator<AxisService> iterator = axisServiceGroup.getServices(); iterator.hasNext(); ) {
             AxisService as = iterator.next();
             for (Parameter parameter : as.getParameters()) {
                 String name = parameter.getName();
@@ -199,7 +201,7 @@ public final class ServiceArchiveCreator {
             // delete the existing services.xml file
             if (servicesF.exists() && !servicesF.delete()) {
                 log.warn("Could not delete the existing services.xml at : " +
-                        servicesF.getAbsolutePath());
+                         servicesF.getAbsolutePath());
             }
             // create the new serices.xml file using the created xml infoset
             File newServicesXml = new File(servicesXmlPath);
@@ -221,11 +223,11 @@ public final class ServiceArchiveCreator {
                 }
             }
             //Creating wsdls
-            for (Iterator<AxisService> iterator = axisServiceGroup.getServices(); iterator.hasNext();) {
+            for (Iterator<AxisService> iterator = axisServiceGroup.getServices(); iterator.hasNext(); ) {
                 AxisService axisService = iterator.next();
 
                 boolean isRpcMessageReceiver = false;
-                for (Iterator<AxisOperation> ops = axisService.getOperations(); ops.hasNext();) {
+                for (Iterator<AxisOperation> ops = axisService.getOperations(); ops.hasNext(); ) {
                     MessageReceiver receiver =
                             (ops.next()).getMessageReceiver();
                     isRpcMessageReceiver =
@@ -241,7 +243,7 @@ public final class ServiceArchiveCreator {
             }
             File fout = new File(workdir + File.separator + "dump_aar_output" + File.separator
                                  + uuid);
-            if(!fout.exists() && !fout.mkdirs()){
+            if (!fout.exists() && !fout.mkdirs()) {
                 log.warn("Could not create " + fout.getAbsolutePath());
             }
             String outAARFilename = fout.getAbsolutePath() + File.separator +
@@ -360,7 +362,7 @@ public final class ServiceArchiveCreator {
         }
 
         //operations
-        for (Iterator<AxisOperation> iterator = axisService.getOperations(); iterator.hasNext();) {
+        for (Iterator<AxisOperation> iterator = axisService.getOperations(); iterator.hasNext(); ) {
             AxisOperation operation = iterator.next();
 
             if (!operation.isControlOperation()) {
@@ -379,7 +381,7 @@ public final class ServiceArchiveCreator {
 
                 OMAttribute opMRClassAttr = createOMAttribute(fac, ns,
                                                               DeploymentConstants.TAG_CLASS_NAME, operation.getMessageReceiver()
-                                .getClass().getName());
+                        .getClass().getName());
                 opMREle.addAttribute(opMRClassAttr);
 
                 List<String> mappingList = operation.getWSAMappingList();
@@ -427,7 +429,7 @@ public final class ServiceArchiveCreator {
                 serializeModules(aoOnlyModuleList, operationEle, fac, ns, operation);
 
                 Map<String, AxisMessage> axisMessagesMap = new AxisMessageLookup().lookup(operation);
-                Set<Map.Entry<String,AxisMessage>> axisMessagesSet = axisMessagesMap.entrySet();
+                Set<Map.Entry<String, AxisMessage>> axisMessagesSet = axisMessagesMap.entrySet();
                 for (Map.Entry<String, AxisMessage> me : axisMessagesSet) {
                     String lableKey = me.getKey();
                     AxisMessage axisMessage = me.getValue();
@@ -440,8 +442,10 @@ public final class ServiceArchiveCreator {
                     List<Parameter> axisMessageParameterList = axisMessage.getParameters();
                     serializeParameterList(axisMessageParameterList, axisMessageEle, fac, ns);
 
+                    //TODO replace with operation.getPolicySubject()
                     PolicyInclude policyInclude = operation.getPolicyInclude();
                     PolicyRegistry registry = policyInclude.getPolicyRegistry();
+                    //TODO replace with policySubject.getAttachedPolicyComponents()
                     List policyList = policyInclude
                             .getPolicyElements(PolicyInclude.AXIS_MESSAGE_POLICY);
                     if (!policyList.isEmpty()) {
@@ -535,7 +539,7 @@ public final class ServiceArchiveCreator {
         serializeModules(axisServiceGroupModuleCollection, serviceGroupEle, fac, ns,
                          axisServiceGroup);
 
-        for (Iterator<AxisService> iterator = axisServiceGroup.getServices(); iterator.hasNext();) {
+        for (Iterator<AxisService> iterator = axisServiceGroup.getServices(); iterator.hasNext(); ) {
             AxisService axisService = iterator.next();
             OMElement axisServiceEle = createServicesXMLInfoset(axisService);
             serviceGroupEle.addChild(axisServiceEle);
@@ -565,7 +569,8 @@ public final class ServiceArchiveCreator {
 
     }
 
-    protected static void serializeModules(Collection<AxisModule> moduleCollection, OMElement parent,
+    protected static void serializeModules(Collection<AxisModule> moduleCollection,
+                                           OMElement parent,
                                            OMFactory fac, OMNamespace ns,
                                            AxisDescription axisDesc) {
         if (moduleCollection != null) {

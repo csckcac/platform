@@ -22,12 +22,13 @@ import org.apache.axis2.description.TransportInDescription;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.core.multitenancy.transports.DummyTransportListener;
 import org.wso2.carbon.core.transports.http.HttpTransportListener;
 import org.wso2.carbon.utils.NetworkUtils;
 
-import java.net.SocketException;
 import java.io.File;
+import java.net.SocketException;
+
+//import org.wso2.carbon.core.multitenancy.transports.DummyTransportListener;
 
 /**
  *
@@ -40,7 +41,8 @@ public final class Utils {
     private static boolean isServletTransportSet = false;
     private static final int SECONDS_PER_DAY = 3600 * 24;
 
-    private Utils() { }
+    private Utils() {
+    }
 
     public static String[] getWsdlInformation(String serviceName,
                                               AxisConfiguration axisConfig) throws AxisFault {
@@ -54,14 +56,14 @@ public final class Utils {
         //TODO Ideally, The transport on which wsdls are displayed, should be configurable.
         TransportInDescription transportInDescription = axisConfig.getTransportIn("http");
 
-        if(transportInDescription == null) {
+        if (transportInDescription == null) {
             transportInDescription = axisConfig.getTransportIn("https");
         }
 
         if (transportInDescription != null) {
-            EndpointReference epr =
-                    transportInDescription.getReceiver().getEPRForService(serviceName, ip);
-            String wsdlUrlPrefix = epr.getAddress();
+            EndpointReference[] epr =
+                    transportInDescription.getReceiver().getEPRsForService(serviceName, ip);
+            String wsdlUrlPrefix = epr[0].getAddress();
             if (wsdlUrlPrefix.endsWith("/")) {
                 wsdlUrlPrefix = wsdlUrlPrefix.substring(0, wsdlUrlPrefix.length() - 1);
             }
@@ -79,11 +81,11 @@ public final class Utils {
     private static boolean isServletTransport(AxisConfiguration axisConfig) {
         if (!isServletTransportSet) {
             TransportInDescription transportInDescription = axisConfig.getTransportIn("http");
-            if(transportInDescription == null) {
+            if (transportInDescription == null) {
                 transportInDescription = axisConfig.getTransportIn("https");
             }
 
-            if (transportInDescription != null){
+            if (transportInDescription != null) {
                 if (transportInDescription.getReceiver() instanceof HttpTransportListener) {
                     isServletTransport = true;
                 }
@@ -118,19 +120,19 @@ public final class Utils {
      * an unempty folder is found, stop there and return. This is only done, upto
      * the given directory (stopPoint).
      * Path can be a file path or a directory path.
-     *
+     * <p/>
      * Ex: path = /home/axis2/repository/isuru/foo/bar
-     *     upto = isuru
+     * upto = isuru
      * - delete bar if it is empty
      * - delete foo if it is empty
      * - delete isuru if it is empty and stop as stopPoint = isuru
      *
-     * @param path - path to delete directories
+     * @param path      - path to delete directories
      * @param stopPoint - dirs are deleted only upto this point
      */
     public static void deleteEmptyDirsOnPath(String path, String stopPoint) {
         // if the stop point is not in the path, we don't proceed
-        if (path.indexOf(File.separator + stopPoint) == -1) {
+        if (!path.contains(File.separator + stopPoint)) {
             return;
         }
         // remove ending "/" if any

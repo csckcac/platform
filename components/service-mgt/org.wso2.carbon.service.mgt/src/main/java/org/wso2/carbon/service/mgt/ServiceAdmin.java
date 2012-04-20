@@ -28,7 +28,18 @@ import org.apache.axis2.Constants;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.deployment.DeploymentErrorMsgs;
-import org.apache.axis2.description.*;
+import org.apache.axis2.description.AxisBinding;
+import org.apache.axis2.description.AxisBindingOperation;
+import org.apache.axis2.description.AxisEndpoint;
+import org.apache.axis2.description.AxisMessage;
+import org.apache.axis2.description.AxisModule;
+import org.apache.axis2.description.AxisOperation;
+import org.apache.axis2.description.AxisService;
+import org.apache.axis2.description.AxisServiceGroup;
+import org.apache.axis2.description.Parameter;
+import org.apache.axis2.description.PolicyInclude;
+import org.apache.axis2.description.PolicySubject;
+import org.apache.axis2.description.TransportInDescription;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.engine.AxisEvent;
 import org.apache.axis2.i18n.Messages;
@@ -36,11 +47,17 @@ import org.apache.axis2.util.PolicyLocator;
 import org.apache.axis2.wsdl.WSDLConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.neethi.*;
+import org.apache.neethi.Assertion;
+import org.apache.neethi.Policy;
+import org.apache.neethi.PolicyComponent;
+import org.apache.neethi.PolicyEngine;
+import org.apache.neethi.PolicyReference;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.core.Resources;
-import org.wso2.carbon.core.persistence.*;
+import org.wso2.carbon.core.persistence.PersistenceFactory;
+import org.wso2.carbon.core.persistence.PersistenceUtils;
+import org.wso2.carbon.core.persistence.ServicePersistenceManager;
 import org.wso2.carbon.core.persistence.file.ModuleFilePersistenceManager;
 import org.wso2.carbon.core.persistence.file.ServiceGroupFilePersistenceManager;
 import org.wso2.carbon.core.transports.TransportPersistenceManager;
@@ -54,7 +71,11 @@ import org.wso2.carbon.security.SecurityConfigException;
 import org.wso2.carbon.security.config.SecurityConfigAdmin;
 import org.wso2.carbon.security.config.service.SecurityScenarioData;
 import org.wso2.carbon.service.mgt.util.Utils;
-import org.wso2.carbon.utils.*;
+import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.utils.DataPaginator;
+import org.wso2.carbon.utils.FileManipulator;
+import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.carbon.utils.ServerException;
 import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
 
 import javax.activation.DataHandler;
@@ -67,7 +88,18 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 @SuppressWarnings("unused")
 public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
@@ -142,7 +174,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 
         String serviceXPath = PersistenceUtils.getResourcePath(axisService);
         String policyResourcePath = serviceXPath + "/" + Resources.POLICIES +
-                "/" + Resources.POLICY + PersistenceUtils.
+                                    "/" + Resources.POLICY + PersistenceUtils.
                 getXPathAttrPredicate(Resources.ServiceProperties.POLICY_UUID, policy.getId());
 
         boolean transactionStarted1 = sfpm.isTransactionStarted(serviceGroupId);
@@ -223,17 +255,17 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
                         List values = sfpm.getAll(
                                 serviceGroupId,
                                 policyResourcePath +
-                                        PersistenceUtils.getXPathAttrPredicate(Resources.ServiceProperties.POLICY_UUID,
-                                                policyWrapper.getAttributeValue(new QName(
-                                                        Resources.ServiceProperties.POLICY_UUID))) +
-                                        "/" + Resources.ModuleProperties.MODULE_XML_TAG +
-                                        PersistenceUtils.getXPathAttrPredicate(Resources.ModuleProperties.TYPE,
-                                                Resources.Associations.REQUIRED_MODULES));
+                                PersistenceUtils.getXPathAttrPredicate(Resources.ServiceProperties.POLICY_UUID,
+                                                                       policyWrapper.getAttributeValue(new QName(
+                                                                               Resources.ServiceProperties.POLICY_UUID))) +
+                                "/" + Resources.ModuleProperties.MODULE_XML_TAG +
+                                PersistenceUtils.getXPathAttrPredicate(Resources.ModuleProperties.TYPE,
+                                                                       Resources.Associations.REQUIRED_MODULES));
                         for (Object val : values) {
                             OMElement moduleAssoc = (OMElement) val;
                             removedModuleAssociations.add(
                                     moduleAssoc.getAttributeValue(new QName(Resources.NAME)) +
-                                            "/" + moduleAssoc.getAttributeValue(new QName(Resources.VERSION))); //ex. rampart/1.6.3-SNAPSHOT
+                                    "/" + moduleAssoc.getAttributeValue(new QName(Resources.VERSION))); //ex. rampart/1.6.3-SNAPSHOT
                         }
                     }
                     policyWrapper.detach();
@@ -296,16 +328,16 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
                 List values = sfpm.getAll(
                         serviceGroupId,
                         policyResourcePath +
-                                PersistenceUtils.getXPathAttrPredicate(Resources.ServiceProperties.POLICY_UUID,
-                                        policyWrapper.getAttributeValue(new QName(
-                                                Resources.ServiceProperties.POLICY_UUID))) +
-                                "/" + Resources.ModuleProperties.MODULE_XML_TAG +
-                                PersistenceUtils.getXPathAttrPredicate(Resources.ModuleProperties.TYPE,
-                                        Resources.Associations.REQUIRED_MODULES));
+                        PersistenceUtils.getXPathAttrPredicate(Resources.ServiceProperties.POLICY_UUID,
+                                                               policyWrapper.getAttributeValue(new QName(
+                                                                       Resources.ServiceProperties.POLICY_UUID))) +
+                        "/" + Resources.ModuleProperties.MODULE_XML_TAG +
+                        PersistenceUtils.getXPathAttrPredicate(Resources.ModuleProperties.TYPE,
+                                                               Resources.Associations.REQUIRED_MODULES));
                 for (Object val : values) {
                     OMElement moduleAss = (OMElement) val;
                     String moduleInfoEl = moduleAss.getAttribute(new QName(Resources.NAME)) +
-                            "/" + moduleAss.getAttribute(new QName(Resources.VERSION));
+                                          "/" + moduleAss.getAttribute(new QName(Resources.VERSION));
                     if (moduleInfoEl.equals(moduleInfo)) {
                         doDisengage = false;
                         break;
@@ -322,13 +354,13 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
                 List serviceAss = sfpm.getAll(
                         serviceGroupId,
                         serviceXPath +
-                                "/" + Resources.ModuleProperties.MODULE_XML_TAG +
-                                PersistenceUtils.getXPathAttrPredicate(Resources.ModuleProperties.TYPE,
-                                        Resources.Associations.ENGAGED_MODULES));
+                        "/" + Resources.ModuleProperties.MODULE_XML_TAG +
+                        PersistenceUtils.getXPathAttrPredicate(Resources.ModuleProperties.TYPE,
+                                                               Resources.Associations.ENGAGED_MODULES));
                 for (Object obj : serviceAss) {
                     OMElement moduleAss = (OMElement) obj;
                     String moduleInfoEl = moduleAss.getAttribute(new QName(Resources.NAME)) +
-                            "/" + moduleAss.getAttribute(new QName(Resources.VERSION));
+                                          "/" + moduleAss.getAttribute(new QName(Resources.VERSION));
                     if (moduleInfoEl.equals(moduleInfo)) {
                         doDisengage = false;
                         break;
@@ -365,9 +397,9 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 //                getXPathAttrPredicate(Resources.ModuleProperties.VERSION_ID, version);
         OMElement modElement = PersistenceUtils.createModule(moduleName, version, Resources.Associations.ENGAGED_MODULES);
         if (!sfpm.elementExists(serviceGroupId,
-                serviceXPath + "/" + Resources.ModuleProperties.MODULE_XML_TAG +
-                        PersistenceUtils.getXPathAttrPredicate(Resources.NAME, moduleName) +
-                        PersistenceUtils.getXPathAttrPredicate(Resources.VERSION, version))) {
+                                serviceXPath + "/" + Resources.ModuleProperties.MODULE_XML_TAG +
+                                PersistenceUtils.getXPathAttrPredicate(Resources.NAME, moduleName) +
+                                PersistenceUtils.getXPathAttrPredicate(Resources.VERSION, version))) {
             pf.getServiceGroupFilePM().put(serviceGroupId, modElement, serviceXPath);
         }
 
@@ -465,8 +497,8 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             }
             // Filter out services based on serviceSearchString
             if (serviceSearchString != null &&
-                    serviceSearchString.trim().length() > 0 &&
-                    !axisService.getName().toLowerCase().contains(serviceSearchString.toLowerCase())) {
+                serviceSearchString.trim().length() > 0 &&
+                !axisService.getName().toLowerCase().contains(serviceSearchString.toLowerCase())) {
                 continue;
             }
             axisServicesList.add(axisService);
@@ -541,7 +573,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             // find the current security scenario id
             if (GhostDeployerUtils.isGhostService(axisService)) {
                 Parameter secParam = axisService.getParameter(CarbonConstants
-                        .GHOST_ATTR_SECURITY_SCENARIO);
+                                                                      .GHOST_ATTR_SECURITY_SCENARIO);
                 if (secParam != null) {
                     service.setSecurityScenarioId((String) secParam.getValue());
                 }
@@ -561,7 +593,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         wrapper.setNumberOfFaultyServiceGroups(getNumberOfFaultyServices());
         wrapper.setServiceTypes(serviceTypes.toArray(new String[serviceTypes.size()]));
         wrapper.setNumberOfActiveServices(getNumberOfActiveServices());
-      //  DataPaginator.doPaging(pageNumber, axisServicesList, serviceList, wrapper);
+        //  DataPaginator.doPaging(pageNumber, axisServicesList, serviceList, wrapper);
         DataPaginator.doPaging(pageNumber, serviceList, wrapper);
         return wrapper;
     }
@@ -573,7 +605,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             AxisServiceGroup serviceGroup = serviceGroups.next();
             if (!SystemFilter.isFilteredOutService(serviceGroup)) {
                 if (!serviceGroup.getServices().hasNext() ||
-                        serviceGroup.getServices().next().isClientSide()) {
+                    serviceGroup.getServices().next().isClientSide()) {
                     continue; // No advancement of currentIndex
                 }
                 sgList.add(serviceGroup.getServiceGroupName());
@@ -597,7 +629,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         Map<String, AxisService> services = getAxisConfig().getServices();
         for (AxisService service : services.values()) {
             if (!SystemFilter.isFilteredOutService((AxisServiceGroup) service.getParent()) &&
-                    service.isActive()) {
+                service.isActive()) {
                 activeList.add(service.getName());
             }
         }
@@ -668,7 +700,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 
             //Retrieving faulty services registered via CarbonConfigurationContext
             AxisService axisService = CarbonUtils.getFaultyService(artifactPath,
-                    this.getConfigContext());
+                                                                   this.getConfigContext());
             fs.setServiceName(serviceName);
             fs.setFault(fault);
 
@@ -759,7 +791,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
     }
 
     public void deleteAllNonAdminServiceGroups() throws AxisFault {
-        for (Iterator<AxisServiceGroup> iter = getAxisConfig().getServiceGroups(); iter.hasNext();) {
+        for (Iterator<AxisServiceGroup> iter = getAxisConfig().getServiceGroups(); iter.hasNext(); ) {
             AxisServiceGroup asGroup = iter.next();
             if (!SystemFilter.isFilteredOutService(asGroup)) {
                 deleteServiceGroup(asGroup.getServiceGroupName());
@@ -842,7 +874,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         if (serviceGroup != null) {
             getConfigContext().removeServiceGroupContext(serviceGroup);
             log.info(Messages.getMessage(DeploymentErrorMsgs.SERVICE_REMOVED,
-                    fileName != null ? fileName : serviceGroupName));
+                                         fileName != null ? fileName : serviceGroupName));
         } else {
             axisConfig.removeFaultyService(fileName);
         }
@@ -886,7 +918,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             if (serviceGroupName.lastIndexOf(File.separator) != -1) {
                 // if this is a hierarchical service, we have to remove the empty dirs on path
                 String firstHierarchicalDir = serviceGroupName.substring(0,
-                        serviceGroupName.indexOf(File.separator));
+                                                                         serviceGroupName.indexOf(File.separator));
                 Utils.deleteEmptyDirsOnPath(fileName, firstHierarchicalDir);
             }
         }
@@ -980,8 +1012,8 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
     private SecurityScenarioData getSecurityScenario(String serviceName) throws AxisFault {
         try {
             return new SecurityConfigAdmin(getUserRealm(),
-                    getConfigSystemRegistry(),
-                    getAxisConfig()).getCurrentScenario(serviceName);
+                                           getConfigSystemRegistry(),
+                                           getAxisConfig()).getCurrentScenario(serviceName);
         } catch (SecurityConfigException e) {
             String msg = "Cannot retrieve security scenario for service";
             log.error(msg, e);
@@ -1027,7 +1059,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         // Persist the service state
         try {
             spm.setServiceProperty(service,
-                    Resources.ServiceProperties.ACTIVE, String.valueOf(isActive));
+                                   Resources.ServiceProperties.ACTIVE, String.valueOf(isActive));
         } catch (Exception e) {
             String msg = "Cannot persist ACTIVE service parameter";
             log.error(msg, e);
@@ -1055,14 +1087,14 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         }
 
         Parameter parameter = ParameterUtil.createParameter(Constants.Configuration.ENABLE_MTOM,
-                flag.trim());
+                                                            flag.trim());
         service.addParameter(parameter);
 
         for (Iterator<AxisOperation> iterator1 = service.getOperations(); iterator1.hasNext(); ) {
             AxisOperation axisOperation = iterator1.next();
             axisOperation.
                     addParameter(ParameterUtil.createParameter(Constants.Configuration.ENABLE_MTOM,
-                            (String) parameter.getValue()));
+                                                               (String) parameter.getValue()));
         }
 
         try {
@@ -1144,7 +1176,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 
         if (axisService.isExposedTransport(transportProtocol)) {
             return "Service [" + serviceId + "] already contains the " + transportProtocol
-                    + " transport binding!";
+                   + " transport binding!";
         }
 
         OMElement serviceElement = spm.getService(axisService);
@@ -1158,15 +1190,15 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 
         // TODO This should be added, but for the moment it is commented
         if (serviceElement.getAttribute(new QName(Resources.ServiceProperties.IS_UT_ENABLED)) !=
-                null) {
+            null) {
             if (!transportProtocol
                     .equalsIgnoreCase(ServerConstants.HTTPS_TRANSPORT)) {
                 throw new AxisFault(
                         "Cannot add non-HTTPS transport binding for Service ["
-                                + serviceId
-                                + "] since a security scenario which requires the "
-                                + "service to contain only the HTTPS transport binding"
-                                + " has been applied to this service.");
+                        + serviceId
+                        + "] since a security scenario which requires the "
+                        + "service to contain only the HTTPS transport binding"
+                        + " has been applied to this service.");
             }
         }
 //         if (serviceDO.getIsUTAuthEnabled()) {
@@ -1185,7 +1217,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             axisService.addExposedTransport(transportProtocol);
         } else {
             return "Service [" + serviceId + "] already contains the " + transportProtocol
-                    + " transport binding!";
+                   + " transport binding!";
         }
 
         Resource transportResource =
@@ -1203,16 +1235,16 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
                 serviceElement.addAttribute(Resources.ServiceProperties.EXPOSED_ON_ALL_TANSPORTS, String
                         .valueOf(false), null);
                 sfpm.put(serviceGroupId,
-                        PersistenceUtils.createAssociation(
-                                transportResource.getPath(), Resources.Associations.EXPOSED_TRANSPORTS),
-                        PersistenceUtils.getResourcePath(axisService));
+                         PersistenceUtils.createAssociation(
+                                 transportResource.getPath(), Resources.Associations.EXPOSED_TRANSPORTS),
+                         PersistenceUtils.getResourcePath(axisService));
 
                 // registry.addAssociation(transportResource.getPath(),
                 // serviceResource.getPath(),
                 // Resources.Associations.EXPOSED_TRANSPORTS);
                 if (spm.getService(axisService) == null) {
                     sfpm.put(serviceGroupId, serviceElement,
-                            PersistenceUtils.getResourcePath(axisService));
+                             PersistenceUtils.getResourcePath(axisService));
                 }
                 registry.put(transportResource.getPath(), transportResource);
                 if (!regTransactionStarted) {
@@ -1261,15 +1293,15 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 
         // TODO This should be added, but for the moment it is commented
         if (serviceElement.getAttribute(new QName(Resources.ServiceProperties.IS_UT_ENABLED)) !=
-                null) {
+            null) {
             if (transportProtocol
                     .equalsIgnoreCase(ServerConstants.HTTPS_TRANSPORT)) {
                 throw new AxisFault(
                         "Cannot add non-HTTPS transport binding for Service ["
-                                + serviceId
-                                + "] since a security scenario which requires the "
-                                + "service to contain only the HTTPS transport binding"
-                                + " has been applied to this service.");
+                        + serviceId
+                        + "] since a security scenario which requires the "
+                        + "service to contain only the HTTPS transport binding"
+                        + " has been applied to this service.");
             }
         }
         // if (serviceDO.getIsUTAuthEnabled()) {
@@ -1300,12 +1332,12 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
                     return SERVICE_MUST_CONTAIN_AT_LEAST_ONE_TRANSPORT;
                 } else {
                     sfpm.delete(serviceGroupId,
-                            PersistenceUtils.getResourcePath(axisService) + "/" +
-                                    Resources.Associations.ASSOCIATION_XML_TAG +
-                                    PersistenceUtils.getXPathAttrPredicate(
-                                            Resources.Associations.DESTINATION_PATH, transportResource.getPath()) +
-                                    PersistenceUtils.getXPathAttrPredicate(
-                                            "type", Resources.Associations.EXPOSED_TRANSPORTS));
+                                PersistenceUtils.getResourcePath(axisService) + "/" +
+                                Resources.Associations.ASSOCIATION_XML_TAG +
+                                PersistenceUtils.getXPathAttrPredicate(
+                                        Resources.Associations.DESTINATION_PATH, transportResource.getPath()) +
+                                PersistenceUtils.getXPathAttrPredicate(
+                                        "type", Resources.Associations.EXPOSED_TRANSPORTS));
                     // registry.removeAssociation(transportResource.getPath(),
                     // serviceResource.getPath(),
                     // Resources.Associations.EXPOSED_TRANSPORTS);
@@ -1358,10 +1390,10 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             }*/
 
             serviceElement.addAttribute(Resources.ServiceProperties.EXPOSED_ON_ALL_TANSPORTS,
-                    String.valueOf(false), null);
+                                        String.valueOf(false), null);
             if (spm.getService(axisService) == null) {
                 sfpm.put(serviceGroupId, serviceElement,
-                        PersistenceUtils.getResourcePath(axisService));
+                         PersistenceUtils.getResourcePath(axisService));
             }
 
             if (!regTransactionStarted) {
@@ -1406,18 +1438,18 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             String serviceXPath = PersistenceUtils.getResourcePath(service);
 
             String policyPath = serviceXPath +
-                    "/" + Resources.POLICIES +
-                    "/" + Resources.POLICY +
-                    PersistenceUtils.getXPathTextPredicate(Resources.ServiceProperties.POLICY_UUID, policyKey);
+                                "/" + Resources.POLICIES +
+                                "/" + Resources.POLICY +
+                                PersistenceUtils.getXPathTextPredicate(Resources.ServiceProperties.POLICY_UUID, policyKey);
             // "/policies/policy[policyUUID/text()=\"SecPolicy\"]"
             sfpm.delete(serviceGroupId, policyPath);
 
             for (String moduleName : moduleNames) {
 //                String modPath = Resources.MODULES + moduleName;
                 sfpm.delete(serviceGroupId, serviceXPath + "/" + Resources.ModuleProperties.MODULE_XML_TAG +
-                        PersistenceUtils.getXPathAttrPredicate(Resources.NAME, moduleName) +
-                        PersistenceUtils.getXPathAttrPredicate(Resources.ModuleProperties.TYPE,
-                                Resources.Associations.ENGAGED_MODULES));
+                                            PersistenceUtils.getXPathAttrPredicate(Resources.NAME, moduleName) +
+                                            PersistenceUtils.getXPathAttrPredicate(Resources.ModuleProperties.TYPE,
+                                                                                   Resources.Associations.ENGAGED_MODULES));
             }
 
             // at axis2
@@ -1486,7 +1518,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 
         if (axisService == null) {
             throw new AxisFault("invalid service name service not found : " +
-                    serviceName);
+                                serviceName);
         }
 
         Parameter parameter = ParameterUtil.createParameter(parameterName, null);
@@ -1539,7 +1571,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         List<PolicyComponent> policyList =
                 new ArrayList<PolicyComponent>(servicePolicySubject.getAttachedPolicyComponents());
         Policy servicePolicy = org.apache.axis2.util.PolicyUtil.getMergedPolicy(policyList,
-                axisService);
+                                                                                axisService);
 
         if (servicePolicy == null) {
             return PolicyUtil.getEmptyPolicyAsOMElement().toString();
@@ -1635,7 +1667,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             policyWrapperElement.addChild(idElement);
 
             policyWrapperElement.addAttribute(Resources.ServiceProperties.POLICY_TYPE,
-                    "" + PolicyInclude.AXIS_MODULE_POLICY, null);
+                                              "" + PolicyInclude.AXIS_MODULE_POLICY, null);
             policyWrapperElement.addAttribute(Resources.VERSION, moduleVersion, null);
             policyWrapperElement.addChild(policyElement);
 
@@ -1680,7 +1712,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         List<PolicyComponent> policyList =
                 new ArrayList<PolicyComponent>(operationPolicySubject.getAttachedPolicyComponents());
         Policy operationPolicy = org.apache.axis2.util.PolicyUtil.getMergedPolicy(policyList,
-                axisService);
+                                                                                  axisService);
 
         if (operationPolicy == null) {
             return PolicyUtil.getEmptyPolicyAsOMElement().toString();
@@ -1714,7 +1746,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         List<PolicyComponent> policyList =
                 new ArrayList<PolicyComponent>(messagePolicySubject.getAttachedPolicyComponents());
         Policy messagePolicy = org.apache.axis2.util.PolicyUtil.getMergedPolicy(policyList,
-                axisService);
+                                                                                axisService);
 
         if (messagePolicy == null) {
             return PolicyUtil.getEmptyPolicyAsOMElement().toString();
@@ -1741,10 +1773,10 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         if (!policyList.isEmpty()) {
             PolicyMetaData policyData = new PolicyMetaData();
             policyData.setWrapper("Policies that are applicable for " + axisService.getName()
-                    + " service");
+                                  + " service");
             policyData.setPolycies(PolicyUtil.processPolicyElements(policyList.iterator(),
-                    new PolicyLocator(
-                            axisService)));
+                                                                    new PolicyLocator(
+                                                                            axisService)));
             policyDataArray.add(policyData);
         }
 
@@ -1802,7 +1834,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         List<PolicyComponent> policyList =
                 new ArrayList<PolicyComponent>(bindingPolicy.getAttachedPolicyComponents());
         Policy servicePolicy = org.apache.axis2.util.PolicyUtil.getMergedPolicy(policyList,
-                axisService);
+                                                                                axisService);
 
         if (servicePolicy == null) {
             return PolicyUtil.getEmptyPolicyAsOMElement().toString();
@@ -1959,7 +1991,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 //            policyWrapperElement.addAttribute(Resources.ServiceProperties.POLICY_UUID, policy.getId(), null);
 
             policyWrapperElement.addAttribute(Resources.ServiceProperties.POLICY_TYPE,
-                    "" + PolicyInclude.AXIS_SERVICE_POLICY, null);
+                                              "" + PolicyInclude.AXIS_SERVICE_POLICY, null);
             policyWrapperElement.addChild(policyElement);
 
             sfpm.put(serviceGroupId, idElement.cloneOMElement(), PersistenceUtils.getResourcePath(axisService));
@@ -2023,12 +2055,12 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 //            policyWrapperElement.addAttribute(Resources.ServiceProperties.POLICY_UUID, policy.getId(), null);
 
             policyWrapperElement.addAttribute(Resources.ServiceProperties.POLICY_TYPE,
-                    "" + PolicyInclude.AXIS_OPERATION_POLICY, null);
+                                              "" + PolicyInclude.AXIS_OPERATION_POLICY, null);
             policyWrapperElement.addChild(policyElement);
 
             // Update the service operation resource to point to this merged policy
             sfpm.put(serviceGroupId, idElement.cloneOMElement(), PersistenceUtils.getResourcePath(axisService) + "/" +
-                    Resources.OPERATION + PersistenceUtils.getXPathAttrPredicate(Resources.NAME, operationName));   //add it to operation element
+                                                                 Resources.OPERATION + PersistenceUtils.getXPathAttrPredicate(Resources.NAME, operationName));   //add it to operation element
 
             String policiesPath = PersistenceUtils.
                     getResourcePath(axisService) + "/" + Resources.POLICIES;
@@ -2089,7 +2121,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 //            policyWrapperElement.addAttribute(Resources.ServiceProperties.POLICY_UUID, policy.getId(), null);
 
             policyWrapperElement.addAttribute(Resources.ServiceProperties.POLICY_TYPE,
-                    "" + PolicyInclude.AXIS_MESSAGE_POLICY, null);
+                                              "" + PolicyInclude.AXIS_MESSAGE_POLICY, null);
             policyWrapperElement.addChild(policyElement);
 
             // Update the service operation resource to point to this merged policy
@@ -2099,14 +2131,14 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
                 idElement.setText("" + policy.getId());
 
                 sfpm.put(serviceGroupId, messageInIdElement, PersistenceUtils.getResourcePath(axisService) + "/" +
-                        Resources.OPERATION + PersistenceUtils.getXPathAttrPredicate(Resources.NAME, operationName));   //add it to operation element
+                                                             Resources.OPERATION + PersistenceUtils.getXPathAttrPredicate(Resources.NAME, operationName));   //add it to operation element
             } else if (messageType.equals(WSDLConstants.MESSAGE_LABEL_OUT_VALUE)) {
                 OMElement messageOutIdElement = omFactory.createOMElement(
                         Resources.ServiceProperties.MESSAGE_OUT_POLICY_UUID, null);
                 idElement.setText("" + policy.getId());
 
                 sfpm.put(serviceGroupId, messageOutIdElement, PersistenceUtils.getResourcePath(axisService) + "/" +
-                        Resources.OPERATION + PersistenceUtils.getXPathAttrPredicate(Resources.NAME, operationName));   //add it to operation element
+                                                              Resources.OPERATION + PersistenceUtils.getXPathAttrPredicate(Resources.NAME, operationName));   //add it to operation element
             }
 
             String policiesPath = PersistenceUtils.
@@ -2165,7 +2197,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             policyWrapperElement.addChild(idElement);
 
             policyWrapperElement.addAttribute(Resources.ServiceProperties.POLICY_TYPE,
-                    "" + PolicyInclude.BINDING_POLICY, null);
+                                              "" + PolicyInclude.BINDING_POLICY, null);
             policyWrapperElement.addChild(policyElement);
 
             // Update the binding resource to point to this merged policy
@@ -2238,16 +2270,16 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             policyWrapperElement.addChild(idElement);
 
             policyWrapperElement.addAttribute(Resources.ServiceProperties.POLICY_TYPE,
-                    "" + PolicyInclude.BINDING_OPERATION_POLICY, null);
+                                              "" + PolicyInclude.BINDING_OPERATION_POLICY, null);
             policyWrapperElement.addChild(policyElement);
 
             // Update the service operation resource to point to this merged policy
             sfpm.put(serviceGroupId, idElement.cloneOMElement(), PersistenceUtils.getResourcePath(axisService) +
-                    "/" + Resources.ServiceProperties.BINDINGS +
-                    "/" + Resources.ServiceProperties.BINDING_XML_TAG +
-                    PersistenceUtils.getXPathAttrPredicate(Resources.NAME, bindingName) +
-                    "/" + Resources.OPERATION +
-                    PersistenceUtils.getXPathAttrPredicate(Resources.NAME, operationName));   //add it to binding operation element
+                                                                 "/" + Resources.ServiceProperties.BINDINGS +
+                                                                 "/" + Resources.ServiceProperties.BINDING_XML_TAG +
+                                                                 PersistenceUtils.getXPathAttrPredicate(Resources.NAME, bindingName) +
+                                                                 "/" + Resources.OPERATION +
+                                                                 PersistenceUtils.getXPathAttrPredicate(Resources.NAME, operationName));   //add it to binding operation element
 
             String policiesPath = PersistenceUtils.
                     getResourcePath(axisService) + "/" + Resources.POLICIES;
@@ -2305,8 +2337,8 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         }
 
         String servicePath = Resources.SERVICE_GROUPS
-                + axisService.getAxisServiceGroup().getServiceGroupName()
-                + Resources.SERVICES + axisService.getName();
+                             + axisService.getAxisServiceGroup().getServiceGroupName()
+                             + Resources.SERVICES + axisService.getName();
 
         Registry registry = getConfigSystemRegistry();
 
@@ -2335,16 +2367,16 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 //            policyWrapperElement.addAttribute(Resources.ServiceProperties.POLICY_UUID, policy.getId(), null);
 
             policyWrapperElement.addAttribute(Resources.ServiceProperties.POLICY_TYPE,
-                    policyType, null);
+                                              policyType, null);
             policyWrapperElement.addChild(policyElement);
 
             // Update the service operation resource to point to this merged policy
             String bindingOppath = PersistenceUtils.getResourcePath(axisService) +
-                    "/" + Resources.ServiceProperties.BINDINGS +
-                    "/" + Resources.ServiceProperties.BINDING_XML_TAG +
-                    PersistenceUtils.getXPathAttrPredicate(Resources.NAME, bindingName) +
-                    "/" + Resources.OPERATION +
-                    PersistenceUtils.getXPathAttrPredicate(Resources.NAME, operationName);
+                                   "/" + Resources.ServiceProperties.BINDINGS +
+                                   "/" + Resources.ServiceProperties.BINDING_XML_TAG +
+                                   PersistenceUtils.getXPathAttrPredicate(Resources.NAME, bindingName) +
+                                   "/" + Resources.OPERATION +
+                                   PersistenceUtils.getXPathAttrPredicate(Resources.NAME, operationName);
             if (messageType.equals(WSDLConstants.MESSAGE_LABEL_IN_VALUE)) {
                 OMElement messageInIdElement = omFactory.createOMElement(
                         Resources.ServiceProperties.MESSAGE_IN_POLICY_UUID, null);
@@ -2457,7 +2489,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 
             String currentBinding = point.getBinding().getName().getLocalPart();
             if ((!currentBinding.contains("HttpBinding")) &&
-                    (!bindingsList.contains(currentBinding))) {
+                (!bindingsList.contains(currentBinding))) {
                 bindingsList.add(currentBinding);
             }
         }

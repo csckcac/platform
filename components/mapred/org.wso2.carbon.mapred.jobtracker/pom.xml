@@ -76,6 +76,7 @@
                             org.wso2.carbon.mapred.jobtracker.HadoopJobTrackerContorller
                         </Bundle-Activator>
                         <DynamicImport>*</DynamicImport>
+			<!--<Require-Bundle>org.wso2.carbon.hdfs.namenode</Require-Bundle>-->
                     </instructions>
                     <wrapImportPackage>;</wrapImportPackage>
                 </configuration>

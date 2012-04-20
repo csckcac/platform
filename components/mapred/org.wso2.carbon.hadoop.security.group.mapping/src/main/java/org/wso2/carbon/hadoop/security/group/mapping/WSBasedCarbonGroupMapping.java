@@ -51,7 +51,7 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
         String path = conf.get("hadoop.security.truststore", "wso2carbon.jks");
 	String username = conf.get("hadoop.security.admin.username", "admin");
 	String password = conf.get("hadoop.security.admin.password", "admin");
-        String serviceUrl = conf.get("hadoop.security.group.mapping.service.url", "https://localhost:9443/services/");
+        String serviceUrl = conf.get("hadoop.security.group.mapping.service.url", "https://127.0.0.1:9443/services");
         System.setProperty("javax.net.ssl.trustStore", path);  
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
         
@@ -65,7 +65,7 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
 		}
         
         try {
-			authAdminStub = new AuthenticationAdminStub(confCtx, serviceUrl+"AuthenticationAdmin");
+			authAdminStub = new AuthenticationAdminStub(confCtx, serviceUrl+"/AuthenticationAdmin");
 		} catch (AxisFault e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -47,13 +47,14 @@ public class ProductConstant {
     public static final String FIREFOX_BROWSER = "firefox";
     public static final String CHROME_BROWSER = "chrome";
     public static final String IE_BROWSER = "ie";
-    public static final String OPERA_BROWSER = "opera";
     public static final String HTML_UNIT_DRIVER = "htmlUnit";
 
 
     public static EnvironmentBuilder env;
     public static FrameworkSettings framework;
-    public static String SYSTEM_TEST_RESOURCE_LOCATION = System.getProperty("system.test.sample.location");
+    public static String SYSTEM_TEST_RESOURCE_LOCATION = getSystemResourceLocation();
+
+
     public static String REPORT_LOCATION = System.getProperty("system.test.sample.location")
             .substring(0, SYSTEM_TEST_RESOURCE_LOCATION.indexOf("core/org.wso2.automation.platform"));
     public static String REPORT_REPOSITORY = REPORT_LOCATION + "reports" + File.separator;
@@ -73,6 +74,23 @@ public class ProductConstant {
         return SYSTEM_TEST_RESOURCE_LOCATION + File.separator + "security" + File.separator +
                "policies";
     }
+
+    /**
+     * construct the resource file path by checking the OS tests are running.
+     * Need to replace string path with correct forward or backward slashes as we set the system property with
+     *  forward slash.
+     * @return  resource path
+     */
+    public static String getSystemResourceLocation() {
+        String resourceLocation;
+        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+            resourceLocation = System.getProperty("system.test.sample.location").replace("/","\\");
+        } else {
+            resourceLocation = System.getProperty("system.test.sample.location").replace("/","/");
+        }
+        return resourceLocation;
+    }
+
 
     public static String getCarbonHome(String product) {
         EnvironmentBuilder env = new EnvironmentBuilder();

@@ -1,2 +1,5 @@
 org.wso2.carbon.proxyadmin_
 org.wso2.carbon.cloud.csg_
+org.wso2.carbon.cloud.csg.common_
+org.wso2.carbon.cloud.csg.agent_
+org.wso2.carbon.cloud.csg.agent.ui_

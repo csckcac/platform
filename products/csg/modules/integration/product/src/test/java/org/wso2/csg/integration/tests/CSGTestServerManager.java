@@ -18,8 +18,14 @@ package org.wso2.csg.integration.tests;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.wso2.carbon.integration.framework.TestServerManager;
+import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+
+import static org.testng.Assert.fail;
 
 public class CSGTestServerManager extends TestServerManager {
 
@@ -38,7 +44,31 @@ public class CSGTestServerManager extends TestServerManager {
     }
 
     @Override
-    protected void copyArtifacts(String s) throws IOException {
-        //FIXME
+    protected void copyArtifacts(String carbonHome) throws IOException {
+        // copy the csg.properties file into the conf directory
+        String targetPath = "repository" + File.separator + "conf" + File.separator;
+        copyResourceFile("csg.properties", targetPath + "csg.properties", carbonHome);
+
+    }
+
+    private void copyResourceFile(String sourcePath, String targetPath, String carbonHome)
+            throws IOException {
+        InputStream in = Thread.currentThread().getContextClassLoader().
+                getResourceAsStream(sourcePath);
+        if (in == null) {
+            fail("Unable to locate the specified configuration resource: " + sourcePath);
+        }
+
+        File target = new File(carbonHome + File.separator + targetPath);
+        FileOutputStream fos = new FileOutputStream(target);
+
+        byte[] data = new byte[1024];
+        int i;
+        while ((i = in.read(data)) != -1) {
+            fos.write(data, 0, i);
+        }
+        fos.flush();
+        fos.close();
+        in.close();
     }
 }

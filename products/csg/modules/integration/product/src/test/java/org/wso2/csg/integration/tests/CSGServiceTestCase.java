@@ -42,11 +42,9 @@ import static org.testng.Assert.*;
 
 /**
  * This contains a list of test which test the CSG specific functionality such as
- * 1. Deploying and invoking a CSG services for a SOAP service, REST service, JSON service
- * 2. Dead message cleanup task of CSG server
- * 3. Test the operations(login, exchange) associated with the in-VM thrift server
- * 4. Test nhttp transport + message relay for receiving messages
- * 5. And list goes..
+ * 1. Dead message cleanup task of CSG server
+ * 2. Test the operations(login, exchange) associated with the in-VM thrift server
+ * 3. Test nhttp transport + message relay for receiving messages
  */
 public class CSGServiceTestCase extends CSGIntegrationTestCase {
 
@@ -60,12 +58,22 @@ public class CSGServiceTestCase extends CSGIntegrationTestCase {
 
     public static final String CSG_SERVER_NAME = "TestServer";
 
+    private CSGThriftClient client;
+
     public CSGServiceTestCase() {
         super("ProxyServiceAdmin");
     }
 
     @Override
     protected void init() throws Exception {
+        String trustStorePath = FrameworkSettings.TEST_FRAMEWORK_HOME + File.separator +
+                "repository" + File.separator + "resources" + File.separator +
+                "security" + File.separator + "client-truststore.jks";
+
+        // don't pass "localhost" as the host name since the thrift client can't connect
+        // it seems the thrift server binds into the ip address
+        client = new CSGThriftClient(CSGUtils.getCSGThriftClient(
+                NetworkUtils.getLocalHostname(), 15001, 20000, trustStorePath, "wso2carbon"));
         proxyServiceAdminStub = new ProxyServiceAdminStub(getAdminServiceURL());
         csgServiceClient = new StockQuoteClient();
         authenticate(proxyServiceAdminStub);
@@ -120,17 +128,8 @@ public class CSGServiceTestCase extends CSGIntegrationTestCase {
     }
 
     @Test(groups = {"wso2.csg"},
-            description = "Test operations on the CSG in VM Thrift server operations(login, exchange" +
-                    " etc..")
-    public void testThriftServerOperations() throws Exception {
-        String trustStorePath = FrameworkSettings.TEST_FRAMEWORK_HOME + File.separator +
-                "repository" + File.separator + "resources" + File.separator +
-                "security" + File.separator + "client-truststore.jks";
-
-        // don't pass "localhost" as the host name since the thrift client can't connect
-        // it seems the thrift server binds into the ip address
-        CSGThriftClient client = new CSGThriftClient(CSGUtils.getCSGThriftClient(
-                NetworkUtils.getLocalHostname(), 15001, 20000, trustStorePath, "wso2carbon"));
+            description = "Test login operation on in VM thrift server")
+    public String testThriftServerOperations() throws Exception {
         String domainName;
         if (FrameworkSettings.STRATOS.equalsIgnoreCase("false")) {
             domainName = null;
@@ -139,7 +138,7 @@ public class CSGServiceTestCase extends CSGIntegrationTestCase {
         }
         String queueName = CSGUtils.getCSGEPR(domainName, CSG_SERVER_NAME, CSG_SERVICE_NAME);
         String token = null;
-        
+
         // check login operation
         try {
             token = client.login(CSGConstant.DEFAULT_CSG_USER,
@@ -147,7 +146,13 @@ public class CSGServiceTestCase extends CSGIntegrationTestCase {
         } catch (NotAuthorizedException e) {
             fail("Login operation fails!. " + e.getMessage(), e);
         }
+        return token;
+    }
 
+    @Test(groups = {"wso2.csg"},
+            description = "Test the exchange operation on the in VM thrift server ")
+    public void testExchangeOperation() throws Exception {
+        String token = testThriftServerOperations();
         BlockingQueue<Message> source = new LinkedBlockingQueue<Message>();
 
         List<Message> requestMsgList = new ArrayList<Message>();
@@ -160,4 +165,6 @@ public class CSGServiceTestCase extends CSGIntegrationTestCase {
             fail("Exchange operation fails!. " + e.getMessage(), e);
         }
     }
+
+
 }

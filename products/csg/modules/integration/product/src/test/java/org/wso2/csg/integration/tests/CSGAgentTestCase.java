@@ -16,7 +16,15 @@
 package org.wso2.csg.integration.tests;
 
 /**
- * This has the tests cases for testing the CSGAgent functionality with CSG server.
+ * This has the tests cases for testing the CSGAgent functionality with CSG server. Deploying and
+ * invoking a CSG services for;
+ * 1. SOAP service
+ * 2. REST service
+ * 3. JSON service
  */
-public class CSGAgentTestCase {
+public class CSGAgentTestCase extends CSGIntegrationTestCase {
+
+    public CSGAgentTestCase(String adminService) {
+        super("ProxyServiceAdmin");
+    }
 }

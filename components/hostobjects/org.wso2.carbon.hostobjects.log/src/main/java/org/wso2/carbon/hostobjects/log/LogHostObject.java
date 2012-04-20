@@ -67,11 +67,8 @@ public class LogHostObject extends ScriptableObject {
         if (argsCount != 1) {
             HostObjectUtil.invalidNumberOfArgs(HOSTOBJECT_NAME, functionName, argsCount, false);
         }
-        if (!(args[0] instanceof String)) {
-            HostObjectUtil.invalidArgsError(HOSTOBJECT_NAME, functionName, "1", "string", args[0], false);
-        }
         LogHostObject logObj = (LogHostObject) thisObj;
-        logObj.logger.debug(args[0]);
+        logObj.logger.debug(HostObjectUtil.serializeJSON(args[0]));
     }
 
     //prints an info message
@@ -81,11 +78,8 @@ public class LogHostObject extends ScriptableObject {
         if (argsCount != 1) {
             HostObjectUtil.invalidNumberOfArgs(HOSTOBJECT_NAME, functionName, argsCount, false);
         }
-        if (!(args[0] instanceof String)) {
-            HostObjectUtil.invalidArgsError(HOSTOBJECT_NAME, functionName, "1", "string", args[0], false);
-        }
         LogHostObject logObj = (LogHostObject) thisObj;
-        logObj.logger.info(args[0]);
+        logObj.logger.info(HostObjectUtil.serializeJSON(args[0]));
     }
 
     //prints an error message
@@ -95,11 +89,8 @@ public class LogHostObject extends ScriptableObject {
         if (argsCount != 1) {
             HostObjectUtil.invalidNumberOfArgs(HOSTOBJECT_NAME, functionName, argsCount, false);
         }
-        if (!(args[0] instanceof String)) {
-            HostObjectUtil.invalidArgsError(HOSTOBJECT_NAME, functionName, "1", "string", args[0], false);
-        }
         LogHostObject logObj = (LogHostObject) thisObj;
-        logObj.logger.error(args[0]);
+        logObj.logger.error(HostObjectUtil.serializeJSON(args[0]));
     }
 
     //prints a warning message
@@ -109,11 +100,8 @@ public class LogHostObject extends ScriptableObject {
         if (argsCount != 1) {
             HostObjectUtil.invalidNumberOfArgs(HOSTOBJECT_NAME, functionName, argsCount, false);
         }
-        if (!(args[0] instanceof String)) {
-            HostObjectUtil.invalidArgsError(HOSTOBJECT_NAME, functionName, "1", "string", args[0], false);
-        }
         LogHostObject logObj = (LogHostObject) thisObj;
-        logObj.logger.warn(args[0]);
+        logObj.logger.warn(HostObjectUtil.serializeJSON(args[0]));
     }
 
     //prints a fatal message
@@ -123,11 +111,8 @@ public class LogHostObject extends ScriptableObject {
         if (argsCount != 1) {
             HostObjectUtil.invalidNumberOfArgs(HOSTOBJECT_NAME, functionName, argsCount, false);
         }
-        if (!(args[0] instanceof String)) {
-            HostObjectUtil.invalidArgsError(HOSTOBJECT_NAME, functionName, "1", "string", args[0], false);
-        }
         LogHostObject logObj = (LogHostObject) thisObj;
-        logObj.logger.fatal(args[0]);
+        logObj.logger.fatal(HostObjectUtil.serializeJSON(args[0]));
     }
 
     //check if debug is enabled

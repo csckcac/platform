@@ -27,15 +27,43 @@
     <enableCache>true</enableCache>
     <registryRoot>/</registryRoot>
 
-    <dbConfig name="wso2registry">
-        <url>jdbc:h2:repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE</url>
-        <userName>wso2carbon</userName>
-        <password>wso2carbon</password>
-        <driverName>org.h2.Driver</driverName>
-        <maxActive>50</maxActive>
-        <maxWait>60000</maxWait>
+<dbConfig name="wso2registry">
+		<url>jdbc:mysql://localhost:3306/appserver_registry</url>
+        <userName>root</userName>
+        <password>root</password>
+        <driverName>com.mysql.jdbc.Driver</driverName>
+        <maxActive>150</maxActive>
+        <maxWait>360000</maxWait>
         <minIdle>5</minIdle>
     </dbConfig>
+
+    <dbConfig name="governance">
+        <url>jdbc:mysql://localhost:3306/governance?autoReconnect=true</url>
+        <userName>registry</userName>
+        <password>password</password>
+        <driverName>com.mysql.jdbc.Driver</driverName>
+        <maxActive>150</maxActive>
+        <maxWait>360000</maxWait>
+        <minIdle>5</minIdle>
+        <validationQuery>SELECT 1</validationQuery>
+    </dbConfig>
+
+    <remoteInstance url="https://governance.cloud-test.wso2.com">
+        <id>governance</id>
+        <dbConfig>governance</dbConfig>
+        <readOnly>false</readOnly>
+        <registryRoot>/</registryRoot>
+               <enableCache>true</enableCache>
+    </remoteInstance>
+
+    <mount path="/_system/governance" overwrite="virtual">
+        <instanceId>governance</instanceId>
+        <targetPath>/_system/governance</targetPath>
+    </mount>
+    <mount path="/_system/config" overwrite="virtual">
+        <instanceId>governance</instanceId>
+        <targetPath>/_system/config</targetPath>
+    </mount>
 
    <!--<handler class="org.wso2.carbon.registry.extensions.handlers.SynapseRepositoryHandler">
         <filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher">

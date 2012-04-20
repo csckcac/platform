@@ -187,6 +187,7 @@ public class UserGroupInformation {
     // circular dependence.
     javax.security.auth.login.Configuration.setConfiguration
         (new HadoopConfiguration());
+
     // give the configuration on how to translate Kerberos names
     try {
       KerberosName.setConfiguration(conf);
@@ -250,16 +251,6 @@ public class UserGroupInformation {
     }
   }
   
-  public static class UserGroupInformationThreadLocal {
-    private static ThreadLocal<UserGroupInformation> ugiThreadLocal = new ThreadLocal<UserGroupInformation>();
-    public static void set(UserGroupInformation ugi) {
-      ugiThreadLocal.set(ugi);
-    }
-    public static UserGroupInformation get() {
-      return ugiThreadLocal.get();
-    }
-  }
-  
   private static class RealUser implements Principal {
     private final UserGroupInformation realUser;
     
@@ -309,17 +300,23 @@ public class UserGroupInformation {
     private static final String KEYTAB_KERBEROS_CONFIG_NAME = 
       "hadoop-keytab-kerberos";
     
-    private static final AppConfigurationEntry OS_SPECIFIC_LOGIN =
+    private /*static*/ final AppConfigurationEntry OS_SPECIFIC_LOGIN =
       new AppConfigurationEntry(OS_LOGIN_MODULE_NAME,
                                 LoginModuleControlFlag.REQUIRED,
                                 new HashMap<String,String>());
-    private static final AppConfigurationEntry HADOOP_LOGIN =
+
+    private /*static*/ final AppConfigurationEntry HADOOP_LOGIN =
       new AppConfigurationEntry(HadoopLoginModule.class.getName(),
                                 LoginModuleControlFlag.REQUIRED,
                                 new HashMap<String,String>());
-    private static final Map<String,String> USER_KERBEROS_OPTIONS = 
-      new HashMap<String,String>();
-    static {
+
+    //private /*static*/ final Map<String,String> USER_KERBEROS_OPTIONS = 
+      //new HashMap<String,String>();
+
+    private String ticketCache = System.getProperty("carbon.kerberos.tgt.handle");
+
+
+    /*static {
       String ticketCache = System.getProperty("carbon.kerberos.tgt.handle");
       if (ticketCache != null) {
         USER_KERBEROS_OPTIONS.put("ticketCache", ticketCache);
@@ -332,47 +329,89 @@ public class UserGroupInformation {
         USER_KERBEROS_OPTIONS.put("useTicketCache", "true");
         USER_KERBEROS_OPTIONS.put("renewTGT", "false");
       }
-      /*String ticketCache = System.getenv("KRB5CCNAME");
-      if (ticketCache != null) {
-        USER_KERBEROS_OPTIONS.put("ticketCache", ticketCache);
-      }*/
-    }
-    private static final AppConfigurationEntry USER_KERBEROS_LOGIN =
-      new AppConfigurationEntry(Krb5LoginModule.class.getName(),
-                                LoginModuleControlFlag.OPTIONAL,
-                                USER_KERBEROS_OPTIONS);
-    private static final Map<String,String> KEYTAB_KERBEROS_OPTIONS = 
-      new HashMap<String,String>();
-    static {
+      //String ticketCache = System.getenv("KRB5CCNAME");
+      //if (ticketCache != null) {
+        //USER_KERBEROS_OPTIONS.put("ticketCache", ticketCache);
+      //}
+    }*/
+
+    //private /*static*/ final AppConfigurationEntry USER_KERBEROS_LOGIN =
+      //new AppConfigurationEntry(Krb5LoginModule.class.getName(),
+        //                        LoginModuleControlFlag.OPTIONAL,
+          //                      USER_KERBEROS_OPTIONS);
+    //private /*static*/ final Map<String,String> KEYTAB_KERBEROS_OPTIONS = 
+      //new HashMap<String,String>();
+
+    /*static {
       KEYTAB_KERBEROS_OPTIONS.put("doNotPrompt", "true");
       KEYTAB_KERBEROS_OPTIONS.put("useKeyTab", "true");
       KEYTAB_KERBEROS_OPTIONS.put("storeKey", "true");
       //KEYTAB_KERBEROS_OPTIONS.put("debug", "true");
-    }
-    private static final AppConfigurationEntry KEYTAB_KERBEROS_LOGIN =
-      new AppConfigurationEntry(Krb5LoginModule.class.getName(),
-                                LoginModuleControlFlag.REQUIRED,
-                                KEYTAB_KERBEROS_OPTIONS);
+    }*/
+
+    //private /*static*/ final AppConfigurationEntry KEYTAB_KERBEROS_LOGIN =
+      //new AppConfigurationEntry(Krb5LoginModule.class.getName(),
+        //                        LoginModuleControlFlag.REQUIRED,
+          //                      KEYTAB_KERBEROS_OPTIONS);
     
-    private static final AppConfigurationEntry[] SIMPLE_CONF = 
-      new AppConfigurationEntry[]{OS_SPECIFIC_LOGIN, HADOOP_LOGIN};
+    //private /*static*/ final AppConfigurationEntry[] SIMPLE_CONF = 
+      //new AppConfigurationEntry[]{OS_SPECIFIC_LOGIN, HADOOP_LOGIN};
 
-    private static final AppConfigurationEntry[] USER_KERBEROS_CONF =
-      new AppConfigurationEntry[]{OS_SPECIFIC_LOGIN, USER_KERBEROS_LOGIN,
-                                  HADOOP_LOGIN};
+    //private /*static*/ final AppConfigurationEntry[] USER_KERBEROS_CONF =
+      //new AppConfigurationEntry[]{OS_SPECIFIC_LOGIN, USER_KERBEROS_LOGIN,
+        //                          HADOOP_LOGIN};
 
-    private static final AppConfigurationEntry[] KEYTAB_KERBEROS_CONF =
-      new AppConfigurationEntry[]{KEYTAB_KERBEROS_LOGIN, HADOOP_LOGIN};
+    //private /*static*/ final AppConfigurationEntry[] KEYTAB_KERBEROS_CONF =
+      //new AppConfigurationEntry[]{KEYTAB_KERBEROS_LOGIN, HADOOP_LOGIN};
+
+
+    public HadoopConfiguration() {
+      //Setup user kerberos parameters.
+
+    }
 
     @Override
     public AppConfigurationEntry[] getAppConfigurationEntry(String appName) {
+      LOG.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> getAppConfigurationEntry("+appName+") Thread ID "+Thread.currentThread().getId());
+      Map<String,String> USER_KERBEROS_OPTIONS = new HashMap<String,String>();
+      Map<String,String> KEYTAB_KERBEROS_OPTIONS = new HashMap<String,String>();
       if (SIMPLE_CONFIG_NAME.equals(appName)) {
+    	AppConfigurationEntry[] SIMPLE_CONF = 
+      		new AppConfigurationEntry[]{OS_SPECIFIC_LOGIN, HADOOP_LOGIN};
         return SIMPLE_CONF;
       } else if (USER_KERBEROS_CONFIG_NAME.equals(appName)) {
+        if (ticketCache != null) {
+           USER_KERBEROS_OPTIONS.put("ticketCache", ticketCache);
+           USER_KERBEROS_OPTIONS.put("doNotPrompt", "true");
+           USER_KERBEROS_OPTIONS.put("useTicketCache", "true");
+           USER_KERBEROS_OPTIONS.put("renewTGT", "true");
+        } else {
+           USER_KERBEROS_OPTIONS.put("doNotPrompt", "true");
+           USER_KERBEROS_OPTIONS.put("useTicketCache", "true");
+           USER_KERBEROS_OPTIONS.put("renewTGT", "false");
+        }
+        AppConfigurationEntry USER_KERBEROS_LOGIN =
+      		new AppConfigurationEntry(Krb5LoginModule.class.getName(),
+                                	  LoginModuleControlFlag.OPTIONAL,
+                                          USER_KERBEROS_OPTIONS);
+        AppConfigurationEntry[] USER_KERBEROS_CONF =
+      		new AppConfigurationEntry[]{OS_SPECIFIC_LOGIN, USER_KERBEROS_LOGIN,
+                                  	    HADOOP_LOGIN};
         return USER_KERBEROS_CONF;
       } else if (KEYTAB_KERBEROS_CONFIG_NAME.equals(appName)) {
+        //Setup keytab parameters.
+        KEYTAB_KERBEROS_OPTIONS.put("doNotPrompt", "true");
+        KEYTAB_KERBEROS_OPTIONS.put("useKeyTab", "true");
+        KEYTAB_KERBEROS_OPTIONS.put("storeKey", "true");
+        //KEYTAB_KERBEROS_OPTIONS.put("debug", "true");
         KEYTAB_KERBEROS_OPTIONS.put("keyTab", keytabFile);
         KEYTAB_KERBEROS_OPTIONS.put("principal", keytabPrincipal);
+	AppConfigurationEntry KEYTAB_KERBEROS_LOGIN =
+      		new AppConfigurationEntry(Krb5LoginModule.class.getName(),
+                                	  LoginModuleControlFlag.REQUIRED,
+                                	  KEYTAB_KERBEROS_OPTIONS);
+        AppConfigurationEntry[] KEYTAB_KERBEROS_CONF =
+      		new AppConfigurationEntry[]{KEYTAB_KERBEROS_LOGIN, HADOOP_LOGIN};
         return KEYTAB_KERBEROS_CONF;
       }
       return null;
@@ -428,7 +467,8 @@ public class UserGroupInformation {
   static UserGroupInformation getLoginUser() throws IOException {
     UserGroupInformation loginUser = UserGroupInformationThreadLocal.get();;
     Subject subject = null;
-    LOG.info(">>>>>>>>>> UGI Information: "+"User "+loginUser.getUserName()+" from Thread ID "+Thread.currentThread().getId());
+    if (loginUser != null)
+      LOG.info(">>>>>>>>>> UGI Information: "+"User "+loginUser.getUserName()+" from Thread ID "+Thread.currentThread().getId());
     if (loginUser == null) {
       try {
         subject = new Subject();

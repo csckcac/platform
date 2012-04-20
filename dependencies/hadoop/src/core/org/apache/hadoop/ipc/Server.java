@@ -71,6 +71,7 @@ import org.apache.hadoop.security.AccessControlException;
 import org.apache.hadoop.security.SaslRpcServer;
 import org.apache.hadoop.security.SaslRpcServer.SaslStatus;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.security.UserGroupInformationThreadLocal;
 import org.apache.hadoop.security.SaslRpcServer.AuthMethod;
 import org.apache.hadoop.security.SaslRpcServer.SaslDigestCallbackHandler;
 import org.apache.hadoop.security.SaslRpcServer.SaslGssCallbackHandler;
@@ -319,12 +320,27 @@ public abstract class Server {
     private class Reader implements Runnable {
       private volatile boolean adding = false;
       private Selector readSelector = null;
-
+      //current is the UserGroupInformation object of the current thread. 
+      //This variable will be set as a thread local variable in the new thread that will be created.
+      //This is required by the WSO2 Carbon environment where job clients, namenodes and jobtrackers 
+      //will run on a single JVM.
+      //WSO2 Carbon change.
+      private UserGroupInformation current;
       Reader(Selector readSelector) {
+        try {
+	  //Get the current user local to this thread.
+          //WSO2 Carbon change.
+          current = UserGroupInformation.getCurrentUser();
+        }catch (IOException ioe) {
+          LOG.warn(ioe.getMessage());
+        }
         this.readSelector = readSelector;
       }
       public void run() {
         LOG.info("Starting SocketReader");
+        //Set the current user local to the thread which spawned this thread as a thread local variable.
+	//WSO2 Carbon change.
+        UserGroupInformationThreadLocal.set(current);
         synchronized (this) {
           while (running) {
             SelectionKey key = null;

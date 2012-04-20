@@ -52,7 +52,7 @@
 </property>
 <property>
   <name>hadoop.security.group.mapping.service.url</name>
-  <value>https://localhost:9444/services/</value>
+  <value>https://localhost:9444/services</value>
   <description>The URL where WSO2 carbon user group retreival service 
   is located.</description>
 </property>

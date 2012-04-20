@@ -54,7 +54,6 @@ Carbon Binary Distribution Directory Structure
         |- bin <folder>
         |- dbscripts <folder>
         |- lib <folder>
-        |- docs <folder>
         |- repository <folder>
         |---- components <folder>
         |---- conf <folder>
@@ -80,9 +79,6 @@ Carbon Binary Distribution Directory Structure
     - lib
       Contains the basic set of libraries required to startup Carbon
       in standalone mode
-
-    - docs
-      Documentation on carbon platform product
 
     - repository
       The repository where Carbon artifacts &

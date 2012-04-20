@@ -10,7 +10,7 @@ Standalone Mode
 
 2. All the shell scripts and .bat files are available in CARBON_HOME/bin folder.
 
-3. To start LB one can use either wso2server.sh or daemon.sh in all Unix
+3. To start CSS one can use either wso2server.sh or daemon.sh in all Unix
    systems & wso2server.bat file on Windows operating systems.
 
 4. Either of the following commands can be used to start ESB

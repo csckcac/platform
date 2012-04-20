@@ -24,7 +24,7 @@
 
     <fileSets>
         <fileSet>
-            <directory>target/wso2carbon-core-${carbon.platform.patch.version.322}</directory>
+            <directory>target/wso2carbon-core-${carbon.platform.version}</directory>
             <outputDirectory>wso2css-${pom.version}</outputDirectory>
             <excludes>
                 <exclude>**/native/*</exclude>
@@ -46,7 +46,7 @@
             </excludes>
         </fileSet>
         <fileSet>
-            <directory>target/wso2carbon-core-${carbon.platform.patch.version.322}</directory>
+            <directory>target/wso2carbon-core-${carbon.platform.version}</directory>
             <outputDirectory>wso2css-${pom.version}</outputDirectory>
             <excludes>
                 <exclude>**/daemon.sh</exclude>
@@ -71,72 +71,72 @@
     <files>
         <file>
             <source>INSTALL.txt</source>
-            <outputDirectory>wso2css-${carbon.product.version}</outputDirectory>
+            <outputDirectory>wso2css-${pom.version}</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>README.txt</source>
-            <outputDirectory>wso2css-${carbon.product.version}</outputDirectory>
+            <outputDirectory>wso2css-${pom.version}</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>LICENSE.txt</source>
-            <outputDirectory>wso2css-${carbon.product.version}</outputDirectory>
+            <outputDirectory>wso2css-${pom.version}</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>release-notes.html</source>
-            <outputDirectory>wso2css-${carbon.product.version}</outputDirectory>
+            <outputDirectory>wso2css-${pom.version}</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>target/wso2carbon-core-${carbon.platform.patch.version.322}/bin/README.txt</source>
-            <outputDirectory>wso2css-${carbon.product.version}/bin/</outputDirectory>
+            <source>target/wso2carbon-core-${carbon.platform.version}/bin/README.txt</source>
+            <outputDirectory>wso2css-${pom.version}/bin/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>target/wso2carbon-core-${carbon.platform.patch.version.322}/bin/version.txt</source>
-            <outputDirectory>wso2css-${carbon.product.version}/bin/</outputDirectory>
+            <source>target/wso2carbon-core-${carbon.platform.version}/bin/version.txt</source>
+            <outputDirectory>wso2css-${pom.version}/bin/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>target/wso2carbon-core-${carbon.platform.patch.version.322}/repository/conf/carbon.xml</source>
-            <outputDirectory>wso2css-${carbon.product.version}/repository/conf/</outputDirectory>
+            <source>target/wso2carbon-core-${carbon.platform.version}/repository/conf/carbon.xml</source>
+            <outputDirectory>wso2css-${pom.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
         </file>
         <file>
-            <source>target/wso2carbon-core-${carbon.platform.patch.version.322}/repository/conf/axis2/axis2.xml</source>
-            <outputDirectory>wso2css-${carbon.product.version}/repository/conf/axis2/</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>target/wso2carbon-core-${carbon.platform.patch.version.322}/repository/conf/README</source>
-            <outputDirectory>wso2css-${carbon.product.version}/repository/conf/</outputDirectory>
+            <source>target/wso2carbon-core-${carbon.platform.version}/repository/conf/axis2/axis2.xml</source>
+            <outputDirectory>wso2css-${pom.version}/repository/conf/axis2/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>target/wso2carbon-core-${carbon.platform.patch.version.322}/bin/wso2server.bat</source>
-            <outputDirectory>wso2css-${carbon.product.version}/bin/</outputDirectory>
+            <source>target/wso2carbon-core-${carbon.platform.version}/repository/conf/README</source>
+            <outputDirectory>wso2css-${pom.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>target/wso2carbon-core-${carbon.platform.patch.version.322}/repository/conf/wrapper.conf</source>
-            <outputDirectory>wso2css-${carbon.product.version}/repository/conf/</outputDirectory>
+            <source>target/wso2carbon-core-${carbon.platform.version}/bin/wso2server.bat</source>
+            <outputDirectory>wso2css-${pom.version}/bin/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>target/wso2carbon-core-${carbon.platform.patch.version.322}/bin/daemon.sh</source>
-            <outputDirectory>wso2css-${carbon.product.version}/bin/</outputDirectory>
+            <source>target/wso2carbon-core-${carbon.platform.version}/repository/conf/wrapper.conf</source>
+            <outputDirectory>wso2css-${pom.version}/repository/conf/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-${carbon.platform.version}/bin/daemon.sh</source>
+            <outputDirectory>wso2css-${pom.version}/bin/</outputDirectory>
             <filtered>true</filtered>
         </file>
     </files>

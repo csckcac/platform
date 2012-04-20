@@ -1,11 +1,11 @@
 ================================================================================
-                        WSO2 CSS 1.0.1
+                        WSO2 CSS 2.0.0
 ================================================================================
 
-Welcome to the WSO2 CSS 1.0.1
+Welcome to the WSO2 CSS 2.0.0
 
-WSO2 CSS is a column-oriented database product based on WSO2 Carbon. 
+WSO2 CSS is a column database product based on WSO2 Carbon. 
 
 --------------------------------------------------------------------------------
-(c) Copyright 2011 WSO2 Inc.
+(c) Copyright 2012 WSO2 Inc.
 

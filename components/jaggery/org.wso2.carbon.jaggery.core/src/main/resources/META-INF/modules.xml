@@ -42,11 +42,11 @@
             <name>TwitterConnect</name>
         </hostObject>
         <hostObject>
-            <className>org.wso2.carbon.hostobjects.feed.Entry</className>
+            <className>org.wso2.carbon.hostobjects.feed.EntryHostObject</className>
             <name>Entry</name>
         </hostObject>
         <hostObject>
-            <className>org.wso2.carbon.hostobjects.feed.Feed</className>
+            <className>org.wso2.carbon.hostobjects.feed.FeedHostObject</className>
             <name>Feed</name>
         </hostObject> 
 

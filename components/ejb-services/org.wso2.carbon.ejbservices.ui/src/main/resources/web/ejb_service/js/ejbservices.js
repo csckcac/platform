@@ -29,7 +29,7 @@ function ejbProviderStep1DisableFields() {
     var comboToLoad = document.getElementById('existingAppServerConfigurations');
     existingAppServerConfigs = comboToLoad.length;
     //disable all text/combo boxes at the screen load
-    var radio2 = document.getElementById('appServerConfiguration2');
+    var radio2 = document.getElementById('useExistingConfig');
     if (existingAppServerConfigs != 0 && radio2.checked == false) {
         document.getElementById('serverType').disabled = true;
         document.getElementById('providerUrl').disabled = true;
@@ -42,8 +42,8 @@ function ejbProviderStep1DisableFields() {
     } else if (existingAppServerConfigs != 0 && radio2.checked == true) {
         toggleEJBAppServerConfigurationEditScreen('existingEJBServer');
     } else if (existingAppServerConfigs == 0) {
-        var radio = document.getElementById('appServerConfiguration1');
-        radio.disabled = true;
+        var radio = document.getElementById('addNewConfig');
+//        radio.disabled = true;
         document.getElementById('existingAppServerConfigurations').disabled = true;
         if (existingAppServerConfigs == 0) {
             document.getElementById('ejbStep0NextButton').disabled = true;

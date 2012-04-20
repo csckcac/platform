@@ -48,20 +48,7 @@
         <hostObject>
             <className>org.wso2.carbon.hostobjects.feed.Feed</className>
             <name>Feed</name>
-        </hostObject>      
-        <hostObject>
-            <className>org.wso2.carbon.hostobjects.atom.APPClientHostObject</className>
-            <name>APPClient</name>
-        </hostObject>
-        <hostObject>
-            <className>org.wso2.carbon.hostobjects.atom.AtomEntryHostObject</className>
-            <name>AtomEntry</name>
-        </hostObject>
-        <hostObject>
-            <className>org.wso2.carbon.hostobjects.atom.AtomFeedHostObject</className>
-            <name>AtomFeed</name>
-        </hostObject>
-
+        </hostObject> 
 
         <hostObject>
             <className>org.wso2.carbon.hostobjects.web.RequestHostObject</className>

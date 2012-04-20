@@ -63,13 +63,14 @@
         <property name="schemaMediaType">application/xsd+xml</property>
         <property name="threadPoolSize">50</property>
         <!--property name="createService">false</property>
-	<property name="useOriginalSchema">true</property>
+	    <property name="useOriginalSchema">true</property>
         <property name="disableWSDLValidation">true</property>
         <property name="disableSchemaValidation">true</property>
         <property name="wsdlExtension">.wsdl</property>
         <property name="schemaExtension">.xsd</property>
         <property name="archiveExtension">.gar</property>
         <property name="tempFilePrefix">wsdl</property-->
+        <property name="numberOfRetry">3</property>
         <property name="schemaLocationConfiguration" type="xml">
             <location>/trunk/schemas/</location>
         </property>

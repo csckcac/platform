@@ -49,7 +49,8 @@ public final class ArchiveExtractor {
                         log.debug("Extracting directory " + entry.getName());
                     }
 
-                    if (!(new File(destination, entry.getName()).mkdir())) {
+                    File tempDir = new File(destination, entry.getName());
+                    if (!tempDir.exists() && !(tempDir.mkdir())) {
                         String errMsg = "Creating directory: " +
                                 entry.getName() + " while extracting the archive: " + file.getName();
                         log.error(errMsg);

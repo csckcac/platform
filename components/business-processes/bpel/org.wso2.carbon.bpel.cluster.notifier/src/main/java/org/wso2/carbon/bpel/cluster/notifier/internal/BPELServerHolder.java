@@ -23,7 +23,7 @@ import org.wso2.carbon.utils.ConfigurationContextService;
 /**
  * Data holder for the BPELServiceComponent
  */
-public class BPELServerHolder {
+public final class BPELServerHolder {
     private static BPELServerHolder instance;
 
     private ConfigurationContextService ccServiceInstance;

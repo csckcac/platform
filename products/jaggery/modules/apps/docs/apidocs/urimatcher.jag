@@ -62,7 +62,7 @@ include('/includes/topnavi.jag');
 
                 <pre class="prettyprint linenums">
 &lt%
-var uriMatcher = new URIMatcher(request.uri);
+var uriMatcher = new URIMatcher(request.getRequestURI());
 
 if(uriMatcher.match('/{context}/{dir}/{page}')) {
 	print(uriMatcher.elements().id)
@@ -72,9 +72,9 @@ if(uriMatcher.match('/{context}/{dir}/{page}')) {
                 <%
 
                 var xhrCode = '&lt%'
-                + '\n var uriMatcher = new URIMatcher(request.uri);\n'
+                + '\n var uriMatcher = new URIMatcher(request.getRequestURI());\n'
                 + '\n if(uriMatcher.match("/{context}/{dir}/{page}")) {'
-                + '\n       print(uriMatcher.elements.context);'
+                + '\n       print(uriMatcher.elements().context);'
                 + '\n }'
                 + '\n %&gt';
 

@@ -121,7 +121,7 @@ public class SecurityDeploymentInterceptor implements AxisObserver {
         PreAxisConfigurationPopulationObserver preAxisConfigObserver =
                 new PreAxisConfigurationPopulationObserver() {
                     public void createdAxisConfiguration(AxisConfiguration axisConfiguration) {
-                        init(axisConfiguration);
+                    	init(axisConfiguration);
                         axisConfiguration.addObservers(SecurityDeploymentInterceptor.this);
                     }
                 };
@@ -354,7 +354,7 @@ public class SecurityDeploymentInterceptor implements AxisObserver {
                 Object[] pvtStores = sfpm.getAll(serviceGroupId, Resources.ServiceProperties.ROOT_XPATH+
                         PersistenceUtils.getXPathAttrPredicate(Resources.NAME, serviceName)+
                         "/"+Resources.Associations.ASSOCIATION_XML_TAG+
-                        PersistenceUtils.getXPathAttrPredicate(Resources.NAME,
+                        PersistenceUtils.getXPathAttrPredicate(Resources.Associations.TYPE,
                                 SecurityConstants.ASSOCIATION_PRIVATE_KEYSTORE)).
                         toArray();
 

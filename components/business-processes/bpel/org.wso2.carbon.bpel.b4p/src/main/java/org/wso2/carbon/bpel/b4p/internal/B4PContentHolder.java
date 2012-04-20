@@ -21,7 +21,7 @@ import org.wso2.carbon.bpel.core.ode.integration.BPELServer;
 /**
  * Data holder for the B4PServiceComponent
  */
-public class B4PContentHolder {
+public final class B4PContentHolder {
 
     private static B4PContentHolder instance;
 

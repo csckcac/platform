@@ -52,16 +52,12 @@ public class SOAPHelper {
     private Binding binding;
     private SOAPFactory soapFactory;
     private boolean isRPC;
-    private Definition wsdlDefintion;
-    private Operation responseOperation;
 
-    public SOAPHelper(Definition wsdlDef, Binding binding, SOAPFactory soapFactory,
+    public SOAPHelper(Binding binding, SOAPFactory soapFactory,
                       boolean isRPC) {
         this.binding = binding;
         this.soapFactory = soapFactory;
         this.isRPC = isRPC;
-        this.wsdlDefintion = wsdlDef;
-        this.responseOperation = null;
     }
 
     public static ExtensibilityElement getBindingExtension(Binding binding) {

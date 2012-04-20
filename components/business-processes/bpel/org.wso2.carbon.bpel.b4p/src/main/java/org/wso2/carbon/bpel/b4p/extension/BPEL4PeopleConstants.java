@@ -19,7 +19,9 @@ package org.wso2.carbon.bpel.b4p.extension;
 /**
  * Holds the constants for BPEL4People component
  */
-public class BPEL4PeopleConstants {
+public final class BPEL4PeopleConstants {
+    private BPEL4PeopleConstants() {}
+
     public static final String B4P_NAMESPACE = "http://docs.oasis-open.org/ns/bpel4people/bpel4people/200803";
     public static final String PEOPLE_ACTIVITY = "peopleActivity";
     public static final String PEOPLE_ACTIVITY_FILTER_NAME = "b4pFilter";

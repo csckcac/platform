@@ -57,7 +57,7 @@ import java.io.File;
 import java.util.List;
 
 public class PeopleActivity {
-    protected final Log log = LogFactory.getLog(PeopleActivity.class);
+    private final Log log = LogFactory.getLog(PeopleActivity.class);
 
     private String name;
     private String inputVarName;
@@ -79,38 +79,39 @@ public class PeopleActivity {
     private boolean isRPC = false;
     private boolean isTwoWay = true;
 
+    private QName serviceName;
+    private QName callbackServiceName;
+    private Definition hiWSDL;
+
+
     private static final long serialVersionUID = -89894857418738012L;
 
-    public InteractionType getActivityType() {
-        return activityType;
-    }
-
-    public QName getCallbackServiceName() {
-        return callbackServiceName;
-    }
-
-    public String getCallbackServicePort() {
-        return callbackServicePort;
-    }
-
-    QName serviceName;
-    QName callbackServiceName;
-    Definition hiWSDL;
+//    public InteractionType getActivityType() {
+//        return activityType;
+//    }
+//
+//    public QName getCallbackServiceName() {
+//        return callbackServiceName;
+//    }
+//
+//    public String getCallbackServicePort() {
+//        return callbackServicePort;
+//    }
 
     public PeopleActivity(ExtensionContext extensionContext, Element element) throws FaultException {
         init(extensionContext, element);
     }
 
-    public Element getInputMessage(ExtensionContext extensionContext) throws FaultException {
-        Node inputNode = extensionContext.readVariable(inputVarName);
-
-        if (inputNode.getNodeType() == Node.ELEMENT_NODE) {
-            return (Element) inputNode;
-        } else {
-            log.error("The node type of the variable is not ELEMENT");
-            throw new FaultException(new QName(BPEL4PeopleConstants.B4P_NAMESPACE, "Unsupported variable type"));
-        }
-    }
+//    public Element getInputMessage(ExtensionContext extensionContext) throws FaultException {
+//        Node inputNode = extensionContext.readVariable(inputVarName);
+//
+//        if (inputNode.getNodeType() == Node.ELEMENT_NODE) {
+//            return (Element) inputNode;
+//        } else {
+//            log.error("The node type of the variable is not ELEMENT");
+//            throw new FaultException(new QName(BPEL4PeopleConstants.B4P_NAMESPACE, "Unsupported variable type"));
+//        }
+//    }
 
     public Operation getOperation(ExtensionContext extensionContext) {
         BpelRuntimeContext runTimeContext = extensionContext.getInternalInstance();
@@ -122,24 +123,24 @@ public class PeopleActivity {
         return partnerLink.getPartnerRoleOperation(operation);
     }
 
-    public Operation getCallbackOperation(ExtensionContext extensionContext) {
-        BpelRuntimeContext runTimeContext = extensionContext.getInternalInstance();
-
-        OProcess process = runTimeContext.getProcessModel();
-
-        OPartnerLink partnerLink = process.getPartnerLink(partnerLinkName);
-
-        return partnerLink.getMyRoleOperation(callbackOperationName);
-
-    }
+//    public Operation getCallbackOperation(ExtensionContext extensionContext) {
+//        BpelRuntimeContext runTimeContext = extensionContext.getInternalInstance();
+//
+//        OProcess process = runTimeContext.getProcessModel();
+//
+//        OPartnerLink partnerLink = process.getPartnerLink(partnerLinkName);
+//
+//        return partnerLink.getMyRoleOperation(callbackOperationName);
+//
+//    }
 
     public String getOperationName() {
         return operation;
     }
 
-    public String getEPRURL() {
-        return serviceURI;
-    }
+//    public String getEPRURL() {
+//        return serviceURI;
+//    }
 
     public String getServicePort() {
         return servicePort;
@@ -157,21 +158,21 @@ public class PeopleActivity {
         return serviceName;
     }
 
-    public Definition getHiWSDL() {
-        return hiWSDL;
-    }
+//    public Definition getHiWSDL() {
+//        return hiWSDL;
+//    }
 
 //    public Definition getCallbackWSDL() {
 //        return du.getDefinitionForService(callbackServiceName);
 //    }
 
-    public String getCallbackOperationName() {
-        return callbackOperationName;
-    }
-
-    public String getPartnerLinkName() {
-        return partnerLinkName;
-    }
+//    public String getCallbackOperationName() {
+//        return callbackOperationName;
+//    }
+//
+//    public String getPartnerLinkName() {
+//        return partnerLinkName;
+//    }
 
     private void init(ExtensionContext extensionContext, Element element) throws FaultException {
         if (!element.getLocalName().equals("peopleActivity") || !element.getNamespaceURI().equals(BPEL4PeopleConstants.B4P_NAMESPACE)) {
@@ -242,12 +243,14 @@ public class PeopleActivity {
         } else if (task.getLocalName().
                 equals(BPEL4PeopleConstants.PEOPLE_ACTIVITY_LOCAL_NOTIFICATION)) {
             activityType = InteractionType.NOTIFICATION;
-            log.warn(task.getLocalName() + " is not supported yet!");
-            throw new RuntimeException(task.getLocalName() + " is not supported yet!");
+            String warnMsg = task.getLocalName() + " is not supported yet!";
+            log.warn(warnMsg);
+            throw new RuntimeException(warnMsg);
         } else if (task.getLocalName().equals(BPEL4PeopleConstants.PEOPLE_ACTIVITY_LOCAL_TASK)) {
             activityType = InteractionType.TASK;
-            log.warn(task.getLocalName() + " is not supported yet!");
-            throw new RuntimeException(task.getLocalName() + " is not supported yet!");
+            String warnMsg = task.getLocalName() + " is not supported yet!";
+            log.warn(warnMsg);
+            throw new RuntimeException(warnMsg);
         }
 
         DeploymentUnitDir du = new DeploymentUnitDir(new File(extensionContext.getDUDir()));
@@ -410,7 +413,7 @@ public class PeopleActivity {
     public String invoke(ExtensionContext extensionContext) throws FaultException {
         BPELMessageContext taskMessageContext = new BPELMessageContext(hiWSDL);
         try {
-            SOAPHelper soapHelper = new SOAPHelper(hiWSDL, getBinding(), getSoapFactory(), isRPC);
+            SOAPHelper soapHelper = new SOAPHelper(getBinding(), getSoapFactory(), isRPC);
             MessageContext messageContext = new MessageContext();
             soapHelper.createSoapRequest(messageContext,
                     (Element) extensionContext.readVariable(inputVarName), getOperation(extensionContext));
@@ -426,7 +429,7 @@ public class PeopleActivity {
             taskMessageContext.setCaller(processId.getLocalPart());
             AxisServiceUtils.invokeService(taskMessageContext, getConfigurationContext());
         } catch (AxisFault axisFault) {
-            log.error(axisFault);
+            log.error(axisFault, axisFault);
             throw new FaultException(new QName(BPEL4PeopleConstants.B4P_NAMESPACE,
                     "Error occurred while invoking service " + serviceName),
                     axisFault);

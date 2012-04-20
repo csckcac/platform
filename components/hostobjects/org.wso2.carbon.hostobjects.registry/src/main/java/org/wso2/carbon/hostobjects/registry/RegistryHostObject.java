@@ -40,7 +40,7 @@ public class RegistryHostObject extends ScriptableObject {
 
     private static final Log log = LogFactory.getLog(RegistryHostObject.class);
 
-    private static final String hostObjectName = "MetaDataStore";
+    private static final String hostObjectName = "MetadataStore";
 
     private Registry registry = null;
 

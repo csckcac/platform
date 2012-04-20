@@ -60,7 +60,7 @@ public class SoapTracerTest {
         int userIdOfUser2 = 2;
         String serviceName = "Axis2Service";
         builderUser1 = new EnvironmentBuilder().as(userIdOfUser1);
-        builderUser2 = new EnvironmentBuilder().as(userIdOfUser1);
+        builderUser2 = new EnvironmentBuilder().as(userIdOfUser2);
         ManageEnvironment environmentUser1 = builderUser1.build();
         ManageEnvironment environmentUser2 = builderUser2.build();
         AXIS2SERVICE_EPR = environmentUser1.getAs().getServiceUrl() + "/" + serviceName;
@@ -139,7 +139,7 @@ public class SoapTracerTest {
 
             assertEquals(SOAP_TRACKER_ON_FLAG, firstTenantSoapTracerServiceInfo.getFlag(),
                          "Soap tracer ON flag not set");
-            assertEquals(SOAP_TRACKER_OFF_FLAG, secondTenantSoapTracerServiceInfo.getFlag(),
+            assertEquals(SOAP_TRACKER_ON_FLAG, secondTenantSoapTracerServiceInfo.getFlag(),
                          "Soap tracer ON flag not set");
 
             log.info("Wait for service deployment");

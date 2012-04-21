@@ -59,6 +59,7 @@
 
         var obj = document.getElementById('existingAppServerConfigurations');
         var providerUrl = obj[obj.selectedIndex].value;
+        //TODO remove providerUrl part since unused?
         location.href = 'ejb_provider_wizard_step1.jsp?providerUrl=' + providerUrl;
     }
 
@@ -198,23 +199,29 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="leftCol-med labelField"><fmt:message key="server.configuration"/></td>
-                        <td class="leftCol-big labelField">
-                            <select onchange="setDefaultServerValues(this,document);return false;"
-                                    name="existingAppServerConfigurations"
-                                    id="existingAppServerConfigurations">
-                                <%
-                                    if (appServers != null) {
-                                        for (EJBAppServerData appServer : appServers) {
-                                %>
-                                <option value="<%=appServer.getProviderURL()%>"><%=appServer.getProviderURL()%>
-                                </option>
-                                <%
-                                        }
-                                    }
-                                %>
-                            </select>
-                            <%--<label for="existingAppServerConfigurations">xxx</label>--%>
+                        <td class="labelField">
+                            <table class="carbonFormTable">
+                                <tr>
+                                    <td class="leftCol-med labelField"><fmt:message key="server.configuration"/></td>
+                                    <td>
+                                        <select onchange="setDefaultServerValues(this,document);return false;"
+                                                name="existingAppServerConfigurations"
+                                                id="existingAppServerConfigurations">
+                                            <%
+                                                if (appServers != null) {
+                                                    for (EJBAppServerData appServer : appServers) {
+                                            %>
+                                            <option value="<%=appServer.getProviderURL()%>"><%=appServer.getProviderURL()%>
+                                            </option>
+                                            <%
+                                                    }
+                                                }
+                                            %>
+                                        </select>
+                                            <%--<label for="existingAppServerConfigurations">xxx</label>--%>
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
                     <tr>

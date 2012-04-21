@@ -15,6 +15,8 @@
  */
 package org.wso2.carbon.analytics.hive.internal;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.apache.hadoop.hive.common.LogUtils;
 import org.apache.hadoop.hive.common.ServerUtils;
@@ -26,9 +28,12 @@ import org.apache.thrift.server.TThreadPoolServer;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TServerTransport;
 import org.apache.thrift.transport.TTransportFactory;
+import org.wso2.carbon.utils.CarbonUtils;
 
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @scr.component name="bam.hive.component" immediate="true"
@@ -36,10 +41,23 @@ import java.util.Properties;
 
 public class HiveServiceComponent {
 
+    private static final Log log = LogFactory.getLog(HiveServiceComponent.class);
+
+    private static final String CARBON_HOME_ENV = "CARBON_HOME";
+
+    private ExecutorService hiveServerPool = Executors.newSingleThreadExecutor();
+
     protected void activate(ComponentContext ctx) {
-        Thread t = new Thread(new HiveRunnable());
-        t.start();
-        System.out.println("Test log..");
+
+        // Set CARBON_HOME if not already set for the use of Hive in order to load hive configurations.
+        String carbonHome = System.getProperty(CARBON_HOME_ENV);
+        if (carbonHome == null) {
+            carbonHome = CarbonUtils.getCarbonHome();
+            System.setProperty(CARBON_HOME_ENV, carbonHome);
+        }
+
+        hiveServerPool.submit(new HiveRunnable());
+
     }
 
     public class HiveRunnable implements Runnable {
@@ -60,11 +78,11 @@ public class HiveServiceComponent {
 
                 // NOTE: It is critical to do this here so that log4j is reinitialized
                 // before any of the other core hive classes are loaded
-                try {
+/*                try {
                     LogUtils.initHiveLog4j();
                 } catch (LogUtils.LogInitializationException e) {
                     HiveServer.HiveServerHandler.LOG.warn(e.getMessage());
-                }
+                }*/
 
                 HiveConf conf = new HiveConf(HiveServer.HiveServerHandler.class);
                 ServerUtils.cleanUpScratchDir(conf);
@@ -89,14 +107,14 @@ public class HiveServiceComponent {
                 String msg = "Starting hive server on port " + cli.port
                              + " with " + cli.minWorkerThreads + " min worker threads and "
                              + cli.maxWorkerThreads + " max worker threads";
-                HiveServer.HiveServerHandler.LOG.info(msg);
-                if (cli.isVerbose()) {
-                    System.err.println(msg);
-                }
 
+                HiveServer.HiveServerHandler.LOG.info(msg);
+
+                // Start Hive Thrift service
                 server.serve();
-            } catch (Exception x) {
-                x.printStackTrace();
+
+            } catch (Exception e) {
+               log.error("Hive server initialization failed..", e);
             }
         }
     }

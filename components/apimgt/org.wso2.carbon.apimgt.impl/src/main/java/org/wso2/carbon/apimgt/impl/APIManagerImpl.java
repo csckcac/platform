@@ -1301,7 +1301,6 @@ public class APIManagerImpl implements APIManager {
 
     private Registry getRegistry(String user, String pass, String url) throws APIManagementException {
         WSRegistryServiceClient client;
-        Registry registry = null;
         try {
             client = new WSRegistryServiceClient(url, user, pass,
                     ConfigurationContextFactory.createConfigurationContextFromFileSystem(

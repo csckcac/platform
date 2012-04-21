@@ -652,8 +652,8 @@ public class ApiMgtDAO {
             }
 
             while (result.next()) {
-                String api_id = result.getString(APIConstants.SUBSCRIPTION_FIELD_API_ID);
-                String[] apiIdAttributes = api_id.split("_");
+                String apiId = result.getString(APIConstants.SUBSCRIPTION_FIELD_API_ID);
+                String[] apiIdAttributes = apiId.split("_");
 
                 APIIdentifier apiIdentifier = new APIIdentifier(apiIdAttributes[0], apiIdAttributes[1],
                         apiIdAttributes[2]);
@@ -759,9 +759,9 @@ public class ApiMgtDAO {
                     " AND APP.SUBSCRIBER_ID=SB.SUBSCRIBER_ID";
 
             ps = connection.prepareStatement(sqlQuery);
-            String api_id = identifier.getProviderName() + "_" + identifier.getApiName() + "_" +
+            String apiId = identifier.getProviderName() + "_" + identifier.getApiName() + "_" +
                     identifier.getVersion();
-            ps.setString(1, api_id);
+            ps.setString(1, apiId);
             result = ps.executeQuery();
             if (result == null) {
                 return subscribers;
@@ -794,7 +794,7 @@ public class ApiMgtDAO {
                 " WHERE API_ID=? ";
         long subscriptions = 0;
 
-        String api_id = identifier.getProviderName() + "_" + identifier.getApiName() + "_" +
+        String apiId = identifier.getProviderName() + "_" + identifier.getApiName() + "_" +
                 identifier.getVersion();
 
         Connection connection = null;
@@ -805,7 +805,7 @@ public class ApiMgtDAO {
             connection = APIMgtDBUtils.getConnection();
 
             ps = connection.prepareStatement(sqlQuery);
-            ps.setString(1, api_id);
+            ps.setString(1, apiId);
             result = ps.executeQuery();
             if (result == null) {
                 return subscriptions;
@@ -814,7 +814,7 @@ public class ApiMgtDAO {
                 subscriptions = result.getLong(APIConstants.SUBSCRIPTION_FIELD_API_ID);
             }
         } catch (SQLException e) {
-            String msg = "Failed to get subscription count for :" + api_id;
+            String msg = "Failed to get subscription count for :" + apiId;
             log.error(msg, e);
             throw new APIManagementException(msg, e);
         } finally {

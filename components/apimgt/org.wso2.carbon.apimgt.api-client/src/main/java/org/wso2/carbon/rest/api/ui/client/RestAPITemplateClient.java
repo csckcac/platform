@@ -22,11 +22,9 @@ import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.wso2.carbon.rest.api.stub.RestApiAdminStub;
-import org.wso2.carbon.rest.api.stub.types.carbon.APIData;
 import org.wso2.carbon.rest.api.ui.client.template.APITemplateBuilder;
 import org.wso2.carbon.rest.api.ui.client.template.impl.BasicTemplateBuilder;
 
-import javax.xml.stream.XMLStreamException;
 import java.util.*;
 
 public class RestAPITemplateClient {
@@ -83,46 +81,45 @@ public class RestAPITemplateClient {
 
 
     public static void main(String[] args) throws Exception {
-        Map testAPIMappings = new HashMap();
+        Map<String,String> testAPIMappings = new HashMap<String,String>();
         testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_NAME, "DelciousAPI3");
         testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_CONTEXT, "/v3");
         testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_VERSION, "1.0.0");
 
-        Map testResourceMappings_1 = new HashMap();
+        Map<String,String> testResourceMappings_1 = new HashMap<String,String>();
         testResourceMappings_1.put(APITemplateBuilder.KEY_FOR_RESOURCE_URI_TEMPLATE, "/tags/get");
         testResourceMappings_1.put(APITemplateBuilder.KEY_FOR_RESOURCE_METHODS, "GET");
         testResourceMappings_1.put(APITemplateBuilder.KEY_FOR_RESOURCE_URI, "https://api.del.icio.us");
 
-        Map testResourceMappings_2 = new HashMap();
+        Map<String,String> testResourceMappings_2 = new HashMap<String,String>();
         testResourceMappings_2.put(APITemplateBuilder.KEY_FOR_RESOURCE_URI_TEMPLATE, "/posts/get");
         testResourceMappings_2.put(APITemplateBuilder.KEY_FOR_RESOURCE_METHODS, "GET");
         testResourceMappings_2.put(APITemplateBuilder.KEY_FOR_RESOURCE_URI, "https://api.del.icio.us");
 
-        Map testResourceMappings_3 = new HashMap();
+        Map<String,String> testResourceMappings_3 = new HashMap<String,String>();
         testResourceMappings_3.put(APITemplateBuilder.KEY_FOR_RESOURCE_URI_TEMPLATE, "/posts/delete?url={posturl}");
         testResourceMappings_3.put(APITemplateBuilder.KEY_FOR_RESOURCE_METHODS, "DELETE");
         testResourceMappings_3.put(APITemplateBuilder.KEY_FOR_RESOURCE_URI, "https://api.del.icio.us");
 
-        Map testResourceMappings_4 = new HashMap();
+        Map<String,String> testResourceMappings_4 = new HashMap<String,String>();
         testResourceMappings_4.put(APITemplateBuilder.KEY_FOR_RESOURCE_URI_TEMPLATE, "/posts/add?url={posturl};description={desc}");
         testResourceMappings_4.put(APITemplateBuilder.KEY_FOR_RESOURCE_METHODS, "POST");
         testResourceMappings_4.put(APITemplateBuilder.KEY_FOR_RESOURCE_URI, "https://api.del.icio.us");
 
-        List<Map> resourceMappings = new ArrayList<Map>();
+        List<Map<String,String>> resourceMappings = new ArrayList<Map<String,String>>();
         resourceMappings.add(testResourceMappings_1);
         resourceMappings.add(testResourceMappings_2);
         resourceMappings.add(testResourceMappings_3);
         resourceMappings.add(testResourceMappings_4);
 
-        Map testHandlerMappings_1 = new HashMap();
+        Map<String,String> testHandlerMappings_1 = new HashMap<String,String>();
         testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER, "org.wso2.carbon.api.handler.throttle.RestAPIThrottleHandler");
         testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER_POLICY_KEY, "conf:/BasicMediatorThrottle_policy.xml");
 
-        List<Map> handlerMappings = new ArrayList<Map>();
+        List<Map<String,String>> handlerMappings = new ArrayList<Map<String,String>>();
         handlerMappings.add(testHandlerMappings_1);
 
-        String adminCookie = null;
-        adminCookie = new AuthAdminServiceClient().login(AuthAdminServiceClient.HOST_NAME,
+        String adminCookie = AuthAdminServiceClient.login(AuthAdminServiceClient.HOST_NAME,
                                                          AuthAdminServiceClient.USER_NAME,
                                                          AuthAdminServiceClient.PASSWORD);
 

@@ -32,9 +32,9 @@ public interface APITemplateBuilder {
     public static final String KEY_FOR_HANDLER = "key_for_handler_class";
     public static final String KEY_FOR_HANDLER_POLICY_KEY = "key_for_handler_policy";
 
-    public String getConfigStringForTemplate();
+    public String getConfigStringForTemplate() throws APITemplateException;
 
-    public OMElement getConfigXMLForTemplate();
+    public OMElement getConfigXMLForTemplate() throws APITemplateException;
 
     public String getAPIName();
 

@@ -952,14 +952,14 @@ public class APIProviderHostObject extends ScriptableObject {
                                                           AuthAdminServiceClient.USER_NAME,
                                                           AuthAdminServiceClient.PASSWORD);
 
-        Map testAPIMappings = new HashMap();
+        Map<String,String> testAPIMappings = new HashMap<String,String>();
 
         testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_NAME, apiName);
         testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_CONTEXT, context);
         testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_VERSION, version);
 
         Iterator it = resourceData.iterator();
-        List<Map> resourceMappings = new ArrayList<Map>();
+        List<Map<String,String>> resourceMappings = new ArrayList<Map<String,String>>();
         while (it.hasNext()) {
             Map uriTemplateMap = new HashMap();
             URITemplate temp = (URITemplate) it.next();
@@ -969,11 +969,11 @@ public class APIProviderHostObject extends ScriptableObject {
             resourceMappings.add(uriTemplateMap);
         }
 
-        Map testHandlerMappings_1 = new HashMap();
+        Map<String,String> testHandlerMappings_1 = new HashMap<String,String>();
         testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER, "org.wso2.carbon.api.handler.throttle.RestAPIThrottleHandler");
         testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER_POLICY_KEY, "conf:/basic-throttle-policy.xml");
 
-        List<Map> handlerMappings = new ArrayList<Map>();
+        List<Map<String,String>> handlerMappings = new ArrayList<Map<String,String>>();
         handlerMappings.add(testHandlerMappings_1);
         RestAPITemplateClient client = new RestAPITemplateClient(new BasicTemplateBuilder(
                 testAPIMappings, resourceMappings, handlerMappings), adminCookie);
@@ -989,14 +989,14 @@ public class APIProviderHostObject extends ScriptableObject {
                                                           AuthAdminServiceClient.USER_NAME,
                                                           AuthAdminServiceClient.PASSWORD);
 
-        Map testAPIMappings = new HashMap();
+        Map<String,String> testAPIMappings = new HashMap<String,String>();
 
         testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_NAME, apiName);
         testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_CONTEXT, context);
         testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_VERSION, version);
 
         Iterator it = resourceData.iterator();
-        List<Map> resourceMappings = new ArrayList<Map>();
+        List<Map<String,String>> resourceMappings = new ArrayList<Map<String,String>>();
         while (it.hasNext()) {
             Map uriTemplateMap = new HashMap();
             URITemplate temp = (URITemplate) it.next();
@@ -1010,7 +1010,7 @@ public class APIProviderHostObject extends ScriptableObject {
         testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER, "org.wso2.carbon.api.handler.throttle.RestAPIThrottleHandler");
         testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER_POLICY_KEY, "conf:/basic-throttle-policy.xml");
 
-        List<Map> handlerMappings = new ArrayList<Map>();
+        List<Map<String,String>> handlerMappings = new ArrayList<Map<String,String>>();
         handlerMappings.add(testHandlerMappings_1);
         RestAPITemplateClient client = new RestAPITemplateClient(new BasicTemplateBuilder(
                 testAPIMappings, resourceMappings, handlerMappings), adminCookie);

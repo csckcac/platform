@@ -1,3 +1,4 @@
-<handler xmlns="http://ws.apache.org/ns/synapse" class="[1]" >
-    <property name="id" value="A"/><property name="policyKey" value="[2]"/>
+<handler xmlns="http://ws.apache.org/ns/synapse" class="[1]">
+    <property name="id" value="A"/>
+    <property name="policyKey" value="[2]"/>
 </handler>

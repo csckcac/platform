@@ -112,6 +112,7 @@ public class BasicTemplateBuilder implements APITemplateBuilder {
         Iterator<Map<String,String>> resourceMaps = resourceMappings.iterator();
         List<String> resourceListString = new ArrayList<String>();
         String resourceTemplate = templateLoader.getTemplate(TemplateLoader.TEMPLATE_TYPE_RESOURCE);
+        int i = 0;
         while (resourceMaps.hasNext()) {
             Map<String,String> singleResMap = resourceMaps.next();           
             if (singleResMap != null && singleResMap.get(KEY_FOR_RESOURCE_METHODS) != null &&
@@ -121,11 +122,13 @@ public class BasicTemplateBuilder implements APITemplateBuilder {
                         replaceAll("\\[1\\]", singleResMap.get(KEY_FOR_RESOURCE_URI_TEMPLATE)).
                         replaceAll("\\[2\\]", singleResMap.get(KEY_FOR_RESOURCE_METHODS)).
                         replaceAll("\\[3\\]", singleResMap.get(KEY_FOR_RESOURCE_URI)).
-                        replaceAll("\\[4\\]", apiMappings.get(KEY_FOR_API_NAME));
+                        replaceAll("\\[4\\]", apiMappings.get(KEY_FOR_API_NAME)).
+                        replaceAll("\\[5\\]", String.valueOf(i));
                 resourceListString.add(replacedStr);
             } else {
                 handleException("Required resource mapping not provided");
             }
+            i++;
         }
         return resourceListString;
     }

@@ -47,10 +47,10 @@ public class LBConfigParser {
 
         String line;
         while ((line = br.readLine()) != null) {
-            sb.append(line);
+            sb.append(line.trim() + "\n");
         }
         
-        return createLBConfigString(sb.toString());
+        return sb.toString().trim();
     }
 
 

@@ -17,24 +17,25 @@
 */
 package org.wso2.carbon.lb.common.conf;
 
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.synapse.SynapseConstants;
 import org.apache.synapse.commons.util.PropertyHelper;
-
-import javax.xml.namespace.QName;
 import org.wso2.carbon.lb.common.LBConfigParser;
 import org.wso2.carbon.lb.common.conf.structure.Node;
 import org.wso2.carbon.lb.common.conf.structure.NodeBuilder;
 import org.wso2.carbon.lb.common.conf.util.LoadBalancerConfigUtil;
 import org.wso2.carbon.lb.common.conf.util.Constants;
-
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 
 /**
@@ -57,40 +58,26 @@ public class LoadBalancerConfiguration {
     private ServiceConfiguration defaultServiceConfig;
     private LBConfiguration lbConfig;
     
-    private LBConfigParser lbConfParser;
-    
     /**
      * LBConfig file as a String
      */
     private String lbConfigString;
     
     /**
-     * LBConfig file's loadbalancer part in a Node object
+     * Root node object for loadbalancer.conf
      */
-    private Node lbConfigNode = new Node();
+    private Node rootNode ;
     
-    /**
-     * LBConfig file's services part in a Node object
-     */
-    private Node servicesConfigNode = new Node();
 
     /**
      * Sample loadbalancer.conf:
      * 
      * loadbalancer {
-     * securityGroups      stratos-appserver-lb;
-     * instanceType        m1.large;
      * instances           1;
-     * availabilityZone    us-east-1c;
-     * payload             /mnt/payload.zip;
      * }
      * 
      * services {
      *      defaults {
-     *          payload                 resources/cluster_node.zip;
-     *          availability_zone       us-east-1c;
-     *          security_groups         default-2011-02-23;
-     *          instance_type           m1.large;
      *          min_app_instances       1;
      *          max_app_instances       5;
      *          queue_length_per_node   400;
@@ -112,8 +99,6 @@ public class LoadBalancerConfiguration {
      *                  tenant_range    *;
      *              }
      *          }
-     *          payload                 resources/cluster_node.zip;
-     *          availability_zone       us-east-1c;
      *      }
      * }
      *
@@ -127,34 +112,51 @@ public class LoadBalancerConfiguration {
 
         try {
 
-            lbConfParser = new LBConfigParser();
-            
-            if(configURL.startsWith(File.separator)){
-                lbConfigString = lbConfParser.createLBConfigString(configURL);
+            if (configURL.startsWith(File.separator)) {
+                lbConfigString = createLBConfigString(configURL);
+            } else {
+                lbConfigString = createLBConfigString(new URL(configURL).openStream());
             }
-            else{
-                lbConfigString = lbConfParser.createLBConfigString(new URL(configURL).openStream());
-            }
-            
 
         } catch (Exception e) {
-            throw new RuntimeException("Cannot read configuration file from URL " + configURL);
+            throw new RuntimeException("Cannot read configuration file from " + configURL);
         }
 
-        // Set load balancer config
-        String loadBalancerEle =
-            lbConfParser.getConfigElementFromString(lbConfigString, Constants.LOAD_BALANCER_ELEMENT);
+        // build a Node object for whole loadbalancer.conf
+        rootNode = new Node();
+        rootNode.setName("root");
+        rootNode = NodeBuilder.buildNode(rootNode, lbConfigString);
 
-        createLoadBalancerConfig(loadBalancerEle);
+        // load loadbalancer node
+        Node lbConfigNode = rootNode.findChildNodeByName(Constants.LOAD_BALANCER_ELEMENT);
 
-        // Set services config
-        String servicesEle =
-            lbConfParser.getConfigElementFromString(lbConfigString, Constants.SERVICES_ELEMENT);
+        if (lbConfigNode == null) {
+            new RuntimeException("Mandatory " + Constants.LOAD_BALANCER_ELEMENT +
+                " element can not be" + " found in configuration file.");
+        }
 
-        createServicesConfig(servicesEle);
+        // Set load balancer configuration
+        createConfiguration(lbConfig = new LBConfiguration(), lbConfigNode);
+
+        // load services node
+        Node servicesConfigNode = rootNode.findChildNodeByName(Constants.SERVICES_ELEMENT);
+
+        if (servicesConfigNode == null) {
+            new RuntimeException("Mandatory " + Constants.SERVICES_ELEMENT +
+                " element can not be found in configuration file.");
+        }
+
+        // Set services configuration
+        createServicesConfig(servicesConfigNode);
     }
 
 
+    /**
+     * Given a host name and a tenant ID this will find the corresponding domain
+     * @param host host name 
+     * @param tenantId tenant ID
+     * @return domain if exists, else empty string
+     */
     public String getDomain(String host, int tenantId) {
         
         if (hostDomainMap.containsKey(host)) {
@@ -187,33 +189,12 @@ public class LoadBalancerConfiguration {
         
     }
 
-    /**
-     * Process the following element
-     * 
-     * loadbalancer {
-     * securityGroups      stratos-appserver-lb;
-     * instanceType        m1.large;
-     * instances           1;
-     * availabilityZone    us-east-1c;
-     * }
-     *
-     * @param loadBalancerEle The loadBalancer element
-     */
-    public void createLoadBalancerConfig(String loadBalancerEle) {
-        lbConfigNode.setName(Constants.LOAD_BALANCER_ELEMENT);
-        createConfiguration(loadBalancerEle, lbConfig = new LBConfiguration(),
-                lbConfigNode);
-    }
 
     /**
      * Process the content of the following 'services' element
      * 
      * services {
      *      defaults {
-     *          payload                 resources/cluster_node.zip;
-     *          availability_zone       us-east-1c;
-     *          security_groups         default-2011-02-23;
-     *          instance_type           m1.large;
      *          min_app_instances       1;
      *          max_app_instances       5;
      *          queue_length_per_node   400;
@@ -235,55 +216,24 @@ public class LoadBalancerConfiguration {
      *                  tenant_range    *;
      *              }
      *          }
-     *          payload                 resources/cluster_node.zip;
-     *          availability_zone       us-east-1c;
      *      }
      * }
      *
-     * @param servicesEle The services element eg:
-     * 
-     * defaults {
-     *          payload                 resources/cluster_node.zip;
-     *          availability_zone       us-east-1c;
-     *          security_groups         default-2011-02-23;
-     *          instance_type           m1.large;
-     *          min_app_instances       1;
-     *          max_app_instances       5;
-     *          queue_length_per_node   400;
-     *          rounds_to_average       10;
-     *          instances_per_scale_up  1;
-     *          message_expiry_time     60000;
-     *      }
-     *          
-     *      appserver {
-     *          hosts                   appserver.cloud-test.wso2.com,as.cloud-test.wso2.com;
-     *          domains   {
-     *              wso2.as1.domain {
-     *                  tenant_range    1-100;
-     *              }
-     *              wso2.as2.domain {
-     *                  tenant_range    101-200;
-     *              }
-     *              wso2.as3.domain {
-     *                  tenant_range    *;
-     *              }
-     *          }
-     *          payload                 resources/cluster_node.zip;
-     *          availability_zone       us-east-1c;
-     *      }
+     * @param servicesConfigNode services element's Node
      * 
      */
-    public void createServicesConfig(String servicesEle) {
+    public void createServicesConfig(Node servicesConfigNode) {
         
-        servicesConfigNode.setName(Constants.SERVICES_ELEMENT);
-        
-        servicesConfigNode = NodeBuilder.buildNode(servicesConfigNode, servicesEle);
+        if (servicesConfigNode == null) {
+            throw new RuntimeException("Mandatory " + Constants.SERVICES_ELEMENT +
+                " element can not be found in configuration file.");
+        }
         
         // Building default configuration
 
         Node defaultNode = servicesConfigNode.findChildNodeByName(Constants.DEFAULTS_ELEMENT);
 
-        createConfiguration(null, defaultServiceConfig = new ServiceConfiguration(null),
+        createConfiguration(defaultServiceConfig = new ServiceConfiguration(null),
                             defaultNode);
         
         // Building custom services configuration
@@ -338,7 +288,7 @@ public class LoadBalancerConfiguration {
                     ServiceConfiguration serviceConfig = new ServiceConfiguration(domain.getName());
                     
                     //serviceNode is fully constructed hence we're sending null as the first argument
-                    createConfiguration(null, serviceConfig, serviceNode);
+                    createConfiguration(serviceConfig, serviceNode);
                     serviceConfigMap.put(domain.getName(), serviceConfig);
                 }
             }
@@ -346,16 +296,11 @@ public class LoadBalancerConfiguration {
         
     }
 
-    private void createConfiguration(String configEle, Configuration config, Node node) {
+    private void createConfiguration(Configuration config, Node node) {
         
-        // if the node is fully constructed, we avoid building it again.
-        if (!node.isFullyConstructed()) {
-            if (configEle == null) {
-                throw new RuntimeException("The configuration element for " +
-                    config.getClass().getName() + " is null");
-            }
-
-            node = NodeBuilder.buildNode(node, configEle);
+        if(node == null){
+            throw new RuntimeException("The configuration element for " +
+                  config.getClass().getName() + " is null");
         }
         
         try {
@@ -372,14 +317,6 @@ public class LoadBalancerConfiguration {
         }
     }
 
-    private void setProperty(Object obj, OMElement propEle) throws IllegalAccessException,
-                                                                   InvocationTargetException,
-                                                                   NoSuchMethodException {
-        String name = propEle.getAttributeValue(new QName("name"));
-        String value = propEle.getAttributeValue(new QName("value"));
-        PropertyHelper.setInstanceProperty(name, value, obj);
-    }
-
     public LBConfiguration getLoadBalancerConfig() {
         return lbConfig;
     }
@@ -393,19 +330,56 @@ public class LoadBalancerConfiguration {
         return serviceConfigMap.get(domain);
     }
 
+    /**
+     * Convert given configuration file to a single String
+     *
+     * @param configFileName - file name to convert
+     * @return String with complete lb configuration
+     * @throws FileNotFoundException 
+     */
+    public String createLBConfigString(String configFileName) throws FileNotFoundException {
+        StringBuilder lbConfigString = new StringBuilder("");
+
+        File configFile = new File(configFileName);
+        Scanner scanner;
+
+        scanner = new Scanner(configFile);
+
+        while (scanner.hasNextLine()) {
+            lbConfigString.append(scanner.nextLine().trim() + "\n");
+        }
+
+        return lbConfigString.toString().trim();
+    }
+    
+    public String createLBConfigString(InputStream configFileName) throws IOException {
+       
+        // read the stream with BufferedReader
+        BufferedReader br = new BufferedReader(new InputStreamReader(configFileName));
+
+        StringBuilder sb = new StringBuilder();
+
+        String line;
+        while ((line = br.readLine()) != null) {
+            sb.append(line.trim() + "\n");
+        }
+        
+        return sb.toString().trim();
+    }
+    
     @SuppressWarnings("unused")
     public abstract class Configuration {
 
-        protected String availabilityZone = "us-east-1c";
+        protected String availabilityZone;
         protected boolean availabilityZoneSet;
 
-        protected String[] security_groups = new String[]{"default"};
+        protected String[] security_groups = new String[]{};
         protected boolean securityGroupsSet;
 
-        protected String instance_type = "m1.large";
+        protected String instance_type;
         protected boolean instanceTypeSet;
 
-        protected String additional_info = "WSO2 Autoscaled setup";
+        protected String additional_info;
 
         public String getAdditionalInfo() {
             return additional_info;
@@ -466,7 +440,7 @@ public class LoadBalancerConfiguration {
 
     @SuppressWarnings("unused")
     public class LBConfiguration extends Configuration {
-        private String elasticIP = LoadBalancerConfigUtil.replaceVariables("${ELASTIC_IP}");
+        private String elasticIP ;//= LoadBalancerConfigUtil.replaceVariables("${ELASTIC_IP}");
         private int instances = 1;
 
         public String getElasticIP() {
@@ -507,7 +481,6 @@ public class LoadBalancerConfiguration {
         private boolean messageExpiryTimeSet;
 
         private String hosts;
-        private boolean hostsSet;
         
         private String domain;
 
@@ -517,6 +490,10 @@ public class LoadBalancerConfiguration {
 
         public String getDomain() {
             return domain;
+        }
+        
+        public String getHosts() {
+            return hosts;
         }
 
         public int getMinAppInstances() {
@@ -621,7 +598,6 @@ public class LoadBalancerConfiguration {
         
         public void setHosts(String hosts) {
             this.hosts = hosts;
-            this.hostsSet = true;
         }
     }
 }

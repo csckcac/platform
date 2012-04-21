@@ -234,9 +234,6 @@
 
     <target name="scm-svn-info" description="Determines the current Subversion URL with peg revision"
             if="scm.provider.svn">
-      <exec executable="svn" dir="${basedir}" output="${build.dir}/svn-info.xml">
-        <arg line="info --xml"/>
-      </exec>
       <xmlproperty file="${build.dir}/svn-info.xml" collapseAttributes="true" prefix="svn" keepRoot="false"/>
       <echo file="${build.dir}/scm.properties">
 connection=scm:svn:${svn.entry.url}@${svn.entry.commit.revision}

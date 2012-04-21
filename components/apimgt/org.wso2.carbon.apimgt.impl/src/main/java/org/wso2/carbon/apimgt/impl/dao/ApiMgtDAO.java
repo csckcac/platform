@@ -219,7 +219,7 @@ public class ApiMgtDAO {
             List<APIKeyInfoDTO> apiKeyInfoList = new ArrayList<APIKeyInfoDTO>();
             while (rs.next()) {
                 String userId = rs.getString(APIConstants.SUBSCRIBER_FIELD_USER_ID);
-                int tenantId = rs.getInt(APIConstants.SUBSCRIBER_FIELD_TENANT_ID);
+                //int tenantId = rs.getInt(APIConstants.SUBSCRIBER_FIELD_TENANT_ID);
                 // If the tenant Id > 0, get the tenant domain and append it to the username.
                 //if (tenantId > 0) {
                     //TODO
@@ -322,8 +322,8 @@ public class ApiMgtDAO {
         }
         APIKeyValidationInfoDTO keyValidationInfoDTO = new APIKeyValidationInfoDTO();
         String status;
-        Timestamp timestamp;
-        Long validityPeriod;
+        //Timestamp timestamp;
+        //Long validityPeriod;
         String tier;
         // First check whether the token is valid, active and not expired.
         Connection conn = null;
@@ -354,8 +354,8 @@ public class ApiMgtDAO {
             rs = ps.executeQuery();
 
             if (rs.next()) { // access token is valid.
-                timestamp = rs.getTimestamp(APIConstants.IDENTITY_OAUTH2_FIELD_TIME_CREATED);
-                validityPeriod = rs.getLong(APIConstants.IDENTITY_OAUTH2_FIELD_VALIDITY_PERIOD);
+                //timestamp = rs.getTimestamp(APIConstants.IDENTITY_OAUTH2_FIELD_TIME_CREATED);
+                //validityPeriod = rs.getLong(APIConstants.IDENTITY_OAUTH2_FIELD_VALIDITY_PERIOD);
                 status = rs.getString(APIConstants.IDENTITY_OAUTH2_FIELD_TOKEN_STATE);
                 tier = rs.getString(APIConstants.SUBSCRIPTION_FIELD_TIER_ID);
             } else { // invalid token.
@@ -495,7 +495,7 @@ public class ApiMgtDAO {
 
         try {
             conn = APIMgtDBUtils.getConnection();
-            String tenantAwareUsername = MultitenantUtils.getTenantAwareUsername(userId);
+           // String tenantAwareUsername = MultitenantUtils.getTenantAwareUsername(userId);
             int tenantId;
             try {
                 tenantId = IdentityUtil.getTenantIdOFUser(userId);
@@ -1286,8 +1286,9 @@ public class ApiMgtDAO {
 
             //getSubscriberId
             if(subscriber.getId() == 0){
-                subscriber = getSubscriber(subscriber.getName(),tenantId);
-                if(subscriber == null){
+                Subscriber subs;
+                subs = getSubscriber(subscriber.getName(),tenantId);
+                if(subs == null){
                     return null;
                 }
             }

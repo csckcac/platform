@@ -92,7 +92,7 @@ our <a href="mail-lists.html">mailing lists</a>.</p>
   <li><a href="jmx_stats.html">JMX Statistics</a></li>
   <li><a href="security_userguide.html">Security</a>
     <ul>
-      <li><a href="user-core/admin_guide.html">User Core Admin Guide</a></li>  
+      <li><a href="user.core/admin_guide.html">User Core Admin Guide</a></li>  
       <li><a href="security_userguide.html#userstoremgt">User Stores Management</a></li>
       <li><a href="security_userguide.html#usergroupmgt">User Groups Management</a></li>
       <li><a href="security_userguide.html#keystoremgt">Keystore Management</a></li>

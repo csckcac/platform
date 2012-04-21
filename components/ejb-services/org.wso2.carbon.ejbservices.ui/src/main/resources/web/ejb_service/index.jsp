@@ -211,7 +211,7 @@
                                                 if (appServers != null) {
                                                     for (EJBAppServerData appServer : appServers) {
                                             %>
-                                            <option value="<%=appServer.getProviderURL()%>"><%=appServer.getProviderURL()%>
+                                            <option value="<%=appServer.getProviderURL()%>"><%=appServer.getAppServerType()%>
                                             </option>
                                             <%
                                                     }

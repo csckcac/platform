@@ -30,21 +30,17 @@ public class NodeBuilder {
      * @param content
      *            should be something similar to following.
      * 
-     *            securityGroups stratos-appserver-lb;
-     *            instanceType m1.large;
-     *            instances 1;
-     *            availabilityZone us-east-1c;
-     *            payload /mnt/payload.zip;
+     *            abc d;
+     *            efg h;
      * 
-     *            Note that the above content is extracted from following element.
+     *            ij {
+     *              klm n;
      * 
-     *            loadbalancer {
-     *            securityGroups stratos-appserver-lb;
-     *            instanceType m1.large;
-     *            instances 1;
-     *            availabilityZone us-east-1c;
-     *            payload /mnt/payload.zip;
+     *              pq {
+     *                  rst u;
+     *              }
      *            }
+     * 
      * @return fully constructed Node
      */
     public static Node buildNode(Node aNode, String content) {
@@ -56,31 +52,37 @@ public class NodeBuilder {
 
             // another node is detected and it is not a variable starting from $
             if (line.contains("{") && !line.contains("${")) {
-                Node childNode = new Node();
-                childNode.setName(line.substring(0, line.indexOf("{")).trim());
+                try {
+                    Node childNode = new Node();
+                    childNode.setName(line.substring(0, line.indexOf("{")).trim());
 
-                StringBuilder sb = new StringBuilder();
+                    StringBuilder sb = new StringBuilder();
 
-                int matchingBraceTracker = 1;
+                    int matchingBraceTracker = 1;
 
-                while (!line.contains("}") || matchingBraceTracker != 0) {
-                    i++;
-                    if (i == lines.length) {
-                        break;
+                    while (!line.contains("}") || matchingBraceTracker != 0) {
+                        i++;
+                        if (i == lines.length) {
+                            break;
+                        }
+                        line = lines[i];
+                        if (line.contains("{")) {
+                            matchingBraceTracker++;
+                        }
+                        if (line.contains("}")) {
+                            matchingBraceTracker--;
+                        }
+                        sb.append(line + "\n");
                     }
-                    line = lines[i];
-                    if (line.contains("{")) {
-                        matchingBraceTracker++;
-                    }
-                    if (line.contains("}")) {
-                        matchingBraceTracker--;
-                    }
-                    sb.append(line + "\n");
+
+                    childNode = buildNode(childNode, sb.toString());
+                    aNode.appendChild(childNode);
+
+                } catch (Exception e) {
+                    throw new RuntimeException(
+                                               "Malformatted element is defined in the configuration file. [" +
+                                                   i + "] \n" + line);
                 }
-
-                //System.err.println(sb.toString());
-                childNode = buildNode(childNode, sb.toString());
-                aNode.setNodes(childNode);
 
             }
             // this is a property
@@ -88,17 +90,16 @@ public class NodeBuilder {
                 if (!line.isEmpty() && !line.equals("}")) {
                     String[] prop = line.split("[\\s]+");
                     try {
-                        aNode.setProperties(prop[0], prop[1].substring(0, prop[1].indexOf(";")));
+                        aNode.addProperty(prop[0], prop[1].substring(0, prop[1].indexOf(";")));
                     } catch (Exception e) {
                         throw new RuntimeException(
-                           "Malformatted property is defined in the configuration file. " +
-                                                       line);
+                                                   "Malformatted property is defined in the configuration file. [" +
+                                                       i + "] \n" + line);
                     }
                 }
             }
         }
 
-        aNode.setFullyConstructed(true);
         return aNode;
 
     }

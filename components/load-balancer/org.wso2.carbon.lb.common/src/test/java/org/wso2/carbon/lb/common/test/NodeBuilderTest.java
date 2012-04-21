@@ -64,27 +64,46 @@ public class NodeBuilderTest extends TestCase {
         a = NodeBuilder.buildNode(a, content);
 
         Assert.assertEquals("appserver", a.getName());
-        Assert.assertEquals(1, a.getNodes().size());
-        Assert.assertEquals("domains", a.getNodes().get(0).getName());
+        Assert.assertEquals(1, a.getChildNodes().size());
+        Assert.assertEquals("domains", a.getChildNodes().get(0).getName());
         Assert.assertEquals("appserver.cloud-test.wso2.com,as.cloud-test.wso2.com",
                             a.getProperty("hosts"));
         Assert.assertEquals("resources/cluster_node.zip", a.getProperty("payload"));
         Assert.assertEquals(null, a.getProperty("payloader"));
 
-        Node b = a.getNodes().get(0);
+        Node b = a.getChildNodes().get(0);
 
-        Assert.assertEquals(3, b.getNodes().size());
+        Assert.assertEquals(3, b.getChildNodes().size());
         Assert.assertEquals(null, b.getProperty("payload"));
 
-        Node c = b.getNodes().get(0);
+        Node c = b.getChildNodes().get(0);
 
-        Assert.assertEquals(0, c.getNodes().size());
+        Assert.assertEquals(0, c.getChildNodes().size());
         Assert.assertEquals("1-100", c.getProperty("tenant_range"));
 
-        c = b.getNodes().get(2);
+        c = b.getChildNodes().get(2);
 
-        Assert.assertEquals(0, c.getNodes().size());
+        Assert.assertEquals(0, c.getChildNodes().size());
         Assert.assertEquals("*", c.getProperty("tenant_range"));
+        
+        String nodeStr = "appserver {\n" +
+        		"availability_zone\tus-east-1c;\n" +
+        		"hosts\tappserver.cloud-test.wso2.com,as.cloud-test.wso2.com;\n" +
+        		"payload\tresources/cluster_node.zip;\n" +
+        		"domains {\n" +
+        		"wso2.as1.domain {\n" +
+        		"tenant_range\t1-100;\n" +
+        		"}\n" +
+        		"wso2.as2.domain {\n" +
+        		"tenant_range\t101-200;\n" +
+        		"}\n" +
+        		"wso2.as3.domain {\n" +
+        		"tenant_range\t*;\n" +
+        		"}\n" +
+        		"}\n" +
+        		"}";
+        
+        assertEquals(nodeStr, a.toString());
 
     }
 

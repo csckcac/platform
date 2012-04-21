@@ -160,7 +160,7 @@ public class LoadBalancerConfiguration {
     public String getDomain(String host, int tenantId) {
         
         if (hostDomainMap.containsKey(host)) {
-            for (Node aNode : hostDomainMap.get(host).getNodes()) {
+            for (Node aNode : hostDomainMap.get(host).getChildNodes()) {
 
                 String tenantRange = aNode.getProperty(Constants.TENANT_RANGE_ELEMENT);
                 
@@ -238,7 +238,7 @@ public class LoadBalancerConfiguration {
         
         // Building custom services configuration
         
-        for (Node serviceNode : servicesConfigNode.getNodes()) {
+        for (Node serviceNode : servicesConfigNode.getChildNodes()) {
             //skip default node
             if(serviceNode != defaultNode){
                 
@@ -248,14 +248,14 @@ public class LoadBalancerConfiguration {
                 
                 Node domainsNode;
                 
-                if (serviceNode.getNodes().isEmpty() || 
-                  !(domainsNode = serviceNode.getNodes().get(0)).getName().equals(
+                if (serviceNode.getChildNodes().isEmpty() || 
+                  !(domainsNode = serviceNode.getChildNodes().get(0)).getName().equals(
                                                              Constants.DOMAIN_ELEMENT)) {
                     throw new RuntimeException("The mandatory domains element child of the "+serviceName+
                                            " element is not specified");
                 }
                 
-                if(domainsNode.getNodes().isEmpty()){
+                if(domainsNode.getChildNodes().isEmpty()){
                     throw new RuntimeException("No domain is specified under "+Constants.DOMAIN_ELEMENT+
                             " of "+serviceName+" element.");
                 }
@@ -284,7 +284,7 @@ public class LoadBalancerConfiguration {
                     
                 }
                 
-                for (Node domain : domainsNode.getNodes()) {
+                for (Node domain : domainsNode.getChildNodes()) {
                     ServiceConfiguration serviceConfig = new ServiceConfiguration(domain.getName());
                     
                     //serviceNode is fully constructed hence we're sending null as the first argument

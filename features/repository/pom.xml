@@ -491,6 +491,6 @@
         <mashup.version>2.3.0-SNAPSHOT</mashup.version>
         <qpid.version>0.11.wso2v1</qpid.version>
         <bam.version>2.0.0-ALPHA</bam.version>
-        <bps.version>2.1.0-SNAPSHOT</bps.version>
+        <bps.version>3.0.0-SNAPSHOT</bps.version>
     </properties>
 </project>

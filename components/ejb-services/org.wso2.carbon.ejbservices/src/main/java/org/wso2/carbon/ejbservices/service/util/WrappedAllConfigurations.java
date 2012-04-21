@@ -28,10 +28,10 @@ public class WrappedAllConfigurations {
     }
 
     public void setAppServerNameList(EJBAppServerData[] appServerNameListParam) {
-        if(appServerNameList == null) {
-            this.appServerNameList = new EJBAppServerData[0];
+        if(appServerNameListParam != null && appServerNameListParam.length > 0) {
+            this.appServerNameList = Arrays.copyOf(appServerNameListParam, appServerNameListParam.length);
         } else {
-            this.appServerNameList = Arrays.copyOf(appServerNameList, appServerNameList.length);
+            this.appServerNameList = new EJBAppServerData[0];
         }
     }
 
@@ -40,10 +40,10 @@ public class WrappedAllConfigurations {
     }
 
     public void setEjbProviderData(EJBProviderData[] ejbProviderDataParam) {
-        if (ejbProviderData == null) {
-            this.ejbProviderData = new EJBProviderData[0];
+        if(ejbProviderDataParam != null && ejbProviderDataParam.length > 0) {
+            this.ejbProviderData = Arrays.copyOf(ejbProviderDataParam, ejbProviderDataParam.length);
         } else {
-            this.ejbProviderData = Arrays.copyOf(ejbProviderData, ejbProviderData.length);
+            this.ejbProviderData = new EJBProviderData[0];
         }
     }
 
@@ -52,10 +52,10 @@ public class WrappedAllConfigurations {
     }
 
     public void setAppServerData(EJBAppServerData[] appServerDataParam) {
-        if (appServerData == null) {
-            this.appServerData = new EJBAppServerData[0];
+        if (appServerDataParam != null && appServerDataParam.length > 0) {
+            this.appServerData = Arrays.copyOf(appServerDataParam, appServerDataParam.length);
         } else {
-            this.appServerData = Arrays.copyOf(appServerData, appServerData.length);
+            this.appServerData = new EJBAppServerData[0];
         }
     }
 }

@@ -26,7 +26,10 @@ import java.io.File;
 /**
  * this class represent the constants that are used for APIManager implementation
  */
-public class APIConstants {
+public final class APIConstants {
+    private APIConstants(){
+
+    }
 
     //key value of the provider rxt
     public static final String PROVIDER_KEY = "provider";

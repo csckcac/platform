@@ -221,10 +221,10 @@ public class ApiMgtDAO {
                 String userId = rs.getString(APIConstants.SUBSCRIBER_FIELD_USER_ID);
                 int tenantId = rs.getInt(APIConstants.SUBSCRIBER_FIELD_TENANT_ID);
                 // If the tenant Id > 0, get the tenant domain and append it to the username.
-                if (tenantId > 0) {
+                //if (tenantId > 0) {
                     //TODO
                     //  userId = userId + "@" + APIKeyMgtUtil.getTenantDomainFromTenantId(tenantId);
-                }
+                //}
                 APIKeyInfoDTO apiKeyInfoDTO = new APIKeyInfoDTO();
                 apiKeyInfoDTO.setUserId(userId);
                 //TODO
@@ -1310,9 +1310,7 @@ public class ApiMgtDAO {
             return applications;
 
         } catch (SQLException e) {
-            e.printStackTrace();
-            log.error("Error when executing the SQL : " + sqlQuery);
-            log.error(e.getMessage(), e);
+            log.error("Error when executing the SQL : " + sqlQuery,e);
             throw new APIManagementException("Error when reading the application information from the persistence store.");
         } finally {
             APIMgtDBUtils.closeAllConnections(prepStmt, connection, rs);

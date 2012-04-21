@@ -16,10 +16,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class APIMgtDBUtils {
-    
+public final class APIMgtDBUtils {
+
     private static Log log = LogFactory.getLog(APIMgtDBUtils.class);
     private static volatile BasicDataSource dataSource = null;
+
+    private APIMgtDBUtils() {
+    }
 
     /**
      * Initializes the data source

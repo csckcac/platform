@@ -43,7 +43,7 @@ import java.io.IOException;
  * cardinality="1..1" policy="dynamic"  bind="setRegistryService" unbind="unsetRegistryService"
  */
 public class APIManagerComponent {
-    static Log log = LogFactory.getLog(APIManagerComponent.class);
+    private static Log log = LogFactory.getLog(APIManagerComponent.class);
     private static RegistryService registryServiceInstance;
 
     protected void activate(ComponentContext componentContext) {

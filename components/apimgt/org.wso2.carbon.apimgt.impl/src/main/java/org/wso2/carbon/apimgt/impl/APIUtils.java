@@ -39,8 +39,11 @@ import java.util.Set;
 /**
  * This class contain the utility methods used for APIManagerImpl
  */
-public class APIUtils {
-    static Log log = LogFactory.getLog(APIUtils.class);
+public final class APIUtils {
+   private static Log log = LogFactory.getLog(APIUtils.class);
+
+    private APIUtils() {
+    }
 
     /**
      * This method used to get API from governance artifact
@@ -191,7 +194,7 @@ public class APIUtils {
             }
 
         } catch (RegistryException e) {
-            e.printStackTrace();
+            log.error("Failed to initialized registry",e);
         }
         return registry;
     }

@@ -20,10 +20,10 @@ package org.wso2.carbon.apimgt.impl.dto;
 
 public class APIInfoDTO {
 
-    String providerId;
-    String apiName;
-    String version;
-    String context;
+   private String providerId;
+   private String apiName;
+   private String version;
+   private String context;
 
     public String getProviderId() {
         return providerId;

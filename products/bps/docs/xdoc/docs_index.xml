@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+        <title>
+            WSO2 BPS - Documentation Index
+        </title>
+        <link href="css/bps-docs.css" rel="stylesheet"/>
+        <link href="styles/dist-docs.css" rel="stylesheet" type="text/css" media="all"/>
+    </head>
+    <body xml:lang="en">
+        <h1>
+            WSO2 Business Process Server (BPS) Documentation Index
+        </h1>
+        <h2>
+            Getting Started
+        </h2>
+        <p>
+            <a href="bpel-quick-start-guide/modeling_process.html">Quick Start Guide</a>
+            : Creates a simple BPEL process and deploy it in WSO2 BPS server.
+        </p>
+        <p>
+            <a href="installation_guide.html">Installation Guide</a>
+            : Gives
+            basic steps on how to download, install, and run WSO2 BPS using the binary
+            distribution, and how to build WSO2 BPS using the source distribution.
+        </p>
+        <p>
+            <a href="bpel-admin-guide/administrator_guide.html#Configure-WSO2-BPS-with-external-data-sources">Configuring External Data Sources</a>:
+            Gives steps on how to configure WSO2 BPS with database servers like MS SQL and Oracle.
+        </p>
+        <p>
+            <a href="user_guide.html">User Guide</a>
+            : A manual on how to run and configure the WSO2 BPS through the management
+            console.
+        </p>
+        <h2>
+            Other Resources
+        </h2>
+        <p/>
+        <p>
+            <a href="http://wso2.org/">The WSO2 Oxygen Tank
+                Library
+            </a>
+            : The Library contains articles, tutorials,
+            presentations, and other knowledge base items published on The Oxygen
+            Tank.
+        </p>
+    </body>
+</html>

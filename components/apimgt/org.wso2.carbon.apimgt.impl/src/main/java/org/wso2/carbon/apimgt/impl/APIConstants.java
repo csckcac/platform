@@ -127,6 +127,7 @@ public final class APIConstants {
     public  static final String DB_CONFIG_PATH = CarbonUtils.getCarbonHome() +File.separator +
             "repository" +File.separator +"conf" +File.separator + "amConfig.xml";
     public static final String RXT_MEDIA_TYPE = "application/vnd.wso2.registry-ext-type+xml";
+    public static final int TOP_TATE_MARGIN = 4;
 
     
 

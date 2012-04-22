@@ -68,7 +68,7 @@ import java.util.regex.Pattern;
  */
 public class APIManagerImpl implements APIManager {
     
-    private static final Log log = LogFactory.getLog(APIManagerImpl.class);
+    private static  Log log = LogFactory.getLog(APIManagerImpl.class);
     
     private static final long KEEP_ALIVE_TASK_PERIOD = 950000L;
     
@@ -302,7 +302,7 @@ public class APIManagerImpl implements APIManager {
                     String artifactPath = genericArtifact.getPath();
 
                     float rating = registry.getAverageRating(artifactPath);
-                    if (rating > 4 && (returnLimit < limit)) {
+                    if (rating > APIConstants.TOP_TATE_MARGIN && (returnLimit < limit)) {
                         returnLimit++;
                         apiSortedSet.add(APIUtils.getAPI(genericArtifact, registry));
                     }
@@ -377,11 +377,9 @@ public class APIManagerImpl implements APIManager {
                 String path = artifact.getPath();
                 org.wso2.carbon.registry.core.Tag[] regTags = registry.getTags(path);
                 String status = artifact.getAttribute(APIConstants.API_OVERVIEW_STATUS);
-                if (status.equals(APIConstants.PUBLISHED)) {
-                    if (regTags != null && regTags.length > 0) {
+                if (status.equals(APIConstants.PUBLISHED) && regTags !=null && regTags.length>0) {
                         for (org.wso2.carbon.registry.core.Tag regTag : regTags) {
                             tagSet.add(new Tag(regTag.getTagName()));
-                        }
                     }
                 }
             }
@@ -438,10 +436,8 @@ public class APIManagerImpl implements APIManager {
                         .getAttribute(APIConstants.API_OVERVIEW_NAME);
                 pattern = Pattern.compile(regex);
                 matcher = pattern.matcher(apiName);
-                if (matcher.matches()) {
-                    if (status.equals(APIConstants.PUBLISHED)) {
+                if (matcher.matches() && status.equals(APIConstants.PUBLISHED)) {
                         apiSet.add(APIUtils.getAPI(artifact, registry));
-                    }
                 }
             }
         } catch (RegistryException e) {
@@ -486,10 +482,8 @@ public class APIManagerImpl implements APIManager {
                             .getAttribute(APIConstants.API_OVERVIEW_NAME);
                     matcher = pattern.matcher(apiName);
                 }
-                if (matcher.matches()) {
-                    if (status.equals(APIConstants.PUBLISHED)) {
+                if (matcher.matches() && status.equals(APIConstants.PUBLISHED)) {
                         apiSet.add(APIUtils.getAPI(artifact, registry));
-                    }
                 }
             }
         } catch (RegistryException e) {

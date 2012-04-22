@@ -105,6 +105,8 @@ public class NodeBuilderTest extends TestCase {
         
         assertEquals(nodeStr, a.toString());
 
+        System.out.println(a.propertiesToString());
+        System.err.println(a.getProperties().toString());
     }
 
 }

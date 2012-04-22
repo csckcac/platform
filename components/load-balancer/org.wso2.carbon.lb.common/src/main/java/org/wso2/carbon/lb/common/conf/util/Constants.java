@@ -31,5 +31,6 @@ public class Constants {
     public static final String TENANT_RANGE_ELEMENT = "tenant_range";
     public static final String TENANT_RANGE_DELIMITER = "-";
     public static final String UNLIMITED_TENANT_RANGE = "*";
+    public static final String AUTOSCALER_ENABLE_ELEMENT = "enable_autoscaler";
 
 }

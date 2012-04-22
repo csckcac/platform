@@ -35,20 +35,20 @@ public class Node {
 
     /**
      * Every node can have 0..n child nodes. 
-     * They are kept in a <List>.
+     * They are kept in a List.
      */
     private List<Node> childNodes = new ArrayList<Node>();
 
     /**
      * Every node can have 0..n properties. 
-     * They are kept in a <Map>.
+     * They are kept in a Map.
      * Key: property name
      * Value: property value
      */
     private Map<String, String> properties = new HashMap<String, String>();
 
     /**
-     * This will convert each child <Node> of this <Node> to a String.
+     * This will convert each child Node of this Node to a String.
      * @return a string which represents child nodes of this node.
      */
     public String childNodesToString() {
@@ -62,9 +62,9 @@ public class Node {
     }
 
     /**
-     * This will try to find a child <Node> of this <Node>, which has the given name.
+     * This will try to find a child Node of this Node, which has the given name.
      * @param name name of the child node to find.
-     * @return child <Node> object if found or else <code>null</code>.
+     * @return child Node object if found or else <code>null</code>.
      */
     public Node findChildNodeByName(String name) {
         for (Node aNode : childNodes) {
@@ -77,7 +77,7 @@ public class Node {
     }
 
     /**
-     * Returns the name of this <Node>. 
+     * Returns the name of this Node. 
      * @return name of the node.
      */
     public String getName() {
@@ -85,16 +85,16 @@ public class Node {
     }
 
     /**
-     * Returns child nodes <List> of this <Node>.
-     * @return <List> of <Node>
+     * Returns child nodes List of this Node.
+     * @return List of Node
      */
     public List<Node> getChildNodes() {
         return childNodes;
     }
 
     /**
-     * Returns properties <Map> of this <Node>.
-     * @return <Map> whose keys and values are <String>.  
+     * Returns properties Map of this Node.
+     * @return Map whose keys and values are String.  
      */
     public Map<String, String> getProperties() {
         return properties;
@@ -103,7 +103,7 @@ public class Node {
     /**
      * Returns the value of a given property.
      * @param key name of a property.
-     * @return trimmed value if the property is found in this <Node>, or else <code>null</code>. 
+     * @return trimmed value if the property is found in this Node, or else <code>null</code>. 
      */
     public String getProperty(String key) {
         if (properties.get(key) == null) {
@@ -113,7 +113,7 @@ public class Node {
     }
 
     /**
-     * Returns all the properties of this <Node> as a String.
+     * Returns all the properties of this Node as a String.
      * Key and value of the property is separated by a tab (\t) character and
      * each property is separated by a new line character.
      * @return properties of this node as a String.
@@ -127,7 +127,7 @@ public class Node {
     }
 
     /**
-     * Sets the name of this <Node>.
+     * Sets the name of this Node.
      * @param name String to be set as the name.
      */
     public void setName(String name) {
@@ -135,8 +135,8 @@ public class Node {
     }
 
     /**
-     * Appends a child node at the end of the <List> of child nodes of this <Node>.
-     * @param aNode child <Node> to be appended.
+     * Appends a child node at the end of the List of child nodes of this Node.
+     * @param aNode child Node to be appended.
      */
     public void appendChild(Node aNode) {
         if (aNode != null) {
@@ -145,7 +145,7 @@ public class Node {
     }
     
     /**
-     * Adds a new property to properties <Map> of this <Node> if and only if 
+     * Adds a new property to properties Map of this Node if and only if 
      * key is not <code>null</code>.
      * @param key name of the property to be added.
      * @param value value of the property to be added.
@@ -157,7 +157,24 @@ public class Node {
     }
     
     /**
-     * Convert this <Node> to a String which is in <i>Nginx</i> format.
+     * Convert this Node to a String which is in <i>Nginx</i> format.
+     * <br/>
+     * Sample:
+     * <br></br>
+     * <code>
+     * ij {
+     * <br/>
+     * klm n;
+     * <br/>
+     * pq {
+     * <br/>
+     * rst u;
+     * <br/>
+     * }
+     * <br/>
+     * }
+     * <br/>
+     * </code>
      */
     public String toString() {
         

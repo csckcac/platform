@@ -87,7 +87,7 @@ public class NodeBuilder {
             }
             // this is a property
             else {
-                if (!line.isEmpty() && !line.equals("}")) {
+                if (!line.isEmpty() && !"}".equals(line)) {
                     String[] prop = line.split("[\\s]+");
                     try {
                         aNode.addProperty(prop[0], prop[1].substring(0, prop[1].indexOf(";")));

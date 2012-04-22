@@ -59,90 +59,93 @@
 		resourceBundle="org.wso2.carbon.ejbservices.ui.i18n.Resources"
 		topPage="false" request="<%=request%>" />
     <div id="middle">
-        <h2><fmt:message key="ejb.service.parameters"/></h2>
-
         <div id="workArea">
 
             <form action="update_service_param.jsp" name="updateServiceParamForm" method="post">
-                <table class="styledLeft" id="updateServiceParamTable">
-                    <thead>
-                        <tr class="tableEvenRow">
-                            <th colspan="2"><fmt:message key="edit.ejb.service.parameters"/></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="tableOddRow">
-                            <td><fmt:message key="remote.interface.name"/><span class="required">*</span></td>
-                            <td>
+                <div class="sectionSeperator"><fmt:message key="ejb.service.parameters"/></div>
+                <div class=”sectionSub”>
+                    <table  class="carbonFormTable">
+                        <tr>
+                            <td class="leftCol-med labelField">
+                                <fmt:message key="remote.interface.name"/><span class="required">*</span>
+                            </td>
+                            <td class="labelField">
                                 <input name="remoteInterfaceName" type="text" value="<%=remoteInterfaceName%>" size="50">
                             </td>
                         </tr>
-                        <tr class="tableEvenRow">
-                            <td ><fmt:message key="bean.jndi.name"/><span class="required">*</span></td>
-                            <td >
+                        <tr>
+                            <td class="leftCol-med labelField">
+
+                                <fmt:message key="bean.jndi.name"/><span class="required">*</span></td>
+                            <td class="labelField">
                                 <input name="beanJndiName" type="text" value="<%=beanJndiName%>" size="50">
                             </td>
                         </tr>
-                        <tr class="tableOddRow">
-                            <td ><fmt:message key="jndi.user"/></td>
-                            <td >
+                        <tr>
+                            <td class="leftCol-med labelField"><fmt:message key="jndi.user"/></td>
+                            <td class="labelField">
                                 <input name="jndiUser" type="text" value="<%=jndiUser%>" size="50">
                             </td>
                         </tr>
-                        <tr class="tableEvenRow">
-                            <td ><fmt:message key="jndi.password"/></td>
-                            <td >
+                        <tr>
+                            <td class="leftCol-med labelField"><fmt:message key="jndi.password"/></td>
+                            <td class="labelField">
                                 <input name="jndiPassword" type="text" value="<%=jndiPassword%>" size="50">
                             </td>
                         </tr>
-                        <tr class="tableOddRow">
-                            <td ><fmt:message key="provider.url"/><span class="required">*</span></td>
-                            <td >
+                        <tr>
+                            <td class="leftCol-med labelField">
+                                <fmt:message key="provider.url"/><span class="required">*</span>
+                            </td>
+                            <td class="labelField">
                                 <input name="providerUrl" type="text" value="<%=providerUrl%>" size="50">
                             </td>
                         </tr>
-                        <tr class="tableEvenRow">
-                            <td ><fmt:message key="service.type"/><span class="required">*</span></td>
-                            <td >
+                        <tr>
+                            <td class="leftCol-med labelField">
+                                <fmt:message key="service.type"/><span class="required">*</span>
+                            </td>
+                            <td class="labelField">
                                 <input name="serviceType" type="text" value="<%=serviceType%>" size="50">
                             </td>
                         </tr>
-                        <tr class="tableOddRow">
-                            <td ><fmt:message key="jndi.context.class"/><span class="required">*</span></td>
-                            <td >
+                        <tr>
+                            <td class="leftCol-med labelField">
+                                <fmt:message key="jndi.context.class"/><span class="required">*</span>
+                            </td>
+                            <td class="labelField">
                                 <input name="jndiContextClass" type="text" value="<%=jndiContextClass%>" size="50">
                             </td>
                         </tr>
-                        <tr class="tableEvenRow">
-                            <td ><fmt:message key="service.class"/><span class="required">*</span></td>
-                            <td >
+                        <tr>
+                            <td class="leftCol-med labelField">
+                                <fmt:message key="service.class"/><span class="required">*</span>
+                            </td>
+                            <td class="labelField">
                                 <input name="serviceClass" type="text" value="<%=serviceClass%>" disabled="true" size="50">
                             </td>
                         </tr>
-                        <tr>
-                            <td class="buttonRow" colspan="2">
-                                <input type="button" class="button" value="<fmt:message key="update"/>"
-                                       id="updateServiceParameters" onclick="validateServiceParameters()"/>&nbsp;&nbsp;
-                                <input type="reset" class="button"  value="<fmt:message key="reset"/>"
-                                       id="reset" onclick="function resetValues() {
-                                            document.updateServiceParamForm.remoteInterfaceName.value = <%=remoteInterfaceName%>;
-                                            document.updateServiceParamForm.beanJndiName.value = <%=beanJndiName%>;
-                                            document.updateServiceParamForm.jndiUser.value = <%=jndiUser%>;
-                                            document.updateServiceParamForm.jndiPassword.value = <%=jndiPassword%>;
-                                            document.updateServiceParamForm.providerUrl.value = <%=providerUrl%>;
-                                            document.updateServiceParamForm.serviceType.value = <%=serviceType%>;
-                                            document.updateServiceParamForm.jndiContextClass.value = <%=jndiContextClass%>;
-                                       }
-                                       resetValues()"/>&nbsp;&nbsp;
-                                <input type="button" class="button" value="<fmt:message key="cancel"/>"
-                                       id="cancel" onclick="location.href='../ejb_service/index.jsp';"/>&nbsp;&nbsp;
-                                <input type="hidden" id="serviceName" value="<%=serviceName%>"
-                                       name="serviceName"/>
-                            </td>
-                        </tr>
-
-                    </tbody>
-                </table>
+                    </table>
+                </div>
+                <div class="buttonRow">
+                    <input type="button" class="button" value="<fmt:message key="update"/>"
+                           id="updateServiceParameters" onclick="validateServiceParameters()"/>&nbsp;&nbsp;
+                    <input type="reset" class="button"  value="<fmt:message key="reset"/>"
+                           id="reset" onclick="function resetValues() {
+                            document.updateServiceParamForm.remoteInterfaceName.value = <%=remoteInterfaceName%>;
+                            document.updateServiceParamForm.beanJndiName.value = <%=beanJndiName%>;
+                            document.updateServiceParamForm.jndiUser.value = <%=jndiUser%>;
+                            document.updateServiceParamForm.jndiPassword.value = <%=jndiPassword%>;
+                            document.updateServiceParamForm.providerUrl.value = <%=providerUrl%>;
+                            document.updateServiceParamForm.serviceType.value = <%=serviceType%>;
+                            document.updateServiceParamForm.jndiContextClass.value = <%=jndiContextClass%>;
+                            }
+                            resetValues()"/>&nbsp;&nbsp;
+                    <input type="button" class="button" value="<fmt:message key="cancel"/>"
+                           id="cancel" onclick="location.href='../ejb_service/index.jsp';"/>&nbsp;&nbsp;
+                    <input type="hidden" id="serviceName" value="<%=serviceName%>"
+                           name="serviceName"/>
+                </div>
             </form>
         </div>
 

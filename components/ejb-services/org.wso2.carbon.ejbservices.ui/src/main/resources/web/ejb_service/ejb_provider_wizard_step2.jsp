@@ -47,7 +47,7 @@
             var remoteInterfaceClass = '';
             var beanJNDIName = document.getElementById('beanJNDIName').value;
 
-            var remoteInterfaceName = document.getElementById("selectRemoteInterface").value;
+            var remoteInterfaceName = document.getElementById("remoteInterface").value;
             /*var remoteInterfaces = document.getElementsByName("chkRemoteInterface");
             for (var a = 0; a < remoteInterfaces.length; a++) {
                 if (remoteInterfaces[a].checked) {
@@ -75,7 +75,7 @@
         }
 
         function setServiceName(){
-            var remoteInterfaceName = document.getElementById("selectRemoteInterface").value;
+            var remoteInterfaceName = document.getElementById("remoteInterface").value;
             document.getElementById("serviceName").value =
                 remoteInterfaceName.substring(remoteInterfaceName.lastIndexOf(".") + 1) +
                 Math.floor((Math.random()*100)+1);
@@ -98,8 +98,8 @@
                                 <fmt:message key="remote.interface"/><span class="required">*</span>
                             </td>
                             <td class="labelField">
-                                <select onchange="setServiceName()" name="selectRemoteInterface"
-                                        id="selectRemoteInterface" tabindex="1">
+                                <select onchange="setServiceName()" name="remoteInterface"
+                                        id="remoteInterface" tabindex="1">
                                     <%
                                         if (classNames == null || classNames[0].equals("")) {
                                     %>

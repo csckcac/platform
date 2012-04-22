@@ -30,7 +30,6 @@ import org.wso2.carbon.apimgt.api.APIManager;
 import org.wso2.carbon.apimgt.api.dto.UserApplicationAPIUsage;
 import org.wso2.carbon.apimgt.api.model.*;
 import org.wso2.carbon.apimgt.api.model.Tag;
-import org.wso2.carbon.apimgt.impl.clients.AuthenticationClient;
 import org.wso2.carbon.apimgt.impl.dao.ApiMgtDAO;
 import org.wso2.carbon.apimgt.impl.internal.APIManagerComponent;
 import org.wso2.carbon.base.ServerConfiguration;
@@ -51,7 +50,6 @@ import org.wso2.carbon.user.api.AuthorizationManager;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.utils.ServerConstants;
 
-import javax.naming.AuthenticationException;
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -780,16 +778,16 @@ public class APIManagerImpl implements APIManager {
      */
     public boolean login(String username, String password) {
         boolean result = false;
-        //TODO this is not finish
-        String epr = "";
-        try {
-            AuthenticationClient client = new AuthenticationClient(epr);
-            result = client.login(username, password);
-        } catch (AxisFault axisFault) {
-            axisFault.printStackTrace();
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-        }
+//        //TODO this is not finish
+//        String epr = "";
+//        try {
+//            AuthenticationClient client = new AuthenticationClient(epr);
+//            result = client.login(username, password);
+//        } catch (AxisFault axisFault) {
+//            axisFault.printStackTrace();
+//        } catch (AuthenticationException e) {
+//            e.printStackTrace();
+//        }
         return result;
     }
 
@@ -800,15 +798,15 @@ public class APIManagerImpl implements APIManager {
      */
     public void logout(String username) {
         //TODO this is not finish
-        String epr = "";
-        try {
-            AuthenticationClient client = new AuthenticationClient(epr);
-            client.logout();
-        } catch (AxisFault axisFault) {
-            axisFault.printStackTrace();
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-        }
+//        String epr = "";
+//        try {
+//            AuthenticationClient client = new AuthenticationClient(epr);
+//            client.logout();
+//        } catch (AxisFault axisFault) {
+//            axisFault.printStackTrace();
+//        } catch (AuthenticationException e) {
+//            e.printStackTrace();
+//        }
 
     }
 

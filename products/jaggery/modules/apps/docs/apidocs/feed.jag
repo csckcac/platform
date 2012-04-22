@@ -62,21 +62,41 @@ include('/includes/topnavi.jag');
 
                 <pre class="prettyprint linenums">
 &lt%
-var reader = new FeedReader();
+var blogURL = "http://madhukaudantha.blogspot.com/feeds/posts/default";
 
-//returns a Feed object
-feed = reader.get("http://feeds.bbci.co.uk/news/rss.xml");
+var feed= new Feed(blogURL);
 
-print(feed.feedType);
+
+// Getting an array of individual entries from the feed
+var entries = feed.entries;
+
+for(var i=0;i &lt entries.length; i++) {
+	var entry = entries[i];
+%&gt
+	&lttr&gt
+        &lttd&gt&lt%=entry.title%&gt&lt/td&gt
+        &lt/tr&gt
+&lt%
+}
+print(entries[0].content);
 %&gt
 </pre>
                 <%
-                var feedCode = '&lt%'
-                    + '\n var reader = new FeedReader(); '
-                    + '\n //returns a Feed object'
-                    + '\n feed = reader.get("http://feeds.bbci.co.uk/news/rss.xml");'
-                    + '\n print(feed.feedType);'
-                	+ '\n %&gt';
+                    var feedCode = '&lt%'				
+    + '\n var blogURL = "http://madhukaudantha.blogspot.com/feeds/posts/default";'
+    + '\n var feed= new Feed(blogURL);'
+    + '\n // Getting an array of individual entries from the feed'
+    + '\n var entries = feed.entries;'
+    + '\n for(var i=0;i &lt entries.length; i++) {'
+    + '\n var entry = entries[i];'
+    + '\n %&gt'
+    + '\n &lttr&gt'
+    + '\n &lttd&gt&lt%=entry.title%&gt&lt/td&gt'
+    + '\n &lt/tr&gt'
+    + '\n &lt%'
+    + '\n }'
+    + '\n print(entries[0].content);'
+    + '\n %&gt'; 
 
                 var codeSnip = encodeURIComponent(feedCode);
                 var urlString = '../tryitframe.jag?code='+codeSnip;
@@ -117,32 +137,13 @@ print(feed.feedType);
                     </td>
                     <td>Entry[]</td>
                     <td>
-                    <pre class="prettyprint">feed.getEntries();</pre>
+                    <pre class="prettyprint">feed.entries;</pre>
                     Returns the complete set of entries contained in this feed.
+					<pre class="prettyprint">feed.entries = entryList;</pre>
+                    setting a entry list for to feed.
                     </td>
-                </tr>
-                <tr>
-                    <td>
-                    <code>insertEntry(newEntry)</code>
-                    </td>
-                    <td>None</td>
-                    <td>
-                     <pre class="prettyprint">feed.insertEntry(newEntry);</pre>
-                    Adds a new Entry to the end of the Feeds collection of entries.
-
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                    <code>writeTo(fileName)</code>
-                    </td>
-                    <td>None</td>
-                    <td>
-                    <pre class="prettyprint">feed.writeTo("file-name.xml");</pre>
-                    Serializes the Feed to a given local file
-
-                    </td>
-                </tr>
+                </tr>                
+  
                 <tr>
                     <td>
                     <code>author</code>

@@ -123,7 +123,7 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
         this.absolutePathForBpelArchive = absolutePathForBpelArchive;
     }
 
-	private TProcessEvents.Generate.Enum generateType = null;
+    private TProcessEvents.Generate.Enum generateType = null;
 
     public ProcessConfigurationImpl(Integer tenantId,
                                     TDeployment.Process processDescriptor,
@@ -159,7 +159,7 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
 
     }
 
-    public Integer getTenantId(){
+    public Integer getTenantId() {
         return tenantId;
     }
 
@@ -216,7 +216,7 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
                         BPELConstants.BPEL_COMPILED_FILE_EXTENSION + " suffix: " + cbpInfo.getCbp());
             }
             relative = relative.replace(BPELConstants.BPEL_COMPILED_FILE_EXTENSION,
-                                        BPELConstants.BPEL_FILE_EXTENSION);
+                    BPELConstants.BPEL_FILE_EXTENSION);
             File bpelFile = new File(du.getDeployDir(), relative);
             if (!bpelFile.exists()) {
                 log.warn("BPEL file does not exist: " + bpelFile);
@@ -312,21 +312,13 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
         if (scopeNames != null) {
             for (String scopeName : scopeNames) {
                 Set<BpelEvent.TYPE> evtSet = events.get(scopeName);
-                if (evtSet != null) {
-                    if (evtSet.contains(type)) {
-                        return true;
-                    }
+                if (evtSet != null && evtSet.contains(type)) {
+                    return true;
                 }
             }
         }
         Set<BpelEvent.TYPE> evtSet = events.get(null);
-        if (evtSet != null) {
-            // Default filtering at the process level for some event types
-            if (evtSet.contains(type)) {
-                return true;
-            }
-        }
-        return false;
+        return evtSet != null && evtSet.contains(type);
     }
 
     public Map<String, String> getEndpointProperties(EndpointReference endpointReference) {
@@ -343,7 +335,7 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
         final String port = (String) map.get("port");
         if (log.isDebugEnabled()) {
             log.debug("Looking Endpoint configuration properties for service: " + service +
-                      " and port: " + port);
+                    " and port: " + port);
         }
         if (bpelPackageConfiguration != null) {
 
@@ -375,7 +367,7 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
             MultiKeyMap endpointConfigs = bpelPackageConfiguration.getEndpoints();
             if (endpointConfigs.size() > 0) {
                 endpointConfig = (EndpointConfiguration) endpointConfigs.get(service.getLocalPart(),
-                                                            service.getNamespaceURI(), port);
+                        service.getNamespaceURI(), port);
                 if (endpointConfig == null) {
                     endpointConfig = (EndpointConfiguration) endpointConfigs.get(
                             service.getLocalPart(), service.getNamespaceURI(), null);
@@ -420,7 +412,7 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
                     assert !aCleanup.getFilterList().isEmpty();
                     cleanupInfo.setFilters(aCleanup.getFilterList());
                     ProcessCleanupConfImpl.processACleanup(cleanupInfo.getCategories(),
-                                                           aCleanup.getCategoryList());
+                            aCleanup.getCategoryList());
 
                     Scheduler.JobDetails runnableDetails = new Scheduler.JobDetails();
                     runnableDetails.getDetailsExt().
@@ -433,7 +425,7 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
                 jobs.add(job);
             } catch (ParseException pe) {
                 log.error("Exception during parsing the schedule cron expression: " +
-                          schedule.getWhen() + ", skipped the scheduled job.", pe);
+                        schedule.getWhen() + ", skipped the scheduled job.", pe);
             }
         }
 
@@ -457,7 +449,7 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
         return du;
     }
 
-    public List<String> getMexInterceptors(QName processId) {
+    public List<String> getMexInterceptors() {
         return mexInterceptors; // unmodifiable tag is removed here
     }
 
@@ -548,7 +540,7 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
                     OMElement endpointEle = serviceEle.getFirstElement();
                     if (endpointEle == null || !endpointEle.getQName().equals(
                             new QName(BPELConstants.BPEL_PKG_ENDPOINT_CONFIG_NS,
-                                      BPELConstants.ENDPOINT))) {
+                                    BPELConstants.ENDPOINT))) {
                         continue;
                     }
 
@@ -560,7 +552,7 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
                     bpelPackageConfiguration.addEndpoint(epConf);
                 } catch (XMLStreamException e) {
                     log.warn("Error occurred while reading endpoint configuration. " +
-                             "Endpoint config will not be applied to: " + tInvoke.getService());
+                            "Endpoint config will not be applied to: " + tInvoke.getService());
                 }
             }
 
@@ -577,7 +569,7 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
                     OMElement endpointEle = serviceEle.getFirstElement();
                     if (endpointEle == null || !endpointEle.getQName().equals(
                             new QName(BPELConstants.BPEL_PKG_ENDPOINT_CONFIG_NS,
-                                      BPELConstants.ENDPOINT))) {
+                                    BPELConstants.ENDPOINT))) {
                         continue;
                     }
 
@@ -614,7 +606,7 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
                 }
                 if (log.isDebugEnabled()) {
                     log.debug("Processing <invoke> element for process " + processInfo.getName() +
-                              ": partnerlink" + plinkName + " -->" + service);
+                            ": partnerlink" + plinkName + " -->" + service);
                 }
 
                 QName serviceName = service.getName();
@@ -622,8 +614,8 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
                 Definition wsdlDef = getDefinitionForService(serviceName);
                 if (wsdlDef == null) {
                     String errMsg = "Cannot find WSDL definition for invoke service " + serviceName +
-                                    ". Required resources not found in the BPEL package " +
-                                    du.getName() + ".";
+                            ". Required resources not found in the BPEL package " +
+                            du.getName() + ".";
                     log.error(errMsg);
                     throw new ContextException(errMsg);
                 }
@@ -631,13 +623,13 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
                 Service serviceDef = wsdlDef.getService(serviceName);
                 if (serviceDef.getPort(service.getPort()) == null) {
                     String errMsg = "Cannot find  port for invoking service for the given name " +
-                                    serviceName + ". Error in deploy.xml.";
+                            serviceName + ". Error in deploy.xml.";
                     log.error(errMsg);
                     throw new ContextException(errMsg);
                 }
 
                 partnerRoleInitialValues.put(plinkName, new Endpoint(service.getName(),
-                                                                     service.getPort()));
+                        service.getPort()));
                 //TODO add proper variable names
                 {
                     OFailureHandling g = null;
@@ -661,7 +653,7 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
                     PartnerRoleConfig c = new PartnerRoleConfig(g, invoke.getUsePeer2Peer());
                     if (log.isDebugEnabled()) {
                         log.debug("PartnerRoleConfig for " + plinkName + " " + c.failureHandling +
-                                  " usePeer2Peer: " + c.usePeer2Peer);
+                                " usePeer2Peer: " + c.usePeer2Peer);
                     }
 
                     partnerRoleConfigurations.put(plinkName, c);
@@ -676,15 +668,15 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
                 /* NOTE:Service cannot be null for provider partner link*/
                 if (service == null) {
                     String errorMsg = "Error in <provide> element for process " +
-                                      processInfo.getName() + ";partnerlink" + plinkName +
-                                      "did not identify an endpoint";
+                            processInfo.getName() + ";partnerlink" + plinkName +
+                            "did not identify an endpoint";
                     log.error(errorMsg);
                     throw new ContextException(errorMsg);
                 }
                 if (log.isDebugEnabled()) {
                     log.debug("Processing <provide> element for process " + processInfo.getName() +
-                              ": partnerlink " + plinkName + " --> " + service.getName() + " : " +
-                              service.getPort());
+                            ": partnerlink " + plinkName + " --> " + service.getName() + " : " +
+                            service.getPort());
                 }
 
                 QName serviceName = service.getName();
@@ -693,8 +685,8 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
                 Definition wsdlDef = getDefinitionForService(serviceName);
                 if (wsdlDef == null) {
                     String errMsg = "Cannot find WSDL definition for provide service " +
-                                    serviceName + ". Required resources not found in the BPEL " +
-                                    "package " + du.getName() + ".";
+                            serviceName + ". Required resources not found in the BPEL " +
+                            "package " + du.getName() + ".";
                     log.error(errMsg);
                     throw new ContextException(errMsg);
                 }
@@ -702,7 +694,7 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
                 Service serviceDef = wsdlDef.getService(serviceName);
                 if (serviceDef.getPort(service.getPort()) == null) {
                     String errMsg = "Cannot find provide port in the given service " + serviceName +
-                                    ". Error in deploy.xml.";
+                            ". Error in deploy.xml.";
                     log.error(errMsg);
                     throw new ContextException(errMsg);
                 }
@@ -719,28 +711,26 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
      */
     private void initEventList() {
         TProcessEvents processEvents = processInfo.getProcessEvents();
-        if (processEvents != null) {
-            if (log.isDebugEnabled()) {
-                List<String> enabledEventList = processEvents.getEnableEventList();
-                StringBuffer strBuf = new StringBuffer();
-                for (String eventType : enabledEventList) {
-                    strBuf.append(eventType);
-                    strBuf.append(", ");
-                }
-                log.debug("Enabled Event List: " + strBuf.toString());
+        if (log.isDebugEnabled() && processEvents != null) {
+            List<String> enabledEventList = processEvents.getEnableEventList();
+            StringBuilder strBuf = new StringBuilder();
+            for (String eventType : enabledEventList) {
+                strBuf.append(eventType);
+                strBuf.append(", ");
             }
+            log.debug("Enabled Event List: " + strBuf.toString());
         }
         /* Defaults */
         if (processEvents == null) {
             //disabling events by default
-           /* HashSet<BpelEvent.TYPE> all = new HashSet<BpelEvent.TYPE>();
-            for (BpelEvent.TYPE t : BpelEvent.TYPE.values()) {
-                if (!t.equals(BpelEvent.TYPE.scopeHandling)) {
-                    all.add(t);
-                }
+            /* HashSet<BpelEvent.TYPE> all = new HashSet<BpelEvent.TYPE>();
+        for (BpelEvent.TYPE t : BpelEvent.TYPE.values()) {
+            if (!t.equals(BpelEvent.TYPE.scopeHandling)) {
+                all.add(t);
             }
+        }
 
-            events.put(null, all);   */
+        events.put(null, all);   */
             return;
         }
 
@@ -778,7 +768,7 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
     private void initMexInterceptors() {
         if (processInfo.getMexInterceptors() != null) {
             for (TMexInterceptor mexInterceptor : processInfo.getMexInterceptors().
-                                                                    getMexInterceptorList()) {
+                    getMexInterceptorList()) {
                 mexInterceptors.add(mexInterceptor.getClassName());
             }
         }
@@ -789,38 +779,37 @@ public class ProcessConfigurationImpl implements ProcessConf, MultiTenantProcess
 
     public void setProcessEventsList(ProcessEventsListType processEventsList) {
 
-         if(processEventsList != null){
-             events.clear();
+        if (processEventsList != null) {
+            events.clear();
 
-             if( processEventsList.getEnableEventsList() != null && processEventsList.getEnableEventsList().getEnableEvent() != null) {
-                EnableEventListType enableEventListType=   processEventsList.getEnableEventsList();
+            if (processEventsList.getEnableEventsList() != null && processEventsList.getEnableEventsList().getEnableEvent() != null) {
+                EnableEventListType enableEventListType = processEventsList.getEnableEventsList();
                 String[] enabledEvents = enableEventListType.getEnableEvent();
                 HashSet<BpelEvent.TYPE> enabledEvtSet = new HashSet<BpelEvent.TYPE>();
-                for(String event : enabledEvents){
+                for (String event : enabledEvents) {
                     enabledEvtSet.add(BpelEvent.TYPE.valueOf(event));
                 }
                 events.put(null, enabledEvtSet);
-             }
-             if(processEventsList.getScopeEventsList()!= null && processEventsList.getScopeEventsList().getScopeEvent() != null){
+            }
+            if (processEventsList.getScopeEventsList() != null && processEventsList.getScopeEventsList().getScopeEvent() != null) {
                 ScopeEventListType scopeEventListType = processEventsList.getScopeEventsList();
-                ScopeEventType[] scopeEvents=   scopeEventListType.getScopeEvent();
+                ScopeEventType[] scopeEvents = scopeEventListType.getScopeEvent();
 
-                for (ScopeEventType scopeEvent : scopeEvents){
-                     EnableEventListType enabledEventLst = scopeEvent.getEnabledEventList();
-                     HashSet<BpelEvent.TYPE> scopeEnabledEventSet = new HashSet<BpelEvent.TYPE>();
-                      if(enabledEventLst != null && enabledEventLst.getEnableEvent() != null){
+                for (ScopeEventType scopeEvent : scopeEvents) {
+                    EnableEventListType enabledEventLst = scopeEvent.getEnabledEventList();
+                    HashSet<BpelEvent.TYPE> scopeEnabledEventSet = new HashSet<BpelEvent.TYPE>();
+                    if (enabledEventLst != null && enabledEventLst.getEnableEvent() != null) {
 
-                        for(String event : enabledEventLst.getEnableEvent()){
+                        for (String event : enabledEventLst.getEnableEvent()) {
                             scopeEnabledEventSet.add(BpelEvent.TYPE.valueOf(event));
                         }
 
-                      }
-                     events.put(scopeEvent.getScope(), scopeEnabledEventSet);
+                    }
+                    events.put(scopeEvent.getScope(), scopeEnabledEventSet);
                 }
-             }
-         }
+            }
+        }
     }
-
 
 
     public void setIsTransient(boolean inMemory) {

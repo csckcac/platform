@@ -33,8 +33,7 @@ import java.nio.channels.FileChannel;
  * HumanTask package uploader admin service service
  */
 public class HumanTaskUploader extends AbstractAdmin {
-
-    final private static Log log = LogFactory.getLog(HumanTaskUploader.class);
+    private static Log log = LogFactory.getLog(HumanTaskUploader.class);
 
     public void uploadHumanTask(UploadedFileItem[] fileItems) throws AxisFault {
 
@@ -73,7 +72,7 @@ public class HumanTaskUploader extends AbstractAdmin {
                 try {
                     writeResource(uploadedFile.getDataHandler(), humantaskTemp, fileName, humantaskDir);
                 } catch (IOException e) {
-                    throw new AxisFault("IOError: Writing resource failed.");
+                    throw new AxisFault("IOError: Writing resource failed.", e);
                 }
             } else {
                 throw new AxisFault("Invalid file type : " + uploadedFile.getFileType() + " ." +

@@ -18,17 +18,15 @@ import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.BPIException;
 
 /**
  * This interface is the basis for all factory classes of the {@link Service}s.
- *
- * @param The type of the service.
- * @author Gregor Latuske
  */
 interface ServiceFactory<T extends Service> {
 
-	/**
-	 * Creates a new instance of the {@link Service}.
-	 *
-	 * @return The new instance of the {@link Service}.
-	 */
-	public T createService() throws BPIException;
-
+    /**
+     * Creates a new instance of the {@link Service}.
+     *
+     * @return The new instance of the {@link Service}.
+     * @throws org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.BPIException
+     *
+     */
+    T createService() throws BPIException;
 }

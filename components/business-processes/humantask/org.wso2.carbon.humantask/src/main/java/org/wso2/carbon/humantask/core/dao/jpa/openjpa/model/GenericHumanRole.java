@@ -21,7 +21,6 @@ import org.wso2.carbon.humantask.core.dao.OrganizationalEntityDAO;
 import org.wso2.carbon.humantask.core.dao.TaskDAO;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +51,7 @@ public class GenericHumanRole implements GenericHumanRoleDAO {
     @ManyToOne
     private Task task;
 
-    @ManyToMany( targetEntity = OrganizationalEntity.class, fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
+    @ManyToMany(targetEntity = OrganizationalEntity.class, fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     @JoinTable(name = "HUMANROLE_ORGENTITY", joinColumns = {@JoinColumn(name = "HUMANROLE_ID", referencedColumnName = "GHR_ID")}, inverseJoinColumns = {@JoinColumn(name = "ORGENTITY_ID", referencedColumnName = "ORG_ENTITY_ID")})
     private List<OrganizationalEntityDAO> orgEntities = new ArrayList<OrganizationalEntityDAO>();
 
@@ -77,7 +76,7 @@ public class GenericHumanRole implements GenericHumanRoleDAO {
     }
 
     public void setTask(TaskDAO task) {
-        this.task = (Task)task;
+        this.task = (Task) task;
     }
 
     public List<OrganizationalEntityDAO> getOrgEntities() {

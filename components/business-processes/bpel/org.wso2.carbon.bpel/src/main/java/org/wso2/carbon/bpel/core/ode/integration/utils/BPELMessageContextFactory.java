@@ -137,10 +137,10 @@ public final class BPELMessageContextFactory {
         boolean isRPC = false;
         if (bindingType instanceof SOAPBinding) {
             isRPC = ((SOAPBinding) bindingType).getStyle() != null
-                    && ((SOAPBinding) bindingType).getStyle().toLowerCase().equals("rpc");
+                    && ((SOAPBinding) bindingType).getStyle().equalsIgnoreCase("rpc");
         } else if (bindingType instanceof SOAP12Binding) {
             isRPC = ((SOAP12Binding) bindingType).getStyle() != null
-                    && ((SOAP12Binding) bindingType).getStyle().toLowerCase().equals("rpc");
+                    && ((SOAP12Binding) bindingType).getStyle().equalsIgnoreCase("rpc");
         }
 
         bpelMessageContext.setRPCStyleOperation(isRPC);

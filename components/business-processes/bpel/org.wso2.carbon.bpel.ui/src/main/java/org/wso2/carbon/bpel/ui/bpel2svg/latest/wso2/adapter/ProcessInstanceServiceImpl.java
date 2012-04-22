@@ -37,16 +37,13 @@ import java.util.List;
 
 /**
  * Implementation of the {@link ProcessInstanceService}.
- *
- * @author Jakob Krein
  */
 public class ProcessInstanceServiceImpl implements ProcessInstanceService<String> {
 
     private static Log log = LogFactory.getLog(ProcessInstanceServiceImpl.class);
 
-    public ProcessInstance getProcessInstance(String instanceId) throws InstanceNotFoundException {
+    public ProcessInstance getProcessInstance(String instanceId) {
         try {
-
             InstanceInfoType instanceBean = getInstanceInfo(Long.parseLong(instanceId));
 
             //Retrieved the ProcessModel from the ProcessID
@@ -68,8 +65,7 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService<String
      * {@inheritDoc}
      */
     @Override
-    public ProcessInstanceStatus mapToStatus(String value) throws IllegalArgumentException {
-
+    public ProcessInstanceStatus mapToStatus(String value) {
         /* Compare the value to all possible status values */
         for (ProcessInstanceStatus status : ProcessInstanceStatus.values()) {
             if (status.name().equalsIgnoreCase(value)) {
@@ -87,7 +83,8 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService<String
      * {@inheritDoc}
      */
     @Override
-    public List<ProcessInstance> getProcessInstances(List<ProcessModel> processModels) throws BPIException {
+    public List<ProcessInstance> getProcessInstances(List<ProcessModel> processModels)
+            throws BPIException {
 
         ArrayList<ProcessInstance> processInstances = new ArrayList<ProcessInstance>();
 
@@ -160,8 +157,9 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService<String
      * @param page   The number of the page that should be retrieved
      * @return A list of process instances
      * @throws RemoteException If stub operation invocation fail
-     * @throws org.wso2.carbon.bpel.stub.mgt.InstanceManagementException If error occurred while
-     * reading the process list from the backend
+     * @throws org.wso2.carbon.bpel.stub.mgt.InstanceManagementException
+     *                         If error occurred while
+     *                         reading the process list from the backend
      */
     private PaginatedInstanceList getPaginatedInstanceList(String filter, String order, int limit,
                                                            int page)
@@ -176,8 +174,9 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService<String
      * @param iid The id of the instance
      * @return An {@link InstanceInfoType} that holds information about the instance
      * @throws RemoteException If stub operation invocation fail
-     * @throws org.wso2.carbon.bpel.stub.mgt.InstanceManagementException If error occurred while
-     * reading the process list from the backend
+     * @throws org.wso2.carbon.bpel.stub.mgt.InstanceManagementException
+     *                         If error occurred while
+     *                         reading the process list from the backend
      */
     private InstanceInfoType getInstanceInfo(long iid)
             throws RemoteException, InstanceManagementException {
@@ -192,8 +191,8 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService<String
      * @throws RemoteException If stub operation invocation fail
      */
     private InstanceManagementServiceStub getStub() throws RemoteException {
-        String INSTANCE_MGT_SERVICE = "InstanceManagementService";
-        String serviceURL = AuthenticationManager.getBackendServerURL() + INSTANCE_MGT_SERVICE;
+        String instanceMgtService = "InstanceManagementService";
+        String serviceURL = AuthenticationManager.getBackendServerURL() + instanceMgtService;
 
         InstanceManagementServiceStub stub = new InstanceManagementServiceStub(null, serviceURL);
         ServiceClient client = stub._getServiceClient();

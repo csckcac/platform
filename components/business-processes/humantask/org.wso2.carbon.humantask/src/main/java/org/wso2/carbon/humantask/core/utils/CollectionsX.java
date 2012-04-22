@@ -83,7 +83,7 @@ public final class CollectionsX {
      *
      * @return coll, for convenience
      */
-    public static <T> Collection<T> remove_if(Collection<T> coll, MemberOfFunction<T> f) {
+    public static <T> Collection<T> removeIf(Collection<T> coll, MemberOfFunction<T> f) {
         Iterator<T> i = coll.iterator();
 
         while (i.hasNext()) {

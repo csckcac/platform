@@ -135,7 +135,7 @@ public class BPELServiceComponent {
         componentContext.getBundleContext().ungetService(registration.getReference());
     }
 
-    private final static class BPELServerShutDown extends Thread {
+    private static final class BPELServerShutDown extends Thread {
         private BPELServerImpl bpsServer;
 
         private BPELServerShutDown(BPELServerImpl bpsServer) {

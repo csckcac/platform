@@ -18,16 +18,13 @@ import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.status.Status;
 
 /**
  * This interface is the basis for all selectable classes with status.
- * 
- * @author Gregor Latuske
  */
 public interface ProcessItem<S extends Status> {
 
-	/**
-	 * Returns the status of the entry.
-	 * 
-	 * @return The status of the entry.
-	 */
-	public S getStatus();
-
+    /**
+     * Returns the status of the entry.
+     *
+     * @return The status of the entry.
+     */
+    S getStatus();
 }

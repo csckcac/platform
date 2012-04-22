@@ -126,7 +126,7 @@ public final class Utils {
 
     public static QName getProcessType(final TDeployment.Process processDescriptor) {
         return processDescriptor.getType() != null ? processDescriptor.getType() :
-               processDescriptor.getName();
+                processDescriptor.getName();
     }
 
     /**
@@ -150,10 +150,10 @@ public final class Utils {
                     }
 
                     if (!new File(deploymentContext.getBpelPackageLocationInFileSystem(),
-                                  entry.getName()).mkdirs()) {
+                            entry.getName()).mkdirs()) {
                         throw new Exception("Archive extraction failed. Cannot create directory: "
-                                            + new File(deploymentContext.getBpelPackageLocationInFileSystem(),
-                                                       entry.getName()).getAbsolutePath() + ".");
+                                + new File(deploymentContext.getBpelPackageLocationInFileSystem(),
+                                entry.getName()).getAbsolutePath() + ".");
                     }
                     continue;
                 }
@@ -170,15 +170,13 @@ public final class Utils {
                 }
 
                 File destFile = new File(deploymentContext.getBpelPackageLocationInFileSystem(),
-                                         entry.getName());
-                if (!destFile.getParentFile().exists()) {
-                    if (!destFile.getParentFile().mkdirs()) {
-                        throw new Exception("Archive extraction failed. Cannot create directory: "
-                                            + destFile.getParentFile().getAbsolutePath());
-                    }
+                        entry.getName());
+                if (!destFile.getParentFile().exists() && !destFile.getParentFile().mkdirs()) {
+                    throw new Exception("Archive extraction failed. Cannot create directory: "
+                            + destFile.getParentFile().getAbsolutePath());
                 }
                 copyInputStream(zipStream,
-                                new BufferedOutputStream(new FileOutputStream(destFile)));
+                        new BufferedOutputStream(new FileOutputStream(destFile)));
             }
 
             zipStream.close();
@@ -186,7 +184,7 @@ public final class Utils {
                     new File(deploymentContext.getBpelPackageLocationInFileSystem()));
         } catch (IOException e) {
             String errMsg = "Error occurred during extracting the archive: " +
-                            deploymentContext.getArchiveName();
+                    deploymentContext.getArchiveName();
             log.error(errMsg, e);
             throw new Exception(errMsg, e);
         }

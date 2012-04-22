@@ -20,7 +20,6 @@ package org.wso2.carbon.bpel.cluster.notifier.internal;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
@@ -32,7 +31,6 @@ import org.wso2.carbon.utils.ConfigurationContextService;
 
 public class BPELClusterNotifierServiceComponent {
     private static Log log = LogFactory.getLog(BPELClusterNotifierServiceComponent.class);
-    private BundleContext bundleContext;
 
     protected void activate(ComponentContext ctxt) {
         if(log.isDebugEnabled()) {

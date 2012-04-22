@@ -16,9 +16,12 @@ import org.wso2.carbon.bpel.cluster.notifier.internal.BPELClusterNotifierService
  * <Axis2RequiredServices>org.wso2.carbon.bpel.core.BPELEngineService</Axis2RequiredServices>
  * element in the BPEL deployers pom
  */
-public class BPELClusterNotifier {
+public final class BPELClusterNotifier {
     public static final String PARAM_PARENT_PROCESS_STORE = "bpel.process-store";
     private static Log log = LogFactory.getLog(BPELClusterNotifier.class);
+
+    private BPELClusterNotifier() {
+    }
 
     public static void sendClusterNotification(StateClusteringCommand command, Object processStore)
             throws AxisFault {

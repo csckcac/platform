@@ -18,19 +18,19 @@ package org.wso2.carbon.humantask.core.dao;
 
 public interface PresentationNameDAO {
 
-    public Long getId();
+    Long getId();
 
-    public void setId(Long id);
+    void setId(Long id);
 
-    public String getXmlLang();
+    String getXmlLang();
 
-    public void setXmlLang(String xmlLang);
+    void setXmlLang(String xmlLang);
 
-    public String getValue();
+    String getValue();
 
-    public void setValue(String value);
+    void setValue(String value);
 
-    public TaskDAO getTask();
+    TaskDAO getTask();
 
-    public void setTask(TaskDAO task);
+    void setTask(TaskDAO task);
 }

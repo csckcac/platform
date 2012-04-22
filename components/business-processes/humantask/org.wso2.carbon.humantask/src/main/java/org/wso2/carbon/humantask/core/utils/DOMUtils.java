@@ -39,7 +39,7 @@ import java.io.StringWriter;
 public final class DOMUtils {
 
     private static ThreadLocal<DocumentBuilder> builders = new ThreadLocal();
-    private final static DocumentBuilderFactory documentBuilderFactory =
+    private static final DocumentBuilderFactory documentBuilderFactory =
             new DocumentBuilderFactoryImpl();
     private static Log log = LogFactory.getLog(DOMUtils.class);
 
@@ -55,7 +55,6 @@ public final class DOMUtils {
 
     /**
      * Initialize the document-builder factory.                 documentBuilderFactory = f;
-
      */
     private static void initDocumentBuilderFactory() {
 //        DocumentBuilderFactory f = XMLParserUtils.getDocumentBuilderFactory();
@@ -91,7 +90,7 @@ public final class DOMUtils {
      * @param node DOM Node
      * @return String
      */
-    static public String domToString(Node node) {
+    public static String domToString(Node node) {
         if (node == null) {
             throw new IllegalArgumentException("Cannot stringify null Node!");
         }
@@ -144,7 +143,7 @@ public final class DOMUtils {
      * @throws org.xml.sax.SAXException DOCUMENTME
      * @throws java.io.IOException      DOCUMENTME
      */
-    static public Element stringToDOM(String s) throws SAXException, IOException {
+    public static Element stringToDOM(String s) throws SAXException, IOException {
         return parse(new InputSource(new StringReader(s))).getDocumentElement();
     }
 

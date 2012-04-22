@@ -21,5 +21,5 @@ package org.wso2.carbon.humantask.core.scheduler;
  */
 interface TaskRunner {
 
-    public void runTask(Task task);
+    void runTask(Task task);
 }

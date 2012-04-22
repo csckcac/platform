@@ -26,33 +26,35 @@ public interface DeadlineDAO {
      * Set the deadline name
      * @param name name of the deadline
      */
-    public void setName(String name);
+    void setName(String name);
 
     /**
      * Get the deadline name
      * @return Deadline name
      */
-    public String getName();
+    String getName();
+
     /**
      * Set the deadline date
      * @param deadlineDate deadline
      */
-    public void setDeadlineDate(Date deadlineDate);
+    void setDeadlineDate(Date deadlineDate);
 
     /**
      * Get the deadline date
      * @return Deadline
      */
-    public Date getDeadlineDate();
+    Date getDeadlineDate();
+
     /**
      * Set the status
      * @param status Status of the deadline
      */
-    public void setStatus(TaskStatus status);
+    void setStatus(TaskStatus status);
 
     /**
      * Set the task
      * @param task Task
      */
-    public void setTask(TaskDAO task);
+    void setTask(TaskDAO task);
 }

@@ -20,7 +20,6 @@ import org.wso2.carbon.humantask.core.dao.PresentationNameDAO;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import java.io.Serializable;
 
 /**
  * Domain Object for presentation name.
@@ -31,7 +30,7 @@ public final class PresentationName extends PresentationElement implements Prese
 
     @Override
     public void setValue(String value) {
-        if(value.length() > 64){
+        if (value.length() > 64) {
             throw new IllegalArgumentException("Presentation Names length is greater than 64.");
         }
         super.setValue(value);

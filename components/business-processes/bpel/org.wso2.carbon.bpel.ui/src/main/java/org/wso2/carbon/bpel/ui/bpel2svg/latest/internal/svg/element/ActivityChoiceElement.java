@@ -14,10 +14,7 @@
 */
 package org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.element;
 
-import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.ProcessModel;
-import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.activity.Activity;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.activity.ActivityChoice;
-import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.activity.ActivitySequence;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.SVG;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.segment.Arrow;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Dimension;
@@ -25,129 +22,132 @@ import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Position;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Settings;
 
 /**
- * The SVG wrapper for the {@link ActivitySequence}.
- *
- * @author Gregor Latuske
+ * The SVG wrapper for the
+ * {@link org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.activity.ActivitySequence}.
  */
-public class ActivityChoiceElement
-	extends ActivityComplexElement<ActivityChoice> {
+public class ActivityChoiceElement extends ActivityComplexElement<ActivityChoice> {
 
-	/** Serial version UID */
-	private static final long serialVersionUID = -7494125003695682759L;
+    /**
+     * Serial version UID
+     */
+    private static final long serialVersionUID = -7494125003695682759L;
 
-	/**
-	 * Constructor of ActivitySequenceElement.
-	 *
-	 * @param value The associated {@link ActivitySequence}.
-	 * @param parent The parent element.
-	 */
-	protected ActivityChoiceElement(ActivityChoice value,
-		ActivityComplexElement<?> parent) {
-		super(value, parent);
-	}
+    /**
+     * Constructor of ActivitySequenceElement.
+     *
+     * @param value  The associated {@link org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.activity.ActivitySequence}.
+     * @param parent The parent element.
+     */
+    protected ActivityChoiceElement(ActivityChoice value,
+                                    ActivityComplexElement<?> parent) {
+        super(value, parent);
+    }
 
-	/**
-	 * Constructor of ActivitySequenceElement.
-	 *
-	 * @param value The associated {@link ProcessModel} or {@link Activity}.
-	 * @param settings The associated {@link Settings}.
-	 */
-	protected ActivityChoiceElement(ActivityChoice value, Settings settings) {
-		super(value, settings);
-	}
+    /**
+     * Constructor of ActivitySequenceElement.
+     *
+     * @param value    The associated {@link org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.ProcessModel} or {@link import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.activity.Activity}.
+     * @param settings The associated {@link Settings}.
+     */
+    protected ActivityChoiceElement(ActivityChoice value, Settings settings) {
+        super(value, settings);
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public SVG getSVG() {
-		SVG svg = createSVG();
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public SVG getSVG() {
+        SVG svg = createSVG();
 
-		// Element has children?
-		if (!getChildren().isEmpty()) {
+        // Element has children?
+        if (!getChildren().isEmpty()) {
 
-			// Next child position
-			Position nextChildPos = createPositionPointer();
+            // Next child position
+            Position nextChildPos = createPositionPointer();
 
-			// Iterate over children
-			for (ActivityElement<?> child : getChildren()) {
+            // Iterate over children
+            for (ActivityElement<?> child : getChildren()) {
 
-				// Modify child position
-				Position childPos = nextChildPos.makeCopy();
-				childPos.appendToX(child.getDimension().getMarginHorizontal());
-				childPos.appendToY(child.getDimension().getMarginVertical());
-				child.setPosition(childPos);
+                // Modify child position
+                Position childPos = nextChildPos.makeCopy();
+                childPos.appendToX(child.getDimension().getMarginHorizontal());
+                childPos.appendToY(child.getDimension().getMarginVertical());
+                child.setPosition(childPos);
 
-				// Add top arrow
-				svg.append(createTopArrow(child));
+                // Add top arrow
+                svg.append(createTopArrow(child));
 
-				// Add SVG segment of the child activity
-				svg.append(child.getSVG());
+                // Add SVG segment of the child activity
+                svg.append(child.getSVG());
 
-				// Add top arrow
-				svg.append(createBottomArrow(child));
+                // Add top arrow
+                svg.append(createBottomArrow(child));
 
-				// Modify position pointer
-				nextChildPos.appendToX(child.getDimension().getWidthWithMargin());
-			}
-		}
+                // Modify position pointer
+                nextChildPos.appendToX(child.getDimension().getWidthWithMargin());
+            }
+        }
 
-		return svg;
-	}
+        return svg;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	protected Dimension calculateDimension() {
-		Dimension dim = getDefaultDimension();
-		int width = 0;
-		int height = 0;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected Dimension calculateDimension() {
+        Dimension dim = getDefaultDimension();
+        int width = 0;
+        int height = 0;
 
-		for (ActivityElement<?> child : getChildren()) {
-			width += child.getDimension().getWidthWithMargin();
+        for (ActivityElement<?> child : getChildren()) {
+            width += child.getDimension().getWidthWithMargin();
 
-			if (child.getDimension().getHeightWithMargin() > height) {
-				height = child.getDimension().getHeightWithMargin();
-			}
-		}
+            if (child.getDimension().getHeightWithMargin() > height) {
+                height = child.getDimension().getHeightWithMargin();
+            }
+        }
 
-		if (getChildren().isEmpty()) {
-			width = getDefaultDimension().getWidth();
-			height = getDefaultDimension().getHeight();
-		} else {
-			height += getDefaultDimension().getHeightWithMargin();
-		}
+        if (getChildren().isEmpty()) {
+            width = getDefaultDimension().getWidth();
+            height = getDefaultDimension().getHeight();
+        } else {
+            height += getDefaultDimension().getHeightWithMargin();
+        }
 
-		return new Dimension(width, dim.getMarginHorizontal(), height, dim.getMarginVertical());
-	}
+        return new Dimension(width, dim.getMarginHorizontal(), height, dim.getMarginVertical());
+    }
 
-	/**
-	 * Creates an arrow between the centre of this element and the top of the child element.
-	 *
-	 * @param child The given child.
-	 * @return An arrow between the centre of this element and the top of the child element.
-	 */
-	private Arrow createTopArrow(ActivityElement<?> child) {
-		Position pos1 = getCenterPosition().makeCopy();
-		pos1.appendToY(getDimension().getMarginVertical());
+    /**
+     * Creates an arrow between the centre of this element and the top of the child element.
+     *
+     * @param child The given child.
+     * @return An arrow between the centre of this element and the top of the child element.
+     */
+    private Arrow createTopArrow(ActivityElement<?> child) {
+        Position pos1 = getCenterPosition().makeCopy();
+        pos1.appendToY(getDimension().getMarginVertical());
 
-		Position pos2 = child.getTopPosition().makeCopy();
-		pos2.appendToY(-child.getDimension().getMarginVertical());
-		
-		return createArrow(child.getValue(), getCenterPosition(), pos1, pos2, child.getTopPosition());
-	}
+        Position pos2 = child.getTopPosition().makeCopy();
+        pos2.appendToY(-child.getDimension().getMarginVertical());
 
-	/**
-	 * Creates an arrow between the bottom of the child element and the bottom of this element.
-	 *
-	 * @param child The given child.
-	 * @return An arrow between the bottom of the child element and the bottom of this element.
-	 */
-	private Arrow createBottomArrow(ActivityElement<?> child) {
-		Position pos2 = getBottomPosition().makeCopy();
-		pos2.appendToY(-getDimension().getMarginVertical());
+        return createArrow(child.getValue(), getCenterPosition(), pos1, pos2, child.getTopPosition());
+    }
 
-		Position pos1 = pos2.makeCopy();
-		pos1.setX(child.getBottomPosition().getX());
+    /**
+     * Creates an arrow between the bottom of the child element and the bottom of this element.
+     *
+     * @param child The given child.
+     * @return An arrow between the bottom of the child element and the bottom of this element.
+     */
+    private Arrow createBottomArrow(ActivityElement<?> child) {
+        Position pos2 = getBottomPosition().makeCopy();
+        pos2.appendToY(-getDimension().getMarginVertical());
 
-		return createArrow(child.getValue(), child.getBottomPosition(), pos1, pos2, getBottomPosition());
-	}
+        Position pos1 = pos2.makeCopy();
+        pos1.setX(child.getBottomPosition().getX());
 
+        return createArrow(child.getValue(), child.getBottomPosition(), pos1, pos2, getBottomPosition());
+    }
 }

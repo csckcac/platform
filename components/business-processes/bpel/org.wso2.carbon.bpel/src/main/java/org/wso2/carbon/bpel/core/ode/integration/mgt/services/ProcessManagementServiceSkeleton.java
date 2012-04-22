@@ -199,7 +199,7 @@ public class ProcessManagementServiceSkeleton extends AbstractAdmin
 
         /* Configuring message exchange interceptors of the process*/
         MexInterpreterListType mxt = new MexInterpreterListType();
-        List<String> mexInterceptor = processConfiguration.getMexInterceptors(processId);
+        List<String> mexInterceptor = processConfiguration.getMexInterceptors();
         if (mexInterceptor != null) {
 
             for (String mexInt : mexInterceptor) {

@@ -21,8 +21,8 @@ package org.wso2.carbon.humantask.core;
 public interface HumanTaskEngineService {
     /**
      * Access the HumanTask Engine
+     *
      * @return HumanTaskServer
      */
-    public HumanTaskServer getHumanTaskServer();
-
+    HumanTaskServer getHumanTaskServer();
 }

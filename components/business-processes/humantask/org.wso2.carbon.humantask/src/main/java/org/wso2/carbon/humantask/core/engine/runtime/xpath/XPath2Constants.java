@@ -19,7 +19,9 @@ package org.wso2.carbon.humantask.core.engine.runtime.xpath;
 /**
  *
  */
-public interface XPath2Constants {
+public final class XPath2Constants {
+    private XPath2Constants() {
+    }
 
     public static final String FUNCTION_GET_POTENTIAL_OWNERS = "getPotentialOwners";
 

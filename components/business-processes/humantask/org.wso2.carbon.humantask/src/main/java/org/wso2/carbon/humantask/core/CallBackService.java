@@ -23,5 +23,5 @@ import org.apache.axis2.AxisFault;
  * This interface is used to send the response of the Humantask to the client
  */
 public interface CallBackService {
-    public void invoke(OMElement payload, long taskId) throws AxisFault;
+    void invoke(OMElement payload, long taskId) throws AxisFault;
 }

@@ -41,8 +41,7 @@ import java.io.File;
  * Integration layer will delegate deployment of artifacts to this. There will be one deployer instance per each tenant.
  */
 public class HumanTaskDeployer extends AbstractDeployer {
-
-    final private static Log log = LogFactory.getLog(HumanTaskDeployer.class);
+    private static Log log = LogFactory.getLog(HumanTaskDeployer.class);
     private HumanTaskStore humanTaskStore;
 
     public void init(ConfigurationContext configurationContext) {
@@ -86,7 +85,7 @@ public class HumanTaskDeployer extends AbstractDeployer {
      * @throws DeploymentException :
      */
     public void undeploy(String unDeployedFilePath) throws DeploymentException {
-        if(StringUtils.isNotEmpty(unDeployedFilePath)) {
+        if (StringUtils.isNotEmpty(unDeployedFilePath)) {
             File unDeployedFile = new File(unDeployedFilePath);
             String unDeployedPackageName = FilenameUtils.removeExtension(unDeployedFile.getName());
             humanTaskStore.unDeploy(unDeployedPackageName);
@@ -105,7 +104,7 @@ public class HumanTaskDeployer extends AbstractDeployer {
             boolean status = humanTaskRepo.mkdir();
             if (!status) {
                 throw new DeploymentException("Failed to create HumanTask repository directory " +
-                                              humanTaskRepo.getAbsolutePath() + ".");
+                        humanTaskRepo.getAbsolutePath() + ".");
             }
         }
     }
@@ -114,7 +113,7 @@ public class HumanTaskDeployer extends AbstractDeployer {
             throws HumanTaskDeploymentException {
         ArchiveBasedHumanTaskDeploymentUnitBuilder humanTaskArchiveProcessor =
                 new ArchiveBasedHumanTaskDeploymentUnitBuilder(humantaskFile,
-                                                               humanTaskStore.getTenantId());
+                        humanTaskStore.getTenantId());
 
         return humanTaskArchiveProcessor.createNewHumanTaskDeploymentUnit();
     }

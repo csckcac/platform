@@ -15,9 +15,7 @@
  */
 package org.wso2.carbon.bpel.ui;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class InstanceFilter {
 

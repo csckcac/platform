@@ -106,10 +106,8 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
         SuperTenantCarbonContext.getCurrentContext().setTenantId(tenantId, true);
 
         bpelDURepo = new File(parentProcessStore.getLocalDeploymentUnitRepo(), tenantId.toString());
-        if (!bpelDURepo.exists()) {
-            if (!bpelDURepo.mkdirs()) {
-                log.warn("Cannot create tenant " + tenantId + " BPEL deployment unit repository.");
-            }
+        if (!bpelDURepo.exists() && !bpelDURepo.mkdirs()) {
+            log.warn("Cannot create tenant " + tenantId + " BPEL deployment unit repository.");
         }
         repository = new BPELPackageRepository(tenantConfigRegistry, bpelDURepo, bpelArchiveRepo);
         repository.init();
@@ -208,14 +206,13 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
 
         }
 
-        if (isExistingPackage) {
-            if (isLoadOnly) {
-                reloadExistingVersionsOfBPELPackage(deploymentContext);
-                // attach this bpel archive with cApp
-                attachWithCapp(deploymentContext.getArchiveName(),
-                        deploymentContext.getBpelPackageName(), tenantId);
-                return; // Once we finish reloading exit from the normal flow.
-            } // Else this is a update of existing BPEL package
+        if (isExistingPackage && isLoadOnly) {
+            reloadExistingVersionsOfBPELPackage(deploymentContext);
+            // attach this bpel archive with cApp
+            attachWithCapp(deploymentContext.getArchiveName(),
+                    deploymentContext.getBpelPackageName(), tenantId);
+            return; // Once we finish reloading exit from the normal flow.
+            // Else this is a update of existing BPEL package
         }
 
         if (isConfigRegistryReadOnly()) {
@@ -506,6 +503,7 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
      *
      * @param deploymentContext information about current deployment
      * @throws RegistryException on error loading resources from registry.
+     * @throws org.wso2.carbon.bpel.skeleton.ode.integration.mgt.services.ProcessManagementException
      */
     private void reloadExistingVersionsOfBPELPackage(BPELDeploymentContext deploymentContext)
             throws RegistryException, ProcessManagementException {
@@ -714,15 +712,13 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
             String registryCollectionPath = dudao.getDeploymentUnitDir();
             try {
                 if (tenantConfigRegistry.resourceExists(registryCollectionPath)) {
-                    if (!bpelDUDirectory.exists()) {
-                        if (!bpelDUDirectory.mkdirs()) {
-                            String errMsg = "Error creating BPEL deployment unit repository for " +
-                                    "tenant " + tenantId;
-                            log.error(errMsg);
-                            log.error("Failed to load BPEL deployment unit " + duName +
-                                    " due to above error.");
-                            throw new BPELDeploymentException(errMsg);
-                        }
+                    if (!bpelDUDirectory.exists() && !bpelDUDirectory.mkdirs()) {
+                        String errMsg = "Error creating BPEL deployment unit repository for " +
+                                "tenant " + tenantId;
+                        log.error(errMsg);
+                        log.error("Failed to load BPEL deployment unit " + duName +
+                                " due to above error.");
+                        throw new BPELDeploymentException(errMsg);
                     }
 
                     boolean deployedOnCarbon310 = false;
@@ -748,10 +744,8 @@ public class TenantProcessStoreImpl implements TenantProcessStore {
                         //Re-compiling to get rid of binary compatibility issues.
                         DeploymentUnitDir du = new DeploymentUnitDir(bpelDUDirectory);
                         for (File file : du.allFiles()) {
-                            if (file.getAbsolutePath().endsWith(".cbp")) {
-                                if (!file.delete()) {
-                                    log.warn("Unable to delete " + file);
-                                }
+                            if (file.getAbsolutePath().endsWith(".cbp") && !file.delete()) {
+                                log.warn("Unable to delete " + file);
                             }
                         }
                         du.compile();

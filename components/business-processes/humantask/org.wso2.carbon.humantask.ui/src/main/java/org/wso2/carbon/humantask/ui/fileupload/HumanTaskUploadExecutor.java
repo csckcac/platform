@@ -33,13 +33,10 @@ import javax.activation.FileDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 /**
  * HumanTask archive upload executor
@@ -68,57 +65,57 @@ public class HumanTaskUploadExecutor extends AbstractFileUploadExecutor {
             String msg = "File uploading failed.";
             log.error(msg);
             out.write("<textarea>" +
-                      "(function(){i18n.fileUplodedFailed();})();" +
-                      "</textarea>");
+                    "(function(){i18n.fileUplodedFailed();})();" +
+                    "</textarea>");
             return true;
         }
         HIUploaderClient uploaderClient = new HIUploaderClient(configurationContext,
-                                                               serverURL +
-                                                               HumanTaskUIConstants.SERVICE_NAMES.HUMANTASK_UPLOADER_SERVICE_NAME,
-                                                               cookie);
+                serverURL +
+                        HumanTaskUIConstants.SERVICE_NAMES.HUMANTASK_UPLOADER_SERVICE_NAME,
+                cookie);
 
         try {
 
-                for (FileItemData fieldData : fileItemsMap.get("humantaskFileName")) {
-                    String fileName = getFileName(fieldData.getFileItem().getName());
-                    //Check filename for \ charactors. This cannot be handled at the lower stages.
-                    if (fileName.matches("(.*[\\\\].*[/].*|.*[/].*[\\\\].*)")) {
-                        log.error("HumanTask Package Validation Failure: one or many of the following illegal characters are in " +
-                                  "the package.\n ~!@#$;%^*()+={}[]| \\<>");
-                        throw new Exception("HumanTask Package Validation Failure: one or many of the following illegal characters " +
-                                            "are in the package. ~!@#$;%^*()+={}[]| \\<>");
-                    }
-                    //Check file extension.
-                    checkServiceFileExtensionValidity(fileName, ALLOWED_FILE_EXTENSIONS);
-
-                    if (fileName.lastIndexOf('\\') != -1) {
-                        int indexOfColon = fileName.lastIndexOf('\\') + 1;
-                        fileName = fileName.substring(indexOfColon, fileName.length());
-                    }
-                    if (fieldData.getFileItem().getFieldName().equals("humantaskFileName")) {
-                        SaveExtractReturn uploadedFiles = saveAndExtractUploadedFile(fieldData.getFileItem());
-
-                        validateHumanTaskPackage(uploadedFiles.extractedFile);
-                        DataSource dataSource = new FileDataSource(uploadedFiles.zipFile);
-                        uploaderClient.addUploadedFileItem(new DataHandler(dataSource), fileName, "zip");
-                    }
+            for (FileItemData fieldData : fileItemsMap.get("humantaskFileName")) {
+                String fileName = getFileName(fieldData.getFileItem().getName());
+                //Check filename for \ charactors. This cannot be handled at the lower stages.
+                if (fileName.matches("(.*[\\\\].*[/].*|.*[/].*[\\\\].*)")) {
+                    log.error("HumanTask Package Validation Failure: one or many of the following illegal characters are in " +
+                            "the package.\n ~!@#$;%^*()+={}[]| \\<>");
+                    throw new Exception("HumanTask Package Validation Failure: one or many of the following illegal characters " +
+                            "are in the package. ~!@#$;%^*()+={}[]| \\<>");
                 }
+                //Check file extension.
+                checkServiceFileExtensionValidity(fileName, ALLOWED_FILE_EXTENSIONS);
+
+                if (fileName.lastIndexOf('\\') != -1) {
+                    int indexOfColon = fileName.lastIndexOf('\\') + 1;
+                    fileName = fileName.substring(indexOfColon, fileName.length());
+                }
+                if (fieldData.getFileItem().getFieldName().equals("humantaskFileName")) {
+                    SaveExtractReturn uploadedFiles = saveAndExtractUploadedFile(fieldData.getFileItem());
+
+                    validateHumanTaskPackage(uploadedFiles.extractedFile);
+                    DataSource dataSource = new FileDataSource(uploadedFiles.zipFile);
+                    uploaderClient.addUploadedFileItem(new DataHandler(dataSource), fileName, "zip");
+                }
+            }
 
             uploaderClient.uploadFileItems();
 
             String msg = "Your HumanTask package been uploaded successfully. Please refresh this page in a" +
-                         " while to see the status of the new package.";
+                    " while to see the status of the new package.";
             CarbonUIMessage.sendCarbonUIMessage(msg, CarbonUIMessage.INFO, request,
-                                                response, getContextRoot(request) + "/" + webContext +
-                                                          HumanTaskUIConstants.PAGES.PACKAGE_LIST_PAGE);
+                    response, getContextRoot(request) + "/" + webContext +
+                    HumanTaskUIConstants.PAGES.PACKAGE_LIST_PAGE);
 
             return true;
         } catch (Exception e) {
             errMsg = "File upload failed :" + e.getMessage();
             log.error(errMsg, e);
             CarbonUIMessage.sendCarbonUIMessage(errMsg, CarbonUIMessage.ERROR, request,
-                                                response, getContextRoot(request) + "/" + webContext +
-                                                          HumanTaskUIConstants.PAGES.UPLOAD_PAGE);
+                    response, getContextRoot(request) + "/" + webContext +
+                    HumanTaskUIConstants.PAGES.UPLOAD_PAGE);
         }
 
         return false;
@@ -160,33 +157,33 @@ public class HumanTaskUploadExecutor extends AbstractFileUploadExecutor {
         return new SaveExtractReturn(uploadedFile.getAbsolutePath(), destinationDir);
     }
 
-    private static void addDir(File dirObj, ZipOutputStream out, int basePathLen) throws Exception {
-        File[] files = dirObj.listFiles();
-        byte[] tmpBuf = new byte[2048];
-
-        for (File file : files) {
-            if (file.isDirectory()) {
-                addDir(file, out, basePathLen);
-                continue;
-            }
-            FileInputStream in = null;
-            try {
-                in = new FileInputStream(file.getAbsolutePath());
-                if (log.isDebugEnabled()) {
-                    log.debug("Adding: " + file.getAbsolutePath());
-                }
-                out.putNextEntry(new ZipEntry(file.getAbsolutePath().substring(basePathLen)));
-                int len;
-                while ((len = in.read(tmpBuf)) > 0) {
-                    out.write(tmpBuf, 0, len);
-                }
-            } finally {
-                if (in != null) {
-                    in.close();
-                }
-            }
-        }
-    }
+//    private static void addDir(File dirObj, ZipOutputStream out, int basePathLen) throws Exception {
+//        File[] files = dirObj.listFiles();
+//        byte[] tmpBuf = new byte[2048];
+//
+//        for (File file : files) {
+//            if (file.isDirectory()) {
+//                addDir(file, out, basePathLen);
+//                continue;
+//            }
+//            FileInputStream in = null;
+//            try {
+//                in = new FileInputStream(file.getAbsolutePath());
+//                if (log.isDebugEnabled()) {
+//                    log.debug("Adding: " + file.getAbsolutePath());
+//                }
+//                out.putNextEntry(new ZipEntry(file.getAbsolutePath().substring(basePathLen)));
+//                int len;
+//                while ((len = in.read(tmpBuf)) > 0) {
+//                    out.write(tmpBuf, 0, len);
+//                }
+//            } finally {
+//                if (in != null) {
+//                    in.close();
+//                }
+//            }
+//        }
+//    }
 
     private String getTempUploadDir() {
         String uuid = generateUUID();
@@ -198,13 +195,13 @@ public class HumanTaskUploadExecutor extends AbstractFileUploadExecutor {
 
         //We have to check whether the htconfig.xml file is in the root level.
         //otherwise we cannot accept this as a valid human task package.
-        String htConfigFilePathString = directoryPath + File.separator  + HumanTaskUIConstants.FILE_NAMES.HT_CONFIG_NAME;
+        String htConfigFilePathString = directoryPath + File.separator + HumanTaskUIConstants.FILE_NAMES.HT_CONFIG_NAME;
 
         File htConfigFile = new File(htConfigFilePathString);
 
         if (!htConfigFile.exists()) {
             throw new Exception("The uploaded task definition zip file does not contain a htconfig.xml" +
-                                "file. Please check the package and re-upload.");
+                    "file. Please check the package and re-upload.");
         }
     }
 

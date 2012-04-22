@@ -30,7 +30,7 @@ import java.util.Map;
  */
 public interface TenantProcessStore {
 
-    public void init() throws Exception;
+    void init() throws Exception;
 
     /**
      * Deploy a BPEL package in tenant specific process store.
@@ -38,7 +38,7 @@ public interface TenantProcessStore {
      * @param deploymentUnit BPEL package directory
      * @throws Exception if there is a error during process deployment
      */
-    public void deploy(File deploymentUnit) throws Exception;
+    void deploy(File deploymentUnit) throws Exception;
 
     /**
      * Undeploy a BPEL package deployed in tenant's process store.
@@ -46,18 +46,18 @@ public interface TenantProcessStore {
      * @param bpelPackageName Name of the BPEL package which going to be undeployed
      * @throws Exception If there is a error when undeploying
      */
-    public void undeploy(String bpelPackageName) throws Exception;
+    void undeploy(String bpelPackageName) throws Exception;
 
     /**
-      * Handle the tenant unloading. We need to clear process configuraions from memory
-      * and cleanup all the resources we hold.
-      */
-     public void handleTenantUnload();
+     * Handle the tenant unloading. We need to clear process configuraions from memory
+     * and cleanup all the resources we hold.
+     */
+    void handleTenantUnload();
 
     /**
      * Bring back the tenant process store's process configurations.
      */
-    public void hydrate();
+    void hydrate();
 
     /**
      * Get the configuration for the given process id
@@ -65,33 +65,37 @@ public interface TenantProcessStore {
      * @param pid Process Id
      * @return Process configuration
      */
-    public ProcessConf getProcessConfiguration(QName pid);
+    ProcessConf getProcessConfiguration(QName pid);
 
     /**
-    * Change the state of the process
-     * @param pid Process ID
+     * Change the state of the process
+     *
+     * @param pid          Process ID
      * @param processState Process State
      * @throws Exception If an error occurred while setting state
      */
-    public void setState(final QName pid, final ProcessState processState) throws Exception;
+    void setState(final QName pid, final ProcessState processState) throws Exception;
 
     /**
      * Set the location where we keep BPEL archives
-     * @param bpelArchiveRepo  Root directory where we keep BPEL archives
+     *
+     * @param bpelArchiveRepo Root directory where we keep BPEL archives
      */
-    public void setBpelArchiveRepo(File bpelArchiveRepo);
+    void setBpelArchiveRepo(File bpelArchiveRepo);
 
     /**
      * Get the list of Axis services deployed in this process store
+     *
      * @return Service list
      */
-    public Map<QName, Object> getDeployedServices();
+    Map<QName, Object> getDeployedServices();
 
-    public void handleNewBPELPackageDeploymentNotification(String bpelPackageName);
+    void handleNewBPELPackageDeploymentNotification(String bpelPackageName);
 
-    public void handleBPELPackageUndeploymentNotification(String bpelPackageName,
-                                                          List<String> versionsOfPackage);
-    public void handleBPELProcessStateChangedNotification(QName pid, ProcessState processState);
+    void handleBPELPackageUndeploymentNotification(String bpelPackageName,
+                                                   List<String> versionsOfPackage);
 
-    public ProcessConf removeProcessConfiguration(QName pid);
+    void handleBPELProcessStateChangedNotification(QName pid, ProcessState processState);
+
+    ProcessConf removeProcessConfiguration(QName pid);
 }

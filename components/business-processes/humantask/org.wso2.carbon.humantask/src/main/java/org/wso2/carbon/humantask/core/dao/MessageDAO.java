@@ -29,37 +29,37 @@ public interface MessageDAO {
         FAILURE
     }
 
-    public void setTask(TaskDAO task);
+    void setTask(TaskDAO task);
 
-    public QName getName();
+    QName getName();
 
-    public void setName(QName name);
+    void setName(QName name);
 
-    public void setData(Element message);
+    void setData(Element message);
 
-    public Element getBodyData();
+    Element getBodyData();
 
-    public void setHeader(Element header);
+    void setHeader(Element header);
 
-    public Element getHeader();
+    Element getHeader();
 
-    public Long getId();
+    Long getId();
 
-    public void setId(Long id);
+    void setId(Long id);
 
-    public MessageType getMessageType();
+    MessageType getMessageType();
 
-    public void setMessageType(MessageType messageType);
+    void setMessageType(MessageType messageType);
 
-    public void addBodyPart(String partName, Element part);
+    void addBodyPart(String partName, Element part);
 
-    public Element getBodyPart(String partName);
+    Element getBodyPart(String partName);
 
-    public Map<String, Element> getBodyParts();
+    Map<String, Element> getBodyParts();
 
-    public void addHeaderPart(String partName, Element part);
+    void addHeaderPart(String partName, Element part);
 
-    public Element getHeaderPart(String partName);
+    Element getHeaderPart(String partName);
 
-    public Map<String, Element> getHeaderParts();
+    Map<String, Element> getHeaderParts();
 }

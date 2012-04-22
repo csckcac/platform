@@ -612,14 +612,13 @@ public final class SOAPUtils {
             }
         }
 
-        if (getSOAPHeaders(bindingOutPut) != null) {
-            if (responseFromPartnerService.getHeader() != null) {
-                extractSoapHeaderParts(messageToODE,
-                        partnerInvocationContext.getBpelServiceWSDLDefinition(),
-                        responseFromPartnerService.getHeader(),
-                        getSOAPHeaders(bindingOutPut),
-                        partnerRoleMessageExchange.getOperation().getOutput().getMessage());
-            }
+        if (getSOAPHeaders(bindingOutPut) != null &&
+                responseFromPartnerService.getHeader() != null) {
+            extractSoapHeaderParts(messageToODE,
+                    partnerInvocationContext.getBpelServiceWSDLDefinition(),
+                    responseFromPartnerService.getHeader(),
+                    getSOAPHeaders(bindingOutPut),
+                    partnerRoleMessageExchange.getOperation().getOutput().getMessage());
         }
 
         return messageToODE;

@@ -24,5 +24,5 @@ public interface HumanTaskCommand {
     /**
      *  The method to execute the business logic for the specific command.
      */
-    public void execute();
+    void execute();
 }

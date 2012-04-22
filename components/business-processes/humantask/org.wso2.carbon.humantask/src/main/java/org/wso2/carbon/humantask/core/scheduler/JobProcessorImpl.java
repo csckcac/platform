@@ -31,10 +31,8 @@ import org.wso2.carbon.humantask.core.internal.HumanTaskServerHolder;
 import org.wso2.carbon.humantask.core.internal.HumanTaskServiceComponent;
 import org.wso2.carbon.humantask.core.store.HumanTaskBaseConfiguration;
 import org.wso2.carbon.humantask.core.store.TaskConfiguration;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.UserRealm;
-import org.wso2.carbon.user.core.UserStoreException;
 
 import javax.xml.namespace.QName;
 import java.util.*;
@@ -207,8 +205,8 @@ public class JobProcessorImpl implements Scheduler.JobProcessor {
                     HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().
                             getPeopleQueryEvaluator().isExistingRole(roleName);
 
-                    if(!isExistingRole(roleName, task.getTenantId())) {
-                        log.warn("Role name " + roleName  + " does not exist for tenant id" + task.getTenantId() );
+                    if (!isExistingRole(roleName, task.getTenantId())) {
+                        log.warn("Role name " + roleName + " does not exist for tenant id" + task.getTenantId());
                     }
 
 
@@ -239,7 +237,7 @@ public class JobProcessorImpl implements Scheduler.JobProcessor {
     private boolean isExistingRole(String roleName, Integer tenantId) {
         RegistryService registryService = HumanTaskServiceComponent.getRegistryService();
         try {
-            UserRealm userRealm= registryService.getUserRealm(tenantId);
+            UserRealm userRealm = registryService.getUserRealm(tenantId);
             return userRealm.getUserStoreManager().isExistingRole(roleName);
         } catch (Exception e) {
             throw new HumanTaskRuntimeException("Cannot retrieve user realm for tenantId :" + tenantId, e);

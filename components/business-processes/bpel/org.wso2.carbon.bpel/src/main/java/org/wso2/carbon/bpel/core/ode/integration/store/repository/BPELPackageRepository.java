@@ -318,8 +318,7 @@ public class BPELPackageRepository {
             IOException, NoSuchAlgorithmException {
         File bpelArchive = new File(bpelArchiveRepo, bpelPackage.getBPELArchiveFileName());
 
-        if (log.isDebugEnabled()) {
-            if (bpelArchive.exists())
+        if (log.isDebugEnabled() && bpelArchive.exists()) {
                 log.debug(bpelPackage.getName() + " File checksum: " +
                         Utils.getMD5Checksum(bpelArchive) + " : " + bpelPackage.getChecksum());
         }
@@ -364,7 +363,7 @@ public class BPELPackageRepository {
             throws RegistryException {
         BPELPackageInfo bpelPackage = new BPELPackageInfo();
         String name = packageLocationInRegistry.substring(
-                packageLocationInRegistry.lastIndexOf("/") + 1);
+                packageLocationInRegistry.lastIndexOf('/') + 1);
         bpelPackage.setName(name);
         bpelPackage.setPackageLocationInRegistry(packageLocationInRegistry);
 

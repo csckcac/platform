@@ -20,11 +20,8 @@ import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.frontend.model.ProcessIn
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.frontend.model.ProcessModelDataModel;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.frontend.model.SVGDataModel;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.BPIException;
-import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.ProcessInstance;
-import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.ProcessModel;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.service.BPIService;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.service.BPIService.BPIServiceFactory;
-import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.SVG;
 
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -33,8 +30,6 @@ import java.util.Map;
 /**
  * This bean delivers the list of process models their instances and the graph with the status information of
  * the selected process instance.
- *
- * @author Gregor Latuske
  */
 public class MainBean /*implements Serializable*/ {
 
@@ -54,17 +49,21 @@ public class MainBean /*implements Serializable*/ {
     private static final Log LOG = LogFactory.getLog(MainBean.class);
 
     /**
-     * The data model for the {@link ProcessModel}s.
+     * The data model for the
+     * {@link org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.ProcessModel}s.
      */
     protected ProcessModelDataModel pmDataModel;
 
     /**
-     * The data model for the {@link ProcessInstance}s.
+     * The data model for the
+     * {@link org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.ProcessInstance}s.
      */
     protected ProcessInstanceDataModel piDataModel;
 
     /**
-     * The data model for the {@link SVG} of the selected {@link ProcessInstance}.
+     * The data model for the
+     * {@link org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.SVG} of the selected
+     * {@link org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.ProcessInstance}.
      */
     protected SVGDataModel svgDataModel;  //TODO: Previously this was final. But to change this dynamically I removed the final. Need to review this and add a proper fix.
 
@@ -73,13 +72,6 @@ public class MainBean /*implements Serializable*/ {
      */
     protected Map<String, SVGDataModel> svgDataModelMap;
 
-    /**
-     * Constructor of MainBean.
-     *
-     * @throws ClassNotFoundException
-     * @throws URISyntaxException
-     * @throws BPIException
-     */
     protected MainBean() throws ClassNotFoundException, URISyntaxException, BPIException {
         this.svgDataModelMap = new HashMap<String, SVGDataModel>();
 

@@ -15,47 +15,48 @@
 package org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.frontend.model.components;
 
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.frontend.model.SelectionDataModel;
-import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.ProcessInstance;
-import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.ProcessModel;
 
 /**
  * This class gives the {@link SelectionDataModel} filtering abilities for different properties of a
- * {@link ProcessModel} or {@link ProcessInstance}.
- * 
- * @author Gregor Latuske
+ * {@link org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.ProcessModel} or
+ * {@link org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.ProcessInstance}.
  */
 public class TextFilter
-	extends Filter<String> {
+        extends Filter<String> {
 
-	/**
-	 * Constructor of TextFilter.
-	 * 
-	 * @param dataModel The associated SeelctionDataModel.
-	 * @param filterProperty The filter property.
-	 */
-	public TextFilter(SelectionDataModel<?,?, ?> dataModel, String filterProperty) {
-		super(dataModel, filterProperty);
-	}
+    /**
+     * Constructor of TextFilter.
+     *
+     * @param dataModel      The associated SeelctionDataModel.
+     * @param filterProperty The filter property.
+     */
+    public TextFilter(SelectionDataModel<?, ?, ?> dataModel, String filterProperty) {
+        super(dataModel, filterProperty);
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public void reset() {
-		setInput("");
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void reset() {
+        setInput("");
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	protected boolean filter(Object object) {
-		if (object instanceof String) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected boolean filter(Object object) {
+        if (object instanceof String) {
 
-			// Object has to contain the input
-			String string = ((String) object).toLowerCase();
-			if (string.indexOf(getInput().toLowerCase()) < 0) {
-				return true;
-			}
-		}
+            // Object has to contain the input
+            String string = ((String) object).toLowerCase();
+            if (!string.contains(getInput().toLowerCase())) {
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
 }

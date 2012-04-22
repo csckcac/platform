@@ -26,66 +26,66 @@ public interface CommentDAO {
     /**
      * @return : The comment id.
      */
-    public Long getId();
+    Long getId();
 
     /**
      * @return : The comment time
      */
-    public Date getCommentedDate();
+    Date getCommentedDate();
 
     /**
      * @param date : The comment date to set.
      */
-    public void setCommentedDate(Date date);
+    void setCommentedDate(Date date);
 
     /**
      * @return : The comment text
      */
-    public String getCommentText();
+    String getCommentText();
 
     /**
      * @param commentText : The comment text to set.
      */
-    public void setCommentText(String commentText);
+    void setCommentText(String commentText);
 
     /**
      * @return : The commented user id.
      */
-    public String getCommentedBy();
+    String getCommentedBy();
 
     /**
      * @param commentedBy : The id of the user who's adding the comment to set.
      */
-    public void setCommentedBy(String commentedBy);
+    void setCommentedBy(String commentedBy);
 
     /**
      * @return : The task which this comment belongs to.
      */
-    public TaskDAO getTask();
+    TaskDAO getTask();
 
     /**
      * @param task : The task to set.
      */
-    public void setTask(TaskDAO task);
+    void setTask(TaskDAO task);
 
     /**
      * @return : The last modified date of the comment.
      */
-    public Date getModifiedDate();
+    Date getModifiedDate();
 
     /**
      * @param modifiedDate : The last modified date to set.
      */
-    public void setModifiedDate(Date modifiedDate);
+    void setModifiedDate(Date modifiedDate);
 
     /**
      * @return : The last modified user name.
      */
-    public String getModifiedBy();
+    String getModifiedBy();
 
     /**
      * @param modifiedBy : The last modified user name.
      */
-    public void setModifiedBy(String modifiedBy);
+    void setModifiedBy(String modifiedBy);
 
 }

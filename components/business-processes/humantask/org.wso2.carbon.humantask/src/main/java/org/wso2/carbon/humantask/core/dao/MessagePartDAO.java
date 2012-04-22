@@ -25,13 +25,13 @@ public interface MessagePartDAO {
         HEADER
     }
 
-    public String getName();
+    String getName();
 
-    public Element getElement();
+    Element getElement();
 
-    public String getContent();
+    String getContent();
 
-    public PartType getPartType();
+    PartType getPartType();
 
-    public void setPartType(PartType partType);
+    void setPartType(PartType partType);
 }

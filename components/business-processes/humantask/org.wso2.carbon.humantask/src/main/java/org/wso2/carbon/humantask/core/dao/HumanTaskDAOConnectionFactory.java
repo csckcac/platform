@@ -27,21 +27,21 @@ public interface HumanTaskDAOConnectionFactory {
      *
      * @return HumanTaskDAOConnection : The dao connection which acts as the interface to the human task database.
      */
-    public HumanTaskDAOConnection getConnection();
+    HumanTaskDAOConnection getConnection();
 
     /**
      * Initialization logic.
      */
-    public void init();
+    void init();
 
     /**
      *
      * @return : The DataSource
      */
-    public DataSource getDataSource();
+    DataSource getDataSource();
 
     /**
      * Shutdown logic.
      */
-    public void shutdown();
+    void shutdown();
 }

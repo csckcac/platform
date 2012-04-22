@@ -27,7 +27,7 @@ import java.util.List;
 public class UserManagerBasedPeopleQueryEvaluator implements PeopleQueryEvaluator {
     private static Log log = LogFactory.getLog(UserManagerBasedPeopleQueryEvaluator.class);
 
-    RegistryService registryService;
+    private RegistryService registryService;
 
     public UserManagerBasedPeopleQueryEvaluator() {
         this.registryService = HumanTaskServiceComponent.getRegistryService();
@@ -220,7 +220,7 @@ public class UserManagerBasedPeopleQueryEvaluator implements PeopleQueryEvaluato
             return this.registryService.getUserRealm(tenantId);
         } catch (RegistryException e) {
             throw new HumanTaskRuntimeException("Error occurred while retrieving " +
-                                                "User Realm for tenant :" + tenantId);
+                                                "User Realm for tenant :" + tenantId, e);
         }
 
     }

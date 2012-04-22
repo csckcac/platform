@@ -32,8 +32,6 @@ import java.util.List;
 
 /**
  * Implementation of the {@link EventService}.
- *
- * @author Jakob Krein
  */
 public class EventServiceImpl implements EventService<ActivityStatusType> {
 
@@ -43,9 +41,7 @@ public class EventServiceImpl implements EventService<ActivityStatusType> {
      * {@inheritDoc}
      */
     @Override
-    public ActivityExecStatus mapToStatus(ActivityStatusType value)
-            throws IllegalArgumentException {
-
+    public ActivityExecStatus mapToStatus(ActivityStatusType value) {
         /* compare the value to all possible status values */
         if (value.equals(ActivityStatusType.ENABLED)) {
             return ActivityExecStatus.ENABLED;
@@ -105,7 +101,7 @@ public class EventServiceImpl implements EventService<ActivityStatusType> {
      * This will capture all the available event details generated inside the given scope and its descendants
      *
      * @param processInstance is used as a reference in each ActivityExecEvent returned by this method.
-     * @param scope Scope with event info
+     * @param scope           Scope with event info
      * @return a list of events generated for the given scope
      */
     private List<ActivityExecEvent> getEventListForScopeIncludingDescendants(
@@ -172,8 +168,8 @@ public class EventServiceImpl implements EventService<ActivityStatusType> {
      * @throws RemoteException If stub operation invocation fail
      */
     private InstanceManagementServiceStub getStub() throws RemoteException {
-        String INSTANCE_MGT_SERVICE = "InstanceManagementService";
-        String serviceURL = AuthenticationManager.getBackendServerURL() + INSTANCE_MGT_SERVICE;
+        String instanceMgtService = "InstanceManagementService";
+        String serviceURL = AuthenticationManager.getBackendServerURL() + instanceMgtService;
 
         InstanceManagementServiceStub stub = new InstanceManagementServiceStub(null, serviceURL);
         ServiceClient client = stub._getServiceClient();

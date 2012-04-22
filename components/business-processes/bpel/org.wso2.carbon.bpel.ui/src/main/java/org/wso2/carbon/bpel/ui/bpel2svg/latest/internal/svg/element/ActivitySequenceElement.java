@@ -14,98 +14,105 @@
  */
 package org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.element;
 
-import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.activity.ActivityChoice;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.activity.ActivitySequence;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.SVG;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Dimension;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Position;
 
 /**
- * The SVG wrapper for the {@link ActivityChoice}.
- * 
+ * The SVG wrapper for the
+ * {@link org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.activity.ActivityChoice}.
+ *
  * @author Gregor Latuske
  */
 public class ActivitySequenceElement
-	extends ActivityComplexElement<ActivitySequence> {
+        extends ActivityComplexElement<ActivitySequence> {
 
-	/** Serial version UID */
-	private static final long serialVersionUID = 795747004970884491L;
+    /**
+     * Serial version UID
+     */
+    private static final long serialVersionUID = 795747004970884491L;
 
-	/**
-	 * Constructor of ActivityChoiceElement.
-	 * 
-	 * @param value The associated {@link ActivityChoice}.
-	 * @param parent The parent element.
-	 */
-	protected ActivitySequenceElement(ActivitySequence value, ActivityComplexElement<?> parent) {
-		super(value, parent);
-	}
+    /**
+     * Constructor of ActivityChoiceElement.
+     *
+     * @param value  The associated
+     *               {@link org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.activity.ActivityChoice}.
+     * @param parent The parent element.
+     */
+    protected ActivitySequenceElement(ActivitySequence value, ActivityComplexElement<?> parent) {
+        super(value, parent);
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public SVG getSVG() {
-		SVG svg = createSVG();
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public SVG getSVG() {
+        SVG svg = createSVG();
 
-		// Element has children?
-		if (!getChildren().isEmpty()) {
+        // Element has children?
+        if (!getChildren().isEmpty()) {
 
-			// Next child position
-			Position nextChildPos = createPositionPointer();
+            // Next child position
+            Position nextChildPos = createPositionPointer();
 
-			// Arrow source
-			Position arrowSource = getCenterPosition();
+            // Arrow source
+            Position arrowSource = getCenterPosition();
 
-			// Iterate over children
-			for (ActivityElement<?> child : getChildren()) {
+            // Iterate over children
+            for (ActivityElement<?> child : getChildren()) {
 
-				// Modify child position
-				Position childPos = nextChildPos.makeCopy();
-				childPos.centerX(getDimension(), child.getDimension());
-				childPos.appendToY(child.getDimension().getMarginVertical());
-				child.setPosition(childPos);
+                // Modify child position
+                Position childPos = nextChildPos.makeCopy();
+                childPos.centerX(getDimension(), child.getDimension());
+                childPos.appendToY(child.getDimension().getMarginVertical());
+                child.setPosition(childPos);
 
-				// Add arrow
-				svg.append(createArrow(child.getValue(), arrowSource, child.getTopPosition()));
+                // Add arrow
+                svg.append(createArrow(child.getValue(), arrowSource, child.getTopPosition()));
 
-				// Add SVG segment of the child activity
-				svg.append(child.getSVG());
+                // Add SVG segment of the child activity
+                svg.append(child.getSVG());
 
-				// Modify next child position & arrow source
-				nextChildPos.appendToY(child.getDimension().getHeightWithMargin());
-				arrowSource = child.getBottomPosition();
-			}
+                // Modify next child position & arrow source
+                nextChildPos.appendToY(child.getDimension().getHeightWithMargin());
+                arrowSource = child.getBottomPosition();
+            }
 
-			// Add final arrow
-			ActivityElement<?> lastChild = getChildren().get(getChildren().size() - 1);
-			svg.append(createArrow(lastChild.getValue(), arrowSource, getBottomPosition()));
-		}
+            // Add final arrow
+            ActivityElement<?> lastChild = getChildren().get(getChildren().size() - 1);
+            svg.append(createArrow(lastChild.getValue(), arrowSource, getBottomPosition()));
+        }
 
-		return svg;
-	}
+        return svg;
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	protected Dimension calculateDimension() {
-		Dimension dim = getDefaultDimension();
-		int width = 0;
-		int height = 0;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected Dimension calculateDimension() {
+        Dimension dim = getDefaultDimension();
+        int width = 0;
+        int height = 0;
 
-		for (ActivityElement<?> child : getChildren()) {
-			if (child.getDimension().getWidthWithMargin() > width) {
-				width = child.getDimension().getWidthWithMargin();
-			}
+        for (ActivityElement<?> child : getChildren()) {
+            if (child.getDimension().getWidthWithMargin() > width) {
+                width = child.getDimension().getWidthWithMargin();
+            }
 
-			height += child.getDimension().getHeightWithMargin();
-		}
+            height += child.getDimension().getHeightWithMargin();
+        }
 
-		if (getChildren().isEmpty()) {
-			width = getDefaultDimension().getWidth();
-			height = getDefaultDimension().getHeight();
-		} else {
-			height += getDefaultDimension().getHeightWithMargin();
-		}
+        if (getChildren().isEmpty()) {
+            width = getDefaultDimension().getWidth();
+            height = getDefaultDimension().getHeight();
+        } else {
+            height += getDefaultDimension().getHeightWithMargin();
+        }
 
-		return new Dimension(width, dim.getMarginHorizontal(), height, dim.getMarginVertical());
-	}
+        return new Dimension(width, dim.getMarginHorizontal(), height, dim.getMarginVertical());
+    }
 
 }

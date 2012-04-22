@@ -27,42 +27,42 @@ import java.util.List;
  *
  * @author Gregor Latuske
  */
-public interface EventService<M>
-	extends Service, ActivityExecStatusMapping<M> {
+public interface EventService<M> extends Service, ActivityExecStatusMapping<M> {
 
-	/**
-	 * Returns all {@link ActivityExecEvent}s stored in the workflow engine to the given
-	 * {@link ProcessInstance}.
-	 *
-	 * @param processInstance The {@link ProcessInstance}, whose {@link ActivityExecEvent}s should be
-	 *        retrieved.
-	 * @return All {@link ActivityExecEvent}s stored in the workflow engine to the given
-	 *         {@link ProcessInstance}.
-	 * @throws BPIException If an error occurred while fetching activity execution events
-	 */
-	public List<ActivityExecEvent> getActivityExecEvents(ProcessInstance processInstance)
-		throws BPIException;
+    /**
+     * Returns all {@link ActivityExecEvent}s stored in the workflow engine to the given
+     * {@link ProcessInstance}.
+     *
+     * @param processInstance The {@link ProcessInstance}, whose {@link ActivityExecEvent}s should be
+     *                        retrieved.
+     * @return All {@link ActivityExecEvent}s stored in the workflow engine to the given
+     *         {@link ProcessInstance}.
+     * @throws BPIException If an error occurred while fetching activity execution events
+     */
+    List<ActivityExecEvent> getActivityExecEvents(ProcessInstance processInstance)
+            throws BPIException;
 
-	/**
-	 * Factory class to create an {@link EventService}.
-	 *
-	 * @author Gregor Latuske
-	 */
-	class EventServiceFactory
-		implements ServiceFactory<EventService<?>> {
+    /**
+     * Factory class to create an {@link EventService}.
+     *
+     * @author Gregor Latuske
+     */
+    class EventServiceFactory implements ServiceFactory<EventService<?>> {
 
-		/** Property name of the {@link EventService}. */
+        /** Property name of the {@link EventService}. */
 //		private static final String SERVICE_PROPERTY = "dispatcher.service.event";
 
-		/** {@inheritDoc} */
-		@Override
-		public EventService<?> createService() throws BPIException {
-			try {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public EventService<?> createService() throws BPIException {
+            try {
                 return new EventServiceImpl();
-			} catch (Exception t) {
-				throw new BPIException(t);
-			}
-		}
-	}
+            } catch (Exception t) {
+                throw new BPIException(t);
+            }
+        }
+    }
 
 }

@@ -26,13 +26,12 @@ public interface Status {
 	 *
 	 * @return The name of the status starting with an upper case.
 	 */
-	public String getName();
+	String getName();
 
 	/**
 	 * Returns the name of the status with lower case.
 	 *
 	 * @return The name of the status with lower case.
 	 */
-	public String getNameLowerCase();
-
+	String getNameLowerCase();
 }

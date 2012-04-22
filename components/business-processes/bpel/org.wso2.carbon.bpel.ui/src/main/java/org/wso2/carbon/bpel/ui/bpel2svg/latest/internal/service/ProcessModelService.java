@@ -26,43 +26,43 @@ import java.util.List;
  *
  * @author Gregor Latuske
  */
-public interface ProcessModelService<M>
-	extends Service, ProcessModelStatusMapping<M> {
+public interface ProcessModelService<M> extends Service, ProcessModelStatusMapping<M> {
 
-	/**
-	 * Returns all {@link ProcessModel}s stored in the workflow engine.
-	 *
-	 * @return All {@link ProcessModel}s stored in the workflow engine.
-	 * @throws BPIException If an error occurred while fetching the process models
-	 */
-	public List<ProcessModel> getProcessModels() throws BPIException;
+    /**
+     * Returns all {@link ProcessModel}s stored in the workflow engine.
+     *
+     * @return All {@link ProcessModel}s stored in the workflow engine.
+     * @throws BPIException If an error occurred while fetching the process models
+     */
+    List<ProcessModel> getProcessModels() throws BPIException;
 
-	/**
-	 * Returns the {@link ProcessModel} with the given ID or <code>null</code>.
-	 *
-	 * @param pid The ID of the {@link ProcessModel}.
-	 * @return The {@link ProcessModel} with the given ID <code>null</code>.
-	 * @throws BPIException If an error occurred while fetching the process model
-	 */
-	public ProcessModel getProcessModel(String pid) throws BPIException;
+    /**
+     * Returns the {@link ProcessModel} with the given ID or <code>null</code>.
+     *
+     * @param pid The ID of the {@link ProcessModel}.
+     * @return The {@link ProcessModel} with the given ID <code>null</code>.
+     * @throws BPIException If an error occurred while fetching the process model
+     */
+    ProcessModel getProcessModel(String pid) throws BPIException;
 
-	/**
-	 * Factory class to create a {@link ProcessModelService}.
-	 *
-	 * @author Gregor Latuske
-	 */
-	class ProcessModelServiceFactory
-		implements ServiceFactory<ProcessModelService<?>> {
+    /**
+     * Factory class to create a {@link ProcessModelService}.
+     *
+     * @author Gregor Latuske
+     */
+    class ProcessModelServiceFactory implements ServiceFactory<ProcessModelService<?>> {
 
-		/** {@inheritDoc} */
-		@Override
-		public ProcessModelService<?> createService() throws BPIException {
-			try {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public ProcessModelService<?> createService() throws BPIException {
+            try {
                 return new ProcessModelServiceImpl();
-			} catch (Exception t) {
-				throw new BPIException(t);
-			}
-		}
-	}
+            } catch (Exception t) {
+                throw new BPIException(t);
+            }
+        }
+    }
 
 }

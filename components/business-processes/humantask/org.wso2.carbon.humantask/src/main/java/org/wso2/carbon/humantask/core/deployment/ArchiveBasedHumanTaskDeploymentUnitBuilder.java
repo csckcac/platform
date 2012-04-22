@@ -426,13 +426,12 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
                     if (log.isDebugEnabled()) {
                         log.debug("Extracting directory " + entry.getName());
                     }
-                    if (!new File(humantaskExtractionLocation, entry.getName()).mkdirs()) {
-                        if (!new File(humantaskExtractionLocation, entry.getName()).exists()) {
-                            throw new HumanTaskDeploymentException("Archive extraction failed. " +
-                                    "Cannot create directory: "
-                                    + new File(humantaskExtractionLocation,
-                                    entry.getName()).getAbsolutePath() + ".");
-                        }
+                    if (!new File(humantaskExtractionLocation, entry.getName()).mkdirs() &&
+                            !new File(humantaskExtractionLocation, entry.getName()).exists()) {
+                        throw new HumanTaskDeploymentException("Archive extraction failed. " +
+                                "Cannot create directory: "
+                                + new File(humantaskExtractionLocation,
+                                entry.getName()).getAbsolutePath() + ".");
                     }
                     continue;
                 }
@@ -442,12 +441,10 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
                 }
 
                 File destFile = new File(humantaskExtractionLocation, entry.getName());
-                if (!destFile.getParentFile().exists()) {
-                    if (!destFile.getParentFile().mkdirs()) {
-                        throw new HumanTaskDeploymentException("Archive extraction failed. " +
-                                "Cannot create directory: "
-                                + destFile.getParentFile().getAbsolutePath());
-                    }
+                if (!destFile.getParentFile().exists() && !destFile.getParentFile().mkdirs()) {
+                    throw new HumanTaskDeploymentException("Archive extraction failed. " +
+                            "Cannot create directory: "
+                            + destFile.getParentFile().getAbsolutePath());
                 }
                 copyInputStream(zipStream,
                         new BufferedOutputStream(new FileOutputStream(destFile)));

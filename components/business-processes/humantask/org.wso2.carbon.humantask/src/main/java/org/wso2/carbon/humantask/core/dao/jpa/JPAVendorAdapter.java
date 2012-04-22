@@ -32,21 +32,21 @@ public interface JPAVendorAdapter {
      *
      * @param dataSource data source to use with JPA layer
      */
-    public void setDataSource(DataSource dataSource);
+    void setDataSource(DataSource dataSource);
 
     /**
      * Whether to generate DDL
      *
      * @param generateDdl boolean
      */
-    public void setGenerateDdl(boolean generateDdl);
+    void setGenerateDdl(boolean generateDdl);
 
     /**
      * Whether to print SQL traces
      *
      * @param showSql boolean
      */
-    public void setShowSql(boolean showSql);
+    void setShowSql(boolean showSql);
 
     /**
      * Returns the current JPA vendor specific property map
@@ -54,7 +54,7 @@ public interface JPAVendorAdapter {
      * @return property map
      * @param tnxManager TransactionManager
      */
-    public Map<String, ?> getJpaPropertyMap(TransactionManager tnxManager);
+    Map<String, ?> getJpaPropertyMap(TransactionManager tnxManager);
 
     /**
      * Return the vendor-specific EntityManagerFactory interface

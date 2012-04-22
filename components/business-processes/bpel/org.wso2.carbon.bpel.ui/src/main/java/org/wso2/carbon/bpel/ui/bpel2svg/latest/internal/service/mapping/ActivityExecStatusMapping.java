@@ -14,17 +14,16 @@
  */
 package org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.service.mapping;
 
-import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.activity.ActivityExecData;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.status.ActivityExecStatus;
 
 /**
- * This class is used to map the status, that is of type M, of a {@link ActivityExecData} to the according
+ * This class is used to map the status, that is of type M, of a
+ * {@link org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.activity.ActivityExecData} to the according
  * {@link ActivityExecStatus}.
- * 
+ *
  * @param <M> The type of the status in the implementation of the workflow engine adapter.
- * @author Gregor Latuske
  */
 public interface ActivityExecStatusMapping<M>
-	extends StatusMapping<ActivityExecStatus, M> {
+        extends StatusMapping<ActivityExecStatus, M> {
 
 }

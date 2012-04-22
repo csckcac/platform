@@ -17,22 +17,20 @@ package org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.service.mapping;
 
 /**
  * This class is used to map the status, that is of type M to the according status S.
- * 
+ *
  * @param <S> The type of the status in the data model.
  * @param <M> The type of the status in the implementation of the workflow engine adapter.
- * @author Gregor Latuske
  */
 public interface StatusMapping<S, M> {
 
-	/**
-	 * Maps the value of type M to the associated status of type S.
-	 * <p>
-	 * If no mapping is possible a {@link IllegalArgumentException} is thrown.
-	 *
-	 * @param value The value to map.
-	 * @return The mapped status.
-	 * @throws IllegalArgumentException
-	 */
-	public S mapToStatus(M value) throws IllegalArgumentException;
-
+    /**
+     * Maps the value of type M to the associated status of type S.
+     * <p/>
+     * If no mapping is possible a {@link IllegalArgumentException} is thrown.
+     *
+     * @param value The value to map.
+     * @return The mapped status.
+     * @throws IllegalArgumentException
+     */
+    S mapToStatus(M value);
 }

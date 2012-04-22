@@ -33,7 +33,7 @@ public interface BPELServer {
      *
      * @param eventListenerClass  Fully qualified class name of BpelEventListener implementation.
      */
-    public void registerEventListener(String eventListenerClass);
+    void registerEventListener(String eventListenerClass);
 
     /**
      * Register ODE Message Exchange Interceptor in ODE BPEL Engine.
@@ -41,7 +41,7 @@ public interface BPELServer {
      * @param mexInterceptorClass  Fully qualified class name of 
      * MessageExchangeInterceptor implementation
      */
-    public void registerMessageExchangeInterceptor(String mexInterceptorClass);
+    void registerMessageExchangeInterceptor(String mexInterceptorClass);
 
 
     /**
@@ -50,17 +50,17 @@ public interface BPELServer {
      *
      * @return MultiTenantProcessStore BPEL Process Store 
      */
-    public MultiTenantProcessStore getMultiTenantProcessStore();
+    MultiTenantProcessStore getMultiTenantProcessStore();
 
     /**
      * Get the multi threaded http connection manager to use with external service invocations.
      * @return HttpConnectionManager instace(multi-threaded implementation).
      */
-    public HttpConnectionManager getHttpConnectionManager();
+    HttpConnectionManager getHttpConnectionManager();
 
     /**
      * Get the BPEL server configuration which is derived from "bps.xml" file
      * @return BPELServerConfiguration
      */
-    public BPELServerConfiguration getBpelServerConfiguration();
+    BPELServerConfiguration getBpelServerConfiguration();
 }

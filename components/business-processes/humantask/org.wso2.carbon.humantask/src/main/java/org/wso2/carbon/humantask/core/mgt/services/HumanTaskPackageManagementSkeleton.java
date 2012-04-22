@@ -22,9 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.humantask.core.HumanTaskServer;
-import org.wso2.carbon.humantask.core.deployment.HumanTaskDeploymentException;
 import org.wso2.carbon.humantask.core.deployment.SimpleTaskDefinitionInfo;
-import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 import org.wso2.carbon.humantask.core.internal.HumanTaskServiceComponent;
 import org.wso2.carbon.humantask.core.store.HumanTaskStore;
 import org.wso2.carbon.humantask.skeleton.mgt.services.HumanTaskPackageManagementSkeletonInterface;
@@ -70,16 +68,16 @@ public class HumanTaskPackageManagementSkeleton extends AbstractAdmin
             throw new IllegalArgumentException("The provided package name is empty!");
         }
         try {
-        List<SimpleTaskDefinitionInfo> taskDefsInPackage =
-                getTenantTaskStore().getTaskConfigurationInfoListForPackage(packageName);
-        Task_type0[] taskDefArray = new Task_type0[taskDefsInPackage.size()];
-        int i = 0;
-        for (SimpleTaskDefinitionInfo taskDefinitionInfo : taskDefsInPackage) {
-            taskDefArray[i] = createTaskTypeObject(taskDefinitionInfo);
-            i++;
-        }
+            List<SimpleTaskDefinitionInfo> taskDefsInPackage =
+                    getTenantTaskStore().getTaskConfigurationInfoListForPackage(packageName);
+            Task_type0[] taskDefArray = new Task_type0[taskDefsInPackage.size()];
+            int i = 0;
+            for (SimpleTaskDefinitionInfo taskDefinitionInfo : taskDefsInPackage) {
+                taskDefArray[i] = createTaskTypeObject(taskDefinitionInfo);
+                i++;
+            }
 
-        return taskDefArray;
+            return taskDefArray;
         } catch (Exception ex) {
             String errMsg = "listTasksInPackage operation failed";
             log.error(errMsg, ex);
@@ -98,15 +96,15 @@ public class HumanTaskPackageManagementSkeleton extends AbstractAdmin
                 tPage = 0;
             }
 
-            Integer ITEMS_PER_PAGE = 10;
-            Integer startIndexForCurrentPage = tPage * ITEMS_PER_PAGE;
-            Integer endIndexForCurrentPage = (tPage + 1) * ITEMS_PER_PAGE;
+            Integer itemsPerPage = 10;
+            Integer startIndexForCurrentPage = tPage * itemsPerPage;
+            Integer endIndexForCurrentPage = (tPage + 1) * itemsPerPage;
 
 
             List<SimpleTaskDefinitionInfo> taskConfigs = getTenantTaskStore().getTaskConfigurationInfoList();
 
             Integer taskDefListSize = taskConfigs.size();
-            Integer pages = (int) Math.ceil((double) taskDefListSize / ITEMS_PER_PAGE);
+            Integer pages = (int) Math.ceil((double) taskDefListSize / itemsPerPage);
             paginatedTaskDefs.setPages(pages);
 
             SimpleTaskDefinitionInfo[] taskDefinitionInfoArray =

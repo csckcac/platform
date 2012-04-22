@@ -14,17 +14,16 @@
  */
 package org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.service.mapping;
 
-import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.ProcessModel;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.status.ProcessModelStatus;
 
 /**
- * This class is used to map the status, that is of type M, of a {@link ProcessModel} to the according
+ * This class is used to map the status, that is of type M, of a
+ * {@link org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.ProcessModel} to the according
  * {@link ProcessModelStatus}.
- * 
+ *
  * @param <M> The type of the status in the implementation of the workflow engine adapter.
- * @author Gregor Latuske
  */
 public interface ProcessModelStatusMapping<M>
-	extends StatusMapping<ProcessModelStatus, M> {
+        extends StatusMapping<ProcessModelStatus, M> {
 
 }

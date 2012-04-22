@@ -19,12 +19,16 @@ package org.wso2.carbon.humantask.ui.constants;
 /**
  * A place holder interface for human task ui component's constatns.
  */
-public interface HumanTaskUIConstants {
+public final class HumanTaskUIConstants {
+    private HumanTaskUIConstants() {
+    }
 
     /**
      * JSP pages to be referred throughout the ui module.
      */
-    public interface PAGES {
+    public final class PAGES {
+        private PAGES() {
+        }
 
         public static final String PACKAGE_LIST_PAGE = "/humantask/humantask_definition_list.jsp";
 
@@ -35,7 +39,10 @@ public interface HumanTaskUIConstants {
     /**
      * Service names to be referred throughout the ui module.
      */
-    public interface SERVICE_NAMES {
+    public final class SERVICE_NAMES {
+
+        private SERVICE_NAMES() {
+        }
 
         public static final String TASK_OPERATIONS_SERVICE = "taskOperations";
 
@@ -47,7 +54,10 @@ public interface HumanTaskUIConstants {
     /**
      * File names to be referred throughout the ui module.
      */
-    public interface FILE_NAMES {
+    public final class FILE_NAMES {
+        private FILE_NAMES() {
+        }
+
         public static final String HT_CONFIG_NAME = "htconfig.xml";
     }
 }

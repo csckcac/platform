@@ -40,7 +40,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class SimpleScheduler implements Scheduler, TaskRunner {
 
-    private static final Log log = LogFactory.getLog(SimpleScheduler.class);
+    private static Log log = LogFactory.getLog(SimpleScheduler.class);
 
     //private static final int DEFAULT_TRANSACTION_TIMEOUT = 60 * 1000;
 
@@ -48,13 +48,13 @@ public class SimpleScheduler implements Scheduler, TaskRunner {
      * Jobs scheduled with a time that is between [now, now+immediateInterval] will be assigned to the current node, and placed
      * directly on the todo queue.
      */
-    private long immediateInterval = 30000;
+    private static final long immediateInterval = 30000;
 
     /**
      * Jobs scheduled with a time that is between (now+immediateInterval,now+nearFutureInterval) will be assigned to the current
      * node, but will not be placed on the todo queue (the promoter will pick them up).
      */
-    private long nearFutureInterval = 60 * 1000;
+    private final long nearFutureInterval = 60 * 1000;
 //    long _nearFutureInterval = 10 * 60 * 1000;
 
 //    /**
@@ -71,7 +71,7 @@ public class SimpleScheduler implements Scheduler, TaskRunner {
     /**
      * Maximum number of jobs in the "near future" / todo queue.
      */
-    private int todoLimit = 10000;
+    private static final int todoLimit = 10000;
 
     /**
      * The object that actually handles the jobs.

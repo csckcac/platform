@@ -35,8 +35,6 @@ import java.util.List;
 
 /**
  * Implementation of the {@link ProcessModelService}.
- *
- * @author Jakob Krein
  */
 public class ProcessModelServiceImpl implements ProcessModelService<String> {
 
@@ -46,8 +44,7 @@ public class ProcessModelServiceImpl implements ProcessModelService<String> {
      * {@inheritDoc}
      */
     @Override
-    public ProcessModelStatus mapToStatus(String value) throws IllegalArgumentException {
-
+    public ProcessModelStatus mapToStatus(String value) {
         /* Compare the value to all possible status values */
         for (ProcessModelStatus status : ProcessModelStatus.values()) {
             if (status.name().equalsIgnoreCase(value)) {
@@ -152,8 +149,9 @@ public class ProcessModelServiceImpl implements ProcessModelService<String> {
      * @param pageNumber The number of the page that should be retrieved
      * @return A list of process models
      * @throws RemoteException If stub operation invocation fail
-     * @throws org.wso2.carbon.bpel.stub.mgt.ProcessManagementException If error occurred while
-     * reading the process list from the backend
+     * @throws org.wso2.carbon.bpel.stub.mgt.ProcessManagementException
+     *                         If error occurred while
+     *                         reading the process list from the backend
      */
     private PaginatedProcessInfoList getPaginatedProcessList(String filter, String orderBy,
                                                              int pageNumber)
@@ -169,8 +167,9 @@ public class ProcessModelServiceImpl implements ProcessModelService<String> {
      * @param pid The id of the process model
      * @return A {@link ProcessInfoType} that holds information about the process model
      * @throws RemoteException If stub operation invocation fail
-     * @throws org.wso2.carbon.bpel.stub.mgt.ProcessManagementException If error occurred while
-     * reading the process list from the backend
+     * @throws org.wso2.carbon.bpel.stub.mgt.ProcessManagementException
+     *                         If error occurred while
+     *                         reading the process list from the backend
      */
     private ProcessInfoType getProcessInfo(String pid)
             throws RemoteException, ProcessManagementException {
@@ -185,8 +184,8 @@ public class ProcessModelServiceImpl implements ProcessModelService<String> {
      * @throws RemoteException If stub operation invocation fail
      */
     private ProcessManagementServiceStub getStub() throws RemoteException {
-        String PROCESS_MGT_SERVICE = "ProcessManagementService";
-        String serviceURL = AuthenticationManager.getBackendServerURL() + PROCESS_MGT_SERVICE;
+        String processMgtService = "ProcessManagementService";
+        String serviceURL = AuthenticationManager.getBackendServerURL() + processMgtService;
 
         ProcessManagementServiceStub stub = new ProcessManagementServiceStub(null, serviceURL);
         ServiceClient client = stub._getServiceClient();

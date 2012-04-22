@@ -14,12 +14,9 @@
 */
 package org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings;
 
-import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.element.ActivityElement;
-
 /**
- * This class represents the width and the height of an {@link ActivityElement}.
- *
- * @author Gregor Latuske
+ * This class represents the width and the height of an
+ * {@link org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.element.ActivityElement}.
  */
 public class Dimension {
 

@@ -23,8 +23,8 @@ import org.wso2.carbon.bpel.core.ode.integration.BPELServer;
 public interface BPELEngineService {
     /**
      * Access the BPEL Engine
+     *
      * @return BPELServer
      */
-    public BPELServer getBPELServer();
-
+    BPELServer getBPELServer();
 }

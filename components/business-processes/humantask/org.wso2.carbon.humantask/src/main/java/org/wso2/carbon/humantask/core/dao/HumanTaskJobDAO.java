@@ -21,106 +21,106 @@ public interface HumanTaskJobDAO {
      * Get primary key
      * @return primary key
      */
-    public Long getId();
+    Long getId();
 
     /**
      * Set primary key
      * @param jobId Job ID
      */
-    public void setId(Long jobId);
+    void setId(Long jobId);
 
     /**
      * Get the assigned node id of the job
      * @return node id
      */
-    public String getNodeId();
+    String getNodeId();
 
     /**
      * Set the assigned node id of the job
      * @param id node id
      */
-    public void setNodeId(String id);
+    void setNodeId(String id);
 
     /**
      * Get the name of the job
      * @return name
      */
-    public String getName();
+    String getName();
 
     /**
      * Set the name of the job
      * @param name Name of the job
      */
-    public void setName(String name);
+    void setName(String name);
 
     /**
      * Get scheduled time of the job execution
      * @return time
      */
-    public Long getTime();
+    Long getTime();
 
     /**
      * Set scheduled time of the job execution
      * @param time Time
      */
-    public void setTime(Long time);
+    void setTime(Long time);
 
     /**
      * Set whether the job is scheduled
      * @param scheduled true or false
      */
-    public void setScheduled(boolean scheduled);
+    void setScheduled(boolean scheduled);
 
     /**
      * Check whether the job should be executed in a transaction
      * @return whether the transaction enabled
      */
-    public boolean isTransacted();
+    boolean isTransacted();
 
     /**
      * Set whether the job should be executed in a transaction
      * @param transacted true or false
      */
-    public void setTransacted(boolean transacted);
+    void setTransacted(boolean transacted);
 
     /**
      * Get details of the job
      * @return details
      */
-    public String getDetails();
+    String getDetails();
 
     /**
      * Set details of the job
      * @param details details
      */
-    public void setDetails(String details);
+    void setDetails(String details);
 
     /**
      * Get the task id of the job
      * @return task id
      */
-    public Long getTaskId();
+    Long getTaskId();
 
     /**
      * Set the task id of the job
      * @param taskId Task id
      */
-    public void setTaskId(Long taskId);
+    void setTaskId(Long taskId);
 
     /**
      * Get the type of the job
      * @return job type
      */
-    public String getType();
+    String getType();
 
     /**
      * Get the type of the job
      * @param type type of the job
      */
-    public void setType(String type);
+    void setType(String type);
 
     /**
      * Delete the object
      */
-    public void delete();
+    void delete();
 }

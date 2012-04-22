@@ -27,7 +27,6 @@ import org.wso2.carbon.bpel.stub.mgt.*;
 import org.wso2.carbon.bpel.stub.mgt.InstanceManagementException;
 import org.wso2.carbon.bpel.stub.mgt.types.*;
 
-import javax.xml.namespace.QName;
 import java.rmi.RemoteException;
 
 /**
@@ -72,8 +71,9 @@ public class InstanceManagementServiceClient {
 
     /**
      * Use to get activity-life-cycle events to log the instance execution
+     *
      * @param iid - instance id
-     * @return - a full set of activity life cycle events 
+     * @return - a full set of activity life cycle events
      * @throws Exception If an error occurred while collecting life cycle info
      */
     public ActivityLifeCycleEventsType getActivityLifeCycleFilter(long iid) throws Exception {
@@ -88,6 +88,7 @@ public class InstanceManagementServiceClient {
     /**
      * Use to get a full detail set of the instance execution
      * Have analysed the events and generate the InstanceInfoWithEventsType
+     *
      * @param iid - instance id
      * @return - a summary of the instance
      * @throws Exception If an error occurred while collecting instance with events
@@ -100,11 +101,11 @@ public class InstanceManagementServiceClient {
             throw e;
         }
     }
-    
+
     public void suspendInstance(long iid) throws RemoteException, InstanceManagementException {
-        try{
+        try {
             stub.suspendInstance(iid);
-        } catch( RemoteException re) {
+        } catch (RemoteException re) {
             log.error("suspendInstance operation failed.", re);
             throw re;
         } catch (InstanceManagementException e) {
@@ -114,9 +115,9 @@ public class InstanceManagementServiceClient {
     }
 
     public void resumeInstance(long iid) throws RemoteException, InstanceManagementException {
-        try{
+        try {
             stub.resumeInstance(iid);
-        } catch( RemoteException re) {
+        } catch (RemoteException re) {
             log.error("resumeInstance operation failed.", re);
             throw re;
         } catch (InstanceManagementException e) {
@@ -126,9 +127,9 @@ public class InstanceManagementServiceClient {
     }
 
     public void deleteInstance(long iid, boolean deleteMessageExchanges)
-            throws RemoteException,InstanceManagementException {
-        String instanceFilter = "IID="+iid;
-        try{
+            throws RemoteException, InstanceManagementException {
+        String instanceFilter = "IID=" + iid;
+        try {
             stub.deleteInstances(instanceFilter, deleteMessageExchanges);
         } catch (RemoteException re) {
             log.error("deleteInstances operation failed.", re);
@@ -141,7 +142,7 @@ public class InstanceManagementServiceClient {
 
     public void deleteInstances(String filter, boolean deleteMessageExchanges)
             throws RemoteException, InstanceManagementException {
-        try{
+        try {
             stub.deleteInstances(filter, deleteMessageExchanges);
         } catch (RemoteException re) {
             log.error("deleteInstances operation failed.", re);
@@ -153,7 +154,7 @@ public class InstanceManagementServiceClient {
     }
 
     public void terminateInstance(long iid) throws RemoteException, InstanceManagementException {
-        try{
+        try {
             stub.terminateInstance(iid);
         } catch (RemoteException re) {
             log.error("terminateInstance operation failed.", re);
@@ -179,7 +180,7 @@ public class InstanceManagementServiceClient {
 
     public InstanceSummaryE getInstanceSummary()
             throws RemoteException, InstanceManagementException {
-        try{
+        try {
             return stub.getInstanceSummary();
         } catch (RemoteException e) {
             log.error("getInstanceSummary operation failed.", e);

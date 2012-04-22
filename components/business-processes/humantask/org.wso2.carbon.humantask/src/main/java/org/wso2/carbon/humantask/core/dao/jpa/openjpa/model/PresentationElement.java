@@ -19,7 +19,6 @@ package org.wso2.carbon.humantask.core.dao.jpa.openjpa.model;
 import org.wso2.carbon.humantask.core.dao.TaskDAO;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 /**
  * Domain Object for presentation element.
@@ -27,7 +26,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "PRESENTATION_ELEMENT")
 @Inheritance
-@DiscriminatorColumn(name="PE_TYPE")
+@DiscriminatorColumn(name = "PE_TYPE")
 public class PresentationElement {
 
     @Id
@@ -72,6 +71,6 @@ public class PresentationElement {
     }
 
     public void setTask(TaskDAO task) {
-        this.task = (Task)task;
+        this.task = (Task) task;
     }
 }

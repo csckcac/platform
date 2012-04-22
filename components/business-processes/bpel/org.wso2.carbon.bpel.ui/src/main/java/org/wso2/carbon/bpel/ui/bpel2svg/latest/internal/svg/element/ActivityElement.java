@@ -14,7 +14,6 @@
 */
 package org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.element;
 
-import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.ProcessModel;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.activity.Activity;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.SVG;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Dimension;
@@ -70,7 +69,9 @@ public abstract class ActivityElement<T extends Activity> /*implements Serializa
     /**
      * Constructor of SVGElement.
      *
-     * @param value  The associated {@link ProcessModel} or {@link Activity}.
+     * @param value  The associated
+     *               {@link org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.ProcessModel} or
+     *               {@link Activity}.
      * @param parent The parent element.
      */
     protected ActivityElement(T value, ActivityComplexElement<?> parent) {
@@ -80,7 +81,9 @@ public abstract class ActivityElement<T extends Activity> /*implements Serializa
     /**
      * Constructor of SVGElement.
      *
-     * @param value    The associated {@link ProcessModel} or {@link Activity}.
+     * @param value    The associated
+     *                 {@link org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.ProcessModel} or
+     *                 {@link Activity}.
      * @param settings The associated {@link Settings}.
      */
     protected ActivityElement(T value, Settings settings) {
@@ -90,7 +93,9 @@ public abstract class ActivityElement<T extends Activity> /*implements Serializa
     /**
      * Constructor of SVGElement.
      *
-     * @param value    The associated {@link ProcessModel} or {@link Activity}.
+     * @param value    The associated
+     *                 {@link org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.ProcessModel} or
+     *                 {@link Activity}.
      * @param parent   The parent {@link ActivityElement}.
      * @param settings The associated {@link Settings}.
      */

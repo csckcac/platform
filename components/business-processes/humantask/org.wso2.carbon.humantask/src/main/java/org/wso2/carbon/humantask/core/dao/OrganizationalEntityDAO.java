@@ -25,19 +25,19 @@ public interface OrganizationalEntityDAO {
         GROUP
     }
 
-    public Long getId();
+    Long getId();
 
-    public void setName(String name);
+    void setName(String name);
 
-    public String getName();
+    String getName();
 
-    public void setOrgEntityType(OrganizationalEntityType orgEntityType);
+    void setOrgEntityType(OrganizationalEntityType orgEntityType);
 
-    public void addGenericHumanRole(GenericHumanRoleDAO genericHumanRole);
+    void addGenericHumanRole(GenericHumanRoleDAO genericHumanRole);
 
-    public List<GenericHumanRoleDAO> getGenericHumanRoles();
+    List<GenericHumanRoleDAO> getGenericHumanRoles();
 
-    public void setGenericHumanRoles(List<GenericHumanRoleDAO> genericHumanRoleDAOs);
+    void setGenericHumanRoles(List<GenericHumanRoleDAO> genericHumanRoleDAOs);
 
-    public OrganizationalEntityType getOrgEntityType();
+    OrganizationalEntityType getOrgEntityType();
 }

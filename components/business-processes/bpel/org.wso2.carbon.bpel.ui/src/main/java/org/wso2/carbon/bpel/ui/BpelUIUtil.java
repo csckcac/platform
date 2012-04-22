@@ -713,21 +713,18 @@ public final class BpelUIUtil {
 
     public static String isProcessStateChecked(DeploymentDescriptorUpdater deployDescriptorUpdater,
                                                String processState) {
-
-        if (deployDescriptorUpdater.getProcessstate() != null) {
-            if (deployDescriptorUpdater.getProcessstate().equalsIgnoreCase(processState)) {
-                return CHECKED;
-            }
+        if (deployDescriptorUpdater.getProcessstate() != null &&
+                deployDescriptorUpdater.getProcessstate().equalsIgnoreCase(processState)) {
+            return CHECKED;
         }
         return "";
     }
 
     public static String isGenerateTypeChecked(DeploymentDescriptorUpdater deployDescriptorUpdater,
                                                String genType) {
-        if (deployDescriptorUpdater.getGentype() != null) {
-            if (deployDescriptorUpdater.getGentype().equalsIgnoreCase(genType)) {
-                return CHECKED;
-            }
+        if (deployDescriptorUpdater.getGentype() != null &&
+                deployDescriptorUpdater.getGentype().equalsIgnoreCase(genType)) {
+            return CHECKED;
         }
         return "";
     }
@@ -745,10 +742,9 @@ public final class BpelUIUtil {
 
     public static String isInMemoryTypeChecked(DeploymentDescriptorUpdater deployDescriptorUpdater,
                                                String inMemory) {
-        if (deployDescriptorUpdater.getInmemorystatus() != null) {
-            if (deployDescriptorUpdater.getInmemorystatus().equalsIgnoreCase(inMemory)) {
-                return CHECKED;
-            }
+        if (deployDescriptorUpdater.getInmemorystatus() != null &&
+                deployDescriptorUpdater.getInmemorystatus().equalsIgnoreCase(inMemory)) {
+            return CHECKED;
         }
         return "";
     }
@@ -790,16 +786,13 @@ public final class BpelUIUtil {
         ListIterator<String> it = valueArray.listIterator();
         while (it.hasNext()) {
             String nextVal = it.next();
-            if (!nextVal.equalsIgnoreCase("0")) {
-                if (it.hasNext()) {
-                    it.next();
-                    it.remove();
-                }
+            if (!nextVal.equalsIgnoreCase("0") && it.hasNext()) {
+                it.next();
+                it.remove();
             }
         }
 
         String[] allEnabledEvents = valueArray.toArray(new String[valueArray.size()]);
-        int i = 0;
         ScopeEventType[] scopeEventTypes = new ScopeEventType[scopeNames.size()];
         for (int j = 0; j < scopeNames.size(); j++) {
             ScopeEventType scopeEventType = new ScopeEventType();

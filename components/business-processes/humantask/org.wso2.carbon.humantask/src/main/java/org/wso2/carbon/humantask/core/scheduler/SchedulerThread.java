@@ -180,7 +180,7 @@ class SchedulerThread implements Runnable {
     public void clearTasks(final Class<? extends Task> tasktype) {
         lock.lock();
         try {
-            CollectionsX.remove_if(todo, new MemberOfFunction<Task>() {
+            CollectionsX.removeIf(todo, new MemberOfFunction<Task>() {
                 @Override
                 public boolean isMember(Task o) {
                     return tasktype.isAssignableFrom(o.getClass());

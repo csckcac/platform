@@ -30,17 +30,17 @@ public interface HumanTaskDAOConnectionFactoryJDBC extends HumanTaskDAOConnectio
      *  Set the datasource
      * @param dataSource : The datasource.
      */
-    public void setDataSource(DataSource dataSource);
+    void setDataSource(DataSource dataSource);
 
     /**
      * The transaction manager.
      * @param tnxManager : The transaction manager to set.
      */
-    public void setTransactionManager(TransactionManager tnxManager);
+    void setTransactionManager(TransactionManager tnxManager);
 
     /**
      * TODO
      * @param propertiesMap
      */
-    public void setDAOConnectionFactoryProperties(Map<String, Object> propertiesMap);
+    void setDAOConnectionFactoryProperties(Map<String, Object> propertiesMap);
 }

@@ -34,26 +34,26 @@ public interface EvaluationContext {
      * Return the input message to the task.
      * @return Message
      */
-    public MessageDAO getInput();
+    MessageDAO getInput();
 
     /**
      * Return generic human role of give type
      * @param ghrType generic human role type
      * @return generic human role
      */
-    public GenericHumanRoleDAO getGenericHumanRole(GenericHumanRoleDAO.GenericHumanRoleType ghrType);
+    GenericHumanRoleDAO getGenericHumanRole(GenericHumanRoleDAO.GenericHumanRoleType ghrType);
 
     /**
      * Return the namespace context for the current task
      * @return NamespaceContext
      * @throws Exception :
      */
-    public NamespaceContext getNameSpaceContextOfTask() throws Exception;
+    NamespaceContext getNameSpaceContextOfTask() throws Exception;
 
     /**
      * Get the root node of the payload to task
      * @return Node DOM node
      * @throws Exception :
      */
-    public Node getRootNode() throws Exception;
+    Node getRootNode() throws Exception;
 }

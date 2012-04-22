@@ -25,58 +25,57 @@ import java.util.List;
 
 /**
  * This interface provides methods to access the {@link ProcessInstance}s stored at the workflow engine.
- * 
+ *
  * @author Gregor Latuske
  */
-public interface ProcessInstanceService<M>
-	extends Service, ProcessInstanceStatusMapping<M> {
+public interface ProcessInstanceService<M> extends Service, ProcessInstanceStatusMapping<M> {
 
     /**
      * Returns the ProcessInstance for the given instance ID.
      *
      * @param instanceId Process instance id
      * @return ProcessInstance
-     * @throws org.wso2.carbon.bpel.ui.bpel2svg.latest.wso2.service.InstanceNotFoundException If the
-     * instance is not found
-     *
+     * @throws org.wso2.carbon.bpel.ui.bpel2svg.latest.wso2.service.InstanceNotFoundException
+     *          If the
+     *          instance is not found
      */
-    public ProcessInstance getProcessInstance(String instanceId) throws InstanceNotFoundException;
+    ProcessInstance getProcessInstance(String instanceId) throws InstanceNotFoundException;
 
-	/**
-	 * Returns all {@link ProcessInstance}s stored in the workflow engine to the given {@link ProcessModel}s.
-	 *
-	 * @param processModels The {@link ProcessModel}s whose {@link ProcessInstance}s should be retrieved.
-	 * @return All {@link ProcessInstance}s stored in the workflow engine to the given {@link ProcessModel}s.
-	 * @throws BPIException If error occurred while fetching the process instances
-	 */
-	public List<ProcessInstance> getProcessInstances(List<ProcessModel> processModels) throws BPIException;
+    /**
+     * Returns all {@link ProcessInstance}s stored in the workflow engine to the given {@link ProcessModel}s.
+     *
+     * @param processModels The {@link ProcessModel}s whose {@link ProcessInstance}s should be retrieved.
+     * @return All {@link ProcessInstance}s stored in the workflow engine to the given {@link ProcessModel}s.
+     * @throws BPIException If error occurred while fetching the process instances
+     */
+    List<ProcessInstance> getProcessInstances(List<ProcessModel> processModels) throws BPIException;
 
-	/**
-	 * Returns all {@link ProcessInstance}s stored in the workflow engine to the given {@link ProcessModel}.
-	 * 
-	 * @param processModel The {@link ProcessModel} whose {@link ProcessInstance}s should be retrieved.
-	 * @return All {@link ProcessInstance}s stored in the workflow engine to the given {@link ProcessModel}.
-	 * @throws BPIException If error occurred while fetching the process instance
-	 */
-	public List<ProcessInstance> getProcessInstances(ProcessModel processModel) throws BPIException;
+    /**
+     * Returns all {@link ProcessInstance}s stored in the workflow engine to the given {@link ProcessModel}.
+     *
+     * @param processModel The {@link ProcessModel} whose {@link ProcessInstance}s should be retrieved.
+     * @return All {@link ProcessInstance}s stored in the workflow engine to the given {@link ProcessModel}.
+     * @throws BPIException If error occurred while fetching the process instance
+     */
+    List<ProcessInstance> getProcessInstances(ProcessModel processModel) throws BPIException;
 
-	/**
-	 * Factory class to create a {@link ProcessInstanceService}.
-	 * 
-	 * @author Gregor Latuske
-	 */
-	class ProcessInstanceServiceFactory
-		implements ServiceFactory<ProcessInstanceService<?>> {
+    /**
+     * Factory class to create a {@link ProcessInstanceService}.
+     *
+     * @author Gregor Latuske
+     */
+    class ProcessInstanceServiceFactory implements ServiceFactory<ProcessInstanceService<?>> {
 
-		/** {@inheritDoc} */
-		@Override
-		public ProcessInstanceService<?> createService() throws BPIException {
-			try {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public ProcessInstanceService<?> createService() throws BPIException {
+            try {
                 return new ProcessInstanceServiceImpl();
-			} catch (Exception t) {
-				throw new BPIException(t);
-			}
-		}
-	}
-
+            } catch (Exception t) {
+                throw new BPIException(t);
+            }
+        }
+    }
 }

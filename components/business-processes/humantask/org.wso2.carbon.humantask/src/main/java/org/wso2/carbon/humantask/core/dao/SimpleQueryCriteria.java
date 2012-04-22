@@ -25,8 +25,6 @@ import java.util.List;
  */
 
 public class SimpleQueryCriteria {
-
-
     /**
      * The query order criteria.
      */

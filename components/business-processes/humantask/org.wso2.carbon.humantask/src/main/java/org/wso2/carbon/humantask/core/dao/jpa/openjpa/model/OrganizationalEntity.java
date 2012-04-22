@@ -20,7 +20,6 @@ import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
 import org.wso2.carbon.humantask.core.dao.OrganizationalEntityDAO;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,6 +97,6 @@ public class OrganizationalEntity extends OpenJPAEntity implements Organizationa
     @Override
     public int hashCode() {
         return (int) (((long) this.id.hashCode()) +
-                      this.getClass().getCanonicalName().hashCode());
+                this.getClass().getCanonicalName().hashCode());
     }
 }

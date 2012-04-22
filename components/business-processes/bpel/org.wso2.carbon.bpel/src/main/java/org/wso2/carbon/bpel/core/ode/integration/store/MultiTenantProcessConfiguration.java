@@ -30,5 +30,5 @@ public interface MultiTenantProcessConfiguration {
      *
      * @return ConfigurationContext of the tenant
      */
-    public ConfigurationContext getTenantConfigurationContext();
+    ConfigurationContext getTenantConfigurationContext();
 }

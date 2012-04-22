@@ -64,14 +64,12 @@ public final class ArchiveExtractor {
                 }
 
                 File destFile = new File(destination, entry.getName());
-                if (!destFile.getParentFile().exists()) {
-                    if(!(destFile.getParentFile().mkdirs())) {
-                        String errMsg = "Creating directory: " +
-                                destFile.getParentFile().getName() +
-                                " while extracting the archive: " + file.getName();
-                        log.error(errMsg);
-                        throw new Exception(errMsg);
-                    }
+                if (!destFile.getParentFile().exists() && !(destFile.getParentFile().mkdirs())) {
+                    String errMsg = "Creating directory: " +
+                            destFile.getParentFile().getName() +
+                            " while extracting the archive: " + file.getName();
+                    log.error(errMsg);
+                    throw new Exception(errMsg);
                 }
                 copyInputStream(zipStream, new BufferedOutputStream(new FileOutputStream(destFile)));
             }

@@ -9,15 +9,13 @@ import java.util.List;
  * The people query functionality.
  */
 public interface PeopleQueryEvaluator {
-
-
     /**
      * Check whether if the given username exist in the user store.
      *
      * @param userName : The user name to be checked.
      * @return : true if the user exist.
      */
-    public boolean isExistingUser(String userName);
+    boolean isExistingUser(String userName);
 
     /**
      * Check whether if the given roleName exists in the user store.
@@ -25,7 +23,7 @@ public interface PeopleQueryEvaluator {
      * @param roleName : The roleName to be checked.
      * @return : true if the roleName exists in the user store.
      */
-    public boolean isExistingRole(String roleName);
+    boolean isExistingRole(String roleName);
 
     /**
      * Checks whether the are users for the given roleName.
@@ -33,7 +31,7 @@ public interface PeopleQueryEvaluator {
      * @param roleName : The role name.
      * @return : True if there are users for the given roleName. false otherwise.
      */
-    public boolean hasUsersForRole(String roleName);
+    boolean hasUsersForRole(String roleName);
 
     /**
      * Returns the list of user names in the user store for the given role name.
@@ -41,7 +39,7 @@ public interface PeopleQueryEvaluator {
      * @param roleName : The role name.
      * @return : The list of user names for the given role name.
      */
-    public List<String> getUserNameListForRole(String roleName);
+    List<String> getUserNameListForRole(String roleName);
 
     /**
      * Returns the list of matching roles for a given user name.
@@ -49,8 +47,7 @@ public interface PeopleQueryEvaluator {
      * @param userName : The user name to get the list of roles.
      * @return : The list of matching role names.
      */
-    public List<String> getRoleNameListForUser(String userName);
-
+    List<String> getRoleNameListForUser(String userName);
 
     /**
      * Creates a new org entity object for the given roleName
@@ -58,7 +55,7 @@ public interface PeopleQueryEvaluator {
      * @param roleName : The name of the role.
      * @return : the created object.
      */
-    public OrganizationalEntityDAO createGroupOrgEntityForRole(String roleName);
+    OrganizationalEntityDAO createGroupOrgEntityForRole(String roleName);
 
     /**
      * Creates a new org entity object for the given user name
@@ -66,7 +63,7 @@ public interface PeopleQueryEvaluator {
      * @param userName : The name of the user.
      * @return : the created object.
      */
-    public OrganizationalEntityDAO createUserOrgEntityForName(String userName);
+    OrganizationalEntityDAO createUserOrgEntityForName(String userName);
 
     /**
      * Creates the GenericHumanRoleDAO object for the given role and the role type.
@@ -75,16 +72,15 @@ public interface PeopleQueryEvaluator {
      * @param type     : The type of the human role.
      * @return : the created GenericHumanRoleDAO object.
      */
-    public GenericHumanRoleDAO createGHRForRoleName(String roleName,
-                                                    GenericHumanRoleDAO.GenericHumanRoleType type);
+    GenericHumanRoleDAO createGHRForRoleName(String roleName,
+                                             GenericHumanRoleDAO.GenericHumanRoleType type);
 
     /**
      * checks if the given list of orgEntities exists in the user store.
      *
      * @param orgEntities : The list of orgEntities to be checked.
      */
-    public void checkOrgEntitiesExist(List<OrganizationalEntityDAO> orgEntities);
-
+    void checkOrgEntitiesExist(List<OrganizationalEntityDAO> orgEntities);
 
     /**
      * checks if the given list orgEntity exists in the user store.
@@ -92,9 +88,9 @@ public interface PeopleQueryEvaluator {
      * @param orgEntity : The orgEntity to be checked.
      * @throws : @see: HumanTaskRuntimeException if the org entities does not exist.
      */
-    public void checkOrgEntityExists(OrganizationalEntityDAO orgEntity);
+    void checkOrgEntityExists(OrganizationalEntityDAO orgEntity);
 
-    public boolean isOrgEntityInRole(OrganizationalEntityDAO entity,
+    boolean isOrgEntityInRole(OrganizationalEntityDAO entity,
                                      GenericHumanRoleDAO role);
 
     /**
@@ -102,5 +98,5 @@ public interface PeopleQueryEvaluator {
      *
      * @return : The user name of the logged in user.
      */
-    public String getLoggedInUser();
+    String getLoggedInUser();
 }

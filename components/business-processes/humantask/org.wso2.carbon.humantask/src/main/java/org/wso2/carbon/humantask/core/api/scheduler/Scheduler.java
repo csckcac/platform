@@ -130,7 +130,7 @@ public interface Scheduler {
      * When the task reaches a final state (Completed, Failed, Error, Exited, Obsolete) all deadlines should be deleted
      * @param taskId Task ID
      */
-    public void cancelJobsForTask(long taskId);
+    void cancelJobsForTask(long taskId);
 
     /**
      * Update the schedule time for a job
@@ -142,7 +142,7 @@ public interface Scheduler {
      * @throws InvalidUpdateRequestException If the requested time
      * has already passed.
      */
-    public void updateJob(Long taskId, String name, Long time)
+    void updateJob(Long taskId, String name, Long time)
             throws InvalidJobsInDbException, InvalidUpdateRequestException;
 
 /**

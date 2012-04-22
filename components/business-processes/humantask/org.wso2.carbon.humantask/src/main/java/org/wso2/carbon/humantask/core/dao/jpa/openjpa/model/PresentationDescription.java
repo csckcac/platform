@@ -21,7 +21,6 @@ import org.wso2.carbon.humantask.core.dao.PresentationDescriptionDAO;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import java.io.Serializable;
 
 /**
  * Domain Object for Presentation Description. Holds the content type.
@@ -29,7 +28,7 @@ import java.io.Serializable;
 @Entity
 @DiscriminatorValue("PDESC")
 public final class PresentationDescription extends PresentationElement implements
-                                                                       PresentationDescriptionDAO{
+        PresentationDescriptionDAO {
     @Column(name = "CONTENT_TYPE")
     private String contentType = "text/plain";
 

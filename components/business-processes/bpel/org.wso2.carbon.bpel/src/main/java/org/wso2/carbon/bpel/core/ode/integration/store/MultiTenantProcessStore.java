@@ -36,7 +36,7 @@ public interface MultiTenantProcessStore {
      *                                   process store.
      * @return TenantProcessStore instance
      */
-    public TenantProcessStore createProcessStoreForTenant(ConfigurationContext tenantConfigurationContext);
+    TenantProcessStore createProcessStoreForTenant(ConfigurationContext tenantConfigurationContext);
 
     /**
      * There should be a directory for each tenant where, deployer used to extract deployed
@@ -45,7 +45,7 @@ public interface MultiTenantProcessStore {
      *
      * @return Parent directory of tenant specific process stores.
      */
-    public File getLocalDeploymentUnitRepo();
+    File getLocalDeploymentUnitRepo();
 
     /**
      * Returns the process store for specific tenant.
@@ -53,7 +53,7 @@ public interface MultiTenantProcessStore {
      * @param tenantId tenant ID
      * @return TenantProcessStore object.
      */
-    public TenantProcessStore getTenantsProcessStore(Integer tenantId);
+    TenantProcessStore getTenantsProcessStore(Integer tenantId);
 
     /**
      * Get tenant id of the given process
@@ -61,7 +61,7 @@ public interface MultiTenantProcessStore {
      * @param pid QName of the process
      * @return Tenant id of the process
      */
-    public Integer getTenantId(QName pid);
+    Integer getTenantId(QName pid);
 
-    public void removeFromProcessToTenantMap(QName pid);
+    void removeFromProcessToTenantMap(QName pid);
 }

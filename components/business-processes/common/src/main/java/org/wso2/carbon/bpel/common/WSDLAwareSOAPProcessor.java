@@ -61,8 +61,8 @@ public class WSDLAwareSOAPProcessor {
     private MessageContext inMessageCtx;
 
     private int tenantId;
-    final static String WSDL_4_J_DEFINITION = "wsdl4jDefinition";
-    final static String WSDL_BINDING_STYLE_RPC = "rpc";
+    private static final String WSDL_4_J_DEFINITION = "wsdl4jDefinition";
+    private static final String WSDL_BINDING_STYLE_RPC = "rpc";
 
     public WSDLAwareSOAPProcessor(MessageContext inMsgCtx) throws AxisFault {
         QName bindingQName;

@@ -82,10 +82,9 @@ public class HumanTaskDeploymentUnit {
     }
 
     public TTask[] getTasks() {
-        if (humanInteraction.getHumanInteractions().isSetTasks()) {
-            if (humanInteraction.getHumanInteractions().getTasks().sizeOfTaskArray() > 0) {
-                return humanInteraction.getHumanInteractions().getTasks().getTaskArray();
-            }
+        if (humanInteraction.getHumanInteractions().isSetTasks() &&
+                humanInteraction.getHumanInteractions().getTasks().sizeOfTaskArray() > 0) {
+            return humanInteraction.getHumanInteractions().getTasks().getTaskArray();
         }
         return null;
     }
@@ -111,10 +110,9 @@ public class HumanTaskDeploymentUnit {
     }
 
     public TNotification[] getNotifications() {
-        if (humanInteraction.getHumanInteractions().isSetNotifications()) {
-            if (humanInteraction.getHumanInteractions().getNotifications().sizeOfNotificationArray() > 0) {
-                return humanInteraction.getHumanInteractions().getNotifications().getNotificationArray();
-            }
+        if (humanInteraction.getHumanInteractions().isSetNotifications() &&
+                humanInteraction.getHumanInteractions().getNotifications().sizeOfNotificationArray() > 0) {
+            return humanInteraction.getHumanInteractions().getNotifications().getNotificationArray();
         }
         return null;
     }

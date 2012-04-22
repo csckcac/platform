@@ -564,11 +564,11 @@ public class ProcessStoreImpl implements ProcessStore, MultiTenantProcessStore {
     }
 
     public void setRetiredPackage(String packageName, boolean retired) {
-        ArrayList<QName> processes = deploymentUnitToProcessesMap.get(packageName);
-        if (processes == null) {
+        ArrayList<QName> processList = deploymentUnitToProcessesMap.get(packageName);
+        if (processList == null) {
             throw new ContextException("Couldn't find the package " + packageName);
         }
-        for (QName pid : processes) {
+        for (QName pid : processList) {
             setState(pid, retired ? ProcessState.RETIRED : ProcessState.ACTIVE);
         }
     }

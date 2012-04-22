@@ -23,7 +23,7 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- *  The expression language runtime for evaluation operations.
+ * The expression language runtime for evaluation operations.
  */
 public interface ExpressionLanguageRuntime {
 
@@ -34,7 +34,7 @@ public interface ExpressionLanguageRuntime {
      * @param evalCtx Evaluation context containing all the required context information
      * @return Return List of selected nodes or string
      */
-    public List evaluate(String exp, EvaluationContext evalCtx);
+    List evaluate(String exp, EvaluationContext evalCtx);
 
     /**
      * Evaluate given XPath string and returns result as a string
@@ -43,7 +43,7 @@ public interface ExpressionLanguageRuntime {
      * @param evalCtx Evaluation context containing all the required context information
      * @return String
      */
-    public String evaluateAsString(String exp, EvaluationContext evalCtx);
+    String evaluateAsString(String exp, EvaluationContext evalCtx);
 
     /**
      * Evaluate given XPath string and returns the result as Date
@@ -52,7 +52,7 @@ public interface ExpressionLanguageRuntime {
      * @param evalCtx Evaluation context containing all the required context information
      * @return Calendar
      */
-    public Calendar evaluateAsDate(String exp, EvaluationContext evalCtx);
+    Calendar evaluateAsDate(String exp, EvaluationContext evalCtx);
 
     /**
      * Evaluate given XPath string and returns the result as Date
@@ -61,7 +61,7 @@ public interface ExpressionLanguageRuntime {
      * @param evalCtx Evaluation context containing all the required context information
      * @return Duration
      */
-    public Duration evaluateAsDuration(String exp, EvaluationContext evalCtx);
+    Duration evaluateAsDuration(String exp, EvaluationContext evalCtx);
 
     /**
      * Evaluate given XPath string and returns the result as boolean
@@ -70,7 +70,7 @@ public interface ExpressionLanguageRuntime {
      * @param evalCtx Evaluation context containing all the required context information
      * @return boolean
      */
-    public boolean evaluateAsBoolean(String exp, EvaluationContext evalCtx);
+    boolean evaluateAsBoolean(String exp, EvaluationContext evalCtx);
 
     /**
      * Evaluate given XPath and returns the results as a java.lang.Number
@@ -79,7 +79,7 @@ public interface ExpressionLanguageRuntime {
      * @param evalCtx Evaluation context containing all the required context information
      * @return Number
      */
-    public Number evaluateAsNumber(String exp, EvaluationContext evalCtx);
+    Number evaluateAsNumber(String exp, EvaluationContext evalCtx);
 
     /**
      * Evaluate the expression returns an Element
@@ -88,8 +88,6 @@ public interface ExpressionLanguageRuntime {
      * @param partName Name of the part
      * @param evalCtx  EvaluationContext
      * @return Part as an Node
-     * @throws org.wso2.carbon.humantask.core.engine.HumanTaskException if expression select
-     * multiple nodes or 0 nodes
      */
     Node evaluateAsPart(String exp, String partName, EvaluationContext evalCtx);
 }

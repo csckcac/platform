@@ -21,7 +21,7 @@ package org.wso2.carbon.humantask.core.dao;
  */
 public interface PresentationParameterDAO {
 
-        public static enum Type{
+    public static enum Type {
         XSD_STRING,
         XSD_INT,
         XSD_BOOL,
@@ -31,23 +31,21 @@ public interface PresentationParameterDAO {
         XSD_ANYTYPE
     }
 
-    public Long getId();
+    Long getId();
 
-    public String getName();
+    String getName();
 
-    public String getValue();
+    String getValue();
 
-    public void setValue(String value);
+    void setValue(String value);
 
-    public Type getType();
+    Type getType();
 
-    public void setId(Long id);
+    void setId(Long id);
 
-    public void setName(String name);
+    void setName(String name);
 
-    public void setTask(TaskDAO task);
+    void setTask(TaskDAO task);
 
-    public void setType(Type type);
-
-
+    void setType(Type type);
 }

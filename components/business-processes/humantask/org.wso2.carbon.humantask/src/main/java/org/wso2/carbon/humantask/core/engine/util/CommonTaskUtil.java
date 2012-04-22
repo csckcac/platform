@@ -147,14 +147,14 @@ public final class CommonTaskUtil {
 
         boolean hasPotentialOwners = false;
         for (GenericHumanRoleDAO humanRoleDAO : task.getHumanRoles()) {
-            if (GenericHumanRoleDAO.GenericHumanRoleType.POTENTIAL_OWNERS.equals(humanRoleDAO.getType())) {
-                if (humanRoleDAO.getOrgEntities() != null && humanRoleDAO.getOrgEntities().size() > 0) {
-                    try {
-                        pqe.checkOrgEntitiesExist(humanRoleDAO.getOrgEntities());
-                        hasPotentialOwners = true;
-                    } catch (HumanTaskRuntimeException ex) {
-                        hasPotentialOwners = false;
-                    }
+            if (GenericHumanRoleDAO.GenericHumanRoleType.POTENTIAL_OWNERS.
+                    equals(humanRoleDAO.getType()) && humanRoleDAO.getOrgEntities() != null &&
+                    humanRoleDAO.getOrgEntities().size() > 0) {
+                try {
+                    pqe.checkOrgEntitiesExist(humanRoleDAO.getOrgEntities());
+                    hasPotentialOwners = true;
+                } catch (HumanTaskRuntimeException ex) {
+                    hasPotentialOwners = false;
                 }
             }
         }
@@ -174,11 +174,10 @@ public final class CommonTaskUtil {
                                                                GenericHumanRoleDAO.GenericHumanRoleType type) {
         OrganizationalEntityDAO matchingUser = null;
         for (GenericHumanRoleDAO humanRoleDAO : task.getHumanRoles()) {
-            if (type.equals(humanRoleDAO.getType())) {
-                if (humanRoleDAO.getOrgEntities() != null && humanRoleDAO.getOrgEntities().size() == 1) {
-                    matchingUser = humanRoleDAO.getOrgEntities().get(0);
-                    break;
-                }
+            if (type.equals(humanRoleDAO.getType()) && humanRoleDAO.getOrgEntities() != null &&
+                    humanRoleDAO.getOrgEntities().size() == 1) {
+                matchingUser = humanRoleDAO.getOrgEntities().get(0);
+                break;
             }
         }
         return matchingUser;

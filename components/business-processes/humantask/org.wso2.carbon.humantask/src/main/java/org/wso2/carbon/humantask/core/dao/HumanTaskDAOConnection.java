@@ -36,7 +36,7 @@ public interface HumanTaskDAOConnection {
      * @return : The created task.
      * @throws org.wso2.carbon.humantask.core.engine.HumanTaskException :
      */
-    public TaskDAO createTask(TaskCreationContext creationContext) throws HumanTaskException;
+    TaskDAO createTask(TaskCreationContext creationContext) throws HumanTaskException;
 
     /**
      * Retrieves the given task with it's children ( comments, events, etc).
@@ -46,7 +46,7 @@ public interface HumanTaskDAOConnection {
      * @param taskId : The id of the task to be retrieved.
      * @return : The retrieved task.
      */
-    public TaskDAO getTask(Long taskId);
+    TaskDAO getTask(Long taskId);
 
     /**
      * Retrieves the list of tasks for the given user name.
@@ -54,22 +54,22 @@ public interface HumanTaskDAOConnection {
      * @param userName : The user name for whom the tasks should be retrieved.
      * @return : The list of matching tasks for the user.
      */
-    public List<TaskDAO> getTasksForUser(String userName);
+    List<TaskDAO> getTasksForUser(String userName);
 
     /**
      * Creates the MessageDAO from the given WSDLAwareMessage.
      *
-     * @param wsdlAwareMessage : The input message.
+     * @param taskCreationContext : The input message context.
      * @return : The constructed MessageDAO.
      */
-    public MessageDAO createMessage(TaskCreationContext taskCreationContext);
+    MessageDAO createMessage(TaskCreationContext taskCreationContext);
 
     /**
      * Creates an empty MessageDAO object of the specific impl.
      *
      * @return : The constructed MessageDAO.
      */
-    public MessageDAO createMessage();
+    MessageDAO createMessage();
 
     /**
      * Creates a new OrganizationalEntityDAO for the given username and the type.
@@ -80,7 +80,7 @@ public interface HumanTaskDAOConnection {
      * @param type     : The type of the org entity.
      * @return : The created org entity.
      */
-    public OrganizationalEntityDAO createNewOrgEntityObject(String userName,
+    OrganizationalEntityDAO createNewOrgEntityObject(String userName,
                                                             OrganizationalEntityDAO.OrganizationalEntityType type);
 
     /**
@@ -89,7 +89,7 @@ public interface HumanTaskDAOConnection {
      * @param type : The role type.
      * @return : The created role object.
      */
-    public GenericHumanRoleDAO createNewGHRObject(GenericHumanRoleDAO.GenericHumanRoleType type);
+    GenericHumanRoleDAO createNewGHRObject(GenericHumanRoleDAO.GenericHumanRoleType type);
 
     /**
      * Create a new CommentDAO object.
@@ -97,7 +97,7 @@ public interface HumanTaskDAOConnection {
      * @param commentedByUserName : The commented user name.
      * @return : The created comment object.
      */
-    public CommentDAO getCommentDAO(String commentString, String commentedByUserName);
+    CommentDAO getCommentDAO(String commentString, String commentedByUserName);
 
     /**
      * Make the tast status OBSOLETE for the tasks with the give name and the tenant Id.
@@ -105,7 +105,7 @@ public interface HumanTaskDAOConnection {
      * @param taskName : The task name for whose instances are to be made obsolete.
      * @param tenantId : The tenant id of the task.
      */
-    public void obsoleteTasks(String taskName, Integer tenantId);
+    void obsoleteTasks(String taskName, Integer tenantId);
 
 
     /**
@@ -113,20 +113,20 @@ public interface HumanTaskDAOConnection {
      *
      * @param queryCriteria : The query criteria for which the matching tasks should be deleted.
      */
-    public void removeTasks(SimpleQueryCriteria queryCriteria);
+    void removeTasks(SimpleQueryCriteria queryCriteria);
 
     /**
      * Create a Deadline
      * @return DeadLine
      */
-    public DeadlineDAO createDeadline();
+    DeadlineDAO createDeadline();
 
     /**
      * Performs a simple task query.
      * @param simpleQueryCriteria : The query criteria.
      * @return : The matching task list.
      */
-    public List<TaskDAO> simpleTaskQuery(SimpleQueryCriteria simpleQueryCriteria);
+    List<TaskDAO> simpleTaskQuery(SimpleQueryCriteria simpleQueryCriteria);
 
     /**
      * Search the matching tasks for a given set of criteria.
@@ -134,13 +134,13 @@ public interface HumanTaskDAOConnection {
      * @param queryCriteria : The Query criteria.
      * @return : The matching tasks.
      */
-    public List<TaskDAO> searchTasks(SimpleQueryCriteria queryCriteria);
+    List<TaskDAO> searchTasks(SimpleQueryCriteria queryCriteria);
 
     /**
      * Create a new job
      * @return HumanTaskJobDAO
      */
-    public HumanTaskJobDAO createHumanTaskJobDao();
+    HumanTaskJobDAO createHumanTaskJobDao();
 
 
 /**
@@ -193,16 +193,16 @@ public interface HumanTaskDAOConnection {
 
    // public void acquireTransactionLocks();
 
-    public int deleteAllJobs();
+    int deleteAllJobs();
 
-    public boolean delete(String jobId, String nodeId);
+    boolean delete(String jobId, String nodeId);
 
     /**
      * Delete jobs for the specified task and returns the list of jobIds
      * @param taskId Task Id
      * @return List of job ids corresponding to the deleted jobs
      */
-    public List<Long> deleteJobsForTask(Long taskId);
+    List<Long> deleteJobsForTask(Long taskId);
 
     /**
      * Update the schedule time for a job
@@ -217,7 +217,7 @@ public interface HumanTaskDAOConnection {
      * @throws org.wso2.carbon.humantask.core.api.scheduler.InvalidJobsInDbException If there are two or more
      *          jobs are selected for the Task Id
      */
-    public Long updateJob(Long taskId, String name, boolean immediate, boolean nearFuture,
+    Long updateJob(Long taskId, String name, boolean immediate, boolean nearFuture,
                           String nodeId, Long time)
             throws InvalidJobsInDbException;
 
@@ -225,12 +225,13 @@ public interface HumanTaskDAOConnection {
      * Return the Entity Manager
      * @return EntityManager
      */
-    public EntityManager getEntityManager();
+    EntityManager getEntityManager();
 
 
     /**
      * Creates a new EventDAO object.
-     * @return :
+     * @param task TaskDAO
+     * @return EventDAO
      */
-    public EventDAO createNewEventObject(TaskDAO task);
+    EventDAO createNewEventObject(TaskDAO task);
 }

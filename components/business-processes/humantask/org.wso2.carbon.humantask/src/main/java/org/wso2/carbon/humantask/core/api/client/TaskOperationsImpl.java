@@ -1429,7 +1429,7 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                                 log.error("Error occurred when converting the output to OMElement",
                                         e);
                                 throw new IllegalStateFault("Error occurred when converting the " +
-                                        "output to OMElement");
+                                        "output to OMElement", e);
                             }
                         }
                     });

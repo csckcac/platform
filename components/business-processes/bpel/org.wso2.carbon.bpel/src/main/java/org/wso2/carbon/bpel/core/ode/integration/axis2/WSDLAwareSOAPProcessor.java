@@ -60,8 +60,8 @@ public class WSDLAwareSOAPProcessor {
     private Binding wsdlBinding;
     private MessageContext inMessageCtx;
 
-    final static String WSDL_4_J_DEFINITION = "wsdl4jDefinition";
-    final static String WSDL_BINDING_STYLE_RPC = "rpc";
+    private static final String WSDL_4_J_DEFINITION = "wsdl4jDefinition";
+    private static final String WSDL_BINDING_STYLE_RPC = "rpc";
 
     private boolean soap12 = false;
 

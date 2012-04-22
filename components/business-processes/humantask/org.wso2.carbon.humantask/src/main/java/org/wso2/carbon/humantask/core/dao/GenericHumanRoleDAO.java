@@ -30,17 +30,17 @@ public interface GenericHumanRoleDAO {
         NOTIFICATION_RECIPIENTS
     }
 
-    public Long getId();
+    Long getId();
 
-    public GenericHumanRoleType getType();
+    GenericHumanRoleType getType();
 
-    public List<OrganizationalEntityDAO> getOrgEntities();
+    List<OrganizationalEntityDAO> getOrgEntities();
 
-    public void setOrgEntities(List<OrganizationalEntityDAO> orgEntities);
+    void setOrgEntities(List<OrganizationalEntityDAO> orgEntities);
 
-    public void setTask(TaskDAO task);
+    void setTask(TaskDAO task);
 
-    public void setType(GenericHumanRoleType type);
+    void setType(GenericHumanRoleType type);
 
-    public void addOrgEntity(OrganizationalEntityDAO orgEntity);
+    void addOrgEntity(OrganizationalEntityDAO orgEntity);
 }

@@ -43,18 +43,19 @@
 
     <script type="text/javascript">
 
-        function validateClassList() {
+        function validateEJBParams() {
             var remoteInterfaceClass = '';
             var beanJNDIName = document.getElementById('beanJNDIName').value;
 
-            var remoteInterfaces = document.getElementsByName("chkRemoteInterface");
+            var remoteInterfaceName = document.getElementById("selectRemoteInterface").value;
+            /*var remoteInterfaces = document.getElementsByName("chkRemoteInterface");
             for (var a = 0; a < remoteInterfaces.length; a++) {
                 if (remoteInterfaces[a].checked) {
                     remoteInterfaceClass = remoteInterfaces[a].value;
                 }
-            }
+            }*/
 
-            if (remoteInterfaceClass == null || wso2.wsf.Util.trim(remoteInterfaceClass) == "") {
+            if (remoteInterfaceName == "null") {
                 CARBON.showErrorDialog('<fmt:message key="please.enter.remote.interface.class"/>.');
                 return false;
             }
@@ -72,6 +73,13 @@
         function handleBackButton(){
             location.href = 'ejb_provider_wizard_step1.jsp?ordinal=1&providerUrl= + <%=jnpProviderUrl%>';
         }
+
+        function setServiceName(){
+            var remoteInterfaceName = document.getElementById("selectRemoteInterface").value;
+            document.getElementById("serviceName").value =
+                remoteInterfaceName.substring(remoteInterfaceName.lastIndexOf(".") + 1) +
+                Math.floor((Math.random()*100)+1);
+        }
     </script>
 
     <div id="middle">
@@ -79,111 +87,67 @@
         <h2><fmt:message key="create.new.ejb.service.step2"/></h2>
 
         <div id="workArea">
-                            <h5><fmt:message key="select.ejb.remote.interface"/></h5>
-                            <table class="styledLeft" id="selectEJBRemoteHomeInterfaces">
-                                <thead>
-                                    <tr>
-                                        <th><fmt:message key="class.name"/></th>
-                                        <th><fmt:message key="remote"/></th>
-                                        <%--<th><fmt:message key="home"/></th>--%>
-                                    </tr>
-                                </thead>
-
-                                <%
-                                    if (classNames == null || classNames[0].equals("")) {
-                                %>
-                                <tr>
-                                    <td><fmt:message key="no.classes.are.available.in.the.uploaded.jar"/></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <%
-                                } else {
-                                    for (String className : classNames) {
-                                %>
-                                <tr>
-                                    <td><%=className%>
-                                    </td>
-                                    <td><input
-                                            onclick="javascript:setRemoteInterfaceClass(this.value);"
-                                            value="<%=className%>"
-                                            name="chkRemoteInterface" type="radio"></td>
-                                </tr>
-                                <%
+            <%--<div class="sectionHelp">All the fields marked with * are mandatory</div>--%>
+            <div class="sectionSeperator"><fmt:message key="ejb.service.parameters"/></div>
+            <form name="addEJBDeployServerForm" method="post"
+                  action="deploy_ejb_service.jsp">
+                <div class=”sectionSub”>
+                    <table class="carbonFormTable">
+                        <tr>
+                            <td class="leftCol-med  labelField">
+                                <fmt:message key="remote.interface"/><span class="required">*</span>
+                            </td>
+                            <td class="labelField">
+                                <select onchange="setServiceName()" name="selectRemoteInterface"
+                                        id="selectRemoteInterface" tabindex="1">
+                                    <%
+                                        if (classNames == null || classNames[0].equals("")) {
+                                    %>
+                                            <option value="null"><fmt:message key="no.classes.are.available.in.the.uploaded.jar"/></option>
+                                    <%
+                                    } else {
+                                        for (String className : classNames) {
+                                    %>
+                                            <option value=<%=className%>><%=className%></option>
+                                    <%
+                                            }
                                         }
-                                    }
-                                %>
-
-                            </table>
-                    <br/>
-            
-                    <form name="addEJBDeployServerForm" method="post"
-                          action="deploy_ejb_service.jsp">
-                            <table class="styledLeft" id="addEJBDeployServerTable">
-                                <thead>
-                                    <tr>
-                                        <th colspan="2"><fmt:message key="ejb.details"/></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="tableOddRow">
-                                        <td><label for="remoteInterface"><fmt:message key="remote.interface"/><font
-                                                color="red">*</font></label></td>
-                                        <td><input
-                                                maxlength="100" size="70"
-                                                tabindex="6"
-                                                readonly="true" id="remoteInterface"
-                                                name="remoteInterface"
-                                                type="text"/></td>
-                                    </tr>
-                                    <tr  class="tableEvenRow">
-                                        <td><label for="beanJNDIName"><fmt:message key="bean.jndi.name"/><font
-                                                color="red">*</font></label></td>
-                                        <td><input
-                                                maxlength="100" size="70"
-                                                tabindex="7"
-                                                id="beanJNDIName" name="beanJNDIName"
-                                                type="text"/></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </br>
-                        <table class="styledLeft" id="addEJBServiceDetailsTable">
-                            <thead>
-                                <tr>
-                                    <th colspan="2"><fmt:message key="ejb.service.details"/></th>
-                                </tr>
-                                </thead>
-                            <tbody>
-                                <tr class="tableOddRow">
-                                    <td><label for="serviceName"><fmt:message key="service.name"/><font
-                                            color="red">*</font></label></td>
-                                    <td><input
-                                            maxlength="100" size="70" tabindex="8"
-                                            id="serviceName" name="serviceName" type="text"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="buttonRow" colspan="2">
-                                        <input name="back_1" type="button" tabindex="9"
-                                               value=" &lt; <fmt:message key="back"/>"
-                                               onclick="handleBackButton();return false;" class="button"/>
-                                        <input type="button" tabindex="10"
-                                               value="<fmt:message key="deploy.service"/>"
-                                               onclick="validateClassList()" class="button"/>
-                                        <input type="button" onClick="cancel()" tabindex="11"
-                                               value="<fmt:message key="cancel"/>" class="button"/>
-                                        <input type="hidden" id="archiveId" value="<%=archiveId%>"
-                                               name="archiveId"/>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </form>
+                                    %>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="leftCol-med labelField">
+                                <fmt:message key="bean.jndi.name"/><span class="required">*</span>
+                            </td>
+                            <td class="labelField">
+                                <input maxlength="100" size="60" name="beanJNDIName" type="text"
+                                       id="beanJNDIName" tabindex="2"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="leftCol-med  labelField">
+                                <fmt:message key="service.name"/><span class="required">*</span>
+                            </td>
+                            <td class="labelField">
+                                <input name="serviceName" type="text" id="serviceName" tabindex="3"/>
+                            </td>
+                        </tr>
+                    </table>
+            </div>
+            <div class="buttonRow">
+                <input name="back_1" type="button" tabindex="4"
+                       value=" &lt; <fmt:message key="back"/>"
+                       onclick="handleBackButton();return false;" class="button"/>
+                <input type="button" tabindex="5"
+                       value="<fmt:message key="deploy.service"/>"
+                       onclick="validateEJBParams()" class="button"/>
+                <input type="button" onClick="cancel()" tabindex="6"
+                       value="<fmt:message key="cancel"/>" class="button"/>
+                <input type="hidden" id="archiveId" value="<%=archiveId%>"
+                       name="archiveId"/>
+            </div>
+            </form>
         </div>
     </div>
-
-    <script type="text/javascript">
-        alternateTableRows('selectEJBRemoteHomeInterfaces', 'tableEvenRow', 'tableOddRow');
-    </script>
 </fmt:bundle>

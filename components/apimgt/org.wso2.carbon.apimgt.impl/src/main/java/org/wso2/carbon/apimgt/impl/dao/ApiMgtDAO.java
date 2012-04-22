@@ -496,14 +496,14 @@ public class ApiMgtDAO {
         try {
             conn = APIMgtDBUtils.getConnection();
            // String tenantAwareUsername = MultitenantUtils.getTenantAwareUsername(userId);
-            int tenantId;
-            try {
-                tenantId = IdentityUtil.getTenantIdOFUser(userId);
-            } catch (IdentityException e) {
-                String msg = "Failed to get tenant id of user : " + userId;
-                log.error(msg, e);
-                throw new APIManagementException(msg, e);
-            }
+//            int tenantId;
+//            try {
+//                tenantId = IdentityUtil.getTenantIdOFUser(userId);
+//            } catch (IdentityException e) {
+//                String msg = "Failed to get tenant id of user : " + userId;
+//                log.error(msg, e);
+//                throw new APIManagementException(msg, e);
+//            }
 
             //This query to update the AM_SUBSCRIPTION table
             String sqlQuery3 = "INSERT " +
@@ -1197,7 +1197,7 @@ public class ApiMgtDAO {
         try {
 
             conn = APIMgtDBUtils.getConnection();
-            String tenantAwareUsername = MultitenantUtils.getTenantAwareUsername(userId);
+            //String tenantAwareUsername = MultitenantUtils.getTenantAwareUsername(userId);
             int tenantId;
             try {
                 tenantId = IdentityUtil.getTenantIdOFUser(userId);

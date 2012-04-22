@@ -83,7 +83,7 @@ public final class APIMgtDBUtils {
             try {
                 dbConnection.close();
             } catch (SQLException e) {
-                log.warn("Database error. Could not close statement. Continuing with others. - " +
+                log.warn("Database error. Could not close database connection. Continuing with others. - " +
                         e.getMessage(), e);
             }
         }
@@ -94,7 +94,7 @@ public final class APIMgtDBUtils {
             try {
                 rs.close();
             } catch (SQLException e) {
-                log.warn("Database error. Could not close result set  - " + e.getMessage(), e);
+                log.warn("Database error. Could not close ResultSet  - " + e.getMessage(), e);
             }
         }
 
@@ -105,7 +105,7 @@ public final class APIMgtDBUtils {
             try {
                 preparedStatement.close();
             } catch (SQLException e) {
-                log.warn("Database error. Could not close statement. Continuing with others. - " +
+                log.warn("Database error. Could not close PreparedStatement. Continuing with others. - " +
                         e.getMessage(), e);
             }
         }

@@ -898,12 +898,11 @@ public class APIManagerImpl implements APIManager {
                     RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + thumbPath, ActionConstants.GET);
         }
 
-        String thumbUrl = RegistryConstants.PATH_SEPARATOR + "registry"
+        return RegistryConstants.PATH_SEPARATOR + "registry"
                 + RegistryConstants.PATH_SEPARATOR + "resource"
                 + RegistryConstants.PATH_SEPARATOR + "_system"
                 + RegistryConstants.PATH_SEPARATOR + "governance"
                 + thumbPath;
-        return thumbUrl;
     }
 
     /**

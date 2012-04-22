@@ -926,7 +926,7 @@ public class ApiMgtDAO {
                     log.error("Failed to rollback the add access token ", e);
                 }
             }
-            throw new IdentityException("Error when storing the access code for consumer key : " + consumerKey);
+          //  throw new IdentityException("Error when storing the access code for consumer key : " + consumerKey);
         } finally {
             IdentityDatabaseUtil.closeAllConnections(connection, null, prepStmt);
         }
@@ -975,7 +975,7 @@ public class ApiMgtDAO {
             try {
                 tenantId = IdentityUtil.getTenantIdOFUser(userId);
             } catch (IdentityException e) {
-                throw new APIManagementException("Failed to get tenant id of user : " + userId);
+                throw new APIManagementException("Failed to get tenant id of user : " + userId, e);
             }
             ps.setInt(3, tenantId);
 
@@ -1147,8 +1147,7 @@ public class ApiMgtDAO {
 
         } catch (SQLException e) {
             log.error("Error when executing the SQL : " + sqlStmt);
-            log.error(e.getMessage(), e);
-            throw new APIManagementException("Error when adding a new OAuth consumer.");
+            throw new APIManagementException("Error when adding a new OAuth consumer.", e);
         } finally {
             APIMgtDBUtils.closeAllConnections(prepStmt, connection, null);
         }
@@ -1175,8 +1174,8 @@ public class ApiMgtDAO {
             }
         } catch (SQLException e) {
             log.error("Error when executing the SQL : " + sqlQuery);
-            log.error(e.getMessage(), e);
-            throw new APIManagementException("Error when reading the application information from the persistence store.");
+            throw new APIManagementException("Error when reading the application information from" +
+                    " the persistence store.",e);
         } finally {
             APIMgtDBUtils.closeAllConnections(prepStmt, connection, rSet);
         }
@@ -1311,8 +1310,9 @@ public class ApiMgtDAO {
             return applications;
 
         } catch (SQLException e) {
-            log.error("Error when executing the SQL : " + sqlQuery,e);
-            throw new APIManagementException("Error when reading the application information from the persistence store.");
+            log.error("Error when executing the SQL : " + sqlQuery);
+            throw new APIManagementException("Error when reading the application information from" +
+                    " the persistence store.", e);
         } finally {
             APIMgtDBUtils.closeAllConnections(prepStmt, connection, rs);
         }
@@ -1361,8 +1361,8 @@ public class ApiMgtDAO {
             }
         } catch (SQLException e) {
             log.error("Error when executing the SQL : " + sqlQuery);
-            log.error(e.getMessage(), e);
-            throw new APIManagementException("Error when reading the application information from the persistence store.");
+            throw new APIManagementException("Error when reading the application information from" +
+                    " the persistence store.", e);
         } finally {
             APIMgtDBUtils.closeAllConnections(prepStmt, connection, rs);
         }

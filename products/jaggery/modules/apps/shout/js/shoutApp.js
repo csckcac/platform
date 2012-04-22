@@ -17,14 +17,17 @@ ShoutApp = new function() {
 	}
 
 	this.sendVerificationCode = function() {
+		if($('#authKey').val()==""){
+			alert("Please Enter the Verification Code")
+		}else{
 		ShoutAppUtil.makeRequest("/shout/twitter.jag?atoken="
 				+ $('#authKey').val(), "", function(html) {
 			$('#key').hide();
 			ShoutApp.readXML(html);
 		});
-		console.log("Called for send VerificationCode");
+		
 	}
-
+}
 	this.readXML = function(xml) {
 		$("#feed_scroll").html("");
 		$(xml)
@@ -56,13 +59,14 @@ ShoutApp = new function() {
 
 	this.postIt = function() {
 		$("#feed_scroll").html("");
-		console.log("Post It");
+		if($('#shout_txt').val()==""){alert("Please Type what to be Share before Click Shout.")}else{
 		ShoutAppUtil.makeRequest("/shout/twitter.jag?share="
 				+ $('#shout_txt').val(), "", function(html) {
 
 		});
-		console.log("Called for send Share");
+		
 		ShoutApp.loadBack();
+		}
 	}
 	
 

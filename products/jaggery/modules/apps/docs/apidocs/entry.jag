@@ -62,23 +62,48 @@ include('/includes/topnavi.jag');
 
         <pre class="prettyprint linenums">
 &lt%
-var reader = new FeedReader();
-var feed = new Feed();
-feed = reader.get("http://ruchirawageesha.blogspot.com/feeds/posts/default");
+//creating entries for feed
+var firstEntry = new Entry();
+firstEntry .title = "Jaggery Feed";
+firstEntry .content= "jaggery is server side .....";
 
-//returns an Entry Object
-var entry = feed.getEntries()[0];
+var Secondentry = new Entry();
+Secondentry .title = "Jaggery Entry";
+Secondentry .content= "make feed entry to be create .....";
 
-print(entry.title);
+//creating list of entris
+var entryList  = new Array();
+entryList[0]  = firstEntry ;
+entryList[1]  = Secondentry ;
+
+//creating feed
+var feed= new Feed();
+//adding new entries for Feed
+feed.entries=entryList;
+print(feed.entries[0].title);
+print('&ltbr&gt');
+print(feed.entries[1].title);
 %&gt
 </pre>
     <%
     var reqCode = '&lt%'
-    + '\n var reader = new FeedReader();'
-    + '\n var feed = new Feed();'
-    + '\n feed = reader.get("http://ruchirawageesha.blogspot.com/feeds/posts/default");'
-    + '\n var entry = feed.getEntries()[0];'
-    + '\n print(entry.title);'
+    + '\n //creating entries for feed'
+    + '\n var firstEntry = new Entry();'
+    + '\n firstEntry .title = "Jaggery Feed";'
+    + '\n firstEntry .content= "jaggery is server side .....";'
+    + '\n var Secondentry = new Entry();'
+    + '\n Secondentry .title = "Jaggery Entry";'
+    + '\n Secondentry .content= "make feed entry to be create .....";'
+    + '\n //creating list of entris'
+    + '\n var entryList  = new Array();'
+    + '\n entryList[0]  = firstEntry ;'
+    + '\n entryList[1]  = Secondentry ;'
+    + '\n //creating feed'
+    + '\n var feed= new Feed();'
+    + '\n //adding new entries for Feed'
+    + '\n feed.entries=entryList;'
+    + '\n print(feed.entries[0].title);'
+    + '\n print(feed.entries[1].title);'
     + '\n %&gt';
 
     var codeSnip = encodeURIComponent(reqCode);
@@ -94,7 +119,7 @@ print(entry.title);
                 </div>
                  <section id="overview">
                      <h4>Overview</h4>
-                      <p class="description">Entry object is the container for entries returned by an AtomFeed or Feed</p>
+                      <p class="description">Entry object is the container for entries returned by Feed.</p>
                      </section>
 
     <section id="members">
@@ -162,11 +187,7 @@ print(entry.title);
                 <td>String </td>
                 <td>The date this entry was updated.</td>
             </tr>
-            <tr>
-                <td>XML</td>
-                <td>XML </td>
-                <td>Returns the E4X XML contents of this AtomEntry.</td>
-            </tr>
+
             </tbody>
         </table>
     </section>

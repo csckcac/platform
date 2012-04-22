@@ -13,7 +13,7 @@
             <a href="/docs/apidocs/print.jag">print()</a>
         </li>
         <li id="log">
-            <a href="/docs/apidocs/log.jag">Log</a>
+            <a href="/docs/apidocs/log.jag">log()</a>
         </li>
     </ul>
 
@@ -62,18 +62,10 @@
 
     <h6>Feed</h6>
         <ul>
-            <li id="atomfeed">
-                <a href="/docs/apidocs/atom.jag">AtomFeed</a>
-            </li>
-            <li id="atomclient">
-                <a href="/docs/apidocs/atomclient.jag">AtomClient</a>
-            </li>
+            
             <li id="entry">
                 <a href="/docs/apidocs/entry.jag">Entry</a>
-            </li>
-            <li id="feedreader">
-                <a href="/docs/apidocs/feedreader.jag">FeedReader</a>
-            </li>
+            </li>           
             <li id="feed">
                 <a href="/docs/apidocs/feed.jag">Feed</a>
             </li>
@@ -95,7 +87,7 @@
             <a href="/docs/apidocs/rdb.jag">Database</a>
         </li>
         <li id="reg">
-            <a href="/docs/apidocs/metadatastore.jag">MetadataStore</a>
+            <a href="/docs/apidocs/registry.jag">Registry</a>
         </li>
     </ul>
 

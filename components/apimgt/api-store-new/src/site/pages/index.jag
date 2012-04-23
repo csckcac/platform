@@ -1,5 +1,80 @@
 <% include("/site/themes/utils.jag"); %>
+<% var site = require("/site/conf/site.json"); %>
 <%
-    var layout0Middle = "item-info/general.jag";
-    includeJags("layouts/layout0/layout.jag");
+var data = {
+    "name":"pages/base",
+    "css":[],
+    "js":[],
+    "code":[],
+    "data":
+        {
+            "title":"My Page",
+            "body":[
+                {
+                    "name":"layouts/layout0",
+                    "data": {
+                            "header":{
+                                "name":"/headers/header-strip",
+                                "data":null
+                            },
+                            "left":[
+                                {
+                                    "name":"ratings/top-rated",
+                                    "data":function () {
+                                        return {
+                                            "count":10
+                                        };
+                                    }
+                                },
+                                {
+                                    "name":"listing/recently-added",
+                                    "data":function () {
+                                        return {
+                                            "count":10
+                                        };
+                                    }
+                                }
+                            ],
+                            "right":[
+                                {
+                                    "name":"ratings/top-rated",
+                                    "data":function () {
+                                        return {
+                                            "count":5
+                                        };
+                                    }
+                                },
+                                {
+                                    "name":"listing/recently-added",
+                                    "data":function () {
+                                        return {
+                                            "count":5
+                                        };
+                                    }
+                                }
+                            ],
+                            "middle":{
+                                "name":"item-info/overview",
+                                "data":function () {
+                                    return {
+                                        "name":function () {
+                                            return "API1"
+                                        },
+                                        "version":function () {
+                                            return "1.0.0"
+                                        },
+                                        "provider":function () {
+                                            return "admin"
+                                        }
+                                    };
+                                }
+                            }
+                        }
+                }
+            ]
+        }
+};
+
+renderPage(data);
+
 %>

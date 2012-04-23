@@ -1,0 +1,5 @@
+<% var template = function(data, params) { %>
+<div class="left"><%=data.left%></div>
+<div class="middle"><%=data.middle%></div>
+<div class="right"><%=data.right%></div>
+<% } %>

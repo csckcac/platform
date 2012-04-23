@@ -1,10 +1,27 @@
 <% include("/site/themes/utils.jag"); %>
 <% var site = require("/site/conf/site.json"); %>
 <%
-    addPageData(data, "title", "API Information");
+var data = {
+    "name":"pages/base",
+    "css":{},
+    "js":{},
+    "code":{},
+    "updates" : {
+        "css" : {},
+        "js" : {}
+    },
+    "data":
+        {
+            "title":"My Page",
+            "body":[
+                {
+                    "name":"layouts/layout0",
+                    "data": null
+                }
+            ]
+        }
+};
 
-    addLayoutData(data, "tmpl", "tmpl/item-info/overview.jag");
-    //initTemplate("item-info");
+renderPage(data);
 
-    renderLayout(data, "layout0");
 %>

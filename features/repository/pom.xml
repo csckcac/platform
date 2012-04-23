@@ -471,6 +471,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.transaction.manager.feature:${carbon.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+				    org.wso2.carbon:org.wso2.carbon.ejbservices.feature:${carbon.version}
+				</featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>

@@ -1,6 +1,6 @@
 //overrides goes here
-var initialize = function(data) {
-    addHeaderCSS(data, "layouts/layout0", "layout0", "tmpl/layouts/layout0/css/layout0.css");
+var initialize = function(global) {
+    addHeaderCSS(global, "layouts/layout0", "layout0", "tmpl/layouts/layout0/css/layout0.css");
     //removeHeaderCSS("layout/default");
     //removeHeaderJS("layout/default");
 };
@@ -8,9 +8,7 @@ var initialize = function(data) {
 var getParams = function(data) {
     //var apis = getTopRatedAPIs(data.count);
     return {
-        header : {
-            apis : null
-        }
+        "count" : 5
     };
 };
 
@@ -38,17 +36,9 @@ var getTemplateVars = function() {
 };
 
 var getTemplates = function () {
-    return [];
-};
-
-var getHeaderCSS = function() {
-    return [];
-};
-
-var getHeaderJS = function() {
-    return [];
-};
-
-var getHeaderCode = function() {
-    return [];
+    return [
+        "ratings/top-rated",
+        "recent/recently-added",
+        "tags/tag-cloud"
+    ];
 };

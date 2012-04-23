@@ -1,15 +1,77 @@
-<% var template = function(data, params) { %>
+<% var template = function(data, params, global) { %>
+<!DOCTYPE html>
 <html>
-<head/>
-<body>
-<div class="page">
-    <h2><%=data.title%></h2>
-    <div class="content">
-        <% includeTemplate("layouts/layout0", params.param1); %>
-        <% includeTemplate("layouts/layout0", params.param2); %>
-    </div>
-    <div class="footer"><% includeTemplates(data.footer); %></div>
-</div>
-</body>
+    <head>
+        <title><%=data.title%></title>
+        <link href="/<%=site.context%>/site/themes/default/images/favicon.png" rel="shortcut icon" type="image/x-icon"/>
+        <script type="text/javascript" src="/<%=site.context%>/site/themes/default/js/lib/jquery-1.7.1.min.js"></script>
+        <script type="text/javascript" src="/<%=site.context%>/site/themes/default/js/lib/jquery-ui-1.8.17.custom.min.js"></script>
+        <script type="text/javascript" src="/<%=site.context%>/site/themes/default/js/lib/jquery.tools.min.js"></script>
+        <script type="text/javascript" src="/<%=site.context%>/site/themes/default/js/lib/ui/jquery.ui.core.min.js"></script>
+        <script type="text/javascript" src="/<%=site.context%>/site/themes/default/js/lib/ui/jquery.ui.widget.min.js"></script>
+        <script type="text/javascript" src="/<%=site.context%>/site/themes/default/js/lib/ui/jquery.ui.position.min.js"></script>
+        <script type="text/javascript" src="/<%=site.context%>/site/themes/default/js/lib/ui/jquery.ui.autocomplete.min.js"></script>
+        <script type="text/javascript" src="/<%=site.context%>/site/themes/default/js/lib/jquery.paginate.js"></script>
+        <script type="text/javascript" src="/<%=site.context%>/site/themes/default/js/search_bar.js"></script>
+        <script type="text/javascript" src="/<%=site.context%>/site/themes/default/js/serviceStoreApp.js"></script>
+        <script type="text/javascript" src="/<%=site.context%>/site/themes/default/js/APIStoreApp.js"></script>
+        <script type="text/javascript" src="/<%=site.context%>/site/themes/default/js/layout-service-detail.js"></script>
+        <!--script src="/<%=site.context%>/site/themes/default/js/assembly.js"></script-->
+        <script type="text/javascript" src="/<%=site.context%>/site/themes/default/js/util.js"></script>
+        <script type="text/javascript" src="/<%=site.context%>/site/themes/default/js/common/renderCommon.js"></script>
+        <script type="text/javascript" src="/<%=site.context%>/site/themes/default/js/index/renderIndex.js"></script>
+        <script type="text/javascript" src="/<%=site.context%>/site/themes/default/js/common/initCommon.js"></script>
+        <script type="text/javascript" src="/<%=site.context%>/site/themes/default/js/index/initIndex.js"></script>
+
+        <!--link rel="stylesheet" type="text/css" href="/<%=site.context%>/site/themes/default/css/tooltip.css"/-->
+        <link rel="stylesheet" type="text/css" href="/<%=site.context%>/site/themes/default/css/overlay-basic.css"/>
+        <!--[if IE 7]><link type="text/css" rel="stylesheet" href="/<%=site.context%>/site/themes/default/css/ie7.css"/><![endif]-->
+        <!--[if gte IE 8]><link type="text/css" rel="stylesheet" href="/<%=site.context%>/site/themes/default/css/ie8.css"/><![endif]-->
+
+        <link rel="stylesheet" href="/<%=site.context%>/site/themes/default/css/960_16_col.css" />
+        <!--<link href='http://fonts.googleapis.com/css?family=Stint+Ultra+Condensed' rel='stylesheet' type='text/css'>-->
+        <link type="text/css" rel="stylesheet" href="/<%=site.context%>/site/themes/default/css/styles.css" />
+        <link type="text/css" rel="stylesheet" href="/<%=site.context%>/site/themes/default/css/searchbox.css" />
+        <link type="text/css" rel="stylesheet" href="/<%=site.context%>/site/themes/default/css/layout.css" />
+        <link type="text/css" rel="stylesheet" href="/<%=site.context%>/site/themes/default/css/paginate-styles.css" />
+        <%
+            var context = site.context;
+
+            var insertCode = function(list, fn) {
+                var obj, tmpl, key, path;
+                for(tmpl in list) {
+                    if(list.hasOwnProperty(tmpl)) {
+                        obj = list[tmpl];
+                        for(key in obj) {
+                            if(obj.hasOwnProperty(key)) {
+                                path = "/" + context + obj[key];
+                                fn(path);
+                            }
+                        }
+                    }
+                }
+            };
+
+            insertCode(global.js, function(path) {
+                print('<script type="text/javascript" src="' + path + '"></script>');
+            });
+
+            insertCode(global.css, function(path) {
+                print('<link type="text/css" rel="stylesheet" href="' + path + '"/>');
+            });
+
+            insertCode(global.code, function(code) {
+                print(code);
+            });
+        %>
+    </head>
+    <body>
+        <% includeTemplates(data.body); %>
+        <div class="footer" id="footer">
+            <div class="container_16">
+                <div class="grid_16 footer-content">&copy;2012 wso2.com. All rights reserved.</div>
+            </div>
+        </div>
+    </body>
 </html>
-<% }; %>
+<% } %>

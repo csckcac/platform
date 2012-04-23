@@ -1,7 +1,7 @@
-<% var tcloud = getTemplateData(data, "tag-cloud"); %>
+<% var template = function(data, params, global) { %>
 <div id="tag-cloud" class="content-box">
     <%
-        var i, tags = tcloud.tags, length = tags.length;
+        var i, tags = params.tags, length = tags.length;
         var maxPercent = 150, minPercent = 100;
         var max = 1, min = 999, count = 0;
         for(i = 0; i < length; i++) {
@@ -22,3 +22,4 @@
         }
     %>
 </div>
+<% }; %>

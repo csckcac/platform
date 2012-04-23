@@ -1,10 +1,10 @@
-<% var tops = getTemplateData(data, "top-rated"); %>
+<% var template = function(data, params, global) { %>
 <div id="top-rated">
     <div class="title">Top Rated</div>
     <div class="content-wrapper">
         <div class="element-wrapper">
             <%
-                var i, apis = tops.apis, length = apis.length;
+                var i, apis = params.apis, length = apis.length;
                 for(i = 0; i < length; i++) {
                     var api = apis[i];
             %>
@@ -25,3 +25,4 @@
         </div>
     </div>
 </div>
+<% } %>

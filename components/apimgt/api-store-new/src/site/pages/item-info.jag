@@ -12,7 +12,7 @@ var data = {
     },
     "data":
         {
-            "title":"My Page",
+            "title":"Service Infomations",
             "body":[
                 {
                     "name":"layouts/layout0",

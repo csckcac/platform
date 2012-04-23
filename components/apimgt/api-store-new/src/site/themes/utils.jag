@@ -58,126 +58,104 @@ var mergeData = function (data, dataDef) {
     return data;
 };
 
-var renderPage = function (data) {
+var renderPage = function (global) {
     var tpls = templates;
-    var name = data.name;
-    var css = data.css;
-    var js = data.js;
-    var code = data.code;
+    var name = global.name;
+    var css = global.css;
+    var js = global.js;
+    var code = global.code;
 
-    var initTemplates = function (tpls, name, d, data) {
+    var initTemplates = function (tpls, name, data, global) {
         if (tpls[name]) {
             return;
         }
         var initializer = require(getInitializerFile(name));
         tpls[name] = initializer;
-        initializer.initialize(data);
+        initializer.initialize(global);
 
         var tmpls = initializer.getTemplates();
         var i, length = tmpls.length;
         for (i = 0; i < length; i++) {
-            initTemplates(tpls, tmpls[i], null, data);
+            initTemplates(tpls, tmpls[i], null, global);
         }
-        d = mergeData(d, initializer.getData());
+        data = mergeData(data, initializer.getData());
         var j, len, vars = initializer.getTemplateVars();
         length = vars.length;
         for (j = 0; j < length; j++) {
             var vname = vars[j];
-            var v = d[vname];
+            var v = data[vname];
             if (!v) {
                 continue;
             }
             if (!(v instanceof Array)) {
-                initTemplates(tpls, v.name, v.data, data);
+                initTemplates(tpls, v.name, v.data, global);
                 return;
             }
             len = v.length;
             for (var k = 0; k < len; k++) {
                 var el = v[k];
-                initTemplates(tpls, el.name, el.data, data);
+                initTemplates(tpls, el.name, el.data, global);
             }
         }
     };
 
-    var d = data.data;
-    if (!d) {
-        d = {};
-        data.data = d;
+    var data = global.data;
+    if (!data) {
+        data = {};
+        global.data = data;
     }
-    initTemplates(tpls, name, d, data);
-    log(data);
+    initTemplates(tpls, name, data, global);
     var initializer = tpls[name];
-    var params = initializer.getParams(d);
+    var params = initializer.getParams(data);
     include(getTemplateFile(name));
     var fn = template;
-    fn(d, params);
+    fn(data, params, global);
 };
 
-var includeTemplate = function (name, data) {
+var includeTemplate = function (name, data, global) {
     var tpls = templates;
     var initializer = tpls[name];
     var params = initializer.getParams(data);
     include(getTemplateFile(name));
     var fn = template;
-    fn(data, params);
+    fn(data, params, global);
 };
 
-var includeTemplates = function (tmpls) {
+var includeTemplates = function (tmpls, global) {
     var i, tmpl, length = tmpls.length;
     for (i = 0; i < length; i++) {
         tmpl = tmpls[i];
-        includeTemplate(tmpl.name, tmpl.data);
+        includeTemplate(tmpl.name, tmpl.data, global);
     }
 };
 
-var addHeaderCSS = function (data, template, key, css) {
+var addHeaderCSS = function (global, template, key, css) {
     css = getThemeFile(css);
-    var obj = data.css;
-    if (!obj) {
-        obj = {};
-        data.css = obj;
-    }
-    var tmpl = obj[template];
-    if (tmpl) {
-        tmpl[key] = css;
-    } else {
-        tmpl = {};
-        obj[template] = tmpl;
-        tmpl[key] = css;
-    }
+    insertGlobal(global, template, "css", key, css);
 };
 
-var addHeaderJS = function (data, template, key, js) {
+var addHeaderJS = function (global, template, key, js) {
     js = getThemeFile(js);
-    var obj = data.js;
+    insertGlobal(global, template, "js", key, js);
+};
+
+var addHeaderCode = function (global, template, key, code) {
+    insertGlobal(global, template, "code", key, code);
+};
+
+var insertGlobal = function (global, template, name, key, value) {
+    var obj = global[name];
     if (!obj) {
         obj = {};
-        data.js = obj;
+        global[name] = obj;
     }
     var tmpl = obj[template];
     if (tmpl) {
-        tmpl[key] = js;
+        tmpl[key] = value;
     } else {
         tmpl = {};
         obj[template] = tmpl;
-        tmpl[key] = js;
+        tmpl[key] = value;
     }
 };
-
-var addHeaderCode = function (data, template, key, code) {
-    var obj = data.code;
-    if (!obj) {
-        obj = {};
-        data.code = obj;
-    }
-    var tmpl = obj[template];
-    if (tmpl) {
-        tmpl[key] = code;
-    } else {
-        tmpl = {};
-        obj[template] = tmpl;
-        tmpl[key] = code;
-    }
-};
-
 %>

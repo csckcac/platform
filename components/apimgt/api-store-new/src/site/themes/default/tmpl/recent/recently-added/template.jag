@@ -1,10 +1,10 @@
-<% var recent = getTemplateData(data, "recently-added"); %>
+<% var template = function(data, params, global) { %>
 <div id="recently-added">
     <div class="title">Recently Added</div>
     <div class="content-wrapper">
         <div class="element-wrapper">
             <%
-                var i, apis = recent.apis, length = apis.length;
+                var i, apis = params.apis, length = apis.length;
                 for(i = 0; i < length; i++) {
                     var api = apis[i];
             %>
@@ -27,3 +27,4 @@
         </div>
     </div>
 </div>
+<% }; %>

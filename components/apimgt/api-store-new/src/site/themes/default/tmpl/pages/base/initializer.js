@@ -1,5 +1,5 @@
 //overrides goes here
-var initialize = function () {
+var initialize = function (global) {
     //removeHeaderCSS("layout/default");
     //removeHeaderJS("layout/default");
 };
@@ -42,16 +42,4 @@ var getTemplateVars = function () {
     return [
         "footer"
     ];
-};
-
-var getHeaderCSS = function () {
-    return [];
-};
-
-var getHeaderJS = function () {
-    return [];
-};
-
-var getHeaderCode = function () {
-    return [];
 };

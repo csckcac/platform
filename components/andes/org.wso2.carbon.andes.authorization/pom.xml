@@ -75,7 +75,7 @@
                         </Private-Package>
                         <Export-Package>
                             !org.wso2.carbon.andes.authorization.internal,
-                            org.wso2.carbon.andes.authorizationn.*
+                            org.wso2.carbon.andes.authorization.*
                         </Export-Package>
                         <Import-Package>
                             org.apache.qpid.*,

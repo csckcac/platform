@@ -136,7 +136,7 @@ if(uriMatcher.match('/{context}/{dir}/{page}')) {
                             </tr>
 
                             <tr>
-                                <td>constructor<code>URIMatcher(uri)</code></td>
+                                <td><code>URIMatcher(uri)</code></td>
                                 <td>URIMatcher Object</td>
                                 <td>Returns the URIMatcher Object<br><br>
                                     <pre class="prettyprint">var uriMatcher = new URIMatcher(request.uri);</pre>

@@ -64,7 +64,7 @@ public class AdminServiceBpelUploader {
 
         final String uploaderServiceURL = ServiceEndPoint + "BPELUploader";
         AdminServiceBpelPackageManager manager = new AdminServiceBpelPackageManager(ServiceEndPoint, sessionCookie);
-        boolean success = false;
+        boolean success;
         AuthenticateStub authenticateStub = new AuthenticateStub();
         BPELUploaderStub bpelUploaderStub = new BPELUploaderStub(uploaderServiceURL);
         authenticateStub.authenticateStub(sessionCookie, bpelUploaderStub);
@@ -86,7 +86,7 @@ public class AdminServiceBpelUploader {
     public void deployPackage(String packageName,
                               BPELUploaderStub bpelUploaderStub) throws MalformedURLException, RemoteException, InterruptedException {
         String sampleArchiveName = packageName + ".zip";
-        File bpelZipArchive = new File(System.getProperty("system.test.sample.location") + File.separator +
+        File bpelZipArchive = new File(getSystemResourceLocation() + File.separator +
                 "artifacts" + File.separator + "BPS" + File.separator + "bpel" + File.separator + sampleArchiveName);
         UploadedFileItem[] uploadedFileItems = new UploadedFileItem[1];
         uploadedFileItems[0] = getUploadedFileItem(new DataHandler(bpelZipArchive.toURI().toURL()),
@@ -110,5 +110,22 @@ public class AdminServiceBpelUploader {
         System.out.println("Deploying " + sampleArchiveName);
         bpelUploaderStub.uploadService(uploadedFileItems);
         Thread.sleep(10000);
+    }
+
+    /**
+     * construct the resource file path by checking the OS tests are running.
+     * Need to replace string path with correct forward or backward slashes as we set the system property with
+     * forward slash.
+     *
+     * @return resource path
+     */
+    private static String getSystemResourceLocation() {
+        String resourceLocation;
+        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+            resourceLocation = System.getProperty("system.test.sample.location").replace("/", "\\");
+        } else {
+            resourceLocation = System.getProperty("system.test.sample.location").replace("/", "/");
+        }
+        return resourceLocation;
     }
 }

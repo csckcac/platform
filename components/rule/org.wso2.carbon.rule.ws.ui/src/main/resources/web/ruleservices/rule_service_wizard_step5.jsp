@@ -214,10 +214,12 @@
                             Map<String, String> nsMap = property.getPrefixToNamespaceMap();
                             NameSpacesInformationRepository repository = (NameSpacesInformationRepository) session.getAttribute(
             NameSpacesInformationRepository.NAMESPACES_INFORMATION_REPOSITORY);
-                            if(nsMap != null && repository== null){
+                            if(nsMap != null){
+                                if(repository== null){
+                                    repository = new NameSpacesInformationRepository();
+                                }
                                 NameSpacesInformation   nameSpacesInformation = new NameSpacesInformation();
                                 nameSpacesInformation.setNameSpaces(nsMap);
-                                repository = new NameSpacesInformationRepository();
                                 repository.addNameSpacesInformation(opname,"inputFactValue"+k, nameSpacesInformation);
         session.setAttribute(NameSpacesInformationRepository.NAMESPACES_INFORMATION_REPOSITORY, repository);
 
@@ -355,6 +357,19 @@
                             String name = property.getElementName();
                             String namespace = property.getNamespace();
                             String xpath = property.getXpath();
+                              Map<String, String> outputNSMap = property.getPrefixToNamespaceMap();
+                            NameSpacesInformationRepository repository = (NameSpacesInformationRepository) session.getAttribute(
+            NameSpacesInformationRepository.NAMESPACES_INFORMATION_REPOSITORY);
+                            if(outputNSMap != null){
+                                if(repository== null){
+                                    repository = new NameSpacesInformationRepository();
+                                }
+                                NameSpacesInformation   nameSpacesInformation = new NameSpacesInformation();
+                                nameSpacesInformation.setNameSpaces(outputNSMap);
+                                repository.addNameSpacesInformation(opname,"outputFactValue"+j, nameSpacesInformation);
+        session.setAttribute(NameSpacesInformationRepository.NAMESPACES_INFORMATION_REPOSITORY, repository);
+
+                            }
                             if (name == null) {
                                 name = "";
                             }
@@ -367,6 +382,7 @@
                              if(xpath == null){
                                  xpath = "";
                             }
+
                 %>
                 <tr id="outputFactRaw<%=j%>">
                     <td>
@@ -397,9 +413,8 @@
                     <td id="factNsEditorButtonTD<%=j%>">
                         <a href="#nsEditorLink" class="nseditor-icon-link"
                            style="padding-left:40px"
-                           onclick="showNameSpaceEditor('outputFactValue<%=j%>','<%=opname%>')"><fmt:message
+                           onclick="showNameSpaceEditor('outputFactValue<%=j%>','<%=opname.trim()%>')"><fmt:message
                                 key="namespaces"/></a>
-                    </td>
                     <td><a href="#" href="#" class="delete-icon-link" style="padding-left:40px"
                            onclick="deleteFact('outputFact','<%=j%>')"><fmt:message
                             key="delete"/></a></td>

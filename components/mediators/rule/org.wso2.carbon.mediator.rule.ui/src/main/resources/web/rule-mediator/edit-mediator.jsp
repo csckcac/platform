@@ -27,6 +27,8 @@
 <%@ page import="org.wso2.carbon.rule.mediator.config.Target" %>
 <%@ page import="org.wso2.carbon.rule.mediator.config.Source" %>
 <%@ page import="org.wso2.carbon.rule.common.*" %>
+<%@ page import="org.wso2.carbon.sequences.ui.util.ns.NameSpacesInformation" %>
+<%@ page import="org.wso2.carbon.sequences.ui.util.ns.NameSpacesInformationRepository" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
 <%--
   ~  Copyright (c) 2008, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -59,22 +61,51 @@
         // todo : proper error handling
         throw new RuntimeException("Unable to edit the mediator");
     }
-
     RuleMediator ruleMediator = (RuleMediator) mediator;
     RuleMediatorConfig ruleMediatorConfig = ruleMediator.getRuleMediatorConfig();
     if (ruleMediatorConfig == null) {
         ruleMediatorConfig = new RuleMediatorConfig();
     }
 
+    String ownerID = SequenceEditorHelper.getEditingMediatorPosition(request.getSession());
+
     Source source = ruleMediatorConfig.getSource();
     String sourceValue = source.getValue() != null ? source.getValue() : "";
     String sourceXpath = source.getXpath() != null ? source.getXpath() : "";
+    Map<String, String> sourceNSMap = source.getPrefixToNamespaceMap();
+
+    if (sourceNSMap != null) {
+        NameSpacesInformationRepository repository = (NameSpacesInformationRepository) session.getAttribute(
+                NameSpacesInformationRepository.NAMESPACES_INFORMATION_REPOSITORY);
+        if (repository == null) {
+            repository = new NameSpacesInformationRepository();
+        }
+        NameSpacesInformation nameSpacesInformation = new NameSpacesInformation();
+        nameSpacesInformation.setNameSpaces(sourceNSMap);
+        repository.addNameSpacesInformation(ownerID, "sourceValue", nameSpacesInformation);
+        session.setAttribute(NameSpacesInformationRepository.NAMESPACES_INFORMATION_REPOSITORY, repository);
+
+    }
+
 
     Target target = ruleMediatorConfig.getTarget();
     String targetValue = target.getValue() != null ? target.getValue() : "";
     String targetResultXpath = target.getResultXpath() != null ? target.getResultXpath() : "";
     String targetXpath = target.getXpath() != null ? target.getXpath() : "";
     String targetAction = target.getAction() != null ? target.getAction() : "";
+    Map<String, String> resultNSMap = target.getPrefixToNamespaceMap();
+    if (resultNSMap != null) {
+
+        NameSpacesInformationRepository repository = (NameSpacesInformationRepository) session.getAttribute(
+                NameSpacesInformationRepository.NAMESPACES_INFORMATION_REPOSITORY);
+        if (repository == null) {
+            repository = new NameSpacesInformationRepository();
+        }
+        NameSpacesInformation nameSpacesInformation = new NameSpacesInformation();
+        nameSpacesInformation.setNameSpaces(resultNSMap);
+        repository.addNameSpacesInformation(ownerID, "resultValue", nameSpacesInformation);
+        session.setAttribute(NameSpacesInformationRepository.NAMESPACES_INFORMATION_REPOSITORY, repository);
+    }
 
     NameSpacesRegistrar nameSpacesRegistrar = NameSpacesRegistrar.getInstance();
     //Execution Set Metadata
@@ -127,6 +158,7 @@
     inputNameSpace = inputNameSpace == null ? "" : inputNameSpace;
     List<Fact> inputFacts = input.getFacts();
 
+
     //Outputs
     Output output = ruleMediatorConfig.getOutput();
     String outputWrapperName = output.getWrapperElementName();
@@ -153,6 +185,7 @@
     <td><h3 class="mediator"><fmt:message key="mediator.rule.source"/></h3></td>
 </tr>
 <tr>
+
     <td>
         <table class="normal">
             <tr>
@@ -208,6 +241,12 @@
                            name="mediator.rule.target.resultXpath"
                            style="width:300px;" value='<%=targetResultXpath%>'/>
                 </td>
+                <td id="resultNsEditorButtonTD">
+                    <a href="#nsEditorLink" class="nseditor-icon-link"
+                       style="padding-left:40px"
+                       onclick="showNameSpaceEditor('resultValue')"><fmt:message
+                            key="namespaces"/></a>
+                </td>
             </tr>
             <tr>
                 <td><fmt:message key="mediator.rule.target.xpath"/>
@@ -217,6 +256,12 @@
                            name="mediator.rule.target.xpath"
                            style="width:300px;" value='<%=targetXpath%>'/>
                 </td>
+                    <%--      <td id="targetNsEditorButtonTD">
+                        <a href="#nsEditorLink" class="nseditor-icon-link"
+                           style="padding-left:40px"
+                           onclick="showNameSpaceEditor('targetValue')"><fmt:message
+                                key="namespaces"/></a>
+                    </td>--%>
             </tr>
             <tr>
                 <td><fmt:message key="mediator.rule.target.action"/>
@@ -308,7 +353,7 @@
                             onclick="showInLinedRuleScriptPolicyEditor('<%=ruleScriptID%>');"><fmt:message
                             key="ruleScript.policy.editor"/></a>
                 </td>
-                  <td id="url_rulescript" style="<%=!isURL ? "display:none;" : ""%>">
+                <td id="url_rulescript" style="<%=!isURL ? "display:none;" : ""%>">
                     <input type="text" class="longInput" id="mediator.rule.url"
                            name="mediator.rule.url" value="<%=ruleURLValue%>"/>
                 </td>
@@ -346,7 +391,7 @@
 </tr>
 <tr>
     <td class="formRaw">
-    <table class="normal">
+        <table class="normal">
             <tr>
                 <td><fmt:message key="wrapper"/>
                 </td>
@@ -373,7 +418,7 @@
             <thead>
             <tr>
                 <th width="10%"><fmt:message key="th.parameter.type"/></th>
-                <%--<th width="10%"><fmt:message key="th.fact.selector"/></th>--%>
+                    <%--<th width="10%"><fmt:message key="th.fact.selector"/></th>--%>
                 <th width="10%"><fmt:message key="th.parameter.elementName"/></th>
                 <th width="10%"><fmt:message key="th.parameter.namespace"/></th>
                 <th width="10%"><fmt:message key="th.parameter.xpath"/></th>
@@ -389,6 +434,18 @@
                         String factElementName = fact.getElementName() != null ? fact.getElementName() : "";
                         String factNamespace = fact.getNamespace() != null ? fact.getNamespace() : "";
                         String factXpath = fact.getXpath() != null ? fact.getXpath() : "";
+                        Map<String, String> factNSMap = fact.getPrefixToNamespaceMap();
+                        if (factNSMap != null) {
+                            NameSpacesInformationRepository repository = (NameSpacesInformationRepository) session.getAttribute(
+                                    NameSpacesInformationRepository.NAMESPACES_INFORMATION_REPOSITORY);
+                            if (repository == null) {
+                                repository = new NameSpacesInformationRepository();
+                            }
+                            NameSpacesInformation nameSpacesInformation = new NameSpacesInformation();
+                            nameSpacesInformation.setNameSpaces(factNSMap);
+                            repository.addNameSpacesInformation(ownerID, "factValue" + k, nameSpacesInformation);
+                            session.setAttribute(NameSpacesInformationRepository.NAMESPACES_INFORMATION_REPOSITORY, repository);
+                        }
 
             %>
             <tr id="factRaw<%=k%>">
@@ -397,12 +454,12 @@
                            id="factType<%=k%>" value="<%=factType%>"
                            type="text"/>
                 </td>
-  <%--              <td>
-                    <a class="fact-selector-icon-link" href="#factEditorLink"
-                       style="padding-left:40px"
-                       onclick="showFactEditor('fact','<%=k%>')"><fmt:message
-                            key="fact.type"/></a>
-                </td>--%>
+                    <%--              <td>
+                        <a class="fact-selector-icon-link" href="#factEditorLink"
+                           style="padding-left:40px"
+                           onclick="showFactEditor('fact','<%=k%>')"><fmt:message
+                                key="fact.type"/></a>
+                    </td>--%>
                 <td>
                     <input name="factElementName<%=k%>"
                            id="factElementName<%=k%>" value="<%=factElementName%>"
@@ -457,7 +514,7 @@
 </tr>
 <tr>
     <td class="formRaw">
-    <table class="normal">
+        <table class="normal">
             <tr>
                 <td><fmt:message key="wrapper"/>
                 </td>
@@ -484,11 +541,11 @@
             <thead>
             <tr>
                 <th width="10%"><fmt:message key="th.parameter.type"/></th>
-                <%--<th width="10%"><fmt:message key="th.result.selector"/></th>--%>
+                    <%--<th width="10%"><fmt:message key="th.result.selector"/></th>--%>
                 <th width="10%"><fmt:message key="th.parameter.elementName"/></th>
                 <th width="10%"><fmt:message key="th.parameter.namespace"/></th>
-                <%--<th width="10%"><fmt:message key="th.parameter.xpath"/></th>--%>
-                <%--<th id="resultns-edior-th"><fmt:message key="namespaceeditor"/></th>--%>
+                    <%--<th width="10%"><fmt:message key="th.parameter.xpath"/></th>--%>
+                    <%--<th id="resultns-edior-th"><fmt:message key="namespaceeditor"/></th>--%>
                 <th><fmt:message key="th.action"/></th>
             </tr>
             <tbody id="resulttbody">
@@ -508,12 +565,12 @@
                            id="resultType<%=j%>" value="<%=resultType%>"
                            type="text"/>
                 </td>
-       <%--         <td>
-                    <a class="fact-selector-icon-link" href="#factEditorLink"
-                       style="padding-left:40px"
-                       onclick="showFactEditor('result','<%=j%>')"><fmt:message
-                            key="result.type"/></a>
-                </td>--%>
+                    <%--         <td>
+                        <a class="fact-selector-icon-link" href="#factEditorLink"
+                           style="padding-left:40px"
+                           onclick="showFactEditor('result','<%=j%>')"><fmt:message
+                                key="result.type"/></a>
+                    </td>--%>
 
                 <td>
                     <input name="resultElementName<%=j%>"
@@ -527,18 +584,18 @@
                            type="text"/>
                 </td>
 
-                <%--<td>--%>
+                    <%--<td>--%>
                     <%--<input name="resultXpath<%=j%>"--%>
-                           <%--id="resultXpath<%=j%>" value="<%=resultXpath%>"--%>
-                           <%--type="text"/>--%>
-                <%--</td>--%>
+                    <%--id="resultXpath<%=j%>" value="<%=resultXpath%>"--%>
+                    <%--type="text"/>--%>
+                    <%--</td>--%>
 
-                <%--<td id="resultNsEditorButtonTD<%=j%>">--%>
+                    <%--<td id="resultNsEditorButtonTD<%=j%>">--%>
                     <%--<a href="#nsEditorLink" class="nseditor-icon-link"--%>
-                       <%--style="padding-left:40px"--%>
-                       <%--onclick="showNameSpaceEditor('resultValue<%=j%>')"><fmt:message--%>
-                            <%--key="namespaces"/></a>--%>
-                <%--</td>--%>
+                    <%--style="padding-left:40px"--%>
+                    <%--onclick="showNameSpaceEditor('resultValue<%=j%>')"><fmt:message--%>
+                    <%--key="namespaces"/></a>--%>
+                    <%--</td>--%>
 
                 <td><a href="#" href="#" class="delete-icon-link" style="padding-left:40px"
                        onclick="deleteFact('result','<%=j%>')"><fmt:message

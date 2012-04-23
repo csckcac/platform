@@ -88,6 +88,12 @@ public class RuleMediatorClientHelper {
         if (request.getParameter("mediator.rule.target.action") != null) {
             target.setAction(request.getParameter("mediator.rule.target.action"));
         }
+            if (repository != null) {
+            information = repository.getNameSpacesInformation(ownerID, "resultValue");
+            if (information != null) {
+                target.setPrefixToNamespaceMap(information.getNameSpaces());
+            }
+        }
 
     }
 

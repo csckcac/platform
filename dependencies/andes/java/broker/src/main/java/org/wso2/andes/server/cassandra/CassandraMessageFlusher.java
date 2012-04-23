@@ -71,10 +71,13 @@ public class CassandraMessageFlusher extends Thread{
                 List<QueueEntry> messages = messageStore.
                         getMessagesFromUserQueue(queue
                                 , messageCount);
+
+
+
                 if(messages.size() == messageCount) {
                     messageCount += 10;
-                    if(messageCount > (ClusterResourceHolder.getInstance().getClusterConfiguration().getFlusherPoolSize() -10)) {
-                        messageCount =  ClusterResourceHolder.getInstance().getClusterConfiguration().getFlusherPoolSize() -10;
+                    if(messageCount > (ClusterResourceHolder.getInstance().getClusterConfiguration().getFlusherPoolSize())) {
+                        messageCount =  ClusterResourceHolder.getInstance().getClusterConfiguration().getFlusherPoolSize()-1;
                     }
                 } else {
                     messageCount-=10;
@@ -172,17 +175,18 @@ public class CassandraMessageFlusher extends Thread{
                                 dequeueMessages(queue, msg);
                         barrier.release();
 
+                    } else {
+                        log.error("Unexpected Subscription Implementation : " +
+                                subscription !=null?subscription.getClass().getName():null);
                     }
                 } catch (AMQException e) {
-                    e.printStackTrace();
+                    log.error("Error while delivering message " ,e);
                 } catch (Throwable e) {
-                    e.printStackTrace();
+                     log.error("Error while delivering message " ,e);
                 }
             }
         };
-
        executor.execute(r);
-
     }
 
 

@@ -17,6 +17,8 @@
 */
 package org.wso2.andes.server.cluster;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.andes.server.ClusterResourceHolder;
 import org.wso2.andes.server.cassandra.CassandraQueueMessage;
 import org.wso2.andes.server.cassandra.DefaultClusteringEnabledSubscriptionManager;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * <code>GlobalQueueWorker</code> is responsible for polling global queues
@@ -34,6 +37,8 @@ import java.util.Random;
 public class GlobalQueueWorker implements Runnable{
 
 
+    private static Log log = LogFactory.getLog(GlobalQueueWorker.class);
+
     private String globalQueueName;
     private boolean running;
     private DefaultClusteringEnabledSubscriptionManager cassandraSubscriptionManager;
@@ -41,9 +46,7 @@ public class GlobalQueueWorker implements Runnable{
     private CassandraMessageStore cassandraMessageStore;
 
 
-    private int count = 0;
 
-    private static int mc = 0;
     public GlobalQueueWorker(String queueName,
                              CassandraMessageStore cassandraMessageStore,
                              int messageCount) {
@@ -69,8 +72,6 @@ public class GlobalQueueWorker implements Runnable{
                 Queue<CassandraQueueMessage> cassandraMessages =
                         cassandraMessageStore.getMessagesFromGlobalQueue(globalQueueName, messageCount);
                 int size = cassandraMessages.size();
-
-
                 List<String> subscriptions =
                         cassandraSubscriptionManager.getUserQueues(globalQueueName);
                 Random jRandom = new Random();
@@ -80,12 +81,9 @@ public class GlobalQueueWorker implements Runnable{
 
                         for (int i = 0; i < size; i++) {
 
-//                        System.out.println("Count : " + size + " id : " + ClusterResourceHolder.getInstance().
-//                                getClusterManager().getNodeId());
 
                             CassandraQueueMessage msg = cassandraMessages.poll();
 
-                            //handle the failures .. and only remove what has moved
                             int random = jRandom.nextInt(subscriptions.size());
                             cassandraMessageStore.addMessageToUserQueue(
                                     subscriptions.get(random),

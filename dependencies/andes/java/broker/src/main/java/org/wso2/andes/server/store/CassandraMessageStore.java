@@ -136,8 +136,8 @@ public class CassandraMessageStore implements MessageStore {
     private static IntegerSerializer integerSerializer = IntegerSerializer.get();
     private static ByteBufferSerializer byteBufferSerializer = ByteBufferSerializer.get();
 
-    private static int mc =0;
-    private static int smc = 0;
+
+
     private static Log log =
             org.apache.commons.logging.LogFactory.getLog(CassandraMessageStore.class);
 
@@ -213,7 +213,7 @@ public class CassandraMessageStore implements MessageStore {
                         underlying);
             } catch (Exception e) {
                log.error("Error in adding incoming message",e);
-                e.printStackTrace();
+               //Todo throw a proper exception up and handle it there
             }
         }
     }
@@ -229,7 +229,6 @@ public class CassandraMessageStore implements MessageStore {
         try {
             messages = new ArrayList<QueueEntry>();
 
-            LongSerializer ls = LongSerializer.get();
             BytesArraySerializer bs = BytesArraySerializer.get();
             SliceQuery<String, String, byte[]> sliceQuery =
                     HFactory.createSliceQuery(keyspace, stringSerializer, stringSerializer, bs);
@@ -241,20 +240,11 @@ public class CassandraMessageStore implements MessageStore {
             QueryResult<ColumnSlice<String, byte[]>> result = sliceQuery.execute();
             ColumnSlice<String, byte[]> columnSlice = result.get();
 
-            long maxId = 0;
-
             for (Object column : columnSlice.getColumns()) {
                 if (column instanceof HColumn) {
                     String columnName = ((HColumn<String, byte[]>) column).getName();
                     byte[] value = ((HColumn<Long, byte[]>) column).getValue();
-
-
                     long messageId = Long.parseLong(columnName);
-
-                    if (messageId > maxId) {
-                        maxId = messageId;
-                    }
-
                     byte[] dataAsBytes = value;
                     ByteBuffer buf = ByteBuffer.wrap(dataAsBytes);
                     buf.position(1);
@@ -680,13 +670,6 @@ public class CassandraMessageStore implements MessageStore {
         if (log.isDebugEnabled()) {
             log.debug("Adding Message with id " + messageId + " to Queue " + queue);
         }
-
-//        mc++;
-
-//       if(mc%400 ==0) {
-//           System.out.println("In " + mc + " node id : " + ClusterResourceHolder.getInstance().getClusterManager().
-//                   getNodeId());
-//       }
 
         ClusterManager clusterManager = ClusterResourceHolder.getInstance().getClusterManager();
 

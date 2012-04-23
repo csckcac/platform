@@ -818,7 +818,6 @@ public class AMQChannel implements SessionConfig, AMQSessionModel
             try {
                 Map<Long, Semaphore> msgLocks = ClusterResourceHolder.getInstance().
                         getSubscriptionManager().getUnAcknowledgedMessageLocks().get(this);
-
                 Semaphore ml = msgLocks.remove(deliveryTag);
                 ml.release();
             } catch (Exception e) {

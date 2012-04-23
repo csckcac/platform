@@ -294,9 +294,6 @@ public class Broker
             clusterManagementMBean = new ClusterManagementInformationMBean(clusterManager);
             clusterManagementMBean.register();
 
-
-
-
             if (ClusterResourceHolder.getInstance().getClusterConfiguration().isOnceInOrderSupportEnabled()) {
                 ClusteringEnabledSubscriptionManager subscriptionManager =
                         new OnceInOrderEnabledSubscriptionManager();

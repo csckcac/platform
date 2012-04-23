@@ -53,13 +53,15 @@ public class ApiMgtDAO {
 
     /**
      *
+     * @throws org.wso2.carbon.apimgt.api.APIManagementException if failed to initialize the db config
      */
     public ApiMgtDAO() throws APIManagementException {
         APIMgtDBUtils.initialize(APIConstants.DB_CONFIG_PATH);
     }
 
     /**
-     * @param dbConfigurationPath
+     * @param dbConfigurationPath  path to database configuration
+     * @throws org.wso2.carbon.apimgt.api.APIManagementException  if failed to initialize the db config
      */
     public ApiMgtDAO(String dbConfigurationPath) throws APIManagementException {
         APIMgtDBUtils.initialize(dbConfigurationPath);
@@ -69,6 +71,7 @@ public class ApiMgtDAO {
      * Get access token key for given userId and API Identifier
      *
      * @param userId     id of the user
+     * @param applicationName name of the Application
      * @param identifier APIIdentifier
      * @return Access token
      * @throws APIManagementException if failed to get Access token
@@ -498,25 +501,15 @@ public class ApiMgtDAO {
 
         try {
             conn = APIMgtDBUtils.getConnection();
-           // String tenantAwareUsername = MultitenantUtils.getTenantAwareUsername(userId);
-//            int tenantId;
-//            try {
-//                tenantId = IdentityUtil.getTenantIdOFUser(userId);
-//            } catch (IdentityException e) {
-//                String msg = "Failed to get tenant id of user : " + userId;
-//                log.error(msg, e);
-//                throw new APIManagementException(msg, e);
-//            }
-
             //This query to update the AM_SUBSCRIPTION table
-            String sqlQuery3 = "INSERT " +
+            String sqlQuery = "INSERT " +
                     "INTO AM_SUBSCRIPTION (TIER_ID,API_ID,APPLICATION_ID,KEY_CONTEXT_MAPPING_ID)" +
                     " VALUES (?,?,?,?)";
 
             //Adding data to the AM_SUBSCRIPTION table
             String apiId = identifier.getProviderName() + "_" + identifier.getApiName() + "_" +
                     identifier.getVersion();
-            ps = conn.prepareStatement(sqlQuery3);
+            ps = conn.prepareStatement(sqlQuery);
             ps.setString(1, identifier.getTier());
             ps.setString(2, apiId);
             ps.setInt(3, applicationId);
@@ -667,7 +660,8 @@ public class ApiMgtDAO {
                         result.getString(APIConstants.SUBSCRIPTION_FIELD_TIER_ID)));
                 subscribedAPI.setLastAccessed(result.getDate(
                         APIConstants.SUBSCRIPTION_FIELD_LAST_ACCESS));
-                //setting NULL for subscriber. If needed, Subscriber object should be constructured & passed in
+                //setting NULL for subscriber. If needed, Subscriber object should be constructed &
+                // passed in
                 Application application = new Application(result.getString("APP_NAME"), subscriber);
                 application.setId(result.getInt("APP_ID"));
                 subscribedAPI.setApplication(application);
@@ -831,6 +825,7 @@ public class ApiMgtDAO {
      *
      * @param identifier APIIdentifier
      * @param userId     @throws APIManagementException if failed to update the subscriber.
+     * @param applicationId Application id
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to update subscriber
      */
@@ -840,13 +835,13 @@ public class ApiMgtDAO {
     }
 
     /**
-     * @param consumerKey
-     * @param applicationName
-     * @param userId
-     * @param tenantId
-     * @param apiInfoDTO
-     * @return
-     * @throws IdentityException
+     * @param consumerKey ConsumerKey
+     * @param applicationName Application name
+     * @param userId  User Id
+     * @param tenantId Tenant Id of the user
+     * @param apiInfoDTO Application Info DTO
+     * @return accessToken
+     * @throws IdentityException if failed to register accessToken
      */
     public String registerAccessToken(String consumerKey, String applicationName, String userId, int tenantId
             , APIInfoDTO apiInfoDTO) throws IdentityException {
@@ -940,11 +935,10 @@ public class ApiMgtDAO {
 
 
     /**
-     * @param apiIdentifier
-     * @param userId
-     * @return
-     * @throws APIManagementException
-     * @throws IdentityException
+     * @param apiIdentifier APIIdentifier
+     * @param userId  User Id
+     * @return true if user subscribed for given APIIdentifier
+     * @throws APIManagementException if failed to check subscribed or not
      */
     public boolean isSubscribed(APIIdentifier apiIdentifier, String userId)
             throws APIManagementException {
@@ -999,8 +993,10 @@ public class ApiMgtDAO {
     }
 
     /**
-     * @param providerName
-     * @return
+     * @param providerName  Name of the provider
+     * @return UserApplicationAPIUsage of given provider
+     * @throws org.wso2.carbon.apimgt.api.APIManagementException if failed to get
+     * UserApplicationAPIUsage for given provider
      */
     public UserApplicationAPIUsage[] getAllAPIUsageByProvider(String providerName) throws APIManagementException {
 
@@ -1039,7 +1035,7 @@ public class ApiMgtDAO {
             ArrayList<UserApplicationAPIUsage> usages = new ArrayList<UserApplicationAPIUsage>();
             UserApplicationAPIUsage userApplicationAPIUsage = null;
             String appName = "";
-            String currentAppName = "";
+            String currentAppName;
             ArrayList<APIIdentifier> apiIdentifiers = new ArrayList<APIIdentifier>();
             while (result.next()) {
                 currentAppName = result.getString("APPNAME");
@@ -1086,10 +1082,10 @@ public class ApiMgtDAO {
     }
 
     /**
-     *
-     * @param accessToken
-     * @return
-     * @throws APIManagementException
+     * return the subscriber for given access token
+     * @param accessToken AccessToken
+     * @return Subscriber
+     * @throws APIManagementException  if failed to get subscriber for given access token
      */
     public Subscriber getSubscriberById(String accessToken) throws APIManagementException {
         Connection connection = null;
@@ -1190,8 +1186,9 @@ public class ApiMgtDAO {
 
     /**
      *
-     * @param application
-     * @throws APIManagementException
+     * @param application Application
+     * @param userId  User Id
+     * @throws APIManagementException  if failed to add Application
      */
     public void addApplication(Application application,String userId) throws APIManagementException {
         Connection conn = null;
@@ -1201,7 +1198,6 @@ public class ApiMgtDAO {
         try {
 
             conn = APIMgtDBUtils.getConnection();
-            //String tenantAwareUsername = MultitenantUtils.getTenantAwareUsername(userId);
             int tenantId;
             try {
                 tenantId = IdentityUtil.getTenantIdOFUser(userId);
@@ -1210,29 +1206,22 @@ public class ApiMgtDAO {
                 log.error(msg, e);
                 throw new APIManagementException(msg, e);
             }
-
             //Get subscriber Id
             Subscriber subscriber = getSubscriber(userId,tenantId);
             if(subscriber == null){
                 throw new APIManagementException("Could not load Subscriber record for : "+userId);
             }
-
-
             //This query to update the AM_APPLICATION table
             String sqlQuery = "INSERT " +
                     "INTO AM_APPLICATION (NAME, SUBSCRIBER_ID)" +
                     " VALUES (?,?)";
-
-
             // Adding data to the AM_APPLICATION  table
             ps = conn.prepareStatement(sqlQuery);
             ps.setString(1, application.getName());
             ps.setInt(2, subscriber.getId());
 
             ps.executeUpdate();
-
             ps.close();
-
             // finally commit transaction
             conn.commit();
 
@@ -1255,9 +1244,9 @@ public class ApiMgtDAO {
 
     /**
      *
-     * @param subscriber
-     * @return
-     * @throws APIManagementException
+     * @param subscriber Subscriber
+     * @return Applications for given subscriber.
+     * @throws APIManagementException if failed to get Applications for given subscriber.
      */
     public Application[] getApplications(Subscriber subscriber) throws APIManagementException {
         if(subscriber == null){
@@ -1276,7 +1265,6 @@ public class ApiMgtDAO {
                 "   AM_APPLICATION " +
                 "WHERE " +
                 "   SUBSCRIBER_ID  = ?";
-
 
         try {
             int tenantId;
@@ -1302,7 +1290,6 @@ public class ApiMgtDAO {
             connection = APIMgtDBUtils.getConnection();
             prepStmt = connection.prepareStatement(sqlQuery);
             prepStmt.setInt(1,subscriber.getId());
-
             rs = prepStmt.executeQuery();
 
             ArrayList<Application> applicationsList = new ArrayList<Application>();
@@ -1312,7 +1299,6 @@ public class ApiMgtDAO {
                 application.setId(rs.getInt("APPLICATION_ID"));
                 applicationsList.add(application);
             }
-
             applications = applicationsList.toArray(new Application[applicationsList.size()]);
             return applications;
 
@@ -1328,10 +1314,10 @@ public class ApiMgtDAO {
 
     /**
      * returns a subscriber record for given username,tenant Id
-     * @param username
-     * @param tenantId
-     * @return
-     * @throws APIManagementException
+     * @param username UserName
+     * @param tenantId Tenant Id
+     * @return  Subscriber
+     * @throws APIManagementException if failed to get subscriber
      */
     private Subscriber getSubscriber(String username,int tenantId) throws APIManagementException {
         Connection connection = null;
@@ -1356,8 +1342,8 @@ public class ApiMgtDAO {
             prepStmt = connection.prepareStatement(sqlQuery);
             prepStmt.setString(1, username);
             prepStmt.setInt(2,tenantId);
-
             rs = prepStmt.executeQuery();
+
             if (rs.next()) {
                 subscriber = new Subscriber(rs.getString("USER_ID"));
                 subscriber.setEmail(rs.getString("EMAIL_ADDRESS"));
@@ -1375,6 +1361,4 @@ public class ApiMgtDAO {
         }
         return subscriber;
     }
-
-
 }

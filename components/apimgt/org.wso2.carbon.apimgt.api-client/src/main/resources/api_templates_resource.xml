@@ -1,6 +1,5 @@
 <resource xmlns="http://ws.apache.org/ns/synapse" url-mapping="[1]" methods="[2]">
     <inSequence>
-        <property name="REST_URL_POSTFIX" scope="axis2" action="remove"/>
         <send>
             <endpoint name="[4]_APIEndpoint_[5]">
                 <address uri="[3]"/>

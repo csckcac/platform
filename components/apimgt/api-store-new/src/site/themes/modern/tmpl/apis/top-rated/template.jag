@@ -1,0 +1,27 @@
+<% var template = function(data, params, global) { %>
+<%
+    var apis = data.apis, length = apis.length;
+    if(apis.length > 0) {
+%>
+<div id="top-rated">
+    <h4>Top Rated</h4>
+    <hr/>
+    <ol>
+        <%
+        var i, api;
+        for(i = 0; i < length; i++) {
+            api = apis[i];
+        %>
+        <li>
+            <a class="tooltip-right medium orange pill" data-content="#tooltipcontentID<%=i%>"><%=api.name%></a>
+            <div class="tooltip-content" id="tooltipcontentID<%=i%>">
+                <h5><%=api.name%></h5>
+                <img src="<%=api.thumbURL%>"/>
+                <p><%=api.description%></p>
+            </div>
+        </li>
+        <% } %>
+    </ol>
+</div>
+    <% } %>
+<% }; %>

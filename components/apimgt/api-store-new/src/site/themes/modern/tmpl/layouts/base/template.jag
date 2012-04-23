@@ -1,0 +1,36 @@
+<% var template = function(data, params, global) { %>
+<div id="layouts_base">
+    <div id="top">
+        <%
+        var i, tmpl, top = params.top;
+        if(top) {
+            length = top.length;
+            for(i = 0; i < length; i++) {
+                tmpl = top[i];
+        %>
+        <div class="col_12">
+            <% includeTemplates(tmpl, global); %>
+        </div>
+        <%  }
+        } %>
+    </div>
+
+    <div id="left">
+        <div class="col_3">
+            <% includeTemplates(params.left, global); %>
+        </div>
+    </div>
+
+    <div id="middle">
+        <div class="col_6">
+            <% includeTemplates(params.middle, global); %>
+        </div>
+    </div>
+
+    <div id="right">
+        <div class="col_3">
+            <% includeTemplates(params.right, global); %>
+        </div>
+    </div>
+</div>
+<% }; %>

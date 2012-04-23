@@ -1,7 +1,11 @@
 <% include("/site/themes/utils.jag"); %>
 <% var site = require("/site/conf/site.json"); %>
 <%
-var data = {
+var published = require("/core/apis/published.js");
+var result = published.getAllPublishedAPIs();
+var apis = result.apis;
+
+var params = {
     "name":"pages/base",
     "css":{},
     "js":{},
@@ -10,18 +14,40 @@ var data = {
         "css" : {},
         "js" : {}
     },
-    "data":
+    "params":
         {
-            "title":"Service Infomations",
+            "title":"API Store Listing",
             "body":[
                 {
-                    "name":"layouts/layout0",
-                    "data": null
+                    "name":"layouts/base",
+                    "params": {
+                        "top" : [{
+                            "name" : "search/api-search",
+                            "params" : null
+                        }],
+                        "left" : [{
+                            "name" : "apis/recently-added",
+                            "params" : null
+                        }, {
+                            "name" : "apis/top-rated",
+                            "params" : null
+                        }],
+                        "middle" : {
+                            "name" : "apis/listing",
+                            "params" : {
+                                "apis" : apis
+                            }
+                        },
+                        "right" : [{
+                            "name" : "tags/tag-cloud",
+                            "params" : null
+                        }]
+                    }
                 }
             ]
         }
 };
 
-renderPage(data);
+renderPage(params);
 
 %>

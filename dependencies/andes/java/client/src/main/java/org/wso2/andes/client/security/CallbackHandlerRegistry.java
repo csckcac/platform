@@ -63,7 +63,7 @@ public class CallbackHandlerRegistry
     private static final String FILE_PROPERTY = "amq.callbackhandler.properties";
 
     /** The default name of the callback handler properties resource. */
-    public static final String DEFAULT_RESOURCE_NAME = "org/apache/qpid/client/security/CallbackHandlerRegistry.properties";
+    public static final String DEFAULT_RESOURCE_NAME = "org/wso2/andes/client/security/CallbackHandlerRegistry.properties";
 
     /** A static reference to the singleton instance of this registry. */
     private static CallbackHandlerRegistry _instance = new CallbackHandlerRegistry();

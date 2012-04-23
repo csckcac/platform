@@ -61,7 +61,7 @@ public class DynamicSaslRegistrar
     private static final String FILE_PROPERTY = "amq.dynamicsaslregistrar.properties";
 
     /** The default name of the SASL properties file resource. */
-    public static final String DEFAULT_RESOURCE_NAME = "org/apache/qpid/client/security/DynamicSaslRegistrar.properties";
+    public static final String DEFAULT_RESOURCE_NAME = "org/wso2/andes/client/security/DynamicSaslRegistrar.properties";
 
     /** Reads the properties file, and creates a dynamic security provider to register the SASL implementations with. */
     public static void registerSaslProviders()

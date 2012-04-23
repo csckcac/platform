@@ -3,6 +3,8 @@ package org.wso2.carbon.hadoop.security.group.mapping;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.rmi.RemoteException;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
@@ -49,9 +51,9 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
     	UserStoreManager userStoreMgr = null;
     	List<String> groups = null;
         String path = conf.get("hadoop.security.truststore", "wso2carbon.jks");
-	String username = conf.get("hadoop.security.admin.username", "admin");
-	String password = conf.get("hadoop.security.admin.password", "admin");
-        String serviceUrl = conf.get("hadoop.security.group.mapping.service.url", "https://127.0.0.1:9443/services");
+	    String username = conf.get("hadoop.security.admin.username", "admin");
+	    String password = conf.get("hadoop.security.admin.password", "admin");
+        String serviceUrl = conf.get("hadoop.security.group.mapping.service.url", "https://127.0.0.1:9443/services/");
         System.setProperty("javax.net.ssl.trustStore", path);  
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
         
@@ -65,7 +67,7 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
 		}
         
         try {
-			authAdminStub = new AuthenticationAdminStub(confCtx, serviceUrl+"/AuthenticationAdmin");
+			authAdminStub = new AuthenticationAdminStub(confCtx, serviceUrl+"AuthenticationAdmin");
 		} catch (AxisFault e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -74,7 +76,9 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
 		}
         authAdminStub._getServiceClient().getOptions().setManageSession(true);
         try {
-			isAuthenticated = authAdminStub.login(username, password, serviceUrl);
+        	URI serviceUrlObj = new URI(serviceUrl);
+        	String serviceHostName = serviceUrlObj.getHost();
+			isAuthenticated = authAdminStub.login(username, password, serviceHostName);
 			LOG.info("Logging in as admin");
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
@@ -86,6 +90,10 @@ public class WSBasedCarbonGroupMapping implements GroupMappingServiceProvider, C
 			e.printStackTrace();
 			LOG.warn(e.getMessage());
 			throw new IOException(e);
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			LOG.warn(e.getMessage());
 		}
         try {
 			String cookie = (String) authAdminStub._getServiceClient().getServiceContext().getProperty(  

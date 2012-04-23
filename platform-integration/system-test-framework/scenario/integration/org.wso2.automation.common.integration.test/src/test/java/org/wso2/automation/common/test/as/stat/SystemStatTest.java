@@ -123,14 +123,16 @@ public class SystemStatTest {
         log.info("Fault count verification passed");
     }
 
-    @Test(groups = {"wso2.as"}, description = "Send 100 invalid request to the service and check stats", priority = 2)
+    @Test(groups = {"wso2.as"}, description = "Send 100 invalid request to the service and check stats",
+          dependsOnMethods = "testServiceStats", priority = 2)
     public void testInvalidRequestStats() throws RemoteException, InterruptedException {
         //introducing faults and verity fault count
         String operation = "echoInt";
         int numberOfRequests = 100;
         String invalidIntNumber = "test";
-        Thread.sleep(5000);
+        Thread.sleep(10000);
         systemStatisticsBeforeExecution = adminServiceStatistics.getSystemStatistics();
+        Thread.sleep(1000);
 
         EndpointReference epr = new EndpointReference(AXIS2SERVICE_EPR);
         for (int i = 0; i < numberOfRequests; i++) {

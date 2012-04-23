@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.admin.service.utils.AuthenticateStub;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
+import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceResourceServiceExceptionException;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceStub;
 import org.wso2.carbon.registry.resource.stub.beans.xsd.CollectionContentBean;
 import org.wso2.carbon.registry.resource.stub.common.xsd.ResourceData;
@@ -332,5 +333,23 @@ public class AdminServiceResourceAdmin {
                     e.getMessage());
         }
 
+    }
+
+    public void addResourcePermission(String sessionCookie, String pathToAuthorize, String roleToAuthorize,
+                                      String actionToAuthorize, String permissionType)
+            throws AxisFault {
+        new AuthenticateStub().authenticateStub(sessionCookie, resourceAdminServiceStub);
+        try {
+            resourceAdminServiceStub.addRolePermission(pathToAuthorize, roleToAuthorize, actionToAuthorize, permissionType);
+        } catch (RemoteException e) {
+            handleException("Fail to add registry permission", e);
+        } catch (ResourceAdminServiceResourceServiceExceptionException e) {
+            handleException("Fail to add registry permission", e);
+        }
+    }
+
+    private void handleException(String msg, Exception e) throws AxisFault {
+        log.error(msg, e);
+        throw new AxisFault(msg, e);
     }
 }

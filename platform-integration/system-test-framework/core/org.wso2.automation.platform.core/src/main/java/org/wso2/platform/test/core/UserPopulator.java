@@ -16,9 +16,11 @@
 
 package org.wso2.platform.test.core;
 
+import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.admin.service.AdminServiceAuthentication;
+import org.wso2.carbon.admin.service.AdminServiceResourceAdmin;
 import org.wso2.carbon.admin.service.AdminServiceTenantMgtServiceAdmin;
 import org.wso2.carbon.admin.service.AdminServiceUserMgtService;
 import org.wso2.carbon.user.mgt.common.UserAdminException;
@@ -44,7 +46,7 @@ public class UserPopulator {
         framework = env.getFrameworkSettings();
     }
 
-    public void populateUsers() throws UserAdminException {
+    public void populateUsers() throws UserAdminException, AxisFault {
         FrameworkProperties manProperties =
                 FrameworkFactory.getFrameworkProperties(ProductConstant.MANAGER_SERVER_NAME);
 
@@ -73,7 +75,7 @@ public class UserPopulator {
                             String hostName = properties.getProductVariables().getHostName();
                             userMgtAdmin = new AdminServiceUserMgtService(backendURL);
                             log.info("Populate user to " + id + " server");
-                            createProductUsers(adminDetails, permissions, userList, backendURL,hostName);
+                            createProductUsers(adminDetails, permissions, userList, backendURL, hostName);
                         }
                     }
                 } else {
@@ -95,19 +97,26 @@ public class UserPopulator {
 
     private void createProductUsers(UserInfo adminDetails, String[] permissions, String[] userList,
                                     String backendUrl,
-                                    String hostName) throws UserAdminException {
+                                    String hostName) throws UserAdminException, AxisFault {
         String sessionCookieUser = login(adminDetails.getUserName(), adminDetails.getPassword(), backendUrl, hostName);
+        AdminServiceResourceAdmin resourceAdmin = new AdminServiceResourceAdmin(backendUrl);
         String[] roleName = {"testRole"};
         int roleNameIndex = 0;
 
         try {
             if (!userMgtAdmin.roleNameExists(roleName[roleNameIndex], sessionCookieUser)) {
                 userMgtAdmin.addRole(roleName[roleNameIndex], userList, permissions, sessionCookieUser);
+                resourceAdmin.addResourcePermission(sessionCookieUser, "/", "testRole", "3", "1");
+                System.out.println("permissoin added");
+                log.info("Role " + roleName[roleNameIndex] + " was created successfully");
                 log.info("Role " + roleName[roleNameIndex] + " was created successfully");
             }
         } catch (UserAdminException e) {
             log.error("Unable to add Role :" + e.getMessage());
             throw new UserAdminException("Unable to add Role :" + e.getMessage());
+        } catch (AxisFault axisFault) {
+            log.error("Unable assign registry permission to the role :", axisFault);
+            throw new AxisFault("Unable assign registry permission to the role :", axisFault);
         }
 
         for (int userId = 0; userId < UserListCsvReader.getUserCount(); userId++) {

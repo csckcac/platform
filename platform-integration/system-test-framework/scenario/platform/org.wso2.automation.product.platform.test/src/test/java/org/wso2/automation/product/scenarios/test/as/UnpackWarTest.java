@@ -16,7 +16,6 @@
 
 package org.wso2.automation.product.scenarios.test.as;
 
-import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.Test;
@@ -30,10 +29,14 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import static org.testng.Assert.fail;
+
 /**
+ * After starting AS with -Dcarbon.unpack.wars parameter.
+ * It should explode the deployed .war files
+ * <p/>
  * Patch automation : https://wso2.org/jira/browse/CARBON-11832
  */
-
 public class UnpackWarTest {
     private static final Log log = LogFactory.getLog(UnpackWarTest.class);
 
@@ -65,13 +68,14 @@ public class UnpackWarTest {
             in = new BufferedReader(
                     new InputStreamReader(
                             connection.getInputStream()));
-
             String inputLine;
 
 
             while ((inputLine = in.readLine()) != null) {
+                System.out.println(inputLine);
                 if (inputLine.contains(content)) {
-                    Assert.fail("Issue still available");
+                    System.out.println(inputLine);
+                    fail("Issue still available");
                 }
             }
             in.close();

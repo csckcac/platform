@@ -113,7 +113,7 @@ public class SingleWebAppUploaderClient {
 
     @Test(groups = "wso2.as", description = "Undeploy all the webapps", priority = 2)
     public void testCleanDeployedApps() throws Exception {
-        log.info("####Deleting webapps");
+        log.info("Deleting webapps");
         worker1.deleteWebApp(CALENDAR_WAR);
         worker2.deleteWebApp(MY_SERVLET_WAR_WAR);
         worker3.deleteWebApp(SAMPLE_WAR);

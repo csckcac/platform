@@ -41,8 +41,8 @@ public class ASTestSuite extends MasterTestSuite {
         suiteVariablesList.add(new SuiteVariables("SpringServiceUpload", SpringServiceUploadTest.class));
         suiteVariablesList.add(new SuiteVariables("JarServiceUpload", JarServiceUploadTest.class));
         suiteVariablesList.add(new SuiteVariables("JaxWSServiceUpload", JaxWsServiceUploaderTest.class));
-        suiteVariablesList.add(new SuiteVariables("AppServerServiceStat", ServiceStatTest.class));
         suiteVariablesList.add(new SuiteVariables("AppServerSystemStat", SystemStatTest.class));
+        suiteVariablesList.add(new SuiteVariables("AppServerServiceStat", ServiceStatTest.class));
         suiteVariablesList.add(new SuiteVariables("AarUploadTest", AARServiceUploadTest.class));
         suiteVariablesList.add(new SuiteVariables("ServiceReferExternalSchema", ExternalSchemaReferenceTest.class));
         suiteVariablesList.add(new SuiteVariables("SoapTracerTest", SoapTracerTest.class));

@@ -79,11 +79,13 @@ public class RestApiAdmin extends AbstractServiceBusAdmin{
             SynapseConfiguration synapseConfiguration = getSynapseConfiguration();
             
             oldAPI = synapseConfiguration.getAPI(apiName);
-            if(oldAPI != null){
+            if (oldAPI != null) {
+                oldAPI.destroy();
             	api.setFileName(oldAPI.getFileName());
             }
     		
             synapseConfiguration.updateAPI(apiName, api);
+            api.init(getSynapseEnvironment());
     		
     		MediationPersistenceManager pm = getMediationPersistenceManager();
             String fileName = api.getFileName();

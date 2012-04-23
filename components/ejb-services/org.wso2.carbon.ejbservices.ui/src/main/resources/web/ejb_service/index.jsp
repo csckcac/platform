@@ -52,6 +52,12 @@
 
     function addApplicationServerElement() {
         var combo = document.getElementById('existingAppServerConfigurations');
+
+        if(!jQuery('#useExistingConfig').is(":checked")) {
+            CARBON.showErrorDialog('<fmt:message key="select.application.server.config"/>.');
+            return false;
+        }
+
         if (combo.length == 0) {
             CARBON.showErrorDialog('<fmt:message key="add.application.server"/>.');
             return false;
@@ -108,7 +114,7 @@
         location.href = "delete_ejb_configuration.jsp?serviceName=" + serviceName;
     }
 
-    function toogleAddAppserverWindow(){
+    function toggleAddAppserverWindow(){
         if(jQuery('#addNewConfig').is(":checked")) {
             jQuery('#addNewConfigTable').show();
         } else {
@@ -200,7 +206,7 @@
                     </tr>
                     <tr>
                         <td class="labelField">
-                            <input onclick="toogleAddAppserverWindow();" type="radio" checked="true"
+                            <input onclick="toggleAddAppserverWindow();" type="radio" checked="true"
                                    value="existingconfig" name="astype"
                                    id="useExistingConfig">
                             <label for="useExistingConfig"><fmt:message key="use.existing"/></label>
@@ -231,7 +237,7 @@
                     </tr>
                     <tr>
                         <td class="labelField">
-                            <input onclick="toogleAddAppserverWindow();" type="radio"
+                            <input onclick="toggleAddAppserverWindow();" type="radio"
                                    value="newconfig" name="astype" id="addNewConfig">
                             <label for="addNewConfig"><fmt:message key="add.new"/></label>
                         </td>
@@ -343,7 +349,7 @@
 <script type="text/javascript">
 //    ejbProviderStep1DisableFields();
     initSections("hidden");
-    toogleAddAppserverWindow();
+    toggleAddAppserverWindow();
 </script>
 
 </fmt:bundle>

@@ -73,8 +73,6 @@ public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEn
         Map<String,CassandraSubscription> subscriptions = subscriptionMap.get(queue.getResourceName());
 
 
-        System.out.println("Add Sub :" + subscription.getSubscription().getSubscriptionID() + " Queue : " + queue);
-
         if(subscriptions == null || subscriptions.size() ==0) {
             synchronized (subscriptionMap) {
                 subscriptions = subscriptionMap.get(queue.getResourceName());
@@ -93,16 +91,13 @@ public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEn
                     }
                 } else {
 
-                    System.out.println("add to old");
                     subscriptions.put(subscription.getSubscription().getSubscriptionID() + "", subscription);
                 }
             }
         } else {
-            System.out.println("add to old");
             subscriptions.put(subscription.getSubscription().getSubscriptionID() + "", subscription);
         }
-        System.out.println(" current size : " +
-                subscriptions.size());
+
     }
 
 
@@ -115,7 +110,6 @@ public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEn
 
         Map<String,CassandraSubscription> subs = subscriptionMap.get(queue);
 
-        System.out.println("remove subsciption");
         if (subs != null) {
             subs.remove(subId);
             if (subs.size() == 0) {

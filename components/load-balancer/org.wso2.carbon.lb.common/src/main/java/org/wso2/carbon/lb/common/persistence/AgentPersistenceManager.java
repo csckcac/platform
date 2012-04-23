@@ -1,18 +1,19 @@
 package org.wso2.carbon.lb.common.persistence;
 
 import org.wso2.carbon.lb.common.dao.ContainerDAO;
-import org.wso2.carbon.lb.common.dao.WorkerNodeDAO;
+import org.wso2.carbon.lb.common.dao.HostMachineDAO;
 import org.wso2.carbon.lb.common.dao.ZoneDAO;
 import org.wso2.carbon.lb.common.dto.Container;
-import org.wso2.carbon.lb.common.dto.WorkerNode;
+import org.wso2.carbon.lb.common.dto.ContainerInformation;
+import org.wso2.carbon.lb.common.dto.HostMachine;
 import org.wso2.carbon.lb.common.dto.Zone;
-import org.wso2.carbon.hosting.wnagent.stub.services.xsd.dto.ContainerInformation;
 
 import java.sql.SQLException;
 
 /**
- *
- *
+ *   This class is written to interface all the dao classes through a singleton class. All the access
+ *   requests to database are gone through this class. Therefore there is a relevant method in this
+ *   class for all the public methods in all the DAO classes.
  *
  */
 public class    AgentPersistenceManager {
@@ -27,20 +28,20 @@ public class    AgentPersistenceManager {
         return manager;
     }
 
-    public boolean addWorkerNode(WorkerNode workerNode, String epr) throws SQLException, ClassNotFoundException {
-        WorkerNodeDAO workerNodeDAO = new WorkerNodeDAO();
-        return workerNodeDAO.create(workerNode, epr);
+    public boolean addHostMachine(HostMachine hostMachine) throws SQLException, ClassNotFoundException {
+        HostMachineDAO hostMachineDAO = new HostMachineDAO();
+        return hostMachineDAO.create(hostMachine);
     }
     
     public void makeWorkerNodeUnavailable(String endPoint)
             throws SQLException, ClassNotFoundException {
-        WorkerNodeDAO workerNodeDAO =  new WorkerNodeDAO();
-        workerNodeDAO.makeUnavailable(endPoint);
+        HostMachineDAO hostMachineDAO =  new HostMachineDAO();
+        hostMachineDAO.makeUnavailable(endPoint);
     }
-    public boolean addZone(Zone zone)
+    public boolean addZone(Zone zone, String[] domains)
             throws ClassNotFoundException, SQLException {
         ZoneDAO zoneResourcePlanDAO = new ZoneDAO();
-        return zoneResourcePlanDAO.create(zone);
+        return zoneResourcePlanDAO.create(zone, domains);
     }
 
     public void addContainer(Container container)
@@ -57,8 +58,8 @@ public class    AgentPersistenceManager {
 
     public boolean deleteWorkerNode(String epr)
             throws ClassNotFoundException, SQLException {
-        WorkerNodeDAO workerNodeDAO = new WorkerNodeDAO();
-        return workerNodeDAO.delete(epr);
+        HostMachineDAO hostMachineDAO = new HostMachineDAO();
+        return hostMachineDAO.delete(epr);
     }
 
     public void changeContainerState(String containerName, Boolean state)
@@ -76,12 +77,12 @@ public class    AgentPersistenceManager {
         ZoneDAO zoneDAO = new ZoneDAO();
         return zoneDAO.isZoneExist(zone);
     }
-    public boolean isWorkerNodeExist(String endPoint) throws ClassNotFoundException, SQLException {
-        WorkerNodeDAO workerNodeDAO = new WorkerNodeDAO();
-        return workerNodeDAO.isWorkerNodeExist(endPoint);
+    public boolean isHostMachineExist(String endPoint) throws ClassNotFoundException, SQLException {
+        HostMachineDAO hostMachineDAO = new HostMachineDAO();
+        return hostMachineDAO.isHostMachineExist(endPoint);
     }
-    public boolean isWorkerNodesAvailableInDomain(String domain) throws ClassNotFoundException, SQLException {
-        WorkerNodeDAO workerNodeDAO = new WorkerNodeDAO();
-        return workerNodeDAO.isAvailableInDomain(domain);
+    public boolean isHostMachinesAvailableInDomain(String domain) throws ClassNotFoundException, SQLException {
+        HostMachineDAO hostMachineDAO = new HostMachineDAO();
+        return hostMachineDAO.isAvailableInDomain(domain);
     }
 }

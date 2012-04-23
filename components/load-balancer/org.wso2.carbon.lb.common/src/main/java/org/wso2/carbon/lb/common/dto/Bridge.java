@@ -7,7 +7,7 @@ public class Bridge {
 
 	private boolean available;
 
-    private String workerNode;
+    private String hostMachine;
 
     private int maximumCountIps;
 
@@ -27,12 +27,12 @@ public class Bridge {
     }
 
 
-    public String getWorkerNode() {
-        return workerNode;
+    public String getHostMachine() {
+        return hostMachine;
     }
 
-    public void setWorkerNode(String workerNode) {
-        this.workerNode = workerNode;
+    public void setHostMachine(String hostMachine) {
+        this.hostMachine = hostMachine;
     }
 
     public int getMaximumCountIps() {

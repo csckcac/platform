@@ -14,7 +14,7 @@ public class Container {
 
     private String tenant;
 
-	private String jailKeysFile;
+	private String containerKeysFile;
 	
 	private String template;
     
@@ -23,12 +23,12 @@ public class Container {
     private String bridge;
 
 
-	public String getJailKeysFile() {
-		return jailKeysFile;
+	public String getContainerKeysFile() {
+		return containerKeysFile;
 	}
 
-	public void setJailKeysFile(String jailKeysFile) {
-		this.jailKeysFile = jailKeysFile;
+	public void setContainerKeysFile(String containerKeysFile) {
+		this.containerKeysFile = containerKeysFile;
 	}
 
 	public String getTemplate() {
@@ -101,5 +101,58 @@ public class Container {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public static class WorkerNode {
+
+        private boolean available;
+
+        private String containerRoot;
+
+        private String ip;
+
+        private String zone;
+
+        private Bridge bridges[];
+
+        public boolean isAvailable() {
+            return available;
+        }
+
+        public void setAvailable(boolean available) {
+            this.available = available;
+        }
+
+        public String getIp() {
+            return ip;
+        }
+
+        public void setIp(String ip) {
+            this.ip = ip;
+        }
+
+        public String getZone() {
+            return zone;
+        }
+
+        public void setZone(String zone) {
+            this.zone = zone;
+        }
+
+        public String getContainerRoot() {
+            return containerRoot;
+        }
+
+        public void setContainerRoot(String containerRoot) {
+            this.containerRoot = containerRoot;
+        }
+
+        public Bridge[] getBridges() {
+            return bridges;
+        }
+
+        public void setBridges(Bridge[] bridges) {
+            this.bridges = bridges;
+        }
     }
 }

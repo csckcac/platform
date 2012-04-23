@@ -4,8 +4,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.lb.common.dto.Bridge;
 import org.wso2.carbon.lb.common.dto.Container;
-import org.wso2.carbon.lb.common.dto.WorkerNode;
-import org.wso2.carbon.hosting.wnagent.stub.services.xsd.dto.ContainerInformation;
+import org.wso2.carbon.lb.common.dto.ContainerInformation;
+import org.wso2.carbon.lb.common.dto.HostMachine;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,7 +15,7 @@ import java.sql.Statement;
 
 /**
  *
- *  This class handles the database access relevant to container data
+ *  This class handles the database access relevant to container data.
  *
  */
 public class ContainerDAO extends AbstractDAO{
@@ -28,6 +28,11 @@ public class ContainerDAO extends AbstractDAO{
         String dbPassword = "root";
         Statement statement = null;
 
+   /**
+    *  This is for adding container details to database. This will be called after successfully
+    *  creating a container in a host machine.
+    *
+    */
     public void create(Container container) throws SQLException, ClassNotFoundException {
         try{
            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
@@ -37,7 +42,7 @@ public class ContainerDAO extends AbstractDAO{
                         + container.getType() + "','"
                         + container.getLabel() + "','" + container.getDescription() + "',"
                         + container.isStarted() + ",'" + container.getTenant() + "','"
-                        + container.getJailKeysFile() + "','" + container.getTemplate() + "','"
+                        + container.getContainerKeysFile() + "','" + container.getTemplate() + "','"
                         + container.getIp() + "','" + container.getBridge() + "')";
 
            statement.executeUpdate(sql);
@@ -48,7 +53,7 @@ public class ContainerDAO extends AbstractDAO{
        }catch (ClassNotFoundException s){
            String msg = "Error while sql connection :" + s.getMessage();
            log.error(msg);
-           throw new ClassNotFoundException(msg);
+           throw new SQLException(msg);
        }
        finally {
             try { if (statement != null) statement.close(); } catch(SQLException e) {}
@@ -56,6 +61,14 @@ public class ContainerDAO extends AbstractDAO{
        }
     }
 
+    /**
+     * This will delete the container from database. This will be called when the container is idle
+     * for a particular time, so it need to recover resources of the machine.
+     *
+     * @param containerId
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     */
     public void delete(String containerId) throws SQLException, ClassNotFoundException {
         try{
            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
@@ -71,7 +84,7 @@ public class ContainerDAO extends AbstractDAO{
        }catch (ClassNotFoundException s){
            String msg = "Error while sql connection :" + s.getMessage();
            log.error(msg);
-           throw new ClassNotFoundException(msg);
+           throw new SQLException(msg);
        }
        finally {
             try { if (statement != null) statement.close(); } catch(SQLException e) {}
@@ -79,14 +92,23 @@ public class ContainerDAO extends AbstractDAO{
        }
     }
 
+    /**
+     * This is called to update the status of the container. We may make started = false if
+     * the container is created but stoped after some time due to some reason.
+     *
+     * @param containerId
+     * @param status
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     */
     public void changeState(String containerId, Boolean status)
-            throws SQLException, ClassNotFoundException {
+            throws SQLException {
         try{
            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
            Class.forName(driver);
            statement = con.createStatement();
-           String sql = "UPDATE container SET started="+ status +" WHERE name='" + containerId+ "'";
-
+           String sql = "UPDATE container SET started="+ status +" WHERE container_id='"
+                        + containerId+ "'";
            statement.executeUpdate(sql);
        }catch (SQLException s){
            String msg = "Error while deleting container data" + s.getMessage();
@@ -95,7 +117,7 @@ public class ContainerDAO extends AbstractDAO{
        }catch (ClassNotFoundException s){
            String msg = "Error while sql connection :" + s.getMessage();
            log.error(msg);
-           throw new ClassNotFoundException(msg);
+           throw new SQLException(msg);
        }
        finally {
             try { if (statement != null) statement.close(); } catch(SQLException e) {}
@@ -105,98 +127,91 @@ public class ContainerDAO extends AbstractDAO{
 
 
 
+
     /**
-     * This method helps to identify the available worker node from the zone requested. This method
-     * and 'retrieveAvailableContainerInformation' method are separated for distributing the complexity.
-     * This will be called from retrieveAvailableContainerInformation method.
+     * This method helps to identify the available worker node from the zone requested.
+     * It will select the worker node which has least load at the moment. This method
+     * is separated with the intention of isolating the algorithm of selection worker node. For
+     * example instead of the least loaded worker node, we can select worker nodes in a round robin
+     * way. Replacing this method with round robin logic will be enough to do the needful.
      *
-     * @param zone
-     * @throws Exception
+     * @param zone name of the zone which search Host machine in.
+     * @throws Exception related to database transactions
      */
-    public WorkerNode getAvailableWorkerNode(String zone)
+    private HostMachine getAvailableHostMachine(String zone)
             throws SQLException, ClassNotFoundException {
-        WorkerNode workerNode = new WorkerNode();
-        ResultSet resultSet = null;
+        HostMachine hostMachine = new HostMachine();
+        ResultSet resultSetForHM = null;
+        Statement statementForBridge = null;
+        Statement statementForContainer = null;
+        ResultSet resultSetForBridge = null;
+        ResultSet resultSetForContainer = null;
         try{
             con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
             Class.forName(driver);
             statement = con.createStatement();
-            String sql =  "SELECT * FROM worker_node WHERE zone='" + zone + "' AND available=true" ;
-            //Here we have to get all the worker nodes to be generic sql and hence we can't use
-            // LIMTI 1(mysql specific)
-            resultSet = statement.executeQuery(sql);
-            int workerNodeCount = 0;
-            boolean workerNodeFilled = false;
-            while(resultSet.next()){
-                workerNodeCount++;
-                if(workerNodeCount == 1){
-                    String workerNodeEndPoint = resultSet.getString("end_point");
-                    workerNode.setContainerRoot(resultSet.getString("container_root"));
-                    workerNode.setAvailable(true);
-                    workerNode.setIp(resultSet.getString("ip"));
-                    workerNode.setZone(zone);
-
-                    Bridge bridges[] = new Bridge[1]; //Here we only get one available bridge for this
-                    // particular worker node. Therefore only one bridge is included in array
-                    bridges[0] = new Bridge();
-
-                    sql = "SELECT * FROM bridge WHERE worker_node='" + workerNodeEndPoint
-                          + "' AND available=true";
-                    //Here we have to get all the bridges to be generic sql and hence we can't use
-                    // LIMTI 1(mysql specific),
-
-                    resultSet = statement.executeQuery(sql);
-                    int bridgeCount = 0;
-                    boolean bridgeFilled = false;
-                    while(resultSet.next()){
-                        bridgeCount++;
-                        if (bridgeCount == 1){
-                            bridges[0].setAvailable(true);
-                            bridges[0].setBridgeIp(resultSet.getString("bridge_ip"));
-                            bridges[0].setCurrentCountIps(resultSet.getInt("current_count_ips"));
-                            bridges[0].setMaximumCountIps(resultSet.getInt("max_count_ips"));
-                            bridges[0].setNetGateway(resultSet.getString("net_gateway"));
-                            bridges[0].setNetMask(resultSet.getString("net_mask"));
-                            bridges[0].setWorkerNode(workerNodeEndPoint);
-                            workerNode.setBridges(bridges);
-                            if(bridges[0].getCurrentCountIps() + 1 == bridges[0].getMaximumCountIps()){
-                                bridgeFilled = true;
-                                sql =  "UPDATE bridge SET available=false WHERE bridge_ip='"
-                                       + bridges[0].getBridgeIp() + "'";
-                                statement.executeUpdate(sql);
-                                //make bridge unavailable
-                            }
-                        }
-                    }
-                    if(bridgeCount == 1 && bridgeFilled){
-                        workerNodeFilled = true;
-                        sql =  "UPDATE worker_node SET available=false WHERE name='"
-                               + workerNodeEndPoint + "'";
-                        statement.executeUpdate(sql);
-                        //make worker node unavailable
+            String sql =  "SELECT * FROM host_machine WHERE zone='" + zone + "' AND available=true" ;
+            //Here we get all the worker nodes that maps to zone
+            resultSetForHM = statement.executeQuery(sql);
+            int containerCountOfHostMachine;
+            int minimumContainerCountHM = -1;
+            while(resultSetForHM.next()){ //Iterate through worker nodes relevant to zone
+                containerCountOfHostMachine = 0;
+                String hostMachineEndPoint = resultSetForHM.getString("epr");
+                Bridge bridges[] = new Bridge[1]; //Here we only get one available bridge for this
+                // particular worker node. Therefore only one bridge is included in array
+                bridges[0] = new Bridge();
+                statementForBridge = con.createStatement();
+                sql = "SELECT * FROM bridge WHERE host_machine='" + hostMachineEndPoint
+                                          + "' AND available=true";
+                resultSetForBridge = statementForBridge.executeQuery(sql);
+                int minimumContainerCountBridge = -1;
+                while(resultSetForBridge.next()){
+                    statementForContainer = con.createStatement();
+                    sql = "SELECT COUNT(bridge) FROM container WHERE bridge='"
+                          + resultSetForBridge.getString("bridge_ip") + "'";
+                    resultSetForContainer = statementForContainer.executeQuery(sql);
+                    resultSetForContainer.next();
+                    int containerCount = resultSetForContainer.getInt(1);
+                    containerCountOfHostMachine += containerCount;
+                    if(minimumContainerCountBridge == -1 || minimumContainerCountBridge > containerCount)
+                    { //check if it's the first one or lower than before
+                        minimumContainerCountBridge = containerCount;
+                        //Please note here it only retrieve the bridge ip as its the only required para
+                        bridges[0].setBridgeIp(resultSetForBridge.getString("bridge_ip"));
                     }
                 }
-                if(workerNodeCount == 1 && workerNodeFilled){
-                    sql =  "UPDATE zone_resource_plan SET available=false WHERE zone='" + zone + "'";
-                    statement.executeUpdate(sql);
-                    //make zone unavailable
+                if(minimumContainerCountHM == -1 || minimumContainerCountHM > containerCountOfHostMachine)
+                { //check if it's the first one or lower than before
+                    minimumContainerCountHM = containerCountOfHostMachine;
+                    hostMachine.setEpr(hostMachineEndPoint);
+                    hostMachine.setContainerRoot(resultSetForHM.getString("container_root"));
+                    hostMachine.setAvailable(true);
+                    hostMachine.setIp(resultSetForHM.getString("ip"));
+                    hostMachine.setZone(zone);
+                    hostMachine.setBridges(bridges);
                 }
             }
         }catch (SQLException s){
-           String msg = "Error while deleting container data" + s.getMessage();
+           String msg = "Error while retrieving container data" + s.getMessage();
            log.error(msg);
            throw new SQLException(s);
-        }catch (ClassNotFoundException s){
+        }
+        catch (ClassNotFoundException s){
            String msg = "Error while sql connection :" + s.getMessage();
            log.error(msg);
-           throw new ClassNotFoundException(msg);
+           throw new SQLException(msg);
         }
         finally {
+            try { if (resultSetForContainer != null) resultSetForContainer.close(); } catch(SQLException e) {}
+            try { if (resultSetForBridge != null) resultSetForBridge.close(); } catch(SQLException e) {}
+            try { if (resultSetForHM != null) resultSetForHM.close(); } catch(SQLException e) {}
             try { if (statement != null) statement.close(); } catch(SQLException e) {}
+            try { if (statementForBridge != null) statementForBridge.close(); } catch(SQLException e) {}
+            try { if (statementForContainer != null) statementForContainer.close(); } catch(SQLException e) {}
             try { if (con != null) con.close(); } catch(Exception e) {}
-            try { if (resultSet != null) resultSet.close(); } catch(Exception e) {}
         }
-        return workerNode;
+        return hostMachine;
     }
 
 
@@ -205,16 +220,18 @@ public class ContainerDAO extends AbstractDAO{
     /**
      * This method will return the next available ip for the input bridge ip. For a particular bridge
      * there will be at-least one ip at the table. If there is only one ip, it is the available ip to
-     * next container to be created and that will be returned. Then it should increase and put back
-     * to the table. If there are more than one ips, we need to select second of the result set to
-     * return and should be deleted as well.
+     * next container to be created and that will be returned. Because ips are filled up to that level
+     * in the bridge. Then it should increase and put back to the table.
+     * If there are more than one ips, we need to select second of the result set to
+     * return and should be deleted as well. That's because we add un-used(ips of destroyed containers
+     * at the end of this table with relevant bridge
      *
      * @param bridgeIp
      * @throws Exception
      */
-    public String getAvailableIp(String bridgeIp) throws SQLException {
+    private String getAvailableIp(String bridgeIp) throws SQLException {
         String availableIp = null;
-        ResultSet resultSet;
+        ResultSet resultSet = null;
         try{
             con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
             Class.forName(driver);
@@ -229,7 +246,6 @@ public class ContainerDAO extends AbstractDAO{
                 availableIp = resultSet.getString("ip").trim();
                 ipCount++;
                 if(ipCount == 2){
-                    System.out.println("two");
                     sql =  "DELETE FROM available_ip WHERE ip='" + availableIp+ "'";
                     statement.executeUpdate(sql);
                     break;
@@ -240,7 +256,6 @@ public class ContainerDAO extends AbstractDAO{
                        + availableIp + "'";
                 statement.executeUpdate(sql);
             }
-
         }catch (SQLException s){
             String msg = "Error while getting available ip " + s.getMessage();
             log.error(msg);
@@ -248,37 +263,41 @@ public class ContainerDAO extends AbstractDAO{
         }catch (ClassNotFoundException s){
             String msg = "Error while sql connection :" + s.getMessage();
             log.error(msg);
-            throw new SQLException(s);
+            throw new SQLException(msg);
         }
         finally {
-           statement.close();
-           con.close();
+            try { if (resultSet != null) resultSet.close(); } catch(Exception e) {}
+            try { if (statement != null) statement.close(); } catch(SQLException e) {}
+            try { if (con != null) con.close(); } catch(Exception e) {}
         }
-
         return availableIp;
     }
 
 
     /**
      * This method will return ContainerInformation object which has all the information for
-     * creating the container physically. This method use 'getAvailableWorkerNode' and 'getAvailableIp'
+     * creating the container physically. This method use 'getAvailableHostMachine' and 'getAvailableIp'
      * for information gathering.
      *
      * @param zone
      * @throws Exception
      */
+
+
     public ContainerInformation retrieveAvailableContainerInformation(String zone)
             throws ClassNotFoundException, SQLException {
 
         ContainerInformation containerInformation = new ContainerInformation();
         //containerInformation.setZone(zone);
-        WorkerNode workerNode = getAvailableWorkerNode(zone);
-        Bridge[] bridges = workerNode.getBridges();
-        Bridge bridge = bridges[0];
-        String bridgeIp =bridge.getBridgeIp();
-        containerInformation.setContainerRoot(workerNode.getContainerRoot());
+        HostMachine hostMachine = getAvailableHostMachine(zone);
+        Bridge[] bridges = hostMachine.getBridges();
+        String bridgeIp = bridges[0].getBridgeIp();
+        containerInformation.setContainerRoot(hostMachine.getContainerRoot());
         containerInformation.setBridge(bridgeIp);
         containerInformation.setIp(getAvailableIp(bridgeIp));
         return containerInformation;
     }
+
+
+
 }

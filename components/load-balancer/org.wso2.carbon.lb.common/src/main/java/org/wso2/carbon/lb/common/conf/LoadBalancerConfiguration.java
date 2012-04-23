@@ -443,6 +443,7 @@ public class LoadBalancerConfiguration {
         private String elasticIP ;//= LoadBalancerConfigUtil.replaceVariables("${ELASTIC_IP}");
         private int instances = 1;
         private boolean isAutoscaleEnabled;
+        private String autoscalerServiceEpr;
 
         public String getElasticIP() {
             return elasticIP;
@@ -455,6 +456,10 @@ public class LoadBalancerConfiguration {
         public boolean isAutoscaleEnabled() {
             return isAutoscaleEnabled;
         }
+        
+        public String getAutoscalerServiceEpr() {
+            return autoscalerServiceEpr;
+        }
 
         public void setElastic_IP(String elasticIP) {
             this.elasticIP = LoadBalancerConfigUtil.replaceVariables(elasticIP);
@@ -466,6 +471,10 @@ public class LoadBalancerConfiguration {
         
         public void setEnable_autoscaler(String isEnabled) {
             this.isAutoscaleEnabled = Boolean.parseBoolean(isEnabled);
+        }
+        
+        public void setAutoscaler_service_epr(String epr) {
+            this.autoscalerServiceEpr = epr;
         }
     }
 

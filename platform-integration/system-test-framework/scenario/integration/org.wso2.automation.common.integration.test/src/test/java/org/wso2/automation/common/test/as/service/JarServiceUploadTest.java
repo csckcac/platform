@@ -32,6 +32,9 @@ import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
 
 import static org.testng.Assert.assertTrue;
 
+/**
+ * Deploy a simple jar service.
+ */
 public class JarServiceUploadTest {
 
     private static final Log log = LogFactory.getLog(JarServiceUploadTest.class);

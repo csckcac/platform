@@ -49,8 +49,6 @@ public class BpelActComposeUrl{
         bpelUploader.deployBPEL("TestComposeUrl", "TestComposeUrl", sessionCookie);
     }
 
-
-
     @Test(groups = {"wso2.bps", "wso2.bps.bpelactivities"}, description = "Invike combine URL Bpel")
     public void testComposeUrl() throws Exception, RemoteException {
     int instanceCount = 0;

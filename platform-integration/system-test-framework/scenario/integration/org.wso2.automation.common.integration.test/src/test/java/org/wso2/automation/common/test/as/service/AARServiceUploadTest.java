@@ -33,7 +33,7 @@ import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
 
 
 /*
-Test multi-tenancy of services - Deploy services from one tenant and check whether those are available in other tenants
+Test multitenancy of services - Deploy axis2 services from one tenant and check whether those are available in other tenants
  */
 public class AARServiceUploadTest {
 

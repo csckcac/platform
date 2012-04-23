@@ -23,13 +23,11 @@ import org.apache.axiom.om.OMNamespace;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.maven.artifact.ArtifactUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.carbon.aarservices.stub.ExceptionException;
 import org.wso2.carbon.admin.service.AdminServiceCarbonServerAdmin;
-import org.wso2.carbon.server.admin.stub.*;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.ArtifactCleanerUtil;
 import org.wso2.platform.test.core.utils.ArtifactDeployerUtil;
@@ -48,7 +46,7 @@ import java.rmi.RemoteException;
 import static org.testng.Assert.assertTrue;
 
 /**
- * Test to verify fix for Deployers don't work when Carbon is in Maintenance mode
+ * Test to verify fix for "Deployers don't work when Carbon is in Maintenance mode"
  * https://wso2.org/jira/browse/CARBON-10973
  */
 public class HotDeploymentTest {
@@ -90,7 +88,7 @@ public class HotDeploymentTest {
         //might happen before server initiate restart
     }
 
-    @Test(groups = {"wso2.as"}, description = "Verity service deployment after gracefull restart", priority = 2)
+    @Test(groups = {"wso2.as"}, description = "Verity service deployment after graceful restart", priority = 2)
     public void testInvokeService() throws InterruptedException, AxisFault {
         int httpsPort = Integer.parseInt(environment.getAs().getProductVariables().getHttpsPort());
         String operation = "echoInt";

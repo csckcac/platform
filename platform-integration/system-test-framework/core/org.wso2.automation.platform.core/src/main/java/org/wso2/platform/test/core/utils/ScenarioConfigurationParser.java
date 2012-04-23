@@ -22,7 +22,6 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.platform.test.core.ProductConstant;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
@@ -61,7 +60,7 @@ public class ScenarioConfigurationParser {
     private static final String ASSOCIATION_VALUE = "value";
     private TestScenarioConfig testScenarioConfig = new TestScenarioConfig();
 
-    public ScenarioConfigurationParser() {
+    private ScenarioConfigurationParser() {
         readConfig();
     }
 

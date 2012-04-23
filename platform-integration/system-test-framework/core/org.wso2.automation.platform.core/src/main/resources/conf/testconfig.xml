@@ -178,7 +178,7 @@
     <scenario testName="org.wso2.automation.common.test.as.service.JaxWsServiceUploaderTest">
         <product name="AS">
             <artifacts userId="1">
-                <artifact name="JaxWSService.jar" type="jaxws"/>
+                <artifact name="java_first_jaxws.war" type="jaxws"/>
             </artifacts>
         </product>
     </scenario>

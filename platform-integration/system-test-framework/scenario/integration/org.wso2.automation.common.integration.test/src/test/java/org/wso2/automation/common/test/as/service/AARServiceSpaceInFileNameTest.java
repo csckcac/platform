@@ -31,7 +31,9 @@ import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Deploy AAR service with spaces in it's file name and invoke it.
+ */
 public class AARServiceSpaceInFileNameTest {
 
     private static final Log log = LogFactory.getLog(AARServiceSpaceInFileNameTest.class);
@@ -53,7 +55,7 @@ public class AARServiceSpaceInFileNameTest {
         log.info("Running AAR service with space in file name test...");
         String operation = "echoInt";
         AxisServiceClientUtils.waitForServiceDeployment(AXIS2SERVICE_EPR);
-        System.out.println("EPR is " + AXIS2SERVICE_EPR);
+        log.info("EPR is " + AXIS2SERVICE_EPR);
         List<String> expectedOutput = new ArrayList<String>();
         expectedOutput.add(">123<");
         AxisServiceClientUtils.sendRequest(AXIS2SERVICE_EPR, operation, createPayLoad().toString(), 1,

@@ -30,7 +30,6 @@ import org.wso2.carbon.admin.service.AdminServiceDataServiceFileUploader;
 import org.wso2.carbon.admin.service.AdminServiceEndPointAdmin;
 import org.wso2.carbon.admin.service.AdminServiceEventSourceAdmin;
 import org.wso2.carbon.admin.service.AdminServiceJARServiceUploader;
-import org.wso2.carbon.admin.service.AdminServiceJAXWSServiceUploader;
 import org.wso2.carbon.admin.service.AdminServiceLocalEntriesAdmin;
 import org.wso2.carbon.admin.service.AdminServiceMashupFileUploader;
 import org.wso2.carbon.admin.service.AdminServiceMassageStoreAdmin;
@@ -43,6 +42,7 @@ import org.wso2.carbon.admin.service.AdminServiceSequenceAdmin;
 import org.wso2.carbon.admin.service.AdminServiceSynapseConfigAdmin;
 import org.wso2.carbon.admin.service.AdminServiceTaskAdmin;
 import org.wso2.carbon.admin.service.AdminServiceWebAppAdmin;
+import org.wso2.carbon.admin.service.JaxwsWebappAdminClient;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
 import org.wso2.carbon.endpoint.stub.types.EndpointAdminEndpointAdminException;
 import org.wso2.carbon.localentry.stub.types.LocalEntryAdminException;
@@ -51,6 +51,7 @@ import org.wso2.carbon.rule.service.stub.fileupload.ExceptionException;
 import org.wso2.carbon.sequences.stub.types.SequenceEditorException;
 import org.wso2.carbon.task.stub.TaskManagementException;
 import org.wso2.carbon.utils.FileManipulator;
+import org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappUploadData;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.dssutils.SqlDataSourceUtil;
 import org.wso2.platform.test.core.utils.endpointutils.EsbendpointSetter;
@@ -134,11 +135,8 @@ public class ArtifactDeployerUtil {
                                   String artifactLocation)
             throws RemoteException, MalformedURLException {
 
-        AdminServiceJAXWSServiceUploader jaxwsuploader =
-                new AdminServiceJAXWSServiceUploader(backendURL);
-        URL jaxwsURL = new URL(("file:///" + artifactLocation));
-        DataHandler jaxwsdh = new DataHandler(jaxwsURL);
-        jaxwsuploader.uploadJAXWSFile(sessionCookie, artifactName, jaxwsdh);
+        JaxwsWebappAdminClient jaxwsWebappAdminClient = new JaxwsWebappAdminClient(backendURL, sessionCookie);
+        jaxwsWebappAdminClient.uploadWebapp(artifactLocation, artifactName);
     }
 
     public void jarFileUploder(String sessionCookie, String backEndUrl, String artifactLocation,
@@ -264,7 +262,8 @@ public class ArtifactDeployerUtil {
     public void springServiceUpload(String sessionCookie, String artifactName,
                                     String artifactLocation,
                                     List<ArtifactDependency> artifactDependencyList,
-                                    List<ArtifactAssociation> artifactAssociationList,String backendURL)
+                                    List<ArtifactAssociation> artifactAssociationList,
+                                    String backendURL)
             throws Exception {
 
         String contextXMLName = getContextXMLName(artifactDependencyList);
@@ -274,7 +273,7 @@ public class ArtifactDeployerUtil {
         String springContextFilePath = artifactLocation + File.separator + "spring" + File.separator +
                                        location + File.separator + contextXMLName;
         SpringServiceMaker newMarker = new SpringServiceMaker();
-        newMarker.createAndUploadSpringBean(springContextFilePath, springBeanFilePath, sessionCookie,backendURL);
+        newMarker.createAndUploadSpringBean(springContextFilePath, springBeanFilePath, sessionCookie, backendURL);
 
     }
 
@@ -443,7 +442,7 @@ public class ArtifactDeployerUtil {
     }
 
     public void updateSynapseConfig(String sessionCookie, String backendURL,
-                                     String scenarioConfigDir)
+                                    String scenarioConfigDir)
             throws IOException, ParserConfigurationException, SAXException, XMLStreamException,
                    ServletException, TransformerException {
 
@@ -745,8 +744,8 @@ public class ArtifactDeployerUtil {
 
     public EnvironmentVariables getClusterEnvironment(String productName, int userId) {
         ClusterReader reader = new ClusterReader();
-        String pid= reader.getActiveClusterNode(productName);
-        EnvironmentBuilder builder = new EnvironmentBuilder().clusterNode(pid,userId);
+        String pid = reader.getActiveClusterNode(productName);
+        EnvironmentBuilder builder = new EnvironmentBuilder().clusterNode(pid, userId);
         return builder.build().getClusterNode(pid);
     }
 }

@@ -71,7 +71,6 @@ public class PlatformTestManager implements ITestListener {
      * Invoked after the test class is instantiated and before
      * any configuration method is called.
      */
-
     public void onStart(ITestContext context) {
         String currentTestClassName = ((TestRunner) context).getCurrentXmlTest().getClasses().get(0).getName();
         log.info("Before executing the test class :" + currentTestClassName);

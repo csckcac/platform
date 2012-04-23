@@ -71,7 +71,6 @@ public class AdminServiceApplicationAdmin {
         appList = applicationAdminStub.listAllApplications();
 
         for (String anAppList : appList) {
-            System.out.println(anAppList);
             if (appName.contains(anAppList)) {
                 applicationAdminStub.deleteApplication(anAppList);
             }

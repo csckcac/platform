@@ -45,6 +45,9 @@ import java.net.URL;
 
 import static org.testng.Assert.assertTrue;
 
+/**
+ * Deploy a service which refers external schema hosted in governance registry.
+ */
 public class ExternalSchemaReferenceTest {
     private static final Log log = LogFactory.getLog(ExternalSchemaReferenceTest.class);
     private static String AXIS2SERVICE_EPR;

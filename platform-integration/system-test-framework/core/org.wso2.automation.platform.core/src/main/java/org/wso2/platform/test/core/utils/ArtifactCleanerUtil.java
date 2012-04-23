@@ -136,6 +136,20 @@ public class ArtifactCleanerUtil {
         AdminServiceWebAppAdmin.deleteWebAppFile(sessionCookie, fileName);
     }
 
+    /**
+     * Delete JaxWs webapp file
+     *
+     * @param sessionCookie - login session
+     * @param backendURL  backend URL of the service
+     * @param webappName  webapp name
+     * @throws RemoteException if war file undeployment fails
+     */
+    public void deleteJaxWsWebapp(String sessionCookie, String backendURL, String webappName)
+            throws RemoteException {
+        JaxwsWebappAdminClient jaxwsWebappAdminClient = new JaxwsWebappAdminClient(backendURL, sessionCookie);
+        jaxwsWebappAdminClient.deleteStartedWebapps(new String[] {webappName});
+    }
+
     public void deleteBpel(String sessionCookie, String backendURL, String fileName)
             throws PackageManagementException, InterruptedException, RemoteException {
         AdminServiceBpelPackageManager packageManager = new AdminServiceBpelPackageManager(backendURL, sessionCookie);

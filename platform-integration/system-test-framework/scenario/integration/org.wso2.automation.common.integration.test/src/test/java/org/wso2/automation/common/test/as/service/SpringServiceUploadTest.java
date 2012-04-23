@@ -33,6 +33,9 @@ import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
 
 import static org.testng.Assert.assertTrue;
 
+/**
+ * Deploy simple spring service and invoke it.
+ */
 public class SpringServiceUploadTest {
 
     private static final Log log = LogFactory.getLog(SpringServiceUploadTest.class);

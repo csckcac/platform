@@ -28,6 +28,9 @@ import org.wso2.platform.test.core.utils.webapputils.WebAppUtil;
 
 import java.io.*;
 
+/**
+ * Deploy same webapps by multiple uses and send HTTP GET request to invoke them.
+ */
 public class WebAppUploaderClient {
 
     private static final Log log = LogFactory.getLog(WebAppUploaderClient.class);

@@ -30,6 +30,9 @@ import java.io.File;
 
 import static org.testng.Assert.*;
 
+/**
+ * Deploy multiple webapps by multiple uses and send HTTP GET request to invoke webapps..
+ */
 public class MultipleWebAppUploaderClient {
 
     private static final Log log = LogFactory.getLog(MultipleWebAppUploaderClient.class);

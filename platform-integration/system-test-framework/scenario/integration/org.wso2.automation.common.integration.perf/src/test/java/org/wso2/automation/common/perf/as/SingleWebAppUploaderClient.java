@@ -29,6 +29,9 @@ import java.io.File;
 
 import static org.testng.Assert.fail;
 
+/**
+ * Deploy multiple webapps by same uses and send HTTP GET request to invoke webapps.
+ */
 public class SingleWebAppUploaderClient {
 
     private static final Log log = LogFactory.getLog(SingleWebAppUploaderClient.class);

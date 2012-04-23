@@ -33,6 +33,9 @@ import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
 
 import static org.testng.Assert.assertTrue;
 
+/**
+ * Deploy a jar service with dependencies.
+ */
 public class JarServiceDependencyTest {
     private static final Log log = LogFactory.getLog(JarServiceDependencyTest.class);
     private static String JAR_SERVICE_EPR;

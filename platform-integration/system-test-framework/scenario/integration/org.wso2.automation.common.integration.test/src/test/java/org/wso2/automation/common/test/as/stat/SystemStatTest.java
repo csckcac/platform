@@ -90,6 +90,7 @@ public class SystemStatTest {
             Assert.assertTrue((result.toString().indexOf(expectedValue) >= 1));
         }
         //get system stats again after 100 service runs   x
+        Thread.sleep(5000);
         systemStatisticsAfterExecution = adminServiceStatistics.getSystemStatistics();
 
         log.debug("Request count is incorrect : " +
@@ -123,11 +124,12 @@ public class SystemStatTest {
     }
 
     @Test(groups = {"wso2.as"}, description = "Send 100 invalid request to the service and check stats", priority = 2)
-    public void testInvalidRequestStats() throws RemoteException {
+    public void testInvalidRequestStats() throws RemoteException, InterruptedException {
         //introducing faults and verity fault count
         String operation = "echoInt";
         int numberOfRequests = 100;
         String invalidIntNumber = "test";
+        Thread.sleep(5000);
         systemStatisticsBeforeExecution = adminServiceStatistics.getSystemStatistics();
 
         EndpointReference epr = new EndpointReference(AXIS2SERVICE_EPR);
@@ -144,6 +146,7 @@ public class SystemStatTest {
                 log.debug(axisFault.getMessage());
             }
         }
+        Thread.sleep(5000);
         systemStatisticsAfterExecution = adminServiceStatistics.getSystemStatistics();
 
         log.debug("Fault count after execution " +

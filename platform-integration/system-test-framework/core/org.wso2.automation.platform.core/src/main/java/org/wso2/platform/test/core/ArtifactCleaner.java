@@ -73,8 +73,8 @@ public class ArtifactCleaner {
                 break;
 
             case jaxws:
-                artifactCleanerUtil.deleteAllServicesByType(sessionCookie, ArtifactTypeFactory.getTypeInString
-                        (ArtifactType.jaxws), backendURL);
+                artifactCleanerUtil.deleteJaxWsWebapp(sessionCookie, backendURL, artifactName);
+                break;
 
             case bpelzip:
                 artifactCleanerUtil.deleteBpel(sessionCookie, backendURL, artifactName.substring

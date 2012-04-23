@@ -50,20 +50,11 @@ public class Stop extends AbstractHumanTaskCommand {
      */
     @Override
     protected void authorise() {
-        TaskDAO task = getTask();
-        OrganizationalEntityDAO caller = getCaller();
         List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles =
                 new ArrayList<GenericHumanRoleDAO.GenericHumanRoleType>();
         allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
 
-        if (!OperationAuthorizationUtil.authoriseUser(task, caller, allowedRoles,
-                getEngine().getPeopleQueryEvaluator())) {
-            String errMsg = String.format("The user[%s] cannot perform [%s] operation on task[id:%d] as he is not in " +
-                    "task roles[%s]", caller.getName(), Stop.class.getSimpleName(), task.getId(),
-                    allowedRoles);
-            log.error(errMsg);
-            throw new HumanTaskRuntimeException(errMsg);
-        }
+        authoriseRoles(allowedRoles);
     }
 
     /**

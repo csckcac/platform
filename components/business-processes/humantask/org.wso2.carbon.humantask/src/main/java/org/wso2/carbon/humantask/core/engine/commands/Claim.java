@@ -52,17 +52,10 @@ public class Claim extends AbstractHumanTaskCommand {
 
     @Override
     protected void authorise() {
-        List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles = new ArrayList
-                <GenericHumanRoleDAO.GenericHumanRoleType>();
+        List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles = new ArrayList<GenericHumanRoleDAO.GenericHumanRoleType>();
         allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.POTENTIAL_OWNERS);
 
-        if (!OperationAuthorizationUtil.authoriseUser(getTask(), getCaller(), allowedRoles,
-                                                      getEngine().getPeopleQueryEvaluator())) {
-            throw new HumanTaskRuntimeException(String.format("The user[%s] cannot perform [%s]" +
-                                                              " operation as he is not in task roles[%s]",
-                                                              getCaller().getName(), Claim.class.getSimpleName(),
-                                                              allowedRoles));
-        }
+        authoriseRoles(allowedRoles);
     }
 
     @Override

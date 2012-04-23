@@ -64,18 +64,10 @@ public class Release extends AbstractHumanTaskCommand {
      */
     @Override
     protected void authorise() {
-        TaskDAO task = getTask();
-        OrganizationalEntityDAO caller = getCaller();
         List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles =
                 new ArrayList<GenericHumanRoleDAO.GenericHumanRoleType>();
         allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
-
-        if (!OperationAuthorizationUtil.authoriseUser(task, caller, allowedRoles,
-                                                      getEngine().getPeopleQueryEvaluator())) {
-            throw new HumanTaskRuntimeException(String.format("The user[%s] cannot perform [%s]" +
-                                                              " operation as he is not in task roles[%s]",
-                                                              caller.getName(), Release.class, allowedRoles));
-        }
+        authoriseRoles(allowedRoles);
     }
 
     /**

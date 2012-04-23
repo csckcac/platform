@@ -9,7 +9,7 @@
         EJBServicesAdminClient serviceAdmin = new EJBServicesAdminClient(config.getServletContext(), session);
         serviceAdmin.deleteEJBConfiguration(serviceName);
 
-        String msg = "EJB Service Conficutation updated successfully";
+        String msg = "EJB Service Conficutation deleted successfully";
         //todo delete the relevant ejb service as well.
         CarbonUIMessage.sendCarbonUIMessage(msg, CarbonUIMessage.INFO, request);
     } catch (Exception e) {

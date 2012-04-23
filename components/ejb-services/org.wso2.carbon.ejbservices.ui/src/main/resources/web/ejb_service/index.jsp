@@ -107,8 +107,11 @@
     function deleteServiceParameters(serviceName) {
         location.href = "delete_ejb_configuration.jsp?serviceName=" + serviceName;
     }
-</script>
 
+    function toogleAddAppserverWindow(){
+        jQuery('#addNewConfigTable').toggle();
+    }
+</script>
 <div id="middle">
 
     <h2><fmt:message key="service.ejb"/></h2>
@@ -193,7 +196,8 @@
                     </tr>
                     <tr>
                         <td class="labelField">
-                            <input type="radio" checked="true" value="existingconfig" name="astype"
+                            <input onclick="toogleAddAppserverWindow();" type="radio" checked="true"
+                                   value="existingconfig" name="astype"
                                    id="useExistingConfig">
                             <label for="useExistingConfig"><fmt:message key="use.existing"/></label>
                         </td>
@@ -216,7 +220,6 @@
                                                 }
                                             %>
                                         </select>
-                                            <%--<label for="existingAppServerConfigurations">xxx</label>--%>
                                     </td>
                                 </tr>
                             </table>
@@ -224,14 +227,14 @@
                     </tr>
                     <tr>
                         <td class="labelField">
-                            <input type="radio" value="newconfig" name="astype" id="addNewConfig">
+                            <input onclick="toogleAddAppserverWindow();" type="radio"
+                                   value="newconfig" name="astype" id="addNewConfig">
                             <label for="addNewConfig"><fmt:message key="add.new"/></label>
                         </td>
                     </tr>
                     <tr>
                         <td class="labelField">
-                            <%--<div class="sectionSeperator togglebleTitle"></div>--%>
-                            <table class="carbonFormTable">
+                            <table class="carbonFormTable" id="addNewConfigTable">
                                 <tr>
                                     <td>
                                         <label><fmt:message key="server.type"/><span class="required">*</span></label>
@@ -325,6 +328,8 @@
         <div class="buttonRow">
             <input type="button" value="<fmt:message key="next"/>&gt;"
                    onclick="addApplicationServerElement();" id="ejbStep0NextButton">
+            <input type="button" value="test"
+                   onclick="showAddAppserverWindow();" id="test">
         </div>
     </div>
 </div>
@@ -336,6 +341,7 @@
 <script type="text/javascript">
 //    ejbProviderStep1DisableFields();
     initSections("hidden");
+    toogleAddAppserverWindow();
 </script>
 
 </fmt:bundle>

@@ -175,6 +175,7 @@ public class EJBServicesAdmin extends AbstractAdmin {
             ejbConfigResource.addProperty(
                     EJBConstants.ConfigProperties.APP_SERVER_TYPE, appServerType);
 
+            //TODO use EJBConstants.CONFIGURATIONS + serviceName as reg path
             registry.put(EJBConstants.CONFIGURATIONS + ejbConfigurationID, ejbConfigResource);
         } catch (RegistryException e) {
             log.error("Unable to add EJB Configuration.", e);

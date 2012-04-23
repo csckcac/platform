@@ -19,6 +19,7 @@ package org.apache.synapse.rest;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
+import org.apache.synapse.rest.version.URLBasedVersionStrategy;
 import org.apache.synapse.transport.nhttp.NhttpConstants;
 
 public class BasicAPIMediationTest extends RESTMediationTestCase {
@@ -43,6 +44,15 @@ public class BasicAPIMediationTest extends RESTMediationTestCase {
         synCtx = getMessageContext(synapseConfig, false, "/test?a=5", "GET");
         handler.process(synCtx);
         checkRestURLPostfix(synCtx, "?a=5");
+
+        api.setVersionStrategy(new URLBasedVersionStrategy(api, "1.0.0", null));
+        synCtx = getMessageContext(synapseConfig, false, "/test/1.0.0?a=5", "GET");
+        handler.process(synCtx);
+        checkRestURLPostfix(synCtx, "?a=5");
+
+        synCtx = getMessageContext(synapseConfig, false, "/test/1.0.0/foo?a=5", "GET");
+        handler.process(synCtx);
+        checkRestURLPostfix(synCtx, "/foo?a=5");
     }
 
     public void testRestURLPostfix2() throws Exception {

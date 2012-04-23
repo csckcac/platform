@@ -27,6 +27,7 @@ import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.rest.dispatch.DispatcherHelper;
 import org.apache.synapse.rest.dispatch.RESTDispatcher;
 import org.apache.synapse.rest.version.DefaultStrategy;
+import org.apache.synapse.rest.version.URLBasedVersionStrategy;
 import org.apache.synapse.rest.version.VersionStrategy;
 import org.apache.synapse.config.xml.rest.VersionStrategyFactory;
 import org.apache.synapse.transport.nhttp.NhttpConstants;
@@ -224,6 +225,14 @@ public class API extends AbstractRESTProcessor implements ManagedLifecycle {
             }
             if (restURLPostfix.startsWith(context)) {
                 restURLPostfix = restURLPostfix.substring(context.length());
+                if (versionStrategy instanceof URLBasedVersionStrategy) {
+                    String version = versionStrategy.getVersion();
+                    if (restURLPostfix.startsWith(version)) {
+                        restURLPostfix = restURLPostfix.substring(version.length());
+                    } else if (restURLPostfix.startsWith("/" + version)) {
+                        restURLPostfix = restURLPostfix.substring(version.length() + 1);
+                    }
+                }
                 ((Axis2MessageContext) synCtx).getAxis2MessageContext().setProperty(
                         NhttpConstants.REST_URL_POSTFIX, restURLPostfix);
             }

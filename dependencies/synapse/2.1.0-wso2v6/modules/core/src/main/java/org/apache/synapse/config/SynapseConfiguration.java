@@ -47,7 +47,6 @@ import org.apache.synapse.mediators.base.SequenceMediator;
 import org.apache.synapse.registry.Registry;
 import org.apache.axiom.om.OMNode;
 import org.apache.synapse.rest.API;
-import org.apache.synapse.rest.Resource;
 import org.apache.synapse.util.xpath.ext.SynapseXpathFunctionContextProvider;
 import org.apache.synapse.util.xpath.ext.SynapseXpathVariableResolver;
 import org.apache.synapse.util.xpath.ext.XpathExtensionUtil;
@@ -638,7 +637,7 @@ public class SynapseConfiguration implements ManagedLifecycle, SynapseArtifact {
      * Returns the map of defined entries in the configuration excluding the
      * fetched entries from remote registry.
      *
-     * @return Map of Entries defined in the local configuraion
+     * @return Map of Entries defined in the local configuration
      */
     public Map<String, Entry> getDefinedEntries() {
 
@@ -678,7 +677,7 @@ public class SynapseConfiguration implements ManagedLifecycle, SynapseArtifact {
                     try {
                         o = registry.getResource(entry, getProperties());
                     } catch (Exception e) {
-                        // Error occured while loading the resource from the registry
+                        // Error occurred while loading the resource from the registry
                         // Fall back to the cached value - Do not increase the expiry time
                         log.warn("Error while loading the resource " + key + " from the remote " +
                                 "registry. Previously cached value will be used. Check the " +
@@ -1167,7 +1166,7 @@ public class SynapseConfiguration implements ManagedLifecycle, SynapseArtifact {
     }
 
     /**
-     * Sets the properties to configure the Synapse enviornment.
+     * Sets the properties to configure the Synapse environment.
      *
      * @param properties - Properties which needs to be set
      *
@@ -1224,7 +1223,7 @@ public class SynapseConfiguration implements ManagedLifecycle, SynapseArtifact {
     }
 
     /**
-     * Gets the propety value if the property specified by the propKey is there or null else
+     * Gets the property value if the property specified by the propKey is there or null else
      *
      * @param propKey - key for the property lookup
      * @return String representation of the property value if found or null else
@@ -1550,7 +1549,7 @@ public class SynapseConfiguration implements ManagedLifecycle, SynapseArtifact {
     }
 
     /**
-     * Get Message sotres defined
+     * Get Message stores defined
      * @return  message store map stored as name of the message store and message store
      */
     public Map<String, MessageStore> getMessageStores() {
@@ -1639,7 +1638,7 @@ public class SynapseConfiguration implements ManagedLifecycle, SynapseArtifact {
 
     private void assertEntryNull(Entry entry, String key) {
         if (entry == null) {
-            handleException("Cannot locate an either local or remote enrty for key : " + key);
+            handleException("Cannot locate an either local or remote entry for key : " + key);
         }
     }
 

@@ -1,0 +1,423 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ax2356="http://dto.xsd.services.stub.wnagent.hosting.carbon.wso2.org/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://impl.agentmgt.jvm.service.autoscaler.carbon.wso2.org" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax2350="http://exception.agentmgt.jvm.service.autoscaler.carbon.wso2.org/xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ax2354="http://dto.common.lb.carbon.wso2.org/xsd" xmlns:ax2352="http://sql.java/xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://impl.agentmgt.jvm.service.autoscaler.carbon.wso2.org">
+    <wsdl:documentation>AgentManagementService</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://sql.java/xsd">
+            <xs:complexType name="SQLException">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="SQLState" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="errorCode" type="xs:int"/>
+                    <xs:element minOccurs="0" name="nextException" nillable="true" type="ax2352:SQLException"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax2357="http://dto.xsd.services.stub.wnagent.hosting.carbon.wso2.org/xsd" xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax2355="http://dto.common.lb.carbon.wso2.org/xsd" xmlns:ax2353="http://sql.java/xsd" xmlns:ax2351="http://exception.agentmgt.jvm.service.autoscaler.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+            <xs:import namespace="http://exception.agentmgt.jvm.service.autoscaler.carbon.wso2.org/xsd"/>
+            <xs:import namespace="http://sql.java/xsd"/>
+            <xs:import namespace="http://dto.common.lb.carbon.wso2.org/xsd"/>
+            <xs:import namespace="http://dto.xsd.services.stub.wnagent.hosting.carbon.wso2.org/xsd"/>
+            <xs:element name="AgentManagementServiceNullAgentException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="NullAgentException" nillable="true" type="ax2350:NullAgentException"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AgentManagementServiceAgentNotAlreadyRegisteredException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="AgentNotAlreadyRegisteredException" nillable="true" type="ax2350:AgentNotAlreadyRegisteredException"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AgentManagementServiceClassNotFoundException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="ClassNotFoundException" nillable="true" type="xs:anyType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AgentManagementServiceSQLException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="SQLException" nillable="true" type="ax2353:SQLException"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="unregisterAgent">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="epr" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="unregisterAgentResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AgentManagementServiceAgentAlreadyRegisteredException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="AgentAlreadyRegisteredException" nillable="true" type="ax2350:AgentAlreadyRegisteredException"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AgentManagementServiceAgentRegisteringException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="AgentRegisteringException" nillable="true" type="ax2350:AgentRegisteringException"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="registerAgent">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="hostMachine" nillable="true" type="ax2355:HostMachine"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="domains" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="registerAgentResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AgentManagementServiceAgentNotFoundException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="AgentNotFoundException" nillable="true" type="ax2350:AgentNotFoundException"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="pickAContainer">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="zone" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="jailKeysFile" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="pickAContainerResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2357:ContainerInformation"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://dto.common.lb.carbon.wso2.org/xsd">
+            <xs:complexType name="HostMachine">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="available" type="xs:boolean"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="bridges" nillable="true" type="ax2354:Bridge"/>
+                    <xs:element minOccurs="0" name="containerRoot" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="epr" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="ip" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="zone" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="Bridge">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="available" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="bridgeIp" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="currentCountIps" type="xs:int"/>
+                    <xs:element minOccurs="0" name="hostMachine" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="maximumCountIps" type="xs:int"/>
+                    <xs:element minOccurs="0" name="netGateway" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="netMask" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://dto.xsd.services.stub.wnagent.hosting.carbon.wso2.org/xsd">
+            <xs:complexType name="ContainerInformation">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="bridge" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="bridgeSpecified" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="containerRoot" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="containerRootSpecified" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="cpuSetShares" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="cpuSetSharesSpecified" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="cpuShares" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="cpuSharesSpecified" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="ip" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="ipSpecified" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="jailKeysFile" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="jailKeysFileSpecified" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="memory" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="memorySpecified" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="netGateway" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="netGatewaySpecified" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="netMask" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="netMaskSpecified" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="storage" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="storageSpecified" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="swap" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="swapSpecified" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="template" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="templateSpecified" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="zone" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="zoneSpecified" type="xs:boolean"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://exception.agentmgt.jvm.service.autoscaler.carbon.wso2.org/xsd">
+            <xs:complexType name="NullAgentException">
+                <xs:sequence/>
+            </xs:complexType>
+            <xs:complexType name="AgentNotAlreadyRegisteredException">
+                <xs:sequence/>
+            </xs:complexType>
+            <xs:complexType name="AgentAlreadyRegisteredException">
+                <xs:sequence/>
+            </xs:complexType>
+            <xs:complexType name="AgentRegisteringException">
+                <xs:sequence/>
+            </xs:complexType>
+            <xs:complexType name="AgentNotFoundException">
+                <xs:sequence/>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="registerAgentRequest">
+        <wsdl:part name="parameters" element="ns1:registerAgent"/>
+    </wsdl:message>
+    <wsdl:message name="registerAgentResponse">
+        <wsdl:part name="parameters" element="ns1:registerAgentResponse"/>
+    </wsdl:message>
+    <wsdl:message name="AgentManagementServiceNullAgentException">
+        <wsdl:part name="parameters" element="ns1:AgentManagementServiceNullAgentException"/>
+    </wsdl:message>
+    <wsdl:message name="AgentManagementServiceAgentAlreadyRegisteredException">
+        <wsdl:part name="parameters" element="ns1:AgentManagementServiceAgentAlreadyRegisteredException"/>
+    </wsdl:message>
+    <wsdl:message name="AgentManagementServiceClassNotFoundException">
+        <wsdl:part name="parameters" element="ns1:AgentManagementServiceClassNotFoundException"/>
+    </wsdl:message>
+    <wsdl:message name="AgentManagementServiceSQLException">
+        <wsdl:part name="parameters" element="ns1:AgentManagementServiceSQLException"/>
+    </wsdl:message>
+    <wsdl:message name="AgentManagementServiceAgentRegisteringException">
+        <wsdl:part name="parameters" element="ns1:AgentManagementServiceAgentRegisteringException"/>
+    </wsdl:message>
+    <wsdl:message name="unregisterAgentRequest">
+        <wsdl:part name="parameters" element="ns1:unregisterAgent"/>
+    </wsdl:message>
+    <wsdl:message name="unregisterAgentResponse">
+        <wsdl:part name="parameters" element="ns1:unregisterAgentResponse"/>
+    </wsdl:message>
+    <wsdl:message name="AgentManagementServiceAgentNotAlreadyRegisteredException">
+        <wsdl:part name="parameters" element="ns1:AgentManagementServiceAgentNotAlreadyRegisteredException"/>
+    </wsdl:message>
+    <wsdl:message name="pickAContainerRequest">
+        <wsdl:part name="parameters" element="ns1:pickAContainer"/>
+    </wsdl:message>
+    <wsdl:message name="pickAContainerResponse">
+        <wsdl:part name="parameters" element="ns1:pickAContainerResponse"/>
+    </wsdl:message>
+    <wsdl:message name="AgentManagementServiceAgentNotFoundException">
+        <wsdl:part name="parameters" element="ns1:AgentManagementServiceAgentNotFoundException"/>
+    </wsdl:message>
+    <wsdl:portType name="AgentManagementServicePortType">
+        <wsdl:operation name="registerAgent">
+            <wsdl:input message="tns:registerAgentRequest" wsaw:Action="urn:registerAgent"/>
+            <wsdl:output message="tns:registerAgentResponse" wsaw:Action="urn:registerAgentResponse"/>
+            <wsdl:fault message="tns:AgentManagementServiceNullAgentException" name="AgentManagementServiceNullAgentException" wsaw:Action="urn:registerAgentAgentManagementServiceNullAgentException"/>
+            <wsdl:fault message="tns:AgentManagementServiceAgentAlreadyRegisteredException" name="AgentManagementServiceAgentAlreadyRegisteredException" wsaw:Action="urn:registerAgentAgentManagementServiceAgentAlreadyRegisteredException"/>
+            <wsdl:fault message="tns:AgentManagementServiceClassNotFoundException" name="AgentManagementServiceClassNotFoundException" wsaw:Action="urn:registerAgentAgentManagementServiceClassNotFoundException"/>
+            <wsdl:fault message="tns:AgentManagementServiceSQLException" name="AgentManagementServiceSQLException" wsaw:Action="urn:registerAgentAgentManagementServiceSQLException"/>
+            <wsdl:fault message="tns:AgentManagementServiceAgentRegisteringException" name="AgentManagementServiceAgentRegisteringException" wsaw:Action="urn:registerAgentAgentManagementServiceAgentRegisteringException"/>
+        </wsdl:operation>
+        <wsdl:operation name="unregisterAgent">
+            <wsdl:input message="tns:unregisterAgentRequest" wsaw:Action="urn:unregisterAgent"/>
+            <wsdl:output message="tns:unregisterAgentResponse" wsaw:Action="urn:unregisterAgentResponse"/>
+            <wsdl:fault message="tns:AgentManagementServiceNullAgentException" name="AgentManagementServiceNullAgentException" wsaw:Action="urn:unregisterAgentAgentManagementServiceNullAgentException"/>
+            <wsdl:fault message="tns:AgentManagementServiceAgentNotAlreadyRegisteredException" name="AgentManagementServiceAgentNotAlreadyRegisteredException" wsaw:Action="urn:unregisterAgentAgentManagementServiceAgentNotAlreadyRegisteredException"/>
+            <wsdl:fault message="tns:AgentManagementServiceClassNotFoundException" name="AgentManagementServiceClassNotFoundException" wsaw:Action="urn:unregisterAgentAgentManagementServiceClassNotFoundException"/>
+            <wsdl:fault message="tns:AgentManagementServiceSQLException" name="AgentManagementServiceSQLException" wsaw:Action="urn:unregisterAgentAgentManagementServiceSQLException"/>
+        </wsdl:operation>
+        <wsdl:operation name="pickAContainer">
+            <wsdl:input message="tns:pickAContainerRequest" wsaw:Action="urn:pickAContainer"/>
+            <wsdl:output message="tns:pickAContainerResponse" wsaw:Action="urn:pickAContainerResponse"/>
+            <wsdl:fault message="tns:AgentManagementServiceAgentNotFoundException" name="AgentManagementServiceAgentNotFoundException" wsaw:Action="urn:pickAContainerAgentManagementServiceAgentNotFoundException"/>
+            <wsdl:fault message="tns:AgentManagementServiceClassNotFoundException" name="AgentManagementServiceClassNotFoundException" wsaw:Action="urn:pickAContainerAgentManagementServiceClassNotFoundException"/>
+            <wsdl:fault message="tns:AgentManagementServiceSQLException" name="AgentManagementServiceSQLException" wsaw:Action="urn:pickAContainerAgentManagementServiceSQLException"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="AgentManagementServiceSoap11Binding" type="tns:AgentManagementServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="registerAgent">
+            <soap:operation soapAction="urn:registerAgent" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AgentManagementServiceAgentAlreadyRegisteredException">
+                <soap:fault use="literal" name="AgentManagementServiceAgentAlreadyRegisteredException"/>
+            </wsdl:fault>
+            <wsdl:fault name="AgentManagementServiceSQLException">
+                <soap:fault use="literal" name="AgentManagementServiceSQLException"/>
+            </wsdl:fault>
+            <wsdl:fault name="AgentManagementServiceClassNotFoundException">
+                <soap:fault use="literal" name="AgentManagementServiceClassNotFoundException"/>
+            </wsdl:fault>
+            <wsdl:fault name="AgentManagementServiceNullAgentException">
+                <soap:fault use="literal" name="AgentManagementServiceNullAgentException"/>
+            </wsdl:fault>
+            <wsdl:fault name="AgentManagementServiceAgentRegisteringException">
+                <soap:fault use="literal" name="AgentManagementServiceAgentRegisteringException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="unregisterAgent">
+            <soap:operation soapAction="urn:unregisterAgent" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AgentManagementServiceSQLException">
+                <soap:fault use="literal" name="AgentManagementServiceSQLException"/>
+            </wsdl:fault>
+            <wsdl:fault name="AgentManagementServiceAgentNotAlreadyRegisteredException">
+                <soap:fault use="literal" name="AgentManagementServiceAgentNotAlreadyRegisteredException"/>
+            </wsdl:fault>
+            <wsdl:fault name="AgentManagementServiceClassNotFoundException">
+                <soap:fault use="literal" name="AgentManagementServiceClassNotFoundException"/>
+            </wsdl:fault>
+            <wsdl:fault name="AgentManagementServiceNullAgentException">
+                <soap:fault use="literal" name="AgentManagementServiceNullAgentException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="pickAContainer">
+            <soap:operation soapAction="urn:pickAContainer" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AgentManagementServiceAgentNotFoundException">
+                <soap:fault use="literal" name="AgentManagementServiceAgentNotFoundException"/>
+            </wsdl:fault>
+            <wsdl:fault name="AgentManagementServiceSQLException">
+                <soap:fault use="literal" name="AgentManagementServiceSQLException"/>
+            </wsdl:fault>
+            <wsdl:fault name="AgentManagementServiceClassNotFoundException">
+                <soap:fault use="literal" name="AgentManagementServiceClassNotFoundException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="AgentManagementServiceSoap12Binding" type="tns:AgentManagementServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="registerAgent">
+            <soap12:operation soapAction="urn:registerAgent" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AgentManagementServiceAgentAlreadyRegisteredException">
+                <soap12:fault use="literal" name="AgentManagementServiceAgentAlreadyRegisteredException"/>
+            </wsdl:fault>
+            <wsdl:fault name="AgentManagementServiceSQLException">
+                <soap12:fault use="literal" name="AgentManagementServiceSQLException"/>
+            </wsdl:fault>
+            <wsdl:fault name="AgentManagementServiceClassNotFoundException">
+                <soap12:fault use="literal" name="AgentManagementServiceClassNotFoundException"/>
+            </wsdl:fault>
+            <wsdl:fault name="AgentManagementServiceNullAgentException">
+                <soap12:fault use="literal" name="AgentManagementServiceNullAgentException"/>
+            </wsdl:fault>
+            <wsdl:fault name="AgentManagementServiceAgentRegisteringException">
+                <soap12:fault use="literal" name="AgentManagementServiceAgentRegisteringException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="unregisterAgent">
+            <soap12:operation soapAction="urn:unregisterAgent" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AgentManagementServiceSQLException">
+                <soap12:fault use="literal" name="AgentManagementServiceSQLException"/>
+            </wsdl:fault>
+            <wsdl:fault name="AgentManagementServiceAgentNotAlreadyRegisteredException">
+                <soap12:fault use="literal" name="AgentManagementServiceAgentNotAlreadyRegisteredException"/>
+            </wsdl:fault>
+            <wsdl:fault name="AgentManagementServiceClassNotFoundException">
+                <soap12:fault use="literal" name="AgentManagementServiceClassNotFoundException"/>
+            </wsdl:fault>
+            <wsdl:fault name="AgentManagementServiceNullAgentException">
+                <soap12:fault use="literal" name="AgentManagementServiceNullAgentException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="pickAContainer">
+            <soap12:operation soapAction="urn:pickAContainer" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AgentManagementServiceAgentNotFoundException">
+                <soap12:fault use="literal" name="AgentManagementServiceAgentNotFoundException"/>
+            </wsdl:fault>
+            <wsdl:fault name="AgentManagementServiceSQLException">
+                <soap12:fault use="literal" name="AgentManagementServiceSQLException"/>
+            </wsdl:fault>
+            <wsdl:fault name="AgentManagementServiceClassNotFoundException">
+                <soap12:fault use="literal" name="AgentManagementServiceClassNotFoundException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="AgentManagementServiceHttpBinding" type="tns:AgentManagementServicePortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="registerAgent">
+            <http:operation location="registerAgent"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="unregisterAgent">
+            <http:operation location="unregisterAgent"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="pickAContainer">
+            <http:operation location="pickAContainer"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="AgentManagementService">
+        <wsdl:port name="AgentManagementServiceHttpsSoap11Endpoint" binding="tns:AgentManagementServiceSoap11Binding">
+            <soap:address location="https://10.100.3.37:9443/services/AgentManagementService.AgentManagementServiceHttpsSoap11Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="AgentManagementServiceHttpsSoap12Endpoint" binding="tns:AgentManagementServiceSoap12Binding">
+            <soap12:address location="https://10.100.3.37:9443/services/AgentManagementService.AgentManagementServiceHttpsSoap12Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="AgentManagementServiceHttpsEndpoint" binding="tns:AgentManagementServiceHttpBinding">
+            <http:address location="https://10.100.3.37:9443/services/AgentManagementService.AgentManagementServiceHttpsEndpoint/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

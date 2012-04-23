@@ -56,7 +56,7 @@ public class APIMgtDAOTest extends TestCase {
         apiInfoDTO.setApiName("API1");
         apiInfoDTO.setProviderId("SUMEDHA");
         apiInfoDTO.setVersion("V1.0.0");
-        String accessKey = apiMgtDAO.getAccessKeyForAPI("SUMEDHA",apiInfoDTO);
+        String accessKey = apiMgtDAO.getAccessKeyForAPI("SUMEDHA", "APPLICATION1", apiInfoDTO);
         assertNotNull(accessKey);
         assertTrue(accessKey.length() > 0);
     }

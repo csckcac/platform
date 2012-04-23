@@ -1,7 +1,7 @@
 <% var template = function(data, params, global) { %>
 <div class="wrapper">
         <div class="header-strip-links" id="header-strip-links">
-            <% //includeTemplate("header-strips/header-strip"); %>
+            <% includeJag("tmpl/header/header-strip.jag"); %>
         </div>
         <div class="container_16 content">
             <div class="grid_16" id="header-strip-search">
@@ -18,10 +18,9 @@
                         <a name="categories" class="tab">Categories</a>
                     </div>
                     <div style="clear:both"></div>
-
                     <div class="content-box-left-side">
-                        <% includeTemplate("ratings/top-rated", params.count); %>
-                        <% includeTemplate("recent/recently-added", params.count); %>
+                        <% includeTemplate("ratings/top-rated", params, global); %>
+                        <% includeTemplate("recent/recently-added", params, global); %>
                     </div>
                 </div>
             </div>
@@ -34,7 +33,7 @@
                     <a name="overview" class="tab selected">Tags</a>
                 </div>
                 <div style="clear:both"></div>
-                <% includeTemplate("tags/tag-cloud"); %>
+                <% includeTemplate("tags/tag-cloud", params, global); %>
             </div>
         </div>
     </div>

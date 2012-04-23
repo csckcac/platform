@@ -12,7 +12,7 @@ var getParams = function(data) {
     };
 };
 
-var getData = function (args) {
+var getData = function () {
     return {
         left:function (args) {
             return "default-title";

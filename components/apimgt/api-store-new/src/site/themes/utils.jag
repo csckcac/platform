@@ -129,6 +129,10 @@ var includeTemplates = function (tmpls, global) {
     }
 };
 
+var includeJag = function (path) {
+    include(getThemeFile(path));
+};
+
 var addHeaderCSS = function (global, template, key, css) {
     css = getThemeFile(css);
     insertGlobal(global, template, "css", key, css);

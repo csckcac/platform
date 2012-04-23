@@ -20,7 +20,7 @@ var getParams = function (data) {
     };
 };
 
-var getData = function (args) {
+var getData = function () {
     return {
         title:"default-title",
         footer:[

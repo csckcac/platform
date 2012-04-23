@@ -24,5 +24,5 @@
         <div style="clear:both"></div>
         <div class="welcome-message">Welcome to Service Store</div>
     </div>
-    <div id="login-box" class="grid_16"><% includeJags("tmpl/login/login-box.jag"); %></div>
+    <div id="login-box" class="grid_16"><% includeJag("tmpl/header/login-box.jag"); %></div>
 </div>

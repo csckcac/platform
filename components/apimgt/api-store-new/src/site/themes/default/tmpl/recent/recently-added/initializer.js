@@ -12,9 +12,9 @@ var getParams = function (data) {
     };
 };
 
-var getData = function (args) {
+var getData = function () {
     return {
-        "count":5
+        "count":10
     };
 };
 

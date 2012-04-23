@@ -2800,3 +2800,26 @@ transition: all 1 ;
     margin-right: 10px;
     width:auto !important;
 }
+
+.sample_thumb {
+    width:270px;
+    height:170px;
+    float:left;
+    padding:10px;
+    box-shadow:0px 0px 5px #CCc;
+    margin-right:20px;
+}
+
+ul.sampleapps {
+}
+
+ul.sampleapps li {
+    clear:both;
+    margin-bottom:30px;
+    list-style:none;
+    float:left;
+}
+
+ul.sampleapps li h3 {
+    margin-top:10px;
+}

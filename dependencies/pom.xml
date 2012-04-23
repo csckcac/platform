@@ -86,6 +86,7 @@
                 <module>orbit/wsdl-validator</module>
                 <module>orbit/xkms</module>
 		<module>orbit/andes</module>
+		<module>orbit/andes-client</module>
 	     </modules>
    <dependencyManagement>
 	<dependencies>

@@ -115,7 +115,7 @@
         <commons-configuration.version>1.6.0</commons-configuration.version>
         <commons-lang.version>2.3.0</commons-lang.version>
         <geronimo-jms_1.1_spec.version>1.1.0</geronimo-jms_1.1_spec.version>
-        <mina.core.version>1.0.1</mina.core.version>
+        <mina.core.version>1.1.7</mina.core.version>
     </properties>
 
 </project>

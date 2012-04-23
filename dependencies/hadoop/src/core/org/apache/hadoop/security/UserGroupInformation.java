@@ -333,7 +333,9 @@ public class UserGroupInformation {
       		new AppConfigurationEntry[]{OS_SPECIFIC_LOGIN, HADOOP_LOGIN};
         return SIMPLE_CONF;
       } else if (USER_KERBEROS_CONFIG_NAME.equals(appName)) {
-    	ticketCache = UserGroupInformation.getKrb5TicketCacheFinder().getTenantTicketCache();
+    	Krb5TicketCacheFinder tktCacheFinder = null;
+    	if ((tktCacheFinder = UserGroupInformation.getKrb5TicketCacheFinder()) != null)
+    		ticketCache = tktCacheFinder.getTenantTicketCache();
         if (ticketCache != null) {
         	LOG.info(">>>>>>>>>>>>>>>>> "+ticketCache);
         	USER_KERBEROS_OPTIONS.put("ticketCache", ticketCache);

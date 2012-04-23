@@ -1377,6 +1377,8 @@ public abstract class Server {
           if (LOG.isDebugEnabled())
             LOG.debug(getName() + ": has #" + call.id + " from " +
                       call.connection+" by user "+call.connection.user.getUserName()+ ". Current Thread ID is "+Thread.currentThread().getId());
+          // Set connection user as the thread local user.
+	  // WSO2 Carbon related change...
           UserGroupInformationThreadLocal.set(call.connection.user); 
           String errorClass = null;
           String error = null;

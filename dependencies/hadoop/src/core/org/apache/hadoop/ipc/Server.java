@@ -1376,8 +1376,8 @@ public abstract class Server {
 
           if (LOG.isDebugEnabled())
             LOG.debug(getName() + ": has #" + call.id + " from " +
-                      call.connection);
-          
+                      call.connection+" by user "+call.connection.user.getUserName()+ ". Current Thread ID is "+Thread.currentThread().getId());
+          UserGroupInformationThreadLocal.set(call.connection.user); 
           String errorClass = null;
           String error = null;
           Writable value = null;

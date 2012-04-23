@@ -75,7 +75,9 @@ public class AuthInfoContext {
 
         synchronized (apiKey.intern()) {
             // We synchronize on the API key here to allow concurrent processing
-            // of different API keys
+            // of different API keys - However when a burst of requests with the
+            // same key is encountered, only one will be allowed to execute the logic,
+            // and the rest will pick the value from the cache.
             info = infoCache.getInfo(apiKey);
             if (info != null) {
                 return info;
@@ -94,13 +96,10 @@ public class AuthInfoContext {
                     getAuthSessionForAdminServices());
             info = validator.validateKey(context, apiVersion, apiKey);
             if (info != null) {
-                synchronized (this) {
-                    // Write operations on the cache must be globally synchronized
-                    if (info.getAuthorized()) {
-                        infoCache.addValidKey(apiKey, info);
-                    } else {
-                        infoCache.addInvalidKey(apiKey, info);
-                    }
+                if (info.getAuthorized()) {
+                    infoCache.addValidKey(apiKey, info);
+                } else {
+                    infoCache.addInvalidKey(apiKey, info);
                 }
                 return info;
             } else {

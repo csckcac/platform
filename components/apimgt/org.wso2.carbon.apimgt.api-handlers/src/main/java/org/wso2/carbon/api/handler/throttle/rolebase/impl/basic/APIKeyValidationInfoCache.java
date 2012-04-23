@@ -20,14 +20,20 @@ import org.wso2.carbon.apimgt.impl.dto.xsd.APIKeyValidationInfoDTO;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * A simple in-memory cache for API keys and validation information related to API keys.
- * In order to conserve resource, this implementation imposes hard upper bounds on the
+ * In order to conserve resources, this implementation imposes hard upper bounds on the
  * number of valid and invalid keys kept in the cache. When the cache is full, a simple
- * LRU algorithm is used to replace existing cache entries. This cache is not thread safe.
- * Any operation that may structurally modify the cache (eg: put, delete) should be
- * externally synchronized.
+ * LRU algorithm is used to replace existing cache entries. This cache implementation is
+ * thread safe. It supports multiple concurrent read operations. That is read operations
+ * may overlap and will return the results without blocking. But write operations are
+ * carried out in a mutually exclusive manner. When multiple write operations are requested,
+ * they will be executed in serial manner with thread blocking. Similarly overlapping read and
+ * write operations will be executed in serial fashion. In general this cache is designed
+ * for many read operations and less write operations.
  */
 public class APIKeyValidationInfoCache {
     
@@ -58,12 +64,34 @@ public class APIKeyValidationInfoCache {
     private static class LRUCache<K,V> extends LinkedHashMap<K,V> {
 
         private int maxEntries;
+        private ReadWriteLock lock;
 
         public LRUCache(int maxEntries) {
             super(maxEntries + 1, 1, false);
             this.maxEntries = maxEntries;
+            this.lock = new ReentrantReadWriteLock();
         }
-        
+
+        @Override
+        public V get(Object key) {
+            lock.readLock().lock();
+            try {
+                return super.get(key);
+            } finally {
+                lock.readLock().unlock();
+            }
+        }
+
+        @Override
+        public V put(K key, V value) {
+            lock.writeLock().lock();
+            try {
+                return super.put(key, value);
+            } finally {
+                lock.writeLock().unlock();
+            }
+        }
+
         @Override
         protected boolean removeEldestEntry(Map.Entry eldest) {
             return size() > maxEntries;

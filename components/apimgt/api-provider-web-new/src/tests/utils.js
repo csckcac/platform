@@ -1,7 +1,7 @@
 var failure = function(method, result) {
     var log = new Log();
     log.error("FAILURE : " + method);
-    log.info("=========================================================================================== : " + method+"ERROR :"+result.error);
+    log.info("=========================================================================================== : " + method+"   ERROR :"+result.error);
 };
 
 var success = function(method, result) {

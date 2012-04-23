@@ -1,5 +1,5 @@
 [
     "core/users/login.js",
-    "core/users/users.js","core/apis/list.js"
+    "core/users/users.js","core/apis/list.js","core/apis/copy.js"
 
 ]

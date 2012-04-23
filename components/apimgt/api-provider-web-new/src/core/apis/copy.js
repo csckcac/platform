@@ -1,7 +1,9 @@
 var createNewAPIVersion = function(apiName, version, newVersion) {
+    var log = new Log();
     var apiProvider = require("/core/greg/greg.js").getAPIProviderObj();
     var user = require("/core/users/users.js").getUser();
     var providerName = user.username;
+
     try {
         var success = apiProvider.createNewAPIVersion(providerName, apiName, version, newVersion);
         if (log.isDebugEnabled()) {

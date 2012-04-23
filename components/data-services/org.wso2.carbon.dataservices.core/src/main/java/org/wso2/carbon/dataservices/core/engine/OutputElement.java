@@ -18,33 +18,126 @@
  */
 package org.wso2.carbon.dataservices.core.engine;
 
-import java.util.Set;
+import org.wso2.carbon.dataservices.core.DBUtils;
+import org.wso2.carbon.dataservices.core.DataServiceFault;
 
 import javax.xml.stream.XMLStreamWriter;
-
-import org.wso2.carbon.dataservices.core.DataServiceFault;
+import java.sql.SQLException;
+import java.util.Set;
 
 /**
  * Represents an entity which can yield a result, i.e. elements in a result section.
  */
-public interface OutputElement {
+public abstract class OutputElement extends XMLWriterHelper{
 
-	/**
-	 * Executes and writes the contents of this element, given the parameters.
-	 */
-	void execute(XMLStreamWriter xmlWriter, 
-			ExternalParamCollection params, int queryLevel)
-			throws DataServiceFault;
-	
-	/**
-	 * Returns the requires roles to view this element.
-	 */
-	Set<String> getRequiredRoles();
-	
-	/**
-	 * Checks if this element is optional, 
-	 * if so, this has to be mentioned in the schema for WSDL generation.
-	 */
-	boolean isOptional();
-	
+    private String arrayName;
+
+    private String name;
+
+    private String paramType;
+
+    private String param;
+
+    public OutputElement(String namespace) {
+        super(namespace);
+    }
+
+    /**
+     * Executes and writes the contents of this element, given the parameters.
+     */
+    public void execute(XMLStreamWriter xmlWriter, ExternalParamCollection params, int queryLevel)
+            throws DataServiceFault {
+        ParamValue paramValue;
+        if (this.getArrayName() == null) {
+            this.executeElement(xmlWriter, params, queryLevel);
+        } else {
+            ExternalParam exParam = this.getExternalParam(params);
+            if (exParam != null) {
+                paramValue = exParam.getValue();
+                String name = exParam.getName();
+                String type = exParam.getType();
+
+                if (DBUtils.isSQLArray(paramValue)) {
+                    ExternalParamCollection tmpParams;
+                    for (ParamValue value : paramValue.getArrayValue()) {
+                        tmpParams = new ExternalParamCollection();
+                        tmpParams.addParam(new ExternalParam(name, value, type));
+                        this.executeElement(xmlWriter, tmpParams, queryLevel);
+                    }
+                } else if (DBUtils.isUDT(paramValue)) {
+                    String indexString = this.getArrayName().substring(
+                            this.getArrayName().indexOf("["), this.getArrayName().length());
+                    ParamValue value;
+                    try {
+                        value = DBUtils.getUDTAttributeValue(DBUtils.getNestedIndices(indexString),
+                                paramValue, 0);
+                        if (DBUtils.isSQLArray(value)) {
+                            ExternalParamCollection tmpParams;
+                            for (ParamValue param : value.getArrayValue()) {
+                                tmpParams = new ExternalParamCollection();
+                                tmpParams.addParam(new ExternalParam(this.getArrayName().toLowerCase(),
+                                        param, type));
+                                this.executeElement(xmlWriter, tmpParams, queryLevel);
+                            }
+                        } else {
+                            this.executeElement(xmlWriter, params, queryLevel);
+                        }
+                    } catch (SQLException e) {
+                        //Let the flow continue.
+                    }
+                } else {
+                    this.execute(xmlWriter, params, queryLevel);
+                }
+            } else {
+                throw new DataServiceFault("The array '" + this.getArrayName() + "' does not exist");
+            }
+        }
+    }
+
+    private ExternalParam getExternalParam(ExternalParamCollection params) {
+        ExternalParam exParam = params.getParam(this.getParamName());
+        if (exParam == null) {
+            exParam = params.getParam(this.getParamType(), this.getParam());
+        }
+        return exParam;
+    }
+
+    private String getParamName() {
+        String paramName = this.getArrayName();
+        if (paramName.contains("[")) {
+            paramName = paramName.substring(0, paramName.indexOf("["));
+        }
+        return paramName.toLowerCase();
+    }
+
+    protected abstract void executeElement(XMLStreamWriter xmlWriter, ExternalParamCollection params,
+                                           int queryLevel) throws DataServiceFault;
+
+    /**
+     * Returns the requires roles to view this element.
+     */
+    public abstract Set<String> getRequiredRoles();
+
+    /**
+     * Checks if this element is optional,
+     * if so, this has to be mentioned in the schema for WSDL generation.
+     */
+    public abstract boolean isOptional();
+
+    public String getArrayName() {
+        return arrayName;
+    }
+
+    public String getParam() {
+        return param;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getParamType() {
+        return paramType;
+    }
+
 }

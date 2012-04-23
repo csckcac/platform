@@ -27,7 +27,7 @@ import java.util.*;
 /**
  * Represents a multilevel <element/> element.
  */
-public class OutputElementGroup extends ArrayOutputElement {
+public class OutputElementGroup extends OutputElement {
 
     private String name;
 

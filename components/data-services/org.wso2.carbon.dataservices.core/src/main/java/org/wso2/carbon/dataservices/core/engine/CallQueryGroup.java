@@ -18,20 +18,19 @@
  */
 package org.wso2.carbon.dataservices.core.engine;
 
-import java.util.List;
-import java.util.Set;
+import org.wso2.carbon.dataservices.core.DataServiceFault;
+import org.wso2.carbon.dataservices.core.description.query.Query;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-
-import org.wso2.carbon.dataservices.core.DataServiceFault;
-import org.wso2.carbon.dataservices.core.description.query.Query;
+import java.util.List;
+import java.util.Set;
 
 /**
  * This class represents a collection of call queries,
  * that is used to execute in succession.
  */
-public class CallQueryGroup extends XMLWriterHelper implements OutputElement {
+public class CallQueryGroup extends OutputElement {
 
 	private List<CallQuery> callQueries;
 		
@@ -94,20 +93,20 @@ public class CallQueryGroup extends XMLWriterHelper implements OutputElement {
 	/**
 	 * Execute all the call queries in this group.
 	 */
-	public void execute(XMLStreamWriter xmlWriter, 
-			ExternalParamCollection params, int queryLevel) 
-			throws DataServiceFault {
-		try {
+    @Override
+    protected void executeElement(XMLStreamWriter xmlWriter, ExternalParamCollection params,
+                                  int queryLevel) throws DataServiceFault {
+        try {
 			/* start write result wrapper */
 			if (this.isHasResult()) {
-				this.startWrapperElement(xmlWriter, this.getNamespace(), this.getResultWrapper(), 
+				this.startWrapperElement(xmlWriter, this.getNamespace(), this.getResultWrapper(),
 					    this.getDefaultCallQuery().getQuery().getResult().getResultType());
 			}
-			
+
 			/* write query results */
 			List<CallQuery> callQueries = this.getCallQueries();
 			for (CallQuery callQuery : callQueries) {
-				callQuery.execute(xmlWriter, params, queryLevel);
+				callQuery.executeElement(xmlWriter, params, queryLevel);
 			}
 
 			/* end write result wrapper */
@@ -117,9 +116,9 @@ public class CallQueryGroup extends XMLWriterHelper implements OutputElement {
 		} catch (XMLStreamException e) {
 			throw new DataServiceFault(e, "Error in CallQueryGroup.execute");
 		}
-	}
-	
-	public boolean isOptional() {
+    }
+
+    public boolean isOptional() {
 		CallQuery defaultCQ = this.getDefaultCallQuery();
 		if (defaultCQ != null) {
 			return defaultCQ.isOptional();

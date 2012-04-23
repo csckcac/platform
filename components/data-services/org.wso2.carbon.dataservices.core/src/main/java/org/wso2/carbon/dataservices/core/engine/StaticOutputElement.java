@@ -36,7 +36,7 @@ import java.util.Set;
 /**
  * Represents a static entry in a Result element.
  */
-public class StaticOutputElement extends ArrayOutputElement {
+public class StaticOutputElement extends OutputElement {
 
     /**
      * name of element/attribute

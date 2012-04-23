@@ -40,59 +40,61 @@ import java.util.Map.Entry;
 /**
  * A call-query is an expression which leads to the execution of a query.
  */
-public class CallQuery implements OutputElement {
+public class CallQuery extends OutputElement {
 
 	private DataService dataService;
-	
+
 	private String queryId;
-	
+
 	private Query query;
 
 	/* key - target query's query-param name, value - withparam */
-    private Map<String, WithParam> withParams; 
-	
+    private Map<String, WithParam> withParams;
+
 	private Set<String> requiredRoles;
-		
+
 	public CallQuery(DataService dataService, String queryId, Map<String, WithParam> withParams,
 			Set<String> requiredRoles) {
+        super(null);
 		this.dataService = dataService;
 		this.queryId = queryId;
 		this.withParams = withParams;
 		this.requiredRoles = requiredRoles;
 	}
-	
+
 	public void init() throws DataServiceFault {
 		this.query = this.getDataService().getQuery(this.getQueryId());
+        this.setNamespace(this.getQuery().getNamespace());
 		if (this.query == null) {
 			throw new DataServiceFault(
 					"Query with the query id: '" + this.getQueryId() + "' cannot be found");
 		}
 	}
-	
+
 	public Set<String> getRequiredRoles() {
 		return requiredRoles;
 	}
-	
+
 	public boolean isOptional() {
 		return this.getRequiredRoles() != null && this.getRequiredRoles().size() > 0;
 	}
-	
+
 	public Map<String, WithParam> getWithParams() {
 		return withParams;
 	}
-	
+
 	public DataService getDataService() {
 		return dataService;
 	}
-	
+
 	public String getQueryId() {
 		return queryId;
 	}
-	
+
 	public Query getQuery() {
 		return query;
 	}
-	
+
 	/**
 	 * This method returns the system variable's value given the property name.
 	 */
@@ -119,7 +121,7 @@ public class CallQuery implements OutputElement {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * This method evaluates the content of the 'defaultValue' field.
 	 * The default value field can simply contain a string value, or it can
@@ -145,11 +147,12 @@ public class CallQuery implements OutputElement {
 			if (evaluatedValue instanceof ParamValue[]) {
 				result.setArrayValue(Arrays.asList((ParamValue[]) evaluatedValue));
 			} else {
-				result.addArrayValue(evaluatedValue == null ? null :new ParamValue(evaluatedValue.toString()));
+				result.addArrayValue(
+                        evaluatedValue == null ? null : new ParamValue(evaluatedValue.toString()));
 			}
 		} else {
 			result = new ParamValue(ParamValue.PARAM_VALUE_SCALAR);
-			/* if the expected value is a scalar, and we have an array, 
+			/* if the expected value is a scalar, and we have an array,
 			   only set the first element as the value */
 			if (evaluatedValue instanceof String[]) {
 				String[] tmpArray = (String[]) evaluatedValue;
@@ -169,30 +172,32 @@ public class CallQuery implements OutputElement {
         List<QueryParam> queryParams = this.getQuery().getQueryParams();
         for (QueryParam queryParam : queryParams) {
             if (queryParam.getDefaultValue() != null) {
-                params.addTempParam(queryParam.getName(), 
-                		this.evaluateDefaultValue(queryParam.getDefaultValue(), queryParam.getParamType()));
+                params.addTempParam(queryParam.getName(),
+                		this.evaluateDefaultValue(queryParam.getDefaultValue(),
+                                queryParam.getParamType()));
             }
         }
     }
-	
-    public void execute(XMLStreamWriter xmlWriter, ExternalParamCollection params, 
-			int queryLevel) throws DataServiceFault {
-        /* handle default values */
+
+    @Override
+    protected void executeElement(XMLStreamWriter xmlWriter, ExternalParamCollection params,
+                                  int queryLevel) throws DataServiceFault {
+         /* handle default values */
         this.processDefaultValues(params);
 		/* convert/filter params according to the WithParams */
 		Map<String, ParamValue> qparams = extractParams(params);
 		/* execute query */
 		this.getQuery().execute(xmlWriter, qparams, queryLevel);
 		/* clear temp values */
-		params.clearTempValues();		
-	}
-	
-	/**
-	 * Convert's a call-query's ExternalParams to parameters (parameter map) 
-	 * that can be passed into actual query objects, by making necessary 
-	 * transformation as instructed by with-param elements. 
+		params.clearTempValues();
+    }
+
+    /**
+	 * Convert's a call-query's ExternalParams to parameters (parameter map)
+	 * that can be passed into actual query objects, by making necessary
+	 * transformation as instructed by with-param elements.
 	 */
-	private Map<String, ParamValue> extractParams(ExternalParamCollection params) 
+	private Map<String, ParamValue> extractParams(ExternalParamCollection params)
 			throws DataServiceFault {
 		Map<String, ParamValue> qparams = new HashMap<String, ParamValue>();
 		ExternalParam paramObj;
@@ -211,7 +216,7 @@ public class CallQuery implements OutputElement {
 				/* this means the query param will be added later by the default values */
 				continue;
 			} else {
-				throw new DataServiceFault(FaultCodes.INCOMPATIBLE_PARAMETERS_ERROR, 
+				throw new DataServiceFault(FaultCodes.INCOMPATIBLE_PARAMETERS_ERROR,
 						"Error in 'CallQuery.extractParams', cannot find parameter with type:" +
 						paramType + " name:" + withParam.getOriginalName());
 			}
@@ -227,24 +232,24 @@ public class CallQuery implements OutputElement {
 		}
 		return qparams;
 	}
-	
+
 	/**
 	 * This class represents a "with-param" element in a call-query.
 	 */
 	public static class WithParam {
-		
+
 		private String name;
-		
+
 		/**
 		 * Original name is the initial value, without making changes to it,
 		 * i.e. making it lower-case.
 		 */
 		private String originalName;
-		
+
 		private String param;
-		
+
 		private String paramType;
-		
+
 		public WithParam(String name, String originalName, String param,
 				String paramType) throws DataServiceFault {
 			this.name = name;
@@ -256,25 +261,25 @@ public class CallQuery implements OutputElement {
 
 		private void validateWithParam() throws DataServiceFault {
 			/* validate name, should be an NCName */
-			if (DBSFields.QUERY_PARAM.equals(this.getParamType()) && 
+			if (DBSFields.QUERY_PARAM.equals(this.getParamType()) &&
 					!NCName.isValid(this.getParam())) {
-				throw new DataServiceFault("Invalid query param name: '" + this.getParam() + 
+				throw new DataServiceFault("Invalid query param name: '" + this.getParam() +
 						"', must be an NCName.");
 			}
 		}
-		
+
 		public String getName() {
 			return name;
 		}
-		
+
 		public String getOriginalName() {
 			return originalName;
 		}
-		
+
 		public String getParam() {
 			return param;
 		}
-		
+
 		public String getParamType() {
 			return paramType;
 		}

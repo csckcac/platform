@@ -17,9 +17,12 @@ package org.wso2.carbon.hostobjects.feed;
 
 import org.apache.abdera.Abdera;
 import org.apache.abdera.factory.Factory;
+import org.apache.abdera.model.Category;
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.model.Link;
 import org.apache.abdera.parser.stax.util.FOMHelper;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
@@ -115,6 +118,7 @@ public class EntryHostObject extends ScriptableObject  {
     private static final long serialVersionUID = -2799736487293031053L;
     private Abdera abdera;
     private Entry entry;
+    private static Log log = LogFactory.getLog(EntryHostObject.class);
 
     public EntryHostObject() {
         super();
@@ -152,11 +156,19 @@ public class EntryHostObject extends ScriptableObject  {
         entry.addCategory(String.valueOf(category));
     }
 
-    public String jsGet_category() {
-        if (entry != null)
-            return entry.getCategories().get(0).toString();
+    public NativeArray jsGet_category() {
+   	 if (entry != null) {
+            NativeArray nativeArray = new NativeArray(0);
+            List<Category> list = entry.getCategories();
+            int size = list.size();
+            for (int i = 0; i < size; i++) {
+           	 Category element = (Category) list.get(i);
+                nativeArray.put(i, nativeArray, element.getAttributeValue("term"));
+            }
+            return nativeArray;
+        }
         return null;
-    }
+   }
 
     //process content
     public void jsSet_content(Object content) {
@@ -281,6 +293,7 @@ public class EntryHostObject extends ScriptableObject  {
     }
 
     public String jsGet_title() {
+    	log.info("Title of the entry get");
         if (entry != null)
             return entry.getTitle();
         return null;

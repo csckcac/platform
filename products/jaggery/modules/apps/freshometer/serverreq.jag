@@ -1,26 +1,23 @@
-
 <%
 
 var title = request.getParameter('q');
-        log("search term : " + encodeURI(title));
 var title = encodeURI(title); // encode search term for rottentomatoes search        
 var apikey = "e9r83r3qcp3hdghg8qpu5kf3";
    var moviesJSON = get("http://api.rottentomatoes.com/api/public/v1.0/movies.json", { apikey : "e9r83r3qcp3hdghg8qpu5kf3", q : title, page_limit : "1" },"json");
 
-
     var i=0;
-
-  var client = new APPClient();
+	
+ // var client = new APPClient();
 
  // Creating an instance of AtomFeed
- var feed = new AtomFeed();
+ var feed= new Feed();
  if (moviesJSON.data.movies[0] != null && moviesJSON.data.movies[0] != 'undefined') {
  var videotitle = encodeURI(moviesJSON.data.movies[0].title);  //encode the full movie title for youtube search
  // Retrieving and online feed
- feed = client.getFeed("http://gdata.youtube.com/feeds/api/videos?q="+videotitle+"video&start-index=1&max-results=6&v=2");
-
+ var URl = "http://gdata.youtube.com/feeds/api/videos?q="+videotitle+"video&start-index=1&max-results=6&v=2";
+ feed.getFeed(URL);
  // Getting an array of individual entries from the feed
- var entries = feed.getEntries();
+ var entries = feed.entries;
 %>
         <div class="results" id="results" >
 

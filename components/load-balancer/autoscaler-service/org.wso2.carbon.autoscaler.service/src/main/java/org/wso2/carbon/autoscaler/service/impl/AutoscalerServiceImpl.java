@@ -84,6 +84,8 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
 
         // load policy configurations
         try {
+            //TODO populate the maps using database details
+
             policyReader = new AutoscalerPolicyFileReader();
             autoscalerPolicy = policyReader.getPolicy();
 

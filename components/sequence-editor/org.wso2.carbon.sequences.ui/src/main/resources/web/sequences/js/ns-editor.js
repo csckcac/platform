@@ -74,7 +74,7 @@ function addNameSpace(namedelete,prefixemptymsg,uriemptymsg) {
     nsRaw.setAttribute("id", "nsTR" + i);
 
     var prefixTD = document.createElement("td");
-    prefixTD.innerHTML = "<input type='text' size='6' style='width:100px' name='prefix" + i + "' id='prefix" + i + "'" +
+    prefixTD.innerHTML = "<input type='text' style='width:100px' name='prefix" + i + "' id='prefix" + i + "'" +
                          " />";
 
     var uriTD = document.createElement("td");

@@ -107,7 +107,7 @@
                                     %>
                                     <tr id="nsTR<%=i%>">
                                         <td align="left">
-                                            <input type="text" name="prefix<%=i%>" id="prefix<%=i%>"
+                                            <input type="text" style="width:100px" name="prefix<%=i%>" id="prefix<%=i%>"
                                                    value="<%=prefix%>"/>
                                         </td>
                                         <td>

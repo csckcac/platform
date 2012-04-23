@@ -53,10 +53,7 @@ public class ProductConstant {
     public static EnvironmentBuilder env;
     public static FrameworkSettings framework;
     public static String SYSTEM_TEST_RESOURCE_LOCATION = getSystemResourceLocation();
-
-
-    public static String REPORT_LOCATION = System.getProperty("system.test.sample.location")
-            .substring(0, SYSTEM_TEST_RESOURCE_LOCATION.indexOf("core/org.wso2.automation.platform"));
+    public static String REPORT_LOCATION = getReportLocation();
     public static String REPORT_REPOSITORY = REPORT_LOCATION + "reports" + File.separator;
 
 
@@ -78,17 +75,37 @@ public class ProductConstant {
     /**
      * construct the resource file path by checking the OS tests are running.
      * Need to replace string path with correct forward or backward slashes as we set the system property with
-     *  forward slash.
-     * @return  resource path
+     * forward slash.
+     *
+     * @return resource path
      */
     public static String getSystemResourceLocation() {
         String resourceLocation;
         if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-            resourceLocation = System.getProperty("system.test.sample.location").replace("/","\\");
+            resourceLocation = System.getProperty("system.test.sample.location").replace("/", "\\");
         } else {
-            resourceLocation = System.getProperty("system.test.sample.location").replace("/","/");
+            resourceLocation = System.getProperty("system.test.sample.location").replace("/", "/");
         }
         return resourceLocation;
+    }
+
+    /**
+     * construct the report path by check OS. TestNG reports will be written to the reportPath.
+     * Need to replace string path with correct forward or backward slashes as we set the system property with
+     * forward slash.
+     *
+     * @return report location
+     */
+    public static String getReportLocation() {
+        String reportLocation;
+        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+            reportLocation = System.getProperty("system.test.sample.location").replace("/", "\\").
+                    substring(0, SYSTEM_TEST_RESOURCE_LOCATION.indexOf("core\\org.wso2.automation.platform"));
+        } else {
+            reportLocation = System.getProperty("system.test.sample.location").replace("/", "\\").
+                    substring(0, SYSTEM_TEST_RESOURCE_LOCATION.indexOf("core/org.wso2.automation.platform"));
+        }
+        return reportLocation;
     }
 
 

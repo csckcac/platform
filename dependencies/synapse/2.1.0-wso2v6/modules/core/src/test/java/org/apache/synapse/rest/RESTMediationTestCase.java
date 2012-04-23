@@ -26,6 +26,7 @@ import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.mediators.TestUtils;
 import org.apache.synapse.mediators.base.SequenceMediator;
 import org.apache.synapse.mediators.builtin.PropertyMediator;
+import org.apache.synapse.transport.nhttp.NhttpConstants;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,6 +45,7 @@ public abstract class RESTMediationTestCase extends TestCase {
         }
         msgCtx.setProperty(Constants.Configuration.HTTP_METHOD, method);
         msgCtx.setProperty(Constants.Configuration.TRANSPORT_IN_URL, url);
+        msgCtx.setProperty(NhttpConstants.REST_URL_POSTFIX, url.substring(1));
         return synCtx;
     }
 

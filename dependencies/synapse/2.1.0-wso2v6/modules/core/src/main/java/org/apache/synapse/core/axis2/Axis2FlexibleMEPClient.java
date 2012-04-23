@@ -241,6 +241,10 @@ public class Axis2FlexibleMEPClient {
                     if (!address.endsWith("/") && !restSuffix.startsWith("/") &&
                             !restSuffix.startsWith("?")) {
                         url = address + "/" + restSuffix;
+                    } else if (address.endsWith("/") && restSuffix.startsWith("/")) {
+                        url = address + restSuffix.substring(1);
+                    } else if (address.endsWith("/") && restSuffix.startsWith("?")) {
+                        url = address.substring(0, address.length() - 1) + restSuffix;
                     } else {
                         url = address + restSuffix;
                     }

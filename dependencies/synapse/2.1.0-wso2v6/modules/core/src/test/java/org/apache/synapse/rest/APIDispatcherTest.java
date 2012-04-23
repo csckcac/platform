@@ -55,7 +55,7 @@ public class APIDispatcherTest extends RESTMediationTestCase {
 
         RESTRequestHandler handler = new RESTRequestHandler();
 
-        // Messages with '/test' context should ne dispatched
+        // Messages with '/test' context should be dispatched
         MessageContext synCtx = getMessageContext(synapseConfig, false, "/test", "GET");
         handler.process(synCtx);
         assertEquals(TEST_API, synCtx.getProperty(RESTConstants.SYNAPSE_REST_API));
@@ -231,13 +231,11 @@ public class APIDispatcherTest extends RESTMediationTestCase {
 
         synCtx = getMessageContext(synapseConfig, false, "/test/1.0.0", "GET");
         handler.process(synCtx);
-//        System.out.println(api.getName() + " : " + synCtx.getProperty(RESTConstants.SYNAPSE_REST_API));
         assertEquals(api.getName(), synCtx.getProperty(RESTConstants.SYNAPSE_REST_API));
         assertEquals(TEST_API_VERSION,synCtx.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION));
 
         synCtx = getMessageContext(synapseConfig, false, "/test/1.0.0/", "GET");
         handler.process(synCtx);
-//        System.out.println(api.getName() + " : " + synCtx.getProperty(RESTConstants.SYNAPSE_REST_API));
         assertEquals(api.getName(), synCtx.getProperty(RESTConstants.SYNAPSE_REST_API));
         assertEquals(TEST_API_VERSION,synCtx.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION));
 
@@ -245,11 +243,9 @@ public class APIDispatcherTest extends RESTMediationTestCase {
         handler.process(synCtx);
         assertEquals(api.getName(), synCtx.getProperty(RESTConstants.SYNAPSE_REST_API));
         assertEquals(TEST_API_VERSION,synCtx.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION));
-//        System.out.println(synCtx.getProperty(RESTConstants.REST_SUB_REQUEST_PATH));
 
         synCtx = getMessageContext(synapseConfig, false, "/test/1.0.0?a=5", "GET");
         handler.process(synCtx);
-//        System.out.println(synCtx.getProperty(RESTConstants.REST_SUB_REQUEST_PATH));
         assertEquals(api.getName(), synCtx.getProperty(RESTConstants.SYNAPSE_REST_API));
         assertEquals(TEST_API_VERSION,synCtx.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION));
 
@@ -275,7 +271,5 @@ public class APIDispatcherTest extends RESTMediationTestCase {
         assertNull(synCtx.getProperty(RESTConstants.SYNAPSE_REST_API));
         assertNull(synCtx.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION));
     }
-
-
 
 }

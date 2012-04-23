@@ -54,11 +54,12 @@ public class API extends AbstractRESTProcessor implements ManagedLifecycle {
     }
 
     /**
-     * get Fully Qualified name of this API
-     * @return returns the key combiantion for API NAME + VERSION
+     * Get the fully qualified name of this API
+     *
+     * @return returns the key combination for API NAME + VERSION
      */
     public String getName() {
-        //check if a versioning strategy exists
+        // check if a versioning strategy exists
         if (versionStrategy.getVersion() != null && !"".equals(versionStrategy.getVersion()) ) {
             return name + ":v" +versionStrategy.getVersion();
         }
@@ -151,9 +152,9 @@ public class API extends AbstractRESTProcessor implements ManagedLifecycle {
     boolean canProcess(MessageContext synCtx) {
         if (synCtx.isResponse()) {
             String apiName = (String) synCtx.getProperty(RESTConstants.SYNAPSE_REST_API);
-            String version = (String) synCtx.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION) == null ?
+            String version = synCtx.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION) == null ?
                              "": (String) synCtx.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION);
-            //if api name is not matching OR versions are differnt
+            //if api name is not matching OR versions are different
             if (!getName().equals(apiName) || !versionStrategy.getVersion().equals(version)) {
                 return false;
             }
@@ -213,6 +214,20 @@ public class API extends AbstractRESTProcessor implements ManagedLifecycle {
         synCtx.setProperty(RESTConstants.SYNAPSE_REST_API, getName());
         synCtx.setProperty(RESTConstants.SYNAPSE_REST_API_VERSION, versionStrategy.getVersion());
         synCtx.setProperty(RESTConstants.REST_API_CONTEXT, context);
+        
+        // Remove the API context part from the REST_URL_POSTFIX
+        String restURLPostfix = (String) ((Axis2MessageContext) synCtx).getAxis2MessageContext().
+                getProperty(NhttpConstants.REST_URL_POSTFIX);
+        if (restURLPostfix != null) {
+            if (!restURLPostfix.startsWith("/")) {
+                restURLPostfix = "/" + restURLPostfix;
+            }
+            if (restURLPostfix.startsWith(context)) {
+                restURLPostfix = restURLPostfix.substring(context.length());
+                ((Axis2MessageContext) synCtx).getAxis2MessageContext().setProperty(
+                        NhttpConstants.REST_URL_POSTFIX, restURLPostfix);
+            }
+        }
 
         for (Handler handler : handlers) {
             if (log.isDebugEnabled()) {
@@ -247,7 +262,7 @@ public class API extends AbstractRESTProcessor implements ManagedLifecycle {
 
 
         String path = RESTUtils.getFullRequestPath(synCtx);
-        String subPath = null;
+        String subPath;
         if (versionStrategy.getVersionType().equals(VersionStrategyFactory.TYPE_URL)) {
             //for URL based
             //request --> http://{host:port}/context/version/path/to/resource

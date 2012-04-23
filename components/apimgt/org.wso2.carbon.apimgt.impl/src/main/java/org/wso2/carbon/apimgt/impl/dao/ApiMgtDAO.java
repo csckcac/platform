@@ -1294,6 +1294,8 @@ public class ApiMgtDAO {
                 subs = getSubscriber(subscriber.getName(),tenantId);
                 if(subs == null){
                     return null;
+                }else{
+                    subscriber = subs;
                 }
             }
 

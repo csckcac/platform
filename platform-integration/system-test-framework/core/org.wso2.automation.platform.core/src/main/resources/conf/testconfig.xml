@@ -473,6 +473,18 @@
         </product>
     </scenario>
 
+    <scenario testName="org.wso2.automation.common.test.dss.fileservice.CSVSampleServiceTest">
+        <product name="DSS">
+            <artifacts userId="3">
+                <artifact name="CSVSampleService.dbs" type="dbs">
+                    <dependency name="Products.csv" dependencyType="csv"/>
+                    <association name="artifact_location" value="csv"/>
+                    <association name="dependency_location" value="resources"/>
+                </artifact>
+            </artifacts>
+        </product>
+    </scenario>
+
     <scenario testName="org.wso2.automation.common.test.dss.fileservice.ExcelDataServiceTest">
         <product name="DSS">
             <artifacts userId="3">

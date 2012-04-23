@@ -1,6 +1,7 @@
 var apiProvider = require("/core/greg/greg.js").getAPIProviderObj();
 
 var getAPIUsageHostTest = function(apiName, server) {
+    var log = new Log();
     var usage = [];
     var usageout = [];
     try {

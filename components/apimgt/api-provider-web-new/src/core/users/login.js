@@ -32,9 +32,9 @@ var login = function (username, password) {
     var cookie = result.client.getResponseHeader("Set-Cookie");
     log(cookie);
     cookie = cookie.split(';')[0];
-    /*session.put("username", username);
-     session.put("userId", subscriber.id);
-     session.put("cookie", cookie);*/
+    session.put("username", username);
+    //session.put("userId", subscriber.id);
+    session.put("cookie", cookie);
     return {
         error:false,
         cookie:cookie

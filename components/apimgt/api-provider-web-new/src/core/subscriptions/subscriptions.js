@@ -1,8 +1,9 @@
 var apiProvider = require("/core/greg/greg.js").getAPIProviderObj();
+var log = new Log();
 
 var getSubscribersOfAPI = function (apiName, version) {
 
-    var user = require("/core/user/user.js").getUser();
+    var user = require("/core/users/users.js").getUser();
     var providerName = user.username;
     var subscribersOut = [];
     var subscribersArray = [];
@@ -42,7 +43,7 @@ var getSubscribersOfAPI = function (apiName, version) {
 var getSubscribersOfProvider = function () {
     var subscribersOut = [];
     var subscribersArray = [];
-    var user = require("/core/user/user.js").getUser();
+    var user = require("/core/users/users.js").getUser();
     var provider = user.username;
     try {
         subscribersArray = apiProvider.getAllAPIUsageByProvider(provider);

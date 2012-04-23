@@ -56,4 +56,16 @@ public class APIInfoDTO {
     public void setContext(String context) {
         this.context = context;
     }
+
+    /**
+     * Computes API Identifier using Provider Id, API Name & Version
+     * @return API Identifier as a String
+     */
+    public String getAPIIdentifier() {
+        if (providerId != null && apiName != null && version != null) {
+            return providerId + "_" + apiName + "_" + version;
+        } else {
+            return null;
+        }
+    }
 }

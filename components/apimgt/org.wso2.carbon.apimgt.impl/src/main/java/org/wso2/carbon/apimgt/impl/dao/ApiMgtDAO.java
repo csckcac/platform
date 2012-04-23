@@ -876,6 +876,7 @@ public class ApiMgtDAO {
                 "           AND SUB.TENANT_ID = ? " +
                 "           AND APP.SUBSCRIBER_ID = SUB.SUBSCRIBER_ID " +
                 "           AND APP.NAME = ? " +
+                "           AND SUBS.API_ID = ? " +
                 "           AND APP.APPLICATION_ID = SUBS.APPLICATION_ID" +
                 "       )";
 
@@ -916,6 +917,7 @@ public class ApiMgtDAO {
             prepStmt.setString(2, userId);
             prepStmt.setInt(3, tenantId);
             prepStmt.setString(4, applicationName);
+            prepStmt.setString(5, apiInfoDTO.getAPIIdentifier());
             prepStmt.executeUpdate();
             prepStmt.close();
 

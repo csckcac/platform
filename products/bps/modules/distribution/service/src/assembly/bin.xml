@@ -179,6 +179,16 @@
             <outputDirectory>wso2stratos-bps-${pom.version}/dbscripts/bps</outputDirectory>
         </fileSet>
 
+        <fileSet>
+            <directory>
+                ../../p2-profile-gen/service/target/wso2carbon-core-${wso2carbon.version}/dbscripts/identity/
+            </directory>
+            <outputDirectory>wso2stratos-bps-${pom.version}/dbscripts/identity</outputDirectory>
+            <includes>
+                <include>**/**.sql</include>
+            </includes>
+        </fileSet>
+
         <!-- copy p2 related files -->
         <!--fileSet>
             <directory>../features/p2-profile-generation/target/wso2carbon-core-${carbon.version}/repository/components/p2</directory>

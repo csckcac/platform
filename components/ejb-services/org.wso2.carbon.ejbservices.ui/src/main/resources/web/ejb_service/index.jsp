@@ -187,7 +187,7 @@
                             <div class="sectionHelp">
                                 Application Server Configuration details where the actual EJB is
                                 deployed
-                                is needed for configuring a new EJB service.
+                                are needed for configuring a new EJB service.
                             </div>
                         </td>
                     </tr>

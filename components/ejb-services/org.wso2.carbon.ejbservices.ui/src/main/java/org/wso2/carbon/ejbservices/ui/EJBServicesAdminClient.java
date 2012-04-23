@@ -192,9 +192,9 @@ public class EJBServicesAdminClient {
         return "<parameter name=\"" + name + "\" locked=\"false\">" + value + "</parameter>";
     }
 
-    public void deleteEJBConfiguration(String beanJndiName, String providerUrl) throws Exception {
+    public void deleteEJBConfiguration(String serviceName) throws Exception {
         try {
-            stub.deleteEJBConfiguration(beanJndiName, providerUrl);
+            stub.deleteEJBConfiguration(serviceName);
         } catch (Exception e) {
             String msg = "Failed to delete EJB Configuration. Backend service may be " +
                          "unavailable";

@@ -147,10 +147,8 @@ public class EJBServicesAdmin extends AbstractAdmin {
                 for (int i = 0; i < configResourceCollection.getChildCount(); i++) {
                     configResourcePath = configResourcePaths[i];
                     configResource = registry.get(configResourcePath);
-                    if (providerURL.equals(configResource.getProperty(
-                            EJBConstants.ConfigProperties.PROVIDER_URL))
-                            && beanJNDIName.equals(configResource.getProperty(
-                            EJBConstants.ConfigProperties.BEAN_JNDI_NAME))) {
+                    if (serviceName.equals(configResource.getProperty(
+                            EJBConstants.ConfigProperties.SERVICE_NAME))) {
                         throw new Exception("EBJ Configuration already exists");
                     }
                 }
@@ -179,7 +177,7 @@ public class EJBServicesAdmin extends AbstractAdmin {
 
             registry.put(EJBConstants.CONFIGURATIONS + ejbConfigurationID, ejbConfigResource);
         } catch (RegistryException e) {
-            log.error("Unable to add the application server", e);
+            log.error("Unable to add EJB Configuration.", e);
             throw e;
         }
     }
@@ -210,8 +208,8 @@ public class EJBServicesAdmin extends AbstractAdmin {
         }
     }
 
-    //todo user servie Name as well for uniquely recognizing ejb-config
-    public EJBProviderData getEJBConfiguration(String beanJNDIName, String jnpProviderUrl)
+    //todo user servie Name as well for uniquely recognizing ejb-config - done
+    public EJBProviderData getEJBConfiguration(String serviceName)
             throws Exception {
 
         String configPath = EJBConstants.CONFIGURATIONS;
@@ -225,10 +223,8 @@ public class EJBServicesAdmin extends AbstractAdmin {
             for (int i = 0; i < configResourceCollection.getChildCount(); i++) {
                 configResourcePath = configResourcePaths[i];
                 configResource = registry.get(configResourcePath);
-                if (jnpProviderUrl.equals(configResource.getProperty(
-                        EJBConstants.ConfigProperties.PROVIDER_URL))
-                    && beanJNDIName.equals(configResource.getProperty(
-                        EJBConstants.ConfigProperties.BEAN_JNDI_NAME))) {
+                if (serviceName.equals(configResource.getProperty(
+                        EJBConstants.ConfigProperties.PROVIDER_URL))) {
 
                     EJBProviderData ejbProviderData = new EJBProviderData();
                     ejbProviderData.setProviderURL(configResource.getProperty(
@@ -249,12 +245,11 @@ public class EJBServicesAdmin extends AbstractAdmin {
                     return ejbProviderData;
                 }
             }
-
         }
         return null;
     }
 
-    public void deleteEJBConfiguration(String beanJNDIName, String jnpProviderUrl)
+    public void deleteEJBConfiguration(String serviceName)
             throws Exception {
         String configPath = EJBConstants.CONFIGURATIONS;
 
@@ -271,11 +266,8 @@ public class EJBServicesAdmin extends AbstractAdmin {
                 for (int i = 0; i < configResourceCollection.getChildCount(); i++) {
                     configResourcePath = configResourcePaths[i];
                     configResource = registry.get(configResourcePath);
-                    if (jnpProviderUrl.equals(configResource.getProperty(
-                            EJBConstants.ConfigProperties.PROVIDER_URL))
-                            && beanJNDIName.equals(configResource.getProperty(
-                            EJBConstants.ConfigProperties.BEAN_JNDI_NAME))) {
-
+                    if (serviceName.equals(configResource.getProperty(
+                            EJBConstants.ConfigProperties.SERVICE_NAME))) {
                         registry.delete(configResourcePath);
                     }
                 }
@@ -374,15 +366,14 @@ public class EJBServicesAdmin extends AbstractAdmin {
         // search for existing configuration, if found abort service deployment
         try {
             //todo identify with service name as well : getEJBConfiguration(beanJNDIName, jnpProviderUrl. serviceName)
-            EJBProviderData ejbProviderData = getEJBConfiguration(beanJNDIName, jnpProviderUrl);
-            if (!(ejbProviderData == null)) {
+            EJBProviderData ejbProviderData = getEJBConfiguration(serviceName);
+            if (ejbProviderData != null) {
                 // configuration found.Throw exception
-                throw new AxisFault("A Service exists for the provided JNDI name(" +
-                        beanJNDIName + ") and JNP Url(" + jnpProviderUrl + ").");
+                throw new AxisFault("A Service exists for the provided Service Name(" +
+                        serviceName + ").");
             }
         } catch (Exception e) {
-            throw new AxisFault("A Service exists for the provided JNDI name(" +
-                    beanJNDIName + ") and JNP Url(" + jnpProviderUrl + ").", e);
+            throw new AxisFault(e.getMessage(), e);
         }
 
         addEJBConfiguration(serviceName,

@@ -228,16 +228,13 @@ public class ApiMgtDAO {
                 //int tenantId = rs.getInt(APIConstants.SUBSCRIBER_FIELD_TENANT_ID);
                 // If the tenant Id > 0, get the tenant domain and append it to the username.
                 //if (tenantId > 0) {
-                    //TODO
-                    //  userId = userId + "@" + APIKeyMgtUtil.getTenantDomainFromTenantId(tenantId);
+                //  userId = userId + "@" + APIKeyMgtUtil.getTenantDomainFromTenantId(tenantId);
                 //}
                 APIKeyInfoDTO apiKeyInfoDTO = new APIKeyInfoDTO();
                 apiKeyInfoDTO.setUserId(userId);
-                //TODO
                 // apiKeyInfoDTO.setStatus(rs.getString(3));
                 apiKeyInfoList.add(apiKeyInfoDTO);
             }
-
             apiKeyInfoDTOs = apiKeyInfoList.toArray(new APIKeyInfoDTO[apiKeyInfoList.size()]);
 
         } catch (SQLException e) {
@@ -1027,7 +1024,6 @@ public class ApiMgtDAO {
                     "ORDER BY " +
                     "   APP.NAME";
 
-
             ps = connection.prepareStatement(sqlQuery);
             ps.setString(1, providerName + "%");
             result = ps.executeQuery();
@@ -1044,9 +1040,6 @@ public class ApiMgtDAO {
                     if (userApplicationAPIUsage != null) {
                         userApplicationAPIUsage.setApiIdentifiers(apiIdentifiers.toArray(new APIIdentifier[apiIdentifiers.size()]));
                         usages.add(userApplicationAPIUsage);
-
-                        apiIdentifiers = new ArrayList<APIIdentifier>();
-                        userApplicationAPIUsage = null;
                     }
                     userApplicationAPIUsage = new UserApplicationAPIUsage();
                     apiIdentifiers = new ArrayList<APIIdentifier>();
@@ -1066,7 +1059,6 @@ public class ApiMgtDAO {
                 userApplicationAPIUsage.setApiIdentifiers(apiIdentifiers.toArray(new APIIdentifier[apiIdentifiers.size()]));
                 usages.add(userApplicationAPIUsage);
             }
-
             if (usages != null) {
                 userApplicationAPIUsages = usages.toArray(new UserApplicationAPIUsage[usages.size()]);
             }

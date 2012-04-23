@@ -109,7 +109,11 @@
     }
 
     function toogleAddAppserverWindow(){
-        jQuery('#addNewConfigTable').toggle();
+        if(jQuery('#addNewConfig').is(":checked")) {
+            jQuery('#addNewConfigTable').show();
+        } else {
+            jQuery('#addNewConfigTable').hide();
+        }
     }
 </script>
 <div id="middle">
@@ -328,8 +332,6 @@
         <div class="buttonRow">
             <input type="button" value="<fmt:message key="next"/>&gt;"
                    onclick="addApplicationServerElement();" id="ejbStep0NextButton">
-            <input type="button" value="test"
-                   onclick="showAddAppserverWindow();" id="test">
         </div>
     </div>
 </div>

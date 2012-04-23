@@ -1,3 +1,20 @@
+/*
+*  Copyright (c) 2005-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*
+*  WSO2 Inc. licenses this file to you under the Apache License,
+*  Version 2.0 (the "License"); you may not use this file except
+*  in compliance with the License.
+*  You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing,
+* software distributed under the License is distributed on an
+* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+* KIND, either express or implied.  See the License for the
+* specific language governing permissions and limitations
+* under the License.
+*/
 package org.wso2.carbon.apimgt.impl;
 
 import org.apache.axiom.om.OMElement;
@@ -34,7 +51,6 @@ public final class APIMgtDBUtils {
         if (dataSource != null) {
             return;
         }
-
         synchronized (APIMgtDBUtils.class) {
             if (dataSource == null) {
                 if (log.isDebugEnabled()) {
@@ -54,9 +70,8 @@ public final class APIMgtDBUtils {
                 dataSource.setUsername(username);
                 dataSource.setPassword(password);
             }
-        }        
+        }
     }
-
 
     /**
      * Utility method to get a new database connection
@@ -71,6 +86,12 @@ public final class APIMgtDBUtils {
         throw new SQLException("Data source is not configured properly.");
     }
 
+    /**
+     * Utility method to close the connection streams.
+     * @param preparedStatement PreparedStatement
+     * @param connection Connection
+     * @param resultSet ResultSet
+     */
     public static void closeAllConnections(PreparedStatement preparedStatement, Connection connection,
                                            ResultSet resultSet) {
         closeConnection(connection);
@@ -78,21 +99,29 @@ public final class APIMgtDBUtils {
         closeStatement(preparedStatement);
     }
 
+    /**
+     * Close Connection
+     * @param dbConnection Connection
+     */
     public static void closeConnection(Connection dbConnection) {
         if (dbConnection != null) {
             try {
                 dbConnection.close();
             } catch (SQLException e) {
-                log.warn("Database error. Could not close database connection. Continuing with others. - " +
-                        e.getMessage(), e);
+                log.warn("Database error. Could not close database connection. Continuing with " +
+                        "others. - " + e.getMessage(), e);
             }
         }
     }
 
-    public static void closeResultSet(ResultSet rs) {
-        if (rs != null) {
+    /**
+     * Close ResultSet
+     * @param resultSet ResultSet
+     */
+    public static void closeResultSet(ResultSet resultSet) {
+        if (resultSet != null) {
             try {
-                rs.close();
+                resultSet.close();
             } catch (SQLException e) {
                 log.warn("Database error. Could not close ResultSet  - " + e.getMessage(), e);
             }
@@ -100,18 +129,28 @@ public final class APIMgtDBUtils {
 
     }
 
+    /**
+     * Close PreparedStatement
+     * @param preparedStatement PreparedStatement
+     */
     public static void closeStatement(PreparedStatement preparedStatement) {
         if (preparedStatement != null) {
             try {
                 preparedStatement.close();
             } catch (SQLException e) {
-                log.warn("Database error. Could not close PreparedStatement. Continuing with others. - " +
-                        e.getMessage(), e);
+                log.warn("Database error. Could not close PreparedStatement. Continuing with" +
+                        " others. - " + e.getMessage(), e);
             }
         }
 
     }
 
+    /**
+     * Return the DBConfiguration
+     * @param configPath  DB config file path
+     * @return DBConfiguration
+     * @throws APIManagementException  if failed to get DBConfiguration
+     */
     private static DBConfiguration getDBConfig(String configPath) throws APIManagementException {
         DBConfiguration dbConfiguration = new DBConfiguration();
         try {
@@ -134,9 +173,9 @@ public final class APIMgtDBUtils {
         }
         return dbConfiguration;
     }
-    
+
     private static void handleException(String msg, Exception e) throws APIManagementException {
-        log.error(msg,e);
+        log.error(msg, e);
         throw new APIManagementException(msg, e);
     }
 }

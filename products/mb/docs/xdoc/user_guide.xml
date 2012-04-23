@@ -57,11 +57,11 @@
         </p>
 
         <p>
-            WSO2 Message Broker is basically consist of two major features. They are:
+            WSO2 Message Broker is basically consist of two major features.They are:
         </p>
         <ul>
             <li>Pub/ Sub Feature</li>
-            <li>Message box feature</li>
+            <li>Message Broker Clustering feature</li>
         </ul>
 
         <h3>
@@ -90,26 +90,6 @@
             <img src="images/MessageFlowDiagram.jpg"
                  alt="Pub/Sub Message Flow"/>
         </p>
-
-
-        <h3>Message box Feature</h3>
-
-
-        <p>This feature of the WSO2 Message Broker provides the facility for users to store messages
-            in an intermediate location which were sent by some one else to the user and
-            access them on demand. In order to have this feature, WSO2 Message Broker uses a
-            Message Queue and all the operations are carried out on that message queue.
-            This message box feature is like the email box we have, more clearly , any one can send
-            messages to Queue and only the owner of the queue can consume the messages
-            stored in that queue.
-        </p>
-
-        <p>
-            <img src="images/MessageQueue.jpg"
-                 alt="Queue Message Flow"/>
-        </p>
-
-
         <h3>How to use Pub/Sub Feature</h3>
 
         <p>In WSO2 Message Broker , Pub/Sub feature is one of the two major features. Inorder to use
@@ -158,7 +138,7 @@
 
             <p>Once you click on the topic , you will get the following page.</p>
             <p>
-                <img src="images/ topic_browser_clicked.png"
+                <img src="images/topic_browser_clicked.png"
                      alt="Topic Details"/>
             </p>
 
@@ -252,86 +232,239 @@
                 types in the provided space.
             </p>
 
+            <h3>How to enable clustering support</h3>
+            <p>
+                New MB version (2.0) supports clustering. Clustering makes WSO2 MB run on several machines providing
+                high message delivery rate and high availability. In order to enable clustering in the binary distribution
+                or extracted WSO2 MB built from the source, open repository/conf/advanced/qpid-config.xml file and enable
+                clustering as follows:</p>
+
+            <p>
+                <br>&lt;  clustering   &gt;</br>
+                <br>&nbsp;&nbsp;&lt;  enabled   &gt;  true  &lt;/enabled &gt;</br>
+            </p>
+            <p>
+                You also need a Apache Zookeeper server and a Apache Cassandra server running in a separate central
+                machines (or at a simple deployment it can be one of the machines running broker nodes as well) in
+                order to configure the clustering.
+            </p>
+            <ul>
+                <li>To configure Zookeeper:
+
+                    <ol>
+                        <li>
+                            <a href="http://www.apache.org/dyn/closer.cgi/zookeeper/">Download</a> Apache Zookeeper 3.X.X
+                        </li>
+                        <li>
+                            Extract the zip folder to a directory of choice.
+                        </li>
+                        <li>
+                            Create a zoo.config file as instructed in Zookeeper installation  guide <a href="http://zookeeper.apache.org/doc/r3.3.5/zookeeperStarted.html">here</a>.
+                        </li>
+                        <li>
+                            Navigate to bin folder and start Zookeeper server by issuing the command ?zkServer.sh start?
+                        </li>
+                        <li>
+                            Default port for Zookeeper will be ?2181?. You can change that using ?clientPort? in zoo.config file.
+                        </li>
+                    </ol>
+                    <p>
+                        At each client MB instance, configure Zookeeper host and port by editing repository/conf/advanced/qpid-config.xml file.
+                    </p>
+                    <img src="images/zookeeperConfig.png"
+                         alt="editing Zookeeper configurations"/>
+                    <p>
+                        In a actual deployment Zookeeper host will be a separate central machine to which all clients running
+                        MB would connect. Thus Zookeeper host should be the IP of that central machine.
+                    </p>
+                </li>
+
+                <li>To configure Cassandra:
+                    <ol>
+                        <li>
+                            Download Apache Cassandra <a href="http://www.apache.org/dyn/closer.cgi?path=/cassandra/1.0.9/apache-cassandra-1.0.9-bin.tar.gz ">apache-cassandra-1.0.9 </a>
+                            or <a href="http://www.apache.org/dyn/closer.cgi?path=/cassandra/0.8.10/apache-cassandra-0.8.10-bin.tar.gz">apache-cassandra-0.8.10</a> release from <a
+                                href="http://cassandra.apache.org/download/">here</a>
+                        </li>
+                        <li>
+                            As instructed in Apache Cassandra installation guide configure and start Cassandra server. Default port would be 9160.
+                        </li>
+                        <li>
+                            At each MB instance you want to have in the distributed cluster, configure Cassandra by editing &lt;MB Home &lt;/repository/conf/advanced/qpid-virtualhosts.xml file.
+                        </li>
+                    </ol>
+                    <img src="images/storeConfig.png"
+                         alt="editing store configurations"/>
+                    <p>
+                        Note that &lt;username&gt; and &lt;password&gt; are credentials for connecting Cassandra, &lt;host&gt;
+                        is the IP address of Cassandra server you have started and &lt;cluster&gt;  should be same for all the
+                        MB nodes in the same cluster.
+                    </p>
+                    <p>
+                        Now message sender and receivers can send messages to that cluster and consume messages from that cluster
+                        as if it was a single message broker running in a machine. Following is a sample client for queue scenario.
+                    </p>
+                </li>
+
+                <li>   Sample Scenario:
+                    <ul>
+                        <li>
+                            In your local machine setup two WSO2 MB instances running with Cassandra server and Zookeeper server as described above
+                            (note that you can setup Cassandra and Zookeeper to run on the same machine). In order to do that in the second WSO2 MB
+                            define a port offset changing &lt;MB Home&gt;/repository/conf/carbon.xml (eg: set port offset to 1).
+                        </li>
+                        <li>
+                            We will call first broker instance MB1 (runs on port 5672) and the other MB2 (runs on port 5673).
+                        </li>
+                        <li>
+                            Using following JMS client make subscriptions to a queue "myQueue" at MB1.
+                            <pre xml:space="preserve">
+
+                            import org.apache.qpid.configuration.ClientProperties;
+                            import javax.jms.*;
+                            import javax.naming.InitialContext;
+                            import javax.naming.NamingException;
+                            import java.util.Properties;
+
+                            public class ConsumeClient {
+
+
+                                public void consumeMessage() {
+
+                                    System.setProperty(ClientProperties.AMQP_VERSION, "0-91");
+                                    Properties initialContextProperties = new Properties();
+                                    initialContextProperties.put("java.naming.factory.initial",
+                                            "org.apache.qpid.jndi.PropertiesFileInitialContextFactory");
+                                    String connectionString = "amqp://admin:admin@clientID/cassandra?brokerlist='tcp://localhost:5673'";
+                                    initialContextProperties.put("connectionfactory.qpidConnectionfactory", connectionString);
+                                    initialContextProperties.put("queue.myQueue", "myQueue");
+
+                                    try {
+                                        InitialContext initialContext = new InitialContext(initialContextProperties);
+                                        QueueConnectionFactory queueConnectionFactory
+                                                  = (QueueConnectionFactory) initialContext.lookup("qpidConnectionfactory");
+                                        QueueConnection queueConnection = queueConnectionFactory.createQueueConnection();
+                                        queueConnection.start();
+
+                                        QueueSession queueSession = queueConnection.createQueueSession(false, QueueSession.AUTO_ACKNOWLEDGE);
+                                          Destination destination = (Destination) initialContext.lookup("myQueue");
+
+                                        MessageConsumer messageConsumer = queueSession.createConsumer(destination);
+
+                                        TextMessage textMessage = (TextMessage) messageConsumer.receive();
+                                        System.out.println("Got message ==> " + textMessage.getText());
+
+                                        try {
+                                            Thread.sleep(90000*1000);
+                                        } catch (Exception e) {
+                                            System.out.println(e);
+                                        }
+
+                                        messageConsumer.close();
+
+                                        queueSession.close();
+                                        queueConnection.stop();
+                                        queueConnection.close();
+
+                                    } catch (NamingException e) {
+                                        e.printStackTrace();
+                                    } catch (JMSException e) {
+                                        e.printStackTrace();
+                                    }
+
+
+                                }
+
+                                public static void main(String[] args) {
+                                        ConsumeClient sendConsumeClient = new ConsumeClient();
+                                        sendConsumeClient.consumeMessage();
+                                }
+                            }
+                            </pre>
+
+                        </li>
+                        <li>
+                            Now using Message Sender described below, send a message to "myQueue" at MB2.
+
+                            <pre xml:space="preserve">
+
+                                import org.apache.qpid.configuration.ClientProperties;
+                                import javax.jms.*;
+                                import javax.naming.InitialContext;
+                                import javax.naming.NamingException;
+                                import java.io.*;
+                                import java.util.Properties;
+
+                                public class SendClient {
+
+
+                                    public static void main(String[] args) {
+                                        SendClient sendClient = new SendClient();
+                                        sendClient.sendMessage();
+                                    }
+
+                                     public void sendMessage() {
+
+                                        System.setProperty(ClientProperties.AMQP_VERSION, "0-91");
+                                          Properties initialContextProperties = new Properties();
+                                        initialContextProperties.put("java.naming.factory.initial",
+                                                "org.apache.qpid.jndi.PropertiesFileInitialContextFactory");
+                                        String connectionString = "amqp://admin:admin@clientID/cassandra?brokerlist='tcp://localhost:5673'";
+                                        initialContextProperties.put("connectionfactory.qpidConnectionfactory", connectionString);
+                                        initialContextProperties.put("queue.myQueue", "myQueue");
+
+
+                                        try {
+                                            InitialContext initialContext = new InitialContext(initialContextProperties);
+                                            QueueConnectionFactory queueConnectionFactory
+                                                    = (QueueConnectionFactory) initialContext.lookup("qpidConnectionfactory");
+
+                                            QueueConnection queueConnection = queueConnectionFactory.createQueueConnection();
+                                            queueConnection.start();
+
+                                            QueueSession queueSession = queueConnection.createQueueSession(false, QueueSession.AUTO_ACKNOWLEDGE);
+
+                                            TextMessage textMessage = queueSession.createTextMessage();
+                                            textMessage.setText("Test message");
+                                            System.out.println("Sending Message : " + textMessage.getText().length());
+
+                                            // Send message
+                                            Queue queue = (Queue) initialContext.lookup("myQueue");
+
+                                           // Queue queue = queueSession.createQueue("testQueue;{create:always, node:{durable: true}}");
+                                            QueueSender queueSender = queueSession.createSender(queue);
+                                            queueSender.send(textMessage);
+
+                                            // Housekeeping
+                                            queueSender.close();
+                                            queueSession.close();
+                                            queueConnection.stop();
+                                            queueConnection.close();
+
+                                        } catch (NamingException e) {
+                                            e.printStackTrace();
+                                        } catch (JMSException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                     }
+                                }
+                            </pre>
+                        </li>
+                        <li>
+                            Now you can run the consumer to receive messages from MB1. You will notice that the message you have
+                            sent to MB2 can be received by MB1. Even if MB2 instance was destroyed message will be consumed to the consumer.
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <p>Following is a typical deployment diagram for a Message Broker cluster setup.</p>
+
+                    <img src="images/Deployment_Diagram.jpg"
+                         alt="A typical cluster deployment"/>
+                </li>
+            </ul>
         </ul>
-
-
-        <h3>How to use Message box/SQS feature</h3>
-
-        <p>Message box is a simple queue where user can store, retrieve and delete messages. Message
-            box provides the Simple Queue Service(SQS) operations. In SQS,
-            When a message is received by a user, that message is unaccessible for a specified time
-            duration, and this message is not visible for other users till that specified time
-            duration is over. If the message received user did not delete the message in that time
-            duration, the message is visible for other users. This time duration is named as
-            visibility timeout.
-        </p>
-
-        <p>For more information regarding SQS, please refer links provided at references.</p>
-
-        <li>Create a message box</li>
-        <p>Click on the add menu under the item messageboxes/SQS. Then provide a name for the
-            message box and a default visibility timeout value in seconds.
-            If the message box is created successfully, It will be displayed at the message box list.
-        </p>
-
-        <p>
-            <img src="images/createMB.png"
-                 alt="Create Message Box"/>
-        </p>
-
-        <li>List message boxes</li>
-        <p>To view created message boxes, click on list menu under item messageboxes(SQS).</p>
-        <p>To view message box content, click on message box name</p>
-        <p>To delete message box, click on delete icon at the right hand. A successful message will
-            be prompted.
-        </p>
-
-        <p>
-            <img src="images/listMessageBoxes.png"
-                 alt="List Message Boxes"/>
-        </p>
-
-        <li>Using the message box</li>
-        <p>User can view the content of the message box by going through link in list view. In
-            message box page, users can do following things.
-        </p>
-        <p>View messages which are retrievable under content of message box.
-        </p>
-        <p>Add messages to message box. These messages are added under retrievable messages of
-            message box.
-        </p>
-
-        <p>
-            <img src="images/addMessage.png"
-                 alt="Add Message To Message Box"/>
-        </p>
-
-        <p>Retrieve messages from message box. User can set visibility timeout value for retrieving
-            messages and the number of messages to retrieve. Retrieved messages are added under
-            retrieved messages.
-        </p>
-
-        <p>
-            <img src="images/retrieveMessage.png"
-                 alt="Retrieve Messages From Message Box"/>
-        </p>
-        <p>View retrieved messages from message box. These messages are displayed under the table
-            retrieved messages from message box. If user did not delete these messages before
-            visibility timeout, those messages will be available to retrieve for other users. If
-            user tried to retrieved messages with low visibility timeout value, they will be
-            retrieved and will be visible to retrieve again.
-        </p>
-
-        <p>
-            <img src="images/addPermission.png"
-                 alt="Add Permissions on Message Box"/>
-        </p>
-        <p>Message box can be shared with other users for five operations such as Send, Receive,
-            Delete, ChangeVisibility and GetQueueAttributes. Those permissions allowed users can
-            access queue for above operations. Permission label is defined for each allowed
-            permission set. This label is used to delete allowed permissions.
-        </p>
-
         <h2 id="References">References</h2>
         <ul>
             <li>

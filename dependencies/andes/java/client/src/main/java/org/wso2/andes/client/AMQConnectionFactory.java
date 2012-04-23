@@ -268,11 +268,11 @@ public class AMQConnectionFactory implements ConnectionFactory, QueueConnectionF
             removeVersion91 = new ThreadLocal<Boolean>();
             removeVersion91.set(new Boolean(false));
         } else {
-            try {
-                removeVersion91.get();
-            } catch (NullPointerException e) {
+
+            if (removeVersion91.get() == null) {
                 removeVersion91.set(new Boolean(false));
             }
+
         }
         if(!removeVersion91.get()) {
             System.setProperty(ClientProperties.AMQP_VERSION, "0-91");

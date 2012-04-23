@@ -43,7 +43,7 @@
                         <suiteXmlFile>src/test/conf/testng2.xml</suiteXmlFile>
                         <suiteXmlFile>src/test/conf/testng3.xml</suiteXmlFile>
                         <suiteXmlFile>src/test/conf/testng4.xml</suiteXmlFile>
-                        <!--<suiteXmlFile>src/test/conf/testng5.xml</suiteXmlFile>-->
+                        <suiteXmlFile>src/test/conf/testng5.xml</suiteXmlFile>
                     </suiteXmlFiles>
                     <systemProperties>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>

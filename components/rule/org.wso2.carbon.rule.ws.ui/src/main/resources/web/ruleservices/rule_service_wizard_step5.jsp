@@ -237,7 +237,7 @@
                                  xpath = "";
                             }
                 %>
-                <tr id="factRaw<%=k%>">
+                <tr id="inputFactRaw<%=k%>">
                     <td>
                         <input class="longInput" name="inputFactType<%=k%>"
                                id="inputFactType<%=k%>" value="<%=type%>"

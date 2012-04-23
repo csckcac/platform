@@ -64,7 +64,7 @@
 
         } else {
             serverName = "";
-            userName = CSGUtils.getStringProperty(CSGConstant.CSG_USER, CSGConstant.DEFAULT_CSG_USER);
+            userName = CSGUtils.getStringProperty(CSGConstant.CSG_USER_NAME, CSGConstant.DEFAULT_CSG_USER);
         }
     } catch (AxisFault axisFault) {
         CarbonUIMessage.sendCarbonUIMessage("Cloud not retrieve the CSG server" + serverName + "info",

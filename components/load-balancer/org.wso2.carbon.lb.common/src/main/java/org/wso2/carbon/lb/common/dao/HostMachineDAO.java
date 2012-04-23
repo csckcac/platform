@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * This class handles the database access relevant to worker node data
+ * This class handles the database access relevant to host machine data
  *
  */
 public class HostMachineDAO extends AbstractDAO{
@@ -62,7 +62,7 @@ public class HostMachineDAO extends AbstractDAO{
             successfullyAdded = true;
 
         }catch (SQLException s){
-            String msg = "Error while inserting worker node plan data" + s.getMessage();
+            String msg = "Error while inserting host machine plan data" + s.getMessage();
             log.error(msg);
             throw new SQLException(s);
         }catch (ClassNotFoundException s){
@@ -128,7 +128,7 @@ public class HostMachineDAO extends AbstractDAO{
             resultSet = statement.executeQuery(sql);
             isExist = resultSet.next();
         }catch (SQLException s){
-            String msg = "SQL statement is not executed for worker node exist !";
+            String msg = "SQL statement is not executed for host machine exist !";
             log.error(msg);
             throw new SQLException(s);
         }catch (ClassNotFoundException s){
@@ -170,7 +170,7 @@ public class HostMachineDAO extends AbstractDAO{
                 isAvailable = resultSet.next();
             }
         }catch (SQLException s){
-            String msg = "SQL statement is not executed for worker node exist !";
+            String msg = "SQL statement is not executed for host machine exist !";
             log.error(msg);
             throw new SQLException(s);
         }catch (ClassNotFoundException s){
@@ -205,7 +205,7 @@ public class HostMachineDAO extends AbstractDAO{
            statement.executeUpdate(sql);
             successfullyDeleted = true;
        }catch (SQLException s){
-           String msg = "Error while deleting worker node data " + s.getMessage();
+           String msg = "Error while deleting host machine data " + s.getMessage();
            log.error(msg);
            throw new SQLException(s);
        }catch (ClassNotFoundException s){

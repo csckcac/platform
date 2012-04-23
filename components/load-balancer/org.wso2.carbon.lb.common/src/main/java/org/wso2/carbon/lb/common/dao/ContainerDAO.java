@@ -129,10 +129,10 @@ public class ContainerDAO extends AbstractDAO{
 
 
     /**
-     * This method helps to identify the available worker node from the zone requested.
-     * It will select the worker node which has least load at the moment. This method
-     * is separated with the intention of isolating the algorithm of selection worker node. For
-     * example instead of the least loaded worker node, we can select worker nodes in a round robin
+     * This method helps to identify the available host machine from the zone requested.
+     * It will select the host machine which has least load at the moment. This method
+     * is separated with the intention of isolating the algorithm of selection host machine. For
+     * example instead of the least loaded host machine, we can select host machine in a round robin
      * way. Replacing this method with round robin logic will be enough to do the needful.
      *
      * @param zone name of the zone which search Host machine in.
@@ -151,7 +151,7 @@ public class ContainerDAO extends AbstractDAO{
             Class.forName(driver);
             statement = con.createStatement();
             String sql =  "SELECT * FROM host_machine WHERE zone='" + zone + "' AND available=true" ;
-            //Here we get all the worker nodes that maps to zone
+            //Here we get all the host machines that maps to zone
             resultSetForHM = statement.executeQuery(sql);
             int containerCountOfHostMachine;
             int minimumContainerCountHM = -1;
@@ -159,7 +159,7 @@ public class ContainerDAO extends AbstractDAO{
                 containerCountOfHostMachine = 0;
                 String hostMachineEndPoint = resultSetForHM.getString("epr");
                 Bridge bridges[] = new Bridge[1]; //Here we only get one available bridge for this
-                // particular worker node. Therefore only one bridge is included in array
+                // particular host machine. Therefore only one bridge is included in array
                 bridges[0] = new Bridge();
                 statementForBridge = con.createStatement();
                 sql = "SELECT * FROM bridge WHERE host_machine='" + hostMachineEndPoint

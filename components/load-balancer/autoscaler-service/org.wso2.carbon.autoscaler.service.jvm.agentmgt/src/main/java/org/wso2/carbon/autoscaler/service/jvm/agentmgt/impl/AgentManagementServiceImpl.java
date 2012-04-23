@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2005-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- * 
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -34,16 +34,16 @@ import org.wso2.carbon.lb.common.persistence.AgentPersistenceManager;
 
 /**
  * Implements the IAgentManagementService interface.
- * 
+ *
  * @scr.component name="org.wso2.carbon.autoscaler.service.jvm.agentmgt"
- * 
+ *
  * @scr.service
  *              value=
  *              "org.wso2.carbon.autoscaler.service.jvm.agentmgt.IAgentManagementService"
- * 
+ *
  */
 public class AgentManagementServiceImpl implements IAgentManagementService {
-    
+
     private static final Log log = LogFactory.getLog(AgentManagementServiceImpl.class);
 
     public boolean registerAgent(HostMachine hostMachine, String[] domains) throws NullAgentException,

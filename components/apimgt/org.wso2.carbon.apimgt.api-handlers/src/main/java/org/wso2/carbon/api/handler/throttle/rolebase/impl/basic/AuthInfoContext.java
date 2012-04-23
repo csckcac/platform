@@ -23,23 +23,21 @@ import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.wso2.carbon.apimgt.impl.dto.xsd.APIKeyValidationInfoDTO;
-import org.wso2.carbon.apimgt.keymgt.stub.types.axis2.APIKeyValidationServiceAPIKeyMgtException;
 import org.wso2.carbon.apimgt.keymgt.stub.validator.APIKeyValidationServiceStub;
 
-
-import java.rmi.RemoteException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AuthInfoContext {
 
-    private static volatile AuthInfoContext infoHolderSingleton;
-    private static final int TIMEOUT_IN_MILLISECS = 15 * 60 * 1000;
+    private static final AuthInfoContext infoHolderSingleton = new AuthInfoContext();
+
+    private static final int TIMEOUT_IN_MILLIS = 15 * 60 * 1000;
 
     private String authCookieString = null;
 
     /**
-     * Map containing all sessesion inforamtion for APIKeys
+     * Map containing all session information for API keys
      */
     private Map<String,APIKeyValidationInfoDTO> keyValidationInfo = null;
 
@@ -48,18 +46,11 @@ public class AuthInfoContext {
     }
 
     public static AuthInfoContext getInstance(){
-        if(infoHolderSingleton == null){
-            synchronized (AuthInfoContext.class){
-                if(infoHolderSingleton == null){
-                    infoHolderSingleton = new AuthInfoContext();
-                }
-            }
-        }
         return infoHolderSingleton;
     }
 
     public synchronized String getAuthSessionForAdminServices() throws Exception {
-        if(authCookieString == null){
+        if (authCookieString == null) {
             return new AuthAdminServiceClient().login(AuthAdminServiceClient.HOST_NAME,
                                                          AuthAdminServiceClient.USER_NAME,
                                                          AuthAdminServiceClient.PASSWORD);
@@ -67,29 +58,52 @@ public class AuthInfoContext {
         return authCookieString;
     }
 
-    public synchronized void resetSessionCookie(){
+    public synchronized void resetSessionCookie() {
         authCookieString = null;
     }
 
-    public APIKeyValidationInfoDTO getValidatedKeyInfo(String context, String apiKey, String apiVersion) throws Exception {
-        if(keyValidationInfo.get(apiKey) == null){
-            APIKeyValidationServiceStub validator = new APIKeyValidationServiceStub(null, AuthAdminServiceClient.SERVICE_URL + "APIKeyValidationService");
+    /**
+     * Get the API key validated against the specified API
+     *
+     * @param context API context
+     * @param apiKey API key to be validated
+     * @param apiVersion API version number
+     * @return An APIKeyValidationInfoDTO object
+     * @throws Exception If an error occurs while accessing backend services
+     */
+    public APIKeyValidationInfoDTO getValidatedKeyInfo(String context, String apiKey, 
+                                                       String apiVersion) throws Exception {
+        
+        if (keyValidationInfo.containsKey(apiKey)) {
+            return keyValidationInfo.get(apiKey);
+        }
+
+        synchronized (apiKey.intern()) {
+            APIKeyValidationInfoDTO info = keyValidationInfo.get(apiKey);
+            if (info != null) {
+                return info;
+            }
+
+            APIKeyValidationServiceStub validator = new APIKeyValidationServiceStub(null,
+                    AuthAdminServiceClient.SERVICE_URL + "APIKeyValidationService");
 
             ServiceClient client = validator._getServiceClient();
             Options options = client.getOptions();
-            options.setTimeOutInMilliSeconds(TIMEOUT_IN_MILLISECS);
-            options.setProperty(HTTPConstants.SO_TIMEOUT, TIMEOUT_IN_MILLISECS);
-            options.setProperty(HTTPConstants.CONNECTION_TIMEOUT, TIMEOUT_IN_MILLISECS);
+            options.setTimeOutInMilliSeconds(TIMEOUT_IN_MILLIS);
+            options.setProperty(HTTPConstants.SO_TIMEOUT, TIMEOUT_IN_MILLIS);
+            options.setProperty(HTTPConstants.CONNECTION_TIMEOUT, TIMEOUT_IN_MILLIS);
             options.setManageSession(true);
-            options.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, getAuthSessionForAdminServices());
-            //TODO : Get the version
-            APIKeyValidationInfoDTO keyValidationInfoDTO = validator.validateKey(context, apiVersion, apiKey);
-            //store key validation results
-            if (keyValidationInfoDTO != null && keyValidationInfoDTO.getAuthorized()) {
-                keyValidationInfo.put(apiKey, keyValidationInfoDTO);
-                return keyValidationInfoDTO;
+            options.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING,
+                    getAuthSessionForAdminServices());
+            info = validator.validateKey(context, apiVersion, apiKey);
+            if (info != null) {
+                if (info.getAuthorized()) {
+                    keyValidationInfo.put(apiKey, info);
+                }
+                return info;
+            } else {
+                throw new AxisFault("API key validator returned null");
             }
         }
-        return  keyValidationInfo.get(apiKey);
     }
 }

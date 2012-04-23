@@ -18,38 +18,42 @@
 package org.wso2.carbon.api.handler.throttle.rolebase.impl.basic;
 
 import org.apache.axis2.AxisFault;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.api.handler.throttle.rolebase.AuthenticationFuture;
 import org.wso2.carbon.api.handler.throttle.rolebase.UserPrivilegesHandler;
 import org.wso2.carbon.apimgt.impl.dto.xsd.APIKeyValidationInfoDTO;
-import org.wso2.carbon.apimgt.keymgt.stub.validator.APIKeyValidationServiceStub;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BasicAPIOAuthHandler implements UserPrivilegesHandler {
 
-    private AuthenticationFuture callback = null ;
+    private static final Log log = LogFactory.getLog(BasicAPIOAuthHandler.class);
 
-    private APIKeyValidationServiceStub keyValidator;
+    private AuthenticationFuture callback = null ;
     private AuthInfoContext context;
 
     public BasicAPIOAuthHandler(AuthenticationFuture callback) throws AxisFault {
         this.callback = callback;
-        keyValidator = new APIKeyValidationServiceStub(null, AuthAdminServiceClient.SERVICE_URL + "APIKeyValidationService");
         context = AuthInfoContext.getInstance();
     }
 
     public boolean authenticateUser() {
+        APIKeyValidationInfoDTO result;
         try {
-            APIKeyValidationInfoDTO result = context.getValidatedKeyInfo(callback.getURI(), callback.getAPIKey(), callback.getAPIVersion());
-            callback.setAuthenticated(result.getAuthorized());
-            ArrayList roles = new ArrayList();
-            roles.add(result.getTier());
-            callback.setAuthorizedRoles(roles);
+            result = context.getValidatedKeyInfo(callback.getURI(),
+                    callback.getAPIKey(), callback.getAPIVersion());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Unexpected error while validating API key: " + callback.getAPIKey(), e);
+            return false;
         }
-        return callback.isAuthenticated();
 
+        callback.setAuthenticated(result.getAuthorized());
+        List<String> roles = new ArrayList<String>();
+        roles.add(result.getTier());
+        callback.setAuthorizedRoles(roles);
+        return callback.isAuthenticated();
     }
 
     public AuthenticationFuture getAuthenticator() {

@@ -459,11 +459,10 @@ public class RestAPIThrottleHandler extends AbstractHandler {
                 }
             }
 
-            if(!isAuthenticated){
-                handleException(" Access deny for a " +
-                                "caller with consumer Key: " + consumerKey + " " +
-                                " : Reason : Authentication failure", synCtx);
-
+            if (!isAuthenticated){
+                handleException("Access denied for a " +
+                                "caller with consumer Key: " + consumerKey + ", " +
+                                "Reason: Authentication failure", synCtx);
             }
             // Domain name based throttling
                 //check whether a configuration has been defined for this role name or not

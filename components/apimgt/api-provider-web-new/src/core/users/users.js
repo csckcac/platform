@@ -1,9 +1,9 @@
 
 function getUser() {
-    //TODO : implement getUser
+
 
     return {
-        username:session.get("username"),
+        username:"admin",     //TODO : implement getUser
         cookie:session.get("cookie")
     };
 

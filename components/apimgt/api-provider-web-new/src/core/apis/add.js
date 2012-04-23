@@ -1,8 +1,8 @@
 var saveAPI = function(apiName, version, description, endpoint, wsdl, tags, tier, thumbUrl, context,
                        uriTemplateArr, uriMethodArr) {
-
+    var log = new Log();
     var apiProvider = require("/core/greg/greg.js").getAPIProviderObj();
-    var user = require("/core/user/user.js").getUser();
+    var user = require("/core/users/users.js").getUser();
     var provider = user.username;
     try {
         var success = apiProvider.addAPI(provider, apiName, version, description, endpoint, wsdl, tags, tier, thumbUrl, context, request, uriTemplateArr, uriMethodArr);

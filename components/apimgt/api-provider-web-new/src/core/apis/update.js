@@ -1,9 +1,9 @@
 var updateAPI = function(apiName, version, description, imageUrl, endpoint, wsdl, tags, tier,
                          status, resourceTemplate, resourceMethod, resourceUri, context,
                          uriTemplateArr, uriMethodArr) {
-
+    var log = new Log();
     var apiProvider = require("/core/greg/greg.js").getAPIProviderObj();
-    var user = require("/core/user/user.js").getUser();
+    var user = require("/core/users/users.js").getUser();
     var providerName = user.username;
     try {
         var success = apiProvider.updateAPI(providerName, apiName, version, description, imageUrl, endpoint, wsdl, tags, tier, status, resourceTemplate, resourceMethod, resourceUri, context, request, uriTemplateArr, uriMethodArr);

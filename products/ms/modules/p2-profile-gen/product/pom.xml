@@ -124,7 +124,7 @@
 
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.application.deployer.mashup.feature:${carbon.version}</featureArtifactDef>
 
-								<!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.cloud.csg.agent.feature:${carbon.platform.version}</featureArtifactDef>-->
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.cloud.csg.agent.feature:${carbon.platform.version}</featureArtifactDef>
                                 <!-- eventing -->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.event.common.feature:${carbon.version}</featureArtifactDef>
 
@@ -309,10 +309,10 @@
                                     <version>${carbon.version}</version>
                                 </feature>
 
-								<!--<feature>-->
-                                    <!--<id>org.wso2.carbon.cloud.csg.agent.feature.group</id>-->
-                                    <!--<version>${carbon.platform.version}</version>-->
-                                <!--</feature>-->
+								<feature>
+                                    <id>org.wso2.carbon.cloud.csg.agent.feature.group</id>
+                                    <version>${carbon.platform.version}</version>
+                                </feature>
 
                                 <feature>
                                     <id>org.wso2.carbon.event.common.feature.group</id>

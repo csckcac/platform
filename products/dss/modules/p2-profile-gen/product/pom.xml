@@ -134,7 +134,7 @@
 				<!-- Cassandra Feature -->
                                 <!--featureArtifactDef>org.wso2.carbon:org.wso2.carbon.cassandra.feature:${carbon.version}</featureArtifactDef-->
 
-				<!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.cloud.csg.agent.feature:${carbon.platform.version}</featureArtifactDef>-->
+				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.cloud.csg.agent.feature:${carbon.platform.version}</featureArtifactDef>
 
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.deployment.synchronizer.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.admin.mgt.server.feature:${carbon.version}</featureArtifactDef>
@@ -332,10 +332,10 @@
 				    <version>${carbon.version}</version>
 				</feature>
 
-								<!--<feature>-->
-                                    <!--<id>org.wso2.carbon.cloud.csg.agent.feature.group</id>-->
-                                    <!--<version>${carbon.platform.version}</version>							-->
- 								<!--</feature>-->
+								<feature>
+                                    <id>org.wso2.carbon.cloud.csg.agent.feature.group</id>
+                                    <version>${carbon.platform.version}</version>							
+ 								</feature>
 
 
                                <feature>

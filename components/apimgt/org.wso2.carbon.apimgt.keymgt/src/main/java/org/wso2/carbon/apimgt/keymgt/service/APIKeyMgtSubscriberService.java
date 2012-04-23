@@ -46,7 +46,7 @@ public class APIKeyMgtSubscriberService extends AbstractAdmin {
     public String getAccessToken(String userId, APIInfoDTO apiInfoDTO,String applicationName) throws APIKeyMgtException,
             APIManagementException, IdentityException {
         ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
-        String accessToken = apiMgtDAO.getAccessKeyForAPI(userId, apiInfoDTO);
+        String accessToken = apiMgtDAO.getAccessKeyForAPI(userId, applicationName, apiInfoDTO);
         if(accessToken == null){
             //get the tenant id for the corresponding domain
             String tenantAwareUserId = MultitenantUtils.getTenantAwareUsername(userId);

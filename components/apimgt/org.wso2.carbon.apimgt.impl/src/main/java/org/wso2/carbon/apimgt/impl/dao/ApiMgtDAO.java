@@ -75,7 +75,7 @@ public class ApiMgtDAO {
      * @throws org.wso2.carbon.identity.base.IdentityException
      *                                if failed to get tenant id
      */
-    public String getAccessKeyForAPI(String userId, APIInfoDTO identifier)
+    public String getAccessKeyForAPI(String userId, String applicationName, APIInfoDTO identifier)
             throws APIManagementException, IdentityException {
 
         String accessKey = null;
@@ -86,7 +86,8 @@ public class ApiMgtDAO {
         String tenantAwareUserId = MultitenantUtils.getTenantAwareUsername(userId);
         int tenantId = IdentityUtil.getTenantIdOFUser(userId);
 
-        log.info("Searching for : " + apiId + " User : " + tenantAwareUserId + " Tenant ID : " + tenantId);
+        log.info("Searching for : " + apiId + " User : " + tenantAwareUserId + " ApplicationName : "+applicationName
+                + " Tenant ID : " + tenantId);
 
         Connection conn = null;
         PreparedStatement ps = null;
@@ -103,6 +104,7 @@ public class ApiMgtDAO {
                         "   SB.USER_ID=? " +
                         "   AND SB.TENANT_ID=? " +
                         "   AND SP.API_ID=? " +
+                        "   AND APP.NAME=?"   +
                         "   AND SB.SUBSCRIBER_ID = APP.SUBSCRIBER_ID " +
                         "   AND APP.APPLICATION_ID = SP.APPLICATION_ID " +
                         "   AND KCM.KEY_CONTEXT_MAPPING_ID = SP.KEY_CONTEXT_MAPPING_ID";
@@ -113,6 +115,7 @@ public class ApiMgtDAO {
             ps.setString(1, tenantAwareUserId);
             ps.setInt(2, tenantId);
             ps.setString(3, apiId);
+            ps.setString(4,applicationName);
 
             rs = ps.executeQuery();
 

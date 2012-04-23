@@ -20,6 +20,7 @@
  */
 package org.wso2.andes.client;
 
+import org.wso2.andes.configuration.ClientProperties;
 import org.wso2.andes.jms.Connection;
 import org.wso2.andes.jms.ConnectionURL;
 import org.wso2.andes.url.AMQBindingURL;
@@ -28,6 +29,7 @@ import org.wso2.andes.url.URLSyntaxException;
 import javax.jms.*;
 import javax.naming.*;
 import javax.naming.spi.ObjectFactory;
+import java.awt.print.Book;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Hashtable;
@@ -47,8 +49,11 @@ public class AMQConnectionFactory implements ConnectionFactory, QueueConnectionF
     private ConnectionURL _connectionDetails;
     private SSLConfiguration _sslConfig;
 
+    private ThreadLocal<Boolean> removeVersion91 = new ThreadLocal<Boolean>();
+
     public AMQConnectionFactory()
     {
+
     }
 
     /**
@@ -259,6 +264,21 @@ public class AMQConnectionFactory implements ConnectionFactory, QueueConnectionF
 
     public Connection createConnection() throws JMSException
     {
+        if(removeVersion91 == null) {
+            removeVersion91 = new ThreadLocal<Boolean>();
+            removeVersion91.set(new Boolean(false));
+        } else {
+            try {
+                removeVersion91.get();
+            } catch (NullPointerException e) {
+                removeVersion91.set(new Boolean(false));
+            }
+        }
+        if(!removeVersion91.get()) {
+            System.setProperty(ClientProperties.AMQP_VERSION, "0-91");
+        } else {
+            System.getProperties().remove(ClientProperties.AMQP_VERSION);
+        }
         try
         {
             if (_connectionDetails != null)
@@ -293,6 +313,21 @@ public class AMQConnectionFactory implements ConnectionFactory, QueueConnectionF
     
     public Connection createConnection(String userName, String password, String id) throws JMSException
     {
+        if(removeVersion91 == null) {
+            removeVersion91 = new ThreadLocal<Boolean>();
+            removeVersion91.set(new Boolean(false));
+        } else {
+            try {
+                removeVersion91.get();
+            } catch (NullPointerException e) {
+                removeVersion91.set(new Boolean(false));
+            }
+        }
+        if(!removeVersion91.get()) {
+            System.setProperty(ClientProperties.AMQP_VERSION, "0-91");
+        } else {
+            System.getProperties().remove(ClientProperties.AMQP_VERSION);
+        }
         try
         {
             if (_connectionDetails != null)
@@ -336,11 +371,25 @@ public class AMQConnectionFactory implements ConnectionFactory, QueueConnectionF
 
     public TopicConnection createTopicConnection() throws JMSException
     {
+
+        if(removeVersion91 == null) {
+            removeVersion91 = new ThreadLocal<Boolean>();
+            removeVersion91.set(new Boolean(true));
+        } else {
+            removeVersion91.set(new Boolean(true));
+        }
+
         return (TopicConnection) createConnection();
     }
 
     public TopicConnection createTopicConnection(String username, String password) throws JMSException
     {
+        if(removeVersion91 == null) {
+            removeVersion91 = new ThreadLocal<Boolean>();
+            removeVersion91.set(new Boolean(true));
+        } else {
+            removeVersion91.set(new Boolean(true));
+        }
         return (TopicConnection) createConnection(username, password);
     }
 

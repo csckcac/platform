@@ -298,18 +298,9 @@ public class FeedHostObject extends ScriptableObject {
 		return alternateLink;
 	}
 
-	public String jsGet_toString() {
-		String entries = null;
-		if (isRssFeed) {
-			entries = rssFeed.getEntries().toString();
-		} else {
 
-			entries = feed.getEntries().toString();
-		}
-		return entries;
-	}
 
-	public static EntryHostObject jsFunction_getEntry(Context cx,
+/*	public static EntryHostObject jsFunction_getEntry(Context cx,
 			Scriptable thisObj, Object[] arguments, Function funObj)
 			throws ScriptException {
 		int argsCount = arguments.length;
@@ -330,9 +321,10 @@ public class FeedHostObject extends ScriptableObject {
 
 		return newAtomEntry;
 	}
+	*/
 
 	public EntryHostObject[] jsGet_entries() throws ScriptException {
-
+		Context cx = Context.getCurrentContext();
 		EntryHostObject[] retEntries = null;
 		List tempEntries = null;
 		// Retrieving the entries from the feed
@@ -353,7 +345,7 @@ public class FeedHostObject extends ScriptableObject {
 		while (tempEntryIterator.hasNext()) {
 			currentEntry = (Entry) tempEntryIterator.next();
 			// ctx = new Context();
-			EntryHostObject newAtomEntry = (EntryHostObject) ctx.newObject(
+			EntryHostObject newAtomEntry = (EntryHostObject) cx.newObject(
 					feedHostObject, "Entry", new Object[0]);
 			newAtomEntry.setEntry(currentEntry);
 			convertedEntries.add(newAtomEntry);
@@ -564,5 +556,26 @@ public class FeedHostObject extends ScriptableObject {
 		log.info("New Added Entry" + entry);
 	}
 	
+    public String jsFunction_toString() {    	
+    	String feedString = null;
+		if (isRssFeed) {
+			feedString = rssFeed.toString();
+		} else {
+
+			feedString = feed.toString();
+		}
+		return feedString;
+    }
+    
+    public Scriptable jsFunction_toXML() {  
+		 Context cx = Context.getCurrentContext();
+	        if (feed != null) {
+	            Object[] objects = { feed };
+	            Scriptable xmlHostObject = cx.newObject(this, "XML", objects);
+	            return xmlHostObject;
+	        }
+	        return null;
+    }
+
 
     }

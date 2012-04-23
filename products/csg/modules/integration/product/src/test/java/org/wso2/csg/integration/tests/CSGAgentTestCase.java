@@ -15,16 +15,45 @@
  */
 package org.wso2.csg.integration.tests;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.testng.annotations.BeforeMethod;
+import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminStub;
+
 /**
- * This has the tests cases for testing the CSGAgent functionality with CSG server. Deploying and
- * invoking a CSG services for;
- * 1. SOAP service
- * 2. REST service
- * 3. JSON service
+ * This has the tests cases for testing the CSGAgent functionality with CSG server.
+ * 1. Deploying and invoking a CSG services for;
+ * - SOAP service
+ * - REST service
+ * - JSON service
+ * <p/>
+ * 2. Various publishing options
+ * - automatic
+ * - manual and there functionality
+ *
+ * 3. If possible we need to check for individual service types
+ * - SOAP, REST, JSON (AS)
+ * - BRS services
+ * - BPS services
+ * - DSS services
+ * - CEP services
+ * - MS services
  */
 public class CSGAgentTestCase extends CSGIntegrationTestCase {
 
+    private ProxyServiceAdminStub proxyServiceAdminStub;
+
+    private static final String CSG_SERVICE_NAME = "SimpleStockQuoteService";
+    
+    protected Log log = LogFactory.getLog(CSGAgentTestCase.class);
+
     public CSGAgentTestCase(String adminService) {
         super("ProxyServiceAdmin");
+    }
+
+    @Override
+    protected void init() throws Exception {
+        super.init();
+
     }
 }

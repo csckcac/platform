@@ -57,7 +57,7 @@ public class CSGServerTestCase extends CSGIntegrationTestCase {
 
     private static final String QUOTE_STRING = "CSG";
 
-    private static final String CSG_SERVICE_NAME = "SimpleStockQuoteService";
+    private static final String CSG_SERVICE_NAME = "DeadMessageCleanUpTestProxy";
 
     public static final String CSG_SERVER_NAME = "TestServer";
 
@@ -69,6 +69,7 @@ public class CSGServerTestCase extends CSGIntegrationTestCase {
 
     @Override
     protected void init() throws Exception {
+        super.init();
         String trustStorePath = FrameworkSettings.TEST_FRAMEWORK_HOME + File.separator +
                 "repository" + File.separator + "resources" + File.separator +
                 "security" + File.separator + "client-truststore.jks";

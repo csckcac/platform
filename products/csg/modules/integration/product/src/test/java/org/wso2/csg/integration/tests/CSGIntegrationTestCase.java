@@ -40,12 +40,12 @@ public abstract class CSGIntegrationTestCase {
         this.adminService = adminService;
     }
 
-    @BeforeMethod(groups = "wso2.csg")
+    @BeforeMethod(groups = {"wso2.csg"})
     public final void doInit() throws Exception {
         init();
     }
 
-    @AfterMethod(groups = "wso2.csg")
+    @AfterMethod(groups = {"wso2.csg"})
     public final void doCleanup() {
         cleanup();
     }

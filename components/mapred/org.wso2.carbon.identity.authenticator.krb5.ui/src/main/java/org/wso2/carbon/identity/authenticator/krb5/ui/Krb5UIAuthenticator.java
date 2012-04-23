@@ -27,6 +27,7 @@ import org.wso2.carbon.authenticator.stub.RememberMeData;
 import org.wso2.carbon.core.common.AuthenticationException;
 import org.wso2.carbon.core.security.AuthenticatorsConfiguration;
 import org.wso2.carbon.registry.core.RegistryConstants;
+import org.wso2.carbon.ui.AbstractCarbonUIAuthenticator;
 import org.wso2.carbon.ui.CarbonUIAuthenticator;
 import org.wso2.carbon.ui.CarbonUIUtil;
 import org.wso2.carbon.ui.DefaultCarbonAuthenticator;
@@ -38,8 +39,9 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.rmi.RemoteException;
+import java.util.List;
 
-public class Krb5UIAuthenticator /*extends DefaultCarbonAuthenticator*/ implements CarbonUIAuthenticator{
+public class Krb5UIAuthenticator extends AbstractCarbonUIAuthenticator{
 
 	private static final Log log = LogFactory.getLog(Krb5UIAuthenticator.class);
 	private static final int DEFAULT_PRIORITY_LEVEL = 10;

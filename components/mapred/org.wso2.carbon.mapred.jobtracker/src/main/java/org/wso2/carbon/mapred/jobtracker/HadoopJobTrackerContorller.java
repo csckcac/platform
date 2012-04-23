@@ -57,7 +57,7 @@ public class HadoopJobTrackerContorller implements BundleActivator{
         String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
         try {
             hadoopConfiguration.load(new FileReader(carbonHome+File.separator+"repository"+
-                    File.separator+"conf"+File.separator+"advanced"+File.separator+HADOOP_CONFIG));
+                    File.separator+"conf"+File.separator+"etc"+File.separator+HADOOP_CONFIG));
             HADOOP_CONFIG_DIR = hadoopConfiguration.getProperty("hadoop.config.dir");
             TASKCONTROLLER_DEPENDS_DIRS = hadoopConfiguration.getProperty("taskcontroller.depends.dir").split(":");
             //taskController.load(new FileReader(HADOOP_CONFIG_DIR+File.separator+TASK_CONTROLLER_CFG));

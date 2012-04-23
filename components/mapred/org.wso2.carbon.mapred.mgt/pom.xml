@@ -54,11 +54,17 @@
                         <Export-Package>
                             org.wso2.carbon.mapred.mgt.*,
                         </Export-Package>
-                        <Import-Package>
+                        <!--<Import-Package>
                             !org.wso2.carbon.mapred.mgt.*,
                             org.apache.axis2.*,
                             org.apache.axiom.*,
                             javax.activation.*,
+                            *;resolution:=optional,
+                        </Import-Package>-->
+                        <Import-Package>
+                            !org.wso2.carbon.mapred.mgt.*,
+                            org.apache.axis2.*,
+                            org.apache.axiom.*,
                             *;resolution:=optional,
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>

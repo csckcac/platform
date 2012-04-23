@@ -443,8 +443,8 @@
                     <tr id="ruleScriptURLTR" style="<%=ruleURLDisplay%>">
                         <td><fmt:message key="rule.source.url"/></td>
                         <td>
-                            <input class="longInput" type="text" name="ruleSourceURL"
-                                   id="ruleSourceURL"
+                            <input  type="text" name="ruleSourceURL"
+                                   id="ruleSourceURL"  size="75"
                                    value="<%=isURL?url.trim():""%>"/>
                         </td>
                     </tr>

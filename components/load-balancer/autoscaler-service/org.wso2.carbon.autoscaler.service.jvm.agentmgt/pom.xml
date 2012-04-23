@@ -52,13 +52,13 @@
                             org.wso2.carbon.autoscaler.service.jvm.agentmgt
                         </Export-Package>
                         <Private-Package>
-                            org.wso2.carbon.autoscaler.service.jvm.agentmgt.impl, 
+                            org.wso2.carbon.autoscaler.service.jvm.agentmgt.impl,
                             org.wso2.carbon.autoscaler.service.jvm.agentmgt.exception,
                             org.wso2.carbon.autoscaler.service.jvm.agentmgt.registry
-                        </Private-Package> 
+                        </Private-Package>
                         <Import-Package>
                             org.apache.commons.logging,
-                            <!--org.apache.commons.logging; version=0.0.0,-->
+                            org.apache.commons.logging; version=0.0.0,>
                             *; resolution:=optional
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
@@ -67,7 +67,7 @@
             </plugin>
         </plugins>
     </build>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -89,4 +89,3 @@
 
 
 </project>
-

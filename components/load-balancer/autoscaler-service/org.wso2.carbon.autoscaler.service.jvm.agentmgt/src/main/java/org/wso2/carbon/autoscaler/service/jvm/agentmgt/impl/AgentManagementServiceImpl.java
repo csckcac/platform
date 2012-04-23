@@ -26,7 +26,9 @@ import org.wso2.carbon.autoscaler.service.jvm.agentmgt.exception.AgentNotFoundEx
 import org.wso2.carbon.autoscaler.service.jvm.agentmgt.exception.AgentRegisteringException;
 import org.wso2.carbon.autoscaler.service.jvm.agentmgt.exception.NullAgentException;
 import org.wso2.carbon.autoscaler.service.jvm.agentmgt.IAgentManagementService;
-import org.wso2.carbon.lb.common.dto.WorkerNode;
+
+import org.wso2.carbon.lb.common.dto.ContainerInformation;
+import org.wso2.carbon.lb.common.dto.HostMachine;
 import org.wso2.carbon.lb.common.dto.Zone;
 import org.wso2.carbon.lb.common.persistence.AgentPersistenceManager;
 
@@ -44,22 +46,23 @@ public class AgentManagementServiceImpl implements IAgentManagementService {
     
     private static final Log log = LogFactory.getLog(AgentManagementServiceImpl.class);
 
-    public boolean registerAgent(WorkerNode workerNode, String epr) throws NullAgentException,
+    public boolean registerAgent(HostMachine hostMachine, String[] domains) throws NullAgentException,
                                                                AgentAlreadyRegisteredException,
                                                                ClassNotFoundException,
                                                                SQLException,
                                                                AgentRegisteringException {
         boolean successfullyRegistered = false;
+        String epr = hostMachine.getEpr();
         Zone zone = new Zone();
         zone.setAvailable(true);
-        zone.setName(workerNode.getZone());
+        zone.setName(hostMachine.getZone());
         AgentPersistenceManager agentPersistenceManager
                 = AgentPersistenceManager.getPersistenceManager();
 
         if (!agentPersistenceManager.isZoneExist(zone.getName())) {
             String msg = "Zone does not exists ";
             log.warn(msg);
-            agentPersistenceManager.addZone(zone);
+            agentPersistenceManager.addZone(zone, domains);
         } else {
             String msg = "Zone exist";
             log.warn(msg);
@@ -68,21 +71,21 @@ public class AgentManagementServiceImpl implements IAgentManagementService {
         // For a successful registration EPR should not be null, EPR should not be already
         // registered and should successfully get added.
         // is EPR null?
-        //String epr = workerNode.getEndPoint();
+        //String epr = hostMachine.getEndPoint();
         if ( epr == null) {
             String msg = "EPR of the Agent is null.";
             log.error(msg);
             throw new NullAgentException(msg);
         }
         // is EPR already registered?
-        else if (agentPersistenceManager.isWorkerNodeExist(epr)) {
+        else if (agentPersistenceManager.isHostMachineExist(epr)) {
             String msg = "EPR of the Agent (" + epr + ") is already registered.";
             log.error(msg);
             throw new AgentAlreadyRegisteredException(msg);
         }
 
         // is EPR successfully added?
-        else if (agentPersistenceManager.addWorkerNode(workerNode, epr)) {
+        else if (agentPersistenceManager.addHostMachine(hostMachine)) {
             log.info("Agent (" + epr + ") is successfully registered!");
             successfullyRegistered = true;
         }
@@ -120,11 +123,21 @@ public class AgentManagementServiceImpl implements IAgentManagementService {
         }
         return successfullyUnregistered;
     }
-    
-    public String pickAnAgent() throws AgentNotFoundException {
-        String selectedpr = "epr";
-        //TODO get it from ContainerProvider
-        return selectedpr;
-    }    
+
+
+    public ContainerInformation pickAContainer(String zone)
+            throws AgentNotFoundException, ClassNotFoundException, SQLException {
+        ContainerInformation containerInformation = new ContainerInformation();
+
+                AgentPersistenceManager agentPersistenceManager
+                        = AgentPersistenceManager.getPersistenceManager();
+                if(agentPersistenceManager.isZoneExist(zone)){
+                    containerInformation = agentPersistenceManager.retrieveAvailableContainerInformation(zone);
+                }else {
+                    String msg = "Requested zone is not exist !";
+                    log.error(msg);
+                }
+        return containerInformation;
+    }
 
 }

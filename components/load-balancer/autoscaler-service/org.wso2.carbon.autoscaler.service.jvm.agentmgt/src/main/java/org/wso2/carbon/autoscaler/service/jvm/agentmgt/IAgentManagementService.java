@@ -22,15 +22,15 @@ import org.wso2.carbon.autoscaler.service.jvm.agentmgt.exception.AgentNotAlready
 import org.wso2.carbon.autoscaler.service.jvm.agentmgt.exception.AgentNotFoundException;
 import org.wso2.carbon.autoscaler.service.jvm.agentmgt.exception.AgentRegisteringException;
 import org.wso2.carbon.autoscaler.service.jvm.agentmgt.exception.NullAgentException;
-import org.wso2.carbon.lb.common.dto.WorkerNode;
+import org.wso2.carbon.lb.common.dto.HostMachine;
 
 import java.sql.SQLException;
 
 /**
- * This service is responsible for keep a list of Agents that get registered to this service and
- * also exposes operations to pick up an Agent based on a selection algorithm
- * (default: round robin) and to retrieve number of registered Agents. Also this service allow
- * Agents to get registered and unregistered.
+ * This service is responsible for insert host machines to data base after added to the zone and
+ * also exposes operations to pick up an Container information based on a selection algorithm
+ * (default: least load host machine selected).
+ * Also this service allow Agents to get registered and unregistered.
  * 
  */
 public interface IAgentManagementService {
@@ -38,8 +38,8 @@ public interface IAgentManagementService {
     /**
      * Registers an Agent's EPR.
      * 
-     * @param workerNode
-     *            Worker node object includes all the information about the new machine added. It
+     * @param hostMachine
+     *            Host machine object includes all the information about the new machine added. It
      *            will have bridges, end point(unique), container root, and a zone.
      * @return whether the registration is successful i.e this will return true if and only if
      *         all following 3 conditions satisfied.
@@ -58,7 +58,7 @@ public interface IAgentManagementService {
      * @throws AgentRegisteringException
      *             when epr failed to added to the list.
      */
-    public boolean registerAgent(WorkerNode workerNode, String epr) throws NullAgentException,
+    public boolean registerAgent(HostMachine hostMachine, String[] domains) throws NullAgentException,
                                                                AgentAlreadyRegisteredException,
                                                                AgentRegisteringException,
                                                                ClassNotFoundException, SQLException;
@@ -85,13 +85,15 @@ public interface IAgentManagementService {
     
 
     /**
-     * Pick an Agent in Round Robin manner.
-     * 
-     * @return EPR of the picked Agent.
-     * 
-     * @throws AgentNotFoundException
-     *             if no Agent can be found.
+     * Pick information of a container possible to create before creation from the host machine of
+     * least loaded host machine.
+     *
+     * @return ContainerInformation all the information needed for creation of container newly.
+     *
+     * @throws AgentNotFoundException if no resources(host machine) to create a container.
      */
-    public String pickAnAgent() throws AgentNotFoundException;
+    public org.wso2.carbon.lb.common.dto.ContainerInformation pickAContainer(String zone) throws AgentNotFoundException,
+                                                                                     ClassNotFoundException,
+                                                                                     SQLException;
 
 }

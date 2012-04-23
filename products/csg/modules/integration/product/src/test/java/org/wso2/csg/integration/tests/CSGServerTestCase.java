@@ -79,8 +79,8 @@ public class CSGServerTestCase extends CSGIntegrationTestCase {
         client = new CSGThriftClient(CSGUtils.getCSGThriftClient(
                 NetworkUtils.getLocalHostname(), 15001, 20000, trustStorePath, "wso2carbon"));
         proxyServiceAdminStub = new ProxyServiceAdminStub(getAdminServiceURL());
-        csgServiceClient = new StockQuoteClient();
         authenticate(proxyServiceAdminStub);
+        csgServiceClient = new StockQuoteClient();
     }
 
     @Override

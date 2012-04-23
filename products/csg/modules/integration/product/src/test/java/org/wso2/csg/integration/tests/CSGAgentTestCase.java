@@ -15,10 +15,15 @@
  */
 package org.wso2.csg.integration.tests;
 
+import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import org.wso2.carbon.cloud.csg.common.thrift.CSGThriftClient;
 import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminStub;
+import org.wso2.csg.integration.tests.util.BackendServer;
+import org.wso2.csg.integration.tests.util.SampleAxis2Server;
+import org.wso2.csg.integration.tests.util.StockQuoteClient;
 
 /**
  * This has the tests cases for testing the CSGAgent functionality with CSG server.
@@ -26,11 +31,13 @@ import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminStub;
  * - SOAP service
  * - REST service
  * - JSON service
+ * - Secure SOAP service
+ * - RM enabled SOAP service etc..etc..
  * <p/>
  * 2. Various publishing options
  * - automatic
  * - manual and there functionality
- *
+ * <p/>
  * 3. If possible we need to check for individual service types
  * - SOAP, REST, JSON (AS)
  * - BRS services
@@ -38,13 +45,25 @@ import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminStub;
  * - DSS services
  * - CEP services
  * - MS services
+ * - ESB proxy service
  */
 public class CSGAgentTestCase extends CSGIntegrationTestCase {
 
     private ProxyServiceAdminStub proxyServiceAdminStub;
 
+    protected BackendServer backendServer;
+
+    private StockQuoteClient csgServiceClient;
+
+    public static final String CSG_SERVER_NAME = "TestServer";
+
+    private CSGThriftClient client;
+
+
+    private static final String QUOTE_STRING = "CSG";
+
     private static final String CSG_SERVICE_NAME = "SimpleStockQuoteService";
-    
+
     protected Log log = LogFactory.getLog(CSGAgentTestCase.class);
 
     public CSGAgentTestCase(String adminService) {
@@ -54,6 +73,38 @@ public class CSGAgentTestCase extends CSGIntegrationTestCase {
     @Override
     protected void init() throws Exception {
         super.init();
+        proxyServiceAdminStub = new ProxyServiceAdminStub(getAdminServiceURL());
+        authenticate(proxyServiceAdminStub);
+        startBackEndAxisServer(new String[]{CSG_SERVICE_NAME});
+        csgServiceClient = new StockQuoteClient();
+    }
+
+    private void startBackEndAxisServer(String services[]) throws Exception {
+        backendServer = new SampleAxis2Server();
+        // deploy each service
+        for (String s : services) {
+            backendServer.deployService(s);
+        }
+        backendServer.start();
+    }
+
+    @Override
+    protected void cleanup() {
+        super.cleanup();
+        try {
+            proxyServiceAdminStub.cleanup();
+            csgServiceClient.destroy();
+            if (backendServer != null && backendServer.isStarted()) {
+                backendServer.stop();
+            }
+        } catch (Exception e) {
+            log.error("Error while cleaning up the resources", e);
+        }
+    }
+
+    @Test(groups = {"wso2.csg"}, description = "A Test to check CSG Agent functionality for a SOAP" +
+            " service")
+    public void testSOAPTest() throws Exception {
 
     }
 }

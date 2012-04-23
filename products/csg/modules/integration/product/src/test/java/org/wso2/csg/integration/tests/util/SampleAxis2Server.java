@@ -24,6 +24,7 @@ import org.apache.axis2.engine.ListenerManager;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.integration.framework.utils.FrameworkSettings;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,14 +50,32 @@ public class SampleAxis2Server implements BackendServer {
     }
 
     public SampleAxis2Server(String axis2xmlFile) {
-        String repositoryPath = "samples" + File.separator + "axis2Server" +
-                File.separator + "repository";
-
-        File repository = new File(repositoryPath);
-        log.info("Using the Axis2 repository path: " + repository.getAbsolutePath());
-
         try {
+            String repositoryPath = "samples" + File.separator +
+                    "axis2Server" + File.separator + "repository";
+            String conf = repositoryPath + File.separator + "conf";
+            String modules = repositoryPath + File.separator + "modules";
+
             File axis2xml = copyResourceToFileSystem(axis2xmlFile, "axis2.xml");
+            File addressingMar = copyResourceToFileSystem("addressing.mar", "addressing.mar");
+            File rampartMar = copyResourceToFileSystem("rampart.mar", "rampart.mar");
+
+            FileUtils.moveFileToDirectory(
+                    axis2xml,
+                    new File(FrameworkSettings.TEST_FRAMEWORK_HOME + File.separator + conf),
+                    true);
+            FileUtils.moveFileToDirectory(
+                    addressingMar,
+                    new File(FrameworkSettings.TEST_FRAMEWORK_HOME + File.separator + modules),
+                    true);
+            FileUtils.moveFileToDirectory(
+                    rampartMar,
+                    new File(FrameworkSettings.TEST_FRAMEWORK_HOME + File.separator + modules),
+                    false);
+
+            log.info("Using the Axis2 repository path: " + repositoryPath);
+
+
             if (axis2xml == null) {
                 log.error("Error while copying the test axis2.xml to the file system");
                 return;
@@ -64,7 +83,9 @@ public class SampleAxis2Server implements BackendServer {
 
             log.info("Loading axis2.xml from: " + axis2xml.getAbsolutePath());
             cfgCtx = ConfigurationContextFactory.createConfigurationContextFromFileSystem(
-                    repository.getAbsolutePath(), axis2xml.getAbsolutePath());
+                    FrameworkSettings.TEST_FRAMEWORK_HOME + File.separator + repositoryPath,
+                    FrameworkSettings.TEST_FRAMEWORK_HOME + File.separator +
+                            conf + File.separator + "axis2.xml");
         } catch (Exception e) {
             log.error("Error while initializing the configuration context", e);
         }

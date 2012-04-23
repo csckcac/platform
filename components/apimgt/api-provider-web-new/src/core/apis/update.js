@@ -1,0 +1,31 @@
+var updateAPI = function(apiName, version, description, imageUrl, endpoint, wsdl, tags, tier,
+                         status, resourceTemplate, resourceMethod, resourceUri, context,
+                         uriTemplateArr, uriMethodArr) {
+
+    var apiProvider = require("/core/greg/greg.js").getAPIProviderObj();
+    var user = require("/core/user/user.js").getUser();
+    var providerName = user.username;
+    try {
+        var success = apiProvider.updateAPI(providerName, apiName, version, description, imageUrl, endpoint, wsdl, tags, tier, status, resourceTemplate, resourceMethod, resourceUri, context, request, uriTemplateArr, uriMethodArr);
+        if (log.isDebugEnabled()) {
+            log.debug("updateAPI : " + apiName + "-" + version);
+        }
+        if (success) {
+            return {
+                error:false
+            };
+        } else {
+            return {
+                error:true
+
+            };
+        }
+    } catch (e) {
+        log.error(e.message);
+        return {
+            error:e
+
+        };
+    }
+
+};

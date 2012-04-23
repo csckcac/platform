@@ -853,7 +853,7 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
     }
 
     @Override
-    public TAttachmentInfo[] getAttachmentInfos(URI uri)
+    public TAttachmentInfo[] getAttachmentInfos(URI taskIdentifier)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
             IllegalAccessFault {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.

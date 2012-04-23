@@ -40,7 +40,7 @@ public class Resume extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkPreConditions() {
-        checkForValidTask(this.getClass());
+        checkForValidTask();
     }
 
     /**

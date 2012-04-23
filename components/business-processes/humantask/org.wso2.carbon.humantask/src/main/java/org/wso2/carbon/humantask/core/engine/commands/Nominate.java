@@ -59,7 +59,7 @@ public class Nominate extends AbstractHumanTaskCommand {
         List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles =
                 new ArrayList<GenericHumanRoleDAO.GenericHumanRoleType>();
         allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.BUSINESS_ADMINISTRATORS);
-        authoriseRoles(allowedRoles, this.getClass());
+        authoriseRoles(allowedRoles);
     }
 
     /**
@@ -67,7 +67,7 @@ public class Nominate extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkState() {
-        checkPreState(TaskStatus.CREATED, this.getClass());
+        checkPreState(TaskStatus.CREATED);
     }
 
     /**

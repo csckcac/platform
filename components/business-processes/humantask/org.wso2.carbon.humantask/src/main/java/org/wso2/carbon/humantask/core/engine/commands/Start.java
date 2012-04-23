@@ -41,7 +41,7 @@ public class Start extends AbstractHumanTaskCommand {
     protected void checkPreConditions() {
         TaskDAO task = getTask();
         OrganizationalEntityDAO caller = getCaller();
-        checkForValidTask(this.getClass());
+        checkForValidTask();
 
         if (TaskStatus.READY.equals(task.getStatus())) {
             List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles = new ArrayList

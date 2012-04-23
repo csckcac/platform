@@ -56,7 +56,7 @@ public class GetFault extends AbstractHumanTaskCommand {
         allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.STAKEHOLDERS);
         allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.TASK_INITIATOR);
 
-        authoriseRoles(allowedRoles, this.getClass());
+        authoriseRoles(allowedRoles);
     }
 
     /**

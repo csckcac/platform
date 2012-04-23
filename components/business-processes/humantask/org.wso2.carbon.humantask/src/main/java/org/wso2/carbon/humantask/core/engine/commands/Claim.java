@@ -38,7 +38,7 @@ public class Claim extends AbstractHumanTaskCommand {
 
     @Override
     protected void checkPreConditions() {
-        checkForValidTask(this.getClass());
+        checkForValidTask();
         TaskDAO task = getTask();
         for (GenericHumanRoleDAO humanRole : task.getHumanRoles()) {
             if (GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER.equals(humanRole.getType())
@@ -67,7 +67,7 @@ public class Claim extends AbstractHumanTaskCommand {
 
     @Override
     protected void checkState() {
-        checkPreState(TaskStatus.READY, this.getClass());
+        checkPreState(TaskStatus.READY);
     }
 
     @Override

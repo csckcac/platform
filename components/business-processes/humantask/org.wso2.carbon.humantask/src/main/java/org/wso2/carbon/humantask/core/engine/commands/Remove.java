@@ -38,7 +38,7 @@ public class Remove extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkPreConditions() {
-        checkForValidNotification(this.getClass());
+        checkForValidNotification();
     }
 
     /**
@@ -49,7 +49,7 @@ public class Remove extends AbstractHumanTaskCommand {
         List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles = new
                 ArrayList<GenericHumanRoleDAO.GenericHumanRoleType>();
         allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.NOTIFICATION_RECIPIENTS);
-        authoriseRoles(allowedRoles, this.getClass());
+        authoriseRoles(allowedRoles);
     }
 
     /**
@@ -57,7 +57,7 @@ public class Remove extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkState() {
-        checkPreState(TaskStatus.READY, this.getClass());
+        checkPreState(TaskStatus.READY);
     }
 
     /**

@@ -42,7 +42,7 @@ public class Stop extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkPreConditions() {
-        checkForValidTask(Stop.class);
+        checkForValidTask();
     }
 
     /**
@@ -72,7 +72,7 @@ public class Stop extends AbstractHumanTaskCommand {
     @Override
     protected void checkState() {
         TaskDAO task = getTask();
-        checkPreState(TaskStatus.IN_PROGRESS, Stop.class);
+        checkPreState(TaskStatus.IN_PROGRESS);
         if (!TaskStatus.IN_PROGRESS.equals(task.getStatus())) {
 
             String errMsg = String.format("User[%s] cannot claim task[%d] as the task is in state[%s]. " +
@@ -89,7 +89,7 @@ public class Stop extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkPostConditions() {
-        checkPostState(TaskStatus.RESERVED, Stop.class);
+        checkPostState(TaskStatus.RESERVED);
     }
 
     @Override

@@ -44,7 +44,7 @@ public class Delegate extends AbstractHumanTaskCommand {
     @Override
     protected void checkPreConditions() {
 
-        checkForValidTask(this.getClass());
+        checkForValidTask();
         OrganizationalEntityDAO caller = getCaller();
         TaskDAO task = getTask();
         //if the delegatee is not an existing user
@@ -65,7 +65,7 @@ public class Delegate extends AbstractHumanTaskCommand {
             allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.BUSINESS_ADMINISTRATORS);
             allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
             try {
-                authoriseRoles(allowedRoles, this.getClass());
+                authoriseRoles(allowedRoles);
             } catch (Exception ex) {
                 String err = String.format("The task[id:%d] can be only delegated after it's released. " +
                         "But for the task to be released you need to be a business " +
@@ -100,7 +100,7 @@ public class Delegate extends AbstractHumanTaskCommand {
         allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.STAKEHOLDERS);
         allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
 
-        authoriseRoles(allowedRoles, this.getClass());
+        authoriseRoles(allowedRoles);
     }
 
     /**
@@ -112,7 +112,7 @@ public class Delegate extends AbstractHumanTaskCommand {
         allowedStates.add(TaskStatus.READY);
         allowedStates.add(TaskStatus.RESERVED);
         allowedStates.add(TaskStatus.IN_PROGRESS);
-        checkPreStates(allowedStates, this.getClass());
+        checkPreStates(allowedStates);
     }
 
     /**
@@ -120,7 +120,7 @@ public class Delegate extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkPostConditions() {
-        checkPostState(TaskStatus.RESERVED, this.getClass());
+        checkPostState(TaskStatus.RESERVED);
     }
 
     @Override

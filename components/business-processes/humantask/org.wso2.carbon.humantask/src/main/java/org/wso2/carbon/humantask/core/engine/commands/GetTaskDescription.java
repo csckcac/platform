@@ -56,7 +56,7 @@ public class GetTaskDescription extends AbstractHumanTaskCommand {
         allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.TASK_INITIATOR);
         allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.NOTIFICATION_RECIPIENTS);
 
-        authoriseRoles(allowedRoles, this.getClass());
+        authoriseRoles(allowedRoles);
     }
 
     /**

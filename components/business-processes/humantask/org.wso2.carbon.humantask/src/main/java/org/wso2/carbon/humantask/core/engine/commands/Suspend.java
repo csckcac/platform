@@ -24,7 +24,7 @@ public class Suspend extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkPreConditions() {
-        checkForValidTask(this.getClass());
+        checkForValidTask();
     }
 
     /**
@@ -78,7 +78,7 @@ public class Suspend extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkPostConditions() {
-        checkPostState(TaskStatus.SUSPENDED, Suspend.class);
+        checkPostState(TaskStatus.SUSPENDED);
     }
 
     @Override

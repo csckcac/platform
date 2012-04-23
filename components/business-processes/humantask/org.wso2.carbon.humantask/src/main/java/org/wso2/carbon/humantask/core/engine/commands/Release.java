@@ -39,7 +39,7 @@ public class Release extends AbstractHumanTaskCommand {
     protected void checkPreConditions() {
         TaskDAO task = getTask();
         OrganizationalEntityDAO caller = getCaller();
-        checkForValidTask(Release.class);
+        checkForValidTask();
         //if the task is in progress status we need to stop it first before releasing it!
         if (TaskStatus.IN_PROGRESS.equals(task.getStatus())) {
 
@@ -48,10 +48,10 @@ public class Release extends AbstractHumanTaskCommand {
             allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
 
             if (!OperationAuthorizationUtil.authoriseUser(task, caller, allowedRoles,
-                    getEngine().getPeopleQueryEvaluator())) {
+                                                          getEngine().getPeopleQueryEvaluator())) {
                 throw new HumanTaskRuntimeException(String.format("The user[%s] cannot perform [%s]" +
-                        " operation as he is not in task roles[%s]",
-                        caller.getName(), Release.class, allowedRoles));
+                                                                  " operation as he is not in task roles[%s]",
+                                                                  caller.getName(), Release.class, allowedRoles));
             }
 
             task.stop();
@@ -71,10 +71,10 @@ public class Release extends AbstractHumanTaskCommand {
         allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
 
         if (!OperationAuthorizationUtil.authoriseUser(task, caller, allowedRoles,
-                getEngine().getPeopleQueryEvaluator())) {
+                                                      getEngine().getPeopleQueryEvaluator())) {
             throw new HumanTaskRuntimeException(String.format("The user[%s] cannot perform [%s]" +
-                    " operation as he is not in task roles[%s]",
-                    caller.getName(), Release.class, allowedRoles));
+                                                              " operation as he is not in task roles[%s]",
+                                                              caller.getName(), Release.class, allowedRoles));
         }
     }
 
@@ -83,7 +83,7 @@ public class Release extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkState() {
-        checkPreState(TaskStatus.RESERVED, Release.class);
+        checkPreState(TaskStatus.RESERVED);
     }
 
     /**
@@ -91,7 +91,7 @@ public class Release extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkPostConditions() {
-        checkPostState(TaskStatus.READY, Release.class);
+        checkPostState(TaskStatus.READY);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class Release extends AbstractHumanTaskCommand {
         authorise();
         checkState();
         task.release();
-        task.persistEvent(createTaskEvent());
+        //task.persistEvent(createTaskEvent());
         checkPostConditions();
     }
 }

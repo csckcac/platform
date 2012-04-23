@@ -40,7 +40,7 @@ public class Activate extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkPreConditions() {
-        checkForValidTask(this.getClass());
+        checkForValidTask();
         TaskDAO task = getTask();
         if (task.getActivationTime() == null) {
             throw new HumanTaskRuntimeException(
@@ -71,7 +71,7 @@ public class Activate extends AbstractHumanTaskCommand {
         allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.BUSINESS_ADMINISTRATORS);
         allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.STAKEHOLDERS);
 
-        authoriseRoles(allowedRoles, this.getClass());
+        authoriseRoles(allowedRoles);
     }
 
     /**
@@ -79,7 +79,7 @@ public class Activate extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkState() {
-        checkPreState(TaskStatus.CREATED, this.getClass());
+        checkPreState(TaskStatus.CREATED);
     }
 
     /**
@@ -87,7 +87,7 @@ public class Activate extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkPostConditions() {
-        checkPostState(TaskStatus.READY, this.getClass());
+        checkPostState(TaskStatus.READY);
     }
 
     @Override

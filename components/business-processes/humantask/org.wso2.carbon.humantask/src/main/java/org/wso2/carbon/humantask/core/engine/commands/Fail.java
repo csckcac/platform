@@ -57,7 +57,7 @@ public class Fail extends AbstractHumanTaskCommand {
         List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles = new
                 ArrayList<GenericHumanRoleDAO.GenericHumanRoleType>();
         allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
-        authoriseRoles(allowedRoles, this.getClass());
+        authoriseRoles(allowedRoles);
     }
 
     /**
@@ -65,7 +65,7 @@ public class Fail extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkState() {
-        checkPreState(TaskStatus.IN_PROGRESS, this.getClass());
+        checkPreState(TaskStatus.IN_PROGRESS);
     }
 
     /**
@@ -73,7 +73,7 @@ public class Fail extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkPostConditions() {
-        checkPostState(TaskStatus.FAILED, this.getClass());
+        checkPostState(TaskStatus.FAILED);
     }
 
     @Override

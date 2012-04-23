@@ -44,7 +44,7 @@ public class SetFault extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkPreConditions() {
-        checkForValidTask(this.getClass());
+        checkForValidTask();
     }
 
     /**
@@ -55,7 +55,7 @@ public class SetFault extends AbstractHumanTaskCommand {
         List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles = new
                 ArrayList<GenericHumanRoleDAO.GenericHumanRoleType>();
         allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
-        authoriseRoles(allowedRoles, this.getClass());
+        authoriseRoles(allowedRoles);
     }
 
     /**
@@ -63,7 +63,7 @@ public class SetFault extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkState() {
-        checkPreState(TaskStatus.IN_PROGRESS, this.getClass());
+        checkPreState(TaskStatus.IN_PROGRESS);
     }
 
     /**
@@ -71,7 +71,7 @@ public class SetFault extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkPostConditions() {
-        checkPostState(TaskStatus.IN_PROGRESS, this.getClass());
+        checkPostState(TaskStatus.IN_PROGRESS);
     }
 
     @Override

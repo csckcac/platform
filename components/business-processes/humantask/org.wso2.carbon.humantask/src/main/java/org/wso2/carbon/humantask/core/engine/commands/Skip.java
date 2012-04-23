@@ -39,7 +39,7 @@ public class Skip extends AbstractHumanTaskCommand {
     @Override
     protected void checkPreConditions() {
         TaskDAO task = getTask();
-        checkForValidTask(this.getClass());
+        checkForValidTask();
         if (!task.isSkipable()) {
             throw new HumanTaskRuntimeException(
                     String.format("The task[id:%d] is not a skippable task.", task.getId()));
@@ -57,7 +57,7 @@ public class Skip extends AbstractHumanTaskCommand {
         allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.BUSINESS_ADMINISTRATORS);
         allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.STAKEHOLDERS);
 
-        authoriseRoles(allowedRoles, this.getClass());
+        authoriseRoles(allowedRoles);
     }
 
     /**
@@ -70,7 +70,7 @@ public class Skip extends AbstractHumanTaskCommand {
         allowedStates.add(TaskStatus.READY);
         allowedStates.add(TaskStatus.RESERVED);
         allowedStates.add(TaskStatus.IN_PROGRESS);
-        checkPreStates(allowedStates, this.getClass());
+        checkPreStates(allowedStates);
     }
 
     /**
@@ -78,7 +78,7 @@ public class Skip extends AbstractHumanTaskCommand {
      */
     @Override
     protected void checkPostConditions() {
-        checkPostState(TaskStatus.OBSOLETE, this.getClass());
+        checkPostState(TaskStatus.OBSOLETE);
     }
 
     @Override

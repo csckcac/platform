@@ -19,6 +19,7 @@
 package org.wso2.carbon.deployment.synchronizer.internal;
 
 import org.wso2.carbon.deployment.synchronizer.DeploymentSynchronizerException;
+import org.wso2.carbon.deployment.synchronizer.internal.repository.CarbonRepositoryUtils;
 import org.wso2.carbon.deployment.synchronizer.services.DeploymentSynchronizerService;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
@@ -55,19 +56,26 @@ public class DeploymentSynchronizerServiceImpl implements DeploymentSynchronizer
         try {
             DeploymentSynchronizer synchronizer =
                     syncManager.getSynchronizer(MultitenantUtils.getAxis2RepositoryPath(tenantId));
-            if (synchronizer != null) {
-                return synchronizer.checkout();
+            if (synchronizer == null) {
+                synchronizer =
+                        CarbonRepositoryUtils.newCarbonRepositorySynchronizer(tenantId);
+                synchronizer.doInitialSyncUp();
             }
+            return synchronizer.checkout();
         } catch (DeploymentSynchronizerException e) {
             throw new RuntimeException(e);
         }
-        return false;
     }
 
     public boolean commit(int tenantId) {
         try {
             DeploymentSynchronizer synchronizer =
                     getSynchronizer(MultitenantUtils.getAxis2RepositoryPath(tenantId));
+            if (synchronizer == null) {
+                synchronizer =
+                        CarbonRepositoryUtils.newCarbonRepositorySynchronizer(tenantId);
+                synchronizer.doInitialSyncUp();
+            }
             return synchronizer.commit();
         } catch (DeploymentSynchronizerException e) {
             throw new RuntimeException(e);
@@ -90,7 +98,7 @@ public class DeploymentSynchronizerServiceImpl implements DeploymentSynchronizer
         DeploymentSynchronizer synchronizer = syncManager.getSynchronizer(filePath);
         if (synchronizer == null) {
             throw new DeploymentSynchronizerException("A repository synchronizer has not been " +
-                    "engaged for the file path: " + filePath);
+                                                      "engaged for the file path: " + filePath);
         }
         return synchronizer;
     }

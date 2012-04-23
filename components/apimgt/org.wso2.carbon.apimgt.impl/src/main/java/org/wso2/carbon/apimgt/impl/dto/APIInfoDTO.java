@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.apimgt.impl.dto;
 
+/**
+ * This class represent the API info DTO.
+ */
 public class APIInfoDTO {
 
    private String providerId;

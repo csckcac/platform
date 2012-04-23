@@ -72,7 +72,6 @@ public final class APIConstants {
     public static final String API_OVERVIEW_THUMBNAIL_URL="overview_thumbnail";
     public static final String API_OVERVIEW_STATUS="overview_status";
     public static final String API_OVERVIEW_TIER="overview_tier";
-    public static final String API_OVERVIEW_TAGS="overview_tags";
     public static final String API_OVERVIEW_IS_LATEST ="overview_isLatest";
     public static final String API_URI_TEMPLATES ="uriTemplates_entry";
 
@@ -86,19 +85,14 @@ public final class APIConstants {
     public static final String SUBSCRIBER_FIELD_EMAIL_ADDRESS = "EMAIL_ADDRESS";
     public static final String SUBSCRIBER_FIELD_USER_ID = "USER_ID";
     public static final String SUBSCRIBER_FIELD_DATE_SUBSCRIBED = "DATE_SUBSCRIBED";
-    public static final String SUBSCRIBER_FIELD_TENANT_ID = "TENANT_ID";
 
     //tables coloums for subscription
     public static final String SUBSCRIPTION_FIELD_TIER_ID = "TIER_ID";
     public static final String SUBSCRIPTION_FIELD_API_ID = "API_ID";
-    public static final String SUBSCRIPTION_FIELD_API_VERSION = "API_VERSION";
-    public static final String SUBSCRIPTION_FIELD_API_PROVIDER = "API_PROVIDER";
     public static final String SUBSCRIPTION_FIELD_ACCESS_TOKEN = "ACCESS_TOKEN";
     public static final String SUBSCRIPTION_FIELD_LAST_ACCESS = "LAST_ACCESSED";
 
     //IDENTITY OAUTH2 table
-    public static final String IDENTITY_OAUTH2_FIELD_TIME_CREATED="TIME_CREATED";
-    public static final String IDENTITY_OAUTH2_FIELD_VALIDITY_PERIOD="VALIDITY_PERIOD";
     public static final String IDENTITY_OAUTH2_FIELD_TOKEN_STATE="TOKEN_STATE";
 
     //documentation rxt

@@ -17,6 +17,9 @@
 */
 package org.wso2.carbon.apimgt.impl.dto;
 
+/**
+ * This class represent the API Key info DTO.
+ */
 public class APIKeyInfoDTO {
 
     private String userId;

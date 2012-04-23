@@ -18,6 +18,9 @@
 */
 package org.wso2.carbon.apimgt.impl.dto;
 
+/**
+ * This class represent the API key validation Info DTO.
+ */
 public class APIKeyValidationInfoDTO {
 
     private boolean authorized;

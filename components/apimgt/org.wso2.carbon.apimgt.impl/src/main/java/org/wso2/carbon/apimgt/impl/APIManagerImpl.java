@@ -18,8 +18,6 @@
 
 package org.wso2.carbon.apimgt.impl;
 
-import org.apache.axis2.AxisFault;
-import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
@@ -32,7 +30,6 @@ import org.wso2.carbon.apimgt.api.model.*;
 import org.wso2.carbon.apimgt.api.model.Tag;
 import org.wso2.carbon.apimgt.impl.dao.ApiMgtDAO;
 import org.wso2.carbon.apimgt.impl.internal.APIManagerComponent;
-import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
@@ -44,6 +41,7 @@ import org.wso2.carbon.registry.core.*;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Comment;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.internal.RegistryCoreServiceComponent;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 import org.wso2.carbon.ui.CarbonUIUtil;
 import org.wso2.carbon.user.api.AuthorizationManager;
@@ -1293,15 +1291,14 @@ public class APIManagerImpl implements APIManager {
     private Registry getRegistry(String user, String pass, String url) throws APIManagementException {
         WSRegistryServiceClient client;
         try {
-            client = new WSRegistryServiceClient(url, user, pass,
-                    ConfigurationContextFactory.createConfigurationContextFromFileSystem(
-                            ServerConfiguration.getInstance().
-                                    getFirstProperty("Axis2Config.clientAxis2XmlLocation")));
-            registry = GovernanceUtils.getGovernanceUserRegistry(client, user);
+//            client = new WSRegistryServiceClient(url, user, pass,
+//                    ConfigurationContextFactory.createConfigurationContextFromFileSystem(
+//                            ServerConfiguration.getInstance().
+//                                    getFirstProperty("Axis2Config.clientAxis2XmlLocation")));
+            //TODO need to verify the registry initialization
+            registry = RegistryCoreServiceComponent.getRegistryService().getGovernanceSystemRegistry();
         } catch (RegistryException e) {
             handleException("Error while obtaining a registry instance", e);
-        } catch (AxisFault af) {
-            handleException("Error while initializing the WS registry client", af);
         }
         return registry;
     }

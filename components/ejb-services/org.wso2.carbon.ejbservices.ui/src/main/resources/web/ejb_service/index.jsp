@@ -179,7 +179,7 @@
         <div class=”sectionSub”>
             <form name="addEJBApplicationServerForm" method="post" action="ejbServiceProvider.jsp">
                 <table class="carbonFormTable sectionSub">
-                    <tr class="tableOddRow">
+                    <tr>
                         <th colspan="2"><fmt:message key="select.application.server"/></th>
                     </tr>
                     <tr>
@@ -204,9 +204,7 @@
                                 <tr>
                                     <td class="leftCol-med labelField"><fmt:message key="server.configuration"/></td>
                                     <td>
-                                        <select onchange="setDefaultServerValues(this,document);return false;"
-                                                name="existingAppServerConfigurations"
-                                                id="existingAppServerConfigurations">
+                                        <select name="existingAppServerConfigurations" id="existingAppServerConfigurations">
                                             <%
                                                 if (appServers != null) {
                                                     for (EJBAppServerData appServer : appServers) {
@@ -232,6 +230,7 @@
                     </tr>
                     <tr>
                         <td class="labelField">
+                            <%--<div class="sectionSeperator togglebleTitle"></div>--%>
                             <table class="carbonFormTable">
                                 <tr>
                                     <td>
@@ -335,7 +334,7 @@
 </script>
 
 <script type="text/javascript">
-    ejbProviderStep1DisableFields();
+//    ejbProviderStep1DisableFields();
     initSections("hidden");
 </script>
 

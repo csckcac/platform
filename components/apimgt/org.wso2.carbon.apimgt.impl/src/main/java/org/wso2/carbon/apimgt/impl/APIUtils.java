@@ -253,7 +253,6 @@ public final class APIUtils {
             if (aStatus.getStatus().equals(status)) {
                 apiStatus = aStatus;
             }
-
         }
         return apiStatus;
 

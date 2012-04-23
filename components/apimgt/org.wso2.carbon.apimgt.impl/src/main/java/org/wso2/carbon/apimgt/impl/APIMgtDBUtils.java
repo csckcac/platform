@@ -103,7 +103,7 @@ public final class APIMgtDBUtils {
      * Close Connection
      * @param dbConnection Connection
      */
-    public static void closeConnection(Connection dbConnection) {
+    private static void closeConnection(Connection dbConnection) {
         if (dbConnection != null) {
             try {
                 dbConnection.close();
@@ -118,7 +118,7 @@ public final class APIMgtDBUtils {
      * Close ResultSet
      * @param resultSet ResultSet
      */
-    public static void closeResultSet(ResultSet resultSet) {
+    private static void closeResultSet(ResultSet resultSet) {
         if (resultSet != null) {
             try {
                 resultSet.close();
@@ -133,7 +133,7 @@ public final class APIMgtDBUtils {
      * Close PreparedStatement
      * @param preparedStatement PreparedStatement
      */
-    public static void closeStatement(PreparedStatement preparedStatement) {
+    private static void closeStatement(PreparedStatement preparedStatement) {
         if (preparedStatement != null) {
             try {
                 preparedStatement.close();

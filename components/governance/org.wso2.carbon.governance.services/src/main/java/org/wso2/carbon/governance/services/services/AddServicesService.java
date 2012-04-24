@@ -20,11 +20,13 @@ import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.xerces.parsers.SAXParser;
 import org.wso2.carbon.governance.api.common.dataobjects.GovernanceArtifact;
 import org.wso2.carbon.governance.api.services.ServiceManager;
 import org.wso2.carbon.governance.api.services.dataobjects.Service;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.governance.services.util.Util;
+import org.wso2.carbon.governance.services.util.XMLConfigValidatorUtil;
 import org.wso2.carbon.registry.common.CommonConstants;
 import org.wso2.carbon.registry.common.services.RegistryAbstractAdmin;
 import org.wso2.carbon.registry.core.*;
@@ -33,11 +35,16 @@ import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.registry.core.utils.UUIDGenerator;
 import org.wso2.carbon.registry.extensions.utils.CommonUtil;
+import org.wso2.carbon.utils.CarbonUtils;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
-import java.io.StringReader;
+import java.io.*;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -300,6 +307,42 @@ public class AddServicesService extends RegistryAbstractAdmin {
         }
         return lifecycleAspectsToAdd.toArray(new String[lifecycleAspectsToAdd.size()]);
     }
+
+    public boolean validateXMLConfigOnSchema(String xml) {
+       SAXParser parser = new SAXParser();
+       String serviceConfPath = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator +
+                "conf" + File.separator + "service-ui-config.xsd";
+
+       String schemaURL = new File(serviceConfPath).toURI().toString();
+
+        try {
+            parser.setFeature("http://xml.org/sax/features/validation", true);
+            parser.setFeature("http://apache.org/xml/features/validation/schema",
+                    true);
+            parser.setFeature("http://apache.org/xml/features/validation/schema-full-checking",
+                    true);
+
+            parser.setProperty("http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation",
+                    schemaURL);
+            XMLConfigValidatorUtil handler = new XMLConfigValidatorUtil();
+            parser.setErrorHandler(handler);
+            parser.parse(new InputSource(new ByteArrayInputStream(xml.getBytes("utf-8"))));
+
+        } catch (SAXNotRecognizedException e) {
+            return false;
+        } catch (SAXNotSupportedException e) {
+            return false;
+        } catch (SAXException e) {
+            return false;
+        } catch (UnsupportedEncodingException e) {
+            return false;
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
+    }
+
+
     private void removeAspect(Registry registry,String path,String aspect)throws Exception{
            try {
             /* set all the variables to the resource */

@@ -21,16 +21,25 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.framework.ServiceRegistration;
+import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.registry.core.ActionConstants;
+import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.RegistryConstants;
+import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.config.RegistryContext;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.secure.AuthorizeRoleListener;
 import org.wso2.carbon.governance.services.util.Util;
 import org.wso2.carbon.registry.core.service.RegistryService;
+import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.registry.core.utils.RegistryUtils;
 import org.wso2.carbon.user.mgt.UserMgtConstants;
 import org.wso2.carbon.user.core.listener.AuthorizationManagerListener;
+import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.utils.FileUtil;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Stack;
 
 /**

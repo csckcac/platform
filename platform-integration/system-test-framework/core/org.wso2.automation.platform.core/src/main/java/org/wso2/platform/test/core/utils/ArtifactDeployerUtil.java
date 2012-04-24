@@ -106,11 +106,11 @@ public class ArtifactDeployerUtil {
     private static final String TASKS_DIR = "tasks";
 
     public void carFileUploder(String sessionCookie, String hostName, URL url,
-                               String artifactName) {
+                               Artifact artifact) {
         DataHandler dh = new DataHandler(url);
         AdminServiceCarbonAppUploader adminServiceCarbonAppUploader =
                 new AdminServiceCarbonAppUploader(hostName);
-        adminServiceCarbonAppUploader.uploadCarbonAppArtifact(sessionCookie, artifactName, dh);
+        adminServiceCarbonAppUploader.uploadCarbonAppArtifact(sessionCookie, artifact.getArtifactName(), dh);
     }
 
     protected String login(String userName, String password, String hostName) {
@@ -141,20 +141,21 @@ public class ArtifactDeployerUtil {
     }
 
     public void jarFileUploder(String sessionCookie, String backEndUrl, String artifactLocation,
-                               String artifactName, List<ArtifactDependency> artifactDependencyList,
-                               List<ArtifactAssociation> artifactAssociationList) throws Exception {
+                               Artifact artifact) throws Exception {
 
-        String serviceGroupName = getJarServiceGroup(artifactName);
+        String serviceGroupName = getJarServiceGroup(artifact.getArtifactName());
         log.debug("Jar Service Group name is " + serviceGroupName);
         AdminServiceJARServiceUploader jarServiceUploader =
                 new AdminServiceJARServiceUploader(backEndUrl);
         List<DataHandler> dhJarList = new ArrayList<DataHandler>();
+        List<ArtifactDependency> artifactDependencyList = artifact.getDependencyArtifactList();
+        List<ArtifactAssociation> artifactAssociationList = artifact.getAssociationList();
         String location = getJarArtifactLocation(artifactAssociationList);
         DataHandler wsdlDataHandler = null;
 
         //add jar service file to array list
         URL jarServiceURL = new URL(("file:///" + artifactLocation + File.separator + "jar" +
-                                     File.separator + location + File.separator + artifactName));
+                                     File.separator + location + File.separator + artifact.getArtifactName()));
         DataHandler dhJarService = new DataHandler(jarServiceURL);
         dhJarList.add(dhJarService);
 
@@ -259,17 +260,14 @@ public class ArtifactDeployerUtil {
         adminServiceDataServiceFileUploader.uploadDataServiceFile(sessionCookie, artifact.getArtifactName(), dbs);
     }
 
-    public void springServiceUpload(String sessionCookie, String artifactName,
-                                    String artifactLocation,
-                                    List<ArtifactDependency> artifactDependencyList,
-                                    List<ArtifactAssociation> artifactAssociationList,
-                                    String backendURL)
+    public void springServiceUpload(String sessionCookie, Artifact artifact,
+                                    String artifactLocation, String backendURL)
             throws Exception {
 
-        String contextXMLName = getContextXMLName(artifactDependencyList);
-        String location = getSpringArtifactLocation(artifactAssociationList);
+        String contextXMLName = getContextXMLName(artifact.getDependencyArtifactList());
+        String location = getSpringArtifactLocation(artifact.getAssociationList());
         String springBeanFilePath = artifactLocation + File.separator + "spring" + File.separator +
-                                    location + File.separator + artifactName;
+                                    location + File.separator + artifact.getArtifactName();
         String springContextFilePath = artifactLocation + File.separator + "spring" + File.separator +
                                        location + File.separator + contextXMLName;
         SpringServiceMaker newMarker = new SpringServiceMaker();

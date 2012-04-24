@@ -42,9 +42,9 @@ public class ArtifactDeployer {
     /**
      * Deploy each test artifact defined in the scenario configuration
      *
-     * @param productName             Name of the product which artifacts will be deployed
-     * @param artifact                test artifacts Object.
-     * @param frameworkProperties     test framework properties
+     * @param productName         Name of the product which artifacts will be deployed
+     * @param artifact            test artifacts Object.
+     * @param frameworkProperties test framework properties
      * @throws Exception - Artifact deployment exception
      */
     protected void deployArtifact(String productName, Artifact artifact,
@@ -74,7 +74,7 @@ public class ArtifactDeployer {
             case car:
                 URL url = new URL("file:///" + artifactLocation + File.separator + "car" +
                                   File.separator + artifact.getArtifactName());
-                deployerUtil.carFileUploder(sessionCookie, backendURL, url, artifact.getArtifactName());
+                deployerUtil.carFileUploder(sessionCookie, backendURL, url, artifact);
                 break;
 
             case war:
@@ -83,8 +83,7 @@ public class ArtifactDeployer {
                 break;
 
             case jar:
-                deployerUtil.jarFileUploder(sessionCookie, backendURL, artifactLocation, artifact.getArtifactName()
-                        , artifact.getDependencyArtifactList(), artifact.getAssociationList());
+                deployerUtil.jarFileUploder(sessionCookie, backendURL, artifactLocation, artifact);
                 break;
 
             case bpelzip:
@@ -108,8 +107,7 @@ public class ArtifactDeployer {
                 break;
 
             case spring:
-                deployerUtil.springServiceUpload(sessionCookie, artifact.getArtifactName(), artifactLocation,
-                                                 artifact.getDependencyArtifactList(), artifact.getAssociationList(), backendURL);
+                deployerUtil.springServiceUpload(sessionCookie, artifact, artifactLocation, backendURL);
                 break;
 
             case dbs:

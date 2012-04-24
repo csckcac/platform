@@ -44,6 +44,7 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="xml" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="schema" nillable="true" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -550,15 +551,15 @@
     <wsdl:service name="AddServicesService">
         <wsdl:port name="AddServicesServiceHttpsSoap11Endpoint" binding="ns:AddServicesServiceSoap11Binding">
             <soap:address
-                    location="https://10.216.199.225:9443/services/AddServicesService.AddServicesServiceHttpsSoap11Endpoint/"/>
+                    location="https://10.200.3.155:9443/services/AddServicesService.AddServicesServiceHttpsSoap11Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="AddServicesServiceHttpsSoap12Endpoint" binding="ns:AddServicesServiceSoap12Binding">
             <soap12:address
-                    location="https://10.216.199.225:9443/services/AddServicesService.AddServicesServiceHttpsSoap12Endpoint/"/>
+                    location="https://10.200.3.155:9443/services/AddServicesService.AddServicesServiceHttpsSoap12Endpoint/"/>
         </wsdl:port>
         <wsdl:port name="AddServicesServiceHttpsEndpoint" binding="ns:AddServicesServiceHttpBinding">
             <http:address
-                    location="https://10.216.199.225:9443/services/AddServicesService.AddServicesServiceHttpsEndpoint/"/>
+                    location="https://10.200.3.155:9443/services/AddServicesService.AddServicesServiceHttpsEndpoint/"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

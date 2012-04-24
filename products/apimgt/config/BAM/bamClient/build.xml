@@ -11,7 +11,7 @@
     <target name="init" depends="clean">
         <mkdir dir="${client.class.dir}"/>
         <mkdir dir="${analyzer.class.dir}"/>
-	<mkdir dir="org.wso2.carbon.bam.client/lib">
+	<mkdir dir="org.wso2.carbon.bam.client/lib" />
         <path id="javac.bam.analyzer.classpath">
             <pathelement path="${analyzer.class.dir}"/>
             <fileset dir="./../repository/components/plugins"/>

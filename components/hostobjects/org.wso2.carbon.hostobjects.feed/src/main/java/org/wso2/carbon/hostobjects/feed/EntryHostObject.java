@@ -23,10 +23,8 @@ import org.apache.abdera.model.Link;
 import org.apache.abdera.parser.stax.util.FOMHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.*;
+import org.wso2.carbon.jaggery.core.manager.CommonManager;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 import org.wso2.javascript.xmlimpl.XML;
 
@@ -110,15 +108,16 @@ import java.util.List;
  *  <li>atom:entry elements MUST contain exactly one atom:title element.</li>
  *  <li>atom:entry elements MUST contain exactly one atom:updated element.</li>
  *  </ul>
- * <p/>
+ *
  * </pre>
  */
-public class EntryHostObject extends ScriptableObject  {
+public class EntryHostObject extends ScriptableObject {
 
     private static final long serialVersionUID = -2799736487293031053L;
     private Abdera abdera;
     private Entry entry;
     private static Log log = LogFactory.getLog(EntryHostObject.class);
+    private Context context;
 
     public EntryHostObject() {
         super();
@@ -131,10 +130,14 @@ public class EntryHostObject extends ScriptableObject  {
     /**
      * Constructor the user will be using inside javaScript
      */
-    public void jsConstructor() {
-        abdera = new Abdera();
-        Factory factory = abdera.getFactory();
-        entry = factory.newEntry();
+    public static Scriptable jsConstructor(Context cx, Object[] args, Function ctorObj,
+                                           boolean inNewExpr) {
+        EntryHostObject entryHO = new EntryHostObject();
+        entryHO.abdera = new Abdera();
+        Factory factory = entryHO.abdera.getFactory();
+        entryHO.entry = factory.newEntry();
+        entryHO.context = cx;
+        return entryHO;
     }
 
     public String getClassName() {
@@ -157,18 +160,18 @@ public class EntryHostObject extends ScriptableObject  {
     }
 
     public NativeArray jsGet_category() {
-   	 if (entry != null) {
+        if (entry != null) {
             NativeArray nativeArray = new NativeArray(0);
             List<Category> list = entry.getCategories();
             int size = list.size();
             for (int i = 0; i < size; i++) {
-           	 Category element = (Category) list.get(i);
+                Category element = (Category) list.get(i);
                 nativeArray.put(i, nativeArray, element.getAttributeValue("term"));
             }
             return nativeArray;
         }
         return null;
-   }
+    }
 
     //process content
     public void jsSet_content(Object content) {
@@ -247,9 +250,11 @@ public class EntryHostObject extends ScriptableObject  {
         }
     }
 
-    public Date jsGet_published() {
-        if (entry != null)
-            return entry.getPublished();
+    public Scriptable jsGet_published() {
+        if (entry != null) {
+            Scriptable js = context.newObject(CommonManager.getJaggeryContext().getScope(), "Date", new Object[]{entry.getPublished().getTime()});
+            return js;
+        }
         return null;
     }
 
@@ -293,7 +298,7 @@ public class EntryHostObject extends ScriptableObject  {
     }
 
     public String jsGet_title() {
-    	log.info("Title of the entry get");
+        log.info("Title of the entry get");
         if (entry != null)
             return entry.getTitle();
         return null;
@@ -328,7 +333,7 @@ public class EntryHostObject extends ScriptableObject  {
     public Scriptable jsGet_XML() {
         Context cx = Context.getCurrentContext();
         if (entry != null) {
-            Object[] objects = { entry };
+            Object[] objects = {entry};
             Scriptable xmlHostObject = cx.newObject(this, "XML", objects);
             return xmlHostObject;
         }

@@ -22,7 +22,11 @@ import java.rmi.RemoteException;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.autoscaler.agent.service.stub.AgentServiceStub;
+import org.wso2.carbon.hosting.wnagent.stub.services.AgentServiceAgentServiceException;
+import org.wso2.carbon.hosting.wnagent.stub.services.AgentServiceIOException;
+import org.wso2.carbon.hosting.wnagent.stub.services.AgentServiceInterruptedException;
+import org.wso2.carbon.hosting.wnagent.stub.services.AgentServiceStub;
+import org.wso2.carbon.hosting.wnagent.stub.services.xsd.beans.ContainerInformation;
 
 /**
  * Client to communicate with Agent Service through Agent Service Stub.
@@ -46,19 +50,74 @@ public class AgentServiceClient {
         }
     }
 
-    public boolean startInstance(String domainName, String instanceId) throws Exception {
-
-        return stub.startInstance(domainName, instanceId);
+    /**
+     * 
+     * @param domainName Domain name
+     * @param instanceId is used as the container name
+     * @param containerInfo
+     * @return
+     * @throws Exception
+     * 
+     * An LXC will be created
+     * 
+     */      
+    public boolean createContainer(String domainName, String instanceId, org.wso2.carbon.lb.common.dto.ContainerInformation containerInfo) throws Exception {
+    	ContainerInformation _containerInfo = convertContainerInformation(containerInfo);
+    	return stub.createContainer(domainName, instanceId, _containerInfo);    	
+    }
+    
+    
+    /**
+     * 
+     * @param instanceId
+     * @param containerInfo
+     * @return
+     * @throws Exception
+     * 
+     * An LXC will be started
+     */
+    public boolean startContainer(String instanceId,
+			org.wso2.carbon.lb.common.dto.ContainerInformation containerInfo) throws Exception {
+    	int status = stub.startContainer(instanceId,
+				containerInfo.getContainerRoot());
+		if (status == 0) {
+			return true;
+		}
+		return false;
     }
 
-    public boolean terminateInstance(String instanceId) throws Exception {
+    // This method converts a dto.ContainerInformation object to a xsd.ContainerInformation object
+   private ContainerInformation convertContainerInformation(
+			org.wso2.carbon.lb.common.dto.ContainerInformation containerInfo) {
+		ContainerInformation info = new ContainerInformation();
+		info.setBridge(containerInfo.getBridge());
+		info.setContainerId(containerInfo.getContainerId());
+		info.setContainerKeysFile(containerInfo.getContainerKeysFile());
+		info.setContainerRoot(containerInfo.getContainerRoot());
+		info.setIp(containerInfo.getIp());
+		info.setNetGateway(containerInfo.getNetGateway());
+		info.setNetMask(containerInfo.getNetMask());
+		info.setType(containerInfo.getType());
+		return info;
+	}
 
-        return stub.terminateInstance(instanceId);
+	public boolean terminateInstance(String instanceId, String containerRoot ) throws Exception {
+
+        int stopContainerStatus = stub.stopContainer(instanceId, containerRoot);
+        if(stopContainerStatus != 0) {
+        	throw new Exception(" Exception occurred in stopping the container");
+        }
+        int destroyContainerStatus = stub.destroyContainer(instanceId, containerRoot);
+        if(destroyContainerStatus != 0) {
+        	throw new Exception(" Exception occurred in destroying the container");
+        }
+        return true;
     }
     
 	public int getNumberOfInstances() throws RemoteException {
 
-		return stub.getNumberOfInstances();
+		//return stub.getNumberOfInstances();
+		return 0;
 	}
 
 }

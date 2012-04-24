@@ -65,13 +65,13 @@ public class Policy {
     public Policy() {
 
         //default policy
-        scaleUpOrderList.add("jvm");
-        scaleUpOrderList.add("ec2");
+        scaleUpOrderList.add("container");
+        //scaleUpOrderList.add("ec2");
         
-        scaleDownOrderList.add("ec2");
-        scaleDownOrderList.add("jvm");
+        scaleDownOrderList.add("container");
+        //scaleDownOrderList.add("jvm");
         
-        scaleDownOrderIdToMinInstanceCountMap.put(0, 1);
+        //scaleDownOrderIdToMinInstanceCountMap.put(0, 1);
         scaleDownOrderIdToMinInstanceCountMap.put(1, 1);
         
     }

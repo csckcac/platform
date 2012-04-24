@@ -40,6 +40,10 @@ public class JVMAdapterRegistry {
      */
     private List<String> temporarilySkippedAgentEprList = new ArrayList<String>();
     
+    
+    private Map<String, String> eprToContainerRootMap = new HashMap<String, String>();
+    
+    
 
     /**
      * Key - domain name, Value - number of instances started in this domain
@@ -79,6 +83,13 @@ public class JVMAdapterRegistry {
 		this.domainNameToInstanceCountMap = domainNameToInstanceCountMap;
 	}
 
+	public Map<String, String> getEprToContainerRootMap() {
+		return eprToContainerRootMap;
+	}
+
+	public void setEprToContainerRootMap(Map<String, String> eprToContainerRootMap) {
+		this.eprToContainerRootMap = eprToContainerRootMap;
+	}
     
 
 }

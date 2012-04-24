@@ -28,7 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.autoscaler.service.IAutoscalerService;
 import org.wso2.carbon.autoscaler.service.adapters.Adapter;
-import org.wso2.carbon.autoscaler.service.adapters.ContainerAdapter;
+import org.wso2.carbon.autoscaler.service.adapters.LXCAdapter;
 import org.wso2.carbon.autoscaler.service.exception.NoInstanceFoundException;
 import org.wso2.carbon.autoscaler.service.util.Policy;
 import org.wso2.carbon.autoscaler.service.xml.AutoscalerPolicyFileReader;
@@ -60,7 +60,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
     /**
      * Keeps a JVMAdapter instance.
      */
-    private ContainerAdapter containerAdapter = new ContainerAdapter();
+    private LXCAdapter containerAdapter = new LXCAdapter();
     
     /**
      * Specify all available adapters here.
@@ -111,7 +111,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
      * If failed we try to spawn an instance in the adapter next in line of the scale up order.
      */
     public boolean startInstance(String domainName) throws ClassNotFoundException, SQLException {
-
+  
         boolean isSuccessfullyStarted = false;
 
         // grabs the scale up order

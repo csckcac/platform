@@ -8,7 +8,7 @@
             </div>
         </div>
             <div class="span6">
-                <table class="table" id="versionTable">
+                <table class="table" id="versionTable" style="display:none;">
                       <tr>
                         <th>API Name</th>
                         <th>Usage</th>
@@ -21,22 +21,6 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-	$.jqplot('chartVersion1', 
-		    [[['API1', 9],['API2', 0],['API3', 2]]], 
-		    {
-		      title: ' ', 
-		      seriesDefaults: {
-		        shadow: false, 
-		        renderer: jQuery.jqplot.PieRenderer, 
-		        rendererOptions: { 
-		          startAngle: 180, 
-		          sliceMargin: 4, 
-		          showDataLabels: true } 
-		      }, 
-		      legend: { show:true, location: 'w' }
-		    }
-		  );
-	
     apiProviderApp.call("action=getAllAPIUsage&server=https://localhost:9444/", function (json) {
         if (json.error == "true") {
             alert(json.message);
@@ -49,7 +33,11 @@ $(document).ready(function() {
                 $('#versionTable').append($('<tr><td>' + json.data.usage[i].apiName + '</td><td>' + json.data.usage[i].count + '</td></tr>'));
 
             }
-            
+            if(json.data.usage.length > 0){
+                $('#versionTable').show();
+            }else{
+                $('#versionTable').hide();
+            }
             var plot1 = jQuery.jqplot('chartVersion1', [data],
                 {
                     seriesDefaults:{

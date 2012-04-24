@@ -376,6 +376,8 @@ public class TomcatJaggeryWebappsDeployer {
             webapp.setServletParameters(servletParameters);
             webapp.setServletMappingParameters(servletMappingParameters);
             webapp.setServletContextParameters(webContextParams);
+            //Adding Display Name from config
+            setDisplayName(context, jaggeryConfigObj);
             webappsHolder.getStartedWebapps().put(filename, webapp);
             webappsHolder.getFaultyWebapps().remove(filename);
             registerApplicationEventListeners(applicationEventListeners, context);
@@ -451,6 +453,7 @@ public class TomcatJaggeryWebappsDeployer {
 
         //jaggery conf params if null conf is not available
         if (jaggeryConfig != null) {
+            setDisplayName(ctx, jaggeryConfig);
             addWelcomeFiles(ctx, jaggeryConfig);
             addErrorPages(ctx, jaggeryConfig);
             addSecurityConstraints(ctx, jaggeryConfig);
@@ -558,6 +561,13 @@ public class TomcatJaggeryWebappsDeployer {
             for (Object role : arr) {
                 context.addSecurityRole((String) role);
             }
+        }
+    }
+
+    private static void setDisplayName(Context context, JSONObject obj) {
+        String dName = (String) obj.get(JaggeryConstants.JaggeryConfigParams.DISPLAY_NAME);
+        if (dName != null) {
+            context.setDisplayName(dName);
         }
     }
 

@@ -205,6 +205,7 @@ public class JaggeryAppAdmin extends AbstractAdmin {
                 continue;
             }
             WebappMetadata webappMetadata = new WebappMetadata();
+            webappMetadata.setDisplayName(((JaggeryApplication) webapp).getDisplayName());
             webappMetadata.setContext(((JaggeryApplication) webapp).getContextName());
             webappMetadata.setLastModifiedTime(((JaggeryApplication) webapp).getLastModifiedTime());
             webappMetadata.setWebappFile(((JaggeryApplication) webapp).getWebappFile().getName());

@@ -69,8 +69,10 @@ body {
     background: -o-linear-gradient(top, rgba(35, 78, 133, 1) 0%, rgba(0, 136, 182, 1) 100%); /* Opera11.10+ */
     background: -ms-linear-gradient(top, rgba(35, 78, 133, 1) 0%, rgba(0, 136, 182, 1) 100%); /* IE10+ */
     background: linear-gradient(top, rgba(35, 78, 133, 1) 0%, rgba(0, 136, 182, 1) 100%); /* W3C */
-    border: 1px solid #CCCCCC;
     height:45px;
+}
+.header-wrapper div.wrap{
+    border:none;
 }
 .header-wrapper div.column{
     padding:0;margin:0;
@@ -93,6 +95,12 @@ a.logo{
     padding-left:250px;
     border: none;
     background: -moz-linear-gradient(top, rgba(35, 78, 133, 1) 0%, rgba(0, 136, 182, 1) 100%); /* FF3.6+ */
+    background: -moz-linear-gradient(top, rgba(35, 78, 133, 1) 0%, rgba(0, 136, 182, 1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(35, 78, 133, 1)), color-stop(100%, rgba(0, 136, 182, 1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, rgba(35, 78, 133, 1) 0%, rgba(0, 136, 182, 1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, rgba(35, 78, 133, 1) 0%, rgba(0, 136, 182, 1) 100%); /* Opera11.10+ */
+    background: -ms-linear-gradient(top, rgba(35, 78, 133, 1) 0%, rgba(0, 136, 182, 1) 100%); /* IE10+ */
+    background: linear-gradient(top, rgba(35, 78, 133, 1) 0%, rgba(0, 136, 182, 1) 100%); /* W3C */
 }
 
 .header-wrapper ul.menu li a {
@@ -110,6 +118,7 @@ a.logo{
 .search-wrapper{
     background:transparent url(css/img/searchBack.png) repeat-x 0 0;
     margin-top:-10px;
+    border:none;
 }
 .search-wrapper div.inner{
     padding:0;
@@ -117,6 +126,9 @@ a.logo{
 .search-wrapper h1{
     margin:0;
     line-height:100%;
+}
+.wrapper{
+    border:none;
 }
 #footer {
     text-align: center;
@@ -230,4 +242,43 @@ div.star-ratings img{
 }
 .ui-widget{
     font-size:1.0em;
+}
+#create-user{
+    float:right;
+    line-height:40px;
+    color:#fff;
+}
+#create-user:hover{
+    color:#ddd;
+}
+.provider-add{
+    background:transparent url(../images/provider-add.png) no-repeat left top;
+    width:180px;
+    height:50px;
+    float:right;
+    padding:100px 0 0 20px;
+}
+.slideshow-add{
+    float:left;
+}
+.add-section,.add-section div.inner,.add-section div.column{
+    margin:0;
+    padding:0;
+}
+.add-section{
+    width:100%;
+}
+.slideshow-buttons{
+    margin: -33px 10px 3px 0;
+}
+.slideshow-buttons a{
+    background-color:#000;
+    color:#fff;
+}
+.slideshow-buttons li.current a{
+    background-color:#1c75bc;
+    color:#fff;
+}
+.ul.tabs li a{
+    background:red;
 }

@@ -1437,6 +1437,7 @@ table .headerSortUp.purple, table .headerSortDown.purple {
     padding: 15px 10px 17px;
     line-height: 19px;
     text-decoration: none;
+    font-family: 'Droid Sans', sans-serif;
 }
 .topbar div > ul a:hover, .nav a:hover {
     color: #ffffff;
@@ -2822,4 +2823,11 @@ ul.sampleapps li {
 
 ul.sampleapps li h3 {
     margin-top:10px;
+}
+
+.bigNum {
+    font-size:180px;
+    float:left;
+    margin-top:60px;
+    min-height:500px;
 }

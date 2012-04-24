@@ -67,18 +67,20 @@ public class AuthInfoContext {
      */
     public APIKeyValidationInfoDTO getValidatedKeyInfo(String context, String apiKey, 
                                                        String apiVersion) throws Exception {
-        
-        APIKeyValidationInfoDTO info = infoCache.getInfo(apiKey);
+        // We use a combination of API context, API version and API key as the
+        // cache key, because API keys are issued per API, per version.
+        String cacheKey = "{" + context + ":" + apiVersion + ":" + apiKey + "}";
+        APIKeyValidationInfoDTO info = infoCache.getInfo(cacheKey);
         if (info != null) {
             return info;
         }
 
-        synchronized (apiKey.intern()) {
+        synchronized (cacheKey.intern()) {
             // We synchronize on the API key here to allow concurrent processing
             // of different API keys - However when a burst of requests with the
             // same key is encountered, only one will be allowed to execute the logic,
             // and the rest will pick the value from the cache.
-            info = infoCache.getInfo(apiKey);
+            info = infoCache.getInfo(cacheKey);
             if (info != null) {
                 return info;
             }
@@ -97,9 +99,9 @@ public class AuthInfoContext {
             info = validator.validateKey(context, apiVersion, apiKey);
             if (info != null) {
                 if (info.getAuthorized()) {
-                    infoCache.addValidKey(apiKey, info);
+                    infoCache.addValidKey(cacheKey, info);
                 } else {
-                    infoCache.addInvalidKey(apiKey, info);
+                    infoCache.addInvalidKey(cacheKey, info);
                 }
                 return info;
             } else {

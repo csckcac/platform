@@ -128,19 +128,21 @@ public class APIProviderHostObject extends ScriptableObject {
      * @throws ScriptException Wrapped exception by org.wso2.carbon.scriptengine.exceptions.ScriptException
      */
     public static boolean jsFunction_addAPI(Context cx, Scriptable thisObj,
-                                         Object[] args,
-                                         Function funObj) throws ScriptException {
+                                            Object[] args,
+                                            Function funObj) throws ScriptException {
         if (args.length == 0) {
             throw new ScriptException("Invalid number of input parameters.");
         }
-        boolean success=false;
-        String provider = (String) args[0];
-        String name = (String) args[1];
-        String version = (String) args[2];
-        String description = (String) args[3];
-        String endpoint = (String) args[4];
-        String wsdl = (String) args[5];
-        String tags = (String) args[6];
+        boolean success = false;
+        NativeObject apiData = (NativeObject) args[0];
+        String provider = (String) apiData.get("provider", apiData);
+        String name = (String) apiData.get("apiName", apiData);
+        String version = (String) apiData.get("version", apiData);
+        String description = (String) apiData.get("description", apiData);
+        String endpoint = (String) apiData.get("endpoint", apiData);
+        String wsdl = (String) apiData.get("wsdl", apiData);
+        String tags = (String) apiData.get("tags", apiData);
+
         Set<String> tag = new HashSet<String>();
         if (tags.indexOf(",") >= 0) {
             String[] userTag = tags.split(",");
@@ -148,13 +150,13 @@ public class APIProviderHostObject extends ScriptableObject {
         } else {
             tag.add(tags);
         }
-        String tier = (String) args[7];
-        String thumbUrl = (String) args[8];
-        String contextVal = (String) args[9];
+        String tier = (String) apiData.get("tier", apiData);
+        String thumbUrl = (String) apiData.get("imageUrl", apiData);
+        String contextVal = (String) apiData.get("context", apiData);
         String context = contextVal.startsWith("/") ? contextVal : ("/" + contextVal);
 
-        HttpServletRequest req = ((RequestHostObject) args[10]).getHttpServletRequest();
-        NativeArray uriTemplateArr = (NativeArray) args[11];
+        HttpServletRequest req = ((RequestHostObject) apiData.get("request", apiData)).getHttpServletRequest();
+        NativeArray uriTemplateArr = (NativeArray) apiData.get("uriTemplateArr", apiData);
 
 
         APIIdentifier apiId = new APIIdentifier(provider, name, version);
@@ -167,7 +169,8 @@ public class APIProviderHostObject extends ScriptableObject {
             }
             API api = new API(apiId);
 
-            NativeArray uriMethodArr = (NativeArray) args[12];
+            NativeArray uriMethodArr = (NativeArray) apiData.get("uriMethodArr", apiData);
+            ;
 
             if (uriTemplateArr.getLength() == uriMethodArr.getLength()) {
                 Set<URITemplate> uriTemplates = new HashSet<URITemplate>();
@@ -195,7 +198,7 @@ public class APIProviderHostObject extends ScriptableObject {
             api.setContext(context);
 
             apiManagerImpl.addAPI(api);
-            success=true;
+            success = true;
             FileItem fi = getThumbFile(req);
 
             if (fi != null) {
@@ -240,21 +243,23 @@ public class APIProviderHostObject extends ScriptableObject {
 
 
     public static boolean jsFunction_updateAPI(Context cx, Scriptable thisObj,
-                                            Object[] args,
-                                            Function funObj) throws ScriptException {
+                                               Object[] args,
+                                               Function funObj) throws ScriptException {
 
         if (args.length == 0) {
             throw new ScriptException("Invalid number of input parameters.");
         }
-        boolean success=false;
-        String provider = (String) args[0];
-        String name = (String) args[1];
-        String version = (String) args[2];
-        String description = (String) args[3];
-        String imageUrl = (String) args[4];
-        String endpoint = (String) args[5];
-        String wsdl = (String) args[6];
-        String tags = (String) args[7];
+
+        NativeObject apiData = (NativeObject) args[0];
+        boolean success = false;
+        String provider = (String) apiData.get("provider", apiData);
+        String name = (String) apiData.get("apiName", apiData);
+        String version = (String) apiData.get("version", apiData);
+        String description = (String) apiData.get("description", apiData);
+        String imageUrl = (String) apiData.get("imageUrl", apiData);
+        String endpoint = (String) apiData.get("endpoint", apiData);
+        String wsdl = (String) apiData.get("wsdl", apiData);
+        String tags = (String) apiData.get("tags", apiData);
         Set<String> tag = new HashSet<String>();
         if (tags.indexOf(",") >= 0) {
             String[] userTag = tags.split(",");
@@ -265,18 +270,17 @@ public class APIProviderHostObject extends ScriptableObject {
         APIIdentifier oldApiId = new APIIdentifier(provider, name, version);
         try {
             API oldapi = apiManagerImpl.getAPI(oldApiId);
+            HttpServletRequest req = ((RequestHostObject) apiData.get("request", apiData)).getHttpServletRequest();
 
-            HttpServletRequest req = ((RequestHostObject) args[11]).getHttpServletRequest();
-
-            String tier = (String) args[8];
-            String status = (String) args[9];
-            String context = (String) args[10];
+            String tier = (String) apiData.get("tier", apiData);
+            String status = (String) apiData.get("status", apiData);
+            String context = (String) apiData.get("context", apiData);
 
             APIIdentifier apiId = new APIIdentifier(provider, name, version);
             API api = new API(apiId);
 
-            NativeArray uriTemplateArr = (NativeArray) args[12];
-            NativeArray uriMethodArr = (NativeArray) args[13];
+            NativeArray uriTemplateArr = (NativeArray) apiData.get("uriTemplateArr", apiData);
+            NativeArray uriMethodArr = (NativeArray) apiData.get("uriMethodArr", apiData);
 
             if (uriTemplateArr.getLength() == uriMethodArr.getLength()) {
                 Set<URITemplate> uriTemplates = new HashSet<URITemplate>();
@@ -326,7 +330,7 @@ public class APIProviderHostObject extends ScriptableObject {
                 api.setThumbnailUrl(apiManagerImpl.addApiThumb(api, fi));
                 apiManagerImpl.updateAPI(api);
             }
-            success=true;
+            success = true;
 
         } catch (APIManagementException e) {
             log.error("Error from registry while updating the API :" + name + "-" + version, e);
@@ -478,7 +482,7 @@ public class APIProviderHostObject extends ScriptableObject {
 
                 }
             } catch (APIManagementException e) {
-                log.error("Error from registry while getting all the APIs information for the provider: "+providerName, e);
+                log.error("Error from registry while getting all the APIs information for the provider: " + providerName, e);
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
 
@@ -517,7 +521,7 @@ public class APIProviderHostObject extends ScriptableObject {
 
             }
         } catch (APIManagementException e) {
-            log.error("Error from registry while getting the subscribed APIs information for the subscriber"+userName, e);
+            log.error("Error from registry while getting the subscribed APIs information for the subscriber" + userName, e);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -560,7 +564,7 @@ public class APIProviderHostObject extends ScriptableObject {
                 }
             }
         } catch (APIManagementException e) {
-            log.error("Error from registry while getting subscribers of the provider: "+providerName, e);
+            log.error("Error from registry while getting subscribers of the provider: " + providerName, e);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
 
@@ -612,7 +616,7 @@ public class APIProviderHostObject extends ScriptableObject {
             }
 
         } catch (APIManagementException e) {
-            log.error("Error from registry while getting document information for the api: "+apiName+"-"+version, e);
+            log.error("Error from registry while getting document information for the api: " + apiName + "-" + version, e);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -694,12 +698,12 @@ public class APIProviderHostObject extends ScriptableObject {
     }
 
     public static boolean jsFunction_addDocumentation(Context cx, Scriptable thisObj,
-                                                   Object[] args, Function funObj)
+                                                      Object[] args, Function funObj)
             throws ScriptException {
         if (args.length < 5 && !isStringValues(args)) {
             throw new ScriptException("Invalid number of parameters and their types.");
         }
-        boolean success=false;
+        boolean success = false;
         String providerName = args[0].toString();
         String apiName = args[1].toString();
         String version = args[2].toString();
@@ -721,7 +725,7 @@ public class APIProviderHostObject extends ScriptableObject {
         doc.setSourceUrl(sourceURL);
         try {
             apiManagerImpl.addDocumentation(apiId, doc);
-            success=true;
+            success = true;
         } catch (APIManagementException e) {
             log.error("Error from registry while adding the document :" + docName + "for the api :" + apiName + "-" + version, e);
         }
@@ -729,12 +733,12 @@ public class APIProviderHostObject extends ScriptableObject {
     }
 
     public static boolean jsFunction_removeDocumentation(Context cx, Scriptable thisObj,
-                                                      Object[] args, Function funObj)
+                                                         Object[] args, Function funObj)
             throws ScriptException {
         if (args.length != 5 && !isStringValues(args)) {
             throw new ScriptException("Invalid number of parameters and their types.");
         }
-        boolean success=false;
+        boolean success = false;
         String providerName = args[0].toString();
         String apiName = args[1].toString();
         String version = args[2].toString();
@@ -745,7 +749,7 @@ public class APIProviderHostObject extends ScriptableObject {
 
         try {
             apiManagerImpl.removeDocumentation(apiId, docName, docType);
-            success=true;
+            success = true;
         } catch (APIManagementException e) {
             log.error("Error from registry while removing the document :" + docName + "for the api :" + apiName + "-" + version, e);
         }
@@ -754,11 +758,11 @@ public class APIProviderHostObject extends ScriptableObject {
     }
 
     public static boolean jsFunction_createNewAPIVersion(Context cx, Scriptable thisObj,
-                                                      Object[] args, Function funObj)
+                                                         Object[] args, Function funObj)
             throws ScriptException
 
     {
-        boolean success=false;
+        boolean success = false;
         if (args.length != 4 && !isStringValues(args)) {
             throw new ScriptException("Invalid number of parameters and their types.");
         }
@@ -771,9 +775,9 @@ public class APIProviderHostObject extends ScriptableObject {
         API api = new API(apiId);
         try {
             apiManagerImpl.createNewAPIVersion(api, newVersion);
-            success=true;
+            success = true;
         } catch (APIManagementException e) {
-            log.error("Error from registry while creating a new api version: "+ newVersion, e);
+            log.error("Error from registry while creating a new api version: " + newVersion, e);
         } catch (DuplicateAPIException e) {
             log.error("Duplicate versioning error while create a new api version", e);
         } catch (Exception e) {
@@ -952,14 +956,14 @@ public class APIProviderHostObject extends ScriptableObject {
                                                           AuthAdminServiceClient.USER_NAME,
                                                           AuthAdminServiceClient.PASSWORD);
 
-        Map<String,String> testAPIMappings = new HashMap<String,String>();
+        Map<String, String> testAPIMappings = new HashMap<String, String>();
 
         testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_NAME, apiName);
         testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_CONTEXT, context);
         testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_VERSION, version);
 
         Iterator it = resourceData.iterator();
-        List<Map<String,String>> resourceMappings = new ArrayList<Map<String,String>>();
+        List<Map<String, String>> resourceMappings = new ArrayList<Map<String, String>>();
         while (it.hasNext()) {
             Map uriTemplateMap = new HashMap();
             URITemplate temp = (URITemplate) it.next();
@@ -969,11 +973,11 @@ public class APIProviderHostObject extends ScriptableObject {
             resourceMappings.add(uriTemplateMap);
         }
 
-        Map<String,String> testHandlerMappings_1 = new HashMap<String,String>();
+        Map<String, String> testHandlerMappings_1 = new HashMap<String, String>();
         testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER, "org.wso2.carbon.api.handler.throttle.RestAPIThrottleHandler");
         testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER_POLICY_KEY, "conf:/basic-throttle-policy.xml");
 
-        List<Map<String,String>> handlerMappings = new ArrayList<Map<String,String>>();
+        List<Map<String, String>> handlerMappings = new ArrayList<Map<String, String>>();
         handlerMappings.add(testHandlerMappings_1);
         RestAPITemplateClient client = new RestAPITemplateClient(new BasicTemplateBuilder(
                 testAPIMappings, resourceMappings, handlerMappings), adminCookie);
@@ -989,14 +993,14 @@ public class APIProviderHostObject extends ScriptableObject {
                                                           AuthAdminServiceClient.USER_NAME,
                                                           AuthAdminServiceClient.PASSWORD);
 
-        Map<String,String> testAPIMappings = new HashMap<String,String>();
+        Map<String, String> testAPIMappings = new HashMap<String, String>();
 
         testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_NAME, apiName);
         testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_CONTEXT, context);
         testAPIMappings.put(APITemplateBuilder.KEY_FOR_API_VERSION, version);
 
         Iterator it = resourceData.iterator();
-        List<Map<String,String>> resourceMappings = new ArrayList<Map<String,String>>();
+        List<Map<String, String>> resourceMappings = new ArrayList<Map<String, String>>();
         while (it.hasNext()) {
             Map uriTemplateMap = new HashMap();
             URITemplate temp = (URITemplate) it.next();
@@ -1010,7 +1014,7 @@ public class APIProviderHostObject extends ScriptableObject {
         testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER, "org.wso2.carbon.api.handler.throttle.RestAPIThrottleHandler");
         testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER_POLICY_KEY, "conf:/basic-throttle-policy.xml");
 
-        List<Map<String,String>> handlerMappings = new ArrayList<Map<String,String>>();
+        List<Map<String, String>> handlerMappings = new ArrayList<Map<String, String>>();
         handlerMappings.add(testHandlerMappings_1);
         RestAPITemplateClient client = new RestAPITemplateClient(new BasicTemplateBuilder(
                 testAPIMappings, resourceMappings, handlerMappings), adminCookie);

@@ -134,6 +134,18 @@ include('/includes/topnavi.jag');
                         </tr>
                         <tr>
 
+                        <td><code>MetadataStore("username", "password")</code></td>
+                        <td>MetadataStore</td>
+                        <td>
+<pre class="prettyprint">
+var dataStore = new MetadataStore("username", "password");
+</pre>
+Returns a new metadata store
+                        </td>
+
+                    </tr>
+                        <tr>
+
                         <td><code>resourceExists(String path);</code></td>
                         <td>Boolean</td>
                         <td>

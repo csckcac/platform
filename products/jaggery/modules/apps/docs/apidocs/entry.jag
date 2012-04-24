@@ -63,47 +63,38 @@ include('/includes/topnavi.jag');
         <pre class="prettyprint linenums">
 &lt%
 //creating entries for feed
-var firstEntry = new Entry();
-firstEntry .title = "Jaggery Feed";
-firstEntry .content= "jaggery is server side .....";
-
-var Secondentry = new Entry();
-Secondentry .title = "Jaggery Entry";
-Secondentry .content= "make feed entry to be create .....";
+var entry = new Entry();
+entry.title = "Jaggery Sample Entry";
+entry.content = "This is content for a sample atom entry";
+entry.authors = ["wso2", "Jaggery"];
 
 //creating list of entris
-var entryList  = new Array();
-entryList[0]  = firstEntry ;
-entryList[1]  = Secondentry ;
+var entries  = new Array();
+entries.push(entry);
 
 //creating feed
 var feed= new Feed();
 //adding new entries for Feed
-feed.entries=entryList;
-print(feed.entries[0].title);
-print('&ltbr&gt');
-print(feed.entries[1].title);
+feed.entries = entries;
+
+//printing the feed
+print(feed.toString());
 %&gt
 </pre>
     <%
     var reqCode = '&lt%'
-    + '\n //creating entries for feed'
-    + '\n var firstEntry = new Entry();'
-    + '\n firstEntry .title = "Jaggery Feed";'
-    + '\n firstEntry .content= "jaggery is server side .....";'
-    + '\n var Secondentry = new Entry();'
-    + '\n Secondentry .title = "Jaggery Entry";'
-    + '\n Secondentry .content= "make feed entry to be create .....";'
-    + '\n //creating list of entris'
-    + '\n var entryList  = new Array();'
-    + '\n entryList[0]  = firstEntry ;'
-    + '\n entryList[1]  = Secondentry ;'
-    + '\n //creating feed'
+    + '\n var entry = new Entry();'
+    + '\n entry.title = "Jaggery Sample Entry";'
+    + '\n entry.content = "This is content for a sample atom entry";'
+    + '\n entry.authors = ["wso2", "Jaggery"];'
+    + '\n'
+    + '\n var entries  = new Array();'
+    + '\n entries.push(entry);'
+    + '\n '
     + '\n var feed= new Feed();'
-    + '\n //adding new entries for Feed'
-    + '\n feed.entries=entryList;'
-    + '\n print(feed.entries[0].title);'
-    + '\n print(feed.entries[1].title);'
+    + '\n feed.entries = entries;'
+    + '\n '
+    + '\n print(feed.toString());'
     + '\n %&gt';
 
     var codeSnip = encodeURIComponent(reqCode);
@@ -125,7 +116,7 @@ print(feed.entries[1].title);
     <section id="members">
         <h4>Members</h4>
 
-        <table class="clsStd members-table">
+        <table class="clsStd member-table">
             <tbody>
             <tr>
                 <th>Member</th>
@@ -133,63 +124,87 @@ print(feed.entries[1].title);
                 <th>Description</th>
             </tr>
             <tr>
-                <td>author</td>
-                <td>String </td>
-                <td>The author of this entry.</td>
+                <td>id</td>
+                <td>String</td>
+                <td>get/set the id attribute</td>
             </tr>
             <tr>
-                <td>category</td>
-                <td>String </td>
-                <td>The category of this entry.</td>
+                <td>authors</td>
+                <td>String [ ] </td>
+                <td>get/set the authors attribute</td>
+            </tr>
+            <tr>
+                <td>categories</td>
+                <td>string [ ]</td>
+                <td>get/set an array of categories</td>
             </tr>
             <tr>
                 <td>content</td>
                 <td>String </td>
-                <td>The content of this entry.</td>
+                <td>get/set the content attribute</td>
             </tr>
             <tr>
-                <td>contributor</td>
-                <td>String </td>
-                <td>The contributor of this entry.</td>
+                <td>contributors</td>
+                <td>String [ ] </td>
+                <td>get/set the contributors attribute</td>
             </tr>
             <tr>
-                <td>id</td>
-                <td>String </td>
-                <td>The id of this entry.</td>
-            </tr>
-            <tr>
-                <td>link</td>
-                <td>String[] </td>
-                <td>The location(s) of this entry.</td>
+                <td>links</td>
+                <td>String [ ] </td>
+                <td>get/set the links set</td>
             </tr>
             <tr>
                 <td>published</td>
-                <td>String </td>
-                <td>The date this entry was published.</td>
+                <td>Date </td>
+                <td>get/set the date attribute</td>
             </tr>
             <tr>
                 <td>rights</td>
-                <td>String </td>
-                <td>The rights associated with this entry.</td>
+                <td>String [ ] </td>
+                <td>get/set rights associated with this entry</td>
             </tr>
             <tr>
                 <td>summary</td>
                 <td>String </td>
-                <td>The summary of this entry.</td>
+                <td>get/set the summary attribute</td>
             </tr>
             <tr>
                 <td>title</td>
                 <td>String </td>
-                <td>The title of this entry.</td>
+                <td>get/set the title attribute</td>
             </tr>
             <tr>
                 <td>updated</td>
-                <td>String </td>
-                <td>The date this entry was updated.</td>
+                <td>Date</td>
+                <td>get/set updated date</td>
             </tr>
 
             </tbody>
         </table>
+    </section>
+        <section id="operations">
+<h4>Operations</h4>
+<table class="clsStd operations-table">
+
+    <tbody>
+
+    <tr>
+
+        <th>Operations</th>
+       <th>Returns</th>
+        <th>Description</th>
+
+    </tr>
+                <tr>
+                    <td>
+                    <code>Entry()</code>
+                    </td>
+                    <td>Entry</td>
+                    <td>Returns an Entry object</td>
+                </tr>
+
+    <tbody>
+    </table>
     </section>
 
 

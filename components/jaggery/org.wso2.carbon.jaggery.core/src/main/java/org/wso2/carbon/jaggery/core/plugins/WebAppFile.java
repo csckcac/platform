@@ -3,6 +3,8 @@ package org.wso2.carbon.jaggery.core.plugins;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.hostobjects.file.JavaScriptFile;
+import org.wso2.carbon.jaggery.core.manager.CommonManager;
+import org.wso2.carbon.jaggery.core.manager.WebAppContext;
 import org.wso2.carbon.jaggery.core.manager.WebAppManager;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 import org.wso2.carbon.scriptengine.util.HostObjectUtil;
@@ -10,17 +12,20 @@ import org.wso2.carbon.scriptengine.util.HostObjectUtil;
 import javax.activation.FileTypeMap;
 import javax.servlet.ServletContext;
 import java.io.*;
+import java.util.Stack;
 
 public class WebAppFile implements JavaScriptFile {
 
     private static final Log log = LogFactory.getLog(WebAppFile.class);
 
     private ServletContext context = null;
-    private BufferedReader bufferedReader = null;
-    private String path = null;
 
+    private RandomAccessFile file = null;
+    private String path = null;
     private boolean opened = false;
+
     private boolean readable = false;
+    private boolean writable = false;
 
     public WebAppFile(String path, ServletContext context) {
         this.path = path.startsWith("/") ? path.substring(1) : path;
@@ -32,17 +37,94 @@ public class WebAppFile implements JavaScriptFile {
 
     }
 
+    private String getFilePath(String fileURL) throws ScriptException {
+        WebAppContext webAppContext = (WebAppContext) CommonManager.getJaggeryContext();
+        Stack<String> includesCallstack = CommonManager.getJaggeryContext().getIncludesCallstack();
+        ServletContext context = webAppContext.getServletConext();
+        String parent = includesCallstack.lastElement();
+        try {
+            String keys[] = WebAppManager.getKeys(context.getContextPath(), parent, fileURL);
+            fileURL = keys[1] + keys[2];
+        } catch (NullPointerException ne) {
+            throw new ScriptException("Invalid file path" + ne.getMessage(), ne);
+        }
+        return fileURL;
+    }
+
     @Override
     public void open(String mode) throws ScriptException {
+        path = context.getRealPath(getFilePath(path));
         if ("r".equals(mode)) {
-            InputStream inputStream = context.getResourceAsStream(path);
-            if (inputStream == null) {
-                String msg = "Unable to read the content of file : " + path;
-                log.error(msg);
-                throw new ScriptException(msg);
+            try {
+                file = new RandomAccessFile(path, "r");
+            } catch (FileNotFoundException e) {
+                log.error(e.getMessage(), e);
+                throw new ScriptException(e);
             }
-            bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             readable = true;
+        } else if ("r+".equals(mode)) {
+            try {
+                file = new RandomAccessFile(path, "rw");
+                file.seek(0);
+            } catch (FileNotFoundException e) {
+                log.error(e.getMessage(), e);
+                throw new ScriptException(e);
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+                throw new ScriptException(e);
+            }
+            readable = true;
+            writable = true;
+        } else if ("w".equals(mode)) {
+            try {
+                file = new RandomAccessFile(path, "rw");
+                file.setLength(0);
+            } catch (FileNotFoundException e) {
+                log.error(e.getMessage(), e);
+                throw new ScriptException(e);
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+                throw new ScriptException(e);
+            }
+            writable = true;
+        } else if ("w+".equals(mode)) {
+            try {
+                file = new RandomAccessFile(path, "rw");
+                file.setLength(0);
+            } catch (FileNotFoundException e) {
+                log.error(e.getMessage(), e);
+                throw new ScriptException(e);
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+                throw new ScriptException(e);
+            }
+            readable = true;
+            writable = true;
+        } else if ("a".equals(mode)) {
+            try {
+                file = new RandomAccessFile(path, "rw");
+                file.seek(file.length());
+            } catch (FileNotFoundException e) {
+                log.error(e.getMessage(), e);
+                throw new ScriptException(e);
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+                throw new ScriptException(e);
+            }
+            writable = true;
+        } else if ("a+".equals(mode)) {
+            try {
+                file = new RandomAccessFile(path, "rw");
+                file.seek(file.length());
+            } catch (FileNotFoundException e) {
+                log.error(e.getMessage(), e);
+                throw new ScriptException(e);
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+                throw new ScriptException(e);
+            }
+            readable = true;
+            writable = true;
         } else {
             String msg = "Invalid or unsupported file mode, path : " + path + ", mode : " + mode;
             log.error(msg);
@@ -53,11 +135,11 @@ public class WebAppFile implements JavaScriptFile {
 
     @Override
     public void close() throws ScriptException {
-        if (!opened) {
+        if(!opened) {
             return;
         }
         try {
-            bufferedReader.close();
+            file.close();
         } catch (IOException e) {
             log.error(e.getMessage(), e);
             throw new ScriptException(e);
@@ -66,16 +148,16 @@ public class WebAppFile implements JavaScriptFile {
 
     @Override
     public String readLine() throws ScriptException {
-        if (!opened) {
+        if(!opened) {
             log.warn("You need to open the file for reading");
             return null;
         }
-        if (!readable) {
+        if(!readable) {
             log.warn("File has not opened in a readable mode.");
             return null;
         }
         try {
-            return bufferedReader.readLine();
+            return file.readLine();
         } catch (IOException e) {
             log.error(e.getMessage(), e);
             throw new ScriptException(e);
@@ -84,25 +166,37 @@ public class WebAppFile implements JavaScriptFile {
 
     @Override
     public void writeLine(String data) throws ScriptException {
-        log.warn("Writing is not implemented for webapp resources");
+        if(!opened) {
+            log.warn("You need to open the file for writing");
+            return;
+        }
+        if(!writable) {
+            log.warn("File has not opened in a writable mode.");
+            return;
+        }
+        try {
+            file.writeBytes(data + "\n");
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+            throw new ScriptException(e);
+        }
     }
 
     @Override
     public String read(long count) throws ScriptException {
-        if (!opened) {
+        if(!opened) {
             log.warn("You need to open the file for reading");
             return null;
         }
-        if (!readable) {
+        if(!readable) {
             log.warn("File has not opened in a readable mode.");
             return null;
         }
         try {
             StringBuffer buffer = new StringBuffer();
-            int ch = bufferedReader.read();
-            for (long i = 0; (i < count) && (ch != -1); i++) {
-                buffer.append((char) ch);
-                ch = bufferedReader.read();
+            long length = file.length();
+            for (long i = 0; (i < count) && (i < length); i++) {
+                buffer.append((char) file.readByte());
             }
             return buffer.toString();
         } catch (IOException e) {
@@ -113,7 +207,20 @@ public class WebAppFile implements JavaScriptFile {
 
     @Override
     public void write(String data) throws ScriptException {
-        log.warn("Writing is not implemented for webapp resources");
+        if(!opened) {
+            log.warn("You need to open the file for writing");
+            return;
+        }
+        if(!writable) {
+            log.warn("File has not opened in a writable mode.");
+            return;
+        }
+        try {
+            file.writeBytes(data);
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+            throw new ScriptException(e);
+        }
     }
 
     @Override
@@ -126,71 +233,79 @@ public class WebAppFile implements JavaScriptFile {
             log.warn("File has not opened in a readable mode.");
             return null;
         }
-        return HostObjectUtil.streamToString(context.getResourceAsStream(path));
+        try {
+            long pointer = file.getFilePointer();
+            file.seek(0);
+            String data = read(file.length());
+            file.seek(pointer);
+            return data;
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+            throw new ScriptException(e);
+        }
     }
 
     @Override
-    public boolean move(String data) throws ScriptException {
-        log.warn("Moving is not implemented for webapp resources");
-        return false;
+    public boolean move(String dest) throws ScriptException {
+        if(opened) {
+            log.warn("Please close the file before moving");
+            return false;
+        }
+        return new File(path).renameTo(new File(path));
     }
 
     @Override
     public boolean del() throws ScriptException {
-        log.warn("Deleting is not implemented for webapp resources");
-        return false;
+        if(opened) {
+            log.warn("Please close the file before deleting");
+            return false;
+        }
+        return new File(path).delete();
     }
 
     @Override
     public long getLength() throws ScriptException {
-        InputStream in = context.getResourceAsStream(path);
-        long length = 0L;
-        if (in == null) {
-            return length;
-        }
         try {
-            int ch = in.read();
-            while (ch != -1) {
-                length++;
-                ch = in.read();
-            }
-            return length;
+            return file.length();
         } catch (IOException e) {
             log.error(e.getMessage(), e);
             throw new ScriptException(e);
-        } finally {
-            try {
-                in.close();
-            } catch (IOException e) {
-                log.error(e.getMessage(), e);
-            }
         }
     }
 
     @Override
     public long getLastModified() throws ScriptException {
-        return WebAppManager.getScriptLastModified(context, path);
+        return new File(path).lastModified();
     }
 
     @Override
     public String getName() throws ScriptException {
-        int index = path.lastIndexOf(File.separator);
-        return index < path.length() ? path.substring(index + 1) : null;
+        return new File(path).getName();
     }
 
     @Override
     public boolean isExist() throws ScriptException {
-        return context.getResourceAsStream(path) != null;
+        return new File(path).exists();
     }
 
     @Override
     public InputStream getInputStream() throws ScriptException {
-        return context.getResourceAsStream(path);
+        try {
+            return new FileInputStream(file.getFD());
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+            throw new ScriptException(e);
+        }
     }
 
     @Override
     public OutputStream getOutputStream() throws ScriptException {
-       return null;
+        try {
+            return new FileOutputStream(file.getFD());
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+            throw new ScriptException(e);
+        }
     }
 
     @Override

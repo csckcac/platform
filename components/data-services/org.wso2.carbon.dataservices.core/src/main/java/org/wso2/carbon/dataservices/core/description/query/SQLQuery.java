@@ -727,7 +727,7 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
      */
     public void finalizeConnection(Connection connection, boolean force) throws DataServiceFault {
         try {
-            if (connection == null || connection.isClosed()) {
+            if (connection == null) {
                 return;
             }
             DataService dataService = this.getDataService();
@@ -735,7 +735,7 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
                 /* just close it */
                 connection.close();
             } else if (!dataService.isInTransaction()) {
-                if (!connection.getAutoCommit()) {
+                if (!connection.isClosed() && !connection.getAutoCommit()) {
                     connection.commit();
                 }
                 connection.close();

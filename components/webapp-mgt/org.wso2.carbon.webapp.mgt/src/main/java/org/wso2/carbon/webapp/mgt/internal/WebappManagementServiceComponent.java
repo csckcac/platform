@@ -21,6 +21,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.base.ServerConfiguration;
+import org.wso2.carbon.core.multitenancy.GenericArtifactUnloader;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
 import org.wso2.carbon.tomcat.ext.valves.TomcatValveContainer;
@@ -38,9 +39,6 @@ import org.wso2.carbon.webapp.mgt.utils.GhostWebappDeployerUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @scr.component name="org.wso2.carbon.webapp.mgt.internal.WebappManagementServiceComponent"
@@ -53,11 +51,12 @@ import java.util.concurrent.TimeUnit;
  * cardinality="1..1" policy="dynamic" bind="setRealmService"  unbind="unsetRealmService"
  * @scr.reference name="registry.service" interface="org.wso2.carbon.registry.core.service.RegistryService"
  * cardinality="1..1" policy="dynamic"  bind="setRegistryService" unbind="unsetRegistryService"
+ * @scr.reference name="artifact.unloader.service" interface="org.wso2.carbon.core.multitenancy.GenericArtifactUnloader"
+ * cardinality="1..1" policy="dynamic"  bind="setArtifactUnloaderService" unbind="unsetArtifactUnloaderService"
  */
 public class WebappManagementServiceComponent {
     private static final Log log = LogFactory.getLog(WebappManagementServiceComponent.class);
-    private static final ScheduledExecutorService webappsCleanupExec
-            = Executors.newScheduledThreadPool(1);
+    private WebappUnloader webappUnloader;
 
 
     protected void activate(ComponentContext ctx) {
@@ -96,13 +95,6 @@ public class WebappManagementServiceComponent {
                                                  serverUrlParam.getValue());
                     }
                 }
-            } else {
-                WebappUnloader webappUnloader = new WebappUnloader(DataHolder.
-                        getServerConfigContext());
-                webappsCleanupExec.scheduleAtFixedRate(webappUnloader,
-                                                       CarbonConstants.WEBAPP_CLEANUP_PERIOD_SECS,
-                                                       CarbonConstants.WEBAPP_CLEANUP_PERIOD_SECS,
-                                                       TimeUnit.SECONDS);
             }
         } catch (Throwable e) {
             log.error("Error occurred while activating WebappManagementServiceComponent", e);
@@ -111,7 +103,6 @@ public class WebappManagementServiceComponent {
 
     protected void deactivate(ComponentContext ctx) {
 //         TomcatValveContainer.removeValves();
-        webappsCleanupExec.shutdownNow();
     }
 
     protected void setConfigurationContextService(ConfigurationContextService contextService) {
@@ -135,5 +126,12 @@ public class WebappManagementServiceComponent {
     }
 
     protected void unsetRegistryService(RegistryService registryService) {
+    }
+
+    protected void setArtifactUnloaderService(GenericArtifactUnloader genericArtifactUnloader) {
+         webappUnloader = new WebappUnloader();
+         genericArtifactUnloader.registerArtifactUnloader(webappUnloader);
+    }
+    protected void unsetArtifactUnloaderService(GenericArtifactUnloader genericArtifactUnloader) {
     }
 }

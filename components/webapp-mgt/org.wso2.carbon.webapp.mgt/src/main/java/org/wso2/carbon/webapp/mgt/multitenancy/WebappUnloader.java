@@ -18,15 +18,16 @@
 
 package org.wso2.carbon.webapp.mgt.multitenancy;
 
-import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.deployment.repository.util.DeploymentFileData;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.core.ArtifactUnloader;
 import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.utils.deployment.GhostDeployer;
 import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
+import org.wso2.carbon.webapp.mgt.DataHolder;
 import org.wso2.carbon.webapp.mgt.TomcatGenericWebappsDeployer;
 import org.wso2.carbon.webapp.mgt.WebApplication;
 import org.wso2.carbon.webapp.mgt.WebApplicationsHolder;
@@ -36,40 +37,35 @@ import java.io.File;
 import java.util.Map;
 import java.util.Set;
 
-public class WebappUnloader implements Runnable {
-
+/**
+ * The unloader used in lazy loading for unloading inactive webapps
+ */
+public class WebappUnloader implements ArtifactUnloader {
     private static final Log log = LogFactory.getLog(WebappUnloader.class);
 
     // Maximum allowed inactive time period for webapps. Default is set to 10 mins
     private static final long DEFAULT_MAX_INACTIVE_INTERVAL = 10;
 
-    private ConfigurationContext mainConfigCtx;
 
-    public WebappUnloader(ConfigurationContext configCtx) {
-        this.mainConfigCtx = configCtx;
-    }
-
-    public void run() {
+    @Override
+    public void unload() {
+        ConfigurationContext mainConfigCtx = DataHolder.getServerConfigContext();
         if (mainConfigCtx == null) {
             return;
         }
-        try {
-            // iterate through all tenant config contexts
-            Set<Map.Entry<String, ConfigurationContext>> ccEntries =
-                    TenantAxisUtils.getTenantConfigurationContexts(mainConfigCtx).entrySet();
-            for (Map.Entry<String, ConfigurationContext> entry : ccEntries) {
-                String tenantDomain = entry.getKey();
-                unloadInactiveWebapps(entry.getValue(), tenantDomain);
-            }
-            // unload from super tenant as well..
-            unloadInactiveWebapps(mainConfigCtx, "Super Tenant");
-        } catch (AxisFault axisFault) {
-            log.error("Error while unloading inactive webapps..", axisFault);
+        // iterate through all tenant config contexts
+        Set<Map.Entry<String, ConfigurationContext>> ccEntries =
+                TenantAxisUtils.getTenantConfigurationContexts(mainConfigCtx).entrySet();
+        for (Map.Entry<String, ConfigurationContext> entry : ccEntries) {
+            String tenantDomain = entry.getKey();
+            unloadInactiveWebapps(entry.getValue(), tenantDomain);
         }
+        // unload from super tenant as well..
+        unloadInactiveWebapps(mainConfigCtx, "Super Tenant");
     }
 
     private void unloadInactiveWebapps(ConfigurationContext configCtx,
-                                       String tenantDomain) throws AxisFault {
+                                       String tenantDomain) /*throws AxisFault*/ {
         WebApplicationsHolder webApplicationsHolder = (WebApplicationsHolder)
                 configCtx.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
 

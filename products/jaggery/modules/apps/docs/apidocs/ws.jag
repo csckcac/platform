@@ -76,7 +76,7 @@
         try {
             version.open(options,"http://localhost:9763/services/Version", false);
             version.send(payload);
-            result = version.responseE4X;
+            result = version.getResponseE4X();
         } catch (e) {
             system.log(e.toString(),"error");
             return e.toString();
@@ -102,7 +102,7 @@ var wsCode = '&lt%'
 + '\n try {'
 + '\n version.open(options,"http://localhost:9763/services/Version", false);'
 + '\n version.send(payload);'
-+ '\n result = version.responseE4X;'
++ '\n result = version.getResponseE4X();'
 + '\n } catch (e) {'
 + '\n log(e.toString(),"error");'
 + '\n return e.toString();'

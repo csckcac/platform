@@ -47,17 +47,17 @@ public class HDFSNameNode {
         Configuration conf = new Configuration(false);
         String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
         String hadoopConf =   carbonHome + File.separator + "repository" + File.separator +
-                                    "conf" + File.separator + "advanced" + File.separator + "hadoop";
+                                    "conf" + File.separator + "etc" + File.separator + "hadoop";
         String hadoopCoreSiteConf = carbonHome + File.separator + "repository" + File.separator +
-                                    "conf" + File.separator + "advanced" + File.separator + "hadoop" + File.separator + CORE_SITE_XML;
+                                    "conf" + File.separator + "etc" + File.separator + "hadoop" + File.separator + CORE_SITE_XML;
         String hdfsCoreSiteConf = carbonHome + File.separator + "repository" + File.separator +
-                                  "conf" + File.separator + "advanced" + File.separator + "hadoop" + File.separator + HDFS_SITE_XML;
+                                  "conf" + File.separator + "etc" + File.separator + "hadoop" + File.separator + HDFS_SITE_XML;
         String hadoopPolicyConf = carbonHome + File.separator + "repository" + File.separator +
-                                  "conf" + File.separator + "advanced" + File.separator + "hadoop" + File.separator + HADOOP_POLICY_XML;
+                                  "conf" + File.separator + "etc" + File.separator + "hadoop" + File.separator + HADOOP_POLICY_XML;
         String mapredSiteConf = carbonHome + File.separator + "repository" + File.separator +
-                                "conf" + File.separator + "advanced" + File.separator + "hadoop" + File.separator + MAPRED_SITE_XML;
+                                "conf" + File.separator + "etc" + File.separator + "hadoop" + File.separator + MAPRED_SITE_XML;
         String hadoopMetrics2Properties = carbonHome + File.separator + "repository" + File.separator +
-                "conf" + File.separator + "advanced" + File.separator + "hadoop" + File.separator + METRICS2_PROPERTIES;
+                "conf" + File.separator + "etc" + File.separator + "hadoop" + File.separator + METRICS2_PROPERTIES;
         conf.addResource(new Path(hadoopCoreSiteConf));
         conf.addResource(new Path(hdfsCoreSiteConf));
         conf.addResource(new Path(hadoopPolicyConf));

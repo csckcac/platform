@@ -19,14 +19,15 @@ package org.wso2.dashboard;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.wso2.dashboard.dbutils.DatabaseFactory;
-import org.wso2.dashboard.dbutils.DatabaseManager;
 import sun.misc.BASE64Decoder;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
@@ -34,34 +35,37 @@ import java.util.Properties;
 
 public class DataProvider {
 
+    private static Connection connection = null;
+
     private static final String jdbcUrl = getProperty("jdbc.url");
     private static final String userName = getProperty("db.user");
     private static final String password = getProperty("db.password");
     private static final String driver = getProperty("jdbc.driver");
-    private static DatabaseManager con = null;
     private static final String DEFAULT_ENCODING = "UTF-8";
     private static BASE64Decoder dec = new BASE64Decoder();
 
     public DataProvider() throws ClassNotFoundException, SQLException {
-        if (con == null || con.isClosed()) {
+        if (connection == null || connection.isClosed()) {
             synchronized (DataProvider.class) {
-                if (con == null || con.isClosed()) {
-                    con = DatabaseFactory.getDatabaseConnector(driver, jdbcUrl, userName, password);
+                if (connection == null || connection.isClosed()) {
+                    Class.forName(driver);
+                    connection = DriverManager.getConnection(jdbcUrl, userName, password);
                 }
             }
         }
     }
 
-
     public JSONArray getTestCases(String build, String state) throws SQLException, IOException {
         JSONArray objArray = new JSONArray();
+        Statement st = null;
         ResultSet rst = null;
         try {
-            rst = con.executeQuery("SELECT WA_TESTCASE_STAT.*, WA_TEST_CLASS_STAT.WA_TEST_CLASS_NAME " +
-                                   "FROM WA_TESTCASE_STAT,WA_TEST_CLASS_STAT  " +
-                                   "WHERE WA_TESTCASE_STAT.WA_BUILD_NUMBER=" + build
-                                   + " AND WA_TESTCASE_STAT.WA_TESTCASE_STATUS='" + state +
-                                   "' AND WA_TESTCASE_STAT.WA_TEST_CLASS_ID=WA_TEST_CLASS_STAT.WA_TEST_CLASS_ID");
+            st = connection.createStatement();
+            rst = st.executeQuery("SELECT WA_TESTCASE_STAT.*, WA_TEST_CLASS_STAT.WA_TEST_CLASS_NAME " +
+                                  "FROM WA_TESTCASE_STAT,WA_TEST_CLASS_STAT  " +
+                                  "WHERE WA_TESTCASE_STAT.WA_BUILD_NUMBER=" + build
+                                  + " AND WA_TESTCASE_STAT.WA_TESTCASE_STATUS='" + state +
+                                  "' AND WA_TESTCASE_STAT.WA_TEST_CLASS_ID=WA_TEST_CLASS_STAT.WA_TEST_CLASS_ID");
             while (rst.next()) {
                 JSONObject object = new JSONObject();
                 object.put("build", rst.getString("WA_BUILD_NUMBER"));
@@ -77,6 +81,7 @@ public class DataProvider {
 
             }
         } finally {
+
             if (rst != null) {
                 try {
                     rst.close();
@@ -84,6 +89,14 @@ public class DataProvider {
 
                 }
             }
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+
+                }
+            }
+
         }
 
         return objArray;
@@ -92,13 +105,15 @@ public class DataProvider {
     public JSONArray getTestCasesBySuite(String suite, String state)
             throws SQLException, IOException {
         JSONArray objArray = new JSONArray();
+        Statement st = null;
         ResultSet rst = null;
         try {
-            rst = con.executeQuery("SELECT WA_TESTCASE_STAT.*, WA_TEST_CLASS_STAT.WA_TEST_CLASS_NAME " +
-                                   "FROM WA_TESTCASE_STAT,WA_TEST_CLASS_STAT  " +
-                                   "WHERE WA_TESTCASE_STAT.WA_TEST_SUITE_ID=" + suite
-                                   + " AND WA_TESTCASE_STAT.WA_TESTCASE_STATUS='" + state +
-                                   "' AND WA_TESTCASE_STAT.WA_TEST_CLASS_ID=WA_TEST_CLASS_STAT.WA_TEST_CLASS_ID");
+            st = connection.createStatement();
+            rst = st.executeQuery("SELECT WA_TESTCASE_STAT.*, WA_TEST_CLASS_STAT.WA_TEST_CLASS_NAME " +
+                                  "FROM WA_TESTCASE_STAT,WA_TEST_CLASS_STAT  " +
+                                  "WHERE WA_TESTCASE_STAT.WA_TEST_SUITE_ID=" + suite
+                                  + " AND WA_TESTCASE_STAT.WA_TESTCASE_STATUS='" + state +
+                                  "' AND WA_TESTCASE_STAT.WA_TEST_CLASS_ID=WA_TEST_CLASS_STAT.WA_TEST_CLASS_ID");
             while (rst.next()) {
                 JSONObject object = new JSONObject();
                 object.put("build", rst.getString("WA_BUILD_NUMBER"));
@@ -121,6 +136,15 @@ public class DataProvider {
 
                 }
             }
+
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+
+                }
+            }
+
         }
         return objArray;
     }
@@ -128,13 +152,15 @@ public class DataProvider {
     public JSONArray getTestCasesByClass(String testClass, String state)
             throws SQLException, IOException {
         JSONArray objArray = new JSONArray();
+        Statement st = null;
         ResultSet rst = null;
         try {
-            rst = con.executeQuery("SELECT WA_TESTCASE_STAT.*, WA_TEST_CLASS_STAT.WA_TEST_CLASS_NAME " +
-                                   "FROM WA_TESTCASE_STAT,WA_TEST_CLASS_STAT  " +
-                                   "WHERE WA_TESTCASE_STAT.WA_TEST_CLASS_ID=" + testClass
-                                   + " AND WA_TESTCASE_STAT.WA_TESTCASE_STATUS='" + state +
-                                   "' AND WA_TESTCASE_STAT.WA_TEST_CLASS_ID=WA_TEST_CLASS_STAT.WA_TEST_CLASS_ID");
+            st = connection.createStatement();
+            rst = st.executeQuery("SELECT WA_TESTCASE_STAT.*, WA_TEST_CLASS_STAT.WA_TEST_CLASS_NAME " +
+                                  "FROM WA_TESTCASE_STAT,WA_TEST_CLASS_STAT  " +
+                                  "WHERE WA_TESTCASE_STAT.WA_TEST_CLASS_ID=" + testClass
+                                  + " AND WA_TESTCASE_STAT.WA_TESTCASE_STATUS='" + state +
+                                  "' AND WA_TESTCASE_STAT.WA_TEST_CLASS_ID=WA_TEST_CLASS_STAT.WA_TEST_CLASS_ID");
             while (rst.next()) {
                 JSONObject object = new JSONObject();
                 object.put("build", rst.getString("WA_BUILD_NUMBER"));
@@ -153,6 +179,13 @@ public class DataProvider {
             if (rst != null) {
                 try {
                     rst.close();
+                } catch (SQLException e) {
+
+                }
+            }
+            if (st != null) {
+                try {
+                    st.close();
                 } catch (SQLException e) {
 
                 }
@@ -163,12 +196,14 @@ public class DataProvider {
 
     public JSONArray getTestCases(int testClass) throws SQLException, IOException {
         JSONArray objArray = new JSONArray();
+        Statement st = null;
         ResultSet rst = null;
         try {
-            rst = con.executeQuery("SELECT WA_TESTCASE_STAT.*, WA_TEST_CLASS_STAT.WA_TEST_CLASS_NAME FROM " +
-                                   "WA_TESTCASE_STAT, WA_TEST_CLASS_STAT" +
-                                   " WHERE WA_TESTCASE_STAT.WA_TEST_CLASS_ID=" + testClass
-                                   + " AND WA_TESTCASE_STAT.WA_TEST_CLASS_ID=WA_TEST_CLASS_STAT.WA_TEST_CLASS_ID");
+            st = connection.createStatement();
+            rst = st.executeQuery("SELECT WA_TESTCASE_STAT.*, WA_TEST_CLASS_STAT.WA_TEST_CLASS_NAME FROM " +
+                                  "WA_TESTCASE_STAT, WA_TEST_CLASS_STAT" +
+                                  " WHERE WA_TESTCASE_STAT.WA_TEST_CLASS_ID=" + testClass
+                                  + " AND WA_TESTCASE_STAT.WA_TEST_CLASS_ID=WA_TEST_CLASS_STAT.WA_TEST_CLASS_ID");
             while (rst.next()) {
                 JSONObject object = new JSONObject();
                 object.put("build", rst.getString("WA_BUILD_NUMBER"));
@@ -188,15 +223,24 @@ public class DataProvider {
 
                 }
             }
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+
+                }
+            }
         }
         return objArray;
     }
 
     public JSONObject getTestSuite(int suiteId) throws SQLException {
         JSONObject object = null;
+        Statement st = null;
         ResultSet rst = null;
         try {
-            rst = con.executeQuery("SELECT * FROM WA_TEST_SUITE_DETAIL WHERE WA_TEST_SUITE_ID = " + suiteId);
+            st = connection.createStatement();
+            rst = st.executeQuery("SELECT * FROM WA_TEST_SUITE_DETAIL WHERE WA_TEST_SUITE_ID = " + suiteId);
             while (rst.next()) {
                 object = new JSONObject();
                 object.put("build", rst.getString("WA_BUILD_NUMBER"));
@@ -214,15 +258,24 @@ public class DataProvider {
 
                 }
             }
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+
+                }
+            }
         }
         return object;
     }
 
     public JSONArray getTestSuites(int build) throws SQLException {
         JSONArray buildInfo = new JSONArray();
+        Statement st = null;
         ResultSet rst = null;
         try {
-            rst = con.executeQuery("SELECT * FROM WA_TEST_SUITE_DETAIL WHERE WA_BUILD_NUMBER = " + build);
+            st = connection.createStatement();
+            rst = st.executeQuery("SELECT * FROM WA_TEST_SUITE_DETAIL WHERE WA_BUILD_NUMBER = " + build);
             while (rst.next()) {
                 JSONObject customer = new JSONObject();
                 customer.put("build", rst.getString("WA_BUILD_NUMBER"));
@@ -247,16 +300,25 @@ public class DataProvider {
 
                 }
             }
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+
+                }
+            }
         }
         return buildInfo;
     }
 
     public JSONArray getTestClasses(int build, int suite) throws SQLException {
         JSONArray buildInfo = new JSONArray();
+        Statement st = null;
         ResultSet rst = null;
         try {
-            rst = con.executeQuery("SELECT * FROM WA_TEST_CLASS_STAT WHERE WA_BUILD_NUMBER = "
-                                   + build + " AND WA_TEST_SUITE_ID =" + suite);
+            st = connection.createStatement();
+            rst = st.executeQuery("SELECT * FROM WA_TEST_CLASS_STAT WHERE WA_BUILD_NUMBER = "
+                                  + build + " AND WA_TEST_SUITE_ID =" + suite);
             while (rst.next()) {
                 JSONObject object = new JSONObject();
                 object.put("build", rst.getString("WA_BUILD_NUMBER"));
@@ -282,15 +344,24 @@ public class DataProvider {
 
                 }
             }
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+
+                }
+            }
         }
         return buildInfo;
     }
 
     public JSONObject getTestClass(int classId) throws SQLException {
         JSONObject object = null;
+        Statement st = null;
         ResultSet rst = null;
         try {
-            rst = con.executeQuery("SELECT * FROM WA_TEST_CLASS_STAT WHERE WA_TEST_CLASS_ID = " + classId);
+            st = connection.createStatement();
+            rst = st.executeQuery("SELECT * FROM WA_TEST_CLASS_STAT WHERE WA_TEST_CLASS_ID = " + classId);
             while (rst.next()) {
                 object = new JSONObject();
                 object.put("build", rst.getString("WA_BUILD_NUMBER"));
@@ -315,15 +386,24 @@ public class DataProvider {
 
                 }
             }
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+
+                }
+            }
         }
         return object;
     }
 
     public JSONArray getBuildHistory() throws SQLException {
         JSONArray data = new JSONArray();
+        Statement st = null;
         ResultSet rst = null;
         try {
-            rst = con.executeQuery("SELECT * FROM WA_BUILD_HISTORY ORDER BY WA_BUILD_NUMBER DESC");
+            st = connection.createStatement();
+            rst = st.executeQuery("SELECT * FROM WA_BUILD_HISTORY ORDER BY WA_BUILD_NUMBER DESC");
             while (rst.next()) {
                 JSONObject record = new JSONObject();
                 record.put("build", rst.getString("WA_BUILD_NUMBER"));
@@ -343,15 +423,24 @@ public class DataProvider {
 
                 }
             }
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+
+                }
+            }
         }
         return data;
     }
 
     public JSONObject getBuild(String buildNo) throws SQLException {
         JSONObject record = null;
+        Statement st = null;
         ResultSet rst = null;
         try {
-            rst = con.executeQuery("SELECT * FROM WA_BUILD_HISTORY WHERE WA_BUILD_NUMBER=" + buildNo);
+            st = connection.createStatement();
+            rst = st.executeQuery("SELECT * FROM WA_BUILD_HISTORY WHERE WA_BUILD_NUMBER=" + buildNo);
             while (rst.next()) {
                 record = new JSONObject();
                 record.put("build", rst.getString("WA_BUILD_NUMBER"));
@@ -368,16 +457,25 @@ public class DataProvider {
 
                 }
             }
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+
+                }
+            }
         }
         return record;
     }
 
     public JSONObject getLastBuild() throws SQLException {
         JSONObject record = null;
+        Statement st = null;
         ResultSet rst = null;
         try {
-            rst = con.executeQuery("SELECT * FROM WA_BUILD_HISTORY " +
-                                   "WHERE WA_BUILD_NUMBER=(SELECT max(WA_BUILD_NUMBER) FROM WA_BUILD_HISTORY)");
+            st = connection.createStatement();
+            rst = st.executeQuery("SELECT * FROM WA_BUILD_HISTORY " +
+                                  "WHERE WA_BUILD_NUMBER=(SELECT max(WA_BUILD_NUMBER) FROM WA_BUILD_HISTORY)");
             while (rst.next()) {
                 record = new JSONObject();
                 record.put("build", rst.getString("WA_BUILD_NUMBER"));
@@ -390,6 +488,13 @@ public class DataProvider {
             if (rst != null) {
                 try {
                     rst.close();
+                } catch (SQLException e) {
+
+                }
+            }
+            if (st != null) {
+                try {
+                    st.close();
                 } catch (SQLException e) {
 
                 }
@@ -422,12 +527,14 @@ public class DataProvider {
     }
 
     private static int getCount(int build, String status) throws SQLException {
-        ResultSet rst = null;
         int record = 0;
+        Statement st = null;
+        ResultSet rst = null;
         try {
-            rst = con.executeQuery("SELECT count(WA_TESTCASE_STATUS) FROM WA_TESTCASE_STAT " +
-                                   "WHERE WA_BUILD_NUMBER = " + build
-                                   + " AND WA_TESTCASE_STATUS = '" + status + "'");
+            st = connection.createStatement();
+            rst = st.executeQuery("SELECT count(WA_TESTCASE_STATUS) FROM WA_TESTCASE_STAT " +
+                                  "WHERE WA_BUILD_NUMBER = " + build
+                                  + " AND WA_TESTCASE_STATUS = '" + status + "'");
 
             while (rst.next()) {
                 record = rst.getInt(1);
@@ -441,18 +548,36 @@ public class DataProvider {
 
                 }
             }
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+
+                }
+            }
+
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+
+                }
+            }
         }
         return record;
     }
 
     private static int getCount(int build, int suite, String status) throws SQLException {
-        ResultSet rst = null;
+
         int record = 0;
+        Statement st = null;
+        ResultSet rst = null;
         try {
-            rst = con.executeQuery("SELECT count(WA_TESTCASE_STATUS) FROM WA_TESTCASE_STAT " +
-                                   "WHERE WA_BUILD_NUMBER = " + build
-                                   + " AND WA_TEST_SUITE_ID = " + suite
-                                   + " AND WA_TESTCASE_STATUS = '" + status + "'");
+            st = connection.createStatement();
+            rst = st.executeQuery("SELECT count(WA_TESTCASE_STATUS) FROM WA_TESTCASE_STAT " +
+                                  "WHERE WA_BUILD_NUMBER = " + build
+                                  + " AND WA_TEST_SUITE_ID = " + suite
+                                  + " AND WA_TESTCASE_STATUS = '" + status + "'");
 
             while (rst.next()) {
                 record = rst.getInt(1);
@@ -462,6 +587,13 @@ public class DataProvider {
             if (rst != null) {
                 try {
                     rst.close();
+                } catch (SQLException e) {
+
+                }
+            }
+            if (st != null) {
+                try {
+                    st.close();
                 } catch (SQLException e) {
 
                 }
@@ -472,14 +604,16 @@ public class DataProvider {
 
     private static int getCount(int build, int testSuite, int testClass, String status)
             throws SQLException {
-        ResultSet rst = null;
         int record = 0;
+        Statement st = null;
+        ResultSet rst = null;
         try {
-            rst = con.executeQuery("SELECT count(WA_TESTCASE_STATUS) FROM WA_TESTCASE_STAT " +
-                                   "WHERE WA_BUILD_NUMBER = " + build
-                                   + " AND WA_TEST_SUITE_ID = " + testSuite
-                                   + " AND WA_TEST_CLASS_ID = " + testClass
-                                   + " AND WA_TESTCASE_STATUS = '" + status + "'");
+            st = connection.createStatement();
+            rst = st.executeQuery("SELECT count(WA_TESTCASE_STATUS) FROM WA_TESTCASE_STAT " +
+                                  "WHERE WA_BUILD_NUMBER = " + build
+                                  + " AND WA_TEST_SUITE_ID = " + testSuite
+                                  + " AND WA_TEST_CLASS_ID = " + testClass
+                                  + " AND WA_TESTCASE_STATUS = '" + status + "'");
             while (rst.next()) {
                 record = rst.getInt(1);
 
@@ -492,17 +626,27 @@ public class DataProvider {
 
                 }
             }
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+
+                }
+            }
         }
         return record;
     }
 
     private static double getTimeTaken(int build)
             throws SQLException {
-        ResultSet rst = null;
+
         double record = 0;
+        Statement st = null;
+        ResultSet rst = null;
         try {
-            rst = con.executeQuery("SELECT sum(WA_TEST_DURATION) FROM WA_TEST_SUITE_DETAIL " +
-                                   "WHERE WA_BUILD_NUMBER = " + build);
+            st = connection.createStatement();
+            rst = st.executeQuery("SELECT sum(WA_TEST_DURATION) FROM WA_TEST_SUITE_DETAIL " +
+                                  "WHERE WA_BUILD_NUMBER = " + build);
 
             while (rst.next()) {
                 record = rst.getDouble(1);
@@ -516,17 +660,26 @@ public class DataProvider {
 
                 }
             }
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+
+                }
+            }
         }
         return record;
     }
 
     public static Map<String, String> getFailReason(int testCaseId)
             throws SQLException, IOException {
-        ResultSet rst = null;
         Map<String, String> record = new Hashtable<String, String>();
+        Statement st = null;
+        ResultSet rst = null;
         try {
-            rst = con.executeQuery("SELECT * FROM WA_ERROR_DETAIL " +
-                                   "WHERE WA_TESTCASE_ID = " + testCaseId);
+            st = connection.createStatement();
+            rst = st.executeQuery("SELECT * FROM WA_ERROR_DETAIL " +
+                                  "WHERE WA_TESTCASE_ID = " + testCaseId);
 
             while (rst.next()) {
                 record.put("errorType", rst.getString("WA_ERROR_TYPE"));
@@ -543,17 +696,26 @@ public class DataProvider {
 
                 }
             }
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+
+                }
+            }
         }
         return record;
 
     }
 
     public static String getStackTrace(int exceptionId) throws SQLException, IOException {
-        ResultSet rst = null;
         String record = "";
+        Statement st = null;
+        ResultSet rst = null;
         try {
-            rst = con.executeQuery("SELECT WA_ERROR_DESCRIPTION FROM WA_ERROR_DETAIL " +
-                                   "WHERE WA_EXCEPTION_ID = " + exceptionId);
+            st = connection.createStatement();
+            rst = st.executeQuery("SELECT WA_ERROR_DESCRIPTION FROM WA_ERROR_DETAIL " +
+                                  "WHERE WA_EXCEPTION_ID = " + exceptionId);
 
 
             while (rst.next()) {
@@ -569,18 +731,28 @@ public class DataProvider {
 
                 }
             }
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+
+                }
+            }
         }
         return record;
 
     }
 
     public static JSONObject getTimeHistory(int suite, String testClassName) throws SQLException {
-        ResultSet rst = null;
+
         JSONObject record = new JSONObject();
+        Statement st = null;
+        ResultSet rst = null;
         try {
-            rst = con.executeQuery("SELECT WA_BUILD_NUMBER,WA_TEST_DURATION FROM WA_TEST_CLASS_STAT " +
-                                   "WHERE WA_TEST_SUITE_ID = " + suite +
-                                   " AND WA_TEST_CLASS_NAME='" + testClassName + "'");
+            st = connection.createStatement();
+            rst = st.executeQuery("SELECT WA_BUILD_NUMBER,WA_TEST_DURATION FROM WA_TEST_CLASS_STAT " +
+                                  "WHERE WA_TEST_SUITE_ID = " + suite +
+                                  " AND WA_TEST_CLASS_NAME='" + testClassName + "'");
 
             while (rst.next()) {
                 record.put(rst.getString("WA_BUILD_NUMBER"), rst.getString("WA_TEST_DURATION"));
@@ -590,6 +762,13 @@ public class DataProvider {
             if (rst != null) {
                 try {
                     rst.close();
+                } catch (SQLException e) {
+
+                }
+            }
+            if (st != null) {
+                try {
+                    st.close();
                 } catch (SQLException e) {
 
                 }

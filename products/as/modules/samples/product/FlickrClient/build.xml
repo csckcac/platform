@@ -33,11 +33,6 @@
         <fileset dir="${wso2appserver.home}">
             <include name="repository/lib/*.jar"/>
 	</fileset>
-	<fileset dir="${appserver.lib}">
-            <include name="*.jar"/>
-            <include name="endorsed/*.jar"/>
-            <include name="api/*.jar"/>
-        </fileset>
     </path>
 
     <target name="init" depends="clean">

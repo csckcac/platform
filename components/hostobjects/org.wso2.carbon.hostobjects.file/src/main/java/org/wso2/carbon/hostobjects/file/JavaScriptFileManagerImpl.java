@@ -39,6 +39,6 @@ public class JavaScriptFileManagerImpl implements JavaScriptFileManager {
             log.error(msg);
             throw new ScriptException(msg);
         }
-        return new JavaScriptFileImpl(path);
+        return new JavaScriptFileImpl(file.getAbsolutePath());
     }
 }

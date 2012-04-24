@@ -51,26 +51,27 @@ public class CarbonDataSourceConfig extends SQLConfig {
 			Map<String, String> properties) throws DataServiceFault {
 		super(dataService, configId, DataSourceTypes.CARBON, properties);
 		this.dataSourceName = properties.get(DBConstants.CarbonDatasource.NAME);
+        this.dataSource = initDataSource();
 	}
 
 	@Override
 	public DataSource getDataSource() {
-        DataSourceInformationRepositoryService dataSourceService =
-                DataServicesDSComponent.getCarbonDataSourceService();
-        if (dataSourceService == null) {
-            log.error("Carbon DataSource Service is not initialized properly");
-            return null;
-        }
-		return this.createDataSource(dataSourceService);
+		return dataSource;
 	}
 	
 	public String getDataSourceName() {
 		return dataSourceName;
 	}
 
-	private DataSource createDataSource(DataSourceInformationRepositoryService cdService) {
+	private DataSource initDataSource() {
+        DataSourceInformationRepositoryService dataSourceService =
+                DataServicesDSComponent.getCarbonDataSourceService();
+        if (dataSourceService == null) {
+            log.error("Carbon DataSource Service is not initialized properly");
+            return null;
+        }
 		DataSourceInformationRepository datasourceRepo =
-                cdService.getDataSourceInformationRepository();
+                dataSourceService.getDataSourceInformationRepository();
 		return ((DataSourceRepositoryManager) (
 				datasourceRepo.getRepositoryListener())).getDataSource(this.getDataSourceName());
 	}

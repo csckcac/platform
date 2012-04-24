@@ -88,7 +88,7 @@ public class ServiceFaultyTest extends DataServiceTest {
     @Test(priority = 2, dependsOnMethods = {"serviceInvocation"})
     public void faultyService() throws RemoteException, XMLStreamException {
         String serviceContent;
-        String newServiceContent = null;
+        String newServiceContent;
         DataServiceAdminService dataServiceAdminService = new DataServiceAdminService(dssBackEndUrl);
         Assert.assertTrue(adminServiceClientDSS.isServiceExist(sessionCookie, serviceName), "Service not in faulty service list");
 
@@ -111,7 +111,7 @@ public class ServiceFaultyTest extends DataServiceTest {
             log.debug(dbsFile);
             newServiceContent = dbsFile.toString();
         } catch (XMLStreamException e) {
-            log.error("XMLStreamException while handling data service content " + e);
+            log.error("XMLStreamException while handling data service content " , e);
             throw new XMLStreamException("XMLStreamException while handling data service content ", e);
         }
         Assert.assertNotNull("Could not edited service content", newServiceContent);

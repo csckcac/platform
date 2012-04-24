@@ -212,7 +212,13 @@ public class RestAPIThrottleHandler extends AbstractHandler {
 
         if (!canAccess) {
             synCtx.setProperty(MESSAGE_THROTTLED_OUT, Boolean.TRUE);
-            handleException("Rejected throttling for API", synCtx);
+            String msg = "Message rejected by throttling handler for API: " +
+                    synCtx.getProperty(RESTConstants.SYNAPSE_REST_API);
+            if (log.isDebugEnabled()) {
+                log.debug(msg);
+                synCtx.getServiceLog().debug(msg);
+            }
+            throw new SynapseException(msg);
         }
 
         return canAccess;
@@ -520,10 +526,7 @@ public class RestAPIThrottleHandler extends AbstractHandler {
                                             }
                                         }
                                     }
-                                    handleException(" Access deny for a " +
-                                                    "caller with consumerKey " + consumerKey + " with Role :"
-                                                    + consumerRoleID +
-                                                    " : Reason : " + info.getFaultReason(), synCtx);
+                                    canAccess = false;
                                 }
                             } else {
                                 if (log.isDebugEnabled()) {

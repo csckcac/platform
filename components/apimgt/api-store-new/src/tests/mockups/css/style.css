@@ -18,6 +18,15 @@ h1, h2, h3, h4, h5, h6 {
 h1{
     color:#317a91;
 }
+h2{
+    color:#58595b;
+    margin:0;
+}
+h5{
+    color:#58595b;
+    font-size:12px;
+    margin:0;
+}
 thead th,
 tbody th {
     font-family: "Trebuchet Ms", arial, verdana, sans-serif;
@@ -74,11 +83,14 @@ body {
 .header-wrapper div.wrap{
     border:none;
 }
-.header-wrapper div.column{
+.header-wrapper div.column,.no-padding div.column{
     padding:0;margin:0;
 }
-.header-wrapper div.inner{
+.header-wrapper div.inner,.no-padding div.inner{
     padding:0;margin:0;
+}
+.no-padding{
+    width:100%;
 }
 a.logo{
     background:transparent url(../images/logo.png) no-repeat 0 0;
@@ -131,6 +143,9 @@ a.logo{
 }
 .wrapper{
     border:none;
+}
+.tabs-section ul.tabs{
+    font-size:11px;
 }
 #footer {
     text-align: center;
@@ -303,3 +318,11 @@ ul.tabs li a:hover{
 .login-links ul li a.link-to-user{
     color:#c8c8c8;
 }
+.comment-box{
+    height:50px;
+}
+.item-title{
+    color:#000;
+    font-weight:bold;
+}
+

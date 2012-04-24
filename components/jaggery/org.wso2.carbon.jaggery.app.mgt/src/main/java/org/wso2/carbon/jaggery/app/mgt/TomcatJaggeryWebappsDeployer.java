@@ -263,40 +263,6 @@ public class TomcatJaggeryWebappsDeployer {
     }
 
     /**
-     * Hot update an existing Jaggery app. i.e., reload or redeploy a Jaggery app archive which has been
-     * updated
-     *
-     * @param jaggeryApplication        The Jaggery app which needs to be hot updated
-     * @param webContextParams          ServletContext params for this Jaggery app
-     * @param applicationEventListeners Application event listeners
-     * @param servletParameters         jaggery servlet params
-     * @param servletMappingParameters  jaggery servlet mappings
-     * @param securityConstraint        to restrict config file
-     * @throws CarbonException If a deployment error occurs
-     */
-/*    private void handleHotUpdate(JaggeryApplication jaggeryApplication,
-                                 List<WebContextParameter> webContextParams,
-                                 List<Object> applicationEventListeners,
-                                 List<ServletParameter> servletParameters,
-                                 List<ServletMappingParameter> servletMappingParameters, SecurityConstraint securityConstraint) throws CarbonException {
-        File webappFile = jaggeryApplication.getWebappFile();
-        if (webappFile.isDirectory()) {  // webapp deployed as an exploded directory
-            jaggeryApplication.reload();
-            jaggeryApplication.setServletContextParameters(webContextParams);
-            jaggeryApplication.setLastModifiedTime(webappFile.lastModified());
-        } else { // webapp deployed from WAR
-            // NOTE: context.reload() does not work for webapps deployed from WARs. Hence, we
-            // need to undeploy & redeploy.
-            // See http://tomcat.apache.org/tomcat-5.5-doc/manager-howto.html#Reload An Existing Application
-            undeploy(jaggeryApplication);
-            handleWarWebappDeployment(webappFile, webContextParams, applicationEventListeners,
-                    servletParameters, servletMappingParameters, securityConstraint);
-        }
-        log.info("Redeployed Jaggery App: " + jaggeryApplication);
-    }
-    */
-
-    /**
      * Handle undeployment.
      *
      * @param webappFile The Jaggery app file to be undeployed

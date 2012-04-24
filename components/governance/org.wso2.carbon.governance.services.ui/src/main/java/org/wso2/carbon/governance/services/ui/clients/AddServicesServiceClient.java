@@ -31,6 +31,7 @@ import org.wso2.carbon.utils.ServerConstants;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpSession;
+import java.rmi.RemoteException;
 
 public class AddServicesServiceClient {
     private static final Log log = LogFactory.getLog(AddServicesServiceClient.class);
@@ -110,4 +111,9 @@ public class AddServicesServiceClient {
     public String[] getAvailableAspects() throws Exception {
         return stub.getAvailableAspects();
     }
+
+    public boolean validateXMLConfigOnSchema(String xml) throws Exception {
+       return stub.validateXMLConfigOnSchema(xml);
+    }
+
 }

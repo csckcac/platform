@@ -21,6 +21,7 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.governance.services.ui.clients.AddServicesServiceClient" %>
 <%@ page import="org.wso2.carbon.registry.core.RegistryConstants" %>
+<%@ page import="java.io.File" %>
 
 <link type="text/css" rel="stylesheet" href="css/menu.css"/>
 <link type="text/css" rel="stylesheet" href="css/style.css"/>
@@ -59,7 +60,35 @@
         resourceBundle="org.wso2.carbon.governance.services.ui.i18n.Resources"
         topPage="false"
         request="<%=request%>"/>
+<%
+    String schemaPath = new File("js/tinyxmlw3cdom.js").toURI().toString();
+%>
+
 <script type="text/javascript">
+
+    function validateAndSaveConfiguration() {
+
+        var xmlURL = editAreaLoader.getValue("payloadEditor");
+           new Ajax.Request('../services/xmlconfig_validator_ajaxprocessor.jsp',
+            {
+                method:'post',
+                parameters: { target_xml: xmlURL},
+                onSuccess: function(transport) {
+                 var returnValue = transport.responseText;
+                 if (returnValue.search(/---XMLSchemaValidated----/) != -1) {
+                   SaveConfiguration();
+                 } else {
+                     CARBON.showErrorDialog(transport.responseText);
+                 }
+                },
+
+                onFailure: function(transport) {
+                    CARBON.showErrorDialog(transport.responseText);
+                    return;
+                }
+            });
+    }
+
     function SaveConfiguration() {
         sessionAwareFunction(function() {
             var CustomUIForm = document.getElementById('services.config.form');
@@ -117,7 +146,7 @@
                 </tr>
                 <tr>
                     <td class="buttonRow">
-                        <input class="button registryWriteOperation" type="button" onclick="SaveConfiguration()" value="<fmt:message key="save"/>"/>
+                        <input class="button registryWriteOperation" type="button" onclick="validateAndSaveConfiguration()" value="<fmt:message key="save"/>"/>
                         <input class="button registryNonWriteOperation" type="button" disabled="disabled" value="<fmt:message key="save"/>"/>
                         <input class="button" type="button" value="<fmt:message key="reset"/>" onclick="javascript: cancelSequence(); return false;"/>
                     </td>

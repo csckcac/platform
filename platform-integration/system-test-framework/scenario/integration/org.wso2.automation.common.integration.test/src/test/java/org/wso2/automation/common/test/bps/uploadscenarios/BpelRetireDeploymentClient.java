@@ -30,6 +30,7 @@ import org.wso2.carbon.admin.service.AdminServiceBpelProcessManager;
 import org.wso2.carbon.admin.service.AdminServiceBpelUploader;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
 import org.wso2.carbon.bpel.stub.mgt.ProcessManagementException;
+import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
 
@@ -51,7 +52,7 @@ public class BpelRetireDeploymentClient {
         backEndUrl = environment.getBps().getBackEndUrl();
         sessionCookie = environment.getBps().getSessionCookie();
         adminServiceAuthentication = environment.getBps().getAdminServiceAuthentication();
-        bpelUploader = new AdminServiceBpelUploader(backEndUrl);
+        bpelUploader = new AdminServiceBpelUploader(backEndUrl, ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION);
         bpelManager = new AdminServiceBpelPackageManager(backEndUrl, sessionCookie);
         bpelProcrss = new AdminServiceBpelProcessManager(backEndUrl, sessionCookie);
 

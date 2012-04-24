@@ -10,10 +10,12 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.*;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
 import org.wso2.carbon.bpel.stub.mgt.types.PaginatedInstanceList;
+import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.RequestSender;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
 
+import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +38,7 @@ public class BpelActComposeUrl{
         ManageEnvironment environment = builder.build();
         backEndUrl = environment.getBps().getBackEndUrl();
         sessionCookie = environment.getBps().getSessionCookie();
-        bpelUploader = new AdminServiceBpelUploader(backEndUrl);
+        bpelUploader =  new AdminServiceBpelUploader(backEndUrl, ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION);
         bpelManager = new AdminServiceBpelPackageManager(backEndUrl, sessionCookie);
         bpelProcrss = new AdminServiceBpelProcessManager(backEndUrl, sessionCookie);
         bpelInstance = new AdminServiceBpelInstanceManager(backEndUrl, sessionCookie);
@@ -45,8 +47,9 @@ public class BpelActComposeUrl{
 
     @BeforeClass(alwaysRun = true,groups = {"wso2.bps", "wso2.bps.bpelactivities"})
     public void deployArtifact()
-            throws InterruptedException, RemoteException, PackageManagementException {
-        bpelUploader.deployBPEL("TestComposeUrl", "TestComposeUrl", sessionCookie);
+            throws InterruptedException, RemoteException, PackageManagementException,
+                   MalformedURLException {
+        bpelUploader.deployBPEL("TestComposeUrl",  sessionCookie);
     }
 
     @Test(groups = {"wso2.bps", "wso2.bps.bpelactivities"}, description = "Invike combine URL Bpel")

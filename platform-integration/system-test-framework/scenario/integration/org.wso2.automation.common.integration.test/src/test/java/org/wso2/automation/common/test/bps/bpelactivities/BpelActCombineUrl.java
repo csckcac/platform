@@ -27,6 +27,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.*;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
 import org.wso2.carbon.bpel.stub.mgt.types.PaginatedInstanceList;
+import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.RequestSender;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
@@ -50,15 +51,15 @@ public class BpelActCombineUrl {
 
     @BeforeTest(alwaysRun = true)
     public void setEnvironment() {
-        EnvironmentBuilder builder = new EnvironmentBuilder().clusterNode("bps001",3).clusterNode("bps002",3).clusterNode("bps003",3);
+        EnvironmentBuilder builder =   new EnvironmentBuilder().bps(3);
         ManageEnvironment environment = builder.build();
-        backEndUrl = environment.getClusterNode("bps001").getBackEndUrl();
-        sessionCookie = environment.getClusterNode("bps001").getSessionCookie();
-        bpelUploader = new AdminServiceBpelUploader(backEndUrl);
+        backEndUrl = environment.getBps().getBackEndUrl();
+        sessionCookie = environment.getBps().getSessionCookie();
+        bpelUploader = new AdminServiceBpelUploader(backEndUrl, ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION);
         bpelManager = new AdminServiceBpelPackageManager(backEndUrl, sessionCookie);
         bpelProcrss = new AdminServiceBpelProcessManager(backEndUrl, sessionCookie);
         bpelInstance = new AdminServiceBpelInstanceManager(backEndUrl, sessionCookie);
-        adminServiceAuthentication=  environment.getClusterNode("bps001").getAdminServiceAuthentication();
+        adminServiceAuthentication=  environment.getBps().getAdminServiceAuthentication();
         requestSender = new RequestSender();
     }
 

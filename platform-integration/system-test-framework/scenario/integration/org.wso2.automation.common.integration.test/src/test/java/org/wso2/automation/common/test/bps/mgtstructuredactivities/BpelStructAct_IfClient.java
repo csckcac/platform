@@ -26,6 +26,7 @@ import org.wso2.carbon.bpel.stub.mgt.InstanceManagementException;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
 import org.wso2.carbon.bpel.stub.mgt.ProcessManagementException;
 import org.wso2.carbon.bpel.stub.mgt.types.PaginatedInstanceList;
+import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.RequestSender;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
@@ -58,7 +59,7 @@ public class BpelStructAct_IfClient {
         serviceUrl=environment.getBps().getServiceUrl();
         sessionCookie = environment.getBps().getSessionCookie();
         adminServiceAuthentication=environment.getBps().getAdminServiceAuthentication();
-        bpelUploader = new AdminServiceBpelUploader(backEndUrl);
+        bpelUploader =   new AdminServiceBpelUploader(backEndUrl, ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION);
         bpelManager = new AdminServiceBpelPackageManager(backEndUrl, sessionCookie);
         bpelProcrss = new AdminServiceBpelProcessManager(backEndUrl, sessionCookie);
         bpelInstance = new AdminServiceBpelInstanceManager(backEndUrl, sessionCookie);

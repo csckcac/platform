@@ -63,7 +63,7 @@ public class BpelVersioningClient {
         serviceUrl = environment.getBps().getServiceUrl();
         sessionCookie = environment.getBps().getSessionCookie();
         adminServiceAuthentication = environment.getBps().getAdminServiceAuthentication();
-        bpelUploader = new AdminServiceBpelUploader(backEndUrl);
+        bpelUploader =  new AdminServiceBpelUploader(backEndUrl, ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION);
         bpelManager = new AdminServiceBpelPackageManager(backEndUrl, sessionCookie);
         bpelProcrss = new AdminServiceBpelProcessManager(backEndUrl, sessionCookie);
         bpelInstance = new AdminServiceBpelInstanceManager(backEndUrl, sessionCookie);

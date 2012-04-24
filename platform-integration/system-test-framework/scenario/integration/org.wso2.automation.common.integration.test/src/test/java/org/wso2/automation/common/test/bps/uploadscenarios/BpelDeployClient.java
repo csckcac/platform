@@ -24,15 +24,20 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import org.wso2.carbon.admin.service.*;
+import org.wso2.carbon.admin.service.AdminServiceAuthentication;
+import org.wso2.carbon.admin.service.AdminServiceBpelInstanceManager;
+import org.wso2.carbon.admin.service.AdminServiceBpelPackageManager;
+import org.wso2.carbon.admin.service.AdminServiceBpelProcessManager;
+import org.wso2.carbon.admin.service.AdminServiceBpelUploader;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
+import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
 
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 
-public class BpelDeployClient{
+public class BpelDeployClient {
     String sessionCookie = null;
     private static final Log log = LogFactory.getLog(BpelDeployClient.class);
     String backEndUrl = null;
@@ -51,21 +56,23 @@ public class BpelDeployClient{
         serviceUrl = environment.getBps().getServiceUrl();
         sessionCookie = environment.getBps().getSessionCookie();
         adminServiceAuthentication = environment.getBps().getAdminServiceAuthentication();
-        bpelUploader = new AdminServiceBpelUploader(backEndUrl);
+        bpelUploader = new AdminServiceBpelUploader(backEndUrl, ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION);
         bpelManager = new AdminServiceBpelPackageManager(backEndUrl, sessionCookie);
         bpelProcrss = new AdminServiceBpelProcessManager(backEndUrl, sessionCookie);
         bpelInstance = new AdminServiceBpelInstanceManager(backEndUrl, sessionCookie);
     }
+
     @Test(groups = {"wso2.bps", "wso2.bps.upload"}, description = "Upload a bpel", priority = 0)
     public void testUploadBpel()
             throws InterruptedException, RemoteException, MalformedURLException,
                    PackageManagementException {
-        Assert.assertTrue( bpelUploader.deployBPEL("TestE4XDirect", sessionCookie),"Bpel service deployment failed");
+        Assert.assertTrue(bpelUploader.deployBPEL("TestE4XDirect", sessionCookie), "Bpel service deployment failed");
     }
 
 
     @AfterClass(alwaysRun = true)
-    public void removeArtifacts() throws PackageManagementException, InterruptedException, RemoteException {
+    public void removeArtifacts()
+            throws PackageManagementException, InterruptedException, RemoteException {
         bpelManager.undeployBPEL("TestE4XDirect");
         adminServiceAuthentication.logOut();
     }

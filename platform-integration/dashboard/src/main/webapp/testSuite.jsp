@@ -67,30 +67,30 @@
     %>
 
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(document).ready(function () {
             var data = [
                 <%=Utils.getPieChartData(build)%>
             ];
             var plot1 = jQuery.jqplot('pieChart', [data],
                                       {
-                                          seriesColors: ["#088708", "#db0e0e", "#facb1f"],
-                                          title: {
-                                              text: 'Build #<%=build.getString("build")%>',   // title for the plot,
-                                              show: true
+                                          seriesColors:["#088708", "#db0e0e", "#facb1f"],
+                                          title:{
+                                              text:'Build #<%=build.getString("build")%>', // title for the plot,
+                                              show:true
                                           },
 
-                                          seriesDefaults: {
+                                          seriesDefaults:{
                                               // Make this a pie chart.
-                                              renderer: jQuery.jqplot.PieRenderer,
-                                              rendererOptions: {
+                                              renderer:jQuery.jqplot.PieRenderer,
+                                              rendererOptions:{
                                                   // Put data labels on the pie slices.
                                                   // By default, labels show the percentage of the slice.
-                                                  showDataLabels: true
+                                                  showDataLabels:true
                                               }
                                           },
-                                          legend: { show:true, location: 'e' }
+                                          legend:{ show:true, location:'e' }
                                       }
-                    );
+            );
         });
     </script>
 
@@ -106,10 +106,17 @@
         <div class="span10">
             <div class="hero-unit">
                 <%--Test build content goes here--%>
-                <h2>Test Build#<%=buildNo%></h2>
-                <h3>Passed :<%=build.get("pass")%></h3>
-                <h3>Failed :<%=build.get("fail")%></h3>
-                <h3>Skipped :<%=build.get("skip")%></h3>
+                <h2>Test Build#<%=buildNo%>
+                </h2>
+
+                <h3>Passed :<%=build.get("pass")%>
+                </h3>
+
+                <h3>Failed :<%=build.get("fail")%>
+                </h3>
+
+                <h3>Skipped :<%=build.get("skip")%>
+                </h3>
 
                 <%--end of the content--%>
 
@@ -179,7 +186,10 @@
                                     </td>
                                     <td>
                                         <%
-                                            double sr = (buildData.getDouble(Constant.PASS) / total) * 100;
+                                            double sr = 0;
+                                            if (total > 0) {
+                                                sr = (buildData.getDouble(Constant.PASS) / total) * 100;
+                                            }
                                         %>
                                         <%=Utils.round(sr) %>
 

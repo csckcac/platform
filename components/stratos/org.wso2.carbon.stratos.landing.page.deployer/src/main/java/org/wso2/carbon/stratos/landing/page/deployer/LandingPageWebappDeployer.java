@@ -23,6 +23,7 @@ import org.apache.catalina.Context;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.stratos.landing.page.deployer.internal.DataHolder;
+import org.wso2.carbon.tomcat.CarbonTomcatException;
 
 import java.io.File;
 
@@ -58,9 +59,16 @@ public class LandingPageWebappDeployer extends AbstractDeployer {
     public void deploy(DeploymentFileData deploymentFileData) throws DeploymentException {
         String carbonWebContextRoot = "/" + WEBAPP_CONTEXT;
         if (deploymentFileData.getFile() != null) {
-            Context context = DataHolder.getCarbonTomcatService().
-                    addWebApp(carbonWebContextRoot,deploymentFileData.getFile().getAbsolutePath(), null);
-            log.info("Deployed product landing page webapp: " + context);
+            Context context = null;
+            try {
+                context = DataHolder.getCarbonTomcatService().
+                        addWebApp(carbonWebContextRoot,deploymentFileData.getFile().getAbsolutePath(), null);
+                log.info("Deployed product landing page webapp: " + context);
+            } catch (CarbonTomcatException e) {
+                String msg = "Webapp failed to deploy :" + deploymentFileData.getFile().getName();
+                log.error(msg, e);
+                throw new DeploymentException(msg, e);
+            }
         }
     }
 

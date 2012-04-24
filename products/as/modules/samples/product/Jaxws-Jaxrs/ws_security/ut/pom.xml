@@ -83,8 +83,6 @@
                             <tasks>
                                 <copy file="${basedir}/src/main/java/demo/wssec/client/wssec.xml"
                                       todir="${basedir}/target/classes/demo/wssec/client"/>
-                                <copy file="${basedir}/src/main/java/demo/wssec/server/wssec.xml"
-                                      todir="${basedir}/target/classes/demo/wssec/server"/>
                             </tasks>
                         </configuration>
                     </execution>

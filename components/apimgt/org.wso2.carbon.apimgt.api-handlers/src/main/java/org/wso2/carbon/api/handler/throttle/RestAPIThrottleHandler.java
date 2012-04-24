@@ -130,13 +130,13 @@ public class RestAPIThrottleHandler extends AbstractHandler {
                             }
                         }
                         if (reCreate || throttle == null) {
-                            version = entry.getVersion();
                             Object entryValue = synCtx.getEntry(policyKey);
                             if (entryValue == null) {
                                 handleException("Null throttling policy returned by Entry : "
                                                 + policyKey, synCtx);
 
                             } else {
+                                version = entry.getVersion();
                                 if (!(entryValue instanceof OMElement)) {
                                     handleException("Policy returned from key : " + policyKey +
                                             " is not an OMElement", synCtx);

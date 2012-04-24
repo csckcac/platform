@@ -308,12 +308,19 @@ public class AddServicesService extends RegistryAbstractAdmin {
         return lifecycleAspectsToAdd.toArray(new String[lifecycleAspectsToAdd.size()]);
     }
 
-    public boolean validateXMLConfigOnSchema(String xml) {
-       SAXParser parser = new SAXParser();
-       String serviceConfPath = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator +
-                "conf" + File.separator + "service-ui-config.xsd";
+    public boolean validateXMLConfigOnSchema(String xml,String schema) {
+        SAXParser parser = new SAXParser();
+        String serviceConfPath = "";
 
-       String schemaURL = new File(serviceConfPath).toURI().toString();
+        if("service-ui-config".equalsIgnoreCase(schema)) {
+            serviceConfPath = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator +
+                    "conf" + File.separator + "service-ui-config.xsd";
+        } else if("lifecycle-config".equalsIgnoreCase(schema)) {
+            serviceConfPath = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator +
+                    "conf" + File.separator + "lifecycle-config.xsd";
+        }
+
+        String schemaURL = new File(serviceConfPath).toURI().toString();
 
         try {
             parser.setFeature("http://xml.org/sax/features/validation", true);

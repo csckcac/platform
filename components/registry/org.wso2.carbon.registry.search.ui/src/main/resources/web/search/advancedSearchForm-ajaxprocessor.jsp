@@ -470,7 +470,7 @@
                     <td>
                        <%-- <input type="text" name="propertyValue" value="<%=propertyValue%>"
                                id="#_propertyValue" onkeypress="handletextBoxKeyPress(event)"/> --%>
-                        <select onChange="alert('Call');adjustPropertyOp();" id="opLeft" name="leftOp">
+                        <select onChange="adjustPropertyOp();" id="opLeft" name="leftOp">
   							<option value="lt">&lt;</option>
   							<option value="le">&#8804;</option>
   							<option value="eq">=</option>
@@ -497,7 +497,7 @@
 
                             <div id="mediaTypeAutoComplete">
                                 <input id="#_mediaType" name="mediaType" type="text" value="<%=mediaType%>" style="width:auto !important;" /> &nbsp;
-                                <input name="mediaTypeNegate" type="checkbox" /> ~                             
+                                <input name="mediaTypeNegate" type="checkbox" /> ~
                                                                                                                          
                                 <div id="customUIButtonDiv">
                                     <%
@@ -507,12 +507,13 @@
                                     %>
                                 </div>
                                 <div id="mediaTypeContainer"></div>
+
                             </div>
-							
-                        </div>						
+
+                        </div>
 					</td>	
                         <%--<input type="text" name="mediaType" value="<%= mediaType%>" id="#_mediaType" onkeypress="handleMediaTypeKeypress(event)"></td>
-                        <input type="checkbox" name="mediaTypeNegate" /> ~   --%>
+                        --%>
                 </tr>
                 <tr>
                     <td colspan="2" style="padding:0px !important;margin:0px !important" id="customDiv">

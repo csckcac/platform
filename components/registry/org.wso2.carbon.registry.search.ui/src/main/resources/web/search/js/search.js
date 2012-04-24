@@ -287,7 +287,20 @@ function submitAdvSearchForm(pageNumber) {
             	CARBON.showWarningDialog(org_wso2_carbon_registry_search_ui_jsi18n["left.needs.larger.than.right.property.value"]);
             	document.getElementById('advancedSearchFormDiv').style.display = "";            	
             	return false;
-            }            
+            }
+
+            var validateValue = validateEmptyPropertyValues();
+               	if(validateValue > 0 ) {
+               	   searchResuts.innerHTML = "";
+               	   if(validateValue == 1) {
+               	    CARBON.showWarningDialog(org_wso2_carbon_registry_search_ui_jsi18n["property.name.required"]);
+               	   } else if(validateValue == 2){
+               	    CARBON.showWarningDialog(org_wso2_carbon_registry_search_ui_jsi18n["either.or.both.property.value.required"]);
+               	   }
+               	   document.getElementById('advancedSearchFormDiv').style.display = "";
+               	   return false;
+            }
+
             
             if (emptyFields == 0) {
                 searchResuts.innerHTML = "";
@@ -344,12 +357,31 @@ function validatePropertyValues(){
     var rightVal = document.getElementById('valueRight').value;
 	
 	if(leftVal != "" && rightVal != ""){
-		
 		if((leftVal <= rightVal)){			
 			return false;
 		}
 	}
 	return true;
+}
+
+function validateEmptyPropertyValues(){
+
+    var leftVal = document.getElementById('valueLeft').value;
+    var rightVal = document.getElementById('valueRight').value;
+    var propertyName = document.getElementById('#_propertyName').value;
+
+    if(leftVal != "" || rightVal != "") {
+    	   if(propertyName == ""){
+    	        return 1;
+    	   }
+    }
+
+    if(propertyName != "") {
+            if(leftVal == "" && rightVal == "") {
+        	    return 2;
+            }
+    }
+    return 0;
 }
 
 function submitSaveSearchForm() {

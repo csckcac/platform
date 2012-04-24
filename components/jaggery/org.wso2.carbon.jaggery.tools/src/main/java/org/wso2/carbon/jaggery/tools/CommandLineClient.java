@@ -78,7 +78,7 @@ public final class CommandLineClient {
                 JaggeryShell.enterContext(new String[0]);
             } else if (line.hasOption(CONSTANT_QUIT)) {
                 out.println("\nThis command only supports in shell mode\n");
-            } else if (args[0] != null && args[0].contains(".jss")) {
+            } else if (args[0] != null && args[0].contains(".jag")) {
                 CommandLineExecutor.parseJaggeryScript(args[0]);
             } else {
                 out.println("\nInvalid command. Please execute -help for instructions\n");
@@ -92,8 +92,8 @@ public final class CommandLineClient {
         out.println("");
         out.println("Command                 Description");
         out.println("=======                 ===========");
-        out.println("<script.jss>            Execute Jaggery file");
-        out.println("<filepath/script.jss>   Execute Jaggery file in the file path");
+        out.println("<script.jag>            Execute Jaggery file");
+        out.println("<filepath/script.jag>   Execute Jaggery file in the file path");
         out.println("-help                	Display Jaggery help messages");
         out.println("-quit	                Quit Jaggery command line client (for shell mode)");
         out.println("-shell	                Enter into the Jaggery shell to execute Jaggery expressions");

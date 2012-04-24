@@ -466,9 +466,9 @@ public class RestAPIThrottleHandler extends AbstractHandler {
             }
 
             if (!isAuthenticated){
-                handleException("Access denied for a " +
-                                "caller with consumer Key: " + consumerKey + ", " +
-                                "Reason: Authentication failure", synCtx);
+                log.debug("Access denied for a " +
+                          "caller with consumer Key: " + consumerKey + ", " +
+                          "Reason: Authentication failure");
             }
             // Domain name based throttling
                 //check whether a configuration has been defined for this role name or not
@@ -489,14 +489,14 @@ public class RestAPIThrottleHandler extends AbstractHandler {
                                     context.setConfigurationContext(cc);
                                     context.setThrottleId(id);
                                 }
-                                AccessInformation info;
+                                AccessInformation info = null;
                                 try {
                                     info = roleBasedAccessController.canAccess(context, consumerKey,
                                                                         consumerRoleID);
                                 } catch (ThrottleException e) {
-                                    handleException("Exception occurred while performing role " +
-                                            "based throttling",e, synCtx);
-                                    return false;
+                                    log.debug("Exception occurred while performing role " +
+                                              "based throttling", e);
+                                    canAccess = false;
                                 }
                                 StatCollector.collect(info, consumerKey, ThrottleConstants.ROLE_BASE);
                                 //check for the permission for access

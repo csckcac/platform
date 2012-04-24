@@ -208,7 +208,7 @@ public class ArtifactDeployerUtil {
     public void bpelFileUploader(String sessionCookie, String backEndUrl, String artifactLocation,
                                  String artifactName)
             throws InterruptedException, RemoteException, PackageManagementException {
-        AdminServiceBpelUploader bpelUploader = new AdminServiceBpelUploader(backEndUrl);
+        AdminServiceBpelUploader bpelUploader = new AdminServiceBpelUploader(backEndUrl,ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION);
         bpelUploader.deployBPEL(artifactName.substring(0, artifactName.indexOf(".")), artifactLocation,
                                 sessionCookie);
     }

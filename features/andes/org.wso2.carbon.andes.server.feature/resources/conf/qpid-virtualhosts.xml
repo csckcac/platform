@@ -25,16 +25,11 @@
         <name>carbon</name>
         <carbon>
             <store>
-                <class>org.wso2.andes.server.store.CassandraMessageStore</class>
-                <ZooKeeperHostName>127.0.0.1</ZooKeeperHostName>
-                <ZooKeeperPort>2181</ZooKeeperPort>
-                <IsRMSupportEnabled>false</IsRMSupportEnabled>
-
+                <class>org.wso2.andes.server.store.CassandraMessageStore</class>               
                 <username>admin</username>
                 <password>admin</password>
                 <cluster>ClusterOne</cluster>
                 <host>localhost</host>
-
                 <port>9160</port>
             </store>
 

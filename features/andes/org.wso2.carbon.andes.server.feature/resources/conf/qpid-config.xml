@@ -102,9 +102,7 @@
 
     <clustering>
 
-        <enabled>false</enabled>
-        <ZooKeeperHost>127.0.0.1</ZooKeeperHost>
-        <ZooKeeperPort>2181</ZooKeeperPort>
+        <enabled>false</enabled>       
         <OnceInOrderSupportEnabled>false</OnceInOrderSupportEnabled>
 
 

@@ -25,7 +25,7 @@ import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.dto.UserApplicationAPIUsage;
 import org.wso2.carbon.apimgt.api.model.*;
 import org.wso2.carbon.apimgt.impl.APIConstants;
-import org.wso2.carbon.apimgt.impl.APIMgtDBUtils;
+import org.wso2.carbon.apimgt.impl.utils.APIMgtDBUtils;
 import org.wso2.carbon.apimgt.impl.dto.APIInfoDTO;
 import org.wso2.carbon.apimgt.impl.dto.APIKeyInfoDTO;
 import org.wso2.carbon.apimgt.impl.dto.APIKeyValidationInfoDTO;

@@ -30,6 +30,7 @@ import org.wso2.carbon.apimgt.api.model.*;
 import org.wso2.carbon.apimgt.api.model.Tag;
 import org.wso2.carbon.apimgt.impl.dao.ApiMgtDAO;
 import org.wso2.carbon.apimgt.impl.internal.APIManagerComponent;
+import org.wso2.carbon.apimgt.impl.utils.APIUtils;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;

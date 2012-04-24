@@ -15,7 +15,7 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.wso2.carbon.apimgt.impl;
+package org.wso2.carbon.apimgt.impl.utils;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
@@ -23,6 +23,7 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.api.APIManagementException;
+import org.wso2.carbon.apimgt.impl.DBConfiguration;
 import org.wso2.carbon.utils.FileUtil;
 
 import javax.xml.namespace.QName;

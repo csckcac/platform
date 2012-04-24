@@ -16,12 +16,13 @@
 * under the License.
 */
 
-package org.wso2.carbon.apimgt.impl;
+package org.wso2.carbon.apimgt.impl.utils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.model.*;
+import org.wso2.carbon.apimgt.impl.APIConstants;
 import org.wso2.carbon.apimgt.impl.internal.APIManagerComponent;
 import org.wso2.carbon.governance.api.common.dataobjects.GovernanceArtifact;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
@@ -247,11 +248,13 @@ public final class APIUtils {
         return documentation;
     }
 
-    public static APIStatus getApiStatus(String status) {
+    public static APIStatus getApiStatus(String status) throws APIManagementException {
         APIStatus apiStatus = null;
         for (APIStatus aStatus : APIStatus.values()) {
             if (aStatus.getStatus().equals(status)) {
                 apiStatus = aStatus;
+            }else {
+                throw new APIManagementException("The API state:" + status +" is incorrect");
             }
         }
         return apiStatus;

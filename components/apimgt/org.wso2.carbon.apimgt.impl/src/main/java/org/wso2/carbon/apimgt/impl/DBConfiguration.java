@@ -18,15 +18,15 @@
 
 package org.wso2.carbon.apimgt.impl;
 
+/**
+ * This class represent the DBConfig info
+ */
 public class DBConfiguration {
 
     private String dbUrl;
     private String userName;
     private String password;
     private String driverName;
-
-    public DBConfiguration() {
-    }
 
     public String getDbUrl() {
         return dbUrl;
@@ -59,6 +59,4 @@ public class DBConfiguration {
     public void setDriverName(String driverName) {
         this.driverName = driverName;
     }
-
-
 }

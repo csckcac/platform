@@ -20,6 +20,7 @@ import org.apache.abdera.factory.Factory;
 import org.apache.abdera.model.Category;
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.model.Link;
+import org.apache.abdera.model.Person;
 import org.apache.abdera.parser.stax.util.FOMHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -116,7 +117,7 @@ public class EntryHostObject extends ScriptableObject {
     private static final long serialVersionUID = -2799736487293031053L;
     private Abdera abdera;
     private Entry entry;
-    private static Log log = LogFactory.getLog(EntryHostObject.class);
+    private static final Log log = LogFactory.getLog(EntryHostObject.class);
     private Context context;
 
     public EntryHostObject() {
@@ -144,22 +145,60 @@ public class EntryHostObject extends ScriptableObject {
         return "Entry";
     }
 
-    public void jsSet_author(Object author) {
-        entry.addAuthor(String.valueOf(author));
+    public void jsSet_authors(Object author) {
+        
+    	if (author instanceof String) {
+
+			entry.addAuthor((String) (author));
+		}
+		
+		if (author instanceof NativeArray) {
+			NativeArray authorsPropertyArray = (NativeArray) author;
+			for (Object o1 : authorsPropertyArray.getIds()) {
+
+				int index = (Integer) o1;
+				String name = authorsPropertyArray.get(index, null)
+						.toString();
+
+				entry.addAuthor(name);
+			}
+    }
     }
 
-    public Object jsGet_author() {
-        if (entry != null) {
-            return entry.getAuthor().getName();
-        }
-        return null;
+    public NativeArray jsGet_authors() {
+    	 if (entry != null) {
+             NativeArray nativeArray = new NativeArray(0);
+             List<Person> list = entry.getAuthors();
+             int size = list.size();
+             for (int i = 0; i < size; i++) {
+            	 Person element = (Person) list.get(i);
+                 nativeArray.put(i, nativeArray, element.getName());
+             }
+             return nativeArray;
+         }
+         return null;
     }
 
-    public void jsSet_category(Object category) {
-        entry.addCategory(String.valueOf(category));
+    public void jsSet_categories(Object category) {
+    	if (category instanceof String) {
+
+			entry.addCategory((String) (category));
+		}
+		
+		if (category instanceof NativeArray) {
+			NativeArray categorysPropertyArray = (NativeArray) category;
+			for (Object o1 : categorysPropertyArray.getIds()) {
+
+				int index = (Integer) o1;
+				String categoryName = categorysPropertyArray.get(index, null)
+						.toString();
+
+				entry.addCategory(categoryName);
+			}
+    }
     }
 
-    public NativeArray jsGet_category() {
+    public NativeArray jsGet_categories() {
         if (entry != null) {
             NativeArray nativeArray = new NativeArray(0);
             List<Category> list = entry.getCategories();
@@ -189,14 +228,38 @@ public class EntryHostObject extends ScriptableObject {
     }
 
     //process contributor       
-    public void jsSet_contributor(Object contributor) {
-        entry.addContributor(String.valueOf(contributor));
+    public void jsSet_contributors(Object contributor) {
+    	if (contributor instanceof String) {
+
+			entry.addContributor((String) (contributor));
+		}
+		
+		if (contributor instanceof NativeArray) {
+			NativeArray contributorsPropertyArray = (NativeArray) contributor;
+			for (Object o1 : contributorsPropertyArray.getIds()) {
+
+				int index = (Integer) o1;
+				String contributorName = contributorsPropertyArray.get(index, null)
+						.toString();
+
+				entry.addContributor(contributorName);
+			}
+    }
+       
     }
 
-    public String jsGet_contributor() {
-        if (entry != null)
-            return entry.getContributors().get(0).toString();
-        return null;
+    public NativeArray jsGet_contributors() {
+      	 if (entry != null) {
+             NativeArray nativeArray = new NativeArray(0);
+             List<Person> list = entry.getContributors();
+             int size = list.size();
+             for (int i = 0; i < size; i++) {
+            	 Person element = (Person) list.get(i);
+                 nativeArray.put(i, nativeArray, element.getName());
+             }
+             return nativeArray;
+         }
+         return null;
     }
 
     //process id
@@ -215,11 +278,27 @@ public class EntryHostObject extends ScriptableObject {
     }
 
     // process link                   
-    public void jsSet_link(Object link) {
-        entry.addLink(String.valueOf(link));
+    public void jsSet_links(Object link) {
+    	if (link instanceof String) {
+
+			entry.addLink((String) (link));
+		}
+		
+		if (link instanceof NativeArray) {
+			NativeArray linksPropertyArray = (NativeArray) link;
+			for (Object o1 : linksPropertyArray.getIds()) {
+
+				int index = (Integer) o1;
+				String linkStr = linksPropertyArray.get(index, null)
+						.toString();
+
+				entry.addLink(linkStr);
+			}
+    }
+     
     }
 
-    public NativeArray jsGet_link() {
+    public NativeArray jsGet_links() {
         if (entry != null) {
             List list = entry.getLinks();
             int size = list.size();
@@ -268,8 +347,8 @@ public class EntryHostObject extends ScriptableObject {
     }
 
     public String jsGet_rights() {
-        if (entry != null)
-            return entry.getRights();
+        if (entry != null){
+            return entry.getRights();}
         return null;
     }
 
@@ -283,8 +362,8 @@ public class EntryHostObject extends ScriptableObject {
     }
 
     public String jsGet_summary() {
-        if (entry != null)
-            return entry.getSummary();
+        if (entry != null){
+            return entry.getSummary();}
         return null;
     }
 
@@ -298,9 +377,8 @@ public class EntryHostObject extends ScriptableObject {
     }
 
     public String jsGet_title() {
-        log.info("Title of the entry get");
-        if (entry != null)
-            return entry.getTitle();
+        if (entry != null){
+            return entry.getTitle();}
         return null;
     }
 
@@ -321,24 +399,19 @@ public class EntryHostObject extends ScriptableObject {
         }
     }
 
-    public String jsGet_updated() {
-        if (entry != null)
-            return entry.getUpdated().toString();
-        return null;
+    public Scriptable jsGet_updated() {
+    	  if (entry != null) {
+              Scriptable js = context.newObject(CommonManager.getJaggeryContext().getScope(), "Date", new Object[]{entry.getUpdated().getTime()});
+              return js;
+          }
+          return null;
     }
 
     /**
      * @return the E4X XML of the contents in this AtomEntry object
      */
-    public Scriptable jsGet_XML() {
-        Context cx = Context.getCurrentContext();
-        if (entry != null) {
-            Object[] objects = {entry};
-            Scriptable xmlHostObject = cx.newObject(this, "XML", objects);
-            return xmlHostObject;
-        }
-        return null;
-    }
+
+
 
     Entry getEntry() {
         return entry;
@@ -348,7 +421,16 @@ public class EntryHostObject extends ScriptableObject {
         this.entry = entry;
     }
 
-    public String jsFunction_toString() {
+    public String jsFunction_toString() {    	
         return entry.toString();
+    }
+    public Scriptable jsFunction_toXML() {
+    	
+         if (entry != null) {
+             Object[] objects = { entry };
+             Scriptable xmlHostObject = context.newObject(CommonManager.getJaggeryContext().getScope(), "XML", objects);
+             return xmlHostObject;
+         }
+         return null;
     }
 }

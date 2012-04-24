@@ -52,9 +52,23 @@ public class LoadBalancerConfiguration {
             new HashMap<String, ServiceConfiguration>();
 
     /**
+     * Key: service name eg: appserver
+     * Value: domains Node
+     */
+    private Map<String, Node> serviceToDomainsMap = new HashMap<String, Node>();
+    
+    public Map<String, Node> getServiceToDomainsMap() {
+        return serviceToDomainsMap;
+    }
+
+    /**
      * Key - host, Value - Node with service clustering domains of this host
      */
     private Map<String, Node> hostDomainMap = new HashMap<String, Node>();
+    public Map<String, Node> getHostDomainMap() {
+        return hostDomainMap;
+    }
+
     private ServiceConfiguration defaultServiceConfig;
     private LBConfiguration lbConfig;
     
@@ -164,6 +178,11 @@ public class LoadBalancerConfiguration {
 
                 String tenantRange = aNode.getProperty(Constants.TENANT_RANGE_ELEMENT);
                 
+                if(tenantRange== null || "".equals(tenantRange)){
+                    throw new RuntimeException("Mandatory element "+Constants.TENANT_RANGE_ELEMENT+" which " +
+                            "is a child element of "+aNode.getName()+" cannot be found.");
+                }
+                
                 //we should reach unlimited range after visiting all other ranges
                 if(tenantRange.equals(Constants.UNLIMITED_TENANT_RANGE)){
                     return aNode.getName();
@@ -187,6 +206,35 @@ public class LoadBalancerConfiguration {
         
         return "";
         
+    }
+    
+    /**
+     * Given a domains Node this will return its domain entries and corresponding
+     * tenant ranges Map.
+     * @param domains Node
+     * @return domainToTenantRangeMap
+     */
+    public Map<String, String> getdomainToTenantRangeMap(Node domains) {
+        Map<String, String> domainToTenantRangeMap = new HashMap<String, String>();
+        
+        for(Node domain : domains.getChildNodes()){
+            
+            String domainName = domain.getName();
+            String tenantRange = domain.getProperty(Constants.TENANT_RANGE_ELEMENT);
+            
+            if(tenantRange== null || "".equals(tenantRange)){
+                throw new RuntimeException("Mandatory element "+Constants.TENANT_RANGE_ELEMENT+" which " +
+                        "is a child element of "+domain.getName()+" cannot be found.");
+            }
+            
+            if(tenantRange!= null && !"".equals(tenantRange) && 
+                    domainName != null && !"".equals(domainName)){
+                
+                domainToTenantRangeMap.put(domainName, tenantRange);
+            }
+        }
+        
+        return domainToTenantRangeMap;
     }
 
 
@@ -283,6 +331,8 @@ public class LoadBalancerConfiguration {
                     hostDomainMap.put(aHost, domainsNode);
                     
                 }
+                
+                serviceToDomainsMap.put(serviceName, domainsNode);
                 
                 for (Node domain : domainsNode.getChildNodes()) {
                     ServiceConfiguration serviceConfig = new ServiceConfiguration(domain.getName());

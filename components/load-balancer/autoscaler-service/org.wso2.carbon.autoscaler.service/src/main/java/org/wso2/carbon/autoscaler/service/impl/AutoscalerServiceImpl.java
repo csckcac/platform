@@ -32,6 +32,7 @@ import org.wso2.carbon.autoscaler.service.adapters.ContainerAdapter;
 import org.wso2.carbon.autoscaler.service.exception.NoInstanceFoundException;
 import org.wso2.carbon.autoscaler.service.util.Policy;
 import org.wso2.carbon.autoscaler.service.xml.AutoscalerPolicyFileReader;
+import org.wso2.carbon.lb.common.persistence.AgentPersistenceManager;
 
 /**
  * AutoScaler task should communicate with AutoscalerService, when it decides to scale up
@@ -84,8 +85,10 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
 
         // load policy configurations
         try {
-            //TODO populate the maps using database details
-
+            AgentPersistenceManager agentPersistenceManager
+                    = AgentPersistenceManager.getPersistenceManager();
+            instanceIdToAdapterMap = agentPersistenceManager.retrieveInstanceIdToAdapterMap();
+            domainToInstanceIdsMap = agentPersistenceManager.retrieveDomainToInstanceIdsMap();
             policyReader = new AutoscalerPolicyFileReader();
             autoscalerPolicy = policyReader.getPolicy();
 
@@ -136,7 +139,10 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
                     instanceIdToAdapterMap.put(instanceId, adapter);
                     // add to domain to instance id map
                     addToDomainToInstanceIdsMap(domainName, instanceId);
-
+                    //add instance details to database
+                    AgentPersistenceManager agentPersistenceManager
+                            = AgentPersistenceManager.getPersistenceManager();
+                    agentPersistenceManager.addInstance(instanceId, adapter, domainName);
                     return true;
                 }
 

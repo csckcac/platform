@@ -31,7 +31,7 @@ public class ZoneDAO extends AbstractDAO{
      * @return whether creation successful
      * @throws SQLException
      */
-    public boolean create(Zone zone, String[] domains) throws SQLException, ClassNotFoundException {
+    public boolean create(Zone zone, String[] domains) throws SQLException {
         boolean successfullyAdded = false;
         ResultSet resultSet = null;
         try{
@@ -69,7 +69,7 @@ public class ZoneDAO extends AbstractDAO{
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public boolean isZoneExist(String zone) throws SQLException, ClassNotFoundException {
+    public boolean isZoneExist(String zone) throws SQLException {
         boolean isExist = false;
         ResultSet resultSet = null;
         try{

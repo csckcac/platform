@@ -32,7 +32,7 @@ public class HostMachineDAO extends AbstractDAO{
  * methods to register zone first.
 */
 
-    public boolean create(HostMachine hostMachine) throws SQLException, ClassNotFoundException {
+    public boolean create(HostMachine hostMachine) throws SQLException {
         boolean successfullyAdded = false;
         try{
             con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
@@ -85,7 +85,7 @@ public class HostMachineDAO extends AbstractDAO{
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public void makeUnavailable(String endPoint) throws SQLException, ClassNotFoundException {
+    public void makeUnavailable(String endPoint) throws SQLException {
         try{
             con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
             Class.forName(driver);
@@ -116,7 +116,7 @@ public class HostMachineDAO extends AbstractDAO{
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public boolean isHostMachineExist(String endPoint) throws SQLException, ClassNotFoundException {
+    public boolean isHostMachineExist(String endPoint) throws SQLException {
         boolean isExist = false;
         ResultSet resultSet = null;
         try{
@@ -153,7 +153,7 @@ public class HostMachineDAO extends AbstractDAO{
      * @throws ClassNotFoundException
      */
     public boolean isAvailableInDomain(String domain)
-            throws SQLException, ClassNotFoundException {
+            throws SQLException {
         boolean isAvailable = false;
         ResultSet resultSet = null;
         try{
@@ -194,7 +194,7 @@ public class HostMachineDAO extends AbstractDAO{
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public boolean delete(String epr) throws SQLException, ClassNotFoundException {
+    public boolean delete(String epr) throws SQLException {
         boolean successfullyDeleted = false;
         try{
            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);

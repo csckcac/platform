@@ -33,7 +33,7 @@ public class ContainerDAO extends AbstractDAO{
     *  creating a container in a host machine.
     *
     */
-    public void create(Container container) throws SQLException, ClassNotFoundException {
+    public void create(Container container) throws SQLException {
         try{
            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
            Class.forName(driver);
@@ -69,7 +69,7 @@ public class ContainerDAO extends AbstractDAO{
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public void delete(String containerId) throws SQLException, ClassNotFoundException {
+    public void delete(String containerId) throws SQLException {
         try{
            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
            Class.forName(driver);
@@ -139,7 +139,7 @@ public class ContainerDAO extends AbstractDAO{
      * @throws Exception related to database transactions
      */
     private HostMachine getAvailableHostMachine(String zone)
-            throws SQLException, ClassNotFoundException {
+            throws SQLException {
         HostMachine hostMachine = new HostMachine();
         ResultSet resultSetForHM = null;
         Statement statementForBridge = null;
@@ -177,8 +177,9 @@ public class ContainerDAO extends AbstractDAO{
                     if(minimumContainerCountBridge == -1 || minimumContainerCountBridge > containerCount)
                     { //check if it's the first one or lower than before
                         minimumContainerCountBridge = containerCount;
-                        //Please note here it only retrieve the bridge ip as its the only required para
                         bridges[0].setBridgeIp(resultSetForBridge.getString("bridge_ip"));
+                        bridges[0].setNetGateway(resultSetForBridge.getString("net_gateway"));
+                        bridges[0].setNetMask(resultSetForBridge.getString("net_mask"));
                     }
                 }
                 if(minimumContainerCountHM == -1 || minimumContainerCountHM > containerCountOfHostMachine)
@@ -285,16 +286,20 @@ public class ContainerDAO extends AbstractDAO{
 
 
     public ContainerInformation retrieveAvailableContainerInformation(String zone)
-            throws ClassNotFoundException, SQLException {
+            throws SQLException {
 
         ContainerInformation containerInformation = new ContainerInformation();
         //containerInformation.setZone(zone);
         HostMachine hostMachine = getAvailableHostMachine(zone);
+        containerInformation.setEpr(hostMachine.getEpr());
         Bridge[] bridges = hostMachine.getBridges();
         String bridgeIp = bridges[0].getBridgeIp();
         containerInformation.setContainerRoot(hostMachine.getContainerRoot());
         containerInformation.setBridge(bridgeIp);
         containerInformation.setIp(getAvailableIp(bridgeIp));
+        containerInformation.setNetGateway(bridges[0].getNetGateway());
+        containerInformation.setNetMask(bridges[0].getNetMask());
+        //Container type, container id can not be set from here it will be set from adapter level
         return containerInformation;
     }
 

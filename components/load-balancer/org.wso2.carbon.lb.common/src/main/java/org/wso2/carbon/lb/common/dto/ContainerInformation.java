@@ -7,6 +7,8 @@ package org.wso2.carbon.lb.common.dto;
 public class ContainerInformation {
     private String containerId;
 
+    private String epr;
+
 	private String containerRoot;
 
 	private String netGateway;
@@ -84,5 +86,13 @@ public class ContainerInformation {
 
     public void setContainerKeysFile(String containerKeysFile) {
         this.containerKeysFile = containerKeysFile;
+    }
+
+    public String getEpr() {
+        return epr;
+    }
+
+    public void setEpr(String epr) {
+        this.epr = epr;
     }
 }

@@ -2,6 +2,7 @@ package org.wso2.carbon.lb.common.persistence;
 
 import org.wso2.carbon.lb.common.dao.ContainerDAO;
 import org.wso2.carbon.lb.common.dao.HostMachineDAO;
+import org.wso2.carbon.lb.common.dao.InstanceDAO;
 import org.wso2.carbon.lb.common.dao.ZoneDAO;
 import org.wso2.carbon.lb.common.dto.Container;
 import org.wso2.carbon.lb.common.dto.ContainerInformation;
@@ -9,6 +10,8 @@ import org.wso2.carbon.lb.common.dto.HostMachine;
 import org.wso2.carbon.lb.common.dto.Zone;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *   This class is written to interface all the dao classes through a singleton class. All the access
@@ -28,61 +31,80 @@ public class    AgentPersistenceManager {
         return manager;
     }
 
-    public boolean addHostMachine(HostMachine hostMachine) throws SQLException, ClassNotFoundException {
+    public boolean addHostMachine(HostMachine hostMachine) throws SQLException {
         HostMachineDAO hostMachineDAO = new HostMachineDAO();
         return hostMachineDAO.create(hostMachine);
     }
     
     public void makeWorkerNodeUnavailable(String endPoint)
-            throws SQLException, ClassNotFoundException {
+            throws SQLException {
         HostMachineDAO hostMachineDAO =  new HostMachineDAO();
         hostMachineDAO.makeUnavailable(endPoint);
     }
     public boolean addZone(Zone zone, String[] domains)
-            throws ClassNotFoundException, SQLException {
+            throws SQLException {
         ZoneDAO zoneResourcePlanDAO = new ZoneDAO();
         return zoneResourcePlanDAO.create(zone, domains);
     }
 
     public void addContainer(Container container)
-            throws ClassNotFoundException, SQLException {
+            throws SQLException {
         ContainerDAO containerDAO = new ContainerDAO();
         containerDAO.create(container);
     }
 
     public void deleteContainer(String containerName)
-            throws ClassNotFoundException, SQLException {
+            throws SQLException {
         ContainerDAO containerDAO = new ContainerDAO();
         containerDAO.delete(containerName);
     }
 
     public boolean deleteWorkerNode(String epr)
-            throws ClassNotFoundException, SQLException {
+            throws SQLException {
         HostMachineDAO hostMachineDAO = new HostMachineDAO();
         return hostMachineDAO.delete(epr);
     }
 
     public void changeContainerState(String containerName, Boolean state)
-            throws ClassNotFoundException, SQLException {
+            throws SQLException {
         ContainerDAO containerDAO = new ContainerDAO();
         containerDAO.changeState(containerName, state);
     }
     public ContainerInformation retrieveAvailableContainerInformation(String zone)
-            throws ClassNotFoundException, SQLException {
+            throws SQLException {
         ContainerDAO containerDAO = new ContainerDAO();
         return containerDAO.retrieveAvailableContainerInformation(zone);
     }
     
-    public boolean isZoneExist(String zone) throws ClassNotFoundException, SQLException {
+    public boolean isZoneExist(String zone) throws SQLException {
         ZoneDAO zoneDAO = new ZoneDAO();
         return zoneDAO.isZoneExist(zone);
     }
-    public boolean isHostMachineExist(String endPoint) throws ClassNotFoundException, SQLException {
+    public boolean isHostMachineExist(String endPoint) throws SQLException {
         HostMachineDAO hostMachineDAO = new HostMachineDAO();
         return hostMachineDAO.isHostMachineExist(endPoint);
     }
-    public boolean isHostMachinesAvailableInDomain(String domain) throws ClassNotFoundException, SQLException {
+    public boolean isHostMachinesAvailableInDomain(String domain) throws SQLException {
         HostMachineDAO hostMachineDAO = new HostMachineDAO();
         return hostMachineDAO.isAvailableInDomain(domain);
     }
+
+    public HashMap<String, ArrayList<String>> retrieveDomainToInstanceIdsMap() throws SQLException {
+        InstanceDAO instanceDAO = new InstanceDAO();
+        return instanceDAO.getDomainToInstanceIdsMap();
+    }
+
+
+    public HashMap<String, String> retrieveInstanceIdToAdapterMap() throws SQLException {
+        InstanceDAO instanceDAO = new InstanceDAO();
+        return instanceDAO.getInstanceIdToAdapterMap();
+    }
+    
+    public boolean addInstance(String instanceId, String adapter, String domain)
+            throws SQLException {
+        InstanceDAO instanceDAO = new InstanceDAO();
+        return instanceDAO.add(instanceId, adapter, domain);
+    }
+
+
 }

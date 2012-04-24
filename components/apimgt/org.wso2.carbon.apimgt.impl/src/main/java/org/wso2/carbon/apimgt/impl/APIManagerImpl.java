@@ -30,7 +30,7 @@ import org.wso2.carbon.apimgt.api.model.*;
 import org.wso2.carbon.apimgt.api.model.Tag;
 import org.wso2.carbon.apimgt.impl.dao.ApiMgtDAO;
 import org.wso2.carbon.apimgt.impl.internal.APIManagerComponent;
-import org.wso2.carbon.apimgt.impl.utils.APIUtils;
+import org.wso2.carbon.apimgt.impl.utils.APIUtil;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
@@ -171,7 +171,7 @@ public class APIManagerImpl implements APIManager {
                 }
                 for (org.wso2.carbon.registry.core.Tag tag1 : tags) {
                     if (tag.equals(tag1.getTagName())) {
-                        apiSet.add(APIUtils.getAPI(artifact, registry));
+                        apiSet.add(APIUtil.getAPI(artifact, registry));
                     }
                 }
             }
@@ -228,7 +228,7 @@ public class APIManagerImpl implements APIManager {
                 // adding the API provider can mark the latest API .
                 String status = artifact.getAttribute(APIConstants.API_OVERVIEW_STATUS);
                 if (status.equals(APIConstants.PUBLISHED)) {
-                    apiSortedSet.add(APIUtils.getAPI(artifact, registry));
+                    apiSortedSet.add(APIUtil.getAPI(artifact, registry));
                 }
             }
         } catch (RegistryException e) {
@@ -262,7 +262,7 @@ public class APIManagerImpl implements APIManager {
                 String apiArtifactId = resource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY);
                 if (apiArtifactId != null) {
                     GenericArtifact apiArtifact = artifactManager.getGenericArtifact(apiArtifactId);
-                    apiSortedList.add(APIUtils.getAPI(apiArtifact, registry));
+                    apiSortedList.add(APIUtil.getAPI(apiArtifact, registry));
                 } else {
                     throw new GovernanceException("artifact id is null of " + apiPath);
                 }
@@ -301,7 +301,7 @@ public class APIManagerImpl implements APIManager {
                     float rating = registry.getAverageRating(artifactPath);
                     if (rating > APIConstants.TOP_TATE_MARGIN && (returnLimit < limit)) {
                         returnLimit++;
-                        apiSortedSet.add(APIUtils.getAPI(genericArtifact, registry));
+                        apiSortedSet.add(APIUtil.getAPI(genericArtifact, registry));
                     }
                 }
             }
@@ -348,7 +348,7 @@ public class APIManagerImpl implements APIManager {
             for (int i = start; i < dateList.size(); i++) {
                 GenericArtifact genericArtifact1 = apiMap.get(dateList.get(i));
 
-                apiSortedSet.add(APIUtils.getAPI(genericArtifact1, registry));
+                apiSortedSet.add(APIUtil.getAPI(genericArtifact1, registry));
             }
 
         } catch (RegistryException e) {
@@ -394,7 +394,7 @@ public class APIManagerImpl implements APIManager {
      * @throws APIManagementException If an error occurs while rating the API
      */
     public void rateAPI(APIIdentifier apiId, APIRating rating) throws APIManagementException {
-        String path = APIUtils.getAPIPath(apiId);
+        String path = APIUtil.getAPIPath(apiId);
         /*
            * String apiPath = apiId.getProviderName() +
            * RegistryConstants.PATH_SEPARATOR + apiId.getApiName() +
@@ -434,7 +434,7 @@ public class APIManagerImpl implements APIManager {
                 pattern = Pattern.compile(regex);
                 matcher = pattern.matcher(apiName);
                 if (matcher.matches() && status.equals(APIConstants.PUBLISHED)) {
-                        apiSet.add(APIUtils.getAPI(artifact, registry));
+                        apiSet.add(APIUtil.getAPI(artifact, registry));
                 }
             }
         } catch (RegistryException e) {
@@ -480,7 +480,7 @@ public class APIManagerImpl implements APIManager {
                     matcher = pattern.matcher(apiName);
                 }
                 if (matcher.matches() && status.equals(APIConstants.PUBLISHED)) {
-                        apiSet.add(APIUtils.getAPI(artifact, registry));
+                        apiSet.add(APIUtil.getAPI(artifact, registry));
                 }
             }
         } catch (RegistryException e) {
@@ -548,7 +548,7 @@ public class APIManagerImpl implements APIManager {
                 throw new APIManagementException("artifact id is null for : " + apiPath);
             }
             GenericArtifact apiArtifact = artifactManager.getGenericArtifact(artifactId);
-            api = APIUtils.getAPI(apiArtifact, registry);
+            api = APIUtil.getAPI(apiArtifact, registry);
 
         } catch (RegistryException e) {
             handleException("Failed to get API from : " + apiPath, e);
@@ -596,7 +596,7 @@ public class APIManagerImpl implements APIManager {
                 throw new APIManagementException("artifact it is null");
             }
             GenericArtifact providerArtifact = artifactManager.getGenericArtifact(artifactId);
-            provider = APIUtils.getProvider(providerArtifact);
+            provider = APIUtil.getProvider(providerArtifact);
 
         } catch (RegistryException e) {
             handleException("Failed to get Provider form : " + providerName, e);
@@ -840,7 +840,7 @@ public class APIManagerImpl implements APIManager {
         try {
             GenericArtifact genericArtifact =
                     artifactManager.newGovernanceArtifact(new QName(api.getId().getApiName()));
-            GenericArtifact artifact = APIUtils.createAPIArtifactContent(genericArtifact, api);
+            GenericArtifact artifact = APIUtil.createAPIArtifactContent(genericArtifact, api);
             artifactManager.addGenericArtifact(artifact);
             String artifactPath = GovernanceUtils.getArtifactPath(registry, artifact.getId());
             String providerPath = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
@@ -905,7 +905,7 @@ public class APIManagerImpl implements APIManager {
     public void updateAPI(API api) throws APIManagementException {
         if (api.getContext() == null) {
             APIIdentifier apiIdentifier = api.getId();
-            String path = APIUtils.getAPIPath(apiIdentifier);
+            String path = APIUtil.getAPIPath(apiIdentifier);
             try {
                 Resource resource = registry.get(path);
                 api.setContext(resource.getProperty(APIConstants.API_CONTEXT_ID));
@@ -990,7 +990,7 @@ public class APIManagerImpl implements APIManager {
                 artifactManager = new GenericArtifactManager(registry, APIConstants.DOCUMENTATION_KEY);
                 GenericArtifact docArtifact = artifactManager.getGenericArtifact(
                         docResource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY));
-                Documentation doc = APIUtils.getDocumentation(docArtifact);
+                Documentation doc = APIUtil.getDocumentation(docArtifact);
                 doc.setLastUpdated(docResource.getLastModified());
                 documentationList.add(doc);
             }
@@ -1022,7 +1022,7 @@ public class APIManagerImpl implements APIManager {
             for (Association association : associations) {
                 Resource docResource = registry.get(association.getSourcePath());
                 GenericArtifact artifact = artifactManager.getGenericArtifact(docResource.getId());
-                documentation = APIUtils.getDocumentation(artifact);
+                documentation = APIUtil.getDocumentation(artifact);
             }
         } catch (RegistryException e) {
             handleException("Failed to get documentation details", e);
@@ -1233,7 +1233,7 @@ public class APIManagerImpl implements APIManager {
      * @throws APIManagementException if failed to add comment for API
      */
     public void addComment(APIIdentifier identifier, String s) throws APIManagementException {
-        String apiPath = APIUtils.getAPIPath(identifier);
+        String apiPath = APIUtil.getAPIPath(identifier);
         Comment comment = new Comment(s);
         try {
             registry.addComment(apiPath, comment);
@@ -1252,7 +1252,7 @@ public class APIManagerImpl implements APIManager {
         List<org.wso2.carbon.apimgt.api.model.Comment> commentList =
                 new ArrayList<org.wso2.carbon.apimgt.api.model.Comment>();
         Comment[] comments;
-        String apiPath = APIUtils.getAPIPath(identifier);
+        String apiPath = APIUtil.getAPIPath(identifier);
         try {
             comments = registry.getComments(apiPath);
             for (Comment comment : comments) {
@@ -1362,14 +1362,14 @@ public class APIManagerImpl implements APIManager {
         Set<SubscribedAPI> subscribedAPIs = apiMgtDAO.getSubscribedAPIs(subscriber);
 
         for (SubscribedAPI subscribedAPI : subscribedAPIs) {
-            String apiPath = APIUtils.getAPIPath(subscribedAPI.getApiId());
+            String apiPath = APIUtil.getAPIPath(subscribedAPI.getApiId());
             Resource resource;
             try {
                 resource = registry.get(apiPath);
                 artifactManager = new GenericArtifactManager(registry, APIConstants.API_KEY);
                 GenericArtifact artifact = artifactManager.getGenericArtifact(
                         resource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY));
-                API api = APIUtils.getAPI(artifact, registry);
+                API api = APIUtil.getAPI(artifact, registry);
                 apiSortedSet.add(api);
             } catch (RegistryException e) {
                 String msg = "Failed to get api";

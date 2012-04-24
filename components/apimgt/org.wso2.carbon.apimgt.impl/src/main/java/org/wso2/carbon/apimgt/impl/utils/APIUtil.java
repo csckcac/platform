@@ -40,10 +40,10 @@ import java.util.Set;
 /**
  * This class contain the utility methods used for APIManagerImpl
  */
-public final class APIUtils {
-   private static Log log = LogFactory.getLog(APIUtils.class);
+public final class APIUtil {
+   private static Log log = LogFactory.getLog(APIUtil.class);
 
-    private APIUtils() {
+    private APIUtil() {
     }
 
     /**

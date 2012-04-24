@@ -34,12 +34,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public final class APIMgtDBUtils {
+public final class APIMgtDBUtil {
 
-    private static Log log = LogFactory.getLog(APIMgtDBUtils.class);
+    private static Log log = LogFactory.getLog(APIMgtDBUtil.class);
     private static volatile BasicDataSource dataSource = null;
 
-    private APIMgtDBUtils() {
+    private APIMgtDBUtil() {
     }
 
     /**
@@ -52,7 +52,7 @@ public final class APIMgtDBUtils {
         if (dataSource != null) {
             return;
         }
-        synchronized (APIMgtDBUtils.class) {
+        synchronized (APIMgtDBUtil.class) {
             if (dataSource == null) {
                 if (log.isDebugEnabled()) {
                     log.debug("Initializing data source");

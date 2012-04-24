@@ -25,7 +25,7 @@ import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.dto.UserApplicationAPIUsage;
 import org.wso2.carbon.apimgt.api.model.*;
 import org.wso2.carbon.apimgt.impl.APIConstants;
-import org.wso2.carbon.apimgt.impl.utils.APIMgtDBUtils;
+import org.wso2.carbon.apimgt.impl.utils.APIMgtDBUtil;
 import org.wso2.carbon.apimgt.impl.dto.APIInfoDTO;
 import org.wso2.carbon.apimgt.impl.dto.APIKeyInfoDTO;
 import org.wso2.carbon.apimgt.impl.dto.APIKeyValidationInfoDTO;
@@ -56,7 +56,7 @@ public class ApiMgtDAO {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException if failed to initialize the db config
      */
     public ApiMgtDAO() throws APIManagementException {
-        APIMgtDBUtils.initialize(APIConstants.DB_CONFIG_PATH);
+        APIMgtDBUtil.initialize(APIConstants.DB_CONFIG_PATH);
     }
 
     /**
@@ -64,7 +64,7 @@ public class ApiMgtDAO {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException  if failed to initialize the db config
      */
     public ApiMgtDAO(String dbConfigurationPath) throws APIManagementException {
-        APIMgtDBUtils.initialize(dbConfigurationPath);
+        APIMgtDBUtil.initialize(dbConfigurationPath);
     }
 
     /**
@@ -113,7 +113,7 @@ public class ApiMgtDAO {
                         "   AND KCM.KEY_CONTEXT_MAPPING_ID = SP.KEY_CONTEXT_MAPPING_ID";
 
         try {
-            conn = APIMgtDBUtils.getConnection();
+            conn = APIMgtDBUtil.getConnection();
             ps = conn.prepareStatement(sqlQuery);
             ps.setString(1, tenantAwareUserId);
             ps.setInt(2, tenantId);
@@ -131,7 +131,7 @@ public class ApiMgtDAO {
             throw new APIManagementException("Error when executing the SQL query to read the" +
                     " access key ", e);
         } finally {
-            APIMgtDBUtils.closeAllConnections(ps, conn, rs);
+            APIMgtDBUtil.closeAllConnections(ps, conn, rs);
         }
         return accessKey;
     }
@@ -165,7 +165,7 @@ public class ApiMgtDAO {
                 "   AND SB.SUBSCRIBER_ID = APP.SUBSCRIBER_ID " +
                 "   AND APP.APPLICATION_ID=SP.APPLICATION_ID ";
         try {
-            conn = APIMgtDBUtils.getConnection();
+            conn = APIMgtDBUtil.getConnection();
             ps = conn.prepareStatement(sqlQuery);
             ps.setString(1, tenantAwareUsername);
             ps.setInt(2, tenantId);
@@ -184,7 +184,7 @@ public class ApiMgtDAO {
             log.error(e.getMessage(), e);
             throw new APIManagementException(e.getMessage(), e);
         } finally {
-            APIMgtDBUtils.closeAllConnections(ps, conn, rs);
+            APIMgtDBUtil.closeAllConnections(ps, conn, rs);
         }
         return apiInfoDTOList.toArray(new APIInfoDTO[apiInfoDTOList.size()]);
     }
@@ -218,7 +218,7 @@ public class ApiMgtDAO {
                 "   AND SP.APPLICATION_ID = APP.APPLICATION_ID " +
                 "   AND APP.SUBSCRIBER_ID=SB.SUBSCRIBER_ID ";
         try {
-            conn = APIMgtDBUtils.getConnection();
+            conn = APIMgtDBUtil.getConnection();
             ps = conn.prepareStatement(sqlQuery);
             ps.setString(1, apiId);
             rs = ps.executeQuery();
@@ -241,7 +241,7 @@ public class ApiMgtDAO {
             log.error(e.getMessage(), e);
             throw new APIManagementException(e.getMessage(), e);
         } finally {
-            APIMgtDBUtils.closeAllConnections(ps, conn, rs);
+            APIMgtDBUtil.closeAllConnections(ps, conn, rs);
         }
         return apiKeyInfoDTOs;
     }
@@ -278,7 +278,7 @@ public class ApiMgtDAO {
                 " AND APP.APPLICATION_ID = SP.APPLICATION_ID";
         try {
 
-            conn = APIMgtDBUtils.getConnection();
+            conn = APIMgtDBUtil.getConnection();
             ps = conn.prepareStatement(sqlQuery);
             ps.setString(1, statusEnum);
             ps.setString(2, tenantAwareUsername);
@@ -301,7 +301,7 @@ public class ApiMgtDAO {
             }
             throw new APIManagementException(e.getMessage(), e);
         } finally {
-            APIMgtDBUtils.closeAllConnections(ps, conn, null);
+            APIMgtDBUtil.closeAllConnections(ps, conn, null);
         }
     }
 
@@ -349,7 +349,7 @@ public class ApiMgtDAO {
                 "   AND IAT.ACCESS_TOKEN=KCM.ACCESS_TOKEN " +
                 "   AND KCM.KEY_CONTEXT_MAPPING_ID = SUB.KEY_CONTEXT_MAPPING_ID";
         try {
-            conn = APIMgtDBUtils.getConnection();
+            conn = APIMgtDBUtil.getConnection();
             ps = conn.prepareStatement(sqlQuery);
             ps.setString(1, accessToken);
             ps.setString(2, context);
@@ -396,7 +396,7 @@ public class ApiMgtDAO {
             log.error(e.getMessage(), e);
             throw new APIManagementException(e.getMessage(), e);
         } finally {
-            APIMgtDBUtils.closeAllConnections(ps, conn, rs);
+            APIMgtDBUtil.closeAllConnections(ps, conn, rs);
         }
         return keyValidationInfoDTO;
     }
@@ -406,7 +406,7 @@ public class ApiMgtDAO {
         ResultSet rs = null;
         PreparedStatement ps = null;
         try {
-        	conn = APIMgtDBUtils.getConnection();
+        	conn = APIMgtDBUtil.getConnection();
         	String query = "INSERT" +
                     " INTO AM_SUBSCRIBER (USER_ID, TENANT_ID, EMAIL_ADDRESS, DATE_SUBSCRIBED)" +
                     " VALUES (?,?,?,?)";
@@ -428,7 +428,7 @@ public class ApiMgtDAO {
 			log.error(msg, e);
 			throw new APIManagementException(msg, e);
 		} finally {
-			APIMgtDBUtils.closeAllConnections(ps, conn, rs);
+			APIMgtDBUtil.closeAllConnections(ps, conn, rs);
 		}
     }
     
@@ -437,7 +437,7 @@ public class ApiMgtDAO {
         ResultSet rs = null;
         PreparedStatement ps = null;
         try {
-        	conn = APIMgtDBUtils.getConnection();
+        	conn = APIMgtDBUtil.getConnection();
         	String query = "UPDATE" +
                     " AM_SUBSCRIBER SET USER_ID=?, TENANT_ID=?, EMAIL_ADDRESS=?, DATE_SUBSCRIBED=?" +
                     " WHERE SUBSCRIBER_ID=?";
@@ -453,7 +453,7 @@ public class ApiMgtDAO {
 			log.error(msg, e);
 			throw new APIManagementException(msg, e);
 		} finally {
-			APIMgtDBUtils.closeAllConnections(ps, conn, rs);
+			APIMgtDBUtil.closeAllConnections(ps, conn, rs);
 		}
     }
     
@@ -462,7 +462,7 @@ public class ApiMgtDAO {
         ResultSet rs = null;
         PreparedStatement ps = null;
         try {
-        	conn = APIMgtDBUtils.getConnection();
+        	conn = APIMgtDBUtil.getConnection();
         	String query = "SELECT" +
                     " USER_ID, TENANT_ID, EMAIL_ADDRESS, DATE_SUBSCRIBED FROM AM_SUBSCRIBER" +
                     " WHERE SUBSCRIBER_ID=?";
@@ -485,7 +485,7 @@ public class ApiMgtDAO {
 			log.error(msg, e);
 			throw new APIManagementException(msg, e);
 		} finally {
-			APIMgtDBUtils.closeAllConnections(ps, conn, rs);
+			APIMgtDBUtil.closeAllConnections(ps, conn, rs);
 		}
     }
     
@@ -497,7 +497,7 @@ public class ApiMgtDAO {
         PreparedStatement ps = null;
 
         try {
-            conn = APIMgtDBUtils.getConnection();
+            conn = APIMgtDBUtil.getConnection();
             //This query to update the AM_SUBSCRIPTION table
             String sqlQuery = "INSERT " +
                     "INTO AM_SUBSCRIPTION (TIER_ID,API_ID,APPLICATION_ID,KEY_CONTEXT_MAPPING_ID)" +
@@ -530,7 +530,7 @@ public class ApiMgtDAO {
             }
             throw new APIManagementException(msg, e);
         } finally {
-            APIMgtDBUtils.closeAllConnections(ps, conn, resultSet);
+            APIMgtDBUtil.closeAllConnections(ps, conn, resultSet);
         }
     }
 
@@ -569,7 +569,7 @@ public class ApiMgtDAO {
                 "   USER_ID = ? " +
                 "   AND TENANT_ID = ?";
         try {
-            conn = APIMgtDBUtils.getConnection();
+            conn = APIMgtDBUtil.getConnection();
 
             ps = conn.prepareStatement(sqlQuery);
             ps.setString(1, subscriberName);
@@ -591,7 +591,7 @@ public class ApiMgtDAO {
             String msg = "Failed to get Subscriber for :" + subscriberName;
             throw new APIManagementException(msg, e);
         } finally {
-            APIMgtDBUtils.closeAllConnections(ps, conn, result);
+            APIMgtDBUtil.closeAllConnections(ps, conn, result);
         }
         return subscriber;
     }
@@ -611,7 +611,7 @@ public class ApiMgtDAO {
         ResultSet result = null;
 
         try {
-            connection = APIMgtDBUtils.getConnection();
+            connection = APIMgtDBUtil.getConnection();
 
             String sqlQuery = "SELECT " +
                     "   SUBS.API_ID AS API_ID " +
@@ -672,7 +672,7 @@ public class ApiMgtDAO {
             String msg = "Failed get tenant id of user " + subscriber.getName();
             throw new APIManagementException(msg, e);
         } finally {
-            APIMgtDBUtils.closeAllConnections(ps, connection, result);
+            APIMgtDBUtil.closeAllConnections(ps, connection, result);
         }
         return subscribedAPIs;
     }
@@ -693,7 +693,7 @@ public class ApiMgtDAO {
         ResultSet result = null;
 
         try {
-            connection = APIMgtDBUtils.getConnection();
+            connection = APIMgtDBUtil.getConnection();
 
             String sqlQuery = "SELECT " +
                     "   SUBS.USER_ID AS USER_ID," +
@@ -728,7 +728,7 @@ public class ApiMgtDAO {
             String msg = "Failed to subscribers for :" + providerName;
             throw new APIManagementException(msg, e);
         } finally {
-            APIMgtDBUtils.closeAllConnections(ps, connection, result);
+            APIMgtDBUtil.closeAllConnections(ps, connection, result);
         }
         return subscribers;
     }
@@ -742,7 +742,7 @@ public class ApiMgtDAO {
         ResultSet result = null;
 
         try {
-            connection = APIMgtDBUtils.getConnection();
+            connection = APIMgtDBUtil.getConnection();
 
 
             String sqlQuery = "SELECT " +
@@ -773,7 +773,7 @@ public class ApiMgtDAO {
             log.error(msg, e);
             throw new APIManagementException(msg, e);
         } finally {
-            APIMgtDBUtils.closeAllConnections(ps, connection, result);
+            APIMgtDBUtil.closeAllConnections(ps, connection, result);
         }
         return subscribers;
     }
@@ -796,7 +796,7 @@ public class ApiMgtDAO {
         ResultSet result = null;
 
         try {
-            connection = APIMgtDBUtils.getConnection();
+            connection = APIMgtDBUtil.getConnection();
 
             ps = connection.prepareStatement(sqlQuery);
             ps.setString(1, apiId);
@@ -812,7 +812,7 @@ public class ApiMgtDAO {
             log.error(msg, e);
             throw new APIManagementException(msg, e);
         } finally {
-            APIMgtDBUtils.closeAllConnections(ps, connection, result);
+            APIMgtDBUtil.closeAllConnections(ps, connection, result);
         }
         return subscriptions;
     }
@@ -878,7 +878,7 @@ public class ApiMgtDAO {
         Connection connection = null;
         PreparedStatement prepStmt = null;
         try {
-            connection = APIMgtDBUtils.getConnection();
+            connection = APIMgtDBUtil.getConnection();
             //Add access token
             prepStmt = connection.prepareStatement(sqlAddAccessToken);
             prepStmt.setString(1, accessToken);
@@ -963,7 +963,7 @@ public class ApiMgtDAO {
                 "   AND APP.SUBSCRIBER_ID = SUB.SUBSCRIBER_ID";
 
         try {
-            conn = APIMgtDBUtils.getConnection();
+            conn = APIMgtDBUtil.getConnection();
             ps = conn.prepareStatement(sqlQuery);
             ps.setString(1, apiId);
             ps.setString(2, userId);
@@ -984,7 +984,7 @@ public class ApiMgtDAO {
             log.error("Error when executing the SQL query : " + sqlQuery, e);
             throw new APIManagementException("Error while checking if user has subscribed to the API ", e);
         } finally {
-            APIMgtDBUtils.closeAllConnections(ps, conn, rs);
+            APIMgtDBUtil.closeAllConnections(ps, conn, rs);
         }
         return isSubscribed;
     }
@@ -1003,7 +1003,7 @@ public class ApiMgtDAO {
         ResultSet result = null;
 
         try {
-            connection = APIMgtDBUtils.getConnection();
+            connection = APIMgtDBUtil.getConnection();
 
             String sqlQuery = "SELECT " +
                     "   SUBS.SUBSCRIPTION_ID AS SUBSCRIPTION_ID, " +
@@ -1068,7 +1068,7 @@ public class ApiMgtDAO {
             String msg = "Failed to find API Usage for :" + providerName;
             throw new APIManagementException(msg, e);
         } finally {
-            APIMgtDBUtils.closeAllConnections(ps, connection, result);
+            APIMgtDBUtil.closeAllConnections(ps, connection, result);
         }
 
     }
@@ -1092,7 +1092,7 @@ public class ApiMgtDAO {
                 " AND APP.SUBSCRIBER_ID=SB.SUBSCRIBER_ID";
 
         try {
-            connection = APIMgtDBUtils.getConnection();
+            connection = APIMgtDBUtil.getConnection();
             ps = connection.prepareStatement(query);
             ps.setString(1, accessToken);
 
@@ -1107,7 +1107,7 @@ public class ApiMgtDAO {
             String msg = "Failed to get Subscriber for accessToken";
             throw new APIManagementException(msg, e);
         } finally {
-            APIMgtDBUtils.closeAllConnections(ps, connection, result);
+            APIMgtDBUtil.closeAllConnections(ps, connection, result);
         }
         return subscriber;
     }
@@ -1126,7 +1126,7 @@ public class ApiMgtDAO {
         while (isDuplicateConsumer(consumerKey));
 
         try {
-            connection = APIMgtDBUtils.getConnection();
+            connection = APIMgtDBUtil.getConnection();
             prepStmt = connection.prepareStatement(sqlStmt);
             prepStmt.setString(1, consumerKey);
             prepStmt.setString(2, consumerSecret);
@@ -1142,7 +1142,7 @@ public class ApiMgtDAO {
             log.error("Error when executing the SQL : " + sqlStmt);
             throw new APIManagementException("Error when adding a new OAuth consumer.", e);
         } finally {
-            APIMgtDBUtils.closeAllConnections(prepStmt, connection, null);
+            APIMgtDBUtil.closeAllConnections(prepStmt, connection, null);
         }
         return new String[]{consumerKey, consumerSecret};
     }
@@ -1157,7 +1157,7 @@ public class ApiMgtDAO {
         boolean isDuplicateConsumer = false;
 
         try {
-            connection = APIMgtDBUtils.getConnection();
+            connection = APIMgtDBUtil.getConnection();
             prepStmt = connection.prepareStatement(sqlQuery);
             prepStmt.setString(1, consumerKey);
 
@@ -1170,7 +1170,7 @@ public class ApiMgtDAO {
             throw new APIManagementException("Error when reading the application information from" +
                     " the persistence store.",e);
         } finally {
-            APIMgtDBUtils.closeAllConnections(prepStmt, connection, rSet);
+            APIMgtDBUtil.closeAllConnections(prepStmt, connection, rSet);
         }
         return isDuplicateConsumer;
     }
@@ -1189,7 +1189,7 @@ public class ApiMgtDAO {
 
         try {
 
-            conn = APIMgtDBUtils.getConnection();
+            conn = APIMgtDBUtil.getConnection();
             int tenantId;
             try {
                 tenantId = IdentityUtil.getTenantIdOFUser(userId);
@@ -1229,7 +1229,7 @@ public class ApiMgtDAO {
             }
             throw new APIManagementException(msg, e);
         } finally {
-            APIMgtDBUtils.closeAllConnections(ps, conn, resultSet);
+            APIMgtDBUtil.closeAllConnections(ps, conn, resultSet);
         }
 
     }
@@ -1279,7 +1279,7 @@ public class ApiMgtDAO {
                 }
             }
 
-            connection = APIMgtDBUtils.getConnection();
+            connection = APIMgtDBUtil.getConnection();
             prepStmt = connection.prepareStatement(sqlQuery);
             prepStmt.setInt(1,subscriber.getId());
             rs = prepStmt.executeQuery();
@@ -1299,7 +1299,7 @@ public class ApiMgtDAO {
             throw new APIManagementException("Error when reading the application information from" +
                     " the persistence store.", e);
         } finally {
-            APIMgtDBUtils.closeAllConnections(prepStmt, connection, rs);
+            APIMgtDBUtil.closeAllConnections(prepStmt, connection, rs);
         }
     }
 
@@ -1330,7 +1330,7 @@ public class ApiMgtDAO {
 
 
         try {
-            connection = APIMgtDBUtils.getConnection();
+            connection = APIMgtDBUtil.getConnection();
             prepStmt = connection.prepareStatement(sqlQuery);
             prepStmt.setString(1, username);
             prepStmt.setInt(2,tenantId);
@@ -1349,7 +1349,7 @@ public class ApiMgtDAO {
             throw new APIManagementException("Error when reading the application information from" +
                     " the persistence store.", e);
         } finally {
-            APIMgtDBUtils.closeAllConnections(prepStmt, connection, rs);
+            APIMgtDBUtil.closeAllConnections(prepStmt, connection, rs);
         }
         return subscriber;
     }

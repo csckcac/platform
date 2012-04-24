@@ -43,6 +43,10 @@
         tempPath = tempPath.replace("&", "%26");
     } catch (Exception ignore) {}
 %>
+<carbon:jsi18n
+        resourceBundle="org.wso2.carbon.registry.resource.ui.i18n.JSResources"
+        request="<%=request%>" namespace="org.wso2.carbon.registry.resource.ui"/>
+
 <script lanuage="text/javascript">
 function setAndGo(fullpath,activepath){
 	var random = Math.floor(Math.random() * 2000);
@@ -58,6 +62,32 @@ function setAndGo(fullpath,activepath){
 	    onFailure: function() {
 	    }
 	});
+}
+
+function submitDelete(path, snapshotId, screenWidth){
+        CARBON.showConfirmationDialog(
+                   org_wso2_carbon_registry_resource_ui_jsi18n["are.you.sure.you.want.to.delete.version"] +
+                   " <strong> " + snapshotId + " </strong> " +
+                   org_wso2_carbon_registry_resource_ui_jsi18n["delete.version.description"], function() {
+
+                   new Ajax.Request('../resources/delete_version_ajaxprocessor.jsp',
+                   	{
+                   	    method:'get',
+                   	    parameters: {path: path,snapshotId:snapshotId},
+
+                   	    onSuccess: function() {
+                   	        window.location = "./versions.jsp?path=" + path + "&screenWidth=" + screenWidth;
+                   	    },
+
+                   	    onFailure: function() {
+                   	        CARBON.showErrorDialog(org_wso2_carbon_registry_resource_ui_jsi18n["could.not.delete.the.version.history"]
+                   	                                + snapshotId);
+                   	    }
+                   	});
+               }
+          );
+
+
 }
 </script>
 <script type="text/javascript">
@@ -169,7 +199,7 @@ function setAndGo(fullpath,activepath){
                         <%
                             }                        
                         %>
-                        <a class="delete-icon-link" href="./delete_version_ajaxprocessor.jsp?path=<%=path%>&snapshotId=<%=versionPath.getVersionNumber()%>&screenWidth=<%=strScreenWidth%>"><fmt:message key="delete.version"/></a>
+                        <a class="delete-icon-link" onclick="submitDelete('<%=path%>','<%=versionPath.getVersionNumber()%>','<%=strScreenWidth%>')"><fmt:message key="delete.version"/></a>
                     </td>
                 </tr>
 

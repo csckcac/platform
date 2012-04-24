@@ -30,13 +30,12 @@ public class DeleteVersionProcessor {
 
     private static final Log log = LogFactory.getLog(DeleteVersionProcessor.class);
 
-    public static void process(
-            HttpServletRequest request, HttpServletResponse response, ServletConfig config)
-            throws UIException {
+    public static void process(HttpServletRequest request, HttpServletResponse response,
+                               ServletConfig config) throws UIException {
 
         String resourcePath = request.getParameter("path");
-        String snapshotId = request.getParameter("snapshotId");        
-
+        String snapshotId = request.getParameter("snapshotId");
+        
         String cookie = (String) request.
                 getSession().getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
 
@@ -45,7 +44,7 @@ public class DeleteVersionProcessor {
                     new ResourceServiceClient(cookie, config, request.getSession());
             client.removeVersionHistory(resourcePath, snapshotId);
         } catch (Exception e) {
-            String msg = "Failed to delete " + resourcePath + ". with the snapshot ID: " + snapshotId + e.getMessage();
+            String msg = "Failed to delete the snapshot Id " + snapshotId + " of the resource " + resourcePath + e.getMessage();
             log.error(msg, e);
             throw new UIException(e);
         }

@@ -20,7 +20,8 @@
 <%
     String errorMessage = null;
 	String path = request.getParameter("path");
-	String screenWidth = request.getParameter("screenWidth");	 
+	String screenWidth = request.getParameter("screenWidth");
+
     try {
     	
         DeleteVersionProcessor.process(request, response, config);        
@@ -35,6 +36,5 @@
     
     %><%=errorMessage%><%
 }
-	
-	response.sendRedirect("./versions.jsp?path=" + path + "&screenWidth=" + screenWidth.trim());
+
 %>

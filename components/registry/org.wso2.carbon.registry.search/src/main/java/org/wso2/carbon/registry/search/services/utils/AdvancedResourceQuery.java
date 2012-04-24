@@ -532,22 +532,26 @@ public class AdvancedResourceQuery {
 	}
 
 	public void setLeftOp(String leftOp) {
-		if (leftPropertyValue != null) {
-			if (leftOp.equals("lt"))
-				this.leftOp = "<";
-			if (leftOp.equals("le"))
-				this.leftOp = "<=";
-		}
+        if (leftPropertyValue != null) {
+            if (leftOp.equals("lt")) {
+                this.leftOp = "<";
+            } else if (leftOp.equals("le")){
+                this.leftOp = "<=";
+            } else {
+                this.leftOp = "=";
+            }
+        }
 	}
 
 	public void setRightOp(String rightOp) {
-		if (rightPropertyValue != null) {
-			if (rightOp.equals("gt"))
-				this.rightOp = ">";
-			if (rightOp.equals("ge"))
-				this.rightOp = ">=";
-			propertyRange = true;
-		}
+        if (rightPropertyValue != null) {
+            if (rightOp.equals("gt"))
+                this.rightOp = ">";
+            if (rightOp.equals("ge"))
+                this.rightOp = ">=";
+            if(leftPropertyValue != null)
+                propertyRange = true;
+        }
 	}
 
 	private boolean queryExists(Registry configSystemRegistry, String queryPath)
@@ -609,31 +613,43 @@ public class AdvancedResourceQuery {
 		}
 
 		if (createdAfter > Long.MIN_VALUE) {
-			if (createdRangeNegate)
-				conditions.add("R.REG_CREATED_TIME < ?");
-			else
+			if (createdRangeNegate) {
+                if(!(createdBefore > Long.MIN_VALUE))
+                    conditions.add("R.REG_CREATED_TIME < ?");
+            } else {
 				conditions.add("R.REG_CREATED_TIME > ?");
+            }
 		}
 
 		if (createdBefore > Long.MIN_VALUE) {
-			if (createdRangeNegate)
-				conditions.add("R.REG_CREATED_TIME > ?");
-			else
+			if (createdRangeNegate){
+                if(!(createdAfter > Long.MIN_VALUE))
+                    conditions.add("R.REG_CREATED_TIME > ?");
+                else
+                    conditions.add("R.REG_CREATED_TIME < ? OR R.REG_CREATED_TIME > ?");
+            } else {
 				conditions.add("R.REG_CREATED_TIME < ?");
+            }
 		}
 
 		if (updatedAfter > Long.MIN_VALUE) {
-			if (updatedRangeNegate)
-				conditions.add("R.REG_LAST_UPDATED_TIME < ?");
-			else
-				conditions.add("R.REG_LAST_UPDATED_TIME > ?");
+            if (updatedRangeNegate) {
+                if(!(updatedBefore > Long.MIN_VALUE))
+                    conditions.add("R.REG_LAST_UPDATED_TIME < ?");
+            } else {
+                conditions.add("R.REG_LAST_UPDATED_TIME > ?");
+            }
 		}
 
 		if (updatedBefore > Long.MIN_VALUE) {
-			if (updatedRangeNegate)
-				conditions.add("R.REG_LAST_UPDATED_TIME > ?");
-			else
-				conditions.add("R.REG_LAST_UPDATED_TIME < ?");
+            if (updatedRangeNegate){
+                if(!(updatedAfter > Long.MIN_VALUE))
+                    conditions.add("R.REG_LAST_UPDATED_TIME > ?");
+                else
+                    conditions.add("R.REG_LAST_UPDATED_TIME < ? OR R.REG_LAST_UPDATED_TIME > ?");
+            } else {
+                conditions.add("R.REG_LAST_UPDATED_TIME < ?");
+            }
 		}
 
 		if (commentWords != null && commentWords.length() != 0) {
@@ -689,36 +705,43 @@ public class AdvancedResourceQuery {
 				}
 			}
 		}
-		if (bool || leftPropertyValue != null || propertyName != null) {
-			tables.add(", REG_PROPERTY PP");
-			tables.add(", REG_RESOURCE_PROPERTY RP");
-			// StringBuffer propertyClause = new StringBuffer();
-			if (StaticConfiguration.isVersioningProperties()) {
-				conditions.add("R.REG_VERSION=RP.REG_VERSION AND "
-						+ "RP.REG_PROPERTY_ID=PP.REG_ID");
-			} else {
-				conditions.add("R.REG_PATH_ID=RP.REG_PATH_ID AND "
-						+ "((R.REG_NAME = RP.REG_RESOURCE_NAME)) AND "
-						+ "RP.REG_PROPERTY_ID=PP.REG_ID");
-			}
+        if ((bool || leftPropertyValue != null || rightPropertyValue != null) && propertyName != null) {
+            tables.add(", REG_PROPERTY PP");
+            tables.add(", REG_RESOURCE_PROPERTY RP");
+            // StringBuffer propertyClause = new StringBuffer();
+            if (StaticConfiguration.isVersioningProperties()) {
+                conditions.add("R.REG_VERSION=RP.REG_VERSION AND "
+                        + "RP.REG_PROPERTY_ID=PP.REG_ID");
+            } else {
+                conditions.add("R.REG_PATH_ID=RP.REG_PATH_ID AND "
+                        + "((R.REG_NAME = RP.REG_RESOURCE_NAME)) AND "
+                        + "RP.REG_PROPERTY_ID=PP.REG_ID");
+            }
 
-		}
+        }
 
-		if (leftPropertyValue != null || propertyName != null) {
-			// StringBuffer propertyClause = new StringBuffer();
-			if (propertyName != null) {
-				conditions.add(" lower(PP.REG_NAME) LIKE ?");
-			
-			if (leftPropertyValue != null) {
-				if (propertyRange) {
-					conditions.add(" PP.REG_VALUE " + leftOp
-							+ " ? AND PP.REG_VALUE " + rightOp + " ? ");
-				} else {
-					conditions.add(" PP.REG_VALUE LIKE ?");
-				}
-				}
-		 	}
-		}
+        if ((leftPropertyValue != null || rightPropertyValue != null) && propertyName != null) {
+            // StringBuffer propertyClause = new StringBuffer();
+            if (propertyName != null) {
+                conditions.add(" lower(PP.REG_NAME) LIKE ? ");
+
+                if (propertyRange) {
+                    conditions.add(" PP.REG_VALUE " + leftOp
+                            + " ? AND PP.REG_VALUE " + rightOp + " ? ");
+
+                } else if(leftPropertyValue != null){
+
+                    if(leftOp.equals("=")) {
+                        conditions.add(" PP.REG_VALUE LIKE ? ");
+                    }else{
+                        conditions.add(" PP.REG_VALUE " + leftOp + " ? ");
+                    }
+
+                } else if(rightPropertyValue != null){
+                    conditions.add(" PP.REG_VALUE " + rightOp + " ? ");
+                }
+            }
+        }
 
 		if (mediaType != null) {
 			if (mediaTypeNegate)
@@ -788,8 +811,7 @@ public class AdvancedResourceQuery {
 				query.append(" AND ");
 			}
 			query.append(condition);
-		}	
-
+		}
 		return query.toString();
 	}
 
@@ -821,34 +843,45 @@ public class AdvancedResourceQuery {
 				conditions.add("lower(R.REG_LAST_UPDATOR) LIKE ?");
 		}
 
-		if (createdAfter > Long.MIN_VALUE) {
-			if (createdRangeNegate)
-				conditions.add("R.REG_CREATED_TIME < ?");
-			else
-				conditions.add("R.REG_CREATED_TIME > ?");
-		}
+        if (createdAfter > Long.MIN_VALUE) {
+            if (createdRangeNegate) {
+                if(!(createdBefore > Long.MIN_VALUE))
+                    conditions.add("R.REG_CREATED_TIME < ?");
+            } else {
+                conditions.add("R.REG_CREATED_TIME > ?");
+            }
+        }
 
-		if (createdBefore > Long.MIN_VALUE) {
-			if (createdRangeNegate)
-				conditions.add("R.REG_CREATED_TIME > ?");
-			else
-				conditions.add("R.REG_CREATED_TIME < ?");
-		}
+        if (createdBefore > Long.MIN_VALUE) {
+            if (createdRangeNegate){
+                if(!(createdAfter > Long.MIN_VALUE))
+                    conditions.add("R.REG_CREATED_TIME > ?");
+                else
+                    conditions.add("R.REG_CREATED_TIME < ? OR R.REG_CREATED_TIME > ?");
+            } else {
+                conditions.add("R.REG_CREATED_TIME < ?");
+            }
+        }
 
-		if (updatedAfter > Long.MIN_VALUE) {
-			if (updatedRangeNegate)
-				conditions.add("R.REG_LAST_UPDATED_TIME < ?");
-			else
-				conditions.add("R.REG_LAST_UPDATED_TIME > ?");
-		}
+        if (updatedAfter > Long.MIN_VALUE) {
+            if (updatedRangeNegate) {
+                if(!(updatedBefore > Long.MIN_VALUE))
+                    conditions.add("R.REG_LAST_UPDATED_TIME < ?");
+            } else {
+                conditions.add("R.REG_LAST_UPDATED_TIME > ?");
+            }
+        }
 
-		if (updatedBefore > Long.MIN_VALUE) {
-			if (updatedRangeNegate)
-				conditions.add("R.REG_LAST_UPDATED_TIME > ?");
-			else
-				conditions.add("R.REG_LAST_UPDATED_TIME < ?");
-		}
-
+        if (updatedBefore > Long.MIN_VALUE) {
+            if (updatedRangeNegate){
+                if(!(updatedAfter > Long.MIN_VALUE))
+                    conditions.add("R.REG_LAST_UPDATED_TIME > ?");
+                else
+                    conditions.add("R.REG_LAST_UPDATED_TIME < ? OR R.REG_LAST_UPDATED_TIME > ?");
+            } else {
+                conditions.add("R.REG_LAST_UPDATED_TIME < ?");
+            }
+        }
 		if (commentWords != null && commentWords.length() != 0) {
 			tables.add(", REG_COMMENT C");
 			tables.add(", REG_RESOURCE_COMMENT RC");
@@ -906,35 +939,42 @@ public class AdvancedResourceQuery {
 				}
 			}
 		}
-		if (bool || leftPropertyValue != null || propertyName != null) {
-			tables.add(", REG_PROPERTY PP");
-			tables.add(", REG_RESOURCE_PROPERTY RP");
-			if (StaticConfiguration.isVersioningProperties()) {
-				conditions.add("R.REG_VERSION=RP.REG_VERSION AND "
-						+ "RP.REG_PROPERTY_ID=PP.REG_ID");
-			} else {
-				conditions
-						.add("R.REG_PATH_ID=RP.REG_PATH_ID AND "
-								+ "R.REG_NAME IS NULL AND RP.REG_RESOURCE_NAME IS NULL AND "
-								+ "RP.REG_PROPERTY_ID=PP.REG_ID");
-			}
-		}
+        if ((bool || leftPropertyValue != null || rightPropertyValue != null) && propertyName != null) {
+            tables.add(", REG_PROPERTY PP");
+            tables.add(", REG_RESOURCE_PROPERTY RP");
+            if (StaticConfiguration.isVersioningProperties()) {
+                conditions.add("R.REG_VERSION=RP.REG_VERSION AND "
+                        + "RP.REG_PROPERTY_ID=PP.REG_ID");
+            } else {
+                conditions
+                        .add("R.REG_PATH_ID=RP.REG_PATH_ID AND "
+                                + "R.REG_NAME IS NULL AND RP.REG_RESOURCE_NAME IS NULL AND "
+                                + "RP.REG_PROPERTY_ID=PP.REG_ID");
+            }
+        }
 
-		if (leftPropertyValue != null || propertyName != null) {
-			StringBuffer propertyClause = new StringBuffer();
-			if (propertyName != null) {
-				conditions.add(" lower(PP.REG_NAME) LIKE ?");
-			
-			if (leftPropertyValue != null) {
-				if (propertyRange) {
-					conditions.add(" PP.REG_VALUE " + leftOp
-							+ " ? AND PP.REG_VALUE " + rightOp + " ? ");
-				} else {
-					conditions.add(" PP.REG_VALUE LIKE ?");
-				}
-			}
-			}
-		}
+        if ((leftPropertyValue != null || rightPropertyValue != null) && propertyName != null) {
+            // StringBuffer propertyClause = new StringBuffer();
+            if (propertyName != null) {
+                conditions.add(" lower(PP.REG_NAME) LIKE ? ");
+
+                if (propertyRange) {
+                    conditions.add(" PP.REG_VALUE " + leftOp
+                            + " ? AND PP.REG_VALUE " + rightOp + " ? ");
+
+                } else if(leftPropertyValue != null){
+
+                    if(leftOp.equals("=")) {
+                        conditions.add(" PP.REG_VALUE LIKE ? ");
+                    }else{
+                        conditions.add(" PP.REG_VALUE " + leftOp + " ? ");
+                    }
+
+                } else if(rightPropertyValue != null){
+                    conditions.add(" PP.REG_VALUE " + rightOp + " ? ");
+                }
+            }
+        }
 
 		if (mediaType != null) {
 			if (mediaTypeNegate)
@@ -1015,7 +1055,6 @@ public class AdvancedResourceQuery {
 			}
 			query.append(condition);
 		}
-		
 		return query.toString();
 	}
 }

@@ -111,10 +111,16 @@
     }
 
     function deleteServiceParameters(serviceName) {
-        location.href = "delete_ejb_configuration.jsp?serviceName=" + serviceName;
+        CARBON.showConfirmationDialog('<fmt:message key="do.you.want.to.delete.ejb.configuration"/>',
+                function(){
+                    location.href = "delete_ejb_configuration.jsp?serviceName=" + serviceName;
+                }, function(){
+                    return false;
+                },
+                null);
     }
 
-    function toggleAddAppserverWindow(){
+    function toggleAddAppServerWindow(){
         if(jQuery('#addNewConfig').is(":checked")) {
             jQuery('#addNewConfigTable').show();
         } else {
@@ -206,7 +212,7 @@
                     </tr>
                     <tr>
                         <td class="labelField">
-                            <input onclick="toggleAddAppserverWindow();" type="radio" checked="true"
+                            <input onclick="toggleAddAppServerWindow();" type="radio" checked="true"
                                    value="existingconfig" name="astype"
                                    id="useExistingConfig">
                             <label for="useExistingConfig"><fmt:message key="use.existing"/></label>
@@ -237,7 +243,7 @@
                     </tr>
                     <tr>
                         <td class="labelField">
-                            <input onclick="toggleAddAppserverWindow();" type="radio"
+                            <input onclick="toggleAddAppServerWindow();" type="radio"
                                    value="newconfig" name="astype" id="addNewConfig">
                             <label for="addNewConfig"><fmt:message key="add.new"/></label>
                         </td>
@@ -349,7 +355,7 @@
 <script type="text/javascript">
 //    ejbProviderStep1DisableFields();
     initSections("hidden");
-    toggleAddAppserverWindow();
+    toggleAddAppServerWindow();
 </script>
 
 </fmt:bundle>

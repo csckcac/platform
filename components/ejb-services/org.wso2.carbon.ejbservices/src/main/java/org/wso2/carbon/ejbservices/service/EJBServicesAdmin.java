@@ -44,6 +44,7 @@ import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.service.mgt.ServiceAdmin;
 import org.wso2.carbon.utils.ArchiveManipulator;
 import org.wso2.carbon.utils.FileManipulator;
 import org.wso2.carbon.utils.ServerConstants;
@@ -275,6 +276,9 @@ public class EJBServicesAdmin extends AbstractAdmin {
             }
 
             registry.commitTransaction();
+
+            ServiceAdmin serviceAdmin = new ServiceAdmin();
+            serviceAdmin.deleteServiceGroups(new String[]{serviceName});
         } catch (Exception e) {
             registry.rollbackTransaction();
             throw (e);

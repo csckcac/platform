@@ -26,9 +26,6 @@ if (action != null) {
     else if (action == "getProviders") {
         print(getProviders());
     }
-    else if (action == "rateAPI") {
-        print(rateAPI());
-    }
     else if (action == "getAPI") {
         var apiName = request.getParameter("apiName");
         var version = request.getParameter("version");
@@ -91,8 +88,7 @@ if (action != null) {
             uriTemplateArr.push(request.getParameter("uriTemplate-" + resCount[i]));
             uriMethodArr.push(request.getParameter("resourceMethod-" + resCount[i]))
         }
-        log(uriTemplateArr);
-        log(uriMethodArr);
+
         if (apiName != null && version != null) {
             print(saveAPI(apiName, version, description, endpoint, wsdl, tags, tier, thumbUrl, context, uriTemplateArr, uriMethodArr));
         }
@@ -107,9 +103,6 @@ if (action != null) {
         var tags = request.getParameter("tags");
         var tier = request.getParameter("tier");
         var status = request.getParameter("status");
-        var resourceTemplate = request.getParameter("resourceTemplate");
-        var resourceMethod = request.getParameter("resourceMethod");
-        var resourceUri = request.getParameter("resourceUri");
         var context = request.getParameter("context");
         var resCount = new Array();
         if(request.getParameter("resourceCount") != null) {
@@ -122,11 +115,9 @@ if (action != null) {
             uriTemplateArr.push(request.getParameter("uriTemplate-" + resCount[i]));
             uriMethodArr.push(request.getParameter("resourceMethod-" + resCount[i]))
         }
-        log(uriTemplateArr);
-        log(uriMethodArr);
 
         if (apiName != null && version != null) {
-            print(updateAPI(apiName, version, description, imageUrl, endpoint, wsdl, tags, tier, status, resourceTemplate, resourceMethod, resourceUri, context, uriTemplateArr, uriMethodArr));
+            print(updateAPI(apiName, version, description, imageUrl, endpoint, wsdl, tags, tier, status, context, uriTemplateArr, uriMethodArr));
         }
     }
     else if (action == "getAllDocumentation") {

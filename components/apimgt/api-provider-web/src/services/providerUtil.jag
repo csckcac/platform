@@ -139,14 +139,7 @@ return {
 }
 
 //methods for usage monitoring
-function rateAPIFunc() {
-        log("rateAPIFunc");
-        apiProvider.setRating();
-        return {
-        error:false,
-        message:"success"
-        };
-}
+
 function getAPIFunc(apiName, version) {
         log("getAPIFunc");
         var providerName = getUserFunc().username;
@@ -309,10 +302,10 @@ return {
 }
 }
 
-function updateAPIFunc(apiName, version, description, imageUrl, endpoint, wsdl, tags, tier, status, resourceTemplate, resourceMethod, resourceUri, context, uriTemplateArr, uriMethodArr) {
+function updateAPIFunc(apiName, version, description, imageUrl, endpoint, wsdl, tags, tier, status, context, uriTemplateArr, uriMethodArr) {
         log("updateAPIFunc");
         var providerName = getUserFunc().username;
-        var success=apiProvider.updateAPI(providerName, apiName, version, description, imageUrl, endpoint, wsdl, tags, tier, status, resourceTemplate, resourceMethod, resourceUri, context, request, uriTemplateArr, uriMethodArr);
+        var success=apiProvider.updateAPI(providerName, apiName, version, description, imageUrl, endpoint, wsdl, tags, tier, status,context, request, uriTemplateArr, uriMethodArr);
         if(success){
         return {
         error:false
@@ -363,8 +356,6 @@ function getInlineContentFunc(apiName, version,docName) {
         var doc = new Array();
         doc = apiProvider.getInlineContent(providerName, apiName, version,docName);
         var k=0;
-        log('doc[k].content '+doc[k].content);
-        log(doc[k].content.length);
         var elem = {
         apiProvider:providerName,
         apiName:apiName,

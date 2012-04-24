@@ -52,9 +52,6 @@ function getId() {
 function setId(id) {
     return getDataJSON(setIdFunc(id), null, "Error while set Id for testing");
 }
-function rateAPI() {
-    return getDataJSON(rateAPIFunc(), null, "Error while Rating API");
-}
 function getAPI(apiName,version) {
     return getDataJSON(getAPIFunc(apiName,version), null, "Error while getting API");
 }
@@ -79,8 +76,8 @@ function getSubscribersOfAPI(apiName,version) {
 function getSubscribedAPIs(username) {
     return getDataJSON(getSubscribedAPIsFunc(username), null, "Error while getting subscribed APIs");
 }
-function updateAPI(apiName,version,description,imageUrl,endpoint,wsdl,tags,tier,status,resourceTemplate,resourceMethod,resourceUri,context, uriTemplateArr, uriMethodArr) {
-    return getDataJSON(updateAPIFunc(apiName,version,description,imageUrl,endpoint,wsdl,tags,tier,status,resourceTemplate,resourceMethod,resourceUri,context, uriTemplateArr, uriMethodArr), null, "Error while updating API");
+function updateAPI(apiName,version,description,imageUrl,endpoint,wsdl,tags,tier,status,context, uriTemplateArr, uriMethodArr) {
+    return getDataJSON(updateAPIFunc(apiName,version,description,imageUrl,endpoint,wsdl,tags,tier,status,context, uriTemplateArr, uriMethodArr), null, "Error while updating API");
 }
 function getAllDocumentation(apiName,version) {
     return getDataJSON(getAllDocumentationFunc(apiName,version), null, "Error while getting all documentation per API");

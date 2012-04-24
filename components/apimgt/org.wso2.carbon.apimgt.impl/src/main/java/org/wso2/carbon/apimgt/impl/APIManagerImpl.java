@@ -1084,9 +1084,7 @@ public class APIManagerImpl implements APIManager {
 
     /**
      * Adds Documentation to an API
-     * addgetget
-     *
-     * @param apiId         APIIdentifier
+     * @param apiId APIIdentifier
      * @param documentation Documentation
      * @throws APIManagementException if failed to add documentation
      */
@@ -1289,13 +1287,7 @@ public class APIManagerImpl implements APIManager {
     }
 
     private Registry getRegistry(String user, String pass, String url) throws APIManagementException {
-        WSRegistryServiceClient client;
         try {
-//            client = new WSRegistryServiceClient(url, user, pass,
-//                    ConfigurationContextFactory.createConfigurationContextFromFileSystem(
-//                            ServerConfiguration.getInstance().
-//                                    getFirstProperty("Axis2Config.clientAxis2XmlLocation")));
-            //TODO need to verify the registry initialization
             registry = RegistryCoreServiceComponent.getRegistryService().getGovernanceSystemRegistry();
         } catch (RegistryException e) {
             handleException("Error while obtaining a registry instance", e);

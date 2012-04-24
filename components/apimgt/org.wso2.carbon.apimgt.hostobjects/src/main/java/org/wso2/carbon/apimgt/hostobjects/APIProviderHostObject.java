@@ -266,17 +266,17 @@ public class APIProviderHostObject extends ScriptableObject {
         try {
             API oldapi = apiManagerImpl.getAPI(oldApiId);
 
-            HttpServletRequest req = ((RequestHostObject) args[14]).getHttpServletRequest();
+            HttpServletRequest req = ((RequestHostObject) args[11]).getHttpServletRequest();
 
             String tier = (String) args[8];
             String status = (String) args[9];
-            String context = (String) args[13];
+            String context = (String) args[10];
 
             APIIdentifier apiId = new APIIdentifier(provider, name, version);
             API api = new API(apiId);
 
-            NativeArray uriTemplateArr = (NativeArray) args[15];
-            NativeArray uriMethodArr = (NativeArray) args[16];
+            NativeArray uriTemplateArr = (NativeArray) args[12];
+            NativeArray uriMethodArr = (NativeArray) args[13];
 
             if (uriTemplateArr.getLength() == uriMethodArr.getLength()) {
                 Set<URITemplate> uriTemplates = new HashSet<URITemplate>();

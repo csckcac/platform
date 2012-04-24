@@ -43,15 +43,9 @@ import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Comment;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.internal.RegistryCoreServiceComponent;
-import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
-import org.wso2.carbon.ui.CarbonUIUtil;
 import org.wso2.carbon.user.api.AuthorizationManager;
 import org.wso2.carbon.user.api.UserStoreException;
-import org.wso2.carbon.utils.ServerConstants;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -76,25 +70,10 @@ public class APIManagerImpl implements APIManager {
     private ScheduledExecutorService scheduler;
     private Future keepAliveTask;
 
-    public APIManagerImpl(HttpServletRequest request, ServletConfig config)
-            throws APIManagementException {
-        HttpSession session = request.getSession();
-        String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
-        String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
-        try {
-            this.registry = GovernanceUtils.getGovernanceUserRegistry(
-                    new WSRegistryServiceClient(backendServerURL, cookie),
-                    (String) session.getAttribute("logged-user"));
-            startKeepAliveTask();
-        } catch (RegistryException e) {
-            handleException("Unable to obtain an instance of the registry", e);
-        }
-    }
-
     public APIManagerImpl(String user,
                           String pass,
                           String remoteAdd) throws APIManagementException {
-        this.registry = getRegistry(user, pass, remoteAdd);
+        this.registry = getRegistry();
         startKeepAliveTask();
     }
 
@@ -1287,7 +1266,7 @@ public class APIManagerImpl implements APIManager {
         return artifactManager;
     }
 
-    private Registry getRegistry(String user, String pass, String url) throws APIManagementException {
+    private Registry getRegistry() throws APIManagementException {
         try {
             registry = RegistryCoreServiceComponent.getRegistryService().getGovernanceSystemRegistry();
         } catch (RegistryException e) {

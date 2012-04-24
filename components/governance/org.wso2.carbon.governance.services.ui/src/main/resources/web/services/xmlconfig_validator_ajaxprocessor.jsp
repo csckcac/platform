@@ -20,10 +20,10 @@
 <%@ page import="org.wso2.carbon.governance.services.ui.clients.AddServicesServiceClient" %>
 
 <%
-
+    String schema = request.getParameter("schema");
     String xml = request.getParameter("target_xml");
     AddServicesServiceClient client = new AddServicesServiceClient(config,session);
-    boolean validated = client.validateXMLConfigOnSchema(xml);
+    boolean validated = client.validateXMLConfigOnSchema(xml,schema);
     if(validated) {
         %>---XMLSchemaValidated----<%
     } else {

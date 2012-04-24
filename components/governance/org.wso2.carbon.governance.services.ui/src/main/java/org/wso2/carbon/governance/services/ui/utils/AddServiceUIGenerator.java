@@ -85,7 +85,6 @@ public class AddServiceUIGenerator {
         }
         int columns = 2; //default value of number of columns is 2
         String widgetName = widget.getAttributeValue(new QName(null, UIGeneratorConstants.ARGUMENT_NAME));
-        System.out.println("+ + + + + + +"+widgetName);
         boolean collapsed = true;  // Default collapse set to true
         String widgetCollapse = widget.getAttributeValue(new QName(null, UIGeneratorConstants.WIDGET_COLLAPSED));
         if (widgetCollapse != null) {

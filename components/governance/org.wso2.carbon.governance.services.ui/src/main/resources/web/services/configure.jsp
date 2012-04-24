@@ -69,10 +69,12 @@
     function validateAndSaveConfiguration() {
 
         var xmlURL = editAreaLoader.getValue("payloadEditor");
+        var _schema="service-ui-config";
+
            new Ajax.Request('../services/xmlconfig_validator_ajaxprocessor.jsp',
             {
                 method:'post',
-                parameters: { target_xml: xmlURL},
+                parameters: { target_xml: xmlURL,schema: _schema},
                 onSuccess: function(transport) {
                  var returnValue = transport.responseText;
                  if (returnValue.search(/---XMLSchemaValidated----/) != -1) {

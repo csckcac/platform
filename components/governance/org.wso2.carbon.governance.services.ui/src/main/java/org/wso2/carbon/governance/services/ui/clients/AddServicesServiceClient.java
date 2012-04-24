@@ -112,8 +112,8 @@ public class AddServicesServiceClient {
         return stub.getAvailableAspects();
     }
 
-    public boolean validateXMLConfigOnSchema(String xml) throws Exception {
-       return stub.validateXMLConfigOnSchema(xml);
+    public boolean validateXMLConfigOnSchema(String xml,String schema) throws Exception {
+       return stub.validateXMLConfigOnSchema(xml,schema);
     }
 
 }

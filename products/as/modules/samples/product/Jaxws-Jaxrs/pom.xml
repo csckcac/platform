@@ -32,6 +32,7 @@
         <module>async_jaxws</module>
         <module>handlers_jaxws</module>
         <module>mtom_jaxws</module>
+        <module>ws_security</module>
     </modules>
 
     <dependencyManagement>

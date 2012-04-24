@@ -18,11 +18,47 @@
 */
 package org.wso2.carbon.mediator.autoscale.ec2autoscale.clients;
 
+import org.apache.axis2.AxisFault;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.load.balance.autoscaler.service.stub.AutoscalerServiceStub;
+
 /**
- * AutoscaleServiceClient - this is the client class this use to call
+ * This is the client class this calls Autoscaler service.
  */
 public class AutoscaleServiceClient {
-    //Here we have to implement client to connect to autoscaler service
-    //Basically spawn instance terminate it get running and pending instances
+    
+    private AutoscalerServiceStub stub;
+    
+    private static final Log log = LogFactory.getLog(AutoscaleServiceClient.class);
+
+
+    public AutoscaleServiceClient(String epr) throws AxisFault {
+
+        try {
+            stub = new AutoscalerServiceStub(epr);
+
+        } catch (AxisFault axisFault) {
+            String msg =
+                "Failed to initiate AutoscalerService client. " + axisFault.getMessage();
+            log.error(msg, axisFault);
+            throw new AxisFault(msg, axisFault);
+        }
+    }
+    
+    public boolean startInstance(String domainName) throws Exception{
+
+        return stub.startInstance(domainName);
+    }
+
+    public boolean terminateInstance(String instanceId) throws Exception {
+
+        return stub.terminateInstance(instanceId);
+    }
+    
+    public int getPendingInstanceCount() {
+        // TODO WS call
+        return 0;
+    }
 
 }

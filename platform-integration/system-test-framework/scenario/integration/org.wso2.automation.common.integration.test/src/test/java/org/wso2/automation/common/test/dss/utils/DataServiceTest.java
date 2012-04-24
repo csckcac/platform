@@ -37,8 +37,11 @@ import org.wso2.platform.test.core.utils.frameworkutils.FrameworkSettings;
 import org.wso2.platform.test.core.utils.frameworkutils.productvariables.EnvironmentSettings;
 
 import javax.activation.DataHandler;
+import javax.xml.stream.XMLStreamException;
 import java.io.File;
+import java.io.IOException;
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public abstract class DataServiceTest {
@@ -133,7 +136,8 @@ public abstract class DataServiceTest {
     }
 
     protected DataHandler createArtifact(String serviceFileName, ArrayList<File> sqlScript)
-            throws RSSAdminRSSDAOExceptionException, RemoteException {
+            throws RSSAdminRSSDAOExceptionException, IOException, ClassNotFoundException,
+                   SQLException, XMLStreamException {
         SqlDataSourceUtil dssUtil = new SqlDataSourceUtil(sessionCookie, dssBackEndUrl,
                                         FrameworkFactory.getFrameworkProperties(ProductConstant.DSS_SERVER_NAME),
                                         Integer.parseInt(userInfo.getUserId()));

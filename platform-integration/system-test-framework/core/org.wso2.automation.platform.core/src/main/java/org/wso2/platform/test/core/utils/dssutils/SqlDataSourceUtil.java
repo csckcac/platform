@@ -20,7 +20,6 @@ package org.wso2.platform.test.core.utils.dssutils;
 import org.apache.axiom.attachments.ByteArrayDataSource;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
-import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
@@ -65,46 +64,12 @@ public class SqlDataSourceUtil {
     private final String userPrivilegeGroup = "automation";
 
 
-    public SqlDataSourceUtil(String sessionCookie, String backEndUrl, FrameworkProperties frameworkProperties, int userId) {
+    public SqlDataSourceUtil(String sessionCookie, String backEndUrl,
+                             FrameworkProperties frameworkProperties, int userId) {
         this.sessionCookie = sessionCookie;
         this.dssBackEndUrl = backEndUrl;
         this.frameworkProperties = frameworkProperties;
         this.userInfo = UserListCsvReader.getUserInfo(userId);
-
-    }
-
-    public DataHandler createArtifact(String dbsFilePath) {
-        Assert.assertNotNull(jdbcUrl, "Initialize jdbcUrl");
-        try {
-            OMElement dbsFile = AXIOMUtil.stringToOM(FileManager.readFile(dbsFilePath));
-            OMElement dbsConfig = dbsFile.getFirstChildWithName(new QName("config"));
-            Iterator configElement1 = dbsConfig.getChildElements();
-            while (configElement1.hasNext()) {
-                OMElement property = (OMElement) configElement1.next();
-                String value = property.getAttributeValue(new QName("name"));
-                if ("org.wso2.ws.dataservice.protocol".equals(value)) {
-                    property.setText(jdbcUrl);
-
-                } else if ("org.wso2.ws.dataservice.user".equals(value)) {
-                    property.setText(databaseUser);
-
-                } else if ("org.wso2.ws.dataservice.password".equals(value)) {
-                    property.setText(databasePassword);
-                }
-            }
-            log.debug(dbsFile);
-            ByteArrayDataSource dbs = new ByteArrayDataSource(dbsFile.toString().getBytes());
-            return new DataHandler(dbs);
-
-        } catch (XMLStreamException e) {
-            log.error("XMLStreamException when Reading Service File" + e.getMessage());
-            Assert.fail("XMLStreamException when Reading Service File" + e.getMessage());
-        } catch (IOException e) {
-            log.error("IOException when Reading Service File" + e.getMessage());
-            Assert.fail("IOException  when Reading Service File" + e.getMessage());
-        }
-
-        return null;
 
     }
 
@@ -132,8 +97,42 @@ public class SqlDataSourceUtil {
         return this.jdbcUrl;
     }
 
+    public DataHandler createArtifact(String dbsFilePath) throws XMLStreamException, IOException {
+        Assert.assertNotNull(jdbcUrl, "Initialize jdbcUrl");
+        try {
+            OMElement dbsFile = AXIOMUtil.stringToOM(FileManager.readFile(dbsFilePath));
+            OMElement dbsConfig = dbsFile.getFirstChildWithName(new QName("config"));
+            Iterator configElement1 = dbsConfig.getChildElements();
+            while (configElement1.hasNext()) {
+                OMElement property = (OMElement) configElement1.next();
+                String value = property.getAttributeValue(new QName("name"));
+                if ("org.wso2.ws.dataservice.protocol".equals(value)) {
+                    property.setText(jdbcUrl);
+
+                } else if ("org.wso2.ws.dataservice.user".equals(value)) {
+                    property.setText(databaseUser);
+
+                } else if ("org.wso2.ws.dataservice.password".equals(value)) {
+                    property.setText(databasePassword);
+                }
+            }
+            log.debug(dbsFile);
+            ByteArrayDataSource dbs = new ByteArrayDataSource(dbsFile.toString().getBytes());
+            return new DataHandler(dbs);
+
+        } catch (XMLStreamException e) {
+            log.error("XMLStreamException when Reading Service File", e);
+            throw new XMLStreamException("XMLStreamException when Reading Service File", e);
+        } catch (IOException e) {
+            log.error("IOException when Reading Service File", e);
+            throw new IOException("IOException  when Reading Service File", e);
+        }
+
+    }
+
     public void createDataSource(List<File> sqlFileList)
-            throws RemoteException, RSSAdminRSSDAOExceptionException {
+            throws IOException, RSSAdminRSSDAOExceptionException, ClassNotFoundException,
+                   SQLException {
         databaseName = frameworkProperties.getDataSource().getDbName();
         if (frameworkProperties.getEnvironmentSettings().is_runningOnStratos()) {
             rSSAdminConsoleService = new RSSAdminConsoleService(dssBackEndUrl);
@@ -153,8 +152,10 @@ public class SqlDataSourceUtil {
         executeUpdate(sqlFileList);
     }
 
-    public void createDataSource(String dbName, String dbUser, String dbPassword, List<File> sqlFileList)
-            throws RemoteException, RSSAdminRSSDAOExceptionException {
+    public void createDataSource(String dbName, String dbUser, String dbPassword,
+                                 List<File> sqlFileList)
+            throws IOException, RSSAdminRSSDAOExceptionException, ClassNotFoundException,
+                   SQLException {
         databaseName = dbName;
 
         if (frameworkProperties.getEnvironmentSettings().is_runningOnStratos()) {
@@ -197,7 +198,8 @@ public class SqlDataSourceUtil {
 
     }
 
-    private void createDataBase(String jdbc, String user, String password) {
+    private void createDataBase(String jdbc, String user, String password)
+            throws ClassNotFoundException, SQLException {
         try {
             MySqlDatabaseManager dbm = new MySqlDatabaseManager(jdbc, user, password);
             dbm.executeUpdate("DROP DATABASE IF EXISTS " + databaseName);
@@ -206,11 +208,11 @@ public class SqlDataSourceUtil {
 
             dbm.disconnect();
         } catch (ClassNotFoundException e) {
-            log.error("Class Not Found. Check MySql-jdbc Driver in classpath: " + e.getMessage());
-            Assert.fail("Class Not Found. Check MySql-jdbc Driver in classpath: " + e.getMessage());
+            log.error("Class Not Found. Check MySql-jdbc Driver in classpath: ", e);
+            throw new ClassNotFoundException("Class Not Found. Check MySql-jdbc Driver in classpath: ", e);
         } catch (SQLException e) {
-            log.error("SQLException When executing SQL: " + e.getMessage());
-            Assert.fail("SQLException When executing SQL: " + e.getMessage());
+            log.error("SQLException When executing SQL: ", e);
+            throw new SQLException("SQLException When executing SQL: ", e);
         }
 
     }
@@ -225,7 +227,7 @@ public class SqlDataSourceUtil {
 
     private void createUser() throws RSSAdminRSSDAOExceptionException, RemoteException {
         DatabaseUserEntry dbUser;
-        rSSAdminConsoleService.createUser(sessionCookie, databaseUser, databasePassword,  dbInstanceId, userPrivilegeGroupId);
+        rSSAdminConsoleService.createUser(sessionCookie, databaseUser, databasePassword, dbInstanceId, userPrivilegeGroupId);
         log.info("Database User Created");
 
         dbUser = rSSAdminConsoleService.getDatabaseUser(sessionCookie, databaseUser, dbInstanceId);
@@ -271,7 +273,8 @@ public class SqlDataSourceUtil {
 
     }
 
-    private void executeUpdate(List<File> sqlFileList) {
+    private void executeUpdate(List<File> sqlFileList)
+            throws IOException, ClassNotFoundException, SQLException {
 
         try {
             MySqlDatabaseManager dbm = new MySqlDatabaseManager(jdbcUrl, databaseUser, databasePassword);
@@ -280,14 +283,14 @@ public class SqlDataSourceUtil {
             }
             dbm.disconnect();
         } catch (IOException e) {
-            log.error("IOException When reading SQL files: " + e.getMessage());
-            Assert.fail("IOException When reading SQL files: " + e.getMessage());
+            log.error("IOException When reading SQL files: ", e);
+            throw new IOException("IOException When reading SQL files: ", e);
         } catch (ClassNotFoundException e) {
             log.error("Class Not Found. Check MySql-jdbc Driver in classpath: " + e.getMessage());
-            Assert.fail("Class Not Found. Check MySql-jdbc Driver in classpath: " + e.getMessage());
+            throw new ClassNotFoundException("Class Not Found. Check MySql-jdbc Driver in classpath: ", e);
         } catch (SQLException e) {
             log.error("SQLException When executing SQL: " + e.getMessage());
-            Assert.fail("SQLException When executing SQL: " + e.getMessage());
+            throw new SQLException("SQLException When executing SQL: ", e);
         }
     }
 }

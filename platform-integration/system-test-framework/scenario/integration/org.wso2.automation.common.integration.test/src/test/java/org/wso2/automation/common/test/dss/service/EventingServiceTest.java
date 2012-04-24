@@ -48,6 +48,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -79,15 +80,14 @@ public class EventingServiceTest extends DataServiceTest {
     @Test(priority = 1, dependsOnMethods = {"addProxy"})
     @Override
     public void serviceDeployment()
-            throws ServiceAdminException, RemoteException, RSSAdminRSSDAOExceptionException,
-                   ExceptionException {
+            throws ServiceAdminException, IOException, RSSAdminRSSDAOExceptionException,
+                   ExceptionException, ClassNotFoundException, SQLException {
         deleteServiceIfExist(serviceName);
         DataHandler dhArtifact;
         dhArtifact = getArtifactWithSubscription(serviceFile);
 
         Assert.assertTrue(adminServiceClientDSS.uploadArtifact(sessionCookie, serviceFile, dhArtifact)
                 , "Service Deployment Failed while uploading service file");
-        ;
         isServiceDeployed(serviceName);
         setServiceEndPointHttp(serviceName);
         log.info(serviceName + " uploaded");
@@ -191,7 +191,8 @@ public class EventingServiceTest extends DataServiceTest {
     }
 
     private DataHandler getArtifactWithSubscription(String serviceFile)
-            throws RSSAdminRSSDAOExceptionException, RemoteException {
+            throws RSSAdminRSSDAOExceptionException, IOException, ClassNotFoundException,
+                   SQLException {
         SqlDataSourceUtil sqlDataSource;
 
         sqlDataSource = new SqlDataSourceUtil(sessionCookie, dssBackEndUrl, FrameworkFactory.getFrameworkProperties("DSS"), 3);

@@ -19,6 +19,7 @@ package org.wso2.platform.test.core;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.platform.test.core.utils.Artifact;
 import org.wso2.platform.test.core.utils.ArtifactAssociation;
 import org.wso2.platform.test.core.utils.ArtifactDependency;
 import org.wso2.platform.test.core.utils.ArtifactDeployerUtil;
@@ -41,91 +42,83 @@ public class ArtifactDeployer {
     /**
      * Deploy each test artifact defined in the scenario configuration
      *
-     * @param userId                  userID of the user the artifact is to be deployed by.
      * @param productName             Name of the product which artifacts will be deployed
-     * @param artifactName            Name of the test artifacts.
-     * @param type                    artifact type
-     * @param artifactDependencyList  list of dependencies the artifact needs.
-     * @param artifactAssociationList list of associations that is specific to particular artifact
+     * @param artifact                test artifacts Object.
      * @param frameworkProperties     test framework properties
      * @throws Exception - Artifact deployment exception
      */
-    protected void deployArtifact(int userId, String productName, String artifactName,
-                                  ArtifactType type,
-                                  List<ArtifactDependency> artifactDependencyList,
-                                  List<ArtifactAssociation> artifactAssociationList,
+    protected void deployArtifact(String productName, Artifact artifact,
                                   FrameworkProperties frameworkProperties) throws Exception {
 
         ArtifactDeployerUtil deployerUtil = new ArtifactDeployerUtil();
         EnvironmentBuilder builder = new EnvironmentBuilder();
         EnvironmentVariables environmentVariables;
         String artifactLocation = ProductConstant.getResourceLocations(productName);
-        environmentVariables = getEnvironment(userId, productName, deployerUtil, builder);
+        environmentVariables = getEnvironment(artifact.getUserId(), productName, deployerUtil, builder);
 
         String sessionCookie = environmentVariables.getSessionCookie();
         String backendURL = environmentVariables.getBackEndUrl();
         log.debug("Server backend URL " + backendURL);
 
-        if (artifactDependencyList.size() == 0) {
+        if (artifact.getDependencyArtifactList().size() == 0) {
             log.info("No dependencies found for the artifact");
         }
 
         String filePath;
-        switch (type) {
+        switch (artifact.getArtifactType()) {
             case aar:
-                filePath = artifactLocation + File.separator + "aar" + File.separator + artifactName;
-                deployerUtil.aarFileUploder(sessionCookie, backendURL, artifactName, filePath);
+                filePath = artifactLocation + File.separator + "aar" + File.separator + artifact.getArtifactName();
+                deployerUtil.aarFileUploder(sessionCookie, backendURL, artifact.getArtifactName(), filePath);
                 break;
 
             case car:
                 URL url = new URL("file:///" + artifactLocation + File.separator + "car" +
-                                  File.separator + artifactName);
-                deployerUtil.carFileUploder(sessionCookie, backendURL, url, artifactName);
+                                  File.separator + artifact.getArtifactName());
+                deployerUtil.carFileUploder(sessionCookie, backendURL, url, artifact.getArtifactName());
                 break;
 
             case war:
-                filePath = artifactLocation + File.separator + "war" + File.separator + artifactName;
+                filePath = artifactLocation + File.separator + "war" + File.separator + artifact.getArtifactName();
                 deployerUtil.warFileUploder(sessionCookie, backendURL, filePath);
                 break;
 
             case jar:
-                deployerUtil.jarFileUploder(sessionCookie, backendURL, artifactLocation, artifactName
-                        , artifactDependencyList, artifactAssociationList);
+                deployerUtil.jarFileUploder(sessionCookie, backendURL, artifactLocation, artifact.getArtifactName()
+                        , artifact.getDependencyArtifactList(), artifact.getAssociationList());
                 break;
 
             case bpelzip:
                 filePath = artifactLocation + File.separator + "bpel";
-                deployerUtil.bpelFileUploader(sessionCookie, backendURL, filePath, artifactName);
+                deployerUtil.bpelFileUploader(sessionCookie, backendURL, filePath, artifact.getArtifactName());
                 break;
 
             case jaxws:
-                filePath = artifactLocation + File.separator + "jaxws" + File.separator + artifactName;
-                deployerUtil.jaxwsFileUploader(sessionCookie, backendURL, artifactName, filePath);
+                filePath = artifactLocation + File.separator + "jaxws" + File.separator + artifact.getArtifactName();
+                deployerUtil.jaxwsFileUploader(sessionCookie, backendURL, artifact.getArtifactName(), filePath);
                 break;
 
             case ruleservice:
-                filePath = artifactLocation + File.separator + "ruleservice" + File.separator + artifactName;
-                deployerUtil.brsFileUploader(sessionCookie, artifactName, filePath, backendURL);
+                filePath = artifactLocation + File.separator + "ruleservice" + File.separator + artifact.getArtifactName();
+                deployerUtil.brsFileUploader(sessionCookie, artifact.getArtifactName(), filePath, backendURL);
                 break;
 
             case jszip:
-                filePath = artifactLocation + File.separator + "jszip" + File.separator + artifactName;
-                deployerUtil.javaScripServiceUploder(sessionCookie, artifactName, filePath, backendURL);
+                filePath = artifactLocation + File.separator + "jszip" + File.separator + artifact.getArtifactName();
+                deployerUtil.javaScripServiceUploder(sessionCookie, artifact.getArtifactName(), filePath, backendURL);
                 break;
 
             case spring:
-                deployerUtil.springServiceUpload(sessionCookie, artifactName, artifactLocation,
-                                                 artifactDependencyList, artifactAssociationList, backendURL);
+                deployerUtil.springServiceUpload(sessionCookie, artifact.getArtifactName(), artifactLocation,
+                                                 artifact.getDependencyArtifactList(), artifact.getAssociationList(), backendURL);
                 break;
 
             case dbs:
-                deployerUtil.dbsFileUploader(sessionCookie, backendURL, artifactName, artifactLocation,
-                                             artifactDependencyList, artifactAssociationList,
-                                             frameworkProperties, userId);
+                deployerUtil.dbsFileUploader(sessionCookie, backendURL, artifact, artifactLocation,
+                                             frameworkProperties);
                 break;
 
             case synapseconfig:
-                deployerUtil.updateESBConfiguration(sessionCookie, backendURL, artifactName,
+                deployerUtil.updateESBConfiguration(sessionCookie, backendURL, artifact.getArtifactName(),
                                                     artifactLocation, productName);
                 break;
 

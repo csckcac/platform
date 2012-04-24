@@ -31,11 +31,13 @@ import org.wso2.carbon.service.mgt.stub.types.carbon.FaultyService;
 import org.wso2.platform.test.core.utils.ClientConnectionUtil;
 
 import javax.activation.DataHandler;
+import javax.xml.stream.XMLStreamException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 //https://wso2.org/jira/browse/CARBON-11692
@@ -53,7 +55,8 @@ public class InvalidClosingTagFaultyServiceTest extends DataServiceTest {
     @Override
     public void serviceDeployment()
             throws ServiceAdminException, IOException, ExceptionException,
-                   RSSAdminRSSDAOExceptionException {
+                   RSSAdminRSSDAOExceptionException, XMLStreamException, ClassNotFoundException,
+                   SQLException {
         deleteServiceIfExist(serviceName);
         DataHandler dhArtifact;
         dhArtifact = createArtifact(serviceFile, getSqlScript());

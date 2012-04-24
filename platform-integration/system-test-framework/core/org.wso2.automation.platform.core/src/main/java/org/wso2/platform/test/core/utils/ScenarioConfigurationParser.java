@@ -51,6 +51,7 @@ public class ScenarioConfigurationParser {
     private static final String USER_ID = "userId";
     private static final String ARTIFACT = "artifact";
     private static final String ARTIFACT_NAME = "name";
+    private static final String LOCATION = "location";
     private static final String ARTIFACT_TYPE = "type";
     private static final String DEPENDENCY = "dependency";
     private static final String DEPENDENCY_NAME = "name";
@@ -131,10 +132,16 @@ public class ScenarioConfigurationParser {
                         OMElement omArtifact = (OMElement) itrArtifact.next();
                         OMAttribute omArtifactNameAttr = omArtifact.getAttribute(new QName(ARTIFACT_NAME));
                         OMAttribute omArtifactTypeAttr = omArtifact.getAttribute(new QName(ARTIFACT_TYPE));
+                        OMAttribute omArtifactLocationAttr = omArtifact.getAttribute(new QName(LOCATION));
 
                         Artifact artifact = new Artifact();
 
                         artifact.setArtifactName(omArtifactNameAttr.getAttributeValue());
+                        if (omArtifactLocationAttr != null) {
+                            artifact.setArtifactLocation(omArtifactLocationAttr.getAttributeValue());
+                        } else {
+                            artifact.setArtifactLocation("");
+                        }
                         artifact.setArtifactType(ArtifactTypeFactory.getType(omArtifactTypeAttr.getAttributeValue()));
                         artifact.setUserId(Integer.parseInt(omUserIdAttr.getAttributeValue()));
 
@@ -147,11 +154,17 @@ public class ScenarioConfigurationParser {
                             OMElement omDependency = (OMElement) itrDependency.next();
                             OMAttribute omDependencyNameAttr = omDependency.getAttribute(new QName(DEPENDENCY_NAME));
                             OMAttribute omDependencyTypeAttr = omDependency.getAttribute(new QName(DEPENDENCY_TYPE));
+                            OMAttribute omDependencyLocationAttr = omDependency.getAttribute(new QName(LOCATION));
 
                             ArtifactDependency artifactDependencies = new ArtifactDependency();
 
                             if (omDependencyNameAttr != null && omDependencyTypeAttr != null) {
                                 artifactDependencies.setDepArtifactName(omDependencyNameAttr.getAttributeValue());
+                                if (omDependencyLocationAttr != null) {
+                                    artifactDependencies.setDepArtifactLocation(omDependencyLocationAttr.getAttributeValue());
+                                } else {
+                                    artifactDependencies.setDepArtifactLocation("");
+                                }
                                 artifactDependencies.setDepArtifactType(ArtifactTypeFactory.
                                         getType(omDependencyTypeAttr.getAttributeValue()));
                                 depMapList.add(artifactDependencies);

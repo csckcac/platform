@@ -39,7 +39,9 @@ import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
+import java.io.IOException;
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -56,14 +58,12 @@ public class ServiceFaultyTest extends DataServiceTest {
     @Test(priority = 0)
     @Override
     public void serviceDeployment()
-            throws ServiceAdminException, RemoteException, ExceptionException {
+            throws ServiceAdminException, IOException, ExceptionException, XMLStreamException,
+                   ClassNotFoundException, RSSAdminRSSDAOExceptionException, SQLException {
         deleteServiceIfExist(serviceName);
         DataHandler dhArtifact;
-        try {
-            dhArtifact = createArtifact(serviceFile, getSqlScript());
-        } catch (RSSAdminRSSDAOExceptionException e) {
-            throw new RuntimeException(e);
-        }
+
+        dhArtifact = createArtifact(serviceFile, getSqlScript());
 
         adminServiceClientDSS.uploadArtifact(sessionCookie, serviceFile, dhArtifact);
         isServiceDeployed(serviceName);
@@ -112,7 +112,7 @@ public class ServiceFaultyTest extends DataServiceTest {
             newServiceContent = dbsFile.toString();
         } catch (XMLStreamException e) {
             log.error("XMLStreamException while handling data service content " + e);
-            throw new XMLStreamException("XMLStreamException while handling data service content " , e);
+            throw new XMLStreamException("XMLStreamException while handling data service content ", e);
         }
         Assert.assertNotNull("Could not edited service content", newServiceContent);
         dataServiceAdminService.editDataService(sessionCookie, serviceName, "", newServiceContent);

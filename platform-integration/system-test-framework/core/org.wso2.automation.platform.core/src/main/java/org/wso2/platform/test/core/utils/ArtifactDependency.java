@@ -22,11 +22,16 @@ package org.wso2.platform.test.core.utils;
  */
 public class ArtifactDependency {
     private String dependencyArtifactName;
+    private String dependencyArtifactLocation;
     private ArtifactType dependencyArtifactType;
 
     public void setDepArtifactName(String dependencyArtifactName) {
         this.dependencyArtifactName = dependencyArtifactName;
     }
+
+    public void setDepArtifactLocation(String dependencyArtifactLocation) {
+            this.dependencyArtifactLocation = dependencyArtifactLocation;
+        }
 
     public void setDepArtifactType(ArtifactType dependencyArtifactType) {
         this.dependencyArtifactType = dependencyArtifactType;
@@ -35,6 +40,10 @@ public class ArtifactDependency {
     public String getDepArtifactName() {
         return dependencyArtifactName;
     }
+
+    public String getDepArtifactLocation() {
+            return dependencyArtifactLocation;
+        }
 
     public ArtifactType getDepArtifactType() {
         return dependencyArtifactType;

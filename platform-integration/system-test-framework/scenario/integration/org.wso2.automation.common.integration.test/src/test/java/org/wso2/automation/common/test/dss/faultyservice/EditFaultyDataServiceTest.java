@@ -41,9 +41,11 @@ import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -84,7 +86,8 @@ public class EditFaultyDataServiceTest extends DataServiceTest {
 
     @Test(priority = 2, dependsOnMethods = {"isServiceFaulty"})
     public void editFaultyService()
-            throws RemoteException, RSSAdminRSSDAOExceptionException, XMLStreamException {
+            throws IOException, RSSAdminRSSDAOExceptionException, XMLStreamException,
+                   ClassNotFoundException, SQLException {
         DataServiceAdminService dataServiceAdminService = new DataServiceAdminService(dssBackEndUrl);
         String serviceContent;
         String newServiceContent = null;

@@ -46,6 +46,7 @@ import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -72,7 +73,7 @@ public class DistributedTransactionTest extends DataServiceTest {
     @Test(priority = 0)
     public void serviceDeployment()
             throws ServiceAdminException, IOException, RSSAdminRSSDAOExceptionException,
-                   ExceptionException, XMLStreamException {
+                   ExceptionException, XMLStreamException, ClassNotFoundException, SQLException {
         deleteServiceIfExist(serviceName);
         DataHandler dhArtifact;
         dhArtifact = getArtifactWithDTP(serviceFile);
@@ -393,7 +394,8 @@ public class DistributedTransactionTest extends DataServiceTest {
 
 
     private DataHandler getArtifactWithDTP(String serviceFile)
-            throws RSSAdminRSSDAOExceptionException, IOException, XMLStreamException {
+            throws RSSAdminRSSDAOExceptionException, IOException, XMLStreamException,
+                   ClassNotFoundException, SQLException {
         SqlDataSourceUtil dataSource1;
         SqlDataSourceUtil dataSource2;
         dataSource1 = new SqlDataSourceUtil(sessionCookie, dssBackEndUrl, FrameworkFactory.getFrameworkProperties(ProductConstant.DSS_SERVER_NAME), 3);

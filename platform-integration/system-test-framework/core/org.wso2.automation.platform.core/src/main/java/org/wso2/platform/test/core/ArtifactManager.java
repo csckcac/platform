@@ -84,31 +84,27 @@ public class ArtifactManager {
             for (ProductConfig aProductConfig : productConfig) {
                 List<Artifact> artifactList = aProductConfig.getProductArtifactList();
 
-                for (Artifact anArtifactList : artifactList) {
+                for (Artifact anArtifact : artifactList) {
 
-                    List<ArtifactDependency> artifactDependencyList = anArtifactList.getDependencyArtifactList();
-                    List<ArtifactAssociation> artifactAssociationList = anArtifactList.getAssociationList();
+                    List<ArtifactDependency> artifactDependencyList = anArtifact.getDependencyArtifactList();
+                    List<ArtifactAssociation> artifactAssociationList = anArtifact.getAssociationList();
 
                     if (deploymentStatus) {
-                        log.info("Deploying : " + anArtifactList.getArtifactName() + " of type : "
-                                 + anArtifactList.getArtifactType().toString().toUpperCase()
+                        log.info("Deploying : " + anArtifact.getArtifactName() + " of type : "
+                                 + anArtifact.getArtifactType().toString().toUpperCase()
                                  + " on :" + aProductConfig.getProductName().toUpperCase()
-                                 + " by user :" + anArtifactList.getUserId());
-                        deployArtifactByType(anArtifactList.getArtifactType(),
-                                             aProductConfig.getProductName(),
-                                             anArtifactList.getArtifactName(),
-                                             anArtifactList.getUserId(),
-                                             artifactDependencyList, artifactAssociationList);
+                                 + " by user :" + anArtifact.getUserId());
+                        deployArtifactByType(anArtifact, aProductConfig.getProductName());
 
                     } else {
-                        log.info("UnDeploying :" + anArtifactList.getArtifactName() + " of type : "
-                                 + anArtifactList.getArtifactType().toString().toUpperCase() +
+                        log.info("UnDeploying :" + anArtifact.getArtifactName() + " of type : "
+                                 + anArtifact.getArtifactType().toString().toUpperCase() +
                                  " on :" + aProductConfig.getProductName().toUpperCase()
-                                 + " by user : " + anArtifactList.getUserId());
-                        cleanArtifactByType(anArtifactList.getArtifactType(),
+                                 + " by user : " + anArtifact.getUserId());
+                        cleanArtifactByType(anArtifact.getArtifactType(),
                                             aProductConfig.getProductName(),
-                                            anArtifactList.getArtifactName(),
-                                            anArtifactList.getUserId(),
+                                            anArtifact.getArtifactName(),
+                                            anArtifact.getUserId(),
                                             artifactDependencyList, artifactAssociationList);
                     }
                 }
@@ -141,23 +137,15 @@ public class ArtifactManager {
     /**
      * calls for artifact deployment before test scenario execution.
      *
-     * @param type                    artifact type
      * @param productName             name of the product
-     * @param artifactName            name of the artifact to be deployed
-     * @param userId                  user do the deployment
-     * @param artifactDependencyList  artifact dependencies if any
-     * @param artifactAssociationList artifact associations if any
+     * @param artifact                artifact object to be deployed
      * @throws Exception if artifact deployment error
      */
-    private void deployArtifactByType(ArtifactType type, String productName, String artifactName,
-                                      int userId,
-                                      List<ArtifactDependency> artifactDependencyList,
-                                      List<ArtifactAssociation> artifactAssociationList)
+    private void deployArtifactByType(Artifact artifact, String productName)
             throws Exception {
 
         FrameworkProperties frameworkProperties = FrameworkFactory.getFrameworkProperties(productName);
-        deployer.deployArtifact(userId, productName, artifactName, type, artifactDependencyList,
-                                artifactAssociationList, frameworkProperties);
+        deployer.deployArtifact(productName, artifact, frameworkProperties);
 
     }
 }

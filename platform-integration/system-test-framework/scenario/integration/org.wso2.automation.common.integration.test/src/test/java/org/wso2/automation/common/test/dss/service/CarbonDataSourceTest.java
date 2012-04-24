@@ -49,6 +49,7 @@ import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -72,8 +73,8 @@ public class CarbonDataSourceTest extends DataServiceTest {
 
     @Test(priority = 0)
     public void createDataSourceTest()
-            throws RemoteException, DataSourceManagementException,
-                   RSSAdminRSSDAOExceptionException {
+            throws IOException, DataSourceManagementException,
+                   RSSAdminRSSDAOExceptionException, ClassNotFoundException, SQLException {
         carbonDataSourceName = createDataSource();
         log.info(carbonDataSourceName + " carbon Data Source Created");
     }
@@ -139,8 +140,8 @@ public class CarbonDataSourceTest extends DataServiceTest {
 
 
     private String createDataSource()
-            throws RemoteException, DataSourceManagementException,
-                   RSSAdminRSSDAOExceptionException {
+            throws IOException, DataSourceManagementException,
+                   RSSAdminRSSDAOExceptionException, ClassNotFoundException, SQLException {
 
         DataServiceAdminService dataServiceAdminService = new DataServiceAdminService(dssBackEndUrl);
         DataSourceAdminService dataSourceAdminService = new DataSourceAdminService(dssBackEndUrl);

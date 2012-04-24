@@ -23,6 +23,7 @@ public class Artifact {
 
     private String artifactName;
     private ArtifactType artifactType;
+    private String artifactLocation;
     private int userId;
     List<ArtifactDependency> dependencyList
             = new ArrayList<ArtifactDependency>();
@@ -32,6 +33,10 @@ public class Artifact {
     public void setArtifactName(String artifactName) {
         this.artifactName = artifactName;
     }
+
+    public void setArtifactLocation(String artifactLocation) {
+            this.artifactLocation = artifactLocation;
+        }
 
     public void setDependencyArtifactList(List<ArtifactDependency> dependencyList) {
         this.dependencyList = dependencyList;
@@ -60,6 +65,10 @@ public class Artifact {
     public String getArtifactName() {
         return artifactName;
     }
+
+    public String getArtifactLocation() {
+            return artifactLocation;
+        }
 
     public void setUserId(int userId) {
         this.userId = userId;

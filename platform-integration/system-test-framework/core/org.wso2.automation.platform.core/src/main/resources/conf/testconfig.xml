@@ -464,10 +464,8 @@
     <scenario testName="org.wso2.automation.common.test.dss.fileservice.CSVDataServiceTest">
         <product name="DSS">
             <artifacts userId="3">
-                <artifact name="CSVDataService.dbs" type="dbs">
-                    <dependency name="Products.csv" dependencyType="csv"/>
-                    <association name="artifact_location" value="csv"/>
-                    <association name="dependency_location" value="resources"/>
+                <artifact name="CSVDataService.dbs" type="dbs" location="csv">
+                    <dependency name="Products.csv" dependencyType="csv" location="resources"/>
                 </artifact>
             </artifacts>
         </product>
@@ -476,8 +474,7 @@
     <scenario testName="org.wso2.automation.common.test.dss.fileservice.CSVSampleServiceTest">
         <product name="DSS">
             <artifacts userId="3">
-                <artifact name="CSVSampleService.dbs" type="dbs">
-                    <association name="artifact_location" value="csv"/>
+                <artifact name="CSVSampleService.dbs" type="dbs" location="csv">
                 </artifact>
             </artifacts>
         </product>
@@ -486,11 +483,9 @@
     <scenario testName="org.wso2.automation.common.test.dss.fileservice.ExcelDataServiceTest">
         <product name="DSS">
             <artifacts userId="3">
-                <artifact name="ExcelDataService.dbs" type="dbs">
-                    <dependency name="Products.xls" dependencyType="excel"/>
-                    <dependency name="transform.xslt" dependencyType="xslt"/>
-                    <association name="artifact_location" value="excel"/>
-                    <association name="dependency_location" value="resources"/>
+                <artifact name="ExcelDataService.dbs" type="dbs" location="excel">
+                    <dependency name="Products.xls" dependencyType="excel" location="resources"/>
+                    <dependency name="transform.xslt" dependencyType="xslt" location="resources"/>
                 </artifact>
             </artifacts>
         </product>
@@ -499,8 +494,7 @@
     <scenario testName="org.wso2.automation.common.test.dss.fileservice.ExcelSampleServiceTest">
         <product name="DSS">
             <artifacts userId="3">
-                <artifact name="ExcelSampleService.dbs" type="dbs">
-                    <association name="artifact_location" value="excel"/>
+                <artifact name="ExcelSampleService.dbs" type="dbs" location="excel">
                 </artifact>
             </artifacts>
         </product>
@@ -509,8 +503,7 @@
     <scenario testName="org.wso2.automation.common.test.dss.fileservice.GSpreadDataServiceTest">
         <product name="DSS">
             <artifacts userId="3">
-                <artifact name="GSpreadDataService.dbs" type="dbs">
-                    <association name="artifact_location" value="gspread"/>
+                <artifact name="GSpreadDataService.dbs" type="dbs" location="gspread">
                 </artifact>
             </artifacts>
         </product>
@@ -519,11 +512,9 @@
     <scenario testName="org.wso2.automation.common.test.dss.service.MySqlDataServiceTest">
         <product name="DSS">
             <artifacts userId="3">
-                <artifact name="MySqlRSSDataServiceTest.dbs" type="dbs">
-                    <dependency name="CreateTables.sql" dependencyType="sql"/>
-                    <dependency name="Customers.sql" dependencyType="sql"/>
-                    <association name="artifact_location" value="rdbms/MySql"/>
-                    <association name="dependency_location" value="sql/MySql"/>
+                <artifact name="MySqlRSSDataServiceTest.dbs" type="dbs" location="rdbms/MySql">
+                    <dependency name="CreateTables.sql" dependencyType="sql" location="sql/MySql"/>
+                    <dependency name="Customers.sql" dependencyType="sql" location="sql/MySql"/>
                 </artifact>
             </artifacts>
         </product>
@@ -532,12 +523,11 @@
     <scenario testName="org.wso2.automation.common.test.dss.service.MySqlStoredProcedureTest">
         <product name="DSS">
             <artifacts userId="3">
-                <artifact name="StoredProcedureServiceTest.dbs" type="dbs">
-                    <dependency name="CreateTables.sql" dependencyType="sql"/>
-                    <dependency name="Employees.sql" dependencyType="sql"/>
-                    <dependency name="StoredProcedures.sql" dependencyType="sql"/>
-                    <association name="artifact_location" value="rdbms/MySql"/>
-                    <association name="dependency_location" value="sql/MySql"/>
+                <artifact name="StoredProcedureServiceTest.dbs" type="dbs" location="rdbms/MySql">
+                    <dependency name="CreateTables.sql" dependencyType="sql" location="sql/MySql"/>
+                    <dependency name="Employees.sql" dependencyType="sql" location="sql/MySql"/>
+                    <dependency name="StoredProcedures.sql" dependencyType="sql"
+                                location="sql/MySql"/>
                 </artifact>
             </artifacts>
         </product>
@@ -546,14 +536,12 @@
     <scenario testName="org.wso2.automation.common.test.dss.service.NestedQueryTest">
         <product name="DSS">
             <artifacts userId="3">
-                <artifact name="NestedQueryTest.dbs" type="dbs">
-                    <dependency name="CreateTables.sql" dependencyType="sql"/>
-                    <dependency name="Offices.sql" dependencyType="sql"/>
-                    <dependency name="Customers.sql" dependencyType="sql"/>
-                    <dependency name="Employees.sql" dependencyType="sql"/>
-                    <dependency name="Orders.sql" dependencyType="sql"/>
-                    <association name="artifact_location" value="rdbms/MySql"/>
-                    <association name="dependency_location" value="sql/MySql"/>
+                <artifact name="NestedQueryTest.dbs" type="dbs" location="rdbms/MySql">
+                    <dependency name="CreateTables.sql" dependencyType="sql" location="sql/MySql"/>
+                    <dependency name="Offices.sql" dependencyType="sql" location="sql/MySql"/>
+                    <dependency name="Customers.sql" dependencyType="sql" location="sql/MySql"/>
+                    <dependency name="Employees.sql" dependencyType="sql" location="sql/MySql"/>
+                    <dependency name="Orders.sql" dependencyType="sql" location="sql/MySql"/>
                 </artifact>
             </artifacts>
         </product>
@@ -562,10 +550,8 @@
     <scenario testName="org.wso2.automation.common.test.dss.service.RestFulServiceTest">
         <product name="DSS">
             <artifacts userId="3">
-                <artifact name="ResourcesServiceTest.dbs" type="dbs">
-                    <dependency name="CreateTables.sql" dependencyType="sql"/>
-                    <association name="artifact_location" value="rdbms/MySql"/>
-                    <association name="dependency_location" value="sql/MySql"/>
+                <artifact name="ResourcesServiceTest.dbs" type="dbs" location="rdbms/MySql">
+                    <dependency name="CreateTables.sql" dependencyType="sql" location="sql/MySql"/>
                 </artifact>
             </artifacts>
         </product>
@@ -574,10 +560,8 @@
     <scenario testName="org.wso2.automation.common.test.dss.service.BatchRequestTest">
         <product name="DSS">
             <artifacts userId="3">
-                <artifact name="BatchRequestTest.dbs" type="dbs">
-                    <dependency name="CreateTables.sql" dependencyType="sql"/>
-                    <association name="artifact_location" value="rdbms/MySql"/>
-                    <association name="dependency_location" value="sql/MySql"/>
+                <artifact name="BatchRequestTest.dbs" type="dbs" location="rdbms/MySql">
+                    <dependency name="CreateTables.sql" dependencyType="sql" location="sql/MySql"/>
                 </artifact>
             </artifacts>
         </product>
@@ -586,11 +570,9 @@
     <scenario testName="org.wso2.automation.common.test.dss.service.SecureDataServiceTest">
         <product name="DSS">
             <artifacts userId="3">
-                <artifact name="SecureDataService.dbs" type="dbs">
-                    <dependency name="CreateTables.sql" dependencyType="sql"/>
-                    <dependency name="Offices.sql" dependencyType="sql"/>
-                    <association name="artifact_location" value="rdbms/MySql"/>
-                    <association name="dependency_location" value="sql/MySql"/>
+                <artifact name="SecureDataService.dbs" type="dbs" location="rdbms/MySql">
+                    <dependency name="CreateTables.sql" dependencyType="sql" location="sql/MySql"/>
+                    <dependency name="Offices.sql" dependencyType="sql" location="sql/MySql"/>
                 </artifact>
             </artifacts>
         </product>
@@ -599,10 +581,8 @@
     <scenario testName="org.wso2.automation.common.test.dss.service.InputParametersValidationTest">
         <product name="DSS">
             <artifacts userId="3">
-                <artifact name="InputParamsValidationTest.dbs" type="dbs">
-                    <dependency name="CreateTables.sql" dependencyType="sql"/>
-                    <association name="artifact_location" value="rdbms/MySql"/>
-                    <association name="dependency_location" value="sql/MySql"/>
+                <artifact name="InputParamsValidationTest.dbs" type="dbs" location="rdbms/MySql">
+                    <dependency name="CreateTables.sql" dependencyType="sql" location="sql/MySql"/>
                 </artifact>
             </artifacts>
         </product>
@@ -611,10 +591,8 @@
     <scenario testName="org.wso2.automation.common.test.dss.service.FileServiceTest">
         <product name="DSS">
             <artifacts userId="3">
-                <artifact name="MySqlFileServiceTest.dbs" type="dbs">
-                    <dependency name="CreateTables.sql" dependencyType="sql"/>
-                    <association name="artifact_location" value="rdbms/MySql"/>
-                    <association name="dependency_location" value="sql/MySql"/>
+                <artifact name="MySqlFileServiceTest.dbs" type="dbs" location="rdbms/MySql">
+                    <dependency name="CreateTables.sql" dependencyType="sql" location="sql/MySql"/>
                 </artifact>
             </artifacts>
         </product>
@@ -623,10 +601,8 @@
     <scenario testName="org.wso2.automation.common.test.dss.scheduletask.AddScheduleTaskTest">
         <product name="DSS">
             <artifacts userId="3">
-                <artifact name="ScheduleTaskTest.dbs" type="dbs">
-                    <dependency name="CreateTables.sql" dependencyType="sql"/>
-                    <association name="artifact_location" value="rdbms/MySql"/>
-                    <association name="dependency_location" value="sql/MySql"/>
+                <artifact name="ScheduleTaskTest.dbs" type="dbs" location="rdbms/MySql">
+                    <dependency name="CreateTables.sql" dependencyType="sql" location="sql/MySql"/>
                 </artifact>
             </artifacts>
         </product>
@@ -635,10 +611,8 @@
     <scenario testName="org.wso2.automation.common.test.dss.scheduletask.ReScheduleTaskTest">
         <product name="DSS">
             <artifacts userId="3">
-                <artifact name="ScheduleTaskTest.dbs" type="dbs">
-                    <dependency name="CreateTables.sql" dependencyType="sql"/>
-                    <association name="artifact_location" value="rdbms/MySql"/>
-                    <association name="dependency_location" value="sql/MySql"/>
+                <artifact name="ScheduleTaskTest.dbs" type="dbs" location="rdbms/MySql">
+                    <dependency name="CreateTables.sql" dependencyType="sql" location="sql/MySql"/>
                 </artifact>
             </artifacts>
         </product>
@@ -678,10 +652,8 @@
     <scenario testName="org.wso2.automation.common.test.dss.syntax.WhiteSpaceWithQueryParamsTest">
         <product name="DSS">
             <artifacts userId="3">
-                <artifact name="WhiteSpacesInQueryParamsTest.dbs" type="dbs">
-                    <dependency name="CreateTables.sql" dependencyType="sql"/>
-                    <association name="artifact_location" value="rdbms/MySql"/>
-                    <association name="dependency_location" value="sql/MySql"/>
+                <artifact name="WhiteSpacesInQueryParamsTest.dbs" type="dbs" location="rdbms/MySql">
+                    <dependency name="CreateTables.sql" dependencyType="sql" location="sql/MySql"/>
                 </artifact>
             </artifacts>
         </product>
@@ -690,10 +662,8 @@
     <scenario testName="org.wso2.automation.common.test.dss.syntax.ReturnRequestStatusTest">
         <product name="DSS">
             <artifacts userId="3">
-                <artifact name="ReturnRequestStatusTest.dbs" type="dbs">
-                    <dependency name="CreateTables.sql" dependencyType="sql"/>
-                    <association name="artifact_location" value="rdbms/MySql"/>
-                    <association name="dependency_location" value="sql/MySql"/>
+                <artifact name="ReturnRequestStatusTest.dbs" type="dbs" location="rdbms/MySql">
+                    <dependency name="CreateTables.sql" dependencyType="sql" location="sql/MySql"/>
                 </artifact>
             </artifacts>
         </product>

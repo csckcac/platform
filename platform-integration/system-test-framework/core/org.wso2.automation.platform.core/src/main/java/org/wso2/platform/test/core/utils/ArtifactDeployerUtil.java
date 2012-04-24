@@ -47,11 +47,11 @@ import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
 import org.wso2.carbon.endpoint.stub.types.EndpointAdminEndpointAdminException;
 import org.wso2.carbon.localentry.stub.types.LocalEntryAdminException;
 import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminProxyAdminException;
+import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSDAOExceptionException;
 import org.wso2.carbon.rule.service.stub.fileupload.ExceptionException;
 import org.wso2.carbon.sequences.stub.types.SequenceEditorException;
 import org.wso2.carbon.task.stub.TaskManagementException;
 import org.wso2.carbon.utils.FileManipulator;
-import org.wso2.carbon.webapp.mgt.stub.types.carbon.WebappUploadData;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.dssutils.SqlDataSourceUtil;
 import org.wso2.platform.test.core.utils.endpointutils.EsbendpointSetter;
@@ -80,6 +80,7 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -212,30 +213,30 @@ public class ArtifactDeployerUtil {
                                 sessionCookie);
     }
 
-    public void dbsFileUploader(String sessionCookie, String backEndUrl, String artifactName,
-                                String artifactLocation,
-                                List<ArtifactDependency> artifactDependencyList,
-                                List<ArtifactAssociation> artifactAssociationList,
-                                FrameworkProperties frameworkProperties, int userId)
-            throws Exception, RemoteException, MalformedURLException {
+    public void dbsFileUploader(String sessionCookie, String backEndUrl, Artifact artifact,
+                                String artifactLocation, FrameworkProperties frameworkProperties)
+            throws IOException, RSSAdminRSSDAOExceptionException,
+                   org.wso2.carbon.dataservices.ui.fileupload.stub.ExceptionException,
+                   MalformedURLException, ClassNotFoundException, SQLException, XMLStreamException {
         String dbsFilePath;
-        String dependencyFilePath;
+        List<ArtifactDependency> artifactDependencyList = artifact.getDependencyArtifactList();
         List<File> sqlFileLis = null;
         DataHandler dbs;
         AdminServiceDataServiceFileUploader adminServiceDataServiceFileUploader =
                 new AdminServiceDataServiceFileUploader(backEndUrl);
 
         dbsFilePath = artifactLocation + File.separator + "dbs" + File.separator +
-                      getDbsAssociation(artifactAssociationList, "artifact_location") + artifactName;
+                      getPath(artifact.getArtifactLocation()) + File.separator + artifact.getArtifactName();
         if (artifactDependencyList != null || artifactDependencyList.size() > 0) {
-            dependencyFilePath = artifactLocation + File.separator +
-                                 getDbsAssociation(artifactAssociationList, "dependency_location");
             Iterator iterator = artifactDependencyList.iterator();
             sqlFileLis = new ArrayList<File>();
             while (iterator.hasNext()) {
                 ArtifactDependency dependency = (ArtifactDependency) iterator.next();
+                String dependencyFilePath = artifactLocation + File.separator +
+                                            getPath(dependency.getDepArtifactLocation() + File.separator
+                                                    + dependency.getDepArtifactName());
                 if (ArtifactType.sql == dependency.getDepArtifactType()) {
-                    sqlFileLis.add(new File(dependencyFilePath + dependency.getDepArtifactName()));
+                    sqlFileLis.add(new File(dependencyFilePath));
                 } else {
                     AdminServiceResourceAdmin adminServiceResourceAdmin =
                             new AdminServiceResourceAdmin(backEndUrl);
@@ -243,20 +244,19 @@ public class ArtifactDeployerUtil {
                                                           "/_system/governance/automation/resources/"
                                                           + dependency.getDepArtifactName(),
                                                           getMediaType(dependency.getDepArtifactType()), "",
-                                                          new DataHandler(new URL("file://" + dependencyFilePath +
-                                                                                  dependency.getDepArtifactName())));
+                                                          new DataHandler(new URL("file://" + dependencyFilePath)));
                 }
             }
         }
         if (sqlFileLis.size() > 0) {
             SqlDataSourceUtil dssUtil =
-                    new SqlDataSourceUtil(sessionCookie, backEndUrl, frameworkProperties, userId);
+                    new SqlDataSourceUtil(sessionCookie, backEndUrl, frameworkProperties, artifact.getUserId());
             dssUtil.createDataSource(sqlFileLis);
             dbs = dssUtil.createArtifact(dbsFilePath);
         } else {
             dbs = new DataHandler(new URL("file://" + dbsFilePath));
         }
-        adminServiceDataServiceFileUploader.uploadDataServiceFile(sessionCookie, artifactName, dbs);
+        adminServiceDataServiceFileUploader.uploadDataServiceFile(sessionCookie, artifact.getArtifactName(), dbs);
     }
 
     public void springServiceUpload(String sessionCookie, String artifactName,
@@ -670,20 +670,16 @@ public class ArtifactDeployerUtil {
         }
     }
 
-    private String getDbsAssociation(List<ArtifactAssociation> artifactAssociationList,
-                                     String keyword)
-            throws Exception {
+    private String getPath(String path) {
         String value = "";
-        if (artifactAssociationList != null || artifactAssociationList.size() > 0) {
-            Iterator iterator = artifactAssociationList.iterator();
-            while (iterator.hasNext()) {
-                ArtifactAssociation association = (ArtifactAssociation) iterator.next();
-                if (association.getAssociationName().equals(keyword)) {
-                    value = association.getAssociationValue() + File.separator;
-                    //Change file separator for OS
-                    value = value.replaceAll("[\\\\/]", File.separator);
-                    break;
-                }
+        if (path != null) {
+            value = path;
+            value = value.replaceAll("[\\\\/]", File.separator);
+            if (value.startsWith(File.separator)) {
+                value = value.substring(1);
+            }
+            if (value.endsWith(File.separator)) {
+                value = value.substring(0, value.length() - 1);
             }
         }
         return value;

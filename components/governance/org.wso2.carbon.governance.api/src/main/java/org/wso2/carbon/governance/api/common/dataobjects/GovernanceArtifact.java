@@ -435,6 +435,28 @@ public abstract class GovernanceArtifact {
     }
 
     /**
+     * Add associated Lifecycle state as a attribute of the Governance Artifact.
+     *
+     * @param lcState current state of the life cycle
+     *
+     * @throws GovernanceException throws if the operation failed.
+     */
+    public void setLcState(String lcState) throws GovernanceException {
+        addAttribute("lcstate",lcState);
+    }
+
+    /**
+     * Returns Lifecycle state of the Governance Artifact
+     *
+     *
+     * @return Associated lifecycle state of the Governance Artifact.
+     * @throws GovernanceException throws if the operation failed.
+     */
+    public String getLcState() throws GovernanceException {
+        return getAttribute("lcstate");
+    }
+
+    /**
      * Get dependencies of an artifacts. The artifacts should be saved, before calling this method.
      *
      * @return the array of depending artifacts.

@@ -13,6 +13,7 @@ import org.apache.http.protocol.HTTP;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseConstants;
 import org.apache.synapse.SynapseException;
+import org.apache.synapse.commons.util.PropertyHelper;
 import org.apache.synapse.config.xml.endpoints.utils.LoadbalanceAlgorithmFactory;
 import org.apache.synapse.core.LoadBalanceMembershipHandler;
 import org.apache.synapse.core.SynapseEnvironment;
@@ -24,17 +25,27 @@ import org.apache.synapse.endpoints.algorithms.LoadbalanceAlgorithm;
 import org.apache.synapse.endpoints.dispatch.SALSessions;
 import org.apache.synapse.endpoints.dispatch.SessionInformation;
 import org.apache.synapse.transport.nhttp.NhttpConstants;
+import org.wso2.carbon.lb.common.conf.LoadBalancerConfiguration;
+import org.wso2.carbon.lb.common.conf.structure.Node;
 import org.wso2.carbon.lb.endpoint.util.ConfigHolder;
 import org.wso2.carbon.lb.endpoint.util.TenantDomainRangeContext;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints.DynamicLoadbalanceEndpoint implements Serializable {
+    
+    private static final long serialVersionUID = 1577351815951789938L;
     private static final Log log = LogFactory.getLog(TenantAwareLoadBalanceEndpoint.class);
+    private String algorithm;
+    private String configuration;
+    private String failOver;
+
+    
     /**
      * Axis2 based membership handler which handles members in multiple clustering domains
      */
@@ -44,16 +55,20 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
      * Key - host, Value - domain
      */
     private Map<String, TenantDomainRangeContext> hostDomainMap;
-    private String algorithm;
-    private String configuration;
-    private String failOver;
+    private LoadBalancerConfiguration lbConfig;
 
     @Override
     public void init(SynapseEnvironment synapseEnvironment) {
         //  super.init(synapseEnvironment);
-        System.out.println("synapse - tenant aware LB initialized");
+        //System.out.println("synapse - tenant aware LB initialized");
         try {
-            hostDomainMap = ServiceClusterDomainConfigParser.loadCloudServicesConfiguration();
+            
+            String configURL = System.getProperty("loadbalancer.conf");
+            lbConfig = new LoadBalancerConfiguration();
+            lbConfig.init(configURL);
+            
+            hostDomainMap = loadHostDomainMap();
+            
         } catch (Exception e) {
             log.error("Error While reading Load Balancer configuration file" + e.toString());
         }
@@ -91,6 +106,7 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
                         cfgCtx,
                         isClusteringEnabled,
                         getName());
+                
             }
             // Initialize the SAL Sessions if already has not been initialized.
             SALSessions salSessions = SALSessions.getInstance();
@@ -100,6 +116,39 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
             initialized = true;
             log.info("ServiceDynamicLoadbalanceEndpoint initialized");
         }
+    }
+
+    private Map<String, TenantDomainRangeContext> loadHostDomainMap() {
+        
+        Map<String, TenantDomainRangeContext> map = new HashMap<String, TenantDomainRangeContext>();
+        
+        // get domains elements for each service 
+        for (Map.Entry<String, Node> entry : lbConfig.getServiceToDomainsMap().entrySet()) {
+            //String serviceName = entry.getKey();
+            Node domains = entry.getValue();
+            TenantDomainRangeContext domainRangeContext = new TenantDomainRangeContext();
+            
+            // get domain to tenant range map for each domains element and iterate over it
+            for (Map.Entry<String, String> entry2 : lbConfig.getdomainToTenantRangeMap(domains).entrySet()) {
+                
+                String domainName = entry2.getKey();
+                String tenantRange = entry2.getValue();
+                domainRangeContext.addTenantDomain(domainName, tenantRange);
+            }
+            
+            // get host to domains node map and iterate over it
+            for (Map.Entry<String, Node> entry3 : lbConfig.getHostDomainMap().entrySet()) {
+                String host = entry3.getKey();
+                Node domainsNode = entry3.getValue();
+                
+                if(domainsNode.equals(domains)){
+                    map.put(host, domainRangeContext);
+                }
+            }
+        
+        }
+        
+        return map;
     }
 
     public void setConfiguration(String paramEle) {
@@ -118,10 +167,12 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
         System.out.print(paramEle.toString());
     }
 
+    //TODO remove following hard coded element
     private String generatePayLoad() {
         return " <serviceDynamicLoadbalance failover=\"true\"\n" +
-                "                                           algorithm=\"org.apache.synapse.endpoints.algorithms.RoundRobin\"\n" +
-                "                                           configuration=\"$system:loadbalancer.xml\"/>";
+                "                                           algorithm=\"org.apache.synapse.endpoints.algorithms.RoundRobin\"" +
+                //"                                           configuration=\"$system:loadbalancer.xml\"" +
+                "/>";
     }
 
     public LoadBalanceMembershipHandler getLbMembershipHandler() {

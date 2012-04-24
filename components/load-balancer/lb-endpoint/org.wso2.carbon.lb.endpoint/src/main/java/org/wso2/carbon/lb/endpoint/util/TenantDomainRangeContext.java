@@ -20,7 +20,7 @@ public class TenantDomainRangeContext {
 
     public void addTenantDomain(String domain, String tenantRange) {
         tenantDomainRangeContextMap.put(domain, tenantRange);
-        String[] parsedLine = tenantRange.trim().split(",");
+        String[] parsedLine = tenantRange.trim().split("-");
         if (parsedLine[0].equalsIgnoreCase("*")) {
             tenantIDClusterDomainMap.put(0, domain);
         } else {

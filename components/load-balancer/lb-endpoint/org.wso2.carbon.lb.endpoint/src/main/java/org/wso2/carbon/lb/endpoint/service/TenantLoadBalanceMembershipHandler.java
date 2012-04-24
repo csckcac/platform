@@ -25,6 +25,7 @@ public class TenantLoadBalanceMembershipHandler implements LoadBalanceMembership
 
     private ConfigurationContext configCtx;
 
+    private LoadbalanceAlgorithm lbAlgo;
     /**
      * Key - Host, Value - DomainAlgorithmContext
      */
@@ -38,6 +39,7 @@ public class TenantLoadBalanceMembershipHandler implements LoadBalanceMembership
                                               boolean isClusteringEnabled,
                                               String endpointName) {
 
+        lbAlgo = algorithm;
         for (Map.Entry<String, TenantDomainRangeContext> entry : hostDomainMap.entrySet()) {
             {
                 AlgorithmContext algorithmContext =
@@ -116,7 +118,7 @@ public class TenantLoadBalanceMembershipHandler implements LoadBalanceMembership
     }
 
     public LoadbalanceAlgorithm getLoadbalanceAlgorithm() {
-        return null;
+        return lbAlgo;
     }
 
     public Properties getProperties() {

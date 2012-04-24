@@ -50,9 +50,10 @@
     boolean isPath = false;
     boolean isURL = false;
 
+    String path = (String) request.getSession().getAttribute("ruleScript");     // To get the uploaded file name
     String key = null;
-    String path = (String) request.getSession().getAttribute("ruleScript");
     String url = null;
+
 
     if (serviceDescription != null) {
         RuleSet ruleSet = serviceDescription.getRuleSet();
@@ -102,16 +103,17 @@
 
     }
 
+    if(path != null && !"".equals(path)) {
+            isSource = false;
+            isPath = true;
+
+    }
 
     if (ruleSourceAsObject == null || "".equals(ruleSourceAsObject)) {
         if (key != null && !"".equals(key.trim())) {
             isSource = false;
             isRegistry = true;
-        } else if (path != null && !"".equals(path)) {
-            isSource = false;
-            isPath = true;
-
-        } else {
+        }  else {
             if (url != null && !"".equals(url)) {
                 isSource = false;
                 isURL = true;
@@ -120,21 +122,10 @@
         }
     }
 
-    if (key == null) {
-        key = "";
-    }
-
-    if (path == null) {
-        path = "";
-    }
-
-    if (url == null) {
-        url = "";
-    }
-
-    if (ruleSourceAsObject == null) {
-        ruleSourceAsObject = "";
-    }
+    key = key == null ? "" : key;
+    path = path == null ? "" : path;
+    url = url == null ? "" : url;
+    ruleSourceAsObject = ruleSourceAsObject == null ? "" : ruleSourceAsObject;
 
     String ruleSourceDisplay = isSource ? "" : "display:none;";
     String ruleKeyDisplay = isRegistry ? "" : "display:none;";
@@ -270,7 +261,7 @@
                         <fmt:message key="reg.key"/>
                         <input type="radio" name="ruleScriptType"
                                id="ruleScriptTypeUpload"
-                               value="key"
+                               value="upload"
                                onclick="setRuleScriptType('upload');"/>
                         <fmt:message key="reg.upload"/>
                         <input type="radio" name="ruleScriptType"
@@ -292,7 +283,7 @@
                         <fmt:message key="reg.key"/>
                         <input type="radio" name="ruleScriptType"
                                id="ruleScriptTypeUpload"
-                               value="key"
+                               value="upload"
                                onclick="setRuleScriptType('upload');"/>
                         <fmt:message key="reg.upload"/>
                         <input type="radio" name="ruleScriptType"
@@ -316,7 +307,7 @@
                         <fmt:message key="reg.key"/>
                         <input type="radio" name="ruleScriptType"
                                id="ruleScriptTypeUpload"
-                               value="key"
+                               value="upload"
                                onclick="setRuleScriptType('upload');"
                                checked="checked"/>
                         <fmt:message key="reg.upload"/>
@@ -340,7 +331,7 @@
                         <fmt:message key="reg.key"/>
                         <input type="radio" name="ruleScriptType"
                                id="ruleScriptTypeUpload"
-                               value="key"
+                               value="upload"
                                onclick="setRuleScriptType('upload');"/>
                         <fmt:message key="reg.upload"/>
 

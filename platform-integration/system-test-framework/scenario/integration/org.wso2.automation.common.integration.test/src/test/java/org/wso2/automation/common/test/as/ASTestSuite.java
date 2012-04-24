@@ -17,8 +17,10 @@
 */
 package org.wso2.automation.common.test.as;
 
+import org.apache.tools.ant.taskdefs.Unpack;
 import org.testng.annotations.AfterSuite;
 import org.wso2.automation.common.test.as.service.*;
+import org.wso2.automation.common.test.as.webapp.UnpackWarTest;
 import org.wso2.platform.test.core.utils.suiteutills.MasterTestSuite;
 import org.wso2.platform.test.core.utils.suiteutills.SuiteVariables;
 import org.wso2.automation.common.test.as.capp.CarFileMultitenancyTest;
@@ -49,6 +51,7 @@ public class ASTestSuite extends MasterTestSuite {
         suiteVariablesList.add(new SuiteVariables("StopandRedeployWebapp", WebAppDeploymentTest.class));
         suiteVariablesList.add(new SuiteVariables("FaultyWebappTest", FaultyWebAppTest.class));
         suiteVariablesList.add(new SuiteVariables("AARServiceWithSpaceinFileNameTest", AARServiceSpaceInFileNameTest.class));
+        suiteVariablesList.add(new SuiteVariables("UnpackWarTest", UnpackWarTest.class));
 
 
         superSuite("Appserver-test-suite", suiteVariablesList).run();

@@ -15,6 +15,7 @@ public class ESBProductScenarioTestSuite extends MasterTestSuite {
         suiteVariablesList.add(new SuiteVariables("XFormURLEncodedBuilderTest", XFormURLEncodedBuilderTest.class));
         suiteVariablesList.add(new SuiteVariables("XFormURLEncodedBuilderWithWSDLTest", XFormURLEncodedBuilderWithWSDLTest.class));
         suiteVariablesList.add(new SuiteVariables("HttpGetTest", HttpGetTest.class));
+        suiteVariablesList.add(new SuiteVariables("MessageProcessorTest", MessageProcessorTest.class));
         superSuite("ESBproductScenariosTestSuite", suiteVariablesList).run();
     }
 

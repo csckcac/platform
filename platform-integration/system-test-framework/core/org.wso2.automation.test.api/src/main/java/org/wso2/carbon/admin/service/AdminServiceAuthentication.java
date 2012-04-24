@@ -18,12 +18,12 @@
 
 package org.wso2.carbon.admin.service;
 
-import junit.framework.Assert;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ServiceContext;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.testng.Assert;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.authenticator.stub.LogoutAuthenticationExceptionException;
@@ -63,7 +63,7 @@ public class AdminServiceAuthentication {
             log.error("Login to " + endPoint + " fail :" + e.getMessage());
             Assert.fail("Login to " + endPoint + " fail :" + e.getMessage());
         }
-        Assert.assertTrue("Login unsuccessful", loginStatus);
+        Assert.assertTrue(loginStatus, "Login unsuccessful");
         log.info("Login Successful");
         serviceContext = authenticationAdminStub._getServiceClient().getLastOperationContext().getServiceContext();
         sessionCookie = (String) serviceContext.getProperty(HTTPConstants.COOKIE_STRING);
@@ -84,7 +84,7 @@ public class AdminServiceAuthentication {
             log.error("Login to " + endPoint + " fail :" + e.getMessage());
             Assert.fail("Login to " + endPoint + " fail :" + e.getMessage());
         }
-        Assert.assertTrue("Login unsuccessful", loginStatus);
+        Assert.assertTrue(loginStatus, "Login unsuccessful");
         log.info("Login Successful");
         serviceContext = authenticationAdminStub._getServiceClient().getLastOperationContext().getServiceContext();
         sessionCookie = (String) serviceContext.getProperty(HTTPConstants.COOKIE_STRING);

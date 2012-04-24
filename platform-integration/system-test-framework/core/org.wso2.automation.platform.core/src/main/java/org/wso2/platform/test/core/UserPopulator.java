@@ -74,7 +74,7 @@ public class UserPopulator {
                             String backendURL = properties.getProductVariables().getBackendUrl();
                             String hostName = properties.getProductVariables().getHostName();
                             userMgtAdmin = new AdminServiceUserMgtService(backendURL);
-                            log.info("Populate user to " + id + " server");
+                            log.info("Populate users to " + id + " server");
                             createProductUsers(adminDetails, permissions, userList, backendURL, hostName);
                         }
                     }
@@ -107,7 +107,6 @@ public class UserPopulator {
             if (!userMgtAdmin.roleNameExists(roleName[roleNameIndex], sessionCookieUser)) {
                 userMgtAdmin.addRole(roleName[roleNameIndex], userList, permissions, sessionCookieUser);
                 resourceAdmin.addResourcePermission(sessionCookieUser, "/", "testRole", "3", "1");
-                System.out.println("permissoin added");
                 log.info("Role " + roleName[roleNameIndex] + " was created successfully");
                 log.info("Role " + roleName[roleNameIndex] + " was created successfully");
             }

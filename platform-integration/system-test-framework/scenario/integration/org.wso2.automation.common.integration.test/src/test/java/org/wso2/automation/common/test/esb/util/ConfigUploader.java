@@ -16,6 +16,7 @@ public class ConfigUploader {
 
     /**
      * changing axis2 server configurations with application server details.
+     *
      * @param environmentObj Environment Object
      * @param configFileName File Name need to be upload
      * @throws XMLStreamException Exception
@@ -27,7 +28,7 @@ public class ConfigUploader {
         XMLStringTransformer xmlStringTransformer = new XMLStringTransformer();
         String resourcePath = ProductConstant.getResourceLocations(ProductConstant.ESB_SERVER_NAME) + File.separator + "mediatorconfig" + File.separator;
         AdminServiceSynapseConfigAdmin synapseConfigAdmin = new AdminServiceSynapseConfigAdmin(environmentObj.getEsb().getSessionCookie(), environmentObj.getEsb().getBackEndUrl());
-        String bufferConfig = xmlStringTransformer.convertXMLFileToString (resourcePath + configFileName);
+        String bufferConfig = xmlStringTransformer.convertXMLFileToString(resourcePath + configFileName);
 
         if (bufferConfig.contains("localhost")) {
             bufferConfig = bufferConfig.replaceAll("localhost", environmentObj.getAs().getProductVariables().getHostName());
@@ -35,11 +36,12 @@ public class ConfigUploader {
         if (bufferConfig.contains("9000")) {
             bufferConfig = bufferConfig.replaceAll("9000", environmentObj.getAs().getProductVariables().getHttpPort());
         }
-        synapseConfigAdmin.updateConfiguration(bufferConfig);
         try {
+            Thread.sleep(5000);
+            synapseConfigAdmin.updateConfiguration(bufferConfig);
             //Thread.sleep(environmentBuilder.getFrameworkSettings().getEnvironmentVariables().getDeploymentDelay());
             // cant set environment delay.because no meaningful of delay 60000 ms every test case.
-            Thread.sleep(20000);
+            Thread.sleep(30000);
         } catch (InterruptedException ignored) {
         }
     }

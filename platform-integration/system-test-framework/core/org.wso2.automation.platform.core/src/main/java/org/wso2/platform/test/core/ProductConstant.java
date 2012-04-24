@@ -102,7 +102,7 @@ public class ProductConstant {
             reportLocation = System.getProperty("system.test.sample.location").replace("/", "\\").
                     substring(0, SYSTEM_TEST_RESOURCE_LOCATION.indexOf("core\\org.wso2.automation.platform"));
         } else {
-            reportLocation = System.getProperty("system.test.sample.location").replace("/", "\\").
+            reportLocation = System.getProperty("system.test.sample.location").replace("/", "/").
                     substring(0, SYSTEM_TEST_RESOURCE_LOCATION.indexOf("core/org.wso2.automation.platform"));
         }
         return reportLocation;

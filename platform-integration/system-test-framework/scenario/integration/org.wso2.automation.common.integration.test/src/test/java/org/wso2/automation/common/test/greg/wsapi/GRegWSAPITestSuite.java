@@ -46,6 +46,7 @@ public class GRegWSAPITestSuite extends MasterTestSuite {
         suiteVariablesList.add(new SuiteVariables("CollectionChildCountTest", CollectionChildCountTest.class));
         suiteVariablesList.add(new SuiteVariables("OnDemandContentTest", OnDemandContentTest.class));
         suiteVariablesList.add(new SuiteVariables("VersionHandlingTest", VersionHandlingTest.class));
+        suiteVariablesList.add(new SuiteVariables("AddWSDLTest", AddWSDLTest.class));
 
         superSuite("WSAPITestSuite", suiteVariablesList).run();
     }

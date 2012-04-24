@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.wso2.automation.product.scenarios.test.as;
+package org.wso2.automation.common.test.as.webapp;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -55,7 +55,6 @@ public class UnpackWarTest {
 
     protected void webAppTest(String url, String content) throws IOException {
         BufferedReader in;
-
         URL u = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) u.openConnection();
         connection.setRequestMethod("GET");
@@ -72,9 +71,7 @@ public class UnpackWarTest {
 
 
             while ((inputLine = in.readLine()) != null) {
-                System.out.println(inputLine);
                 if (inputLine.contains(content)) {
-                    System.out.println(inputLine);
                     fail("Issue still available");
                 }
             }

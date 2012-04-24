@@ -148,6 +148,7 @@ public class WSRequestHostObject extends ScriptableObject {
             log.error(e.getMessage(), e);
         }
     }
+
     /**
      * Constructor for the use by Rhino
      */
@@ -413,8 +414,13 @@ public class WSRequestHostObject extends ScriptableObject {
      * response. If the responseXML property is empty, you can check the responseText property to
      * see if a non-XML response was received.
      */
-    public String jsGet_responseText() {
-        return responseText;
+    public static String jsFunction_responseText(Context cx, Scriptable thisObj, Object[] arguments,
+                                     Function funObj) throws ScriptException {
+        WSRequestHostObject wsRequest = (WSRequestHostObject) thisObj;
+        if (arguments.length != 0) {
+            throw new ScriptException("invalid number of arguments");
+        }
+        return wsRequest.responseText;
     }
 
     protected void updateResponse(OMElement response) {
@@ -459,16 +465,26 @@ public class WSRequestHostObject extends ScriptableObject {
      * Getter for the responseE4X property. The parsed E4X XML message representing the response
      * from the service.
      */
-    public Scriptable jsGet_responseE4X() throws ScriptException {
-        return responseXML;
+    public static Scriptable jsFunction_getResponseE4X(Context cx, Scriptable thisObj, Object[] arguments,
+                                                       Function funObj) throws ScriptException {
+        WSRequestHostObject wsRequest = (WSRequestHostObject) thisObj;
+        if (arguments.length != 0) {
+            throw new ScriptException("invalid number of arguments");
+        }
+        return wsRequest.responseXML;
     }
 
     /**
      * Getter for the responseXML property. The parsed XML message representing the response from
      * the service. Currently we return an E4X object. But ideally this needs to be a DOM.
      */
-    public Scriptable jsGet_responseXML() throws ScriptException {
-        return responseXML;
+    public static Scriptable jsFunction_getResponseXML(Context cx, Scriptable thisObj, Object[] arguments,
+                                                       Function funObj) throws ScriptException {
+        WSRequestHostObject wsRequest = (WSRequestHostObject) thisObj;
+        if (arguments.length != 0) {
+            throw new ScriptException("invalid number of arguments");
+        }
+        return wsRequest.responseXML;
     }
 
     /**
@@ -499,8 +515,13 @@ public class WSRequestHostObject extends ScriptableObject {
      * has been received.</li> <p/> Of these, typically only the last (readyState == 4) is used.
      * </p>
      */
-    public int jsGet_readyState() {
-        return readyState;
+    public static int jsFunction_getReadyState(Context cx, Scriptable thisObj, Object[] arguments,
+                                               Function funObj) throws ScriptException {
+        WSRequestHostObject wsRequest = (WSRequestHostObject) thisObj;
+        if (arguments.length != 0) {
+            throw new ScriptException("invalid number of arguments");
+        }
+        return wsRequest.readyState;
     }
 
     /**
@@ -513,10 +534,15 @@ public class WSRequestHostObject extends ScriptableObject {
      * href="http://www.wso2.org/wiki/display/mashup/WebServiceError">WebServiceError</a> for more
      * details.
      */
-    public Scriptable jsGet_error() {
-        if (error != null) {
-            Object[] objects = {error};
-            return context.newObject(this, "WebServiceError", objects);
+    public static Scriptable jsFunction_getError(Context cx, Scriptable thisObj, Object[] arguments,
+                                              Function funObj) throws ScriptException {
+        WSRequestHostObject wsRequest = (WSRequestHostObject) thisObj;
+        if (arguments.length != 0) {
+            throw new ScriptException("invalid number of arguments");
+        }
+        if (wsRequest.error != null) {
+            Object[] objects = {wsRequest.error};
+            return wsRequest.context.newObject(thisObj, "WebServiceError", objects);
         }
         return null;
     }

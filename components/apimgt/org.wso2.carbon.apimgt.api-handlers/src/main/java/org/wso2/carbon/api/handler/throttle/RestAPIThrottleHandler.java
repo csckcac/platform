@@ -127,10 +127,10 @@ public class RestAPIThrottleHandler extends AbstractHandler {
                             if ((!entry.isCached() || entry.isExpired()) &&
                                     version != entry.getVersion()) {
                                 reCreate = true;
-                                version = entry.getVersion();
                             }
                         }
                         if (reCreate || throttle == null) {
+                            version = entry.getVersion();
                             Object entryValue = synCtx.getEntry(policyKey);
                             if (entryValue == null) {
                                 handleException("Null throttling policy returned by Entry : "

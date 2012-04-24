@@ -25,13 +25,24 @@ var params = {
                             "name" : "search/api-search",
                             "params" : null
                         }],
-                        "left" : [{
-                            "name" : "apis/recently-added",
-                            "params" : null
-                        }, {
-                            "name" : "apis/top-rated",
-                            "params" : null
-                        }],
+                        "left" : {
+                            "name" : "tabs/basic",
+                            "params" : {
+                                "tabs" : [{
+                                    "title" : "Recent",
+                                    "body" : [{
+                                        "name" : "apis/recently-added",
+                                        "params" : null
+                                    }, {
+                                        "name" : "apis/top-rated",
+                                        "params" : null
+                                    }]
+                                }, {
+                                    "title" : "Top Rated",
+                                    "body" : null
+                                }]
+                            }
+                        },
                         "middle" : {
                             "name" : "apis/listing",
                             "params" : {

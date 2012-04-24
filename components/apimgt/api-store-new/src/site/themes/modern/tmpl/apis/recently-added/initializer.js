@@ -1,3 +1,7 @@
+var getTemplateFile = function() {
+    return "tmpl/apis/recently-added/template.jag";
+};
+
 var initialize = function (global) {
 
 };

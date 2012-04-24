@@ -1,3 +1,7 @@
+var getTemplateFile = function() {
+    return "tmpl/tags/tag-cloud/template.jag";
+};
+
 var initialize = function (global) {
     //addHeaderJS(global, "tags/tag-cloud", "tag-cloud-events", "tmpl/tags/tag-cloud/js/tag-cloud.js");
 };

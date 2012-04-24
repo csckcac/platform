@@ -1,0 +1,32 @@
+<% var template = function(data, params, global) { %>
+<div class="tabs-basic">
+    <%
+        var tabs = data.tabs, length = tabs.length;
+        var i, index, tab, classes;
+    %>
+    <ul class="tabs left">
+    <%
+    for(i = 0; i < length; i++) {
+        tab = tabs[i];
+        if(i == 0) {
+            classes = "first current";
+        } else if(i == length - 1) {
+            classes = "last";
+        } else {
+            classes = "";
+        }
+    %>
+        <li class="<%=classes%>">
+            <a href="#tab<%=String(i)%>"><%=tab.title%></a>
+        </li>
+    <% } %>
+    </ul>
+
+    <%
+    for(i = 0; i < length; i++) {
+        tab = tabs[i];
+    %>
+    <div class="tab-content clearfix" id="tab<%=i%>"><% includeTemplates(tab.body, global); %></div>
+    <% } %>
+</div>
+<% }; %>

@@ -10,8 +10,7 @@
             <img src="<%=api.thumbURL%>" width="100" height="100"/>
         </a>
         <a><%=api.name%></a>
-        <a href="#"><%=api.provider%></a>
-
+        <a href="/service-info?name=foo&version1.0"><%=api.provider%></a>
         <div class="star-ratings">
             <img src="css/img/star-1.0.png"/>
             <img src="css/img/star-1.0.png"/>

@@ -5,8 +5,8 @@ Log.prototype.isDebugEnabled = function () {
     return false;
 };
 
-var getTemplateFile = function (template) {
-    return getTemplatesDir() + template + "/template.jag";
+var getTemplateFile = function (initializer) {
+    return getThemeFile(initializer.getTemplateFile());
 };
 
 var getInitializerFile = function (template) {
@@ -65,7 +65,6 @@ var renderPage = function (global) {
     var log = new Log();
     if (log.isDebugEnabled()) {
         log.debug("=============== renderPage(global) ===================");
-        log.debug("global >>> " + stringify(global));
     }
     var tpls = templates;
     var name = global.name;
@@ -73,13 +72,46 @@ var renderPage = function (global) {
     var js = global.js;
     var code = global.code;
 
+    var setTemplates = function (inserted, tmpls, keys, params) {
+        var i, tpl, length, tpls, key = keys[0];
+        var kys = keys.slice(1);
+        length = kys.length;
+        tpls = params[key];
+        if (length == 0) {
+            if (!tpls) {
+                return;
+            }
+            if (tpls instanceof Array) {
+                for (i = 0; i < tpls.length; i++) {
+                    tpl = tpls[i];
+                    if (!inserted[tpl.name]) {
+                        inserted[tpl.name] = true;
+                        tmpls.push(tpl);
+                    }
+                }
+            } else {
+                if (!inserted[tpls.name]) {
+                    inserted[tpls.name] = true;
+                    tmpls.push(tpls);
+                }
+            }
+            return;
+        }
+
+        if (tpls instanceof Array) {
+            for (i = 0; i < tpls.length; i++) {
+                setTemplates(inserted, tmpls, kys, tpls[i]);
+            }
+        } else {
+            setTemplates(inserted, tmpls, kys, tpls);
+        }
+    };
+
     var initTemplates = function (tpls, name, params, global) {
         if (log.isDebugEnabled()) {
             log.debug("=============== initTemplates(tpls, name, params, global) ===================");
             log.debug("tpls >>> " + stringify(tpls));
             log.debug("name >>> " + stringify(name));
-            log.debug("params >>> " + stringify(params));
-            log.debug("global >>> " + stringify(global));
         }
         if (tpls[name]) {
             return;
@@ -104,22 +136,29 @@ var renderPage = function (global) {
         if (log.isDebugEnabled()) {
             log.debug("merged params >>> " + getInitializerFile(name));
         }
-        var j, k, vname, value, d, tpl, len, vars = initializer.getTemplateParams();
+        var j, k, keys, values, inserted, d, tpl, len, vars = initializer.getTemplateParams();
+
         length = vars.length;
         for (j = 0; j < length; j++) {
-            vname = vars[j];
-            value = params[vname];
-            if (!value) {
+            keys = vars[j];
+            if (keys instanceof Array) {
+                values = [];
+                inserted = {};
+                setTemplates(inserted, values, keys, params);
+            } else {
+                values = params[keys];
+            }
+            if (!values) {
                 continue;
             }
-            if (!(value instanceof Array)) {
-                d = value.params || (value.params = {});
-                initTemplates(tpls, value.name, d, global);
+            if (!(values instanceof Array)) {
+                d = values.params || (values.params = {});
+                initTemplates(tpls, values.name, d, global);
                 continue;
             }
-            len = value.length;
+            len = values.length;
             for (k = 0; k < len; k++) {
-                tpl = value[k];
+                tpl = values[k];
                 d = tpl.params || (tpl.params = {});
                 initTemplates(tpls, tpl.name, d, global);
             }
@@ -131,13 +170,10 @@ var renderPage = function (global) {
     var initializer = tpls[name];
     var data = initializer.getData(params);
     if (log.isDebugEnabled()) {
-        log.debug("including template >>> " + getTemplateFile(name));
-        log.debug("params >>> " + stringify(params));
-        log.debug("data >>> " + stringify(data));
-        log.debug("global >>> " + stringify(global));
+        log.debug("including template >>> " + getTemplateFile(initializer));
     }
     template = null;
-    include(getTemplateFile(name));
+    include(getTemplateFile(initializer));
     var fn = template;
     if (!fn) {
         log.error("Template header and footer includes are missing for : " + name);
@@ -150,20 +186,15 @@ var includeTemplate = function (name, params, global) {
     if (log.isDebugEnabled()) {
         log.debug("=================includeTemplate(name, data, global)====================");
         log.debug("name >>> " + stringify(name));
-        log.debug("data >>> " + stringify(params));
-        log.debug("global >>> " + stringify(global));
     }
     var tpls = templates;
     var initializer = tpls[name];
     var data = initializer.getData(params);
     if (log.isDebugEnabled()) {
-        log.debug("including template >>> " + getTemplateFile(name));
-        log.debug("params >>> " + stringify(params));
-        log.debug("data >>> " + stringify(data));
-        log.debug("global >>> " + stringify(global));
+        log.debug("including template >>> " + getTemplateFile(initializer));
     }
     template = null;
-    include(getTemplateFile(name));
+    include(getTemplateFile(initializer));
     var fn = template;
     if (!fn) {
         log.error("Template header and footer includes are missing for : " + name);
@@ -172,6 +203,9 @@ var includeTemplate = function (name, params, global) {
 };
 
 var includeTemplates = function (tmpls, global) {
+    if (!tmpls) {
+        return;
+    }
     if (tmpls instanceof Array) {
         var i, tmpl, length = tmpls.length;
         for (i = 0; i < length; i++) {

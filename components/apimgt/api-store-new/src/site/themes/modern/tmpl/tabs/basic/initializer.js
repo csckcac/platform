@@ -1,20 +1,20 @@
 var getTemplateFile = function() {
-    return "tmpl/apis/listing/template.jag";
+    return "tmpl/tabs/basic/template.jag";
 };
 
 var initialize = function (global) {
-
+    //addHeaderCSS(global, "layouts/layout0", "layout0", "tmpl/layouts/layout0/css/layout0.css");
 };
 
 var getData = function (params) {
     return {
-        "apis":params.apis
+        tabs : params.tabs
     };
 };
 
 var getParams = function () {
     return {
-        "apis" : null
+        tabs:null
     };
 };
 
@@ -23,5 +23,7 @@ var getTemplates = function () {
 };
 
 var getTemplateParams = function () {
-    return [];
+    return [
+        ["tabs", "body"]
+    ];
 };

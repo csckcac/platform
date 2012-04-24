@@ -1,3 +1,6 @@
+var getTemplateFile = function() {
+    return "tmpl/apis/top-rated/template.jag";
+};
 //overrides goes here
 var initialize = function (global) {
     //removeHeaderCSS("layout/default");

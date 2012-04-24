@@ -120,6 +120,7 @@
                         <Export-Package>
                             org.wso2.carbon.service.mgt,
                             org.wso2.carbon.service.mgt.util,
+                            org.wso2.carbon.service.mgt.multitenancy
                         </Export-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                         <Require-CarbonUIComponents>${project.artifactId}.ui-${project.version}</Require-CarbonUIComponents>

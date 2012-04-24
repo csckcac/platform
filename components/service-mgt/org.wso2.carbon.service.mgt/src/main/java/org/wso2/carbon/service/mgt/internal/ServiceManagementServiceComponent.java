@@ -21,7 +21,9 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.base.api.ServerConfigurationService;
+import org.wso2.carbon.core.multitenancy.GenericArtifactUnloader;
 import org.wso2.carbon.service.mgt.ServiceAdmin;
+import org.wso2.carbon.service.mgt.multitenancy.ServiceUnloader;
 import org.wso2.carbon.utils.ConfigurationContextService;
 import org.wso2.carbon.utils.MBeanRegistrar;
 
@@ -38,6 +40,8 @@ import org.wso2.carbon.utils.MBeanRegistrar;
  * cardinality="1..1" policy="dynamic"
  * bind="setServerConfiguration"
  * unbind="unsetServerConfiguration"
+ * @scr.reference name="artifact.unloader.service" interface="org.wso2.carbon.core.multitenancy.GenericArtifactUnloader"
+ * cardinality="1..1" policy="dynamic"  bind="setArtifactUnloaderService" unbind="unsetArtifactUnloaderService"
  */
 public class ServiceManagementServiceComponent {
 
@@ -45,6 +49,7 @@ public class ServiceManagementServiceComponent {
 
     private ConfigurationContext configCtx;
     private ServiceAdmin serviceAdmin;
+    ServiceUnloader serviceUnloader;
 
     protected void activate(ComponentContext ctxt) {
         try {
@@ -73,6 +78,7 @@ public class ServiceManagementServiceComponent {
 
     protected void setConfigurationContext(ConfigurationContextService configCtx) {
         this.configCtx = configCtx.getServerConfigContext();
+        DataHolder.setServerConfigContext(configCtx.getServerConfigContext());
     }
 
     protected void unsetConfigurationContext(ConfigurationContextService configCtx) {
@@ -83,7 +89,15 @@ public class ServiceManagementServiceComponent {
         registerMBeans(serverConfigurationService);
     }
 
-    protected void unsetServerConfiguration(ServerConfigurationService serverConfigurationServiceg) {
+    protected void unsetServerConfiguration(
+            ServerConfigurationService serverConfigurationServiceg) {
+    }
+
+    protected void setArtifactUnloaderService(GenericArtifactUnloader genericArtifactUnloader) {
+         serviceUnloader = new ServiceUnloader();
+         genericArtifactUnloader.registerArtifactUnloader(serviceUnloader);
+    }
+    protected void unsetArtifactUnloaderService(GenericArtifactUnloader genericArtifactUnloader) {
     }
 
     private void registerMBeans(ServerConfigurationService serverConfigurationService) {

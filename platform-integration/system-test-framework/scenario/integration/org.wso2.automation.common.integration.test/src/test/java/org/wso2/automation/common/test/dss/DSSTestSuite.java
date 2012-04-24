@@ -20,8 +20,13 @@ package org.wso2.automation.common.test.dss;
 import org.testng.annotations.AfterSuite;
 import org.wso2.automation.common.test.dss.datasource.DataSourceInitializationAtStartUp;
 import org.wso2.automation.common.test.dss.faultyservice.InvalidClosingTagFaultyServiceTest;
+import org.wso2.automation.common.test.dss.fileservice.CSVSampleServiceTest;
+import org.wso2.automation.common.test.dss.fileservice.ExcelSampleServiceTest;
+import org.wso2.automation.common.test.dss.rssmanager.RSSManagerTest;
 import org.wso2.automation.common.test.dss.syntax.ReturnRequestStatusTest;
 import org.wso2.automation.common.test.dss.syntax.WhiteSpaceWithQueryParamsTest;
+import org.wso2.platform.test.core.ProductConstant;
+import org.wso2.platform.test.core.utils.frameworkutils.FrameworkFactory;
 import org.wso2.platform.test.core.utils.suiteutills.MasterTestSuite;
 import org.wso2.platform.test.core.utils.suiteutills.SuiteVariables;
 import org.wso2.automation.common.test.dss.faultyservice.EditFaultyDataServiceTest;
@@ -51,36 +56,44 @@ public class DSSTestSuite extends MasterTestSuite {
 
     @AfterSuite
     public void suiteRunner() {
-        List<SuiteVariables> suiteVariablesList=new ArrayList<SuiteVariables>();
-        suiteVariablesList.add(new SuiteVariables("CSVDataService", CSVDataServiceTest.class));
-        suiteVariablesList.add(new SuiteVariables("ExcelDataService", ExcelDataServiceTest.class));
+        List<SuiteVariables> suiteVariablesList = new ArrayList<SuiteVariables>();
+        suiteVariablesList.add(new SuiteVariables("CSVSampleDataService", CSVSampleServiceTest.class));
+        suiteVariablesList.add(new SuiteVariables("CSVDataServiceWithRegistry", CSVDataServiceTest.class));
+        suiteVariablesList.add(new SuiteVariables("ExcelDataService", ExcelSampleServiceTest.class));
+        suiteVariablesList.add(new SuiteVariables("ExcelDataServiceWithRegistry", ExcelDataServiceTest.class));
         suiteVariablesList.add(new SuiteVariables("GoogleSpreadSheetDataService", GSpreadDataServiceTest.class));
         suiteVariablesList.add(new SuiteVariables("MySqlDataServiceTest", MySqlDataServiceTest.class));
         suiteVariablesList.add(new SuiteVariables("MySqlStoredProcedureTest", MySqlStoredProcedureTest.class));
         suiteVariablesList.add(new SuiteVariables("NestedQueryTest", NestedQueryTest.class));
         suiteVariablesList.add(new SuiteVariables("CarbonDataSourceTest", CarbonDataSourceTest.class));
+        suiteVariablesList.add(new SuiteVariables("DistributedTransactionTest", DistributedTransactionTest.class));
         suiteVariablesList.add(new SuiteVariables("RestFulServiceTest", RestFulServiceTest.class));
         suiteVariablesList.add(new SuiteVariables("BatchRequestTest", BatchRequestTest.class));
         suiteVariablesList.add(new SuiteVariables("SecureDataServiceTest", SecureDataServiceTest.class));
         suiteVariablesList.add(new SuiteVariables("InputParametersValidationTest", InputParametersValidationTest.class));
         suiteVariablesList.add(new SuiteVariables("FileServiceTest", FileServiceTest.class));
         suiteVariablesList.add(new SuiteVariables("EventingServiceTest", EventingServiceTest.class));
-        suiteVariablesList.add(new SuiteVariables("DistributedTransactionTest", DistributedTransactionTest.class));
         suiteVariablesList.add(new SuiteVariables("FaultyServiceTest", FaultyServiceTest.class));
         suiteVariablesList.add(new SuiteVariables("ServiceFaultyTest", ServiceFaultyTest.class));
         suiteVariablesList.add(new SuiteVariables("EditFaultyDataServiceTest", EditFaultyDataServiceTest.class));
         suiteVariablesList.add(new SuiteVariables("ReturnRequestStatusTest", ReturnRequestStatusTest.class));
         suiteVariablesList.add(new SuiteVariables("WhiteSpaceWithQueryParamsTest", WhiteSpaceWithQueryParamsTest.class));
-        suiteVariablesList.add(new SuiteVariables("AddScheduleTaskTest", AddScheduleTaskTest.class));
-        suiteVariablesList.add(new SuiteVariables("ReScheduleTaskTest", ReScheduleTaskTest.class));
 
-        suiteVariablesList.add(new SuiteVariables("DataSourceInitializationAtStartUp", DataSourceInitializationAtStartUp.class));
-        suiteVariablesList.add(new SuiteVariables("InvalidClosingTagFaultyServiceTest", InvalidClosingTagFaultyServiceTest.class));
-        superSuite("DataServiceServer",suiteVariablesList).run();
+        if (FrameworkFactory.getFrameworkProperties(ProductConstant.DSS_SERVER_NAME).getEnvironmentSettings().is_runningOnStratos()) {
+            suiteVariablesList.add(new SuiteVariables("RSSManager", RSSManagerTest.class));
+
+        } else {
+            suiteVariablesList.add(new SuiteVariables("AddScheduleTaskTest", AddScheduleTaskTest.class));
+            suiteVariablesList.add(new SuiteVariables("ReScheduleTaskTest", ReScheduleTaskTest.class));
+            suiteVariablesList.add(new SuiteVariables("DataSourceInitializationAtStartUp", DataSourceInitializationAtStartUp.class));
+            suiteVariablesList.add(new SuiteVariables("InvalidClosingTagFaultyServiceTest", InvalidClosingTagFaultyServiceTest.class));
+
+        }
+        superSuite("DataServiceServer", suiteVariablesList).run();
     }
 
     public static void main(String[] args) {
-       new DSSTestSuite().suiteRunner();
+        new DSSTestSuite().suiteRunner();
     }
 
 }

@@ -253,8 +253,6 @@ public final class APIUtil {
         for (APIStatus aStatus : APIStatus.values()) {
             if (aStatus.getStatus().equals(status)) {
                 apiStatus = aStatus;
-            }else {
-                throw new APIManagementException("The API state:" + status +" is incorrect");
             }
         }
         return apiStatus;

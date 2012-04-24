@@ -140,7 +140,7 @@
                        value=" &lt; <fmt:message key="back"/>"
                        onclick="handleBackButton();return false;" class="button"/>
                 <input type="button" tabindex="5"
-                       value="<fmt:message key="deploy.service"/>"
+                       value="<fmt:message key="finish"/>"
                        onclick="validateEJBParams()" class="button"/>
                 <input type="button" onClick="cancel()" tabindex="6"
                        value="<fmt:message key="cancel"/>" class="button"/>

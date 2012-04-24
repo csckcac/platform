@@ -377,7 +377,9 @@ public class TomcatJaggeryWebappsDeployer {
             webapp.setServletMappingParameters(servletMappingParameters);
             webapp.setServletContextParameters(webContextParams);
             //Adding Display Name from config
-            setDisplayName(context, jaggeryConfigObj);
+            if (jaggeryConfigObj != null) {
+                setDisplayName(context, jaggeryConfigObj);
+            }
             webappsHolder.getStartedWebapps().put(filename, webapp);
             webappsHolder.getFaultyWebapps().remove(filename);
             registerApplicationEventListeners(applicationEventListeners, context);

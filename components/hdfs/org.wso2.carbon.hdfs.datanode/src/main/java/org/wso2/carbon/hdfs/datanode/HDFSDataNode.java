@@ -37,29 +37,32 @@ public class HDFSDataNode {
     private static final String HDFS_DEFAULT_XML = "hdfs-default.xml";
     private static final String HDFS_SITE_XML = "hdfs-site.xml";
     private static final String HADOOP_POLICY_XML = "hadoop-policy.xml";
+    private static final String METRICS2_PROPERTIES = "hadoop-metrics2.properties";
 
     private Thread thread;
 
     public HDFSDataNode() {
-        Configuration conf = new Configuration(false);
+        Configuration configuration = new Configuration(false);
         String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
-
+        String hadoopConf = carbonHome + File.separator + "repository" + File.separator +
+                "conf" + File.separator + "etc" + File.separator + "hadoop";
         String hadoopCoreSiteConf = carbonHome + File.separator + "repository" + File.separator +
-                                    "conf" + File.separator + "advanced" + File.separator + CORE_SITE_XML;
-        String hdfsCoreDefaultConf = carbonHome + File.separator + "repository" + File.separator +
-                                  "conf" + File.separator + "advanced" + File.separator + HDFS_DEFAULT_XML;
+                "conf" + File.separator + "etc" + File.separator + "hadoop" + File.separator + CORE_SITE_XML;
         String hdfsCoreSiteConf = carbonHome + File.separator + "repository" + File.separator +
-                                  "conf" + File.separator + "advanced" + File.separator + HDFS_SITE_XML;
+                "conf" + File.separator + "etc" + File.separator + "hadoop" + File.separator + HDFS_SITE_XML;
         String hadoopPolicyConf = carbonHome + File.separator + "repository" + File.separator +
-                                  "conf" + File.separator + "advanced" + File.separator + HADOOP_POLICY_XML;
-
-        conf.addResource(new Path(hadoopCoreSiteConf));
-        conf.addResource(new Path(hdfsCoreDefaultConf));
-        conf.addResource(new Path(hdfsCoreSiteConf));
-        conf.addResource(new Path(hadoopPolicyConf));
+                "conf" + File.separator + "etc" + File.separator + "hadoop" + File.separator + HADOOP_POLICY_XML;
+//        String mapredSiteConf = carbonHome + File.separator + "repository" + File.separator +
+//                "conf" + File.separator + "etc" + File.separator + "hadoop" + File.separator + MAPRED_SITE_XML;
+        String hadoopMetrics2Properties = carbonHome + File.separator + "repository" + File.separator +
+                "conf" + File.separator + "etc" + File.separator + "hadoop" + File.separator + METRICS2_PROPERTIES;
+        configuration.addResource(new Path(hadoopConf));
+        configuration.addResource(new Path(hdfsCoreSiteConf));
+        configuration.addResource(new Path(hadoopPolicyConf));
+        configuration.addResource(new Path(hadoopMetrics2Properties));
 
         try {
-            DataNode datanode = DataNode.createDataNode(null, conf, null);
+            DataNode datanode = DataNode.createDataNode(null, configuration, null);
             DataNode.runDatanodeDaemon(datanode);
         } catch (Throwable e) {
             log.error(e);

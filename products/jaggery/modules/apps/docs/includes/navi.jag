@@ -13,7 +13,7 @@
             <a href="/docs/apidocs/print.jag">print()</a>
         </li>
         <li id="log">
-            <a href="/docs/apidocs/log.jag">log()</a>
+            <a href="/docs/apidocs/log.jag">Log</a>
         </li>
     </ul>
 

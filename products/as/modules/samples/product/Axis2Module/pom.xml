@@ -26,7 +26,7 @@
                         </goals>
                         <configuration>
                             <marName>
-                                LogModule
+                                LogModule-1.0.0
                             </marName>
                             <moduleXmlFile>
                                 ${basedir}/src/main/resources/META-INF/module.xml

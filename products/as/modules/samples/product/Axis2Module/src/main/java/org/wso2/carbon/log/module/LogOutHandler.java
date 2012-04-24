@@ -13,7 +13,7 @@ public class LogOutHandler extends AbstractHandler {
     public InvocationResponse invoke(MessageContext messageContext) throws AxisFault {
         // Ignore filtered services and services to which this module is not engaged..
         if (LogModuleUtils.isFilteredOutService(messageContext.getAxisServiceGroup()) ||
-                !messageContext.getAxisOperation().isEngaged("logmodule")) {
+                !messageContext.getAxisOperation().isEngaged("logmodule-1.0.0")) {
             return InvocationResponse.CONTINUE;
         }
         // Log the message

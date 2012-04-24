@@ -35,10 +35,10 @@ public class ContainerDAO extends AbstractDAO{
     */
     public void create(Container container) throws SQLException {
         try{
-           con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
-           Class.forName(driver);
-           statement = con.createStatement();
-           String sql = "INSERT INTO container VALUES('" + container.getContainerId() + "','"
+            Class.forName(driver);
+            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
+            statement = con.createStatement();
+            String sql = "INSERT INTO container VALUES('" + container.getContainerId() + "','"
                         + container.getType() + "','"
                         + container.getLabel() + "','" + container.getDescription() + "',"
                         + container.isStarted() + ",'" + container.getTenant() + "','"
@@ -49,7 +49,7 @@ public class ContainerDAO extends AbstractDAO{
        }catch (SQLException s){
            String msg = "Error while inserting container data" + s.getMessage();
            log.error(msg);
-           throw new SQLException(s);
+           throw new SQLException(s + msg);
        }catch (ClassNotFoundException s){
            String msg = "Error while sql connection :" + s.getMessage();
            log.error(msg);
@@ -71,16 +71,15 @@ public class ContainerDAO extends AbstractDAO{
      */
     public void delete(String containerId) throws SQLException {
         try{
-           con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
-           Class.forName(driver);
-           statement = con.createStatement();
-           String sql = "DELETE FROM container WHERE container_id='" + containerId + "'";
-
-           statement.executeUpdate(sql);
+            Class.forName(driver);
+            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
+            statement = con.createStatement();
+            String sql = "DELETE FROM container WHERE container_id='" + containerId + "'";
+            statement.executeUpdate(sql);
        }catch (SQLException s){
            String msg = "Error while deleting container data" + s.getMessage();
            log.error(msg);
-           throw new SQLException(s);
+           throw new SQLException(s + msg);
        }catch (ClassNotFoundException s){
            String msg = "Error while sql connection :" + s.getMessage();
            log.error(msg);
@@ -104,8 +103,8 @@ public class ContainerDAO extends AbstractDAO{
     public void changeState(String containerId, Boolean status)
             throws SQLException {
         try{
+            Class.forName(driver);
            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
-           Class.forName(driver);
            statement = con.createStatement();
            String sql = "UPDATE container SET started="+ status +" WHERE container_id='"
                         + containerId+ "'";
@@ -113,7 +112,7 @@ public class ContainerDAO extends AbstractDAO{
        }catch (SQLException s){
            String msg = "Error while deleting container data" + s.getMessage();
            log.error(msg);
-           throw new SQLException(s);
+           throw new SQLException(s + msg);
        }catch (ClassNotFoundException s){
            String msg = "Error while sql connection :" + s.getMessage();
            log.error(msg);
@@ -147,8 +146,8 @@ public class ContainerDAO extends AbstractDAO{
         ResultSet resultSetForBridge = null;
         ResultSet resultSetForContainer = null;
         try{
-            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
             Class.forName(driver);
+            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
             statement = con.createStatement();
             String sql =  "SELECT * FROM host_machine WHERE zone='" + zone + "' AND available=true" ;
             //Here we get all the host machines that maps to zone
@@ -196,7 +195,7 @@ public class ContainerDAO extends AbstractDAO{
         }catch (SQLException s){
            String msg = "Error while retrieving container data" + s.getMessage();
            log.error(msg);
-           throw new SQLException(s);
+           throw new SQLException(s + msg);
         }
         catch (ClassNotFoundException s){
            String msg = "Error while sql connection :" + s.getMessage();
@@ -234,8 +233,8 @@ public class ContainerDAO extends AbstractDAO{
         String availableIp = null;
         ResultSet resultSet = null;
         try{
-            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
             Class.forName(driver);
+            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
             statement = con.createStatement();
             String sql =  "SELECT * FROM available_ip WHERE bridge='" + bridgeIp + "'" ;
             //Here we have to get all the ips relevant to the bridge then select the ip according to
@@ -260,7 +259,7 @@ public class ContainerDAO extends AbstractDAO{
         }catch (SQLException s){
             String msg = "Error while getting available ip " + s.getMessage();
             log.error(msg);
-            throw new SQLException(s);
+            throw new SQLException(s + msg);
         }catch (ClassNotFoundException s){
             String msg = "Error while sql connection :" + s.getMessage();
             log.error(msg);
@@ -299,7 +298,7 @@ public class ContainerDAO extends AbstractDAO{
         containerInformation.setIp(getAvailableIp(bridgeIp));
         containerInformation.setNetGateway(bridges[0].getNetGateway());
         containerInformation.setNetMask(bridges[0].getNetMask());
-        //Container type, container id can not be set from here it will be set from adapter level
+        //Container type, container id can not be set from here. They will be set from adapter level.
         return containerInformation;
     }
 

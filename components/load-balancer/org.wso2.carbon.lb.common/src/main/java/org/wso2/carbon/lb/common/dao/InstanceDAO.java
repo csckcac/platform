@@ -38,8 +38,8 @@ public class InstanceDAO extends AbstractDAO{
         HashMap instanceToDomainMap = new HashMap<String, ArrayList<String>>();
         ResultSet resultSet = null;
         try{
-            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
             Class.forName(driver);
+            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
             statement = con.createStatement();
             String sql =  "SELECT instance_id, domain FROM instance" ;
             resultSet = statement.executeQuery(sql);
@@ -65,7 +65,7 @@ public class InstanceDAO extends AbstractDAO{
         }catch (SQLException s){
             String msg = "Error while getting available ip " + s.getMessage();
             log.error(msg);
-            throw new SQLException(s);
+            throw new SQLException(s + msg);
         }catch (ClassNotFoundException s){
             String msg = "Error while sql connection :" + s.getMessage();
             log.error(msg);
@@ -92,8 +92,8 @@ public class InstanceDAO extends AbstractDAO{
         HashMap instanceToAdapterMap = new HashMap<String, String>();
         ResultSet resultSet = null;
         try{
-            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
             Class.forName(driver);
+            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
             statement = con.createStatement();
             String sql =  "SELECT instance_id, adapter FROM instance" ;
             resultSet = statement.executeQuery(sql);
@@ -105,7 +105,7 @@ public class InstanceDAO extends AbstractDAO{
         }catch (SQLException s){
             String msg = "Error while getting adapter map " + s.getMessage();
             log.error(msg);
-            throw new SQLException(s);
+            throw new SQLException(s + msg);
         }catch (ClassNotFoundException s){
             String msg = "Error while sql connection :" + s.getMessage();
             log.error(msg);
@@ -123,8 +123,8 @@ public class InstanceDAO extends AbstractDAO{
         boolean successfullyAdded = false;
         ResultSet resultSet = null;
         try{
-            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
             Class.forName(driver);
+            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
             statement = con.createStatement();
             String sql = "INSERT INTO instance VALUES('" + instance +  "', '" + adapter + "', '" + domain + "')";
             statement.executeUpdate(sql);
@@ -132,7 +132,7 @@ public class InstanceDAO extends AbstractDAO{
         }catch (SQLException s){
             String msg = "Error while inserting instance data";
             log.error(msg + s.getMessage());
-            throw new SQLException(s);
+            throw new SQLException(s + msg);
         }catch (ClassNotFoundException s){
             String msg = "DB connection not successful !";
             log.error(msg);

@@ -61,11 +61,11 @@ public class AgentManagementServiceImpl implements IAgentManagementService {
 
         if (!agentPersistenceManager.isZoneExist(zone.getName())) {
             String msg = "Zone does not exists ";
-            log.warn(msg);
+            log.info(msg);
             agentPersistenceManager.addZone(zone, domains);
         } else {
             String msg = "Zone exist";
-            log.warn(msg);
+            log.info(msg);
         }
 
         // For a successful registration EPR should not be null, EPR should not be already
@@ -85,7 +85,7 @@ public class AgentManagementServiceImpl implements IAgentManagementService {
         }
 
         // is EPR successfully added?
-        else if (agentPersistenceManager.addHostMachine(hostMachine)) {
+        else if (agentPersistenceManager.addHostMachine(hostMachine, domains)) {
             log.info("Agent (" + epr + ") is successfully registered!");
             successfullyRegistered = true;
         }

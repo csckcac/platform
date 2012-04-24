@@ -31,12 +31,12 @@ public class    AgentPersistenceManager {
         return manager;
     }
 
-    public boolean addHostMachine(HostMachine hostMachine) throws SQLException {
+    public boolean addHostMachine(HostMachine hostMachine, String[] domains) throws SQLException {
         HostMachineDAO hostMachineDAO = new HostMachineDAO();
-        return hostMachineDAO.create(hostMachine);
+        return hostMachineDAO.create(hostMachine, domains);
     }
     
-    public void makeWorkerNodeUnavailable(String endPoint)
+    public void makeHostMachineUnavailable(String endPoint)
             throws SQLException {
         HostMachineDAO hostMachineDAO =  new HostMachineDAO();
         hostMachineDAO.makeUnavailable(endPoint);
@@ -75,10 +75,14 @@ public class    AgentPersistenceManager {
         ContainerDAO containerDAO = new ContainerDAO();
         return containerDAO.retrieveAvailableContainerInformation(zone);
     }
-    
+
     public boolean isZoneExist(String zone) throws SQLException {
         ZoneDAO zoneDAO = new ZoneDAO();
         return zoneDAO.isZoneExist(zone);
+    }
+    public boolean updateDomainConfigs(String zone, String[] domains) throws SQLException {
+        ZoneDAO zoneDAO = new ZoneDAO();
+        return zoneDAO.update(zone, domains);
     }
     public boolean isHostMachineExist(String endPoint) throws SQLException {
         HostMachineDAO hostMachineDAO = new HostMachineDAO();

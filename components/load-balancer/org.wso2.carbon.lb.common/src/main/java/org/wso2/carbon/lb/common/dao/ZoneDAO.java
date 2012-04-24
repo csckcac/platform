@@ -63,6 +63,45 @@ public class ZoneDAO extends AbstractDAO{
     }
 
     /**
+     * This is called when configuration update call came. It will update the domains.
+     * @param zone
+     * @param domains
+     * @return whether update request successful
+     * @throws SQLException
+     */
+    public boolean update(String zone, String[] domains) throws SQLException {
+        boolean successfullyUpdated = false;
+        ResultSet resultSet = null;
+        try{
+            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
+            Class.forName(driver);
+            statement = con.createStatement();
+            String sql = "DELETE FROM domain WHERE zone=" + zone;
+            //delete all the current domain entries for zone
+            statement.executeUpdate(sql);
+            for(String domain : domains){  //insert new set of domains
+                sql = "INSERT INTO domain VALUES('" + domain + "', '" + zone + "')";
+                statement.executeUpdate(sql);
+            }
+            successfullyUpdated = true;
+        }catch (SQLException s){
+            String msg = "Error while updating ";
+            log.error(msg + s.getMessage());
+            throw new SQLException(s);
+        }catch (ClassNotFoundException s){
+            String msg = "DB connection not successful !";
+            log.error(msg);
+            throw new SQLException(msg);
+        }
+        finally {
+            try { if (resultSet != null) resultSet.close(); } catch(Exception e) {}
+            try { if (statement != null) statement.close(); } catch(SQLException e) {}
+            try { if (con != null) con.close(); } catch(Exception e) {}
+        }
+        return successfullyUpdated;
+    }
+
+    /**
      * This is for checking availability of zone
      * @param zone
      * @return whether the zone is in the database

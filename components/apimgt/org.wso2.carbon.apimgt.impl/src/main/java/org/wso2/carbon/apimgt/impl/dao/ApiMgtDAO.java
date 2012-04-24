@@ -376,6 +376,7 @@ public class ApiMgtDAO {
                     log.debug("Provided Access Token : " + accessToken + "is not ACTIVE.");
                 }
                 keyValidationInfoDTO.setAuthorized(true);
+                keyValidationInfoDTO.setTier(tier);
                 return keyValidationInfoDTO;
             }
 
@@ -388,8 +389,8 @@ public class ApiMgtDAO {
 //                keyValidationInfoDTO.setAuthorized(false);
 //                return keyValidationInfoDTO;
 //            }
-            keyValidationInfoDTO.setAuthorized(true);
-            keyValidationInfoDTO.setTier(tier);
+//            keyValidationInfoDTO.setAuthorized(true);
+//            keyValidationInfoDTO.setTier(tier);
 
         } catch (SQLException e) {
             log.error("Error when executing the SQL ");

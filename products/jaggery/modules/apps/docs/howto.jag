@@ -120,8 +120,10 @@ include('/includes/topnavi.jag');
                     Command Line Commands
                 </h2>
             </div>
-            <p><code>&#60script.jag&#62</code> &#150 Load Jaggery script from the current path.</p>
-            <p><code>&#60filepath&#47script.jag&#62</code> &#150 Load Jaggery script from the path given.</p>
+            <p><code>&#60script.jag&#62</code> &#150 Load Jaggery script (script.jag) from the current path. <br/><br/>Eg: jaggery.bat script.jag</p>
+            <p><code>&#60filepath&#47script.jag&#62</code> &#150 Load Jaggery script (script.jag) from the path given. <br/><br/>Eg: jaggery.bat E:\script.jag</p>
+            
+            <br/>
             <img alt="Jaggery Commands" src="images/load.png"/>
 
             <p><code>-help</code> &#150 Shows all the commands for help.</p>

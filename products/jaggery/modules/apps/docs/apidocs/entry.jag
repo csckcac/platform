@@ -160,7 +160,7 @@ print(feed.toString());
             </tr>
             <tr>
                 <td>rights</td>
-                <td>String [ ] </td>
+                <td>String </td>
                 <td>get/set rights associated with this entry</td>
             </tr>
             <tr>
@@ -201,6 +201,20 @@ print(feed.toString());
                     </td>
                     <td>Entry</td>
                     <td>Returns an Entry object</td>
+                </tr>
+				<tr>
+                    <td>
+                    <code>toXML()</code>
+                    </td>
+                    <td>XML</td>
+                    <td>Returns the E4X XML contents of this Entry object.</td>
+                </tr>
+                <tr>
+                    <td>
+                    <code>toString()</code>
+                    </td>
+                    <td>String</td>
+                    <td>Returns the string representation of the Entry</td>
                 </tr>
 
     <tbody>

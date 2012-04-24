@@ -170,23 +170,23 @@ for(var i=0;i &lt 5; i++) {
                 </tr>
                 <tr>
                     <td>
-                    <code>description</code>
+                    <code>logo</code>
                     </td>
                     <td>String</td>
-                    <td>The description of this feed.</td>
+                    <td>The logo of this feed.</td>
                 </tr>
                 <tr>
                     <td>
-                    <code>feedType</code>
+                    <code>icon</code>
                     </td>
                     <td>String</td>
-                    <td>get/set the type of this feed</td>
+                    <td>get/set the icon URL of this feed</td>
                 </tr>
                 <tr>
                     <td>
-                    <code>link</code>
+                    <code>links</code>
                     </td>
-                    <td>String</td>
+                    <td>String [ ]</td>
                     <td>The location of the feed.</td>
                 </tr>
                 <tr>
@@ -239,7 +239,7 @@ for(var i=0;i &lt 5; i++) {
                     <td>
                     <code>toString()</code>
                     </td>
-                    <td>XML</td>
+                    <td>String</td>
                     <td>Returns the string representation of the feed</td>
                 </tr>
     <tbody>

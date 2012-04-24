@@ -28,6 +28,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceAuthentication;
 import org.wso2.carbon.admin.service.AdminServiceProxyServiceAdmin;
 import org.wso2.carbon.admin.service.AdminServiceService;
+import org.wso2.carbon.dataservices.ui.fileupload.stub.ExceptionException;
 import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminProxyAdminException;
 import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSDAOExceptionException;
 import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
@@ -78,12 +79,15 @@ public class EventingServiceTest extends DataServiceTest {
     @Test(priority = 1, dependsOnMethods = {"addProxy"})
     @Override
     public void serviceDeployment()
-            throws ServiceAdminException, RemoteException, RSSAdminRSSDAOExceptionException {
+            throws ServiceAdminException, RemoteException, RSSAdminRSSDAOExceptionException,
+                   ExceptionException {
         deleteServiceIfExist(serviceName);
         DataHandler dhArtifact;
         dhArtifact = getArtifactWithSubscription(serviceFile);
 
-        adminServiceClientDSS.uploadArtifact(sessionCookie, serviceFile, dhArtifact);
+        Assert.assertTrue(adminServiceClientDSS.uploadArtifact(sessionCookie, serviceFile, dhArtifact)
+                , "Service Deployment Failed while uploading service file");
+        ;
         isServiceDeployed(serviceName);
         setServiceEndPointHttp(serviceName);
         log.info(serviceName + " uploaded");

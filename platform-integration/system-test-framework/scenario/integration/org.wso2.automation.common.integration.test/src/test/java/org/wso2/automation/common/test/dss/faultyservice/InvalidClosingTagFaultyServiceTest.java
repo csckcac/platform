@@ -24,6 +24,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.wso2.automation.common.test.dss.utils.DataServiceTest;
 import org.wso2.carbon.admin.service.AdminServiceCarbonServerAdmin;
+import org.wso2.carbon.dataservices.ui.fileupload.stub.ExceptionException;
 import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSDAOExceptionException;
 import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
 import org.wso2.carbon.service.mgt.stub.types.carbon.FaultyService;
@@ -50,14 +51,13 @@ public class InvalidClosingTagFaultyServiceTest extends DataServiceTest {
 
     @Test(priority = 0)
     @Override
-    public void serviceDeployment() throws ServiceAdminException, RemoteException {
+    public void serviceDeployment()
+            throws ServiceAdminException, IOException, ExceptionException,
+                   RSSAdminRSSDAOExceptionException {
         deleteServiceIfExist(serviceName);
         DataHandler dhArtifact;
-        try{
         dhArtifact = createArtifact(serviceFile, getSqlScript());
-        } catch (RSSAdminRSSDAOExceptionException e) {
-            throw new RuntimeException(e);
-        }
+
         String content = "";
         ByteArrayDataSource dbs;
         try {
@@ -69,14 +69,16 @@ public class InvalidClosingTagFaultyServiceTest extends DataServiceTest {
                 content = content + line;
             }
         } catch (IOException e) {
-            throw new RuntimeException("Exception Occurred while processing input Stream");
+            log.error("Exception Occurred while processing input Stream", e);
+            throw new IOException("Exception Occurred while processing input Stream", e);
         }
         Assert.assertTrue(content.contains("</query>"), "query tag missing");
         content = content.replaceFirst("</query>", "</que>");
         dbs = new ByteArrayDataSource(content.getBytes());
         dhArtifact = new DataHandler(dbs);
 
-        adminServiceClientDSS.uploadArtifact(sessionCookie, serviceFile, dhArtifact);
+        Assert.assertTrue(adminServiceClientDSS.uploadArtifact(sessionCookie, serviceFile, dhArtifact)
+                        , "Service Deployment Failed while uploading service file");
 
     }
 

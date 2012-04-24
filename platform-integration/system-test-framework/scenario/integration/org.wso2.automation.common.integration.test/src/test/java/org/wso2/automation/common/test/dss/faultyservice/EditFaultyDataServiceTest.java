@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.DataServiceAdminService;
+import org.wso2.carbon.dataservices.ui.fileupload.stub.ExceptionException;
 import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSDAOExceptionException;
 import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
@@ -57,17 +58,20 @@ public class EditFaultyDataServiceTest extends DataServiceTest {
 
     @Override
     @Test(priority = 0)
-    public void serviceDeployment() throws ServiceAdminException, RemoteException {
+    public void serviceDeployment()
+            throws ServiceAdminException, RemoteException, ExceptionException,
+                   MalformedURLException {
         deleteServiceIfExist(serviceName);
-        DataHandler dhArtifact = null;
+        DataHandler dhArtifact;
         try {
             dhArtifact = new DataHandler(new URL("file://" + serviceFileLocation + File.separator + serviceFile));
         } catch (MalformedURLException e) {
-            log.error("Resource file Not Found " + e.getMessage());
-            Assert.fail("Resource file Not Found " + e.getMessage());
+            log.error("Resource file Not Found ", e);
+            throw e;
         }
         Assert.assertNotNull(dhArtifact, "Service File Not Found");
-        adminServiceClientDSS.uploadArtifact(sessionCookie, serviceFile, dhArtifact);
+        Assert.assertTrue(adminServiceClientDSS.uploadArtifact(sessionCookie, serviceFile, dhArtifact)
+                , "Service Deployment Failed while uploading service file");
         log.info(serviceName + " uploaded");
     }
 
@@ -79,7 +83,8 @@ public class EditFaultyDataServiceTest extends DataServiceTest {
     }
 
     @Test(priority = 2, dependsOnMethods = {"isServiceFaulty"})
-    public void editFaultyService() throws RemoteException, RSSAdminRSSDAOExceptionException {
+    public void editFaultyService()
+            throws RemoteException, RSSAdminRSSDAOExceptionException, XMLStreamException {
         DataServiceAdminService dataServiceAdminService = new DataServiceAdminService(dssBackEndUrl);
         String serviceContent;
         String newServiceContent = null;
@@ -107,8 +112,8 @@ public class EditFaultyDataServiceTest extends DataServiceTest {
             log.debug(dbsFile);
             newServiceContent = dbsFile.toString();
         } catch (XMLStreamException e) {
-            log.error("XMLStreamException while handling data service content " + e.getMessage());
-            Assert.fail("XMLStreamException while handling data service content " + e.getMessage());
+            log.error("XMLStreamException while handling data service content ", e);
+            throw new XMLStreamException("XMLStreamException while handling data service content ", e);
         }
         Assert.assertNotNull("Could not edited service content", newServiceContent);
         dataServiceAdminService.editDataService(sessionCookie, serviceName, "", newServiceContent);

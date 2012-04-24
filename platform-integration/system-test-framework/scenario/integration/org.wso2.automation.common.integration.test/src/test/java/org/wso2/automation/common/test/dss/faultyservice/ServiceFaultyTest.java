@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.DataServiceAdminService;
+import org.wso2.carbon.dataservices.ui.fileupload.stub.ExceptionException;
 import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSDAOExceptionException;
 import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
 import org.wso2.carbon.service.mgt.stub.types.carbon.FaultyService;
@@ -54,7 +55,8 @@ public class ServiceFaultyTest extends DataServiceTest {
 
     @Test(priority = 0)
     @Override
-    public void serviceDeployment() throws ServiceAdminException, RemoteException {
+    public void serviceDeployment()
+            throws ServiceAdminException, RemoteException, ExceptionException {
         deleteServiceIfExist(serviceName);
         DataHandler dhArtifact;
         try {
@@ -84,7 +86,7 @@ public class ServiceFaultyTest extends DataServiceTest {
     }
 
     @Test(priority = 2, dependsOnMethods = {"serviceInvocation"})
-    public void faultyService() throws RemoteException {
+    public void faultyService() throws RemoteException, XMLStreamException {
         String serviceContent;
         String newServiceContent = null;
         DataServiceAdminService dataServiceAdminService = new DataServiceAdminService(dssBackEndUrl);
@@ -109,8 +111,8 @@ public class ServiceFaultyTest extends DataServiceTest {
             log.debug(dbsFile);
             newServiceContent = dbsFile.toString();
         } catch (XMLStreamException e) {
-            log.error("XMLStreamException while handling data service content " + e.getMessage());
-            Assert.fail("XMLStreamException while handling data service content " + e.getMessage());
+            log.error("XMLStreamException while handling data service content " + e);
+            throw new XMLStreamException("XMLStreamException while handling data service content " , e);
         }
         Assert.assertNotNull("Could not edited service content", newServiceContent);
         dataServiceAdminService.editDataService(sessionCookie, serviceName, "", newServiceContent);

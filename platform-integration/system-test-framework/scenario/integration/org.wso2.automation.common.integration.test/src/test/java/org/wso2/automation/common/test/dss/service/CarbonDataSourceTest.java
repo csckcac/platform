@@ -32,6 +32,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.DataServiceAdminService;
 import org.wso2.carbon.admin.service.DataSourceAdminService;
 import org.wso2.carbon.admin.service.RSSAdminConsoleService;
+import org.wso2.carbon.dataservices.ui.fileupload.stub.ExceptionException;
 import org.wso2.carbon.datasource.ui.stub.DataSourceManagementException;
 import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSDAOExceptionException;
 import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
@@ -79,10 +80,12 @@ public class CarbonDataSourceTest extends DataServiceTest {
 
     @Test(priority = 1, dependsOnMethods = {"createDataSourceTest"})
     @Override
-    public void serviceDeployment() throws ServiceAdminException, RemoteException {
+    public void serviceDeployment()
+            throws ServiceAdminException, IOException, ExceptionException, XMLStreamException {
         deleteServiceIfExist(serviceName);
         DataHandler dhArtifact = createArtifactWithDataSource(serviceFile);
-        adminServiceClientDSS.uploadArtifact(sessionCookie, serviceFile, dhArtifact);
+        Assert.assertTrue(adminServiceClientDSS.uploadArtifact(sessionCookie, serviceFile, dhArtifact)
+                , "Service Deployment Failed while uploading service file");
         isServiceDeployed(serviceName);
         setServiceEndPointHttp(serviceName);
     }
@@ -214,12 +217,13 @@ public class CarbonDataSourceTest extends DataServiceTest {
 
     private List<File> getSqlScript() {
         ArrayList<File> al = new ArrayList<File>();
-        al.add(new File(resourceFileLocation + File.separator + "sql" +  File.separator + "MySql" + File.separator + "CreateTables.sql"));
-        al.add(new File(resourceFileLocation + File.separator + "sql" +  File.separator + "MySql" + File.separator + "Customers.sql")) ;
+        al.add(new File(resourceFileLocation + File.separator + "sql" + File.separator + "MySql" + File.separator + "CreateTables.sql"));
+        al.add(new File(resourceFileLocation + File.separator + "sql" + File.separator + "MySql" + File.separator + "Customers.sql"));
         return al;
     }
 
-    private DataHandler createArtifactWithDataSource(String serviceFileName) {
+    private DataHandler createArtifactWithDataSource(String serviceFileName)
+            throws XMLStreamException, IOException {
         Assert.assertNotNull("Carbon data source name null. create carbon data source first", carbonDataSourceName);
         try {
 
@@ -241,13 +245,12 @@ public class CarbonDataSourceTest extends DataServiceTest {
             return new DataHandler(dbs);
 
         } catch (XMLStreamException e) {
-            log.error("XMLStreamException when Reading Service File" + e.getMessage());
-            Assert.fail("XMLStreamException when Reading Service File" + e.getMessage());
+            log.error("XMLStreamException when Reading Service File" , e);
+            throw new XMLStreamException("XMLStreamException when Reading Service File" , e);
         } catch (IOException e) {
-            log.error("IOException when Reading Service File" + e.getMessage());
-            Assert.fail("IOException  when Reading Service File" + e.getMessage());
+            log.error("IOException when Reading Service File" , e);
+            throw new IOException("IOException  when Reading Service File" , e);
         }
-        return null;
     }
 
     private DataSourceInformation getDataSourceInformation(String dataSourceName) {
@@ -273,7 +276,6 @@ public class CarbonDataSourceTest extends DataServiceTest {
         dataSourceInfo.setTestOnBorrow(true);
         dataSourceInfo.setValidationQuery("SELECT 1");
         dataSourceInfo.setTestWhileIdle(false);
-
 
 
 //        dataSourceInfo.setNumTestsPerEvictionRun(3);

@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.wso2.carbon.admin.service.*;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.dataservices.ui.fileupload.stub.ExceptionException;
 import org.wso2.carbon.security.mgt.stub.config.SecurityAdminServiceSecurityConfigExceptionException;
 import org.wso2.carbon.admin.service.AdminServiceDataServiceFileUploader;
 import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
@@ -42,9 +43,10 @@ public class AdminServiceClientDSS {
         this.backEndUrl = backEndUrl;
     }
 
-    public void uploadArtifact(String sessionCookie, String fileName, DataHandler dh) {
+    public boolean uploadArtifact(String sessionCookie, String fileName, DataHandler dh)
+            throws RemoteException, ExceptionException {
         AdminServiceDataServiceFileUploader adminServiceDataServiceFileUploader = new AdminServiceDataServiceFileUploader(backEndUrl);
-        adminServiceDataServiceFileUploader.uploadDataServiceFile(sessionCookie, fileName, dh);
+        return adminServiceDataServiceFileUploader.uploadDataServiceFile(sessionCookie, fileName, dh);
     }
 
     public void deleteService(String sessionCookie, String[] serviceGroup) throws RemoteException {

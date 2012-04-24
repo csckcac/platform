@@ -17,7 +17,6 @@
 */
 package org.wso2.carbon.admin.service;
 
-import junit.framework.Assert;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,33 +34,27 @@ public class AdminServiceDataServiceFileUploader {
     private DataServiceFileUploaderStub dataServiceFileUploaderStub;
     private String endPoint;
 
-    public AdminServiceDataServiceFileUploader(String backEndUrl) {
+    public AdminServiceDataServiceFileUploader(String backEndUrl) throws AxisFault {
         this.endPoint = backEndUrl + serviceName;
         log.debug("EndPoint :" + endPoint);
-        try {
-            dataServiceFileUploaderStub = new DataServiceFileUploaderStub(endPoint);
-        } catch (AxisFault axisFault) {
-            log.error("Initializing DataServiceFileUploaderStub failed : " + axisFault.getMessage());
-            Assert.fail("Initializing DataServiceFileUploaderStub failed : " + axisFault.getMessage());
-        }
+
+        dataServiceFileUploaderStub = new DataServiceFileUploaderStub(endPoint);
+
     }
 
 
-    public void uploadDataServiceFile(String sessionCookie, String fileName, DataHandler dh) {
+    public boolean uploadDataServiceFile(String sessionCookie, String fileName, DataHandler dh)
+            throws ExceptionException, RemoteException {
         new AuthenticateStub().authenticateStub(sessionCookie, dataServiceFileUploaderStub);
         log.debug("path to file :" + dh.getName());
-        try {
-            Assert.assertEquals("Expected Not Same", "successful", dataServiceFileUploaderStub.uploadService(fileName, "", dh));
+        String response = dataServiceFileUploaderStub.uploadService(fileName, "", dh);
+        if ("successful".equalsIgnoreCase(response)) {
             log.info("Artifact Uploaded");
-        } catch (RemoteException e) {
-            log.error("RemoteException: uploading failed : " + e.getMessage());
-            Assert.fail("RemoteException: uploading failed : " + e.getMessage());
-
-        } catch (ExceptionException e) {
-            log.error("ExceptionException :uploading failed : " + e.getMessage());
-            Assert.fail("ExceptionException :uploading failed : " + e.getMessage());
+            return true;
+        } else {
+            log.info(response);
+            return false;
         }
-
 
     }
 }

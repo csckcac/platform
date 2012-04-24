@@ -31,6 +31,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.wso2.carbon.dataservices.ui.fileupload.stub.ExceptionException;
 import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSDAOExceptionException;
 import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
 import org.wso2.platform.test.core.ProductConstant;
@@ -70,11 +71,13 @@ public class DistributedTransactionTest extends DataServiceTest {
     @Override
     @Test(priority = 0)
     public void serviceDeployment()
-            throws ServiceAdminException, RemoteException, RSSAdminRSSDAOExceptionException {
+            throws ServiceAdminException, IOException, RSSAdminRSSDAOExceptionException,
+                   ExceptionException, XMLStreamException {
         deleteServiceIfExist(serviceName);
         DataHandler dhArtifact;
         dhArtifact = getArtifactWithDTP(serviceFile);
-        adminServiceClientDSS.uploadArtifact(sessionCookie, serviceFile, dhArtifact);
+        Assert.assertTrue(adminServiceClientDSS.uploadArtifact(sessionCookie, serviceFile, dhArtifact)
+                , "Service Deployment Failed while uploading service file");
         isServiceDeployed(serviceName);
         setServiceEndPointHttp(serviceName);
         log.info(serviceName + " uploaded");
@@ -390,7 +393,7 @@ public class DistributedTransactionTest extends DataServiceTest {
 
 
     private DataHandler getArtifactWithDTP(String serviceFile)
-            throws RSSAdminRSSDAOExceptionException, RemoteException {
+            throws RSSAdminRSSDAOExceptionException, IOException, XMLStreamException {
         SqlDataSourceUtil dataSource1;
         SqlDataSourceUtil dataSource2;
         dataSource1 = new SqlDataSourceUtil(sessionCookie, dssBackEndUrl, FrameworkFactory.getFrameworkProperties(ProductConstant.DSS_SERVER_NAME), 3);
@@ -446,11 +449,11 @@ public class DistributedTransactionTest extends DataServiceTest {
             return new DataHandler(dbs);
 
         } catch (XMLStreamException e) {
-            log.error("XMLStreamException when Reading Service File" + e.getMessage());
-            throw new RuntimeException("XMLStreamException when Reading Service File" + e.getMessage(), e);
+            log.error("XMLStreamException when Reading Service File" , e);
+            throw new XMLStreamException("XMLStreamException when Reading Service File" , e);
         } catch (IOException e) {
-            log.error("IOException when Reading Service File" + e.getMessage());
-            throw new RuntimeException("IOException  when Reading Service File" + e.getMessage(), e);
+            log.error("IOException when Reading Service File" , e);
+            throw new IOException("IOException  when Reading Service File" , e);
         }
     }
 

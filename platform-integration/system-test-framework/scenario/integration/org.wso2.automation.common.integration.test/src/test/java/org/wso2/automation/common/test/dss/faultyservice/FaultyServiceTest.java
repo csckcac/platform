@@ -21,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.wso2.carbon.dataservices.ui.fileupload.stub.ExceptionException;
 import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
 import org.wso2.carbon.service.mgt.stub.types.carbon.FaultyService;
 import org.wso2.automation.common.test.dss.utils.DataServiceTest;
@@ -44,17 +45,20 @@ public class FaultyServiceTest extends DataServiceTest {
 
     @Test(priority = 0)
     @Override
-    public void serviceDeployment() throws ServiceAdminException, RemoteException {
+    public void serviceDeployment()
+            throws ServiceAdminException, RemoteException, ExceptionException,
+                   MalformedURLException {
         deleteServiceIfExist(serviceName);
         DataHandler dhArtifact = null;
         try {
             dhArtifact = new DataHandler(new URL("file://" + serviceFileLocation + File.separator + serviceFile));
         } catch (MalformedURLException e) {
-            log.error("Resource file Not Found " + e.getMessage());
-            Assert.fail("Resource file Not Found " + e.getMessage());
+            log.error("Resource file Not Found " , e);
+            throw e;
         }
         Assert.assertNotNull(dhArtifact, "Service File Not Found");
-        adminServiceClientDSS.uploadArtifact(sessionCookie, serviceFile, dhArtifact);
+        Assert.assertTrue(adminServiceClientDSS.uploadArtifact(sessionCookie, serviceFile, dhArtifact)
+                , "Service Deployment Failed while uploading service file");
         log.info(serviceName + " uploaded");
     }
 

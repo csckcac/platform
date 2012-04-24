@@ -19,7 +19,9 @@ package org.wso2.automation.product.scenarios.test.esb;
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import static org.testng.Assert.*;
+
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceTracerAdmin;
@@ -52,7 +54,6 @@ public class XFormURLEncodedBuilderTest {
         PROXY_EPR = environment.getEsb().getServiceUrl() + "/SimplePassThoughProxy";
         soapTracerAdmin = new AdminServiceTracerAdmin(environment.getAs().getBackEndUrl(),
                                                       environment.getAs().getSessionCookie());
-
     }
 
 
@@ -72,8 +73,9 @@ public class XFormURLEncodedBuilderTest {
                         + "&" + "address=no35a";
         int responseCode = httpClient.postWithContentType(toEpr, params,
                                                           "application/x-www-form-urlencoded");
-        assert responseCode == 0 : "response code is null";
+        assert responseCode != 0 : "Response code is :" + responseCode;
         assertEquals(200, responseCode, "Response Code not 200");
+
         tracerServiceInfo = soapTracerAdmin.getMessages(200, "greet");
         MessagePayload messagePayload = tracerServiceInfo.getLastMessage();
         assertTrue(messagePayload.getRequest().contains("name"), "Name tag not found in the service request");

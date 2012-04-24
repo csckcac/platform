@@ -42,7 +42,7 @@ public class PlatformTestManager implements ITestListener {
      * @see org.testng.ITestResult#FAILURE
      */
     public void onTestFailure(ITestResult result) {
-        log.error("On Test Failure ...");
+        log.error("On Test Failure : " + result.getThrowable().getMessage());
     }
 
     /**

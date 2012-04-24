@@ -18,9 +18,9 @@
 package org.wso2.automation.common.test.esb;
 
 import org.testng.annotations.AfterSuite;
+import org.wso2.automation.common.test.esb.mediators.test.MediatorTest;
 import org.wso2.platform.test.core.utils.suiteutills.MasterTestSuite;
 import org.wso2.platform.test.core.utils.suiteutills.SuiteVariables;
-import org.wso2.automation.common.test.esb.mediators.test.MediatorTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,6 @@ public class ESBTestSuite extends MasterTestSuite {
         List<SuiteVariables> suiteVariablesList = new ArrayList<SuiteVariables>();
         suiteVariablesList.add(new SuiteVariables("MediatorTest", MediatorTest.class));
         suiteVariablesList.add(new SuiteVariables("CustomeProxyTest", CustomProxyTest.class));
-        suiteVariablesList.add(new SuiteVariables("SimpleProxyTest", SimpleProxyTest.class));
         suiteVariablesList.add(new SuiteVariables("ServiceChainingTest", ServiceChainingTest.class));
         superSuite("ESBTestSuite", suiteVariablesList).run();
     }

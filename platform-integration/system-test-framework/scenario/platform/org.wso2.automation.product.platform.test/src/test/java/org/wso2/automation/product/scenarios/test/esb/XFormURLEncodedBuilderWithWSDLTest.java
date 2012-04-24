@@ -58,7 +58,7 @@ public class XFormURLEncodedBuilderWithWSDLTest {
                         + "&" + "address=no35a";
         int responseCode = httpClient.postWithContentType(toEpr, params,
                                                           "application/x-www-form-urlencoded");
-        assert responseCode == 0 : "response code is null";
+        assert responseCode != 0 : "response code is null";
         Assert.assertEquals(200, responseCode, "Response Code not 200");
         tracerServiceInfo = soapTracerAdmin.getMessages(200, "greet");
         MessagePayload messagePayload = tracerServiceInfo.getLastMessage();

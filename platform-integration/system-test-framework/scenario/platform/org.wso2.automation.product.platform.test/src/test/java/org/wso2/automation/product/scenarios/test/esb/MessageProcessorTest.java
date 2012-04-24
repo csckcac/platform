@@ -64,12 +64,13 @@ public class MessageProcessorTest {
     }
 
 
-    @Test(groups = "wso2.esb", invocationCount = REQUEST_COUNT,
-          dependsOnMethods = "testWaitForServiceDeployment",
+    @Test(groups = "wso2.esb", dependsOnMethods = "testWaitForServiceDeployment",
           description = "Test to verify processor deactivation", priority = 2)
     public void testPostRequest() throws Exception {
-        AxisServiceClientUtils.sendRequestOneWay(createPayLoad().toString(),
-                                                 new EndpointReference(PROXY_EPR));
+        for (int i = 0; i < REQUEST_COUNT; i++) {
+            AxisServiceClientUtils.sendRequestOneWay(createPayLoad().toString(),
+                                                     new EndpointReference(PROXY_EPR));
+        }
 
     }
 
@@ -103,12 +104,14 @@ public class MessageProcessorTest {
 
     }
 
-    @Test(groups = "wso2.esb", invocationCount = REQUEST_COUNT,
-          description = "Resending requests", dependsOnMethods = "testVerifyServiceStats", priority = 6)
+    @Test(groups = "wso2.esb", description = "Resending requests", dependsOnMethods = "testVerifyServiceStats", priority = 6)
     public void testResendRequests() throws Exception {
         AxisServiceClientUtils.waitForServiceDeployment(SERVICE_EPR);
-        AxisServiceClientUtils.sendRequestOneWay(createPayLoad().toString(),
-                                                 new EndpointReference(PROXY_EPR));
+        for (int i = 0; i < REQUEST_COUNT; i++) {
+            AxisServiceClientUtils.sendRequestOneWay(createPayLoad().toString(),
+                                                     new EndpointReference(PROXY_EPR));
+        }
+
     }
 
     @Test(groups = "wso2.esb",
@@ -133,7 +136,6 @@ public class MessageProcessorTest {
         symbol.setText("IBM");
         request.addChild(symbol);
         method.addChild(request);
-        log.info("Created payload is :" + method);
         return method;
     }
 

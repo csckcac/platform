@@ -71,6 +71,7 @@ public class ServiceChainingTest {
         AxisServiceClientUtils.waitForServiceDeployment(JARSERVICE_EPR);
         AxisServiceClientUtils.waitForServiceDeployment(CREDITPROXY_EPR);
         AxisServiceClientUtils.waitForServiceDeployment(PERSONINFOSERVICE_EPR);
+        Thread.sleep(5000);
         List<String> expectedOutput = new ArrayList<String>();
         expectedOutput.add(">true<");
         AxisServiceClientUtils.sendRequest(CREDITPROXY_EPR, operation, createPayLoad().toString(),

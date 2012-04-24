@@ -20,7 +20,8 @@ public class MasterTestSuite {
         suite.setThreadCount(2);
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("first-name", "Cedric");
-        suite.setParameters(parameters);
+
+        suite.setParameters(parameters);                                        
         for (SuiteVariables suiteVariables : suiteVariablesList) {
 
             XmlTest test = new XmlTest(suite);

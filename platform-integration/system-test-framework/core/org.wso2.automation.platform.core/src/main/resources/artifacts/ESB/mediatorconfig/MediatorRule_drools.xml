@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://ws.apache.org/ns/synapse">
-
     <!-- the SimpleURLRegistry allows access to a URL based registry (e.g. file:/// or http://) -->
     <registry provider="org.wso2.carbon.mediation.registry.ESBRegistry">
         <!-- the root property of the simple URL registry helps resolve a resource URL as root + key -->
@@ -8,13 +7,9 @@
         <!-- all resources loaded from the URL registry would be cached for this number of milli seconds -->
         <parameter name="cachableDuration">15000</parameter>
     </registry>
-
-
     <localEntry key="rule-script-key"
                 src="file:repository/samples/resources/rule/simple_rule_base.drl"/>
-
     <in>
-
         <rule>
             <ruleset>
                 <source key="rule-script-key"/>
@@ -29,18 +24,14 @@
             <childMediators>
                 <send>
                     <endpoint>
-                        <address uri="http://localhost:9000/services/SimpleStockQuoteService"/>
+                        <address uri="http://localhost:9764/services/SimpleStockQuoteService"/>
                     </endpoint>
                 </send>
                 <drop/>
             </childMediators>
-
         </rule>
-
     </in>
-
     <out>
         <send/>
     </out>
-
 </definitions>

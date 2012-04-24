@@ -635,7 +635,7 @@
             </artifacts>
         </product>
         <product name="ESB">
-            <artifacts userId="0">
+            <artifacts userId="1">
                 <artifact name="config3" type="synapseconfig">
                 </artifact>
             </artifacts>

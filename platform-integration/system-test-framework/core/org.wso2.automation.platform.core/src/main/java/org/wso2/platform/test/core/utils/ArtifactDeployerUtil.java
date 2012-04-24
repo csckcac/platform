@@ -453,7 +453,7 @@ public class ArtifactDeployerUtil {
         if (synapseXmlFile.exists()) {
             Document doc = builder.parse(synapseXmlFile);
             String fileContent = getStringFromDocument(doc);
-            assert fileContent == null : "Synapse file content empty";
+            assert fileContent != null : "Synapse file content empty";
             synapseConfigAdmin.updateConfiguration(fileContent);
             try {
                 Thread.sleep(20000);

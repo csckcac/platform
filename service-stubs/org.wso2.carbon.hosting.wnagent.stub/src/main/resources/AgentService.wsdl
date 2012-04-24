@@ -1,10 +1,10 @@
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://service.wnagent.hosting.carbon.wso2.org" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax2350="http://io.java/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ax2354="http://dto.wnagent.hosting.carbon.wso2.org/xsd" xmlns:ax2352="http://exception.wnagent.hosting.carbon.wso2.org/xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.wnagent.hosting.carbon.wso2.org">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax2124="http://beans.wnagent.hosting.carbon.wso2.org/xsd" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://service.wnagent.hosting.carbon.wso2.org" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ax2120="http://io.java/xsd" xmlns:ax2122="http://exception.wnagent.hosting.carbon.wso2.org/xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.wnagent.hosting.carbon.wso2.org">
     <wsdl:documentation>AgentService</wsdl:documentation>
     <wsdl:types>
-        <xs:schema xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax2355="http://dto.wnagent.hosting.carbon.wso2.org/xsd" xmlns:ax2353="http://exception.wnagent.hosting.carbon.wso2.org/xsd" xmlns:ax2351="http://io.java/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+        <xs:schema xmlns:ax2125="http://beans.wnagent.hosting.carbon.wso2.org/xsd" xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax2121="http://io.java/xsd" xmlns:ax2123="http://exception.wnagent.hosting.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
             <xs:import namespace="http://io.java/xsd" />
             <xs:import namespace="http://exception.wnagent.hosting.carbon.wso2.org/xsd" />
-            <xs:import namespace="http://dto.wnagent.hosting.carbon.wso2.org/xsd" />
+            <xs:import namespace="http://beans.wnagent.hosting.carbon.wso2.org/xsd" />
             <xs:element name="unregisterInAgentManagementService">
                 <xs:complexType>
                     <xs:sequence />
@@ -13,7 +13,7 @@
             <xs:element name="AgentServiceIOException">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="IOException" nillable="true" type="ax2350:IOException" />
+                        <xs:element minOccurs="0" name="IOException" nillable="true" type="ax2121:IOException" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -27,14 +27,15 @@
             <xs:element name="AgentServiceAgentServiceException">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="AgentServiceException" nillable="true" type="ax2353:AgentServiceException" />
+                        <xs:element minOccurs="0" name="AgentServiceException" nillable="true" type="ax2123:AgentServiceException" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="stopContainer">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="tenantName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="containerName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="containerRoot" nillable="true" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -48,7 +49,8 @@
             <xs:element name="startContainer">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="tenantName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="containerName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="containerRoot" nillable="true" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -67,7 +69,8 @@
             <xs:element name="destroyContainer">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="tenantName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="containerName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="containerRoot" nillable="true" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -82,8 +85,8 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="domainName" nillable="true" type="xs:string" />
-                        <xs:element minOccurs="0" name="tenantName" nillable="true" type="xs:string" />
-                        <xs:element minOccurs="0" name="containerInfo" nillable="true" type="ax2355:ContainerInformation" />
+                        <xs:element minOccurs="0" name="containerName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="containerInfo" nillable="true" type="ax2125:ContainerInformation" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -95,17 +98,7 @@
                 </xs:complexType>
             </xs:element>
         </xs:schema>
-        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://io.java/xsd">
-            <xs:complexType name="IOException">
-                <xs:sequence />
-            </xs:complexType>
-        </xs:schema>
-        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://exception.wnagent.hosting.carbon.wso2.org/xsd">
-            <xs:complexType name="AgentServiceException">
-                <xs:sequence />
-            </xs:complexType>
-        </xs:schema>
-        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://dto.wnagent.hosting.carbon.wso2.org/xsd">
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://beans.wnagent.hosting.carbon.wso2.org/xsd">
             <xs:complexType name="ContainerInformation">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="bridge" nillable="true" type="xs:string" />
@@ -117,6 +110,16 @@
                     <xs:element minOccurs="0" name="netMask" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="type" nillable="true" type="xs:string" />
                 </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://io.java/xsd">
+            <xs:complexType name="IOException">
+                <xs:sequence />
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://exception.wnagent.hosting.carbon.wso2.org/xsd">
+            <xs:complexType name="AgentServiceException">
+                <xs:sequence />
             </xs:complexType>
         </xs:schema>
     </wsdl:types>
@@ -408,13 +411,13 @@
     </wsdl:binding>
     <wsdl:service name="AgentService">
         <wsdl:port name="AgentServiceHttpsSoap11Endpoint" binding="tns:AgentServiceSoap11Binding">
-            <soap:address location="https://10.100.3.48:9448/services/AgentService.AgentServiceHttpsSoap11Endpoint/" />
+            <soap:address location="https://192.168.254.1:9443/services/AgentService.AgentServiceHttpsSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="AgentServiceHttpsSoap12Endpoint" binding="tns:AgentServiceSoap12Binding">
-            <soap12:address location="https://10.100.3.48:9448/services/AgentService.AgentServiceHttpsSoap12Endpoint/" />
+            <soap12:address location="https://192.168.254.1:9443/services/AgentService.AgentServiceHttpsSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="AgentServiceHttpsEndpoint" binding="tns:AgentServiceHttpBinding">
-            <http:address location="https://10.100.3.48:9448/services/AgentService.AgentServiceHttpsEndpoint/" />
+            <http:address location="https://192.168.254.1:9443/services/AgentService.AgentServiceHttpsEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

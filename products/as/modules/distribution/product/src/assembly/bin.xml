@@ -67,13 +67,22 @@
                 <exclude>**/pom.xml</exclude>
                 <exclude>**/target/**</exclude>
                 <exclude>**/Jaxws-Jaxrs/**</exclude>
+                <exclude>**/Axis2Module/**</exclude>
             </excludes>
         </fileSet>
 
-        <!--  copying JAX-WS/JAX-RS samples with pom.xml files-->
+        <!--  copying JAX-WS/JAX-RS samples and Axis2Module with pom.xml files-->
         <fileSet>
             <directory>../../samples/product/Jaxws-Jaxrs</directory>
             <outputDirectory>wso2as-${pom.version}/samples/Jaxws-Jaxrs</outputDirectory>
+            <excludes>
+                <exclude>**/**.sh</exclude>
+                <exclude>**/target/**</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>../../samples/product/Axis2Module</directory>
+            <outputDirectory>wso2as-${pom.version}/samples/Axis2Module</outputDirectory>
             <excludes>
                 <exclude>**/**.sh</exclude>
                 <exclude>**/target/**</exclude>

@@ -70,7 +70,7 @@
     %>
 
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(document).ready(function () {
             var pass = [
                 <%=Utils.getDataAsAList(build, Constant.PASS)%>];
             var fail = [
@@ -84,28 +84,28 @@
 
             var plot1 = $.jqplot('chart1', [pass, fail, skip], {
 
-                seriesColors: [ "#088708", "#db0e0e", "#facb1f"],
-                title: {
-                    text: 'Build Chart',   // title for the plot,
-                    show: true
+                seriesColors:[ "#088708", "#db0e0e", "#facb1f"],
+                title:{
+                    text:'Build Chart', // title for the plot,
+                    show:true
                 },
 
                 // The "seriesDefaults" option is an options object that will
                 // be applied to all series in the chart.
                 seriesDefaults:{
                     renderer:$.jqplot.BarRenderer,
-                    rendererOptions: {
-                        barPadding: 3,      // number of pixels between adjacent bars in the same
+                    rendererOptions:{
+                        barPadding:3, // number of pixels between adjacent bars in the same
                         // group (same category or bin).
-                        barMargin: 10,      // number of pixels between adjacent groups of bars.
-                        barDirection: 'vertical', // vertical or horizontal.
-                        barWidth: 30,     // width of the bars.  null to calculate automatically.
-                        shadowOffset: 0    // offset from the bar edge to stroke the shadow.
+                        barMargin:10, // number of pixels between adjacent groups of bars.
+                        barDirection:'vertical', // vertical or horizontal.
+                        barWidth:30, // width of the bars.  null to calculate automatically.
+                        shadowOffset:0    // offset from the bar edge to stroke the shadow.
                         //shadowDepth: 5,     // nuber of strokes to make for the shadow.
                         //shadowAlpha: 0.8   // transparency of the shadow.
                     },
                     showMarker:false,
-                    pointLabels: { show:true }
+                    pointLabels:{ show:true }
                 },
                 // Custom labels for the series are specified with the "label"
                 // option on the series option.  Here a series option object
@@ -119,24 +119,24 @@
                 // plot container, shrinking the grid to accomodate the legend.
                 // A value of "outside" would not shrink the grid and allow
                 // the legend to overflow the container.
-                legend: {
-                    show: true,
+                legend:{
+                    show:true,
 
-                    placement: 'outsideGrid'
+                    placement:'outsideGrid'
 
                 },
-                axes: {
+                axes:{
                     // Use a category axis on the x axis and use our custom ticks.
-                    xaxis: {
+                    xaxis:{
                         label:'Build #',
-                        renderer: $.jqplot.CategoryAxisRenderer,
-                        ticks: ticks
+                        renderer:$.jqplot.CategoryAxisRenderer,
+                        ticks:ticks
                     },
                     // Pad the y axis just a little so bars can get close to, but
                     // not touch, the grid boundaries.  1.2 is the default padding.
-                    yaxis: {
-                        pad: 1.00,
-                        tickOptions: {formatString: '%d'}
+                    yaxis:{
+                        pad:1.00,
+                        tickOptions:{formatString:'%d'}
                     }
                 }
             });
@@ -146,25 +146,25 @@
             ];
             var plot2 = jQuery.jqplot('pieChart', [data1],
                                       {
-                                          seriesColors: ["#088708", "#db0e0e", "#facb1f"],
-                                          title: {
-                                              text: 'Last Build #<%=lastBuild.get("build")%>',   // title for the plot
-                                              show: true
+                                          seriesColors:["#088708", "#db0e0e", "#facb1f"],
+                                          title:{
+                                              text:'Last Build #<%=lastBuild.get("build")%>', // title for the plot
+                                              show:true
                                           },
 
-                                          seriesDefaults: {
+                                          seriesDefaults:{
                                               // Make this a pie chart.
-                                              renderer: jQuery.jqplot.PieRenderer,
-                                              rendererOptions: {
+                                              renderer:jQuery.jqplot.PieRenderer,
+                                              rendererOptions:{
                                                   // Put data labels on the pie slices.
                                                   // By default, labels show the percentage of the slice.
-                                                  showDataLabels: true
+                                                  showDataLabels:true
                                               }
                                           },
-                                          legend: { show:true, location: 'e' }
+                                          legend:{ show:true, location:'e' }
 
                                       }
-                    );
+            );
         });
     </script>
     <%
@@ -181,20 +181,20 @@
     <div class="row-fluid">
         <jsp:include page="includes/left-menu.jsp"/>
         <div class="span10">
-             <%
-                    if(lastBuild == null) {
-                %>
-             <div class="hero-unit">
-                 <h2>No Test Result Found</h2>
-                 </div>
-                <%
-                    } else {
-                %>
+            <%
+                if (lastBuild == null) {
+            %>
+            <div class="hero-unit">
+                <h2>No Test Result Found</h2>
+            </div>
+            <%
+            } else {
+            %>
             <div class="hero-unit">
                 <%
-                    if(lastBuild == null) {
+                    if (lastBuild == null) {
                 %>
-                 <h2>No Test Result Found</h2>
+                <h2>No Test Result Found</h2>
                 <%
                     }
                 %>
@@ -268,7 +268,10 @@
                         </td>
                         <td>
                             <%
-                                double sr = (buildData.getDouble(Constant.PASS) / total) * 100;
+                                double sr = 0;
+                                if (total > 0) {
+                                    sr = (buildData.getDouble(Constant.PASS) / total) * 100;
+                                }
                             %>
                             <%=Utils.round(sr) %>
 

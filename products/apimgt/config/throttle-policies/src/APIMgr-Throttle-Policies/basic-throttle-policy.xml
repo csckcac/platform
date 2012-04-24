@@ -2,7 +2,7 @@
             xmlns:throttle="http://www.wso2.org/products/wso2commons/throttle">
     <throttle:MediatorThrottleAssertion>
         <wsp:Policy>
-            <throttle:ID throttle:type="ROLE">GOLD</throttle:ID>
+            <throttle:ID throttle:type="ROLE">Gold</throttle:ID>
             <wsp:Policy>
                 <throttle:Control>
                     <wsp:Policy>
@@ -13,7 +13,7 @@
             </wsp:Policy>
         </wsp:Policy>
         <wsp:Policy>
-            <throttle:ID throttle:type="ROLE">SILVER</throttle:ID>
+            <throttle:ID throttle:type="ROLE">Silver</throttle:ID>
             <wsp:Policy>
                 <throttle:Control>
                     <wsp:Policy>
@@ -24,7 +24,7 @@
             </wsp:Policy>
         </wsp:Policy>
         <wsp:Policy>
-            <throttle:ID throttle:type="ROLE">BRONZE</throttle:ID>
+            <throttle:ID throttle:type="ROLE">Bronze</throttle:ID>
             <wsp:Policy>
                 <throttle:Deny/>
             </wsp:Policy>

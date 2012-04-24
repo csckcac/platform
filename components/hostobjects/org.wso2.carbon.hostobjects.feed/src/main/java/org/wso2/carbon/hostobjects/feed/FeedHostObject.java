@@ -1,17 +1,20 @@
 package org.wso2.carbon.hostobjects.feed;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.abdera.Abdera;
 import org.apache.abdera.factory.Factory;
+import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.i18n.iri.IRISyntaxException;
 
 import org.apache.abdera.model.Category;
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.model.Feed;
 import org.apache.abdera.model.Link;
+import org.apache.abdera.model.Person;
 import org.apache.abdera.parser.stax.util.FOMHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,9 +24,12 @@ import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.NativeArray;
+import org.wso2.carbon.jaggery.core.manager.CommonManager;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 import org.wso2.carbon.scriptengine.util.HostObjectUtil;
 import org.wso2.javascript.xmlimpl.XML;
+
+import org.wso2.carbon.hostobjects.file.*;
 
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -73,17 +79,17 @@ public class FeedHostObject extends ScriptableObject {
 		Abdera abdera = new Abdera();
 		Factory factory = abdera.getFactory();
 		feed = factory.newFeed();
-		feedHostObject = new FeedHostObject();	
+		feedHostObject = new FeedHostObject();
 		ctx = cx;
-		if (argsCount == 0) {					
+		if (argsCount == 0) {
 			return feedHostObject;
 		}
 		if (argsCount == 1) {
 			if (!(args[0] instanceof String)) {
 				HostObjectUtil.invalidArgsError(HOST_OBJECT_NAME,
 						HOST_OBJECT_NAME, "1", "string", args[0], true);
-			}		
-			
+			}
+
 			FeedHostObject.jsFunction_getFeed(cx, null, args, null);
 		}
 		return feedHostObject;
@@ -181,6 +187,52 @@ public class FeedHostObject extends ScriptableObject {
 		feed.addAuthor(String.valueOf(author));
 	}
 
+	public void jsSet_authors(Object author) {
+
+		if (author instanceof String) {
+
+			feed.addAuthor((String) (author));
+		}
+
+		if (author instanceof NativeArray) {
+			NativeArray authorsPropertyArray = (NativeArray) author;
+			for (Object o1 : authorsPropertyArray.getIds()) {
+
+				int index = (Integer) o1;
+				String name = authorsPropertyArray.get(index, null).toString();
+
+				feed.addAuthor(name);
+			}
+		}
+	}
+
+	public NativeArray jsGet_authors() {
+		String author;
+		NativeArray nativeArray = new NativeArray(0);
+		if (isRssFeed) {
+
+			List list = rssFeed.getAuthors();
+			int size = list.size();
+			for (int i = 0; i < size; i++) {
+				String element = (String) list.get(i);
+				nativeArray.put(i, nativeArray, element);
+			}
+			return nativeArray;
+		} else {
+			if (feed != null) {
+
+				List<Person> list = feed.getAuthors();
+				int size = list.size();
+				for (int i = 0; i < size; i++) {
+					Person element = (Person) list.get(i);
+					nativeArray.put(i, nativeArray, element.getName());
+				}
+				return nativeArray;
+			}
+			return null;
+		}
+	}
+
 	public void jsSet_updated(Object updated) throws ScriptException {
 		Date date;
 
@@ -198,9 +250,13 @@ public class FeedHostObject extends ScriptableObject {
 
 	}
 
-	public String jsGet_updated() {
-		if (feed != null)
-			return feed.getUpdated().toString();
+	public Scriptable jsGet_updated() {
+		if (feed != null) {
+			Scriptable js = ctx.newObject(CommonManager.getJaggeryContext()
+					.getScope(), "Date", new Object[] { feed.getUpdated()
+					.getTime() });
+			return js;
+		}
 		return null;
 	}
 
@@ -236,6 +292,24 @@ public class FeedHostObject extends ScriptableObject {
 		return null;
 	}
 
+	// icon processing
+	public void jsSet_icon(Object iconUrl) {
+		if (iconUrl instanceof String) {
+			feed.setIcon(iconUrl.toString());
+		}
+	}
+
+	public String jsGet_icon() {
+		if (feed != null){
+			if (feed.getIcon() == null) {
+				return null;
+			} else {
+				return feed.getIcon().getPath();
+			}
+		}
+		return null;
+	}
+
 	public void jsSet_category(Object category) {
 		feed.addCategory(String.valueOf(category));
 	}
@@ -247,28 +321,68 @@ public class FeedHostObject extends ScriptableObject {
 			int size = list.size();
 			for (int i = 0; i < size; i++) {
 				Category element = (Category) list.get(i);
-				nativeArray.put(i, nativeArray, element.toString());
+				nativeArray.put(i, nativeArray,
+						element.getAttributeValue("term"));
 			}
 			return nativeArray;
 		}
 		return null;
 	}
 
-	public void jsSet_contributor(Object contributor) {
-		feed.addContributor(String.valueOf(contributor));
+	public void jsSet_contributors(Object contributor) {
+		if (contributor instanceof String) {
+
+			entry.addContributor((String) (contributor));
+		}
+
+		if (contributor instanceof NativeArray) {
+			NativeArray contributorsPropertyArray = (NativeArray) contributor;
+			for (Object o1 : contributorsPropertyArray.getIds()) {
+
+				int index = (Integer) o1;
+				String contributorName = contributorsPropertyArray.get(index,
+						null).toString();
+
+				feed.addContributor(contributorName);
+			}
+		}
+
 	}
 
-	public String jsGet_contributor() {
-		if (feed != null)
-			return feed.getContributors().get(0).toString();
+	public NativeArray jsGet_contributors() {
+		if (feed != null) {
+			NativeArray nativeArray = new NativeArray(0);
+			List<Person> list = feed.getContributors();
+			int size = list.size();
+			for (int i = 0; i < size; i++) {
+				Person element = (Person) list.get(i);
+				nativeArray.put(i, nativeArray, element.getName());
+			}
+			return nativeArray;
+		}
 		return null;
 	}
 
-	public void jsSet_link(Object link) {
-		feed.addLink(String.valueOf(link));
+	public void jsSet_links(Object link) {
+		if (link instanceof String) {
+
+			feed.addLink((String) (link));
+		}
+
+		if (link instanceof NativeArray) {
+			NativeArray linksPropertyArray = (NativeArray) link;
+			for (Object o1 : linksPropertyArray.getIds()) {
+
+				int index = (Integer) o1;
+				String linkStr = linksPropertyArray.get(index, null).toString();
+
+				feed.addLink(linkStr);
+			}
+		}
+
 	}
 
-	public NativeArray jsGet_link() {
+	public NativeArray jsGet_links() {
 		if (feed != null) {
 			NativeArray nativeArray = new NativeArray(0);
 			List<Link> list = feed.getLinks();
@@ -293,35 +407,36 @@ public class FeedHostObject extends ScriptableObject {
 		}
 	}
 
+	public String jsGet_logo() throws ScriptException {
+		String logoStr = null;
+		IRI logo = feed.getLogo();
+		if (logo == null) {
+			return null;
+		}
+		try {
+			logoStr = logo.toURL().toString();
+		} catch (MalformedURLException e) {
+			throw new ScriptException(e);
+		} catch (URISyntaxException e) {
+			throw new ScriptException(e);
+		}
+		return logoStr;
+	}
+
+	public void jsSet_logo(Object logo) {
+		if (logo instanceof String) {
+			feed.setLogo(logo.toString());
+		}
+	}
+
 	public String jsGet_alternateLink() {
 		String alternateLink = feed.getAlternateLink().toString();
 		return alternateLink;
 	}
 
-
-
-/*	public static EntryHostObject jsFunction_getEntry(Context cx,
-			Scriptable thisObj, Object[] arguments, Function funObj)
-			throws ScriptException {
-		int argsCount = arguments.length;
-		if (argsCount != 1) {
-			HostObjectUtil.invalidNumberOfArgs(HOST_OBJECT_NAME,
-					HOST_OBJECT_NAME, argsCount, true);
-		}
-		if (!(arguments[0] instanceof String)) {
-			HostObjectUtil.invalidArgsError(HOST_OBJECT_NAME, HOST_OBJECT_NAME,
-					"1", "string", arguments[0], true);
-		}
-
-		Entry currentEntry = feed.getEntry(arguments[0].toString());
-
-		EntryHostObject newAtomEntry = (EntryHostObject) cx.newObject(
-				feedHostObject, "Entry", new Object[0]);
-		newAtomEntry.setEntry(currentEntry);
-
-		return newAtomEntry;
-	}
-	*/
+	/*
+	 * public static EntryHostObject throws ScriptException return newAtomEntry
+	 */
 
 	public EntryHostObject[] jsGet_entries() throws ScriptException {
 		Context cx = Context.getCurrentContext();
@@ -341,10 +456,9 @@ public class FeedHostObject extends ScriptableObject {
 
 		Entry currentEntry;
 
-		// Converting the list of Abdera Entries to AtomEntryHostObjects
+		// Converting the list of Abdera Entries to EntryHostObjects
 		while (tempEntryIterator.hasNext()) {
 			currentEntry = (Entry) tempEntryIterator.next();
-			// ctx = new Context();
 			EntryHostObject newAtomEntry = (EntryHostObject) cx.newObject(
 					feedHostObject, "Entry", new Object[0]);
 			newAtomEntry.setEntry(currentEntry);
@@ -552,12 +666,11 @@ public class FeedHostObject extends ScriptableObject {
 		} else if (!(entryObject instanceof EntryHostObject)) {
 			throw new ScriptException("Invalid parameter");
 		}
-		// for testing will be removed
-		log.info("New Added Entry" + entry);
+		// log.info("New Added Entry" + entry);
 	}
-	
-    public String jsFunction_toString() {    	
-    	String feedString = null;
+
+	public String jsFunction_toString() {
+		String feedString = null;
 		if (isRssFeed) {
 			feedString = rssFeed.toString();
 		} else {
@@ -565,17 +678,54 @@ public class FeedHostObject extends ScriptableObject {
 			feedString = feed.toString();
 		}
 		return feedString;
-    }
-    
-    public Scriptable jsFunction_toXML() {  
-		 Context cx = Context.getCurrentContext();
-	        if (feed != null) {
-	            Object[] objects = { feed };
-	            Scriptable xmlHostObject = cx.newObject(this, "XML", objects);
-	            return xmlHostObject;
-	        }
-	        return null;
-    }
+	}
 
+	public Scriptable jsFunction_toXML() {
+		Context cx = Context.getCurrentContext();
+		if (feed != null) {
+			Object[] objects = { feed };
+			Scriptable xmlHostObject = cx.newObject(this, "XML", objects);
+			return xmlHostObject;
+		}
+		return null;
+	}
 
-    }
+	public static Scriptable jsFunction_writeTo(Context cx, Scriptable thisObj,
+			Object[] arguments, Function funObj) throws ScriptException {
+
+		FeedHostObject feedObject = (FeedHostObject) thisObj;
+		FileHostObject fileHostObject;
+		OutputStreamWriter outputStreamWriter = null;
+		try {
+			if (arguments[0] instanceof String) {
+				fileHostObject = (FileHostObject) cx.newObject(feedObject,
+						"File", arguments);
+				outputStreamWriter = new OutputStreamWriter(
+						fileHostObject.getOutputStream());
+				feedObject.feed.writeTo(outputStreamWriter);
+				outputStreamWriter.flush();
+			} else if (arguments[0] instanceof FileHostObject) {
+				fileHostObject = (FileHostObject) arguments[0];
+				outputStreamWriter = new OutputStreamWriter(
+						fileHostObject.getOutputStream());
+				feedObject.feed.writeTo(outputStreamWriter);
+				outputStreamWriter.flush();
+			} else {
+				throw new ScriptException("Invalid parameter");
+			}
+			return feedObject;
+		} catch (IOException e) {
+			throw new ScriptException(e);
+		} finally {
+			if (outputStreamWriter != null) {
+				try {
+					outputStreamWriter.close();
+				} catch (IOException e) {
+					log.warn("Error closing the stream", e);
+				}
+			}
+
+		}
+	}
+
+}

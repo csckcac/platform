@@ -1,13 +1,13 @@
-var saveAPI = function(apiName, version, description, endpoint, wsdl, tags, tier, thumbUrl, context,
-                       uriTemplateArr, uriMethodArr) {
+var saveAPI = function(apiData) {
     var log = new Log();
     var apiProvider = require("/core/greg/greg.js").getAPIProviderObj();
     var user = require("/core/users/users.js").getUser();
-    var provider = user.username;
+    apiData.provider = user.username;
+    apiData.request = request;
     try {
-        var success = apiProvider.addAPI(provider, apiName, version, description, endpoint, wsdl, tags, tier, thumbUrl, context, request, uriTemplateArr, uriMethodArr);
+        var success = apiProvider.addAPI(apiData);
         if (log.isDebugEnabled()) {
-            log.debug("addAPI : " + apiName + "-" + version);
+            log.debug("addAPI : " + apiData.apiName + "-" + apiData.version);
         }
         if (success) {
             return {

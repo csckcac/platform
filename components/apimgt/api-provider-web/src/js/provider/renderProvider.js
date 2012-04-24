@@ -9,33 +9,6 @@ var logout = function () {
     apiProviderApp.logout();
 };
 
-var saveAPI = function () {
-
-    var apiName = $("#apiName").val();
-    var context = $("#context").val();
-    var version = $("#version").val();
-    var thumbUrl = $("#apiThumb").val();
-    var description = $("#description").val();
-    var endpoint = $("#endpoint").val();
-    var wsdl = $("#wsdl").val();
-    var tags = $("#tags").val();
-    var tier = $("#tier").val();
-
-    if (apiName == "" || version == "" || context == "") {
-        alert("Please enter newly added API name and its version");
-    } else {
-        apiProviderApp.call("action=saveAPI&apiName=" + apiName + "&version=" + version + "&description=" + description
-            + "&endpoint=" + endpoint + "&wsdl=" + wsdl + "&tags=" + tags + "&tier=" + tier + "&thumbUrl=" + thumbUrl + "&context=" + context, function (json) {
-            if (json.error == "true") {
-                alert(json.message);
-            } else {
-                $("#addAPIForm")[0].reset();
-                location.href = "?place=";
-            }
-        });
-    }
-};
-
 var getAPI = function (apiName, version) {
     apiProviderApp.call("action=getAPI&apiName=" + apiName + "&version=" + version, function (json) {
         if (json.error == "true") {
@@ -62,39 +35,6 @@ $(document).ready(function () {
     $('#editAPIForm #apiName').val(apiProviderApp.currentAPIName);
     $('#editAPIForm #version').val(apiProviderApp.currentVersion)
 });
-
-
-var updateAPI = function () {
-    var apiName = apiProviderApp.currentAPIName;
-    var version = apiProviderApp.currentVersion;
-    var description = $("#editDescription").val();
-    var image = $("#imageUrl").val();
-
-    if ($.isEmptyObject(image)) {
-        image = 'images/api-default.png';
-    }
-    var endpoint = $("#editEndpoint").val();
-    var wsdl = $("#editWsdl").val();
-    var tags = $("#editTags").val();
-    var tier = $("#editTier").val();
-    var status = $("#editStatus").val();
-    var resourceUri = $("#resourceUri").val();
-    var resourceMethod = $("#resourceMethod").val();
-    var resourceUriTemp = $("#uriTemplate").val();
-    var context = $("#hiddenContext").val();
-
-    apiProviderApp.call("action=updateAPI&apiName=" + apiName + "&version=" + version + "&description=" + description + "&imageUrl=" + image + "&endpoint=" + endpoint + "&wsdl=" + wsdl + "&tags=" + tags + "&tier=" + tier + "&status=" + status
-        + "&resourceTemplate=" + resourceUriTemp + "&resourceUri=" + resourceUri + "&resourceMethod=" + resourceMethod + "&context=" + context, function (json) {
-        if (json.error == "true") {
-            alert(json.message);
-        } else {
-            $("#editAPIForm")[0].reset();
-            location.href = "?place=";
-        }
-    });
-
-
-};
 
 var renderAPI = function (result) {
 

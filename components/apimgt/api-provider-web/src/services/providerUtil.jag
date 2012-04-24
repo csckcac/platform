@@ -211,10 +211,11 @@ return {
 
 }
 
-function saveAPIFunc(apiName, version, description, endpoint, wsdl, tags, tier, thumbUrl, context, uriTemplateArr, uriMethodArr) {
+function saveAPIFunc(apiData) {
         log("saveAPIFunc");
-        var provider = getUserFunc().username;
-        var success=apiProvider.addAPI(provider, apiName, version, description, endpoint, wsdl, tags, tier, thumbUrl, context, request, uriTemplateArr, uriMethodArr);
+        apiData.provider=getUserFunc().username;
+        apiData.request=request;
+        var success=apiProvider.addAPI(apiData);
         if(success){return {
         error:false
         };}else{return {
@@ -302,10 +303,11 @@ return {
 }
 }
 
-function updateAPIFunc(apiName, version, description, imageUrl, endpoint, wsdl, tags, tier, status, context, uriTemplateArr, uriMethodArr) {
+function updateAPIFunc(apiData) {
         log("updateAPIFunc");
-        var providerName = getUserFunc().username;
-        var success=apiProvider.updateAPI(providerName, apiName, version, description, imageUrl, endpoint, wsdl, tags, tier, status,context, request, uriTemplateArr, uriMethodArr);
+        apiData.provider = getUserFunc().username;
+        apiData.request=request;
+        var success=apiProvider.updateAPI(apiData);
         if(success){
         return {
         error:false

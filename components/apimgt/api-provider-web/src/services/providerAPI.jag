@@ -64,8 +64,8 @@ function addInlineContent(apiName,version,docName,docContent) {
 function getAPIsByProvider() {
     return getDataJSON(getAPIsByProviderFunc(), null, "Error while Rating API");
 }
-function saveAPI(apiName,version,description,endpoint,wsdl,tags,tier,thumbUrl,context, uriTemplateArr, uriMethodArr) {
-    return getDataJSON(saveAPIFunc(apiName,version,description,endpoint,wsdl,tags,tier,thumbUrl,context, uriTemplateArr, uriMethodArr), null, "Error while adding API");
+function saveAPI(apiData) {
+    return getDataJSON(saveAPIFunc(apiData), null, "Error while adding API");
 }
 function getAllAPIUsageByProvider() {
     return getDataJSON(getAllAPIUsageByProviderFunc(), null, "Error while getting subscribers for a provider");
@@ -76,8 +76,8 @@ function getSubscribersOfAPI(apiName,version) {
 function getSubscribedAPIs(username) {
     return getDataJSON(getSubscribedAPIsFunc(username), null, "Error while getting subscribed APIs");
 }
-function updateAPI(apiName,version,description,imageUrl,endpoint,wsdl,tags,tier,status,context, uriTemplateArr, uriMethodArr) {
-    return getDataJSON(updateAPIFunc(apiName,version,description,imageUrl,endpoint,wsdl,tags,tier,status,context, uriTemplateArr, uriMethodArr), null, "Error while updating API");
+function updateAPI(apiData) {
+    return getDataJSON(updateAPIFunc(apiData), null, "Error while updating API");
 }
 function getAllDocumentation(apiName,version) {
     return getDataJSON(getAllDocumentationFunc(apiName,version), null, "Error while getting all documentation per API");

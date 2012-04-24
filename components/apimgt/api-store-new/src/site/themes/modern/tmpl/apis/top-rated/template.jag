@@ -1,4 +1,4 @@
-<% var template = function(data, params, global) { %>
+<% jagg.template = function(data, params, jagg) { %>
 <%
     var apis = data.apis, length = apis.length;
     if(apis.length > 0) {

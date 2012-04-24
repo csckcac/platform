@@ -1,8 +1,8 @@
-<% var template = function(data, params, global) { %>
+<% jagg.template = function(data, params, jagg) { %>
 <!DOCTYPE html>
 <html>
 <head>
-    <title><%=params.title%></title>
+    <title><%=data.title%></title>
     <meta charset="UTF-8">
     <meta name="description" content=""/>
 
@@ -43,15 +43,15 @@
             }
         };
 
-        insertCode(global.js, function(path) {
+        insertCode(jagg.global.js, function(path) {
             print('<script type="text/javascript" src="' + path + '"></script>');
         });
 
-        insertCode(global.css, function(path) {
+        insertCode(jagg.global.css, function(path) {
             print('<link type="text/css" rel="stylesheet" href="' + path + '"/>');
         });
 
-        insertCode(global.code, function(code) {
+        insertCode(jagg.global.code, function(code) {
             print(code);
         });
     %>
@@ -66,7 +66,7 @@
 </div>
 
 <div class="clearfix wrap">
-    <% includeTemplates(params.body, global); %>
+    <% jagg.includeTemplates(data.body); %>
     <div class="clear"></div>
 
     <div id="footer">

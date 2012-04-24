@@ -2,7 +2,7 @@ var getTemplateFile = function() {
     return "tmpl/apis/listing/template.jag";
 };
 
-var initialize = function (global) {
+var initialize = function (jagg) {
 
 };
 

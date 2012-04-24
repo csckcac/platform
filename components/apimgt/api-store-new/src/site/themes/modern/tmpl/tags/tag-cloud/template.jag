@@ -1,4 +1,4 @@
-<% var template = function(data, params, global) { %>
+<% jagg.template = function(data, params, jagg) { %>
 <div id="tag-cloud" class="clouds">
     <%
         var i, tag, tags = data.tags, length = tags.length;

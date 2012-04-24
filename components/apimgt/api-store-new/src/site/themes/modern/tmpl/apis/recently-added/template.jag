@@ -1,4 +1,4 @@
-<% var template = function(data, params, global) { %>
+<% jagg.template = function(data, params, jagg) { %>
 <div id="recently-added">
     <h4>Recently Added</h4>
     <hr/>
@@ -9,8 +9,8 @@
             api = apis[i];
         %>
         <li>
-            <a class="tooltip-right medium orange pill" data-content="#tooltipcontentID<%=i%>"><%=api.name%></a>
-            <div class="tooltip-content" id="tooltipcontentID<%=i%>">
+            <a class="tooltip-right medium orange pill" data-content="#tooltipcontentID<%=String(i)%>"><%=api.name%></a>
+            <div class="tooltip-content" id="tooltipcontentID<%=String(i)%>">
                 <h5><%=api.name%></h5>
                 <img src="<%=api.thumbURL%>"/>
                 <p><%=api.description%></p>

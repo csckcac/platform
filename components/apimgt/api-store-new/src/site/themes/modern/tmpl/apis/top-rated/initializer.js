@@ -2,7 +2,7 @@ var getTemplateFile = function() {
     return "tmpl/apis/top-rated/template.jag";
 };
 //overrides goes here
-var initialize = function (global) {
+var initialize = function (jagg) {
     //removeHeaderCSS("layout/default");
     //removeHeaderJS("layout/default");
 };

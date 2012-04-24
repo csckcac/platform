@@ -1,15 +1,15 @@
-<% var template = function(data, params, global) { %>
+<% jagg.template = function(data, params, jagg) { %>
 <div id="layouts_base">
     <div id="top">
         <%
-        var i, tmpl, top = params.top;
+        var i, tmpl, top = data.top;
         if(top) {
             length = top.length;
             for(i = 0; i < length; i++) {
                 tmpl = top[i];
         %>
         <div class="col_12">
-            <% includeTemplates(tmpl, global); %>
+            <% jagg.includeTemplates(tmpl); %>
         </div>
         <%  }
         } %>
@@ -17,19 +17,19 @@
 
     <div id="left">
         <div class="col_3">
-            <% includeTemplates(params.left, global); %>
+            <% jagg.includeTemplates(data.left); %>
         </div>
     </div>
 
     <div id="middle">
         <div class="col_6">
-            <% includeTemplates(params.middle, global); %>
+            <% jagg.includeTemplates(data.middle); %>
         </div>
     </div>
 
     <div id="right">
         <div class="col_3">
-            <% includeTemplates(params.right, global); %>
+            <% jagg.includeTemplates(data.right); %>
         </div>
     </div>
 </div>

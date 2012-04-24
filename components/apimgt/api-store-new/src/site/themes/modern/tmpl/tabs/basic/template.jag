@@ -1,5 +1,5 @@
-<% var template = function(data, params, global) { %>
-<div class="tabs-basic">
+<% jagg.template = function(data, params, jagg) { %>
+<div class="tabs-basic<%=" " + data.classes%>">
     <%
         var tabs = data.tabs, length = tabs.length;
         var i, index, tab, classes;
@@ -9,14 +9,14 @@
     for(i = 0; i < length; i++) {
         tab = tabs[i];
         if(i == 0) {
-            classes = "first current";
+            clazz = "first current";
         } else if(i == length - 1) {
-            classes = "last";
+            clazz = "last";
         } else {
-            classes = "";
+            clazz = "";
         }
     %>
-        <li class="<%=classes%>">
+        <li class="<%=clazz%>">
             <a href="#tab<%=String(i)%>"><%=tab.title%></a>
         </li>
     <% } %>
@@ -26,7 +26,7 @@
     for(i = 0; i < length; i++) {
         tab = tabs[i];
     %>
-    <div class="tab-content clearfix" id="tab<%=i%>"><% includeTemplates(tab.body, global); %></div>
+    <div class="tab-content clearfix" id="tab<%=String(i)%>"><% jagg.includeTemplates(tab.body, jagg); %></div>
     <% } %>
 </div>
 <% }; %>

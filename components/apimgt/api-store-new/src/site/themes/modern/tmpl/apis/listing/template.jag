@@ -1,4 +1,5 @@
-<% var template = function(data, params, global) { %>
+<% jagg.template = function(data, params, jagg) { %>
+<% var stars = require("/site/themes/default/utils/ratings/star-generator.js"); %>
 <div class="gallery">
     <%
     var i, api, apis = data.apis, length = apis.length;
@@ -11,13 +12,7 @@
         </a>
         <a><%=api.name%></a>
         <a href="/service-info?name=foo&version1.0"><%=api.provider%></a>
-        <div class="star-ratings">
-            <img src="css/img/star-1.0.png"/>
-            <img src="css/img/star-1.0.png"/>
-            <img src="css/img/star-1.0.png"/>
-            <img src="css/img/star-1.0.png"/>
-            <img src="css/img/star-1.0.png"/>
-        </div>
+        <div class="star-ratings"><%=stars.getStaticStars(site.context, api.rating)%></div>
     </div>
     <% } %>
 </div>

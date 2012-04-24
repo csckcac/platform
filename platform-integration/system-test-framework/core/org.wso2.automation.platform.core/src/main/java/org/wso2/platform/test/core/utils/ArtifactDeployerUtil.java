@@ -54,7 +54,7 @@ import org.wso2.carbon.task.stub.TaskManagementException;
 import org.wso2.carbon.utils.FileManipulator;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.dssutils.SqlDataSourceUtil;
-import org.wso2.platform.test.core.utils.endpointutils.EsbendpointSetter;
+import org.wso2.platform.test.core.utils.endpointutils.EsbEndpointSetter;
 import org.wso2.platform.test.core.utils.environmentutils.ClusterReader;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
@@ -488,8 +488,8 @@ public class ArtifactDeployerUtil {
                                        ENDPOINT_DIR + File.separator + aEndPointFiles);
 
                 DataHandler endpointDh = new DataHandler(endpoint);
-                EsbendpointSetter esbendpointSetter = new EsbendpointSetter();
-                endPointAdmin.addEndPoint(sessionCookie, esbendpointSetter.setEndpoitUrl(endpointDh));
+                EsbEndpointSetter esbendpointSetter = new EsbEndpointSetter();
+                endPointAdmin.addEndPoint(sessionCookie, esbendpointSetter.setEndpointURL(endpointDh));
             }
         }
     }

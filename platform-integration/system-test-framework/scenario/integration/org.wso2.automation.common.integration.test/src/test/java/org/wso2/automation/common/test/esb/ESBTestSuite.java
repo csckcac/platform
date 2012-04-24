@@ -34,7 +34,7 @@ public class ESBTestSuite extends MasterTestSuite {
 
         suiteVariablesList.add(new SuiteVariables("CustomeProxyTest", CustomProxyTest.class));
         suiteVariablesList.add(new SuiteVariables("ServiceChainingTest", ServiceChainingTest.class));
-        suiteVariablesList.add(new SuiteVariables("MediatorTest", MediatorTest.class));
+//        suiteVariablesList.add(new SuiteVariables("MediatorTest", MediatorTest.class));
 
         superSuite("ESBTestSuite", suiteVariablesList).run();
     }

@@ -2,6 +2,7 @@
 <lookup>
     <as>
         <url type="address">"http://10.100.2.122:9766/services/ClubDataDS1/"</url>
+        <url type="address">"http://krishantha-new:9765/services/HelloService"</url>
         <url type="loadbalance">"http://10.100.2.122:9766/services/ClubProfileDS1/"</url>
         <url type="failover">"http://localhost:9001/services/LBService1"</url>
     </as>

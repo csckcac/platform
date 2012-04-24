@@ -37,8 +37,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;
 
-public class EsbendpointSetter {
-    public OMElement setEndpoitUrl(DataHandler dh) throws IOException, XMLStreamException {
+public class EsbEndpointSetter {
+    public OMElement setEndpointURL(DataHandler dh) throws IOException, XMLStreamException {
         DataHandler dataHandler = null;
 
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(dh.getInputStream());
@@ -116,7 +116,8 @@ public class EsbendpointSetter {
     public String getUrl(String endpoint) throws IOException, XMLStreamException {
         String newEndPoint = endpoint;
 
-        DataHandler dh = new DataHandler(new URL("file://" + ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + File.separator + "artifacts/ESB/endpointlookup.xml"));
+        DataHandler dh = new DataHandler(new URL("file://" + ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + File.separator +
+                                                 "artifacts" + File.separator + "ESB" + File.separator + "endpointlookup.xml"));
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(dh.getInputStream());
         StAXOMBuilder builder = new StAXOMBuilder(parser);
         OMElement endPointElem = builder.getDocumentElement();

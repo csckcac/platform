@@ -38,7 +38,6 @@ import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
 
 import java.rmi.RemoteException;
 
-//https://support.wso2.com/jira/browse/MARSPRODSPRT-228
 /*
 Multi tenancy of RSS manager test and security of RSS Databases and users of the tenants
  */

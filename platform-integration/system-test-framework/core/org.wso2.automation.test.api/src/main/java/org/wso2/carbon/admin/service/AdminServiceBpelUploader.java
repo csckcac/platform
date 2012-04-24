@@ -34,11 +34,13 @@ import java.rmi.RemoteException;
 
 public class AdminServiceBpelUploader {
     String ServiceEndPoint = null;
+    String resourcePath = null;
     private static final Log log = LogFactory.getLog(AdminServiceBpelUploader.class);
     BPELPackageManagementServiceStub bpelPackageManagementServiceStub;
 
-    public AdminServiceBpelUploader(String serviceEndPoint) {
+    public AdminServiceBpelUploader(String serviceEndPoint, String resourceLocation) {
         this.ServiceEndPoint = serviceEndPoint;
+        this.resourcePath = resourceLocation;
     }
 
 
@@ -64,7 +66,7 @@ public class AdminServiceBpelUploader {
 
         final String uploaderServiceURL = ServiceEndPoint + "BPELUploader";
         AdminServiceBpelPackageManager manager = new AdminServiceBpelPackageManager(ServiceEndPoint, sessionCookie);
-        boolean success;
+        boolean success = false;
         AuthenticateStub authenticateStub = new AuthenticateStub();
         BPELUploaderStub bpelUploaderStub = new BPELUploaderStub(uploaderServiceURL);
         authenticateStub.authenticateStub(sessionCookie, bpelUploaderStub);
@@ -74,7 +76,8 @@ public class AdminServiceBpelUploader {
         return success;
     }
 
-    private UploadedFileItem getUploadedFileItem(DataHandler dataHandler, String fileName, String fileType) {
+    private UploadedFileItem getUploadedFileItem(DataHandler dataHandler, String fileName,
+                                                 String fileType) {
         UploadedFileItem uploadedFileItem = new UploadedFileItem();
         uploadedFileItem.setDataHandler(dataHandler);
         uploadedFileItem.setFileName(fileName);
@@ -84,48 +87,34 @@ public class AdminServiceBpelUploader {
     }
 
     public void deployPackage(String packageName,
-                              BPELUploaderStub bpelUploaderStub) throws MalformedURLException, RemoteException, InterruptedException {
+                              BPELUploaderStub bpelUploaderStub)
+            throws MalformedURLException, RemoteException, InterruptedException {
         String sampleArchiveName = packageName + ".zip";
-        File bpelZipArchive = new File(getSystemResourceLocation() + File.separator +
-                "artifacts" + File.separator + "BPS" + File.separator + "bpel" + File.separator + sampleArchiveName);
+        File bpelZipArchive =
+                new File(resourcePath + File.separator +"artifacts" + File.separator
+                         + "BPS" + File.separator + "bpel" + File.separator + sampleArchiveName);
         UploadedFileItem[] uploadedFileItems = new UploadedFileItem[1];
         uploadedFileItems[0] = getUploadedFileItem(new DataHandler(bpelZipArchive.toURI().toURL()),
-                sampleArchiveName,
-                "zip");
+                                                   sampleArchiveName,
+                                                   "zip");
         System.out.println("Deploying " + sampleArchiveName);
         bpelUploaderStub.uploadService(uploadedFileItems);
         Thread.sleep(10000);
     }
 
     public void deployPackage(String packageName, String resourceDir,
-                              BPELUploaderStub bpelUploaderStub) throws RemoteException, InterruptedException {
+                              BPELUploaderStub bpelUploaderStub)
+            throws RemoteException, InterruptedException {
 
         String sampleArchiveName = packageName + ".zip";
         System.out.println(resourceDir + File.separator + sampleArchiveName);
         DataSource bpelDataSource = new FileDataSource(resourceDir + File.separator + sampleArchiveName);
         UploadedFileItem[] uploadedFileItems = new UploadedFileItem[1];
         uploadedFileItems[0] = getUploadedFileItem(new DataHandler(bpelDataSource),
-                sampleArchiveName,
-                "zip");
+                                                   sampleArchiveName,
+                                                   "zip");
         System.out.println("Deploying " + sampleArchiveName);
         bpelUploaderStub.uploadService(uploadedFileItems);
         Thread.sleep(10000);
-    }
-
-    /**
-     * construct the resource file path by checking the OS tests are running.
-     * Need to replace string path with correct forward or backward slashes as we set the system property with
-     * forward slash.
-     *
-     * @return resource path
-     */
-    private static String getSystemResourceLocation() {
-        String resourceLocation;
-        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-            resourceLocation = System.getProperty("system.test.sample.location").replace("/", "\\");
-        } else {
-            resourceLocation = System.getProperty("system.test.sample.location").replace("/", "/");
-        }
-        return resourceLocation;
     }
 }

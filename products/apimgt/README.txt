@@ -42,7 +42,6 @@ Key Features
     - Try APIs on-line before using them
     - Rate APIs and comment on their features, usability and other related aspects
 
-
 System Requirements
 ==================================
 

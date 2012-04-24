@@ -22,6 +22,7 @@
         <then>
             <log level="custom">
                 <property name="STATUS" value="Message throttled out"/>
+                <property name="API" expression="$ctx:SYNAPSE_REST_API"/>
             </log>
             <payloadFactory>
                 <format>

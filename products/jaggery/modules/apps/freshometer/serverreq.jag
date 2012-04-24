@@ -14,8 +14,8 @@ var apikey = "e9r83r3qcp3hdghg8qpu5kf3";
  if (moviesJSON.data.movies[0] != null && moviesJSON.data.movies[0] != 'undefined') {
  var videotitle = encodeURI(moviesJSON.data.movies[0].title);  //encode the full movie title for youtube search
  // Retrieving and online feed
- var URl = "http://gdata.youtube.com/feeds/api/videos?q="+videotitle+"video&start-index=1&max-results=6&v=2";
- feed.getFeed(URL);
+ var url = "http://gdata.youtube.com/feeds/api/videos?q="+videotitle+"video&start-index=1&max-results=6&v=2";
+ feed.getFeed(url);
  // Getting an array of individual entries from the feed
  var entries = feed.entries;
 %>

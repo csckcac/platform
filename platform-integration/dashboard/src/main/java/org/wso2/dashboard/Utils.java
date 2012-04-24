@@ -20,8 +20,11 @@ package org.wso2.dashboard;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.Iterator;
+import java.util.Properties;
 
 public class Utils {
     public static String getDataArray(JSONArray ja) {
@@ -32,9 +35,12 @@ public class Utils {
             while (i.hasNext()) {
                 JSONObject jo = (JSONObject) i.next();
                 s.append("[") ;
-                s.append(jo.getString("id") + "'" + "," );
-                s.append(jo.getString(Constant.PASS) + "," );
-                s.append(jo.getString(Constant.FAIL) + "," );
+                s.append(jo.getString("id"));
+                s.append("," );
+                s.append(jo.getString(Constant.PASS));
+                s.append("," );
+                s.append(jo.getString(Constant.FAIL));
+                s.append("," );
                 s.append(jo.getString(Constant.SKIP));
                 s.append( "],");
             }
@@ -52,7 +58,8 @@ public class Utils {
             while (i.hasNext()) {
                 JSONObject jo = (JSONObject) i.next();
                 if (jo.containsKey(key)) {
-                    s.append(jo.getString(key) + ",");
+                    s.append(jo.getString(key));
+                    s.append(",");
                 }
                 if(count == 5) {
                     break;
@@ -77,4 +84,27 @@ public class Utils {
         DecimalFormat twoDForm = new DecimalFormat("#.###");
         return Double.parseDouble(twoDForm.format(value));
     }
+
+   public static String getProperty(String key) {
+            Properties dbProps = new Properties();
+            InputStream is = null;
+
+            try {
+                is = DataProvider.class.getClassLoader().getResourceAsStream("dbconf.properties");
+                dbProps.load(is);//this may throw IOException
+            } catch (IOException e) {
+
+                System.err.println("Database configuration not found");
+            } finally {
+                try {
+                    if (is != null) {
+                        is.close();
+                    }
+
+                } catch (IOException e) {
+
+                }
+            }
+            return dbProps.getProperty(key);
+        }
 }

@@ -37,14 +37,23 @@ public class OracleDatabaseManager implements DatabaseManager {
     }
 
     public void executeUpdate(String sql) throws SQLException {
-        Statement st = connection.createStatement();
+        Statement st = null;
         log.debug(sql);
-        st.executeUpdate(sql.trim());
-        st.close();
-        log.info("Sql update Success");
+        try {
+            st = connection.createStatement();
+            st.executeUpdate(sql);
+        } finally {
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+                    //can do nothing
+                }
+            }
+        }
+        log.debug("Sql update Success");
 
     }
-
 
     public ResultSet executeQuery(String sql) throws SQLException {
         Statement st = connection.createStatement();
@@ -54,10 +63,20 @@ public class OracleDatabaseManager implements DatabaseManager {
     }
 
     public void execute(String sql) throws SQLException {
-        Statement st = connection.createStatement();
-        st.execute(sql);
-        st.close();
-        log.info("Sql execution Success");
+        Statement st = null;
+        try {
+            st = connection.createStatement();
+            st.execute(sql);
+        } finally {
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+                    //can do nothing
+                }
+            }
+        }
+        log.debug("Sql execution Success");
     }
 
     public void disconnect() throws SQLException {
@@ -69,7 +88,7 @@ public class OracleDatabaseManager implements DatabaseManager {
         return connection.isClosed();
     }
 
-    protected void finalize() throws SQLException {
+    protected void finalize() throws Throwable {
         try {
             if (!connection.isClosed()) {
                 disconnect();
@@ -79,5 +98,7 @@ public class OracleDatabaseManager implements DatabaseManager {
             log.error("Error while disconnecting from database");
             throw new SQLException("Error while disconnecting from database");
         }
+        super.finalize();
     }
+
 }

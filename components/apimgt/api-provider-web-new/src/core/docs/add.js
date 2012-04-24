@@ -1,10 +1,11 @@
 var apiProvider = require("/core/greg/greg.js").getAPIProviderObj();
 var user = require("/core/users/users.js").getUser();
+var log = new Log();
+
 var addDocumentation = function(apiName, version, docName, docType, summary, sourceType,
                                 sourceUrl) {
 
 
-    var log = new Log();
     var providerName = user.username;
     try {
         var success = apiProvider.addDocumentation(providerName, apiName, version, docName, docType, summary, sourceType, sourceUrl);

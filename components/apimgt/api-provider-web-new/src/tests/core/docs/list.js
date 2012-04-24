@@ -1,10 +1,10 @@
 var test0 = function() {
-    var name = "createNewAPIVersion";
+    var name = "getAllDocumentation";
     var utils = require("/tests/utils.js");
-    var copy = require("/core/apis/copy.js");
+    var add = require("/core/docs/list.js");
 
 
-    var result = copy[name]("apiSample", "1.2.3","2.4.6");
+    var result = add[name]("apiSample", "1.2.3");
     if (result.error) {
         utils.failure(name, result);
         return;

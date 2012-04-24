@@ -6,11 +6,11 @@ var test0 = function() {
     var uriTemplateArr = [];
     var uriMethodArr = [];
 
-    uriTemplateArr.push("api1");
+    uriTemplateArr.push("/*");
     uriMethodArr.push("GET");
 
 
-    var result = add[name]("admin", "api1", "1.2.3", "hello", "http://ab", "http://ab.wsdl", "jaggery,mashup", "silver", "", "api1", request, uriTemplateArr, uriMethodArr);
+    var result = add[name]("apiSample", "1.2.3", "hello", "http://ab", "http://ab.wsdl", "jaggery,mashup", "silver", "", "api1", uriTemplateArr, uriMethodArr);
     if (result.error) {
         utils.failure(name, result);
         return;

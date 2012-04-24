@@ -1,12 +1,12 @@
 var updateAPI = function(apiName, version, description, imageUrl, endpoint, wsdl, tags, tier,
-                         status, resourceTemplate, resourceMethod, resourceUri, context,
+                         status, context,
                          uriTemplateArr, uriMethodArr) {
     var log = new Log();
     var apiProvider = require("/core/greg/greg.js").getAPIProviderObj();
     var user = require("/core/users/users.js").getUser();
     var providerName = user.username;
     try {
-        var success = apiProvider.updateAPI(providerName, apiName, version, description, imageUrl, endpoint, wsdl, tags, tier, status, resourceTemplate, resourceMethod, resourceUri, context, request, uriTemplateArr, uriMethodArr);
+        var success = apiProvider.updateAPI(providerName, apiName, version, description, imageUrl, endpoint, wsdl, tags, tier, status, context, request, uriTemplateArr, uriMethodArr);
         if (log.isDebugEnabled()) {
             log.debug("updateAPI : " + apiName + "-" + version);
         }

@@ -1,10 +1,10 @@
 var test0 = function() {
-    var name = "createNewAPIVersion";
+    var name = "removeDocumentation";
     var utils = require("/tests/utils.js");
-    var copy = require("/core/apis/copy.js");
+    var remove = require("/core/docs/remove.js");
 
 
-    var result = copy[name]("apiSample", "1.2.3","2.4.6");
+    var result = remove[name]("apiSample", "1.2.3", "doc1", "samples");
     if (result.error) {
         utils.failure(name, result);
         return;

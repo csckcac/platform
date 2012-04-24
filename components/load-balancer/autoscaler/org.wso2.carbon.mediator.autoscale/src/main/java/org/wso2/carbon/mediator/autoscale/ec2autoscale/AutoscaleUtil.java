@@ -15,10 +15,6 @@
  */
 package org.wso2.carbon.mediator.autoscale.ec2autoscale;
 
-//import com.amazonaws.auth.AWSCredentials;
-//import com.amazonaws.auth.BasicAWSCredentials;
-//import com.amazonaws.services.ec2.AmazonEC2Client;
-//import com.amazonaws.services.ec2.model.GroupIdentifier;
 import org.apache.axis2.clustering.ClusteringAgent;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
@@ -29,15 +25,13 @@ import org.apache.synapse.SynapseException;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.wso2.carbon.lb.common.conf.LoadBalancerConfiguration;
 import org.wso2.carbon.mediator.autoscale.ec2autoscale.context.AppDomainContext;
-
-import sun.misc.BASE64Encoder;
-
+//import sun.misc.BASE64Encoder;
+import org.apache.axiom.om.util.Base64;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -174,8 +168,8 @@ public final class AutoscaleUtil {
             }
             byte[] bytes = AutoscaleUtil.getBytesFromFile(file);
             if (bytes != null) {
-                BASE64Encoder encoder = new BASE64Encoder();
-                userData = encoder.encode(bytes);
+//                /BASE64.e encoder = new BASE64Encoder();
+                userData = Base64.encode(bytes);
             }
         } catch (IOException e) {
             AutoscaleUtil.handleException("Cannot read data from payload file " + payloadFileName,
@@ -226,10 +220,11 @@ public final class AutoscaleUtil {
                 }
                     appDomainContexts.put(domain, new AppDomainContext(lbConfig.getServiceConfig(domain)));
 
+                }
             }
             configCtx.setNonReplicableProperty(AutoscaleConstants.APP_DOMAIN_CONTEXTS,
                                                appDomainContexts);
-        }
+        
         return appDomainContexts;
     }
 }

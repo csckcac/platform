@@ -117,9 +117,10 @@ for(var i=0;i &lt 5; i++) {
 
 <section id="overview">
     <h4>Overview</h4>
-    <p class="description">Feed API is capable of intelligently working with both Atom and RSS feeds.
+    <!--p class="description">Feed API is capable of intelligently working with both Atom and RSS feeds.
     The underlying protocol implementation is kept transparent. However, some data might be lost due to this being an
-    abstraction of both Atom and RSS feeds. The Feed host object is capable of persisting it's content to disk.</p>
+    abstraction of both Atom and RSS feeds. The Feed host object is capable of persisting it's content to disk.</p-->
+    <p class="description">The Feed API handles reading and writing Atom feeds</p>
     
 </section>
 <section id="members">

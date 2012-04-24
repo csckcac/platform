@@ -159,83 +159,6 @@ include('/includes/tryit_but.jag');
     </td>
 
 </tr>
-
-<tr>
-
-    <td><code>readyState </code>
-    </td>
-   <td>Unsigned Short</td>
-    <td>The current state of the object, which can be one of
-        the following values:
-        <br><br>
-        <ul>
-            <li>0: The object has not been initialized by calling the
-                open() method.
-                <br><br>
-            </li>
-            <li>1: The object has been initialized successfully, but
-                the send() method has not been called.
-                <br><br>
-            </li>
-            <li>2: The request is pending
-                <br><br>
-            </li>
-            <li>3: The request is partially complete (some data has
-                been received, and may be available in the responseText property.
-                <br><br>
-            </li>
-            <li>4: The request is complete, all data has been
-                received.
-                <br><br>
-                Of these, typically only the last (readyState == 4) is used.
-            </li>
-        </ul>
-    </td>
-
-</tr>
-
-<tr>
-
-    <td><code>responseXML</code>
-    </td>
-    <td>Document</td>
-    <td>The parsed XML message representing the response from the service. (Currently this is same as responseE4X, but
-        this will be fixed to return a DOM document in the future versions)
-    </td>
-
-</tr>
-
-<tr>
-
-    <td><code>responseE4X </code>*
-    </td>
-    <td>XML</td>
-    <td>The parsed E4X XML message representing the response from the service.</td>
-
-</tr>
-
-
-<tr>
-    <td><code>responseText</code>
-    </td>
-    <td>String</td>
-    <td>The raw text representing the XML (or non-XML) response. If the responseXML property is empty, you can check the
-        responseText property to see if a non-XML response was received.
-    </td>
-</tr>
-
-
-<tr>
-
-    <td><code>error </code>
-    </td>
-   <td>WebService Error</td>
-    <td>When an asynchronous operation failed to complete successfully (including internal errors, or protocol errors
-        such as SOAP faults) the error property is a WebServiceError object
-    </td>
-
-</tr>
-
 </tbody>
 </table>
                 </section>
@@ -583,6 +506,81 @@ include('/includes/tryit_but.jag');
         </td>
 
     </tr>
+            <tr>
+
+                <td><code>getReadyState()</code>
+                </td>
+                <td>Unsigned Short</td>
+                <td>The current state of the object, which can be one of
+                the following values:
+                    <br><br>
+                        <ul>
+                            <li>0: The object has not been initialized by calling the
+                            open() method.
+                                <br><br>
+                                </li>
+                                    <li>1: The object has been initialized successfully, but
+                                    the send() method has not been called.
+                                        <br><br>
+                                        </li>
+                                            <li>2: The request is pending
+                                                <br><br>
+                                                </li>
+                                                    <li>3: The request is partially complete (some data has
+                                                    been received, and may be available in the responseText property.
+                                                        <br><br>
+                                                        </li>
+                                                            <li>4: The request is complete, all data has been
+                                                            received.
+                                                                <br><br>
+                                                                Of these, typically only the last (readyState == 4) is used.
+                                                                </li>
+                                                                </ul>
+                                                            </td>
+
+                                                        </tr>
+
+                                                        <tr>
+
+                                                            <td><code>getResponseXML()</code>
+                                                            </td>
+                                                            <td>Document</td>
+                                                            <td>The parsed XML message representing the response from the service. (Currently this is same as responseE4X, but
+                                                            this will be fixed to return a DOM document in the future versions)
+                                                            </td>
+
+                                                        </tr>
+
+                                                        <tr>
+
+                                                            <td><code>getResponseE4X() </code>*
+                                                            </td>
+                                                            <td>XML</td>
+                                                            <td>The parsed E4X XML message representing the response from the service.</td>
+
+                                                        </tr>
+
+
+                                                        <tr>
+                                                            <td><code>getResponseText()</code>
+                                                            </td>
+                                                            <td>String</td>
+                                                            <td>The raw text representing the XML (or non-XML) response. If the responseXML property is empty, you can check the
+                                                            responseText property to see if a non-XML response was received.
+                                                            </td>
+                                                        </tr>
+
+
+                                                        <tr>
+
+                                                            <td><code>getError() </code>
+                                                            </td>
+                                                            <td>WebService Error</td>
+                                                            <td>When an asynchronous operation failed to complete successfully (including internal errors, or protocol errors
+                                                            such as SOAP faults) the error property is a WebServiceError object
+                                                            </td>
+
+                                                        </tr>
     
     </tbody>
 

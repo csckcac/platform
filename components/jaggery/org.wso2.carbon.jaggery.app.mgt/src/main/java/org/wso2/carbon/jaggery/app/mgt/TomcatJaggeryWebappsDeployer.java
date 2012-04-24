@@ -126,7 +126,7 @@ public class TomcatJaggeryWebappsDeployer {
                 handleHotDeployment(webappFile, webContextParams, applicationEventListeners,
                         servletParameters, servletMappingParameters, securityConstraint);
             } else if (faultyWebapp != null &&
-                    faultyWebapp.getLastModifiedTime() != lastModifiedTime) {
+                    faultyWebapp.getLastModifiedTime() != lastModifiedTime && (configLastModified != 0 && faultyWebapp.getConfigDirLastModifiedTime() != configLastModified)) {
                 handleHotDeployment(webappFile, webContextParams, applicationEventListeners,
                         servletParameters, servletMappingParameters, securityConstraint);
             }

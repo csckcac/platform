@@ -137,6 +137,7 @@
         </axis2.osgi.version.range.hdfs>
         <axiom.osgi.version.range.hdfs>${axiom.osgi.version.range}
         </axiom.osgi.version.range.hdfs>
+        <hadoop.version>0.20.203.1-wso2v1</hadoop.version>
         <wso2carbon.version.hdfs>${wso2carbon.version}</wso2carbon.version.hdfs>
     </properties>
 

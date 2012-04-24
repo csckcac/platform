@@ -22,6 +22,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hdfs.server.namenode.NameNode;
+import org.apache.hadoop.metrics2.lib.DefaultMetricsSystem;
 import org.wso2.carbon.utils.ServerConstants;
 
 import java.io.File;
@@ -37,6 +38,7 @@ public class HDFSNameNode {
     private static final String HDFS_SITE_XML = "hdfs-site.xml";
     private static final String HADOOP_POLICY_XML = "hadoop-policy.xml";
     private static final String MAPRED_SITE_XML = "mapred-site.xml";
+    private static final String METRICS2_PROPERTIES = "hadoop-metrics2.properties";
 
 
     private Thread thread;
@@ -44,32 +46,26 @@ public class HDFSNameNode {
     public HDFSNameNode() {
         Configuration conf = new Configuration(false);
         String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
+        String hadoopConf =   carbonHome + File.separator + "repository" + File.separator +
+                                    "conf" + File.separator + "advanced" + File.separator + "hadoop";
         String hadoopCoreSiteConf = carbonHome + File.separator + "repository" + File.separator +
-                                    "conf" + File.separator + "advanced" + File.separator + CORE_SITE_XML;
+                                    "conf" + File.separator + "advanced" + File.separator + "hadoop" + File.separator + CORE_SITE_XML;
         String hdfsCoreSiteConf = carbonHome + File.separator + "repository" + File.separator +
-                                  "conf" + File.separator + "advanced" + File.separator + HDFS_SITE_XML;
+                                  "conf" + File.separator + "advanced" + File.separator + "hadoop" + File.separator + HDFS_SITE_XML;
         String hadoopPolicyConf = carbonHome + File.separator + "repository" + File.separator +
-                                  "conf" + File.separator + "advanced" + File.separator + HADOOP_POLICY_XML;
+                                  "conf" + File.separator + "advanced" + File.separator + "hadoop" + File.separator + HADOOP_POLICY_XML;
         String mapredSiteConf = carbonHome + File.separator + "repository" + File.separator +
-                                "conf" + File.separator + "advanced" + File.separator + MAPRED_SITE_XML;
-
-
+                                "conf" + File.separator + "advanced" + File.separator + "hadoop" + File.separator + MAPRED_SITE_XML;
+        String hadoopMetrics2Properties = carbonHome + File.separator + "repository" + File.separator +
+                "conf" + File.separator + "advanced" + File.separator + "hadoop" + File.separator + METRICS2_PROPERTIES;
         conf.addResource(new Path(hadoopCoreSiteConf));
         conf.addResource(new Path(hdfsCoreSiteConf));
         conf.addResource(new Path(hadoopPolicyConf));
         conf.addResource(new Path(mapredSiteConf));
-
-
-//        try{
-//        org.wso2.carbon.user.api.UserRealm userRealm = realmService.getTenantUserRealm(CarbonContext.getCurrentContext().getTenantId());
-//            System.out.println(userRealm.getUserStoreManager().getRoleNames());
-//        }catch (UserStoreException e){
-//
-//        }
+        conf.addResource(new Path(hadoopMetrics2Properties));
 
         try {
-
-            //DefaultMetricsSystem.initialize("namenode");
+            DefaultMetricsSystem.initialize("namenode");
             NameNode namenode = new NameNode(conf);
 //            if (namenode != null) {
 //                namenode.join();
@@ -78,8 +74,6 @@ public class HDFSNameNode {
             log.error(e);
             //System.exit(-1);
         }
-
-
     }
 
     /**
@@ -116,6 +110,4 @@ public class HDFSNameNode {
         } catch (InterruptedException ignored) {
         }
     }
-
-
 }

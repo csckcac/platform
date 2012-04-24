@@ -37,17 +37,9 @@ import java.util.List;
 public class HDFSAdmin extends AbstractAdmin {
 
     //private Configuration configuration = new Configuration(false);
+    //set FS default user home directory.
+    private static final String USER_HOME = "/user";
 
-//    public Configuration getClusterConfiguration() {
-//        configuration.set("fs.default.name", "hdfs://master:9000");
-//        //configuration.set("dfs.replication", "1");
-//        configuration.set("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem");
-//        //configuration.set("hadoop.security.authentication", "carbon"); //have to implement wso2 auth metod in server to support
-//        //configuration.set("hadoop.security.authorization", "true");
-//        //configuration.set("carbon.tenant.id", "carbon");
-//        // configuration.set("carbon.tenant.password", "carbon");
-//        return configuration;
-//    }
 
     /**
      * Mgt service return file and folder list of the give HDFS path
@@ -60,7 +52,7 @@ public class HDFSAdmin extends AbstractAdmin {
             throws HDFSServerManagementException {
 
         if (fsObjectPath == null) {
-            fsObjectPath = "/users/" + fsObjectPath;
+            fsObjectPath = "/user/" + fsObjectPath;
         }
 
         //DataAccessComponentManager dataAccessComponentManager = new DataAccessComponentManager();

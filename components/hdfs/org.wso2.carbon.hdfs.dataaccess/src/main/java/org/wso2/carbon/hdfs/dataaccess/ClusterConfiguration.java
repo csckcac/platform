@@ -18,32 +18,55 @@
 package org.wso2.carbon.hdfs.dataaccess;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.wso2.carbon.utils.ServerConstants;
+
+import java.io.File;
 
 /**
  * Set HDFS Cluster Configuration
  */
 public class ClusterConfiguration {
 
-    private static final String FS_HDFS_IMPL = "org.apache.hadoop.hdfs.DistributedFileSystem";
-    private static final String FS_DEFAUT_NAME = "hdfs://master:9000";
-    private static final String HADOOP_SECURITY_AUTHENTICATION = "carbon";
-    private static final String HADOOP_SECURITY_AUTHORIAZATION = "true";
+    private static final String CORE_SITE_XML = "core-site.xml";
+    private static final String HDFS_SITE_XML = "hdfs-site.xml";
+    private static final String HADOOP_POLICY_XML = "hadoop-policy.xml";
+    private static final String MAPRED_SITE_XML = "mapred-site.xml";
+    private static final String METRICS2_PROPERTIES = "hadoop-metrics2.properties";
 
     private static Configuration configuration = new Configuration(false);
 
-    public static void setDefaultConfiguration() {
-        configuration.set("fs.default.name", "hdfs://master:9000");
-        //configuration.set("dfs.replication", "1");
-        configuration.set("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem");
-        //configuration.set("hadoop.security.authentication", "carbon"); //have to implement wso2 auth metod in server to support
-        //configuration.set("hadoop.security.authorization", "true");
-        //configuration.set("carbon.tenant.id", "carbon");
-       // configuration.set("carbon.tenant.password", "carbon");
 
+    /**
+     * Set default Configuration required to conect with the HDFS cluster
+     */
+    public static void setDefaultConfiguration() {
+
+        String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
+        String hadoopConf = carbonHome + File.separator + "repository" + File.separator +
+                "conf" + File.separator + "advanced" + File.separator + "hadoop";
+        String hadoopCoreSiteConf = carbonHome + File.separator + "repository" + File.separator +
+                "conf" + File.separator + "advanced" + File.separator + "hadoop" + File.separator + CORE_SITE_XML;
+        String hdfsCoreSiteConf = carbonHome + File.separator + "repository" + File.separator +
+                "conf" + File.separator + "advanced" + File.separator + "hadoop" + File.separator + HDFS_SITE_XML;
+        String hadoopPolicyConf = carbonHome + File.separator + "repository" + File.separator +
+                "conf" + File.separator + "advanced" + File.separator + "hadoop" + File.separator + HADOOP_POLICY_XML;
+        String mapredSiteConf = carbonHome + File.separator + "repository" + File.separator +
+                "conf" + File.separator + "advanced" + File.separator + "hadoop" + File.separator + MAPRED_SITE_XML;
+        String hadoopMetrics2Properties = carbonHome + File.separator + "repository" + File.separator +
+                "conf" + File.separator + "advanced" + File.separator + "hadoop" + File.separator + METRICS2_PROPERTIES;
+        configuration.addResource(new Path(hadoopConf));
+        configuration.addResource(new Path(hdfsCoreSiteConf));
+        configuration.addResource(new Path(hadoopPolicyConf));
+        configuration.addResource(new Path(hadoopMetrics2Properties));
     }
 
     public static Configuration getDefaultConfiguration() {
+        //if(advanced/hdfs-site.xml present){
+        //readHDFSCustomConfig();
+        //}else{
         setDefaultConfiguration();
+        //}
         return configuration;
     }
 
@@ -73,5 +96,4 @@ public class ClusterConfiguration {
     public void setCarbonTenentPassword() {
 
     }
-
 }

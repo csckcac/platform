@@ -165,8 +165,12 @@
                               $.jstree.rollback(data.rlbk);
                               return false;
                           }
-                          //alert("going to delete a node " + data.rslt.obj.attr('path'));
+                          alert("going to delete a node " + data.rslt.obj.attr('path'));
                           $.get("delete_folder_ajaxprocessor.jsp", {"folderPath" : data.rslt.obj.attr('path')});
+
+                          //check the status code return and rollback the node.
+
+
                           return true;
 
                       })

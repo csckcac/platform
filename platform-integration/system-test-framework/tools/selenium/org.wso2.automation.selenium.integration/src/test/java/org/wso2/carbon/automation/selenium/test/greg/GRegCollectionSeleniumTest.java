@@ -37,6 +37,7 @@ import org.wso2.platform.test.core.utils.seleniumutils.SeleniumScreenCapture;
 import static org.testng.Assert.*;
 
 import java.net.MalformedURLException;
+import java.util.Calendar;
 
 
 public class GRegCollectionSeleniumTest {
@@ -47,7 +48,7 @@ public class GRegCollectionSeleniumTest {
     String password;
 
     @BeforeClass(alwaysRun = true)
-    public void init() throws MalformedURLException {
+    public void init() throws Exception {
         int userId = new GregUserIDEvaluator().getTenantID();
         String baseUrl = new GRegBackEndURLEvaluator().getBackEndURL();
         log.info("baseURL is " + baseUrl);
@@ -58,6 +59,10 @@ public class GRegCollectionSeleniumTest {
                 getUserInfo(userId);
         username = tenantDetails.getUserName();
         password = tenantDetails.getPassword();
+        userLogin();
+        gotoDetailViewTab();
+        deleteResourceFromBrowser(getResourceId("selenium_root")); //delete the the root collection before the test.
+        new GregUserLogout().userLogout(driver);
     }
 
     @Test(groups = {"wso2.greg"}, description = "add a collection tree ", priority = 1)
@@ -69,7 +74,7 @@ public class GRegCollectionSeleniumTest {
 
             addCollection(collectionPath);      //Create Collection  1
             Thread.sleep(3000L);
-            assertEquals(collectionPath, selenium.getValue("//input"),
+            assertEquals(collectionPath, selenium.getValue("//*[@id=\"uLocationBar\"]"),
                          "New Created Collection does not Exists :");
 
             new GregUserLogout().userLogout(driver);
@@ -104,11 +109,15 @@ public class GRegCollectionSeleniumTest {
 
             addCollection(collectionPath);                   //Create Collection  1
             Thread.sleep(3000L);
-            assertEquals(collectionPath, selenium.getValue("//input"),
+            assertEquals(collectionPath, selenium.getValue("//*[@id=\"uLocationBar\"]"),
                          "New Created Collection does not Exists :");
 
             //Add Comment
-            driver.findElement(By.id("commentsIconMinimized")).click();
+            if (waitForElement("//*[@id=\"commentsIconMinimized\"]")) {
+                driver.findElement(By.id("commentsIconMinimized")).click();
+            } else {
+                driver.findElement(By.id("commentsIconExpanded")).click();
+            }
             Thread.sleep(2000L);
             driver.findElement(By.linkText("Add Comment")).click();
             Thread.sleep(3000L);
@@ -131,8 +140,9 @@ public class GRegCollectionSeleniumTest {
             assertTrue(selenium.isTextPresent("WSO2 Carbon"), "Comment Delete pop-up title failed :");
             assertTrue(selenium.isTextPresent("exact:Are you sure you want to delete this comment?"),
                        "Comment Delete pop-up  message failed :");
+            Thread.sleep(3000L);
             selenium.click("//button");
-            Thread.sleep(2000L);
+            Thread.sleep(6000L);
             new GregUserLogout().userLogout(driver);
             log.info("********GRegCollectionSeleniumTest testAddComment() - Passed ***********");
 
@@ -164,7 +174,7 @@ public class GRegCollectionSeleniumTest {
 
             addCollection(collectionPath);      //Create Collection  1
             Thread.sleep(2000L);
-            assertEquals(collectionPath, selenium.getValue("//input"),
+            assertEquals(collectionPath, selenium.getValue("//*[@id=\"uLocationBar\"]"),
                          "New Created Collection does not Exists :");
 
             //Apply Tag
@@ -219,7 +229,7 @@ public class GRegCollectionSeleniumTest {
             //Create Collection  1
             addCollection(collectionPath);
             Thread.sleep(2000L);
-            assertEquals(collectionPath, selenium.getValue("//input"),
+            assertEquals(collectionPath, selenium.getValue("//*[@id=\"uLocationBar\"]"),
                          "New Created Collection does not Exists :");
 
             //Add LifeCycle
@@ -285,7 +295,7 @@ public class GRegCollectionSeleniumTest {
 
             addCollection(collectionPath);                 //Create Collection  1
             Thread.sleep(2000L);
-            assertEquals(collectionPath, selenium.getValue("//input"), "New Created Collection does not Exists :");
+            assertEquals(collectionPath, selenium.getValue("//*[@id=\"uLocationBar\"]"), "New Created Collection does not Exists :");
 
             // Add rating 1
             driver.findElement(By.xpath("//img[3]")).click();
@@ -344,7 +354,7 @@ public class GRegCollectionSeleniumTest {
 
             addCollection(collectionPath);                 //Create Collection  1
             Thread.sleep(2000L);
-            assertEquals(collectionPath, selenium.getValue("//input"), "New Created Collection does not Exists :");
+            assertEquals(collectionPath, selenium.getValue("//*[@id=\"uLocationBar\"]"), "New Created Collection does not Exists :");
 
             findLocation("/selenium_root/collection_root/rename");
             assertTrue(selenium.isTextPresent("a1"), "Collection a1 does not Exists :");
@@ -366,12 +376,14 @@ public class GRegCollectionSeleniumTest {
             Thread.sleep(3000L);
             assertTrue(selenium.isTextPresent(rename), "Renamed Collection does not Exists :");
             //Sign out
+            Thread.sleep(5000L);
             new GregUserLogout().userLogout(driver);
             log.info("********GRegCollectionSeleniumTest renameCollection() - Passed ***********");
         } catch (WebDriverException e) {
             log.info("Failed to rename collection: - WebDriver Exception :" + e.getMessage());
             new SeleniumScreenCapture().getScreenshot(driver, "greg",
                                                       "GRegCollectionSeleniumTest_addRatingToCollection");
+            Thread.sleep(5000L);
             new GregUserLogout().userLogout(driver);
             Thread.sleep(3000L);
             throw new WebDriverException("Failed to rename collection:" + e.getMessage());
@@ -398,15 +410,16 @@ public class GRegCollectionSeleniumTest {
 
             addCollection(collectionPath1);   //Create Collection  1
             Thread.sleep(2000L);
-            assertEquals(collectionPath1, selenium.getValue("//input"),
+            assertEquals(collectionPath1, selenium.getValue("//*[@id=\"uLocationBar\"]"),
                          "New Created Collection1 does not Exists :");
-            driver.findElement(By.xpath("//input")).clear();
+            driver.findElement(By.xpath("//*[@id=\"uLocationBar\"]")).click();
+            driver.findElement(By.xpath("//*[@id=\"uLocationBar\"]")).clear();
 
             findLocation("/");
 
             addCollection(collectionPath2);          //Create Collection  2
             Thread.sleep(2000L);
-            assertEquals(collectionPath2, selenium.getValue("//input"),
+            assertEquals(collectionPath2, selenium.getValue("//*[@id=\"uLocationBar\"]"),
                          "New Created Collection does not Exists :");
 
             findLocation("/selenium_root/collection_root/move/collection1");
@@ -464,13 +477,13 @@ public class GRegCollectionSeleniumTest {
 
             addCollection(collectionPath1);            //Create Collection  1
             Thread.sleep(2000L);
-            assertEquals(collectionPath1, selenium.getValue("//input"),
+            assertEquals(collectionPath1, selenium.getValue("//*[@id=\"uLocationBar\"]"),
                          "New Created Collection1 does not Exists :");
 
             findLocation("/");
             addCollection(collectionPath2);             //Create Collection  2
             Thread.sleep(2000L);
-            assertEquals(collectionPath2, selenium.getValue("//input"),
+            assertEquals(collectionPath2, selenium.getValue("//*[@id=\"uLocationBar\"]"),
                          "New Created Collection2 does not Exists :");
 
             findLocation("/selenium_root/collection_root/copy/collection1");
@@ -529,7 +542,7 @@ public class GRegCollectionSeleniumTest {
 
             addCollection(collectionPath1);               //Create Collection  1
             Thread.sleep(2000L);
-            assertEquals(collectionPath1, selenium.getValue("//input"),
+            assertEquals(collectionPath1, selenium.getValue("//*[@id=\"uLocationBar\"]"),
                          "New Created Collection does not Exists :");
 
             findLocation("/selenium_root/collection_root/delete/");
@@ -637,6 +650,7 @@ public class GRegCollectionSeleniumTest {
     private void gotoDetailViewTab() throws Exception {
         try {
             driver.findElement(By.linkText("Browse")).click();           //Click on Browse link
+            selenium.waitForPageToLoad("30000");
             Thread.sleep(5000L);
             driver.findElement(By.id("stdView")).click();                    //Go to Detail view Tab
             Thread.sleep(3000L);
@@ -660,7 +674,9 @@ public class GRegCollectionSeleniumTest {
         try {
             driver.findElement(By.id("uLocationBar")).clear();
             driver.findElement(By.id("uLocationBar")).sendKeys(path);
-            driver.findElement(By.xpath("//input[2]")).click();
+            Thread.sleep(2000);
+            driver.findElement(By.xpath("/html/body/table/tbody/tr[2]/td[3]/table/tbody/tr[2]/td/div" +
+                                        "/div/table/tbody/tr/td/table/tbody/tr/td/input[2]")).click();
             Thread.sleep(3000L);
         } catch (WebDriverException e) {
             log.info("Failed to find Location collection/resource path:- WebDriver Exception :" +
@@ -726,6 +742,19 @@ public class GRegCollectionSeleniumTest {
             selenium.click("//button");
             selenium.waitForPageToLoad("30000");
         }
+    }
+
+    private boolean waitForElement(String elementName) throws InterruptedException {
+        Calendar startTime = Calendar.getInstance();
+        while (((Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis()))
+               < (120 * 1000)) {
+            if (selenium.isElementPresent(elementName)) {
+                return true;
+            }
+            Thread.sleep(1000);
+            log.info("waiting for element :" + elementName);
+        }
+        return false;
     }
 
 }

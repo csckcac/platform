@@ -21,6 +21,7 @@ import org.apache.tools.ant.taskdefs.Unpack;
 import org.testng.annotations.AfterSuite;
 import org.wso2.automation.common.test.as.service.*;
 import org.wso2.automation.common.test.as.webapp.UnpackWarTest;
+import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.suiteutills.MasterTestSuite;
 import org.wso2.platform.test.core.utils.suiteutills.SuiteVariables;
 import org.wso2.automation.common.test.as.capp.CarFileMultitenancyTest;
@@ -38,22 +39,38 @@ public class ASTestSuite extends MasterTestSuite {
     @AfterSuite
     public void suiteRunner() {
         List<SuiteVariables> suiteVariablesList = new ArrayList<SuiteVariables>();
-        suiteVariablesList.add(new SuiteVariables("CarFileUploadTest", CarFileMultitenancyTest.class));
-        suiteVariablesList.add(new SuiteVariables("JarServiceDependencyTest", JarServiceDependencyTest.class));
-        suiteVariablesList.add(new SuiteVariables("SpringServiceUpload", SpringServiceUploadTest.class));
-        suiteVariablesList.add(new SuiteVariables("JarServiceUpload", JarServiceUploadTest.class));
-        suiteVariablesList.add(new SuiteVariables("JaxWSServiceUpload", JaxWsServiceUploaderTest.class));
-        suiteVariablesList.add(new SuiteVariables("AppServerSystemStat", SystemStatTest.class));
-        suiteVariablesList.add(new SuiteVariables("AppServerServiceStat", ServiceStatTest.class));
-        suiteVariablesList.add(new SuiteVariables("AarUploadTest", AARServiceUploadTest.class));
-        suiteVariablesList.add(new SuiteVariables("ServiceReferExternalSchema", ExternalSchemaReferenceTest.class));
-        suiteVariablesList.add(new SuiteVariables("SoapTracerTest", SoapTracerTest.class));
-        suiteVariablesList.add(new SuiteVariables("StopandRedeployWebapp", WebAppDeploymentTest.class));
-        suiteVariablesList.add(new SuiteVariables("FaultyWebappTest", FaultyWebAppTest.class));
-        suiteVariablesList.add(new SuiteVariables("AARServiceWithSpaceinFileNameTest", AARServiceSpaceInFileNameTest.class));
-        suiteVariablesList.add(new SuiteVariables("UnpackWarTest", UnpackWarTest.class));
 
 
+        EnvironmentBuilder env = new EnvironmentBuilder();
+        if (env.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
+            suiteVariablesList.add(new SuiteVariables("CarFileUploadTest", CarFileMultitenancyTest.class));
+            suiteVariablesList.add(new SuiteVariables("JarServiceDependencyTest", JarServiceDependencyTest.class));
+            suiteVariablesList.add(new SuiteVariables("SpringServiceUpload", SpringServiceUploadTest.class));
+            suiteVariablesList.add(new SuiteVariables("JarServiceUpload", JarServiceUploadTest.class));
+            suiteVariablesList.add(new SuiteVariables("AppServerSystemStat", SystemStatTest.class));
+            suiteVariablesList.add(new SuiteVariables("AppServerServiceStat", ServiceStatTest.class));
+            suiteVariablesList.add(new SuiteVariables("AarUploadTest", AARServiceUploadTest.class));
+            suiteVariablesList.add(new SuiteVariables("ServiceReferExternalSchema", ExternalSchemaReferenceTest.class));
+            suiteVariablesList.add(new SuiteVariables("SoapTracerTest", SoapTracerTest.class));
+            suiteVariablesList.add(new SuiteVariables("StopandRedeployWebapp", WebAppDeploymentTest.class));
+            suiteVariablesList.add(new SuiteVariables("FaultyWebappTest", FaultyWebAppTest.class));
+            suiteVariablesList.add(new SuiteVariables("AARServiceWithSpaceinFileNameTest", AARServiceSpaceInFileNameTest.class));
+        } else {
+            suiteVariablesList.add(new SuiteVariables("UnpackWarTest", UnpackWarTest.class));
+            suiteVariablesList.add(new SuiteVariables("CarFileUploadTest", CarFileMultitenancyTest.class));
+            suiteVariablesList.add(new SuiteVariables("JarServiceDependencyTest", JarServiceDependencyTest.class));
+            suiteVariablesList.add(new SuiteVariables("SpringServiceUpload", SpringServiceUploadTest.class));
+            suiteVariablesList.add(new SuiteVariables("JarServiceUpload", JarServiceUploadTest.class));
+            suiteVariablesList.add(new SuiteVariables("JaxWSServiceUpload", JaxWsServiceUploaderTest.class));
+            suiteVariablesList.add(new SuiteVariables("AppServerSystemStat", SystemStatTest.class));
+            suiteVariablesList.add(new SuiteVariables("AppServerServiceStat", ServiceStatTest.class));
+            suiteVariablesList.add(new SuiteVariables("AarUploadTest", AARServiceUploadTest.class));
+            suiteVariablesList.add(new SuiteVariables("ServiceReferExternalSchema", ExternalSchemaReferenceTest.class));
+            suiteVariablesList.add(new SuiteVariables("SoapTracerTest", SoapTracerTest.class));
+            suiteVariablesList.add(new SuiteVariables("StopandRedeployWebapp", WebAppDeploymentTest.class));
+            suiteVariablesList.add(new SuiteVariables("FaultyWebappTest", FaultyWebAppTest.class));
+            suiteVariablesList.add(new SuiteVariables("AARServiceWithSpaceinFileNameTest", AARServiceSpaceInFileNameTest.class));
+        }
         superSuite("Appserver-test-suite", suiteVariablesList).run();
     }
 

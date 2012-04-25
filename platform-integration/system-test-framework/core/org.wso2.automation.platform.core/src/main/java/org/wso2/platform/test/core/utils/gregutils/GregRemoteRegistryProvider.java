@@ -8,10 +8,10 @@ import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
+import org.wso2.platform.test.core.utils.environmentutils.ProductUrlGeneratorUtil;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkFactory;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkProperties;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -30,10 +30,15 @@ public class GregRemoteRegistryProvider {
         EnvironmentBuilder env = new EnvironmentBuilder();
         FrameworkProperties properties = FrameworkFactory.getFrameworkProperties(ProductConstant.GREG_SERVER_NAME);
         if (env.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
-            registryURL = "https://" + properties.getProductVariables().getHostName() + "/t/" + userDetails.getDomain() +  "/registry/";
+            registryURL = ProductUrlGeneratorUtil.getRemoteRegistryURLOfStratos(properties.getProductVariables().
+                    getHttpsPort(), properties.getProductVariables().getHostName(), properties, userDetails);
         } else {
-            registryURL = "https://" + properties.getProductVariables().getHostName() + ":" + properties.getProductVariables().getHttpsPort() + "/registry/";
+            registryURL = ProductUrlGeneratorUtil.getRemoteRegistryURLOfProducts(properties.getProductVariables().getHttpsPort(),
+                                                                                 properties.getProductVariables().getHostName(),
+                                                                                 properties.getProductVariables().getWebContextRoot());
         }
+
+        System.out.println(registryURL);
 
         try {
             registry = new RemoteRegistry(new URL(registryURL), username, password);

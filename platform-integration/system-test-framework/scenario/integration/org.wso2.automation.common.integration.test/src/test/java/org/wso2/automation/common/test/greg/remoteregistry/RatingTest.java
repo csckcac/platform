@@ -63,7 +63,6 @@ public class RatingTest {
             log.error("Registry API Add Rating to a  Resource Test - Failed:" + e.getMessage());
             throw new RegistryException("Registry API Add Rating to a  Resource Test - Failed:" + e.getMessage());
         }
-
     }
 
     @Test(groups = {"wso2.greg"}, description = "test add rating to a Collection", priority = 2)

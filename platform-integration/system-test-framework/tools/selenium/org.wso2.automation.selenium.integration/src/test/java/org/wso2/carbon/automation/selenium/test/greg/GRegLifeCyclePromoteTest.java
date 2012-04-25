@@ -208,7 +208,7 @@ public class GRegLifeCyclePromoteTest {
         while (rowCount >= 0 && selenium.isTextPresent(serviceName)) {
             if (selenium.getTable("customTable." + rowCount + ".0").contains(serviceName)) {
                 driver.findElement(By.xpath("//tr[2]/td[3]/table/tbody/tr[2]/td/div/div/form[2]/table/tbody/tr["
-                                            + rowCount + "]/td[4]/a")).click();
+                                            + rowCount + "]/td/a")).click();
                 Thread.sleep(SLEEP_TIME);
                 assertTrue(selenium.isTextPresent("Are you sure you want to delete"));
                 selenium.click("//button");
@@ -227,7 +227,7 @@ public class GRegLifeCyclePromoteTest {
         while (rowCount >= 0 && selenium.isTextPresent(wsdlName)) {
             if (selenium.getTable("customTable." + rowCount + ".0").contains(wsdlName)) {
                 driver.findElement(By.xpath("//tr[2]/td[3]/table/tbody/tr[2]/td/div/div/form/table/tbody/tr["
-                                            + rowCount + "]/td[4]/a")).click();
+                                            + rowCount + "]/td/a")).click();
                 Thread.sleep(SLEEP_TIME);
                 assertTrue(selenium.isTextPresent("Are you sure you want to delete"));
                 selenium.click("//button");

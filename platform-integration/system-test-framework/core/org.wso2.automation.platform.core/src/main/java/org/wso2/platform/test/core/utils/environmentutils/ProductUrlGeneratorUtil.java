@@ -189,4 +189,66 @@ public class ProductUrlGeneratorUtil {
         }
         return indexURL;
     }
+
+    public static String getRemoteRegistryURLOfProducts(String httpsPort, String hostName,
+                                                        String webContextRoot) {
+        String remoteRegistryURL;
+        boolean webContextEnabled = Boolean.parseBoolean(prop.getProperty("carbon.web.context.enable"));
+        boolean portEnabled = Boolean.parseBoolean(prop.getProperty("port.enable"));
+
+        if (portEnabled && webContextEnabled) {
+            if (webContextRoot != null && httpsPort != null) {
+                remoteRegistryURL = "https://" + hostName + ":" + httpsPort + "/" + webContextRoot + "/" + "registry/";
+            } else if (webContextRoot == null && httpsPort != null) {
+                remoteRegistryURL = "https://" + hostName + ":" + httpsPort + "/" + "registry/";
+            } else if (webContextRoot == null) {
+                remoteRegistryURL = "https://" + hostName + "/" + "services/";
+            } else {
+                remoteRegistryURL = "https://" + hostName + "/" + webContextRoot + "/" + "registry/";
+            }
+        } else if (!portEnabled && webContextEnabled) {
+            remoteRegistryURL = "https://" + hostName + "/" + webContextRoot + "/" + "registry/";
+        } else if (portEnabled && !webContextEnabled) {
+            remoteRegistryURL = "https://" + hostName + ":" + httpsPort + "/" + "registry/";
+        } else {
+            remoteRegistryURL = "https://" + hostName + "/" + "registry/";
+        }
+        return remoteRegistryURL;
+    }
+
+    public static String getRemoteRegistryURLOfStratos(String httpsPort, String hostName,
+                                                       FrameworkProperties frameworkProperties,
+                                                       UserInfo info) {
+        String remoteRegistryURL;
+        boolean webContextEnabled = frameworkProperties.getEnvironmentSettings().isEnableCarbonWebContext();
+        boolean portEnabled = frameworkProperties.getEnvironmentSettings().isEnablePort();
+        String webContextRoot = frameworkProperties.getProductVariables().getWebContextRoot();
+        String superTenantID = "0";
+        String tenantDomain;
+
+        if (info.getUserId().equals(superTenantID)) { /*skip the domain if user is super admin */
+            tenantDomain = null;
+        } else {
+            tenantDomain = info.getUserName().split("@")[1];
+        }
+
+        if (portEnabled && webContextEnabled) {
+            if (webContextRoot != null && httpsPort != null) {
+                remoteRegistryURL = "https://" + hostName + ":" + httpsPort + "/" + webContextRoot + "/t/" + tenantDomain + "/registry/";
+            } else if (webContextRoot == null && httpsPort != null) {
+                remoteRegistryURL = "https://" + hostName + ":" + httpsPort + "/" + "t/" + tenantDomain + "/registry/";
+            } else if (webContextRoot == null) {
+                remoteRegistryURL = "https://" + hostName + "/" + "t/" + tenantDomain + "/registry";
+            } else {
+                remoteRegistryURL = "https://" + hostName + "/" + webContextRoot + "/" + "t/" + tenantDomain + "/registry/";
+            }
+        } else if (!portEnabled && webContextEnabled) {
+            remoteRegistryURL = "https://" + hostName + "/" + webContextRoot + "/" + "t/" + tenantDomain + "/registry/";
+        } else if (portEnabled && !webContextEnabled) {
+            remoteRegistryURL = "https://" + hostName + ":" + httpsPort + "/" + "t/" + tenantDomain + "/registry/";
+        } else {
+            remoteRegistryURL = "https://" + hostName + "/" + "t/" + tenantDomain + "/registry/";
+        }
+        return remoteRegistryURL;
+    }
 }

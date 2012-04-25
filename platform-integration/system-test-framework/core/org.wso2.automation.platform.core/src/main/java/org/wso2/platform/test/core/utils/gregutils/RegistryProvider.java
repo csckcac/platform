@@ -40,7 +40,8 @@ public class RegistryProvider {
     private static WSRegistryServiceClient registry = null;
     private static Registry governance = null;
 
-    public WSRegistryServiceClient getRegistry(int userID, String productName) throws RegistryException, AxisFault {
+    public WSRegistryServiceClient getRegistry(int userID, String productName)
+            throws RegistryException, AxisFault {
         String userName;
         String password;
         String tenantDomain;
@@ -53,10 +54,10 @@ public class RegistryProvider {
             password = userDetails.getPassword();
             tenantDomain = userDetails.getDomain();
             serverURL = getServiceURL(tenantDomain, productName);
-        }else{
+        } else {
             UserInfo userDetails = UserListCsvReader.getUserInfo(userID);
-            userName = "admin"; //To-do read user credentials for product user file
-            password = "admin";
+            userName = userDetails.getUserName();
+            password = userDetails.getPassword();
             serverURL = getServiceURL(null, productName);
         }
 
@@ -78,7 +79,8 @@ public class RegistryProvider {
         return registry;
     }
 
-    public Registry getGovernance(WSRegistryServiceClient registry, int userId) throws RegistryException {
+    public Registry getGovernance(WSRegistryServiceClient registry, int userId)
+            throws RegistryException {
         UserInfo userDetails = UserListCsvReader.getUserInfo(userId);
         String userName = userDetails.getUserName();
         setSystemProperties();
@@ -94,7 +96,7 @@ public class RegistryProvider {
 
     private static void setSystemProperties() {
         EnvironmentBuilder env = new EnvironmentBuilder();
-        System.setProperty("javax.net.ssl.trustStore",env.getFrameworkSettings().getEnvironmentVariables().getKeystorePath());
+        System.setProperty("javax.net.ssl.trustStore", env.getFrameworkSettings().getEnvironmentVariables().getKeystorePath());
         System.setProperty("javax.net.ssl.trustStorePassword", env.getFrameworkSettings().getEnvironmentVariables().getKeyStrorePassword());
         System.setProperty("javax.net.ssl.trustStoreType", "JKS");
         System.setProperty("carbon.repo.write.mode", "true");
@@ -103,12 +105,13 @@ public class RegistryProvider {
     private static String getServiceURL(String tenantDomain, String productName) {
         String serverURL;
         EnvironmentBuilder env = new EnvironmentBuilder();
-         FrameworkProperties gregProperties = FrameworkFactory.getFrameworkProperties(productName);
-        if (env.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
-            serverURL = "https://" + gregProperties.getProductVariables().getHostName() + "/t/" + tenantDomain + "/" + "services" + "/";
-        } else {
+        FrameworkProperties gregProperties = FrameworkFactory.getFrameworkProperties(productName);
+
+//        if (env.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
+//            serverURL = "https://" + gregProperties.getProductVariables().getHostName() + "/t/" + tenantDomain + "/" + "services" + "/";
+//        } else {
             serverURL = gregProperties.getProductVariables().getBackendUrl();
-        }
+//        }
         log.info("Server URL is :" + serverURL);
         return serverURL;
     }

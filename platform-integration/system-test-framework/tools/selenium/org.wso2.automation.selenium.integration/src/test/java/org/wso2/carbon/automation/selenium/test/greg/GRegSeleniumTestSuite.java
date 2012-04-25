@@ -30,8 +30,8 @@ public class GRegSeleniumTestSuite extends MasterTestSuite {
                                                       GRegServiceCreatorSeleniumTest.class));
             suiteVariablesList.add(new SuiteVariables("GReg_Schema_Uploader",
                                                       GRegSchemaUploaderSeleniumTest.class));
-            suiteVariablesList.add(new SuiteVariables("GReg_Policy_Uploader",
-                                                      GRegPolicyUploaderSeleniumTest.class));
+            suiteVariablesList.add(new SuiteVariables("GReg_Policy_Uploader", GRegPolicyUploaderSeleniumTest.class));
+            suiteVariablesList.add(new SuiteVariables("GRegLifeCyclePromoteTest", GRegLifeCyclePromoteTest.class));
             superSuite("GRegSeleniumTestSuite", suiteVariablesList).run();
         }
     }

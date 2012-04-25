@@ -23,8 +23,9 @@ import org.openqa.selenium.WebDriver;
 
 public class GregUserLogout {
 
-    public void userLogout(WebDriver driver) {
-        driver.findElement(By.xpath("//li[3]/a")).click();
-
+    public void userLogout(WebDriver driver) throws InterruptedException {
+//        driver.findElement(By.xpath("//li[7]/a")).click();
+        Thread.sleep(3000L);
+        driver.findElement(By.xpath("/html/body/table/tbody/tr/td/div/div[4]/div/ul/li[7]/a")).click();
     }
 }

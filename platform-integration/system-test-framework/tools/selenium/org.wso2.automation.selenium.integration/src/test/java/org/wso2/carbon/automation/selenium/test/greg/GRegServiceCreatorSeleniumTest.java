@@ -98,7 +98,7 @@ public class GRegServiceCreatorSeleniumTest {
             assertTrue(selenium.isTextPresent("testservice1"));
             assertTrue(selenium.isTextPresent("testservice123"));
             // delete service
-            selenium.click("//td[4]/a");
+            selenium.click("//td[5]/a");
             Thread.sleep(2000L);
             assertTrue(selenium.isTextPresent("WSO2 Carbon"));
             assertTrue(selenium.isTextPresent("Are you sure you want to delete'/_system/governance/trunk/services/testservice123/testservice1' permanently?"));

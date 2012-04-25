@@ -58,7 +58,7 @@ public class GregLoginSeleniumTest {
     }
 
     @Test(groups = {"wso2.greg"}, description = "G-Reg user login to system")
-    public void testGRegUserLogin() {
+    public void testGRegUserLogin() throws InterruptedException {
         new GregUserLogin().userLogin(driver, username, password);
         selenium.waitForPageToLoad("30000");
         assertTrue(selenium.isTextPresent("WSO2 Governance Registry Home"));

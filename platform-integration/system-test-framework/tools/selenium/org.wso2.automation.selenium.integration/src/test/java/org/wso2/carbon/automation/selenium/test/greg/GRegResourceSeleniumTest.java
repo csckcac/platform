@@ -81,7 +81,7 @@ public class GRegResourceSeleniumTest {
             selenium.waitForPageToLoad("30000");
             addCollection(collectionPath);   //Create Collection  1
             Thread.sleep(2000L);
-            assertEquals(collectionPath, selenium.getValue("//input"),
+            assertEquals(collectionPath, selenium.getValue("//*[@id=\"uLocationBar\"]"),
                          "New Created Collection1 does not Exists :");
 
             addResource(resourceName);          //add Resource
@@ -119,7 +119,7 @@ public class GRegResourceSeleniumTest {
 
             addCollection(collectionPath);           //Create Collection  1
             Thread.sleep(2000L);
-            assertEquals(collectionPath, selenium.getValue("//input"),
+            assertEquals(collectionPath, selenium.getValue("//*[@id=\"uLocationBar\"]"),
                          "New Created Collection does not Exists :");
 
             //add Resource
@@ -195,7 +195,7 @@ public class GRegResourceSeleniumTest {
             //Create Collection  1
             addCollection(collectionPath);
             Thread.sleep(2000L);
-            assertEquals(collectionPath, selenium.getValue("//input"), "New Created Collection does not Exists :");
+            assertEquals(collectionPath, selenium.getValue("//*[@id=\"uLocationBar\"]"), "New Created Collection does not Exists :");
 
             //add Resource
             addResource(resourceName);
@@ -358,7 +358,7 @@ public class GRegResourceSeleniumTest {
             //Create Collection  1
             addCollection(collectionPath);
             Thread.sleep(2000L);
-            assertEquals(collectionPath, selenium.getValue("//input"), "New Created Collection does not Exists :");
+            assertEquals(collectionPath, selenium.getValue("//*[@id=\"uLocationBar\"]"), "New Created Collection does not Exists :");
 
             //add Resource
             addResource(resourceName);

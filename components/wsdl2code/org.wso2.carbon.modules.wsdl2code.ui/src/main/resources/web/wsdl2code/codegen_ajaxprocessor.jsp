@@ -22,6 +22,7 @@
 <%@page import="org.wso2.carbon.ui.util.CharacterEncoder" %>
 <%@page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="org.wso2.carbon.wsdl2code.ui.WSDL2CodeClient" %>
+<%@ page import="java.io.File" %>
 <%
     WSDL2CodeClient wsdl2CodeClient;
     String codegenOptions = CharacterEncoder.getSafeText(request.getParameter("optionsString"));
@@ -38,6 +39,16 @@
     wsdl2CodeClient = new WSDL2CodeClient(configContext, backendServerURL, cookie);
 
     String[] options = codegenOptions.split(",");
+
+    String workDir = (String) configContext.getProperty(ServerConstants.WORK_DIR);
+    for(int i=0; i < options.length ; i++) {
+        if ( "-uri".equals(options[i]) && i+1 < options.length ) {
+            if (options[i+1] != null && options[i+1].startsWith("/extra/")) {
+                options[i+1] = workDir + options[i+1];
+            }
+        }
+    }
+
     wsdl2CodeClient.codeGen(options, response);
     out.close();
 %>

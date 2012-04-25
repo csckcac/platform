@@ -81,7 +81,14 @@ public class WSDL2CodeFileUploadExecutor extends AbstractFileUploadExecutor {
                     fileOutStream.flush();
                     fileOutStream.close();
                     response.setContentType("text/plain; charset=utf-8");
-                    filePaths = filePaths + uploadedFile.getAbsolutePath() + ",";
+
+                    String outPath = File.separator + "extra" + File.separator +
+                            uploadedFile.getAbsolutePath().split(
+                            File.separator + "tmp" +
+                                    File.separator + "work" +
+                                    File.separator + "extra" + File.separator) [1];
+
+                    filePaths = filePaths + outPath + ",";
 
                     filePaths = filePaths.substring(0, filePaths.length() - 1);
                     out.write(filePaths);
@@ -117,7 +124,13 @@ public class WSDL2CodeFileUploadExecutor extends AbstractFileUploadExecutor {
                                     destinationFilePath = new File(destinationFilePath.getParent() + File.separator
                                             + uuid + ".xml");
                                     response.setContentType("text/plain; charset=utf-8");
-                                    filePaths = filePaths + destinationFilePath.getAbsolutePath() + ",";
+                                    String outPath = File.separator + "extra" + File.separator +
+                                            destinationFilePath.getAbsolutePath().split(
+                                            File.separator + "tmp" +
+                                                    File.separator + "work" +
+                                                    File.separator + "extra" + File.separator) [1];
+
+                                    filePaths = filePaths + outPath + ",";
                                 }
 
                                 copyInputStream(zipInputStream,

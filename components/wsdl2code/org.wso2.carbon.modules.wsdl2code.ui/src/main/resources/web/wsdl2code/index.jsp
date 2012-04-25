@@ -91,6 +91,15 @@
     }
 
     function startCodegen(optionsObj) {
+        var idUriElement = document.getElementById("id_uri").value;
+
+        if (idUriElement != null && idUriElement.length > 0) {
+            if (idUriElement.substring(0, 4) != "http" && idUriElement.substring(1, 6) != "extra") {
+                    CARBON.showWarningDialog('<fmt:message key="error.codegenFile.wrong"/>');
+                    return false;
+            }
+        }
+
         populateOptions();
         var optionsString = "";
 
@@ -148,16 +157,11 @@
         var responseText = o.responseText;
         if (responseText) {
             var index = responseText.indexOf("<pre>");
-            if (index < 0)
-                index = responseText.indexOf("<PRE>");
-            var endIndex = responseText.indexOf("</pre>");
-            if (endIndex < 0)
-                endIndex = responseText.indexOf("</PRE>");
-            var uuid ='';
-            if (index < 0)
-                uuid = responseText;
-            else
-                uuid = responseText.substring(index + 5, endIndex);
+
+            responseText = responseText.replace( new RegExp("<pre[^>]*>"),"");
+            responseText = responseText.replace( new RegExp("</pre>"),"");
+            var uuid = responseText;
+
             var divObj = document.getElementById("divCodegenFileupload");
             if (divObj) {
                 divObj.innerHTML = "";
@@ -218,12 +222,20 @@
         panel1.show();
     }
 
-    function codeGenFileUploadeHelper(codegenParentTextId) {
+    function codeGenFileUploadeHelper(codegenParentTextId, executor) {
         var submit = '<fmt:message key="submit"/>';
         var cancel = '<fmt:message key="cancel"/>';
         var uploadFile = '<fmt:message key="uploadFile"/>';
-        var uploadFileHelp = '<fmt:message key="uploadFileHelp"/>';
-        var innerHTML = "<div id='formset'><form method='post' id='codegenFileUpload' name='codegenFileUpload' action='../../fileupload/wsdl' enctype='multipart/form-data' target='self'><fieldset><legend>" + uploadFile + "</legend><div><input type='file' size='40' name='codegenFile' id='codegenFile'/></div><div><p>" + uploadFileHelp + "</p></div><div><input type='button' value=" + submit + " onclick=\"submitFormAsync('" +
+        var uploadFileHelp = ' ';
+        if(executor == "wsdl") {
+            uploadFileHelp = '<fmt:message key="uploadFileHelp"/>'
+        }
+
+        var innerHTML = "<div id='formset'><form method='post' id='codegenFileUpload' name='codegenFileUpload' " +
+                "action='../../fileupload/"+executor+"' enctype='multipart/form-data' target='self'><fieldset>" +
+                "<legend>" + uploadFile + "</legend><div><input type='file' size='40' name='codegenFile'" +
+                " id='codegenFile'/></div><div><p>" + uploadFileHelp + "</p></div><div>"+
+                "<input type='button' value=" + submit + " onclick=\"submitFormAsync('" +
                         codegenParentTextId +
                         "')\"/><input type='button' value=" + cancel + " onclick='hideDiv()'/></div></fieldset></form></div>";
         var header = '<fmt:message key="uploadFileTitle"/>';
@@ -295,11 +307,19 @@
                                         String uploadFile = argument.getAttributeValue(
                                                 new QName(null, "uploadFile"));
                                         if (uploadFile != null && "true".equals(uploadFile)) {
+                                            String executor;
+                                            if ("id_uri".equals(name)) {
+                                                executor = "wsdl";
+                                            }
+                                            else {
+                                                executor = "tools";
+                                            }
+
                                 %>
                                 <input class="toolsClass" type="text" size="37" id="<%=name%>"/>
                                 <input type="button" width="20px" id="<%=name%>_button"
                                        value="..."
-                                       onclick="codeGenFileUploadeHelper('<%=name%>');"/>
+                                       onclick="codeGenFileUploadeHelper('<%=name%>', '<%=executor%>');"/>
                                 <%
                                 } else {
                                 %>

@@ -107,7 +107,7 @@
 
 <property>
   <name>javax.jdo.option.ConnectionURL</name>
-  <value>jdbc:h2://media/S3A8345D001/Documents and Settings/setups/alpha2/tmp/trunk1/wso2carbon-core-4.0.0-SNAPSHOT/repository/database/metastore_db</value>
+  <value>jdbc:h2://${CARBON_HOME}/repository/database/metastore_db</value>
   <description>JDBC connect string for a JDBC metastore</description>
 </property>
 
@@ -119,7 +119,7 @@
 
 <property>
   <name>javax.jdo.PersistenceManagerFactoryClass</name>
-  <value>org.datanucleus.jdo.JDOPersistenceManagerFactory</value>
+  <value>org.datanucleus.api.jdo.JDOPersistenceManagerFactory</value>
   <description>class implementing the jdo persistence</description>
 </property>
 
@@ -227,9 +227,15 @@
 
 <property>
   <name>hive.metastore.warehouse.dir</name>
-  <value>/user/hive/warehouse</value>
+  <value>file://${CARBON_HOME}/repository/data/hive/warehouse</value>
   <description>location of default database for the warehouse</description>
 </property>
+
+<!--<property>
+  <name>hive.metastore.warehouse.dir</name>
+  <value>/user/hive/warehouse</value>
+  <description>location of default database for the warehouse</description>
+</property>-->
 
 <property>
   <name>hive.metastore.execute.setugi</name>
@@ -821,7 +827,7 @@
 
 <property>
   <name>hive.stats.dbconnectionstring</name>
-  <value>jdbc:h2://media/S3A8345D001/Documents and Settings/setups/alpha2/tmp/trunk1/wso2carbon-core-4.0.0-SNAPSHOT/repository/database/TempStatsStore</value>
+  <value>jdbc:h2://${CARBON_HOME}/repository/database/TempStatsStore</value>
   <description>The default connection string for the database that stores temporary hive statistics.</description>
 </property>
 
@@ -1211,13 +1217,6 @@
 </property>
 
 <property>
-  <name>javax.jdo.PersistenceManagerFactoryClass</name>
-  <value>org.datanucleus.api.jdo.JDOPersistenceManagerFactory</value>
-  <description>Where to insert into multilevel directories like 
-  "insert directory '/HIVEFT25686/chinna/' from table"</description>
-</property>
-
-<property>
   <name>datanucleus.classLoaderResolverName</name>
   <value>jdo</value>
   <description>Where to insert into multilevel directories like 
@@ -1226,21 +1225,37 @@
 
   <property>
     <name>fs.default.name</name>
-    <value>hdfs://localhost:9000</value>
+    <value>file://${CARBON_HOME}/data/hive</value>
   </property>
+
   <property>
     <name>hadoop.tmp.dir</name>
-    <value>/home/chamith/Desktop/hadoop</value>
+    <value>${CARBON_HOME}/tmp/hadoop</value>
   </property>
 
   <property>
     <name>mapred.job.tracker</name>
-    <value>localhost:9001</value>
+    <value>local</value>
   </property>
 
   <property>
     <name>dfs.replication</name>
     <value>1</value>
+  </property>
+
+  <property>
+    <name>hive.jar.path</name>
+    <value>${CARBON_HOME}/repository/components/plugins/hive_0.8.1.wso2v1.jar</value>
+  </property>
+
+  <property>
+    <name>hadoop.embedded.local.mode</name>
+    <value>true</value>
+  </property>
+
+  <property>
+    <name>mapred.local.dir</name>
+    <value>${CARBON_HOME}/tmp/hadoop/local</value>
   </property>
 
 </configuration>

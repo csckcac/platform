@@ -93,6 +93,8 @@ public interface APIManager {
     public Set<API> getRecentlyAddedAPIs(int limit) throws APIManagementException;
 
     /**
+     * Get all tags of published APIs
+     *
      * @return a list of all Tags applied to all APIs published.
      * @throws APIManagementException if failed to get All the tags
      */
@@ -136,6 +138,7 @@ public interface APIManager {
 
     /**
      * Returns true if a given user has subscribed to the API
+     *
      * @param apiIdentifier  APIIdentifier
      * @param userId user id
      * @return true, if giving api identifier is already subscribed
@@ -183,6 +186,7 @@ public interface APIManager {
     public boolean isAPIAvailable(APIIdentifier identifier) throws APIManagementException;
 
     /**
+     * Return Usage of given APIIdentifier
      *
      * @param apiIdentifier APIIdentifier
      * @return Usage
@@ -190,6 +194,7 @@ public interface APIManager {
     public Usage getUsageByAPI(APIIdentifier apiIdentifier);
 
     /**
+     * Return Usage of given provider and API
      *
      * @param providerId if of the provider
      * @param apiName  name of the API
@@ -200,10 +205,13 @@ public interface APIManager {
 
     /**
      * Returns usage details of all APIs published by a provider
-     * @param providerId
-     * @return
+     *
+     * @param providerId  Provider Id
+     * @return  UserApplicationAPIUsages for given provider
+     * @throws APIManagementException If failed to get UserApplicationAPIUsage
      */
-    public UserApplicationAPIUsage[] getAllAPIUsageByProvider(String providerId) throws APIManagementException;
+    public UserApplicationAPIUsage[] getAllAPIUsageByProvider(String providerId)
+            throws APIManagementException;
 
 
     /**
@@ -217,8 +225,10 @@ public interface APIManager {
 
     /**
      * Add new Subscriber
+     *
      * @param identifier APIIdentifier
      * @param userId id of the user
+     * @param applicationId Application Id
      * @throws APIManagementException if failed to add subscription details to database
      */
     public void addSubscription(APIIdentifier identifier, String userId, int applicationId)
@@ -226,6 +236,7 @@ public interface APIManager {
 
    /**
      * Remove a Subscriber
+    *
      * @param identifier APIIdentifier
      * @param userId id of the user
      * @throws APIManagementException if failed to add subscription details to database
@@ -264,16 +275,6 @@ public interface APIManager {
     public long getAPISubscriptionCountByAPI(APIIdentifier identifier)
             throws APIManagementException;
 
-//    /**
-//     * Get list of APIs purchased by a consumer.
-//     *
-//     * @param subscriberEmail email
-//     * @return Set<SubscribedAPI>
-//     * @throws APIManagementException if failed to get subscribed API
-//     */
-//    public Set<SubscribedAPI> getSubscribedAPIsBySubscriber(String subscriberEmail)
-//            throws APIManagementException;
-
     /**
      * @param username Name of the user
      * @param password Password of the user
@@ -304,6 +305,7 @@ public interface APIManager {
      *
      * @param identifier APIIdentifier
      * @param userId user id
+     * @param applicationId Application Id
      * @throws APIManagementException if failed to update subscription
      */
     public void updateSubscriptions(APIIdentifier identifier, String userId, int applicationId)
@@ -374,8 +376,10 @@ public interface APIManager {
      * @param identifier, API identifier
      * @param documentationName, name of the inline documentation
      * @throws APIManagementException if the asking documentation content is unavailable
+     * @return if failed to get doc content
      */
-    public String getDocumentationContent(APIIdentifier identifier, String documentationName) throws APIManagementException;
+    public String getDocumentationContent(APIIdentifier identifier, String documentationName)
+            throws APIManagementException;
 
     /**
      * Removes a given documentation
@@ -406,8 +410,8 @@ public interface APIManager {
      * @param  text, content of the inline documentation
      * @throws APIManagementException if failed to add the document as a resource to registry
      */
-    public void addDocumentationContent(APIIdentifier identifier,
-                                        String documentationName, String text) throws APIManagementException;
+    public void addDocumentationContent(APIIdentifier identifier, String documentationName, String text)
+            throws APIManagementException;
 
     /**
      * Updates a given documentation
@@ -455,31 +459,31 @@ public interface APIManager {
 
     /**
      * Adds an application 
-     * @param application
-     * @param userId
-     * @throws APIManagementException
+     * @param application Application
+     * @param userId User Id
+     * @throws APIManagementException  if failed to add Application
      */
     public void addApplication(Application application, String userId) throws APIManagementException;
 
     /**
      * Returns a list of applications for a given subscriber
-     * @param subscriber
-     * @return
-     * @throws APIManagementException
+     * @param subscriber Subscriber
+     * @return  Applications
+     * @throws APIManagementException if failed to applications for given subscriber
      */
     public Application[] getApplications(Subscriber subscriber) throws APIManagementException;
         
     /**
      * Creates a new subscriber, the newly created subscriber id will be set in the given object.
      * @param subscriber The subscriber to be added
-     * @throws APIManagementException
+     * @throws APIManagementException if failed add subscriber
      */
     public void addSubscriber(Subscriber subscriber) throws APIManagementException;
     
     /**
      * Updates the given subscriber.
      * @param subscriber The subscriber to be updated
-     * @throws APIManagementException
+     * @throws APIManagementException  if failed to update subscriber
      */
     public void updateSubscriber(Subscriber subscriber) throws APIManagementException;
     
@@ -487,7 +491,7 @@ public interface APIManager {
      * Returns the subscriber with the given subscriber id.
      * @param subscriberId The subscriber id of the subscriber to be returned
      * @return The looked up subscriber or null if the requested subscriber does not exist
-     * @throws APIManagementException
+     * @throws APIManagementException if faild to get Subscriber
      */
     public Subscriber getSubscriber(int subscriberId) throws APIManagementException;
     

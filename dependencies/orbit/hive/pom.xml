@@ -69,6 +69,11 @@
 		<artifactId>hive-metastore</artifactId>
 		<version>0.8.1-wso2v1</version>
 	    </dependency>
+	    <dependency>
+		<groupId>org.apache.hive</groupId>
+                <artifactId>hive-cassandra</artifactId>
+                <version>0.8.1-wso2v1</version>
+	   </dependency>
     </dependencies>
 
     <properties>
@@ -101,10 +106,11 @@
                         <Import-Package>
                             !org.apache.hadoop.hive.*,
                             org.apache.hadoop.hive.*,
+			    org.apache.cassandra.thrift; version="1.0.0",
                             *;resolution:=optional
                         </Import-Package>
                         <Embed-Dependency>
-			    hive-exec|hive-shims|hive-builtins|hive-service|hive-serde|hive-metastore;scope=compile|runtime;inline=false;
+			    hive-exec|hive-shims|hive-builtins|hive-service|hive-serde|hive-metastore|hive-cassandra;scope=compile|runtime;inline=false;
                         </Embed-Dependency>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>

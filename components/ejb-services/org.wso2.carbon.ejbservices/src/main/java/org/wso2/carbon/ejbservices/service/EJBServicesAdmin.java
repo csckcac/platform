@@ -49,6 +49,9 @@ import org.wso2.carbon.utils.ArchiveManipulator;
 import org.wso2.carbon.utils.FileManipulator;
 import org.wso2.carbon.utils.ServerConstants;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.*;
@@ -56,6 +59,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 @SuppressWarnings("UnusedDeclaration")
 public class EJBServicesAdmin extends AbstractAdmin {
@@ -590,6 +594,28 @@ public class EJBServicesAdmin extends AbstractAdmin {
         allConfigurations.setAppServerData(getEJBAppServerConfigurations());
         allConfigurations.setAppServerNameList(getAppServerNameList());
         return allConfigurations;
+    }
+
+    public boolean testAppServerConnection(String providerURL,
+                                        String jndiContextClass, String userName, String password)
+            throws Exception {
+        Properties properties = new Properties();
+        properties.setProperty(Context.SECURITY_PRINCIPAL, userName);
+        properties.setProperty(Context.SECURITY_CREDENTIALS, password);
+        properties.setProperty(Context.INITIAL_CONTEXT_FACTORY, jndiContextClass);
+        properties.setProperty(Context.PROVIDER_URL, providerURL);
+
+        //try to get context using these properties
+        try {
+            InitialContext context = new InitialContext(properties);
+            return true;
+        } catch (NamingException e) {
+            log.info("AppServer Connection Test Failed", e);
+            return false;
+        } catch (Exception e){
+            log.error(e.getMessage(), e);
+            throw e;
+        }
     }
 
     private void setServiceParameter(String serviceName,

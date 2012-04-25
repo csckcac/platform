@@ -127,6 +127,50 @@
             jQuery('#addNewConfigTable').hide();
         }
     }
+
+    function testApplicationServerConnection(){
+        var providerURL1 = jQuery('#providerUrl').val();
+        var jndiContextClass = jQuery('#jndiContextClass').val();
+        var userName = jQuery('#userName').val();
+        var password = jQuery('#password').val();
+
+        if (providerURL1 == null || wso2.wsf.Util.trim(providerURL1) == "") {
+            CARBON.showWarningDialog('<fmt:message key="enter.valid.provider.url"/>.');
+            return false;
+        }
+        if (jndiContextClass == null || wso2.wsf.Util.trim(jndiContextClass) == "") {
+            CARBON.showWarningDialog('<fmt:message key="enter.valid.jndi.context"/>.');
+            return false;
+        }
+        if (password != null && wso2.wsf.Util.trim(password) != "") {
+            if (jndiUserName == null || wso2.wsf.Util.trim(jndiUserName) == "") {
+                CARBON.showWarningDialog('<fmt:message key="enter.username"/>.');
+                return false;
+            }
+        }
+
+        jQuery.ajax({
+                        type:"POST",
+                        url:"../ejb_service/test_appserver_configuration-ajaxprocessor.jsp",
+                        data:{
+                            providerURL1:providerURL1, jndiContextClass:jndiContextClass,
+                            userName:userName, password:password
+                        },
+                        success:function (status) {
+                            CARBON.showInfoDialog(
+                                    '<fmt:message key="application.server.connection.test.successful"/>.',
+                                    null, null);
+//                            if (status.status == '200') {
+//                            }
+                        },
+                        error:function (status) {
+                            if (status.status == '500') {
+                                CARBON.showErrorDialog(
+                                        '<fmt:message key="error.connectiong.to.application.server"/>.',
+                                        null, null);
+                            }
+                        }});
+    }
 </script>
 <div id="middle">
 
@@ -229,7 +273,7 @@
                                                 if (appServers != null) {
                                                     for (EJBAppServerData appServer : appServers) {
                                             %>
-                                            <option value="<%=appServer.getProviderURL()%>"><%=appServer.getAppServerType()%>
+                                            <option value="<%=appServer.getProviderURL()%>"><%=appServer.getAppServerType()%> - <%=appServer.getProviderURL()%>
                                             </option>
                                             <%
                                                     }
@@ -328,6 +372,11 @@
                                                id="addApplicationServerButton"
                                                type="button" class="button"
                                                onclick="validateAddEJBApplicationServerSubmit()"/>
+                                        <input value="<fmt:message key="test.connection"/>"
+                                               name="testApplicationServerConnectionButton"
+                                               id="testApplicationServerConnectionButton"
+                                               type="button" class="button"
+                                               onclick="testApplicationServerConnection();"/>
                                         <input value="<fmt:message key="reset"/>"
                                                name="resetAddApplicationServerButton"
                                                id="resetAddApplicationServerButton"
@@ -353,7 +402,6 @@
 </script>
 
 <script type="text/javascript">
-//    ejbProviderStep1DisableFields();
     initSections("hidden");
     toggleAddAppServerWindow();
 </script>

@@ -8,6 +8,7 @@ import org.apache.axis2.client.Options;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jasper.tagplugins.jstl.core.Catch;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.ejbservices.stub.EJBProviderAdminStub;
 import org.wso2.carbon.ejbservices.stub.types.carbon.EJBAppServerData;
@@ -201,5 +202,18 @@ public class EJBServicesAdminClient {
             log.error(msg, e);
             throw e;
         }
+    }
+
+    public boolean testAppServerConnection(String providerURL,
+                                        String jndiContextClass, String userName, String password)
+            throws Exception {
+        boolean isSuccessful = false;
+        try {
+            isSuccessful = stub.testAppServerConnection(providerURL, jndiContextClass,  userName,  password);
+        } catch (Exception e){
+            log.error("Failed to connect to the given Application Server.", e);
+            throw e;
+        }
+        return isSuccessful;
     }
 }

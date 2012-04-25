@@ -20,7 +20,7 @@ import java.sql.Statement;
  */
 public class ContainerDAO extends AbstractDAO{
     protected Log log = LogFactory.getLog(ContainerDAO.class);
-        Connection con = null;
+    Connection con = null;
         String url = "jdbc:mysql://localhost:3306/";
         String db = "hosting_mgt_db";
         String driver = "com.mysql.jdbc.Driver";
@@ -51,9 +51,9 @@ public class ContainerDAO extends AbstractDAO{
            log.error(msg);
            throw new SQLException(s + msg);
        }catch (ClassNotFoundException s){
-           String msg = "Error while sql connection :" + s.getMessage();
-           log.error(msg);
-           throw new SQLException(msg);
+            String msg = "Error while sql connection :" + s.getMessage();
+            log.error(msg);
+            throw new SQLException(msg, s);
        }
        finally {
             try { if (statement != null) statement.close(); } catch(SQLException e) {}
@@ -134,10 +134,10 @@ public class ContainerDAO extends AbstractDAO{
      * example instead of the least loaded host machine, we can select host machine in a round robin
      * way. Replacing this method with round robin logic will be enough to do the needful.
      *
-     * @param zone name of the zone which search Host machine in.
+     * @param domain name of the zone which search Host machine in.
      * @throws Exception related to database transactions
      */
-    private HostMachine getAvailableHostMachine(String zone)
+    private HostMachine getAvailableHostMachine(String domain)
             throws SQLException {
         HostMachine hostMachine = new HostMachine();
         ResultSet resultSetForHM = null;
@@ -149,6 +149,12 @@ public class ContainerDAO extends AbstractDAO{
             Class.forName(driver);
             con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
             statement = con.createStatement();
+
+            String sqlDomain =  "SELECT zone FROM domain WHERE domain_name='" + domain + "'" ;
+            //Here we get all the host machines that maps to zone
+            resultSetForHM = statement.executeQuery(sqlDomain);
+            resultSetForHM.next();
+            String zone = resultSetForHM.getString("zone");
             String sql =  "SELECT * FROM host_machine WHERE zone='" + zone + "' AND available=true" ;
             //Here we get all the host machines that maps to zone
             resultSetForHM = statement.executeQuery(sql);
@@ -216,7 +222,6 @@ public class ContainerDAO extends AbstractDAO{
 
 
 
-
     /**
      * This method will return the next available ip for the input bridge ip. For a particular bridge
      * there will be at-least one ip at the table. If there is only one ip, it is the available ip to
@@ -239,7 +244,7 @@ public class ContainerDAO extends AbstractDAO{
             String sql =  "SELECT * FROM available_ip WHERE bridge='" + bridgeIp + "'" ;
             //Here we have to get all the ips relevant to the bridge then select the ip according to
             // the algorithms described at method comment. BTW:Here we have to get all the ips to be
-            // generic sql and hence we can't use LIMTI 2(mysql specific)
+            // generic sql and hence we can't use LIMTI 2(LIMIT is mysql specific)
             resultSet = statement.executeQuery(sql);
             int ipCount = 0;
             while(resultSet.next()){
@@ -288,7 +293,6 @@ public class ContainerDAO extends AbstractDAO{
             throws SQLException {
 
         ContainerInformation containerInformation = new ContainerInformation();
-        //containerInformation.setZone(zone);
         HostMachine hostMachine = getAvailableHostMachine(zone);
         containerInformation.setEpr(hostMachine.getEpr());
         Bridge[] bridges = hostMachine.getBridges();
@@ -298,6 +302,8 @@ public class ContainerDAO extends AbstractDAO{
         containerInformation.setIp(getAvailableIp(bridgeIp));
         containerInformation.setNetGateway(bridges[0].getNetGateway());
         containerInformation.setNetMask(bridges[0].getNetMask());
+        containerInformation.setType("S");        //set a default for current implementation
+
         //Container type, container id can not be set from here. They will be set from adapter level.
         return containerInformation;
     }

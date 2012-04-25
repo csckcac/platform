@@ -19,13 +19,12 @@ import java.util.Map;
 public class InstanceDAO extends AbstractDAO{
     protected Log log = LogFactory.getLog(ContainerDAO.class);
     Connection con = null;
-    String url = "jdbc:mysql://localhost:3306/";
-    String db = "hosting_mgt_db";
-    String driver = "com.mysql.jdbc.Driver";
-    String dbUsername = "root";
-    String dbPassword = "root";
-    Statement statement = null;
-
+        String url = "jdbc:mysql://localhost:3306/";
+        String db = "hosting_mgt_db";
+        String driver = "com.mysql.jdbc.Driver";
+        String dbUsername = "root";
+        String dbPassword = "root";
+        Statement statement = null;
     /**
      * This method is implemented for provide caching support in this component. Instance  to domain
      * mapping will be retrieved from persistence database. Those details will be cached in a

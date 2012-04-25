@@ -103,7 +103,17 @@ public class    AgentPersistenceManager {
         InstanceDAO instanceDAO = new InstanceDAO();
         return instanceDAO.getInstanceIdToAdapterMap();
     }
-    
+
+    public HashMap<String, String> retrieveContainerIdToAgentMap() throws SQLException {
+        HostMachineDAO hostMachineDAO = new HostMachineDAO();
+        return hostMachineDAO.getContainerIdToAgentMap();
+    }
+
+    public HashMap<String, String> retrieveAgentToContainerRootMap() throws SQLException {
+        HostMachineDAO hostMachineDAO = new HostMachineDAO();
+        return hostMachineDAO.getAgentToContainerRootMap();
+    }
+
     public boolean addInstance(String instanceId, String adapter, String domain)
             throws SQLException {
         InstanceDAO instanceDAO = new InstanceDAO();

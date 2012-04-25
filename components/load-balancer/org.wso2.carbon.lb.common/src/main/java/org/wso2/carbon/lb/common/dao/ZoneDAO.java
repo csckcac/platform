@@ -16,12 +16,12 @@ import java.sql.Statement;
 public class ZoneDAO extends AbstractDAO{
     protected Log log = LogFactory.getLog(HostMachineDAO.class);
     Connection con = null;
-    String url = "jdbc:mysql://localhost:3306/";
-    String db = "hosting_mgt_db";
-    String driver = "com.mysql.jdbc.Driver";
-    String dbUsername = "root";
-    String dbPassword = "root";
-    Statement statement = null;
+        String url = "jdbc:mysql://localhost:3306/";
+        String db = "hosting_mgt_db";
+        String driver = "com.mysql.jdbc.Driver";
+        String dbUsername = "root";
+        String dbPassword = "root";
+        Statement statement = null;
 
     /**
      * This is called when new Host machine is registering. Zone and domains relevant to that zone are
@@ -112,8 +112,8 @@ public class ZoneDAO extends AbstractDAO{
         boolean isExist = false;
         ResultSet resultSet = null;
         try{
-            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
             Class.forName(driver);
+            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
             statement = con.createStatement();
             String sql =  "SELECT 1 FROM zone WHERE name='" + zone + "'";
             resultSet = statement.executeQuery(sql);

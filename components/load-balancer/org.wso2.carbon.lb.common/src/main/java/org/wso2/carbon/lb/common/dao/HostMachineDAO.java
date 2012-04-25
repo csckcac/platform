@@ -21,13 +21,12 @@ public class HostMachineDAO extends AbstractDAO{
 
     protected Log log = LogFactory.getLog(HostMachineDAO.class);
     Connection con = null;
-    String url = "jdbc:mysql://localhost:3306/";
-    String db = "hosting_mgt_db";
-    String driver = "com.mysql.jdbc.Driver";
-    String dbUsername = "root";
-    String dbPassword = "root";
-    Statement statement = null;
-
+        String url = "jdbc:mysql://localhost:3306/";
+        String db = "hosting_mgt_db";
+        String driver = "com.mysql.jdbc.Driver";
+        String dbUsername = "root";
+        String dbPassword = "root";
+        Statement statement = null;
 /* Register a host machine when it is physically added to a zone. When a host machine is first
  * created it will first check whether the zone is already exist. If not this method will call
  * methods to register zone first.
@@ -46,6 +45,7 @@ public class HostMachineDAO extends AbstractDAO{
             statement.executeUpdate(sql);
             Bridge[] bridges = hostMachine.getBridges();
             for (Bridge bridge : bridges) {
+            //add all bridge details
                 String sqlForBridge = "INSERT INTO bridge VALUES(" + bridge.isAvailable() + ",'"
                                       + bridge.getHostMachine() + "',"
                                       + bridge.getMaximumCountIps() + ","
@@ -54,6 +54,7 @@ public class HostMachineDAO extends AbstractDAO{
                                       + bridge.getNetMask() + "','"
                                       + bridge.getNetGateway() + "')";
                 statement.executeUpdate(sqlForBridge);
+                //add available ip table details
                 String sqlForStartingIp = "INSERT INTO available_ip (ip, bridge) VALUES('"
                                           + incrementIp(bridge.getBridgeIp()) + "','"
                                           + bridge.getBridgeIp() + "')";
@@ -122,6 +123,7 @@ public class HostMachineDAO extends AbstractDAO{
             statement = con.createStatement();
             Statement statement = con.createStatement();
             String sql =  "SELECT 1 FROM host_machine WHERE epr='" + endPoint + "'";
+            //return a result if there is a record
             resultSet = statement.executeQuery(sql);
             isExist = resultSet.next();
         }catch (SQLException s){

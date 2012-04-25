@@ -19,70 +19,68 @@ package org.wso2.carbon.apimgt.usage.publisher;
 
 import org.wso2.carbon.apimgt.usage.publisher.dto.RequestPublisherDTO;
 import org.wso2.carbon.apimgt.usage.publisher.dto.ResponsePublisherDTO;
+import org.wso2.carbon.apimgt.usage.publisher.internal.UsageComponent;
+import org.wso2.carbon.apimgt.usage.publisher.service.APIMGTConfigReaderService;
 
 
 public class Test {
     public static void main(String[] args) {
 
+        // Have to hard code Carbon Home in APIMGTConfigReaderService and APIMgtUsagePublisherConstants
+        UsageComponent.apimgtConfigReaderService = new APIMGTConfigReaderService();
         APIMgtUsageConfigHolder configHolder = new APIMgtUsageConfigHolder();
-/*        configHolder.setBamAgentTrustStore("/home/johann/Desktop/wso2bam-2.0.0-ALPHA2/repository/resources/security/client-truststore.jks");
-        configHolder.setBamAgentTrustStorePassword("wso2carbon");
-        configHolder.setBamServerPassword("admin");
-        configHolder.setBamServerThriftPort("7612");
-        configHolder.setBamServerURL("https://localhost:9444/");
-        configHolder.setBamServerUser("admin");*/
         APIMgtUsageBAMDataPublisher testPublisher = new APIMgtUsageBAMDataPublisher(configHolder);
         RequestPublisherDTO testRequestPublisherDTO = new RequestPublisherDTO();
         ResponsePublisherDTO testResponsePublisherDTO = new ResponsePublisherDTO();
 
         //Only the properties needed for the test are set
-        testRequestPublisherDTO.setApi("Delicious");
+        testRequestPublisherDTO.setApi("DeliciousAPI");
         testRequestPublisherDTO.setVersion("v1.0.0");
         testRequestPublisherDTO.setRequestTime(((Long)System.currentTimeMillis()).toString());
         testPublisher.publishEvent(testRequestPublisherDTO);
 
-        testRequestPublisherDTO.setApi("Delicious");
+        testRequestPublisherDTO.setApi("DeliciousAPI");
         testRequestPublisherDTO.setVersion("v1.0.0");
         testRequestPublisherDTO.setRequestTime(((Long)System.currentTimeMillis()).toString());
         testPublisher.publishEvent(testRequestPublisherDTO);
 
-        testRequestPublisherDTO.setApi("Delicious");
+        testRequestPublisherDTO.setApi("FacebookAPI");
         testRequestPublisherDTO.setVersion("v1.0.0");
         testRequestPublisherDTO.setRequestTime(((Long)System.currentTimeMillis()).toString());
         testPublisher.publishEvent(testRequestPublisherDTO);
 
-        testRequestPublisherDTO.setApi("Delicious");
+        testRequestPublisherDTO.setApi("TwitterAPI");
         testRequestPublisherDTO.setVersion("v1.0.0");
         testRequestPublisherDTO.setRequestTime(((Long)System.currentTimeMillis()).toString());
         testPublisher.publishEvent(testRequestPublisherDTO);
 
-        testRequestPublisherDTO.setApi("Delicious");
+        testRequestPublisherDTO.setApi("DeliciousAPI");
         testRequestPublisherDTO.setVersion("v1.1.0");
         testRequestPublisherDTO.setRequestTime(((Long)System.currentTimeMillis()).toString());
         testPublisher.publishEvent(testRequestPublisherDTO);
 
-        testRequestPublisherDTO.setApi("Delicious");
+        testRequestPublisherDTO.setApi("TwitterAPI");
         testRequestPublisherDTO.setVersion("v1.1.0");
         testRequestPublisherDTO.setRequestTime(((Long)System.currentTimeMillis()).toString());
         testPublisher.publishEvent(testRequestPublisherDTO);
 
-        testRequestPublisherDTO.setApi("Delicious");
+        testRequestPublisherDTO.setApi("DeliciousAPI");
         testRequestPublisherDTO.setVersion("v1.1.0");
         testRequestPublisherDTO.setRequestTime(((Long)System.currentTimeMillis()).toString());
         testPublisher.publishEvent(testRequestPublisherDTO);
 
-        testRequestPublisherDTO.setApi("Delicious");
+        testRequestPublisherDTO.setApi("DeliciousAPI");
         testRequestPublisherDTO.setVersion("v1.2.0");
         testRequestPublisherDTO.setRequestTime(((Long)System.currentTimeMillis()).toString());
         testPublisher.publishEvent(testRequestPublisherDTO);
 
-        testRequestPublisherDTO.setApi("Delicious");
+        testRequestPublisherDTO.setApi("FacebookAPI");
         testRequestPublisherDTO.setVersion("v1.2.0");
         testRequestPublisherDTO.setRequestTime(((Long)System.currentTimeMillis()).toString());
         testPublisher.publishEvent(testRequestPublisherDTO);
 
-        testResponsePublisherDTO.setApi("Delicious");
-        testResponsePublisherDTO.setVersion("v1.3.0");
+        testResponsePublisherDTO.setApi("DeliciousAPI");
+        testResponsePublisherDTO.setVersion("v1.0.0");
         testResponsePublisherDTO.setResponseTime(((Long)System.currentTimeMillis()).toString());
         testResponsePublisherDTO.setServiceTime("5");
         testPublisher.publishEvent(testResponsePublisherDTO);

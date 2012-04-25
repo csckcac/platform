@@ -194,7 +194,8 @@ public class STSAdminServiceImpl extends AbstractAdmin implements STSAdminServic
 
     private KeyStoreData[] getKeyStores() throws SecurityConfigException {
         KeyStoreAdmin admin = new KeyStoreAdmin(getGovernanceSystemRegistry());
-        return admin.getKeyStores();
+        boolean isSuperTenant = super.getTenantDomain() == null ? true : false;
+        return admin.getKeyStores(isSuperTenant);
     }
 
     private String[] getStoreEntries(String keyStoreName) throws SecurityConfigException {

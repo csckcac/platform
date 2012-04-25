@@ -103,9 +103,6 @@ public class SecurityServiceAdmin {
         String serviceGroupId = axisService.getAxisServiceGroup().getServiceGroupName();
         boolean isProxyService = PersistenceUtils.isProxyService(axisService);
 	try {
-        String policyString = policy.toString();
-        ByteArrayInputStream bais = new ByteArrayInputStream(policyString.getBytes());
-
         if (policy.getId() == null) {
             // Generate an ID
             policy.setId(UUIDGenerator.getUUID());

@@ -1022,9 +1022,7 @@ public class SecurityConfigAdmin {
                         throw new SecurityConfigException("Missing key store" + storeName);
                     }
                 }
-            } else {
-                trustedStores = new String[0];
-            }
+            } 
 
 //            todo check whether this is needed in the new file-based persistence model.
             if (userGroups != null) {

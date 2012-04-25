@@ -66,8 +66,7 @@ public class KeyStoreAdmin {
 	private static Log log = LogFactory.getLog(KeyStoreAdmin.class);
 	
 	private boolean includeCert = false;
-    private boolean isSuperTenant = true;
-
+    
 	public boolean isIncludeCert() {
 		return includeCert;
 	}
@@ -78,13 +77,9 @@ public class KeyStoreAdmin {
 
 	public KeyStoreAdmin(Registry registry) {
 		this.registry = registry;
-        //Check whether it is the super tenant, used to deny permission for accessing the primary KS
-        if(((UserRegistry)registry).getTenantId() != 0){
-            isSuperTenant = false;
-        }
 	}
 
-	public KeyStoreData[] getKeyStores() throws SecurityConfigException {
+	public KeyStoreData[] getKeyStores(boolean isSuperTenant) throws SecurityConfigException {
 		KeyStoreData[] names = new KeyStoreData[0];
 		try {
 			if (registry.resourceExists(SecurityConstants.KEY_STORES)) {
@@ -519,8 +514,8 @@ public class KeyStoreAdmin {
 
 	}
 
-	public Key getPrivateKey(String alias) throws SecurityConfigException {
-		KeyStoreData[] keystores = getKeyStores();
+	public Key getPrivateKey(String alias, boolean isSuperTenant) throws SecurityConfigException {
+		KeyStoreData[] keystores = getKeyStores(isSuperTenant);
 		KeyStore keyStore = null;
 		String privateKeyPassowrd = null;
 

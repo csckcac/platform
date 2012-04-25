@@ -25,8 +25,8 @@ public class KeyStoreAdminServiceImpl extends AbstractAdmin implements KeyStoreA
 
     public KeyStoreData[] getKeyStores() throws SecurityConfigException {
         KeyStoreAdmin admin = new KeyStoreAdmin(getGovernanceSystemRegistry());
-        return admin.getKeyStores();
-
+        boolean isSuperTenant = super.getTenantDomain() == null ? true : false;
+        return admin.getKeyStores(isSuperTenant);
     }
 
     public void addKeyStore(String fileData, String filename, String password, String provider,

@@ -33,6 +33,7 @@
 
     <modules>
         <module>ut</module>
+        <module>sign_encrypt</module>
     </modules>
 
     <dependencyManagement>

@@ -3,28 +3,11 @@ import org.wso2.carbon.billing.mgt.dataobjects.*;
 import org.wso2.carbon.stratos.common.constants.*;
 
 // free users restrictions
-rule restrictFreeUsers
-when
- $package: MultitenancyPackage(name == "Demo")
- $dataContext : ThrottlingDataContext()
- eval($dataContext.getDataInt(ThrottlingDataEntryConstants.USERS_COUNT)  >= 1 &&
-            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
-
-then
- ThrottlingAccessValidation validation = $dataContext.getAccessValidation();
- validation.setTenantBlocked(StratosConstants.THROTTLING_ADD_USER_ACTION, true, 
-            "You have exceeded the maximum allowed number of users of 1. Please upgrade the subscription.");
-
-end
-
 
 rule unsetRestrictFreeUsers
 when
-
  $package: MultitenancyPackage(name == "Demo")
  $dataContext : ThrottlingDataContext()
- eval($dataContext.getDataInt(ThrottlingDataEntryConstants.USERS_COUNT)  < 1 &&
-            $dataContext.getDataObject(ThrottlingDataEntryConstants.PACKAGE) == $package)
 
 then
  ThrottlingAccessValidation validation = $dataContext.getAccessValidation();

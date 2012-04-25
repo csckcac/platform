@@ -2,6 +2,10 @@ var getTemplateFile = function () {
     return "tmpl/apis/api-info/template.jag";
 };
 
+var initialize = function (jagg) {
+
+};
+
 var getData = function (params) {
     return {
         "api":params.api,
@@ -48,4 +52,8 @@ var getDataTemplates = function () {
     return [
         ["tabs", "tabs", "body"]
     ];
+};
+
+var getParamTemplates = function () {
+    return [];
 };

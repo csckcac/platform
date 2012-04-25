@@ -2,7 +2,7 @@ var getParent = function () {
     return "layouts/base";
 };
 
-var getParams = function () {
+var getData = function (params) {
     return {
         "top":[
             {
@@ -41,7 +41,7 @@ var getParams = function () {
                 }
             }
         ],
-        "middle":null,
+        "middle":params.middle,
         "right":[
             {
                 "name":"tags/tag-cloud",
@@ -49,4 +49,25 @@ var getParams = function () {
             }
         ]
     };
+};
+
+var getParams = function () {
+    return {
+        "middle":null
+    };
+};
+
+
+var getDataTemplates = function () {
+    return [
+        "top",
+        "left",
+        "right"
+    ];
+};
+
+var getParamTemplates = function () {
+    return [
+        "middle"
+    ];
 };

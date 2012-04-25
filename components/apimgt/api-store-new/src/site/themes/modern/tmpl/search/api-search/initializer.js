@@ -18,6 +18,10 @@ var getTemplates = function () {
     return [];
 };
 
-var getTemplateParams = function () {
+var getDataTemplates = function () {
+    return [];
+};
+
+var getParamTemplates = function () {
     return [];
 };

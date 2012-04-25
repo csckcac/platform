@@ -89,21 +89,28 @@ var jagg = jagg || {};
         return extParams;
     };
 
-    var render = function (data) {
-        var jaggi = jagg;
-        jaggi.global = data;
+    var render = function (template) {
+        var fn, params, data, jaggi = jagg, log = new Log(), templates, initializer;
+        jaggi.global = template;
         jaggi.templates = {};
-        initializeTemplate(data, jaggi);
-        var fn, initializer, templates = jaggi.templates, log = new Log();
-        initializer = templates[data.name];
+        initializeTemplate(template, jaggi);
+        templates = jaggi.templates;
+        initializer = templates[template.name];
         jaggi.template = null;
         include(getTemplateFile(initializer));
         fn = jaggi.template;
         if (!fn) {
-            log.error("Template header and footer includes are missing for : " + data.name);
+            log.error("Template header and footer includes are missing for : " + template.name);
         }
-        var params = data.params;
-        fn(initializer.getData(params), params, jaggi);
+        params = template.params;
+        if (initializer.getData) {
+            data = initializer.getData(params);
+        } else if (initializer.getParams) {
+            data = params;
+        } else {
+            data = {};
+        }
+        fn(data, params, jaggi);
     };
 
     var includeTemplates = function (data) {
@@ -111,15 +118,15 @@ var jagg = jagg || {};
             return;
         }
 
-        var i, length, jaggi = jagg;
+        var i, d, length, jaggi = jagg;
         if (data instanceof Array) {
             length = data.length;
             for (i = 0; i < length; i++) {
-                var d = data[i];
-                includeTemplate(d.name, d.params, jaggi);
+                d = data[i];
+                executeTemplate(d.name, d.params, d.data, false);
             }
         } else {
-            includeTemplate(data.name, data.params, jaggi);
+            executeTemplate(data.name, data.params, data.data, false);
         }
     };
 
@@ -138,6 +145,10 @@ var jagg = jagg || {};
     };
 
     var includeTemplate = function (name, params) {
+        executeTemplate(name, params, null, true);
+    };
+
+    var executeTemplate = function (name, params, data, populate) {
         //initializeTemplate({name:name, params:null}, jagg);
 
         var fn, initializer, jaggi = jagg, templates = jaggi.templates, log = new Log();
@@ -148,35 +159,72 @@ var jagg = jagg || {};
         if (!fn) {
             log.error("Template header and footer includes are missing for : " + name);
         }
-        fn(initializer.getData(params), params, jaggi);
+        if (populate) {
+            if (initializer.getData) {
+                data = initializer.getData(params);
+            } else if (initializer.getParams) {
+                data = params;
+            } else {
+                data = {};
+            }
+        }
+        fn(data, params, jaggi);
     };
 
-    var initializeTemplate = function (data, jagg) {
-        if (!data) {
+    /**
+     * A template is passed into this method
+     * @param template template in { name : "foo/bar", params : { x : [], y : {} } }
+     * @param jagg jagg object in the format { global : params, templates : {} }
+     */
+    var initializeTemplate = function (template, jagg) {
+        if (!template) {
             return;
         }
-        var extParams, defParams, tmplParams, tmpls,
-                i, length, name = data.name, log = new Log();
+        var extParams, defParams, tmplParams, data, tmpls,
+                i, length, name = template.name, log = new Log();
         var initializer = jagg.templates[name];
         if (!initializer) {
             initializer = require(getInitializerFile(name));
             inheritParent(initializer);
             jagg.templates[name] = initializer;
-            initializer.initialize();
+            if (initializer.initialize) {
+                initializer.initialize();
+            }
         }
-        extParams = data.params || (data.params = {});
-        defParams = initializer.getParams();
+        extParams = template.params || (template.params = {});
+        defParams = initializer.getParams ? initializer.getParams() : {};
         mergeParams(extParams, defParams);
-        tmplParams = initializer.getTemplateParams();
-        length = tmplParams.length;
-        for (i = 0; i < length; i++) {
-            initializeTemplates(tmplParams[i], extParams, jagg);
+        if (initializer.getParamTemplates) {
+            tmplParams = initializer.getParamTemplates();
+            length = tmplParams.length;
+            for (i = 0; i < length; i++) {
+                initializeTemplates(tmplParams[i], extParams, jagg);
+            }
         }
 
-        tmpls = initializer.getTemplates();
-        length = tmpls.length;
-        for (i = 0; i < length; i++) {
-            initializeTemplate({name:tmpls[i], params:null}, jagg);
+        if (initializer.getData) {
+            data = initializer.getData(extParams);
+        } else if (initializer.getParams) {
+            data = extParams;
+        } else {
+            data = {};
+        }
+
+        template.data = data;
+        if (initializer.getDataTemplates) {
+            tmplParams = initializer.getDataTemplates();
+            length = tmplParams.length;
+            for (i = 0; i < length; i++) {
+                initializeTemplates(tmplParams[i], data, jagg);
+            }
+        }
+
+        if (initializer.getTemplates) {
+            tmpls = initializer.getTemplates();
+            length = tmpls.length;
+            for (i = 0; i < length; i++) {
+                initializeTemplate({name:tmpls[i], params:null}, jagg);
+            }
         }
     };
 

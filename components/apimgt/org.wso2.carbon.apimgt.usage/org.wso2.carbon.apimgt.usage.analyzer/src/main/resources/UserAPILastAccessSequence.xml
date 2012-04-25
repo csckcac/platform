@@ -4,7 +4,7 @@
       <get name="BASEEnriched" batchSize="1000">
       </get>
       <groupBy>
-         <field name="user"/>
+         <field name="userId"/>
          <field name="api"/>
       </groupBy>
       <drop type="column">

@@ -13,7 +13,7 @@
             <field name="resource"/>
             <field name="method"/>
             <field name="version"/>
-            <field name="user"/>
+            <field name="userId"/>
 	    <field name="request"/>
 	    <field name="response"/>
 	    <field name="responseTime"/>

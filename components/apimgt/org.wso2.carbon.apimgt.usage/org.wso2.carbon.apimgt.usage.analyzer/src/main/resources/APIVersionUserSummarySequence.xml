@@ -1,11 +1,12 @@
-<analyzerSequence name="APIVersionSummarySequence">
+<analyzerSequence name="APIVersionUserummarySequence">
    <trigger cron="1 * * * * ? *"/>
    <analyzers>
       <get name="BASEEnriched" batchSize="1000">
       </get>
       <groupBy>
          <field name="api"/>
-         <field name="version"/>
+          <field name="version"/>
+         <field name="userId"/>
       </groupBy>
       <drop type="column">
          <fieldSet>
@@ -13,7 +14,6 @@
             <field name="context"/>
             <field name="resource"/>
             <field name="method"/>
-            <field name="userId"/>
 	    <field name="requestTime"/>
 	    <field name="response"/>
 	    <field name="responseTime"/>
@@ -23,7 +23,7 @@
       <aggregate>
          <measure name="request" aggregationType="SUM"/>
       </aggregate>
-      <put name="APIVersionSummary" dataSourceType="CASSANDRA">
+      <put name="APIVersionUserSummary" dataSourceType="CASSANDRA">
          <onExist>
             <aggregate>
                <measure name="request" aggregationType="SUM"/>

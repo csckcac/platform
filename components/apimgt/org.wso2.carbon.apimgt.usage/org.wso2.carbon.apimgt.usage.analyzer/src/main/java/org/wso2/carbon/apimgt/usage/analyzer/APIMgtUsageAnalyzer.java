@@ -19,21 +19,50 @@ package org.wso2.carbon.apimgt.usage.analyzer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.apimgt.api.APIManagementException;
+import org.wso2.carbon.apimgt.api.model.Subscriber;
+import org.wso2.carbon.apimgt.impl.dao.ApiMgtDAO;
 import org.wso2.carbon.bam.analyzer.analyzers.AbstractAnalyzer;
 import org.wso2.carbon.bam.analyzer.engine.DataContext;
 import org.wso2.carbon.bam.core.dataobjects.Record;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class APIMgtUsageAnalyzer extends AbstractAnalyzer{
 
     private static Log log   = LogFactory.getLog(APIMgtUsageAnalyzer.class);
 
+    private ApiMgtDAO apiMgtDAO = null;
+
+    APIMgtUsageAnalyzer(){
+        try {
+            apiMgtDAO = new ApiMgtDAO();
+        } catch (APIManagementException e) {
+            log.error("Error while initializing APIMgtDAO",e);
+        }
+    }
+
 	public void analyze(DataContext dataContext) {
         ArrayList<Record> rows = (ArrayList)dataContext.getSequenceProperties("ClassAnalyzer").get("result");
         for(Record row:rows){
-
-            row.addColumn("user","abc123");
+            Map map = row.getColumns();
+            if(!map.containsKey("consumerKey")){
+                log.error("Consumer key column unavailable");
+            }else if(!map.containsKey("context")){
+                log.error("Context column unavailable");
+            }else{
+                String consumerKey = (String)map.get("consumerKey");
+                String context = (String)map.get("context");
+                String userID = null;
+                try {
+                    Subscriber subscriber = apiMgtDAO.getSubscriberByAccessToken(consumerKey,context);
+                    userID = subscriber.getName();
+                } catch (APIManagementException e) {
+                    log.error("Error while getting subscriber by access token",e);
+                }
+                row.addColumn("userId",userID);
+            }
         }
 	}
 }

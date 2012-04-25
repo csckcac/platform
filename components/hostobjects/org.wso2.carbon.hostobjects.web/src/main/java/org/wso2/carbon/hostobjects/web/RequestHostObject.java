@@ -157,7 +157,39 @@ public class RequestHostObject extends ScriptableObject {
         RequestHostObject rho = (RequestHostObject) thisObj;
         return rho.request.getHeader((String) args[0]);
     }
+    
+    public static String jsFunction_getRemoteAddr(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+        String functionName = "getRemoteAddr";
+        int argsCount = args.length;
+        if (argsCount != 0) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
 
+        RequestHostObject rho = (RequestHostObject) thisObj;
+        return rho.request.getRemoteAddr();
+    }
+
+    public static String jsFunction_getPathInfo(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+        String functionName = "getPathInfo";
+        int argsCount = args.length;
+        if (argsCount != 0) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+
+        RequestHostObject rho = (RequestHostObject) thisObj;
+        return rho.request.getPathInfo();
+    }
+    
+    public static int jsFunction_getLocalPort(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+        String functionName = "getPathInfo";
+        int argsCount = args.length;
+        if (argsCount != 0) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+
+        RequestHostObject rho = (RequestHostObject) thisObj;
+        return rho.request.getLocalPort();
+    }
     public static String jsFunction_getParameter(Context cx, Scriptable thisObj, Object[] args, Function funObj)
             throws ScriptException {
         String functionName = "getParameter";

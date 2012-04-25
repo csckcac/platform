@@ -119,7 +119,7 @@ public class STSDeploymentInterceptor implements AxisObserver {
         }
 
         admin = new KeyStoreAdmin(governRegistry);
-        keystores = admin.getKeyStores();
+        keystores = admin.getKeyStores(true);
 
         for (int i = 0; i < keystores.length; i++) {
             if (KeyStoreUtil.isPrimaryStore(keystores[i].getKeyStoreName())) {

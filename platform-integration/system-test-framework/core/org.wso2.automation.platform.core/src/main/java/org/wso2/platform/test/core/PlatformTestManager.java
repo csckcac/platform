@@ -74,14 +74,14 @@ public class PlatformTestManager implements ITestListener {
     public void onStart(ITestContext context) {
         String currentTestClassName = ((TestRunner) context).getCurrentXmlTest().getClasses().get(0).getName();
         log.info("Before executing the test class :" + currentTestClassName);
-       if (currentTestClassName != null) {
+        if (currentTestClassName != null) {
             artifactManager = new ArtifactManager(((TestRunner) context).getCurrentXmlTest().getClasses().get(0).getName());
             try {
                 artifactManager.deployArtifacts();
             } catch (UnknownArtifactTypeException e) { /*cannot throw the exception */
-                log.error("Unknown Artifact type to be deployed " + e.getMessage());
+                log.error("Unknown Artifact type to be deployed ", e);
             } catch (Exception e) {
-                log.error("Artifact Deployment Error " + e.getMessage());
+                log.error("Artifact Deployment Error ", e);
             }
         }
     }
@@ -95,9 +95,9 @@ public class PlatformTestManager implements ITestListener {
             assert artifactManager != null;
             artifactManager.cleanArtifacts();
         } catch (UnknownArtifactTypeException e) { /*cannot throw the exception */
-            log.error("Unknown Artifact type to be cleared " + e.getMessage());
+            log.error("Unknown Artifact type to be cleared ", e);
         } catch (Exception e) {
-            log.error("Artifact Cleaning Error " + e.getMessage());
+            log.error("Artifact Cleaning Error ", e);
         }
     }
 

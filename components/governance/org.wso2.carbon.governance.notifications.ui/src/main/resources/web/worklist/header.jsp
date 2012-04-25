@@ -207,6 +207,7 @@ under the License.
             margin-top:12px;
             background-color:#f0f0f0;
             color:#464646;
+			z-index:2000;
         }
         .notificationPopup div.popupPointer{
             background:transparent url(../worklist/images/popupPointer.png) no-repeat right top;

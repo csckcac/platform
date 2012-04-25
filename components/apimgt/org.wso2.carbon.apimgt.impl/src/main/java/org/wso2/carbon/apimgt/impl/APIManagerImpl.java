@@ -31,6 +31,7 @@ import org.wso2.carbon.apimgt.api.model.Tag;
 import org.wso2.carbon.apimgt.impl.dao.ApiMgtDAO;
 import org.wso2.carbon.apimgt.impl.internal.APIManagerComponent;
 import org.wso2.carbon.apimgt.impl.utils.APIUtil;
+import org.wso2.carbon.apimgt.impl.utils.APIVersionComparator;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
@@ -204,7 +205,7 @@ public class APIManagerImpl implements APIManager {
                 return apiSortedSet;
             }
             Map<String,API> latestPublishedAPIs = new HashMap<String, API>();
-            Comparator<String> versionComparator = new APIVersionComparator();
+            Comparator<API> versionComparator = new APIVersionComparator();
             for (GenericArtifact artifact : genericArtifacts) {
                 // adding the API provider can mark the latest API .
                 String status = artifact.getAttribute(APIConstants.API_OVERVIEW_STATUS);
@@ -216,8 +217,7 @@ public class APIManagerImpl implements APIManager {
                     if (existingAPI != null) {
                         // If we have already seen an API with the same name, make sure
                         // this one has a higher version number
-                        if (versionComparator.compare(api.getId().getVersion(),
-                                existingAPI.getId().getVersion()) > 0) {
+                        if (versionComparator.compare(api, existingAPI) > 0) {
                             latestPublishedAPIs.put(key, api);
                         }
                     } else {
@@ -1436,38 +1436,6 @@ public class APIManagerImpl implements APIManager {
 
         public int compare(API api1, API api2) {
             return api1.getId().getApiName().compareTo(api2.getId().getApiName());
-        }
-    }
-
-    /**
-     * Simple API version comparator. Assumes that all API versions are in the standard
-     * major.minor.patch format.
-     */
-    private class APIVersionComparator implements Comparator<String> {
-        
-        private static final int MAJOR = 0;
-        private static final int MINOR = 1;
-        private static final int PATCH = 2;
-
-        public int compare(String o1, String o2) {
-            String[] fragments1 = o1.split("\\.");
-            String[] fragments2 = o2.split("\\.");
-
-            int result = compare(Integer.parseInt(fragments1[MAJOR]),
-                    Integer.parseInt(fragments2[MAJOR]));
-            if (result == 0) {
-                result = compare(Integer.parseInt(fragments1[MINOR]),
-                        Integer.parseInt(fragments2[MINOR]));
-                if (result == 0) {
-                    result = compare(Integer.parseInt(fragments1[PATCH]),
-                            Integer.parseInt(fragments2[PATCH]));
-                }
-            }
-            return result;
-        }
-        
-        private int compare(int n1, int n2) {
-            return n1 - n2;
         }
     }
 }

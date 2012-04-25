@@ -19,6 +19,8 @@ connection on your machine.
 
 Steps:
 ------
+** IMPORTANT: If you have already configured any other sample, start from Step 7 **
+
 1. Extract wso2am-xxx.zip (eg: wso2am-1.0.0-SNAPSHOT.zip)
 2. Go to wso2am-1.0.0-SNAPSHOT/bin folder & type 'ant'
 
@@ -28,11 +30,11 @@ some more master data required for this sample.
 
 4. Shutdown WSO2AM server. (IMPORTANT: This step is a MUST)
 
-5. Run 'ant' inside wso2am-1.0.0-SNAPSHOT/samples/TwitterSearch
+5. Run 'ant' inside wso2am-1.0.0-SNAPSHOT/samples/Data
 You will see an output similar to following. This step adds two user accounts (provider1 & subscriber1) to WSO2AM's user base.
 
 populate-user-database:
-      [sql] Executing resource: .....  /wso2am-1.0.0-SNAPSHOT/samples/Sample4/UserPopulator.sql
+      [sql] Executing resource: .....  /wso2am-1.0.0-SNAPSHOT/samples/Data/UserPopulator.sql
       [sql] 10 of 10 SQL statements executed successfully
       
       

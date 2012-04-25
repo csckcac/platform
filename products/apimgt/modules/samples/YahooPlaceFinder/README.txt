@@ -1,4 +1,4 @@
-How to Deploy & Test TwitterSearch Sample?
+How to Deploy & Test YahooPlaceFinder Sample?
 ===========================================
 
 ###########################################################################################
@@ -19,6 +19,8 @@ connection on your machine.
 
 Steps:
 ------
+** IMPORTANT: If you have already configured any other sample, start from Step 7 **
+
 1. Extract wso2am-xxx.zip (eg: wso2am-1.0.0-SNAPSHOT.zip)
 2. Go to wso2am-1.0.0-SNAPSHOT/bin folder & type 'ant'
 
@@ -28,13 +30,13 @@ some more master data required for this sample.
 
 4. Shutdown WSO2AM server. (IMPORTANT: This step is a MUST)
 
-5. Run 'ant' inside wso2am-1.0.0-SNAPSHOT/samples/YahooPlaceFinder
+5. Run 'ant' inside wso2am-1.0.0-SNAPSHOT/samples/Data
 You will see an output similar to following. This step adds two user accounts (provider1 & subscriber1) to WSO2AM's user base.
 
 populate-user-database:
-      [sql] Executing resource: .....  /wso2am-1.0.0-SNAPSHOT/samples/Sample4/UserPopulator.sql
+      [sql] Executing resource: .....  /wso2am-1.0.0-SNAPSHOT/samples/Data/UserPopulator.sql
       [sql] 10 of 10 SQL statements executed successfully
-      
+
       
 6. Start WSO2AM again & now you can login to API Provider's console
 URL - http://localhost:9763/apiprovider/
@@ -43,7 +45,7 @@ Username/password - provider1/provider1
 Take a note of the fact that there are no APIs published. Next step adds an API & publishes it to API store.
 
 7. Run wso2am-1.0.0-SNAPSHOT/samples/YahooPlaceFinder/APIPopulator.sh  (eg: sh APIPopulator.sh)
-You will see an output similar to following on the console. Fresh above page & you should be seeing the newly added TwitterSearch API.
+You will see an output similar to following on the console. Fresh above page & you should be seeing the newly added YahooPlaceFinder API.
 
 {"data" : {}, "message" : "Login successful for user provider1", "error" : "false"}
 {"data" : {"cookie" : "JSESSIONID=054B59502342DE9B701832261222359C", "username" : "provider1"}, "message" : {}, "error" : "false"}

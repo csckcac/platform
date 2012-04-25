@@ -61,7 +61,7 @@
 
 <pre class="prettyprint linenums">
 {
-"displayName":"Minimal Sample",
+    "displayName":"Minimal Sample",
     "welcomeFiles":["index.jag", "index.html"],
     "errorPages":[
         {
@@ -89,7 +89,7 @@
         "authMethod":"BASIC"
     },
     "securityRoles":["admin", "everyone"],
-	"urlMappings" : [
+    "urlMappings" : [
 		{
 			"url" : "/sample/uri-mapping",
 			"path" : "/index.jag"

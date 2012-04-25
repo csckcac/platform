@@ -452,11 +452,10 @@ public class TomcatJaggeryWebappsDeployer {
         }
 
         ctx.addConstraint(securityConstraint);
-
+        addWelcomeFiles(ctx, jaggeryConfig);
         //jaggery conf params if null conf is not available
         if (jaggeryConfig != null) {
             setDisplayName(ctx, jaggeryConfig);
-            addWelcomeFiles(ctx, jaggeryConfig);
             addErrorPages(ctx, jaggeryConfig);
             addSecurityConstraints(ctx, jaggeryConfig);
             setLoginConfig(ctx, jaggeryConfig);
@@ -574,11 +573,19 @@ public class TomcatJaggeryWebappsDeployer {
     }
 
     private static void addWelcomeFiles(Context context, JSONObject obj) {
-        JSONArray arr = (JSONArray) obj.get(JaggeryConstants.JaggeryConfigParams.WELCOME_FILES);
-        if (arr != null) {
-            for (Object role : arr) {
-                context.addWelcomeFile((String) role);
+        if (obj != null) {
+            JSONArray arr = (JSONArray) obj.get(JaggeryConstants.JaggeryConfigParams.WELCOME_FILES);
+            if (arr != null) {
+                for (Object role : arr) {
+                    context.addWelcomeFile((String) role);
+                }
+            } else {
+                context.addWelcomeFile("index.jag");
+                context.addWelcomeFile("index.html");
             }
+        } else {
+            context.addWelcomeFile("index.jag");
+            context.addWelcomeFile("index.html");
         }
     }
 

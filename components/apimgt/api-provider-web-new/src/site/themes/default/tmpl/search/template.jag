@@ -1,0 +1,10 @@
+<% jagg.template = function(data, params, jagg) { %>
+<form class="well form-search">
+    <input type="text" id="apiSearch" class="input-medium search-query" placeholder="Filter APIs" />
+    <input type="button" class="btn btn-primary" onClick="apiProviderApp.searchAPIs()" value="Search" />
+</form>
+<div class="alert alert-success" id="searchMessageContainer" style="display:none">
+        <a class="close" data-dismiss="alert">x</a>
+         <div id="searchMessage"></div>
+      </div>
+<% }; %>

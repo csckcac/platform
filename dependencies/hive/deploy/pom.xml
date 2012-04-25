@@ -199,6 +199,22 @@
                             <generatePom>true</generatePom>
                         </configuration>
                     </execution>
+		  <execution>
+                        <id>install hive-cassandra-handler jar</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <groupId>org.apache.hive</groupId>
+                            <artifactId>hive-cassandra</artifactId>
+                            <version>${hive.version}</version>
+                            <packaging>jar</packaging>
+                            <file>${project.basedir}/../build/cassandra-handler/hive-cassandra-handler-${hive.build.version}.jar
+                            </file>
+                            <generatePom>true</generatePom>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 

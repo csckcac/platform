@@ -23,7 +23,6 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.model.*;
 import org.wso2.carbon.apimgt.impl.APIConstants;
-import org.wso2.carbon.apimgt.impl.internal.APIManagerComponent;
 import org.wso2.carbon.governance.api.common.dataobjects.GovernanceArtifact;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
@@ -32,7 +31,6 @@ import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Tag;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.registry.core.service.RegistryService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -177,27 +175,6 @@ public final class APIUtil {
             throw new APIManagementException(msg, e);
         }
         return artifact;
-    }
-
-    /**
-     * This method used to get Registry from RegistryService
-     *
-     * @return Registry
-     * @throws APIManagementException if failed to get Registry from RegistryService
-     */
-    public static Registry getRegistry() throws APIManagementException {
-        Registry registry = null;
-        try {
-            RegistryService registryService = APIManagerComponent.getRegistryService();
-            registry = registryService.getRegistry();
-            if (registry == null) {
-                throw new APIManagementException("Failed to initialized Registry");
-            }
-
-        } catch (RegistryException e) {
-            log.error("Failed to initialized registry",e);
-        }
-        return registry;
     }
 
     /**

@@ -26,6 +26,7 @@ import org.wso2.carbon.api.handler.throttle.CarbonAPIThrottleConstants;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 
 public class AuthAdminServiceClient {
+
     public static final String CLIENT_TRUST_STORE_PATH = CarbonAPIThrottleConstants._AUTH_ADMIN_TRUST_STORE;
 
     public static final String HOST_NAME = CarbonAPIThrottleConstants._AUTH_ADMIN_SERVER;
@@ -38,15 +39,11 @@ public class AuthAdminServiceClient {
     public static final String KEY_STORE_PASSWORD = CarbonAPIThrottleConstants._AUTH_ADMIN_TRUST_STORE_PASS;
     public static final String KEY_STORE_TYPE = CarbonAPIThrottleConstants._AUTH_ADMIN_TRUST_STORE_TYPE;
 
-    private static AuthenticationAdminStub authenticationAdminStub;
+    private AuthenticationAdminStub authenticationAdminStub;
 
     public AuthAdminServiceClient() throws AxisFault {
-        init(SERVICE_URL + "AuthenticationAdmin");
-    }
-
-    public void init(String backEndServerURL) throws AxisFault {
         setSystemProperties(CLIENT_TRUST_STORE_PATH, KEY_STORE_TYPE, KEY_STORE_PASSWORD);
-        authenticationAdminStub = new AuthenticationAdminStub(null, backEndServerURL);
+        authenticationAdminStub = new AuthenticationAdminStub(null, SERVICE_URL + "AuthenticationAdmin");
         ServiceClient client = authenticationAdminStub._getServiceClient();
         Options options = client.getOptions();
         options.setManageSession(true);

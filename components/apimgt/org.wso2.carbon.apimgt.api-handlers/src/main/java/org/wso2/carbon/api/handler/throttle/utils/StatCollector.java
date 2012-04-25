@@ -36,8 +36,8 @@ public class StatCollector {
     private AtomicLong stTime_DOMAIN = new AtomicLong(-1);
 
     private long startTime = 0;
-    public static long statCollectionPeriod = 0;
-    public static long statDisplayWindow = 0;
+    private long statCollectionPeriod = 0;
+    private long statDisplayWindow = 0;
 
     private static volatile StatCollector instance = null;
 
@@ -73,11 +73,11 @@ public class StatCollector {
         return instance;
     }
 
-    public static void setStatCollectionPeriod(long period) {
+    public void setStatCollectionPeriod(long period) {
         statCollectionPeriod = period;
     }
 
-    public static void setStatDisplayWindow(long period) {
+    public void setStatDisplayWindow(long period) {
         statDisplayWindow = period;
     }
 

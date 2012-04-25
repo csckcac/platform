@@ -43,8 +43,8 @@ import java.io.IOException;
  * cardinality="1..1" policy="dynamic"  bind="setRegistryService" unbind="unsetRegistryService"
  */
 public class APIManagerComponent {
-    private static Log log = LogFactory.getLog(APIManagerComponent.class);
-    private static RegistryService registryServiceInstance;
+
+    private static final Log log = LogFactory.getLog(APIManagerComponent.class);
 
     protected void activate(ComponentContext componentContext) {
        if(log.isDebugEnabled()){
@@ -62,18 +62,20 @@ public class APIManagerComponent {
         if(registryService!=null && log.isDebugEnabled()){
           log.debug("Registry service initialized");
         }
-        registryServiceInstance = registryService;
+        ServiceReferenceHolder.getInstance().setRegistryService(registryService);
     }
 
     protected void unsetRegistryService(RegistryService registryService) {
-        registryServiceInstance = null;
+        ServiceReferenceHolder.getInstance().setRegistryService(null);
     }
+
     public static RegistryService getRegistryService() throws RegistryException {
-        if (registryServiceInstance == null) {
+        RegistryService registryService = ServiceReferenceHolder.getInstance().getRegistryService();
+        if (registryService == null) {
             log.error("Failed to get RegistryService");
             throw new RegistryException("Registry Service instance null");
         }
-        return registryServiceInstance;
+        return registryService;
     }
 
     private static void addRxtConfigs() throws APIManagementException {
@@ -88,8 +90,9 @@ public class APIManagerComponent {
                     continue;
                 }
                 String rxt = FileUtil.readFileToString(path + File.separator + rxtPath);
-                Registry registry = getRegistryService().getRegistry();
-                UserRegistry systemRegistry = getRegistryService().getRegistry(CarbonConstants.REGISTRY_SYSTEM_USERNAME);
+                RegistryService registryService = ServiceReferenceHolder.getInstance().getRegistryService();
+                Registry registry = registryService.getRegistry();
+                UserRegistry systemRegistry = registryService.getRegistry(CarbonConstants.REGISTRY_SYSTEM_USERNAME);
                 Resource resource = registry.newResource();
                 resource.setContent(rxt.getBytes());
                 resource.setMediaType(APIConstants.RXT_MEDIA_TYPE);

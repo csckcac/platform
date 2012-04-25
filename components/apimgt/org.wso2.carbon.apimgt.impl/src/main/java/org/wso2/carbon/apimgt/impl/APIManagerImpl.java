@@ -30,6 +30,7 @@ import org.wso2.carbon.apimgt.api.model.*;
 import org.wso2.carbon.apimgt.api.model.Tag;
 import org.wso2.carbon.apimgt.impl.dao.ApiMgtDAO;
 import org.wso2.carbon.apimgt.impl.internal.APIManagerComponent;
+import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 import org.wso2.carbon.apimgt.impl.utils.APIUtil;
 import org.wso2.carbon.apimgt.impl.utils.APIVersionComparator;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
@@ -876,8 +877,8 @@ public class APIManagerImpl implements APIManager {
         //AuthorizationManager accessControlAdmin =
         //CarbonContext.getCurrentContext().getUserRealm().getAuthorizationManager();
 
-        AuthorizationManager accessControlAdmin = APIManagerComponent.getRegistryService().
-                getUserRealm(IdentityUtil.getTenantIdOFUser(
+        AuthorizationManager accessControlAdmin = ServiceReferenceHolder.getInstance().
+                getRegistryService().getUserRealm(IdentityUtil.getTenantIdOFUser(
                         api.getId().getProviderName())).getAuthorizationManager();
 
         registry.put(thumbPath, thumb);

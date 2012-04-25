@@ -64,7 +64,7 @@ on the "Generate" button to obtain an API key.
 
 11. Now we are ready to invoke the API. Copy and paste following into a new console window & execute it.
 
-curl -v -H "Authorization: Bearer _TAmPFGkaknjfLeAHYVBvaXti9Aa" http://localhost:8280/placeFinder/1.0.0?q=Colombo
+curl -v -H "Authorization: Bearer 9nEQnijLZ0Gi0gZ6a3pZICktVUca" http://localhost:8280/placeFinder/1.0.0?q=Colombo
 
 (** NOTE: Replace the string '9nEQnijLZ0Gi0gZ6a3pZICktVUca' with the API key you generated earlier)
 

@@ -77,7 +77,7 @@ include('/includes/topnavi.jag');
 	            Jaggery Server is powered by WSO2 carbon OSGi Runtime
 	
 	            <br/> <br/>
-	            Management console can be accessed by <code>{http://localhost:9443/carbon}</code>
+	            Management console can be accessed by <code>{https://localhost:9443/carbon}</code>
 	        </p>
 	        <img alt="Jaggery Management Console" src="images/j-mgt-console.png"/>
 	
@@ -85,13 +85,15 @@ include('/includes/topnavi.jag');
 	</div>
     <div class="row">
         <div class="span16">
-            <h2>How to Deploy a Jaggery App</h2>
+            <h2>How To Deploy A Jaggery App</h2>
 
-            <p>In-order to compose a Jaggery script you have to make it a <span class="label notice"> .jag</span> extension.</p>
+            <p>In-order to compose a Jaggery script you have to make it a <code>.jag</code> extension.</p>
 
-            <p>There are no restrictions for the directory structure, add your <code>.jag</code> files where ever you want, zip them all together, rename the .zip to .war <b>(Just for now in M3)</b> and deploy at <i>{JAGGERY_HOME}/repository/deployment/server/jaggeryapps</i></p>
+            <p>There are no restrictions for the directory structure, add your <code>.jag</code> files where ever you want, and copy the entire directory to <code>{JAGGERY_HOME}/repository/deployment/server/jaggeryapps</code> The Jaggery Server
+            will then deploy the directory as an application which will be shown in the management console. The directory name will be taken as the
+            application context name</p>
             
-            <p>Also Jaggery app .war file can be uploaded through the management console as follows. This can be found under Add link in Jaggery Applications section.</p>
+            <p>Also your app can be uploaded as a .zip archive using the management console. The upload page can be found under the Add link in Jaggery Applications section.</p>
             <br/>
             <img alt="Upload Jaggery" src="images/uploadjaggery.png"/>
         </div>
@@ -106,7 +108,7 @@ include('/includes/topnavi.jag');
             </div>
 
             <p>
-                Jaggery command line client ships with the Jaggery bundle. Execute bin/jaggery.bat or bin/jaggery.sh
+                Jaggery command line client ships with Jaggery server can be executed at bin/jaggery.bat or bin/jaggery.sh
                 based on your platform to enter into the command line console.
             </p>
             <img alt="Jaggery Command Line" src="images/commandline.png"/>
@@ -117,12 +119,12 @@ include('/includes/topnavi.jag');
         <div class="span-two-thirds">
             <div class="page-header">
                 <h2>
-                    Command Line Commands
+                    The List Of Commands
                 </h2>
             </div>
-            <p><code>&#60script.jag&#62</code> &#150 Load Jaggery script (script.jag) from the current path. <br/><br/>Eg: jaggery.bat script.jag</p>
-            <p><code>&#60filepath&#47script.jag&#62</code> &#150 Load Jaggery script (script.jag) from the path given. <br/><br/>Eg: jaggery.bat E:\script.jag</p>
-            
+            <p><code>&lt;script.jag&gt;</code> - Load Jaggery script (script.jag) from the current path.
+            <br/><br/><code>Eg :- sh jaggery.sh script.jag</code></p>
+
             <br/>
             <img alt="Jaggery Commands" src="images/load.png"/>
 
@@ -140,12 +142,11 @@ include('/includes/topnavi.jag');
     <div class="span-two-thirds">
         <div class="page-header">
             <h2>
-                Command Line Shell Mode
+                The Shell Mode
             </h2>
         </div>
         <p>
-        	Jaggery command line shell mode will facilitate the evaluation of realtime Jaggery expressions. Also this will be
-        	helpful for interactive shell executions.
+        	Jaggery shell mode will facilitate the evaluation of Jaggery expressions. Also this will be helpful for interactive script executions and debuging.
         </p>
 
         <img alt="Jaggery Shell" src="images/shell.png"/>

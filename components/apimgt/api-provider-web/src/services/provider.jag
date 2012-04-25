@@ -33,20 +33,40 @@ if (action != null) {
             print(getAPI(apiName, version));
         }
     }
-    else if (action == "getAPIUsageHostTest"){
+    else if (action == "getProviderAPIVersionUsage"){
+         var providerName = request.getParameter("providerName");
          var apiName = request.getParameter("apiName");
          var server = request.getParameter("server");
-         if(apiName!=null&& server!=null){
-         		print(getAPIUsageHostTest(apiName,server));
+         if(providerName!=null&&apiName!=null&& server!=null){
+         		print(getProviderAPIVersionUsage(providerName, apiName,server));
          }
     }
-    else if (action == "getAllAPIUsage"){
+    else if (action == "getProviderAPIUsage"){
         var server = request.getParameter("server");
-        if(server!=null){
-        		print(getAllAPIUsage(server));
+        var providerName = request.getParameter("providerName");
+        if(providerName!=null&&server!=null){
+        		print(getProviderAPIUsage(providerName,server));
         }
-   }
-    else if (action == "getAPIsByProvider") {
+   }else if (action == "getProviderAPIUserUsage"){
+        var providerName = request.getParameter("providerName");
+        var apiName = request.getParameter("apiName");
+        var server = request.getParameter("server");
+        if(providerName!=null&&apiName!=null&&server!=null){
+        		print(getProviderAPIUserUsage(providerName,apiName,server));
+        }
+   }else if (action == "getProviderAPIVersionLastAccess"){
+        var providerName = request.getParameter("providerName");
+        var server = request.getParameter("server");
+        if(providerName!=null&&server!=null){
+        		print(getProviderAPIVersionLastAccess(providerName,server));
+        }
+   }else if (action == "getProviderAPIServiceTime"){
+        var providerName = request.getParameter("providerName");
+        var server = request.getParameter("server");
+        if(providerName!=null&&server!=null){
+        		print(getProviderAPIServiceTime(providerName,server));
+        }
+   }else if (action == "getAPIsByProvider") {
         print(getAPIsByProvider());
     }
     else if (action == "getId") {

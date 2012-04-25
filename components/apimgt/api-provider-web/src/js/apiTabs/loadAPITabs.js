@@ -26,8 +26,7 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
 
     ////////////// edit tab
     if (clickedTab == "versions") {
-console.log("test Version Click");
-        apiProviderApp.call("action=getAPIUsageHostTest&apiName="+ apiProviderApp.currentAPIName +"&server=https://localhost:9444/", function (json) {
+        apiProviderApp.call("action=getProviderAPIVersionUsage&providerName="+ apiProviderApp.currentProviderName +"&apiName="+ apiProviderApp.currentAPIName +"&server=https://localhost:9444/", function (json) {
             if (json.error == "true") {
                 alert(json.message);
             }
@@ -48,7 +47,50 @@ console.log("test Version Click");
                  ['v1.4.0', 7],
                  ['v1.3.0', 9]
                  ];*/
-                var plot1 = jQuery.jqplot('chartVersion1', [data],
+                var plot1 = jQuery.jqplot('versionChart', [data],
+                    {
+                        seriesDefaults:{
+                            // Make this a pie chart.
+                            renderer:jQuery.jqplot.PieRenderer,
+                            rendererOptions:{
+                                // Put data labels on the pie slices.
+                                // By default, labels show the percentage of the slice.
+                                showDataLabels:true
+                            }
+                        },
+                        legend:{ show:true, location:'e' }
+                    }
+                );
+
+            }
+        });
+
+
+    }
+
+    if (clickedTab == "users") {
+        apiProviderApp.call("action=getProviderAPIUserUsage&providerName="+ apiProviderApp.currentProviderName +"&apiName="+ apiProviderApp.currentAPIName +"&server=https://localhost:9444/", function (json) {
+            if (json.error == "true") {
+                alert(json.message);
+            }
+            else {
+                var data = new Array();
+                $('#userTable').find("tr:gt(0)").remove();
+                for (var i = 0; i < json.data.usage.length; i++) {
+                    data[i] = [json.data.usage[i].user, parseFloat(json.data.usage[i].count)];
+                    $('#userTable').append($('<tr><td>' + json.data.usage[i].user + '</td><td>' + json.data.usage[i].count + '</td></tr>'));
+
+                }
+                // jQuery Plot chart data format
+                /*[
+                 ['v1.0.0', 12],
+                 ['v1.1.0', 9],
+                 ['v1.2.0', 14],
+                 ['v1.3.0', 16],
+                 ['v1.4.0', 7],
+                 ['v1.3.0', 9]
+                 ];*/
+                var plot1 = jQuery.jqplot('userChart', [data],
                     {
                         seriesDefaults:{
                             // Make this a pie chart.

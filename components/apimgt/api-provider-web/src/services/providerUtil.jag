@@ -93,10 +93,10 @@ return {
 }
 
 //methods for usage monitoring
-function getAPIUsageHostTestFunc(apiName,server) {
+function getProviderAPIVersionUsageFunc(providerName, apiName, server) {
         var usage=  new Array();
         var usageout=  new Array();
-        usage= apiProvider.getAPIUsageTest(apiName,server);
+        usage= apiProvider.getProviderAPIVersionUsage(providerName, apiName, server);
         for (var k = 0; k < usage.length ; k++){
         var elem = {
         version:usage[k].version,
@@ -112,11 +112,10 @@ return {
         };
 }
 
-function getAllAPIUsageFunc(server) {
-        log("getAllAPIUsageFunc " + server);
+function getProviderAPIUsageFunc(providerName,server) {
         var usage=  new Array();
         var usageout=  new Array();
-        usage= apiProvider.getAllAPIUsage(server);
+        usage= apiProvider.getProviderAPIUsage(providerName,server);
         if (usage == null) {
         return {
         error:true
@@ -127,6 +126,82 @@ function getAllAPIUsageFunc(server) {
         var elem = {
         apiName:usage[k].apiName,
         count:usage[k].count
+        };
+usageout.push(elem);
+
+
+}
+return {
+        error:false,
+        usage:usageout
+        };}
+}
+
+function getProviderAPIUserUsageFunc(providerName,apiName,server) {
+        var usage=  new Array();
+        var usageout=  new Array();
+        usage= apiProvider.getProviderAPIUserUsage(providerName,apiName,server);
+        if (usage == null) {
+        return {
+        error:true
+        };
+
+}else{
+        for (var k = 0; k < usage.length ; k++){
+        var elem = {
+        apiName:usage[k].api,
+        count:usage[k].count
+        };
+usageout.push(elem);
+
+
+}
+return {
+        error:false,
+        usage:usageout
+        };}
+}
+
+function getProviderAPIVersionLastAccessFunc(providerName,server) {
+        var usage=  new Array();
+        var usageout=  new Array();
+        usage= apiProvider.getProviderAPIVersionLastAccess(providerName,server);
+        if (usage == null) {
+        return {
+        error:true
+        };
+
+}else{
+        for (var k = 0; k < usage.length ; k++){
+        var elem = {
+        apiName:usage[k].api,
+        version:usage[k].version,
+        lastAccess:usage[k].lastAccess
+        };
+usageout.push(elem);
+
+
+}
+return {
+        error:false,
+        usage:usageout
+        };}
+}
+
+function getProviderAPIServiceTimeFunc(providerName,server) {
+        var usage=  new Array();
+        var usageout=  new Array();
+        usage= apiProvider.getProviderAPIServiceTime(providerName,server);
+        if (usage == null) {
+        return {
+        error:true
+        };
+
+}else{
+        for (var k = 0; k < usage.length ; k++){
+        var elem = {
+        apiName:usage[k].api,
+        serviceTime:usage[k].serviceTime
         };
 usageout.push(elem);
 

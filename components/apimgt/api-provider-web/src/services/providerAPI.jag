@@ -37,11 +37,20 @@ function getProviders() {
     return getDataJSON(getProvidersFunc(), null, "Error while get API Providers");
 }
 //methods for usage monitoring 
-function getAPIUsageHostTest(apiName,server) {
-    return getDataJSON(getAPIUsageHostTestFunc(apiName,server), null, "Error while get API Usage Test Details");
+function getProviderAPIVersionUsage(providerName, apiName,server) {
+    return getDataJSON(getProviderAPIVersionUsageFunc(providerName, apiName,server), null, "Error while getting ProviderAPIVersionUsage");
 }
-function getAllAPIUsage(server) {
-    return getDataJSON(getAllAPIUsageFunc(server), null, "Error while get All API Usage Details");
+function getProviderAPIUsage(providerName,server) {
+    return getDataJSON(getProviderAPIUsageFunc(providerName,server), null, "Error while getting ProviderAPIUsage");
+}
+function getProviderAPIUserUsage(providerName,apiName,server) {
+    return getDataJSON(getProviderAPIUserUsageFunc(providerName,apiName,server), null, "Error while getting ProviderAPIUserUsage");
+}
+function getProviderAPIVersionLastAccess(providerName,server) {
+    return getDataJSON(getProviderAPIVersionLastAccessFunc(providerName,server), null, "Error while getting ProviderAPIVersionLastAccess");
+}
+function getProviderAPIServiceTime(providerName,server) {
+    return getDataJSON(getProviderAPIServiceTimeFunc(providerName,server), null, "Error while getting ProviderAPIServiceTime");
 }
 
 //end method list for usage monitoring 

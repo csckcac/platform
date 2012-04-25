@@ -1,9 +1,5 @@
 Installing Jaggery ${carbon.product.version}
 
-WSO2 Carbon ${carbon.product.version} can be run either in standalone mode or as a webapp within a
-servlet container.
-
-
 Standalone Mode
 ---------------
 1. The directory containing this INSTALL file will the root and it will be

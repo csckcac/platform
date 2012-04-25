@@ -48,7 +48,7 @@ public class AdminServiceTenantMgtServiceAdmin {
 
     public void addTenant(String sessionCookie, String domainName, String password, String firstName, String usagePlan) {
 
-        new AuthenticateStub().authenticateStub(sessionCookie, tenantMgtAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, tenantMgtAdminServiceStub);
 
         Date date = new Date();
         Calendar calendar = new GregorianCalendar();
@@ -97,7 +97,7 @@ public class AdminServiceTenantMgtServiceAdmin {
     }
 
     public TenantInfoBean getTenant(String sessionCookie, String tenantDomain) {
-        new AuthenticateStub().authenticateStub(sessionCookie, tenantMgtAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, tenantMgtAdminServiceStub);
         TenantInfoBean getTenantBean = null;
         try {
             getTenantBean = tenantMgtAdminServiceStub.getTenant(tenantDomain);
@@ -113,7 +113,7 @@ public class AdminServiceTenantMgtServiceAdmin {
     }
 
     public void updateTenant(String sessionCookie, TenantInfoBean infoBean) {
-        new AuthenticateStub().authenticateStub(sessionCookie, tenantMgtAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, tenantMgtAdminServiceStub);
         try {
             tenantMgtAdminServiceStub.updateTenant(infoBean);
         } catch (RemoteException e) {
@@ -126,7 +126,7 @@ public class AdminServiceTenantMgtServiceAdmin {
     }
 
     public void activateTenant(String sessionCookie, String domainName) {
-        new AuthenticateStub().authenticateStub(sessionCookie, tenantMgtAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, tenantMgtAdminServiceStub);
         try {
             tenantMgtAdminServiceStub.activateTenant(domainName);
         } catch (RemoteException e) {

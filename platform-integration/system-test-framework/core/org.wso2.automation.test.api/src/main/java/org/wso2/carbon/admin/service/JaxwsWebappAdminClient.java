@@ -48,7 +48,7 @@ public class JaxwsWebappAdminClient {
         try {
             webappAdminStub = new WebappAdminStub(serviceURL);
 
-            new AuthenticateStub().authenticateStub(sessionCookie, webappAdminStub);
+            AuthenticateStub.authenticateStub(sessionCookie, webappAdminStub);
         } catch (AxisFault axisFault) {
             handleException("webappAdminStub initialization error", axisFault);
         }

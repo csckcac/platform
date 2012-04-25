@@ -52,7 +52,7 @@ public class AdminServiceBillingDataAccessService {
             throws Exception {
         Customer customer;
         Boolean updateStatus;
-        new AuthenticateStub().authenticateStub(sessionCookie, billingDataAccessServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, billingDataAccessServiceStub);
         try {
             customer = billingDataAccessServiceStub.getCustomerWithName(tenantDomainName);
             updateStatus = billingDataAccessServiceStub.changeSubscription(customer.getId(), usagePlanName);
@@ -66,7 +66,7 @@ public class AdminServiceBillingDataAccessService {
 
     public void getActiveSubscriptionOfCustomer(String sessionCookie, int customerId)
             throws RemoteException, BillingDataAccessServiceExceptionException {
-        new AuthenticateStub().authenticateStub(sessionCookie, billingDataAccessServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, billingDataAccessServiceStub);
         try {
             billingDataAccessServiceStub.getActiveSubscriptionOfCustomer(customerId);
         } catch (RemoteException e) {
@@ -81,7 +81,7 @@ public class AdminServiceBillingDataAccessService {
 
     public Customer getCustomerWithName(String sessionCookie, String customerName)
             throws RemoteException, BillingDataAccessServiceExceptionException {
-        new AuthenticateStub().authenticateStub(sessionCookie, billingDataAccessServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, billingDataAccessServiceStub);
         Customer customer = null;
         try {
             customer = billingDataAccessServiceStub.getCustomerWithName(customerName);
@@ -97,7 +97,7 @@ public class AdminServiceBillingDataAccessService {
 
     public Subscription getSubscription(String sessionCookie, int subscriptionId)
             throws RemoteException, BillingDataAccessServiceExceptionException {
-        new AuthenticateStub().authenticateStub(sessionCookie, billingDataAccessServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, billingDataAccessServiceStub);
         Subscription subscription = null;
         try {
             subscription = billingDataAccessServiceStub.getSubscription(subscriptionId);
@@ -115,7 +115,7 @@ public class AdminServiceBillingDataAccessService {
     public String getUsagePlanName(String sessionCookie, String tenantName) {
         Customer customer;
         Subscription subscription;
-        new AuthenticateStub().authenticateStub(sessionCookie, billingDataAccessServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, billingDataAccessServiceStub);
 
         try {
             customer = billingDataAccessServiceStub.getCustomerWithName(tenantName);

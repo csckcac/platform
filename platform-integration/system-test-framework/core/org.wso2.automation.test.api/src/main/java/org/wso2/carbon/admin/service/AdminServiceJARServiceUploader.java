@@ -54,7 +54,7 @@ public class AdminServiceJARServiceUploader {
         Resource resourceDataWsdl;
         UploadArtifactsResponse uploadArtifactsResponse;
 
-        new AuthenticateStub().authenticateStub(sessionCookie, jarServiceCreatorAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, jarServiceCreatorAdminStub);
         Resource[] resourceDataArray = new Resource[dhJarList.size()];
 
         assert dhJarList.size() != 0;

@@ -49,7 +49,7 @@ public class AdminServiceCarbonAppUploader {
         UploadedFileItem[] carbonAppArray = new UploadedFileItem[1];
         UploadedFileItem carbonApp = new UploadedFileItem();
 
-        new AuthenticateStub().authenticateStub(sessionCookie, carbonAppUploaderStub);
+        AuthenticateStub.authenticateStub(sessionCookie, carbonAppUploaderStub);
         carbonApp.setFileName(fileName);
         carbonApp.setDataHandler(dh);
         carbonApp.setFileType("jar");

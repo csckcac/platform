@@ -52,7 +52,7 @@ public class AdminServiceSpringServiceFileUploader {
     public void uploadSpringServiceFile(String sessionCookie, String fileName, DataHandler dh)
             throws ExceptionException, RemoteException {
         AARServiceData aarServiceData;
-        new AuthenticateStub().authenticateStub(sessionCookie, serviceUploaderStub);
+        AuthenticateStub.authenticateStub(sessionCookie, serviceUploaderStub);
         aarServiceData = new AARServiceData();
         aarServiceData.setFileName(fileName);
         aarServiceData.setDataHandler(dh);

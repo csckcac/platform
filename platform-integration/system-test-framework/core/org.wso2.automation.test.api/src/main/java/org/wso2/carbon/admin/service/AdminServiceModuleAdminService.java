@@ -45,7 +45,7 @@ public class AdminServiceModuleAdminService {
 
     public void uploadModule(String sessionCookie, DataHandler dh) throws RemoteException, Exception {
 
-        new AuthenticateStub().authenticateStub(sessionCookie, moduleAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, moduleAdminServiceStub);
         ModuleUploadData moduleUploadData = new ModuleUploadData();
         moduleUploadData.setFileName(dh.getName().substring(dh.getName().lastIndexOf('/') + 1));
         moduleUploadData.setDataHandler(dh);
@@ -65,7 +65,7 @@ public class AdminServiceModuleAdminService {
     }
 
     public void deleteModule(String sessionCookie, String moduleId) throws ModuleAdminServiceModuleMgtExceptionException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, moduleAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, moduleAdminServiceStub);
         log.info(moduleAdminServiceStub.removeModule(moduleId));
 
     }

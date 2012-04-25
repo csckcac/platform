@@ -56,7 +56,7 @@ public class AdminServiceResourceAdmin {
                                String description, DataHandler dh)
             throws ResourceAdminServiceExceptionException, RemoteException {
 
-        new AuthenticateStub().authenticateStub(sessionCookie, resourceAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         log.debug("Destination Path :" + destinationPath);
         log.debug("Media Type :" + mediaType);
 
@@ -67,7 +67,7 @@ public class AdminServiceResourceAdmin {
     public ResourceData[] getResource(String sessionCookie, String destinationPath)
             throws ResourceAdminServiceExceptionException, RemoteException {
         ResourceData[] rs;
-        new AuthenticateStub().authenticateStub(sessionCookie, resourceAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         log.debug("Destination Path :" + destinationPath);
 
         rs = resourceAdminServiceStub.getResourceData(new String[]{destinationPath});
@@ -78,7 +78,7 @@ public class AdminServiceResourceAdmin {
     public CollectionContentBean getCollectionContent(String sessionCookie, String destinationPath)
             throws RemoteException, ResourceAdminServiceExceptionException {
         CollectionContentBean collectionContentBean;
-        new AuthenticateStub().authenticateStub(sessionCookie, resourceAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
 
         try {
             collectionContentBean = resourceAdminServiceStub.getCollectionContent(destinationPath);
@@ -100,7 +100,7 @@ public class AdminServiceResourceAdmin {
     public boolean deleteResource(String sessionCookie, String destinationPath)
             throws ResourceAdminServiceExceptionException, RemoteException {
 
-        new AuthenticateStub().authenticateStub(sessionCookie, resourceAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         log.debug("Destination Path :" + destinationPath);
         return resourceAdminServiceStub.delete(destinationPath);
 
@@ -108,7 +108,7 @@ public class AdminServiceResourceAdmin {
 
     public void addWSDL(String sessionCookie, String description, DataHandler dh) {
         String fileName;
-        new AuthenticateStub().authenticateStub(sessionCookie, resourceAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
         log.debug(fileName);
         try {
@@ -127,7 +127,7 @@ public class AdminServiceResourceAdmin {
     public void addWSDL(String sessionCookie, String resourceName, String description,
                         String fetchURL) {
 
-        new AuthenticateStub().authenticateStub(sessionCookie, resourceAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         log.debug("fetchUrl :" + fetchURL);
         try {
             Assert.assertTrue("Importing WSDL from URL failed", resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_WSDL, description, fetchURL, null));
@@ -144,7 +144,7 @@ public class AdminServiceResourceAdmin {
 
     public void addSchema(String sessionCookie, String description, DataHandler dh) {
         String fileName;
-        new AuthenticateStub().authenticateStub(sessionCookie, resourceAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
         log.debug("File Name: " + fileName);
         try {
@@ -164,7 +164,7 @@ public class AdminServiceResourceAdmin {
     public void addSchema(String sessionCookie, String resourceName, String description,
                           String fetchURL) {
 
-        new AuthenticateStub().authenticateStub(sessionCookie, resourceAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         log.debug("fetchURL :" + fetchURL);
         try {
             Assert.assertTrue("Importing Schema from URL failed", resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_SCHEMA, description, fetchURL, null));
@@ -181,7 +181,7 @@ public class AdminServiceResourceAdmin {
 
     public void addPolicy(String sessionCookie, String description, DataHandler dh) {
         String fileName;
-        new AuthenticateStub().authenticateStub(sessionCookie, resourceAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
         log.debug("file name :" + fileName);
         try {
@@ -200,7 +200,7 @@ public class AdminServiceResourceAdmin {
     public void addPolicy(String sessionCookie, String resourceName, String description,
                           String fetchURL) {
 
-        new AuthenticateStub().authenticateStub(sessionCookie, resourceAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         log.debug("fetchURL :" + fetchURL);
         try {
             Assert.assertTrue("Importing Policy failed", resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_POLICY, description, fetchURL, null));
@@ -218,7 +218,7 @@ public class AdminServiceResourceAdmin {
 
     public void uploadArtifact(String sessionCookie, String description, DataHandler dh) {
         String fileName;
-        new AuthenticateStub().authenticateStub(sessionCookie, resourceAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
         log.debug("file name :" + fileName);
         try {
@@ -236,7 +236,7 @@ public class AdminServiceResourceAdmin {
 
     public void addCollection(String sessionCookie, String parentPath, String collectionName,
                               String mediaType, String description) {
-        new AuthenticateStub().authenticateStub(sessionCookie, resourceAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         log.debug("collectionName :" + collectionName);
         log.debug("parentPath :" + parentPath);
         try {
@@ -256,7 +256,7 @@ public class AdminServiceResourceAdmin {
     public void addSymbolink(String sessionCookie, String parentPath, String name,
                              String targetPath)
             throws RemoteException, ResourceAdminServiceExceptionException {
-        new AuthenticateStub().authenticateStub(sessionCookie, resourceAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         log.debug("symbolink name " + name);
 
         try {
@@ -280,7 +280,7 @@ public class AdminServiceResourceAdmin {
                                 String mediaType, String description, String content)
             throws RemoteException, ResourceAdminServiceExceptionException {
 
-        new AuthenticateStub().authenticateStub(sessionCookie, resourceAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         log.debug("text resource name : " + fileName);
 
         try {
@@ -304,7 +304,7 @@ public class AdminServiceResourceAdmin {
                                       String roleToAuthorize,
                                       String actionToAuthorize, String permissionType)
             throws AxisFault {
-        new AuthenticateStub().authenticateStub(sessionCookie, resourceAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         try {
             resourceAdminServiceStub.addRolePermission(pathToAuthorize, roleToAuthorize, actionToAuthorize, permissionType);
         } catch (RemoteException e) {

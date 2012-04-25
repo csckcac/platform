@@ -45,7 +45,7 @@ public class AdminServiceGovernanceService {
     }
 
     public void addService(String sessionCookie, DataHandler dh) throws RegistryExceptionException, IOException, XMLStreamException {
-        new AuthenticateStub().authenticateStub(sessionCookie, addServicesServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, addServicesServiceStub);
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(dh.getInputStream());
         //create the builder
         StAXOMBuilder builder = new StAXOMBuilder(parser);

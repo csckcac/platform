@@ -44,10 +44,9 @@ public class AdminServiceBpelPackageManager {
 
     private BPELPackageManagementServiceStub setPackageManagementStub() throws AxisFault {
         final String packageMgtServiceUrl = ServiceEndPoint + "BPELPackageManagementService";
-        AuthenticateStub authenticateStub = new AuthenticateStub();
         BPELPackageManagementServiceStub packageManagementServiceStub = null;
         packageManagementServiceStub = new BPELPackageManagementServiceStub(packageMgtServiceUrl);
-        authenticateStub.authenticateStub(SessionCookie, packageManagementServiceStub);
+        AuthenticateStub.authenticateStub(SessionCookie, packageManagementServiceStub);
         return packageManagementServiceStub;
     }
 

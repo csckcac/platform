@@ -55,7 +55,7 @@ public class DataSourceAdminService {
     public void addDataSourceInformation(String sessionCookie, String dataSourceName,
                                          DataSourceInformation dataSourceInfo)
             throws DataSourceManagementException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, dataSourceAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, dataSourceAdminStub);
         OMElement dataSourceInfoElement;
 
         Properties properties = DataSourceInformationSerializer.serialize(dataSourceInfo);
@@ -71,7 +71,7 @@ public class DataSourceAdminService {
     public void editCarbonDataSources(String sessionCookie, String name,
                                       DataSourceInformation dataSourceInformation)
             throws DataSourceManagementException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, dataSourceAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, dataSourceAdminStub);
 
         Properties properties = DataSourceInformationSerializer.serialize(dataSourceInformation);
         if (properties.isEmpty()) {
@@ -85,7 +85,7 @@ public class DataSourceAdminService {
 
     public DataSourceInformation getCarbonDataSources(String sessionCookie, String name)
             throws DataSourceManagementException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, dataSourceAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, dataSourceAdminStub);
         OMElement dataSource;
         DataSourceInformation dataSourceInformation;
 
@@ -98,7 +98,7 @@ public class DataSourceAdminService {
 
     public void removeCarbonDataSources(String sessionCookie, String name)
             throws DataSourceManagementException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, dataSourceAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, dataSourceAdminStub);
 
         dataSourceAdminStub.removeDataSourceInformation(name);
 

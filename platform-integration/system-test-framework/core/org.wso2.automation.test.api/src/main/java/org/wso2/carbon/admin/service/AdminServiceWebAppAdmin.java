@@ -64,7 +64,7 @@ public class AdminServiceWebAppAdmin {
         webApp = new WebappUploadData();
         webApp.setFileName(fileName);
         webApp.setDataHandler(dh);
-        new AuthenticateStub().authenticateStub(sessionCookie, webappAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, webappAdminStub);
         try {
             assertTrue(webappAdminStub.uploadWebapp(new WebappUploadData[]{webApp})
                     , "webapp upload unsuccessful");
@@ -75,7 +75,7 @@ public class AdminServiceWebAppAdmin {
     }
 
     public void deleteWebAppFile(String sessionCookie, String fileName) throws RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, webappAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, webappAdminStub);
         try {
             webappAdminStub.deleteStartedWebapps(new String[]{fileName});
         } catch (RemoteException e) {
@@ -85,7 +85,7 @@ public class AdminServiceWebAppAdmin {
     }
 
     public void deleteStoppedWebapps(String sessionCookie, String fileName) throws RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, webappAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, webappAdminStub);
 
         try {
             webappAdminStub.deleteStoppedWebapps(new String[]{fileName});
@@ -96,7 +96,7 @@ public class AdminServiceWebAppAdmin {
     }
 
     public void stopWebapps(String sessionCookie, String fileName) throws RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, webappAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, webappAdminStub);
         try {
             webappAdminStub.stopAllWebapps();
             WebappMetadata webappMetadata = webappAdminStub.getStoppedWebapp(fileName);
@@ -107,7 +107,7 @@ public class AdminServiceWebAppAdmin {
     }
 
     public boolean stopWebApp(String sessionCookie, String fileName) throws RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, webappAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, webappAdminStub);
         try {
             webappAdminStub.stopWebapps(new String[]{fileName});
             WebappMetadata webappMetadata = webappAdminStub.getStoppedWebapp(fileName);

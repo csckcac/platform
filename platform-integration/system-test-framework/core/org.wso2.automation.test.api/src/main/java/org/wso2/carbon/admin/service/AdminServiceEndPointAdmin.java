@@ -47,7 +47,7 @@ public class AdminServiceEndPointAdmin {
 
 
     public void addEndPoint(String sessionCookie, DataHandler dh) throws EndpointAdminEndpointAdminException, IOException, XMLStreamException {
-        new AuthenticateStub().authenticateStub(sessionCookie, endpointAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, endpointAdminStub);
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(dh.getInputStream());
         //create the builder
         StAXOMBuilder builder = new StAXOMBuilder(parser);
@@ -57,17 +57,17 @@ public class AdminServiceEndPointAdmin {
     }
 
     public void addEndPoint(String sessionCookie,   OMElement endPointElem ) throws EndpointAdminEndpointAdminException, IOException, XMLStreamException {
-        new AuthenticateStub().authenticateStub(sessionCookie, endpointAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, endpointAdminStub);
         endpointAdminStub.addEndpoint(endPointElem.toString());
     }
 
     public void deleteEndPoint(String sessionCookie, String endPointName) throws EndpointAdminEndpointAdminException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, endpointAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, endpointAdminStub);
         endpointAdminStub.deleteEndpoint(endPointName);
     }
 
     public String getEndPoint(String sessionCookie, String endPointName) throws EndpointAdminEndpointAdminException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, endpointAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, endpointAdminStub);
         return endpointAdminStub.getEndpoint(endPointName);
     }
 }

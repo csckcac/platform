@@ -45,7 +45,7 @@ public class AdminServiceTracerAdmin {
         String serviceURL = backendServerURL + serviceName;
         try {
             tracerAdminStub = new TracerAdminStub(serviceURL);
-            new AuthenticateStub().authenticateStub(sessionCookie, tracerAdminStub);
+            AuthenticateStub.authenticateStub(sessionCookie, tracerAdminStub);
         } catch (AxisFault axisFault) {
             log.error("TracerAdminStub initialization fail: " + axisFault.getMessage());
             Assert.fail("TracerAdminStub initialization fail: " + axisFault.getMessage());

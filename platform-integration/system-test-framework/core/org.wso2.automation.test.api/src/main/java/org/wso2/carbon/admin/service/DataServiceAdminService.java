@@ -42,7 +42,7 @@ public class DataServiceAdminService {
     }
 
     public String[] getCarbonDataSources(String sessionCookie) throws RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, dataServiceAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, dataServiceAdminStub);
         String[] dataSourceList;
 
         dataSourceList = dataServiceAdminStub.getCarbonDataSourceNames();
@@ -53,8 +53,7 @@ public class DataServiceAdminService {
     public void editDataService(String sessionCookie, String serviceName, String serviceHierachy,
                                 String dataServiceContent)
             throws RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, dataServiceAdminStub);
-
+        AuthenticateStub.authenticateStub(sessionCookie, dataServiceAdminStub);
 
         dataServiceAdminStub.saveDataService(serviceName, serviceHierachy, dataServiceContent);
 
@@ -63,7 +62,7 @@ public class DataServiceAdminService {
 
     public String getDataServiceContent(String sessionCookie, String serviceName)
             throws RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, dataServiceAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, dataServiceAdminStub);
         String content;
 
         content = dataServiceAdminStub.getDataServiceContentAsString(serviceName);

@@ -40,7 +40,7 @@ public class AdminServiceStatistic {
         String endPoint = backendServerURL + serviceName;
         try {
             statisticsAdminStub = new StatisticsAdminStub(endPoint);
-            new AuthenticateStub().authenticateStub(sessionCookie, statisticsAdminStub);
+            AuthenticateStub.authenticateStub(sessionCookie, statisticsAdminStub);
         } catch (AxisFault axisFault) {
             log.error("Statistics Admin initialization fail: " + axisFault.getMessage());
             Assert.fail("Statistics Admin initialization fail: " + axisFault.getMessage());

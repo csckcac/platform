@@ -49,10 +49,9 @@ public class AdminServiceLocalEntriesAdmin {
 
     private LocalEntryAdminServiceStub setPackageManagementStub() throws AxisFault {
         final String localEntriesServiceUrl = backendUrl + "LocalEntryAdmin";
-        AuthenticateStub authenticateStub = new AuthenticateStub();
         LocalEntryAdminServiceStub localEntryAdminService = null;
         localEntryAdminService = new LocalEntryAdminServiceStub(localEntriesServiceUrl);
-        authenticateStub.authenticateStub(SessionCookie, localEntryAdminService);
+        AuthenticateStub.authenticateStub(SessionCookie, localEntryAdminService);
         return localEntryAdminService;
     }
 

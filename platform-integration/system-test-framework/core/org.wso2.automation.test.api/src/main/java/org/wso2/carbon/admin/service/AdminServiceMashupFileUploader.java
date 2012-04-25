@@ -44,7 +44,7 @@ public class AdminServiceMashupFileUploader {
 
         JSServiceUploadData jSSFile;
 
-        new AuthenticateStub().authenticateStub(sessionCookie, jSServiceUploaderStub);
+        AuthenticateStub.authenticateStub(sessionCookie, jSServiceUploaderStub);
 
         jSSFile = new JSServiceUploadData();
         jSSFile.setDataHandler(dh);

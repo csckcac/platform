@@ -46,10 +46,9 @@ public class AdminServiceMessageProcessor {
 
     private MessageProcessorAdminServiceStub setMessageStroeStubStub() throws AxisFault {
         final String messageProcessorServiceUrl = backendUrl + "MessageProcessorAdminService";
-        AuthenticateStub authenticateStub = new AuthenticateStub();
         MessageProcessorAdminServiceStub messageProcessor = null;
         messageProcessor = new MessageProcessorAdminServiceStub(messageProcessorServiceUrl);
-        authenticateStub.authenticateStub(SessionCookie, messageProcessor);
+        AuthenticateStub.authenticateStub(SessionCookie, messageProcessor);
         return messageProcessor;
     }
 

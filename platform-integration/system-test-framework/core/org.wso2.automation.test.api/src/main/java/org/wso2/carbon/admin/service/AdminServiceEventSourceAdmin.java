@@ -42,10 +42,9 @@ public class AdminServiceEventSourceAdmin {
 
     private EventSourceAdminServiceStub setPackageManagementStub() throws AxisFault {
         final String eventSourceServiceUrl = ServiceEndPoint + "EventSourceAdminService";
-        AuthenticateStub authenticateStub = new AuthenticateStub();
         EventSourceAdminServiceStub eventSourceAdminService = null;
         eventSourceAdminService = new EventSourceAdminServiceStub(eventSourceServiceUrl);
-        authenticateStub.authenticateStub(SessionCookie, eventSourceAdminService);
+        AuthenticateStub.authenticateStub(SessionCookie, eventSourceAdminService);
         return eventSourceAdminService;
     }
 

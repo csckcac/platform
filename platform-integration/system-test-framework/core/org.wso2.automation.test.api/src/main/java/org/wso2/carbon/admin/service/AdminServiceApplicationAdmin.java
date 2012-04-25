@@ -40,7 +40,7 @@ public class AdminServiceApplicationAdmin {
 
 
     public void deleteApplication(String sessionCookie, String appName) throws ApplicationAdminExceptionException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, applicationAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, applicationAdminStub);
 
         applicationAdminStub.deleteApplication(appName);
         log.info("Application Deleted");
@@ -51,7 +51,7 @@ public class AdminServiceApplicationAdmin {
 
         String[] appList;
 
-        new AuthenticateStub().authenticateStub(sessionCookie, applicationAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, applicationAdminStub);
         appList = applicationAdminStub.listAllApplications();
         return appList;
     }
@@ -60,14 +60,14 @@ public class AdminServiceApplicationAdmin {
 
         ApplicationMetadata appList;
 
-        new AuthenticateStub().authenticateStub(sessionCookie, applicationAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, applicationAdminStub);
         appList = applicationAdminStub.getAppData(appName);
         return appList;
     }
 
     public String[] deleteMatchingApplication(String sessionCookie, String appName) throws ApplicationAdminExceptionException, RemoteException {
         String[] appList;
-        new AuthenticateStub().authenticateStub(sessionCookie, applicationAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, applicationAdminStub);
         appList = applicationAdminStub.listAllApplications();
 
         for (String anAppList : appList) {

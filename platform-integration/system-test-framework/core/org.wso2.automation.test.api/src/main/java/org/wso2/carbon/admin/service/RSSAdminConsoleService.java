@@ -56,7 +56,7 @@ public class RSSAdminConsoleService {
 
     public void createDatabase(String sessionCookie, String databaseName, int rssInstanceId)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, consoleAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         log.debug("Database Name :" + databaseName);
         log.debug("RSSInstanceId :" + rssInstanceId);
 
@@ -68,7 +68,7 @@ public class RSSAdminConsoleService {
 
     public void dropDatabase(String sessionCookie, int databaseId)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, consoleAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         log.debug("Database InstanceId :" + databaseId);
         consoleAdminStub.dropDatabase(databaseId);
         log.info("Database Dropped");
@@ -78,7 +78,7 @@ public class RSSAdminConsoleService {
 
     public DatabaseInstanceEntry[] getDatabaseInstanceList(String sessionCookie)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, consoleAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         DatabaseInstanceEntry[] databaseList;
         databaseList = consoleAdminStub.getDatabaseInstanceList();
         log.debug("Database Instance list: " + databaseList);
@@ -111,7 +111,7 @@ public class RSSAdminConsoleService {
         privilegeGroup.setPrivGroupName(privilegeGroupName);
         privilegeGroup.setPrivs(getAllDatabasePermission());
 
-        new AuthenticateStub().authenticateStub(sessionCookie, consoleAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         log.debug("Privilege Group Name: " + privilegeGroupName);
 
         consoleAdminStub.createPrivilegeGroup(privilegeGroup);
@@ -142,7 +142,7 @@ public class RSSAdminConsoleService {
 
     public void deletePrivilegeGroup(String sessionCookie, int privilegeGroupId)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, consoleAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         log.debug("privilege group id :" + privilegeGroupId);
 
         consoleAdminStub.removePrivilegeGroup(privilegeGroupId);
@@ -152,7 +152,7 @@ public class RSSAdminConsoleService {
 
     public PrivilegeGroup[] getUserPrivilegeGroups(String sessionCookie)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, consoleAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         PrivilegeGroup[] privilegeGroup;
         privilegeGroup = consoleAdminStub.getPrivilegeGroups();
 
@@ -183,7 +183,7 @@ public class RSSAdminConsoleService {
     public DatabaseInstanceEntry getDatabaseInstanceById(String sessionCookie, int rssInstanceId,
                                                          int databaseInstanceId)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, consoleAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         DatabaseInstanceEntry databaseInstanceEntry;
         databaseInstanceEntry = consoleAdminStub.getDatabaseInstanceById(databaseInstanceId);
         return databaseInstanceEntry;
@@ -191,7 +191,7 @@ public class RSSAdminConsoleService {
 
     public RSSInstanceEntry[] getRSSInstanceList(String sessionCookie)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, consoleAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         RSSInstanceEntry[] rssInstance;
 
         rssInstance = consoleAdminStub.getRSSInstanceList();
@@ -202,7 +202,7 @@ public class RSSAdminConsoleService {
 
     public RSSInstance getRSSInstanceById(String sessionCookie, int rssInstanceId)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, consoleAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         RSSInstance rssInstance;
 
         rssInstance = consoleAdminStub.getRSSInstanceDataById(rssInstanceId);
@@ -213,7 +213,7 @@ public class RSSAdminConsoleService {
 
     public RSSInstanceEntry getRoundRobinAssignedRSSInstance(String sessionCookie)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, consoleAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         RSSInstanceEntry rssInstance;
 
         rssInstance = consoleAdminStub.getRoundRobinAssignedRSSInstance();
@@ -225,7 +225,7 @@ public class RSSAdminConsoleService {
     public void createUser(String sessionCookie, String userName, String password,
                             int databaseInstanceId, int privilegeGroupId)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, consoleAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         DatabaseUser user = new DatabaseUser();
         user.setUsername(userName);
         user.setPassword(password);
@@ -243,7 +243,7 @@ public class RSSAdminConsoleService {
 
     public void deleteUser(String sessionCookie, int userId, int databaseInstanceId)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, consoleAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         log.debug("UserId " + userId);
 
         consoleAdminStub.dropUser(userId, databaseInstanceId);
@@ -255,7 +255,7 @@ public class RSSAdminConsoleService {
     public DatabaseUserEntry[] getUsersByDatabaseInstanceId(String sessionCookie,
                                                             int databaseInstanceId)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, consoleAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         DatabaseUserEntry[] userList;
         log.debug("databaseInstanceId " + databaseInstanceId);
 
@@ -268,7 +268,7 @@ public class RSSAdminConsoleService {
     public String createCarbonDSFromDatabaseUserEntry(String sessionCookie, int databaseInstanceId,
                                                       int dbUserId)
             throws RSSAdminRSSDAOExceptionException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, consoleAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, consoleAdminStub);
         String carbonDataSource;
         log.debug("databaseInstanceId " + databaseInstanceId);
 

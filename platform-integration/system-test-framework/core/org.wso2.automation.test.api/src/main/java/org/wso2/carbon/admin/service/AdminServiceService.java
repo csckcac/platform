@@ -44,7 +44,7 @@ public class AdminServiceService {
     }
 
     public void deleteService(String sessionCookie, String[] serviceGroup) throws RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, serviceAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, serviceAdminStub);
 
         serviceAdminStub.deleteServiceGroups(serviceGroup);
 
@@ -52,7 +52,7 @@ public class AdminServiceService {
 
     public void deleteFaultyService(String sessionCookie, String artifactPath)
             throws RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, serviceAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, serviceAdminStub);
 
         serviceAdminStub.deleteFaultyServiceGroup(artifactPath);
 
@@ -60,7 +60,7 @@ public class AdminServiceService {
     }
 
     public void deleteAllNonAdminServiceGroups(String sessionCookie) throws RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, serviceAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, serviceAdminStub);
 
         serviceAdminStub.deleteAllNonAdminServiceGroups();
 
@@ -69,7 +69,7 @@ public class AdminServiceService {
 
     public ServiceMetaDataWrapper listServices(String sessionCookie, String serviceName)
             throws RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, serviceAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, serviceAdminStub);
         ServiceMetaDataWrapper serviceMetaDataWrapper;
 
         serviceMetaDataWrapper = serviceAdminStub.listServices("ALL", serviceName, 0);
@@ -79,7 +79,7 @@ public class AdminServiceService {
 
 
     public FaultyServicesWrapper listFaultyServices(String sessionCookie) throws RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, serviceAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, serviceAdminStub);
         FaultyServicesWrapper faultyServicesWrapper;
 
         faultyServicesWrapper = serviceAdminStub.getFaultyServiceArchives(0);
@@ -109,7 +109,7 @@ public class AdminServiceService {
 
     public void deleteMatchingServiceByGroup(String sessionCookie, String serviceFileName)
             throws RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, serviceAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, serviceAdminStub);
         String matchingServiceName = getMatchingServiceName(sessionCookie, serviceFileName);
         if (matchingServiceName != null) {
             String serviceGroup[] = {getServiceGroup(sessionCookie, matchingServiceName)};
@@ -124,7 +124,7 @@ public class AdminServiceService {
 
     public String deleteAllServicesByType(String sessionCookie, String type)
             throws RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, serviceAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, serviceAdminStub);
         ServiceMetaDataWrapper serviceMetaDataWrapper;
 
         serviceMetaDataWrapper = serviceAdminStub.listServices("ALL", null, 0);
@@ -151,7 +151,7 @@ public class AdminServiceService {
     public String getMatchingServiceName(String sessionCookie, String serviceFileName)
             throws RemoteException {
 
-        new AuthenticateStub().authenticateStub(sessionCookie, serviceAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, serviceAdminStub);
         ServiceMetaDataWrapper serviceMetaDataWrapper;
         serviceMetaDataWrapper = serviceAdminStub.listServices("ALL", serviceFileName, 0);
 
@@ -234,7 +234,7 @@ public class AdminServiceService {
 
     public ServiceMetaData getServicesData(String sessionCookie, String serviceName)
             throws ServiceAdminException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, serviceAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, serviceAdminStub);
 
         return serviceAdminStub.getServiceData(serviceName);
 
@@ -242,7 +242,7 @@ public class AdminServiceService {
 
     public void startService(String sessionCookie, String serviceName)
             throws ServiceAdminException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, serviceAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, serviceAdminStub);
 
         serviceAdminStub.startService(serviceName);
         log.info("Service Started");
@@ -251,7 +251,7 @@ public class AdminServiceService {
 
     public void stopService(String sessionCookie, String serviceName)
             throws ServiceAdminException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, serviceAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, serviceAdminStub);
 
         serviceAdminStub.stopService(serviceName);
         log.info("Service Stopped");

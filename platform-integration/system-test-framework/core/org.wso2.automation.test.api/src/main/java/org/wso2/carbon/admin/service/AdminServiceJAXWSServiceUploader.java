@@ -43,7 +43,7 @@ public class AdminServiceJAXWSServiceUploader {
 
         JAXServiceData jAXServiceData;
 
-        new AuthenticateStub().authenticateStub(sessionCookie, jAXWSServiceUploaderStub);
+        AuthenticateStub.authenticateStub(sessionCookie, jAXWSServiceUploaderStub);
 
         jAXServiceData = new JAXServiceData();
         jAXServiceData.setFileName(fileName);

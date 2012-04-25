@@ -48,7 +48,7 @@ public class AdminServiceSequenceAdmin {
 
     public void addSequence(String sessionCookie, DataHandler dh)
             throws SequenceEditorException, IOException, XMLStreamException {
-        new AuthenticateStub().authenticateStub(sessionCookie, sequenceAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, sequenceAdminServiceStub);
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(dh.getInputStream());
         //create the builder
         StAXOMBuilder builder = new StAXOMBuilder(parser);
@@ -58,28 +58,28 @@ public class AdminServiceSequenceAdmin {
 
     public void addDynamicSequence(String sessionCookie, String key, OMElement omElement)
             throws SequenceEditorException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, sequenceAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, sequenceAdminServiceStub);
         sequenceAdminServiceStub.addDynamicSequence(key, omElement);
 
     }
 
     public OMElement getSequence(String sessionCookie, String sequenceName)
             throws SequenceEditorException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, sequenceAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, sequenceAdminServiceStub);
         return sequenceAdminServiceStub.getSequence(sequenceName);
 
     }
 
     public void deleteSequence(String sessionCookie, String sequenceName)
             throws SequenceEditorException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, sequenceAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, sequenceAdminServiceStub);
         sequenceAdminServiceStub.deleteSequence(sequenceName);
 
     }
 
     public void updateDynamicSequence(String sessionCookies, String key, OMElement OmSequence)
             throws SequenceEditorException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookies, sequenceAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookies, sequenceAdminServiceStub);
         sequenceAdminServiceStub.updateDynamicSequence(key, OmSequence);
     }
 }

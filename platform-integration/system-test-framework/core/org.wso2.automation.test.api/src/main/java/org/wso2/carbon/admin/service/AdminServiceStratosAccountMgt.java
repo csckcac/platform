@@ -48,7 +48,7 @@ public class AdminServiceStratosAccountMgt {
 
     public void deactivateTenant(String sessionCookie)
             throws RemoteException, DeactivateExceptionException {
-        new AuthenticateStub().authenticateStub(sessionCookie, accountMgtServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, accountMgtServiceStub);
         try {
             accountMgtServiceStub.deactivate();
         } catch (RemoteException e) {
@@ -62,7 +62,7 @@ public class AdminServiceStratosAccountMgt {
 
     public void updateTenantContact(String sessionCookie, String email)
             throws RemoteException, UpdateContactExceptionException {
-        new AuthenticateStub().authenticateStub(sessionCookie, accountMgtServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, accountMgtServiceStub);
         try {
             accountMgtServiceStub.updateContact(email);
         } catch (RemoteException e) {
@@ -76,7 +76,7 @@ public class AdminServiceStratosAccountMgt {
 
     public void updateTenantFullName(String sessionCookie, AccountInfoBean accountInfoBean)
             throws RemoteException, UpdateFullnameExceptionException {
-        new AuthenticateStub().authenticateStub(sessionCookie, accountMgtServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, accountMgtServiceStub);
         try {
             accountMgtServiceStub.updateFullname(accountInfoBean);
         } catch (RemoteException e) {
@@ -90,7 +90,7 @@ public class AdminServiceStratosAccountMgt {
 
     public String getTenantcontact(String sessionCookie)
             throws RemoteException, GetContactExceptionException {
-        new AuthenticateStub().authenticateStub(sessionCookie, accountMgtServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, accountMgtServiceStub);
         String contactInfo;
         try {
             contactInfo = accountMgtServiceStub.getContact();
@@ -107,7 +107,7 @@ public class AdminServiceStratosAccountMgt {
 
     public AccountInfoBean getTenantFullName(String sessionCookie)
             throws RemoteException, GetFullnameExceptionException {
-        new AuthenticateStub().authenticateStub(sessionCookie, accountMgtServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, accountMgtServiceStub);
         AccountInfoBean accountInfoBean;
         try {
             accountInfoBean = accountMgtServiceStub.getFullname();

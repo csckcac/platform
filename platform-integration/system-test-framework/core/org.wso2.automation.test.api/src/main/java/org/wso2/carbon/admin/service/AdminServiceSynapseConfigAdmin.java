@@ -54,7 +54,7 @@ public class AdminServiceSynapseConfigAdmin {
         String endPoint = backEndUrl + serviceName;
         log.debug("admin service url = " + endPoint);
         configServiceAdminStub = new ConfigServiceAdminStub(endPoint);
-        new AuthenticateStub().authenticateStub(sessionCookie, configServiceAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, configServiceAdminStub);
     }
 
     /**

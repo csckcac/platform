@@ -47,10 +47,9 @@ public class AdminServiceBpelProcessManager {
 
     private ProcessManagementServiceStub setProcessManagementStub() throws AxisFault {
         final String serviceMgtServiceUrl = ServiceEndPoint + "ProcessManagementService";
-        AuthenticateStub authenticateStub = new AuthenticateStub();
         ProcessManagementServiceStub processManagementServiceStub = null;
         processManagementServiceStub = new ProcessManagementServiceStub(serviceMgtServiceUrl);
-        authenticateStub.authenticateStub(SessionCookie, processManagementServiceStub);
+        AuthenticateStub.authenticateStub(SessionCookie, processManagementServiceStub);
         return processManagementServiceStub;
     }
 

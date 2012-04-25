@@ -57,10 +57,10 @@ public class AdminServiceBpelInstanceManager {
 
     private InstanceManagementServiceStub setInstanceManagementStub() throws AxisFault {
         final String packageMgtServiceUrl = ServiceEndPoint + "InstanceManagementService";
-        AuthenticateStub authenticateStub = new AuthenticateStub();
+
         InstanceManagementServiceStub instanceManagementStub = null;
         instanceManagementStub = new InstanceManagementServiceStub(packageMgtServiceUrl);
-        authenticateStub.authenticateStub(SessionCookie, instanceManagementStub);
+        AuthenticateStub.authenticateStub(SessionCookie, instanceManagementStub);
         return instanceManagementStub;
     }
 

@@ -48,10 +48,9 @@ public class AdminServiceConfigServiceAdmin {
 
     private ConfigServiceAdminStub setMessageStroeStubStub() throws AxisFault {
         final String messageStoreServiceUrl = backendUrl + "MessageStoreAdminService";
-        AuthenticateStub authenticateStub = new AuthenticateStub();
         ConfigServiceAdminStub configeAdminService = null;
         configeAdminService = new ConfigServiceAdminStub(messageStoreServiceUrl);
-        authenticateStub.authenticateStub(SessionCookie, configeAdminService);
+        AuthenticateStub.authenticateStub(SessionCookie, configeAdminService);
         return configeAdminService;
     }
 

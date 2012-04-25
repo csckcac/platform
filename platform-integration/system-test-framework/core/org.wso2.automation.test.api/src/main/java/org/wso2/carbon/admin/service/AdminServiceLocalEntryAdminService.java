@@ -47,7 +47,7 @@ public class AdminServiceLocalEntryAdminService {
 
 
     public void addLocalEntry(String sessionCookie, DataHandler dh) throws LocalEntryAdminException, IOException, XMLStreamException {
-        new AuthenticateStub().authenticateStub(sessionCookie, localEntryAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, localEntryAdminServiceStub);
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(dh.getInputStream());
         //create the builder
         StAXOMBuilder builder = new StAXOMBuilder(parser);
@@ -57,13 +57,13 @@ public class AdminServiceLocalEntryAdminService {
     }
 
     public void deleteLocalEntry(String sessionCookie, String localEntryKey) throws LocalEntryAdminException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, localEntryAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, localEntryAdminServiceStub);
         localEntryAdminServiceStub.deleteEntry(localEntryKey);
 
     }
 
     public OMElement getLocalEntry(String sessionCookie, String localEntryKey) throws LocalEntryAdminException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, localEntryAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, localEntryAdminServiceStub);
         return (OMElement) localEntryAdminServiceStub.getEntry(localEntryKey);
 
     }

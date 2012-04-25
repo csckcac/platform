@@ -41,7 +41,7 @@ public class AdminServiceSynapseArtifactUploader {
 
 
     public void uploadFile(String sessionCookie, String fileName, DataHandler dh) throws RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, synapseArtifactUploaderAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, synapseArtifactUploaderAdminStub);
 
         synapseArtifactUploaderAdminStub.uploadArtifact(fileName, dh);
         log.info("Artifact uploaded");
@@ -49,7 +49,7 @@ public class AdminServiceSynapseArtifactUploader {
     }
 
     public void deleteFile(String sessionCookie, String fileName) throws RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, synapseArtifactUploaderAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, synapseArtifactUploaderAdminStub);
 
         synapseArtifactUploaderAdminStub.removeArtifact(fileName);
         log.info("Artifact Deleted");

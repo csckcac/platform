@@ -45,7 +45,7 @@ public class AdminServiceDataServiceFileUploader {
 
     public boolean uploadDataServiceFile(String sessionCookie, String fileName, DataHandler dh)
             throws ExceptionException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, dataServiceFileUploaderStub);
+        AuthenticateStub.authenticateStub(sessionCookie, dataServiceFileUploaderStub);
         log.debug("path to file :" + dh.getName());
         String response = dataServiceFileUploaderStub.uploadService(fileName, "", dh);
         if ("successful".equalsIgnoreCase(response)) {

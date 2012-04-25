@@ -52,9 +52,8 @@ public class AdminServiceBpelUploader {
         AdminServiceBpelPackageManager manager = new AdminServiceBpelPackageManager(ServiceEndPoint, sessionCookie);
 
         boolean success = false;
-        AuthenticateStub authenticateStub = new AuthenticateStub();
         BPELUploaderStub bpelUploaderStub = new BPELUploaderStub(uploaderServiceURL);
-        authenticateStub.authenticateStub(sessionCookie, bpelUploaderStub);
+        AuthenticateStub.authenticateStub(sessionCookie, bpelUploaderStub);
         deployPackage(packageName, bpelUploaderStub);
         Thread.sleep(10000);
         success = manager.checkProcessDeployment(packageName);

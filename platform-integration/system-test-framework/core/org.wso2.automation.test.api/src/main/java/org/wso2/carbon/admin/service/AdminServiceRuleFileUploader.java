@@ -45,7 +45,7 @@ public class AdminServiceRuleFileUploader {
     }
 
     public void uploadRuleFile(String sessionCookie, String fileName, DataHandler dh) throws ExceptionException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, ruleServiceFileUploadAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, ruleServiceFileUploadAdminStub);
 
         ruleServiceFileUploadAdminStub.uploadService(fileName, dh);
         log.info("Artifact uploaded");

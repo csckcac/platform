@@ -40,25 +40,25 @@ public class AdminServiceCarbonServerAdmin {
     }
 
     public void restartGracefully(String sessionCookie) throws Exception, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, serverAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, serverAdminStub);
         serverAdminStub.restartGracefully();
 
     }
 
     public void restart(String sessionCookie) throws Exception, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, serverAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, serverAdminStub);
         serverAdminStub.restart();
 
     }
 
     public void shutdown(String sessionCookie) throws Exception, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, serverAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, serverAdminStub);
         serverAdminStub.shutdown();
 
     }
 
     public void shutdownGracefully(String sessionCookie) throws Exception, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, serverAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, serverAdminStub);
         serverAdminStub.shutdownGracefully();
 
     }

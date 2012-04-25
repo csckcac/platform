@@ -51,7 +51,7 @@ public class AdminServiceAARServiceUploader {
     public void uploadAARFile(String sessionCookie, String fileName, String filePath,
                               String serviceHierarchy) throws ExceptionException, RemoteException {
         AARServiceData aarServiceData;
-        new AuthenticateStub().authenticateStub(sessionCookie, serviceUploaderStub);
+        AuthenticateStub.authenticateStub(sessionCookie, serviceUploaderStub);
         aarServiceData = new AARServiceData();
         aarServiceData.setFileName(fileName);
         aarServiceData.setDataHandler(createDataHandler(filePath));

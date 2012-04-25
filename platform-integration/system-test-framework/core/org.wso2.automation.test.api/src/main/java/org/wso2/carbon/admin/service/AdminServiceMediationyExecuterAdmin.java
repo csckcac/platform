@@ -45,10 +45,9 @@ public class AdminServiceMediationyExecuterAdmin {
 
     private PriorityMediationAdminStub setPriorityExecutorStub() throws AxisFault {
         final String priorityAdminServiceUrl = backendUrl + "PriorityMediationAdmin";
-        AuthenticateStub authenticateStub = new AuthenticateStub();
         PriorityMediationAdminStub priorityMediator = null;
         priorityMediator = new PriorityMediationAdminStub(priorityAdminServiceUrl);
-        authenticateStub.authenticateStub(SessionCookie, priorityMediator);
+        AuthenticateStub.authenticateStub(SessionCookie, priorityMediator);
         return priorityMediator;
     }
 

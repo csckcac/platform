@@ -40,7 +40,7 @@ public class AdminServiceLogViewer {
         String endPoint = backEndUrl + serviceName;
         log.debug("admin service url = " + endPoint);
         logViewerStub = new LogViewerStub(endPoint);
-        new AuthenticateStub().authenticateStub(sessionCookie, logViewerStub);
+        AuthenticateStub.authenticateStub(sessionCookie, logViewerStub);
     }
 
     /**

@@ -46,7 +46,7 @@ public class AdminServiceSecurity {
                               String privateStore)
             throws SecurityAdminServiceSecurityConfigExceptionException, RemoteException {
 
-        new AuthenticateStub().authenticateStub(sessionCookie, securityAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, securityAdminServiceStub);
         ApplySecurity applySecurity;
         applySecurity = new ApplySecurity();
         applySecurity.setServiceName(serviceName);
@@ -66,7 +66,7 @@ public class AdminServiceSecurity {
                                             String ServicePrincipalPassword)
             throws SecurityAdminServiceSecurityConfigExceptionException, RemoteException {
 
-        new AuthenticateStub().authenticateStub(sessionCookie, securityAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, securityAdminServiceStub);
         ApplyKerberosSecurityPolicy applySecurity;
         applySecurity = new ApplyKerberosSecurityPolicy();
         applySecurity.setServiceName(serviceName);
@@ -87,7 +87,7 @@ public class AdminServiceSecurity {
         DisableSecurityOnService disableRequest = new DisableSecurityOnService();
         disableRequest.setServiceName(serviceName);
 
-        new AuthenticateStub().authenticateStub(sessionCookie, securityAdminServiceStub);
+        AuthenticateStub.authenticateStub(sessionCookie, securityAdminServiceStub);
 
 
         securityAdminServiceStub.disableSecurityOnService(disableRequest);

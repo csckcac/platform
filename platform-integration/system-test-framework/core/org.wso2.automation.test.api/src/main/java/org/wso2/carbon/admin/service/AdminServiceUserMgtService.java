@@ -49,7 +49,7 @@ public class AdminServiceUserMgtService {
 
     public void addRole(String roleName, String[] userList, String[] permissions, String sessionCookie)
             throws UserAdminException {
-        new AuthenticateStub().authenticateStub(sessionCookie, userAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, userAdminStub);
         try {
             userAdminStub.addRole(roleName, userList, permissions);
         } catch (Exception e) {
@@ -59,7 +59,7 @@ public class AdminServiceUserMgtService {
 
     public void addUser(String sessionCookie, String userName, String password, String[] roles,
                         String profileName) throws UserAdminException {
-        new AuthenticateStub().authenticateStub(sessionCookie, userAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, userAdminStub);
         try {
             userAdminStub.addUser(userName, password, roles, null, profileName);
         } catch (Exception e) {
@@ -82,7 +82,7 @@ public class AdminServiceUserMgtService {
     }
 
     public void deleteRole(String sessionCookie, String roleName) {
-        new AuthenticateStub().authenticateStub(sessionCookie, userAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, userAdminStub);
         FlaggedName[] existingRoles;
         try {
             userAdminStub.deleteRole(roleName);
@@ -103,7 +103,7 @@ public class AdminServiceUserMgtService {
     }
 
     public void deleteUser(String sessionCookie, String userName) {
-        new AuthenticateStub().authenticateStub(sessionCookie, userAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, userAdminStub);
 
         String[] userList;
         try {

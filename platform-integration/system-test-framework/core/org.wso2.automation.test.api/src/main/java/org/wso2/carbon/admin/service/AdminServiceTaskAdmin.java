@@ -47,7 +47,7 @@ public class AdminServiceTaskAdmin {
     }
 
     public void addTask(String sessionCookie, DataHandler dh) throws TaskManagementException, IOException, XMLStreamException {
-        new AuthenticateStub().authenticateStub(sessionCookie, taskAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, taskAdminStub);
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(dh.getInputStream());
         //create the builder
         StAXOMBuilder builder = new StAXOMBuilder(parser);
@@ -57,13 +57,13 @@ public class AdminServiceTaskAdmin {
     }
 
     public void deleteTask(String sessionCookie, String name, String group) throws TaskManagementException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, taskAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, taskAdminStub);
         taskAdminStub.deleteTaskDescription(name, group);
 
     }
 
     public OMElement getScheduleTask(String sessionCookie, String name, String group) throws TaskManagementException, RemoteException {
-        new AuthenticateStub().authenticateStub(sessionCookie, taskAdminStub);
+        AuthenticateStub.authenticateStub(sessionCookie, taskAdminStub);
         return taskAdminStub.getTaskDescription(name, group);
 
     }

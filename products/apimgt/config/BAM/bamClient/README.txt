@@ -1,19 +1,20 @@
 ---------------------------------------------------------------------------------
 	Requirements
 ---------------------------------------------------------------------------------
+1. WSO2 BAM-2.0.0 ALPHA2 
+2. Apache Ant
+3. Java Runtime Environment
+
+---------------------------------------------------------------------------------
+Configuring BAM
+---------------------------------------------------------------------------------
+
+1.Copy StatClient directory into BAM_HOME
+2.Run "ant make_analyzer_jar" command. This will compile & copy API Stat analyzer into the repository/components/lib folder
+3.Change port offset to 1 by editting the repository/conf/carbon.xml
+4.Start WSO2 BAM server
+5.Go to StatClient directory and run "ant initalize_column_family_datastore" command (This will take around 3 mins to complete. You need to have Internet connection)
+6.Finally you can see the message - "BAM configured successfully for collecting API stats"
+7.
  
-	1. WSO2 BAM-2.0.0 ALPHA2 
-	2. Ant build tool
-	3. Java Runtime Environment
-
----------------------------------------------------------------------------------
-Configure BAM
----------------------------------------------------------------------------------
-
-	* First copy bamClient directory into BAM_HOME
-        * Run "ant makejar" command and this will copy the class analyzer into the repository/components/lib folder
-	* Change the port offset to 1 (You have to edit the repository/conf/carbon.xml)
-	* Start WSO2 BAM server
-	* Again go to bamClient directory and run "ant" command (It takes arround 3 min to complete the task)
-	* Finally you can see the message - "BAM configured successfully for collecting API stats" 
 

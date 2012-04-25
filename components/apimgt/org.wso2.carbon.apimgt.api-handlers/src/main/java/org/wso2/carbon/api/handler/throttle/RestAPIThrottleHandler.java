@@ -454,94 +454,102 @@ public class RestAPIThrottleHandler extends AbstractHandler {
                 AuthenticationFuture authFuture = handler.getAuthenticator();
 
                 consumerKey = authFuture.getAPIKey();
-                //do authentication
-                handler.authenticateUser();
-
-                isAuthenticated = authFuture.isAuthenticated();
-
-                if (isAuthenticated) {
-                    //get feedback from the authenticator
-                    roleID = (String) authFuture.getAuthorizedRoles().get(0);
+                // TODO: Following is a temporary workaround to get authentication working properly
+                // TODO: This will be cleaned up properly with APISTORE-249
+                if (consumerKey == null) {
+                    isAuthenticated = false;
+                } else {
+                    //do authentication
+                    handler.authenticateUser();
+                    isAuthenticated = authFuture.isAuthenticated();
+                    if (isAuthenticated) {
+                        //get feedback from the authenticator
+                        roleID = (String) authFuture.getAuthorizedRoles().get(0);
+                    }
                 }
+                // Don't pass the Auth header any further
+                ((Map) headers).remove(RestAPIThrottleHandler.O_AUTH_HEADER);
             }
 
-            if (!isAuthenticated){
-                log.debug("Access denied for a " +
-                          "caller with consumer Key: " + consumerKey + ", " +
+            if (!isAuthenticated) {
+                synCtx.setProperty("AM_AUTH_FAILURE", Boolean.TRUE);
+                canAccess = false;
+                log.debug("Access denied for a caller with consumer Key: " + consumerKey + ", " +
                           "Reason: Authentication failure");
             }
-            // Domain name based throttling
-                //check whether a configuration has been defined for this role name or not
-                String consumerRoleID;
-                if (consumerKey != null && isAuthenticated) {
-                    //loads the ThrottleContext
-                    ThrottleContext context =
-                            throttle.getThrottleContext(ThrottleConstants.ROLE_BASED_THROTTLE_KEY);
-                    if (context != null) {
-                        //Loads the ThrottleConfiguration
-                        ThrottleConfiguration config = context.getThrottleConfiguration();
-                        if (config != null) {
-                            //check for configuration for this caller
-                            consumerRoleID = config.getConfigurationKeyOfCaller(roleID);
-                            if (consumerRoleID != null) {
-                                // If this is a clustered env.
-                                if (isClusteringEnable) {
-                                    context.setConfigurationContext(cc);
-                                    context.setThrottleId(id);
-                                }
-                                AccessInformation info = null;
-                                try {
-                                    info = roleBasedAccessController.canAccess(context, consumerKey,
-                                                                        consumerRoleID);
-                                } catch (ThrottleException e) {
-                                    log.debug("Exception occurred while performing role " +
-                                              "based throttling", e);
-                                    canAccess = false;
-                                }
-                                StatCollector.collect(info, consumerKey, ThrottleConstants.ROLE_BASE);
-                                //check for the permission for access
-                                if (!info.isAccessAllowed()) {
 
-                                    //In the case of both of concurrency throttling and
-                                    //rate based throttling have enabled ,
-                                    //if the access rate less than maximum concurrent access ,
-                                    //then it is possible to occur death situation.To avoid that reset,
-                                    //if the access has denied by rate based throttling
-                                    if (cac != null) {
-                                        cac.incrementAndGet();
-                                        // set back if this is a clustered env
-                                        if (isClusteringEnable) {
-                                            cc.setProperty(key, cac);
-                                            //replicate the current state of ConcurrentAccessController
-                                            try {
-                                                if (log.isDebugEnabled()) {
-                                                    log.debug("Going to replicates the " +
-                                                            "states of the ConcurrentAccessController" +
-                                                            " with key : " + key);
-                                                }
-                                                Replicator.replicate(cc, new String[]{key});
-                                            } catch (ClusteringFault clusteringFault) {
-                                                log.error("Error during replicating states ",
-                                                        clusteringFault);
+            // Domain name based throttling
+            //check whether a configuration has been defined for this role name or not
+            String consumerRoleID;
+            if (consumerKey != null && isAuthenticated) {
+                //loads the ThrottleContext
+                ThrottleContext context =
+                        throttle.getThrottleContext(ThrottleConstants.ROLE_BASED_THROTTLE_KEY);
+                if (context != null) {
+                    //Loads the ThrottleConfiguration
+                    ThrottleConfiguration config = context.getThrottleConfiguration();
+                    if (config != null) {
+                        //check for configuration for this caller
+                        consumerRoleID = config.getConfigurationKeyOfCaller(roleID);
+                        if (consumerRoleID != null) {
+                            // If this is a clustered env.
+                            if (isClusteringEnable) {
+                                context.setConfigurationContext(cc);
+                                context.setThrottleId(id);
+                            }
+                            AccessInformation info = null;
+                            try {
+                                info = roleBasedAccessController.canAccess(context, consumerKey,
+                                                                    consumerRoleID);
+                            } catch (ThrottleException e) {
+                                log.debug("Exception occurred while performing role " +
+                                          "based throttling", e);
+                                canAccess = false;
+                            }
+                            StatCollector.collect(info, consumerKey, ThrottleConstants.ROLE_BASE);
+                            //check for the permission for access
+                            if (!info.isAccessAllowed()) {
+
+                                //In the case of both of concurrency throttling and
+                                //rate based throttling have enabled ,
+                                //if the access rate less than maximum concurrent access ,
+                                //then it is possible to occur death situation.To avoid that reset,
+                                //if the access has denied by rate based throttling
+                                if (cac != null) {
+                                    cac.incrementAndGet();
+                                    // set back if this is a clustered env
+                                    if (isClusteringEnable) {
+                                        cc.setProperty(key, cac);
+                                        //replicate the current state of ConcurrentAccessController
+                                        try {
+                                            if (log.isDebugEnabled()) {
+                                                log.debug("Going to replicates the " +
+                                                        "states of the ConcurrentAccessController" +
+                                                        " with key : " + key);
                                             }
+                                            Replicator.replicate(cc, new String[]{key});
+                                        } catch (ClusteringFault clusteringFault) {
+                                            log.error("Error during replicating states ",
+                                                    clusteringFault);
                                         }
                                     }
-                                    canAccess = false;
                                 }
-                            } else {
-                                if (log.isDebugEnabled()) {
-                                    log.debug("Could not find the Throttle Context for role-Based " +
-                                            "Throttling for role name " + consumerKey + " Throttling for this " +
-                                            "role name may not be configured from policy");
-                                }
+                                canAccess = false;
+                            }
+                        } else {
+                            if (log.isDebugEnabled()) {
+                                log.debug("Could not find the Throttle Context for role-Based " +
+                                        "Throttling for role name " + consumerKey + " Throttling for this " +
+                                        "role name may not be configured from policy");
                             }
                         }
                     }
-                } else {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Could not find the API Key of the caller - role based throttling NOT applied");
-                    }
                 }
+            } else {
+                if (log.isDebugEnabled()) {
+                    log.debug("Could not find the API Key of the caller - role based throttling NOT applied");
+                }
+            }
         }
         return canAccess;
     }

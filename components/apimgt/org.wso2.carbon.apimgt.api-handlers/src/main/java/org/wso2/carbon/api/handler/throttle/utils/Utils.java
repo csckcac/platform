@@ -80,6 +80,9 @@ public class Utils {
         //OAuth oauth_consumer_key="nq21LN39VlKe6OezcOndBx",
         // oauth_signature_method="HMAC-SHA1", oauth_signature="DZKyT75hiOIdtMGCU%2BbITArs4sU%3D",
         // oauth_timestamp="1328590467", oauth_nonce="7031216264696", oauth_version="1.0"
+        if (authHeader == null) {
+            return null;
+        }
 
         String  consumerKey = null;
 

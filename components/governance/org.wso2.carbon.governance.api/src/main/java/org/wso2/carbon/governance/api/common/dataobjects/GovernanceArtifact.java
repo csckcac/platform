@@ -442,7 +442,9 @@ public abstract class GovernanceArtifact {
      * @throws GovernanceException throws if the operation failed.
      */
     public void setLcState(String lcState) throws GovernanceException {
-        addAttribute("lcstate",lcState);
+        if(lcState != null) {
+            addAttribute("lcstate",lcState);
+        }
     }
 
     /**

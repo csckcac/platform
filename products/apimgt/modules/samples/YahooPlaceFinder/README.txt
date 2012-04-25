@@ -70,7 +70,13 @@ curl -v -H "Authorization: Bearer _TAmPFGkaknjfLeAHYVBvaXti9Aa" http://localhost
 
 You should be able to see search results from PlaceFinder on you console.
 eg:
-
+ <ResultSet version="1.0"><Error>0</Error><ErrorMessage>No error</ErrorMessage><Locale>us_US</Locale>
+ <Quality>40</Quality><Found>1</Found><Result><quality>40</quality><latitude>6.927200</latitude>
+ <longitude>79.872200</longitude><offsetlat>6.927200</offsetlat><offsetlon>79.872200</offsetlon>
+ <radius>6500</radius><name /><line1 /><line2>Colombo</line2><line3 /><line4>Sri Lanka</line4><house />
+ <street /><xstreet /><unittype /><unit /><postal /><neighborhood /><city>Colombo</city><county>Colombo</county>
+ <state>Western</state><country>Sri Lanka</country><countrycode>LK</countrycode><statecode /><countycode /><uzip />
+ <hash /><woeid>2189783</woeid><woetype>7</woetype></Result></ResultSet>
 
 12. Try executing the above command several times with different API keys. Note the authentication
 failures returned by the API gateway when you pass invalid API keys.

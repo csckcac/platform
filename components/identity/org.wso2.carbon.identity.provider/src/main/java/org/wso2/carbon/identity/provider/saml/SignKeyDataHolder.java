@@ -69,7 +69,7 @@ public class SignKeyDataHolder implements X509Credential {
 			keyAdmin = new KeyStoreAdmin(IdentityTenantUtil.getRegistry(null,null));
 			keyMan = KeyStoreManager.getInstance(null);
 
-			issuerPK = (PrivateKey) keyAdmin.getPrivateKey(keyAlias);;
+			issuerPK = (PrivateKey) keyAdmin.getPrivateKey(keyAlias, true);
 			certificates = keyMan.getPrimaryKeyStore().getCertificateChain(keyAlias);
 
 			issuerCerts = new X509Certificate[certificates.length];

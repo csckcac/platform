@@ -46,10 +46,10 @@ public class SAMLSSOConfigService extends AbstractAdmin{
 
 
     private KeyStoreData[] getKeyStores() throws IdentityException {
-        KeyStoreAdmin admin = null;
         try {
-            admin = new KeyStoreAdmin(getGovernanceRegistry());
-            return admin.getKeyStores();
+            KeyStoreAdmin admin = new KeyStoreAdmin(getGovernanceRegistry());
+            boolean isSuperAdmin = super.getTenantDomain() == null ? true : false ;
+            return admin.getKeyStores(isSuperAdmin);
         } catch (SecurityConfigException e) {
             log.error("Error when loading the key stores from registry", e);
             throw new IdentityException("Error when loading the key stores from registry", e);

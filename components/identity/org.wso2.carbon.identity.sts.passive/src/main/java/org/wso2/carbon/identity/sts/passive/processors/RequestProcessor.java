@@ -107,7 +107,7 @@ public abstract class RequestProcessor {
         element.addAttribute(parent.getOMFactory().createOMAttribute("Uri", null, uri));
     }
 
-    protected SAMLTokenIssuerConfig getSAMLTokenIssuerConfig(AxisService service) throws Exception {
+    protected SAMLTokenIssuerConfig getSAMLTokenIssuerConfig(AxisService service, boolean isSuperTenant) throws Exception {
         UserRegistry systemRegistry = null;
         String keyAlias = null;
         String keyPassword = null;
@@ -138,7 +138,7 @@ public abstract class RequestProcessor {
         }
 
         admin = new KeyStoreAdmin(systemRegistry);
-        keystores = admin.getKeyStores();
+        keystores = admin.getKeyStores(isSuperTenant);
 
         for (int i = 0; i < keystores.length; i++) {
             if (KeyStoreUtil.isPrimaryStore(keystores[i].getKeyStoreName())) {

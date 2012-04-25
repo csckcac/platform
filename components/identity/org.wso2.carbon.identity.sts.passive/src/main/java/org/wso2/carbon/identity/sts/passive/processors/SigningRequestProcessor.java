@@ -105,7 +105,7 @@ public class SigningRequestProcessor extends RequestProcessor {
             issuer = new SAMLPassiveTokenIssuer();
             issuer.setAudienceRestrictionCondition(request.getRealm());
             issuer.setConfig(getSAMLTokenIssuerConfig(MessageContext.getCurrentMessageContext()
-                                                              .getAxisService()));
+                                                              .getAxisService(), true));
             rstr = issuer.issuePassiveRSTR(rahasData);
             reponseToken = new ResponseToken();
             reponseToken.setResults(rstr.toStringWithConsume());

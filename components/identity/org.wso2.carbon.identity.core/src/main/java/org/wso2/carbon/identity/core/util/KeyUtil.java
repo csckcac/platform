@@ -39,7 +39,7 @@ public class KeyUtil {
 	 * @return
 	 * @throws IdentityException
 	 */
-	public static X509Certificate[] getServiceCertificateChain(String alias)
+	public static X509Certificate[] getServiceCertificateChain(String alias, boolean isSuperTenant)
 			throws IdentityException {
 
 		if (log.isDebugEnabled()) {
@@ -48,7 +48,7 @@ public class KeyUtil {
 
 		try {
 			KeyStoreAdmin keyAdmin = new KeyStoreAdmin(IdentityTenantUtil.getRegistry(null, null));
-			KeyStoreData[] keystores = keyAdmin.getKeyStores();
+			KeyStoreData[] keystores = keyAdmin.getKeyStores(isSuperTenant);
 			if (keystores.length == 0 || keystores.length > 1) {
 				throw new IdentityException("There should be only one keystore");
 			}
@@ -125,7 +125,7 @@ public class KeyUtil {
 	 * @return
 	 * @throws IdentityException
 	 */
-	public static Key getPrivateKey(String alias) throws IdentityException {
+	public static Key getPrivateKey(String alias, boolean isSuperTenant) throws IdentityException {
 
 		if (log.isDebugEnabled()) {
 			log.debug("Retreiving private key for alias " + alias);
@@ -133,7 +133,7 @@ public class KeyUtil {
 
 		try {
 			KeyStoreAdmin keyAdmin = new KeyStoreAdmin(IdentityTenantUtil.getRegistry(null, null));
-			return keyAdmin.getPrivateKey(alias);
+			return keyAdmin.getPrivateKey(alias, isSuperTenant);
 		} catch (Exception e) {
 			log.error("Error while retreiving private key for alias ", e);
 			throw new IdentityException("Error while retreiving private key for alias ", e);

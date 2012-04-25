@@ -44,8 +44,11 @@ import org.wso2.carbon.apimgt.api.model.URITemplate;
 import org.wso2.carbon.apimgt.hostobjects.utils.APIHostObjectUtil;
 import org.wso2.carbon.apimgt.impl.APIManagerImpl;
 import org.wso2.carbon.apimgt.usage.client.APIMgtUsageQueryServiceClient;
-import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUsage;
-import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionDTO;
+import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUsageDTO;
+import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIServiceTimeDTO;
+import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUserUsageDTO;
+import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUsageDTO;
+import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionLastAccessDTO;
 import org.wso2.carbon.hostobjects.web.RequestHostObject;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.rest.api.ui.client.AuthAdminServiceClient;
@@ -888,14 +891,14 @@ public class APIProviderHostObject extends ScriptableObject {
 
     }
 
-    public static NativeArray jsFunction_getAPIUsageTest(String APIname, String serverURL)
+    public static NativeArray jsFunction_getProviderAPIVersionUsage(String providerName, String APIname, String serverURL)
             throws ScriptException {
-        List<ProviderAPIVersionDTO> list = null;
+        List<ProviderAPIVersionUsageDTO> list = null;
         try {
             APIMgtUsageQueryServiceClient client = new APIMgtUsageQueryServiceClient(serverURL);
-            list = client.getProviderAPIVersionsUsage(APIname);
+            list = client.getProviderAPIVersionUsage(providerName, APIname);
         } catch (Exception e) {
-            log.error("Backend-Error while querying BAM server", e);
+            log.error("Backend-Error while querying BAM server for ProviderAPIVersionUsage", e);
         }
         NativeArray myn = new NativeArray(0);
         Iterator it = null;
@@ -907,7 +910,7 @@ public class APIProviderHostObject extends ScriptableObject {
             while (it.hasNext()) {
                 NativeObject row = new NativeObject();
                 Object usageObject = it.next();
-                ProviderAPIVersionDTO usage = (ProviderAPIVersionDTO) usageObject;
+                ProviderAPIVersionUsageDTO usage = (ProviderAPIVersionUsageDTO) usageObject;
                 row.put("version", row, usage.getVersion());
                 row.put("count", row, usage.getCount());
                 myn.put(i, myn, row);
@@ -918,14 +921,13 @@ public class APIProviderHostObject extends ScriptableObject {
         return myn;
     }
 
-    public static NativeArray jsFunction_getAllAPIUsage(String serverURL) throws ScriptException {
-        log.info("jsFunction_getAllAPIUsage called " + serverURL);
-        List<ProviderAPIUsage> list = null;
+    public static NativeArray jsFunction_getProviderAPIUsage(String providerName, String serverURL) throws ScriptException {
+        List<ProviderAPIUsageDTO> list = null;
         try {
             APIMgtUsageQueryServiceClient client = new APIMgtUsageQueryServiceClient(serverURL);
-            list = client.getProviderAPIUsage();
+            list = client.getProviderAPIUsage(providerName);
         } catch (Exception e) {
-            log.error("Backend-Error while querying BAM server for getting All API Usage", e);
+            log.error("Backend-Error while querying BAM server for ProviderAPIUsage", e);
         }
         NativeArray myn = new NativeArray(0);
         Iterator it = null;
@@ -937,9 +939,97 @@ public class APIProviderHostObject extends ScriptableObject {
             while (it.hasNext()) {
                 NativeObject row = new NativeObject();
                 Object usageObject = it.next();
-                ProviderAPIUsage usage = (ProviderAPIUsage) usageObject;
+                ProviderAPIUsageDTO usage = (ProviderAPIUsageDTO) usageObject;
                 row.put("apiName", row, usage.getApiName());
                 row.put("count", row, usage.getCount());
+                myn.put(i, myn, row);
+                i++;
+
+            }
+        }
+        return myn;
+    }
+
+    public static NativeArray jsFunction_getProviderAPIUserUsage(String providerName, String apiName, String serverURL) throws ScriptException {
+        List<ProviderAPIUserUsageDTO> list = null;
+        try {
+            APIMgtUsageQueryServiceClient client = new APIMgtUsageQueryServiceClient(serverURL);
+            list = client.getProviderAPIUserUsage(providerName, apiName);
+        } catch (Exception e) {
+            log.error("Backend-Error while querying BAM server for ProviderAPIUserUsage", e);
+        }
+        NativeArray myn = new NativeArray(0);
+        Iterator it = null;
+        if (list != null) {
+            it = list.iterator();
+        }
+        int i = 0;
+        if (it != null) {
+            while (it.hasNext()) {
+                NativeObject row = new NativeObject();
+                Object usageObject = it.next();
+                ProviderAPIUserUsageDTO usage = (ProviderAPIUserUsageDTO) usageObject;
+                row.put("user", row, usage.getUser());
+                row.put("count", row, usage.getCount());
+                myn.put(i, myn, row);
+                i++;
+
+            }
+        }
+        return myn;
+    }
+
+    public static NativeArray jsFunction_getProviderAPIVersionLastAccess(String providerName,String serverURL) throws ScriptException {
+        List<ProviderAPIVersionLastAccessDTO> list = null;
+        try {
+            APIMgtUsageQueryServiceClient client = new APIMgtUsageQueryServiceClient(serverURL);
+            list = client.getProviderAPIVersionLastAccess(providerName);
+        } catch (Exception e) {
+            log.error("Backend-Error while querying BAM server for ProviderAPIVersionLastAccess", e);
+        }
+        NativeArray myn = new NativeArray(0);
+        Iterator it = null;
+        if (list != null) {
+            it = list.iterator();
+        }
+        int i = 0;
+        if (it != null) {
+            while (it.hasNext()) {
+                NativeObject row = new NativeObject();
+                Object usageObject = it.next();
+                ProviderAPIVersionLastAccessDTO usage = (ProviderAPIVersionLastAccessDTO) usageObject;
+                row.put("api", row, usage.getApi());
+                row.put("version", row, usage.getVersion());
+                row.put("lastAccess", row, usage.getLastAccess());
+                myn.put(i, myn, row);
+                i++;
+
+            }
+        }
+        return myn;
+    }
+
+    public static NativeArray jsFunction_getProviderAPIServiceTime(String providerName,String serverURL) throws ScriptException {
+        List<ProviderAPIServiceTimeDTO> list = null;
+        try {
+            APIMgtUsageQueryServiceClient client = new APIMgtUsageQueryServiceClient(serverURL);
+            list = client.getProviderAPIServiceTime(providerName);
+        } catch (Exception e) {
+            log.error("Backend-Error while querying BAM server for ProviderAPIServiceTime", e);
+        }
+        NativeArray myn = new NativeArray(0);
+        Iterator it = null;
+        if (list != null) {
+            it = list.iterator();
+        }
+        int i = 0;
+        if (it != null) {
+            while (it.hasNext()) {
+                NativeObject row = new NativeObject();
+                Object usageObject = it.next();
+                ProviderAPIServiceTimeDTO usage = (ProviderAPIServiceTimeDTO) usageObject;
+                row.put("api", row, usage.getApiName());
+                row.put("serviceTime", row, usage.getServiceTime());
                 myn.put(i, myn, row);
                 i++;
 

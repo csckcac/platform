@@ -66,7 +66,7 @@ public class Database {
     }
 
     /**
-     * Databas initialization logic.
+     * Database initialization logic.
      */
     public synchronized void start() throws DatabaseConfigurationException, HumanTaskServerException {
 
@@ -125,9 +125,15 @@ public class Database {
     private void initExternalDb() throws DatabaseConfigurationException {
         try {
             this.dataSource = (DataSource) lookupInJndi(serverConfiguration.getDataSourceName());
-            log.info("HumanTask Server using external DataSource " + serverConfiguration.getDataSourceName());
+
+            if(log.isDebugEnabled()) {
+                log.debug("HumanTask Server using external DataSource " +
+                          serverConfiguration.getDataSourceName());
+            }
+
         } catch (Exception e) {
-            String errorMsg = "Failed to resolved external DataSource at " + serverConfiguration.getDataSourceName();
+            String errorMsg = "Failed to resolved external DataSource at " +
+                              serverConfiguration.getDataSourceName();
             log.error(errorMsg, e);
             throw new DatabaseConfigurationException(errorMsg, e);
         }
@@ -181,7 +187,8 @@ public class Database {
      * @return : the connection factory.
      * @throws DatabaseConfigurationException : If the provided config factory cannot be instantiated.
      */
-    public HumanTaskDAOConnectionFactoryJDBC createDAOConnectionFactory() throws DatabaseConfigurationException {
+    public HumanTaskDAOConnectionFactoryJDBC createDAOConnectionFactory()
+            throws DatabaseConfigurationException {
         String connectionFactoryClassName = serverConfiguration.getDaoConnectionFactoryClass();
 
         if(log.isDebugEnabled()) {
@@ -201,7 +208,8 @@ public class Database {
 
         humanTaskDAOConnectionFactoryJDBC.setDataSource(getDataSource());
         humanTaskDAOConnectionFactoryJDBC.setTransactionManager(getTnxManager());
-        humanTaskDAOConnectionFactoryJDBC.setDAOConnectionFactoryProperties(getGenericDAOFactoryProperties());
+        humanTaskDAOConnectionFactoryJDBC.setDAOConnectionFactoryProperties(
+                getGenericDAOFactoryProperties());
         humanTaskDAOConnectionFactoryJDBC.init();
 
 

@@ -484,32 +484,21 @@ public class Task extends OpenJPAEntity implements TaskDAO {
         this.escalated = escalated;
     }
 
+    @Override
     public List<PresentationSubjectDAO> getPresentationSubjects() {
         return presentationSubjects;
     }
 
-//    public void setPresentationSubjects(List<PresentationSubjectDAO> presentationSubjects) {
-//        this.presentationSubjects = presentationSubjects;
-//    }
 
     @Override
     public List<PresentationNameDAO> getPresentationNames() {
         return presentationNames;
     }
 
-//    public void setPresentationNames(List<PresentationNameDAO> presentationNames) {
-//        this.presentationNames = presentationNames;
-//    }
-
     @Override
     public List<PresentationDescriptionDAO> getPresentationDescriptions() {
         return presentationDescriptions;
     }
-
-//    public void setPresentationDescriptions(
-//            List<PresentationDescriptionDAO> presentationDescriptions) {
-//        this.presentationDescriptions = presentationDescriptions;
-//    }
 
     @Override
     public List<DeadlineDAO> getDeadlines() {
@@ -540,7 +529,6 @@ public class Task extends OpenJPAEntity implements TaskDAO {
     public void persistEvent(EventDAO event) {
         event.setTask(this);
         this.getEvents().add(event);
-        //getEntityManager().merge(this);
     }
 
     @Override
@@ -614,8 +602,6 @@ public class Task extends OpenJPAEntity implements TaskDAO {
 
         this.addHumanRole(actualOwnerRole);
         this.setStatus(TaskStatus.RESERVED);
-
-        //getEntityManager().merge(this);
     }
 
     @Override
@@ -750,10 +736,6 @@ public class Task extends OpenJPAEntity implements TaskDAO {
         return inputMessage;
     }
 
-//    public void setComments(List<CommentDAO> comments) {
-//        this.comments = comments;
-//    }
-
     @Override
     public void setSkipable(Boolean skipable) {
         this.skipable = skipable;
@@ -862,7 +844,6 @@ public class Task extends OpenJPAEntity implements TaskDAO {
                 break;
             }
         }
-        //this.getEntityManager().merge(this);
     }
 
     @Override

@@ -7,8 +7,6 @@ var initialize = function (jagg) {
 };
 
 var getData = function (params) {
-    log("********************************************************************");
-    log(params);
     var recent = require("/core/apis/recently-added.js");
     var result = recent.getRecentlyAddedAPIs(params.count);
     return {

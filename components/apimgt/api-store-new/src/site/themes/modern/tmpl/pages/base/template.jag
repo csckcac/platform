@@ -10,8 +10,6 @@
     <!--[if lt IE 9]><script src="/<%=site.context%>/site/themes/modern/js/lib/html5/html5.js"></script><![endif]-->
     <script type="text/javascript" src="/<%=site.context%>/site/themes/modern/js/lib/kickStart/prettify.js"></script>
     <script type="text/javascript" src="/<%=site.context%>/site/themes/modern/js/lib/kickStart/kickstart.js"></script>
-    <link rel="stylesheet" type="text/css" href="/<%=site.context%>/site/themes/modern/js/lib/kickStart/css/kickstart.css" media="all"/>
-    <link rel="stylesheet" href="/<%=site.context%>/site/themes/modern/js/lib/jquery/css/start/jquery-ui-1.8.19.custom.css">
     <script src="/<%=site.context%>/site/themes/modern/js/lib/jquery/external/jquery.bgiframe-2.1.2.js"></script>
     <script src="/<%=site.context%>/site/themes/modern/js/lib/jquery/ui/jquery.ui.core.min.js"></script>
     <script src="/<%=site.context%>/site/themes/modern/js/lib/jquery/ui/jquery.ui.widget.min.js"></script>
@@ -23,6 +21,8 @@
     <script src="/<%=site.context%>/site/themes/modern/js/lib/jquery/ui/jquery.ui.dialog.min.js"></script>
     <script src="/<%=site.context%>/site/themes/modern/js/lib/jquery/ui/jquery.effects.core.min.js"></script>
 
+    <link rel="stylesheet" type="text/css" href="/<%=site.context%>/site/themes/modern/js/lib/kickStart/css/kickstart.css" media="all"/>
+    <link rel="stylesheet" href="/<%=site.context%>/site/themes/modern/js/lib/jquery/css/start/jquery-ui-1.8.19.custom.css">
     <link rel="stylesheet" type="text/css" href="/<%=site.context%>/site/themes/modern/css/style.css" media="all"/>
 
     <%
@@ -60,9 +60,7 @@
 
 <div id="header">
     <a id="top-of-page"></a>
-    <div class="header-wrapper">
-        <div class="wrap"></div>
-    </div>
+    <% jagg.includeTemplate("header/top-bar", null); %>
 </div>
 
 <div class="clearfix wrap">
@@ -70,7 +68,8 @@
     <div class="clear"></div>
 
     <div id="footer">
-
+        &copy; Copyright 2011–2012 All Rights Reserved.
+        <a id="link-top" href="#top-of-page">Top</a>
     </div>
 </div>
 </body>

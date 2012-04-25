@@ -17,8 +17,10 @@ var getRecentlyAddedAPIs = function (limit) {
                 version:api.version,
                 description:api.description,
                 rating:api.rates,
-                purchased:"false",
-                thumbURL:api.thumbnailurl
+                subscribed:api.subscribed,
+                thumbURL:api.thumbnailurl,
+                tier:api.tier,
+                context:api.context
             });
         }
         return {

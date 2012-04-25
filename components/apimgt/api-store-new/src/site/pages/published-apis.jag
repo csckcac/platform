@@ -1,14 +1,42 @@
-<% include("/site/themes/utils.jag"); %>
-<% var site = require("/site/conf/site.json"); %>
 <%
-    addPageData(data, "title", "API Listing");
+include("/site/themes/jagg.jag");
+var site = require("/site/conf/site.json");
 
-    addLayoutData(data, "tmpl", "tmpl/item-listing/item-listing.jag");
+var published = require("/core/apis/published.js");
+var result = published.getAllPublishedAPIs();
+var apis = result.apis;
 
-    var published = require("/core/published/published.js");
-    var result = published.getAllPublishedAPIs();
-    addTemplateData(data, "item-listing", "apis", result.apis);
-    initTemplate(data, "item-listing");
+var params = {
+    "name":"pages/base",
+    "css":{},
+    "js":{},
+    "code":{},
+    "updates" : {
+        "css" : {},
+        "js" : {}
+    },
+    "params":
+        {
+            "title":"API Store Listing",
+            "body":[
+                {
+                    "name":"layouts/extended",
+                    "params": {
+                        "top" : null,
+                        "left" : null,
+                        "middle" : {
+                            "name" : "apis/listing",
+                            "params" : {
+                                "apis" : apis
+                            }
+                        },
+                        "right" : null
+                    }
+                }
+            ]
+        }
+};
 
-    renderLayout(data, "layout0");
+jagg.render(params);
+
 %>

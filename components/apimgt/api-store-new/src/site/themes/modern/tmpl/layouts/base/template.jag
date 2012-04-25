@@ -1,18 +1,7 @@
 <% jagg.template = function(data, params, jagg) { %>
 <div id="layouts_base">
     <div id="top">
-        <%
-        var i, tmpl, top = data.top;
-        if(top) {
-            length = top.length;
-            for(i = 0; i < length; i++) {
-                tmpl = top[i];
-        %>
-        <div class="col_12">
-            <% jagg.includeTemplates(tmpl); %>
-        </div>
-        <%  }
-        } %>
+        <% jagg.includeTemplates(data.top); %>
     </div>
 
     <div id="left">

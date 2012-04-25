@@ -1,7 +1,3 @@
-var getTemplateFile = function () {
-    return "tmpl/layouts/base/template.jag";
-};
-
 var getParent = function () {
     return "layouts/base";
 };
@@ -9,6 +5,10 @@ var getParent = function () {
 var getParams = function () {
     return {
         "top":[
+            {
+                "name":"header/featured-apis",
+                "params":null
+            },
             {
                 "name":"search/api-search",
                 "params":null

@@ -1,12 +1,15 @@
-<div class="col_12">
-    <!-- Slideshow -->
-    <ul class="slideshow" width="900" height="150">
-        <li><img class="full-width" src="http://placehold.it/900X150/4D99E0/ffffff.png&text=Featured+API1"/></li>
-        <li><img class="full-width" src="http://placehold.it/900X150/4D99E0/ffffff.png&text=Featured+API2"/></li>
-        <li><img class="full-width" src="http://placehold.it/900X150/4D99E0/ffffff.png&text=Featured+API3"/></li>
-        <li><h3>Featured API4</h3>
-
-            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-                sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p></li>
-    </ul>
+<% jagg.template = function(data, params, jagg) { %>
+<div class="col_12 add-section">
+    <div class="slideshow-add">
+        <!-- Slideshow -->
+        <ul class="slideshow" width="760" height="150">
+            <li><img class="full-width" src="/<%=site.context%>/site/themes/modern/tmpl/header/featured-apis/images/add1.png"/></li>
+            <li><img class="full-width" src="/<%=site.context%>/site/themes/modern/tmpl/header/featured-apis/images/add2.png"/></li>
+        </ul>
+    </div>
+    <div class="provider-add">
+        <button class="medium green">Add My API</button>
+    </div>
+    <div class="clear"></div>
 </div>
+<% }; %>

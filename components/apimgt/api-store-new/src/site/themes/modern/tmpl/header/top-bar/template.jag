@@ -1,0 +1,35 @@
+<% jagg.template = function(data, params, jagg) { %>
+<div class="header-wrapper">
+    <div class="wrap">
+        <div class="col_8">
+            <ul class="menu">
+                <li class="current">
+                    <a href="">APIs</a>
+                </li>
+                <li>
+                    <a href="">Applications</a>
+                </li>
+                <li>
+                    <a href="">My Subscriptions</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col_4 login-links">
+            <ul style="display:none;">
+                <li>
+                    <a id="create-user">Login</a>
+                </li>
+            </ul>
+            <ul>
+                <li>
+                    <a id="logout-user">Logout</a>
+                </li>
+                <li>
+                    <a class="link-to-user">foo@bar.com</a>
+                </li>
+            </ul>
+        </div>
+        <a class="logo"></a>
+    </div>
+</div>
+<% }; %>

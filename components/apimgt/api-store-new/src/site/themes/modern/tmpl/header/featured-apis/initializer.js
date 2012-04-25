@@ -1,5 +1,5 @@
 var getTemplateFile = function () {
-    return "tmpl/pages/base/template.jag";
+    return "tmpl/header/featured-apis/template.jag";
 };
 
 var initialize = function (jagg) {
@@ -8,25 +8,23 @@ var initialize = function (jagg) {
 
 var getData = function (params) {
     return {
-        title:params.title,
-        body:params.body
+        //title:params.title,
+        //body:params.body
     };
 };
 
 var getParams = function () {
     //return { top:null, left:null, middle:null, right:null };
     return {
-        title:null,
-        body:null
+        //title:null,
+        //body:null
     };
 };
 
 var getTemplates = function () {
-    return [
-        "header/top-bar"
-    ];
+    return [];
 };
 
 var getTemplateParams = function () {
-    return ["body"];
+    return [];
 };

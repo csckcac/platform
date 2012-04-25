@@ -91,6 +91,8 @@ var jagg = jagg || {};
 
     var render = function (data) {
         var jaggi = jagg;
+        jaggi.global = data;
+        jaggi.templates = {};
         initializeTemplate(data, jaggi);
         var fn, initializer, templates = jaggi.templates, log = new Log();
         initializer = templates[data.name];
@@ -221,6 +223,9 @@ var jagg = jagg || {};
     };
 
     var ns = jagg;
+    //config variables
+    ns.templates = null;
+    ns.global = null;
     ns.getTemplateFile = getTemplateFile;
     ns.getInitializerFile = getInitializerFile;
     ns.getTheme = getTheme;

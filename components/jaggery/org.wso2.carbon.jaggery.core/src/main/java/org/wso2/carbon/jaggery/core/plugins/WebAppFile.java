@@ -28,7 +28,8 @@ public class WebAppFile implements JavaScriptFile {
     private boolean writable = false;
 
     public WebAppFile(String path, ServletContext context) {
-        this.path = path.startsWith("/") ? path.substring(1) : path;
+        //this.path = path.startsWith("/") ? path.substring(1) : path;
+        this.path = path;
         this.context = context;
     }
 
@@ -46,7 +47,7 @@ public class WebAppFile implements JavaScriptFile {
             String keys[] = WebAppManager.getKeys(context.getContextPath(), parent, fileURL);
             fileURL = keys[1] + keys[2];
         } catch (NullPointerException ne) {
-            throw new ScriptException("Invalid file path" + ne.getMessage(), ne);
+            throw new ScriptException("Invalid file path : " + fileURL, ne);
         }
         return fileURL;
     }

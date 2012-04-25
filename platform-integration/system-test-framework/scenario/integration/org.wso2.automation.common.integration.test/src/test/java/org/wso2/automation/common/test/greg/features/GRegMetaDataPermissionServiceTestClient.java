@@ -79,12 +79,11 @@ public class GRegMetaDataPermissionServiceTestClient {
                                 "/permission/admin/manage/resources/govern/metadata"};
         String permission2[] = {"/permission/admin/login",
                                 "/permission/admin/manage/resources"};
-        String userList[] = {"admin"};
         String sessionCookieUser;
         boolean status;
         String resourceName = "echo.wsdl";
         String fetchUrl = "http://people.wso2.com/~evanthika/wsdls/echo.wsdl";
-        addRolewithUser(permission1, userList);
+        addRolewithUser(permission1);
         sessionCookieUser = userAuthenticationStub.login(userName, userPassword, gregHostName);
         log.info("Newly Created User Loged in :" + userName);
 
@@ -103,7 +102,7 @@ public class GRegMetaDataPermissionServiceTestClient {
         assertTrue(status, "Only Login user permission has uploaded a text resource ? :");
         userAuthenticationStub.logOut();
         deleteRoleAndUsers(roleName, userName);
-        addRolewithUser(permission2, userList);
+        addRolewithUser(permission2);
         sessionCookieUser = userAuthenticationStub.login(userName, userPassword, gregHostName);
         log.info("Newly Created User Loged in :" + userName);
         admin_service_resource_admin.addWSDL(sessionCookieUser, resourceName, "", fetchUrl);
@@ -118,9 +117,9 @@ public class GRegMetaDataPermissionServiceTestClient {
         log.info("*********GReg Metadata Permission Asigning Scenario test - Passed**********");
     }
 
-    private void addRolewithUser(String[] permission, String[] userList) throws
+    private void addRolewithUser(String[] permission) throws
                                                                          UserAdminException {
-        userAdminStub.addRole(roleName, userList, permission, sessionCookie);
+        userAdminStub.addRole(roleName, null, permission, sessionCookie);
         log.info("Successfully added Role :" + roleName);
         String roles[] = {roleName};
         userAdminStub.addUser(sessionCookie, userName, userPassword, roles, null);

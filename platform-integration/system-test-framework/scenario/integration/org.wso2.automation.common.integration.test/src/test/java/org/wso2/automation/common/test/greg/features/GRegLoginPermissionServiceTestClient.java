@@ -59,6 +59,7 @@ public class GRegLoginPermissionServiceTestClient {
         admin_service_resource_admin = new AdminServiceResourceAdmin(gregBackEndUrl);
         roleName = "login_role";
         userName = "greg_login_user";
+        userPassword = "welcome";
 
         if (userAdminStub.roleNameExists(roleName, sessionCookie)) {  //delete the role if exists
             userAdminStub.deleteRole(sessionCookie, roleName);
@@ -67,6 +68,8 @@ public class GRegLoginPermissionServiceTestClient {
         if (userAdminStub.userNameExists(roleName, sessionCookie, userName)) { //delete user if exists
             userAdminStub.deleteUser(sessionCookie, userName);
         }
+
+
     }
 
 
@@ -75,11 +78,13 @@ public class GRegLoginPermissionServiceTestClient {
     public void testAddLoginPermissionUser()
             throws UserAdminException, RemoteException, ResourceAdminServiceExceptionException {
 
-        userPassword = "welcome";
+
         String permission[] = {"/permission/admin/login"};
-        String userList[] = {"admin"};
+        String userList[] = {userName};
         String sessionCookieUser;
         boolean status;
+//        userAdminStub.addUser(sessionCookie,userName,userPassword,);
+
         try {
             addRoleWithUser(permission, userList);
             sessionCookieUser = userAuthenticationStub.login(userName, userPassword, gregHostName);
@@ -107,7 +112,7 @@ public class GRegLoginPermissionServiceTestClient {
     }
 
     private void addRoleWithUser(String[] permission, String[] userList) throws UserAdminException {
-        userAdminStub.addRole(roleName, userList, permission, sessionCookie);
+        userAdminStub.addRole(roleName, null, permission, sessionCookie);
         log.info("Successfully added Role :" + roleName);
         String roles[] = {roleName};
         userAdminStub.addUser(sessionCookie, userName, userPassword, roles, null);

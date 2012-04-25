@@ -86,14 +86,14 @@ public class CommentTest {
                 if (comment.getText().equals(comment1)) {
                     commentFound = true;
                     assertEquals(comment1, comment.getText());
-                    assertEquals(password, comment.getUser());
+                    assertEquals(username, comment.getUser());
                     assertEquals(path, comment.getResourcePath());
 
                 }
                 if (comment.getText().equals(comment2)) {
                     commentFound = true;
                     assertEquals(comment2, comment.getText());
-                    assertEquals(password, comment.getUser());
+                    assertEquals(username, comment.getUser());
                     assertEquals(path, comment.getResourcePath());
                 }
                 if (comment.getText().equals("This is default comment")) {
@@ -156,13 +156,13 @@ public class CommentTest {
                 if (comment.getText().equals(comment1)) {
                     commentFound = true;
                     assertEquals(comment1, comment.getText());
-                    assertEquals(password, comment.getUser());
+                    assertEquals(username, comment.getUser());
                     assertEquals(path, comment.getResourcePath());
                 }
                 if (comment.getText().equals(comment2)) {
                     commentFound = true;
                     assertEquals(comment2, comment.getText());
-                    assertEquals(password, comment.getUser());
+                    assertEquals(username, comment.getUser());
                     assertEquals(path, comment.getResourcePath());
                 }
 
@@ -236,13 +236,13 @@ public class CommentTest {
                 if (comment.getText().equals(comment1)) {
                     commentFound = true;
                     assertEquals(comment1, comment.getText());
-                    assertEquals(password, comment.getUser());
+                    assertEquals(username, comment.getUser());
                     assertEquals(path, comment.getResourcePath());
                 }
                 if (comment.getText().equals(comment2)) {
                     commentFound = true;
                     assertEquals(comment2, comment.getText());
-                    assertEquals(password, comment.getUser());
+                    assertEquals(username, comment.getUser());
                     assertEquals(path, comment.getResourcePath());
                 }
 
@@ -316,14 +316,14 @@ public class CommentTest {
                 if (comment.getText().equals(comment1)) {
                     commentFound = true;
                     assertEquals(comment1, comment.getText());
-                    assertEquals(password, comment.getUser());
+                    assertEquals(username, comment.getUser());
                     assertEquals("/", comment.getResourcePath());
                 }
 
                 if (comment.getText().equals(comment2)) {
                     commentFound = true;
                     assertEquals(comment2, comment.getText());
-                    assertEquals(password, comment.getUser());
+                    assertEquals(username, comment.getUser());
                     assertEquals("/", comment.getResourcePath());
                 }
 
@@ -392,7 +392,7 @@ public class CommentTest {
                 if (comment.getText().equals(c1.getText())) {
                     commentFound = true;
                     assertEquals("This is default comment " + path, comment.getText());
-                    assertEquals(password, comment.getUser());
+                    assertEquals(username, comment.getUser());
                     assertEquals(path, comment.getResourcePath());
                 }
             }

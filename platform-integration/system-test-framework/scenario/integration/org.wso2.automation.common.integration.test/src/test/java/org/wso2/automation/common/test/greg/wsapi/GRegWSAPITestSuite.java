@@ -30,7 +30,7 @@ public class GRegWSAPITestSuite extends MasterTestSuite {
     public void suiteRunner() {
         List<SuiteVariables> suiteVariablesList = new ArrayList<SuiteVariables>();
         suiteVariablesList.add(new SuiteVariables("CommentTest", CommentTest.class));
-        suiteVariablesList.add(new SuiteVariables("ContinuousOperations", CommentTest.class));
+        suiteVariablesList.add(new SuiteVariables("ContinuousOperations", ContinuousOperations.class));
         suiteVariablesList.add(new SuiteVariables("PropertyTest", PropertiesTest.class));
         suiteVariablesList.add(new SuiteVariables("QueryTest", QueryTest.class));
         suiteVariablesList.add(new SuiteVariables("RatingTest", RatingTest.class));

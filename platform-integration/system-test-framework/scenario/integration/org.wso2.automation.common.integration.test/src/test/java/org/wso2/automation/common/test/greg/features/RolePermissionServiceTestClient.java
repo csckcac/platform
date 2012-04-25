@@ -32,7 +32,6 @@ public class RolePermissionServiceTestClient {
     private static final Log log = LogFactory.getLog(RolePermissionServiceTestClient.class);
     private AdminServiceUserMgtService userAdminStub;
     private EnvironmentVariables gregServer;
-    private FrameworkSettings frameworkSettings;
     private String gregBackEndUrl;
     private String sessionCookie;
     private String roleName;
@@ -44,13 +43,9 @@ public class RolePermissionServiceTestClient {
     public void init() throws AxisFault {
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(0);
         gregServer = builder.build().getGreg();
-        frameworkSettings = builder.getFrameworkSettings();
         sessionCookie = gregServer.getSessionCookie();
         gregBackEndUrl = gregServer.getBackEndUrl();
-
         userAdminStub = new AdminServiceUserMgtService(gregBackEndUrl);
-
-
     }
 
     @Test(groups = {"wso2.greg"}, description = "test add a role with login permission",
@@ -183,7 +178,7 @@ public class RolePermissionServiceTestClient {
     }
 
     private void addRolewithUser(String[] permission, String[] userList) throws UserAdminException {
-        userAdminStub.addRole(roleName, userList, permission, sessionCookie);
+        userAdminStub.addRole(roleName, null , permission, sessionCookie);
         log.info("Successfully added Role :" + roleName);
 
         String roles[] = {roleName};

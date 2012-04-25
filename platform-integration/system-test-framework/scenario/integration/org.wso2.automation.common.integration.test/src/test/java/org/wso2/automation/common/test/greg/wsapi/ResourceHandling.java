@@ -35,13 +35,15 @@ import java.util.List;
 public class ResourceHandling {
     private static final Log log = LogFactory.getLog(ResourceHandling.class);
     private static WSRegistryServiceClient registry = null;
-    String password = null;
+    private static String password = null;
+    private static String userName = null;
 
     @BeforeClass(alwaysRun = true)
     public void init() throws RegistryException, AxisFault {
         int tenantId = new GregUserIDEvaluator().getTenantID();
         registry = new RegistryProvider().getRegistry(tenantId, ProductConstant.GREG_SERVER_NAME);
         password = UserListCsvReader.getUserInfo(tenantId).getPassword();
+        userName = UserListCsvReader.getUserInfo(tenantId).getUserName();
         removeResource();
     }
 
@@ -253,15 +255,15 @@ public class ResourceHandling {
             Resource r3 = registry.newResource();
             r3 = registry.get(path);
 
-            assertEquals(password, r3.getAuthorUserName(), "Author User names are not Equal");
+            assertEquals(userName, r3.getAuthorUserName(), "Author User names are not Equal");
             assertNotNull(r3.getCreatedTime(), "Created time is null");
-            assertEquals(password, r3.getAuthorUserName(), "Author User names are not Equal");
+            assertEquals(userName, r3.getAuthorUserName(), "Author User names are not Equal");
             assertEquals("this is test desc this is test desc this is test desc this is test" +
                     " desc this is test desc this is test desc this is test desc this is test desc this is test descthis is " +
                     "test desc ", r3.getDescription(), "Description is not Equal");
             assertNotNull(r3.getId(), "Get Id is null");
             assertNotNull(r3.getLastModified(), "LastModifiedDate is null");
-            assertEquals(password, r3.getLastUpdaterUserName(), "Last Updated names are not Equal");
+            assertEquals(userName, r3.getLastUpdaterUserName(), "Last Updated names are not Equal");
             //System.out.println(r3.getMediaType());
             assertEquals("plain/text", r3.getMediaType(), "Media Type is not equal");
             assertEquals("/testk/testa", r3.getParentPath(), "parent Path is not equal");
@@ -292,7 +294,7 @@ public class ResourceHandling {
             Resource r3 = registry.get(path);
             assertNotNull(r3.getId(), "Get Id is null");
             assertNotNull(r3.getLastModified(), "LastModifiedDate is null");
-            assertEquals(password, r3.getLastUpdaterUserName(), "Last Updated names are not Equal");
+            assertEquals(userName, r3.getLastUpdaterUserName(), "Last Updated names are not Equal");
             assertEquals("/testk2/testa", r3.getParentPath(), "parent Path is not equal");
             assertEquals(0, r3.getState(), "Get stated wrong");
 

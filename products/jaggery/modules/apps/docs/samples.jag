@@ -56,7 +56,7 @@ include('/includes/topnavi.jag');
              view descriptions, demos and samples and try out jaggery code. The documentation site also includes downloads
              and sample apps.
          </p>
-             <a href="/docs" class="btn primary">View Demo</a>
+             <a href="/docs" target="_blank" class="btn primary">View Demo</a>
           </li>
 
           <li>
@@ -69,7 +69,7 @@ include('/includes/topnavi.jag');
              the one client. Shout! requires the user to authenticate and approve the app before being able to
              read / publish to their feeds.
          </p>
-               <a href="/shout" class="btn primary">View Demo</a>
+               <a href="/shout" target="_blank" class="btn primary">View Demo</a>
           </li>
 
           <li>
@@ -81,7 +81,7 @@ include('/includes/topnavi.jag');
              The Fresh-o-meter app allows you to search for any movie title, and retrieve its information (Cast, Movie Poster,
              Release year, Plot and rating) as well as related videos from youtube. it acts as a central movie information search engine.
          </p>
-               <a href="/freshometer/index.jag" class="btn primary">View Demo</a>
+               <a href="/freshometer/index.jag" target="_blank" class="btn primary">View Demo</a>
           </li>
 
 

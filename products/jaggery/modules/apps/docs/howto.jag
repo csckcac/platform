@@ -63,13 +63,13 @@ include('/includes/topnavi.jag');
         <div class="span16">
             <h2>How To Deploy A Jaggery App</h2>
 
-            <p>In-order to compose a Jaggery script you have to make it a <code>.jag</code> extension.</p>
+            <p>In-order to compose a Jaggery script you will need to give it a <code>.jag</code> extension.</p>
 
-            <p>There are no restrictions for the directory structure, add your <code>.jag</code> files where ever you want, and copy the entire directory to <code>{JAGGERY_HOME}/repository/deployment/server/jaggeryapps</code> The Jaggery Server
+            <p>There are no restrictions for the directory structure, add your <code>.jag</code> files where ever you want, and copy the entire directory to <code>{JAGGERY_HOME}/repository/deployment/server/jaggeryapps/</code> The Jaggery Server
             will then deploy the directory as an application which will be shown in the management console. The directory name will be taken as the
             application context name</p>
 
-            <p>Also your app can be uploaded as a .zip archive using the management console. The upload page can be found under the Add link in Jaggery Applications section.</p>
+            <p>Alternatively your app could be uploaded as a .zip archive using the management console. The upload page can be found under the Add link in Jaggery Applications section.</p>
             <br/>
             <img alt="Upload Jaggery" src="images/uploadjaggery.png"/>
         </div>
@@ -95,7 +95,7 @@ include('/includes/topnavi.jag');
 						</pre><br/>
                 <li>Thats it ! point to  <code>{http://localhost:9443/helloapp/helloworld.jag}</code></li>
             </ol>
-             <p>Excited ?? checkout the <a href="/docs/documentation.jag">Jaggery API</a></p>
+             <p>Excited ?? check out the <a href="/docs/documentation.jag">Jaggery API</a></p>
         </div>
     </div>
     <br/>
@@ -108,9 +108,9 @@ include('/includes/topnavi.jag');
 	        </div>
 	
 	        <p>
-	            Jaggery Server is the Runtime that host Jaggery applications.
+	            Jaggery Server is the Runtime Environment that hosts Jaggery applications.
 	            <br/>  <br/>
-	            It contains a management console, for admins to mange (deploy, reload, stop and start) Jaggery apps. Using the management console, admins can gather basic statistics about the
+	            It contains a management console, for admins to manage (deploy, reload, stop and start) Jaggery apps. Using the management console, admins can gather basic statistics about
 	            deployed applications.
 	             <br/><br/>
 	            Jaggery Server is powered by WSO2 carbon OSGi Runtime
@@ -132,8 +132,8 @@ include('/includes/topnavi.jag');
             </div>
 
             <p>
-                Jaggery command line client ships with Jaggery server can be executed at bin/jaggery.bat or bin/jaggery.sh
-                based on your platform to enter into the command line console.
+                The Jaggery command line client ships with the Jaggery server and can be executed at bin/jaggery.bat or bin/jaggery.sh
+                based on your platform. Using this it is possible to enter into the command line console.
             </p>
 
             <p>Jaggery CMD is still experimental, and is for developer preview. You are welcome to play with it and please do provide us your <a href="https://wso2.org/jira/browse/JAGGERY">feedback</a></p>
@@ -172,7 +172,7 @@ include('/includes/topnavi.jag');
             </h2>
         </div>
         <p>
-        	Jaggery shell mode will facilitate the evaluation of Jaggery expressions. Also this will be helpful for interactive script executions and debuging.
+        	Jaggery shell mode will facilitate the evaluation of Jaggery expressions. Also this will be helpful for interactive script executions and debugging.
         </p>
 
         <img alt="Jaggery Shell" src="images/shell.png"/>

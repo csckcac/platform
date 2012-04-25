@@ -6,8 +6,8 @@
             <wsp:Policy>
                 <throttle:Control>
                     <wsp:Policy>
-                        <throttle:MaximumCount>10</throttle:MaximumCount>
-                        <throttle:UnitTime>10000</throttle:UnitTime>
+                        <throttle:MaximumCount>20</throttle:MaximumCount>
+                        <throttle:UnitTime>60000</throttle:UnitTime>
                     </wsp:Policy>
                 </throttle:Control>
             </wsp:Policy>
@@ -17,8 +17,8 @@
             <wsp:Policy>
                 <throttle:Control>
                     <wsp:Policy>
-                        <throttle:MaximumCount>3</throttle:MaximumCount>
-                        <throttle:UnitTime>10000</throttle:UnitTime>
+                        <throttle:MaximumCount>5</throttle:MaximumCount>
+                        <throttle:UnitTime>60000</throttle:UnitTime>
                     </wsp:Policy>
                 </throttle:Control>
             </wsp:Policy>

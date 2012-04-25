@@ -438,9 +438,13 @@ template-wso2-carbon-server() {
 	# MySQL still prompts.  Bug.
 	#DEBCONF_FRONTEND='noninteractive' 
 
-    cp -f $CONFDIR/custom/wso2_carbon_server_cron.sh $ROOTFS/opt/
-    chroot $ROOTFS chmod +x /opt/wso2_carbon_server_cron.sh
+    cp -f $CONFDIR/custom/wso2_service_node.sh $ROOTFS/opt/
+    chroot $ROOTFS chmod +x /opt/wso2_service_node.sh
     cp -Lrf /opt/java $ROOTFS/opt/
+
+    #temp
+    cp -rf /opt/wso2as-4.1.0 $ROOTFS/opt/
+
 
     # Install from app repositories
     if [ $CLONE = "false" ]; then
@@ -462,7 +466,7 @@ template-wso2-carbon-server() {
 
 pushd $ROOTFS/etc
     echo "#!/bin/sh -e
-crontab /opt/wso2_carbon_server_cron.sh > /dev/null &2>1
+/opt/wso2_service_node.sh > /dev/null &2>1
 exit 0
     " > rc.local
     popd	

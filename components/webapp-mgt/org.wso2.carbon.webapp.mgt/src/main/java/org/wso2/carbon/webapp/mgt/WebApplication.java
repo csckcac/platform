@@ -69,7 +69,7 @@ public class WebApplication {
     public void setServletContextParameters(List<WebContextParameter> parameters) {
         for (WebContextParameter parameter : parameters) {
             context.getServletContext().setInitParameter(parameter.getName(),
-                                                         parameter.getValue()); // context-param in web.xml
+                    parameter.getValue()); // context-param in web.xml
         }
     }
 
@@ -120,9 +120,20 @@ public class WebApplication {
     }
 
     public boolean reload() {
-        if (context.getAvailable()) {
-            context.reload();
-            log.info("Reloaded webapp: " + context);
+        try {
+            //reload the context of Host
+            handleHotUpdateToHost("reload");
+        } catch (CarbonException e) {
+            log.error("error while reloading context for the hosts", e);
+        }
+        //reload the context of WebApplication
+        return reload(context);
+    }
+
+    private boolean reload(Context contextOfWepap) {
+        if (contextOfWepap.getAvailable()) {
+            contextOfWepap.reload();
+            log.info("Reloaded webapp: " + contextOfWepap);
             return true;
         }
         return false;
@@ -136,14 +147,22 @@ public class WebApplication {
      * @throws CarbonException If an error occurs while stopping this webapp
      */
     public boolean stop() throws CarbonException {
+        //stop the context of Host
+        handleHotUpdateToHost("stop");
+        //stop the context of WebApplication
+        return stop(this.context);
+
+    }
+
+    private boolean stop(Context contextOfWepap) throws CarbonException {
         try {
-            if (context.getAvailable()) {
-                context.stop();
-                log.info("Stopped webapp: " + context);
+            if (contextOfWepap.getAvailable()) {
+                contextOfWepap.stop();
+                log.info("Stopped webapp: " + contextOfWepap);
                 return true;
             }
         } catch (Exception e) {
-            throw new CarbonException("Cannot temporarilly stop webapp " + context, e);
+            throw new CarbonException("Cannot temporarilly stop webapp " + contextOfWepap, e);
         }
         return false;
     }
@@ -155,14 +174,21 @@ public class WebApplication {
      * @throws CarbonException If an error occurs while starting this webapp
      */
     public boolean start() throws CarbonException {
+        //start context of the Host
+        handleHotUpdateToHost("start");
+        //start the context of WebApplication
+        return start(this.context);
+    }
+
+    private boolean start(Context contextOfWepap) throws CarbonException {
         try {
-            if (!context.getAvailable()) {
-                context.start();
-                log.info("Started webapp: " + context);
+            if (!contextOfWepap.getAvailable()) {
+                contextOfWepap.start();
+                log.info("Started webapp: " + contextOfWepap);
                 return true;
             }
         } catch (Exception e) {
-            throw new CarbonException("Cannot start webapp " + context, e);
+            throw new CarbonException("Cannot start webapp " + contextOfWepap, e);
         }
         return false;
     }
@@ -173,21 +199,26 @@ public class WebApplication {
      * @throws CarbonException If an error occurs while lazy unloading
      */
     public void lazyUnload() throws CarbonException {
+        //lazyunload the context of WebApplication
+        lazyUnload(this.context);
+    }
+
+    private void lazyUnload(Context contextOfWepap) throws CarbonException {
         try {
-            if (context.getAvailable()) {
+            if (contextOfWepap.getAvailable()) {
                 // If the following is not done, the Realm will throw a LifecycleException, because
                 // Realm.stop is called for each context.
-                context.setRealm(null);
-                context.stop();
-                context.destroy();
-                log.info("Unloaded webapp: " + context);
+                contextOfWepap.setRealm(null);
+                contextOfWepap.stop();
+                contextOfWepap.destroy();
+                log.info("Unloaded webapp: " + contextOfWepap);
             }
             //if the webapp is stopped above context.getAvailable() becomes false.
             //So to unload stopped webapps this is done.
-            else if (LifecycleState.STOPPED.equals(context.getState())) {
-                context.setRealm(null);
-                context.destroy();
-                log.info("Unloaded webapp: " + context);
+            else if (LifecycleState.STOPPED.equals(contextOfWepap.getState())) {
+                contextOfWepap.setRealm(null);
+                contextOfWepap.destroy();
+                log.info("Unloaded webapp: " + contextOfWepap);
             }
         } catch (Exception e) {
             throw new CarbonException("Cannot lazy unload webapp " + context, e);
@@ -201,11 +232,46 @@ public class WebApplication {
      * @throws CarbonException If an error occurs while undeploying this webapp
      */
     public void undeploy() throws CarbonException {
-        lazyUnload();
+        //lazyunload the context of WebApplication
+        lazyUnload(this.context);
+        //lozyunload the context of Host
+        handleHotUpdateToHost("lazyUnload");
         File webappDir = new File(getAppBase(), context.getBaseName());
         if (TomcatUtil.checkUnpackWars() && webappDir.exists() && !FileManipulator.deleteDir(webappDir)) {
             throw new CarbonException("exploded Webapp directory " + webappDir + " deletion failed");
         }
+
+    }
+
+    /**
+     * Doing the start, stop, reload and lazy unload of webapps inside all hosts
+     * respectively when getting request.
+     *
+     * @param nameOfOperation  the operation to be performed in oder to hot update the host
+     * @throws CarbonException if errors occurs when hot update the host
+     */
+    private void handleHotUpdateToHost(String nameOfOperation) throws CarbonException {
+        if (DataHolder.getHotUpdateService() != null) {
+            Container[] containers = DataHolder.getCarbonTomcatService().getTomcat().getEngine().findChildren();
+            Context hostContext;
+            for (Container container : containers) {
+                if(container.getName() != "localhost") {
+                    hostContext = (Context) container.findChild("/");
+                    if (nameOfOperation.equalsIgnoreCase("start")) {
+                        start(hostContext);
+                    } else if (nameOfOperation.equalsIgnoreCase("stop")) {
+                        stop(hostContext);
+                    } else if (nameOfOperation.equalsIgnoreCase("reload")) {
+                        reload(hostContext);
+                    } else if (nameOfOperation.equalsIgnoreCase("lazyunload")) {
+                        lazyUnload(hostContext);
+                        //TODO delete the directory
+                    }
+                }
+
+            }
+        }
+
     }
 
     /**
@@ -225,7 +291,7 @@ public class WebApplication {
      * for our associated Host.
      *
      * @return The AppBase
-     * //TODO - when webapp exploding is supported for stratos, this should return the tenant's webapp dir
+     *         //TODO - when webapp exploding is supported for stratos, this should return the tenant's webapp dir
      */
     protected File getAppBase() {
         File appBase = null;
@@ -283,6 +349,7 @@ public class WebApplication {
 
     /**
      * Given a context path, get the config file name.
+     * @param path
      */
     private String getDocBase(String path) {
         String basename;

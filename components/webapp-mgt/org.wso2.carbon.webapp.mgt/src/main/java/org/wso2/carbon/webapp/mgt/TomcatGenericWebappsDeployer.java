@@ -17,11 +17,11 @@
 package org.wso2.carbon.webapp.mgt;
 
 import org.apache.catalina.Context;
+import org.apache.catalina.Host;
 import org.apache.catalina.core.StandardContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonException;
-import org.wso2.carbon.url.mapper.HotUpdateService;
 import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 
 import java.io.File;
@@ -149,7 +149,7 @@ public class TomcatGenericWebappsDeployer {
             webContextPrefix = "/";
         }
         handleWebappDeployment(webappWAR, webContextPrefix + warContext,
-                               webContextParams, applicationEventListeners);
+                webContextParams, applicationEventListeners);
     }
 
     /**
@@ -178,7 +178,7 @@ public class TomcatGenericWebappsDeployer {
             webContextPrefix = "/";
         }
         handleWebappDeployment(webappDir, webContextPrefix + warContext,
-                               webContextParams, applicationEventListeners);
+                                webContextParams, applicationEventListeners);
     }
 
     private void handleWebappDeployment(File webappFile, String contextStr,
@@ -189,8 +189,14 @@ public class TomcatGenericWebappsDeployer {
             Context context =
                     DataHolder.getCarbonTomcatService().addWebApp(contextStr, webappFile.getAbsolutePath());
             //deploying web app for url-mapper
-            if(isUrlMapperService()) {
-                DataHolder.getHotUpdateService().deployWebApp(webappFile);
+            if (DataHolder.getHotUpdateService() != null) {
+                List<String> hostNames = DataHolder.getHotUpdateService().getMappigsPerWebapp(contextStr);
+                for (String hostName : hostNames) {
+                    Host host = (Host) DataHolder.getCarbonTomcatService().
+                            getTomcat().getEngine().findChild(hostName);
+                    Context contextForHost =
+                            DataHolder.getCarbonTomcatService().addWebApp(host, "/", webappFile.getAbsolutePath());
+                }
             }
             context.setManager(new CarbonTomcatSessionManager(tenantId)); // TODO: Must use a clusterable manager such as BackupManager
             context.setReloadable(false);
@@ -257,14 +263,6 @@ public class TomcatGenericWebappsDeployer {
             // need to undeploy & redeploy.
             // See http://tomcat.apache.org/tomcat-5.5-doc/manager-howto.html#Reload An Existing Application
             undeploy(webApplication);
-            //undeploying web app for url-mapper
-            if(isUrlMapperService()) {
-                try {
-                    DataHolder.getHotUpdateService().undeployWebApp(webappFile);
-                } catch (Exception e) {
-                    log.error(e);
-                }
-            }
             handleWarWebappDeployment(webappFile, webContextParams, applicationEventListeners);
         }
         log.info("Redeployed webapp: " + webApplication);
@@ -286,19 +284,11 @@ public class TomcatGenericWebappsDeployer {
             Map<String, WebApplication> deployedWebapps = webappsHolder.getStartedWebapps();
             Map<String, WebApplication> stoppedWebapps = webappsHolder.getStoppedWebapps();
             String fileName = webappFile.getName();
-            //undeploying web app for url-mapper
-            if(isUrlMapperService()) {
-                try {
-                    DataHolder.getHotUpdateService().undeployWebApp(webappFile);
-                } catch (Exception e) {
-                    log.error(e);
-                }
-            }
             if (deployedWebapps.containsKey(fileName)) {
                 undeploy(deployedWebapps.get(fileName));
             }
             //also checking the stopped webapps.
-            else if(stoppedWebapps.containsKey(fileName)){
+            else if (stoppedWebapps.containsKey(fileName)) {
                 undeploy(stoppedWebapps.get(fileName));
             }
 
@@ -351,20 +341,5 @@ public class TomcatGenericWebappsDeployer {
     private void undeploy(WebApplication webapp) throws CarbonException {
         webappsHolder.undeployWebapp(webapp);
         log.info("Undeployed webapp: " + webapp);
-    }
-
-    /**
-     * Checking whether the HotUpdateService is available or not.
-     * @return boolean
-     */
-    private boolean isUrlMapperService() {
-        //TODO getting from BundleContext.
-        boolean exists = true;
-        try {
-            HotUpdateService.class.getName();
-        } catch (NoClassDefFoundError ignore) {
-            exists = false;
-        }
-        return exists;
     }
 }

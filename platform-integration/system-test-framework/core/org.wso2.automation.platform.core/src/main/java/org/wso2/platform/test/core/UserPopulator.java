@@ -107,6 +107,9 @@ public class UserPopulator {
             if (!userMgtAdmin.roleNameExists(roleName[roleNameIndex], sessionCookieUser)) {
                 userMgtAdmin.addRole(roleName[roleNameIndex], userList, permissions, sessionCookieUser);
                 resourceAdmin.addResourcePermission(sessionCookieUser, "/", "testRole", "3", "1");
+                resourceAdmin.addResourcePermission(sessionCookieUser, "/", "testRole", "2", "1");
+                resourceAdmin.addResourcePermission(sessionCookieUser, "/", "testRole", "4", "1");
+                resourceAdmin.addResourcePermission(sessionCookieUser, "/", "testRole", "5", "1");
                 log.info("Role " + roleName[roleNameIndex] + " was created successfully");
                 log.info("Role " + roleName[roleNameIndex] + " was created successfully");
             }

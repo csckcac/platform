@@ -1,0 +1,34 @@
+<% jagg.template = function(data, params, jagg) {
+
+        var apiName = request.getParameter("name");
+        var apiVersion = request.getParameter("version");
+
+        var api = require("/core/apis/list.js");
+        var result = api.getAPI(apiName,apiVersion);
+        return {
+        "api":result.api
+        };
+%>
+
+<ul class="nav nav-list">
+  <% var api = params.api%>
+  <% if(api.thumb==null){%>
+  <li><a href="#"><img id="apiThumb" src="images/api-default.png" alt="" /></a></li>
+  <%}else{%> <li><a href="#"><img id="apiThumb" src=<%=api.thumb%> alt="" /></a></li>
+  <%}%>
+  <li><a href="#" onclick="showTab('usersLink')"><i class="icon-user"></i>
+      <span class="userCount">
+          <% if (api.subs == "1"){%>
+          <%=api.subs%> User
+          <%}else{%>
+          <%=api.subs%> Users
+          </span></a></li>
+           <%}%>
+
+
+  <!--li><span><i class="icon-heart"></i> Up time: 90%</span></li-->
+  <li><span id="status"><i class="icon-pencil"></i>&nbsp; <%=api.status%></span></li>
+  <li><span id="version"><i class="icon-th"></i></span></li>
+  <li><a href="#"  onclick="showTab('docsLink')"><i class="icon-file"></i> Docs</a></li>
+</ul>
+<% }; %>

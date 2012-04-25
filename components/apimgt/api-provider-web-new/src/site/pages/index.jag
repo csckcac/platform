@@ -1,0 +1,45 @@
+<%
+include("/site/themes/jagg.jag");
+var site = require("/site/conf/site.json");
+
+var list = require("/core/apis/list.js");
+var result = list.getAPIsByProvider();
+var apis = result.apis;
+
+var params = {
+    "name":"pages/base",
+    "css":{},
+    "js":{},
+    "code":{},
+    "updates" : {
+        "css" : {},
+        "js" : {}
+    },
+    "params":
+        {
+            "title":"API Provider Listing",
+            "body":[
+                {
+                    "name":"layouts/extended",
+                    "params": {
+                        "top" : null,
+                        "left" : null,
+                        "middle" : {
+                            "name" : "item-listing/listing",
+                            "params" : {
+                                "apis" : apis
+                            }
+                        },
+                        "right" : null
+                    }
+                }
+            ]
+        }
+};
+
+log(jagg == null);
+jagg.templates = {};
+jagg.global = params;
+jagg.render(params, jagg);
+
+%>

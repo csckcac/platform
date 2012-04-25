@@ -1,0 +1,247 @@
+<%
+Log.prototype.isDebugEnabled = function () {
+    return false;
+};
+
+var jagg = jagg || {};
+
+(function () {
+
+    var getTemplateFile = function (initializer) {
+        return getThemeFile(initializer.getTemplateFile());
+    };
+
+    var getInitializerFile = function (template) {
+        return getTemplatesDir() + template + "/initializer.js";
+    };
+
+    var getTheme = function () {
+        //TODO : remove following lines if theme switching need to be avoided
+        var theme = request.getParameter("theme");
+        if (theme) {
+            return theme;
+        }
+        var site = require("/site/conf/site.json");
+        return site.theme;
+    };
+
+    var getThemesPath = function () {
+        return "/site/themes/";
+    };
+
+    var getThemePath = function () {
+        var site = require("/site/conf/site.json");
+        return getThemesPath() + getTheme() + "/";
+    };
+
+    var getDefaultThemePath = function () {
+        return getThemesPath() + "default/";
+    };
+
+    var getTemplatesDir = function () {
+        return getThemePath() + "tmpl/";
+    };
+
+    var getThemeFile = function (path) {
+        var prefix = getThemePath();
+        var def = getDefaultThemePath();
+        var tmpPath = prefix + path;
+        var file = new File(tmpPath);
+        return file.exists ? tmpPath : def + path;
+    };
+
+    var includeJag = function (path) {
+        include(getThemeFile(path));
+    };
+
+    var addHeaderCSS = function (global, template, key, css) {
+        css = getThemeFile(css);
+        insertGlobal(global, template, "css", key, css);
+    };
+
+    var addHeaderJS = function (global, template, key, js) {
+        js = getThemeFile(js);
+        insertGlobal(global, template, "js", key, js);
+    };
+
+    var addHeaderCode = function (global, template, key, code) {
+        insertGlobal(global, template, "code", key, code);
+    };
+
+    var insertGlobal = function (global, template, name, key, value) {
+        var obj = global[name] || (global[name] = {});
+        var tmpl = obj[template];
+        tmpl = tmpl || (obj[template] = {});
+        tmpl[key] = value;
+    };
+
+    var mergeParams = function (extParams, defParams) {
+        var key, obj;
+        extParams = extParams || {};
+        for (key in defParams) {
+            if (defParams.hasOwnProperty(key)) {
+                obj = extParams[key];
+                if (!obj) {
+                    extParams[key] = defParams[key];
+                }
+            }
+        }
+        return extParams;
+    };
+
+    var render = function (data) {
+        var jaggi = jagg;
+        jaggi.global = data;
+        jaggi.templates = {};
+        initializeTemplate(data, jaggi);
+        var fn, initializer, templates = jaggi.templates, log = new Log();
+        initializer = templates[data.name];
+        jaggi.template = null;
+        include(getTemplateFile(initializer));
+        fn = jaggi.template;
+        if (!fn) {
+            log.error("Template header and footer includes are missing for : " + data.name);
+        }
+        var params = data.params;
+        fn(initializer.getData(params), params, jaggi);
+    };
+
+    var includeTemplates = function (data) {
+        if (!data) {
+            return;
+        }
+
+        var i, length, jaggi = jagg;
+        if (data instanceof Array) {
+            length = data.length;
+            for (i = 0; i < length; i++) {
+                var d = data[i];
+                includeTemplate(d.name, d.params, jaggi);
+            }
+        } else {
+            includeTemplate(data.name, data.params, jaggi);
+        }
+    };
+
+    var inheritParent = function (initializer) {
+        if (!initializer.getParent) {
+            return;
+        }
+        var parent = require(getInitializerFile(initializer.getParent()));
+        for (var prop in parent) {
+            if (parent.hasOwnProperty(prop)) {
+                if (!initializer[prop]) {
+                    initializer[prop] = parent[prop];
+                }
+            }
+        }
+    };
+
+    var includeTemplate = function (name, params) {
+        //initializeTemplate({name:name, params:null}, jagg);
+
+        var fn, initializer, jaggi = jagg, templates = jaggi.templates, log = new Log();
+        initializer = templates[name];
+        jaggi.template = null;
+        include(getTemplateFile(initializer));
+        fn = jaggi.template;
+        if (!fn) {
+            log.error("Template header and footer includes are missing for : " + name);
+        }
+        fn(initializer.getData(params), params, jaggi);
+    };
+
+    var initializeTemplate = function (data, jagg) {
+        if (!data) {
+            return;
+        }
+        var extParams, defParams, tmplParams, tmpls,
+                i, length, name = data.name, log = new Log();
+        var initializer = jagg.templates[name];
+        if (!initializer) {
+            initializer = require(getInitializerFile(name));
+            inheritParent(initializer);
+            jagg.templates[name] = initializer;
+            initializer.initialize();
+        }
+        extParams = data.params || (data.params = {});
+        defParams = initializer.getParams();
+        mergeParams(extParams, defParams);
+        tmplParams = initializer.getTemplateParams();
+        length = tmplParams.length;
+        for (i = 0; i < length; i++) {
+            initializeTemplates(tmplParams[i], extParams, jagg);
+        }
+
+        tmpls = initializer.getTemplates();
+        length = tmpls.length;
+        for (i = 0; i < length; i++) {
+            initializeTemplate({name:tmpls[i], params:null}, jagg);
+        }
+    };
+
+    // [ "foo", "bar", "mar"]
+    // [{ "name" : "foo/bar", params : {}}]
+    var initializeTemplates = function (keys, params, jagg) {
+        if (!params) {
+            return;
+        }
+        var i, length, values;
+        if (typeof keys !== "string") {
+            length = keys.length;
+            values = params[keys[0]];
+            var last = length == 1;
+            if (values instanceof Array) {
+                length = values.length;
+                for (i = 0; i < length; i++) {
+                    if (last) {
+                        initializeTemplate(values[i], jagg);
+                    } else {
+                        initializeTemplates(keys.slice(1), values[i], jagg);
+                    }
+                }
+            } else {
+                if (last) {
+                    initializeTemplate(values, jagg);
+                } else {
+                    initializeTemplates(keys.slice(1), values, jagg);
+                }
+            }
+            return;
+        } else {
+            values = params[keys];
+        }
+
+        if (values instanceof Array) {
+            length = values.length;
+            for (i = 0; i < length; i++) {
+                initializeTemplate(values[i], jagg);
+            }
+        } else {
+            initializeTemplate(values, jagg);
+        }
+    };
+
+    var ns = jagg;
+    //config variables
+    ns.templates = null;
+    ns.global = null;
+    ns.getTemplateFile = getTemplateFile;
+    ns.getInitializerFile = getInitializerFile;
+    ns.getTheme = getTheme;
+    ns.getThemesPath = getThemesPath;
+    ns.getDefaultThemePath = getDefaultThemePath;
+    ns.getTemplatesDir = getTemplatesDir;
+    ns.getThemeFile = getThemeFile;
+    ns.includeJag = includeJag;
+    ns.addHeaderCSS = addHeaderCSS;
+    ns.addHeaderJS = addHeaderJS;
+    ns.addHeaderCode = addHeaderCode;
+    ns.render = render;
+    ns.insertGlobal = insertGlobal;
+    ns.includeTemplate = includeTemplate;
+    ns.includeTemplates = includeTemplates;
+    ns.initializeTemplate = initializeTemplate;
+    ns.initializeTemplates = initializeTemplates;
+}());
+//%>

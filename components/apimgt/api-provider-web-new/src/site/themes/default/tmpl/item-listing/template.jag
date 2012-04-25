@@ -1,0 +1,42 @@
+<% jagg.template = function(data, params, jagg) { %>
+<div id="home">
+<h2>My APIs</h2>
+
+
+<ul class="thumbnails">
+<span class="loading"></span>
+<%
+    var i, api, apis = data.apis, length = apis.length;
+    for(i = 0; i < length; i++) {
+        api = apis[i];
+    %>
+    <li class="span2">
+        <div class="thumbnail">
+            <a href="?place=api-details&name=<%=apiName%>&version=<%=apiVersion%>">
+            <% if(api.thumb==null){%>
+            <img class="thumb" src="images/api-default.png" alt="">
+            <%} else{%>
+            <img class="thumb" src="<%=api.thumb%>" alt="">
+            </a>
+            <h5><a href="?place=api-details&name=<%=apiName%>&version=<%=apiVersion%>" class="label label-info">api.name + "-v" + api.version</a></h5>
+            <div><a href="?place=api-details&name=<%=apiName%>&version=<%=apiVersion%>"><span id="noOfUsers">
+                   <% if (api.subs == "1"){%>
+                    <%=api.subs%> User
+                    <%}else{%>
+                     <%=api.subs%> Users<%}%>
+                    </span></a></div>
+            <!--span>Up Time: 90%</span-->
+            <p class="status">api.status</p>
+        </div>
+     </li>
+      <%}%>
+</ul>
+
+
+
+<div class="pagination" id="pagination">
+<ul></ul>
+</div>
+</div>
+
+<% }; %>

@@ -81,6 +81,36 @@ public class TaskOperationsTestCase {
         Assert.assertEquals(loadedTask.getStatus().toString(), "RESERVED",
                             "The task status should be RESERVED!");
 
+        // Now reclaim the task to continue with other operations.
+
+    }
+
+    @Test(groups = {"wso2.bps"}, description = "Claims approval test case release and reclaim task")
+    public void taskReleaseAndReClaimTask()
+            throws Exception {
+
+        taskOperationsStub.release(taskId);
+        TTaskAbstract loadedTask = taskOperationsStub.loadTask(taskId);
+
+        //Now as the task have been release
+        //1. The actual user value should be empty.
+        Assert.assertNull(loadedTask.getActualOwner(),
+                            "After releasing the task the actual owner should be null");
+        //2. The task status should go back to READY
+        Assert.assertEquals(loadedTask.getStatus().toString(), "READY",
+                            "The task status should be READY!");
+
+
+        // Now reclaim the task to continue with other operations.
+        taskOperationsStub.claim(taskId);
+        TTaskAbstract loadedTaskAferReClaim = taskOperationsStub.loadTask(taskId);
+        Assert.assertEquals(loadedTaskAferReClaim.getActualOwner().getTUser(), HumanTaskTestConstants.CLERK1_USER,
+                            "The assignee should be clerk1 !");
+        Assert.assertEquals(loadedTaskAferReClaim.getStatus().toString(), "RESERVED",
+                            "The task status should be RESERVED!");
+
+
+
     }
 
     @Test(groups = {"wso2.bps"}, description = "Claims approval test case")

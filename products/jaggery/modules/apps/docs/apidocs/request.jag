@@ -189,6 +189,39 @@ include('/includes/topnavi.jag');
                         </td>
 
                     </tr>
+                    <tr>
+
+                        <td><code>getRemoteAddr()</code>
+                        </td>
+                        <td>String</td>
+                        <td>
+                            <pre class="prettyprint">request.getRemoteAddr()</pre>
+                            Returns the Internet Protocol (IP) address of the client that sent the request.
+                        </td>
+
+                    </tr>
+                    <tr>
+
+                        <td><code>getPathInfo()</code>
+                        </td>
+                        <td>String</td>
+                        <td>
+                            <pre class="prettyprint">request.getPathInfo()</pre>
+                            Returns the request extra path information
+                        </td>
+
+                    </tr>
+                    <tr>
+
+                        <td><code>getLocalPort()</code>
+                        </td>
+                        <td>Number</td>
+                        <td>
+                            <pre class="prettyprint">request.getLocalPort()</pre>
+                            Returns the request local port number
+                        </td>
+
+                    </tr>
 
                     <tr>
 

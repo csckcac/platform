@@ -177,15 +177,38 @@ public class MapRedTask extends ExecDriver implements Serializable {
       String isSilent = "true".equalsIgnoreCase(System
           .getProperty("test.silent")) ? "-nolog" : "";
 
-      String jarCmd;
+      String jarCmd = "";
+      String embeddedLocalMode = conf.getVar(HiveConf.ConfVars.HADOOPEMBEDDEDLOCALMODE);
+
+        if (embeddedLocalMode != null && embeddedLocalMode.trim().equalsIgnoreCase("true")) {
+            jarCmd = " org.apache.hadoop.util.RunJar " ;
+        }
+
       if (ShimLoader.getHadoopShims().usesJobShell()) {
-        jarCmd = libJarsOption + hiveJar + " " + ExecDriver.class.getName();
+        jarCmd += libJarsOption + hiveJar + " " + ExecDriver.class.getName();
       } else {
-        jarCmd = hiveJar + " " + ExecDriver.class.getName() + libJarsOption;
+        jarCmd += hiveJar + " " + ExecDriver.class.getName() + libJarsOption;
       }
 
-      String cmdLine = hadoopExec + " jar " + jarCmd + " -plan "
+
+        String cmdLine;
+        String javaHome = System.getenv("JAVA_HOME");
+        String carbonHome = System.getProperty("CARBON_HOME");
+        String pluginsLocation = carbonHome + File.separator + "repository" + File.separator +
+                                 "components" + File.separator + "plugins";
+        String pluginsClasspath = pluginsLocation + "/*";
+
+        if (embeddedLocalMode != null && embeddedLocalMode.trim().equalsIgnoreCase("true")) {
+             cmdLine = javaHome + File.separator + "bin" + File.separator +"java" + " -classpath " +
+                       pluginsClasspath + jarCmd + " -plan " + planPath.toString() + " " +
+                       isSilent + " " + "-Dproc_jar " + "-classpath " + pluginsClasspath +
+                       " " + hiveConfArgs;
+        } else {
+            cmdLine = hadoopExec + " jar " + jarCmd + " -plan "
           + planPath.toString() + " " + isSilent + " " + hiveConfArgs;
+        }
+        
+
 
       String workDir = (new File(".")).getCanonicalPath();
       String files = getResourceFiles(conf, SessionState.ResourceType.FILE);
@@ -208,7 +231,10 @@ public class MapRedTask extends ExecDriver implements Serializable {
         }
       }
 
-      LOG.info("Executing: " + cmdLine);
+      if (LOG.isDebugEnabled()) {
+          LOG.debug("Executing: " + cmdLine);
+      }
+
       Process executor = null;
 
       // Inherit Java system variables

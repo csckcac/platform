@@ -63,7 +63,12 @@
         <hr/>
         <p>After giving a data source id select the data source type as Google Spread Sheet and
             enter
-            the url for the sheet. If the spread sheet is Private you have to enter the user name
+            the url for the sheet. Note that public visibility is supported when 
+	    Google Spread Sheet is published on the web. To start publishing a spreadsheet to
+	    the web, select File > Publish to the web from the Spreadsheets user interface, and 
+	    then click the Start Publishing button. Use the URL generated there as the URL of the 
+            sheet.
+	    If the spread sheet is Private you have to enter the user name
             and
             the password for the sheet. Click on "Save" once you done with entering the details.
         </p>

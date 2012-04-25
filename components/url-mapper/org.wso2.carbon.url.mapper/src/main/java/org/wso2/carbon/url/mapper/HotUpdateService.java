@@ -15,15 +15,9 @@
  */
 package org.wso2.carbon.url.mapper;
 
-import org.wso2.carbon.url.mapper.internal.exception.UrlMapperException;
-
-import java.io.File;
+import java.util.List;
 
 public interface HotUpdateService {
 
-    public void deployWebApp(File file) throws UrlMapperException;
-
-    public void undeployWebApp(File file) throws UrlMapperException;
-
-    public void deleteWebApp(File file) throws UrlMapperException;
+    public List<String> getMappigsPerWebapp(String webAppName);
 }

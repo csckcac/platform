@@ -19,36 +19,37 @@ package org.wso2.carbon.apimgt.usage.client;
 
 public final class APIMgtUsageQueryServiceClientConstants {
 
-    public static final String  BASEEnriched = "BASEEnriched";
 
-    public static final String  BASEEnrichedIndex = "BASEEnrichedIndex";
+    public static final String API_SERVICE_TIME_SUMMARY_TABLE = "APIServiceTimeSummary";
 
-    public static final String  APISummaryTable = "APISummary";
+    public static final String API_SERVICE_TIME_SUMMARY_TABLE_INDEX = "APIServiceTimeSummaryIndex";
 
-    public static final String  APILastAccessTable = "APILastAccess";
+    public static final String API_VERSION_SUMMARY_TABLE = "APIVersionSummary";
 
-    public static final String  APIServiceTimeSummaryTable = "APIServiceTimeSummary";
+    public static final String API_VERSION_SUMMARY_TABLE_INDEX = "APIVersionSummaryIndex";
 
-    public static final String  UserAPISummaryTable = "UserAPISummary";
+    public static final String API_VERSION_USER_SUMMARY_TABLE = "APIVersionUserSummary";
 
-    public static final String  UserAPILastAccessTable = "UserAPILastAccess";
+    public static final String API_VERSION_USER_SUMMARY_TABLE_INDEX = "APIVersionUserSummaryIndex";
 
-    public static final String  UserAPIServiceTimeSummaryTable = "UserAPIServiceTimeSummary";
+    public static final String API_VERSION_LAST_ACCESS_TABLE = "APIVersionLastAccess";
 
-    public static final String  APISummaryTableIndex = "APISummaryIndex";
+    public static final String API_VERSION_LAST_ACCESS_TABLE_INDEX = "APIVersionLastAccessIndex";
 
-    public static final String  APILastAccessTableIndex = "APILastAccessIndex";
+    public static final String ROWS = "rows";
 
-    public static final String  APIServiceTimeSummaryTableIndex = "APIServiceTimeSummaryIndex";
+    public static final String ROW = "row";
 
-    public static final String  UserAPISummaryTableIndex = "UserAPISummaryIndex";
+    public static final String REQUEST = "request";
 
-    public static final String  UserAPILastAccessTableIndex = "UserAPILastAccessIndex";
+    public static final String API = "api";
 
-    public static final String  UserAPIServiceTimeSummaryTableIndex = "UserAPIServiceTimeSummaryIndex";
+    public static final String SERVICE_TIME = "serviceTime";
 
-    public static final String  APIVersionSummaryTable = "APIVersionSummary";
+    public static final String VERSION = "version";
 
-    public static final String  APIVersionSummaryTableIndex = "APIVersionSummaryIndex";
+    public static final String USER = "userId";
+
+    public static final String REQUEST_TIME = "requestTime";
 
 }

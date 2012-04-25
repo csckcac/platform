@@ -1,6 +1,6 @@
 package org.wso2.carbon.apimgt.usage.client.dto;
 
-public class ProviderAPIVersionDTO {
+public class ProviderAPIVersionUsageDTO {
 
     String version;
     String count;
@@ -21,7 +21,7 @@ public class ProviderAPIVersionDTO {
         this.version = version;
     }
 
-    public ProviderAPIVersionDTO(String version,String count){
+    public ProviderAPIVersionUsageDTO(String version, String count){
         this.version = version;
         this.count = count;
     }

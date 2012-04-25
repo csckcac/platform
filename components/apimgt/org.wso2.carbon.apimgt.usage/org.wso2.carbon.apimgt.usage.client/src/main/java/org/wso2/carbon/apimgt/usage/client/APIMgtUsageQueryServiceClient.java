@@ -19,558 +19,221 @@ package org.wso2.carbon.apimgt.usage.client;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.apache.axis2.context.ConfigurationContext;
-import org.apache.commons.lang.StringUtils;
-import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUsage;
-import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionDTO;
+import org.wso2.carbon.apimgt.api.APIManagementException;
+import org.wso2.carbon.apimgt.api.model.API;
+import org.wso2.carbon.apimgt.api.model.APIIdentifier;
+import org.wso2.carbon.apimgt.api.model.Subscriber;
+import org.wso2.carbon.apimgt.impl.APIManagerImpl;
+import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUsageDTO;
+import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIServiceTimeDTO;
+import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUserUsageDTO;
+import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUsageDTO;
+import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionLastAccessDTO;
 import org.wso2.carbon.apimgt.usage.client.exception.APIMgtUsageQueryServiceClientException;
-import org.wso2.carbon.bam.index.stub.IndexAdminServiceConfigurationException;
-import org.wso2.carbon.bam.index.stub.IndexAdminServiceIndexingException;
-import org.wso2.carbon.bam.index.stub.IndexAdminServiceStub;
-import org.wso2.carbon.bam.index.stub.service.types.IndexDTO;
 import org.wso2.carbon.bam.presentation.stub.QueryServiceStoreException;
 import org.wso2.carbon.bam.presentation.stub.QueryServiceStub;
 
 import javax.xml.namespace.QName;
 import java.rmi.RemoteException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Map;
+import java.util.Set;
 
 public class APIMgtUsageQueryServiceClient {
 
-    public static final String ROWS = "rows";
-    public static final String ROW = "row";
-    public static final String REQUEST = "request";
     private QueryServiceStub qss;
-    private IndexAdminServiceStub indexAdminStub;
 
-    public APIMgtUsageQueryServiceClient(ConfigurationContext cc, String targetEndpoint,
-                                         boolean useSeparateListener) throws
-                                                                      APIMgtUsageQueryServiceClientException {
-        if (targetEndpoint == null || targetEndpoint.equals("")) {
-            targetEndpoint = "https://localhost:9443/services/QueryService";
-        }
-        try {
-            qss = new QueryServiceStub(cc, targetEndpoint, useSeparateListener);
-        } catch (AxisFault e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while instantiating org.wso2.carbon.apimgt.usage.client.APIMgtUsageQueryServiceClient", e);
-        }
-    }
+    private APIManagerImpl apiManagerImpl;
 
-    public APIMgtUsageQueryServiceClient(ConfigurationContext cc, String targetEndpoint) throws
-                                                                                         APIMgtUsageQueryServiceClientException {
-        if (targetEndpoint == null || targetEndpoint.equals("")) {
-            targetEndpoint = "https://localhost:9443/services/QueryService";
-        }
-        try {
-            qss = new QueryServiceStub(cc, targetEndpoint);
-        } catch (AxisFault e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while instantiating org.wso2.carbon.apimgt.usage.client.APIMgtUsageQueryServiceClient", e);
-        }
-    }
-
-    public APIMgtUsageQueryServiceClient(ConfigurationContext cc) throws
-                                                                  APIMgtUsageQueryServiceClientException {
-        try {
-            qss = new QueryServiceStub(cc);
-        } catch (AxisFault e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while instantiating org.wso2.carbon.apimgt.usage.client.APIMgtUsageQueryServiceClient", e);
-        }
-    }
-
-    public APIMgtUsageQueryServiceClient(String targetEndpoint) throws
-                                                                APIMgtUsageQueryServiceClientException {
+    public APIMgtUsageQueryServiceClient(String targetEndpoint) throws APIMgtUsageQueryServiceClientException {
         if (targetEndpoint == null || targetEndpoint.equals("")) {
             targetEndpoint = "https://localhost:9444/";
         }
         String queryServiceEndpoint = targetEndpoint + "services/QueryService";
-        String indexAdminServiceEndpoint = targetEndpoint + "services/IndexAdminService";
         try {
             qss = new QueryServiceStub(queryServiceEndpoint);
-            indexAdminStub = new IndexAdminServiceStub(indexAdminServiceEndpoint);
         } catch (AxisFault e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while instantiating org.wso2.carbon.apimgt.usage.client.APIMgtUsageQueryServiceClient", e);
+            throw new APIMgtUsageQueryServiceClientException("Exception while instantiating QueryServiceStub", e);
+        }
+        try{
+            apiManagerImpl = new APIManagerImpl("admin","admin","https://localhost:9443/");
+        }
+        catch (APIManagementException e) {
+            throw new APIMgtUsageQueryServiceClientException("Exception while instantiating APIManagerImpl", e);
         }
     }
 
-    // Get usage count for single API
-    public String getAPIUsage(String api) throws APIMgtUsageQueryServiceClientException {
-        String result = null;
+    /**
+     * This method can be used to get total request count for each API version by provider.
+     * @return  List<ProviderAPIVersionUsageDTO>
+     * @throws APIMgtUsageQueryServiceClientException
+     */
+    public List<ProviderAPIVersionUsageDTO> getProviderAPIVersionUsage(String providerName, String apiName) throws APIMgtUsageQueryServiceClientException {
+        List<ProviderAPIVersionUsageDTO> result = new ArrayList<ProviderAPIVersionUsageDTO>();
+        OMElement omElement = null;
         QueryServiceStub.CompositeIndex[] compositeIndex = new QueryServiceStub.CompositeIndex[1];
         compositeIndex[0] = new QueryServiceStub.CompositeIndex();
         compositeIndex[0].setIndexName("api");
-        compositeIndex[0].setRangeFirst(api);
-        compositeIndex[0].setRangeLast(api);
-        OMElement omElement = null;
-        try {
-            omElement = qss.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.APISummaryTable, APIMgtUsageQueryServiceClientConstants.APISummaryTableIndex, compositeIndex);
-        } catch (RemoteException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        } catch (QueryServiceStoreException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        }
-        String omElementString = omElement.toString();
-        Pattern pattern = Pattern.compile("<request>(.*?)</request>");
-        Matcher matcher = pattern.matcher(omElementString);
-        if (matcher.find()) {
-            result = matcher.group(1);
+        compositeIndex[0].setRangeFirst(apiName);
+        compositeIndex[0].setRangeLast(getNextStringInLexicalOrder(apiName));
+        omElement = this.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_VERSION_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.API_VERSION_SUMMARY_TABLE_INDEX, compositeIndex);
+        Set<String> versions = this.getAPIVersions(providerName, apiName);
+        for(String version:versions){
+            OMElement rowsElement = omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
+            Iterator rowIterator = rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
+            while(rowIterator.hasNext()){
+                OMElement row = (OMElement)rowIterator.next();
+                if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.VERSION)).getText().equals(version)){
+                    result.add(new ProviderAPIVersionUsageDTO(version,row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST)).getText()));
+                    break;
+                }
+            }
+
         }
         return result;
     }
 
-    // Get usage count for single API by time
-    public String getAPIUsageByTime(String api, String start, String end) throws
-                                                                          APIMgtUsageQueryServiceClientException {
-        String result = null;
+    /**
+     * This method can be used to get total request count by subscribers for a single API provided by a particular provider.
+     * @return  List<ProviderAPIUserUsageDTO>
+     * @throws APIMgtUsageQueryServiceClientException
+     */
+    public List<ProviderAPIUserUsageDTO> getProviderAPIUserUsage(String providerName, String apiName) throws APIMgtUsageQueryServiceClientException {
+        List<ProviderAPIUserUsageDTO> result = new ArrayList<ProviderAPIUserUsageDTO>();
+        OMElement omElement = null;
         QueryServiceStub.CompositeIndex[] compositeIndex = new QueryServiceStub.CompositeIndex[1];
         compositeIndex[0] = new QueryServiceStub.CompositeIndex();
-        compositeIndex[0].setIndexName("requestTime");
-        compositeIndex[0].setRangeFirst(start);
-        compositeIndex[0].setRangeLast(end);
-        OMElement omElement = null;
-        try {
-            omElement = qss.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.BASEEnriched, APIMgtUsageQueryServiceClientConstants.BASEEnrichedIndex, compositeIndex);
-        } catch (RemoteException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        } catch (QueryServiceStoreException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
+        compositeIndex[0].setIndexName("api");
+        compositeIndex[0].setRangeFirst(apiName);
+        compositeIndex[0].setRangeLast(getNextStringInLexicalOrder(apiName));
+        omElement = this.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_VERSION_USER_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.API_VERSION_USER_SUMMARY_TABLE_INDEX, compositeIndex);
+        Set<String> versions = this.getAPIVersions(providerName,apiName);
+        Set<APIIdentifier> apiIdentifiers = null;
+        for(String version:versions){
+            apiIdentifiers.add(new APIIdentifier(providerName, apiName, version));
         }
-        String omElementString = omElement.toString();
-        result = ((Integer) StringUtils.countMatches(omElementString, "<api>" + api + "</api>")).toString();
-        return result;
-    }
-
-    // Get usage count for multiple APIs.
-    // The count for each API is returned in the order of the APIs in the array passed.
-    public String[] getAPIUsage(String[] api) throws APIMgtUsageQueryServiceClientException {
-        String[] result = new String[api.length];
-        OMElement omElement = null;
-        try {
-            omElement = qss.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.APISummaryTable, APIMgtUsageQueryServiceClientConstants.APISummaryTableIndex, null);
-        } catch (RemoteException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        } catch (QueryServiceStoreException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        }
-        String omElementString = omElement.toString();
-        String temp = null;
-        for (int i = 0; i < api.length; i++) {
-            Pattern pattern = Pattern.compile(".*(<row>.*<api>" + api[i] + "</api>.*?</row>)");
-            Matcher matcher = pattern.matcher(omElementString);
-            if (matcher.find()) {
-                temp = matcher.group(1);
-            }
-            Pattern pattern1 = Pattern.compile("<request>(.*?)</request>");
-            Matcher matcher1 = pattern1.matcher(temp);
-            if (matcher1.find()) {
-                result[i] = matcher1.group(1);
-            }
-        }
-        return result;
-    }
-
-    // Get usage count for multiple APIs by time.
-    // The count for each API is returned in the order of the APIs in the array passed.
-    public String[] getAPIUsageByTime(String[] api, String start, String end) throws
-                                                                              APIMgtUsageQueryServiceClientException {
-        String[] result = new String[api.length];
-        QueryServiceStub.CompositeIndex[] compositeIndex = new QueryServiceStub.CompositeIndex[1];
-        compositeIndex[0] = new QueryServiceStub.CompositeIndex();
-        compositeIndex[0].setIndexName("requestTime");
-        compositeIndex[0].setRangeFirst(start);
-        compositeIndex[0].setRangeLast(end);
-        OMElement omElement = null;
-        try {
-            omElement = qss.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.BASEEnriched, APIMgtUsageQueryServiceClientConstants.BASEEnrichedIndex, compositeIndex);
-        } catch (RemoteException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        } catch (QueryServiceStoreException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        }
-        String omElementString = omElement.toString();
-        for (int i = 0; i < api.length; i++) {
-            result[i] = ((Integer) StringUtils.countMatches(omElementString, "<api>" + api[i] + "</api>")).toString();
-        }
-        return result;
-    }
-
-    // Get usage count for single API for particular user
-    public String getUserAPIUsage(String user, String api) throws
-                                                           APIMgtUsageQueryServiceClientException {
-        String result = null;
-        QueryServiceStub.CompositeIndex[] compositeIndex = new QueryServiceStub.CompositeIndex[2];
-        compositeIndex[0] = new QueryServiceStub.CompositeIndex();
-        compositeIndex[0].setIndexName("user");
-        compositeIndex[0].setRangeFirst(user);
-        compositeIndex[0].setRangeLast(user);
-        compositeIndex[1] = new QueryServiceStub.CompositeIndex();
-        compositeIndex[1].setIndexName("api");
-        compositeIndex[1].setRangeFirst(api);
-        compositeIndex[1].setRangeLast(api);
-        OMElement omElement = null;
-        try {
-            omElement = qss.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.UserAPISummaryTable, APIMgtUsageQueryServiceClientConstants.UserAPISummaryTableIndex, compositeIndex);
-        } catch (RemoteException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        } catch (QueryServiceStoreException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        }
-        String omElementString = omElement.toString();
-        Pattern pattern = Pattern.compile("<request>(.*?)</request>");
-        Matcher matcher = pattern.matcher(omElementString);
-        if (matcher.find()) {
-            result = matcher.group(1);
-        }
-        return result;
-    }
-
-    // Get usage count for single API for particular user by time
-    public String getUserAPIUsageByTime(String user, String api, String start, String end) throws
-                                                                                           APIMgtUsageQueryServiceClientException {
-        int result = 0;
-        QueryServiceStub.CompositeIndex[] compositeIndex = new QueryServiceStub.CompositeIndex[1];
-        compositeIndex[0] = new QueryServiceStub.CompositeIndex();
-        compositeIndex[0].setIndexName("requestTime");
-        compositeIndex[0].setRangeFirst(start);
-        compositeIndex[0].setRangeLast(end);
-        OMElement omElement = null;
-        try {
-            omElement = qss.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.BASEEnriched, APIMgtUsageQueryServiceClientConstants.BASEEnrichedIndex, compositeIndex);
-        } catch (RemoteException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        } catch (QueryServiceStoreException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        }
-
-        String omElementString = omElement.toString();
-        Pattern pattern = Pattern.compile(".*?(<row>.*?<user>" + user + "</user>.*?</row>)");
-        Matcher matcher = pattern.matcher(omElementString);
-        while (matcher.find()) {
-            if (matcher.group(1).contains("<api>" + api + "</api>")) {
-                result++;
-            }
-        }
-        return ((Integer) result).toString();
-    }
-
-    // Get usage count for multiple APIs for particular user.
-    // The count for each API is returned in the order of the APIs in the array passed.
-    public String[] getUserAPIUsage(String user, String[] api) throws
-                                                               APIMgtUsageQueryServiceClientException {
-        String[] result = new String[api.length];
-        QueryServiceStub.CompositeIndex[] compositeIndex = new QueryServiceStub.CompositeIndex[1];
-        compositeIndex[0] = new QueryServiceStub.CompositeIndex();
-        compositeIndex[0].setIndexName("user");
-        compositeIndex[0].setRangeFirst(user);
-        compositeIndex[0].setRangeLast(getNextStringInLexicalOrder(user));
-        OMElement omElement = null;
-        try {
-            omElement = qss.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.UserAPISummaryTable, APIMgtUsageQueryServiceClientConstants.UserAPISummaryTableIndex, compositeIndex);
-        } catch (RemoteException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        } catch (QueryServiceStoreException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        }
-        String omElementString = omElement.toString();
-        String temp = null;
-        for (int i = 0; i < api.length; i++) {
-            Pattern pattern = Pattern.compile(".*(<row>.*<api>" + api[i] + "</api>.*?</row>)");
-            Matcher matcher = pattern.matcher(omElementString);
-            if (matcher.find()) {
-                temp = matcher.group(1);
-            }
-            Pattern pattern1 = Pattern.compile("<request>(.*?)</request>");
-            Matcher matcher1 = pattern1.matcher(temp);
-            if (matcher1.find()) {
-                result[i] = matcher1.group(1);
-            }
-        }
-        return result;
-    }
-
-    // Get usage count for multiple APIs for particular user by time.
-    // The count for each API is returned in the order of the APIs in the array passed.
-    public String[] getUserAPIUsageByTime(String user, String[] api, String start, String end)
-            throws
-            APIMgtUsageQueryServiceClientException {
-        int[] result = new int[api.length];
-        QueryServiceStub.CompositeIndex[] compositeIndex = new QueryServiceStub.CompositeIndex[1];
-        compositeIndex[0] = new QueryServiceStub.CompositeIndex();
-        compositeIndex[0].setIndexName("requestTime");
-        compositeIndex[0].setRangeFirst(start);
-        compositeIndex[0].setRangeLast(end);
-        OMElement omElement = null;
-        try {
-            omElement = qss.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.BASEEnriched, APIMgtUsageQueryServiceClientConstants.BASEEnrichedIndex, compositeIndex);
-        } catch (RemoteException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        } catch (QueryServiceStoreException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        }
-        String omElementString = omElement.toString();
-        Pattern pattern = Pattern.compile(".*?(<row>.*?<user>" + user + "</user>.*?</row>)");
-        Matcher matcher = pattern.matcher(omElementString);
-        while (matcher.find()) {
-            for (int i = 0; i < api.length; i++) {
-                if (matcher.group(1).contains("<api>" + api[i] + "</api>")) {
-                    result[i]++;
+        Map<String,Float> map = new HashMap<String,Float>();
+        for(APIIdentifier apiIdentifier:apiIdentifiers){
+            Set<Subscriber> subscribers = this.getSubscribersOfAPI(providerName,apiName,apiIdentifier.getVersion());
+            for(Subscriber subscriber:subscribers){
+                OMElement rowsElement = omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
+                Iterator rowIterator = rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
+                while(rowIterator.hasNext()){
+                    OMElement row = (OMElement)rowIterator.next();
+                    if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.VERSION)).getText().equals(apiIdentifier.getVersion()) && row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.USER)).getText().equals(subscriber.getName())){
+                        if(map.containsKey(subscriber.getName())){
+                            map.put(subscriber.getName(),map.get(subscriber.getName())+Float.parseFloat(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST)).getText()));
+                        }else{
+                            map.put(subscriber.getName(),Float.parseFloat(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST)).getText()));
+                        }
+                        break;
+                    }
                 }
             }
         }
-        String[] return_result = new String[api.length];
-        for (int i = 0; i < api.length; i++) {
-            return_result[i] = ((Integer) result[i]).toString();
-        }
-        return return_result;
-    }
-
-
-    // Get last access time for single API
-    public String getAPILastAccess(String api) throws APIMgtUsageQueryServiceClientException {
-        String result = null;
-        QueryServiceStub.CompositeIndex[] compositeIndex = new QueryServiceStub.CompositeIndex[1];
-        compositeIndex[0] = new QueryServiceStub.CompositeIndex();
-        compositeIndex[0].setIndexName("api");
-        compositeIndex[0].setRangeFirst(api);
-        compositeIndex[0].setRangeLast(api);
-        OMElement omElement = null;
-        try {
-            omElement = qss.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.APILastAccessTable, APIMgtUsageQueryServiceClientConstants.APILastAccessTableIndex, compositeIndex);
-        } catch (RemoteException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        } catch (QueryServiceStoreException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        }
-        String omElementString = omElement.toString();
-        Pattern pattern = Pattern.compile("<requestTime>(.*?)</requestTime>");
-        Matcher matcher = pattern.matcher(omElementString);
-        if (matcher.find()) {
-            result = matcher.group(1);
+        Set<String> keys = map.keySet();
+        for(String key:keys){
+            result.add(new ProviderAPIUserUsageDTO(key,map.get(key).toString()));
         }
         return result;
     }
 
-
-    // Get last access time for multiple APIs.
-    // The time for each API is returned in the order of the APIs in the array passed.
-    public String[] getAPILastAccess(String[] api) throws APIMgtUsageQueryServiceClientException {
-        String[] result = new String[api.length];
-        OMElement omElement = null;
-        try {
-            omElement = qss.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.APILastAccessTable, APIMgtUsageQueryServiceClientConstants.APILastAccessTableIndex, null);
-        } catch (RemoteException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        } catch (QueryServiceStoreException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
+    /**
+     * This method can be used to get total request count for each API by provider.
+     * @return  List<ProviderAPIDTO>
+     * @throws APIMgtUsageQueryServiceClientException
+     */
+    public List<ProviderAPIUsageDTO> getProviderAPIUsage(String providerName) throws APIMgtUsageQueryServiceClientException {
+        List<ProviderAPIUsageDTO> result = new ArrayList<ProviderAPIUsageDTO>();
+        List<API> apis = this.getAPIsByProvider(providerName);
+        Set<APIIdentifier> apiIdentifiers = new HashSet<APIIdentifier>();
+        for(API api:apis){
+            Set<String> versions = this.getAPIVersions(providerName,api.getId().getApiName());
+            for(String version:versions){
+                apiIdentifiers.add(new APIIdentifier(providerName, api.getId().getApiName(), version));
+            }
         }
-        String omElementString = omElement.toString();
-        String temp = null;
-        for (int i = 0; i < api.length; i++) {
-            Pattern pattern = Pattern.compile(".*(<row>.*<api>" + api[i] + "</api>.*?</row>)");
-            Matcher matcher = pattern.matcher(omElementString);
-            if (matcher.find()) {
-                temp = matcher.group(1);
+        OMElement omElement = this.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_VERSION_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.API_VERSION_SUMMARY_TABLE_INDEX, null);
+        Map<String,Float> map = new HashMap<String,Float>();
+        for (APIIdentifier apiIdentifier:apiIdentifiers){
+            OMElement rowsElement = omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
+            Iterator rowIterator = rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
+            while(rowIterator.hasNext()){
+                OMElement row = (OMElement)rowIterator.next();
+                if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.API)).getText().equals(apiIdentifier.getApiName()) && row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.VERSION)).getText().equals(apiIdentifier.getVersion())){
+                    if(map.containsKey(apiIdentifier.getApiName())){
+                        map.put(apiIdentifier.getApiName(),map.get(apiIdentifier.getApiName()) + Float.parseFloat(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST)).getText()));
+                    }else{
+                        map.put(apiIdentifier.getApiName(),Float.parseFloat(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST)).getText()));
+                    }
+                    break;
+                }
             }
-            Pattern pattern1 = Pattern.compile("<requestTime>(.*?)</requestTime>");
-            Matcher matcher1 = pattern1.matcher(temp);
-            if (matcher1.find()) {
-                result[i] = matcher1.group(1);
-            }
+        }
+        Set<String> keys = map.keySet();
+        for(String key:keys){
+            result.add(new ProviderAPIUsageDTO(key,map.get(key).toString()));
         }
         return result;
     }
 
-
-    // Get last access time for single API for particular user
-    public String getUserAPILastAccess(String user, String api) throws
-                                                                APIMgtUsageQueryServiceClientException {
-        String result = null;
-        QueryServiceStub.CompositeIndex[] compositeIndex = new QueryServiceStub.CompositeIndex[2];
-        compositeIndex[0] = new QueryServiceStub.CompositeIndex();
-        compositeIndex[0].setIndexName("user");
-        compositeIndex[0].setRangeFirst(user);
-        compositeIndex[0].setRangeLast(user);
-        compositeIndex[1] = new QueryServiceStub.CompositeIndex();
-        compositeIndex[1].setIndexName("api");
-        compositeIndex[1].setRangeFirst(api);
-        compositeIndex[1].setRangeLast(api);
-        OMElement omElement = null;
-        try {
-            omElement = qss.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.UserAPILastAccessTable, APIMgtUsageQueryServiceClientConstants.UserAPILastAccessTableIndex, compositeIndex);
-        } catch (RemoteException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        } catch (QueryServiceStoreException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        }
-        String omElementString = omElement.toString();
-        Pattern pattern = Pattern.compile("<requestTime>(.*?)</requestTime>");
-        Matcher matcher = pattern.matcher(omElementString);
-        if (matcher.find()) {
-            result = matcher.group(1);
-        }
-        return result;
-    }
-
-    // Get last access time for multiple APIs.
-    // The time for each API is returned in the order of the APIs in the array passed.
-    public String[] getUserAPILastAccess(String user, String[] api) throws
-                                                                    APIMgtUsageQueryServiceClientException {
-        String[] result = new String[api.length];
-        QueryServiceStub.CompositeIndex[] compositeIndex = new QueryServiceStub.CompositeIndex[1];
-        compositeIndex[0] = new QueryServiceStub.CompositeIndex();
-        compositeIndex[0].setIndexName("user");
-        compositeIndex[0].setRangeFirst(user);
-        compositeIndex[0].setRangeLast(getNextStringInLexicalOrder(user));
-        OMElement omElement = null;
-        try {
-            omElement = qss.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.UserAPILastAccessTable, APIMgtUsageQueryServiceClientConstants.UserAPILastAccessTableIndex, compositeIndex);
-        } catch (RemoteException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        } catch (QueryServiceStoreException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        }
-        String omElementString = omElement.toString();
-        String temp = null;
-        for (int i = 0; i < api.length; i++) {
-            Pattern pattern = Pattern.compile(".*(<row>.*<api>" + api[i] + "</api>.*?</row>)");
-            Matcher matcher = pattern.matcher(omElementString);
-            if (matcher.find()) {
-                temp = matcher.group(1);
+    /**
+     * This method can be used to get last access time for each API versions by particular provider.
+     * @return List<ProviderAPIVersionLastAccessDTO>.
+     * @throws APIMgtUsageQueryServiceClientException
+     */
+    public List<ProviderAPIVersionLastAccessDTO> getProviderAPIVersionLastAccess(String providerName) throws APIMgtUsageQueryServiceClientException {
+        List<ProviderAPIVersionLastAccessDTO> result = new ArrayList<ProviderAPIVersionLastAccessDTO>();
+        OMElement omElement = this.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_VERSION_LAST_ACCESS_TABLE, APIMgtUsageQueryServiceClientConstants.API_VERSION_LAST_ACCESS_TABLE_INDEX, null);
+        List<API> apis = this.getAPIsByProvider(providerName);
+        Set<APIIdentifier> apiIdentifiers = new HashSet<APIIdentifier>();
+        for(API api:apis){
+        Set<String> versions = this.getAPIVersions(providerName,api.getId().getApiName());
+            for(String version:versions){
+                apiIdentifiers.add(new APIIdentifier(providerName, api.getId().getApiName(), version));
             }
-            Pattern pattern1 = Pattern.compile("<requestTime>(.*?)</requestTime>");
-            Matcher matcher1 = pattern1.matcher(temp);
-            if (matcher1.find()) {
-                result[i] = matcher1.group(1);
+        }
+        for (APIIdentifier apiIdentifier:apiIdentifiers) {
+            OMElement rowsElement = omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
+            Iterator oMElementIterator = rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
+            while(oMElementIterator.hasNext()){
+                OMElement row = (OMElement)oMElementIterator.next();
+                if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.API)).getText().equals(apiIdentifier.getApiName()) && row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.VERSION)).getText().equals(apiIdentifier.getVersion())){
+                    result.add(new ProviderAPIVersionLastAccessDTO(apiIdentifier.getApiName(),apiIdentifier.getVersion(), (new SimpleDateFormat()).format(Long.parseLong(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST_TIME)).getText()))));
+                    break;
+                }
             }
         }
         return result;
     }
 
-
-    // Get average service time for single API
-    public String getAverageAPIServiceTime(String api) throws
-                                                       APIMgtUsageQueryServiceClientException {
-        String result = null;
-        QueryServiceStub.CompositeIndex[] compositeIndex = new QueryServiceStub.CompositeIndex[1];
-        compositeIndex[0] = new QueryServiceStub.CompositeIndex();
-        compositeIndex[0].setIndexName("api");
-        compositeIndex[0].setRangeFirst(api);
-        compositeIndex[0].setRangeLast(api);
-        OMElement omElement = null;
-        try {
-            omElement = qss.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.APIServiceTimeSummaryTable, APIMgtUsageQueryServiceClientConstants.APIServiceTimeSummaryTableIndex, compositeIndex);
-        } catch (RemoteException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        } catch (QueryServiceStoreException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        }
-        String omElementString = omElement.toString();
-        Pattern pattern = Pattern.compile("<serviceTime>(.*?)</serviceTime>");
-        Matcher matcher = pattern.matcher(omElementString);
-        if (matcher.find()) {
-            result = matcher.group(1);
-        }
-        return result;
-    }
-
-    // Get average service time for multiple APIs.
-    // The time for each API is returned in the order of the APIs in the array passed.
-    public String[] getAverageAPIServiceTime(String[] api) throws
-                                                           APIMgtUsageQueryServiceClientException {
-        String[] result = new String[api.length];
-        OMElement omElement = null;
-        try {
-            omElement = qss.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.APIServiceTimeSummaryTable, APIMgtUsageQueryServiceClientConstants.APIServiceTimeSummaryTableIndex, null);
-        } catch (RemoteException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        } catch (QueryServiceStoreException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        }
-        String omElementString = omElement.toString();
-        String temp = null;
-        for (int i = 0; i < api.length; i++) {
-            Pattern pattern = Pattern.compile(".*(<row>.*<api>" + api[i] + "</api>.*?</row>)");
-            Matcher matcher = pattern.matcher(omElementString);
-            if (matcher.find()) {
-                temp = matcher.group(1);
-            }
-            Pattern pattern1 = Pattern.compile("<serviceTime>(.*?)</serviceTime>");
-            Matcher matcher1 = pattern1.matcher(temp);
-            if (matcher1.find()) {
-                result[i] = matcher1.group(1);
+    /**
+     * This method can be used to get average service time for each API by provider.
+     * @return List<ProviderAPIServiceTimeDTO>.
+     * @throws APIMgtUsageQueryServiceClientException
+     */
+    public List<ProviderAPIServiceTimeDTO> getProviderAPIServiceTime(String providerName) throws APIMgtUsageQueryServiceClientException {
+        List<ProviderAPIServiceTimeDTO> result = new ArrayList<ProviderAPIServiceTimeDTO>();
+        OMElement omElement = this.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_SERVICE_TIME_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.API_SERVICE_TIME_SUMMARY_TABLE_INDEX, null);
+        List<API> apis = this.getAPIsByProvider(providerName);
+        for (API api:apis) {
+            OMElement rowsElement = omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
+            Iterator rowIterator = rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
+            while(rowIterator.hasNext()){
+                OMElement row = (OMElement)rowIterator.next();
+                if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.API)).equals(api.getId().getApiName())){
+                    String serviceTime = (row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.SERVICE_TIME))).getText();
+                    result.add(new ProviderAPIServiceTimeDTO(api.getId().getApiName(), serviceTime));
+                }
             }
         }
         return result;
     }
-
-    // Get average service time for single API for particular user
-    public String getAverageUserAPIServiceTime(String user, String api) throws
-                                                                        APIMgtUsageQueryServiceClientException {
-        String result = null;
-        QueryServiceStub.CompositeIndex[] compositeIndex = new QueryServiceStub.CompositeIndex[2];
-        compositeIndex[0] = new QueryServiceStub.CompositeIndex();
-        compositeIndex[0].setIndexName("user");
-        compositeIndex[0].setRangeFirst(user);
-        compositeIndex[0].setRangeLast(user);
-        compositeIndex[1] = new QueryServiceStub.CompositeIndex();
-        compositeIndex[1].setIndexName("api");
-        compositeIndex[1].setRangeFirst(api);
-        compositeIndex[1].setRangeLast(api);
-        OMElement omElement = null;
-        try {
-            omElement = qss.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.UserAPIServiceTimeSummaryTable, APIMgtUsageQueryServiceClientConstants.UserAPIServiceTimeSummaryTableIndex, compositeIndex);
-        } catch (RemoteException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        } catch (QueryServiceStoreException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        }
-        String omElementString = omElement.toString();
-        Pattern pattern = Pattern.compile("<serviceTime>(.*?)</serviceTime>");
-        Matcher matcher = pattern.matcher(omElementString);
-        if (matcher.find()) {
-            result = matcher.group(1);
-        }
-        return result;
-    }
-
-    // Get average service time for multiple APIs for particular user.
-    // The time for each API is returned in the order of the APIs in the array passed.
-    public String[] getAverageUserAPIServiceTime(String user, String[] api) throws
-                                                                            APIMgtUsageQueryServiceClientException {
-        String[] result = new String[api.length];
-        QueryServiceStub.CompositeIndex[] compositeIndex = new QueryServiceStub.CompositeIndex[1];
-        compositeIndex[0] = new QueryServiceStub.CompositeIndex();
-        compositeIndex[0].setIndexName("user");
-        compositeIndex[0].setRangeFirst(user);
-        compositeIndex[0].setRangeLast(getNextStringInLexicalOrder(user));
-        OMElement omElement = null;
-        try {
-            omElement = qss.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.UserAPIServiceTimeSummaryTable, APIMgtUsageQueryServiceClientConstants.UserAPIServiceTimeSummaryTableIndex, compositeIndex);
-        } catch (RemoteException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        } catch (QueryServiceStoreException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        }
-        String omElementString = omElement.toString();
-        String temp = null;
-        for (int i = 0; i < api.length; i++) {
-            Pattern pattern = Pattern.compile(".*(<row>.*<api>" + api[i] + "</api>.*?</row>)");
-            Matcher matcher = pattern.matcher(omElementString);
-            if (matcher.find()) {
-                temp = matcher.group(1);
-            }
-            Pattern pattern1 = Pattern.compile("<serviceTime>(.*?)</serviceTime>");
-            Matcher matcher1 = pattern1.matcher(temp);
-            if (matcher1.find()) {
-                result[i] = matcher1.group(1);
-            }
-        }
-        return result;
-    }
-
 
     private String getNextStringInLexicalOrder(String str) {
         if ((str == null) || (str.equals(""))) {
@@ -583,100 +246,46 @@ public class APIMgtUsageQueryServiceClient {
         return new String(bytes);
     }
 
-// Get usage count for for multiple versions of APIs provided by a particular provider.
-public List<ProviderAPIVersionDTO> getProviderAPIVersionsUsage(String api) throws APIMgtUsageQueryServiceClientException {
-        List<ProviderAPIVersionDTO> result = new ArrayList<ProviderAPIVersionDTO>();
-        OMElement omElement = null;
-        QueryServiceStub.CompositeIndex[] compositeIndex = new QueryServiceStub.CompositeIndex[1];
-        compositeIndex[0] = new QueryServiceStub.CompositeIndex();
-        compositeIndex[0].setIndexName("api");
-        compositeIndex[0].setRangeFirst(api);
-        compositeIndex[0].setRangeLast(getNextStringInLexicalOrder(api));
-        try {
-            omElement = qss.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.APIVersionSummaryTable, APIMgtUsageQueryServiceClientConstants.APIVersionSummaryTableIndex, compositeIndex);
-        } catch (RemoteException e) {
+    private OMElement queryColumnFamily(String columnFamily,String index,QueryServiceStub.CompositeIndex[] compositeIndex) throws APIMgtUsageQueryServiceClientException{
+        OMElement result = null;
+        try{
+            qss.queryColumnFamily(columnFamily,index,compositeIndex);
+        }catch(RemoteException e){
             throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        } catch (QueryServiceStoreException e) {
+        }catch(QueryServiceStoreException e){
             throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        }
-        String omElementString = omElement.toString();
-        String temp = null;
-        Pattern pattern = Pattern.compile("(<row>.*?</row>)");
-        Matcher matcher = pattern.matcher(omElementString);
-        while(matcher.find()) {
-            temp = matcher.group(1);
-            System.out.println(matcher.group(1));
-            Pattern pattern1 = Pattern.compile("<version>(.*)</version>");
-            Matcher matcher1 = pattern1.matcher(temp);
-            Pattern pattern2 = Pattern.compile("<request>(.*)</request>");
-            Matcher matcher2 = pattern2.matcher(temp);
-            if(matcher1.find() && matcher2.find()){
-                result.add(new ProviderAPIVersionDTO(matcher1.group(1),matcher2.group(1)));
-            }
-       }
-        return result;
-    }
-
-    /**
-     * This method can be used to get all API names and total request count for each API.
-     * @return  all API names and total request count for each API.
-     * @throws APIMgtUsageQueryServiceClientException
-     */
-    public List<ProviderAPIUsage> getProviderAPIUsage()
-            throws APIMgtUsageQueryServiceClientException {
-        List<ProviderAPIUsage> result = new ArrayList<ProviderAPIUsage>();
-        OMElement omElement = null;
-        String[] apiNames = getAPIList();
-
-        for (String apiName:apiNames){
-            QueryServiceStub.CompositeIndex[] compositeIndex = new QueryServiceStub.CompositeIndex[1];
-            compositeIndex[0] = new QueryServiceStub.CompositeIndex();
-            compositeIndex[0].setIndexName("api");
-            compositeIndex[0].setRangeFirst(apiName);
-            compositeIndex[0].setRangeLast(getNextStringInLexicalOrder(apiName));
-
-            try {
-                omElement = qss.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.APIVersionSummaryTable, APIMgtUsageQueryServiceClientConstants.APIVersionSummaryTableIndex, compositeIndex);
-            } catch (RemoteException e) {
-                throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-            } catch (QueryServiceStoreException e) {
-                throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-            }
-
-            OMElement rowsElement = omElement.getFirstChildWithName(new QName(ROWS));
-            Iterator oMElementIterator = rowsElement.getChildrenWithName(new QName(ROW));
-
-            while (oMElementIterator.hasNext()) {
-                OMElement element = (OMElement) oMElementIterator.next();
-                String requestCount = element.getFirstChildWithName(new QName(REQUEST)).getText();
-                double requestCountValue =  Double.parseDouble(requestCount);
-                result.add(new ProviderAPIUsage(apiName,requestCountValue));
-            }
         }
         return result;
     }
 
-
-    /**
-     * Get all API names
-     * @return
-     * @throws APIMgtUsageQueryServiceClientException
-     */
-    public String[] getAPIList() throws APIMgtUsageQueryServiceClientException {
-        IndexDTO indexDTO = null;
-        String[] apiNames = null;
-
+    private Set<String> getAPIVersions(String providerId,String apiName) throws APIMgtUsageQueryServiceClientException{
+        Set<String> result = null;
         try {
-            IndexDTO apiIndex = indexAdminStub.getIndex(APIMgtUsageQueryServiceClientConstants.APIVersionSummaryTableIndex);
-            apiNames = indexAdminStub.getIndexValues(APIMgtUsageQueryServiceClientConstants.APIVersionSummaryTableIndex,
-                                          apiIndex.getIndexedColumns()[0]);
-        } catch (RemoteException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        } catch (IndexAdminServiceConfigurationException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        } catch (IndexAdminServiceIndexingException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
+            result = apiManagerImpl.getAPIVersions(providerId, apiName);
+        } catch (APIManagementException e) {
+            throw new APIMgtUsageQueryServiceClientException("Exception while retrieving versions for provider-api combination", e);
         }
-        return apiNames;
+        return result;
     }
+
+    private Set<Subscriber> getSubscribersOfAPI(String providerId,String apiName, String version) throws APIMgtUsageQueryServiceClientException{
+        Set<Subscriber> subscribers = null;
+        try {
+            subscribers = apiManagerImpl.getSubscribersOfAPI(new APIIdentifier(providerId,apiName,version));
+        } catch (APIManagementException e) {
+            throw new APIMgtUsageQueryServiceClientException("Exception while getting subscribers for provider-api combination", e);
+        }
+        return subscribers;
+    }
+
+    private List<API> getAPIsByProvider(String providerId) throws APIMgtUsageQueryServiceClientException{
+        List<API> apis;
+        try {
+            apis = apiManagerImpl.getAPIsByProvider(providerId);
+        } catch (APIManagementException e) {
+            throw new APIMgtUsageQueryServiceClientException("Exception while retrieving APIs by provider", e);
+        }
+        return apis;
+    }
+
 }

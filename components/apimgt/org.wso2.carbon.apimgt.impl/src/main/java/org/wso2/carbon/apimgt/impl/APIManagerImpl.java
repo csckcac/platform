@@ -1233,6 +1233,18 @@ public class APIManagerImpl implements APIManager {
     }
 
     /**
+     * Get the Subscriber from access token
+     *
+     * @param accessToken
+     * @return Subscriber
+     * @throws org.wso2.carbon.apimgt.api.APIManagementException
+     *          if failed to get Subscriber from access token
+     */
+    public Subscriber getSubscriberByAccessToken(String accessToken,String context) throws APIManagementException {
+        return apiMgtDAO.getSubscriberByAccessToken(accessToken,context);
+    }
+
+    /**
      * @param identifier Api identifier
      * @param s          comment text
      * @throws APIManagementException if failed to add comment for API

@@ -20,7 +20,6 @@ package org.wso2.carbon.endpoint.test;
 
 import org.testng.annotations.Test;
 import org.wso2.carbon.endpoint.stub.types.EndpointAdminEndpointAdminException;
-import org.wso2.carbon.endpoint.stub.types.EndpointAdminException;
 import org.wso2.carbon.endpoint.stub.types.EndpointAdminStub;
 import org.wso2.esb.integration.ESBIntegrationTestCase;
 
@@ -29,7 +28,9 @@ import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 public class DynamicInlinedWSDLEpTestCase extends ESBIntegrationTestCase {
 
@@ -44,7 +45,7 @@ public class DynamicInlinedWSDLEpTestCase extends ESBIntegrationTestCase {
 
     @Test(groups = {"wso2.esb"})
     public void testDynamicInlineWSDLEndpoint()
-            throws RemoteException, EndpointAdminException, EndpointAdminEndpointAdminException {
+            throws RemoteException, EndpointAdminEndpointAdminException {
         EndpointAdminStub endpointAdminStub = new EndpointAdminStub(getAdminServiceURL());
 
         authenticate(endpointAdminStub);
@@ -59,8 +60,8 @@ public class DynamicInlinedWSDLEpTestCase extends ESBIntegrationTestCase {
     }
 
     private void cleanupEndpoints(EndpointAdminStub endpointAdminStub)
-            throws RemoteException, EndpointAdminException, EndpointAdminEndpointAdminException {
-        String[] endpointNames = endpointAdminStub.getDynamicEndpoints(0, 100);
+            throws RemoteException, EndpointAdminEndpointAdminException {
+        String[] endpointNames = endpointAdminStub.getDynamicEndpoints();
         List endpointList;
         if (endpointNames != null && endpointNames.length > 0 && endpointNames[0] != null) {
             endpointList = Arrays.asList(endpointNames);
@@ -75,7 +76,7 @@ public class DynamicInlinedWSDLEpTestCase extends ESBIntegrationTestCase {
 
     private void dynamicEndpointAdditionScenario(EndpointAdminStub endpointAdminStub,
                                                  String path)
-            throws RemoteException, EndpointAdminEndpointAdminException, EndpointAdminException {
+            throws RemoteException, EndpointAdminEndpointAdminException {
         int beforeCount = endpointAdminStub.getDynamicEndpointCount();
         endpointAdminStub.addDynamicEndpoint(path, ENDPOINT_XML);
         assertEndpointAddition(path, beforeCount, endpointAdminStub);
@@ -98,12 +99,12 @@ public class DynamicInlinedWSDLEpTestCase extends ESBIntegrationTestCase {
 
     private void assertEndpointAddition(String path, int beforeCount,
                                         EndpointAdminStub endpointAdminStub)
-            throws RemoteException, EndpointAdminEndpointAdminException, EndpointAdminException {
+            throws RemoteException, EndpointAdminEndpointAdminException {
 
         int afterCount = endpointAdminStub.getDynamicEndpointCount();
         assertEquals(1, afterCount - beforeCount);
 
-        String[] endpointNames = endpointAdminStub.getDynamicEndpoints(0, 100);
+        String[] endpointNames = endpointAdminStub.getDynamicEndpoints();
         if (endpointNames != null && endpointNames.length > 0 && endpointNames[0] != null) {
             assertTrue(Arrays.asList(endpointNames).contains(path));
         } else {

@@ -84,7 +84,7 @@ public class DefaultEndpointTestCase extends ESBIntegrationTestCase {
     private void endpointStatisticsScenario(EndpointAdminStub endpointAdminStub)
             throws RemoteException, EndpointAdminEndpointAdminException {
         endpointAdminStub.enableStatistics(ENDPOINT_NAME);
-        String endpoint = endpointAdminStub.getEndpoint(ENDPOINT_NAME);
+        String endpoint = endpointAdminStub.getEndpointConfiguration(ENDPOINT_NAME);
         assertTrue(endpoint.contains("statistics=\"enable"));
     }
 

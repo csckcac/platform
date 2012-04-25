@@ -115,7 +115,7 @@ $(document).ready(function() {
                 }
             });
 
-    apiProviderApp.call("action=getProviderAPIUsage&providerId="+apiProviderApp.currentProviderName+"&server=https://localhost:9444/", function (json) {
+    apiProviderApp.call("action=getProviderAPIServiceTime&providerId="+apiProviderApp.currentProviderName+"&server=https://localhost:9444/", function (json) {
         if (json.error == "true") {
             alert(json.message);
         }
@@ -159,7 +159,7 @@ $(document).ready(function() {
         }
     });
 
-    apiProviderApp.call("action=getProviderAPIServiceTime&providerId="+apiProviderApp.currentProviderName+"&server=https://localhost:9444/", function (json) {
+    apiProviderApp.call("action=getProviderAPIUsage&providerId="+apiProviderApp.currentProviderName+"&server=https://localhost:9444/", function (json) {
         if (json.error == "true") {
             alert(json.message);
         }
@@ -172,11 +172,11 @@ $(document).ready(function() {
 
             }
             if(json.data.usage.length > 0){
-                $('#serviceTimeTable').show();
+                $('#apiTable').show();
             }else{
-                $('#serviceTimeTable').hide();
+                $('#apiTable').hide();
             }
-            var plot1 = jQuery.jqplot('serviceTimeChart', [data],
+            var plot1 = jQuery.jqplot('apiChart', [data],
                 {
                     seriesDefaults:{
                         renderer:jQuery.jqplot.PieRenderer,

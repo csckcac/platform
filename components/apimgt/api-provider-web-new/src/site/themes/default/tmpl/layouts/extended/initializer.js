@@ -19,25 +19,8 @@ var getParams = function () {
                 "name":"",
                 "params":{
                     "classes":"",
-                    "tabs":[
-                        {
-                            "title":"",
-                            "body":[
-                                {
-                                    "name":"",
-                                    "params":null
-                                },
-                                {
-                                    "name":"",
-                                    "params":null
-                                }
-                            ]
-                        },
-                        {
-                            "title":"",
-                            "body":null
-                        }
-                    ]
+                    "place":""
+
                 }
             }
         ],

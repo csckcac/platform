@@ -24,13 +24,15 @@ var params = {
                     "params": {
                         "top" : null,
                         "left" : null,
-                        "middle" : {
-                            "name" : "item-listing/listing",
+                        "right" : [{
+                            "name" : "search",
+                            "params" :null
+                        },{
+                            "name" : "item-listing",
                             "params" : {
                                 "apis" : apis
                             }
-                        },
-                        "right" : null
+                        }]
                     }
                 }
             ]

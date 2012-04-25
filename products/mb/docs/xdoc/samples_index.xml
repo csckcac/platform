@@ -52,21 +52,12 @@
                 <li>
                     <a href="samples/jms_topic_sample.html">JMS Topic Sample</a>
                 </li>
-                <li>
-                    <a href="samples/mb_with_aws_sdk.html">How to use AWS JAVA SDK as SQS client with MB</a>
-                </li>
-                <li>
-                    <a href="samples/sqs_soap_client.html">SQS SOAP Client Sample</a>
-                </li>
-                <li>
-                    <a href="samples/messagebox_as_event_sink.html">MessageBox as an Event Sink</a>
-                </li>
             </ul>
         </div>
         <h2 id="Overview">Overview</h2>
         <p>
             This set of samples demonstrates the features in Message Broker product to use in
-            various situations. We will use JMS and SQS APIs with Message Broker to
+            various situations. We will use JMS APIs with Message Broker to
             publish,subscribe messages.
         </p>
         <p>

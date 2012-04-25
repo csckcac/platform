@@ -255,7 +255,7 @@ public class WebApplication {
             Container[] containers = DataHolder.getCarbonTomcatService().getTomcat().getEngine().findChildren();
             Context hostContext;
             for (Container container : containers) {
-                if(container.getName() != "localhost") {
+                if(!(container.getName().equalsIgnoreCase("localhost"))) {
                     hostContext = (Context) container.findChild("/");
                     if (nameOfOperation.equalsIgnoreCase("start")) {
                         start(hostContext);

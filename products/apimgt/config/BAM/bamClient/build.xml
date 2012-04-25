@@ -1,4 +1,4 @@
-<project name="BAMClient" default="configureBAM" basedir=".">
+<project name="BAMClient" default="clean" basedir=".">
 
     <property name="client.class.dir" value="target/client/classes"/>
     <property name="analyzer.class.dir" value="target/analyzer/classes"/>
@@ -48,7 +48,7 @@
     </target>
 
 
-    <target name="configureBAM" depends="compile_client">
+    <target name="initalize_column_family_datastore" depends="compile_client">
         <java classname="org.wso2.carbon.bam.client.Client"
               classpathref="javac.bam.client.classpath" fork="true">
             <sysproperty key="bamUrl" value="https://localhost:9444/services/"/>
@@ -57,7 +57,7 @@
         </java>
     </target>
 
-    <target name="makejar" depends="compile_analyzer">
+    <target name="make_analyzer_jar" depends="compile_analyzer">
 	<mkdir dir="${client.class.dir}"/>
         <jar destfile="${analyzer.jar.dir}/ClassAnalyzer.jar" basedir="${analyzer.class.dir}"/>
 	<copy file="${analyzer.jar.dir}/ClassAnalyzer.jar" todir="../repository/components/lib"/>

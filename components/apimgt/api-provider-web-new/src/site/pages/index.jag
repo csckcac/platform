@@ -24,24 +24,18 @@ var params = {
                     "params": {
                         "top" : null,
                         "left" : null,
-                        "right" : [{
-                            "name" : "search",
-                            "params" :null
-                        },{
+                        "right" : {
                             "name" : "item-listing",
                             "params" : {
                                 "apis" : apis
                             }
-                        }]
+                        }
                     }
                 }
             ]
         }
 };
 
-log(jagg == null);
-jagg.templates = {};
-jagg.global = params;
-jagg.render(params, jagg);
+jagg.render(params);
 
 %>

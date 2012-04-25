@@ -128,5 +128,9 @@
             <a href="/docs/apidocs/wsstub.jag">WSStub</a>
         </li>
     </ul>
+    <h5>Configuration File</h5>
+        <ul>
+            <li id="conf"><a href="/docs/apidocs/jagconf.jag">jaggery.conf</a></li>
+        </ul>
 
 

@@ -41,9 +41,9 @@ include('/includes/topnavi.jag');
     <div class="row">
         <div class="span-two-thirds">
             <div class="page-header">
-                <h1>
+                <h2>
                     Setting up Jaggery
-                </h1>
+                </h2>
             </div>
 
             <ol>
@@ -57,6 +57,45 @@ include('/includes/topnavi.jag');
             <p align="right">
                 <a class="btn success large" href="http://dist.wso2.org/products/jaggery/dl/jaggery-1.0.0-SNAPSHOT_M4.zip">Download Jaggery (M4) </a>
             </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span16">
+            <h2>How To Deploy A Jaggery App</h2>
+
+            <p>In-order to compose a Jaggery script you have to make it a <code>.jag</code> extension.</p>
+
+            <p>There are no restrictions for the directory structure, add your <code>.jag</code> files where ever you want, and copy the entire directory to <code>{JAGGERY_HOME}/repository/deployment/server/jaggeryapps</code> The Jaggery Server
+            will then deploy the directory as an application which will be shown in the management console. The directory name will be taken as the
+            application context name</p>
+
+            <p>Also your app can be uploaded as a .zip archive using the management console. The upload page can be found under the Add link in Jaggery Applications section.</p>
+            <br/>
+            <img alt="Upload Jaggery" src="images/uploadjaggery.png"/>
+        </div>
+    </div>
+    <br/>
+        <div class="row">
+        <div class="span-two-thirds">
+            <div class="page-header">
+                <h2>
+                    The "Hello World" Jaggery App
+                </h2>
+            </div>
+
+            <ol>
+                <li>Create a directory called helloapp at <code><code>{JAGGERY_HOME}/repository/deployment/server/jaggeryapps/</code></code></li>
+                <li>Create a jaggery file <code>helloworld.jag</code> inside the helloapp directory and add the following code snippet</li>
+                <br/>
+                <pre class="prettyprint" id="indexsample">
+&lt%
+    var name = 'Jaggery';
+    print("Hello " + name);
+%&gt
+						</pre><br/>
+                <li>Thats it ! point to  <code>{http://localhost:9443/helloapp/helloworld.jag}</code></li>
+            </ol>
+             <p>Excited ?? checkout the <a href="/docs/documentation.jag">Jaggery API</a></p>
         </div>
     </div>
     <br/>
@@ -83,21 +122,6 @@ include('/includes/topnavi.jag');
 	
 	    </div>
 	</div>
-    <div class="row">
-        <div class="span16">
-            <h2>How To Deploy A Jaggery App</h2>
-
-            <p>In-order to compose a Jaggery script you have to make it a <code>.jag</code> extension.</p>
-
-            <p>There are no restrictions for the directory structure, add your <code>.jag</code> files where ever you want, and copy the entire directory to <code>{JAGGERY_HOME}/repository/deployment/server/jaggeryapps</code> The Jaggery Server
-            will then deploy the directory as an application which will be shown in the management console. The directory name will be taken as the
-            application context name</p>
-            
-            <p>Also your app can be uploaded as a .zip archive using the management console. The upload page can be found under the Add link in Jaggery Applications section.</p>
-            <br/>
-            <img alt="Upload Jaggery" src="images/uploadjaggery.png"/>
-        </div>
-    </div>
     <br/>
     <div class="row">
         <div class="span-two-thirds">
@@ -111,6 +135,8 @@ include('/includes/topnavi.jag');
                 Jaggery command line client ships with Jaggery server can be executed at bin/jaggery.bat or bin/jaggery.sh
                 based on your platform to enter into the command line console.
             </p>
+
+            <p>Jaggery CMD is still experimental, and is for developer preview. You are welcome to play with it and please do provide us your <a href="https://wso2.org/jira/browse/JAGGERY">feedback</a></p>
             <img alt="Jaggery Command Line" src="images/commandline.png"/>
         </div>
     </div>

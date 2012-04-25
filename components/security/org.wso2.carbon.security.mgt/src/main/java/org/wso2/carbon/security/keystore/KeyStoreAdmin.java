@@ -79,6 +79,12 @@ public class KeyStoreAdmin {
 		this.registry = registry;
 	}
 
+	/**
+	 * Method to retrive keystore data.
+	 * @param isSuperTenant - Indication whether the querying super tennat data
+	 * @return
+	 * @throws SecurityConfigException
+	 */
 	public KeyStoreData[] getKeyStores(boolean isSuperTenant) throws SecurityConfigException {
 		KeyStoreData[] names = new KeyStoreData[0];
 		try {

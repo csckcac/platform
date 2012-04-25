@@ -2,9 +2,17 @@
 include("/site/themes/jagg.jag");
 var site = require("/site/conf/site.json");
 
-var published = require("/core/apis/published.js");
-var result = published.getAllPublishedAPIs();
-var apis = result.apis;
+var apis,
+    tag = request.getParameter("tag");
+if(tag) {
+    var tagged = require("/core/apis/tagged.js");
+    var result = tagged.getAPIsByTag(tag);
+    apis = result.apis;
+} else {
+    var published = require("/core/apis/published.js");
+    var result = published.getAllPublishedAPIs();
+    apis = result.apis;
+}
 
 var params = {
     "name":"pages/base",

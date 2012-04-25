@@ -27,7 +27,10 @@ var params = {
                 {
                     "name":"layouts/base",
                     "params": {
-                        "top" : null,
+                        "top" : {
+                            "name" : "search/api-search",
+                            "params" : null
+                        },
                         "left" : {
                             "name" : "apis/provider-more",
                             "params" : null

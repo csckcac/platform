@@ -3,7 +3,7 @@
     <%
         var i, tag, tags = data.tags, length = tags.length;
         var maxPercent = 150, minPercent = 100;
-        var max = 1, min = 999, count = 0;
+        var max = 1, min = 999, count = 0, size, path;
         for(i = 0; i < length; i++) {
             tag = tags[i];
             count = parseInt(tags[i].count);
@@ -13,12 +13,12 @@
 
         var total, link, size;
         var multiplier = (maxPercent - minPercent) / (max - min);
-
         for(i = 0; i < length; i++) {
-            var tag = tags[i];
-            var count = parseInt(tag.count);
-            var size = minPercent + ((max - (max - (count - min))) * multiplier) + "%";
-            print('<a class="cloud-link" style="font-size:' + size + '%">' + tag.name + '</a>');
+            tag = tags[i];
+            count = parseInt(tag.count);
+            size = minPercent + ((max - (max - (count - min))) * multiplier) + "%";
+            path = site.context + "/apis/list?tag=" + tag.name;
+            print('<a href="' + path + '" class="cloud-link" style="font-size:' + size + '%">' + tag.name + '</a>');
         }
     %>
 </div>

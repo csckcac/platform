@@ -184,7 +184,7 @@ a.logo{
     margin:0;
 }
 /* start tag cloud */
-.clouds a{color:#6e9215;}
+.clouds a{color:#6e9215; display: inline-block; text-decoration: none;padding: 2px;}
 .clouds a:hover{color:#fff;background-color:#6e9215;}
 .ts1 {font-size:35%;text-decoration:none;}
 .ts2 {font-size:40%;text-decoration:none;}

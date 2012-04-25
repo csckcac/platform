@@ -49,7 +49,7 @@ public class CSGPollingTransportTaskManagerFactory {
         try {
             token = CSGUtils.getPlainToken(encryptedToken);
         } catch (CryptoException e) {
-            throw new AxisFault(e.getMessage());
+            throw new AxisFault(e.getMessage(), e);
         }
 
         if ("".equals(token)) {

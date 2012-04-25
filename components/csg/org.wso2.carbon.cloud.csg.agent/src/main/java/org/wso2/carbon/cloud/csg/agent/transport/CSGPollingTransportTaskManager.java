@@ -244,15 +244,15 @@ public class CSGPollingTransportTaskManager {
     /**
      * A periodic task to poll remote Thrift server buffers and submitting messages for processing
      */
-    private class MessageExchangeTask implements Runnable {
+    private final class MessageExchangeTask implements Runnable {
 
         private CSGThriftClient client;
 
         private volatile STATE workerState = STATE.STOPPED;
 
-        int responseBlockSize;
+        private int responseBlockSize;
 
-        int requestBlockSize;
+        private int requestBlockSize;
 
         private CSGAgentBuffers buffers;
 
@@ -350,7 +350,7 @@ public class CSGPollingTransportTaskManager {
      * The message dispatch task which dispatch messages from the source buffers to actual
      * processing logic
      */
-    private class MessageDispatchTask implements Runnable {
+    private final class MessageDispatchTask implements Runnable {
         private CSGAgentBuffers buffers;
 
         private MessageDispatchTask(CSGAgentBuffers buffers) {
@@ -370,7 +370,7 @@ public class CSGPollingTransportTaskManager {
     /**
      * Process any request messages
      */
-    private class MessageProcessingTask implements Runnable {
+    private final class MessageProcessingTask implements Runnable {
         private Message message;
         private boolean isSOAP11;
         private CSGAgentBuffers buffers;

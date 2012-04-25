@@ -339,7 +339,7 @@ public class CSGTransportSender extends AbstractTransportSender {
      * The task which send the response message back to client
      */
     private class ResponseMessageProcessingTask implements Runnable {
-        Message msg;
+        private Message msg;
 
         private ResponseMessageProcessingTask(Message msg) {
             this.msg = msg;

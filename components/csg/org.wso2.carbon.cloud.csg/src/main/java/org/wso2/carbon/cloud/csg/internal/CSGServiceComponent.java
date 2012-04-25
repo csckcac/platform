@@ -135,10 +135,10 @@ public class CSGServiceComponent {
             server.start(hostName, port, timeOut, keyStoreURL, keyStorePassWord,
                     "CSG-ThriftServer-main-thread");
         } catch (AxisFault axisFault) {
-            log.error(axisFault);
+            log.error("Unable to start thrift server", axisFault);
             return;
         }
-        if (log.isDebugEnabled()) {
+        if (log.isInfoEnabled()) {
             log.info("Activated the CSGServiceComponent");
         }
     }

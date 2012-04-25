@@ -52,6 +52,12 @@ public class CSGAgentUtils {
     private static Log log = LogFactory.getLog(CSGAgentUtils.class);
 
     /**
+     * Prevents this utility class being instantiated.
+     */
+    private CSGAgentUtils(){
+    }
+    
+    /**
      * Returns the session cookie given the admin credentials
      *
      * @param serverUrl  the server url
@@ -180,7 +186,7 @@ public class CSGAgentUtils {
         try {
             url = new URL(wsdlURI);
         } catch (MalformedURLException e) {
-            throw new CSGException("Invalid URI reference '" + wsdlURI + "'");
+            throw new CSGException("Invalid URI reference '" + wsdlURI + "'", e);
         }
         URLConnection connection;
         connection = getURLConnection(url);

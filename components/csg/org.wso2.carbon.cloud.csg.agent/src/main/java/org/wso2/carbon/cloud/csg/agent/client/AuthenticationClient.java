@@ -59,7 +59,7 @@ public class AuthenticationClient {
             return (String) serivceContext.getProperty(HTTPConstants.COOKIE_STRING);
 
         } catch (CSGException ex) {
-            throw new AxisFault(ex.getMessage());
+            throw new AxisFault(ex.getMessage(), ex);
         }
     }
 

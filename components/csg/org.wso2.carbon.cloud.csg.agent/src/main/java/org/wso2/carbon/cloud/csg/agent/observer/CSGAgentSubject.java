@@ -26,18 +26,18 @@ public interface CSGAgentSubject {
      * Add an observer
      * @param o observer
      */
-    public void addObserver(CSGAgentObserver o);
+    void addObserver(CSGAgentObserver o);
 
     /**
      * Remove observer
      * @param o observer
      */
-    public void removeObserver(CSGAgentObserver o);
+    void removeObserver(CSGAgentObserver o);
 
     /**
      * Invoked when the subject connected with the remote server to trigger the observers
      * @param host remote host
      * @param port remote host port
      */
-    public void connected(String host, int port);
+    void connected(String host, int port);
 }

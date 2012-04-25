@@ -24,17 +24,17 @@ public interface CSGAgentObserver {
      * Action to perform once the event is received
      * @param s CSGAgentSubject to act upon
      */
-    public void update(CSGAgentSubject s);
+    void update(CSGAgentSubject s);
 
     /**
      * Returns the host name associated with the observer
      * @return the remote host name
      */
-    public String getHostName();
+    String getHostName();
 
     /**
      * Returns the port of the server associated with the observer
      * @return the port
      */
-    public int getPort();
+    int getPort();
 }

@@ -172,7 +172,7 @@ public class CSGThriftServerHandler implements CSGService.Iface {
             }
             buffer.put(msg);
         } catch (Exception e) {
-            throw new AxisFault(e.getMessage());
+            throw new AxisFault(e.getMessage(), e);
         }
     }
 

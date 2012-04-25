@@ -15,6 +15,16 @@
  */
 package org.wso2.carbon.cloud.csg.common;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.Socket;
+import java.net.SocketException;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.BlockingQueue;
+
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
@@ -32,18 +42,6 @@ import org.wso2.carbon.core.util.CryptoException;
 import org.wso2.carbon.core.util.CryptoUtil;
 import org.wso2.carbon.utils.NetworkUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.BlockingQueue;
-
 public class CSGUtils {
 
     private static final Log log = LogFactory.getLog(CSGUtils.class);
@@ -54,6 +52,13 @@ public class CSGUtils {
         prop = loadProperties("csg.properties");
     }
 
+    /**
+     * Prevents this utility class being instantiated 
+     */
+    private CSGUtils(){
+        
+    }
+    
     /**
      * Returns an instance of CSG_TRANSPORT_NAME thrift client
      *
@@ -106,7 +111,7 @@ public class CSGUtils {
         try {
             src.drainTo(dest, blockSize);
         } catch (Exception e) {
-            throw new AxisFault(e.getMessage());
+            throw new AxisFault(e.getMessage(), e);
         }
     }
 
@@ -227,20 +232,20 @@ public class CSGUtils {
     public static String getPortFromServerURL(String serverURL) {
         //https://localhost:9443/ or //https://localhost:9444
         String socket = getSocketStringFromServerURL(serverURL);
-        return socket.substring(socket.indexOf(":") + 1);
+        return socket.substring(socket.indexOf(':') + 1);
     }
 
     public static String getHostFromServerURL(String serverURL) {
         String socket = getSocketStringFromServerURL(serverURL);
-        return socket.substring(0, socket.indexOf(":"));
+        return socket.substring(0, socket.indexOf(':'));
     }
 
     public static String getUserNameFromTenantUserName(String tenantUserName) {
-        return tenantUserName.contains("@") ? tenantUserName.substring(0, tenantUserName.indexOf("@")) : tenantUserName;
+        return tenantUserName.contains("@") ? tenantUserName.substring(0, tenantUserName.indexOf('@')) : tenantUserName;
     }
 
     public static String getDomainNameFromTenantUserName(String tenantUserName) {
-        return tenantUserName.contains("@") ? tenantUserName.substring(tenantUserName.indexOf("@") + 1) : null;
+        return tenantUserName.contains("@") ? tenantUserName.substring(tenantUserName.indexOf('@') + 1) : null;
     }
     
     public static String getTryItURLFromWSDLURL(String wsdlURL){

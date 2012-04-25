@@ -41,7 +41,7 @@ public class CSGAgentAdminClient {
 
     private ResourceBundle bundle;
 
-    public CSGAgentAdminServiceStub stub;
+    private CSGAgentAdminServiceStub stub;
 
 
     public CSGAgentAdminClient(String cookie,

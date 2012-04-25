@@ -16,42 +16,42 @@
 
 package org.wso2.carbon.rule.common.config;
 
-import org.wso2.carbon.rule.common.RuleService;
-import org.wso2.carbon.rule.common.Operation;
-import org.wso2.carbon.rule.common.util.Constants;
-import org.wso2.carbon.rule.common.exception.RuleConfigurationException;
-import org.wso2.carbon.rule.common.config.HelperUtil;
-import org.wso2.carbon.rule.common.config.RuleSetHelper;
 import org.apache.axiom.om.OMElement;
+import org.wso2.carbon.rule.common.Operation;
+import org.wso2.carbon.rule.common.RuleService;
+import org.wso2.carbon.rule.common.exception.RuleConfigurationException;
+import org.wso2.carbon.rule.common.util.Constants;
 
 import javax.xml.namespace.QName;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
 
 public class RuleServiceHelper {
 
     public static RuleService getRuleService(OMElement ruleServiceElement)
-                                           throws RuleConfigurationException {
+            throws RuleConfigurationException {
 
         if (!ruleServiceElement.getQName().equals(new QName(
-                   Constants.RULE_CONF_NAMESPACE, Constants.RULE_CONF_ELE_RULE_SERVICE))){
+                Constants.RULE_CONF_NAMESPACE, Constants.RULE_CONF_ELE_RULE_SERVICE))) {
             throw new RuleConfigurationException("Invalid rule service configuration file");
         }
 
         RuleService ruleService = new RuleService();
 
         ruleService.setName(HelperUtil.getAttributeValue(
-                         ruleServiceElement, Constants.RULE_CONF_ATTR_NAME));
+                ruleServiceElement, Constants.RULE_CONF_ATTR_NAME));
         ruleService.setTargetNamespace(HelperUtil.getAttributeValue(
                 ruleServiceElement, Constants.RULE_CONF_ATTR_TARGET_NAMESPACE));
         ruleService.setScope(HelperUtil.getAttributeValue(
                 ruleServiceElement, Constants.RULE_CONF_ATTR_SCOPE));
+        ruleService.setDescription(HelperUtil.getAttributeValue(
+                ruleServiceElement, Constants.RULE_CONF_ATTR_DESCRIPTION));
 
         OMElement ruleSetOMElement =
                 ruleServiceElement.getFirstChildWithName(new QName(
-                          Constants.RULE_CONF_NAMESPACE, Constants.RULE_CONF_ELE_RULE_SET));
-        if (ruleSetOMElement == null){
+                        Constants.RULE_CONF_NAMESPACE, Constants.RULE_CONF_ELE_RULE_SET));
+        if (ruleSetOMElement == null) {
             throw new RuleConfigurationException("No rule set is defined");
         }
 
@@ -63,7 +63,7 @@ public class RuleServiceHelper {
                 ruleServiceElement.getChildrenWithName(new QName(
                         Constants.RULE_CONF_NAMESPACE, Constants.RULE_CONF_ELE_OPERATION));
         OMElement operationElement = null;
-        for (; operationIter.hasNext();){
+        for (; operationIter.hasNext(); ) {
             operationElement = (OMElement) operationIter.next();
             operations.add(OperationHelper.getOperation(operationElement));
         }
@@ -73,5 +73,5 @@ public class RuleServiceHelper {
         return ruleService;
     }
 
-    
+
 }

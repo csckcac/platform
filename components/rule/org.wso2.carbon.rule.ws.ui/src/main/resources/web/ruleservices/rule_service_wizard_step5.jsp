@@ -118,11 +118,11 @@
 
     Input input = null;
     List<Fact> inputFacts = null;
-    String inputWrapperName = "input";
+    String inputWrapperName = "";
     String inputNameSpace = " ";
     Output output = null;
     List<Fact> outputFacts = null;
-    String outputWrapperName = "output";
+    String outputWrapperName = "";
     String outputNameSpace = " ";
 
     if(operation == null){
@@ -317,7 +317,7 @@
                 <td><fmt:message key="wrapper"/>
                 </td>
                 <td>
-                    <input type="text" name="wrapperName" id="wrapperName"
+                    <input type="text" name="outputWrapperName" id="outputWrapperName"
                            value="<%=outputWrapperName%>"/>
                 </td>
                 <td> <fmt:message key="namespace"/>

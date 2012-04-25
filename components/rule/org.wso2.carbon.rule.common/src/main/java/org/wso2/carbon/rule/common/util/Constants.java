@@ -53,6 +53,7 @@ public interface Constants {
     public static final String RULE_CONF_ATTR_NAME = "name";
     public static final String RULE_CONF_ATTR_TARGET_NAMESPACE = "targetNamespace";
     public static final String RULE_CONF_ATTR_BACKEND_RUNTIME_FACTORY = "backendRuntimeFactory";
+    public static final String RULE_CONF_ATTR_DESCRIPTION = "description";
     public static final String RULE_CONF_ATTR_SCOPE = "scope";
     public static final String RULE_CONF_ATTR_TYPE= "type";
     public static final String RULE_CONF_ATTR_RESOURCE_TYPE = "resourceType";

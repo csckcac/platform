@@ -64,6 +64,10 @@ public class RuleService {
                     Constants.RULE_CONF_ATTR_SCOPE,
                     this.scope, null);
         }
+        if(this.description != null){
+            ruleServiceOMElement.addAttribute(Constants.RULE_CONF_ATTR_DESCRIPTION, this.description, null);
+
+        }
 
         ruleServiceOMElement.addChild(this.ruleSet.toOM());
 

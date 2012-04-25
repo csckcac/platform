@@ -17,13 +17,13 @@
 */
 package org.wso2.automation.common.test.dss.utils;
 
-import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.wso2.carbon.admin.service.*;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.dataservices.ui.fileupload.stub.ExceptionException;
+import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
 import org.wso2.carbon.security.mgt.stub.config.SecurityAdminServiceSecurityConfigExceptionException;
 import org.wso2.carbon.admin.service.AdminServiceDataServiceFileUploader;
 import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
@@ -62,33 +62,40 @@ public class AdminServiceClientDSS {
 
     }
 
-    public void activeteService(String sessionCookie, String serviceName) throws Exception, RemoteException {
+    public void activateService(String sessionCookie, String serviceName)
+            throws ServiceAdminException, RemoteException {
         AdminServiceService adminServiceService = new AdminServiceService(backEndUrl);
         adminServiceService.startService(sessionCookie, serviceName);
 
     }
 
-    public void deactivateService(String sessionCookie, String serviceName) throws RemoteException, LoginAuthenticationExceptionException, Exception {
+    public void deactivateService(String sessionCookie, String serviceName)
+            throws ServiceAdminException, RemoteException {
         AdminServiceService adminServiceService = new AdminServiceService(backEndUrl);
         adminServiceService.stopService(sessionCookie, serviceName);
 
     }
 
-    public void applySecurity(String sessionCookie, String serviceName, String policyId, String[] userGroups, String[] trustedKeyStoreArray, String privateStore)
+    public void applySecurity(String sessionCookie, String serviceName, String policyId,
+                              String[] userGroups, String[] trustedKeyStoreArray,
+                              String privateStore)
             throws RemoteException, SecurityAdminServiceSecurityConfigExceptionException {
         AdminServiceSecurity adminServiceSecurity = new AdminServiceSecurity(backEndUrl);
         adminServiceSecurity.applySecurity(sessionCookie, serviceName, policyId, userGroups, trustedKeyStoreArray, privateStore);
 
     }
 
-    public void applyKerberosSecurity(String sessionCookie, String serviceName, String policyId, String ServicePrincipalName, String ServicePrincipalPassword)
+    public void applyKerberosSecurity(String sessionCookie, String serviceName, String policyId,
+                                      String ServicePrincipalName, String ServicePrincipalPassword)
             throws RemoteException, SecurityAdminServiceSecurityConfigExceptionException {
         AdminServiceSecurity adminServiceSecurity = new AdminServiceSecurity(backEndUrl);
         adminServiceSecurity.applyKerberosSecurityPolicy(sessionCookie, serviceName, policyId, ServicePrincipalName, ServicePrincipalPassword);
 
     }
 
-    public void disableSecurity(String sessionCookie, String serviceName) throws SecurityAdminServiceSecurityConfigExceptionException, RemoteException, LoginAuthenticationExceptionException {
+    public void disableSecurity(String sessionCookie, String serviceName)
+            throws SecurityAdminServiceSecurityConfigExceptionException, RemoteException,
+                   LoginAuthenticationExceptionException {
         AdminServiceSecurity adminServiceSecurity = new AdminServiceSecurity(backEndUrl);
         adminServiceSecurity.disableSecurity(sessionCookie, serviceName);
 
@@ -107,9 +114,11 @@ public class AdminServiceClientDSS {
 
     }
 
-    public void addResource(String sessionCookie, String destinationPath, String mediaType, String description, DataHandler dh) {
+    public boolean addResource(String sessionCookie, String destinationPath, String mediaType,
+                               String description, DataHandler dh)
+            throws ResourceAdminServiceExceptionException, RemoteException {
         AdminServiceResourceAdmin adminServiceResourceAdmin = new AdminServiceResourceAdmin(backEndUrl);
-        adminServiceResourceAdmin.addResource(sessionCookie, destinationPath, mediaType, description, dh);
+        return adminServiceResourceAdmin.addResource(sessionCookie, destinationPath, mediaType, description, dh);
     }
 
     public ServiceMetaData getServiceData(String sessionCookie, String serviceName)

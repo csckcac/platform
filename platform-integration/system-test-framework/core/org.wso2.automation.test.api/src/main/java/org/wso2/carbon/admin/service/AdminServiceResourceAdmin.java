@@ -44,59 +44,33 @@ public class AdminServiceResourceAdmin {
     private static final String MEDIA_TYPE_POLICY = "application/policy+xml";
     private static final String MEDIA_TYPE_GOVERNANCE_ARCHIVE = "application/vnd.wso2.governance-archive";
 
-    public AdminServiceResourceAdmin(String backEndUrl) {
+    public AdminServiceResourceAdmin(String backEndUrl) throws AxisFault {
         this.endPoint = backEndUrl + serviceName;
         log.debug("Endpoint :" + endPoint);
-        try {
-            resourceAdminServiceStub = new ResourceAdminServiceStub(endPoint);
-        } catch (AxisFault axisFault) {
-            log.error("Initializing ResourceAdminServiceStub failed : " + axisFault.getMessage());
-            Assert.fail("Initializing ResourceAdminServiceStub failed : " + axisFault.getMessage());
-        }
+
+        resourceAdminServiceStub = new ResourceAdminServiceStub(endPoint);
+
     }
 
-    public void addResource(String sessionCookie, String destinationPath, String mediaType,
-                            String description, DataHandler dh) {
+    public boolean addResource(String sessionCookie, String destinationPath, String mediaType,
+                               String description, DataHandler dh)
+            throws ResourceAdminServiceExceptionException, RemoteException {
 
         new AuthenticateStub().authenticateStub(sessionCookie, resourceAdminServiceStub);
         log.debug("Destination Path :" + destinationPath);
         log.debug("Media Type :" + mediaType);
-        try {
-            Assert.assertTrue("Resource Adding Failed ", resourceAdminServiceStub.addResource(destinationPath, mediaType, description, dh, null));
-            log.info("Resource Added");
-        } catch (RemoteException e) {
-            log.error("Resource adding failed due to RemoteException : " + e.getMessage());
-            Assert.fail("Resource adding failed due to RemoteException : " + e.getMessage());
-        } catch (ResourceAdminServiceExceptionException e) {
-            log.error("Resource adding failed due to ResourceAdminServiceExceptionException : " + e.getMessage());
-            Assert.fail("Resource adding failed due to ResourceAdminServiceExceptionException : " + e.getMessage());
-        }
+
+        return resourceAdminServiceStub.addResource(destinationPath, mediaType, description, dh, null);
 
     }
 
-    public ResourceData[] getResource(String sessionCookie, String destinationPath) {
-        ResourceData[] rs = null;
+    public ResourceData[] getResource(String sessionCookie, String destinationPath)
+            throws ResourceAdminServiceExceptionException, RemoteException {
+        ResourceData[] rs;
         new AuthenticateStub().authenticateStub(sessionCookie, resourceAdminServiceStub);
         log.debug("Destination Path :" + destinationPath);
-        try {
-            rs = resourceAdminServiceStub.getResourceData(new String[]{destinationPath});
-            log.info("Resource Data Received");
-        } catch (RemoteException e) {
-            log.error("Resource getting failed due to RemoteException : " + e.getMessage());
-            Assert.fail("Resource getting stub failed due to RemoteException : " + e.getMessage());
-        } catch (ResourceAdminServiceExceptionException e) {
-            log.error("Resource getting failed due to ResourceAdminServiceExceptionException : " + e.getMessage());
-            Assert.fail("Resource getting failed due to ResourceAdminServiceExceptionException : " + e.getMessage());
-        }
-        Assert.assertNotNull("ResourceData object null", rs);
 
-        try {
-            CollectionContentBean collectionContentBean = resourceAdminServiceStub.getCollectionContent(destinationPath);
-        } catch (RemoteException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (ResourceAdminServiceExceptionException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+        rs = resourceAdminServiceStub.getResourceData(new String[]{destinationPath});
 
         return rs;
     }
@@ -123,21 +97,12 @@ public class AdminServiceResourceAdmin {
         return collectionContentBean;
     }
 
-    public void deleteResource(String sessionCookie, String destinationPath) {
+    public boolean deleteResource(String sessionCookie, String destinationPath)
+            throws ResourceAdminServiceExceptionException, RemoteException {
 
         new AuthenticateStub().authenticateStub(sessionCookie, resourceAdminServiceStub);
         log.debug("Destination Path :" + destinationPath);
-        try {
-            Assert.assertTrue("Resource Not Deleted", resourceAdminServiceStub.delete(destinationPath));
-            log.info("Resource Deleted");
-        } catch (RemoteException e) {
-            log.error("Resource Deleting failed due to Exception : " + e.getMessage());
-            Assert.fail("Resource Deleting failed due to Exception : " + e.getMessage());
-        } catch (ResourceAdminServiceExceptionException e) {
-            log.error("Resource Deleting failed due to ResourceAdminServiceExceptionException : " + e.getMessage());
-            Assert.fail("Resource Deleting failed due to ResourceAdminServiceExceptionException : " + e.getMessage());
-        }
-
+        return resourceAdminServiceStub.delete(destinationPath);
 
     }
 
@@ -335,7 +300,8 @@ public class AdminServiceResourceAdmin {
 
     }
 
-    public void addResourcePermission(String sessionCookie, String pathToAuthorize, String roleToAuthorize,
+    public void addResourcePermission(String sessionCookie, String pathToAuthorize,
+                                      String roleToAuthorize,
                                       String actionToAuthorize, String permissionType)
             throws AxisFault {
         new AuthenticateStub().authenticateStub(sessionCookie, resourceAdminServiceStub);

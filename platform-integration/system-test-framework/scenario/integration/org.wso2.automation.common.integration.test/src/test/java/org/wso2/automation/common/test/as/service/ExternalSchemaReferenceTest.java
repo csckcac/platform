@@ -27,10 +27,12 @@ import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceResourceAdmin;
 import org.wso2.carbon.registry.api.RegistryException;
+import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClientUtils;
@@ -42,6 +44,7 @@ import javax.activation.DataHandler;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.rmi.RemoteException;
 
 import static org.testng.Assert.assertTrue;
 
@@ -70,7 +73,8 @@ public class ExternalSchemaReferenceTest {
 
     @Test(groups = "wso2.as", description = "Put claculator schema to G-Reg", priority = 1)
     public void addCalculatorSchema()
-            throws FileNotFoundException, RegistryException, MalformedURLException {
+            throws FileNotFoundException, RegistryException, MalformedURLException, RemoteException,
+                   ResourceAdminServiceExceptionException {
         String filePath = ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION + File.separator +
                           "artifacts" + File.separator + "GREG" + File.separator +
                           "schema" + File.separator + "calculator.xsd";
@@ -79,8 +83,8 @@ public class ExternalSchemaReferenceTest {
         DataHandler garDh = new DataHandler(garURL);
         AdminServiceResourceAdmin adminServiceResourceAdmin =
                 new AdminServiceResourceAdmin(environment.getAs().getBackEndUrl());
-        adminServiceResourceAdmin.addResource
-                (environment.getAs().getSessionCookie(), schemaPath, "application/x-xsd+xml", "desc", garDh);
+        Assert.assertTrue(adminServiceResourceAdmin.addResource
+                (environment.getAs().getSessionCookie(), schemaPath, "application/x-xsd+xml", "desc", garDh),"Resource Adding failed");
     }
 
     @Test(groups = {"wso2.as"},

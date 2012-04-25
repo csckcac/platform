@@ -47,6 +47,7 @@ import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
 import org.wso2.carbon.endpoint.stub.types.EndpointAdminEndpointAdminException;
 import org.wso2.carbon.localentry.stub.types.LocalEntryAdminException;
 import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminProxyAdminException;
+import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
 import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSDAOExceptionException;
 import org.wso2.carbon.rule.service.stub.fileupload.ExceptionException;
 import org.wso2.carbon.sequences.stub.types.SequenceEditorException;
@@ -209,7 +210,7 @@ public class ArtifactDeployerUtil {
     public void bpelFileUploader(String sessionCookie, String backEndUrl, String artifactLocation,
                                  String artifactName)
             throws InterruptedException, RemoteException, PackageManagementException {
-        AdminServiceBpelUploader bpelUploader = new AdminServiceBpelUploader(backEndUrl,ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION);
+        AdminServiceBpelUploader bpelUploader = new AdminServiceBpelUploader(backEndUrl, ProductConstant.SYSTEM_TEST_RESOURCE_LOCATION);
         bpelUploader.deployBPEL(artifactName.substring(0, artifactName.indexOf(".")), artifactLocation,
                                 sessionCookie);
     }
@@ -218,7 +219,8 @@ public class ArtifactDeployerUtil {
                                 String artifactLocation, FrameworkProperties frameworkProperties)
             throws IOException, RSSAdminRSSDAOExceptionException,
                    org.wso2.carbon.dataservices.ui.fileupload.stub.ExceptionException,
-                   MalformedURLException, ClassNotFoundException, SQLException, XMLStreamException {
+                   MalformedURLException, ClassNotFoundException, SQLException, XMLStreamException,
+                   ResourceAdminServiceExceptionException {
         String dbsFilePath;
         List<ArtifactDependency> artifactDependencyList = artifact.getDependencyArtifactList();
         List<File> sqlFileLis = null;
@@ -241,11 +243,13 @@ public class ArtifactDeployerUtil {
                 } else {
                     AdminServiceResourceAdmin adminServiceResourceAdmin =
                             new AdminServiceResourceAdmin(backEndUrl);
-                    adminServiceResourceAdmin.addResource(sessionCookie,
-                                                          "/_system/governance/automation/resources/"
-                                                          + dependency.getDepArtifactName(),
-                                                          getMediaType(dependency.getDepArtifactType()), "",
-                                                          new DataHandler(new URL("file://" + dependencyFilePath)));
+                    if (!adminServiceResourceAdmin.addResource(sessionCookie,
+                                                               "/_system/governance/automation/resources/"
+                                                               + dependency.getDepArtifactName(),
+                                                               getMediaType(dependency.getDepArtifactType()), "",
+                                                               new DataHandler(new URL("file://" + dependencyFilePath)))) {
+                        log.error(dependency.getDepArtifactName() + " Resource Adding Failed");
+                    }
                 }
             }
         }

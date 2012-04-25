@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.admin.service.*;
 import org.wso2.carbon.application.mgt.stub.ApplicationAdminExceptionException;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
+import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
 import org.wso2.carbon.sequences.stub.types.SequenceEditorException;
 import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
 import org.wso2.carbon.service.mgt.stub.types.carbon.ServiceMetaData;
@@ -89,7 +90,7 @@ public class ArtifactCleanerUtil {
             log.error("Error occurred while getting CApp list " + e.getMessage());
             throw new ApplicationAdminExceptionException("Error occurred while getting CApp list " + e.getMessage());
         } catch (RemoteException e) {
-            log.error("Error occurred while getting CApp list "+ e.getMessage());
+            log.error("Error occurred while getting CApp list " + e.getMessage());
             throw new RemoteException("Error occurred while getting CApp list " + e.getMessage());
         }
         return appList;
@@ -140,14 +141,14 @@ public class ArtifactCleanerUtil {
      * Delete JaxWs webapp file
      *
      * @param sessionCookie - login session
-     * @param backendURL  backend URL of the service
-     * @param webappName  webapp name
+     * @param backendURL    backend URL of the service
+     * @param webappName    webapp name
      * @throws RemoteException if war file undeployment fails
      */
     public void deleteJaxWsWebapp(String sessionCookie, String backendURL, String webappName)
             throws RemoteException {
         JaxwsWebappAdminClient jaxwsWebappAdminClient = new JaxwsWebappAdminClient(backendURL, sessionCookie);
-        jaxwsWebappAdminClient.deleteStartedWebapps(new String[] {webappName});
+        jaxwsWebappAdminClient.deleteStartedWebapps(new String[]{webappName});
     }
 
     public void deleteBpel(String sessionCookie, String backendURL, String fileName)
@@ -171,7 +172,7 @@ public class ArtifactCleanerUtil {
 
     public void deleteDataService(String sessionCookie, String backEndUrl, String artifactName,
                                   List<ArtifactDependency> artifactDependencyList)
-            throws RemoteException, ServiceAdminException {
+            throws RemoteException, ServiceAdminException, ResourceAdminServiceExceptionException {
         AdminServiceService serviceAdmin = new AdminServiceService(backEndUrl);
         ServiceMetaData serviceInfo = serviceAdmin.getServicesData(sessionCookie, artifactName.substring(0, artifactName.indexOf(".dbs")));
         serviceAdmin.deleteService(sessionCookie, new String[]{serviceInfo.getServiceGroupName()});
@@ -184,7 +185,12 @@ public class ArtifactCleanerUtil {
                     //TODO - drop database
                 } else {
                     AdminServiceResourceAdmin adminServiceResourceAdmin = new AdminServiceResourceAdmin(backEndUrl);
-                    adminServiceResourceAdmin.deleteResource(sessionCookie, "/_system/governance/automation/resources/" + dependency.getDepArtifactName());
+                    if (!adminServiceResourceAdmin.deleteResource(sessionCookie,
+                                                                  "/_system/governance/automation/resources/"
+                                                                  + dependency.getDepArtifactName())) {
+                        log.error(dependency.getDepArtifactName() + " Deletion failed");
+
+                    }
                 }
             }
         }
@@ -206,7 +212,8 @@ public class ArtifactCleanerUtil {
     }
 
     public void restToDefaultConfiguration(String sessionCookie, String backendURL)
-            throws IOException, SequenceEditorException, XMLStreamException,ParserConfigurationException,
+            throws IOException, SequenceEditorException, XMLStreamException,
+                   ParserConfigurationException,
                    SAXException, TransformerException, ServletException {
 
         String configLocation = ProductConstant.getResourceLocations(ProductConstant.ESB_SERVER_NAME)

@@ -1,4 +1,12 @@
 <% jagg.template = function(data, params, jagg) { %>
+<%
+    var mw = 6;
+    if(!data.left && !data.right) {
+        mw = 12;
+    } else if(!data.left || !data.right) {
+        mw = 9;
+    }
+%>
 <div id="layouts_base">
     <div id="top">
         <% jagg.includeTemplates(data.top); %>
@@ -11,7 +19,7 @@
     </div>
 
     <div id="middle">
-        <div class="col_6">
+        <div class="col_<%=String(mw)%>">
             <% jagg.includeTemplates(data.middle); %>
         </div>
     </div>

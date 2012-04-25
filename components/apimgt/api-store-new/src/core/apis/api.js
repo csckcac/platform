@@ -6,7 +6,7 @@ var getAPI = function (name, version, provider, username) {
         var obj;
         var api = store.getAPI(provider, name, version, username);
         if (log.isDebugEnabled()) {
-            log.debug("getAPIDescription : " + stringify(description));
+            log.debug("getAPI : " + stringify(description));
         }
         api = api[0];
         obj = {

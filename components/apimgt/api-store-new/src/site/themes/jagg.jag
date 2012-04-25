@@ -190,7 +190,7 @@ var jagg = jagg || {};
         if (typeof keys !== "string") {
             length = keys.length;
             values = params[keys[0]];
-            var last = length == 1;
+            var last = (length == 1);
             if (values instanceof Array) {
                 length = values.length;
                 for (i = 0; i < length; i++) {

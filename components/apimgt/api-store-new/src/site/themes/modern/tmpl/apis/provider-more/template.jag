@@ -1,0 +1,25 @@
+<% jagg.template = function(data, params, jagg) { %>
+<% var stars = require("/site/themes/modern/utils/ratings/star-generator.js"); %>
+<div class="provider-more cat_and_charts">
+    <h4>More from provider</h4>
+    <hr/>
+    <%
+    var i, api, path, apis = data.apis, length = apis.length;
+    for(i = 0; i < length; i++) {
+        api = apis[i];
+        path = site.context + "/apis/info?name=" + api.name + "&version=" + api.version + "&provider=" + api.provider;
+    %>
+    <div class="col_12 no-padding">
+        <div class="col_5">
+            <a href=""><img class="thumbnail" src="<%=api.thumbURL%>"/></a>
+        </div>
+        <div class="col_7">
+            <a href="<%=path%>" class="item-title"><%=api.name%></a>
+            <a href="<%=path%>" class="item-provider"><%=api.provider%></a>
+
+            <div class="star-ratings"><%=stars.getStaticStars(site.context, api.rating)%></div>
+        </div>
+    </div>
+    <% } %>
+</div>
+<% }; %>

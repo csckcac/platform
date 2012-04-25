@@ -1,0 +1,50 @@
+<%
+include("/site/themes/jagg.jag");
+var site = require("/site/conf/site.json");
+
+var name = request.getParameter("name");
+var version = request.getParameter("version");
+var provider = request.getParameter("provider");
+
+var published = require("/core/apis/api.js");
+var result = published.getAPI(name, version, provider, "admin");
+var api = result.api;
+var title = "API Store - " + api.name;
+
+var params = {
+    "name":"pages/base",
+    "css":{},
+    "js":{},
+    "code":{},
+    "updates" : {
+        "css" : {},
+        "js" : {}
+    },
+    "params":
+        {
+            "title":title,
+            "body":[
+                {
+                    "name":"layouts/base",
+                    "params": {
+                        "top" : null,
+                        "left" : {
+                            "name" : "apis/provider-more",
+                            "params" : null
+                        },
+                        "middle" : {
+                            "name" : "apis/api-info",
+                            "params" : {
+                                "api" : api
+                            }
+                        },
+                        "right" : null
+                    }
+                }
+            ]
+        }
+};
+
+jagg.render(params);
+
+%>

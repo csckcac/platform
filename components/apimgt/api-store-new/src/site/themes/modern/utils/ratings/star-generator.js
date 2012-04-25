@@ -1,7 +1,7 @@
 
 var getStaticStars = function (context, rating) {
 
-    var prefix = "/" + context + "/site/themes/default/utils/ratings/images/";
+    var prefix = context + "/site/themes/modern/utils/ratings/images/";
 
     var getHTML = function (image) {
         return '<img src="' + prefix + image + '"/>';
@@ -37,7 +37,7 @@ var getStaticStars = function (context, rating) {
 
 var getDynamicStars = function (context, rating) {
 
-    var prefix = "/" + context + "/site/themes/default/utils/ratings/images/";
+    var prefix = context + "/site/themes/modern/utils/ratings/images/";
 
     var getHTML = function (image) {
         return '<img src="' + prefix + image + '"/>';

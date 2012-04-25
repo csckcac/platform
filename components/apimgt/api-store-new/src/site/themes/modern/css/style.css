@@ -243,14 +243,6 @@ div.thumbnail span {
     color: #666;
     padding: 0px 5px;
 }
-div.thumbnail a{
-    margin:0;
-    font-size:11px;
-    color:#1c75bc;
-    cursor:pointer;
-    background:none;
-    border:none;
-}
 div.star-ratings img{
     display:inline-block;
 }
@@ -325,5 +317,26 @@ ul.tabs li a:hover{
 .item-title{
     color:#000;
     font-weight:bold;
+}
+
+.api-listing .thumbnail a {
+    display: inline-block;
+    padding: 3px;
+    position: relative;
+    margin:0;
+    font-size:11px;
+    color:#1c75bc;
+    cursor:pointer;
+    background:none;
+    border:none;
+}
+
+.provider-more .item-title {
+    display:block;
+}
+
+.provider-more .thumbnail {
+    width : 60px;
+    height : 60px;
 }
 

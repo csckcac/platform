@@ -4,7 +4,7 @@
         <div class="col_8">
             <ul class="menu">
                 <li class="current">
-                    <a href="">APIs</a>
+                    <a href="<%=site.context%>">APIs</a>
                 </li>
                 <li>
                     <a href="">Applications</a>
@@ -15,12 +15,12 @@
             </ul>
         </div>
         <div class="col_4 login-links">
-            <ul style="display:none;">
+            <ul>
                 <li>
                     <a id="create-user">Login</a>
                 </li>
             </ul>
-            <ul>
+            <ul style="display:none;">
                 <li>
                     <a id="logout-user">Logout</a>
                 </li>

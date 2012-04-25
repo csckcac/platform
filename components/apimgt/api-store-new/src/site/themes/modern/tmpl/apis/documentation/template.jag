@@ -1,0 +1,7 @@
+<% jagg.template = function(data, params, jagg) { %>
+<div id="documentation">
+    <p>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eget feugiat ipsum. Ut imperdiet sapien et urna tincidunt mollis. In hac habitasse platea dictumst. Nam elementum lacus metus.
+    </p>
+</div>
+<% }; %>

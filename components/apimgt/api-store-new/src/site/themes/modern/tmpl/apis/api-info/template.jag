@@ -1,4 +1,7 @@
-<div class="col_9">
+<% jagg.template = function(data, params, jagg) { %>
+<% var stars = require("/site/themes/modern/utils/ratings/star-generator.js"); %>
+<% var api = data.api; %>
+<div class="api-info">
     <h2><%=api.name%></h2>
     <h5><%=api.provider%></h5>
 
@@ -31,7 +34,8 @@
             <button class="medium green">Subscribe</button>
         </div>
         <div class="col_12 tabs-section">
-            <% includeTemplate("tabs/basic", data.tabs); %>
+            <% jagg.includeTemplate("tabs/basic", data.tabs); %>
         </div>
     </div>
 </div>
+<% }; %>

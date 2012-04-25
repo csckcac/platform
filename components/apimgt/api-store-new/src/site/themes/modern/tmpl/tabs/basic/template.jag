@@ -1,5 +1,5 @@
 <% jagg.template = function(data, params, jagg) { %>
-<div class="tabs-basic<%=" " + data.classes%>">
+<div class="tabs-basic<%=(data.classes ? " " + data.classes : "")%>">
     <%
         var tabs = data.tabs, length = tabs.length;
         var i, index, tab, classes;

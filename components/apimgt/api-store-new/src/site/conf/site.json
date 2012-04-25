@@ -1,6 +1,6 @@
 {
     "theme" : "modern",
-    "context" : "storenew",
+    "context" : "/storenew",
     "recentAPIsCount" : 5,
     "topRatedCount" : 5
 }

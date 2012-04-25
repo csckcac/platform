@@ -13,6 +13,7 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvents" %>
+<%@ page import="org.wso2.carbon.humantask.stub.ui.task.client.api.types.TUser" %>
 
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
@@ -63,6 +64,9 @@
         } else if ("taskEvents".equals(loadParam)) {
             TTaskEvents taskEvents = taskOperationsClient.getTaskEvents(new URI(taskId));
             taskDetailsJSONString = HumanTaskUIUtil.loadTaskEventsJSONString(taskEvents);
+        } else if ("assignableUsers".equals(loadParam)) {
+            TUser[] assignableUsers = taskOperationsClient.getTaskAssignableUsers(new URI(taskId));
+            taskDetailsJSONString = HumanTaskUIUtil.loadUserJSONString(assignableUsers);
         }
 
     } catch (Exception e) {

@@ -552,15 +552,16 @@ public final class OperationAuthorizationUtil {
     public static boolean authorisedToDelegate(TaskDAO task, OrganizationalEntityDAO caller,
                                                PeopleQueryEvaluator pqe) {
 
-        if (!TaskStatus.READY.equals(task.getStatus()) || !TaskStatus.IN_PROGRESS.equals(task.getStatus()) ||
-                !TaskStatus.RESERVED.equals(task.getStatus())) {
+        if (TaskStatus.READY.equals(task.getStatus()) || TaskStatus.IN_PROGRESS.equals(task.getStatus()) ||
+                TaskStatus.RESERVED.equals(task.getStatus())) {
+            List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles = new ArrayList<GenericHumanRoleDAO.GenericHumanRoleType>();
+            allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.POTENTIAL_OWNERS);
+            allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.STAKEHOLDERS);
+            allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
+            return authoriseUser(task, caller, allowedRoles, pqe);
+        } else {
             return false;
         }
-        List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles = new ArrayList<GenericHumanRoleDAO.GenericHumanRoleType>();
-        allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.POTENTIAL_OWNERS);
-        allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.STAKEHOLDERS);
-        allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
-        return authoriseUser(task, caller, allowedRoles, pqe);
     }
 
     /**

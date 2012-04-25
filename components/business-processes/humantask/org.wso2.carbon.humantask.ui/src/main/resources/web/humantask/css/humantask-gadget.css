@@ -173,6 +173,12 @@ fieldset legend{
     margin-bottom:10px;
     padding:5px;
 }
+
+.delegateDiv{
+    padding-top:10px;
+    padding-bottom:10px;
+}
+
 .commentBox a{
     cursor:pointer;
     color:#3c7da3;

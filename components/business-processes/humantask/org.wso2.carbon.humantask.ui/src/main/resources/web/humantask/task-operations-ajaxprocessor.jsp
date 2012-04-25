@@ -83,6 +83,10 @@
             } else if ("resume".equals(operation)) {
                 taskOperationsClient.resume(new URI(taskId));
                 taskOperationJsonObject.put("TaskResumed", "true");
+            } else if ("delegate".equals(operation)) {
+                String delegatee = request.getParameter("delegatee");
+                taskOperationsClient.delegate(new URI(taskId) , delegatee);
+                taskOperationJsonObject.put("TaskDelegated", "true");
             }
 
             taskOperationJson = taskOperationJsonObject.toJSONString();

@@ -554,4 +554,20 @@ public final class CommonTaskUtil {
                             Scheduler.JobType.TIMER_DEADLINE, null, task.getId(), deadline.getName());
         }
     }
+
+    public static String getPotentialOwnerRoleName(TaskDAO task) {
+          String roleName = null;
+        GHR_ITERATION:
+        for(GenericHumanRoleDAO role : task.getHumanRoles()){
+            if(GenericHumanRoleDAO.GenericHumanRoleType.POTENTIAL_OWNERS.equals(role.getType())) {
+                for(OrganizationalEntityDAO orgEntity : role.getOrgEntities()) {
+                    if(OrganizationalEntityDAO.OrganizationalEntityType.GROUP.equals(orgEntity.getOrgEntityType())) {
+                        roleName = orgEntity.getName();
+                        break GHR_ITERATION;
+                    }
+                }
+            }
+        }
+        return roleName;
+    }
 }

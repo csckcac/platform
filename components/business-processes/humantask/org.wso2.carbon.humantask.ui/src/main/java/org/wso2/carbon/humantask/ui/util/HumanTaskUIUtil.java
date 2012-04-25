@@ -26,6 +26,7 @@ import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskAbstract;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskAuthorisationParams;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvent;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvents;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TUser;
 
 import java.util.LinkedHashMap;
 
@@ -260,5 +261,25 @@ public final class HumanTaskUIUtil {
         }
 
         return JSONObject.toJSONString(taskEventsMap);
+    }
+
+
+    /**
+     * Builds a JSON representation of task comments.
+     *
+     * @param users : The user list array to be converted to JSON.
+     * @return : The JSON string.
+     */
+    public static String loadUserJSONString(TUser[] users) {
+        LinkedHashMap<String, JSONObject> userMap = new LinkedHashMap<String, JSONObject>();
+        if (users != null) {
+            for (int i = 0; i < users.length; i++) {
+                JSONObject userObject = new JSONObject();
+                userObject.put("userName", users[i].getTUser());
+                userMap.put(String.valueOf(i), userObject);
+            }
+        }
+
+        return JSONObject.toJSONString(userMap);
     }
 }

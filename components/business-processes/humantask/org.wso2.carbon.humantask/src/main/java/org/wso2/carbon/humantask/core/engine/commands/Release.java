@@ -17,11 +17,14 @@
 package org.wso2.carbon.humantask.core.engine.commands;
 
 import org.wso2.carbon.humantask.core.dao.*;
+import org.wso2.carbon.humantask.core.engine.HumanTaskCommand;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 import org.wso2.carbon.humantask.core.engine.util.OperationAuthorizationUtil;
+import org.wso2.carbon.humantask.core.internal.HumanTaskServiceComponent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * The release operation logic.
@@ -100,7 +103,7 @@ public class Release extends AbstractHumanTaskCommand {
         authorise();
         checkState();
         task.release();
-        //task.persistEvent(createTaskEvent());
+        task.persistEvent(createTaskEvent());
         checkPostConditions();
     }
 }

@@ -103,6 +103,10 @@ HUMANTASK.showHideActions = function() {
         jQuery('#commentLinkLi').show();
     }
 
+    if (HUMANTASK.authParams.authorisedToDelegate) {
+        jQuery('#delegateLinkLi').show();
+    }
+
     if (HUMANTASK.authParams.authorisedToSuspend) {
         jQuery('#suspendLinkLi').show();
     }
@@ -218,6 +222,8 @@ HUMANTASK.bindButtons = function() {
     jQuery('#resumeLink').click(HUMANTASK.resumeTask);
     jQuery('#addCommentButton').click(HUMANTASK.addComment);
     jQuery('#completeTaskButton').click(HUMANTASK.completeTask);
+    jQuery('#delegateButton').click(HUMANTASK.delegateTask);
+
 };
 
 
@@ -340,6 +346,21 @@ HUMANTASK.addComment = function() {
               });
 };
 
+HUMANTASK.delegateTask = function() {
+    var delegatee =  jQuery('#assignableUserList').val();
+    var delegateURL = 'task-operations-ajaxprocessor.jsp?operation=delegate&taskClient=' +
+                  HUMANTASK.taskClient + '&taskId=' + HUMANTASK.taskId + '&delegatee=' + delegatee;
+    $.getJSON(delegateURL,
+              function(json) {
+                  if (json.TaskDelegated == 'true') {
+                      location.reload(true);
+                  } else {
+                      alert('Error occurred while delageting task : ' + json.TaskDelegated);
+                      return true;
+                  }
+              });
+};
+
 HUMANTASK.handleTabSelection = function (tabType) {
 
     if (tabType == 'commentsTab') {
@@ -357,6 +378,44 @@ HUMANTASK.handleTabSelection = function (tabType) {
         $('#eventTabLink').addClass('selected');
         HUMANTASK.loadEvents(HUMANTASK.taskId, HUMANTASK.taskClient);
     }
+};
+
+/**
+ *
+ * @param tabId
+ */
+HUMANTASK.handleDelegateSelection = function (tabId) {
+    toggleMe(tabId);
+    HUMANTASK.fillAssignableUsersList();
+};
+
+/**
+ *
+ */
+HUMANTASK.fillAssignableUsersList = function () {
+
+    // we need to do an ajax call only if the delegate section is visible.
+    if ($('#delegateSection').is(":visible")) {
+        var page = 'task-loading-ajaxprocessor.jsp?taskClient=' + HUMANTASK.taskClient +
+                   '&taskId=' + HUMANTASK.taskId + '&loadParam=assignableUsers';
+        $.getJSON(page,
+                  function(eventJson) {
+                      HUMANTASK.populateAssignableUserDropDown(eventJson);
+                  });
+    }
+};
+
+/**
+ * Appends values to the people list drop down.
+ * @param eventJson  user list json.
+ */
+HUMANTASK.populateAssignableUserDropDown = function (eventJson) {
+    $('#assignableUserList').empty();
+    $.each(eventJson, function(index, userNameJSON) {
+        $('#assignableUserList').append(
+                $('<option></option>').val(userNameJSON.userName).html(userNameJSON.userName)
+        );
+    });
 };
 
 

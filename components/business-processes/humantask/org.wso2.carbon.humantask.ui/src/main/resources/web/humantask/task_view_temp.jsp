@@ -65,6 +65,7 @@
                 <li id="suspendLinkLi" style="display:none;"><a id="suspendLink">Suspend</a></li>
                 <li id="resumeLinkLi" style="display:none;"><a id="resumeLink">Resume</a></li>
                 <li id="commentLinkLi" style="display:none;"><a onclick="toggleMe('commentSection')">Comment</a></li>
+                <li id="delegateLinkLi" style="display:none;"><a onclick="HUMANTASK.handleDelegateSelection('delegateSection')">Assign</a></li>
                 <li id="moreActionsLinkLi" style="display:none;"><a id="moreActionsLink">More Actions</a></li>
             </ul>
         </div>
@@ -72,6 +73,9 @@
             <textarea id="commentTextAreaId" class="commentTextArea"></textarea>
             <input id="addCommentButton" type="button" class="button" value="Add Comment" />
             <div style="clear:both;"></div>
+        </div>
+        <div id="delegateSection" class="delegateDiv" style="display:none">
+            <select id="assignableUserList"></select><input id="delegateButton" type="button" class="button" value="Assign" />
         </div>
         <div class="tabLessContent-noBorder" id="tabContent">
             <div id="actionTab" class="tabContentData">

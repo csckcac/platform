@@ -37,6 +37,7 @@ import org.wso2.carbon.humantask.core.dao.TaskType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityTransaction;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -539,7 +540,7 @@ public class Task extends OpenJPAEntity implements TaskDAO {
     public void persistEvent(EventDAO event) {
         event.setTask(this);
         this.getEvents().add(event);
-        getEntityManager().merge(this);
+        //getEntityManager().merge(this);
     }
 
     @Override
@@ -614,7 +615,7 @@ public class Task extends OpenJPAEntity implements TaskDAO {
         this.addHumanRole(actualOwnerRole);
         this.setStatus(TaskStatus.RESERVED);
 
-        getEntityManager().merge(this);
+        //getEntityManager().merge(this);
     }
 
     @Override
@@ -861,7 +862,7 @@ public class Task extends OpenJPAEntity implements TaskDAO {
                 break;
             }
         }
-        this.getEntityManager().merge(this);
+        //this.getEntityManager().merge(this);
     }
 
     @Override

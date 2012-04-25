@@ -54,8 +54,10 @@ import org.wso2.carbon.humantask.client.api.types.TTaskOperations;
 import org.wso2.carbon.humantask.client.api.types.TTaskQueryResultSet;
 import org.wso2.carbon.humantask.client.api.types.TTaskSimpleQueryResultSet;
 import org.wso2.carbon.humantask.client.api.types.TTime;
+import org.wso2.carbon.humantask.client.api.types.TUser;
 import org.wso2.carbon.humantask.core.HumanTaskConstants;
 import org.wso2.carbon.humantask.core.dao.CommentDAO;
+import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
 import org.wso2.carbon.humantask.core.dao.HumanTaskDAOConnection;
 import org.wso2.carbon.humantask.core.dao.OrganizationalEntityDAO;
 import org.wso2.carbon.humantask.core.dao.SimpleQueryCriteria;
@@ -90,11 +92,17 @@ import org.wso2.carbon.humantask.core.engine.commands.Stop;
 import org.wso2.carbon.humantask.core.engine.commands.Suspend;
 import org.wso2.carbon.humantask.core.engine.commands.UpdateComment;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
+import org.wso2.carbon.humantask.core.engine.util.CommonTaskUtil;
 import org.wso2.carbon.humantask.core.internal.HumanTaskServiceComponent;
 import org.wso2.carbon.humantask.core.utils.DOMUtils;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.service.RegistryService;
+import org.wso2.carbon.user.core.UserRealm;
+import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 
 import javax.xml.namespace.QName;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -375,6 +383,45 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                 throw (IllegalStateFault) ex;
             } else if (ex instanceof IllegalAccessFault) {
                 throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalStateFault(errMsg, ex);
+            }
+        }
+    }
+
+    @Override
+    public TUser[] getAssignableUserList(URI uri) throws IllegalStateFault, IllegalArgumentFault {
+        final Integer tenantId = CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId();
+                CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(tenantId);
+        try {
+            final Long taskId = validateTaskId(uri);
+            return HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().getScheduler().
+                    execTransaction(new Callable<TUser[]>() {
+                        public TUser[] call() throws Exception {
+                            HumanTaskEngine engine =
+                                    HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine();
+                            HumanTaskDAOConnection daoConn =
+                                    engine.getDaoConnectionFactory().getConnection();
+                            TaskDAO task = daoConn.getTask(taskId);
+                            String roleName = CommonTaskUtil.getPotentialOwnerRoleName(task);
+                            String actualOwnerUserName = null;
+                            OrganizationalEntityDAO actualOwner =
+                                    CommonTaskUtil.getUserEntityForRole(task,GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
+                            if (actualOwner != null) {
+                                actualOwnerUserName = actualOwner.getName();
+                            }
+
+                            return getUserListForRole(roleName, tenantId, actualOwnerUserName);
+                        }
+                    });
+        } catch (Exception ex) {
+            String errMsg = "loadAuthorisationParams operation failed";
+            log.error(errMsg, ex);
+            if (ex instanceof IllegalArgumentFault) {
+                throw (IllegalArgumentFault) ex;
+            } else if (ex instanceof IllegalStateFault) {
+                throw (IllegalStateFault) ex;
             } else {
                 throw new IllegalStateFault(errMsg, ex);
             }
@@ -734,8 +781,8 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
                         public Object call() throws Exception {
                             List<OrganizationalEntityDAO> orgEntities = TransformerUtils.
                                     transformOrganizationalEntityList(tOrganizationalEntity);
-                            if (orgEntities.size() > 0) {
-                                throw new IllegalArgumentFault("There can be only 1 delegatee!!");
+                            if (orgEntities.size() > 1) {
+                                throw new IllegalArgumentFault("There can be only 1 delegatee of type user!");
                             }
 
                             Delegate delegateCommand = new Delegate(getCaller(),
@@ -1609,5 +1656,33 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
         }
 
         return userName;
+    }
+
+
+    private TUser[] getUserListForRole(String roleName, Integer tenantId, String actualOwnerUserName)
+            throws RegistryException, UserStoreException {
+        TUser[] userList = new TUser[0];
+
+        RegistryService registryService = HumanTaskServiceComponent.getRegistryService();
+        if(registryService != null && registryService.getUserRealm(tenantId) != null) {
+            UserRealm userRealm = registryService.getUserRealm(tenantId);
+            String[] assignableUserNameList = userRealm.getUserStoreManager().getUserListOfRole(roleName);
+            if(assignableUserNameList != null) {
+                userList = new TUser[assignableUserNameList.length];
+                for(int i= 0 ; i < assignableUserNameList.length ; i++) {
+                    TUser user  = new TUser();
+                    user.setTUser(assignableUserNameList[i]);
+                    if(StringUtils.isEmpty(actualOwnerUserName)) {
+                        userList[i] = user;
+                    } else if(StringUtils.isNotEmpty(actualOwnerUserName) &&
+                              !actualOwnerUserName.equals(assignableUserNameList[i])) {
+                        userList[i] = user;
+                    }
+                }
+            }
+        } else {
+            log.warn("Cannot load User Realm for Tenant Id: " + tenantId);
+        }
+        return userList;
     }
 }

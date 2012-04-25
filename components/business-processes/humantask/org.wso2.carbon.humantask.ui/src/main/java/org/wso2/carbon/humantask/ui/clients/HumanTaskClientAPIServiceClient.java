@@ -29,13 +29,17 @@ import org.wso2.carbon.humantask.stub.ui.task.client.api.IllegalAccessFault;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.IllegalArgumentFault;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.IllegalOperationFault;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.IllegalStateFault;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.RecipientNotAllowedException;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.TaskOperationsStub;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TComment;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TOrganizationalEntity;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TOrganizationalEntityChoice;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TSimpleQueryInput;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskAbstract;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskAuthorisationParams;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvents;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskSimpleQueryResultSet;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TUser;
 import org.wso2.carbon.humantask.ui.constants.HumanTaskUIConstants;
 
 import javax.xml.stream.XMLStreamException;
@@ -596,5 +600,64 @@ public class HumanTaskClientAPIServiceClient {
             log.error(errMsg, e);
             throw e;
         }
+    }
+
+    public TUser[] getTaskAssignableUsers(URI taskId)
+            throws RemoteException, IllegalStateFault, IllegalOperationFault, IllegalArgumentFault {
+       String errMsg = "Error occurred while performing getTaskAssignableUsers operation";
+        try {
+            return stub.getAssignableUserList(taskId);
+        } catch (RemoteException e) {
+            log.error(errMsg, e);
+            throw e;
+        } catch (IllegalStateFault e) {
+            log.error(errMsg, e);
+            throw e;
+        } catch (IllegalArgumentFault e) {
+            log.error(errMsg, e);
+            throw e;
+        }
+    }
+
+    public void delegate(URI taskId, String delegatee)
+            throws RemoteException, IllegalStateFault, IllegalArgumentFault, IllegalOperationFault,
+                   RecipientNotAllowedException, IllegalAccessFault {
+
+        if(delegatee == null || "".equals(delegatee.trim())) {
+            throw new IllegalArgumentException("Delegatee user name should not be empty.");
+        }
+        String errMsg = "Error occurred while performing delegate operation";
+
+        TOrganizationalEntity delegateOrgEntity = new TOrganizationalEntity();
+        TOrganizationalEntityChoice[] delegateArr = new TOrganizationalEntityChoice[1];
+        TOrganizationalEntityChoice delegateeChoice = new TOrganizationalEntityChoice();
+        TUser delegateeUser = new TUser();
+        delegateeUser.setTUser(delegatee);
+        delegateeChoice.setUser(delegateeUser);
+        delegateArr[0] = delegateeChoice;
+        delegateOrgEntity.setTOrganizationalEntityChoice(delegateArr);
+
+        try {
+            stub.delegate(taskId, delegateOrgEntity);
+        } catch (RemoteException e) {
+            log.error(errMsg, e);
+            throw e;
+        } catch (IllegalStateFault e) {
+            log.error(errMsg, e);
+            throw e;
+        } catch (IllegalOperationFault e) {
+            log.error(errMsg, e);
+            throw e;
+        } catch (IllegalArgumentFault e) {
+            log.error(errMsg, e);
+            throw e;
+        } catch (RecipientNotAllowedException e) {
+            log.error(errMsg, e);
+            throw e;
+        } catch (IllegalAccessFault e) {
+            log.error(errMsg, e);
+            throw e;
+        }
+
     }
 }

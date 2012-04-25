@@ -183,7 +183,10 @@ public class Database {
      */
     public HumanTaskDAOConnectionFactoryJDBC createDAOConnectionFactory() throws DatabaseConfigurationException {
         String connectionFactoryClassName = serverConfiguration.getDaoConnectionFactoryClass();
-        log.info("Using DAO connection factory class: " + connectionFactoryClassName);
+
+        if(log.isDebugEnabled()) {
+            log.debug("Using DAO connection factory class: " + connectionFactoryClassName);
+        }
 
         HumanTaskDAOConnectionFactoryJDBC humanTaskDAOConnectionFactoryJDBC;
 

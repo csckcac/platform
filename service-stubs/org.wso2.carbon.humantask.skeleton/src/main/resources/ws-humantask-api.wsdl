@@ -1186,6 +1186,22 @@
                 </xsd:complexType>
             </xsd:element>
 
+            <xsd:element name="getAssignableUserList">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="identifier" type="xsd:anyURI"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="getAssignableUserListResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="user" type="htt:tUser" minOccurs="0"
+                                     maxOccurs="unbounded"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
             <xsd:element name="activate">
                 <xsd:complexType>
                     <xsd:sequence>
@@ -1825,6 +1841,13 @@
         <wsdl:part name="loadTaskEventsResponse" element="loadTaskEventsResponse"/>
     </wsdl:message>
 
+    <wsdl:message name="getAssignableUserList">
+        <wsdl:part name="getAssignableUserList" element="getAssignableUserList"/>
+    </wsdl:message>
+    <wsdl:message name="getAssignableUserListResponse">
+        <wsdl:part name="getAssignableUserListResponse" element="getAssignableUserListResponse"/>
+    </wsdl:message>
+
     <wsdl:message name="activate">
         <wsdl:part name="activate" element="activate"/>
     </wsdl:message>
@@ -2345,6 +2368,12 @@
         <wsdl:operation name="loadTaskEvents">
             <wsdl:input message="loadTaskEvents"/>
             <wsdl:output message="loadTaskEventsResponse"/>
+            <wsdl:fault name="illegalStateFault" message="illegalStateFault"/>
+            <wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault"/>
+        </wsdl:operation>
+        <wsdl:operation name="getAssignableUserList">
+            <wsdl:input message="getAssignableUserList"/>
+            <wsdl:output message="getAssignableUserListResponse"/>
             <wsdl:fault name="illegalStateFault" message="illegalStateFault"/>
             <wsdl:fault name="illegalArgumentFault" message="illegalArgumentFault"/>
         </wsdl:operation>
@@ -3117,6 +3146,22 @@
         <wsdl:operation name="loadTaskEvents">
             <soap:operation
                     soapAction="http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/loadTaskEvents"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="illegalStateFault">
+                <soap:fault use="literal" name="illegalStateFault"/>
+            </wsdl:fault>
+            <wsdl:fault name="illegalArgumentFault">
+                <soap:fault use="literal" name="illegalArgumentFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+       <wsdl:operation name="getAssignableUserList">
+            <soap:operation
+                    soapAction="http://docs.oasis-open.org/ns/bpel4people/ws-humantask/api/200803/getAssignableUserList"/>
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>

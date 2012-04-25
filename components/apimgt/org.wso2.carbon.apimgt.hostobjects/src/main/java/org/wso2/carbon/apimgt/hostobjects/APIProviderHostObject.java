@@ -896,7 +896,7 @@ public class APIProviderHostObject extends ScriptableObject {
         List<ProviderAPIVersionUsageDTO> list = null;
         try {
             APIMgtUsageQueryServiceClient client = new APIMgtUsageQueryServiceClient(serverURL);
-            list = client.getProviderAPIVersionUsage(providerName, APIname);
+            list = client.getProviderAPIVersionUsage(APIname);
         } catch (Exception e) {
             log.error("Backend-Error while querying BAM server for ProviderAPIVersionUsage", e);
         }
@@ -925,7 +925,7 @@ public class APIProviderHostObject extends ScriptableObject {
         List<ProviderAPIUsageDTO> list = null;
         try {
             APIMgtUsageQueryServiceClient client = new APIMgtUsageQueryServiceClient(serverURL);
-            list = client.getProviderAPIUsage(providerName);
+            list = client.getProviderAPIUsage();
         } catch (Exception e) {
             log.error("Backend-Error while querying BAM server for ProviderAPIUsage", e);
         }

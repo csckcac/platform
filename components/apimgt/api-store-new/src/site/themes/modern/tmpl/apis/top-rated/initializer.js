@@ -1,12 +1,13 @@
-var getTemplateFile = function() {
+var getTemplateFile = function () {
     return "tmpl/apis/top-rated/template.jag";
 };
 
 var getData = function (params) {
-    var ratings = require("/core/apis/top-rated.js");
-    var result = ratings.getTopRatedAPIs(params.count);
+    var result, apis, ratings = require("/core/apis/top-rated.js");
+    result = ratings.getTopRatedAPIs(params.count);
+    apis = result.apis;
     return {
-        "apis":result.apis
+        "apis":apis
     };
 };
 

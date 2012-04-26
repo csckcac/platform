@@ -24,40 +24,15 @@
     <link rel="stylesheet" type="text/css" href="<%=site.context%>/site/themes/modern/js/lib/kickStart/css/kickstart.css" media="all"/>
     <link rel="stylesheet" href="<%=site.context%>/site/themes/modern/js/lib/jquery/css/start/jquery-ui-1.8.19.custom.css">
     <link rel="stylesheet" type="text/css" href="<%=site.context%>/site/themes/modern/css/style.css" media="all"/>
-
     <%
-        var context = site.context;
-
-        var insertCode = function(list, fn) {
-            var obj, tmpl, key, path;
-            for(tmpl in list) {
-                if(list.hasOwnProperty(tmpl)) {
-                    obj = list[tmpl];
-                    for(key in obj) {
-                        if(obj.hasOwnProperty(key)) {
-                            path = "/" + context + obj[key];
-                            fn(path);
-                        }
-                    }
-                }
-            }
-        };
-
-        insertCode(jagg.global.js, function(path) {
-            print('<script type="text/javascript" src="' + path + '"></script>');
-        });
-
-        insertCode(jagg.global.css, function(path) {
-            print('<link type="text/css" rel="stylesheet" href="' + path + '"/>');
-        });
-
-        insertCode(jagg.global.code, function(code) {
-            print(code);
-        });
+        var global = jagg.global;
+        jagg.printGlobals(global.js);
+        jagg.printGlobals(global.css);
+        jagg.printGlobals(global.code);
     %>
 </head>
 <body>
-
+<% jagg.includeJag("tmpl/pages/base/dialog-box.jag"); %>
 <div id="header">
     <a id="top-of-page"></a>
     <% jagg.includeTemplate("header/top-bar", null); %>

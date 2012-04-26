@@ -1,17 +1,18 @@
-var getTemplateFile = function() {
+var getTemplateFile = function () {
     return "tmpl/apis/recently-added/template.jag";
 };
 
 var getData = function (params) {
-    var recent = require("/core/apis/recently-added.js");
-    var result = recent.getRecentlyAddedAPIs(params.count);
+    var result, apis, recent = require("/core/apis/recently-added.js");
+    result = recent.getRecentlyAddedAPIs(params.count);
+    apis = result.apis;
     return {
-        "apis":result.apis
+        "apis":apis
     };
 };
 
 var getParams = function () {
     return {
-        "count" : 5
+        "count":5
     };
 };

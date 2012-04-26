@@ -2,49 +2,40 @@
 include("/site/themes/jagg.jag");
 var site = require("/site/conf/site.json");
 
-var apis,
-    tag = request.getParameter("tag");
-if(tag) {
-    var tagged = require("/core/apis/tagged.js");
-    var result = tagged.getAPIsByTag(tag);
-    apis = result.apis;
-} else {
-    var published = require("/core/apis/published.js");
-    var result = published.getAllPublishedAPIs();
-    apis = result.apis;
-}
+(function () {
+    var apis, result, obj,
+            tag = request.getParameter("tag");
+    if (tag) {
+        obj = require("/core/apis/tagged.js");
+        result = obj.getAPIsByTag(tag);
+        apis = result.apis;
+    } else {
+        obj = require("/core/apis/published.js");
+        result = obj.getAllPublishedAPIs();
+        apis = result.apis;
+    }
 
-var params = {
-    "name":"pages/base",
-    "css":{},
-    "js":{},
-    "code":{},
-    "updates" : {
-        "css" : {},
-        "js" : {}
-    },
-    "params":
-        {
+    jagg.render({
+        "name":"pages/base",
+        "params":{
             "title":"API Store Listing",
             "body":[
                 {
                     "name":"layouts/extended",
-                    "params": {
-                        "top" : null,
-                        "left" : null,
-                        "middle" : {
-                            "name" : "apis/listing",
-                            "params" : {
-                                "apis" : apis
+                    "params":{
+                        "top":null,
+                        "left":null,
+                        "middle":{
+                            "name":"apis/listing",
+                            "params":{
+                                "apis":apis
                             }
                         },
-                        "right" : null
+                        "right":null
                     }
                 }
             ]
         }
-};
-
-jagg.render(params);
-
+    });
+}());
 %>

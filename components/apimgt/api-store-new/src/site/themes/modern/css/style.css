@@ -340,3 +340,7 @@ ul.tabs li a:hover{
     height : 60px;
 }
 
+.hidden {
+    display: none;
+}
+

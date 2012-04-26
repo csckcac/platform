@@ -1,0 +1,33 @@
+<%
+(function () {
+    var lib, obj, result, username, action = request.getParameter("action");
+    if (action === "login") {
+        lib = require("/core/users/login.js");
+        username = request.getParameter("username");
+        result = lib.login(username, request.getParameter("password"));
+        if (result.error) {
+            obj = {
+                error:result.error,
+                message:"Error while authenticating username and password"
+            };
+        } else {
+            obj = {
+                error:false,
+                data:{
+                    success:true
+                }
+            }
+        }
+        session.put("logged.user", {username:username, cookie:result.cookie});
+        print(obj);
+    } else if (action === "logout") {
+        session.remove("logged.user");
+        print({
+            error:false,
+            data:{
+                success:true
+            }
+        });
+    }
+}());
+//%>

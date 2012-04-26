@@ -1,11 +1,12 @@
-var getTemplateFile = function() {
+var getTemplateFile = function () {
     return "tmpl/tags/tag-cloud/template.jag";
 };
 
 var getData = function (params) {
-    var tags = require("/core/tags/cloud.js");
-    var result = tags.getAllTags();
+    var result, tags, cloud = require("/core/tags/cloud.js");
+    result = cloud.getAllTags();
+    tags = result.tags;
     return {
-        "tags":result.tags
+        "tags":tags
     };
 };

@@ -1,11 +1,46 @@
 <%
+//TODO : remove this when log configs are implemented
 Log.prototype.isDebugEnabled = function () {
     return false;
+};
+
+//TODO : remove this when Context HO is implemented.
+var context = context || {
+    put:function (key, value) {
+        session.put(key, value);
+    },
+    get:function (key) {
+        return session.get(key);
+    },
+    remove:function (key) {
+        session.remove(key);
+    }
 };
 
 var jagg = jagg || {};
 
 (function () {
+    var ctx = context;
+    var getUrlMapping = function (path) {
+        var urlMap = ctx.get("url.map"), configs, i, length, mapping, mappings, file;
+        if (urlMap) {
+            return urlMap[path];
+        }
+        file = new File("/jaggery.conf");
+        file.open("r");
+        configs = parse(file.readAll());
+        file.close();
+
+        urlMap = {};
+        mappings = configs.urlMappings;
+        length = mappings.length;
+        for (i = 0; i < length; i++) {
+            mapping = mappings[i];
+            urlMap[mapping.path] = mapping.url;
+        }
+        ctx.put("url.map", urlMap);
+        return urlMap[path];
+    };
 
     var getTemplateFile = function (initializer) {
         return getThemeFile(initializer.getTemplateFile());
@@ -47,6 +82,7 @@ var jagg = jagg || {};
         var def = getDefaultThemePath();
         var tmpPath = prefix + path;
         var file = new File(tmpPath);
+        //TODO : update to isExists() method of FO
         return file.exists ? tmpPath : def + path;
     };
 
@@ -54,25 +90,53 @@ var jagg = jagg || {};
         include(getThemeFile(path));
     };
 
-    var addHeaderCSS = function (global, template, key, css) {
-        css = getThemeFile(css);
-        insertGlobal(global, template, "css", key, css);
+    var addHeaderCSS = function (template, key, css) {
+        css = '<link type="text/css" rel="stylesheet" href="' + site.context + getThemeFile(css) + '"/>';
+        insertGlobal(this, template, "css", key, css);
     };
 
-    var addHeaderJS = function (global, template, key, js) {
-        js = getThemeFile(js);
-        insertGlobal(global, template, "js", key, js);
+    var addHeaderCSSCode = function (template, key, css) {
+        css = '<style type="text/css">' + css + '</style>';
+        insertGlobal(this, template, "css", key, css);
     };
 
-    var addHeaderCode = function (global, template, key, code) {
-        insertGlobal(global, template, "code", key, code);
+    var addHeaderJS = function (template, key, js) {
+        js = '<script type="text/javascript" src="' + site.context + getThemeFile(js) + '"></script>';
+        insertGlobal(this, template, "js", key, js);
     };
 
-    var insertGlobal = function (global, template, name, key, value) {
-        var obj = global[name] || (global[name] = {});
-        var tmpl = obj[template];
-        tmpl = tmpl || (obj[template] = {});
-        tmpl[key] = value;
+    var addHeaderJSCode = function (template, key, js) {
+        js = '<script type="text/javascript">' + js + '</script>';
+        insertGlobal(this, template, "js", key, js);
+    };
+
+    var addHeaderCode = function (template, key, code) {
+        insertGlobal(this, template, "code", key, code);
+    };
+
+    var insertGlobal = function (jagg, template, name, key, value) {
+        var global = jagg.global,
+                obj = global[name] || (global[name] = {}),
+                tmpl = obj[template] || (obj[template] = {}),
+                keys = tmpl.keys || (tmpl.keys = []),
+                values = tmpl.values || (tmpl.values = {});
+        keys.push(key);
+        values[key] = value;
+    };
+
+    var printGlobals = function (tmpls) {
+        var key, tmpl, keys, values, i, length;
+        for (key in tmpls) {
+            if (tmpls.hasOwnProperty(key)) {
+                tmpl = tmpls[key];
+                keys = tmpl.keys;
+                values = tmpl.values;
+                length = keys.length;
+                for (i = 0; i < length; i++) {
+                    print(values[keys[i]]);
+                }
+            }
+        }
     };
 
     var mergeParams = function (extParams, defParams) {
@@ -188,7 +252,7 @@ var jagg = jagg || {};
             inheritParent(initializer);
             jagg.templates[name] = initializer;
             if (initializer.initialize) {
-                initializer.initialize();
+                initializer.initialize(jagg);
             }
         }
         extParams = template.params || (template.params = {});
@@ -283,10 +347,13 @@ var jagg = jagg || {};
     ns.getThemeFile = getThemeFile;
     ns.includeJag = includeJag;
     ns.addHeaderCSS = addHeaderCSS;
+    ns.addHeaderCSSCode = addHeaderCSSCode;
     ns.addHeaderJS = addHeaderJS;
+    ns.addHeaderJSCode = addHeaderJSCode;
     ns.addHeaderCode = addHeaderCode;
     ns.render = render;
     ns.insertGlobal = insertGlobal;
+    ns.printGlobals = printGlobals;
     ns.includeTemplate = includeTemplate;
     ns.includeTemplates = includeTemplates;
     ns.initializeTemplate = initializeTemplate;

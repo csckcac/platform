@@ -1,6 +1,6 @@
 var login = function (username, password) {
     var greg = require("/core/greg/greg.js");
-    var gregClient = require("/core/greg/clients.js");
+    var gregClient = require("/core/greg/client.js");
     var url = greg.getServerURL() + "services/AuthenticationAdmin";
     var remoteAddress = greg.getServer();
     var payload =

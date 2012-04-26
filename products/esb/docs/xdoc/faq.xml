@@ -475,7 +475,7 @@
                 <p>
                     Yes you can. You can connect WSO2 ESB with any external user store implementation.
                     The user store could be LDAP based, JDBC based or a custom developed user store. Please
-                    refer <a href="user-core/admin_guide.html">user core documentation</a> for more details.
+                    refer <a href="user.core/admin_guide.html">user core documentation</a> for more details.
                 </p>
             </li>
 

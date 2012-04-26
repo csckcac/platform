@@ -481,7 +481,7 @@ settings for the LDAP based user store looks as follows.
 &lt;/UserStoreManager&gt;
 </pre>
 <p>
-For more information on using external user stores please refer <a href="user-core/admin_guide.html">User Core Admin
+For more information on using external user stores please refer <a href="user.core/admin_guide.html">User Core Admin
 Guide</a>.    
 </p>
 

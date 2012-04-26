@@ -63,13 +63,13 @@ public class TestResourcesTestCase {
             fail("Couldn't get content from path /d1/d2/d3/r1");
         }
 
-        assertEquals(new String((byte[]) r1.getContent()),
-                new String((byte[]) r1_actual.getContent()), "Content is not equal.");
-        assertEquals("admin", r1_actual.getLastUpdaterUserName(), "LastUpdatedUser is not Equal");
-        assertEquals("/d1/d2/d3/r1", r1_actual.getPath(), "Can not get Resource path");
-        assertEquals("/d1/d2/d3", r1_actual.getParentPath(), "Can not get Resource parent path");
-        assertEquals(r1.getDescription(), r1_actual.getDescription(), "Resource description is not equal");
-        assertEquals("admin", r1_actual.getAuthorUserName(), "Resource description is not equal");
+        assertEquals( new String((byte[]) r1_actual.getContent()),
+                    new String((byte[]) r1.getContent()), "Content is not equal.");
+        assertEquals(r1_actual.getLastUpdaterUserName(),"admin", "LastUpdatedUser is not Equal");
+        assertEquals(r1_actual.getPath(),"/d1/d2/d3/r1", "Can not get Resource path");
+        assertEquals(r1_actual.getParentPath(),"/d1/d2/d3", "Can not get Resource parent path");
+        assertEquals(r1_actual.getDescription(),r1.getDescription(), "Resource description is not equal");
+        assertEquals(r1_actual.getAuthorUserName(),"admin", "Resource description is not equal");
 
     }
 
@@ -92,16 +92,16 @@ public class TestResourcesTestCase {
 
         Resource r1_actual = registry.get("/d1/d2/d3/d4/r1");
 
-        assertEquals(new String((byte[]) r1.getContent()),
-                new String((byte[]) r1_actual.getContent()), "Content is not equal.");
-        assertEquals("admin", r1_actual.getLastUpdaterUserName(), "LastUpdatedUser is not Equal");
-        assertEquals("/d1/d2/d3/d4/r1", r1_actual.getPath(), "Can not get Resource path");
-        assertEquals("/d1/d2/d3/d4", r1_actual.getParentPath(), "Can not get Resource parent path");
-        assertEquals(r1.getDescription(), r1_actual.getDescription(), "Resource description is not equal");
-        assertEquals("admin", r1_actual.getAuthorUserName(), "Author is not equal");
-        assertEquals(r1.getProperty("key1"), r1_actual.getProperty("key1"), "Resource properties are equal");
-        assertEquals(r1.getProperty("key2"), r1_actual.getProperty("key2"), "Resource properties are equal");
-        assertEquals(r1.getProperty("key3_update"), r1_actual.getProperty("key3_update"),
+        assertEquals(new String((byte[]) r1_actual.getContent()),
+                    new String((byte[]) r1.getContent()), "Content is not equal.");
+        assertEquals( r1_actual.getLastUpdaterUserName(),"admin", "LastUpdatedUser is not Equal");
+        assertEquals( r1_actual.getPath(),"/d1/d2/d3/d4/r1", "Can not get Resource path");
+        assertEquals( r1_actual.getParentPath(),"/d1/d2/d3/d4", "Can not get Resource parent path");
+        assertEquals(r1_actual.getDescription(),r1.getDescription(), "Resource description is not equal");
+        assertEquals(r1_actual.getAuthorUserName(),"admin", "Author is not equal");
+        assertEquals(r1_actual.getProperty("key1"),r1.getProperty("key1"), "Resource properties are equal");
+        assertEquals( r1_actual.getProperty("key2"),r1.getProperty("key2"), "Resource properties are equal");
+        assertEquals(r1_actual.getProperty("key3_update"),r1.getProperty("key3_update"),
                 "Resource properties are equal");
 
         String contentUpdated = "this is my content updated";
@@ -114,16 +114,16 @@ public class TestResourcesTestCase {
         registry.put(path, r1);
         Resource r2_actual = registry.get("/d1/d2/d3/d4/r1");
 
-        assertEquals(new String((byte[]) r1.getContent()),
-                new String((byte[]) r2_actual.getContent()), "Content is not equal.");
-        assertEquals("admin", r2_actual.getLastUpdaterUserName(), "LastUpdatedUser is not Equal");
-        assertEquals("/d1/d2/d3/d4/r1", r2_actual.getPath(), "Can not get Resource path");
-        assertEquals("/d1/d2/d3/d4", r2_actual.getParentPath(), "Can not get Resource parent path");
-        assertEquals(r1.getDescription(), r2_actual.getDescription(), "Resource description is not equal");
-        assertEquals("admin", r2_actual.getAuthorUserName(), "Author is not equal");
-        assertEquals(r1.getProperty("key1"), r2_actual.getProperty("key1"), "Resource properties are equal");
-        assertEquals(r1.getProperty("key2"), r2_actual.getProperty("key2"), "Resource properties are equal");
-        assertEquals(r1.getProperty("key3_update"), r2_actual.getProperty("key3_update"),
+        assertEquals(new String((byte[]) r2_actual.getContent()),
+                new String((byte[]) r1.getContent()),"Content is not equal.");
+        assertEquals(r2_actual.getLastUpdaterUserName(),"admin", "LastUpdatedUser is not Equal");
+        assertEquals(r2_actual.getPath(),"/d1/d2/d3/d4/r1", "Can not get Resource path");
+        assertEquals(r2_actual.getParentPath(),"/d1/d2/d3/d4", "Can not get Resource parent path");
+        assertEquals(r2_actual.getDescription(),r1.getDescription(), "Resource description is not equal");
+        assertEquals(r2_actual.getAuthorUserName(),"admin", "Author is not equal");
+        assertEquals(r2_actual.getProperty("key1"),r1.getProperty("key1"), "Resource properties are equal");
+        assertEquals(r2_actual.getProperty("key2"),r1.getProperty("key2"), "Resource properties are equal");
+        assertEquals(r2_actual.getProperty("key3_update"),r1.getProperty("key3_update"),
                 "Resource properties are equal");
     }
 
@@ -151,15 +151,15 @@ public class TestResourcesTestCase {
             fail("Couldn't get content from path /d1/d2/r2");
         }
 
-        assertEquals(new String((byte[]) r1.getContent()),
-                new String((byte[]) r1_actual.getContent()), "Content is not equal.");
-        assertEquals("admin", r1_actual.getLastUpdaterUserName(), "LastUpdatedUser is not Equal");
-        assertEquals("/d1/d2/r2", r1_actual.getPath(), "Can not get Resource path");
-        assertEquals("/d1/d2", r1_actual.getParentPath(), "Can not get Resource parent path");
-        assertEquals(r1.getDescription(), r1_actual.getDescription(), "Resource description is not equal");
-        assertEquals("admin", r1_actual.getAuthorUserName(), "Author is not equal");
-        assertEquals(r1.getProperty("key1"), r1_actual.getProperty("key1"), "Resource properties are equal");
-        assertEquals(r1.getProperty("key2"), r1_actual.getProperty("key2"), "Resource properties are equal");
+        assertEquals(new String((byte[]) r1_actual.getContent()),
+                    new String((byte[]) r1.getContent()),"Content is not equal.");
+        assertEquals(r1_actual.getLastUpdaterUserName(),"admin", "LastUpdatedUser is not Equal");
+        assertEquals(r1_actual.getPath(),"/d1/d2/r2", "Can not get Resource path");
+        assertEquals(r1_actual.getParentPath(),"/d1/d2", "Can not get Resource parent path");
+        assertEquals(r1_actual.getDescription(),r1.getDescription(), "Resource description is not equal");
+        assertEquals(r1_actual.getAuthorUserName(),"admin", "Author is not equal");
+        assertEquals(r1_actual.getProperty("key1"),r1.getProperty("key1"), "Resource properties are equal");
+        assertEquals(r1_actual.getProperty("key2"),r1.getProperty("key2"), "Resource properties are equal");
 
     }
 
@@ -187,14 +187,14 @@ public class TestResourcesTestCase {
             fail("Couldn't get content from path /c11/c12/c13/c14/r4");
         }
 
-        assertEquals("admin", r1_actual.getLastUpdaterUserName(), "LastUpdatedUser is not Equal");
-        assertEquals(path_collection, r1_actual.getPath(), "Can not get Resource path");
-        assertEquals("/c11/c12/c13/c14", r1_actual.getParentPath(), "Can not get Resource parent path");
-        assertEquals(r1.getDescription(), r1_actual.getDescription(), "Resource description is not equal");
-        assertEquals("admin", r1_actual.getAuthorUserName(), "Author is not equal");
-        assertEquals(r1.getProperty("key1"), r1_actual.getProperty("key1"), "Resource properties are not equal");
-        assertEquals(r1.getProperty("key2"), r1_actual.getProperty("key2"), "Resource properties are not equal");
-        assertEquals(r1.getMediaType(), r1_actual.getMediaType(), "Media Types are not equal");
+        assertEquals(r1_actual.getLastUpdaterUserName(),"admin", "LastUpdatedUser is not Equal");
+        assertEquals(r1_actual.getPath(),path_collection, "Can not get Resource path");
+        assertEquals(r1_actual.getParentPath(),"/c11/c12/c13/c14", "Can not get Resource parent path");
+        assertEquals(r1_actual.getDescription(),r1.getDescription(), "Resource description is not equal");
+        assertEquals(r1_actual.getAuthorUserName(),"admin", "Author is not equal");
+        assertEquals(r1_actual.getProperty("key1"),r1.getProperty("key1"), "Resource properties are not equal");
+        assertEquals(r1_actual.getProperty("key2"),r1.getProperty("key2"), "Resource properties are not equal");
+        assertEquals(r1_actual.getMediaType(),r1.getMediaType(), "Media Types are not equal");
 
     }
 
@@ -249,13 +249,13 @@ public class TestResourcesTestCase {
         Resource r1_actual = registry.get("/c1/c2/c3");
 
         assertTrue(r1_actual instanceof Collection);
-        assertEquals("admin", r1_actual.getLastUpdaterUserName(), "LastUpdatedUser is not Equal");
-        assertEquals(path_collection, r1_actual.getPath(), "Can not get Resource path");
-        assertEquals("/c1/c2", r1_actual.getParentPath(), "Can not get Resource parent path");
-        assertEquals(r1.getDescription(), r1_actual.getDescription(), "Resource description is not equal");
-        assertEquals("admin", r1_actual.getAuthorUserName(), "Authour is not equal");
-        assertEquals(r1.getProperty("key1"), r1_actual.getProperty("key1"), "Resource properties are not equal");
-        assertEquals(r1.getProperty("key2"), r1_actual.getProperty("key2"), "Resource properties are not equal");
+        assertEquals(r1_actual.getLastUpdaterUserName(),"admin", "LastUpdatedUser is not Equal");
+        assertEquals( r1_actual.getPath(),path_collection, "Can not get Resource path");
+        assertEquals( r1_actual.getParentPath(),"/c1/c2", "Can not get Resource parent path");
+        assertEquals(r1_actual.getDescription(),r1.getDescription(), "Resource description is not equal");
+        assertEquals( r1_actual.getAuthorUserName(),"admin", "Authour is not equal");
+        assertEquals(r1_actual.getProperty("key1"),r1.getProperty("key1"), "Resource properties are not equal");
+        assertEquals(r1_actual.getProperty("key2"),r1.getProperty("key2"), "Resource properties are not equal");
     }
 
     @Test(groups = {"wso2.greg"})
@@ -309,14 +309,14 @@ public class TestResourcesTestCase {
         } catch (RegistryException e) {
             fail("Couldn't get content of path /c11/c12/c13/r4");
         }
-        assertEquals("admin", r1_actual.getLastUpdaterUserName(), "LastUpdatedUser is not Equal");
-        assertEquals(path_new, r1_actual.getPath(), "Can not get Resource path");
-        assertEquals("/c11/c12/c13", r1_actual.getParentPath(), "Can not get Resource parent path");
-        assertEquals(r2.getDescription(), r1_actual.getDescription(), "Resource description is not equal");
-        assertEquals("admin", r1_actual.getAuthorUserName(), "Authour is not equal");
-        assertEquals(r2.getProperty("key1"), r1_actual.getProperty("key1"), "Resource properties are equal");
-        assertEquals(r2.getProperty("key2"), r1_actual.getProperty("key2"), "Resource properties are equal");
-        assertEquals(r2.getMediaType(), r1_actual.getMediaType(), "Media Types is not equal");
+        assertEquals(r1_actual.getLastUpdaterUserName(),"admin", "LastUpdatedUser is not Equal");
+        assertEquals(r1_actual.getPath(),path_new, "Can not get Resource path");
+        assertEquals( r1_actual.getParentPath(),"/c11/c12/c13", "Can not get Resource parent path");
+        assertEquals(r1_actual.getDescription(),r2.getDescription(), "Resource description is not equal");
+        assertEquals(r1_actual.getAuthorUserName(),"admin", "Authour is not equal");
+        assertEquals(r1_actual.getProperty("key1"),r2.getProperty("key1"), "Resource properties are equal");
+        assertEquals(r1_actual.getProperty("key2"),r2.getProperty("key2"), "Resource properties are equal");
+        assertEquals(r1_actual.getMediaType(),r2.getMediaType(), "Media Types is not equal");
     }
 
     @Test(groups = {"wso2.greg"})
@@ -363,13 +363,13 @@ public class TestResourcesTestCase {
         } catch (RegistryException e) {
             fail("Couldn't get content of path /c20/c21/c22");
         }
-        assertEquals("admin", r1_actual.getLastUpdaterUserName(), "LastUpdatedUser is not Equal");
-        assertEquals(path_new, r1_actual.getPath(), "Can not get Resource path");
-        assertEquals("/c20/c21", r1_actual.getParentPath(), "Can not get Resource parent path");
-        assertEquals(r2.getDescription(), r1_actual.getDescription(), "Resource description is not equal");
-        assertEquals("admin", r1_actual.getAuthorUserName(), "Authour is not equal");
-        assertEquals(r2.getProperty("key1"), r1_actual.getProperty("key1"), "Resource properties are equal");
-        assertEquals(r2.getProperty("key2"), r1_actual.getProperty("key2"), "Resource properties are equal");
+        assertEquals(r1_actual.getLastUpdaterUserName(),"admin", "LastUpdatedUser is not Equal");
+        assertEquals(r1_actual.getPath(),path_new, "Can not get Resource path");
+        assertEquals(r1_actual.getParentPath(),"/c20/c21", "Can not get Resource parent path");
+        assertEquals( r1_actual.getDescription(),r2.getDescription(), "Resource description is not equal");
+        assertEquals(r1_actual.getAuthorUserName(),"admin","Authour is not equal");
+        assertEquals(r1_actual.getProperty("key1"),r2.getProperty("key1"), "Resource properties are equal");
+        assertEquals(r1_actual.getProperty("key2"),r2.getProperty("key2"), "Resource properties are equal");
     }
 
     @Test(groups = {"wso2.greg"})
@@ -397,14 +397,14 @@ public class TestResourcesTestCase {
             fail("Couldn't get content of path /d11/d12/d13/r1 space");
         }
 
-        assertEquals("admin", r1_actual.getLastUpdaterUserName(), "LastUpdatedUser is not Equal");
-        assertEquals(path, r1_actual.getPath(), "Can not get Resource path");
-        assertEquals("/d11/d12/d13", r1_actual.getParentPath(), "Can not get Resource parent path");
-        assertEquals(r1.getDescription(), r1_actual.getDescription(), "Resource description is not equal");
-        assertEquals("admin", r1_actual.getAuthorUserName(), "Authour is not equal");
-        assertEquals(r1.getProperty("key1"), r1_actual.getProperty("key1"), "Resource properties are not equal");
-        assertEquals(r1.getProperty("key2"), r1_actual.getProperty("key2"), "Resource properties are not equal");
-        assertEquals(r1.getMediaType(), r1_actual.getMediaType(), "Media Types are not equal");
+        assertEquals(r1_actual.getLastUpdaterUserName(),"admin", "LastUpdatedUser is not Equal");
+        assertEquals(r1_actual.getPath(),path, "Can not get Resource path");
+        assertEquals(r1_actual.getParentPath(),"/d11/d12/d13", "Can not get Resource parent path");
+        assertEquals(r1_actual.getDescription(),r1.getDescription(), "Resource description is not equal");
+        assertEquals(r1_actual.getAuthorUserName(),"admin", "Authour is not equal");
+        assertEquals( r1_actual.getProperty("key1"),r1.getProperty("key1"), "Resource properties are not equal");
+        assertEquals(r1_actual.getProperty("key2"),r1.getProperty("key2"), "Resource properties are not equal");
+        assertEquals(r1_actual.getMediaType(),r1.getMediaType(), "Media Types are not equal");
 
 
     }
@@ -474,11 +474,11 @@ public class TestResourcesTestCase {
         }
 
         assertTrue(content, "Imported file is empty");
-        assertEquals("admin", r1_actual.getLastUpdaterUserName(), "LastUpdatedUser is not Equal");
-        assertEquals(path, r1_actual.getPath(), "Can not get Resource path");
-        assertEquals("/d25/d21/d23/d24", r1_actual.getParentPath(), "Can not get Resource parent path");
+        assertEquals(r1_actual.getLastUpdaterUserName(),"admin", "LastUpdatedUser is not Equal");
+        assertEquals( r1_actual.getPath(),path, "Can not get Resource path");
+        assertEquals(r1_actual.getParentPath(),"/d25/d21/d23/d24", "Can not get Resource parent path");
         //assertEquals("Resource description is not equal", r1.getDescription(), r1_actual.getDescription());
-        assertEquals("admin", r1_actual.getAuthorUserName(), "Authour is not equal");
+        assertEquals( r1_actual.getAuthorUserName(),"admin", "Authour is not equal");
         //assertEquals("Resource properties are equal", r1.getProperty("key1"), r1_actual.getProperty("key1"));
         //assertEquals("Resource properties are equal", r1.getProperty("key2"), r1_actual.getProperty("key2"));
     }
@@ -505,8 +505,8 @@ public class TestResourcesTestCase {
             fail("Couldn't get content from path" + path);
         }
 
-        assertEquals(new String((byte[]) r1.getContent()),
-                new String((byte[]) r1_actual.getContent()), "Content is not equal.");
+        assertEquals(new String((byte[]) r1_actual.getContent()),
+                   new String((byte[]) r1.getContent()), "Content is not equal.");
 
         /*rename the resource*/
 
@@ -524,13 +524,13 @@ public class TestResourcesTestCase {
         } catch (RegistryException e) {
             fail("Couldn't get content from path" + new_path);
         }
-        assertEquals("admin", r2_actual.getLastUpdaterUserName(), "LastUpdatedUser is not Equal");
-        assertEquals(new_path, r2_actual.getPath(), "Can not get Resource path");
-        assertEquals("/d33/d34", r2_actual.getParentPath(), "Can not get Resource parent path");
-        assertEquals(r1.getDescription(), r2_actual.getDescription(), "Resource description is not equal");
-        assertEquals("admin", r2_actual.getAuthorUserName(), "Authour is not equal");
-        assertEquals(r1.getProperty("key1"), r2_actual.getProperty("key1"), "Resource properties are equal");
-        assertEquals(r1.getProperty("key2"), r2_actual.getProperty("key2"), "Resource properties are equal");
+        assertEquals(r2_actual.getLastUpdaterUserName(),"admin", "LastUpdatedUser is not Equal");
+        assertEquals( r2_actual.getPath(),new_path, "Can not get Resource path");
+        assertEquals( r2_actual.getParentPath(),"/d33/d34", "Can not get Resource parent path");
+        assertEquals(r2_actual.getDescription(),r1.getDescription(), "Resource description is not equal");
+        assertEquals( r2_actual.getAuthorUserName(),"admin", "Authour is not equal");
+        assertEquals(r2_actual.getProperty("key1"),r1.getProperty("key1"), "Resource properties are equal");
+        assertEquals(r2_actual.getProperty("key2"),r1.getProperty("key2"), "Resource properties are equal");
     }
 
     @Test(groups = {"wso2.greg"})
@@ -555,8 +555,8 @@ public class TestResourcesTestCase {
             fail("Couldn't get content from path" + path);
         }
 
-        assertEquals(new String((byte[]) r1.getContent()),
-                new String((byte[]) r1_actual.getContent()), "Content is not equal.");
+        assertEquals(new String((byte[]) r1_actual.getContent()),
+                   new String((byte[]) r1.getContent()),"Content is not equal.");
 
         boolean deleted = true;
         try {
@@ -589,8 +589,8 @@ public class TestResourcesTestCase {
             fail("Couldn't get content from path" + path_new);
         }
 
-        assertEquals(new String((byte[]) r2.getContent()),
-                new String((byte[]) r1_actual2.getContent()), "Content is not equal.");
+        assertEquals( new String((byte[]) r1_actual2.getContent()),
+                new String((byte[]) r2.getContent()),"Content is not equal.");
     }
 
     @Test(groups = {"wso2.greg"})
@@ -613,8 +613,8 @@ public class TestResourcesTestCase {
 
             Resource r1_actual2 = registry.get(path);
 
-            assertEquals(new String((byte[]) r1.getContent()),
-                    new String((byte[]) r1_actual2.getContent()), "Content is not equal.");
+            assertEquals( new String((byte[]) r1_actual2.getContent()),
+                    new String((byte[]) r1.getContent()),"Content is not equal.");
 
             List propertyValues = r1_actual2.getPropertyValues("key1");
             Object[] valueName = propertyValues.toArray();

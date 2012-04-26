@@ -95,7 +95,7 @@ public class PropertiesTestCase {
         Resource r2b = registry.get("/propTest3/r2");
         String p1Value = r2b.getProperty("p1");
 
-        assertEquals(p1Value, null, "Property p1 of /propTest3/r2 should contain the value null");
+        assertNull(p1Value, "Property p1 of /propTest3/r2 should contain the value null");
     }
 
     @Test(groups = {"wso2.greg"})
@@ -133,7 +133,7 @@ public class PropertiesTestCase {
 
         Resource r1e2 = registry.get("/props/t1/r1");
 
-        assertEquals(r1e2.getProperty("p1"), null, "Property is not removed.");
+        assertNull(r1e2.getProperty("p1"), "Property is not removed.");
         assertNotNull(r1e2.getProperty("p2"), "Wrong property is removed.");
     }
 

@@ -1066,15 +1066,19 @@ public class APIProviderHostObject extends ScriptableObject {
         }
 
         Map<String, String> testHandlerMappings_1 = new HashMap<String, String>();
-        testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER, "org.wso2.carbon.apimgt.handlers.security.APIAuthenticationHandler");
+        testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER, "org.wso2.carbon.apimgt.usage.publisher.APIMgtUsageHandler");
 
         Map<String, String> testHandlerMappings_2 = new HashMap<String, String>();
-        testHandlerMappings_2.put(APITemplateBuilder.KEY_FOR_HANDLER, "org.wso2.carbon.apimgt.handlers.throttling.APIThrottleHandler");
-        testHandlerMappings_2.put(APITemplateBuilder.KEY_FOR_HANDLER_POLICY_KEY, "conf:/basic-throttle-policy.xml");
+        testHandlerMappings_2.put(APITemplateBuilder.KEY_FOR_HANDLER, "org.wso2.carbon.apimgt.handlers.security.APIAuthenticationHandler");
+
+        Map<String, String> testHandlerMappings_3 = new HashMap<String, String>();
+        testHandlerMappings_3.put(APITemplateBuilder.KEY_FOR_HANDLER, "org.wso2.carbon.apimgt.handlers.throttling.APIThrottleHandler");
+        testHandlerMappings_3.put(APITemplateBuilder.KEY_FOR_HANDLER_POLICY_KEY, "conf:/basic-throttle-policy.xml");
 
         List<Map<String, String>> handlerMappings = new ArrayList<Map<String, String>>();
         handlerMappings.add(testHandlerMappings_1);
         handlerMappings.add(testHandlerMappings_2);
+        handlerMappings.add(testHandlerMappings_3);
         RestAPITemplateClient client = new RestAPITemplateClient(new BasicTemplateBuilder(
                 testAPIMappings, resourceMappings, handlerMappings), adminCookie);
         client.addApi();
@@ -1107,15 +1111,19 @@ public class APIProviderHostObject extends ScriptableObject {
         }
 
         Map<String, String> testHandlerMappings_1 = new HashMap<String, String>();
-        testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER, "org.wso2.carbon.apimgt.handlers.security.APIAuthenticationHandler");
+        testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER, "org.wso2.carbon.apimgt.usage.publisher.APIMgtUsageHandler");
 
         Map<String, String> testHandlerMappings_2 = new HashMap<String, String>();
-        testHandlerMappings_2.put(APITemplateBuilder.KEY_FOR_HANDLER, "org.wso2.carbon.apimgt.handlers.throttling.APIThrottleHandler");
-        testHandlerMappings_2.put(APITemplateBuilder.KEY_FOR_HANDLER_POLICY_KEY, "conf:/basic-throttle-policy.xml");
+        testHandlerMappings_2.put(APITemplateBuilder.KEY_FOR_HANDLER, "org.wso2.carbon.apimgt.handlers.security.APIAuthenticationHandler");
+
+        Map<String, String> testHandlerMappings_3 = new HashMap<String, String>();
+        testHandlerMappings_3.put(APITemplateBuilder.KEY_FOR_HANDLER, "org.wso2.carbon.apimgt.handlers.throttling.APIThrottleHandler");
+        testHandlerMappings_3.put(APITemplateBuilder.KEY_FOR_HANDLER_POLICY_KEY, "conf:/basic-throttle-policy.xml");
 
         List<Map<String, String>> handlerMappings = new ArrayList<Map<String, String>>();
         handlerMappings.add(testHandlerMappings_1);
         handlerMappings.add(testHandlerMappings_2);
+        handlerMappings.add(testHandlerMappings_3);
         RestAPITemplateClient client = new RestAPITemplateClient(new BasicTemplateBuilder(
                 testAPIMappings, resourceMappings, handlerMappings), adminCookie);
         client.updateApi();

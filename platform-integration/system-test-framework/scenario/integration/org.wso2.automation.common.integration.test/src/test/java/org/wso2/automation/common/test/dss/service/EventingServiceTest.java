@@ -33,10 +33,12 @@ import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminProxyAdminException;
 import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSDAOExceptionException;
 import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
 import org.wso2.carbon.service.mgt.stub.types.carbon.ServiceMetaData;
+import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
 import org.wso2.platform.test.core.utils.dssutils.SqlDataSourceUtil;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
+import org.wso2.platform.test.core.utils.environmentutils.ProductUrlGeneratorUtil;
 import org.wso2.platform.test.core.utils.fileutils.FileManager;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkFactory;
 import org.wso2.automation.common.test.dss.utils.DataServiceTest;
@@ -267,22 +269,15 @@ public class EventingServiceTest extends DataServiceTest {
 
             OMElement target = proxyFile.getFirstElement();
             Iterator i = target.getChildrenWithName(new QName("endpoint"));
-            String serverUrl;
-            if (environment.isEnablePort()) {
-                serverUrl = "http://" + dssServer.getProductVariables().getHostName() + ":" + dssServer.getProductVariables().getHttpPort();
-            } else {
-                serverUrl = "http://" + dssServer.getProductVariables().getHostName();
-            }
+            ProductUrlGeneratorUtil urlGenerator = new ProductUrlGeneratorUtil();
             while (i.hasNext()) {
                 OMElement endpoint = (OMElement) i.next();
                 OMElement address = endpoint.getFirstElement();
                 OMAttribute uri = address.getAttribute(new QName("uri"));
-
-                if (environment.is_runningOnStratos()) {
-                    uri.setAttributeValue(serverUrl + "/services/t/" + userInfo.getDomain() + "/EventingTest/updateProductQuantity");
-                } else {
-                    uri.setAttributeValue(serverUrl + "/services/EventingTest/updateProductQuantity");
-                }
+                uri.setAttributeValue(urlGenerator.getHttpServiceURL(dssServer.getProductVariables().getHttpPort(),
+                                                                     dssServer.getProductVariables().getHostName(),
+                                                                     FrameworkFactory.getFrameworkProperties(ProductConstant.DSS_SERVER_NAME),
+                                                                     userInfo) + "/EventingTest/updateProductQuantity");
             }
 
             ByteArrayDataSource dbs = new ByteArrayDataSource(proxyFile.toString().getBytes());

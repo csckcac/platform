@@ -15,10 +15,7 @@
  */
 package org.wso2.carbon.url.mapper.internal.util;
 
-import org.apache.catalina.Container;
-import org.apache.catalina.Engine;
-import org.apache.catalina.Host;
-import org.apache.catalina.LifecycleException;
+import org.apache.catalina.*;
 import org.apache.catalina.core.StandardHost;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,9 +47,9 @@ public class HostUtil {
      * This method is used to retrieve list of host names for a given
      * webapplication.
      *
-     * @param webAppName
+     * @param webAppName the webapp name
      * @return list of mapped hosts.
-     * @throws UrlMapperException
+     * @throws UrlMapperException throws it when failing to get resource from registry
      */
     public static List<String> getMappingsPerWebApp(String webAppName) throws UrlMapperException {
         Collection hosts;
@@ -78,6 +75,13 @@ public class HostUtil {
         }
     }
 
+    /**
+     *  Find out whether the hostname exists already
+     *
+     * @param mappingName the host name to be mapped
+     * @return Whether the hostname is valid or not
+     * @throws UrlMapperException throws when error while retrieve from registry
+     */
     public static boolean isMappingExist(String mappingName) throws UrlMapperException {
         mappingName = UrlMapperConstants.HostProperties.FILE_SERPERATOR
                 + UrlMapperConstants.HostProperties.HOSTINFO + mappingName;
@@ -173,11 +177,11 @@ public class HostUtil {
      * /repository/../webapps and redeploy it within added virtual host.
      *
      * @param hostName The virtual host name
-     * @param uri      The web app to be deployed in the virtual host
+     * @param uri The web app to be deployed in the virtual host
      * @throws org.wso2.carbon.url.mapper.internal.exception.UrlMapperException
      *          When adding directory throws an Exception
      */
-    public static void addWebAppToHost(String hostName, String uri) throws Exception {
+    public static void addWebAppToHost(String hostName, String uri) throws UrlMapperException {
         int tenantId;
         String tenantDomain;
         String webAppFile;
@@ -222,7 +226,7 @@ public class HostUtil {
     }
 
     /**
-     * Add host to engine.
+     * add host to engine.
      *
      * @param hostName name of the host
      * @return will return the added host of Engine
@@ -238,9 +242,15 @@ public class HostUtil {
         host.setName(hostName);
         host.setUnpackWARs(false);
         engine.addChild(host);
+        log.info("host added to the tomcat: " + host);
         return host;
     }
 
+    /**
+     * delete the host from CATALINA-HOME directory
+     *
+     * @param hostName
+     */
     public static void deleteHostDirectory(String hostName) {
         String filePath = CarbonUtils.getCarbonCatalinaHome() + "/" + hostName;
         File file = new File(filePath);
@@ -254,8 +264,29 @@ public class HostUtil {
 
     }
 
-    public static void removeHostFromEngine(String hostName) throws UrlMapperException {
+    /**
+     * edit the existing host with the given name
+     *
+     * @param webAppName the associated webapp name of the host to be edited
+     * @param oldHost the existing hostname to be edited
+     * @param newHost the hostname given
+     * @throws UrlMapperException throws when error while removing oldHost or adding newHost
+     */
+    public static void editHostInEngine(String webAppName, String oldHost, String newHost)
+            throws UrlMapperException {
+        removeHostFromEngine(oldHost);
+        addWebAppToHost(newHost, webAppName);
+    }
 
+    /**
+     * remove the host from the engine
+     *
+     * @param hostName name of the host to be removed
+     * @throws UrlMapperException throws when error while removing
+     *                  context or host from engine and from registry
+     */
+    public static void removeHostFromEngine(String hostName)
+            throws UrlMapperException {
         Container[] hosts = DataHolder.getInstance().getCarbonTomcatService().getTomcat()
                 .getEngine().findChildren();
         CarbonTomcatService carbonTomcatService = DataHolder.getInstance().getCarbonTomcatService();
@@ -263,11 +294,24 @@ public class HostUtil {
         for (Container host : hosts) {
             if (host.getName().contains(hostName)) {
                 try {
-                    host.stop();
-                    engine.removeChild(host);
-
+                    Context context = (Context) host.findChild("/");
+                    if (host.getState().isAvailable()) {
+                        if (context.getAvailable()) {
+                            context.setRealm(null);
+                            context.stop();
+                            context.destroy();
+                            log.info("Unloaded webapp from the host: " + host + " as the context of: " + context);
+                        }
+                        host.removeChild(context);
+                        host.setRealm(null);
+                        host.stop();
+                        host.destroy();
+                        engine.removeChild(host);
+                        log.info("Unloaded host from the engine: " + host);
+                        break;
+                    }
                 } catch (LifecycleException e) {
-                    throw new UrlMapperException("Error when removing host from tomcat engine.", e);
+                    throw new UrlMapperException("Error when removing host from tomcat engine." + host, e);
                 }
 
             }
@@ -381,7 +425,7 @@ public class HostUtil {
     }
 
     /**
-     * validating the host name
+     * validating the host name  //TODO
      *
      * @param domain hostName as domain
      * @return
@@ -408,14 +452,5 @@ public class HostUtil {
         }
 
         return false;
-    }
-
-    public List<String> getMappigsPerWebapp(String webAppName) {
-        try {
-            return HostUtil.getMappingsPerWebApp(webAppName);
-        } catch (UrlMapperException e) {
-            log.error("error while retrieving resource from registry...", e);
-        }
-        return null;
     }
 }

@@ -30,123 +30,120 @@ import org.wso2.carbon.url.mapper.stub.UrlMapperAdminServiceStub;
  * create new virtual host by specifying webapp specific id..
  */
 public class UrlMapperServiceClient {
-	UrlMapperAdminServiceStub stub;
-	private static final Log log = LogFactory.getLog(UrlMapperServiceClient.class);
+    UrlMapperAdminServiceStub stub;
+    private static final Log log = LogFactory.getLog(UrlMapperServiceClient.class);
 
-	public UrlMapperServiceClient(String cookie, String backendServerURL,
-			ConfigurationContext configCtx) throws AxisFault {
-		String serviceURL = backendServerURL + "UrlMapperAdminService";
-		stub = new UrlMapperAdminServiceStub(configCtx, serviceURL);
-		ServiceClient client = stub._getServiceClient();
-		Options option = client.getOptions();
-		option.setManageSession(true);
-		option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, cookie);
-		option.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
-	}
+    public UrlMapperServiceClient(String cookie, String backendServerURL,
+                                  ConfigurationContext configCtx) throws AxisFault {
+        String serviceURL = backendServerURL + "UrlMapperAdminService";
+        stub = new UrlMapperAdminServiceStub(configCtx, serviceURL);
+        ServiceClient client = stub._getServiceClient();
+        Options option = client.getOptions();
+        option.setManageSession(true);
+        option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, cookie);
+        option.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
+    }
 
-	public boolean editHost(String newHost, String oldhost) throws Exception {
-		try {
-			return stub.editHost(newHost, oldhost);
-		} catch (Exception e) {
-			String msg = "Error occurred while editing  host. Backend service may be unavailable";
-			log.error(msg, e);
-			throw e;
-		}
-	}
+    public boolean editHost(String webappName, String oldhost, String newHost) throws Exception {
+        try {
+            return stub.editHost(webappName, oldhost, newHost);
+        } catch (Exception e) {
+            String msg = "Error occurred while editing  host. Backend service may be unavailable";
+            log.error(msg, e);
+            throw e;
+        }
+    }
 
-	public void editServiceDomain(String newHost, String oldhost) throws Exception {
-		try {
-			stub.editServiceDomain(newHost, oldhost);
-		} catch (Exception e) {
-			String msg = "Error occurred while editing service host. Backend service may be unavailable";
-			log.error(msg, e);
-			throw e;
-		}
-	}
+    public void editServiceDomain(String newHost, String oldhost) throws Exception {
+        try {
+            stub.editServiceDomain(newHost, oldhost);
+        } catch (Exception e) {
+            String msg = "Error occurred while editing service host. Backend service may be unavailable";
+            log.error(msg, e);
+            throw e;
+        }
+    }
 
-	public void removeServiceDomain(String host) throws Exception {
-		try {
-			stub.deleteServiceDomain(host);
-		} catch (Exception e) {
-			String msg = "Error occurred while deleting service host. Backend service may be unavailable";
-			log.error(msg, e);
-			throw e;
-		}
-	}
+    public void removeServiceDomain(String host) throws Exception {
+        try {
+            stub.deleteServiceDomain(host);
+        } catch (Exception e) {
+            String msg = "Error occurred while deleting service host. Backend service may be unavailable";
+            log.error(msg, e);
+            throw e;
+        }
+    }
 
-	public void addServiceDomain(String host, String epr) throws Exception {
-		try {
-			stub.addServiceDomain(host, epr);
-		} catch (Exception e) {
-			String msg = "Error occurred while adding new domain to " + epr
-					+ ". Backend service may be unavailable";
-			log.error(msg, e);
-			throw e;
-		}
-	}
+    public void addServiceDomain(String host, String epr) throws Exception {
+        try {
+            stub.addServiceDomain(host, epr);
+        } catch (Exception e) {
+            String msg = "Error occurred while adding new domain to " + epr
+                    + ". Backend service may be unavailable";
+            log.error(msg, e);
+            throw e;
+        }
+    }
 
-	public void deleteHost(String host) throws Exception {
-		try {
-			stub.deleteHost(host);
-		} catch (Exception e) {
-			String msg = "Error occurred while deleting host. Backend service may be unavailable";
-			log.error(msg, e);
-			throw e;
-		}
-	}
+    public void deleteHost(String host) throws Exception {
+        try {
+            stub.deleteHost(host);
+        } catch (Exception e) {
+            String msg = "Error occurred while deleting host. Backend service may be unavailable";
+            log.error(msg, e);
+            throw e;
+        }
+    }
 
-	/**
-	 * @param appId
-	 *            the tenant specified application ID for a web app
-	 * @param context
-	 *            the context of the web app from the appserver localhost
-	 * @throws Exception
-	 *             throws when exception in adding virtual host or webapp
-	 */
-	public void addWebAppToHost(String appId, String context) throws Exception {
-		try {
-			String hostName = appId;
-			boolean isDomain = isMappingExist(hostName);
+    /**
+     * @param appId   the tenant specified application ID for a web app
+     * @param context the context of the web app from the appserver localhost
+     * @throws Exception throws when exception in adding virtual host or webapp
+     */
+    public void addWebAppToHost(String appId, String context) throws Exception {
+        try {
+            String hostName = appId;
+            boolean isDomain = isMappingExist(hostName);
 
-			if (isDomain) {
-			} else {
-				stub.addWebAppToHost(hostName, context);
-			}
-		} catch (Exception e) {
-			String msg = "Error occurred while adding webb app to host. Backend service may be unavailable";
-			log.error(msg, e);
-			throw e;
-		}
-	}
+            if (isDomain) {
+            } else {
+                stub.addWebAppToHost(hostName, context);
+            }
+        } catch (Exception e) {
+            String msg = "Error occurred while adding webb app to host. Backend service may be unavailable";
+            log.error(msg, e);
+            throw e;
+        }
+    }
 
-	public String[] getHostForWebApp(String webAppName) throws Exception {
-		try {
-			return stub.getHostForWebApp(webAppName);
-		} catch (Exception e) {
-			String msg = "Error occurred while getting hosts for web application. Backend service may be unavailable";
-			log.error(msg, e);
-			throw e;
-		}
-	}
+    public String[] getHostForWebApp(String webAppName) throws Exception {
+        try {
+            return stub.getHostForWebApp(webAppName);
+        } catch (Exception e) {
+            String msg = "Error occurred while getting hosts for web application. Backend service may be unavailable";
+            log.error(msg, e);
+            throw e;
+        }
+    }
 
-	public String[] getHostForEpr(String epr) throws Exception {
-		try {
-			return stub.getHostForEpr(epr);
-		} catch (Exception e) {
-			String msg = "Error occurred while getting hosts for web application. Backend service may be unavailable";
-			log.error(msg, e);
-			throw e;
-		}
-	}
+    public String[] getHostForEpr(String epr) throws Exception {
+        try {
+            return stub.getHostForEpr(epr);
+        } catch (Exception e) {
+            String msg = "Error occurred while getting hosts for web application. Backend service may be unavailable";
+            log.error(msg, e);
+            throw e;
+        }
+    }
 
-	public boolean isMappingExist(String mappingName) throws Exception {
-		try {
-			return stub.isMappingExist(mappingName);
-		} catch (Exception e) {
-			String msg = "Error occurred while checking domain exsistance. Backend service may be unavailable";
-			log.error(msg, e);
-			throw e;
-		}
-	}
+    public boolean isMappingExist(String mappingName) throws Exception {
+        try {
+            return stub.isMappingExist(mappingName);
+        } catch (Exception e) {
+            String msg = "Error occurred while checking domain exsistance. Backend service may be unavailable";
+            log.error(msg, e);
+            throw e;
+        }
+    }
 
 }

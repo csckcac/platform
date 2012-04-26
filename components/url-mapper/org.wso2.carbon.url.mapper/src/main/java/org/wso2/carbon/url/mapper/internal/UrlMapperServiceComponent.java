@@ -15,6 +15,10 @@
  */
 package org.wso2.carbon.url.mapper.internal;
 
+import org.apache.catalina.Context;
+import org.apache.catalina.Engine;
+import org.apache.catalina.Host;
+import org.apache.catalina.LifecycleException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
@@ -26,7 +30,9 @@ import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
 import org.wso2.carbon.tomcat.ext.valves.TomcatValveContainer;
 import org.wso2.carbon.url.mapper.HotUpdateService;
 import org.wso2.carbon.url.mapper.UrlMapperValve;
+import org.wso2.carbon.url.mapper.internal.exception.UrlMapperException;
 import org.wso2.carbon.url.mapper.internal.util.DataHolder;
+import org.wso2.carbon.url.mapper.internal.util.HostUtil;
 import org.wso2.carbon.url.mapper.internal.util.UrlMapperConstants;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.CarbonUtils;
@@ -43,7 +49,7 @@ import static org.wso2.carbon.url.mapper.internal.util.HostUtil.getAllHostsFromR
  * adds the CarbonTomcatValve to TomcatContainer.
  *
  * @scr.component name="org.wso2.carbon.url.mapper" immediate="true"
- * @scr.reference name="tomcat.service.provider"  
+ * @scr.reference name="tomcat.service.provider"
  * interface="org.wso2.carbon.tomcat.api.CarbonTomcatService"
  * cardinality="1..1" policy="dynamic" bind="setCarbonTomcatService"
  * unbind="unsetCarbonTomcatService"
@@ -95,6 +101,11 @@ public class UrlMapperServiceComponent {
     }
 
     protected void deactivate(ComponentContext componentContext) {
+        try {
+            removeHostFromTomcat();
+        } catch (UrlMapperException e) {
+            log.error("error while unloading the hosts from engine ", e);
+        }
         serviceRegistration.unregister();
     }
 
@@ -142,6 +153,46 @@ public class UrlMapperServiceComponent {
                 hostName = hostName.substring(UrlMapperConstants.HostProperties.HOSTINFO_DIR.length());
                 //add webapp to host and adding them to tomcat
                 addHostToEngine(hostName);
+            }
+        }
+    }
+
+    /**
+     * Reads the registry for existing virtual host and adding them to the tomcat
+     * engine with deploying the webapps if webapps is already existed.
+     *
+     * @throws Exception If an error occurs when reading from the registry
+     */
+    public void removeHostFromTomcat() throws UrlMapperException {
+        List<String> hostNames = HostUtil.getAllHostsFromRegistry();
+        CarbonTomcatService carbonTomcatService = DataHolder.getInstance().getCarbonTomcatService();
+        Engine engine = carbonTomcatService.getTomcat().getEngine();
+        Host host = null;
+        for (String hostName : hostNames) {
+            try {
+                hostName = hostName.substring(UrlMapperConstants.HostProperties.HOSTINFO_DIR.length());
+                host = (Host) engine.findChild(hostName);
+                Context context = (Context) host.findChild("/");
+                if (host.getState().isAvailable()) {
+                    if (context.getAvailable()) {
+                        context.setRealm(null);
+                        context.stop();
+                        context.destroy();
+                        log.info("Unloaded webapp from the host: " + host + " as the context of: " + context);
+                    }
+                    host.removeChild(context);
+                    host.setRealm(null);
+                    host.stop();
+                    host.destroy();
+                    engine.removeChild(host);
+                    log.info("Unloaded host from the engine: " + host);
+                    // host name should be deleted explicitly because when host is deleted
+                    // from tomcat engine the folder with the host name will not get
+                    // removed.
+                    HostUtil.deleteHostDirectory(hostName);
+                }
+            } catch (LifecycleException e) {
+                throw new UrlMapperException("Error when removing host from tomcat engine." + host, e);
             }
         }
     }

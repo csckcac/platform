@@ -1,5 +1,4 @@
-
-<!--
+    <!--
         ~ Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
         ~
         ~ WSO2 Inc. licenses this file to you under the Apache License,
@@ -18,22 +17,22 @@
         -->
 
 
-<%@ page import="org.apache.axis2.context.ConfigurationContext"%>
-<%@ page import="org.wso2.carbon.CarbonConstants"%>
-<%@ page import="org.wso2.carbon.ui.CarbonUIUtil"%>
-<%@ page import="org.wso2.carbon.utils.ServerConstants"%>
-<%@ page import="org.wso2.carbon.ui.CarbonUIMessage"%>
-<%@ page import="org.wso2.carbon.utils.multitenancy.CarbonContextHolder"%>
-<%@ page
-	import="org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar"
-	prefix="carbon"%>
-<script type="text/javascript" src="../admin/dialog/js/dialog.js"></script>
-<%@ page import="org.wso2.carbon.utils.CarbonUtils"%>
-<%@ page import="org.wso2.carbon.url.mapper.ui.UrlMapperServiceClient"%>
+        <%@ page import="org.apache.axis2.context.ConfigurationContext" %>
+        <%@ page import="org.wso2.carbon.CarbonConstants" %>
+        <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
+        <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
+        <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
+        <%@ page import="org.wso2.carbon.utils.multitenancy.CarbonContextHolder" %>
+        <%@ page
+                import="org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext" %>
+        <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+        <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar"
+                   prefix="carbon" %>
+        <script type="text/javascript" src="../admin/dialog/js/dialog.js"></script>
+        <%@ page import="org.wso2.carbon.utils.CarbonUtils" %>
+        <%@ page import="org.wso2.carbon.url.mapper.ui.UrlMapperServiceClient" %>
 
-<%
+            <%
 	String carbonEndpoint = request.getParameter("carbonEndpoint");
 	String requestType = request.getParameter("type");
 	String backendServerURL = CarbonUIUtil
@@ -51,7 +50,7 @@
 			if (carbonEndpoint.contains("services")) {
 				hostAdmin.editServiceDomain(usergivenEndpoint,oldHost);
 			} else {
-				hostAdmin.editHost(usergivenEndpoint,oldHost);
+				hostAdmin.editHost(carbonEndpoint, oldHost, usergivenEndpoint);
 			}
 			%>URL Mapping successfully edited.<%
 	} catch (Exception e) {

@@ -188,7 +188,7 @@ public class RuleServiceAdminClient {
     public String[] getAllFacts(RuleService ruleService,
                                 javax.servlet.http.HttpSession session) {
         String serviceName = ruleService.getName();
-        String[] classes = (String[]) session.getAttribute(serviceName.trim());
+        String[] classes = (String[]) session.getAttribute("allFacts");
         if (classes != null && classes.length > 1) { // message class already there: need the length to be > 1
             return classes;
         } else {

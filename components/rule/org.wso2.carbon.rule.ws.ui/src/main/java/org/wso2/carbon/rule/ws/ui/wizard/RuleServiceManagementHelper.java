@@ -71,6 +71,13 @@ public class RuleServiceManagementHelper {
             ruleService.setDescription(description.trim());
         }
 
+        String serviceScope = request.getParameter("ruleServiceScope");
+        if(serviceScope != null && !"".equals(serviceScope)){
+            ruleService.setScope(serviceScope.trim());
+
+        }
+        System.out.println(serviceScope);
+
         String generateServicesXML = request.getParameter("generateServiceXML");
         if (generateServicesXML != null) {
             ruleService.setContainsServicesXML(true);

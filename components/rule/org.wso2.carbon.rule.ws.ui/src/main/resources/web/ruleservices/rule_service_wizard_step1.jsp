@@ -27,11 +27,13 @@
 
     String serviceName = "";
     String description = "";
+    String serviceScope = "";
     //serviceName = (ruleService.getName() == null) ? "" : ruleService.getName();
        // description = (ruleService.getDescription() == null) ? "" : ruleService.getDescription();
     if(!ruleService.isEditable()){
         serviceName = (ruleService.getName() == null) ? "" : ruleService.getName();
         description = (ruleService.getDescription() == null) ? "" : ruleService.getDescription();
+        serviceScope = (ruleService.getScope() == null) ? "" : ruleService.getScope();
     }
 %>
 
@@ -114,17 +116,75 @@
                     <tr>
                         <td class="formRaw">
                             <table class="normal">
-                                <td><fmt:message key="genarate.service.xml"/>
+                                <td><fmt:message key="service.scope"/>
                                 </td>
                                 <td>
-                                    <% if (ruleService.isContainsServicesXML()) {%>
-                                    <input type="checkbox" name="generateServiceXML"
-                                           id="generateServiceXML"
-                                           checked="checked"/>
-                                    <% } else { %>
-                                    <input type="checkbox" name="generateServiceXML"
-                                           id="generateServiceXML"/>
-                                    <%} %>
+                                    <select id="ruleServiceScope" name="ruleServiceScope"
+                                           >
+                                         <%
+                            if ("request".equals(serviceScope)) {
+                        %>
+                                        <option id="request" value="request" selected="true">
+                                            <fmt:message key="service.scope.request"/>
+                                        </option>
+                                        <option id="application" value="application">
+                                            <fmt:message key="service.scope.application"/>
+                                        </option>
+                                        <option id="soapSession" value="soapSession">
+                                            <fmt:message key="service.scope.soapS"/>
+                                        </option>
+                                        <option id="tpSession" value="tpSession">
+                                            <fmt:message key="service.scope.tps"/>
+                                        </option>
+                                           <% } else if("application".equals(serviceScope)){
+
+                                          %>
+                                         <option id="request" value="request" >
+                                            <fmt:message key="service.scope.request"/>
+                                        </option>
+                                        <option id="application" value="application" selected="true">
+                                            <fmt:message key="service.scope.application"/>
+                                        </option>
+                                        <option id="soapSession" value="soapSession">
+                                            <fmt:message key="service.scope.soapS"/>
+                                        </option>
+                                        <option id="tpSession" value="tpSession">
+                                            <fmt:message key="service.scope.tps"/>
+                                        </option>
+                                           <% } else if("soapSession".equals(serviceScope)){
+                                           %>
+                                         <option id="request" value="request" >
+                                            <fmt:message key="service.scope.request"/>
+                                        </option>
+                                        <option id="application" value="application">
+                                            <fmt:message key="service.scope.application"/>
+                                        </option>
+                                        <option id="soapSession" value="soapSession" selected="true">
+                                            <fmt:message key="service.scope.soapS"/>
+                                        </option>
+                                        <option id="tpSession" value="tpSession">
+                                            <fmt:message key="service.scope.tps"/>
+                                        </option>
+                                           <% } else {
+                                           %>
+                                         <option id="request" value="request" >
+                                            <fmt:message key="service.scope.request"/>
+                                        </option>
+                                        <option id="application" value="application">
+                                            <fmt:message key="service.scope.application"/>
+                                        </option>
+                                        <option id="soapSession" value="soapSession">
+                                            <fmt:message key="service.scope.soapS"/>
+                                        </option>
+                                        <option id="tpSession" value="tpSession" selected="true">
+                                            <fmt:message key="service.scope.tps"/>
+                                        </option>
+                                         <% }
+                                           %>
+
+                                    </select>
+
+                    </select>
                                 </td>
                             </table>
                         </td>

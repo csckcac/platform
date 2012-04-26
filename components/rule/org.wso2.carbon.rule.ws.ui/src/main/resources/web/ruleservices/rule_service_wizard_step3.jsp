@@ -31,7 +31,7 @@
     String [] classes =  ruleServiceAdminClient.getAllFacts(ruleService,session);
     int classesCount = 0;
     if(classes != null && classes.length != 0 && classes.length > 1){
-        classesCount = classes.length - 1;
+        classesCount = classes.length; // Check the reason for (classes.length - 1)
     }
     boolean factAdded = classesCount != 0;
 %>

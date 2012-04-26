@@ -19,6 +19,7 @@ package org.wso2.bps.integration.tests.humantask;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.databinding.types.URI;
+import org.apache.commons.lang.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeGroups;
 import org.testng.annotations.Test;
@@ -27,7 +28,14 @@ import org.wso2.bps.integration.tests.util.HumanTaskTestConstants;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.TaskOperationsStub;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TComment;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskAbstract;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvent;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvents;
 import org.wso2.carbon.utils.CarbonUtils;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Test class to check the task operations functionality.
@@ -37,6 +45,8 @@ public class TaskOperationsTestCase {
     private TaskOperationsStub taskOperationsStub = null;
 
     private URI taskId = null;
+
+    private Set<String> taskEvents = new HashSet<String>();
 
 
     @BeforeGroups(groups = {"wso2.bps"}, description = " Copying sample HumanTask packages")
@@ -81,6 +91,8 @@ public class TaskOperationsTestCase {
         Assert.assertEquals(loadedTask.getStatus().toString(), "RESERVED",
                             "The task status should be RESERVED!");
 
+        taskEvents.add("claim");
+
         // Now reclaim the task to continue with other operations.
 
     }
@@ -95,11 +107,12 @@ public class TaskOperationsTestCase {
         //Now as the task have been release
         //1. The actual user value should be empty.
         Assert.assertNull(loadedTask.getActualOwner(),
-                            "After releasing the task the actual owner should be null");
+                          "After releasing the task the actual owner should be null");
         //2. The task status should go back to READY
         Assert.assertEquals(loadedTask.getStatus().toString(), "READY",
                             "The task status should be READY!");
 
+        taskEvents.add("release");
 
         // Now reclaim the task to continue with other operations.
         taskOperationsStub.claim(taskId);
@@ -108,7 +121,6 @@ public class TaskOperationsTestCase {
                             "The assignee should be clerk1 !");
         Assert.assertEquals(loadedTaskAferReClaim.getStatus().toString(), "RESERVED",
                             "The task status should be RESERVED!");
-
 
 
     }
@@ -121,6 +133,7 @@ public class TaskOperationsTestCase {
         TTaskAbstract loadedTask = taskOperationsStub.loadTask(taskId);
         Assert.assertEquals(loadedTask.getStatus().toString(), "IN_PROGRESS",
                             "The task status should be IN_PROGRESS after starting the task!");
+        taskEvents.add("start");
     }
 
     @Test(groups = {"wso2.bps"}, description = "Claims approval test case")
@@ -131,6 +144,7 @@ public class TaskOperationsTestCase {
         TTaskAbstract loadedTask = taskOperationsStub.loadTask(taskId);
         Assert.assertEquals(loadedTask.getStatus().toString(), "RESERVED",
                             "The task status should be RESERVED after stopping the task!");
+        taskEvents.add("stop");
 
         // Now start the task again
         taskOperationsStub.start(taskId);
@@ -149,17 +163,21 @@ public class TaskOperationsTestCase {
                             "The task status should be SUSPENDED after suspending the task!");
         Assert.assertEquals(loadedTask.getPreviousStatus().toString(), "IN_PROGRESS",
                             "The task previous status should be IN_PROGRESS");
+        taskEvents.add("suspend");
 
         taskOperationsStub.resume(taskId);
         TTaskAbstract loadedTaskAfterResume = taskOperationsStub.loadTask(taskId);
         Assert.assertEquals(loadedTaskAfterResume.getStatus().toString(), "IN_PROGRESS",
                             "The task status should be IN_PROGRESS after resuming the suspended task!");
+        taskEvents.add("resume");
     }
 
     @Test(groups = {"wso2.bps"}, description = "Claims approval test case")
     public void testTaskCommentOperations() throws Exception {
         String commentText1 = "This is a test comment";
         URI taskCommentId = taskOperationsStub.addComment(taskId, commentText1);
+
+        taskEvents.add("addcomment");
 
         Assert.assertNotNull(taskCommentId, "The comment id cannot be null");
 
@@ -185,6 +203,32 @@ public class TaskOperationsTestCase {
         taskOperationsStub.deleteComment(taskId, taskCommentId2);
         TComment[] commentsAfterAllDeletions = taskOperationsStub.getComments(taskId);
         Assert.assertNull(commentsAfterAllDeletions, "There should not be any comments left!");
+
+        taskEvents.add("deletecomment");
+
+    }
+
+    // check the task events are persisted properly
+    @Test(groups = {"wso2.bps"}, description = "Task event persistence")
+    public void testTaskEventHistory() throws Exception {
+
+        TTaskEvents tTaskEvents = taskOperationsStub.loadTaskEvents(taskId);
+        TTaskEvent[] events = tTaskEvents.getEvent();
+
+        Assert.assertNotNull(events, "The task event history cannot be empty after performing task operations");
+        Assert.assertNotEquals(events.length, 0, "The task event history objects should be a positive number");
+
+        Set<String> persistedTaskEvents = new HashSet<String>();
+        for (TTaskEvent event : events) {
+            persistedTaskEvents.add(event.getEventType());
+        }
+
+        for (String occurredTaskEvent : this.taskEvents) {
+            Assert.assertTrue(persistedTaskEvents.contains(occurredTaskEvent),
+                               "The occurred task event [" + occurredTaskEvent +
+                               "] is not in the persisted task event list :[" +
+                               StringUtils.join(persistedTaskEvents.toArray(), ",") + "]");
+        }
 
     }
 

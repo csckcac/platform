@@ -110,7 +110,7 @@ public class TaskCreationTestCase {
     }
 
     @Test(groups = {"wso2.bps"}, description = "Claims approval test case")
-    public void claimService() throws XMLStreamException, AxisFault, InterruptedException {
+    public void createFirstTask() throws XMLStreamException, AxisFault, InterruptedException {
         String soapBody =
                 "<p:ClaimApprovalData xmlns:p=\"http://www.example.com/claims/schema\">\n" +
                 "      <p:cust>\n" +
@@ -121,13 +121,38 @@ public class TaskCreationTestCase {
                 "      <p:amount>2500</p:amount>\n" +
                 "      <p:region>LK</p:region>\n" +
                 "      <p:prio>7</p:prio>\n" +
-                "      <p:activateAt>2012-02-09T01:01:01</p:activateAt>\n" +
+                "      <p:activateAt>2012-12-09T01:01:01</p:activateAt>\n" +
                 "</p:ClaimApprovalData>";
 
         String operation = "approve";
         String serviceName = "ClaimService";
         List<String> expectedOutput = new ArrayList<String>();
         expectedOutput.add("taskid>1<");
+        log.info("Calling Service: " + SERVICE_URL_PREFIX + serviceName);
+        BPSTestUtils.sendRequest(SERVICE_URL_PREFIX + serviceName, operation, soapBody, 1,
+                                 expectedOutput, BPSTestUtils.TWO_WAY);
+
+    }
+
+        @Test(groups = {"wso2.bps"}, description = "Claims approval test case")
+    public void createSecondTask() throws XMLStreamException, AxisFault, InterruptedException {
+        String soapBody =
+                "<p:ClaimApprovalData xmlns:p=\"http://www.example.com/claims/schema\">\n" +
+                "      <p:cust>\n" +
+                "         <p:id>452422</p:id>\n" +
+                "         <p:firstname>John</p:firstname>\n" +
+                "         <p:lastname>Doe</p:lastname>\n" +
+                "      </p:cust>\n" +
+                "      <p:amount>50000</p:amount>\n" +
+                "      <p:region>US</p:region>\n" +
+                "      <p:prio>1</p:prio>\n" +
+                "      <p:activateAt>2012-12-09T01:01:01</p:activateAt>\n" +
+                "</p:ClaimApprovalData>";
+
+        String operation = "approve";
+        String serviceName = "ClaimService";
+        List<String> expectedOutput = new ArrayList<String>();
+        expectedOutput.add("taskid>2<");
         log.info("Calling Service: " + SERVICE_URL_PREFIX + serviceName);
         BPSTestUtils.sendRequest(SERVICE_URL_PREFIX + serviceName, operation, soapBody, 1,
                                  expectedOutput, BPSTestUtils.TWO_WAY);

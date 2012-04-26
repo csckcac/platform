@@ -95,41 +95,33 @@ goto end
 
 :runAxis2
 
+setlocal EnableDelayedExpansion
 cd %AXIS2_HOME%
 echo "Starting Sample Axis2 Server ..."
 echo Using AXIS2_HOME:        %AXIS2_HOME%
 echo Using JAVA_HOME:       %JAVA_HOME%
 
-rem Decide on the wrapper binary.
-set _WRAPPER_BASE=wrapper
-set _WRAPPER_DIR=%AXIS2_HOME%..\..\bin\native\
-set _WRAPPER_EXE=%_WRAPPER_DIR%%_WRAPPER_BASE%-windows-x86-32.exe
-if exist "%_WRAPPER_EXE%" goto conf
-set _WRAPPER_EXE=%_WRAPPER_DIR%%_WRAPPER_BASE%-windows-x86-64.exe
-if exist "%_WRAPPER_EXE%" goto conf
-set _WRAPPER_EXE=%_WRAPPER_DIR%%_WRAPPER_BASE%.exe
-if exist "%_WRAPPER_EXE%" goto conf
-echo Unable to locate a Wrapper executable using any of the following names:
-echo %_WRAPPER_DIR%%_WRAPPER_BASE%-windows-x86-32.exe
-echo %_WRAPPER_DIR%%_WRAPPER_BASE%-windows-x86-64.exe
-echo %_WRAPPER_DIR%%_WRAPPER_BASE%.exe
-pause
-goto :eof
+if "%CARBON_HOME%"=="" set CARBON_HOME=%~sdp0..\..
+set CMD=RUN %*
 
-rem
-rem Find the wrapper.conf
-rem
-:conf
-set _WRAPPER_CONF="%AXIS2_HOME%..\..\conf\sample-server-wrapper.conf"
+rem Set all jar folders to CARBON_CLASSPATH variable. 
+set CARBON_CLASSPATH=..\..\lib,%CARBON_CLASSPATH%
+set CARBON_CLASSPATH=..\..\repository\components\lib,%CARBON_CLASSPATH%
+set CARBON_CLASSPATH=..\..\repository\components\plugins,%CARBON_CLASSPATH%
+set CARBON_CLASSPATH=..\..\lib\core\WEB-INF\lib,%CARBON_CLASSPATH%
+set CARBON_CLASSPATH=..\..\repository\components\extensions,%CARBON_CLASSPATH%
+set CARBON_CLASSPATH=..\..\lib\endorsed,%CARBON_CLASSPATH%
 
-rem
-rem Start the Wrapper
-rem
-:startup
-"%_WRAPPER_EXE%" -c %_WRAPPER_CONF% wrapper.java.additional.1=%_HTTPPORT% wrapper.java.additional.2=%_HTTPSPORT% wrapper.java.additional.3=%_SERVERNAME% %_XDEBUG%
+set confpath=%AXIS2_HOME%repository\conf\axis2.xml
+set AXIS2_ENDORSED=%AXIS2_HOME%..\..\lib\endorsed
 
-if not errorlevel 1 goto :eof
-pause
+rem Assign synapse-samples*.jar folders to SAMPLE_SERVERPATH variable. Since it is the jar contains the SampleServer classes.
+FOR %%C in ("%CARBON_HOME%\repository\components\plugins\synapse-samples*.jar") DO set SAMPLE_SERVERPATH=!SAMPLE_SERVERPATH, %CARBON_HOME%\repository\components\plugins\%%~nC%%~xC
+
+rem We use <code> samples.util.Bootstrap</code> to avoid long classpath windows OS issue to start the server. We pass the the jar files location as 
+rem -Djar.class.paths=%CARBON_CLASSPATH% as a system property.(It is a MUST) Additionally we pass -Dsystem.home="."  property which is set to current directory.
+
+"%JAVA_HOME%\bin\java"  -Xms256m -Xmx512m -XX:MaxPermSize=256m  -classpath "%SAMPLE_SERVERPATH%" -Djava.io.tmpdir="%AXIS2_HOME%..\..\tmp\sampleServer"  -Djava.endorsed.dirs="%AXIS2_ENDORSED%"  -Djar.class.paths=%CARBON_CLASSPATH% -Dsystem.home="."  samples.util.Bootstrap  -conf  "%AXIS2_HOME%repository\conf\axis2.xml" %CMD%
 
 :end
 set _JAVACMD=

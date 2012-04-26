@@ -127,14 +127,14 @@ public abstract class ConfigurationPlugin
             elements.remove(tag);
         }
 
-        if (_logger.isInfoEnabled())
+        if (_logger.isDebugEnabled())
         {
             if (!elements.isEmpty())
             {
-                _logger.info("Elements to lookup:" + path);
+                _logger.debug("Elements to lookup:" + path);
                 for (String tag : elements)
                 {
-                    _logger.info("Tag:'" + tag + "'");
+                    _logger.debug("Tag:'" + tag + "'");
                 }
             }
         }

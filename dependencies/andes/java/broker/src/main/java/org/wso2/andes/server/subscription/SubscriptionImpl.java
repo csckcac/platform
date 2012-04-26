@@ -101,7 +101,7 @@ public abstract class SubscriptionImpl implements Subscription, FlowCreditManage
     private long _createTime = System.currentTimeMillis();
 
 
-    static final class BrowserSubscription extends SubscriptionImpl
+    public static final class BrowserSubscription extends SubscriptionImpl
     {
         public BrowserSubscription(AMQChannel channel, AMQProtocolSession protocolSession,
                                    AMQShortString consumerTag, FieldTable filters,

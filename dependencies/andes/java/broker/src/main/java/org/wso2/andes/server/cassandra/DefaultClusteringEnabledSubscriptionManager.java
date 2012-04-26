@@ -24,6 +24,8 @@ import org.wso2.andes.server.ClusterResourceHolder;
 import org.wso2.andes.server.cluster.ClusterManager;
 import org.wso2.andes.server.queue.AMQQueue;
 import org.wso2.andes.server.store.CassandraMessageStore;
+import org.wso2.andes.server.subscription.Subscription;
+import org.wso2.andes.server.subscription.SubscriptionImpl;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -69,35 +71,42 @@ public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEn
      * @param queue
      * @param subscription
      */
-    public void addSubscription(AMQQueue queue , CassandraSubscription subscription) {
-        Map<String,CassandraSubscription> subscriptions = subscriptionMap.get(queue.getResourceName());
+    public void addSubscription(AMQQueue queue, CassandraSubscription subscription) {
 
+        if (subscription.getSubscription() instanceof SubscriptionImpl.BrowserSubscription) {
+            QueueBrowserFlusher flusher = new QueueBrowserFlusher(subscription.getSubscription(),queue,subscription.getSession());
+            flusher.send();
 
-        if(subscriptions == null || subscriptions.size() ==0) {
-            synchronized (subscriptionMap) {
-                subscriptions = subscriptionMap.get(queue.getResourceName());
-                if(subscriptions == null || subscriptions.size() == 0) {
-                    subscriptions = subscriptionMap.get(queue.getResourceName());
-                    if (subscriptions == null) {
-                        subscriptions = new ConcurrentHashMap<String, CassandraSubscription>();
-                        subscriptions.put(subscription.getSubscription().getSubscriptionID() + "",
-                                subscription);
-                        subscriptionMap.put(queue.getResourceName(), subscriptions);
-                        handleSubscription(queue, subscriptions);
-                    } else if (subscriptions.size() == 0) {
-                        subscriptions.put(subscription.getSubscription().getSubscriptionID() + "",
-                                subscription);
-                        handleSubscription(queue, subscriptions);
-                    }
-                } else {
-
-                    subscriptions.put(subscription.getSubscription().getSubscriptionID() + "", subscription);
-                }
-            }
         } else {
-            subscriptions.put(subscription.getSubscription().getSubscriptionID() + "", subscription);
-        }
 
+            Map<String, CassandraSubscription> subscriptions = subscriptionMap.get(queue.getResourceName());
+
+            if (subscriptions == null || subscriptions.size() == 0) {
+                synchronized (subscriptionMap) {
+                    subscriptions = subscriptionMap.get(queue.getResourceName());
+                    if (subscriptions == null || subscriptions.size() == 0) {
+                        subscriptions = subscriptionMap.get(queue.getResourceName());
+                        if (subscriptions == null) {
+                            subscriptions = new ConcurrentHashMap<String, CassandraSubscription>();
+                            subscriptions.put(subscription.getSubscription().getSubscriptionID() + "",
+                                    subscription);
+                            subscriptionMap.put(queue.getResourceName(), subscriptions);
+                            handleSubscription(queue, subscriptions);
+                        } else if (subscriptions.size() == 0) {
+                            subscriptions.put(subscription.getSubscription().getSubscriptionID() + "",
+                                    subscription);
+                            handleSubscription(queue, subscriptions);
+                        }
+                    } else {
+
+                        subscriptions.put(subscription.getSubscription().getSubscriptionID() + "", subscription);
+                    }
+                }
+            } else {
+                subscriptions.put(subscription.getSubscription().getSubscriptionID() + "", subscription);
+            }
+
+        }
     }
 
 
@@ -110,7 +119,7 @@ public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEn
 
         Map<String,CassandraSubscription> subs = subscriptionMap.get(queue);
 
-        if (subs != null) {
+        if (subs != null && subs.containsKey(subId)) {
             subs.remove(subId);
             if (subs.size() == 0) {
                 // This is the last subscription for this queue

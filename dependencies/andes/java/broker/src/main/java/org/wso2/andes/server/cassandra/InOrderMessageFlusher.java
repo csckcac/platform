@@ -47,7 +47,7 @@ public class InOrderMessageFlusher {
 
     private long maxWaitTimePerMessage = 2*60*1000;
 
-    private static Log log = LogFactory.getLog(CassandraMessageFlusher.class);
+    private static Log log = LogFactory.getLog(InOrderMessageFlusher.class);
 
 
     public InOrderMessageFlusher(Subscription subscription, AMQQueue queue, AMQProtocolSession session) {

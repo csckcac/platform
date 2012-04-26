@@ -18,69 +18,26 @@
   -->
 
 <sequence xmlns="http://ws.apache.org/ns/synapse" name="fault">
-    <filter xpath="$ctx:MESSAGE_THROTTLED_OUT">
-        <then>
-            <filter xpath="$ctx:AM_AUTH_FAILURE">
-                <then>
-                    <log level="custom">
-                        <property name="STATUS" value="Authentication failed"/>
-                        <property name="API" expression="$ctx:SYNAPSE_REST_API"/>
-                    </log>
-                    <payloadFactory>
-                        <format>
-                            <am:fault xmlns:am="http://wso2.org/apimanager">
-                                <am:code>0</am:code>
-                                <am:type>Status report</am:type>
-                                <am:message>Authentication Failure</am:message>
-                                <am:description>Missing or invalid authorization details</am:description>
-                            </am:fault>
-                        </format>
-                    </payloadFactory>
-                    <property name="HTTP_SC" value="401" scope="axis2"/>
-                    <property name="WWW-Authenticate" value="OAuth2 realm=&quot;WSO2 API Manager&quot;" scope="transport"/>
-                </then>
-                <else>
-                    <log level="custom">
-                        <property name="STATUS" value="Message throttled out"/>
-                        <property name="API" expression="$ctx:SYNAPSE_REST_API"/>
-                    </log>
-                    <payloadFactory>
-                        <format>
-                            <am:fault xmlns:am="http://wso2.org/apimanager">
-                                <am:code>0</am:code>
-                                <am:type>Status report</am:type>
-                                <am:message>Message Throttled</am:message>
-                                <am:description>You have exceeded the allocated quota</am:description>
-                            </am:fault>
-                        </format>
-                    </payloadFactory>
-                    <property name="HTTP_SC" value="503" scope="axis2"/>
-                </else>
-            </filter>
-        </then>
-        <else>
-            <log level="full">
-                <property name="STATUS" value="Executing default 'fault' sequence"/>
-                <property name="ERROR_CODE" expression="get-property('ERROR_CODE')"/>
-                <property name="ERROR_MESSAGE" expression="get-property('ERROR_MESSAGE')"/>
-            </log>
-            <payloadFactory>
-                <format>
-                    <am:fault xmlns:am="http://wso2.org/apimanager">
-                        <am:code>$1</am:code>
-                        <am:type>Status report</am:type>
-                        <am:message>Runtime Error</am:message>
-                        <am:description>$2</am:description>
-                    </am:fault>
-                </format>
-                <args>
-                    <arg expression="$ctx:ERROR_CODE"/>
-                    <arg expression="$ctx:ERROR_MESSAGE"/>
-                </args>
-            </payloadFactory>
-	        <property name="HTTP_SC" value="500" scope="axis2"/>
-        </else>        
-    </filter>
+    <log level="full">
+        <property name="STATUS" value="Executing default 'fault' sequence"/>
+        <property name="ERROR_CODE" expression="get-property('ERROR_CODE')"/>
+        <property name="ERROR_MESSAGE" expression="get-property('ERROR_MESSAGE')"/>
+    </log>
+    <payloadFactory>
+        <format>
+            <am:fault xmlns:am="http://wso2.org/apimanager">
+                <am:code>$1</am:code>
+                <am:type>Status report</am:type>
+                <am:message>Runtime Error</am:message>
+                <am:description>$2</am:description>
+            </am:fault>
+        </format>
+        <args>
+            <arg expression="$ctx:ERROR_CODE"/>
+            <arg expression="$ctx:ERROR_MESSAGE"/>
+        </args>
+    </payloadFactory>
+    <property name="HTTP_SC" value="500" scope="axis2"/>
     <property name="RESPONSE" value="true"/>
     <header name="To" action="remove"/>
     <property name="NO_ENTITY_BODY" scope="axis2" action="remove"/>

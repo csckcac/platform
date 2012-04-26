@@ -23,6 +23,7 @@
                 <module>components</module>
 		<module>features</module>
 		<module>samples/shopping-cart</module>
+		<module>samples/shopping-cart-global</module>
                 <module>products</module>
              </modules>
 	</profile>

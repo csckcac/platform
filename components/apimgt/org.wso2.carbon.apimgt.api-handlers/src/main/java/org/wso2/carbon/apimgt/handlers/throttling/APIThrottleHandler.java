@@ -37,8 +37,6 @@ import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.core.axis2.Axis2Sender;
 import org.apache.synapse.rest.AbstractHandler;
 import org.apache.synapse.transport.nhttp.NhttpConstants;
-import org.wso2.carbon.apimgt.handlers.security.APISecurityConstants;
-import org.wso2.carbon.apimgt.handlers.security.APISecurityException;
 import org.wso2.carbon.apimgt.handlers.security.APISecurityUtils;
 import org.wso2.carbon.apimgt.handlers.security.AuthenticationContext;
 import org.wso2.throttle.*;
@@ -448,58 +446,59 @@ public class APIThrottleHandler extends AbstractHandler {
     }
 
     private void initThrottle(MessageContext synCtx, ConfigurationContext cc) {
-        if (policyKey != null) {
-            Entry entry = synCtx.getConfiguration().getEntryDefinition(policyKey);
-            if (entry == null) {
-                handleException("Cannot find throttling policy using key: " + policyKey);
+        if (policyKey == null) {
+            throw new SynapseException("Throttle policy unspecified for the API");
+        }
+
+        Entry entry = synCtx.getConfiguration().getEntryDefinition(policyKey);
+        if (entry == null) {
+            handleException("Cannot find throttling policy using key: " + policyKey);
+            return;
+        }
+
+        boolean reCreate = false;
+        // if the key refers to a dynamic resource
+        if (entry.isDynamic()) {
+            if ((!entry.isCached() || entry.isExpired()) && version != entry.getVersion()) {
+                reCreate = true;
+            }
+        }
+
+        if (reCreate || throttle == null) {
+            Object entryValue = synCtx.getEntry(policyKey);
+            if (entryValue == null || !(entryValue instanceof OMElement)) {
+                handleException("Unable to load throttling policy using key: " + policyKey);
                 return;
             }
+            version = entry.getVersion();
 
-            boolean reCreate = false;
-            // if the key refers to a dynamic resource
-            if (entry.isDynamic()) {
-                if ((!entry.isCached() || entry.isExpired()) && version != entry.getVersion()) {
-                    reCreate = true;
-                }
+            // Check for reload in a cluster environment
+            // For clustered environments, if the concurrent access controller
+            // is not null and throttle is not null , then must reload.
+            if (isClusteringEnable && concurrentAccessController != null && throttle != null) {
+                concurrentAccessController = null; // set null ,
+                // because need to reload
             }
 
-            if (reCreate || throttle == null) {
-                Object entryValue = synCtx.getEntry(policyKey);
-                if (entryValue == null || !(entryValue instanceof OMElement)) {
-                    handleException("Unable to load throttling policy using key: " + policyKey);
-                    return;
-                }
+            try {
+                // Creates the throttle from the policy
+                throttle = ThrottleFactory.createMediatorThrottle(
+                        PolicyEngine.getPolicy((OMElement) entryValue));
 
-                version = entry.getVersion();
-
-                //Check for reload in a cluster environment
-                // For clustered environment ,if the concurrent access controller
-                // is not null and throttle is not null , then must reload.
-                if (isClusteringEnable && concurrentAccessController != null && throttle != null) {
-                    concurrentAccessController = null; // set null ,
-                    // because need to reload
-                }
-
-                try {
-                    // Creates the throttle from the policy
-                    throttle = ThrottleFactory.createMediatorThrottle(
-                            PolicyEngine.getPolicy((OMElement) entryValue));
-
-                    //For non-clustered  environment , must re-initiates
-                    //For  clustered  environment,
-                    //concurrent access controller is null ,
-                    //then must re-initiates
-                    if (throttle != null && (concurrentAccessController == null || !isClusteringEnable)) {
-                        concurrentAccessController = throttle.getConcurrentAccessController();
-                        if (concurrentAccessController != null) {
-                            cc.setProperty(key, concurrentAccessController);
-                        } else {
-                            cc.removeProperty(key);
-                        }
+                //For non-clustered  environment , must re-initiates
+                //For  clustered  environment,
+                //concurrent access controller is null ,
+                //then must re-initiates
+                if (throttle != null && (concurrentAccessController == null || !isClusteringEnable)) {
+                    concurrentAccessController = throttle.getConcurrentAccessController();
+                    if (concurrentAccessController != null) {
+                        cc.setProperty(key, concurrentAccessController);
+                    } else {
+                        cc.removeProperty(key);
                     }
-                } catch (ThrottleException e) {
-                    handleException("Error processing the throttling policy", e);
                 }
+            } catch (ThrottleException e) {
+                handleException("Error processing the throttling policy", e);
             }
         }
     }
@@ -512,6 +511,7 @@ public class APIThrottleHandler extends AbstractHandler {
     public String getId(){
         return id;
     }
+
     public void setPolicyKey(String policyKey){
         this.policyKey = policyKey;
     }
@@ -520,12 +520,12 @@ public class APIThrottleHandler extends AbstractHandler {
         return policyKey;
     }
 
-    protected void handleException(String msg, Exception e) {
+    private void handleException(String msg, Exception e) {
         log.error(msg, e);
         throw new SynapseException(msg, e);
     }
 
-    protected void handleException(String msg) {
+    private void handleException(String msg) {
         log.error(msg);
         throw new SynapseException(msg);
     }

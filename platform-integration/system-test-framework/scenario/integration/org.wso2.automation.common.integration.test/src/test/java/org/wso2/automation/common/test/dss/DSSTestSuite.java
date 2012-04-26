@@ -26,6 +26,7 @@ import org.wso2.automation.common.test.dss.rssmanager.RSSManagerTest;
 import org.wso2.automation.common.test.dss.syntax.ReturnRequestStatusTest;
 import org.wso2.automation.common.test.dss.syntax.WhiteSpaceWithQueryParamsTest;
 import org.wso2.platform.test.core.ProductConstant;
+import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkFactory;
 import org.wso2.platform.test.core.utils.suiteutills.MasterTestSuite;
 import org.wso2.platform.test.core.utils.suiteutills.SuiteVariables;
@@ -57,6 +58,8 @@ public class DSSTestSuite extends MasterTestSuite {
     @AfterSuite
     public void suiteRunner() {
         List<SuiteVariables> suiteVariablesList = new ArrayList<SuiteVariables>();
+        EnvironmentBuilder env = new EnvironmentBuilder();
+
         suiteVariablesList.add(new SuiteVariables("CSVSampleDataService", CSVSampleServiceTest.class));
         suiteVariablesList.add(new SuiteVariables("CSVDataServiceWithRegistry", CSVDataServiceTest.class));
         suiteVariablesList.add(new SuiteVariables("ExcelDataService", ExcelSampleServiceTest.class));
@@ -79,7 +82,7 @@ public class DSSTestSuite extends MasterTestSuite {
         suiteVariablesList.add(new SuiteVariables("ReturnRequestStatusTest", ReturnRequestStatusTest.class));
         suiteVariablesList.add(new SuiteVariables("WhiteSpaceWithQueryParamsTest", WhiteSpaceWithQueryParamsTest.class));
 
-        if (FrameworkFactory.getFrameworkProperties(ProductConstant.DSS_SERVER_NAME).getEnvironmentSettings().is_runningOnStratos()) {
+        if (env.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
             suiteVariablesList.add(new SuiteVariables("RSSManager", RSSManagerTest.class));
 
         } else {

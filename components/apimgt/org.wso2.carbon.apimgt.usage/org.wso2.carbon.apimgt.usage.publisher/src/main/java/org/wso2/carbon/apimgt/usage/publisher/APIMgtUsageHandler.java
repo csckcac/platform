@@ -73,7 +73,7 @@ public class APIMgtUsageHandler extends AbstractHandler {
                 if((String) mc.getProperty(RESTConstants.REST_FULL_REQUEST_PATH) == null){
                     log.error("Request path is null in request context",new NullPointerException());
                 }
-                Pattern pattern = Pattern.compile("^/.+?/.+?(/.+)$");
+                Pattern pattern = Pattern.compile("^/.+?/.+?([/?].+)$");
                 Matcher matcher = pattern.matcher((String) mc.getProperty(RESTConstants.REST_FULL_REQUEST_PATH));
                 if(matcher.find()){
                       requestPublisherDTO.setResource(matcher.group(1));

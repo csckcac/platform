@@ -131,7 +131,7 @@ public class APIMgtUsageQueryServiceClient {
         while(matcher.find()) {
             temp = matcher.group(1);
             Pattern pattern1 = Pattern.compile("<version>(.*?)</version>");
-	    Matcher matcher1 = pattern1.matcher(temp);
+	        Matcher matcher1 = pattern1.matcher(temp);
             Pattern pattern2 = Pattern.compile("<request>(.*?)</request>");
             Matcher matcher2 = pattern2.matcher(temp);
             if(matcher1.find() && matcher2.find()){
@@ -234,29 +234,30 @@ public class APIMgtUsageQueryServiceClient {
         List<ProviderAPIUsageDTO> result = new ArrayList<ProviderAPIUsageDTO>();
         OMElement omElement = null;
         String[] apiNames = getAPIList();
+        if(apiNames != null){
+            for (String apiName:apiNames){
+                QueryServiceStub.CompositeIndex[] compositeIndex = new QueryServiceStub.CompositeIndex[1];
+                compositeIndex[0] = new QueryServiceStub.CompositeIndex();
+                compositeIndex[0].setIndexName("api");
+                compositeIndex[0].setRangeFirst(apiName);
+                compositeIndex[0].setRangeLast(getNextStringInLexicalOrder(apiName));
 
-        for (String apiName:apiNames){
-            QueryServiceStub.CompositeIndex[] compositeIndex = new QueryServiceStub.CompositeIndex[1];
-            compositeIndex[0] = new QueryServiceStub.CompositeIndex();
-            compositeIndex[0].setIndexName("api");
-            compositeIndex[0].setRangeFirst(apiName);
-            compositeIndex[0].setRangeLast(getNextStringInLexicalOrder(apiName));
-
-            try {
-                omElement = qss.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_VERSION_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.API_VERSION_SUMMARY_TABLE_INDEX, compositeIndex);
-            } catch (RemoteException e) {
-                throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-            } catch (QueryServiceStoreException e) {
-                 throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
+                try {
+                    omElement = qss.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_VERSION_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.API_VERSION_SUMMARY_TABLE_INDEX, compositeIndex);
+                } catch (RemoteException e) {
+                    throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
+                } catch (QueryServiceStoreException e) {
+                     throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
+                }
+                OMElement rowsElement = omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
+                Iterator oMElementIterator = rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
+                float requestCount = 0;
+                while (oMElementIterator.hasNext()) {
+                    OMElement element = (OMElement) oMElementIterator.next();
+                    requestCount += Float.parseFloat(element.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST)).getText());
+                }
+                result.add(new ProviderAPIUsageDTO(apiName,((Float)requestCount).toString()));
             }
-	        OMElement rowsElement = omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
-            Iterator oMElementIterator = rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
-            float requestCount = 0;
-            while (oMElementIterator.hasNext()) {
-                OMElement element = (OMElement) oMElementIterator.next();
-                requestCount += Float.parseFloat(element.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST)).getText());
-            }
-            result.add(new ProviderAPIUsageDTO(apiName,((Float)requestCount).toString()));
         }
         return result;
     }

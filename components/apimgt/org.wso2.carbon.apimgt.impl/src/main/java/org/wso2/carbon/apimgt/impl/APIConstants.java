@@ -24,12 +24,9 @@ import org.wso2.carbon.utils.CarbonUtils;
 import java.io.File;
 
 /**
- * this class represent the constants that are used for APIManager implementation
+ * This class represents the constants that are used for APIManager implementation
  */
 public final class APIConstants {
-    private APIConstants(){
-
-    }
 
     //key value of the provider rxt
     public static final String PROVIDER_KEY = "provider";
@@ -118,11 +115,10 @@ public final class APIConstants {
         public static final String BLOCKED = "BLOCKED";
         public static final String REVOKED = "REVOKED";
     }
+
     public  static final String DB_CONFIG_PATH = CarbonUtils.getCarbonHome() +File.separator +
             "repository" +File.separator +"conf" +File.separator + "amConfig.xml";
     public static final String RXT_MEDIA_TYPE = "application/vnd.wso2.registry-ext-type+xml";
     public static final int TOP_TATE_MARGIN = 4;
-
-    
 
 }

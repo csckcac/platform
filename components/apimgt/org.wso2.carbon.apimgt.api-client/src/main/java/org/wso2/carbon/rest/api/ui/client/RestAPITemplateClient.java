@@ -112,12 +112,16 @@ public class RestAPITemplateClient {
         resourceMappings.add(testResourceMappings_3);
         resourceMappings.add(testResourceMappings_4);
 
-        Map<String,String> testHandlerMappings_1 = new HashMap<String,String>();
-        testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER, "org.wso2.carbon.api.handler.throttle.RestAPIThrottleHandler");
-        testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER_POLICY_KEY, "conf:/BasicMediatorThrottle_policy.xml");
+        Map<String, String> testHandlerMappings_1 = new HashMap<String, String>();
+        testHandlerMappings_1.put(APITemplateBuilder.KEY_FOR_HANDLER, "org.wso2.carbon.apimgt.handlers.security.APIAuthenticationHandler");
+
+        Map<String, String> testHandlerMappings_2 = new HashMap<String, String>();
+        testHandlerMappings_2.put(APITemplateBuilder.KEY_FOR_HANDLER, "org.wso2.carbon.apimgt.handlers.throttling.APIThrottleHandler");
+        testHandlerMappings_2.put(APITemplateBuilder.KEY_FOR_HANDLER_POLICY_KEY, "conf:/basic-throttle-policy.xml");
 
         List<Map<String,String>> handlerMappings = new ArrayList<Map<String,String>>();
         handlerMappings.add(testHandlerMappings_1);
+        handlerMappings.add(testHandlerMappings_2);
 
         String adminCookie = AuthAdminServiceClient.login(AuthAdminServiceClient.HOST_NAME,
                                                          AuthAdminServiceClient.USER_NAME,

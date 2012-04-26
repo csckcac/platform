@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.wso2.carbon.api.handler.throttle.rolebase.impl.basic;
+package org.wso2.carbon.apimgt.handlers.security;
 
 import org.wso2.carbon.apimgt.impl.dto.xsd.APIKeyValidationInfoDTO;
 
@@ -35,12 +35,12 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * write operations will be executed in serial fashion. In general this cache is designed
  * for many read operations and less write operations.
  */
-public class APIKeyValidationInfoCache {
-    
-    private Map<String,APIKeyValidationInfoDTO> validKeys;    
+public class APIKeyCache {
+
+    private Map<String,APIKeyValidationInfoDTO> validKeys;
     private Map<String,APIKeyValidationInfoDTO> invalidKeys;
 
-    public APIKeyValidationInfoCache(int maxValidKeys, int maxInvalidKeys) {
+    public APIKeyCache(int maxValidKeys, int maxInvalidKeys) {
         validKeys = new LRUCache<String, APIKeyValidationInfoDTO>(maxValidKeys);
         invalidKeys = new LRUCache<String, APIKeyValidationInfoDTO>(maxInvalidKeys);
     }
@@ -48,7 +48,7 @@ public class APIKeyValidationInfoCache {
     public void addValidKey(String key, APIKeyValidationInfoDTO info) {
         validKeys.put(key, info);
     }
-    
+
     public void addInvalidKey(String key, APIKeyValidationInfoDTO info) {
         invalidKeys.put(key, info);
     }

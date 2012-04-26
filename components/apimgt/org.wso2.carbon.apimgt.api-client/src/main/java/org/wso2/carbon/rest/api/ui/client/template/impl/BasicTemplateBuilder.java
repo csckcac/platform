@@ -137,13 +137,20 @@ public class BasicTemplateBuilder implements APITemplateBuilder {
         Iterator<Map<String,String>> handlerMaps = handlerMappings.iterator();
         List<String> handlerListStr = new ArrayList<String>();
 
-        String handlerTemplate = templateLoader.getTemplate(TemplateLoader.TEMPLATE_TYPE_HANDLER);
+        String complexHandlerTemplate = templateLoader.getTemplate(TemplateLoader.TEMPLATE_TYPE_COMPLEX_HANDLER);
+        String simpleHandlerTemplate = templateLoader.getTemplate(TemplateLoader.TEMPLATE_TYPE_SIMPLE_HANDLER);
+
         while (handlerMaps.hasNext()) {
             Map<String,String> singleHandler = handlerMaps.next();
-            if (singleHandler != null && singleHandler.get(KEY_FOR_HANDLER) != null) {
-                String replacedStr = handlerTemplate.
+            if (singleHandler != null && singleHandler.containsKey(KEY_FOR_HANDLER) &&
+                    singleHandler.containsKey(KEY_FOR_HANDLER_POLICY_KEY)) {
+                String replacedStr = complexHandlerTemplate.
                         replaceAll("\\[1\\]", singleHandler.get(KEY_FOR_HANDLER)).
                         replaceAll("\\[2\\]", singleHandler.get(KEY_FOR_HANDLER_POLICY_KEY));
+                handlerListStr.add(replacedStr);
+            } else if (singleHandler != null && singleHandler.containsKey(KEY_FOR_HANDLER)) {
+                String replacedStr = simpleHandlerTemplate.
+                        replaceAll("\\[1\\]", singleHandler.get(KEY_FOR_HANDLER));
                 handlerListStr.add(replacedStr);
             } else {
                 handleException("Required handler mapping not provided");

@@ -160,7 +160,7 @@ public class SchemaTestCase {
 
         // change the target namespace and check
         String oldSchemaPath = newSchema.getPath();
-        Assert.assertEquals("/trunk/schemas/org/bar/purchasing/" + schema.getId() + ".xsd",oldSchemaPath);
+        Assert.assertEquals(oldSchemaPath,"/trunk/schemas/org/bar/purchasing/" + schema.getId() + ".xsd");
         Assert.assertTrue(
                 registry.resourceExists("/trunk/schemas/org/bar/purchasing/" + schema.getId() + ".xsd"));
     }

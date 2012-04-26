@@ -29,7 +29,7 @@
 
                     <includes>
                         <include>**/*TestServerManager.java</include>
-                        <include>**/app/test/**TestCase.java</include>
+                        <include>**/governance/api/test/**TestCase.java</include>
                         <!--<include>**/*SchemaTestCase.java</include>-->
                     </includes>
 

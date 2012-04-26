@@ -50,9 +50,9 @@ public class PolicyTestCase {
         policyManager.addPolicy(policy);
 
         Policy newPolicy = policyManager.getPolicy(policy.getId());
-        Assert.assertEquals(policy.getPolicyContent(), newPolicy.getPolicyContent());
-        Assert.assertEquals("it is me", newPolicy.getAttribute("creator"));
-        Assert.assertEquals("0.01", newPolicy.getAttribute("version"));
+        Assert.assertEquals(newPolicy.getPolicyContent(),policy.getPolicyContent());
+        Assert.assertEquals(newPolicy.getAttribute("creator"),"it is me");
+        Assert.assertEquals(newPolicy.getAttribute("version"),"0.01");
 
         // change the target namespace and check
         String oldPolicyPath = newPolicy.getPath();
@@ -62,18 +62,18 @@ public class PolicyTestCase {
         newPolicy.setName("my-policy.xml");
         policyManager.updatePolicy(newPolicy);
 
-        Assert.assertEquals("/trunk/policies/my-policy.xml", newPolicy.getPath());
+        Assert.assertEquals( newPolicy.getPath(),"/trunk/policies/my-policy.xml");
         Assert.assertFalse(registry.resourceExists("/trunk/policies/policy.xml"));
 
         // doing an update without changing anything.
         policyManager.updatePolicy(newPolicy);
 
-        Assert.assertEquals("/trunk/policies/my-policy.xml", newPolicy.getPath());
-        Assert.assertEquals("0.01", newPolicy.getAttribute("version"));
+        Assert.assertEquals( newPolicy.getPath(),"/trunk/policies/my-policy.xml");
+        Assert.assertEquals(newPolicy.getAttribute("version"),"0.01");
 
         newPolicy = policyManager.getPolicy(policy.getId());
-        Assert.assertEquals("it is me", newPolicy.getAttribute("creator"));
-        Assert.assertEquals("0.01", newPolicy.getAttribute("version"));
+        Assert.assertEquals(newPolicy.getAttribute("creator"),"it is me");
+        Assert.assertEquals(newPolicy.getAttribute("version"),"0.01");
 
         Policy[] policies = policyManager.findPolicies(new PolicyFilter() {
             public boolean matches(Policy policy) throws GovernanceException {
@@ -83,7 +83,7 @@ public class PolicyTestCase {
                 return false;
             }
         });
-        Assert.assertEquals(1, policies.length);
+        Assert.assertEquals(policies.length,1);
         Assert.assertEquals(newPolicy.getId(), policies[0].getId());
 
         // deleting the policy

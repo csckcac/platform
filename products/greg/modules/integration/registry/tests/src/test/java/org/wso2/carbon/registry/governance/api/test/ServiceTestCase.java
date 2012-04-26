@@ -102,7 +102,7 @@ public class ServiceTestCase {
         Assert.assertEquals(newService.getAttribute("custom-attribute"), "custom-value");
         Assert.assertEquals(newService.getAttribute("interface_wsdlURL"),
                 "/_system/governance/trunk/wsdls/com/foo/abc.wsdl");
-        Assert.assertEquals(service.getQName(), newService.getQName());
+        Assert.assertEquals(newService.getQName(),service.getQName());
 
         Service service2 = serviceManager.newService(new QName("http://baps.paps.mug/done", "meep"));
         service2.addAttribute("custom-attribute", "custom-value2");
@@ -234,7 +234,7 @@ public class ServiceTestCase {
         QName qname = exactServiceCopy.getQName();
 
         Assert.assertEquals(new QName("http://doc.x.ge/yong", "almdo"), qname);
-        Assert.assertEquals("/trunk/services/ge/x/doc/yong/almdo", exactServiceCopy.getPath());
+        Assert.assertEquals( exactServiceCopy.getPath(),"/trunk/services/ge/x/doc/yong/almdo");
 
 
         // doing the same for a meta data service
@@ -254,8 +254,8 @@ public class ServiceTestCase {
         exactServiceCopy = serviceManager.getService(service.getId());
         qname = exactServiceCopy.getQName();
 
-        Assert.assertEquals(new QName("http://doc.x.ge/yong", "almdo"), qname);
-        Assert.assertEquals("/trunk/services/ge/x/doc/yong/almdo", exactServiceCopy.getPath());
+        Assert.assertEquals(qname,new QName("http://doc.x.ge/yong", "almdo"));
+        Assert.assertEquals( exactServiceCopy.getPath(),"/trunk/services/ge/x/doc/yong/almdo");
                 
     }
 

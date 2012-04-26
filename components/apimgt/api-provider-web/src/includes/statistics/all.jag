@@ -22,7 +22,7 @@
 <!--
 <h2>Average Service Time For APIs</h2>
 -->
-        <div class="row-fluid well">
+        <div class="row-fluid well" style="display:none;">
         <div class="span5">
 
             <div>

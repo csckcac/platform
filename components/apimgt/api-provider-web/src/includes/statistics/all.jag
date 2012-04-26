@@ -19,8 +19,63 @@
 
 
 </div>
+<!--
+<h2>Average Service Time For APIs</h2>
+-->
+        <div class="row-fluid well">
+        <div class="span5">
+
+            <div>
+                <div id="serviceTimeChart"></div>
+            </div>
+    </div>
+<!--
+            <div class="span6">
+
+                <table class="table" id="serviceTimeTable" style="display:none;">
+                      <tr>
+                        <th>API Name</th>
+                        <th>Average Service Time</th>
+                      </tr>
+                  </table>
+            </div>
+-->
+</div>
+<!--
+<h2>Last Access Time of APIs</h2>
+
+        <div class="row-fluid well">
+        <div class="span5">
+
+        </div>
+            <div class="span6">
+                <table class="table" id="lastAccessTable">
+                      <tr>
+                        <th>API Name</th>
+                        <th>Version</th>
+                        <th>Last Access</th>
+                      </tr>
+                      <tr>
+                        <td>API 1</td>
+                        <td>v1.0.0</td>
+                        <td>10/02/2012 16:53:02</td>
+                      </tr>
+                      <tr>
+                        <td>API 2</td>
+                        <td>v1.0.0</td>
+                        <td>15/02/2012 08:15:44</td>
+                      </tr>
+                      <tr>
+                        <td>API 2</td>
+                        <td>v1.0.1</td>
+                        <td>18/02/2012 21:07:24</td>
+                      </tr>
+                  </table>
+            </div>
 
 
+</div>
+-->
 <script type="text/javascript">
 $(document).ready(function() {
 	$.jqplot('apiChart',

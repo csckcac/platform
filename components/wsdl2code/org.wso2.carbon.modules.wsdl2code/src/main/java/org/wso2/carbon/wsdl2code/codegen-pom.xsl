@@ -153,7 +153,7 @@
             <dependency>
                 <groupId>wsdl4j</groupId>
                 <artifactId>wsdl4j</artifactId>
-                <version>1.6.2</version>
+                <version>1.6.2-wso2v3</version>
             </dependency>
             <dependency>
                 <groupId>javax.mail</groupId>

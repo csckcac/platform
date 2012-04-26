@@ -65,7 +65,7 @@ public class Exit extends AbstractHumanTaskCommand {
         if (isInFinalState) {
             String errMsg = String.format("User[%s] cannot perform [%s] operation on task[%d] as the task is in state[%s]. " +
                     "[%s] operation can be performed only on tasks not in states[%s,%s,%s,%s,%s]",
-                    getCaller().getName(), Exit.class, task.getId(),
+                    getOperationInvoker().getName(), Exit.class, task.getId(),
                     task.getStatus(), Exit.class, TaskStatus.EXITED,
                     TaskStatus.ERROR, TaskStatus.FAILED, TaskStatus.OBSOLETE,
                     TaskStatus.COMPLETED);

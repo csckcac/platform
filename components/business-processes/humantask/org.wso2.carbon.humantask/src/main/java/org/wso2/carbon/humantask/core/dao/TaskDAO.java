@@ -99,12 +99,24 @@ public interface TaskDAO {
 
     void release();
 
+    /**
+     * Removes the task object. Note: Applicable for notification only.
+     */
     void remove();
 
+    /**
+     * Resume the task from the suspended state.
+     */
     void resume();
 
+    /**
+     * Activates the task.
+     */
     void activate();
 
+    /**
+     * Skips the task. i.e : Makes the task OBSOLETE.
+     */
     void skip();
 
     void updateAndPersistComment(Long commentId, String newComment, String modifiedBy);

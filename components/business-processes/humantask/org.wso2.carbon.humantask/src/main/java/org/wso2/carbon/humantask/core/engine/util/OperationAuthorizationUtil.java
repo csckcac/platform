@@ -20,8 +20,11 @@ import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
 import org.wso2.carbon.humantask.core.dao.OrganizationalEntityDAO;
 import org.wso2.carbon.humantask.core.dao.TaskDAO;
 import org.wso2.carbon.humantask.core.dao.TaskStatus;
+import org.wso2.carbon.humantask.core.dao.TaskType;
 import org.wso2.carbon.humantask.core.engine.PeopleQueryEvaluator;
 import org.wso2.carbon.humantask.core.engine.people.eval.PeopleQueryComparators;
+import org.wso2.carbon.humantask.core.internal.HumanTaskServiceComponent;
+import org.wso2.carbon.registry.core.service.RegistryService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -233,19 +236,19 @@ public final class OperationAuthorizationUtil {
             return false;
         }
 
-        if (!TaskStatus.CREATED.equals(task.getStatus())
-                || !TaskStatus.READY.equals(task.getStatus())
-                || !TaskStatus.RESERVED.equals(task.getStatus())
-                || !TaskStatus.IN_PROGRESS.equals(task.getStatus())) {
-            return false;
+        if (TaskStatus.CREATED.equals(task.getStatus())
+                || TaskStatus.READY.equals(task.getStatus())
+                || TaskStatus.RESERVED.equals(task.getStatus())
+                || TaskStatus.IN_PROGRESS.equals(task.getStatus())) {
+            List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles = new ArrayList<GenericHumanRoleDAO.GenericHumanRoleType>();
+            allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.TASK_INITIATOR);
+            allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.BUSINESS_ADMINISTRATORS);
+            allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.STAKEHOLDERS);
+
+            return authoriseUser(task, caller, allowedRoles, pqe);
         }
 
-        List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles = new ArrayList<GenericHumanRoleDAO.GenericHumanRoleType>();
-        allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.TASK_INITIATOR);
-        allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.BUSINESS_ADMINISTRATORS);
-        allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.STAKEHOLDERS);
-
-        return authoriseUser(task, caller, allowedRoles, pqe);
+        return false;
     }
 
     /**
@@ -294,6 +297,32 @@ public final class OperationAuthorizationUtil {
                                                PeopleQueryEvaluator pqe) {
         List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles = new ArrayList<GenericHumanRoleDAO.GenericHumanRoleType>();
         allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
+        return authoriseUser(task, caller, allowedRoles, pqe);
+    }
+
+
+    /**
+     * Checks whether the provided user is authorised to remove the given task.
+     *
+     * @param task   : The TaskDAO object
+     * @param caller : The user  being authorised.
+     * @param pqe    : The people query evaluator.
+     * @return : true if the task is in the required state and the user is authorised to perform remove
+     *         operation.
+     */
+    public static boolean authorisedToRemove(TaskDAO task, OrganizationalEntityDAO caller,
+                                             PeopleQueryEvaluator pqe) {
+
+        if (!TaskType.NOTIFICATION.equals(task.getType())) {
+            return false;
+        }
+
+        if (!TaskStatus.READY.equals(task.getStatus())) {
+            return false;
+        }
+
+        List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles = new ArrayList<GenericHumanRoleDAO.GenericHumanRoleType>();
+        allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.BUSINESS_ADMINISTRATORS);
         return authoriseUser(task, caller, allowedRoles, pqe);
     }
 
@@ -456,7 +485,7 @@ public final class OperationAuthorizationUtil {
      */
     public static boolean authorisedToFail(TaskDAO task, OrganizationalEntityDAO caller,
                                            PeopleQueryEvaluator pqe) {
-        if (TaskStatus.IN_PROGRESS.equals(task.getStatus())) {
+        if (!TaskStatus.IN_PROGRESS.equals(task.getStatus())) {
             return false;
         }
         List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles = new ArrayList<GenericHumanRoleDAO.GenericHumanRoleType>();
@@ -543,22 +572,31 @@ public final class OperationAuthorizationUtil {
     /**
      * Checks whether the provided user is authorised to delegate the given task.
      *
-     * @param task   : The TaskDAO object
-     * @param caller : The user  being authorised.
-     * @param pqe    : The people query evaluator.
+     * @param task             : The TaskDAO object
+     * @param operationInvoker : The user  being authorised.
+     * @param pqe              : The people query evaluator.
      * @return : true if the task has the required state and the user is authorised to perform delegate
      *         operation.
      */
-    public static boolean authorisedToDelegate(TaskDAO task, OrganizationalEntityDAO caller,
+    public static boolean authorisedToDelegate(TaskDAO task,
+                                               OrganizationalEntityDAO operationInvoker,
                                                PeopleQueryEvaluator pqe) {
 
         if (TaskStatus.READY.equals(task.getStatus()) || TaskStatus.IN_PROGRESS.equals(task.getStatus()) ||
-                TaskStatus.RESERVED.equals(task.getStatus())) {
+            TaskStatus.RESERVED.equals(task.getStatus())) {
+
+            // If there are no users qualified for the task to be assigned, then fail the authorisation.
+            List<String> assignableUsersWithoutActualOwner = CommonTaskUtil.getAssignableUserNameList(task, true);
+            if (assignableUsersWithoutActualOwner.size() < 1) {
+                return false;
+            }
+
             List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles = new ArrayList<GenericHumanRoleDAO.GenericHumanRoleType>();
             allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.POTENTIAL_OWNERS);
             allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.STAKEHOLDERS);
             allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
-            return authoriseUser(task, caller, allowedRoles, pqe);
+            return authoriseUser(task, operationInvoker, allowedRoles, pqe);
+
         } else {
             return false;
         }
@@ -568,12 +606,12 @@ public final class OperationAuthorizationUtil {
      * Checks whether the provided user is authorised to complete the given task.
      *
      * @param task   : The TaskDAO object
-     * @param caller : The user  being authorised.
+     * @param operationInvoker : The user  being authorised.
      * @param pqe    : The people query evaluator.
      * @return : true if the task has the required state and the user is authorised to complete activate
      *         operation.
      */
-    public static boolean authorisedToComplete(TaskDAO task, OrganizationalEntityDAO caller,
+    public static boolean authorisedToComplete(TaskDAO task, OrganizationalEntityDAO operationInvoker,
                                                PeopleQueryEvaluator pqe) {
 
         if (!TaskStatus.IN_PROGRESS.equals(task.getStatus())) {
@@ -581,7 +619,7 @@ public final class OperationAuthorizationUtil {
         }
         List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles = new ArrayList<GenericHumanRoleDAO.GenericHumanRoleType>();
         allowedRoles.add(GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
-        return authoriseUser(task, caller, allowedRoles, pqe);
+        return authoriseUser(task, operationInvoker, allowedRoles, pqe);
     }
 
     /**

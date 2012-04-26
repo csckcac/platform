@@ -45,7 +45,7 @@ public class Delegate extends AbstractHumanTaskCommand {
     protected void checkPreConditions() {
 
         checkForValidTask();
-        OrganizationalEntityDAO caller = getCaller();
+        OrganizationalEntityDAO caller = getOperationInvoker();
         TaskDAO task = getTask();
         //if the delegatee is not an existing user
         if (!getEngine().getPeopleQueryEvaluator().isExistingUser(delegatee.getName())) {

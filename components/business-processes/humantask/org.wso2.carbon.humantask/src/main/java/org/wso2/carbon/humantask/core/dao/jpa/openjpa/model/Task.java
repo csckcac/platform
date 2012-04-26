@@ -710,7 +710,6 @@ public class Task extends OpenJPAEntity implements TaskDAO {
     @Override
     public void skip() {
         this.setStatus(TaskStatus.OBSOLETE);
-        getEntityManager().merge(this);
     }
 
     @Override
@@ -766,7 +765,6 @@ public class Task extends OpenJPAEntity implements TaskDAO {
                 }
 
             } else {
-                //TODO - implement me.
                 throw new UnsupportedOperationException("Multiple nominees are not supported yet.");
             }
 

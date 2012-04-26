@@ -350,6 +350,7 @@
       <xsd:element name="authorisedToDeleteOutput" type="xsd:boolean"/>
       <xsd:element name="authorisedToRelease" type="xsd:boolean"/>
       <xsd:element name="authorisedToResume" type="xsd:boolean"/>
+      <xsd:element name="authorisedToRemove" type="xsd:boolean"/>
       <xsd:element name="authorisedToSuspend" type="xsd:boolean"/>
       <xsd:element name="authorisedToSetPriority" type="xsd:boolean"/>       
       <xsd:element name="authorisedToSkip" type="xsd:boolean"/>

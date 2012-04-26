@@ -17,14 +17,11 @@
 package org.wso2.carbon.humantask.core.engine.commands;
 
 import org.wso2.carbon.humantask.core.dao.*;
-import org.wso2.carbon.humantask.core.engine.HumanTaskCommand;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 import org.wso2.carbon.humantask.core.engine.util.OperationAuthorizationUtil;
-import org.wso2.carbon.humantask.core.internal.HumanTaskServiceComponent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 /**
  * The release operation logic.
@@ -41,7 +38,7 @@ public class Release extends AbstractHumanTaskCommand {
     @Override
     protected void checkPreConditions() {
         TaskDAO task = getTask();
-        OrganizationalEntityDAO caller = getCaller();
+        OrganizationalEntityDAO caller = getOperationInvoker();
         checkForValidTask();
         //if the task is in progress status we need to stop it first before releasing it!
         if (TaskStatus.IN_PROGRESS.equals(task.getStatus())) {

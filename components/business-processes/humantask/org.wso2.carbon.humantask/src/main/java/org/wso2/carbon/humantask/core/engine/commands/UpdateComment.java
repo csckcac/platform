@@ -88,7 +88,7 @@ public class UpdateComment extends AbstractHumanTaskCommand {
         checkPreConditions();
         authorise();
         checkState();
-        task.updateAndPersistComment(updatingCommentId, updatedCommentString, getCaller().getName());
+        task.updateAndPersistComment(updatingCommentId, updatedCommentString, getOperationInvoker().getName());
         task.persistEvent(createTaskEvent());
         checkPostConditions();
     }

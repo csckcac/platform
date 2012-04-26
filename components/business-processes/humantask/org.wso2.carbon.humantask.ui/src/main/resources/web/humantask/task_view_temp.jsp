@@ -66,6 +66,9 @@
                 <li id="resumeLinkLi" style="display:none;"><a id="resumeLink">Resume</a></li>
                 <li id="commentLinkLi" style="display:none;"><a onclick="toggleMe('commentSection')">Comment</a></li>
                 <li id="delegateLinkLi" style="display:none;"><a onclick="HUMANTASK.handleDelegateSelection('delegateSection')">Assign</a></li>
+                <li id="removeLinkLi" style="display:none;"><a id="removeLink">Remove</a></li>
+                <li id="skipLinkLi" style="display:none;"><a id="skipLink">Skip</a></li>
+                <li id="failLinkLi" style="display:none;"><a id="failLink">Fail</a></li>
                 <li id="moreActionsLinkLi" style="display:none;"><a id="moreActionsLink">More Actions</a></li>
             </ul>
         </div>

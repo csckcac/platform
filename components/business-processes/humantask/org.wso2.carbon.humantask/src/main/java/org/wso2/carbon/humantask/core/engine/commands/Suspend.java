@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.humantask.core.dao.*;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
-import org.wso2.carbon.humantask.core.engine.util.OperationAuthorizationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +56,7 @@ public class Suspend extends AbstractHumanTaskCommand {
         if (!isInSuspendableState) {
             String errMsg = String.format("User[%s] cannot perform [%s] operation on task[%d] as the task is in state[%s]. " +
                     "[%s] operation can be performed only on tasks in states[%s,%s,%s]",
-                    getCaller().getName(), Suspend.class, task.getId(),
+                    getOperationInvoker().getName(), Suspend.class, task.getId(),
                     task.getStatus(), Suspend.class, TaskStatus.RESERVED,
                     TaskStatus.READY, TaskStatus.IN_PROGRESS);
             log.error(errMsg);

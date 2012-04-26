@@ -28,8 +28,10 @@ import java.util.List;
  */
 public class AddComment extends AbstractHumanTaskCommand {
 
+    /** The comment string to be added to the task */
     private String commentString;
 
+    /** The persisted commend object after operation completes. */
     private CommentDAO persistedComment;
 
     public AddComment(String callerId, Long taskId, String commentString) {
@@ -88,7 +90,7 @@ public class AddComment extends AbstractHumanTaskCommand {
         authorise();
         checkState();
         persistedComment = getTask().persistComment(getEngine().getDaoConnectionFactory().
-                getConnection().getCommentDAO(commentString, getCaller().getName()));
+                getConnection().getCommentDAO(commentString, getOperationInvoker().getName()));
         getTask().persistEvent(createTaskEvent());
         checkPostConditions();
     }

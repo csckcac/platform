@@ -173,7 +173,10 @@ public class HumanTaskJPQLQueryBuilder {
         assignedToMeQuery.setParameter("name", queryCriteria.getCaller());
         assignedToMeQuery.setParameter(TASK_TYPE, TaskType.TASK);
         assignedToMeQuery.setParameter(ROLE_TYPE, GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
-        List<TaskStatus> statusList = Arrays.asList(TaskStatus.COMPLETED, TaskStatus.OBSOLETE);
+        List<TaskStatus> statusList = Arrays.asList(TaskStatus.COMPLETED,
+                                                    TaskStatus.OBSOLETE,
+                                                    TaskStatus.FAILED,
+                                                    TaskStatus.REMOVED);
         assignedToMeQuery.setParameter(TASK_STATUSES, statusList);
         return assignedToMeQuery;
     }

@@ -40,7 +40,7 @@ public class Start extends AbstractHumanTaskCommand {
     @Override
     protected void checkPreConditions() {
         TaskDAO task = getTask();
-        OrganizationalEntityDAO caller = getCaller();
+        OrganizationalEntityDAO caller = getOperationInvoker();
         checkForValidTask();
 
         if (TaskStatus.READY.equals(task.getStatus())) {
@@ -81,7 +81,7 @@ public class Start extends AbstractHumanTaskCommand {
         if (!TaskStatus.RESERVED.equals(task.getStatus())) {
             String errMsg = String.format("User[%s] cannot perform [%s] operation on task[%d] as the task is in state[%s]. " +
                     "[%s] operation can be performed only on tasks in [%s] state",
-                    getCaller().getName(), Start.class, task.getId(),
+                    getOperationInvoker().getName(), Start.class, task.getId(),
                     task.getStatus(), Start.class, TaskStatus.RESERVED);
             log.error(errMsg);
             throw new HumanTaskRuntimeException(errMsg);

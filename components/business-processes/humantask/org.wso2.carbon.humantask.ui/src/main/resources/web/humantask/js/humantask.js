@@ -115,6 +115,18 @@ HUMANTASK.showHideActions = function() {
         jQuery('#resumeLinkLi').show();
     }
 
+    if (HUMANTASK.authParams.authorisedToRemove) {
+        jQuery('#removeLinkLi').show();
+    }
+
+    if (HUMANTASK.authParams.authorisedToSkip) {
+        jQuery('#skipLinkLi').show();
+    }
+
+    if (HUMANTASK.authParams.authorisedToFail) {
+        jQuery('#failLinkLi').show();
+    }
+
     if (HUMANTASK.authParams.authorisedToComplete) {
         jQuery('#responseFormFieldSet').show();
     }
@@ -220,6 +232,9 @@ HUMANTASK.bindButtons = function() {
     jQuery('#releaseLink').click(HUMANTASK.releaseTask);
     jQuery('#suspendLink').click(HUMANTASK.suspendTask);
     jQuery('#resumeLink').click(HUMANTASK.resumeTask);
+    jQuery('#failLink').click(HUMANTASK.failTask);
+    jQuery('#skipLink').click(HUMANTASK.skipTask);
+    jQuery('#removeLink').click(HUMANTASK.removeTask);
     jQuery('#addCommentButton').click(HUMANTASK.addComment);
     jQuery('#completeTaskButton').click(HUMANTASK.completeTask);
     jQuery('#delegateButton').click(HUMANTASK.delegateTask);
@@ -306,6 +321,47 @@ HUMANTASK.resumeTask = function() {
                       location.reload(true);
                   } else {
                       alert('Error occurred while releasing task : ' + json.TaskResumed);
+                      return true;
+                  }
+              });
+};
+
+HUMANTASK.failTask = function() {
+    var failURL = 'task-operations-ajaxprocessor.jsp?operation=fail&taskClient=' +
+                    HUMANTASK.taskClient + '&taskId=' + HUMANTASK.taskId;
+    $.getJSON(failURL,
+              function(json) {
+                  if (json.TaskFailed == 'true') {
+                      location.reload(true);
+                  } else {
+                      alert('Error occurred while failing task : ' + json.TaskFailed);
+                      return true;
+                  }
+              });
+};
+
+HUMANTASK.skipTask = function() {
+    var skipURL = HUMANTASK.getTaskOperationURL('skip');
+    $.getJSON(skipURL,
+              function(json) {
+                  if (json.TaskSkipped == 'true') {
+                      location.reload(true);
+                  } else {
+                      alert('Error occurred while skipping task : ' + json.TaskSkipped);
+                      return true;
+                  }
+              });
+};
+
+HUMANTASK.removeTask = function() {
+    var removeURL = 'task-operations-ajaxprocessor.jsp?operation=remove&taskClient=' +
+                    HUMANTASK.taskClient + '&taskId=' + HUMANTASK.taskId;
+    $.getJSON(removeURL,
+              function(json) {
+                  if (json.TaskRemoved == 'true') {
+                      location.reload(true);
+                  } else {
+                      alert('Error occurred while removing task : ' + json.TaskRemoved);
                       return true;
                   }
               });
@@ -416,6 +472,16 @@ HUMANTASK.populateAssignableUserDropDown = function (eventJson) {
                 $('<option></option>').val(userNameJSON.userName).html(userNameJSON.userName)
         );
     });
+};
+
+/**
+ * Constructs the ajax url for the task operation.
+ *
+ * @param operationName : The task operation name.
+ */
+HUMANTASK.getTaskOperationURL = function(operationName) {
+    return  'task-operations-ajaxprocessor.jsp?operation=' + operationName + '&taskClient=' +
+                    HUMANTASK.taskClient + '&taskId=' + HUMANTASK.taskId;
 };
 
 

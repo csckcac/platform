@@ -531,6 +531,7 @@ public final class TransformerUtils {
         authParams.setAuthorisedToNominate(OperationAuthorizationUtil.authorisedToNominate(task, caller, pqe));
         authParams.setAuthorisedToRelease(OperationAuthorizationUtil.authorisedToRelease(task, caller, pqe));
         authParams.setAuthorisedToResume(OperationAuthorizationUtil.authorisedToResume(task, caller, pqe));
+        authParams.setAuthorisedToRemove(OperationAuthorizationUtil.authorisedToRemove(task, caller, pqe));
         authParams.setAuthorisedToSetFault(OperationAuthorizationUtil.authorisedToSetFault(task, caller, pqe));
         authParams.setAuthorisedToSetOutput(OperationAuthorizationUtil.authorisedToSetOutput(task, caller, pqe));
         authParams.setAuthorisedToSetPriority(OperationAuthorizationUtil.authorisedToSetPriority(task, caller, pqe));

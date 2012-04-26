@@ -20,7 +20,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.humantask.core.dao.*;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
-import org.wso2.carbon.humantask.core.engine.util.OperationAuthorizationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +76,7 @@ public class Claim extends AbstractHumanTaskCommand {
 
     @Override
     public void execute() {
-        OrganizationalEntityDAO caller = getCaller();
+        OrganizationalEntityDAO caller = getOperationInvoker();
         TaskDAO task = getTask();
         if (log.isDebugEnabled()) {
             log.debug(String.format("User[%s] claiming task[%d]", caller.getName(), task

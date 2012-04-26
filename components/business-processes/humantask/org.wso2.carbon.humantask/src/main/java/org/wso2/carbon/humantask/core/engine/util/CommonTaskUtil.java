@@ -16,6 +16,7 @@
 
 package org.wso2.carbon.humantask.core.engine.util;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,9 +37,14 @@ import org.wso2.carbon.humantask.core.store.HumanTaskBaseConfiguration;
 import org.wso2.carbon.humantask.core.store.HumanTaskStore;
 import org.wso2.carbon.humantask.core.store.TaskConfiguration;
 import org.wso2.carbon.humantask.core.utils.Duration;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.service.RegistryService;
+import org.wso2.carbon.user.core.UserRealm;
+import org.wso2.carbon.user.core.UserStoreException;
 
 import javax.xml.namespace.QName;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -234,27 +240,6 @@ public final class CommonTaskUtil {
         }
         return defaultPresentationName;
     }
-
-//    /**
-//     * Gets the presentation name of the task for the given language.
-//     *
-//     * @param task    : The task object.
-//     * @param xmlLang : The xml lang to filter.
-//     * @return : The matching PresentationNameDAO if one exists, else null.
-//     */
-//    public static PresentationNameDAO getPresentationName(TaskDAO task, String xmlLang) {
-//        PresentationNameDAO defaultPresentationName = null;
-//        if (task.getPresentationNames() != null && task.getPresentationNames().size() > 0) {
-//            for (PresentationNameDAO presentationName : task.getPresentationNames()) {
-//                if (StringUtils.isNotEmpty(presentationName.getXmlLang()) &&
-//                        presentationName.getXmlLang().toLowerCase().contains(xmlLang)) {
-//                    defaultPresentationName = presentationName;
-//                    break;
-//                }
-//            }
-//        }
-//        return defaultPresentationName;
-//    }
 
     /**
      * @param task TaskDAO
@@ -555,6 +540,11 @@ public final class CommonTaskUtil {
         }
     }
 
+    /**
+     * Gets the potential owner role name for the given task.
+     * @param task : The task object.
+     * @return : The potential owner role name.
+     */
     public static String getPotentialOwnerRoleName(TaskDAO task) {
           String roleName = null;
         GHR_ITERATION:
@@ -569,5 +559,62 @@ public final class CommonTaskUtil {
             }
         }
         return roleName;
+    }
+
+    /**
+     * Returns the list of assignable user name list.
+     *
+     * @param task               : The task object.
+     * @param excludeActualOwner : Whether to exclude the actual owner from the returned list.
+     * @return : the list of assignable user name list.
+     */
+    public static List<String> getAssignableUserNameList(TaskDAO task, boolean excludeActualOwner) {
+        String potentialOwnerRole = getPotentialOwnerRoleName(task);
+        RegistryService registryService = HumanTaskServiceComponent.getRegistryService();
+        try {
+            UserRealm userRealm = registryService.getUserRealm(task.getTenantId());
+
+            String[] assignableUsersArray =
+                    userRealm.getUserStoreManager().getUserListOfRole(potentialOwnerRole);
+
+            List<String> allPotentialOwners = new ArrayList<String>(Arrays.asList(assignableUsersArray));
+
+            OrganizationalEntityDAO actualOwner = getActualOwner(task);
+
+            if (excludeActualOwner && actualOwner != null) {
+                allPotentialOwners.remove(actualOwner.getName());
+            }
+
+            return allPotentialOwners;
+
+        } catch (RegistryException e) {
+            throw new HumanTaskRuntimeException("Cannot locate user realm for tenant id " +
+                                                task.getTenantId());
+        } catch (UserStoreException e) {
+            throw new HumanTaskRuntimeException("Error retrieving the UserStoreManager " +
+                                                task.getTenantId(), e);
+        }
+    }
+
+    /**
+     * Returns the actual owner OrganizationalEntityDAO of the given task.
+     *
+     * @param task : The task object.
+     * @return : The actual owner of the task IF exists, null otherwise. The caller should always
+     *           check for null in the return value.
+     */
+    public static OrganizationalEntityDAO getActualOwner(TaskDAO task) {
+
+        OrganizationalEntityDAO actualOwnerOrgEntity = null;
+        List<OrganizationalEntityDAO> actualOwner =
+                getOrgEntitiesForRole(task,
+                                      GenericHumanRoleDAO.GenericHumanRoleType.ACTUAL_OWNER);
+
+        // There should be only 1 actual owner for the task if any exists.
+        if(actualOwner != null && actualOwner.size() ==1) {
+                 actualOwnerOrgEntity = actualOwner.get(0);
+        }
+
+        return actualOwnerOrgEntity;
     }
 }

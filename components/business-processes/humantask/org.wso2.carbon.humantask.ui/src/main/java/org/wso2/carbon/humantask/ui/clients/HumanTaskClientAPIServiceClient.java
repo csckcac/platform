@@ -400,7 +400,7 @@ public class HumanTaskClientAPIServiceClient {
         }
     }
 
-        /**
+    /**
      * Gets the list of comments associated with a given task.
      *
      * @param taskId : The task id.
@@ -537,12 +537,13 @@ public class HumanTaskClientAPIServiceClient {
 
     /**
      * Suspend task operation.
+     *
      * @param taskId : The task to be suspended.
-     * @throws RemoteException :
-     * @throws IllegalStateFault :
+     * @throws RemoteException       :
+     * @throws IllegalStateFault     :
      * @throws IllegalOperationFault :
-     * @throws IllegalArgumentFault :
-     * @throws IllegalAccessFault :
+     * @throws IllegalArgumentFault  :
+     * @throws IllegalAccessFault    :
      */
     public void suspend(URI taskId)
             throws RemoteException, IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
@@ -572,11 +573,11 @@ public class HumanTaskClientAPIServiceClient {
      * Resume task operation.
      *
      * @param taskId : The task id.
-     * @throws RemoteException :
-     * @throws IllegalStateFault :
+     * @throws RemoteException       :
+     * @throws IllegalStateFault     :
      * @throws IllegalOperationFault :
-     * @throws IllegalArgumentFault :
-     * @throws IllegalAccessFault :
+     * @throws IllegalArgumentFault  :
+     * @throws IllegalAccessFault    :
      */
     public void resume(URI taskId)
             throws RemoteException, IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
@@ -602,9 +603,19 @@ public class HumanTaskClientAPIServiceClient {
         }
     }
 
+    /**
+     * Returns an array of assignable users of a task.
+     *
+     * @param taskId : The task id.
+     * @return : The assignable user array.
+     * @throws RemoteException :
+     * @throws IllegalStateFault :
+     * @throws IllegalOperationFault :
+     * @throws IllegalArgumentFault :
+     */
     public TUser[] getTaskAssignableUsers(URI taskId)
             throws RemoteException, IllegalStateFault, IllegalOperationFault, IllegalArgumentFault {
-       String errMsg = "Error occurred while performing getTaskAssignableUsers operation";
+        String errMsg = "Error occurred while performing getTaskAssignableUsers operation";
         try {
             return stub.getAssignableUserList(taskId);
         } catch (RemoteException e) {
@@ -619,11 +630,23 @@ public class HumanTaskClientAPIServiceClient {
         }
     }
 
+    /**
+     * Delegate task operation.
+     *
+     * @param taskId : the task id of the task being delegated.
+     * @param delegatee : The person to whom the task is being delegated.
+     * @throws RemoteException  :
+     * @throws IllegalStateFault  :
+     * @throws IllegalArgumentFault :
+     * @throws IllegalOperationFault :
+     * @throws RecipientNotAllowedException   :
+     * @throws IllegalAccessFault :
+     */
     public void delegate(URI taskId, String delegatee)
             throws RemoteException, IllegalStateFault, IllegalArgumentFault, IllegalOperationFault,
                    RecipientNotAllowedException, IllegalAccessFault {
 
-        if(delegatee == null || "".equals(delegatee.trim())) {
+        if (delegatee == null || "".equals(delegatee.trim())) {
             throw new IllegalArgumentException("Delegatee user name should not be empty.");
         }
         String errMsg = "Error occurred while performing delegate operation";
@@ -652,6 +675,103 @@ public class HumanTaskClientAPIServiceClient {
             log.error(errMsg, e);
             throw e;
         } catch (RecipientNotAllowedException e) {
+            log.error(errMsg, e);
+            throw e;
+        } catch (IllegalAccessFault e) {
+            log.error(errMsg, e);
+            throw e;
+        }
+
+    }
+
+    /**
+     * The skip operation.
+     * @param taskId : The task id.
+     * @throws IllegalArgumentFault :
+     * @throws IllegalOperationFault  :
+     * @throws IllegalAccessFault :
+     * @throws IllegalStateFault :
+     * @throws RemoteException :
+     */
+    public void skip(URI taskId)
+            throws IllegalArgumentFault, IllegalOperationFault, IllegalAccessFault,
+                   IllegalStateFault, RemoteException {
+        String errMsg = "Error occurred while performing skip operation";
+        try {
+            stub.skip(taskId);
+        } catch (RemoteException e) {
+            log.error(errMsg, e);
+            throw e;
+        } catch (IllegalStateFault e) {
+            log.error(errMsg, e);
+            throw e;
+        } catch (IllegalOperationFault e) {
+            log.error(errMsg, e);
+            throw e;
+        } catch (IllegalArgumentFault e) {
+            log.error(errMsg, e);
+            throw e;
+        } catch (IllegalAccessFault e) {
+            log.error(errMsg, e);
+            throw e;
+        }
+    }
+
+    /**
+     * The task fail operation.
+     * @param taskId : The id of the task to be failed.
+     * @throws IllegalArgumentFault :
+     * @throws IllegalOperationFault :
+     * @throws IllegalAccessFault  :
+     * @throws IllegalStateFault  :
+     * @throws RemoteException :
+     */
+    public void fail(URI taskId)
+            throws IllegalArgumentFault, IllegalOperationFault, IllegalAccessFault,
+                   IllegalStateFault, RemoteException {
+        String errMsg = "Error occurred while performing fail operation";
+        try {
+            stub.fail(taskId, null);
+        } catch (RemoteException e) {
+            log.error(errMsg, e);
+            throw e;
+        } catch (IllegalStateFault e) {
+            log.error(errMsg, e);
+            throw e;
+        } catch (IllegalOperationFault e) {
+            log.error(errMsg, e);
+            throw e;
+        } catch (IllegalArgumentFault e) {
+            log.error(errMsg, e);
+            throw e;
+        } catch (IllegalAccessFault e) {
+            log.error(errMsg, e);
+            throw e;
+        }
+
+    }
+
+    /**
+     * Task remove operation. Note: applicable for notifications only.
+     * @param taskId : The id of the task to be removed.
+     * @throws IllegalArgumentFault :
+     * @throws IllegalOperationFault  :
+     * @throws IllegalAccessFault  :
+     * @throws RemoteException   :
+     */
+    public void remove(URI taskId)
+            throws IllegalArgumentFault, IllegalOperationFault, IllegalAccessFault,
+                   RemoteException {
+        String errMsg = "Error occurred while performing resume operation";
+        try {
+            stub.remove(taskId);
+        } catch (RemoteException e) {
+            log.error(errMsg, e);
+            throw e;
+        } catch (IllegalOperationFault e) {
+            log.error(errMsg, e);
+            throw e;
+        } catch (IllegalArgumentFault e) {
             log.error(errMsg, e);
             throw e;
         } catch (IllegalAccessFault e) {

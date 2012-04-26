@@ -20,7 +20,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.humantask.core.dao.*;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
-import org.wso2.carbon.humantask.core.engine.util.OperationAuthorizationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +63,7 @@ public class Resume extends AbstractHumanTaskCommand {
     @Override
     protected void checkState() {
         TaskDAO task = getTask();
-        OrganizationalEntityDAO caller = getCaller();
+        OrganizationalEntityDAO caller = getOperationInvoker();
         if (!TaskStatus.SUSPENDED.equals(task.getStatus())) {
             String errMsg = String.format("User[%s] cannot [%s] task[%d] as the task is in state[%s]. " +
                     "Only tasks in [%s] state can be resumed!",

@@ -21,7 +21,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.humantask.core.dao.*;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
-import org.wso2.carbon.humantask.core.engine.util.OperationAuthorizationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +67,7 @@ public class Stop extends AbstractHumanTaskCommand {
 
             String errMsg = String.format("User[%s] cannot claim task[%d] as the task is in state[%s]. " +
                     "Only tasks in [%s] can be claimed!",
-                    getCaller().getName(), task.getId(),
+                    getOperationInvoker().getName(), task.getId(),
                     task.getStatus(), TaskStatus.IN_PROGRESS);
             log.error(errMsg);
             throw new HumanTaskRuntimeException(errMsg);

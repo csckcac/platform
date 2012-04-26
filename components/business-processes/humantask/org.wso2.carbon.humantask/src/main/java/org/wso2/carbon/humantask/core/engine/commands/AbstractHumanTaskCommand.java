@@ -52,7 +52,7 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
     /**
      * The caller of the operation.
      */
-    private OrganizationalEntityDAO caller;
+    private OrganizationalEntityDAO operationInvoker;
 
     /**
      * The task event related to this command.
@@ -67,8 +67,8 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
         return task;
     }
 
-    protected OrganizationalEntityDAO getCaller() {
-        return caller;
+    protected OrganizationalEntityDAO getOperationInvoker() {
+        return operationInvoker;
     }
 
     protected EventDAO getEvent() {
@@ -76,14 +76,14 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
     }
 
     /**
-     * @param callerId : The caller user id.
+     * @param invokerUserName : The user name of the operation invoker.
      * @param taskId   : The task id.
      */
-    public AbstractHumanTaskCommand(String callerId, Long taskId) {
+    public AbstractHumanTaskCommand(String invokerUserName, Long taskId) {
         engine = HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine();
-        validateCaller(callerId);
-        this.caller = engine.getDaoConnectionFactory().getConnection().
-                createNewOrgEntityObject(callerId, OrganizationalEntityDAO.OrganizationalEntityType.USER);
+        validateCaller(invokerUserName);
+        this.operationInvoker = engine.getDaoConnectionFactory().getConnection().
+                createNewOrgEntityObject(invokerUserName, OrganizationalEntityDAO.OrganizationalEntityType.USER);
         this.task = engine.getDaoConnectionFactory().getConnection().getTask(taskId);
 
         this.event = engine.getDaoConnectionFactory().getConnection().createNewEventObject(task);
@@ -93,7 +93,7 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
     private void validateCaller(String callerId) {
         if (StringUtils.isEmpty(callerId) || !engine.getPeopleQueryEvaluator().isExistingUser(callerId)) {
             String errMsg = String.format("The caller[name:%s] is not a valid user in the user store.",
-                    caller.getName());
+                    operationInvoker.getName());
             log.error(errMsg);
             throw new HumanTaskRuntimeException(errMsg);
         }
@@ -161,7 +161,7 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
         if (!expectedStatus.equals(task.getStatus())) {
             String errMsg = String.format("User[%s] cannot [%s] task[id:%d] as the task is in state[%s]. " +
                     "[%s] operation can be performed on tasks in state[%s]!",
-                    caller.getName(), this.getClass().getSimpleName(), task.getId(),
+                    operationInvoker.getName(), this.getClass().getSimpleName(), task.getId(),
                     task.getStatus(), this.getClass().getSimpleName(),
                     expectedStatus);
             log.error(errMsg);
@@ -180,7 +180,7 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
         if (!expectedStates.contains(task.getStatus())) {
             String errMsg = String.format("User[%s] cannot [%s] task[id:%d] as the task is in state[%s]. " +
                     "[%s] operation can be performed on tasks in states[%s]!",
-                    caller.getName(), this.getClass().getSimpleName(), task.getId(),
+                    operationInvoker.getName(), this.getClass().getSimpleName(), task.getId(),
                     task.getStatus(), this.getClass().getSimpleName(),
                     expectedStates);
             log.error(errMsg);
@@ -189,11 +189,11 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
     }
 
     protected void authoriseRoles(List<GenericHumanRoleDAO.GenericHumanRoleType> allowedRoles) {
-        if (!OperationAuthorizationUtil.authoriseUser(this.task, caller, allowedRoles,
+        if (!OperationAuthorizationUtil.authoriseUser(this.task, operationInvoker, allowedRoles,
                 engine.getPeopleQueryEvaluator())) {
             throw new HumanTaskRuntimeException(String.format("The user[%s] cannot perform [%s]" +
                     " operation as he is not in task roles[%s]",
-                    caller.getName(), this.getClass().getSimpleName(),
+                    operationInvoker.getName(), this.getClass().getSimpleName(),
                     allowedRoles));
         }
     }
@@ -231,7 +231,7 @@ public abstract class AbstractHumanTaskCommand implements HumanTaskCommand {
         event.setTask(task);
         //As the getClass method gives the run time class name we can directly set the operation type.
         event.setType(this.getClass().getSimpleName().toLowerCase());
-        event.setUser(caller.getName());
+        event.setUser(operationInvoker.getName());
         event.setNewState(task.getStatus());
         return event;
     }

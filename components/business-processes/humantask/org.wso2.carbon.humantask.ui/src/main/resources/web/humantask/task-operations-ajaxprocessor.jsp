@@ -87,6 +87,15 @@
                 String delegatee = request.getParameter("delegatee");
                 taskOperationsClient.delegate(new URI(taskId) , delegatee);
                 taskOperationJsonObject.put("TaskDelegated", "true");
+            } else if ("skip".equals(operation)) {
+                taskOperationsClient.skip(new URI(taskId));
+                taskOperationJsonObject.put("TaskSkipped", "true");
+            } else if ("fail".equals(operation)) {
+                taskOperationsClient.fail(new URI(taskId));
+                taskOperationJsonObject.put("TaskFailed", "true");
+            } else if ("remove".equals(operation)) {
+                taskOperationsClient.remove(new URI(taskId));
+                taskOperationJsonObject.put("TaskRemoved", "true");
             }
 
             taskOperationJson = taskOperationJsonObject.toJSONString();

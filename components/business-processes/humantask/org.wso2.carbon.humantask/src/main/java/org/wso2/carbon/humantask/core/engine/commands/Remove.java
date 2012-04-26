@@ -84,7 +84,7 @@ public class Remove extends AbstractHumanTaskCommand {
         authorise();
         checkState();
         task.remove();
-        task.persistEvent(createTaskEvent());
+        //task.persistEvent(createTaskEvent());
         checkPostConditions();
     }
 }

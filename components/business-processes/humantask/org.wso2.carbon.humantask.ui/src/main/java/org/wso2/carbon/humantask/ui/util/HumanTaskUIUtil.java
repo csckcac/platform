@@ -171,6 +171,7 @@ public final class HumanTaskUIUtil {
             taskAuthParamsJSON.put("authorisedToNominate", authParams.getAuthorisedToNominate());
             taskAuthParamsJSON.put("authorisedToRelease", authParams.getAuthorisedToRelease());
             taskAuthParamsJSON.put("authorisedToResume", authParams.getAuthorisedToResume());
+            taskAuthParamsJSON.put("authorisedToRemove", authParams.getAuthorisedToRemove());
             taskAuthParamsJSON.put("authorisedToSetFault", authParams.getAuthorisedToSetFault());
             taskAuthParamsJSON.put("authorisedToSetOutput", authParams.getAuthorisedToSetOutput());
             taskAuthParamsJSON.put("authorisedToSetPriority", authParams.getAuthorisedToSetPriority());

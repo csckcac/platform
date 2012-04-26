@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-//import java.util.jar.Attributes;
 
 @Stateful(mappedName = "LibraryManager")
 @Remote(LibraryManager.class)
@@ -51,8 +50,8 @@ public class LibraryManagerImpl implements LibraryManager {
         return library.keySet().contains(ISBN);
     }
 
-    public boolean addBook(Object book) {
-        Book newBook = (Book) book;
+    public boolean addBook(Book book) {
+        Book newBook = book;
         try {
             library.put(newBook.getISBN(), newBook);
         } catch (Exception e) {

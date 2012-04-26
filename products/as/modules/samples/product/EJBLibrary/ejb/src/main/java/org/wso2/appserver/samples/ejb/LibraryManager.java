@@ -41,5 +41,5 @@ public interface LibraryManager {
      * @param book - book to add
      * @return true if successfully added.
      */
-    public boolean addBook(Object book);
+    public boolean addBook(Book book);
 }

@@ -35,13 +35,15 @@ public class AuthenticateStub {
      */
     public static void authenticateStub(String sessionCookie, Stub stub) {
         long soTimeout = 5 * 60 * 1000; // Three minutes
-        
+
         ServiceClient client = stub._getServiceClient();
         Options option = client.getOptions();
         option.setManageSession(true);
         option.setTimeOutInMilliSeconds(soTimeout);
         option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, sessionCookie);
-        log.debug("AuthenticateStub : Stub created with session " + sessionCookie);
+        if (log.isDebugEnabled()) {
+            log.debug("AuthenticateStub : Stub created with session " + sessionCookie);
+        }
     }
 
 }

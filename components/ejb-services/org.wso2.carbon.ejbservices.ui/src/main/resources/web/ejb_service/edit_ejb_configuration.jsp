@@ -67,6 +67,14 @@
                     <table  class="carbonFormTable">
                         <tr>
                             <td class="leftCol-med labelField">
+                                <fmt:message key="service.name"/><span class="required">*</span>
+                            </td>
+                            <td class="labelField">
+                                <input name="serviceName" type="text" value="<%=serviceName%>" disabled="true" size="50">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="leftCol-med labelField">
                                 <fmt:message key="remote.interface.name"/><span class="required">*</span>
                             </td>
                             <td class="labelField">

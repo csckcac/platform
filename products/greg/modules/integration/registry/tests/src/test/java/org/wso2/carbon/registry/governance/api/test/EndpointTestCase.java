@@ -62,12 +62,12 @@ public class EndpointTestCase {
         endpoint1.addAttribute("status", "QA");
 
         endpointManager.addEndpoint(endpoint1);
-        Assert.assertEquals(endpoint1.getPath(),"/trunk/endpoints/localhost/papapa/ep-booom");
+        Assert.assertEquals(endpoint1.getPath(), "/trunk/endpoints/localhost/papapa/ep-booom");
 
         // now get the endpoint back.
         Endpoint endpoint2 = endpointManager.getEndpoint(endpoint1.getId());
-        Assert.assertEquals(endpoint2.getUrl(),"http://localhost/papapa/booom");
-        Assert.assertEquals(endpoint1.getAttribute("status"),"QA");
+        Assert.assertEquals(endpoint2.getUrl(), "http://localhost/papapa/booom");
+        Assert.assertEquals(endpoint1.getAttribute("status"), "QA");
 
         // so we will be deleting the endpoint
         endpointManager.removeEndpoint(endpoint2.getId());
@@ -86,11 +86,11 @@ public class EndpointTestCase {
         wsdlManager.addWsdl(wsdl);
 
         Endpoint[] endpoints = wsdl.getAttachedEndpoints();
-        Assert.assertEquals(endpoints.length,1);
+        Assert.assertEquals(endpoints.length, 1);
 
-        Assert.assertEquals(endpoints[0].getUrl(),"http://localhost:8080/axis2/services/BizService");
-        Assert.assertEquals(endpoints[0].getAttributeKeys().length,1);
-        Assert.assertEquals(endpoints[0].getAttribute(CommonConstants.SOAP11_ENDPOINT_ATTRIBUTE),"true");
+        Assert.assertEquals(endpoints[0].getUrl(), "http://localhost:8080/axis2/services/BizService");
+        Assert.assertEquals(endpoints[0].getAttributeKeys().length, 1);
+        Assert.assertEquals(endpoints[0].getAttribute(CommonConstants.SOAP11_ENDPOINT_ATTRIBUTE), "true");
 
         // now we are trying to remove the endpoint
         EndpointManager endpointManager = new EndpointManager(registry);
@@ -107,13 +107,13 @@ public class EndpointTestCase {
 
         ServiceManager serviceManager = new ServiceManager(registry);
 
-        for (GovernanceArtifact artifact: artifacts) {
+        for (GovernanceArtifact artifact : artifacts) {
             if (artifact instanceof Service) {
                 // getting the service.
-                Service service2 = (Service)artifact;
+                Service service2 = (Service) artifact;
                 serviceManager.removeService(service2.getId());
             }
-        }        
+        }
 
         // now try to remove the endpoint
         endpointManager.removeEndpoint(endpoints[0].getId());
@@ -131,17 +131,17 @@ public class EndpointTestCase {
         serviceManager.addService(service);
 
         Endpoint[] endpoints = service.getAttachedEndpoints();
-        Assert.assertEquals(endpoints.length,2);
+        Assert.assertEquals(endpoints.length, 2);
 
-        Assert.assertEquals(endpoints[0].getUrl(),"http://endpoint1");
-        Assert.assertEquals( endpoints[0].getAttributeKeys().length,0);
+        Assert.assertEquals(endpoints[0].getUrl(), "http://endpoint1");
+        Assert.assertEquals(endpoints[0].getAttributeKeys().length, 0);
 
-        Assert.assertEquals(endpoints[1].getUrl(),"http://endpoint2");
-        Assert.assertEquals( endpoints[1].getAttributeKeys().length,1);
-        Assert.assertEquals(endpoints[1].getAttribute(CommonConstants.ENDPOINT_ENVIRONMENT_ATTR),"QA");
+        Assert.assertEquals(endpoints[1].getUrl(), "http://endpoint2");
+        Assert.assertEquals(endpoints[1].getAttributeKeys().length, 1);
+        Assert.assertEquals(endpoints[1].getAttribute(CommonConstants.ENDPOINT_ENVIRONMENT_ATTR), "QA");
 
         // now update the endpoints in the service
-        service.setAttributes("endpoints_entry", new String[] {
+        service.setAttributes("endpoints_entry", new String[]{
                 "Dev:http://endpoint3",
                 "Production:http://endpoint4",
                 "QA:http://endpoint2",
@@ -150,20 +150,20 @@ public class EndpointTestCase {
 
         endpoints = getAttachedEndpointsFromService(service);
 //        endpoints = service.getAttachedEndpoints();
-        Assert.assertEquals(endpoints.length,3);
+        Assert.assertEquals(endpoints.length, 3);
 
 
-        Assert.assertEquals(endpoints[0].getUrl(),"http://endpoint3");
-        Assert.assertEquals( endpoints[0].getAttributeKeys().length,1);
-        Assert.assertEquals(endpoints[0].getAttribute(CommonConstants.ENDPOINT_ENVIRONMENT_ATTR),"Dev");
+        Assert.assertEquals(endpoints[0].getUrl(), "http://endpoint3");
+        Assert.assertEquals(endpoints[0].getAttributeKeys().length, 1);
+        Assert.assertEquals(endpoints[0].getAttribute(CommonConstants.ENDPOINT_ENVIRONMENT_ATTR), "Dev");
 
-        Assert.assertEquals(endpoints[1].getUrl(),"http://endpoint4");
-        Assert.assertEquals(endpoints[1].getAttributeKeys().length,1);
-        Assert.assertEquals(endpoints[1].getAttribute(CommonConstants.ENDPOINT_ENVIRONMENT_ATTR),"Production");
+        Assert.assertEquals(endpoints[1].getUrl(), "http://endpoint4");
+        Assert.assertEquals(endpoints[1].getAttributeKeys().length, 1);
+        Assert.assertEquals(endpoints[1].getAttribute(CommonConstants.ENDPOINT_ENVIRONMENT_ATTR), "Production");
 
-        Assert.assertEquals( endpoints[2].getUrl(),"http://endpoint2");
-        Assert.assertEquals(1, endpoints[2].getAttributeKeys().length,1);
-        Assert.assertEquals(endpoints[2].getAttribute(CommonConstants.ENDPOINT_ENVIRONMENT_ATTR),"QA");
+        Assert.assertEquals(endpoints[2].getUrl(), "http://endpoint2");
+        Assert.assertEquals(1, endpoints[2].getAttributeKeys().length, 1);
+        Assert.assertEquals(endpoints[2].getAttribute(CommonConstants.ENDPOINT_ENVIRONMENT_ATTR), "QA");
     }
 
     // add endpoints as attachments
@@ -185,51 +185,51 @@ public class EndpointTestCase {
         service.attachEndpoint(ep2);
 
         Endpoint[] endpoints = service.getAttachedEndpoints();
-        Assert.assertEquals(endpoints.length,2);
+        Assert.assertEquals(endpoints.length, 2);
 
-        Assert.assertEquals( endpoints[0].getUrl(),"http://endpoint1xx");
-        Assert.assertEquals(endpoints[0].getAttributeKeys().length,0);
+        Assert.assertEquals(endpoints[0].getUrl(), "http://endpoint1xx");
+        Assert.assertEquals(endpoints[0].getAttributeKeys().length, 0);
 
-        Assert.assertEquals( endpoints[1].getUrl(),"http://endpoint2xx");
-        Assert.assertEquals( endpoints[1].getAttributeKeys().length,1);
-        Assert.assertEquals(endpoints[1].getAttribute(CommonConstants.ENDPOINT_ENVIRONMENT_ATTR),"QA");
+        Assert.assertEquals(endpoints[1].getUrl(), "http://endpoint2xx");
+        Assert.assertEquals(endpoints[1].getAttributeKeys().length, 1);
+        Assert.assertEquals(endpoints[1].getAttribute(CommonConstants.ENDPOINT_ENVIRONMENT_ATTR), "QA");
 
         service.detachEndpoint(ep1.getId());
         endpoints = service.getAttachedEndpoints();
-        Assert.assertEquals(endpoints.length,1);
-        
-        Assert.assertEquals(endpoints[0].getUrl(),"http://endpoint2xx");
-        Assert.assertEquals(endpoints[0].getAttributeKeys().length,1);
-        Assert.assertEquals(endpoints[0].getAttribute(CommonConstants.ENDPOINT_ENVIRONMENT_ATTR),"QA");
+        Assert.assertEquals(endpoints.length, 1);
+
+        Assert.assertEquals(endpoints[0].getUrl(), "http://endpoint2xx");
+        Assert.assertEquals(endpoints[0].getAttributeKeys().length, 1);
+        Assert.assertEquals(endpoints[0].getAttribute(CommonConstants.ENDPOINT_ENVIRONMENT_ATTR), "QA");
 
 
         // now update the endpoints in the service
-        service.setAttributes("endpoints_entry", new String[] {
+        service.setAttributes("endpoints_entry", new String[]{
                 "Dev:http://endpoint3",
                 "Production:http://endpoint4",
                 "QA:http://endpoint2xx",
         });
         serviceManager.updateService(service);
 
-       endpoints = getAttachedEndpointsFromService(service);
+        endpoints = getAttachedEndpointsFromService(service);
 //        endpoints = service.getAttachedEndpoints();
-        Assert.assertEquals( endpoints.length,3);
+        Assert.assertEquals(endpoints.length, 3);
 
 
-        Assert.assertEquals( endpoints[0].getUrl(),"http://endpoint3");
-        Assert.assertEquals( endpoints[0].getAttributeKeys().length,1);
-        Assert.assertEquals(endpoints[0].getAttribute(CommonConstants.ENDPOINT_ENVIRONMENT_ATTR),"Dev");
+        Assert.assertEquals(endpoints[0].getUrl(), "http://endpoint3");
+        Assert.assertEquals(endpoints[0].getAttributeKeys().length, 1);
+        Assert.assertEquals(endpoints[0].getAttribute(CommonConstants.ENDPOINT_ENVIRONMENT_ATTR), "Dev");
 
-        Assert.assertEquals(endpoints[1].getUrl(),"http://endpoint4");
-        Assert.assertEquals( endpoints[1].getAttributeKeys().length,1);
-        Assert.assertEquals(endpoints[1].getAttribute(CommonConstants.ENDPOINT_ENVIRONMENT_ATTR),"Production");
+        Assert.assertEquals(endpoints[1].getUrl(), "http://endpoint4");
+        Assert.assertEquals(endpoints[1].getAttributeKeys().length, 1);
+        Assert.assertEquals(endpoints[1].getAttribute(CommonConstants.ENDPOINT_ENVIRONMENT_ATTR), "Production");
 
-        Assert.assertEquals(endpoints[2].getUrl(),"http://endpoint2xx");
-        Assert.assertEquals(endpoints[2].getAttributeKeys().length,1);
-        Assert.assertEquals(endpoints[2].getAttribute(CommonConstants.ENDPOINT_ENVIRONMENT_ATTR),"QA");
+        Assert.assertEquals(endpoints[2].getUrl(), "http://endpoint2xx");
+        Assert.assertEquals(endpoints[2].getAttributeKeys().length, 1);
+        Assert.assertEquals(endpoints[2].getAttribute(CommonConstants.ENDPOINT_ENVIRONMENT_ATTR), "QA");
 
         Endpoint ep5 = endpointManager.getEndpointByUrl("http://endpoint2");
-        Assert.assertEquals(ep5.getAttribute(CommonConstants.ENDPOINT_ENVIRONMENT_ATTR),"QA");
+        Assert.assertEquals(ep5.getAttribute(CommonConstants.ENDPOINT_ENVIRONMENT_ATTR), "QA");
     }
 
     @Test(groups = {"wso2.greg"})
@@ -247,16 +247,16 @@ public class EndpointTestCase {
         // retrieve the service
         Service service2 = serviceManager.getService(service.getId());
         Endpoint[] endpoints = service2.getAttachedEndpoints();
-        Assert.assertEquals( endpoints.length,1);
+        Assert.assertEquals(endpoints.length, 1);
 
-        Assert.assertEquals( service2.getAttribute("endpoints_entry"),":" + endpoints[0].getUrl());
+        Assert.assertEquals(service2.getAttribute("endpoints_entry"), ":" + endpoints[0].getUrl());
     }
 
 
     public void testServiceAddingEndpointsWithWsdl() throws Exception {
         File file = new File("src/test/resources/service.metadata.xml");
         FileInputStream fileInputStream = new FileInputStream(file);
-        byte[] fileContents = new byte[(int)file.length()];
+        byte[] fileContents = new byte[(int) file.length()];
         fileInputStream.read(fileContents);
 
         OMElement contentElement = GovernanceUtils.buildOMElement(fileContents);
@@ -271,7 +271,7 @@ public class EndpointTestCase {
         // so retrieve it back
         String serviceId = service.getId();
         Service newService = serviceManager.getService(serviceId);
-        Assert.assertEquals(newService.getAttribute("custom-attribute"),  "custom-value");
+        Assert.assertEquals(newService.getAttribute("custom-attribute"), "custom-value");
         Assert.assertEquals(newService.getAttribute("endpoints_entry"),
                 ":http://localhost:8080/axis2/services/BizService");
 
@@ -284,13 +284,13 @@ public class EndpointTestCase {
 
         GovernanceArtifact[] artifacts = wsdl.getDependents();
 
-        for (GovernanceArtifact artifact: artifacts) {
+        for (GovernanceArtifact artifact : artifacts) {
             if (artifact instanceof Service) {
                 // getting the service.
-                Service service2 = (Service)artifact;
+                Service service2 = (Service) artifact;
                 Endpoint[] endpoints = service2.getAttachedEndpoints();
-                Assert.assertEquals(endpoints.length,1);
-                Assert.assertEquals(endpoints[0].getUrl(),"http://localhost:8080/axis2/services/BizService-my-changes");
+                Assert.assertEquals(endpoints.length, 1);
+                Assert.assertEquals(endpoints[0].getUrl(), "http://localhost:8080/axis2/services/BizService-my-changes");
             }
         }
     }
@@ -313,14 +313,14 @@ public class EndpointTestCase {
         service.attachEndpoint(ep2);
 
         Endpoint[] endpoints = service.getAttachedEndpoints();
-        Assert.assertEquals( endpoints.length,2);
+        Assert.assertEquals(endpoints.length, 2);
 
         // get the updated service endpoints
         service = serviceManager.getService(service.getId());
 
         String[] endpointValues = service.getAttributes("endpoints_entry");
 
-        Assert.assertEquals( endpointValues.length,2);
+        Assert.assertEquals(endpointValues.length, 2);
     }
 
     // add non http endpoints as attachments
@@ -341,38 +341,38 @@ public class EndpointTestCase {
         service.attachEndpoint(ep2);
 
         Endpoint[] endpoints = service.getAttachedEndpoints();
-        Assert.assertEquals( endpoints.length,2);
+        Assert.assertEquals(endpoints.length, 2);
 
         // get the updated service endpoints
         service = serviceManager.getService(service.getId());
 
         String[] endpointValues = service.getAttributes("endpoints_entry");
 
-        Assert.assertEquals( endpointValues.length,2);
+        Assert.assertEquals(endpointValues.length, 2);
     }
 
-    private  Endpoint[] getAttachedEndpointsFromService(Service service) throws
+    private Endpoint[] getAttachedEndpointsFromService(Service service) throws
             GovernanceException {
-        List<Endpoint> endpoints =new ArrayList<Endpoint>();
+        List<Endpoint> endpoints = new ArrayList<Endpoint>();
         try {
             String[] endpointValues = service.getAttributes("endpoints_entry");
             EndpointManager endpointManager = new EndpointManager(registry);
-            for(String ep:endpointValues) {
+            for (String ep : endpointValues) {
                 endpoints.add(endpointManager.getEndpointByUrl(getFilteredEPURL(ep)));
             }
         } catch (GovernanceException e) {
             throw new GovernanceException("Exception occurred while geting endpoints ");
         }
-     return endpoints.toArray(new Endpoint[endpoints.size()]);
+        return endpoints.toArray(new Endpoint[endpoints.size()]);
     }
 
-    private String getFilteredEPURL(String ep){
+    private String getFilteredEPURL(String ep) {
 //        Dev:http://endpoint3
-      if(!ep.startsWith("http")){
-      return ep.substring(ep.indexOf(":") + 1, ep.length());
-      } else {
-       return ep;
-      }
+        if (!ep.startsWith("http")) {
+            return ep.substring(ep.indexOf(":") + 1, ep.length());
+        } else {
+            return ep;
+        }
     }
 
 }

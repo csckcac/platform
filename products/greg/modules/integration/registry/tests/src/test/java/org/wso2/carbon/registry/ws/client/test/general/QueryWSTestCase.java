@@ -72,9 +72,9 @@ public class QueryWSTestCase extends TestSetup {
             e.printStackTrace();
         }
 
-        assertEquals(sql, new String((byte[]) r1.getContent()), "File content is not matching");
+        assertEquals(new String((byte[]) r1.getContent()), sql, "File content is not matching");
 
-        assertEquals(RegistryConstants.SQL_QUERY_MEDIA_TYPE, r1.getMediaType(), "Media type doesn't match");
+        assertEquals(r1.getMediaType(), RegistryConstants.SQL_QUERY_MEDIA_TYPE, "Media type doesn't match");
         assertEquals(RegistryConstants.SQL_QUERY_MEDIA_TYPE, "application/vnd.sql.query", "Media type doesn't match");
 
         try {

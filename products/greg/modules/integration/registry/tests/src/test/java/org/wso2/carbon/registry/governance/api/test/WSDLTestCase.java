@@ -58,9 +58,9 @@ public class WSDLTestCase {
         wsdlManager.addWsdl(wsdl);
 
         Wsdl newWsdl = wsdlManager.getWsdl(wsdl.getId());
-        Assert.assertEquals( newWsdl.getWsdlElement().toString(),wsdl.getWsdlElement().toString());
-        Assert.assertEquals(newWsdl.getAttribute("creator"),"it is me");
-        Assert.assertEquals(newWsdl.getAttribute("version"),"0.01");
+        Assert.assertEquals(newWsdl.getWsdlElement().toString(), wsdl.getWsdlElement().toString());
+        Assert.assertEquals(newWsdl.getAttribute("creator"), "it is me");
+        Assert.assertEquals(newWsdl.getAttribute("version"), "0.01");
 
         // change the target namespace and check
         String oldWSDLPath = newWsdl.getPath();
@@ -72,18 +72,18 @@ public class WSDLTestCase {
         wsdlElement.declareNamespace("http://ww2.wso2.org/test", "tns");
         wsdlManager.updateWsdl(newWsdl);
 
-        Assert.assertEquals(newWsdl.getPath(),"/trunk/wsdls/org/wso2/ww2/test/BizService.wsdl");
+        Assert.assertEquals(newWsdl.getPath(), "/trunk/wsdls/org/wso2/ww2/test/BizService.wsdl");
         //assertFalse(registry.resourceExists("/wsdls/http/foo/com/BizService.wsdl"));
 
         // doing an update without changing anything.
         wsdlManager.updateWsdl(newWsdl);
 
-        Assert.assertEquals(newWsdl.getPath(),"/trunk/wsdls/org/wso2/ww2/test/BizService.wsdl");
-        Assert.assertEquals( newWsdl.getAttribute("version"),"0.01");
+        Assert.assertEquals(newWsdl.getPath(), "/trunk/wsdls/org/wso2/ww2/test/BizService.wsdl");
+        Assert.assertEquals(newWsdl.getAttribute("version"), "0.01");
 
         newWsdl = wsdlManager.getWsdl(wsdl.getId());
-        Assert.assertEquals(newWsdl.getAttribute("creator"),"it is me");
-        Assert.assertEquals(newWsdl.getAttribute("version"),"0.01");
+        Assert.assertEquals(newWsdl.getAttribute("creator"), "it is me");
+        Assert.assertEquals(newWsdl.getAttribute("version"), "0.01");
 
         // adding a new schema to the wsdl.
         wsdlElement = newWsdl.getWsdlElement();
@@ -101,13 +101,13 @@ public class WSDLTestCase {
         wsdlManager.updateWsdl(newWsdl);
 
         Schema[] schemas = newWsdl.getAttachedSchemas();
-        Assert.assertEquals(schemas[schemas.length - 1].getPath(),"/trunk/schemas/org/bar/purchasing_dup/purchasing_dup.xsd");
+        Assert.assertEquals(schemas[schemas.length - 1].getPath(), "/trunk/schemas/org/bar/purchasing_dup/purchasing_dup.xsd");
 
 
         Wsdl[] wsdls = wsdlManager.findWsdls(new WsdlFilter() {
             public boolean matches(Wsdl wsdl) throws GovernanceException {
                 Schema[] schemas = wsdl.getAttachedSchemas();
-                for (Schema schema: schemas) {
+                for (Schema schema : schemas) {
                     if (schema.getPath().equals("/trunk/schemas/org/bar/purchasing_dup/purchasing_dup.xsd")) {
                         return true;
                     }
@@ -115,7 +115,7 @@ public class WSDLTestCase {
                 return false;
             }
         });
-        Assert.assertEquals( wsdls.length,1);
+        Assert.assertEquals(wsdls.length, 1);
         Assert.assertEquals(newWsdl.getId(), wsdls[0].getId());
 
         // deleting the wsdl
@@ -132,7 +132,7 @@ public class WSDLTestCase {
         // and delete the wsdl
         wsdlManager.removeWsdl(anotherWsdl.getId());
         Assert.assertNull(wsdlManager.getWsdl(anotherWsdl.getId()));
-         
+
     }
 
     @Test(groups = {"wso2.greg"})
@@ -155,16 +155,16 @@ public class WSDLTestCase {
 
         // now get the wsdl and check the update is there.
         Wsdl wsdl2 = wsdlManager.getWsdl(wsdl.getId());
-        Assert.assertEquals( wsdl2.getAttribute("creator2"),"it is me");
-        Assert.assertEquals( wsdl2.getAttribute("version2"),"0.01");
+        Assert.assertEquals(wsdl2.getAttribute("creator2"), "it is me");
+        Assert.assertEquals(wsdl2.getAttribute("version2"), "0.01");
         OMElement contentElement2 = wsdl.getWsdlElement();
         OMElement addressElement2 = evaluateXPathToElement("//soap:address", contentElement2);
 
-        Assert.assertEquals(addressElement2.getAttributeValue(new QName("location")),"http://my-custom-endpoint/hoooo");
+        Assert.assertEquals(addressElement2.getAttributeValue(new QName("location")), "http://my-custom-endpoint/hoooo");
     }
 
     private static OMElement evaluateXPathToElement(String expression,
-                                                           OMElement root) throws Exception {
+                                                    OMElement root) throws Exception {
         List<OMElement> nodes = GovernanceUtils.evaluateXPathToElements(expression, root);
         if (nodes == null || nodes.size() == 0) {
             return null;

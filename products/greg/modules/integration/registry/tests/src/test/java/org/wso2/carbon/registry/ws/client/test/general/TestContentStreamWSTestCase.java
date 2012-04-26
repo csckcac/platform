@@ -64,8 +64,8 @@ public class TestContentStreamWSTestCase extends TestSetup {
 
         Resource r2 = registry.get(registryPath);
 
-        assertEquals(new String((byte[]) resource.getContent()),
-                new String((byte[]) r2.getContent()), "File content is not matching");
+        assertEquals(new String((byte[]) r2.getContent()),
+                new String((byte[]) resource.getContent()), "File content is not matching");
 
     }
 
@@ -90,13 +90,13 @@ public class TestContentStreamWSTestCase extends TestSetup {
 
         Resource r4 = registry.get("/content/stream/content.txt");
 
-        assertEquals(new String((byte[]) r3.getContent()),
-                new String((byte[]) r4.getContent()), "Content is not equal.");
+        assertEquals(new String((byte[]) r4.getContent()),
+                new String((byte[]) r3.getContent()), "Content is not equal.");
 
         InputStream isTest = r4.getContentStream();
 
-        assertEquals(new String((byte[]) r3.getContent()),
-                convertStreamToString(isTest), "Content stream is not equal.");
+        assertEquals(convertStreamToString(isTest),
+                new String((byte[]) r3.getContent()), "Content stream is not equal.");
 
         r3.discard();
     }
@@ -123,8 +123,8 @@ public class TestContentStreamWSTestCase extends TestSetup {
 
         Resource r2 = registry.get(registryPath);
 
-        assertEquals(new String((byte[]) resource.getContent()),
-                new String((byte[]) r2.getContent()), "File content is not matching");
+        assertEquals(new String((byte[]) r2.getContent()),
+                new String((byte[]) resource.getContent()), "File content is not matching");
 
     }
 

@@ -52,7 +52,7 @@ public class VersionHandlingTestCase {
         //registry.createVersion("/version/r1");
 
         String[] r1Versions = registry.getVersions("/version/r1");
-        assertEquals(r1Versions.length,1, "/version/r1 should have 1 version.");
+        assertEquals(r1Versions.length, 1, "/version/r1 should have 1 version.");
 //        assertTrue("Resource should have atleaset 1 version.", FileSystemImportExportTestCase.versionCount(r1Versions));
 
         Resource r1v2 = registry.get("/version/r1");
@@ -196,7 +196,7 @@ public class VersionHandlingTestCase {
 
         Resource r1r1 = registry.get("/test/v10/r1");
 
-        assertEquals(new String((byte[]) r1r1.getContent()),"content 1",
+        assertEquals(new String((byte[]) r1r1.getContent()), "content 1",
                 "Restored resource should have content 'content 1'");
         clearResource("/test/v10/r1");
 
@@ -228,7 +228,7 @@ public class VersionHandlingTestCase {
 
         registry.restoreVersion(c1Versions[2]);
         Collection c1r1 = (Collection) registry.get("/test/v11/c1");
-        assertEquals( c1r1.getChildren().length,0, "version 1 of c1 should not have any children");
+        assertEquals(c1r1.getChildren().length, 0, "version 1 of c1 should not have any children");
 
         try {
             registry.get("/test/v11/c1/r1");
@@ -244,7 +244,7 @@ public class VersionHandlingTestCase {
 
         registry.restoreVersion(c1Versions[1]);
         Collection c1r2 = (Collection) registry.get("/test/v11/c1");
-        assertEquals( c1r2.getChildren().length,1, "version 2 of c1 should have 1 child");
+        assertEquals(c1r2.getChildren().length, 1, "version 2 of c1 should have 1 child");
 
         try {
             registry.get("/test/v11/c1/r1");
@@ -261,7 +261,7 @@ public class VersionHandlingTestCase {
 
         registry.restoreVersion(c1Versions[0]);
         Collection c1r3 = (Collection) registry.get("/test/v11/c1");
-        assertEquals( c1r3.getChildren().length,2, "version 3 of c1 should have 2 children");
+        assertEquals(c1r3.getChildren().length, 2, "version 3 of c1 should have 2 children");
 
         try {
             registry.get("/test/v11/c1/r1");

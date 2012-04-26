@@ -65,25 +65,25 @@ public class CommentWSTestCase extends TestSetup {
             if (comment.getText().equals(comment1)) {
                 commentFound = true;
                 //System.out.println(comment.getPath());
-                assertEquals(comment1, comment.getText());
-                assertEquals("admin", comment.getUser());
-                assertEquals(path, comment.getResourcePath());
+                assertEquals(comment.getText(), comment1);
+                assertEquals(comment.getUser(), "admin");
+                assertEquals(comment.getResourcePath(), path);
                 //System.out.println(comment.getPath());
                 //break;
             }
 
             if (comment.getText().equals(comment2)) {
                 commentFound = true;
-                assertEquals(comment2, comment.getText());
-                assertEquals("admin", comment.getUser());
-                assertEquals(path, comment.getResourcePath());
+                assertEquals(comment.getText(), comment2);
+                assertEquals(comment.getUser(), "admin");
+                assertEquals(comment.getResourcePath(), path);
                 //break;
             }
 
             if (comment.getText().equals("This is default comment")) {
                 commentFound = true;
-                assertEquals("This is default comment", comment.getText());
-                assertEquals("admin", comment.getUser());
+                assertEquals(comment.getText(), "This is default comment");
+                assertEquals(comment.getUser(), "admin");
                 //break;
             }
         }
@@ -432,7 +432,7 @@ public class CommentWSTestCase extends TestSetup {
             comments = registry.getComments("/c101/c11/r1");
 //            System.out.println(comments);
             Resource resource = registry.get(comments[0].getPath());
-            assertEquals("This is the edited comment", resource.getContent());
+            assertEquals(resource.getContent(), "This is the edited comment");
         } catch (RegistryException e) {
             e.printStackTrace();
             fail("Failed to get comments form URL:/c101/c11/r1;comments");
@@ -476,7 +476,7 @@ public class CommentWSTestCase extends TestSetup {
 
         Comment[] comments1 = registry.getComments(r1Path);
 
-        assertEquals(2, comments1.length, "There should be two comments.");
+        assertEquals(comments1.length, 2, "There should be two comments.");
 
         String[] cTexts1 = {comments1[0].getText(), comments1[1].getText()};
 
@@ -487,7 +487,7 @@ public class CommentWSTestCase extends TestSetup {
 
         Comment[] comments2 = registry.getComments(r1Path);
 
-        assertEquals(1, comments2.length, "There should be one comment.");
+        assertEquals(comments2.length, 1, "There should be one comment.");
 
         String[] cTexts2 = {comments2[0].getText()};
 

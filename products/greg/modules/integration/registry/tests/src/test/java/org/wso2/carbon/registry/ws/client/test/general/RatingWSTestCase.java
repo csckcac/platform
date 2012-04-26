@@ -29,7 +29,7 @@ public class RatingWSTestCase extends TestSetup {
 
 
     @BeforeClass(groups = {"wso2.greg"})
-    public void initTest() {
+    public void initTassertEest() {
         super.init();
     }
 
@@ -73,7 +73,7 @@ public class RatingWSTestCase extends TestSetup {
         float rating = registry.getAverageRating("/d61/d17/d18/r1");
 
 
-        assertEquals((float) 5.0, rating, (float) 0.01, "Rating of the resource /d61/d17/d18/r1 should be 5.");
+        assertEquals(rating, (float) 5.0, (float) 0.01, "Rating of the resource /d61/d17/d18/r1 should be 5.");
 
         /*rate the same resource again*/
 
@@ -81,7 +81,7 @@ public class RatingWSTestCase extends TestSetup {
 
         float rating_edit = registry.getAverageRating("/d61/d17/d18/r1");
 
-        assertEquals((float) 3.0, rating_edit, (float) 0.01,
+        assertEquals(rating_edit, (float) 3.0, (float) 0.01,
                 "Rating of the resource /d61/d17/d18/r1 should be 3.");
     }
 

@@ -83,7 +83,7 @@ public class ServiceTestCase {
     public void testServiceSearch() throws Exception {
         File file = new File(configPath);
         FileInputStream fileInputStream = new FileInputStream(file);
-        byte[] fileContents = new byte[(int)file.length()];
+        byte[] fileContents = new byte[(int) file.length()];
         fileInputStream.read(fileContents);
 
         OMElement contentElement = GovernanceUtils.buildOMElement(fileContents);
@@ -102,17 +102,17 @@ public class ServiceTestCase {
         Assert.assertEquals(newService.getAttribute("custom-attribute"), "custom-value");
         Assert.assertEquals(newService.getAttribute("interface_wsdlURL"),
                 "/_system/governance/trunk/wsdls/com/foo/abc.wsdl");
-        Assert.assertEquals(newService.getQName(),service.getQName());
+        Assert.assertEquals(newService.getQName(), service.getQName());
 
         Service service2 = serviceManager.newService(new QName("http://baps.paps.mug/done", "meep"));
         service2.addAttribute("custom-attribute", "custom-value2");
         serviceManager.addService(service2);
 
-        Service service3 =  serviceManager.newService(new QName("http://baps.paps.mug/jug", "peem"));
+        Service service3 = serviceManager.newService(new QName("http://baps.paps.mug/jug", "peem"));
         service3.addAttribute("custom-attribute", "not-custom-value");
         serviceManager.addService(service3);
 
-        Service service4 =  serviceManager.newService(new QName("http://baps.dadan.mug/jug", "doon"));
+        Service service4 = serviceManager.newService(new QName("http://baps.dadan.mug/jug", "doon"));
         service4.addAttribute("not-custom-attribute", "custom-value3");
         serviceManager.addService(service4);
 
@@ -164,7 +164,7 @@ public class ServiceTestCase {
         WsdlManager wsdlManager = new WsdlManager(registry);
 
         Wsdl wsdl = wsdlManager.newWsdl("http://svn.wso2.org/repos/wso2/trunk/graphite/components/governance/org.wso2.carbon.governance.api/src/test/resources/test-resources/wsdl/BizService.wsdl");
-         wsdlManager.addWsdl(wsdl);
+        wsdlManager.addWsdl(wsdl);
 
         ServiceManager serviceManager = new ServiceManager(registry);
         Service service = serviceManager.newService(new QName("http://test/org/bang", "myservice"));
@@ -201,7 +201,7 @@ public class ServiceTestCase {
 
         File file = new File(configPath);
         FileInputStream fileInputStream = new FileInputStream(file);
-        byte[] fileContents = new byte[(int)file.length()];
+        byte[] fileContents = new byte[(int) file.length()];
         fileInputStream.read(fileContents);
 
         OMElement contentElement = GovernanceUtils.buildOMElement(fileContents);
@@ -210,7 +210,7 @@ public class ServiceTestCase {
         //serviceManager.addService(service);
 
         String[] serviceIds = serviceManager.getAllServiceIds();
-        for (String serviceId: serviceIds) {
+        for (String serviceId : serviceIds) {
             Service servicex = serviceManager.getService(serviceId);
             Policy[] policiesx = servicex.getAttachedPolicies();
             if (policiesx != null && policiesx.length != 0) {
@@ -234,13 +234,13 @@ public class ServiceTestCase {
         QName qname = exactServiceCopy.getQName();
 
         Assert.assertEquals(new QName("http://doc.x.ge/yong", "almdo"), qname);
-        Assert.assertEquals( exactServiceCopy.getPath(),"/trunk/services/ge/x/doc/yong/almdo");
+        Assert.assertEquals(exactServiceCopy.getPath(), "/trunk/services/ge/x/doc/yong/almdo");
 
 
         // doing the same for a meta data service
         File file = new File(configPath);
         FileInputStream fileInputStream = new FileInputStream(file);
-        byte[] fileContents = new byte[(int)file.length()];
+        byte[] fileContents = new byte[(int) file.length()];
         fileInputStream.read(fileContents);
 
         OMElement contentElement = GovernanceUtils.buildOMElement(fileContents);
@@ -254,9 +254,9 @@ public class ServiceTestCase {
         exactServiceCopy = serviceManager.getService(service.getId());
         qname = exactServiceCopy.getQName();
 
-        Assert.assertEquals(qname,new QName("http://doc.x.ge/yong", "almdo"));
-        Assert.assertEquals( exactServiceCopy.getPath(),"/trunk/services/ge/x/doc/yong/almdo");
-                
+        Assert.assertEquals(qname, new QName("http://doc.x.ge/yong", "almdo"));
+        Assert.assertEquals(exactServiceCopy.getPath(), "/trunk/services/ge/x/doc/yong/almdo");
+
     }
 
     @Test(groups = {"wso2.greg"})

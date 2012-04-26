@@ -56,9 +56,9 @@ public class SchemaTestCase {
         schemaManager.addSchema(schema);
 
         Schema newSchema = schemaManager.getSchema(schema.getId());
-        Assert.assertEquals(newSchema.getSchemaElement().toString(),schema.getSchemaElement().toString());
-        Assert.assertEquals(newSchema.getAttribute("creator"),"it is me");
-        Assert.assertEquals(newSchema.getAttribute("version"),"0.01");
+        Assert.assertEquals(newSchema.getSchemaElement().toString(), schema.getSchemaElement().toString());
+        Assert.assertEquals(newSchema.getAttribute("creator"), "it is me");
+        Assert.assertEquals(newSchema.getAttribute("version"), "0.01");
 
         // change the target namespace and check
         String oldSchemaPath = newSchema.getPath();
@@ -70,30 +70,30 @@ public class SchemaTestCase {
         schemaElement.declareNamespace("http://ww2.wso2.org/schema-test", "tns");
         schemaManager.updateSchema(newSchema);
 
-        Assert.assertEquals(newSchema.getPath(),"/trunk/schemas/org/wso2/ww2/schema_test/purchasing.xsd");
+        Assert.assertEquals(newSchema.getPath(), "/trunk/schemas/org/wso2/ww2/schema_test/purchasing.xsd");
         Assert.assertFalse(registry.resourceExists("/trunk/test_schemas/org/bar/purchasing.xsd"));
 
         // doing an update without changing anything.
         schemaManager.updateSchema(newSchema);
 
-        Assert.assertEquals(newSchema.getPath(),"/trunk/schemas/org/wso2/ww2/schema_test/purchasing.xsd");
-        Assert.assertEquals(newSchema.getAttribute("version"),"0.01");
+        Assert.assertEquals(newSchema.getPath(), "/trunk/schemas/org/wso2/ww2/schema_test/purchasing.xsd");
+        Assert.assertEquals(newSchema.getAttribute("version"), "0.01");
 
         newSchema = schemaManager.getSchema(schema.getId());
-        Assert.assertEquals( newSchema.getAttribute("creator"),"it is me");
-        Assert.assertEquals(newSchema.getAttribute("version"),"0.01");
+        Assert.assertEquals(newSchema.getAttribute("creator"), "it is me");
+        Assert.assertEquals(newSchema.getAttribute("version"), "0.01");
 
         Schema[] schemas = schemaManager.findSchemas(new SchemaFilter() {
             public boolean matches(Schema schema) throws GovernanceException {
                 if (schema.getAttribute("version").equals("0.01")) {
-                    System.out.println(">>>>> "+ schema.getQName().toString());
+                    System.out.println(">>>>> " + schema.getQName().toString());
                     return true;
                 }
                 return false;
             }
         });
-        System.out.println(">>>>> Schema Len:"+schemas.length);
-        Assert.assertEquals(schemas.length,2);
+        System.out.println(">>>>> Schema Len:" + schemas.length);
+        Assert.assertEquals(schemas.length, 2);
         Assert.assertEquals(newSchema.getId(), schemas[0].getId());
 
         // deleting the schema
@@ -124,8 +124,8 @@ public class SchemaTestCase {
         Schema newSchema = schemaManager.getSchema(schema.getId());
         Assert.assertEquals(newSchema.getSchemaElement().toString(),
                 schema.getSchemaElement().toString());
-        Assert.assertEquals(newSchema.getAttribute("creator"),"it is me");
-        Assert.assertEquals(newSchema.getAttribute("version"),"0.01");
+        Assert.assertEquals(newSchema.getAttribute("creator"), "it is me");
+        Assert.assertEquals(newSchema.getAttribute("version"), "0.01");
 
         // change the target namespace and check
         String oldSchemaPath = newSchema.getPath();
@@ -155,12 +155,12 @@ public class SchemaTestCase {
         Schema newSchema = schemaManager.getSchema(schema.getId());
         Assert.assertEquals(newSchema.getSchemaElement().toString(),
                 schema.getSchemaElement().toString());
-        Assert.assertEquals(newSchema.getAttribute("creator"),"it is me");
-        Assert.assertEquals(newSchema.getAttribute("version"),"0.01");
+        Assert.assertEquals(newSchema.getAttribute("creator"), "it is me");
+        Assert.assertEquals(newSchema.getAttribute("version"), "0.01");
 
         // change the target namespace and check
         String oldSchemaPath = newSchema.getPath();
-        Assert.assertEquals(oldSchemaPath,"/trunk/schemas/org/bar/purchasing/" + schema.getId() + ".xsd");
+        Assert.assertEquals(oldSchemaPath, "/trunk/schemas/org/bar/purchasing/" + schema.getId() + ".xsd");
         Assert.assertTrue(
                 registry.resourceExists("/trunk/schemas/org/bar/purchasing/" + schema.getId() + ".xsd"));
     }

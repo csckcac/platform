@@ -136,9 +136,9 @@ public class GovernanceRegistrySmokeTestCase {
     public void runSymbolicLinkTests3() {
         try {
             invokeResourceAndCollectionScenariosForLinks(
-                    "/TestAutomation/SmokeTestCollectionActual3", 
+                    "/TestAutomation/SmokeTestCollectionActual3",
                     "/TestAutomation/SmokeTestResourceActual3.txt",
-                    "/TestAutomation/SmokeTestCollectionLink3", 
+                    "/TestAutomation/SmokeTestCollectionLink3",
                     "/TestAutomation/SmokeTestResourceLink3.txt");
 
         } catch (Exception e) {
@@ -160,9 +160,9 @@ public class GovernanceRegistrySmokeTestCase {
     }
 
     private void invokeResourceAndCollectionScenariosForLinks(String smokeTestCollection,
-                                                      String smokeTestResource, 
-                                                      String smokeTestCollectionLink,
-                                                      String smokeTestResourceLink)
+                                                              String smokeTestResource,
+                                                              String smokeTestCollectionLink,
+                                                              String smokeTestResourceLink)
             throws RemoteException, ResourceAdminServiceExceptionException, MalformedURLException,
             AddAssociationRegistryExceptionException, GetAssociationTreeRegistryExceptionException,
             RegistryExceptionException, CustomLifecyclesChecklistAdminServiceExceptionException,
@@ -259,14 +259,14 @@ public class GovernanceRegistrySmokeTestCase {
     }
 
     private void smokeTestPropertiesWithComparison(String smokeTestCollection,
-                                                          String smokeTestResource,
-                                                          String smokeTestCollectionVerify,
-                                                          String smokeTestResourceVerify)
+                                                   String smokeTestResource,
+                                                   String smokeTestCollectionVerify,
+                                                   String smokeTestResourceVerify)
             throws RemoteException, RegistryExceptionException,
             PropertiesAdminServiceRegistryExceptionException {
         PropertiesAdminServiceStub propertiesAdminServiceStub =
                 TestUtils.getPropertiesAdminServiceStub(loggedInSessionCookie);
-        
+
         propertiesAdminServiceStub.setProperty(smokeTestCollectionVerify, "foo", "bar");
         boolean found = false;
         for (org.wso2.carbon.registry.properties.stub.utils.xsd.Property property :
@@ -281,7 +281,7 @@ public class GovernanceRegistrySmokeTestCase {
 
         propertiesAdminServiceStub.setProperty(smokeTestResourceVerify, "foo", "bar");
         found = false;
-        for (org.wso2.carbon.registry.properties.stub.utils.xsd.Property property : 
+        for (org.wso2.carbon.registry.properties.stub.utils.xsd.Property property :
                 propertiesAdminServiceStub.getProperties(smokeTestResource, "no").getProperties()) {
             if (property.getKey().equals("foo")) {
                 found = true;
@@ -300,86 +300,86 @@ public class GovernanceRegistrySmokeTestCase {
         InfoAdminServiceStub infoAdminServiceStub =
                 TestUtils.getInfoAdminServiceStub(loggedInSessionCookie);
         infoAdminServiceStub.addComment("this is sample comment", smokeTestCollection,
-            loggedInSessionCookie);
+                loggedInSessionCookie);
         infoAdminServiceStub.addComment("this is sample comment2", smokeTestCollection,
-            loggedInSessionCookie);
+                loggedInSessionCookie);
         Comment[] comment = infoAdminServiceStub.getComments(smokeTestCollectionVerify,
-            loggedInSessionCookie).getComments();
+                loggedInSessionCookie).getComments();
         Assert.assertTrue(
                 comment[0].getDescription().equalsIgnoreCase("this is sample comment"),
                 "added comment was not found");
         Assert.assertTrue(
-            comment[1].getDescription().equalsIgnoreCase("this is sample comment2"),
-            "added comment was not found");
+                comment[1].getDescription().equalsIgnoreCase("this is sample comment2"),
+                "added comment was not found");
         infoAdminServiceStub.removeComment(comment[0].getCommentPath(), loggedInSessionCookie);
         comment = infoAdminServiceStub.getComments(smokeTestCollectionVerify,
                 loggedInSessionCookie).getComments();
         Assert.assertTrue(
-            comment[0].getDescription().equalsIgnoreCase("this is sample comment2"),
-            "comment was not removed");
+                comment[0].getDescription().equalsIgnoreCase("this is sample comment2"),
+                "comment was not removed");
 
         infoAdminServiceStub.addComment("this is sample comment", smokeTestResource,
-            loggedInSessionCookie);
+                loggedInSessionCookie);
         infoAdminServiceStub.addComment("this is sample comment2", smokeTestResource,
-            loggedInSessionCookie);
+                loggedInSessionCookie);
         comment = infoAdminServiceStub.getComments(smokeTestResourceVerify,
-            loggedInSessionCookie).getComments();
+                loggedInSessionCookie).getComments();
         Assert.assertTrue(
-            comment[0].getDescription().equalsIgnoreCase("this is sample comment"),
-            "added comment was not found");
+                comment[0].getDescription().equalsIgnoreCase("this is sample comment"),
+                "added comment was not found");
         Assert.assertTrue(
-            comment[1].getDescription().equalsIgnoreCase("this is sample comment2"),
-            "added comment was not found");
+                comment[1].getDescription().equalsIgnoreCase("this is sample comment2"),
+                "added comment was not found");
         infoAdminServiceStub.removeComment(comment[0].getCommentPath(), loggedInSessionCookie);
         comment = infoAdminServiceStub.getComments(smokeTestResourceVerify,
                 loggedInSessionCookie).getComments();
         Assert.assertTrue(
-            comment[0].getDescription().equalsIgnoreCase("this is sample comment2"),
-            "comment was not removed");
+                comment[0].getDescription().equalsIgnoreCase("this is sample comment2"),
+                "comment was not removed");
 
         infoAdminServiceStub.addTag("foo", smokeTestCollection, loggedInSessionCookie);
         Assert.assertEquals(infoAdminServiceStub.getTags(smokeTestCollectionVerify,
-            loggedInSessionCookie).getTags().length, 1, "the tag was not added");
+                loggedInSessionCookie).getTags().length, 1, "the tag was not added");
         infoAdminServiceStub.removeTag("foo", smokeTestCollection, loggedInSessionCookie);
         Assert.assertNull(infoAdminServiceStub.getTags(smokeTestCollectionVerify,
                 loggedInSessionCookie).getTags(), "the tag was not removed");
 
         infoAdminServiceStub.addTag("foo", smokeTestResource, loggedInSessionCookie);
         Assert.assertEquals(infoAdminServiceStub.getTags(smokeTestResourceVerify,
-            loggedInSessionCookie).getTags().length, 1, "the tag was not added");
+                loggedInSessionCookie).getTags().length, 1, "the tag was not added");
         infoAdminServiceStub.removeTag("foo", smokeTestResource, loggedInSessionCookie);
         Assert.assertNull(infoAdminServiceStub.getTags(smokeTestResourceVerify,
                 loggedInSessionCookie).getTags(), "the tag was not removed");
 
         infoAdminServiceStub.rateResource("5", smokeTestCollection, loggedInSessionCookie);
         Assert.assertEquals(
-            infoAdminServiceStub.getRatings(smokeTestCollectionVerify, loggedInSessionCookie)
-                    .getAverageRating(), 5.0f, "the ratings do not tally");
+                infoAdminServiceStub.getRatings(smokeTestCollectionVerify, loggedInSessionCookie)
+                        .getAverageRating(), 5.0f, "the ratings do not tally");
         Assert.assertEquals(
-            infoAdminServiceStub.getRatings(smokeTestCollectionVerify, loggedInSessionCookie)
-                    .getUserRating(), 5, "the ratings do not tally");
+                infoAdminServiceStub.getRatings(smokeTestCollectionVerify, loggedInSessionCookie)
+                        .getUserRating(), 5, "the ratings do not tally");
         infoAdminServiceStub.rateResource("0", smokeTestCollection, loggedInSessionCookie);
         Assert.assertEquals(
-            infoAdminServiceStub.getRatings(smokeTestCollectionVerify, loggedInSessionCookie)
-                    .getAverageRating(), 0.0f, "the ratings do not tally");
+                infoAdminServiceStub.getRatings(smokeTestCollectionVerify, loggedInSessionCookie)
+                        .getAverageRating(), 0.0f, "the ratings do not tally");
         Assert.assertEquals(
-            infoAdminServiceStub.getRatings(smokeTestCollectionVerify, loggedInSessionCookie)
-                    .getUserRating(), 0, "the ratings do not tally");
+                infoAdminServiceStub.getRatings(smokeTestCollectionVerify, loggedInSessionCookie)
+                        .getUserRating(), 0, "the ratings do not tally");
 
         infoAdminServiceStub.rateResource("5", smokeTestResource, loggedInSessionCookie);
         Assert.assertEquals(
-            infoAdminServiceStub.getRatings(smokeTestResourceVerify, loggedInSessionCookie)
-                    .getAverageRating(), 5.0f, "the ratings do not tally");
+                infoAdminServiceStub.getRatings(smokeTestResourceVerify, loggedInSessionCookie)
+                        .getAverageRating(), 5.0f, "the ratings do not tally");
         Assert.assertEquals(
-            infoAdminServiceStub.getRatings(smokeTestResourceVerify, loggedInSessionCookie)
-                    .getUserRating(), 5, "the ratings do not tally");
+                infoAdminServiceStub.getRatings(smokeTestResourceVerify, loggedInSessionCookie)
+                        .getUserRating(), 5, "the ratings do not tally");
         infoAdminServiceStub.rateResource("0", smokeTestResource, loggedInSessionCookie);
         Assert.assertEquals(
-            infoAdminServiceStub.getRatings(smokeTestResourceVerify, loggedInSessionCookie)
-                    .getAverageRating(), 0.0f, "the ratings do not tally");
+                infoAdminServiceStub.getRatings(smokeTestResourceVerify, loggedInSessionCookie)
+                        .getAverageRating(), 0.0f, "the ratings do not tally");
         Assert.assertEquals(
-            infoAdminServiceStub.getRatings(smokeTestResourceVerify, loggedInSessionCookie)
-                    .getUserRating(), 0, "the ratings do not tally");
+                infoAdminServiceStub.getRatings(smokeTestResourceVerify, loggedInSessionCookie)
+                        .getUserRating(), 0, "the ratings do not tally");
     }
 
     private void smokeTestSubscriptions(String smokeTestCollection, String smokeTestResource)
@@ -425,8 +425,8 @@ public class GovernanceRegistrySmokeTestCase {
                 loggedInSessionCookie).getSubscriptionInstances().length, 1,
                 "subscription failed");
         instances = infoAdminServiceStub.subscribe(smokeTestResource,
-                    "digest://h/mailto:dev@wso2.org", "ResourceUpdated",
-                    loggedInSessionCookie).getSubscriptionInstances();
+                "digest://h/mailto:dev@wso2.org", "ResourceUpdated",
+                loggedInSessionCookie).getSubscriptionInstances();
         Assert.assertEquals(instances.length, 1, "subscription failed");
         Assert.assertEquals(infoAdminServiceStub.subscribeREST(smokeTestResource,
                 "https://localhost:9443/services/RESTHello", "ResourceUpdated",
@@ -488,7 +488,7 @@ public class GovernanceRegistrySmokeTestCase {
         Assert.assertTrue(relationAdminServiceStub.getAssociationTree(
                 smokeTestResource, "depends").getAssociationTree().contains(
                 smokeTestCollection), "The association was not added");
-        
+
         relationAdminServiceStub.addAssociation(smokeTestCollection,
                 "uses", smokeTestResource, "delete");
         Assert.assertFalse(relationAdminServiceStub.getAssociationTree(

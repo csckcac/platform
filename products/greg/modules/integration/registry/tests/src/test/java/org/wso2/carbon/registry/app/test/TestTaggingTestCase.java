@@ -69,7 +69,7 @@ public class TestTaggingTestCase {
             //System.out.println("Available resource paths:" + path.getResourcePath());
 
             if (path.getResourcePath().equals("/d11/r1")) {
-                assertEquals(path.getResourcePath(),"/d11/r1", "Path are not matching");
+                assertEquals(path.getResourcePath(), "/d11/r1", "Path are not matching");
                 artifactFound = true;
                 //break;
             }
@@ -168,13 +168,13 @@ public class TestTaggingTestCase {
             if (tag.getTagName().equals("tag1")) {
                 tagFound = true;
                 //System.out.println(tag.getTagName());
-                assertEquals(tag.getTagName(),"tag1", "Tag names are not equals");
+                assertEquals(tag.getTagName(), "tag1", "Tag names are not equals");
                 //System.out.println(tag.getCategory());
-                assertEquals(tag.getCategory(),1, "Tag category not equals");
+                assertEquals(tag.getCategory(), 1, "Tag category not equals");
                 //System.out.println(tag.getTagCount());
-                assertEquals((int) (tag.getTagCount()), 1,"Tag count not equals");
+                assertEquals((int) (tag.getTagCount()), 1, "Tag count not equals");
                 //System.out.println(tags.length);
-                assertEquals(tags.length,2, "Tag length not equals");
+                assertEquals(tags.length, 2, "Tag length not equals");
 
                 tag.setTagName("tag1_updated");
                 break;
@@ -194,9 +194,9 @@ public class TestTaggingTestCase {
         for (TaggedResourcePath path : paths) {
             if (path.getResourcePath().equals("/d14/d13/r1")) {
                 // System.out.println(paths[1].getResourcePath());
-                assertEquals( path.getResourcePath(),"/d14/d13/r1", "Path are not matching");
+                assertEquals(path.getResourcePath(), "/d14/d13/r1", "Path are not matching");
                 //System.out.println(paths[1].getTagCount());
-                assertEquals((int) (paths[0].getTagCount()),1, "Tag count not equals");
+                assertEquals((int) (paths[0].getTagCount()), 1, "Tag count not equals");
 //                System.out.println(paths[1].getTagCounts());
 //                assertEquals("Tag count not equals",0,(paths[0].getTagCounts()));
                 artifactFound = true;
@@ -340,7 +340,7 @@ public class TestTaggingTestCase {
 
         registry.applyTag("/d11/r1", "jsp");
         Tag[] r11Tags = registry.getTags("/d11/r1");
-        assertEquals( r11Tags.length,1);
+        assertEquals(r11Tags.length, 1);
 
         TaggedResourcePath[] paths = registry.getResourcePathsWithTag("jsp");
         boolean artifactFound = false;

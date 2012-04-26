@@ -85,7 +85,7 @@ public class RatingTestCase {
 
         //System.out.println("Start rating:" + rating);
 
-        assertEquals(rating,(float) 5.0, (float) 0.01,
+        assertEquals(rating, (float) 5.0, (float) 0.01,
                 "Rating of the resource /d61/d17/d18/r1 should be 5.");
 
         /*rate the same resource again*/
@@ -96,7 +96,7 @@ public class RatingTestCase {
 
         //System.out.println("Start rating:" + rating_edit);
 
-        assertEquals(rating_edit,(float) 3.0, (float) 0.01,
+        assertEquals(rating_edit, (float) 3.0, (float) 0.01,
                 "Rating of the resource /d61/d17/d18/r1 should be 3.");
     }
 

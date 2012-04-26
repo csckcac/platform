@@ -96,7 +96,7 @@ public class PropertiesWSTestCase extends TestSetup {
 
         Resource r1e2 = registry.get("/props/t1/r1");
 
-        assertEquals(r1e2.getProperty("p1"), null, "Property is not removed.");
+        assertNull(r1e2.getProperty("p1"), "Property is not removed.");
         assertNotNull(r1e2.getProperty("p2"), "Wrong property is removed.");
     }
 

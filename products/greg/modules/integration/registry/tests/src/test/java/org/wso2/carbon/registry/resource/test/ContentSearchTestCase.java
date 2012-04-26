@@ -69,6 +69,7 @@ public class ContentSearchTestCase {
         addResource();
         searchContent();
     }
+
     public void searchContent() {
         SearchResultsBean bean = null;
 
@@ -76,25 +77,24 @@ public class ContentSearchTestCase {
             boolean searchSuccess = false;
             // Retrying until test passes
             log.info("### Content search retry cycle started .. ");
-            for(int i=0;i<RERTY_CYCLES;i++) {
+            for (int i = 0; i < RERTY_CYCLES; i++) {
                 log.info("#### Content search cycle # " + i);
                 bean = contentSearchAdminServiceStub.getContentSearchResults("ArrayOftCountrySelectedTopScorer");
                 if (bean.getResourceDataList() != null) {
                     bean.setResourceDataList(new ResourceData[0]);
                     searchSuccess = true;
-                    log.info("#### Content search PASSED .. in seconds : " + i*15 );
+                    log.info("#### Content search PASSED .. in seconds : " + i * 15);
                     break;
 
                 } else {
                     doSleep();
                 }
             }
-             if(!searchSuccess) {
+            if (!searchSuccess) {
                 fail("# MetaData search test failed .. ");
                 log.info("# MetaData search test failed .. ");
                 log.error("# MetaData search test failed .. ");
-             }
-
+            }
 
 
         } catch (Exception e) {
@@ -106,7 +106,7 @@ public class ContentSearchTestCase {
         }
     }
 
-       private void doSleep() {
+    private void doSleep() {
         try {
             Thread.sleep(15000);
         } catch (InterruptedException e) {

@@ -39,14 +39,14 @@ public class ResourceHandlingWSTestCase extends TestSetup {
     @Test(groups = {"wso2.greg"})
     public void newCollection() throws Exception {
         Collection collection = registry.newCollection();
-        assertEquals(0, collection.getChildCount(), "Invalid Child Count for new collection");
+        assertEquals(collection.getChildCount(), 0, "Invalid Child Count for new collection");
         assertNotNull(collection.getChildren(), "The children for a new collection cannot be null");
-        assertEquals(0, collection.getChildren().length, "Invalid Child Count for new collection");
+        assertEquals(collection.getChildren().length, 0, "Invalid Child Count for new collection");
         registry.put("/f1012/col", collection);
         Collection collection_new = (Collection) registry.get("/f1012/col");
-        assertEquals(0, collection_new.getChildCount(), "Invalid Child Count for new collection");
+        assertEquals(collection_new.getChildCount(), 0, "Invalid Child Count for new collection");
         assertNotNull(collection_new.getChildren(), "The children for a new collection cannot be null");
-        assertEquals(0, collection_new.getChildren().length, "Invalid Child Count for new collection");
+        assertEquals(collection_new.getChildren().length, 0, "Invalid Child Count for new collection");
     }
 
     @Test(groups = {"wso2.greg"}, dependsOnMethods = {"newCollection"})
@@ -84,8 +84,8 @@ public class ResourceHandlingWSTestCase extends TestSetup {
 
             Resource r2 = registry.get(path);
 
-            assertEquals(r1.getProperty("key1"), r2.getProperty("key1"), "Properties are not equal");
-            assertEquals(r1.getProperty("key2"), r2.getProperty("key2"), "Properties are not equal");
+            assertEquals(r2.getProperty("key1"), r1.getProperty("key1"), "Properties are not equal");
+            assertEquals(r2.getProperty("key2"), r1.getProperty("key2"), "Properties are not equal");
             assertEquals(new String((byte[]) r1.getContent()),
                     new String((byte[]) r2.getContent()), "File content is not matching");
             assertTrue(containsComment(commentPath, c1.getText()), c1.getText() + " is not associated for resource" + path);
@@ -96,25 +96,25 @@ public class ResourceHandlingWSTestCase extends TestSetup {
 
             float rating = registry.getAverageRating(path);
             assertEquals(rating, (float) 4.0, (float) 0.01, "Rating is not mathching");
-            assertEquals(r1.getMediaType(), r2.getMediaType(), "Media type not exist");
+            assertEquals(r2.getMediaType(), r1.getMediaType(), "Media type not exist");
 //            assertEquals("Authour name is not exist", r1.getAuthorUserName(), r2.getAuthorUserName());
-            assertEquals(r1.getDescription(), r2.getDescription(), "Description is not exist");
+            assertEquals(r2.getDescription(), r1.getDescription(), "Description is not exist");
 
             String new_path_returned;
             new_path_returned = registry.rename(path, new_path);
 
-            assertEquals(new_path, new_path_returned, "New resource path is not equal");
+            assertEquals(new_path_returned, new_path, "New resource path is not equal");
 
             /*get renamed resource details*/
 
             Resource r1Renamed = registry.get(new_path);
 
-            assertEquals(new String((byte[]) r2.getContent()),
-                    new String((byte[]) r1Renamed.getContent()), "File content is not matching");
-            assertEquals(r2.getProperty("key1"), r1Renamed.getProperty("key1"),
-                    "Properties are not equal");
-            assertEquals(r2.getProperty("key2"),
-                    r1Renamed.getProperty("key2"), "Properties are not equal");
+            assertEquals(new String((byte[]) r1Renamed.getContent()),
+                    new String((byte[]) r2.getContent()), "File content is not matching");
+            assertEquals(r1Renamed.getProperty("key1"),
+                    r2.getProperty("key1"), "Properties are not equal");
+            assertEquals(r1Renamed.getProperty("key2"),
+                    r2.getProperty("key2"), "Properties are not equal");
             assertTrue(containsComment(commentPathNew, c1.getText()),
                     c1.getText() + " is not associated for resource" + new_path);
             assertTrue(containsComment(commentPathNew, c2.getText()),
@@ -125,10 +125,10 @@ public class ResourceHandlingWSTestCase extends TestSetup {
 
             float rating1 = registry.getAverageRating(new_path);
             assertEquals(rating1, (float) 4.0, (float) 0.01, "Rating is not copied");
-            assertEquals(r2.getMediaType(), r1Renamed.getMediaType(), "Media type not copied");
-            assertEquals(r2.getAuthorUserName(), r1Renamed.getAuthorUserName(),
+            assertEquals(r1Renamed.getMediaType(), r2.getMediaType(), "Media type not copied");
+            assertEquals(r1Renamed.getAuthorUserName(), r2.getAuthorUserName(),
                     "Authour Name is not copied");
-            assertEquals(r2.getDescription(), r1Renamed.getDescription(), "Description is not exist");
+            assertEquals(r1Renamed.getDescription(), r2.getDescription(), "Description is not exist");
 
         } catch (RegistryException e) {
             e.printStackTrace();
@@ -168,8 +168,9 @@ public class ResourceHandlingWSTestCase extends TestSetup {
 
             Resource r2 = registry.get(path);
 
-            assertEquals(r1.getProperty("key1"), r2.getProperty("key1"), "Properties are not equal");
-            assertEquals(r1.getProperty("key2"), r2.getProperty("key2"), "Properties are not equal");
+            assertEquals(r2.getProperty("key1"), r1.getProperty("key1"), "Properties are not equal");
+            assertEquals(r2.getProperty("key2"),
+                    r1.getProperty("key2"), "Properties are not equal");
             assertTrue(containsComment(commentPath, c1.getText()),
                     c1.getText() + " is not associated for resource" + path);
             assertTrue(containsComment(commentPath, c2.getText()),
@@ -185,16 +186,16 @@ public class ResourceHandlingWSTestCase extends TestSetup {
             String new_path_returned;
             new_path_returned = registry.rename(path, new_path);
 
-            assertEquals(new_path, new_path_returned, "New resource path is not equal");
+            assertEquals(new_path_returned, new_path, "New resource path is not equal");
 
             /*get renamed resource details*/
 
             Resource r1Renamed = registry.get(new_path);
 
-            assertEquals(r2.getProperty("key1"),
-                    r1Renamed.getProperty("key1"), "Properties are not equal");
-            assertEquals(r2.getProperty("key2"),
-                    r1Renamed.getProperty("key2"), "Properties are not equal");
+            assertEquals(r1Renamed.getProperty("key1"),
+                    r2.getProperty("key1"), "Properties are not equal");
+            assertEquals(r1Renamed.getProperty("key2"),
+                    r2.getProperty("key2"), "Properties are not equal");
             assertTrue(containsComment(commentPathNew, c1.getText()),
                     c1.getText() + " is not associated for resource" + new_path);
             assertTrue(containsComment(commentPathNew, c2.getText()),
@@ -232,20 +233,20 @@ public class ResourceHandlingWSTestCase extends TestSetup {
 
         r3 = registry.get(path);
 
-        assertEquals("admin", r3.getAuthorUserName(), "Author User names are not Equal");
+        assertEquals(r3.getAuthorUserName(), "admin", "Author User names are not Equal");
         assertNotNull(r3.getCreatedTime(), "Created time is null");
-        assertEquals("admin", r3.getAuthorUserName(), "Author User names are not Equal");
-        assertEquals("this is test desc this is test desc this is test desc this is test" +
+        assertEquals(r3.getAuthorUserName(), "admin", "Author User names are not Equal");
+        assertEquals(r3.getDescription(), "this is test desc this is test desc this is test desc this is test" +
                 " desc this is test desc this is test desc this is test desc this is test desc this is test descthis is " +
-                "test desc ", r3.getDescription(), "Description is not Equal");
+                "test desc ", "Description is not Equal");
         assertNotNull(r3.getId(), "Get Id is null");
         assertNotNull(r3.getLastModified(), "LastModifiedDate is null");
-        assertEquals("admin", r3.getLastUpdaterUserName(), "Last Updated names are not Equal");
+        assertEquals(r3.getLastUpdaterUserName(), "admin", "Last Updated names are not Equal");
         //System.out.println(r3.getMediaType());
-        assertEquals("plain/text", r3.getMediaType(), "Media Type is not equal");
-        assertEquals("/testk/testa", r3.getParentPath(), "parent Path is not equal");
-        assertEquals(path, r3.getPath(), "parent Path is not equal");
-        assertEquals(0, r3.getState(), "Get stated wrong");
+        assertEquals(r3.getMediaType(), "plain/text", "Media Type is not equal");
+        assertEquals(r3.getParentPath(), "/testk/testa", "parent Path is not equal");
+        assertEquals(r3.getPath(), path, "parent Path is not equal");
+        assertEquals(r3.getState(), 0, "Get stated wrong");
 
         String st = r3.getPermanentPath();
 //        assertTrue("Permenent path contanin the string" + path + " verion", st.contains("/testk/testa/derby.log;version:"));
@@ -273,19 +274,19 @@ public class ResourceHandlingWSTestCase extends TestSetup {
         //assertEquals("Description is not Equal", "this is test desc", r3.getDescription());
         assertNotNull(r3.getId(), "Get Id is null");
         assertNotNull(r3.getLastModified(), "LastModifiedDate is null");
-        assertEquals("admin", r3.getLastUpdaterUserName(), "Last Updated names are not Equal");
+        assertEquals(r3.getLastUpdaterUserName(), "admin", "Last Updated names are not Equal");
         //System.out.println("Media Type:" + r3.getMediaType());
         //assertEquals("Media Type is not equal","unknown",r3.getMediaType());
-        assertEquals("/testk2/testa", r3.getParentPath(), "parent Path is not equal");
-        assertEquals(0, r3.getState(), "Get stated wrong");
+        assertEquals(r3.getParentPath(), "/testk2/testa", "parent Path is not equal");
+        assertEquals(r3.getState(), 0, "Get stated wrong");
 
         registry.createVersion(path);
 
 //         System.out.println(r3.getParentPath());
 //      System.out.println(r3.getPath());
 
-        assertEquals("/testk2/testa", r3.getParentPath(), "Permenent path doesn't contanin the string");
-        assertEquals(path, r3.getPath(), "Path doesn't contanin the string");
+        assertEquals(r3.getParentPath(), "/testk2/testa", "Permenent path doesn't contanin the string");
+        assertEquals(r3.getPath(), path, "Path doesn't contanin the string");
 
 //        String st = r3.getPermanentPath();
 //        assertTrue("Permenent path contanin the string" + path +" verion", st.contains("/testk2/testa/testc;version:"));

@@ -47,7 +47,7 @@ public class CollectionChildCountWSTestCase extends TestSetup {
         Resource resource = registry.get(path);
         assertTrue((resource instanceof Collection), "resource is not a collection");
         Collection collection = (Collection) resource;
-        assertEquals(2, collection.getChildCount(), "Invalid child count");
+        assertEquals(collection.getChildCount(), 2, "Invalid child count");
     }
 
     @Test(groups = {"wso2.greg"})
@@ -56,7 +56,7 @@ public class CollectionChildCountWSTestCase extends TestSetup {
         Resource resource = registry.get(path, 1, 1);
         assertTrue((resource instanceof Collection), "resource is not a collection");
         Collection collection = (Collection) resource;
-        assertEquals(1, collection.getChildCount(), "Invalid child count");
+        assertEquals(collection.getChildCount(), 1, "Invalid child count");
 
     }
 }

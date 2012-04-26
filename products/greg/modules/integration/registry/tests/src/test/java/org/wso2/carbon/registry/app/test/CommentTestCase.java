@@ -72,25 +72,25 @@ public class CommentTestCase {
             if (comment.getText().equals(comment1)) {
                 commentFound = true;
                 //System.out.println(comment.getPath());
-                assertEquals(comment.getText(),comment1);
-                assertEquals( comment.getUser(),"admin");
-                assertEquals(comment.getResourcePath(),path);
+                assertEquals(comment.getText(), comment1);
+                assertEquals(comment.getUser(), "admin");
+                assertEquals(comment.getResourcePath(), path);
                 //System.out.println(comment.getPath());
                 //break;
             }
 
             if (comment.getText().equals(comment2)) {
                 commentFound = true;
-                assertEquals(comment.getText(),comment2);
-                assertEquals( comment.getUser(),"admin");
-                assertEquals(comment.getResourcePath(),path);
+                assertEquals(comment.getText(), comment2);
+                assertEquals(comment.getUser(), "admin");
+                assertEquals(comment.getResourcePath(), path);
                 //break;
             }
 
             if (comment.getText().equals("This is default comment")) {
                 commentFound = true;
-                assertEquals(comment.getText(),"This is default comment");
-                assertEquals(comment.getUser(),"admin");
+                assertEquals(comment.getText(), "This is default comment");
+                assertEquals(comment.getUser(), "admin");
                 //break;
             }
         }
@@ -417,7 +417,7 @@ public class CommentTestCase {
             comments = registry.getComments("/c101/c11/r1");
 //            System.out.println(comments);
             Resource resource = registry.get(comments[0].getPath());
-            assertEquals(new String((byte[]) resource.getContent()),"This is the edited comment");
+            assertEquals(new String((byte[]) resource.getContent()), "This is the edited comment");
         } catch (RegistryException e) {
             e.printStackTrace();
             fail("Failed to get comments form URL:/c101/c11/r1;comments");
@@ -450,7 +450,7 @@ public class CommentTestCase {
 
         Comment[] comments2 = registry.getComments(r1Path);
 
-        assertEquals( comments2.length,1, "There should be one comment.");
+        assertEquals(comments2.length, 1, "There should be one comment.");
 
         String[] cTexts2 = {comments2[0].getText()};
 

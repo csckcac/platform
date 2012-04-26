@@ -46,20 +46,20 @@ public class BackwardAssociationHandlerTestCase {
         frameworkPath = FrameworkSettings.getFrameworkPath();
     }
 
-  @Test(groups = {"wso2.greg"}, description = "Add handler configuration to registry", priority = 1)
-  public void testCopyHandler() throws ExceptionException, RemoteException {
-      log.debug("Running SuccessCase");
-      String sampleHandlerName = "backwardAssociationHandler.xml";
-      String handlerName = "org.wso2.carbon.registry.backward.association.handler.BackwardAssociationHandler";
-      handlerManagementServiceStub =
-              TestUtils.getHandlerManagementServiceStub(loggedInSessionCookie);
+    @Test(groups = {"wso2.greg"}, description = "Add handler configuration to registry", priority = 1)
+    public void testCopyHandler() throws ExceptionException, RemoteException {
+        log.debug("Running SuccessCase");
+        String sampleHandlerName = "backwardAssociationHandler.xml";
+        String handlerName = "org.wso2.carbon.registry.backward.association.handler.BackwardAssociationHandler";
+        handlerManagementServiceStub =
+                TestUtils.getHandlerManagementServiceStub(loggedInSessionCookie);
 
-      String handlerResource = TestUtils.getTestResourcesDir(frameworkPath);
-      handlerResource = handlerResource + File.separator + "handler" + File.separator + sampleHandlerName;
-      handlerManagementServiceStub.createHandler(fileReader(handlerResource));
-      String handlerConfig = handlerManagementServiceStub.getHandlerConfiguration(handlerName);
-      assertNotNull(handlerConfig, "Handler config cannot be null - " + handlerName);
-  }  
+        String handlerResource = TestUtils.getTestResourcesDir(frameworkPath);
+        handlerResource = handlerResource + File.separator + "handler" + File.separator + sampleHandlerName;
+        handlerManagementServiceStub.createHandler(fileReader(handlerResource));
+        String handlerConfig = handlerManagementServiceStub.getHandlerConfiguration(handlerName);
+        assertNotNull(handlerConfig, "Handler config cannot be null - " + handlerName);
+    }
 
     @Test(groups = {"wso2.greg"}, description = "Test backward association handler", priority = 1)
     public void testBackwardAssociation()

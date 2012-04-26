@@ -172,7 +172,7 @@ public class VersionHandlingWSTestCase extends TestSetup {
 
         Resource r1r1 = registry.get("/_test/v10/r1");
 
-        assertEquals("content 1", new String((byte[]) r1r1.getContent()),
+        assertEquals(new String((byte[]) r1r1.getContent()), "content 1",
                 "Restored resource should have content 'content 1'");
     }
 
@@ -202,7 +202,7 @@ public class VersionHandlingWSTestCase extends TestSetup {
 
         registry.restoreVersion(c1Versions[2]);
         Collection c1r1 = (Collection) registry.get("/_test/v11/c1");
-        assertEquals(0, c1r1.getChildren().length, "version 1 of c1 should not have any children");
+        assertEquals(c1r1.getChildren().length, 0, "version 1 of c1 should not have any children");
 
         try {
             registry.get("/_test/v11/c1/r1");
@@ -218,7 +218,7 @@ public class VersionHandlingWSTestCase extends TestSetup {
 
         registry.restoreVersion(c1Versions[1]);
         Collection c1r2 = (Collection) registry.get("/_test/v11/c1");
-        assertEquals(1, c1r2.getChildren().length, "version 2 of c1 should have 1 child");
+        assertEquals(c1r2.getChildren().length, 1, "version 2 of c1 should have 1 child");
 
         try {
             registry.get("/_test/v11/c1/r1");
@@ -235,7 +235,7 @@ public class VersionHandlingWSTestCase extends TestSetup {
 
         registry.restoreVersion(c1Versions[0]);
         Collection c1r3 = (Collection) registry.get("/_test/v11/c1");
-        assertEquals(2, c1r3.getChildren().length, "version 3 of c1 should have 2 children");
+        assertEquals(c1r3.getChildren().length, 2, "version 3 of c1 should have 2 children");
 
         try {
             registry.get("/_test/v11/c1/r1");
@@ -427,7 +427,7 @@ public class VersionHandlingWSTestCase extends TestSetup {
 
         Resource getResource = registry.get("/_abc2");
         String contentRetrieved = new String((byte[]) getResource.getContent());
-        assertEquals(content, contentRetrieved,
+        assertEquals(contentRetrieved, content,
                 "Content does not match");
 
         resource = registry.newResource();
@@ -441,7 +441,7 @@ public class VersionHandlingWSTestCase extends TestSetup {
 
         contentRetrieved = new String((byte[]) getResource.getContent());
 
-        assertEquals(content, contentRetrieved,
+        assertEquals(contentRetrieved, content,
                 "Content does not match");
 
     }

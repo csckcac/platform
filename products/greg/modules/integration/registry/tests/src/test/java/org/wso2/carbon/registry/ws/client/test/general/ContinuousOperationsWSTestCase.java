@@ -96,8 +96,8 @@ public class ContinuousOperationsWSTestCase extends TestSetup {
 
             Resource resource2 = registry.get(path);
 
-            assertEquals(new String((byte[]) resource.getContent()),
-                    new String((byte[]) resource2.getContent()), "File content is not matching");
+            assertEquals(new String((byte[]) resource2.getContent()),
+                    new String((byte[]) resource.getContent()), "File content is not matching");
 
             resource.discard();
             res1.discard();

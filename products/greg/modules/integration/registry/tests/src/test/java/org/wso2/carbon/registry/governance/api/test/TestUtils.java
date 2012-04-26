@@ -36,17 +36,17 @@ class TestUtils {
     }
 
     static void cleanupResources(Registry registry) throws RegistryException {
-        for (String string : new String[]{"/trunk/wsdls", "/trunk/services","/trunk/schemas",
-                "/trunk/policies","/trunk/endpoints"}) {
+        for (String string : new String[]{"/trunk/wsdls", "/trunk/services", "/trunk/schemas",
+                "/trunk/policies", "/trunk/endpoints"}) {
             if (registry.resourceExists(string)) {
                 registry.delete(string);
             }
         }
     }
-    
+
     static Registry getRegistry() {
         try {
-            String url = "https://" + FrameworkSettings.HOST_NAME + ":" + FrameworkSettings.HTTPS_PORT 
+            String url = "https://" + FrameworkSettings.HOST_NAME + ":" + FrameworkSettings.HTTPS_PORT
                     + "/services/";
             WSRegistryServiceClient registry =
                     new WSRegistryServiceClient(url, FrameworkSettings.USER_NAME,
@@ -61,7 +61,7 @@ class TestUtils {
                                                     "Axis2Config.clientAxis2XmlLocation")));
             return GovernanceUtils.getGovernanceUserRegistry(registry, FrameworkSettings.USER_NAME);
         } catch (RegistryException e) {
-            Assert.fail("Unable to create registry instance: " + e.getMessage());    
+            Assert.fail("Unable to create registry instance: " + e.getMessage());
         } catch (AxisFault e) {
             Assert.fail("Unable to create registry instance: " + e.getMessage());
         }

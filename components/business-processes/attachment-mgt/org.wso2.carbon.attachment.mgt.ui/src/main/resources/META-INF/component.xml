@@ -16,7 +16,7 @@
  ~ under the License.
  -->
 <component xmlns="http://products.wso2.org/carbon">
-    <menus>
+    <!--<menus>
         <menu>
             <id>hello_world_menue</id>
             <i18n-key>hello_world.menu</i18n-key>
@@ -28,23 +28,6 @@
             <style-class>manage</style-class>
             <require-permission>/permission/protected/manage</require-permission>
         </menu>
-    </menus>
+    </menus>-->
 
-    <FileUploadConfig>
-        <Mapping>
-            <Actions>
-                <Action>attachment-mgt</Action>
-            </Actions>
-            <Class>org.wso2.carbon.attachment.mgt.ui.fileupload.AttachmentUploadExecutor</Class>
-        </Mapping>
-    </FileUploadConfig>
-
-    <!--<servlets>
-		<servlet id="Attachment_Upload_Servlet">
-			<servlet-name>Attachment Upload Servlet</servlet-name>
-			<url-pattern>/carbon/attachment-mgt/upload</url-pattern>
-			<display-name>Attachment Upload Servlet</display-name>
-			<servlet-class>org.wso2.carbon.attachment.mgt.ui.fileupload.AttachmentUploadServlet</servlet-class>
-		</servlet>
-    </servlets>-->
 </component>

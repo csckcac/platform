@@ -47,6 +47,11 @@
                     <webXml>${basedir}/../../web.xml</webXml>
                     <packagingExcludes>WEB-INF/lib/*.jar</packagingExcludes>
                     <warName>${project.artifactId}</warName>
+                    <webResources>
+                        <resource>
+                            <directory>../../css</directory>
+                        </resource>
+                    </webResources>
                 </configuration>
             </plugin>
             <plugin>

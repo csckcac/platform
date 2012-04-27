@@ -16,13 +16,9 @@
         <bamAgentTrustStore>repository/resources/security/client-truststore.jks</bamAgentTrustStore>
         <bamAgentTrustStorePassword>wso2carbon</bamAgentTrustStorePassword>
     </apiMGTDataAgentConfig>
-    <Security>
-        <AuthServerURL>https://localhost:9443/services/</AuthServerURL>
+    <APIConsumerAuthentication>
         <AuthUsername>admin</AuthUsername>
         <AuthPassword>admin</AuthPassword>
-        <AuthTruststore>repository/resources/security/client-truststore.jks</AuthTruststore>
-        <AuthTruststoreType>JKS</AuthTruststoreType>
-        <AuthTruststorePass>wso2carbon</AuthTruststorePass>
-    </Security>
+    </APIConsumerAuthentication>
 </config>
 

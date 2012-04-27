@@ -25,10 +25,12 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.humantask.stub.mgt.HumanTaskPackageManagementStub;
 import org.wso2.carbon.humantask.stub.mgt.PackageManagementException;
 import org.wso2.carbon.humantask.stub.mgt.types.DeployedTaskDefinitionsPaginated;
+import org.wso2.carbon.humantask.stub.mgt.types.TaskInfoType;
 import org.wso2.carbon.humantask.stub.mgt.types.Task_type0;
 import org.wso2.carbon.humantask.stub.mgt.types.UndeployStatus_type0;
 import org.wso2.carbon.humantask.ui.constants.HumanTaskUIConstants;
 
+import javax.xml.namespace.QName;
 import java.rmi.RemoteException;
 
 /**
@@ -147,5 +149,17 @@ public class HumanTaskPackageManagementServiceClient {
             log.error("listDeployedPackagesPaginated operation failed.", e);
             throw e;
         }
+    }
+
+    /**
+     *
+     * @param taskId
+     * @return
+     * @throws PackageManagementException
+     * @throws RemoteException
+     */
+    public TaskInfoType getTaskInfo (QName taskId)
+            throws PackageManagementException, RemoteException {
+        return stub.getTaskInfo(taskId);
     }
 }

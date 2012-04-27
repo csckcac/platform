@@ -19,6 +19,7 @@ package org.wso2.carbon.humantask.ui.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.simple.JSONObject;
+import org.wso2.carbon.humantask.stub.mgt.types.TaskInfoType;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TComment;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TPresentationName;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TPresentationSubject;
@@ -27,7 +28,10 @@ import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskAuthorisatio
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvent;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvents;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TUser;
+import org.wso2.carbon.utils.xml.XMLPrettyPrinter;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.LinkedHashMap;
 
 /**
@@ -227,8 +231,8 @@ public final class HumanTaskUIUtil {
 
     /**
      * Builds a JSON representation of task events.
-     * @param taskEvents : The task events list.
      *
+     * @param taskEvents : The task events list.
      * @return : The json string for the given task events list.
      */
     public static String loadTaskEventsJSONString(TTaskEvents taskEvents) {
@@ -282,5 +286,21 @@ public final class HumanTaskUIUtil {
         }
 
         return JSONObject.toJSONString(userMap);
+    }
+
+    public static String getTaskDefinition(TaskInfoType taskInfoType) {
+        return taskInfoType.getDefinitionInfo().getDefinition().getExtraElement().toString();
+    }
+
+    public static String prettyPrint(String taskDefinitionRawXml) {
+        String tRawXML = taskDefinitionRawXml;
+        tRawXML = tRawXML.replaceAll("\n|\\r|\\f|\\t", "");
+        tRawXML = tRawXML.replaceAll("> +<", "><");
+        InputStream xmlIn = new ByteArrayInputStream(tRawXML.getBytes());
+        XMLPrettyPrinter xmlPrettyPrinter = new XMLPrettyPrinter(xmlIn);
+        tRawXML = xmlPrettyPrinter.xmlFormat();
+//        rawXML = rawXML.replaceAll("\n", "<br>");
+
+        return tRawXML;
     }
 }

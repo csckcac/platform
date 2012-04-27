@@ -59,6 +59,7 @@ public final class DeploymentUtil {
         SimpleTaskDefinitionInfo taskInfo = new SimpleTaskDefinitionInfo();
         taskInfo.setPackageName(baseConfiguration.getPackageName());
         taskInfo.setTaskName(baseConfiguration.getName().toString());
+        taskInfo.setHumanTaskDefinitionFile(baseConfiguration.getHumanTaskDefinitionFile());
         if (baseConfiguration instanceof NotificationConfiguration) {
             taskInfo.setTaskType(TaskType.NOTIFICATION);
         } else if (baseConfiguration instanceof TaskConfiguration) {

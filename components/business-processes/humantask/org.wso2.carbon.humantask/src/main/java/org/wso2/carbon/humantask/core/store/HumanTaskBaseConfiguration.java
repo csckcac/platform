@@ -31,6 +31,7 @@ import org.wso2.carbon.humantask.core.utils.HumanTaskNamespaceContext;
 import javax.wsdl.Definition;
 import javax.wsdl.PortType;
 import javax.xml.namespace.QName;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -67,7 +68,11 @@ public abstract class HumanTaskBaseConfiguration {
 
     private AxisConfiguration tenantAxisConf;
 
+    /** The name of the package containing this task configuration. */
     private String packageName;
+
+    /** The human task definition file containing this task configuration. */
+    private File humanTaskDefinitionFile;
 
 
     public HumanTaskBaseConfiguration() {
@@ -78,13 +83,14 @@ public abstract class HumanTaskBaseConfiguration {
                                       String targetNamespace,
                                       String humanTaskArtifactName,
                                       AxisConfiguration tenantAxisConf,
-                                      boolean task, String packageName) {
+                                      boolean task, String packageName, File humanTaskDefinitionFile) {
         this.humanInteractionsDocument = humanInteractionsDocument;
         this.targetNamespace = targetNamespace;
         this.humanTaskArtifactName = humanTaskArtifactName;
         this.task = task;
         this.tenantAxisConf = tenantAxisConf;
         this.packageName = packageName;
+        this.humanTaskDefinitionFile = humanTaskDefinitionFile;
 
         if (humanInteractionsDocument.getHumanInteractions().getExpressionLanguage() != null) {
             this.defaultExpressionLanguage = humanInteractionsDocument.getHumanInteractions().
@@ -226,5 +232,20 @@ public abstract class HumanTaskBaseConfiguration {
     public boolean isValidPart(String partName) {
         return wsdl.getPortType(getPortType()).getOperation(getOperation(), null, null).
                 getInput().getMessage().getPart(partName) != null;
+    }
+
+    /**
+     *
+     * @return : The human task definition file containing this task configuration.
+     */
+    public File getHumanTaskDefinitionFile() {
+        return humanTaskDefinitionFile;
+    }
+
+    /**
+     * @param humanTaskDefinitionFile : The human task definition file to set.
+     */
+    public void setHumanTaskDefinitionFile(File humanTaskDefinitionFile) {
+        this.humanTaskDefinitionFile = humanTaskDefinitionFile;
     }
 }

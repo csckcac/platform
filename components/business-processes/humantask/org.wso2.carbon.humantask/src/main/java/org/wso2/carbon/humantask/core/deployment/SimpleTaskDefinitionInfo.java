@@ -18,6 +18,7 @@ package org.wso2.carbon.humantask.core.deployment;
 
 import org.wso2.carbon.humantask.core.dao.TaskType;
 
+import java.io.File;
 import java.util.Date;
 
 /**
@@ -46,6 +47,11 @@ public class SimpleTaskDefinitionInfo {
      * The name of the package *
      */
     private TaskType taskType;
+
+    /**
+     * The human task definition file.
+     */
+    private File humanTaskDefinitionFile;
 
     /**
      * @return : The package name.
@@ -109,5 +115,19 @@ public class SimpleTaskDefinitionInfo {
      */
     public void setTaskType(TaskType taskType) {
         this.taskType = taskType;
+    }
+
+    /**
+     * @return : The human task definition file.
+     */
+    public File getHumanTaskDefinitionFile() {
+        return humanTaskDefinitionFile;
+    }
+
+    /**
+     * @param humanTaskDefinitionFile : The human task definition file to set.
+     */
+    public void setHumanTaskDefinitionFile(File humanTaskDefinitionFile) {
+        this.humanTaskDefinitionFile = humanTaskDefinitionFile;
     }
 }

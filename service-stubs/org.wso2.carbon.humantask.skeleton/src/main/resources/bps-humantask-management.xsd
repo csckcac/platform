@@ -120,6 +120,39 @@
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
+        <xsd:element name="getTaskInfoIn">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="taskId" type="xsd:QName"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="TaskInfo" type="tns:TaskInfoType"/>
+    <xsd:complexType name="TaskInfoType">
+        <xsd:annotation>
+            <xsd:documentation>Information about a HumanTask Definition.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="taskId" type="xsd:QName"/>
+            <xsd:element name="packageName" type="xsd:string"/>
+            <xsd:element name="taskType" type="tns:TaskType"/>
+            <xsd:element name="status" type="tns:TaskStatusType"/>
+            <xsd:element name="definitionInfo" type="tns:TaskDefinitionInfo"/>
+            <xsd:any maxOccurs="unbounded" minOccurs="0" namespace="##other" processContents="lax"/>
+        </xsd:sequence>
+        <xsd:anyAttribute namespace="##other" processContents="lax"/>
+    </xsd:complexType>
+    <xsd:complexType name="TaskDefinitionInfo">
+        <xsd:sequence>
+            <xsd:element name="TaskName" type="xsd:QName"/>
+            <xsd:element name="Definition" type="tns:humanTaskDefinition"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="humanTaskDefinition">
+        <xsd:sequence>
+            <xsd:any namespace="##other" processContents="lax"/>
+        </xsd:sequence>
+    </xsd:complexType>
     <xsd:simpleType name="PackageStatusType">
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="UNDEPLOYED"/>

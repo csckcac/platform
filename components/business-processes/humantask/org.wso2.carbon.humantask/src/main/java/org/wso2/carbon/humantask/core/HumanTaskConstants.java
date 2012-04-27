@@ -18,37 +18,57 @@ package org.wso2.carbon.humantask.core;
 
 import java.io.File;
 
+/**
+ * A placeholder class for human task constants used throughout the module.
+ */
 public final class HumanTaskConstants {
     private HumanTaskConstants() {
     }
 
+    /** HumanTask file extension */
+    public static final String HUMANTASK_FILE_EXT = ".ht";
+
+    /** HumanTask config file name */
     public static final String HUMANTASK_CONFIG_FILE = "humantask.xml";
 
+    /** XPath 2  */
     public static final String WSHT_EXP_LANG_XPATH20 = "urn:wsht:sublang:xpath2.0";
 
+    /** HumanTask Repo directory name */
     public static final String HUMANTASK_REPO_DIRECTORY = "humantask";
 
+    /** HumanTask package temporary location */
     public static final String HUMANTASK_PACKAGE_TEMP_DIRECTORY = "tmp" +
             File.separator + "humantaskuploads";
+
+    /** HumanTask package file extension */
     public static final String HUMANTASK_PACKAGE_EXTENSION = "zip";
 
-    // Registry repository root location for storing human task deployment units
+    /** Registry repository root location for storing human task deployment units */
     public static final String HT_DEP_UNITS_REPO_LOCATION = "/humantask/deploymentunits/";
 
-    @Deprecated
-    public static final String HUMAN_INTERACTION_FEEDBACK_NS = "http://wso2.org/humantask/feedback";
-
+    /** BPEL4People correlation header  */
     public static final String B4P_CORRELATION_HEADER = "correlation";
+
+    /** Bpel4People correlation header attribute */
     public static final String B4P_CORRELATION_HEADER_ATTRIBUTE = "taskid";
-	public static final String B4P_NAMESPACE = "http://docs.oasis-open.org/ns/bpel4people/bpel4people/200803";
-    
+
+    /** BPEL4People namespace */
+    public static final String B4P_NAMESPACE = "http://docs.oasis-open.org/ns/bpel4people/bpel4people/200803";
+
+    /** Default pagination size */
 	public static final int ITEMS_PER_PAGE = 20;
 
+    /** */
     public static final String HUMANTASK_TASK_TYPE =  "humantaskType";
 
+    /** HumanTask Cleanup job name */
     public static final String HUMANTASK_CLEANUP_JOB = "humantaskCleanupJob";
+
+    /** The port off set identifier */
     public static final String CARBON_CONFIG_PORT_OFFSET_NODE = "Ports.Offset";
 
+    /** The specification defines the default task priority to be set as 5 */
     public static final Integer DEFAULT_TASK_PRIORITY = 5;
 
 }

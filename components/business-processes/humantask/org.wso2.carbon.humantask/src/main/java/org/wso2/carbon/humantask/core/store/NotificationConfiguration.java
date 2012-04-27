@@ -27,6 +27,7 @@ import org.wso2.carbon.humantask.core.utils.HumanTaskNamespaceContext;
 
 import javax.wsdl.Definition;
 import javax.xml.namespace.QName;
+import java.io.File;
 import java.util.List;
 
 public class NotificationConfiguration extends HumanTaskBaseConfiguration {
@@ -44,9 +45,9 @@ public class NotificationConfiguration extends HumanTaskBaseConfiguration {
                                      List<Definition> wsdls,
                                      String targetNamespace,
                                      String humanTaskArtifactName,
-                                     AxisConfiguration tenantAxisConfig, String packageName) {
+                                     AxisConfiguration tenantAxisConfig, String packageName, File humanTaskDefinitionFile) {
         super(humanInteractionsDocument, targetNamespace, humanTaskArtifactName, tenantAxisConfig,
-                false, packageName);
+                false, packageName,humanTaskDefinitionFile);
 
         this.notificationDefinition = notification;
         this.notificationDeploymentConfiguration = notificationDeploymentConfiguration;

@@ -60,6 +60,8 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
 
     private InputStream hiConfiguration;
 
+    private File humanTaskDefinitionFile;
+
     private Map<String, InputStream> wsdlsMap = new HashMap<String, InputStream>();
 
     private Map<String, InputStream> schemasMap = new HashMap<String, InputStream>();
@@ -78,7 +80,7 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
 
     private static final FileFilter humantaskFilter = new FileFilter() {
         public boolean accept(File path) {
-            return path.getName().endsWith(".ht") && path.isFile();
+            return path.getName().endsWith(HumanTaskConstants.HUMANTASK_FILE_EXT) && path.isFile();
         }
     };
 
@@ -112,6 +114,7 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
 
             try {
                 hiDefinition = new FileInputStream(hiDefinitionFiles.get(0));
+                humanTaskDefinitionFile = hiDefinitionFiles.get(0);
             } catch (FileNotFoundException e) {
                 log.error(e.getMessage());
                 throw new HumanTaskDeploymentException("Error building humantask archive; " +
@@ -204,27 +207,7 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
         return fileName;
     }
 
-//    public InputStream getHiDefinition() throws HumanTaskDeploymentException {
-//        try {
-//            hiDefinition.reset();
-//        } catch (IOException e) {
-//            String errMsg = "Error reading hiDefinition";
-//            log.error(errMsg, e);
-//            throw new HumanTaskDeploymentException(errMsg, e);
-//        }
-//        return hiDefinition;
-//    }
 
-//    public InputStream getHiConfiguration() throws HumanTaskDeploymentException {
-//        try {
-//            hiConfiguration.reset();
-//        } catch (IOException e) {
-//            String errMsg = "Error reading hiConfiguration";
-//            log.error(errMsg, e);
-//            throw new HumanTaskDeploymentException(errMsg, e);
-//        }
-//        return hiConfiguration;
-//    }
 
     public List<Definition> getWsdlDefinitions() throws HumanTaskDeploymentException {
         if (wsdlDefinitions.size() == 0) {
@@ -237,17 +220,12 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
                 } catch (WSDLException e) {
                     String errMsg = "Error occurred while converting the wsdl input stream to " +
                             "wsdl definition";
-                    log.error(errMsg, e);
                     throw new HumanTaskDeploymentException(errMsg, e);
                 }
             }
         }
         return wsdlDefinitions;
     }
-
-//    public String getFileName() {
-//        return fileName;
-//    }
 
     /**
      * Read the WSDL file given the input stream for the WSDL source
@@ -299,7 +277,11 @@ public class ArchiveBasedHumanTaskDeploymentUnitBuilder extends HumanTaskDeploym
 
     }
 
-//    public void persist() throws HumanTaskDeploymentException {
+    public File getHumanTaskDefinitionFile() {
+        return humanTaskDefinitionFile;
+    }
+
+    //    public void persist() throws HumanTaskDeploymentException {
 //        //create a collection for the DU n create relevent associations
 //        Registry configRegistry;
 //        try {

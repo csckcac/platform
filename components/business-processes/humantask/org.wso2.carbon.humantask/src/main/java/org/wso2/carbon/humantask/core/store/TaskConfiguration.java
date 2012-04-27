@@ -27,6 +27,7 @@ import org.wso2.carbon.humantask.core.utils.HumanTaskNamespaceContext;
 import javax.wsdl.Definition;
 import javax.wsdl.PortType;
 import javax.xml.namespace.QName;
+import java.io.File;
 import java.util.List;
 
 /**
@@ -60,8 +61,9 @@ public class TaskConfiguration extends HumanTaskBaseConfiguration {
                              List<Definition> wsdls,
                              String targetNamespace,
                              String humanTaskArtifactName,
-                             AxisConfiguration tenatAxisConf, String packageName) {
-        super(humanInteractionsDocument, targetNamespace, humanTaskArtifactName, tenatAxisConf, true, packageName);
+                             AxisConfiguration tenatAxisConf, String packageName, File humanTaskDefinitionFile) {
+        super(humanInteractionsDocument, targetNamespace, humanTaskArtifactName, tenatAxisConf,
+              true, packageName, humanTaskDefinitionFile);
 
         this.task = task;
         this.taskDeploymentConfiguration = taskDeploymentConfiguration;

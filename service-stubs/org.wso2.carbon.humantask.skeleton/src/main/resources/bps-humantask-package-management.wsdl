@@ -70,6 +70,12 @@
 	<message name="packageManagementException">
         <part name="part" element="ns:packageManagementException"/>
     </message>
+    <message name="getTaskInfoRequest">
+        <part name="part" element="ns:getTaskInfoIn"/>
+    </message>
+    <message name="getTaskInfoResponse">
+        <part name="part" element="ns:TaskInfo"/>
+    </message>
 
     <portType name="HumanTaskPackageManagementPortType">
         <operation name="undeployHumanTaskPackage">
@@ -91,6 +97,11 @@
             <input message="tns:listTasksInPackageRequest"/>
             <output message="tns:listTasksInPackageResponse"/>
 	    <fault name="packageManagementException" message="tns:packageManagementException"/>
+        </operation>
+        <operation name="getTaskInfo">
+            <input message="tns:getTaskInfoRequest"/>
+            <output message="tns:getTaskInfoResponse"/>
+            <fault name="packageManagementException" message="tns:packageManagementException"/>
         </operation>
     </portType>
     <binding name="HumanTaskPackageManagementSOAPBinding" type="tns:HumanTaskPackageManagementPortType">
@@ -133,6 +144,18 @@
         </operation>
         <operation name="listTasksInPackage">
             <soap:operation soapAction="urn:listTasksInPackage"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="packageManagementException">
+                <soap:fault name="packageManagementException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="getTaskInfo">
+            <soap:operation soapAction="urn:getTaskInfo"/>
             <input>
                 <soap:body use="literal"/>
             </input>

@@ -87,7 +87,10 @@ public class HumanTaskStore {
                                               humanTaskDU.getHumanInteractionsDefinition(),
                                               humanTaskDU.getWSDLs(),
                                               humanTaskDU.getNamespace(),
-                                              humanTaskDU.getName(), getTenantAxisConfig(), humanTaskDU.getName());
+                                              humanTaskDU.getName(),
+                                              getTenantAxisConfig(),
+                                              humanTaskDU.getName(),
+                                              humanTaskDU.getHumanTaskDefinitionFile());
                 taskConfigurations.add(taskConf);
                 deploy(taskConf);
                 createCallBackService(taskConf);
@@ -104,7 +107,10 @@ public class HumanTaskStore {
                                                       humanTaskDU.getHumanInteractionsDefinition(),
                                                       humanTaskDU.getWSDLs(),
                                                       humanTaskDU.getNamespace(),
-                                                      humanTaskDU.getName(), getTenantAxisConfig(), humanTaskDU.getName());
+                                                      humanTaskDU.getName(),
+                                                      getTenantAxisConfig(),
+                                                      humanTaskDU.getName(),
+                                                      humanTaskDU.getHumanTaskDefinitionFile());
                 taskConfigurations.add(notificationConf);
                 deploy(notificationConf);
             }
@@ -120,7 +126,8 @@ public class HumanTaskStore {
                                                   humanTaskDU.getNamespace(),
                                                   humanTaskDU.getName(),
                                                   getTenantAxisConfig(),
-                                                  humanTaskDU.getName());
+                                                  humanTaskDU.getName(),
+                                                  humanTaskDU.getHumanTaskDefinitionFile());
             taskConfigurations.add(notificationConf);
         }
     }

@@ -22,6 +22,7 @@ import org.wso2.carbon.humantask.core.deployment.config.THTDeploymentConfig;
 
 import javax.wsdl.Definition;
 import javax.xml.namespace.QName;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +41,8 @@ public class HumanTaskDeploymentUnit {
     private String name;
 
     private String targetNamespace;
+
+    private File humanTaskDefinitionFile;
 
 //    private URI uIResourceProviderURI;
 
@@ -118,19 +121,13 @@ public class HumanTaskDeploymentUnit {
     }
 
 
-//    /**
-//     * @return : The URI of the UI Resource Provider.
-//     */
-//    public URI getUIResourceProviderURI() {
-//        return uIResourceProviderURI;
-//    }
-//
-//    /**
-//     * @param uiResourceProviderURI : The Custom UI resource provider URI to set.
-//     */
-//    public void setUIResourceProviderURI(URI uiResourceProviderURI) {
-//        this.uIResourceProviderURI = uiResourceProviderURI;
-//    }
+    public File getHumanTaskDefinitionFile() {
+        return humanTaskDefinitionFile;
+    }
+
+    public void setHumanTaskDefinitionFile(File humanTaskDefinitionFile) {
+        this.humanTaskDefinitionFile = humanTaskDefinitionFile;
+    }
 
     public List<TNotification> getInlineNotifications() {
         List<TNotification> notifications = new ArrayList<TNotification>();

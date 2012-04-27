@@ -1,0 +1,94 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:tns="http://service.gadgetgenwizard.bam.carbon.wso2.org" xmlns:ax23="http://service.gadgetgenwizard.bam.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.gadgetgenwizard.bam.carbon.wso2.org">
+    <wsdl:documentation>GadgetGenAdminService</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax24="http://service.gadgetgenwizard.bam.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+            <xs:import namespace="http://service.gadgetgenwizard.bam.carbon.wso2.org/xsd" />
+            <xs:element name="createGadget">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="map" nillable="true" type="ax23:WSMap" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="createGadgetResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://service.gadgetgenwizard.bam.carbon.wso2.org/xsd">
+            <xs:complexType name="WSMap">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="wsMapElements" nillable="true" type="ax23:WSMapElement" />
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="WSMapElement">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="key" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="value" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="createGadgetRequest">
+        <wsdl:part name="parameters" element="ns1:createGadget" />
+    </wsdl:message>
+    <wsdl:message name="createGadgetResponse">
+        <wsdl:part name="parameters" element="ns1:createGadgetResponse" />
+    </wsdl:message>
+    <wsdl:portType name="GadgetGenAdminServicePortType">
+        <wsdl:operation name="createGadget">
+            <wsdl:input message="tns:createGadgetRequest" wsaw:Action="urn:createGadget" />
+            <wsdl:output message="tns:createGadgetResponse" wsaw:Action="urn:createGadgetResponse" />
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="GadgetGenAdminServiceSoap11Binding" type="tns:GadgetGenAdminServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="createGadget">
+            <soap:operation soapAction="urn:createGadget" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="GadgetGenAdminServiceSoap12Binding" type="tns:GadgetGenAdminServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="createGadget">
+            <soap12:operation soapAction="urn:createGadget" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="GadgetGenAdminServiceHttpBinding" type="tns:GadgetGenAdminServicePortType">
+        <http:binding verb="POST" />
+        <wsdl:operation name="createGadget">
+            <http:operation location="createGadget" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="GadgetGenAdminService">
+        <wsdl:port name="GadgetGenAdminServiceHttpsSoap11Endpoint" binding="tns:GadgetGenAdminServiceSoap11Binding">
+            <soap:address location="https://10.150.3.123:9443/services/GadgetGenAdminService.GadgetGenAdminServiceHttpsSoap11Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="GadgetGenAdminServiceHttpsSoap12Endpoint" binding="tns:GadgetGenAdminServiceSoap12Binding">
+            <soap12:address location="https://10.150.3.123:9443/services/GadgetGenAdminService.GadgetGenAdminServiceHttpsSoap12Endpoint/" />
+        </wsdl:port>
+        <wsdl:port name="GadgetGenAdminServiceHttpsEndpoint" binding="tns:GadgetGenAdminServiceHttpBinding">
+            <http:address location="https://10.150.3.123:9443/services/GadgetGenAdminService.GadgetGenAdminServiceHttpsEndpoint/" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

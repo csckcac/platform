@@ -30,22 +30,18 @@ import org.wso2.carbon.utils.CarbonUtils;
  * Actual validation operations are carried out by invoking back-end authentication and
  * key validation services. In order to minimize the network overhead, this implementation
  * caches some API key authentication information in memory. This implementation and the
- * underlying caching implementation are thread-safe.
+ * underlying caching implementation are thread-safe. An instance of this class must not be
+ * shared among multiple APIs, API handlers or authenticators.
  */
 public class APIKeyValidator {
-
-    private static final APIKeyValidator instance = new APIKeyValidator();
 
     private static final int TIMEOUT_IN_MILLIS = 15 * 60 * 1000;
 
     private APIKeyCache infoCache;
 
-    private APIKeyValidator() {
-        infoCache = new APIKeyCache(1000, 250);
-    }
-
-    public static APIKeyValidator getInstance(){
-        return instance;
+    public APIKeyValidator() {
+        infoCache = new APIKeyCache(APISecurityConstants.DEFAULT_MAX_VALID_KEYS,
+                APISecurityConstants.DEFAULT_MAX_INVALID_KEYS);
     }
 
     private String getAuthSessionForAdminServices() throws Exception {
@@ -63,49 +59,27 @@ public class APIKeyValidator {
      */
     public APIKeyValidationInfoDTO getKeyValidationInfo(String context, String apiKey,
                                                        String apiVersion) throws APISecurityException {
-        // We use a combination of API context, API version and API key as the
-        // cache key, because API keys are issued per API, per version.
-        String cacheKey = "{" + context + ":" + apiVersion + ":" + apiKey + "}";
-        APIKeyValidationInfoDTO info = infoCache.getInfo(cacheKey);
+        APIKeyValidationInfoDTO info = infoCache.getInfo(apiKey);
         if (info != null) {
             return info;
         }
 
-        synchronized (cacheKey.intern()) {
+        synchronized (apiKey.intern()) {
             // We synchronize on the API key here to allow concurrent processing
             // of different API keys - However when a burst of requests with the
             // same key is encountered, only one will be allowed to execute the logic,
             // and the rest will pick the value from the cache.
-            info = infoCache.getInfo(cacheKey);
+            info = infoCache.getInfo(apiKey);
             if (info != null) {
                 return info;
             }
 
-            try {
-                String serviceURL = CarbonUtils.getServerURL(ServerConfiguration.getInstance(),
-                        ServiceReferenceHolder.getInstance().getServerConfigurationContext());
-                APIKeyValidationServiceStub validator = new APIKeyValidationServiceStub(null,
-                        serviceURL + "APIKeyValidationService");
-
-                ServiceClient client = validator._getServiceClient();
-                Options options = client.getOptions();
-                options.setTimeOutInMilliSeconds(TIMEOUT_IN_MILLIS);
-                options.setProperty(HTTPConstants.SO_TIMEOUT, TIMEOUT_IN_MILLIS);
-                options.setProperty(HTTPConstants.CONNECTION_TIMEOUT, TIMEOUT_IN_MILLIS);
-                options.setManageSession(true);
-                options.setProperty(HTTPConstants.COOKIE_STRING,
-                        getAuthSessionForAdminServices());
-                info = validator.validateKey(context, apiVersion, apiKey);
-            } catch (Exception e) {
-                throw new APISecurityException(APISecurityConstants.API_AUTH_GENERAL_ERROR,
-                        "Error while accessing backend services for API key validation", e);
-            }
-
+            info = doGetKeyValidationInfo(context, apiVersion, apiKey);
             if (info != null) {
                 if (info.getAuthorized()) {
-                    infoCache.addValidKey(cacheKey, info);
+                    infoCache.addValidKey(apiKey, info);
                 } else {
-                    infoCache.addInvalidKey(cacheKey, info);
+                    infoCache.addInvalidKey(apiKey, info);
                 }
                 return info;
             } else {
@@ -113,5 +87,28 @@ public class APIKeyValidator {
                         "API key validator returned null");
             }
         }
+    }
+    
+    protected APIKeyValidationInfoDTO doGetKeyValidationInfo(String context, String apiVersion, 
+                                                             String apiKey) throws APISecurityException {
+        try {
+            String serviceURL = CarbonUtils.getServerURL(ServerConfiguration.getInstance(),
+                    ServiceReferenceHolder.getInstance().getServerConfigurationContext());
+            APIKeyValidationServiceStub validator = new APIKeyValidationServiceStub(null,
+                    serviceURL + "APIKeyValidationService");
+
+            ServiceClient client = validator._getServiceClient();
+            Options options = client.getOptions();
+            options.setTimeOutInMilliSeconds(TIMEOUT_IN_MILLIS);
+            options.setProperty(HTTPConstants.SO_TIMEOUT, TIMEOUT_IN_MILLIS);
+            options.setProperty(HTTPConstants.CONNECTION_TIMEOUT, TIMEOUT_IN_MILLIS);
+            options.setManageSession(true);
+            options.setProperty(HTTPConstants.COOKIE_STRING,
+                    getAuthSessionForAdminServices());
+            return validator.validateKey(context, apiVersion, apiKey);
+        } catch (Exception e) {
+            throw new APISecurityException(APISecurityConstants.API_AUTH_GENERAL_ERROR,
+                    "Error while accessing backend services for API key validation", e);
+        }    
     }
 }

@@ -34,14 +34,15 @@ import java.util.Map;
  */
 public class OAuthAuthenticator implements Authenticator {
     
-    private APIKeyValidator keyValidator = APIKeyValidator.getInstance();
+    protected APIKeyValidator keyValidator;
     
-    private String securityHeader;
-    private String consumerKeyHeaderSegment;
-    private String oauthHeaderSplitter;
-    private String consumerKeySegmentDelimiter;
+    private String securityHeader = HttpHeaders.AUTHORIZATION;
+    private String consumerKeyHeaderSegment = "Bearer";
+    private String oauthHeaderSplitter = ",";
+    private String consumerKeySegmentDelimiter = " ";
 
     public OAuthAuthenticator() {
+        this.keyValidator = new APIKeyValidator();
         initOAuthParams();
     }
 
@@ -124,30 +125,30 @@ public class OAuthAuthenticator implements Authenticator {
         return result.trim();
     }
     
-    private void initOAuthParams() {
+    protected void initOAuthParams() {
         APIManagerConfiguration config = APIManagerConfiguration.getInstance();
-        securityHeader = config.getFirstProperty(
+        String value = config.getFirstProperty(
                 APISecurityConstants.API_SECURITY_OAUTH_HEADER);
-        if (securityHeader == null) {
-            securityHeader = HttpHeaders.AUTHORIZATION;
+        if (value != null) {
+            securityHeader = value;
         }
 
-        consumerKeyHeaderSegment = config.getFirstProperty(
+        value = config.getFirstProperty(
                 APISecurityConstants.API_SECURITY_CONSUMER_KEY_HEADER_SEGMENT);
-        if (consumerKeyHeaderSegment == null) {
-            consumerKeyHeaderSegment = "Bearer";
+        if (value != null) {
+            consumerKeyHeaderSegment = value;
         }
 
-        oauthHeaderSplitter = config.getFirstProperty(
+        value = config.getFirstProperty(
                 APISecurityConstants.API_SECURITY_OAUTH_HEADER_SPLITTER);
-        if (oauthHeaderSplitter == null) {
-            oauthHeaderSplitter = ",";
+        if (value != null) {
+            oauthHeaderSplitter = value;
         }
 
-        consumerKeySegmentDelimiter = config.getFirstProperty(
+        value = config.getFirstProperty(
                 APISecurityConstants.API_SECURITY_CONSUMER_KEY_SEGMENT_DELIMITER);
-        if (consumerKeySegmentDelimiter == null) {
-            consumerKeySegmentDelimiter = " ";
+        if (value != null) {
+            consumerKeySegmentDelimiter = value;
         }
     }
 

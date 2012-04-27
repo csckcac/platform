@@ -24,15 +24,7 @@ public class APISecurityConstants {
     public static final int API_AUTH_INVALID_CREDENTIALS = 900901;
     public static final int API_AUTH_MISSING_CREDENTIALS = 900902;
     
-    public static final String API_SECURITY_CONFIGURATION = "Security.";
-    public static final String API_SECURITY_AUTH_ADMIN_URL =
-            API_SECURITY_CONFIGURATION + "AuthServerURL";
-    public static final String API_SECURITY_AUTH_TRUSTSTORE =
-            API_SECURITY_CONFIGURATION + "AuthTruststore";
-    public static final String API_SECURITY_AUTH_TRUSTSTORE_TYPE =
-            API_SECURITY_CONFIGURATION + "AuthTruststoreType";
-    public static final String API_SECURITY_AUTH_TRUSTSTORE_PASS =
-            API_SECURITY_CONFIGURATION + "AuthTruststorePass";
+    public static final String API_SECURITY_CONFIGURATION = "APIConsumerAuthentication.";
     public static final String API_SECURITY_AUTH_USERNAME =
             API_SECURITY_CONFIGURATION + "AuthUsername";
     public static final String API_SECURITY_AUTH_PASSWORD =

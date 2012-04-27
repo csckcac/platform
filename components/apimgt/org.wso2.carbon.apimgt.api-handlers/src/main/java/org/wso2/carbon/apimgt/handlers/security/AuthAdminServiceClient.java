@@ -21,8 +21,11 @@ import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ServiceContext;
 import org.apache.axis2.transport.http.HTTPConstants;
+import org.wso2.carbon.apimgt.handlers.internal.ServiceReferenceHolder;
 import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
+import org.wso2.carbon.base.ServerConfiguration;
+import org.wso2.carbon.utils.CarbonUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -36,11 +39,8 @@ public class AuthAdminServiceClient {
 
     public AuthAdminServiceClient() throws AxisFault {
         setSystemProperties();
-        APIManagerConfiguration config = APIManagerConfiguration.getInstance();
-        String serviceURL = config.getFirstProperty(APISecurityConstants.API_SECURITY_AUTH_ADMIN_URL);
-        if (serviceURL == null) {
-            throw new AxisFault("URL of the authentication admin service hasn't been specified");
-        }
+        String serviceURL = CarbonUtils.getServerURL(ServerConfiguration.getInstance(),
+                ServiceReferenceHolder.getInstance().getServerConfigurationContext());
         serviceURL += "AuthenticationAdmin";
         try {
             URL url = new URL(serviceURL);
@@ -48,7 +48,8 @@ public class AuthAdminServiceClient {
         } catch (MalformedURLException e) {
             throw new AxisFault("Malformed admin service URL: " + serviceURL, e);
         }
-        
+
+        APIManagerConfiguration config = APIManagerConfiguration.getInstance();
         username = config.getFirstProperty(APISecurityConstants.API_SECURITY_AUTH_USERNAME);
         password = config.getFirstProperty(APISecurityConstants.API_SECURITY_AUTH_PASSWORD);
         if (username == null || password == null) {
@@ -70,15 +71,12 @@ public class AuthAdminServiceClient {
     }
 
     private void setSystemProperties() throws AxisFault {
-        APIManagerConfiguration config = APIManagerConfiguration.getInstance();
-        String keyStorePath = config.getFirstProperty(
-                APISecurityConstants.API_SECURITY_AUTH_TRUSTSTORE);
-        String keyStorePassword = config.getFirstProperty(
-                APISecurityConstants.API_SECURITY_AUTH_TRUSTSTORE_PASS);
-        String keyStoreType = config.getFirstProperty(
-                APISecurityConstants.API_SECURITY_AUTH_TRUSTSTORE_TYPE);
+        ServerConfiguration config = ServerConfiguration.getInstance();
+        String keyStorePath = config.getFirstProperty("Security.TrustStore.Location");
+        String keyStorePassword = config.getFirstProperty("Security.TrustStore.Password");
+        String keyStoreType = config.getFirstProperty("Security.TrustStore.Type");
         if (keyStorePath == null || keyStorePassword == null || keyStoreType == null) {
-            throw new AxisFault("Required configuration parameter missing for authentication" +
+            throw new AxisFault("Required truststore parameters missing for authentication" +
                     " admin stub");
         }
         System.setProperty("javax.net.ssl.trustStore", keyStorePath);

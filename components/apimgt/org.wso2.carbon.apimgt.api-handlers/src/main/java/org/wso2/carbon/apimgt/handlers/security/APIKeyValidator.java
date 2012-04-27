@@ -19,9 +19,12 @@ package org.wso2.carbon.apimgt.handlers.security;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.transport.http.HTTPConstants;
-import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
+import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.apimgt.handlers.internal.ServiceReferenceHolder;
 import org.wso2.carbon.apimgt.impl.dto.xsd.APIKeyValidationInfoDTO;
 import org.wso2.carbon.apimgt.keymgt.stub.validator.APIKeyValidationServiceStub;
+import org.wso2.carbon.base.ServerConfiguration;
+import org.wso2.carbon.utils.CarbonUtils;
 
 public class APIKeyValidator {
 
@@ -73,8 +76,8 @@ public class APIKeyValidator {
             }
 
             try {
-                String serviceURL = APIManagerConfiguration.getInstance().getFirstProperty(
-                        APISecurityConstants.API_SECURITY_AUTH_ADMIN_URL);
+                String serviceURL = CarbonUtils.getServerURL(ServerConfiguration.getInstance(),
+                        ServiceReferenceHolder.getInstance().getServerConfigurationContext());
                 APIKeyValidationServiceStub validator = new APIKeyValidationServiceStub(null,
                         serviceURL + "APIKeyValidationService");
 

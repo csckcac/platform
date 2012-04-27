@@ -58,15 +58,17 @@
         request="<%=request%>"/>
 
 <style type="text/css">
-    .disabled{
-        color:#CCCCCC;
+    .disabled {
+        color: #CCCCCC;
         cursor: default;
     }
+
     a.disabled:hover {
         color: #CCCCCC;
     }
-    .enabled{
-        color:#2F7ABD;
+
+    .enabled {
+        color: #2F7ABD;
         cursor: pointer;
     }
 </style>
@@ -93,77 +95,61 @@
     }
 </script>
 <div id="middle">
-    <table>
-        <tr>
-            <form>
-                <td>Row ID:</td>
-                <td><input type="text" name="rowid" id="rowid"/></td>
-                <td><input type="button" value="Explore Row "
-                           onclick="getDataForRow('<%=keyspace%>',
-                        '<%=columnFamily%>',document.getElementById('rowid').value);"/></td>
-            </form>
-        </tr>
-        <tr>
-            <td>Page Size:</td>
-            <td>
-                <select id="ddlPageSize" onchange="loadPageSize('<%=keyspace%>','<%=columnFamily%>');">
-                    <option>10</option>
-                    <option>25</option>
-                    <option>50</option>
-                    <option>100</option>
-                </select>
-            </td>
-        </tr>
-    </table>
+<table>
+    <tr>
+        <form>
+            <td>Row ID:</td>
+            <td><input type="text" name="rowid" id="rowid"/></td>
+            <td><input type="button" value="Explore Row "
+                       onclick="getDataForRow('<%=keyspace%>',
+                               '<%=columnFamily%>',document.getElementById('rowid').value);"/></td>
+        </form>
+    </tr>
+    <tr>
+        <td>Page Size:</td>
+        <td>
+            <select id="ddlPageSize" onchange="loadPageSize('<%=keyspace%>','<%=columnFamily%>');">
+                <option>10</option>
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+            </select>
+        </td>
+    </tr>
+</table>
 
-    <div id="workArea">
-        <%
-            String[] rows = new String[0];
-            String[] previousRows = new String[0];
-            String[] nextRows = new String[0];
-            boolean previousRowsExists = true;
-            boolean nextRowsExists = true;
+<div id="workArea">
+    <%
+        String[] rows = new String[0];
+        String[] previousRows = new String[0];
+        String[] nextRows = new String[0];
+        boolean previousRowsExists = true;
+        boolean nextRowsExists = true;
 
-            //if a row ID has been inserted to field
-            if (rowID != null) {
-                rows = cassandraExplorerAdminClient.getRows(keyspace, columnFamily, rowID, rowID, 50);
-                if (rows == null || rows.length == 0) {
-        %>
-        <script type="text/javascript">
-            jQuery(document).ready(function() {
-                CARBON.showInfoDialog('No Results found', function () {
-                    CARBON.closeWindow();
-                   reloadDataTable('<%=keyspace%>','<%=columnFamily%>');
-                }, function () {
-                    CARBON.closeWindow();
-                    reloadDataTable('<%=keyspace%>','<%=columnFamily%>');
-                });
+        //if a row ID has been inserted to field
+        if (rowID != null) {
+            rows = cassandraExplorerAdminClient.getRows(keyspace, columnFamily, rowID, rowID, 50);
+            if (rows == null || rows.length == 0) {
+    %>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            CARBON.showInfoDialog('No Results found', function () {
+                CARBON.closeWindow();
+                reloadDataTable('<%=keyspace%>', '<%=columnFamily%>');
+            }, function () {
+                CARBON.closeWindow();
+                reloadDataTable('<%=keyspace%>', '<%=columnFamily%>');
             });
-        </script>
-        <%
-                }
-                //check if user is paginating
-            } else if (startRowKey != null && navigationDirection != null) {
-                if ("next".equals(navigationDirection)) {
-                    rows = cassandraExplorerAdminClient.getRows(keyspace, columnFamily, startRowKey, "",
-                            Integer.parseInt(pageSize));
-                    previousRows = cassandraExplorerAdminClient.getRows(keyspace, columnFamily, "", rows[0], 2);
-                    nextRows = cassandraExplorerAdminClient.getRows(keyspace, columnFamily,
-                            rows[rows.length - 1], "", 2);
-
-                    if (previousRows.length > 1) {
-                        previousRowsExists = true;
-                    } else {
-                        previousRowsExists = false;
-                    }
-                    if (nextRows.length > 1) {
-                        nextRowsExists = true;
-                    } else {
-                        nextRowsExists = false;
-                    }
-                } else if ("prev".equals(navigationDirection)) {
-                    rows = cassandraExplorerAdminClient.getRows(keyspace, columnFamily, "", startRowKey,
-                            Integer.parseInt(pageSize));
+        });
+    </script>
+    <%
+            }
+            //check if user is paginating
+        } else if (startRowKey != null && navigationDirection != null) {
+            if ("next".equals(navigationDirection)) {
+                rows = cassandraExplorerAdminClient.getRows(keyspace, columnFamily, startRowKey, "",
+                        Integer.parseInt(pageSize));
+                if (rows != null) {
                     previousRows = cassandraExplorerAdminClient.getRows(keyspace, columnFamily, "", rows[0], 2);
                     nextRows = cassandraExplorerAdminClient.getRows(keyspace, columnFamily,
                             rows[rows.length - 1], "", 2);
@@ -179,15 +165,36 @@
                         nextRowsExists = false;
                     }
                 }
-               // loading intially or reloading data table.
+            } else if ("prev".equals(navigationDirection)) {
+                rows = cassandraExplorerAdminClient.getRows(keyspace, columnFamily, "", startRowKey,
+                        Integer.parseInt(pageSize));
+                if (rows != null) {
+                    previousRows = cassandraExplorerAdminClient.getRows(keyspace, columnFamily, "", rows[0], 2);
+                    nextRows = cassandraExplorerAdminClient.getRows(keyspace, columnFamily,
+                            rows[rows.length - 1], "", 2);
+
+                    if (previousRows.length > 1) {
+                        previousRowsExists = true;
+                    } else {
+                        previousRowsExists = false;
+                    }
+                    if (nextRows.length > 1) {
+                        nextRowsExists = true;
+                    } else {
+                        nextRowsExists = false;
+                    }
+                }
+            }
+            // loading intially or reloading data table.
+        } else {
+            int intPageSize;
+            if (pageSize != null) {
+                intPageSize = Integer.parseInt(pageSize);
             } else {
-                int intPageSize;
-                if (pageSize != null) {
-                    intPageSize = Integer.parseInt(pageSize);
-                } else {
-                    intPageSize = 10;
-                }
-                rows = cassandraExplorerAdminClient.getRows(keyspace, columnFamily, "", "", intPageSize);
+                intPageSize = 10;
+            }
+            rows = cassandraExplorerAdminClient.getRows(keyspace, columnFamily, "", "", intPageSize);
+            if (rows != null) {
                 previousRows = cassandraExplorerAdminClient.getRows(keyspace, columnFamily, "", rows[0], 2);
                 nextRows = cassandraExplorerAdminClient.getRows(keyspace, columnFamily, rows[rows.length - 1], "", 2);
 
@@ -202,103 +209,121 @@
                     nextRowsExists = false;
                 }
             }
+        }
 
-            if (pageSize != null) {
-        %>
+        if (pageSize != null) {
+    %>
 
-        <script type="text/javascript">
-            document.getElementById("ddlPageSize").value = "<%=pageSize%>";
-        </script>
+    <script type="text/javascript">
+        document.getElementById("ddlPageSize").value = "<%=pageSize%>";
+    </script>
 
-        <%
-            }if (rows != null) {
-        %>
-        <input type="hidden" id="hfStartRowKey" value="<%=rows[0]%>"/>
-        <input type="hidden" id="hfEndRowKey" value="<%=rows[rows.length-1]%>"/>
-        <%
-                for (int i = 0; i < rows.length; i++) {
-                    String cfExplorerTableID = "CfExplorerTable_" + rows[i];
-                    String startKeyId = "hfStartKey_" + rows[i];
-                    String endKeyId = "hfEndKey_" + rows[i];
+    <%
+        }
+        if (rows != null) {
+    %>
+    <input type="hidden" id="hfStartRowKey" value="<%=rows[0]%>"/>
+    <input type="hidden" id="hfEndRowKey" value="<%=rows[rows.length-1]%>"/>
+    <%
+        for (int i = 0; i < rows.length; i++) {
+            String cfExplorerTableID = "CfExplorerTable_" + rows[i];
+            String startKeyId = "hfStartKey_" + rows[i];
+            String endKeyId = "hfEndKey_" + rows[i];
 
-        %>
-        <input type="hidden" id="<%=startKeyId%>" value=""/>
-        <input type="hidden" id="<%=endKeyId%>" value=""/>
-        <table class="styledLeft" id="<%=cfExplorerTableID%>" width="100%" style="margin-left: 0px;">
-            <thead>
-            <tr>
-                <th width="25%">Row <%=i + 1%>
-                </th>
-                <%
-                    org.wso2.carbon.cassandra.mgt.stub.explorer.xsd.Column[] columns = cassandraExplorerAdminClient.
-                            getColumnsForRowName(keyspace, columnFamily, rows[i], "", "", 3, false);
-                    String startKey = columns[0].getName();
-                    String endKey = columns[columns.length - 1].getName();
-                    for (int k = 0; k < columns.length; k++) {
-                %>
-                <script type="text/javascript">
-                    document.getElementById("<%=startKeyId%>").value = "<%=startKey%>";
-                    document.getElementById("<%=endKeyId%>").value = "<%=endKey%>";
-                </script>
-                <th><%=columns[k].getName()%>
-                </th>
-                <% } %>
-                <th width="100px"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>
-                    <a onclick="getDataPageForRow('<%=keyspace%>','<%=columnFamily%>','<%= rows[i] %>')"
-                       class="view-icon-link" href="#">
-                        <%=rows[i]%>
-                    </a>
-                </td>
-                <%
-                    String currentRowID = rows[i];
-                    for (int j = 0; j < columns.length; j++) {
-                %>
-                <td><%=columns[j].getValue()%>
-                </td>
-                <% }
-                %>
-                <td>
+    %>
+    <input type="hidden" id="<%=startKeyId%>" value=""/>
+    <input type="hidden" id="<%=endKeyId%>" value=""/>
+    <table class="styledLeft" id="<%=cfExplorerTableID%>" width="100%" style="margin-left: 0px;">
+        <thead>
+        <tr>
+            <th width="25%">Row <%=i + 1%>
+            </th>
+            <%
+                org.wso2.carbon.cassandra.mgt.stub.explorer.xsd.Column[] columns = cassandraExplorerAdminClient.
+                        getColumnsForRowName(keyspace, columnFamily, rows[i], "", "", 3, false);
+                String startKey = columns[0].getName();
+                String endKey = columns[columns.length - 1].getName();
+                for (int k = 0; k < columns.length; k++) {
+            %>
+            <script type="text/javascript">
+                document.getElementById("<%=startKeyId%>").value = "<%=startKey%>";
+                document.getElementById("<%=endKeyId%>").value = "<%=endKey%>";
+            </script>
+            <th><%=columns[k].getName()%>
+            </th>
+            <% } %>
+            <th width="100px"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                <a onclick="getDataPageForRow('<%=keyspace%>','<%=columnFamily%>','<%= rows[i] %>')"
+                   class="view-icon-link" href="#">
+                    <%=rows[i]%>
+                </a>
+            </td>
+            <%
+                String currentRowID = rows[i];
+                for (int j = 0; j < columns.length; j++) {
+            %>
+            <td><%=columns[j].getValue()%>
+            </td>
+            <% }
+            %>
+            <td>
                     <span>
                         <a class="enabled" id="btnPrevCols"
-                           onclick="loadPrevious('<%=currentRowID%>','<%=keyspace%>','<%=columnFamily%>');">&lt;Prev </a>
+                           onclick="loadPrevious('<%=currentRowID%>','<%=keyspace%>','<%=columnFamily%>');">
+                            &lt;Prev </a>
                     </span>
                     <span>
-                        <a class="enabled" id="btnNextCols" onclick="loadNext('<%=currentRowID%>','<%=keyspace%>','<%=columnFamily%>');"> Next&gt;</a>
+                        <a class="enabled" id="btnNextCols"
+                           onclick="loadNext('<%=currentRowID%>','<%=keyspace%>','<%=columnFamily%>');">
+                            Next&gt;</a>
                     </span>
-                    <script type="text/javascript">
-                        updateButtonStatus("<%=currentRowID%>");
-                    </script>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <br>
-        <%
-                }
-            }
-        %>
-        <table>
-            <tr>
-                <td><input type="button" id="btnPrevRows" value="&lt;Prev " onclick="loadPreviousRows('<%=keyspace%>','<%=columnFamily%>');"/></td>
-                <td><input type="button" id="btnNextRows" value=" Next&gt;" onclick="loadNextRows('<%=keyspace%>','<%=columnFamily%>');"/></td>
                 <script type="text/javascript">
-                    if (<%=!previousRowsExists%>) {
-                        document.getElementById("btnPrevRows").disabled = true;
-                    }
-                    if (<%=!nextRowsExists%>) {
-                        document.getElementById("btnNextRows").disabled = true;
-                    }
+                    updateButtonStatus("<%=currentRowID%>");
                 </script>
-            </tr>
-        </table>
-    </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
+    <%
+        }
+    %>
+    <table>
+        <tr>
+            <td><input type="button" id="btnPrevRows" value="&lt;Prev "
+                       onclick="loadPreviousRows('<%=keyspace%>','<%=columnFamily%>');"/></td>
+            <td><input type="button" id="btnNextRows" value=" Next&gt;"
+                       onclick="loadNextRows('<%=keyspace%>','<%=columnFamily%>');"/></td>
+            <script type="text/javascript">
+                if (<%=!previousRowsExists%>) {
+                    document.getElementById("btnPrevRows").disabled = true;
+                }
+                if (<%=!nextRowsExists%>) {
+                    document.getElementById("btnNextRows").disabled = true;
+                }
+            </script>
+        </tr>
+    </table>
+</div>
 </div>
 
+<%
+} else {%>
 
+<script type="text/javascript">
+    jQuery(document).ready(function () {
+        CARBON.showInfoDialog('No Results found', function () {
+            CARBON.closeWindow();
+        }, function () {
+            CARBON.closeWindow();
+        });
+    });
+</script>
+<%}%>
 </fmt:bundle>
 

@@ -23,12 +23,12 @@ h2{
     margin:0;
 }
 h4{
-    font-size:20px;
+    font-size:120%;
     color:#919520;
 }
 h5{
     color:#58595b;
-    font-size:12px;
+    font-size:110%;
     margin:0;
 }
 thead th,
@@ -149,7 +149,7 @@ a.logo{
     border:none;
 }
 .tabs-section ul.tabs{
-    font-size:11px;
+    font-size:90%;
 }
 #footer {
     text-align: center;
@@ -246,7 +246,7 @@ div.thumbnail span {
 }
 div.thumbnail a{
     margin:0;
-    font-size:11px;
+    font-size:0.8px;
     color:#1c75bc;
     cursor:pointer;
     background:none;
@@ -360,7 +360,7 @@ ul.tabs li a:hover{
     padding: 9px 16px 9px;
     margin:0 10px 10px 0;
     text-align: center;
-    font-size: 14px;
+    font-size: 100%;
     line-height: 12px;
     border: 3px solid #fff;
     box-shadow: 0 1px 1.5px 0 rgba(0, 0, 0, 0.45);
@@ -381,6 +381,9 @@ ul.tabs li a:hover{
 }
 .application-api-listing div{
     padding-top:10px;
+}
+.simple-space-maker{
+    padding:10px 0;
 }
 
 

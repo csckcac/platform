@@ -20,6 +20,7 @@ package org.wso2.carbon.cassandra.dataaccess;
 
 import me.prettyprint.cassandra.service.CassandraHostConfigurator;
 import me.prettyprint.hector.api.Cluster;
+import me.prettyprint.hector.api.Keyspace;
 import me.prettyprint.hector.api.factory.HFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -134,6 +135,19 @@ public class DataAccessServiceImpl implements DataAccessService {
             }
             return cluster;
         }
+
+    /**
+     * Returns a Cassandra Keyspace for the current user
+     *
+     * @param cluster
+     * @param keyspaceName
+     * @return
+     */
+    public Keyspace getKeySpace(Cluster cluster, String keyspaceName) {
+        cluster = HFactory.getOrCreateCluster(cluster.getName(), "localhost");
+        Keyspace keyspace = HFactory.createKeyspace(keyspaceName, cluster);
+        return keyspace;
+    }
 
     /**
      * Returns a Cassandra cluster for the current carbon user

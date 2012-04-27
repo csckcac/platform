@@ -19,6 +19,7 @@
 package org.wso2.carbon.cassandra.dataaccess;
 
 import me.prettyprint.hector.api.Cluster;
+import me.prettyprint.hector.api.Keyspace;
 
 /**
  * To provides the access to the underlying data store. Currently,this is coupled to the hector Cassandra dataaccess
@@ -80,4 +81,12 @@ public interface DataAccessService {
      * Shutdown and remove the references to the <code>Cluster</code> instances in the system
      */
     void destroyAllClusters();
+
+    /**
+     *  get the KeySpace
+     * @param cluster
+     * @param keySpaceName
+     * @return
+     */
+    Keyspace getKeySpace(Cluster cluster,String keySpaceName);
 }

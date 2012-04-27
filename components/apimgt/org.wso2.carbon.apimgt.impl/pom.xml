@@ -146,7 +146,11 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
+                        <Private-Package>
+                            org.wso2.carbon.apimgt.impl.internal
+                        </Private-Package>
                         <Export-Package>
+                            !org.wso2.carbon.apimgt.impl.internal,
                             org.wso2.carbon.apimgt.impl.*,
                         </Export-Package>
                         <Import-Package>
@@ -154,7 +158,6 @@
                             org.wso2.carbon.registry.ws.client.*,
                             org.wso2.carbon.apimgt.api.model.*,
                             org.wso2.carbon.apimgt.api.*,
-                            <!--org.apache.axis2.*; version="${axis2.osgi.version.range}",-->
                             javax.servlet;version="2.4.0",
                             javax.servlet.http;version="2.4.0",
                             javax.servlet.resources;version="2.4.0",

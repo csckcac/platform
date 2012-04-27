@@ -41,6 +41,6 @@ public class APISecurityConstants {
             API_SECURITY_CONFIGURATION + "OAuthHeaderSplitter";
     
     public static final String API_SECURITY_NS = "http://wso2.org/apimanager/security";
-    public static final String API_SECURITY_NS_PREFIX = "am";
+    public static final String API_SECURITY_NS_PREFIX = "ams";
     
 }

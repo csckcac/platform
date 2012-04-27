@@ -16,6 +16,10 @@
 
 package org.wso2.carbon.apimgt.handlers.security;
 
+/**
+ * Contains some context information related to an authenticated request. This can be used
+ * to access API keys and tier information related to already authenticated requests.
+ */
 public class AuthenticationContext {
 
     private boolean authenticated;

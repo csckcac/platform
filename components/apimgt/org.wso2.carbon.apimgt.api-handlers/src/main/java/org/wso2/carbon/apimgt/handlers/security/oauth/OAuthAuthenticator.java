@@ -26,6 +26,12 @@ import org.wso2.carbon.apimgt.impl.dto.xsd.APIKeyValidationInfoDTO;
 
 import java.util.Map;
 
+/**
+ * An API consumer authenticator which authenticates user requests using
+ * the OAuth protocol. This implementation uses some default token/delimiter
+ * values to parse OAuth headers, but if needed these settings can be overridden
+ * through the APIManagerConfiguration.
+ */
 public class OAuthAuthenticator implements Authenticator {
     
     private APIKeyValidator keyValidator = APIKeyValidator.getInstance();

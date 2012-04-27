@@ -30,6 +30,9 @@ import org.wso2.carbon.utils.CarbonUtils;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+/**
+ * Service client used to login to backend AuthenticationAdmin service.
+ */
 public class AuthAdminServiceClient {
 
     private AuthenticationAdminStub authenticationAdminStub;

@@ -16,6 +16,10 @@
 
 package org.wso2.carbon.apimgt.handlers.security;
 
+/**
+ * Represents an API security violation or a system error that may have occurred
+ * while validating security requirements.
+ */
 public class APISecurityException extends Exception {
     
     private int errorCode;

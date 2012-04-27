@@ -19,13 +19,19 @@ package org.wso2.carbon.apimgt.handlers.security;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.transport.http.HTTPConstants;
-import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.apimgt.handlers.internal.ServiceReferenceHolder;
 import org.wso2.carbon.apimgt.impl.dto.xsd.APIKeyValidationInfoDTO;
 import org.wso2.carbon.apimgt.keymgt.stub.validator.APIKeyValidationServiceStub;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.utils.CarbonUtils;
 
+/**
+ * This class is used to validate a given API key against a given API context and a version.
+ * Actual validation operations are carried out by invoking back-end authentication and
+ * key validation services. In order to minimize the network overhead, this implementation
+ * caches some API key authentication information in memory. This implementation and the
+ * underlying caching implementation are thread-safe.
+ */
 public class APIKeyValidator {
 
     private static final APIKeyValidator instance = new APIKeyValidator();

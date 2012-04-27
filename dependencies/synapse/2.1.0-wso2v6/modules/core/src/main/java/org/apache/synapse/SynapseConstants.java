@@ -21,7 +21,6 @@ package org.apache.synapse;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMNamespace;
-
 import javax.xml.namespace.QName;
 
 /**
@@ -37,7 +36,9 @@ public final class SynapseConstants {
     /** An OMNamespace object for the Synapse NS */
     public static final OMNamespace SYNAPSE_OMNAMESPACE =
             OMAbstractFactory.getOMFactory().createOMNamespace(SYNAPSE_NAMESPACE, "");
-
+    /** An OMNamespace object for the Empty Namespace */
+    public static final OMNamespace NULL_NAMESPACE = 
+    	OMAbstractFactory.getOMFactory().createOMNamespace("", "");
     /** The name of the main sequence for message mediation */
     public static final String MAIN_SEQUENCE_KEY  = "main";
     /** The name of the fault sequence to execute on failures during mediation */

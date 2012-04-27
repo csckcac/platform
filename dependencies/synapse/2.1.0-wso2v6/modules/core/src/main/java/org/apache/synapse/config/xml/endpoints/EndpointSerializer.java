@@ -138,6 +138,8 @@ public abstract class EndpointSerializer {
             return new TemplateEndpointSerializer();
         } else if(endpoint instanceof RecipientListEndpoint){
         	return new RecipientListEndpointSerializer();
+        } else if(endpoint instanceof ClassEndpoint){
+        	return new ClassEndpointSerializer();
         }
 
         throw new SynapseException("Serializer for endpoint " +

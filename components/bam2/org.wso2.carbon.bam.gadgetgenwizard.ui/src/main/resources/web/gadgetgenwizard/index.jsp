@@ -41,10 +41,16 @@
             $("#Back").attr("disabled", "disabled");
         }
 
+        $("#Finish").hide();
+
+        $("#Finish").click(function() {
+            sendAjaxRequest("generate_gadget_ajaxprocessor.jsp", null);
+        })
+
         $("#Back").click(function() {
             var backURL = "";
             if ($("#page").val() == "02") {
-                backURL = "index_ajaxprocessor.jsp";
+                backURL = "datasource_ajaxprocessor.jsp";
             } else if ($("#page").val() == "03") {
                 backURL = "sqlinput_ajaxprocessor.jsp";
             } else if ($("#page").val() == "04") {
@@ -83,9 +89,18 @@
                         //show the success message
                         $('#div-form').fadeIn('fast');
 
-                        if ($("#page").val() != "01") {
+                        if ($("#page").val() == "01") {
+                            $("#Back").attr("disabled", "disabled");
+                        } else {
                             $("#Back").removeAttr('disabled');
                         }
+
+                        if ($("#page").val() == "04") {
+                            $("#Finish").show();
+                        } else {
+                            $("#Finish").hide();
+                        }
+
                     });
 
                     //if process.php returned 0/false (send mail failed)
@@ -199,10 +214,10 @@
 
             <div style="height:115px;" id="div-form">
                 <form>
-                <p>JDBC URL : <input type="text" size="50%" name="jdbcurl"/></p>
-                <p>Driver Class Name : <input type="text" size="50%" name="driver"/></p>
-                <p>Username : <input type="text" size="50%" name="username"/></p>
-                <p>Password : <input type="text" size="50%" name="password"/></p>
+                <p>JDBC URL : <input type="text" size="50%" name="jdbcurl" value="jdbc:mysql://localhost:3306/gadgetgen"/></p>
+                <p>Driver Class Name : <input type="text" size="50%" name="driver" value="com.mysql.jdbc.Driver"/></p>
+                <p>Username : <input type="text" size="50%" name="username" value="root"/></p>
+                <p>Password : <input type="text" size="50%" name="password" value="root"/></p>
                     <input type="hidden" name="page" id="page" value="01">
                 </form>
             </div>
@@ -210,7 +225,11 @@
                 <p>
                     <input type="button" id="Back" value="Back">
 
-                    <input type="button" id="Next" value="Next"></p>
+                    <input type="button" id="Next" value="Next">
+
+                    <input type="button" id="Finish" value="Finish">
+
+                    </p>
             </div>
 
 

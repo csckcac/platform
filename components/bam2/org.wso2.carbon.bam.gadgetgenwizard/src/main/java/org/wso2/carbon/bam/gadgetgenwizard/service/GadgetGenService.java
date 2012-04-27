@@ -73,7 +73,6 @@ public class GadgetGenService {
             omElement.setText(wsMapElement.getValue());
             omDocument.addChild(omElement);
         }
-        omDocument.
         return omDocument;  //To change body of created methods use File | Settings | File Templates.
     }
 }

@@ -89,7 +89,11 @@
             <artifactId>org.wso2.carbon.ui</artifactId>
             <version>${wso2carbon.version.bam2}</version>
         </dependency>
-
+       <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.bam.gadgetgenwizard.stub</artifactId>
+            <version>${wso2carbon.version.bam2}</version>
+        </dependency>
 
     </dependencies>
 

@@ -1,19 +1,15 @@
-<%@ page import="org.apache.axis2.context.ConfigurationContext" %>
-<%@ page import="org.wso2.carbon.CarbonConstants" %>
-<%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
-<%@ page import="org.wso2.carbon.utils.ServerConstants" %>
+<%@ page import="java.util.Enumeration" %>
 <%@ page import="java.util.Iterator" %>
 <%@ page import="java.util.Map" %>
 
 
-
 <%
     Map parameterMap = request.getParameterMap();
-
     for (Iterator iterator = parameterMap.keySet().iterator(); iterator.hasNext();) {
         String param = (String) iterator.next();
         Object value = parameterMap.get(param);
         session.setAttribute(param, value);
+        System.out.println("============= Request Map ===================");
         if (value instanceof String[]) {
             String[] strings = (String[]) value;
             for (int i = 0; i < strings.length; i++) {
@@ -27,13 +23,19 @@
         }
 
     }
+    System.out.println("============== Session Map ===================");
+    Enumeration attributeNames = session.getAttributeNames();
+    while (attributeNames.hasMoreElements()) {
+        String attribute = (String) attributeNames.nextElement();
+        System.out.println("param key : " + attribute + " param value : " + session.getAttribute(attribute) );
+    }
 
-
-
+    String sqlParam = request.getParameter("sql");
+    String sql = (sqlParam == null) ? "select * from productsummary" : sqlParam;
 
 %>
 <form>
-    <p>SQL Statement : <input type="text" size="50%" name="sql"/></p>
+    <p>SQL Statement : <input type="text" size="50%" name="sql" value="<%=sql%>"/></p>
     <input type="hidden" name="page" id="page" value="02">
 
 </form>

@@ -1251,10 +1251,13 @@ public class DashboardService extends AbstractAdmin {
             } else {
                 response = "http://" + newUrl.getHost() + ":" + getBackendHttpPort() + newUrl.getPath();
             }
+            
             if (hostName != null && !hostName.equals("")) {
-                response = "http://" + hostName + ":" + getBackendHttpPort();
-            } else if ((hostName != null && !hostName.equals("")) && !"".equals(newUrl.getPath())) {
-                response = "http://" + hostName + ":" + getBackendHttpPort() + newUrl.getPath();
+                if (!"".equals(newUrl.getPath())) {
+                    response = "http://" + hostName + ":" + getBackendHttpPort() + newUrl.getPath();
+                } else {
+                    response = "http://" + hostName + ":" + getBackendHttpPort();
+                }
             }
 
         } catch (MalformedURLException e) {

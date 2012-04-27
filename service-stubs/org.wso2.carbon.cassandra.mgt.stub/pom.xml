@@ -64,6 +64,12 @@
                                     -ns2p http://mgt.cassandra.carbon.wso2.org=org.wso2.carbon.cassandra.mgt.stub.cluster,http://mgt.cassandra.carbon.wso2.org/xsd=org.wso2.carbon.cassandra.mgt.stub.cluster.xsd,http://org.apache.axis2/xsd=org.wso2.carbon.cassandra.mgt.stub.cluster.axis2.xsd"/>
                                     <classpath refid="wsdl2java.classpath"/>
                                 </java>
+                                <java classname="org.apache.axis2.wsdl.WSDL2Java" fork="true">
+                                    <arg line="-uri src/main/resources/CassandraExplorerAdmin.wsdl -u -uw
+                                    -o target/generated-code -p org.wso2.carbon.cassandra.mgt.stub.explorer
+                                    -ns2p http://mgt.cassandra.carbon.wso2.org=org.wso2.carbon.cassandra.mgt.stub.explorer,http://mgt.cassandra.carbon.wso2.org/xsd=org.wso2.carbon.cassandra.mgt.stub.explorer.xsd,http://org.apache.axis2/xsd=org.wso2.carbon.cassandra.mgt.stub.explorer.axis2.xsd"/>
+                                    <classpath refid="wsdl2java.classpath"/>
+                                </java>
                             </tasks>
                         </configuration>
                     </execution>

@@ -17,33 +17,12 @@
 */
 package org.wso2.automation.common.test.dss.utils.exception;
 
-public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
-
-    private Throwable throwable;
-    private int failCount;
-
-    public ExceptionHandler() {
-        failCount = 0;
+public class ConcurrencyTestFailedError extends Exception {
+    public ConcurrencyTestFailedError(String message) {
+        super(message);
     }
 
-    public void uncaughtException(Thread t, Throwable e) {
-        throwable = e;
-        failCount++;
-    }
-
-    public boolean isTestPass() {
-        if (throwable == null) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public int getFailCount() {
-        return failCount;
-    }
-    
-    public Throwable getException() {
-        return throwable;
+    public ConcurrencyTestFailedError(String message, Throwable throwable) {
+        super(message, throwable);
     }
 }

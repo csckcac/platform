@@ -19,11 +19,16 @@ package org.wso2.automation.common.test.dss.utils;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
+import org.wso2.automation.common.test.dss.utils.exception.ConcurrencyTestFailedError;
 import org.wso2.automation.common.test.dss.utils.exception.ExceptionHandler;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
 
 public class ConcurrencyTest {
+    private static final Log log = LogFactory.getLog(ConcurrencyTest.class);
+
     private int concurrencyNumber;
     private int numberOfIterations;
 
@@ -32,9 +37,11 @@ public class ConcurrencyTest {
         numberOfIterations = loopCount;
     }
 
-    public boolean run(final String serviceEndPoint, final OMElement payload, final String operation)
-            throws Exception {
-
+    public void run(final String serviceEndPoint, final OMElement payload,
+                    final String operation)
+            throws ConcurrencyTestFailedError, InterruptedException {
+        log.info("Starting Concurrency test with " + concurrencyNumber + " Threads and " + numberOfIterations
+                 + " loop count");
         ExceptionHandler handler = new ExceptionHandler();
         Thread[] clientThread = new Thread[concurrencyNumber];
         final AxisServiceClient serviceClient = new AxisServiceClient();
@@ -43,9 +50,9 @@ public class ConcurrencyTest {
                 public void run() {
                     for (int j = 0; j < numberOfIterations; j++) {
                         try {
-                            serviceClient.sendReceive(payload, serviceEndPoint,operation);
+                            serviceClient.sendReceive(payload, serviceEndPoint, operation);
                         } catch (AxisFault axisFault) {
-                            Assert.fail("AxisFault " + axisFault.getMessage());
+                            Assert.fail("AxisFault when getting response. " + axisFault.getMessage());
                         }
                     }
                 }
@@ -59,10 +66,19 @@ public class ConcurrencyTest {
         }
 
         for (int i = 0; i < concurrencyNumber; i++) {
-            clientThread[i].join();
+            try {
+                clientThread[i].join();
+            } catch (InterruptedException e) {
+                throw new InterruptedException("Exception Occurred while joining Thread");
+            }
         }
 
-        return handler.isTestPass();
+        if (!handler.isTestPass()) {
+            throw new ConcurrencyTestFailedError(handler.getFailCount() + " service invocation/s failed out of "
+                                                 + concurrencyNumber * numberOfIterations + " service invocations.\n"
+                                                 + "Concurrency Test Failed for Thread Group=" + concurrencyNumber
+                                                 + " and loop count=" + numberOfIterations, handler.getException());
+        }
 
     }
 }

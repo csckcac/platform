@@ -56,14 +56,10 @@ import org.wso2.carbon.humantask.client.api.types.TTaskSimpleQueryResultSet;
 import org.wso2.carbon.humantask.client.api.types.TTime;
 import org.wso2.carbon.humantask.client.api.types.TUser;
 import org.wso2.carbon.humantask.core.HumanTaskConstants;
-import org.wso2.carbon.humantask.core.dao.CommentDAO;
-import org.wso2.carbon.humantask.core.dao.GenericHumanRoleDAO;
-import org.wso2.carbon.humantask.core.dao.HumanTaskDAOConnection;
-import org.wso2.carbon.humantask.core.dao.OrganizationalEntityDAO;
-import org.wso2.carbon.humantask.core.dao.SimpleQueryCriteria;
-import org.wso2.carbon.humantask.core.dao.TaskDAO;
+import org.wso2.carbon.humantask.core.dao.*;
 import org.wso2.carbon.humantask.core.engine.HumanTaskCommand;
 import org.wso2.carbon.humantask.core.engine.HumanTaskEngine;
+import org.wso2.carbon.humantask.core.engine.HumanTaskException;
 import org.wso2.carbon.humantask.core.engine.PeopleQueryEvaluator;
 import org.wso2.carbon.humantask.core.engine.commands.Activate;
 import org.wso2.carbon.humantask.core.engine.commands.AddComment;
@@ -864,16 +860,6 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
     }
 
     @Override
-    public URI addAttachment(URI uri, String s, String s1, String s2, Object o)
-            throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
-            IllegalAccessFault {
-        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
-                getCurrentCarbonContextHolder().getTenantId());
-        handleUnsupportedOperation();
-        return null;
-    }
-
-    @Override
     public TBatchResponse[] batchResume(URI[] uris) {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
@@ -900,13 +886,80 @@ public class TaskOperationsImpl extends AbstractAdmin implements TaskOperationsS
     }
 
     @Override
-    public TAttachmentInfo[] getAttachmentInfos(URI taskIdentifier)
+    public boolean addAttachment(URI taskIdentifier, String name, String accessType, String contentType, Object attachment)
             throws IllegalStateFault, IllegalOperationFault, IllegalArgumentFault,
-            IllegalAccessFault {
+                   IllegalAccessFault {
         CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
                 getCurrentCarbonContextHolder().getTenantId());
-        handleUnsupportedOperation();
-        return new TAttachmentInfo[0];
+        final Long taskId = validateTaskId(taskIdentifier);
+        final String attachmentID = (String) attachment;
+
+        try {
+            Boolean isAdded = HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine()
+                        .getScheduler().execTransaction(new Callable<Boolean>() {
+                public Boolean call() throws Exception {
+                    HumanTaskEngine engine = HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine();
+                    HumanTaskDAOConnection daoConn = engine.getDaoConnectionFactory().getConnection();
+                    TaskDAO taskDAO = daoConn.getTask(taskId);
+                    try {
+                        boolean isAdded = taskDAO.addAttachment(TransformerUtils.generateAttachmentDAOFromID(taskDAO,
+                                                                                                    attachmentID));
+
+                        if (!isAdded) {
+                            throw new HumanTaskException("Attachment with id: " + attachmentID +  "was not associated " +
+                                                         "task with id:" + taskId);
+                        }
+
+                        return isAdded;
+                    } catch (HumanTaskException ex) {
+                        String errMsg = "getAttachmentInfos operation failed. Reason: ";
+                        log.error(errMsg + ex.getLocalizedMessage(), ex);
+                        throw ex;
+                    }
+                }
+            });
+            return isAdded;
+        } catch (Exception ex) {
+            String errMsg = "addAttachment operation failed";
+            log.error(errMsg, ex);
+            if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalAccessFault(errMsg, ex);
+            }
+        }
+    }
+
+    @Override
+    public TAttachmentInfo[] getAttachmentInfos(final URI taskIdentifier) throws IllegalAccessFault {
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(CarbonContextHolder.
+                getCurrentCarbonContextHolder().getTenantId());
+
+        final Long taskId = validateTaskId(taskIdentifier);
+        try {
+            List<AttachmentDAO> attachmentList = HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine()
+                    .getScheduler().
+                    execTransaction(new Callable<List<AttachmentDAO>>() {
+                        public List<AttachmentDAO> call() throws Exception {
+                            HumanTaskEngine engine = HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine();
+                            HumanTaskDAOConnection daoConn = engine.getDaoConnectionFactory().getConnection();
+                            log.warn("Here we can re-use the loadTask method in the same class. But then we have to " +
+                                     "depend on the DTO defined by WSDL, not the back end DAOs. So if we can refactor" +
+                                     " the loadTask method, we can reuse it and avoid the db transaction take in this" +
+                                     " method. Else this method cost two DB transactions.");
+                            return daoConn.getTask(taskId).getAttachments();
+                        }
+                    });
+            return TransformerUtils.transformAttachments(attachmentList);
+        } catch (Exception ex) {
+            String errMsg = "getAttachmentInfos operation failed";
+            log.error(errMsg, ex);
+            if (ex instanceof IllegalAccessFault) {
+                throw (IllegalAccessFault) ex;
+            } else {
+                throw new IllegalAccessFault(errMsg, ex);
+            }
+        }
     }
 
     @Override

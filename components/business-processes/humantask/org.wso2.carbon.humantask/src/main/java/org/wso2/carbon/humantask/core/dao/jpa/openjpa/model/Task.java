@@ -37,7 +37,6 @@ import org.wso2.carbon.humantask.core.dao.TaskType;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityTransaction;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -472,6 +471,11 @@ public class Task extends OpenJPAEntity implements TaskDAO {
     @Override
     public void setAttachments(List<AttachmentDAO> attachments) {
         this.attachments = attachments;
+    }
+
+    @Override
+    public boolean addAttachment(AttachmentDAO attachment) {
+        return this.attachments.add(attachment);
     }
 
     @Override

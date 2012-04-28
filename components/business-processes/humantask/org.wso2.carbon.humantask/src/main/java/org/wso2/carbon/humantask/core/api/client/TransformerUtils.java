@@ -16,18 +16,24 @@
 
 package org.wso2.carbon.humantask.core.api.client;
 
+import org.apache.axiom.om.OMElement;
 import org.apache.axis2.databinding.types.URI;
 import org.apache.axis2.databinding.utils.ConverterUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.attachment.mgt.skeleton.AttachmentMgtException;
+import org.wso2.carbon.attachment.mgt.skeleton.types.*;
 import org.wso2.carbon.humantask.client.api.types.*;
 import org.wso2.carbon.humantask.core.dao.*;
+import org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.*;
 import org.wso2.carbon.humantask.core.engine.HumanTaskEngine;
+import org.wso2.carbon.humantask.core.engine.HumanTaskException;
 import org.wso2.carbon.humantask.core.engine.PeopleQueryEvaluator;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 import org.wso2.carbon.humantask.core.engine.util.CommonTaskUtil;
 import org.wso2.carbon.humantask.core.engine.util.OperationAuthorizationUtil;
+import org.wso2.carbon.humantask.core.internal.HumanTaskServerHolder;
 import org.wso2.carbon.humantask.core.internal.HumanTaskServiceComponent;
 import org.wso2.carbon.humantask.core.store.HumanTaskBaseConfiguration;
 import org.wso2.carbon.humantask.core.store.TaskConfiguration;
@@ -36,6 +42,7 @@ import javax.xml.namespace.QName;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -372,6 +379,10 @@ public final class TransformerUtils {
         taskAbstract.setPresentationDescription(
                 transformPresentationDescription(CommonTaskUtil.getDefaultPresentationDescription(task)));
 
+        //Setting attachment specific information
+        taskAbstract.setHasAttachments(!task.getAttachments().isEmpty());
+        taskAbstract.setNumberOfAttachments(task.getAttachments().size());
+
         return taskAbstract;
     }
 
@@ -573,5 +584,105 @@ public final class TransformerUtils {
         }
 
         return taskEvents;
+    }
+
+    public static TAttachmentInfo[] transformAttachments(List<AttachmentDAO> attachmentList) {
+        TAttachmentInfo[] array = new TAttachmentInfo[attachmentList.size()];
+        int counter = 0;
+        for (AttachmentDAO attachmentDAO : attachmentList) {
+            TAttachmentInfo attachmentInfo = new TAttachmentInfo();
+
+            log.warn("DTO initialization is not complete. Please fix this method implementation. Having some troubles" +
+                     " as attachment-mgt data structure is not compatible with the human-task data structure for " +
+                     "attachments.");
+
+            try {
+                attachmentInfo.setIdentifier(new URI(attachmentDAO.getValue()));
+            } catch (URI.MalformedURIException e) {
+                log.error(e.getLocalizedMessage(), e);
+            }
+
+            attachmentInfo.setAccessType("dummyAccessType");
+            attachmentInfo.setContentType(attachmentDAO.getContentType());
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(attachmentDAO.getAttachedAt());
+            attachmentInfo.setAttachedTime(cal);
+
+            try {
+                attachmentInfo.setContentCategory(new URI("DummyContentCategory"));
+            } catch (URI.MalformedURIException e) {
+                log.error(e.getLocalizedMessage(), e);
+            }
+
+            TUser user = new TUser();
+            user.setTUser("DummyUser");
+            attachmentInfo.setAttachedBy(user); //TODO: Have to set the original user.
+
+            attachmentInfo.setName(attachmentDAO.getName());
+
+            array[counter] = attachmentInfo;
+            counter++;
+        }
+        return array;
+    }
+
+    /**
+     * Generate an {@code AttachmentDAO} for a given attachment-id
+     *
+     * @param task task to be associated with the particular attachment
+     * @param attachmentID id of the attachment, so this will be used to extract attachment information from the
+     * attachment-mgt OSGi service
+     *
+     * @return reference to the created {@code AttachmentDAO}
+     * @throws HumanTaskException If if was failed to retrieve data from the attachment-mgt OSGi service
+     */
+    public static AttachmentDAO generateAttachmentDAOFromID(TaskDAO task, String attachmentID) throws HumanTaskException {
+        try {
+            org.wso2.carbon.attachment.mgt.skeleton.types.TAttachment attachment = HumanTaskServerHolder.getInstance().getAttachmentService()
+                    .getAttachmentService()
+                    .getAttachmentInfo(attachmentID);
+
+            AttachmentDAO dao = new org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.Attachment();  //TODO: Check for a way to retrieve implementation neutral DAO object
+
+            //Constructing the attachment DAO from the DTO
+            //dao.setId(Long.valueOf(attachment.getId())); //TODO: We should be able to set an unique id (generated in the attachment-mgt database) from a client
+            dao.setName(attachment.getName());
+            dao.setContentType(attachment.getContentType());
+            dao.setTask((Task) task);
+            dao.setValue(attachment.getUrl().toString());
+
+            //TODO: These stuff should be supported from the attachment-mgt service
+            log.warn("Please fix the following inputs required creating an attachmentDAO.");
+            dao.setAttachedAt(new Date(System.currentTimeMillis()));
+            dao.setAccessType(null);
+            dao.setAttachedBy(null);
+
+            return dao;
+        } catch (AttachmentMgtException e) {
+            String errorMsg = "Attachment Data retrieval operation failed for attachment id:" + attachmentID + ". " + "Reason:";
+            log.error(e.getLocalizedMessage(), e);
+            throw new HumanTaskException(errorMsg + e.getLocalizedMessage(), e);
+        }
+    }
+
+    /**
+     * Generate a list of {@code AttachmentDAO} for a given list of attachment-id
+     * @param task task to be associated with the particular attachment
+     * @param attachmentIDs list of ids of the attachments, so these will be used to extract attachment information
+     * from the attachment-mgt OSGi service
+     *
+     * @return a list of references to the created {@code AttachmentDAO}s
+     * @throws HumanTaskException
+     */
+    public static List<AttachmentDAO> generateAttachmentDAOListFromIDs(TaskDAO task,
+                                                                       List<String> attachmentIDs) throws HumanTaskException {
+        List<AttachmentDAO> attachmentDAOList = new ArrayList<AttachmentDAO>();
+
+        for (String attachmentID : attachmentIDs) {
+            AttachmentDAO dao = generateAttachmentDAOFromID(task, attachmentID);
+            attachmentDAOList.add(dao);
+        }
+        return attachmentDAOList;
     }
 }

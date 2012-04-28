@@ -17,11 +17,15 @@
 package org.wso2.carbon.bpel.b4p.utils;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.OMNode;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
+import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.ode.axis2.OdeFault;
 import org.apache.ode.bpel.common.FaultException;
 import org.apache.ode.il.OMUtils;
@@ -48,6 +52,7 @@ import java.util.List;
  */
 
 public class SOAPHelper {
+    private static Log log = LogFactory.getLog(SOAPHelper.class);
 
     private Binding binding;
     private SOAPFactory soapFactory;
@@ -74,6 +79,51 @@ public class SOAPHelper {
             // retrieve the single element
             return (ExtensibilityElement) bindings.iterator().next();
         }
+    }
+
+    /**
+     * Create a SOAP request and add a list of attachment ids to the SOAP Header
+     * @param msgCtx base message context which will be manipulated through out the operation
+     * @param message element to be included in the SOAP Body
+     * @param op operation incorporated with the request
+     * @param attachmentIDList list of attachment ids to be included in the SOAP header
+     * @throws AxisFault Exception if operation/input not found for the binding or if any exception thrown from
+     * the axis2 level operations
+     */
+    public void createSoapRequest(MessageContext msgCtx, Element message, Operation op, List<Long> attachmentIDList)
+            throws AxisFault {
+        createSoapRequest(msgCtx, message, op);
+
+        SOAPHeader header = msgCtx.getEnvelope().getHeader();
+
+        if (attachmentIDList != null && !attachmentIDList.isEmpty()) {
+            addAttachmentIDHeader(header, attachmentIDList);
+        }
+    }
+
+    /**
+     * Adding the attachment ids iteratively to the SOAP Header
+     * @param header Header Element where the child elements going to be included
+     * @param attachmentIDList attachment ids
+     */
+    private void addAttachmentIDHeader(SOAPHeader header, List<Long> attachmentIDList) {
+        log.warn("Please position this constants properly. These are reused in org.wso2.carbon.humantask.core.dao.TaskCreationContext#getAttachmentIDs");
+        final String NAMESPACE = "http://wso2.org/bps/attachments";
+        final String NAMESPACE_PREFIX = "attch";
+        final String PARENT_ELEMENT_NAME = "attachmentIDs";
+        final String CHILD_ELEMENT_NAME = "attachmentID";
+
+        OMNamespace omNs = soapFactory.createOMNamespace(NAMESPACE, NAMESPACE_PREFIX);
+        OMElement headerElement = soapFactory.createOMElement(PARENT_ELEMENT_NAME, omNs);
+
+        for (Long id : attachmentIDList) {
+            OMElement idElement = soapFactory.createOMElement(CHILD_ELEMENT_NAME, omNs);
+            idElement.setText(String.valueOf(id));
+
+            headerElement.addChild(idElement);
+        }
+
+        header.addChild(headerElement);
     }
 
     public void createSoapRequest(MessageContext msgCtx, Element message, Operation op)

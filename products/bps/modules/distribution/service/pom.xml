@@ -252,6 +252,23 @@
                                 <!--</sql>-->
                                 <!--<echo-->
                                         <!--message="##################### END ############################"/>-->
+
+				<echo
+                                        message="########### Create ATTACHMENT H2 Database ##############"/>
+                                <sql
+                                        driver="org.h2.Driver"
+                                        url="jdbc:h2:${basedir}/target/database/attachmentdb;create=true"
+                                        userid="wso2carbon" password="wso2carbon" autocommit="true"
+                                        onerror="continue">
+                                    <classpath>
+                                        <path refid="h2.classpath"/>
+                                    </classpath>
+                                    <fileset
+                                            file="${basedir}/sql/attachment-mgt/h2.sql"/>
+                                </sql>
+
+                                <echo
+                                        message="##################### END ############################"/>
                             </tasks>
                         </configuration>
                     </execution>

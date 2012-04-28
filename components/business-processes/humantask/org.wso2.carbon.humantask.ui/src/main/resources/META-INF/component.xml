@@ -94,6 +94,12 @@
             </Actions>
             <Class>org.wso2.carbon.humantask.ui.fileupload.HumanTaskUploadExecutor</Class>
         </Mapping>
+        <Mapping>
+            <Actions>
+                <Action>attachment-mgt</Action>
+            </Actions>
+            <Class>org.wso2.carbon.humantask.ui.fileupload.AttachmentUploadExecutor</Class>
+        </Mapping>
     </FileUploadConfig>
 
 </component>

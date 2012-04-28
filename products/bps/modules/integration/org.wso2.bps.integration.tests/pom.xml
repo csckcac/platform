@@ -34,7 +34,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <inherited>false</inherited>
                 <configuration>
-		    <skipTests>true</skipTests>
                     <includes>
                         <include>**/*TestServerManager.java</include>
                         <include>**/*TestCase.java</include>

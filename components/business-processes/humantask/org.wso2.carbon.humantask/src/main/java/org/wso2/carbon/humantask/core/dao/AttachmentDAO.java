@@ -16,5 +16,86 @@
 
 package org.wso2.carbon.humantask.core.dao;
 
+import org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.OrganizationalEntity;
+import org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.Task;
+
+import java.util.Date;
+
+/**
+ * DAO representation of the task attachment,
+ */
 public interface AttachmentDAO {
+    /**
+     * @return unique id of the attachment
+     */
+    Long getId();
+
+    /**
+     * @param id unique id of the attachment
+     */
+    void setId(Long id);
+
+    /**
+     * @return name of the attachment
+     */
+    String getName();
+
+    /**
+     * @param name name of the attachment
+     */
+    void setName(String name);
+
+    /**
+     * @return media type of the attachment
+     */
+    String getContentType();
+
+    /**
+     * @param contentType media type of the attachment
+     */
+    void setContentType(String contentType);
+
+    String getAccessType();
+
+    void setAccessType(String accessType);
+
+    /**
+     * @return the date, when the attachment is uploaded to the system.
+     */
+    Date getAttachedAt();
+
+    /**
+     * @param attachedAt the date, when the attachment is uploaded to the system.
+     */
+    void setAttachedAt(Date attachedAt);
+
+    /**
+     * @return organizational entity who uploaded the attachment
+     */
+    OrganizationalEntity getAttachedBy();
+
+    /**
+     * @param attachedBy organizational entity who uploaded the attachment
+     */
+    void setAttachedBy(OrganizationalEntity attachedBy);
+
+    /**
+     * @return value representation of the attachment
+     */
+    String getValue();
+
+    /**
+     * @param value representation of the attachment
+     */
+    void setValue(String value);
+
+    /**
+     * @return the associated task for the attachment
+     */
+    Task getTask();
+
+    /**
+     * @param task Associated task for the attachment
+     */
+    void setTask(Task task);
 }

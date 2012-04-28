@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.attachment.mgt.server.AttachmentServerService;
 import org.wso2.carbon.datasource.DataSourceInformationRepositoryService;
 import org.wso2.carbon.humantask.core.Axis2ConfigurationContextObserverImpl;
 import org.wso2.carbon.humantask.core.HumanTaskEngineService;
@@ -43,6 +44,10 @@ import org.wso2.carbon.utils.Axis2ConfigurationContextObserver;
  * interface="org.wso2.carbon.user.core.service.RealmService"
  * cardinality="1..1" policy="dynamic" bind="setRealmService"
  * unbind="unsetRealmService"
+ *
+ * @scr.reference name="attachment.mgt.service" interface="org.wso2.carbon.attachment.mgt.server.AttachmentServerService"
+ * cardinality="1..1" policy="dynamic"  bind="setAttachmentMgtService"
+ * unbind="unsetAttachmentMgtService"
  */
 
 public class HumanTaskServiceComponent {
@@ -176,5 +181,23 @@ public class HumanTaskServiceComponent {
     private void registerHumanTaskServerService() {
         this.bundleContext.registerService(HumanTaskEngineService.class.getName(),
                                                           new HumanTaskEngineServiceImpl(), null);
+    }
+
+    /**
+     * Initializes the Attachment-Mgt Service dependency
+     *
+     * @param attMgtService Attachment-Mgt Service reference
+     */
+    protected void setAttachmentMgtService(AttachmentServerService attMgtService) {
+        HumanTaskServerHolder.getInstance().setAttachmentService(attMgtService);
+    }
+
+    /**
+     * De-reference the Attachment-Mgt Service dependency
+     *
+     * @param attMgtService Attachment-Mgt Service reference
+     */
+    protected void unsetAttachmentMgtService(AttachmentServerService attMgtService) {
+        HumanTaskServerHolder.getInstance().setAttachmentService(null);
     }
 }

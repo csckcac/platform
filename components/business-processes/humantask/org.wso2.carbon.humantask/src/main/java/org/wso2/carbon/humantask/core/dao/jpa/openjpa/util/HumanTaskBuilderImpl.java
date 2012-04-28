@@ -1,11 +1,15 @@
 package org.wso2.carbon.humantask.core.dao.jpa.openjpa.util;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.humantask.core.api.client.TransformerUtils;
 import org.wso2.carbon.humantask.core.dao.MessageDAO;
 import org.wso2.carbon.humantask.core.dao.TaskCreationContext;
 import org.wso2.carbon.humantask.core.dao.TaskDAO;
 import org.wso2.carbon.humantask.core.dao.TaskStatus;
 import org.wso2.carbon.humantask.core.dao.TaskType;
 import org.wso2.carbon.humantask.core.dao.jpa.openjpa.model.Task;
+import org.wso2.carbon.humantask.core.engine.HumanTaskException;
 import org.wso2.carbon.humantask.core.engine.runtime.api.HumanTaskRuntimeException;
 import org.wso2.carbon.humantask.core.store.HumanTaskBaseConfiguration;
 
@@ -13,6 +17,10 @@ import org.wso2.carbon.humantask.core.store.HumanTaskBaseConfiguration;
  * The builder class for creating Task Objects.
  */
 public class HumanTaskBuilderImpl {
+    /**
+     * Class Logger
+     */
+    private static Log log = LogFactory.getLog(HumanTaskBuilderImpl.class);
 
     private TaskCreationContext creationContext;
 
@@ -52,6 +60,15 @@ public class HumanTaskBuilderImpl {
         task.setSkipable(false);
         task.setEscalated(false);
         task.setStatus(TaskStatus.CREATED);
+
+        //Setting the attachments to the task
+        try {
+            task.setAttachments(TransformerUtils.generateAttachmentDAOListFromIDs(task,
+                                                                                  creationContext.getAttachmentIDs()));
+        } catch (HumanTaskException e) {
+            log.error(e.getLocalizedMessage(), e);
+        }
+
         return task;
     }
 

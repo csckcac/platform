@@ -16,6 +16,10 @@
 
 package org.wso2.carbon.humantask.core.dao.jpa.openjpa.model;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.humantask.core.dao.AttachmentDAO;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -24,7 +28,11 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "TASK_ATTACHMENT")
-public class Attachment {
+public class Attachment implements AttachmentDAO {
+    /**
+     * Class logger
+     */
+    private static Log log = LogFactory.getLog(Attachment.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -62,13 +70,15 @@ public class Attachment {
 
     @Column(name = "ATTACHED_BY")
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private OrganizationalEntity attachedBy;
+    private OrganizationalEntity attachedBy;  //TODO: We can do proper refactoring to this code by generalizing
+    //TODO:  OrganizationalEntity to OrganizationalEntityDAO. Then need to add more annotations as well.
 
     @Column(name="VALUE")
     private String value;
 
     @ManyToOne
-    private Task task;
+    private Task task;     //TODO: We can do proper refactoring to this code by generalizing Task to TaskDAO. Then
+    //TODO: need to add more annotations as well.
 
     public Long getId() {
         return id;
@@ -95,10 +105,12 @@ public class Attachment {
     }
 
     public String getAccessType() {
+        log.warn("What's this access type means?. Please add the documentation for the interface once issue is resolved.");
         return accessType;
     }
 
     public void setAccessType(String accessType) {
+        log.warn("What's this access type means?. Please add the documentation for the interface once issue is resolved.");
         this.accessType = accessType;
     }
 

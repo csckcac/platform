@@ -31,15 +31,7 @@ import org.wso2.carbon.humantask.stub.ui.task.client.api.IllegalOperationFault;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.IllegalStateFault;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.RecipientNotAllowedException;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.TaskOperationsStub;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TComment;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TOrganizationalEntity;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TOrganizationalEntityChoice;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TSimpleQueryInput;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskAbstract;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskAuthorisationParams;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvents;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskSimpleQueryResultSet;
-import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TUser;
+import org.wso2.carbon.humantask.stub.ui.task.client.api.types.*;
 import org.wso2.carbon.humantask.ui.constants.HumanTaskUIConstants;
 
 import javax.xml.stream.XMLStreamException;
@@ -127,6 +119,59 @@ public class HumanTaskClientAPIServiceClient {
             log.error("Error occurred while performing loadTask operation", illegalAccessFault);
             throw illegalAccessFault;
         }
+    }
+
+    public boolean addAttachment(String taskID, String attachmentID) throws RemoteException, IllegalStateFault,
+                                                                            IllegalOperationFault,
+                                                                            IllegalArgumentFault,
+                                                                            IllegalAccessFault, URI.MalformedURIException {
+        String errorMsg = "Error occurred while performing addAttachment operation";
+        try {
+            log.warn("Some of the attributes(like accessType) defined in the Service WSDLs are ignored and nulls are " +
+                     "passed from to the service call");
+            return stub.addAttachment(new URI(taskID), null, null, null, attachmentID);
+        } catch (RemoteException e) {
+            log.error(errorMsg, e);
+            throw e;
+        } catch (IllegalStateFault e) {
+            log.error(errorMsg, e);
+            throw e;
+        } catch (IllegalOperationFault e) {
+            log.error(errorMsg, e);
+            throw e;
+        } catch (IllegalArgumentFault e) {
+            log.error(errorMsg, e);
+            throw e;
+        } catch (IllegalAccessFault e) {
+            log.error(errorMsg, e);
+            throw e;
+        } catch (URI.MalformedURIException e) {
+            log.error(errorMsg, e);
+            throw e;
+        }
+    }
+
+    public TAttachmentInfo[] getAttachmentInfos(URI taskId) throws RemoteException, IllegalStateFault, IllegalOperationFault, IllegalArgumentFault, IllegalAccessFault {
+        String errorMsg = "Error occurred while performing getAttachments operation";
+        try {
+            return stub.getAttachmentInfos(taskId);
+        } catch (RemoteException e) {
+            log.error(errorMsg,e);
+            throw e;
+        } catch (IllegalStateFault e) {
+            log.error(errorMsg,e);
+            throw e;
+        } catch (IllegalOperationFault e) {
+            log.error(errorMsg,e);
+            throw e;
+        } catch (IllegalArgumentFault e) {
+            log.error(errorMsg,e);
+            throw e;
+        } catch (IllegalAccessFault e) {
+            log.error(errorMsg,e);
+            throw e;
+        }
+
     }
 
     /**

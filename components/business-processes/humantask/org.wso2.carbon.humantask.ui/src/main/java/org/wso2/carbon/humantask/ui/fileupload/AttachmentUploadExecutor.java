@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.attachment.mgt.ui.fileupload;
+package org.wso2.carbon.humantask.ui.fileupload;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.humantask.ui.clients.HumanTaskClientAPIServiceClient;
 import org.wso2.carbon.ui.CarbonUIMessage;
 import org.wso2.carbon.ui.transports.fileupload.AbstractFileUploadExecutor;
 import org.wso2.carbon.utils.FileItemData;
@@ -31,10 +32,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Map;
 
-@Deprecated
-/**
- * This impl was moved to human task bundle. So recommended to remove.
- */
 public class AttachmentUploadExecutor extends AbstractFileUploadExecutor {
     /**
      * Class Logger
@@ -50,9 +47,13 @@ public class AttachmentUploadExecutor extends AbstractFileUploadExecutor {
         String cookie = (String) request.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
 
         Map<String, ArrayList<String>> formFieldsMap = getFormFieldsMap();
+        String taskID = null;
         String redirect = null;
 
         try {
+            if (formFieldsMap.get("taskId") != null) {
+                taskID = formFieldsMap.get("taskId").get(0);
+            }
             if (formFieldsMap.get("redirect") != null) {
                 redirect = formFieldsMap.get("redirect").get(0);
             }
@@ -70,24 +71,34 @@ public class AttachmentUploadExecutor extends AbstractFileUploadExecutor {
                 return true;
             }
 
-            AttachmentUploadClient client = new AttachmentUploadClient(configurationContext,
+            AttachmentUploadClient attachmentUploadClient = new AttachmentUploadClient(configurationContext,
                                                                        serverURL + "AttachmentMgtService", cookie);
+            HumanTaskClientAPIServiceClient taskOperationClient = new HumanTaskClientAPIServiceClient(cookie,
+                                                                      serverURL + "taskOperations", configurationContext);
+
             response.setContentType("text/html; charset=utf-8");
 
-            client.addUploadedFileItem(fileToBeUpload);
+            String attachmentID = attachmentUploadClient.addUploadedFileItem(fileToBeUpload);
+            boolean isAdded = taskOperationClient.addAttachment(taskID, attachmentID);
 
             String msg = "Your attachment has been uploaded successfully. Please refresh this page in a while to see " +
                          "the status of the new process.";
-            if (redirect != null) {
-                CarbonUIMessage.sendCarbonUIMessage(msg, CarbonUIMessage.INFO, request, response,
-                                                    getContextRoot(request) + "/" + webContext + "/" + redirect);
-            } else {
-                CarbonUIMessage.sendCarbonUIMessage(msg, CarbonUIMessage.INFO, request);
-            }
 
-            return true;
+            if (!isAdded) {
+                throw new Exception("Attachment was added successfully with id:" + attachmentID + ". But the task " +
+                                    "with id: " + taskID + " was not associated with it correctly.");
+            } else {
+                if (redirect != null) {
+                    CarbonUIMessage.sendCarbonUIMessage(msg, CarbonUIMessage.INFO, request, response,
+                                                        getContextRoot(request) + "/" + webContext + "/" + redirect);
+                } else {
+                    CarbonUIMessage.sendCarbonUIMessage(msg, CarbonUIMessage.INFO, request);
+                }
+
+                return true;
+            }
         } catch (Exception ex) {
-            String errMsg = "File upload failed.";
+            String errMsg = "File upload failed. Reason :" + ex.getLocalizedMessage();
             log.error(errMsg, ex);
             if (redirect != null) {
                 CarbonUIMessage.sendCarbonUIMessage(errMsg, CarbonUIMessage.ERROR, request,

@@ -130,6 +130,7 @@
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.captcha.mgt.server.feature:${carbon.version}</featureArtifactDef>
 				                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.ntask.feature:${carbon.version}</featureArtifactDef>
 				                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.coordination.core.feature:${carbon.version}</featureArtifactDef>
+				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.attachment.mgt.feature:${carbon.version}</featureArtifactDef>
                                 <!-- reporting features -->
                                 <!--featureArtifactDef>org.wso2.carbon:org.wso2.carbon.reporting.feature:${carbon.version}
                                 </featureArtifactDef-->
@@ -313,7 +314,10 @@
                                     <id>org.wso2.carbon.coordination.core.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-
+				<feature>
+                                    <id>org.wso2.carbon.attachment.mgt.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>

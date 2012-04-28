@@ -31,6 +31,7 @@ import org.wso2.carbon.datasource.DataSourceInformationRepositoryService;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.service.TenantRegistryLoader;
 import org.wso2.carbon.utils.Axis2ConfigurationContextObserver;
+import org.wso2.carbon.attachment.mgt.server.AttachmentServerService ;
 
 /**
  * @scr.component name="org.wso2.carbon.bpel.BPELServiceComponent" immediate="true"
@@ -40,6 +41,10 @@ import org.wso2.carbon.utils.Axis2ConfigurationContextObserver;
  * unbind="unsetDataSourceInformationRepositoryService"
  * @scr.reference name="registry.service" interface="org.wso2.carbon.registry.core.service.RegistryService"
  * cardinality="1..1" policy="dynamic"  bind="setRegistryService" unbind="unsetRegistryService"
+ *
+ * @scr.reference name="attachment.mgt.service" interface="org.wso2.carbon.attachment.mgt.server.AttachmentServerService"
+ * cardinality="1..1" policy="dynamic"  bind="setAttachmentMgtService"
+ * unbind="unsetAttachmentMgtService"
  */
 
 public class BPELServiceComponent {
@@ -152,6 +157,24 @@ public class BPELServiceComponent {
                 log.error("Error when shutting down BPEL Server.", e);
             }
         }
+    }
+
+    /**
+     * Initializes the Attachment-Mgt Service dependency
+     *
+     * @param attMgtService Attachment-Mgt Service reference
+     */
+    protected void setAttachmentMgtService(AttachmentServerService attMgtService) {
+        BPELServerHolder.getInstance().setAttachmentService(attMgtService);
+    }
+
+    /**
+     * De-reference the Attachment-Mgt Service dependency
+     *
+     * @param attMgtService Attachment-Mgt Service reference
+     */
+    protected void unsetAttachmentMgtService(AttachmentServerService attMgtService) {
+        BPELServerHolder.getInstance().setAttachmentService(null);
     }
 
 }

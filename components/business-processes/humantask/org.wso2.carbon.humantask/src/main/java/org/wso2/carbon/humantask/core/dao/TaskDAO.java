@@ -158,6 +158,8 @@ public interface TaskDAO {
      */
     void setAttachments(List<AttachmentDAO> attachments);
 
+    boolean addAttachment(AttachmentDAO attachment);
+
     Long getId();
 
     List<GenericHumanRoleDAO> getHumanRoles();

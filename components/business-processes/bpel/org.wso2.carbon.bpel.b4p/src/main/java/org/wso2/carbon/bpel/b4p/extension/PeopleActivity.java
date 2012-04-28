@@ -25,11 +25,14 @@ import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ode.bpel.common.FaultException;
+import org.apache.ode.bpel.dao.AttachmentDAO;
 import org.apache.ode.bpel.dd.DeployDocument;
 import org.apache.ode.bpel.dd.TDeployment;
 import org.apache.ode.bpel.dd.TInvoke;
 import org.apache.ode.bpel.dd.TProvide;
+import org.apache.ode.bpel.engine.MessageExchangeImpl;
 import org.apache.ode.bpel.epr.WSDL11Endpoint;
+import org.apache.ode.bpel.iapi.MessageExchange;
 import org.apache.ode.bpel.o.OPartnerLink;
 import org.apache.ode.bpel.o.OProcess;
 import org.apache.ode.bpel.runtime.BpelRuntimeContext;
@@ -54,6 +57,8 @@ import javax.wsdl.extensions.soap.SOAPBinding;
 import javax.wsdl.extensions.soap12.SOAP12Binding;
 import javax.xml.namespace.QName;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class PeopleActivity {
@@ -410,14 +415,46 @@ public class PeopleActivity {
 //        message.addBodyPart();
 //    }
 
+    /**
+     * Process the current runtime context and generate a list of attachment ids bind to the current runtime context.
+     *
+     * @return a list of attachment ids
+     */
+    private Collection<Long> getAttachmentIDs(ExtensionContext extensionContext) {
+        Collection<Long> attachmentIDs = new ArrayList<Long>();
+        Collection<MessageExchange> mexList = extensionContext.getInternalInstance().getMessageExchangeDAOs();
+
+        for (MessageExchange mex : mexList) {
+            //extract the available mex references
+
+            MessageExchangeImpl mexImpl = (MessageExchangeImpl) mex;
+            Collection<AttachmentDAO> attachmentDAOList = mexImpl.getDAO().getAttachments();
+
+            for(AttachmentDAO dao : attachmentDAOList){
+                attachmentIDs.add(dao.getId());
+            }
+        }
+
+        log.warn("Here we return a one level list, so the client doesn't knows which attachment ids are bind to which" +
+                 " message exchanges");
+        return attachmentIDs;
+    }
+
     public String invoke(ExtensionContext extensionContext) throws FaultException {
         BPELMessageContext taskMessageContext = new BPELMessageContext(hiWSDL);
         try {
+            //Setting the attachment id attachmentIDList
+            List<Long> attachmentIDList = (List) getAttachmentIDs(extensionContext);
+            taskMessageContext.setAttachmentIDList(attachmentIDList);
+            taskMessageContext.setOperationName(getOperationName());
+
             SOAPHelper soapHelper = new SOAPHelper(getBinding(), getSoapFactory(), isRPC);
             MessageContext messageContext = new MessageContext();
+            log.warn("Adding attachment ID list as a method input to createSoapRequest makes no sense. Have to fix. " +
+                     "Here we can't embed attachments in MessageContext, as we have only a list of attachment ids.");
             soapHelper.createSoapRequest(messageContext,
-                    (Element) extensionContext.readVariable(inputVarName), getOperation(extensionContext));
-            taskMessageContext.setOperationName(getOperationName());
+                                         (Element) extensionContext.readVariable(inputVarName), getOperation(extensionContext), attachmentIDList);
+
             taskMessageContext.setInMessageContext(messageContext);
             taskMessageContext.setPort(getServicePort());
             taskMessageContext.setService(getServiceName());

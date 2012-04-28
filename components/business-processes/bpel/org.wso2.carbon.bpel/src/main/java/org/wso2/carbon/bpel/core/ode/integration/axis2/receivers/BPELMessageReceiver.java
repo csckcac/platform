@@ -15,6 +15,7 @@
  */
 package org.wso2.carbon.bpel.core.ode.integration.axis2.receivers;
 
+import org.apache.axiom.attachments.Attachments;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
@@ -22,11 +23,18 @@ import org.apache.axis2.engine.AxisEngine;
 import org.apache.axis2.receivers.AbstractInMessageReceiver;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.attachment.mgt.skeleton.AttachmentMgtException;
+import org.wso2.carbon.attachment.mgt.skeleton.types.TAttachment;
+import org.wso2.carbon.bpel.core.internal.BPELServerHolder;
+import org.wso2.carbon.bpel.core.ode.integration.BPELConstants;
 import org.wso2.carbon.bpel.core.ode.integration.BPELMessageContext;
 import org.wso2.carbon.bpel.core.ode.integration.BPELProcessProxy;
-import org.wso2.carbon.bpel.core.ode.integration.BPELConstants;
 import org.wso2.carbon.bpel.core.ode.integration.utils.BPELMessageContextFactory;
 import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
+
+import javax.activation.DataHandler;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.wso2.carbon.bpel.core.ode.integration.utils.BPELMessageContextFactory.hasResponse;
 
@@ -43,6 +51,42 @@ public class BPELMessageReceiver extends AbstractInMessageReceiver {
     private static Log messageTraceLog = LogFactory.getLog(BPELConstants.MESSAGE_TRACE);
 
     private BPELProcessProxy processProxy;
+
+    /**
+     * Upload each attachment from attachment-map and returns a list of attachment ids.
+     *
+     * @param attachmentsMap
+     * @return list of attachment ids
+     */
+    private List<String> persistAttachments(Attachments attachmentsMap) {
+        List<String> attachmentIdList = new ArrayList<String>();
+        //for each attachment upload it
+        for (String id : attachmentsMap.getAllContentIDs()) {
+            DataHandler attachmentContent = attachmentsMap.getDataHandler(id);
+
+            try {
+                String attachmentID = BPELServerHolder.getInstance().getAttachmentService()
+                        .getAttachmentService().add(createAttachmentDTO(attachmentContent));
+                attachmentIdList.add(attachmentID);
+                log.info("Attachment added. ID : " + attachmentID);
+            } catch (AttachmentMgtException e) {
+                log.error(e.getLocalizedMessage(), e);
+            }
+        }
+        return attachmentIdList;
+    }
+
+    private TAttachment createAttachmentDTO(DataHandler attachmentHandler) {
+        log.warn("DummyUser name added when attachment creation");
+        TAttachment attachment = new TAttachment();
+        attachment.setName(attachmentHandler.getName());
+        attachment.setCreatedBy("dummyBPELUser");   //User can be who?
+        attachment.setContentType(attachmentHandler.getContentType());
+        //As well there are some other parameters to be set.
+        attachment.setContent(attachmentHandler);
+
+        return attachment;
+    }
 
     protected final void invokeBusinessLogic(final MessageContext inMessageContext)
             throws AxisFault {
@@ -68,6 +112,12 @@ public class BPELMessageReceiver extends AbstractInMessageReceiver {
                 inMessageContext,
                 processProxy,
                 soapFactory);
+
+        //Initializing the attachments in the BPEL Message Context
+        List<String> attachmentIDs = persistAttachments(inMessageContext.getAttachmentMap());
+        if (attachmentIDs != null && !attachmentIDs.isEmpty()) {
+            bpelMessageContext.setAttachmentIDList(attachmentIDs);
+        }
 
         if (hasResponse(inMessageContext.getAxisOperation())) {
             handleInOutOperation(bpelMessageContext);

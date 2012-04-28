@@ -16,19 +16,25 @@
 
 package org.wso2.carbon.humantask.core.dao;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.wso2.carbon.humantask.core.engine.PeopleQueryEvaluator;
 import org.wso2.carbon.humantask.core.engine.runtime.ExpressionEvaluationContext;
 import org.wso2.carbon.humantask.core.engine.runtime.api.EvaluationContext;
 import org.wso2.carbon.humantask.core.store.HumanTaskBaseConfiguration;
 
 import javax.xml.namespace.QName;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
  * The context data required to create a task object.
  */
 public class TaskCreationContext {
+    private static Log log = LogFactory.getLog(TaskCreationContext.class);
 
     private HumanTaskBaseConfiguration taskConfiguration;
 
@@ -128,5 +134,38 @@ public class TaskCreationContext {
 
     public void setMessageHeaderParts(Map<String, Element> messageHeaderParts) {
         this.messageHeaderParts = messageHeaderParts;
+    }
+
+    /**
+     * Extract the header content related to attachment-ids and create a list from of those attachment-ids
+     *
+     * @return list of attachment-ids
+     */
+    public List<String> getAttachmentIDs() {
+        List<String> attachmentIDs = new ArrayList<String>();
+        log.warn("Please position this constants properly. Also as this attachment serializing/de-serializing " +
+                 "implementations are dependent each other, we need a way to maintain this two methods (org.wso2.carbon.bpel.b4p.utils.SOAPHelper#addAttachmentIDHeader) in a common" +
+                 " place.");
+        final String NAMESPACE = "http://wso2.org/bps/attachments";
+        final String NAMESPACE_PREFIX = "attch";
+        final String PARENT_ELEMENT_NAME = "attachmentIDs";
+        final String CHILD_ELEMENT_NAME = "attachmentID";
+
+        Element attachmentElement = this.messageHeaderParts.get(PARENT_ELEMENT_NAME);
+
+        if (attachmentElement != null) {
+            NodeList childElementList = attachmentElement.getElementsByTagName(CHILD_ELEMENT_NAME);
+            int size = childElementList.getLength();
+            for (int i = 0; i < size; i++) {
+                Element child = (Element) childElementList.item(i);
+                attachmentIDs.add(child.getTextContent());
+            }
+        } else {
+            if (log.isDebugEnabled()) {
+                log.debug("No header elements found with :" + PARENT_ELEMENT_NAME);
+            }
+        }
+
+        return attachmentIDs;
     }
 }

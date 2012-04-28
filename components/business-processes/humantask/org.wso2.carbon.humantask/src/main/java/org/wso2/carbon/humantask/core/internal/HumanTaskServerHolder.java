@@ -16,6 +16,7 @@
 
 package org.wso2.carbon.humantask.core.internal;
 
+import org.wso2.carbon.attachment.mgt.server.AttachmentServerService;
 import org.wso2.carbon.humantask.core.HumanTaskServer;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.service.RealmService;
@@ -30,6 +31,7 @@ public final class HumanTaskServerHolder {
     private boolean dataSourceInfoRepoProvided = false;
     private HumanTaskServer htServer = null;
     private RegistryService registryService;
+    private AttachmentServerService attachmentService;
 
     /**
      * The HumanTask UI Resource Provider
@@ -81,5 +83,23 @@ public final class HumanTaskServerHolder {
 
     public void setHumanTaskUIResourceProvider(HumanTaskUIResourceProvider humanTaskUIResourceProvider) {
         this.humanTaskUIResourceProvider = humanTaskUIResourceProvider;
+    }
+
+    /**
+     * Returns the Attachment-Mgt service dependency
+     *
+     * @return Attachment-Mgt service reference
+     */
+    public AttachmentServerService getAttachmentService() {
+        return attachmentService;
+    }
+
+    /**
+     * Initialize the Attachment-Mgt service dependency
+     *
+     * @param attachmentService Attachment-Mgt service reference
+     */
+    public void setAttachmentService(AttachmentServerService attachmentService) {
+        this.attachmentService = attachmentService;
     }
 }

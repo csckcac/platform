@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.bpel.core.internal;
 
+import org.wso2.carbon.attachment.mgt.server.AttachmentServerService;
 import org.wso2.carbon.bpel.core.ode.integration.BPELServerImpl;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.service.TenantRegistryLoader;
@@ -32,6 +33,8 @@ public final class BPELServerHolder {
     private BPELServerImpl bpelServer;
 
     private TenantRegistryLoader registryLoader;
+
+    private AttachmentServerService attachmentService;
 
     private BPELServerHolder() {
     }
@@ -65,5 +68,23 @@ public final class BPELServerHolder {
 
     public void setRegistryLoader(TenantRegistryLoader registryLoader) {
         this.registryLoader = registryLoader;
+    }
+
+    /**
+     * Returns the Attachment-Mgt service dependency
+     *
+     * @return Attachment-Mgt service reference
+     */
+    public AttachmentServerService getAttachmentService() {
+        return attachmentService;
+    }
+
+    /**
+     * Initialize the Attachment-Mgt service dependency
+     *
+     * @param attachmentService Attachment-Mgt service reference
+     */
+    public void setAttachmentService(AttachmentServerService attachmentService) {
+        this.attachmentService = attachmentService;
     }
 }

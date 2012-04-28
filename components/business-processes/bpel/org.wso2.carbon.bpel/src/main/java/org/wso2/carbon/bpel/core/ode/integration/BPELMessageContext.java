@@ -26,6 +26,7 @@ import org.wso2.carbon.unifiedendpoint.core.UnifiedEndpoint;
 import javax.wsdl.Binding;
 import javax.wsdl.Definition;
 import javax.xml.namespace.QName;
+import java.util.List;
 
 /**
  * Used as a Data Transfer Object. Will be created at the BPEL Message Receiver. Instance of this
@@ -66,6 +67,11 @@ public class BPELMessageContext {
     private String port;
 
     private String caller;
+
+    /**
+     * Associated list of attachment ids for the BPEL message context
+     */
+    private List attachmentIDs;
 
     public BPELMessageContext(Definition bpelServiceWSDLDefinition){
         this.bpelServiceWSDLDefinition = bpelServiceWSDLDefinition;
@@ -185,5 +191,23 @@ public class BPELMessageContext {
 
     public void setCaller(String caller) {
         this.caller = caller;
+    }
+
+    /**
+     * Assign a list of attachments to be associated with the BPEL Message Context
+     *
+     * @param attachmentIDs a list of attachments to be associated with the BPEL Message Context
+     */
+    public void setAttachmentIDList(List attachmentIDs) {
+        this.attachmentIDs = attachmentIDs;
+    }
+
+    /**
+     * Returns the list of attachments associated with the BPEL Message Context
+     *
+     * @return the list of attachments associated with the BPEL Message Context
+     */
+    public List getAttachmentIDList() {
+        return attachmentIDs;
     }
 }

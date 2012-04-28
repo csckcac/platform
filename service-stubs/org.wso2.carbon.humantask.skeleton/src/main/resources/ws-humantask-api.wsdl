@@ -41,7 +41,7 @@
             <xsd:element name="addAttachmentResponse">
                 <xsd:complexType>
                     <xsd:sequence>
-                        <xsd:element name="identifier" type="xsd:anyURI"/>
+                        <xsd:element name="isAssociated" type="xsd:boolean"/>
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>

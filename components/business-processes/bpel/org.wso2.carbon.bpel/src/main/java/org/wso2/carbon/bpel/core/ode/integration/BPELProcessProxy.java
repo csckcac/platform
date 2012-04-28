@@ -305,7 +305,7 @@ public class BPELProcessProxy {
             log.debug("Message content:  " + DOMUtils.domToString(request.getMessage()));
         }
 
-        return odeMessageExchange.invoke(request);
+        return odeMessageExchange.invoke(request, bpelMessageContext.getAttachmentIDList());
     }
 
     private boolean commitODEMessageExchange(final MyRoleMessageExchange odeMessageExchange) {

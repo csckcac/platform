@@ -1,21 +1,22 @@
-<config>
+<APIManager>
     <Database>
         <URL>jdbc:h2:target/repository/database/WSO2AM_DB</URL>
         <Username>wso2carbon</Username>
         <Password>wso2carbon</Password>
         <Driver>org.h2.Driver</Driver>
     </Database>
-    <apiMGTDataAgentConfig>
-        <bamServerThriftPort>7612</bamServerThriftPort>
-        <bamServerURL>https://localhost:9444/</bamServerURL>
-        <bamServerUser>admin</bamServerUser>
-        <bamServerPassword>admin</bamServerPassword>
-        <bamAgentTrustStore>repository/resources/security/client-truststore.jks</bamAgentTrustStore>
-        <bamAgentTrustStorePassword>wso2carbon</bamAgentTrustStorePassword>
-    </apiMGTDataAgentConfig>
+    <APIUsageTracking>
+        <Enabled>false</Enabled>
+        <ThriftPort>7612</ThriftPort>
+        <BAMServerURL>https://localhost:9444/</BAMServerURL>
+        <BAMUser>admin</BAMUser>
+        <BAMPassword>admin</BAMPassword>
+        <BAMTrustStore>repository/resources/security/client-truststore.jks</BAMTrustStore>
+        <BAMTrustStorePassword>wso2carbon</BAMTrustStorePassword>
+    </APIUsageTracking>
     <APIConsumerAuthentication>
         <AuthUsername>admin</AuthUsername>
         <AuthPassword>admin</AuthPassword>
     </APIConsumerAuthentication>
-</config>
+</APIManager>
 

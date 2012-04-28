@@ -20,9 +20,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.apimgt.api.APIManagementException;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
@@ -31,33 +29,36 @@ import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Global API Manager configuration. This is generally populated from the repository/conf/amConfig.xml
+ * file at system startup. Once successfully populated, this class does not allow more parameters
+ * to be added to the configuration.
+ */
 public class APIManagerConfiguration {
-
-    private static final APIManagerConfiguration instance = new APIManagerConfiguration();
-    
-    private static final Log log = LogFactory.getLog(APIManagerConfiguration.class);
     
     private Map<String,List<String>> configuration = new ConcurrentHashMap<String, List<String>>();
 
-    private APIManagerConfiguration() {
-        String filePath = CarbonUtils.getCarbonHome() + File.separator +
-                "repository" +File.separator +"conf" +File.separator + "amConfig.xml";
+    private boolean initialized;
+    
+    public void load(String filePath) throws APIManagementException {
+        if (initialized) {
+            return;
+        }
         InputStream in = null;
         try {
             in = FileUtils.openInputStream(new File(filePath));
             StAXOMBuilder builder = new StAXOMBuilder(in);
             readChildElements(builder.getDocumentElement(), new Stack<String>());
+            initialized = true;
         } catch (IOException e) {
-            log.error("I/O error while reading the API manager configuration: " + filePath, e);
+            throw new APIManagementException("I/O error while reading the API manager " +
+                    "configuration: " + filePath, e);
         } catch (XMLStreamException e) {
-            log.error("Error while parsing the API manager configuration: " + filePath, e);
+            throw new APIManagementException("Error while parsing the API manager " +
+                    "configuration: " + filePath, e);
         } finally {
             IOUtils.closeQuietly(in);
         }
-    }
-
-    public static APIManagerConfiguration getInstance() {
-        return instance;
     }
 
     public String getFirstProperty(String key) {

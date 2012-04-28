@@ -52,7 +52,7 @@ public class AuthAdminServiceClient {
             throw new AxisFault("Malformed admin service URL: " + serviceURL, e);
         }
 
-        APIManagerConfiguration config = APIManagerConfiguration.getInstance();
+        APIManagerConfiguration config = ServiceReferenceHolder.getInstance().getAPIManagerConfiguration();
         username = config.getFirstProperty(APISecurityConstants.API_SECURITY_AUTH_USERNAME);
         password = config.getFirstProperty(APISecurityConstants.API_SECURITY_AUTH_PASSWORD);
         if (username == null || password == null) {

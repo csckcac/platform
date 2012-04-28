@@ -20,6 +20,7 @@ import org.apache.http.HttpHeaders;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.rest.RESTConstants;
+import org.wso2.carbon.apimgt.handlers.internal.ServiceReferenceHolder;
 import org.wso2.carbon.apimgt.handlers.security.*;
 import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
 import org.wso2.carbon.apimgt.impl.dto.xsd.APIKeyValidationInfoDTO;
@@ -126,7 +127,7 @@ public class OAuthAuthenticator implements Authenticator {
     }
     
     protected void initOAuthParams() {
-        APIManagerConfiguration config = APIManagerConfiguration.getInstance();
+        APIManagerConfiguration config = ServiceReferenceHolder.getInstance().getAPIManagerConfiguration();
         String value = config.getFirstProperty(
                 APISecurityConstants.API_SECURITY_OAUTH_HEADER);
         if (value != null) {

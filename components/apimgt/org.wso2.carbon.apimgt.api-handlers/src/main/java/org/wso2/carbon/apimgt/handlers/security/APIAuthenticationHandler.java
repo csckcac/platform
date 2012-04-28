@@ -32,12 +32,10 @@ import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.core.axis2.Axis2Sender;
 import org.apache.synapse.rest.AbstractHandler;
 import org.apache.synapse.transport.nhttp.NhttpConstants;
+import org.wso2.carbon.apimgt.handlers.internal.ServiceReferenceHolder;
 import org.wso2.carbon.apimgt.handlers.security.oauth.OAuthAuthenticator;
-import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
 
-import javax.xml.namespace.QName;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -60,8 +58,8 @@ public class APIAuthenticationHandler extends AbstractHandler {
     private Authenticator authenticator;
     
     public APIAuthenticationHandler() {
-        String authenticatorType = APIManagerConfiguration.getInstance().getFirstProperty(
-                APISecurityConstants.API_SECURITY_AUTHENTICATOR);
+        String authenticatorType = ServiceReferenceHolder.getInstance().getAPIManagerConfiguration().
+                getFirstProperty(APISecurityConstants.API_SECURITY_AUTHENTICATOR);
         if (authenticatorType == null) {
             authenticatorType = OAuthAuthenticator.class.getName();
         }

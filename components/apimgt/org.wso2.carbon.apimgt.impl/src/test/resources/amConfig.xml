@@ -1,13 +1,13 @@
 <config>
-    <dbConfig name="wso2am">
-        <url>jdbc:h2:target/repository/database/WSO2AM_DB</url>
-        <userName>wso2carbon</userName>
-        <password>wso2carbon</password>
-        <driverName>org.h2.Driver</driverName>
+    <Database>
+        <URL>jdbc:h2:target/repository/database/WSO2AM_DB</URL>
+        <Username>wso2carbon</Username>
+        <Password>wso2carbon</Password>
+        <Driver>org.h2.Driver</Driver>
         <maxActive>50</maxActive>
         <maxWait>60000</maxWait>
         <minIdle>5</minIdle>
-    </dbConfig>
+    </Database>
     <apiMGTDataAgentConfig>
         <bamServerThriftPort>7612</bamServerThriftPort>
         <bamServerURL>https://localhost:9444/</bamServerURL>

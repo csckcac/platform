@@ -17,18 +17,14 @@
 */
 package org.wso2.carbon.apimgt.impl.utils;
 
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.api.APIManagementException;
+import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
 import org.wso2.carbon.apimgt.impl.DBConfiguration;
-import org.wso2.carbon.utils.FileUtil;
+import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,28 +32,32 @@ import java.sql.SQLException;
 
 public final class APIMgtDBUtil {
 
-    private static Log log = LogFactory.getLog(APIMgtDBUtil.class);
-    private static volatile BasicDataSource dataSource = null;
+    private static final Log log = LogFactory.getLog(APIMgtDBUtil.class);
 
-    private APIMgtDBUtil() {
-    }
+    private static volatile BasicDataSource dataSource = null;
+    
+    private static final String DB_CONFIG = "Database.";
+    private static final String DB_DRIVER = DB_CONFIG + "Driver";
+    private static final String DB_URL = DB_CONFIG + "URL";
+    private static final String DB_USER = DB_CONFIG + "Username";
+    private static final String DB_PASSWORD = DB_CONFIG + "Password";
 
     /**
      * Initializes the data source
      *
-     * @param dbConfigurationPath db Config path
      * @throws APIManagementException if an error occurs while loading DB configuration
      */
-    public static void initialize(String dbConfigurationPath) throws APIManagementException {
+    public static void initialize() throws APIManagementException {
         if (dataSource != null) {
             return;
         }
+
         synchronized (APIMgtDBUtil.class) {
             if (dataSource == null) {
                 if (log.isDebugEnabled()) {
                     log.debug("Initializing data source");
                 }
-                DBConfiguration configuration = getDBConfig(dbConfigurationPath);
+                DBConfiguration configuration = getDBConfig();
                 String dbUrl = configuration.getDbUrl();
                 String driver = configuration.getDriverName();
                 String username = configuration.getUserName();
@@ -148,35 +148,17 @@ public final class APIMgtDBUtil {
 
     /**
      * Return the DBConfiguration
-     * @param configPath  DB config file path
+     *
      * @return DBConfiguration
-     * @throws APIManagementException  if failed to get DBConfiguration
      */
-    private static DBConfiguration getDBConfig(String configPath) throws APIManagementException {
+    private static DBConfiguration getDBConfig() {
         DBConfiguration dbConfiguration = new DBConfiguration();
-        try {
-            String config = FileUtil.readFileToString(configPath);
-
-            OMElement omElement = AXIOMUtil.stringToOM(config);
-            OMElement dbConfigOMElement = omElement.getFirstChildWithName(new QName("dbConfig"));
-            dbConfiguration.setDbUrl(
-                    dbConfigOMElement.getFirstChildWithName(new QName("url")).getText());
-            dbConfiguration.setDriverName(
-                    dbConfigOMElement.getFirstChildWithName(new QName("driverName")).getText());
-            dbConfiguration.setUserName(
-                    dbConfigOMElement.getFirstChildWithName(new QName("userName")).getText());
-            dbConfiguration.setPassword(
-                    dbConfigOMElement.getFirstChildWithName(new QName("password")).getText());
-        } catch (XMLStreamException e) {
-            handleException("Failed to get db configuration", e);
-        } catch (IOException e) {
-            handleException("Error while reading the configuration file: " + configPath, e);
-        }
+        APIManagerConfiguration config = ServiceReferenceHolder.getInstance().
+                getAPIManagerConfigurationService().getAPIManagerConfiguration();
+        dbConfiguration.setDbUrl(config.getFirstProperty(DB_URL));
+        dbConfiguration.setDriverName(config.getFirstProperty(DB_DRIVER));
+        dbConfiguration.setUserName(config.getFirstProperty(DB_USER));
+        dbConfiguration.setPassword(config.getFirstProperty(DB_PASSWORD));
         return dbConfiguration;
-    }
-
-    private static void handleException(String msg, Exception e) throws APIManagementException {
-        log.error(msg, e);
-        throw new APIManagementException(msg, e);
     }
 }

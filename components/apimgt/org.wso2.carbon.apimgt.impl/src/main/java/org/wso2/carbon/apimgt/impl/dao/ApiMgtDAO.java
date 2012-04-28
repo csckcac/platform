@@ -56,15 +56,7 @@ public class ApiMgtDAO {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException if failed to initialize the db config
      */
     public ApiMgtDAO() throws APIManagementException {
-        APIMgtDBUtil.initialize(APIConstants.DB_CONFIG_PATH);
-    }
-
-    /**
-     * @param dbConfigurationPath  path to database configuration
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException  if failed to initialize the db config
-     */
-    public ApiMgtDAO(String dbConfigurationPath) throws APIManagementException {
-        APIMgtDBUtil.initialize(dbConfigurationPath);
+        APIMgtDBUtil.initialize();
     }
 
     /**
@@ -968,7 +960,7 @@ public class ApiMgtDAO {
             ps = conn.prepareStatement(sqlQuery);
             ps.setString(1, apiId);
             ps.setString(2, userId);
-            int tenantId = -1;
+            int tenantId;
             try {
                 tenantId = IdentityUtil.getTenantIdOFUser(userId);
             } catch (IdentityException e) {

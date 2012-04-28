@@ -18,32 +18,35 @@
 
 package org.wso2.carbon.apimgt.impl.dao.test;
 
-
 import junit.framework.TestCase;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.api.dto.UserApplicationAPIUsage;
 import org.wso2.carbon.apimgt.api.model.APIIdentifier;
 import org.wso2.carbon.apimgt.api.model.Application;
 import org.wso2.carbon.apimgt.api.model.SubscribedAPI;
 import org.wso2.carbon.apimgt.api.model.Subscriber;
+import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
+import org.wso2.carbon.apimgt.impl.APIManagerConfigurationServiceImpl;
 import org.wso2.carbon.apimgt.impl.dao.ApiMgtDAO;
 import org.wso2.carbon.apimgt.impl.dto.APIInfoDTO;
 import org.wso2.carbon.apimgt.impl.dto.APIKeyInfoDTO;
 import org.wso2.carbon.apimgt.impl.dto.APIKeyValidationInfoDTO;
+import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 
 import java.util.Date;
 import java.util.Set;
 
 public class APIMgtDAOTest extends TestCase {
-    Log log = LogFactory.getLog(APIMgtDAOTest.class);
-    ApiMgtDAO apiMgtDAO;
 
+    ApiMgtDAO apiMgtDAO;
 
     @Override
     protected void setUp() throws Exception {
         String dbConfigPath = System.getProperty("APIManagerDBConfigurationPath");
-        apiMgtDAO = new ApiMgtDAO(dbConfigPath);
+        APIManagerConfiguration config = new APIManagerConfiguration();
+        config.load(dbConfigPath);
+        ServiceReferenceHolder.getInstance().setAPIManagerConfigurationService(
+                new APIManagerConfigurationServiceImpl(config));
+        apiMgtDAO = new ApiMgtDAO();
     }
 
     public void testGetSubscribersOfProvider() throws Exception{
@@ -51,6 +54,7 @@ public class APIMgtDAOTest extends TestCase {
         assertNotNull(subscribers);
         assertTrue(subscribers.size() > 0);
     }
+
     public void testAccessKeyForAPI() throws Exception {
         APIInfoDTO apiInfoDTO = new APIInfoDTO();
         apiInfoDTO.setApiName("API1");
@@ -100,14 +104,12 @@ public class APIMgtDAOTest extends TestCase {
         assertFalse(isSubscribed);
     }
 
-
     public void testGetAllAPIUsageByProvider() throws Exception{
         UserApplicationAPIUsage[] userApplicationAPIUsages = apiMgtDAO.getAllAPIUsageByProvider("SUMEDHA_API1_V1.0.0");
         assertNotNull(userApplicationAPIUsages);
 
     }
-    
-    
+
     public void testAddSubscription() throws Exception{
         APIIdentifier apiIdentifier = new APIIdentifier("SUMEDHA","API1","V1.0.0");
         apiIdentifier.setApplicationId("APPLICATION99");

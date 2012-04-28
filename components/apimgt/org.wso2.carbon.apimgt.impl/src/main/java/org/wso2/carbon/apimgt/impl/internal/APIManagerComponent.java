@@ -20,10 +20,14 @@ package org.wso2.carbon.apimgt.impl.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.impl.APIConstants;
+import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
+import org.wso2.carbon.apimgt.impl.APIManagerConfigurationService;
+import org.wso2.carbon.apimgt.impl.APIManagerConfigurationServiceImpl;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
@@ -35,6 +39,7 @@ import org.wso2.carbon.utils.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Properties;
 
 /**
  * @scr.component name="org.wso2.apimgt.impl.services" immediate="true"
@@ -46,21 +51,40 @@ public class APIManagerComponent {
 
     private static final Log log = LogFactory.getLog(APIManagerComponent.class);
 
+    private ServiceRegistration registration;
+
     protected void activate(ComponentContext componentContext) {
-       if(log.isDebugEnabled()){
-           log.debug("APIManagerComponent activated");
-       }
+        if (log.isDebugEnabled()) {
+            log.debug("API manager component activated");
+        }
+        
         try {
             addRxtConfigs();
+            APIManagerConfiguration configuration = new APIManagerConfiguration();
+            String filePath = CarbonUtils.getCarbonHome() + File.separator + "repository" +
+                    File.separator + "conf" + File.separator + "amConfig.xml";
+            configuration.load(filePath);
+            APIManagerConfigurationServiceImpl configurationService =
+                    new APIManagerConfigurationServiceImpl(configuration);
+            ServiceReferenceHolder.getInstance().setAPIManagerConfigurationService(configurationService);
+            registration = componentContext.getBundleContext().registerService(
+                    APIManagerConfigurationService.class.getName(),
+                    configurationService, new Properties());
         } catch (APIManagementException e) {
-            //TODO
-            log.error("Failed to add rxt files to registry",e);
+            log.fatal("Error while initializing the API manager component", e);
         }
     }
 
+    protected void deactivate(ComponentContext componentContext) {
+        if (log.isDebugEnabled()) {
+            log.debug("Deactivating API manager component");
+        }
+        registration.unregister();
+    }
+
     protected void setRegistryService(RegistryService registryService) {
-        if(registryService!=null && log.isDebugEnabled()){
-          log.debug("Registry service initialized");
+        if (registryService != null && log.isDebugEnabled()) {
+            log.debug("Registry service initialized");
         }
         ServiceReferenceHolder.getInstance().setRegistryService(registryService);
     }
@@ -108,6 +132,5 @@ public class APIManagerComponent {
                 throw new APIManagementException(msg, e);
             }
         }
-
     }
 }

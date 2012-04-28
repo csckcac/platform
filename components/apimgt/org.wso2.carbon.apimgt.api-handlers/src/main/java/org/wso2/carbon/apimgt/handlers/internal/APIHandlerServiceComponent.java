@@ -19,6 +19,7 @@ package org.wso2.carbon.apimgt.handlers.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.apimgt.impl.APIManagerConfigurationService;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
 /**
@@ -26,6 +27,9 @@ import org.wso2.carbon.utils.ConfigurationContextService;
  * @scr.reference name="configuration.context.service"
  * interface="org.wso2.carbon.utils.ConfigurationContextService" cardinality="1..1"
  * policy="dynamic" bind="setConfigurationContextService" unbind="unsetConfigurationContextService"
+ * @scr.reference name="api.manager.config.service"
+ * interface="org.wso2.carbon.apimgt.impl.APIManagerConfigurationService" cardinality="1..1"
+ * policy="dynamic" bind="setAPIManagerConfigurationService" unbind="unsetAPIManagerConfigurationService"
  */
 public class APIHandlerServiceComponent {
     
@@ -55,5 +59,19 @@ public class APIHandlerServiceComponent {
             log.debug("Configuration context service unbound from the API handlers");
         }
         ServiceReferenceHolder.getInstance().setConfigurationContextService(null);
+    }
+
+    protected void setAPIManagerConfigurationService(APIManagerConfigurationService amcService) {
+        if (log.isDebugEnabled()) {
+            log.debug("API manager configuration service bound to the API handlers");
+        }
+        ServiceReferenceHolder.getInstance().setAPIManagerConfigurationService(amcService);
+    }
+
+    protected void unsetAPIManagerConfigurationService(APIManagerConfigurationService amcService) {
+        if (log.isDebugEnabled()) {
+            log.debug("API manager configuration service unbound from the API handlers");
+        }
+        ServiceReferenceHolder.getInstance().setAPIManagerConfigurationService(null);
     }
 }

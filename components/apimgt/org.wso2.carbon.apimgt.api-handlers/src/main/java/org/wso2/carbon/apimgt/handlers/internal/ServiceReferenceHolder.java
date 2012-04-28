@@ -17,6 +17,8 @@
 package org.wso2.carbon.apimgt.handlers.internal;
 
 import org.apache.axis2.context.ConfigurationContext;
+import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
+import org.wso2.carbon.apimgt.impl.APIManagerConfigurationService;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
 public class ServiceReferenceHolder {
@@ -24,6 +26,7 @@ public class ServiceReferenceHolder {
     private static final ServiceReferenceHolder instance = new ServiceReferenceHolder();
 
     private ConfigurationContextService cfgCtxService;
+    private APIManagerConfigurationService amConfigService;
 
     private ServiceReferenceHolder() {
 
@@ -43,5 +46,13 @@ public class ServiceReferenceHolder {
 
     public ConfigurationContext getServerConfigurationContext() {
         return cfgCtxService.getServerConfigContext();
+    }
+
+    public APIManagerConfiguration getAPIManagerConfiguration() {
+        return amConfigService.getAPIManagerConfiguration();
+    }
+
+    public void setAPIManagerConfigurationService(APIManagerConfigurationService amConfigService) {
+        this.amConfigService = amConfigService;
     }
 }

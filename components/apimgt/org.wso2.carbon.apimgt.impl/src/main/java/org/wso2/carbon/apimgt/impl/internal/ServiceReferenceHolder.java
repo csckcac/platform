@@ -16,6 +16,7 @@
 
 package org.wso2.carbon.apimgt.impl.internal;
 
+import org.wso2.carbon.apimgt.impl.APIManagerConfigurationService;
 import org.wso2.carbon.registry.core.service.RegistryService;
 
 public class ServiceReferenceHolder {
@@ -23,6 +24,7 @@ public class ServiceReferenceHolder {
     private static final ServiceReferenceHolder instance = new ServiceReferenceHolder();
 
     private RegistryService registryService;
+    private APIManagerConfigurationService amConfigurationService;
 
     private ServiceReferenceHolder() {
 
@@ -38,5 +40,13 @@ public class ServiceReferenceHolder {
 
     public void setRegistryService(RegistryService registryService) {
         this.registryService = registryService;
+    }
+
+    public APIManagerConfigurationService getAPIManagerConfigurationService() {
+        return amConfigurationService;
+    }
+
+    public void setAPIManagerConfigurationService(APIManagerConfigurationService amConfigurationService) {
+        this.amConfigurationService = amConfigurationService;
     }
 }

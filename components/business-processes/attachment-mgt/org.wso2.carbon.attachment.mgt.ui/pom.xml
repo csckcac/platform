@@ -61,7 +61,12 @@
                             org.wso2.carbon.attachment.mgt.ui.*;version="${carbon.platform.package.export.version}"
                         </Export-Package>
                         <Import-Package>
-                            org.wso2.carbon.attachment.mgt.stub.*;version="${carbon.platform.package.import.version.range}"
+                            javax.servlet.*;version=2.4.0,
+                            javax.xml.namespace; version=0.0.0,
+                            javax.xml.transform.*; version=0.0.0,
+                            org.w3c.dom.*;version="0.0.0",
+                            org.wso2.carbon.attachment.mgt.stub.*;version="${carbon.platform.package.import.version.range}",
+                            *;resolution:=optional
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                         <Carbon-Component>UIBundle</Carbon-Component>

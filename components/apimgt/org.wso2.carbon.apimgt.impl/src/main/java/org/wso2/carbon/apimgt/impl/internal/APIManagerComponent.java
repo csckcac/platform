@@ -131,7 +131,7 @@ public class APIManagerComponent {
                 if (registry.resourceExists(resourcePath)) {
                     continue;
                 }
-                String rxt = FileUtil.readFileToString(dir + File.separator + rxtPath);
+                String rxt = FileUtil.readFileToString(rxtDir + File.separator + rxtPath);
                 Resource resource = registry.newResource();
                 resource.setContent(rxt.getBytes());
                 resource.setMediaType(APIConstants.RXT_MEDIA_TYPE);

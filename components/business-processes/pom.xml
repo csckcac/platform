@@ -36,5 +36,15 @@
                 <module>bpel</module>
                 <module>humantask</module>
                 <module>common</module>
+		<module>attachment-mgt</module>
             </modules>
+    <dependencyManagement>
+        <dependencies>
+	    <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.attachment.mgt</artifactId>
+                <version>${wso2carbon.version}</version>
+            </dependency>
+	</dependencies>
+    </dependencyManagement>
 </project>

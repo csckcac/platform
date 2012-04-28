@@ -29,7 +29,6 @@ import org.wso2.carbon.apimgt.api.dto.UserApplicationAPIUsage;
 import org.wso2.carbon.apimgt.api.model.*;
 import org.wso2.carbon.apimgt.api.model.Tag;
 import org.wso2.carbon.apimgt.impl.dao.ApiMgtDAO;
-import org.wso2.carbon.apimgt.impl.internal.APIManagerComponent;
 import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 import org.wso2.carbon.apimgt.impl.utils.APIUtil;
 import org.wso2.carbon.apimgt.impl.utils.APIVersionComparator;
@@ -903,15 +902,14 @@ public class APIManagerImpl implements APIManager {
      * @throws APIManagementException if failed to update API
      */
     public void updateAPI(API api) throws APIManagementException {
-        if (api.getContext() == null) {
-            APIIdentifier apiIdentifier = api.getId();
-            String path = APIUtil.getAPIPath(apiIdentifier);
-            try {
-                Resource resource = registry.get(path);
-                api.setContext(resource.getProperty(APIConstants.API_CONTEXT_ID));
-            } catch (RegistryException e) {
-                handleException("Failed set context id when updating the API", e);
-            }
+
+        APIIdentifier apiIdentifier = api.getId();
+        String path = APIUtil.getAPIPath(apiIdentifier);
+        try {
+            Resource resource = registry.get(path);
+            api.setContext(resource.getProperty(APIConstants.API_CONTEXT_ID));
+        } catch (RegistryException e) {
+            handleException("Failed set context id when updating the API", e);
         }
         addAPI(api);
     }

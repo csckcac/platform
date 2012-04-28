@@ -31,7 +31,7 @@ import org.wso2.carbon.datasource.DataSourceInformationRepositoryService;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.service.TenantRegistryLoader;
 import org.wso2.carbon.utils.Axis2ConfigurationContextObserver;
-import org.wso2.carbon.attachment.mgt.server.AttachmentServerService ;
+import org.wso2.carbon.attachment.mgt.server.AttachmentServerService;
 
 /**
  * @scr.component name="org.wso2.carbon.bpel.BPELServiceComponent" immediate="true"

@@ -25,6 +25,7 @@ import org.apache.synapse.rest.AbstractHandler;
 import org.apache.synapse.rest.RESTConstants;
 import org.wso2.carbon.apimgt.usage.publisher.dto.RequestPublisherDTO;
 import org.wso2.carbon.apimgt.usage.publisher.dto.ResponsePublisherDTO;
+import org.wso2.carbon.apimgt.usage.publisher.internal.UsageComponent;
 import org.wso2.carbon.apimgt.usage.publisher.util.Utils;
 
 import java.util.Map;
@@ -34,17 +35,25 @@ import java.util.regex.Pattern;
 public class APIMgtUsageHandler extends AbstractHandler {
 
     private APIMgtUsageConfigHolder configHolder = new APIMgtUsageConfigHolder();
-    private APIMgtUsageBAMDataPublisher publisher;
+    private volatile APIMgtUsageBAMDataPublisher publisher;
+    private boolean enabled = UsageComponent.getApiMgtConfigReaderService().isEnabled();
 
     private static Log log   = LogFactory.getLog(APIMgtUsageHandler.class);
 
         public boolean handleRequest(MessageContext mc) {
-            synchronized (this){
-                if(publisher == null){
-                    publisher = new APIMgtUsageBAMDataPublisher(configHolder);
+            if (!enabled) {
+                return true;
+            }
+
+            if (publisher == null) {
+                synchronized (this){
+                    if (publisher == null){
+                        publisher = new APIMgtUsageBAMDataPublisher(configHolder);
+                    }
                 }
             }
-            String currentTime = ((Long)System.currentTimeMillis()).toString();
+
+            String currentTime = String.valueOf(System.currentTimeMillis());
             RequestPublisherDTO requestPublisherDTO;
             try{
                 mc.setProperty("requestTime",currentTime);
@@ -54,23 +63,23 @@ public class APIMgtUsageHandler extends AbstractHandler {
                 String consumerKey;
                 Object headers = ((Axis2MessageContext)mc).getAxis2MessageContext().getProperty(org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS) ;
                 consumerKey = Utils.extractCustomerKeyFromAuthHeader((String) ((Map) headers).get(APIMgtUsagePublisherConstants.AUTHORIZATION_HEADER));
-                if(consumerKey == null){
+                if (consumerKey == null){
                     log.error("consumerKey is null in request context",new NullPointerException());
                 }
                 requestPublisherDTO.setConsumerKey(consumerKey);
                 mc.setProperty("consumerKey",consumerKey);
 
-                if((String) mc.getProperty(RESTConstants.REST_API_CONTEXT) == null){
+                if (mc.getProperty(RESTConstants.REST_API_CONTEXT) == null){
                     log.error("API context is null in request context",new NullPointerException());
                 }
                 requestPublisherDTO.setContext((String) mc.getProperty(RESTConstants.REST_API_CONTEXT));
 
-                if((String) mc.getProperty(RESTConstants.SYNAPSE_REST_API) == null){
+                if (mc.getProperty(RESTConstants.SYNAPSE_REST_API) == null){
                     log.error("API is null in request context",new NullPointerException());
                 }
                 requestPublisherDTO.setApi((String) mc.getProperty(RESTConstants.SYNAPSE_REST_API));
 
-                if((String) mc.getProperty(RESTConstants.REST_FULL_REQUEST_PATH) == null){
+                if (mc.getProperty(RESTConstants.REST_FULL_REQUEST_PATH) == null){
                     log.error("Request path is null in request context",new NullPointerException());
                 }
                 Pattern pattern = Pattern.compile("^/.+?/.+?([/?].+)$");
@@ -80,14 +89,14 @@ public class APIMgtUsageHandler extends AbstractHandler {
                       mc.setProperty("resource",matcher.group(1));
                 }
 
-                if((String) ((Axis2MessageContext) mc).getAxis2MessageContext().getProperty("HTTP_METHOD") == null){
+                if (((Axis2MessageContext) mc).getAxis2MessageContext().getProperty("HTTP_METHOD") == null){
                     log.error("HTTP method is null in request context",new NullPointerException());
                 }
                 String method = (String) ((Axis2MessageContext) mc).getAxis2MessageContext().getProperty("HTTP_METHOD");
                 requestPublisherDTO.setMethod(method);
                 mc.setProperty("method",method);
 
-                if((String) mc.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION) == null){
+                if (mc.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION) == null){
                     log.error("API version is null in request context",new NullPointerException());
                 }
                 requestPublisherDTO.setVersion((String) mc.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION));
@@ -95,14 +104,16 @@ public class APIMgtUsageHandler extends AbstractHandler {
                 requestPublisherDTO.setRequestTime(currentTime);
 
                 publisher.publishEvent(requestPublisherDTO);
-                return true;
-            }catch (Exception e){
+            } catch (Exception e){
                 log.error("Exception occurred while executing API usage request handler",e);
             }
-            return false;
+            return true; // Should never stop the message flow
         }
 
-        public boolean handleResponse(MessageContext mc){
+        public boolean handleResponse(MessageContext mc) {
+            if (!enabled) {
+                return true;
+            }
             Long currentTime = System.currentTimeMillis();
             ResponsePublisherDTO responsePublisherDTO = new ResponsePublisherDTO();
             try{
@@ -111,42 +122,41 @@ public class APIMgtUsageHandler extends AbstractHandler {
                 Long serviceTime = currentTime - Long.parseLong((String)mc.getProperty("requestTime"));
                 responsePublisherDTO.setServiceTime(serviceTime.toString());
 
-                if((String)mc.getProperty("consumerKey") == null){
+                if (mc.getProperty("consumerKey") == null){
                     log.error("consumerKey is null in response context",new NullPointerException());
                 }
                 responsePublisherDTO.setConsumerKey((String)mc.getProperty("consumerKey"));
 
-                if((String) mc.getProperty(RESTConstants.REST_API_CONTEXT) == null){
+                if (mc.getProperty(RESTConstants.REST_API_CONTEXT) == null){
                     log.error("API context is null in response context",new NullPointerException());
                 }
                 responsePublisherDTO.setContext((String) mc.getProperty(RESTConstants.REST_API_CONTEXT));
 
-                if((String) mc.getProperty(RESTConstants.SYNAPSE_REST_API) == null){
+                if (mc.getProperty(RESTConstants.SYNAPSE_REST_API) == null){
                     log.error("API is null in response context",new NullPointerException());
                 }
                 responsePublisherDTO.setApi((String) mc.getProperty(RESTConstants.SYNAPSE_REST_API));
 
-                if((String) mc.getProperty("resource") == null){
+                if (mc.getProperty("resource") == null){
                     log.error("Resource is null in response context",new NullPointerException());
                 }
                 responsePublisherDTO.setResource((String) mc.getProperty("resource"));
 
-                if((String) mc.getProperty("method") == null){
+                if (mc.getProperty("method") == null){
                     log.error("HTTP method is null in response context",new NullPointerException());
                 }
                 responsePublisherDTO.setMethod((String)mc.getProperty("method"));
 
-                if((String) mc.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION) == null){
+                if (mc.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION) == null){
                     log.error("API version is null in response context",new NullPointerException());
                 }
                 responsePublisherDTO.setVersion((String) mc.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION));
 
                 publisher.publishEvent(responsePublisherDTO);
-                return true;
-            }catch(Exception e){
+            } catch (Exception e){
                 log.error("Exception occurred while executing API usage response handler",e);
             }
-            return false;
+            return true; // Should never stop the message flow
         }
 
         public APIMgtUsageBAMDataPublisher getAPIMgtUsageBAMDataPublisher(){

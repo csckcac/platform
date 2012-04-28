@@ -19,6 +19,7 @@ package org.wso2.carbon.apimgt.usage.publisher;
 
 import org.apache.log4j.BasicConfigurator;
 import org.wso2.carbon.apimgt.usage.publisher.dto.PublisherDTO;
+import org.wso2.carbon.apimgt.usage.publisher.service.APIMGTConfigReaderService;
 import org.wso2.carbon.bam.agent.conf.AgentConfiguration;
 import org.wso2.carbon.bam.agent.core.Agent;
 import org.wso2.carbon.bam.agent.publish.EventReceiver;
@@ -43,11 +44,15 @@ public class APIMgtUsageBAMDataPublisher {
 
     private Agent agent;
 
-    /**
-     * init using constructor
-     */
     public APIMgtUsageBAMDataPublisher(APIMgtUsageConfigHolder configHolder){
         this.eventReceiver = configHolder.createEventReceiver();
+        AgentConfiguration configuration = new AgentConfiguration();
+        agent = new Agent(configuration);
+    }
+
+    public APIMgtUsageBAMDataPublisher(APIMgtUsageConfigHolder configHolder,
+                                       APIMGTConfigReaderService apimgtConfigReaderService){
+        this.eventReceiver = configHolder.createEventReceiver(apimgtConfigReaderService);
         AgentConfiguration configuration = new AgentConfiguration();
         agent = new Agent(configuration);
     }

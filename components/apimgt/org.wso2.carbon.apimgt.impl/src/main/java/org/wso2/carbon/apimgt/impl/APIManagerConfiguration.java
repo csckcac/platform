@@ -32,7 +32,9 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Global API Manager configuration. This is generally populated from the repository/conf/amConfig.xml
  * file at system startup. Once successfully populated, this class does not allow more parameters
- * to be added to the configuration.
+ * to be added to the configuration. The design of this class has been greatly inspired by
+ * the ServerConfiguration class in Carbon core. This class uses a similar '.' separated
+ * approach to keep track of XML parameters.
  */
 public class APIManagerConfiguration {
     

@@ -1,58 +1,28 @@
 package org.wso2.carbon.apimgt.usage.publisher.service;
 
-
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.axis2.util.JavaUtils;
+import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
 import org.wso2.carbon.apimgt.usage.publisher.APIMgtUsagePublisherConstants;
-import org.wso2.carbon.apimgt.usage.publisher.exception.APIMGTDataPublisherException;
-import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.carbon.utils.FileUtil;
 
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
-import java.io.File;
-import java.io.IOException;
+public class APIMGTConfigReaderService {
 
-public class APIMGTConfigReaderService{
+    private String bamServerThriftPort;
+    private String bamServerURL;
+    private String bamServerUser;
+    private String bamServerPassword;
+    private String bamAgentTrustStore;
+    private String bamAgentTrustStorePassword;
+    private boolean enabled;
 
-    String bamServerThriftPort;
-    String bamServerURL;
-    String bamServerUser;
-    String bamServerPassword;
-    String bamAgentTrustStore;
-    String bamAgentTrustStorePassword;
-
-    public APIMGTConfigReaderService() {
-        String config = null;
-        try {
-            config = FileUtil.readFileToString(APIMgtUsagePublisherConstants.CONFIG_PATH);
-            OMElement omElement = AXIOMUtil.stringToOM(config);
-
-            OMElement apiMGTDataAgentConfig = omElement.getFirstChildWithName(new QName("apiMGTDataAgentConfig"));
-
-            bamServerThriftPort = apiMGTDataAgentConfig.getFirstChildWithName(
-                    new QName("bamServerThriftPort")).getText();
-            bamServerURL = apiMGTDataAgentConfig.getFirstChildWithName(
-                    new QName("bamServerURL")).getText();
-            bamServerUser = apiMGTDataAgentConfig.getFirstChildWithName(
-                    new QName("bamServerUser")).getText();
-            bamServerPassword = apiMGTDataAgentConfig.getFirstChildWithName(
-                    new QName("bamServerPassword")).getText();
-            bamAgentTrustStore = apiMGTDataAgentConfig.getFirstChildWithName(
-                    new QName("bamAgentTrustStore")).getText();
-            bamAgentTrustStore = CarbonUtils.getCarbonHome() + File.separator + bamAgentTrustStore;
-            bamAgentTrustStorePassword = apiMGTDataAgentConfig.getFirstChildWithName(
-                    new QName("bamAgentTrustStorePassword")).getText();
-
-
-        } catch (IOException e) {
-            String msg = "Failed to read amConfig.xml configuration file from path" +
-                         APIMgtUsagePublisherConstants.CONFIG_PATH;
-            throw new APIMGTDataPublisherException(msg, e);
-        } catch (XMLStreamException e) {
-            String msg = "Error occured while reading amConfig.xml configuration file";
-            throw new APIMGTDataPublisherException(msg, e);
-        }
+    public APIMGTConfigReaderService(APIManagerConfiguration config) {
+        String enabledStr = config.getFirstProperty(APIMgtUsagePublisherConstants.API_USAGE_ENABLED);
+        enabled = enabledStr != null && JavaUtils.isTrueExplicitly(enabledStr);
+        bamServerThriftPort = config.getFirstProperty(APIMgtUsagePublisherConstants.API_USAGE_THRIFT_PORT);
+        bamServerURL = config.getFirstProperty(APIMgtUsagePublisherConstants.API_USAGE_BAM_SERVER_URL);
+        bamServerUser = config.getFirstProperty(APIMgtUsagePublisherConstants.API_USAGE_BAM_SERVER_USER);
+        bamServerPassword = config.getFirstProperty(APIMgtUsagePublisherConstants.API_USAGE_BAM_SERVER_PASSWORD);
+        bamAgentTrustStore = config.getFirstProperty(APIMgtUsagePublisherConstants.API_USAGE_BAM_TRUSTSTORE);
+        bamAgentTrustStorePassword = config.getFirstProperty(APIMgtUsagePublisherConstants.API_USAGE_BAM_TRUSTSTORE_PASSWORD);
     }
 
     public String getBamServerThriftPort() {
@@ -74,7 +44,12 @@ public class APIMGTConfigReaderService{
     public String getBamServerURL() {
         return bamServerURL;
     }
+    
     public String getBamAgentTrustStorePassword() {
         return bamAgentTrustStorePassword;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 }

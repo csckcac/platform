@@ -28,8 +28,13 @@ public final class APIMgtUsagePublisherConstants {
     public static String _OAUTH_CONSUMER_KEY = "Bearer";
     public static  String HEADER_SEGMENT_DELIMETER = " ";
 
-
-    public  static final String CONFIG_PATH = CarbonUtils.getCarbonHome() + File.separator +
-                                                 "repository" +File.separator +"conf" +File.separator + "amConfig.xml";
+    public static final String API_USAGE_TRACKING = "APIUsageTracking.";
+    public static final String API_USAGE_ENABLED = API_USAGE_TRACKING + "Enabled";
+    public static final String API_USAGE_THRIFT_PORT = API_USAGE_TRACKING + "ThriftPort";
+    public static final String API_USAGE_BAM_SERVER_URL = API_USAGE_TRACKING + "BAMServerURL";
+    public static final String API_USAGE_BAM_SERVER_USER = API_USAGE_TRACKING + "BAMUser";
+    public static final String API_USAGE_BAM_SERVER_PASSWORD = API_USAGE_TRACKING + "BAMPassword";
+    public static final String API_USAGE_BAM_TRUSTSTORE = API_USAGE_TRACKING + "BAMTrustStore";
+    public static final String API_USAGE_BAM_TRUSTSTORE_PASSWORD = API_USAGE_TRACKING + "BAMTrustStorePassword";
 
 }

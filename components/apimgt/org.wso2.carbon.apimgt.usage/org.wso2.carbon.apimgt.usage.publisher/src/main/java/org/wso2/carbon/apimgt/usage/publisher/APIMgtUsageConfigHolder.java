@@ -18,26 +18,28 @@
 package org.wso2.carbon.apimgt.usage.publisher;
 
 import org.wso2.carbon.apimgt.usage.publisher.internal.UsageComponent;
+import org.wso2.carbon.apimgt.usage.publisher.service.APIMGTConfigReaderService;
 import org.wso2.carbon.bam.agent.publish.EventReceiver;
 
 public class APIMgtUsageConfigHolder {
 
+    public EventReceiver createEventReceiver() {
+        APIMGTConfigReaderService apimgtConfigReaderService = UsageComponent.getApiMgtConfigReaderService();
+        return createEventReceiver(apimgtConfigReaderService);
+    }
 
-    EventReceiver createEventReceiver() {
-
+    public EventReceiver createEventReceiver(APIMGTConfigReaderService apimgtConfigReaderService) {
         EventReceiver eventReceiver = new EventReceiver();
         System.setProperty("javax.net.ssl.trustStore",
-                           UsageComponent.apimgtConfigReaderService.getBamAgentTrustStore());
+                apimgtConfigReaderService.getBamAgentTrustStore());
         System.setProperty("javax.net.ssl.trustStorePassword",
-                           UsageComponent.apimgtConfigReaderService.getBamAgentTrustStorePassword());
-        eventReceiver.setUrl(UsageComponent.apimgtConfigReaderService.getBamServerURL());
-        eventReceiver.setUserName(UsageComponent.apimgtConfigReaderService.getBamServerUser());
-        eventReceiver.setPassword(UsageComponent.apimgtConfigReaderService.getBamServerPassword());
+                apimgtConfigReaderService.getBamAgentTrustStorePassword());
+        eventReceiver.setUrl(apimgtConfigReaderService.getBamServerURL());
+        eventReceiver.setUserName(apimgtConfigReaderService.getBamServerUser());
+        eventReceiver.setPassword(apimgtConfigReaderService.getBamServerPassword());
         eventReceiver.setPort(Integer.parseInt(
-                UsageComponent.apimgtConfigReaderService.getBamServerThriftPort()));
+                apimgtConfigReaderService.getBamServerThriftPort()));
         eventReceiver.setSocketTransportEnabled(true);
         return eventReceiver;
     }
-
-
 }

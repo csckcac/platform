@@ -38,6 +38,7 @@ import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.FileUtil;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -103,27 +104,38 @@ public class APIManagerComponent {
     }
 
     private static void addRxtConfigs() throws APIManagementException {
-        String path = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator +
+        String rxtDir = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator +
                 "resources" + File.separator + "rxts";
-        File file = new File(path);
-        String[] rxtFilePaths = file.list();
+        File file = new File(rxtDir);
+        //create a FilenameFilter
+        FilenameFilter filenameFilter = new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                //if the file extension is .rxt return true, else false
+                return name.endsWith(".rxt");
+            }
+        };
+        String[] rxtFilePaths = file.list(filenameFilter);
+        RegistryService registryService = ServiceReferenceHolder.getInstance().getRegistryService();
+        UserRegistry systemRegistry;
+        Registry registry;
+        try {
+            systemRegistry = registryService.getRegistry(CarbonConstants.REGISTRY_SYSTEM_USERNAME);
+            registry = registryService.getRegistry();
+        } catch (RegistryException e) {
+            throw new APIManagementException("Failed to get registry", e);
+        }
 
         for (String rxtPath : rxtFilePaths) {
+            String resourcePath = APIConstants.RXT_PATH + RegistryConstants.PATH_SEPARATOR + rxtPath;
             try {
-                if (!rxtPath.contains(".rxt")) {
+                if (registry.resourceExists(resourcePath)) {
                     continue;
                 }
-                String rxt = FileUtil.readFileToString(path + File.separator + rxtPath);
-                RegistryService registryService = ServiceReferenceHolder.getInstance().getRegistryService();
-                Registry registry = registryService.getRegistry();
-                UserRegistry systemRegistry = registryService.getRegistry(CarbonConstants.REGISTRY_SYSTEM_USERNAME);
+                String rxt = FileUtil.readFileToString(dir + File.separator + rxtPath);
                 Resource resource = registry.newResource();
                 resource.setContent(rxt.getBytes());
                 resource.setMediaType(APIConstants.RXT_MEDIA_TYPE);
-                String resourcePath = APIConstants.RXT_PATH + RegistryConstants.PATH_SEPARATOR + rxtPath;
-                if (!registry.resourceExists(resourcePath)) {
-                    systemRegistry.put(resourcePath, resource);
-                }
+                systemRegistry.put(resourcePath, resource);
             } catch (IOException e) {
                 String msg = "Failed to read rxt files";
                 throw new APIManagementException(msg, e);

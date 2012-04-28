@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.carbon.mediator.autoscale.ec2autoscale;
+package org.wso2.carbon.mediator.autoscale.ec2autoscale.util;
 
 import org.apache.axis2.clustering.ClusteringAgent;
 import org.apache.axis2.context.ConfigurationContext;
@@ -219,7 +219,7 @@ public final class AutoscaleUtil {
                                                domain + " has not been defined");
                 }
                     appDomainContexts.put(domain, new AppDomainContext(lbConfig.getServiceConfig(domain)));
-
+                    
                 }
             }
             configCtx.setNonReplicableProperty(AutoscaleConstants.APP_DOMAIN_CONTEXTS,

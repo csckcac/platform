@@ -28,7 +28,7 @@ import java.util.Map;
 
 public class TaskSchedulingManager {
 
-        private static final Log log = LogFactory.getLog(TaskSchedulingManager.class);
+    private static final Log log = LogFactory.getLog(TaskSchedulingManager.class);
 
     private static TaskSchedulingManager thisInstance = new TaskSchedulingManager();
 

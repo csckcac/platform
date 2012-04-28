@@ -20,6 +20,8 @@ package org.wso2.carbon.mediator.autoscale.ec2autoscale.context;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.lb.common.conf.LoadBalancerConfiguration;
 
 
@@ -28,8 +30,7 @@ import org.wso2.carbon.lb.common.conf.LoadBalancerConfiguration;
  */
 public class AppDomainContext extends LoadBalancerContext{
 
-//    private static final int ONE_HOUR_IN_MILLIS = 60 * 60 * 1000;
-//    private static final int IDLE_INSTANCE_RUNNING_TIME_IN_MILLIS = 58 * 60 * 1000; // 58 minutes
+    private static final Log log = LogFactory.getLog(AppDomainContext.class);
 
     /**
      * Request tokens of requests in flight
@@ -38,9 +39,6 @@ public class AppDomainContext extends LoadBalancerContext{
      */
     private Map<String, Long> requestTokens = new ConcurrentHashMap<String, Long>();
     private List<Integer> requestTokenListLengths;
-    // private List<Instance> runningInstanceList = new ArrayList<Instance>();
-//    private int pendingInstances;
-//    private int runningInstanceCount;
     private LoadBalancerConfiguration.ServiceConfiguration serviceConfig;
 
     public AppDomainContext(LoadBalancerConfiguration.ServiceConfiguration serviceConfig) {
@@ -63,6 +61,9 @@ public class AppDomainContext extends LoadBalancerContext{
 
     public void addRequestToken(String tokenId) {
         requestTokens.put(tokenId, System.currentTimeMillis());
+        if (log.isDebugEnabled()) {
+            log.debug("Request Tokens Added : "+requestTokens.size());
+        }
     }
 
     public void removeRequestToken(String tokenId) {
@@ -95,13 +96,22 @@ public class AppDomainContext extends LoadBalancerContext{
         for (Map.Entry<String, Long> entry : requestTokens.entrySet()) {
             if (System.currentTimeMillis() - entry.getValue() >= serviceConfig.getMessageExpiryTime()) {
                 requestTokens.remove(entry.getKey());
+                if (log.isDebugEnabled()) {
+                    log.debug("Request Tokens Expired : " + requestTokens.get(entry.getKey()));
+                }
             }
         }
     }
 
     public void recordRequestTokenListLength() {
         if (requestTokenListLengths.size() >= serviceConfig.getRoundsToAverage()) {
-            requestTokenListLengths.remove(0);
+            int count = requestTokenListLengths.remove(0);
+            if (log.isDebugEnabled()) {
+                log.debug("Request Tokens Removed : " + count);
+            }
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("Request Tokens Added : " + requestTokens.size());
         }
         requestTokenListLengths.add(requestTokens.size());
     }
@@ -141,6 +151,10 @@ public class AppDomainContext extends LoadBalancerContext{
         int size = requestTokenListLengths.size();
         if (size == 0) {
             return -1; // -1 means that no requests have been received
+        }
+        
+        if (log.isDebugEnabled()) {
+            log.debug("Total Tokens : "+total+ " : Size: "+size);
         }
         return (int) total / size;
     }

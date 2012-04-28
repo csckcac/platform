@@ -13,29 +13,37 @@
  * See the License for the specific language governing permissions and         
  * limitations under the License.                                              
  */
-package org.wso2.carbon.mediator.autoscale.ec2autoscale.mediators;
-
-import org.apache.axiom.om.OMElement;
-import org.apache.synapse.Mediator;
-import org.apache.synapse.config.xml.AbstractMediatorFactory;
-import org.apache.synapse.config.xml.XMLConfigConstants;
-
-import javax.xml.namespace.QName;
-import java.util.Properties;
+package org.wso2.carbon.mediator.autoscale.ec2autoscale.util;
 
 /**
- *
+ * Constants
  */
-public class AutoscaleOutMediatorFactory extends AbstractMediatorFactory {
+public final class AutoscaleConstants {
+    public static final String REQUEST_ID = "request.id";
+    public static final String APP_DOMAIN_CONTEXTS = "autoscale.app.domain.contexts";
+    public static final String TARGET_DOMAIN = "autoscale.target.domain";
+    public static final String LOAD_BALANCER_CONFIG = "loadbalancer.conf";
 
-    private static final QName AUTOSCALE_OUT_QNAME = new QName(XMLConfigConstants.SYNAPSE_NAMESPACE,
-                                                               "autoscaleOut");
+    /**
+     * Name of the EC2 instance tag which if set on an instance, the autoscaler will not
+     * terminate such instance
+     */
+    public static final String AVOID_TERMINATION = "avoidTermination";
 
-    public Mediator createSpecificMediator(OMElement omElement, Properties properties) {
-        return new AutoscaleOutMediator();
+    public static enum InstanceState {
+        RUNNING("running"), PENDING("pending"), TERMINATED("terminated"), SHUTTING_DOWN("shutting-down");
+
+        private String state;
+
+        InstanceState(String state) {
+            this.state = state;
+        }
+
+        public String getState() {
+            return state;
+        }
     }
 
-    public QName getTagQName() {
-        return AUTOSCALE_OUT_QNAME;
+    private AutoscaleConstants() {
     }
 }

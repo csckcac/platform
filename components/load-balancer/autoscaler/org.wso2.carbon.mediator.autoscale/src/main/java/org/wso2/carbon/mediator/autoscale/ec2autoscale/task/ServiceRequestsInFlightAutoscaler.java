@@ -28,10 +28,10 @@ import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.task.Task;
 import org.apache.synapse.task.TaskDescription;
 import org.wso2.carbon.lb.common.conf.LoadBalancerConfiguration;
-import org.wso2.carbon.mediator.autoscale.ec2autoscale.AutoscaleUtil;
 import org.wso2.carbon.mediator.autoscale.ec2autoscale.clients.AutoscaleServiceClient;
 import org.wso2.carbon.mediator.autoscale.ec2autoscale.context.LoadBalancerContext;
 import org.wso2.carbon.mediator.autoscale.ec2autoscale.context.AppDomainContext;
+import org.wso2.carbon.mediator.autoscale.ec2autoscale.util.AutoscaleUtil;
 import org.wso2.carbon.mediator.autoscale.ec2autoscale.util.AutoscalerTaskDSHolder;
 import org.wso2.carbon.mediator.autoscale.ec2autoscale.util.ConfigHolder;
 
@@ -50,22 +50,9 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
 
     private static final Log log = LogFactory.getLog(ServiceRequestsInFlightAutoscaler.class);
 
-    private LoadBalancerConfiguration loadBalancerConfig = new LoadBalancerConfiguration();
-    //AutoscalerTaskDSHolder.getInstance().        getLoadBalancerConfig();
+    private LoadBalancerConfiguration loadBalancerConfig;
     
     private String autoscalerServiceEPR ;
-
-    // **************** Task Config Parameters **************************
-
-//    public void setAutoscalerService(String epr) {
-//        autoscalerServiceEPR = epr;
-//    }
-    
-//    public void setConfiguration(String configURL) {
-//        loadBalancerConfig.init(configURL);
-//    }
-    
-    // *******************************************************************
 
     /**
      * AppDomainContexts for each domain
@@ -95,18 +82,6 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
 
     public void init(SynapseEnvironment synEnv) {
         
-//        if (!loadBalancerConfig.getLoadBalancerConfig().isAutoscaleEnabled()) {
-//            TaskDescription taskDes = synEnv.getTaskManager().getTaskDescriptionRepository()
-//                  .getTaskDescription("autoscaler");
-//            
-//            taskDes.setCount(0);
-//            taskDes.setInterval(0);
-//            
-//            
-//            
-//            log.info(synEnv.getTaskManager().getTaskDescriptionRepository().getTaskDescription("autoscaler").getCount());
-//        }else{
-        
         loadBalancerConfig = AutoscalerTaskDSHolder.getInstance().getLoadBalancerConfig();
         
         ConfigurationContext configCtx =
@@ -123,10 +98,12 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
             throw new RuntimeException(
                                        "Autoscaler Service initialization failed and cannot proceed.");
         }
-
-        log.info("Initialized autoscaler task");
         
-//        }
+        if (log.isDebugEnabled()) {
+
+            log.debug("Initialized autoscaler task");
+
+        }
     }
 
     /**
@@ -135,12 +112,7 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
      * The exact sequence of execution is shown in this method.
      */
     public void execute() {
-//        if(!loadBalancerConfig.getLoadBalancerConfig().isAutoscaleEnabled()){
-//            log.info("Autoscaling is disabled.");
-//            destroy();
-//            
-//            return;
-//        }
+
         if (isTaskRunning) {
             return;
         }
@@ -269,10 +241,9 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
         int successfullyStartedInstanceCount = diff;
 
         while (diff > 0) {
-            // TODO: call autoscaler service and ask to spawn an instance
+            // call autoscaler service and ask to spawn an instance
             // and increment pending instance count only if autoscaler service returns
-            // true. context.incrementPendingInstances(1)
-            // if it failed do successfullyStartedInstanceCount--
+            // true.
             try {
                 boolean isSuccessful = autoscalerService.startInstance(domain);
                 if (!isSuccessful) {
@@ -303,20 +274,20 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
      */
     private void nonPrimaryLBSanityCheck() {
         if (!isPrimaryLoadBalancer) {
-            String elasticIP = loadBalancerConfig.getLoadBalancerConfig().getElasticIP();
+            //String elasticIP = loadBalancerConfig.getLoadBalancerConfig().getElasticIP();
             // Address address = ec2.describeAddress(elasticIP);
             // if (address == null) {
             // AutoscaleUtil.handleException("Elastic IP address " + elasticIP +
             // " has  not been reserved");
             // return;
             // }
-            String localInstanceId = System.getenv("instance_id");
+            //String localInstanceId = System.getenv("instance_id");
             // String elasticIPInstanceId = address.getInstanceId();
             // if (elasticIPInstanceId == null || elasticIPInstanceId.isEmpty()) {
             // ec2.associateAddress(localInstanceId, elasticIP);
             isPrimaryLoadBalancer = true;
-            log.info("Associated Elastic IP " + elasticIP + " with local instance " +
-                localInstanceId);
+//            log.info("Associated Elastic IP " + elasticIP + " with local instance " +
+//                localInstanceId);
             // } else if (elasticIPInstanceId.equals(localInstanceId)) {
             // isPrimaryLoadBalancer = true; // If the Elastic IP is assigned to this instance, it
             // is the primary LB
@@ -356,7 +327,7 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
         int requiredInstances = serviceConfig.getMinAppInstances();
         if (currentInstances < requiredInstances) {
             log.warn("App domain Sanity check failed for [" + serviceDomain +
-                "] . Current instances: " + currentInstances + ". Require instances is: " +
+                "] . Current instances: " + currentInstances + ". Required instances: " +
                 requiredInstances);
             int diff = requiredInstances - currentInstances;
 
@@ -400,6 +371,10 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
         int runningAppInstances = appDomainContext.getRunningInstanceCount();
 
         int queueLengthPerNode = serviceConfig.getQueueLengthPerNode();
+        if (log.isDebugEnabled()) {
+            log.debug("******** Average load: " + average + " **** Handlable load: " +
+                (runningAppInstances * queueLengthPerNode));
+        }
         if (average > (runningAppInstances * queueLengthPerNode)) {
             // current average is high than that can be handled by current nodes.
             scaleUp(serviceDomain);
@@ -419,7 +394,7 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
      *            The service clustering domain
      */
     private void scaleUp(String serviceDomain) {
-        log.error("Started new instance =" + serviceDomain);
+        
         LoadBalancerConfiguration.ServiceConfiguration serviceConfig =
             loadBalancerConfig.getServiceConfig(serviceDomain);
         int maxAppInstances = serviceConfig.getMaxAppInstances();
@@ -437,9 +412,10 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
 
             if (successfullyStarted != instancesPerScaleUp) {
                 failedInstances = instancesPerScaleUp - successfullyStarted;
-                log.error(successfullyStarted + " instances successfully started and\n" +
-                    failedInstances + " instances failed to start for domain " + serviceDomain);
-
+                if (log.isDebugEnabled()) {
+                    log.debug(successfullyStarted + " instances successfully started and\n" +
+                        failedInstances + " instances failed to start for domain " + serviceDomain);
+                }
             }
 
             // we increment the pending instance count
@@ -462,7 +438,7 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
      *            The service clustering domain
      */
     private void scaleDown(String serviceDomain) {
-        log.error("Stopped new instance =" + serviceDomain);
+       
         LoadBalancerConfiguration.ServiceConfiguration serviceConfig =
             loadBalancerConfig.getServiceConfig(serviceDomain);
         AppDomainContext appDomainContext = appDomainContexts.get(serviceDomain);
@@ -470,12 +446,13 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
         int minAppInstances = serviceConfig.getMinAppInstances();
         if (runningInstances > minAppInstances) {
 
-            log.debug("Domain: " + serviceDomain + ". Running instances:" + runningInstances +
-                ". Min instances:" + minAppInstances);
-
+            if (log.isDebugEnabled()) {
+                log.debug("Domain: " + serviceDomain + ". Running instances:" + runningInstances +
+                    ". Min instances:" + minAppInstances);
+            }
             // ask to scale down
             try {
-                boolean isSuccessful = autoscalerService.terminateInstance(serviceDomain);
+                autoscalerService.terminateInstance(serviceDomain);
 
             } catch (Exception e) {
                 log.error("Instance termination failed for domain " + serviceDomain);

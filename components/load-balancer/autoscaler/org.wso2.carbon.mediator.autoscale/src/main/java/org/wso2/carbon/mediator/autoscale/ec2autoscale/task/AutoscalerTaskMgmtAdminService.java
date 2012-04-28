@@ -64,13 +64,6 @@ public class AutoscalerTaskMgmtAdminService extends AbstractAdmin implements Tas
 
     private static AutoscalerTaskMgmtAdminService instance = null;
 
-/*    public static synchronized BAMAnalyzerTaskMgmtService getInstance() {
-        if (instance == null) {
-           instance = new BAMAnalyzerTaskMgmtService();
-        }
-        return instance;
-    }*/
-
     public void shutdown() {
         schedulingManager.shutDown(getConfigContext());
     }

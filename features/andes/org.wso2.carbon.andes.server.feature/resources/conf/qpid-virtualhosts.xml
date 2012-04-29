@@ -24,13 +24,12 @@
    <virtualhost>
         <name>carbon</name>
         <carbon>
-            <store>
-                <class>org.wso2.andes.server.store.CassandraMessageStore</class>               
+           <store>
+                <class>org.wso2.andes.server.store.CassandraMessageStore</class>
                 <username>admin</username>
                 <password>admin</password>
                 <cluster>ClusterOne</cluster>
-                <host>localhost</host>
-                <port>9160</port>
+                <connectionString>localhost:9160</connectionString>
             </store>
 
             <housekeeping>

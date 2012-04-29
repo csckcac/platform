@@ -18,18 +18,12 @@
 package org.wso2.andes.server.store;
 
 import me.prettyprint.cassandra.serializers.*;
-import me.prettyprint.cassandra.service.CassandraHostConfigurator;
-import me.prettyprint.cassandra.service.ThriftCfDef;
-import me.prettyprint.cassandra.service.ThriftKsDef;
 import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.Keyspace;
 import me.prettyprint.hector.api.beans.ColumnSlice;
 import me.prettyprint.hector.api.beans.HColumn;
 import me.prettyprint.hector.api.beans.OrderedRows;
 import me.prettyprint.hector.api.beans.Row;
-import me.prettyprint.hector.api.ddl.ColumnFamilyDefinition;
-import me.prettyprint.hector.api.ddl.ComparatorType;
-import me.prettyprint.hector.api.ddl.KeyspaceDefinition;
 import me.prettyprint.hector.api.factory.HFactory;
 import me.prettyprint.hector.api.mutation.Mutator;
 import me.prettyprint.hector.api.query.ColumnQuery;
@@ -38,6 +32,7 @@ import me.prettyprint.hector.api.query.RangeSlicesQuery;
 import me.prettyprint.hector.api.query.SliceQuery;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.andes.AMQException;
 import org.wso2.andes.AMQStoreException;
 import org.wso2.andes.framing.AMQShortString;
@@ -56,6 +51,8 @@ import org.wso2.andes.server.message.MessageMetaData_0_10;
 import org.wso2.andes.server.message.MessageTransferMessage;
 import org.wso2.andes.server.protocol.AMQProtocolSession;
 import org.wso2.andes.server.queue.*;
+import org.wso2.andes.server.store.util.CassandraDataAccessException;
+import org.wso2.andes.server.store.util.CassandraDataAccessHelper;
 import org.wso2.andes.server.virtualhost.VirtualHostConfigSynchronizer;
 
 import java.io.ByteArrayOutputStream;
@@ -65,10 +62,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 /**
- * CassandraMessageStore
- *
- * Message Store implemented using cassandra
- * Working with qpid as and alternative to Derby Message Store
+ * Class <code>CassandraMessageStore</code> is the Message Store implemented for cassandra
+ * Working with andes as an alternative to Derby Message Store
  *
  * */
 public class CassandraMessageStore implements MessageStore {
@@ -76,10 +71,8 @@ public class CassandraMessageStore implements MessageStore {
     private Cluster cluster;
     private final String USERNAME_KEY = "username";
     private final String PASSWORD_KEY = "password";
-    private final String HOST_KEY = "host";
-    private final String PORT_KEY = "port";
+    private final String CONNECTION_STRING = "connectionString";
     private final String CLUSTER_KEY = "cluster";
-    private final String CONTENT_REMOVING_INTERVAL = "cleanUpInterval";
 
 
 
@@ -90,6 +83,7 @@ public class CassandraMessageStore implements MessageStore {
     private final static String INTEGER_TYPE = "IntegerType";
     private final static String QUEUE_COLUMN_FAMILY = "Queue";
     private final static String QUEUE_DETAILS_COLUMN_FAMILY = "QueueDetails";
+    private final static String QUEUE_DETAILS_ROW = "QUEUE_DETAILS";
     private final static String QUEUE_ENTRY_COLUMN_FAMILY = "QueueEntries";
     private final static String QUEUE_ENTRY_ROW = "QueueEntriesRow";
     private final static String EXCHANGE_COLUMN_FAMILY = "ExchangeColumnFamily";
@@ -116,7 +110,8 @@ public class CassandraMessageStore implements MessageStore {
     private final static String TOPIC_EXCHANGE_MESSAGE_IDS = "TopicExchangeMessageIds";
     private final static String PUB_SUB_MESSAGE_IDS = "pubSubMessages";
     private final static String TOPIC_SUBSCRIBERS = "topicSubscribers";
-    private final static String TOPICS = "topics";
+    private final static String TOPICS_COLUMN_FAMILY = "topics";
+    private final static String TOPICS_ROW = "TOPICS";
     private final static String ACKED_MESSAGE_IDS_COLUMN_FAMILY = "acknowledgedMessageIds";
     private final static String ACKED_MESSAGE_IDS_ROW = "acknowledgedMessageIdsRow";
 
@@ -125,8 +120,8 @@ public class CassandraMessageStore implements MessageStore {
     private Queue<Long> contentDeletionTasks;
     private ConcurrentHashMap<Long,Long> pubSubMessageContentDeletionTasks;
 
-    private ContentRemoverTask removerTask;
-    private PubSubMessageContentRemoverTask pubSubContentRemoverTask;
+    private ContentRemoverTask messageContentRemovalTask = null;
+    private PubSubMessageContentRemoverTask pubSubMessageContentRemoverTask = null;
     private boolean configured = false;
 
 
@@ -139,59 +134,10 @@ public class CassandraMessageStore implements MessageStore {
 
 
     private static Log log =
-            org.apache.commons.logging.LogFactory.getLog(CassandraMessageStore.class);
-
+            LogFactory.getLog(CassandraMessageStore.class);
 
     public CassandraMessageStore() {
         ClusterResourceHolder.getInstance().setCassandraMessageStore(this);
-    }
-
-    /**
-     * Create a Cluster
-     *
-     * @param userName the name to be used to authenticate to Cassandra cluster
-     * @param password the password to be used to authenticate to Cassandra cluster
-     * @return <code>Cluster</code> instance
-     */
-    private Cluster createCluster(String userName, String password, String clusterName,
-                                  String hostName, String port) {
-
-        Map<String, String> credentials = new HashMap<String, String>();
-        credentials.put(USERNAME_KEY, userName);
-        credentials.put(PASSWORD_KEY, password);
-
-        CassandraHostConfigurator hostConfigurator =
-                new CassandraHostConfigurator(hostName + ":" + port);
-
-        hostConfigurator.setMaxActive(2000);
-
-        Cluster cluster = HFactory.getCluster(clusterName);
-
-        if (cluster == null) {
-            cluster = HFactory.createCluster(clusterName, hostConfigurator, credentials);
-        }
-
-        return cluster;
-    }
-
-
-    private void createColumnFamily(String name, String comparatorType, KeyspaceDefinition ksDef) {
-        ColumnFamilyDefinition cfDef =
-                new ThriftCfDef(KEYSPACE, /*"Queue"*/name,
-                        ComparatorType.getByClassName(/*"LongType"*/comparatorType));
-        if (ksDef == null) {
-            cluster.addColumnFamily(cfDef);
-        } else {
-            List<ColumnFamilyDefinition> cfDefsList = ksDef.getCfDefs();
-            HashSet cfNames = new HashSet();
-            for (ColumnFamilyDefinition columnFamilyDefinition : cfDefsList) {
-                cfNames.add(columnFamilyDefinition.getName());
-            }
-            if (!cfNames.contains(name)) {
-                cluster.addColumnFamily(cfDef);
-            }
-        }
-
     }
 
     public void addMessage(IncomingMessage message)  {
@@ -453,8 +399,6 @@ public class CassandraMessageStore implements MessageStore {
     public void dequeueMessages(AMQQueue queue, List<QueueEntry> messagesToDelete) {
 
         try {
-
-            Mutator<String> mutator = HFactory.createMutator(keyspace,stringSerializer);
             List<QueueEntry> messages = messagesToDelete;
             ClusterManager clusterManager = ClusterResourceHolder.getInstance().getClusterManager();
             String key = queue.getResourceName() +"_" + clusterManager.getNodeId();
@@ -465,7 +409,6 @@ public class CassandraMessageStore implements MessageStore {
 
                 removeMessageFromUserQueue(key, messageID);
             }
-            mutator.execute();
         } catch (Exception e) {
             log.error("Error in dequeuing messages from "+ queue.getName(),e);
         }
@@ -478,10 +421,12 @@ public class CassandraMessageStore implements MessageStore {
      * @param queueName User queue name
      * @param messageId message id
      */
-    public void removeMessageFromUserQueue(String queueName, String messageId) {
-        Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
-        mutator.addDeletion(queueName, USER_QUEUES_COLUMN_FAMILY, messageId, stringSerializer);
-        mutator.execute();
+    public void removeMessageFromUserQueue(String queueName, String messageId) throws AMQStoreException {
+        try {
+            CassandraDataAccessHelper.deleteStringColumnFromRaw(USER_QUEUES_COLUMN_FAMILY, queueName, messageId, keyspace);
+        } catch (CassandraDataAccessException e) {
+            throw new AMQStoreException("Error while removing message from User queue",e);
+        }
 
     }
 
@@ -493,11 +438,12 @@ public class CassandraMessageStore implements MessageStore {
      * @param messageId
      */
     public void removeMessageFromGlobalQueue(String queueName, String messageId) {
-        LongSerializer ls = LongSerializer.get();
-
-        Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
-        mutator.addDeletion(queueName, GLOBAL_QUEUES_COLUMN_FAMILY, messageId,stringSerializer);
-        mutator.execute();
+        try {
+            CassandraDataAccessHelper.deleteStringColumnFromRaw(GLOBAL_QUEUES_COLUMN_FAMILY,
+                    queueName, messageId, keyspace);
+        } catch (CassandraDataAccessException e) {
+            log.error("Error while removing messages from global queue " + queueName ,e);
+        }
     }
 
 
@@ -521,42 +467,32 @@ public class CassandraMessageStore implements MessageStore {
     }
 
 
-    private Keyspace createKeyspace() {
+    private Keyspace createKeySpace() throws CassandraDataAccessException {
 
-        //Define the keyspace
-        KeyspaceDefinition definition = new ThriftKsDef(KEYSPACE);
+        this.keyspace = CassandraDataAccessHelper.createKeySpace(cluster, KEYSPACE);
 
-        KeyspaceDefinition def = cluster.describeKeyspace(KEYSPACE);
-        if (def == null) {
-            //Adding keyspace to the cluster
-            cluster.addKeyspace(definition);
-        }
-        this.keyspace = HFactory.createKeyspace(KEYSPACE, cluster);
-        CassandraConsistencyLevelPolicy policy = new CassandraConsistencyLevelPolicy();
-        this.keyspace.setConsistencyLevelPolicy(policy);
 
-        createColumnFamily(QUEUE_COLUMN_FAMILY, LONG_TYPE, def);
-        createColumnFamily(BINDING_COLUMN_FAMILY, UTF8_TYPE, def);
-        createColumnFamily(MESSAGE_CONTENT_COLUMN_FAMILY, INTEGER_TYPE, def);
-        createColumnFamily(MESSAGE_CONTENT_ID_COLUMN_FAMILY, LONG_TYPE, def);
-        createColumnFamily(SQ_COLUMN_FAMILY, UTF8_TYPE, def);
-        createColumnFamily(GLOBAL_QUEUE_TO_USER_QUEUE_COLUMN_FAMILY, UTF8_TYPE, def);
-        createColumnFamily(QMD_COLUMN_FAMILY, LONG_TYPE, def);
-        createColumnFamily(QUEUE_DETAILS_COLUMN_FAMILY, UTF8_TYPE, def);
-        createColumnFamily(QUEUE_ENTRY_COLUMN_FAMILY, UTF8_TYPE, def);
-        createColumnFamily(EXCHANGE_COLUMN_FAMILY, UTF8_TYPE, def);
-        createColumnFamily(USER_QUEUES_COLUMN_FAMILY, UTF8_TYPE, def);
-        createColumnFamily(MESSAGE_QUEUE_MAPPING_COLUMN_FAMILY, UTF8_TYPE, def);
-        createColumnFamily(GLOBAL_QUEUES_COLUMN_FAMILY, UTF8_TYPE, def);
-        createColumnFamily(GLOBAL_QUEUE_LIST_COLUMN_FAMILY, UTF8_TYPE, def);
-        createColumnFamily(TOPIC_EXCHANGE_MESSAGE_IDS,LONG_TYPE,def);
-        createColumnFamily(PUB_SUB_MESSAGE_IDS,LONG_TYPE,def);
-        createColumnFamily(TOPIC_SUBSCRIBERS,UTF8_TYPE,def);
-        createColumnFamily(TOPICS,UTF8_TYPE,def);
-        createColumnFamily(ACKED_MESSAGE_IDS_COLUMN_FAMILY,LONG_TYPE,def);
-
-        //Create keyspace in client side
-        keyspace = HFactory.createKeyspace("QpidKeySpace", cluster);
+        CassandraDataAccessHelper.createColumnFamily(QUEUE_COLUMN_FAMILY, KEYSPACE, this.cluster, LONG_TYPE);
+        CassandraDataAccessHelper.createColumnFamily(BINDING_COLUMN_FAMILY, KEYSPACE, this.cluster, UTF8_TYPE);
+        CassandraDataAccessHelper.createColumnFamily(MESSAGE_CONTENT_COLUMN_FAMILY, KEYSPACE, this.cluster, INTEGER_TYPE);
+        CassandraDataAccessHelper.createColumnFamily(MESSAGE_CONTENT_ID_COLUMN_FAMILY, KEYSPACE, this.cluster, LONG_TYPE);
+        CassandraDataAccessHelper.createColumnFamily(SQ_COLUMN_FAMILY, KEYSPACE, this.cluster, UTF8_TYPE);
+        CassandraDataAccessHelper.createColumnFamily(GLOBAL_QUEUE_TO_USER_QUEUE_COLUMN_FAMILY, KEYSPACE, this.cluster,
+                UTF8_TYPE);
+        CassandraDataAccessHelper.createColumnFamily(QMD_COLUMN_FAMILY, KEYSPACE, this.cluster, LONG_TYPE);
+        CassandraDataAccessHelper.createColumnFamily(QUEUE_DETAILS_COLUMN_FAMILY, KEYSPACE, this.cluster, UTF8_TYPE);
+        CassandraDataAccessHelper.createColumnFamily(QUEUE_ENTRY_COLUMN_FAMILY, KEYSPACE, this.cluster, UTF8_TYPE);
+        CassandraDataAccessHelper.createColumnFamily(EXCHANGE_COLUMN_FAMILY, KEYSPACE, this.cluster, UTF8_TYPE);
+        CassandraDataAccessHelper.createColumnFamily(USER_QUEUES_COLUMN_FAMILY, KEYSPACE, this.cluster, UTF8_TYPE);
+        CassandraDataAccessHelper.createColumnFamily(MESSAGE_QUEUE_MAPPING_COLUMN_FAMILY, KEYSPACE, this.cluster,
+                UTF8_TYPE);
+        CassandraDataAccessHelper.createColumnFamily(GLOBAL_QUEUES_COLUMN_FAMILY, KEYSPACE, this.cluster, UTF8_TYPE);
+        CassandraDataAccessHelper.createColumnFamily(GLOBAL_QUEUE_LIST_COLUMN_FAMILY, KEYSPACE, this.cluster, UTF8_TYPE);
+        CassandraDataAccessHelper.createColumnFamily(TOPIC_EXCHANGE_MESSAGE_IDS, KEYSPACE, this.cluster, LONG_TYPE);
+        CassandraDataAccessHelper.createColumnFamily(PUB_SUB_MESSAGE_IDS, KEYSPACE, this.cluster, LONG_TYPE);
+        CassandraDataAccessHelper.createColumnFamily(TOPIC_SUBSCRIBERS, KEYSPACE, this.cluster, UTF8_TYPE);
+        CassandraDataAccessHelper.createColumnFamily(TOPICS_COLUMN_FAMILY, KEYSPACE, this.cluster, UTF8_TYPE);
+        CassandraDataAccessHelper.createColumnFamily(ACKED_MESSAGE_IDS_COLUMN_FAMILY, KEYSPACE, this.cluster, LONG_TYPE);
 
         return keyspace;
     }
@@ -579,59 +515,6 @@ public class CassandraMessageStore implements MessageStore {
         return queueCount;
     }
 
-    public List<String> getUserQueues(String qpidQueueName) {
-        ArrayList<String> userQueues = new ArrayList<String>();
-
-        if (keyspace == null) {
-            return userQueues;
-        }
-
-        try {
-            SliceQuery sliceQuery = HFactory.createSliceQuery(keyspace,stringSerializer,
-                    stringSerializer,stringSerializer);
-            sliceQuery.setKey(qpidQueueName);
-            sliceQuery.setColumnFamily(GLOBAL_QUEUE_TO_USER_QUEUE_COLUMN_FAMILY);
-            sliceQuery.setRange("", "", false, 10000);
-
-            QueryResult<ColumnSlice<String, String>> result = sliceQuery.execute();
-            ColumnSlice<String, String> columnSlice = result.get();
-            for (HColumn<String, String> column : columnSlice.getColumns()) {
-                userQueues.add(column.getName());
-            }
-        } catch (Exception e) {
-            log.error("Error in getting user queues for qpid queue :" + qpidQueueName,e);
-        }
-        return userQueues;
-    }
-
-
-    public List<String> getGlobalQueues() {
-
-        ArrayList<String> globalQueues = new ArrayList<String>();
-        if (keyspace == null) {
-            return globalQueues;
-        }
-        try {
-
-            SliceQuery sliceQuery = HFactory.createSliceQuery(keyspace, stringSerializer,
-                    stringSerializer, stringSerializer);
-            sliceQuery.setKey(GLOBAL_QUEUE_LIST_ROW);
-            sliceQuery.setColumnFamily(GLOBAL_QUEUE_LIST_COLUMN_FAMILY);
-            sliceQuery.setRange("", "", false, 10000);
-
-            QueryResult<ColumnSlice<String, String>> result = sliceQuery.execute();
-            ColumnSlice<String, String> columnSlice = result.get();
-            for (HColumn<String, String> column : columnSlice.getColumns()) {
-                globalQueues.add(column.getName());
-            }
-        } catch (Exception e) {
-            log.error("Error in getting global queues" ,e);
-        }
-
-        return globalQueues;
-    }
-
-
     /**
      * Add a Message to Internal User level Queue
      *
@@ -639,34 +522,27 @@ public class CassandraMessageStore implements MessageStore {
      * @param messageId message id
      * @param message   message content.
      */
-    public void addMessageToUserQueue(String userQueue, String messageId, byte[] message) {
-        BytesArraySerializer bs = BytesArraySerializer.get();
+    public void addMessageToUserQueue(String userQueue, String messageId, byte[] message)
+            throws CassandraDataAccessException {
         try {
 
+            CassandraDataAccessHelper.addMessageToQueue(USER_QUEUES_COLUMN_FAMILY, userQueue, messageId, message, keyspace);
 
-
-            Mutator<String> mutator = HFactory.createMutator(keyspace,stringSerializer);
-            mutator.addInsertion(userQueue.trim(), USER_QUEUES_COLUMN_FAMILY,
-                    HFactory.createColumn(messageId, message,stringSerializer, bs));
-            mutator.addInsertion(MESSAGE_QUEUE_MAPPING_ROW, MESSAGE_QUEUE_MAPPING_COLUMN_FAMILY,
-                    HFactory.createColumn(messageId, userQueue.trim(),stringSerializer,stringSerializer));
-            mutator.execute();
-
+            CassandraDataAccessHelper.addMappingToRaw(MESSAGE_QUEUE_MAPPING_COLUMN_FAMILY, MESSAGE_QUEUE_MAPPING_ROW,
+                    messageId, userQueue, keyspace);
         } catch (Exception e) {
-            log.error("Error in adding message :" + messageId +" to user queue :" + userQueue,e);
+            throw new CassandraDataAccessException("Error in adding message :" + messageId +" to user queue :" +
+                    userQueue,e);
         }
     }
 
-        /**
-         * Add message to global queue
-         *
-         * @param queue
-         * @param messageId
-         * @param message
-         */
-
+    /**
+     * Add message to global queue
+     * @param queue
+     * @param messageId
+     * @param message
+     */
     public void addMessageToGlobalQueue(String queue, String messageId, byte[] message) throws Exception {
-        BytesArraySerializer bs = BytesArraySerializer.get();
         if (log.isDebugEnabled()) {
             log.debug("Adding Message with id " + messageId + " to Queue " + queue);
         }
@@ -674,13 +550,12 @@ public class CassandraMessageStore implements MessageStore {
         ClusterManager clusterManager = ClusterResourceHolder.getInstance().getClusterManager();
 
         try {
-            Mutator<String>  mutator = HFactory.createMutator(keyspace,stringSerializer);
 
-            mutator.addInsertion(queue.trim(), GLOBAL_QUEUES_COLUMN_FAMILY,
-                    HFactory.createColumn(messageId, message,stringSerializer, bs));
-            mutator.addInsertion(GLOBAL_QUEUE_LIST_ROW, GLOBAL_QUEUE_LIST_COLUMN_FAMILY,
-                    HFactory.createColumn(queue, queue,stringSerializer,stringSerializer));
-            mutator.execute();
+            CassandraDataAccessHelper.addMessageToQueue(GLOBAL_QUEUES_COLUMN_FAMILY, queue, messageId, message, keyspace);
+
+            CassandraDataAccessHelper.addMappingToRaw(GLOBAL_QUEUES_COLUMN_FAMILY, GLOBAL_QUEUE_LIST_ROW, queue,
+                    queue, keyspace);
+
             clusterManager.handleQueueAddition(queue);
 
         } catch (Exception e) {
@@ -699,7 +574,6 @@ public class CassandraMessageStore implements MessageStore {
 
             src.duplicate().get(chunkData);
 
-
             Mutator<String> messageContentMutator = HFactory.createMutator(keyspace,
                     stringSerializer);
 
@@ -708,6 +582,7 @@ public class CassandraMessageStore implements MessageStore {
                     MESSAGE_CONTENT_COLUMN_FAMILY,
                     HFactory.createColumn(offset, chunkData, integerSerializer, bytesArraySerializer));
             messageContentMutator.execute();
+
         } catch (Exception e) {
             log.error("Error in adding message content" ,e);
         }
@@ -923,25 +798,19 @@ public class CassandraMessageStore implements MessageStore {
         }
     }
 
-    public void addBinding(Exchange exchange, AMQQueue amqQueue, String routingKey) {
+    public void addBinding(Exchange exchange, AMQQueue amqQueue, String routingKey) throws CassandraDataAccessException {
         if (keyspace == null) {
             return;
         }
-        try {
-
-            Mutator<String>  mutator = HFactory.createMutator(keyspace,stringSerializer);
 
             String columnName = routingKey;
             String columnValue = amqQueue.getName();
-
-            mutator.insert(exchange.getName(), BINDING_COLUMN_FAMILY,
-                    HFactory.createColumn(columnName, columnValue, stringSerializer, stringSerializer));
-            mutator.execute();
-        } catch (Exception e) {
-            log.error("Error in adding binding ",e);
-        }
+            CassandraDataAccessHelper.addMappingToRaw(BINDING_COLUMN_FAMILY, exchange.getName(), columnName,
+                    columnValue, keyspace);
 
     }
+
+
     /**
      * When a new message arrived for a topic
      * it searches for the registered subscribers for that topic
@@ -951,9 +820,13 @@ public class CassandraMessageStore implements MessageStore {
      * @param messageId - Id of the new message
      * */
     public void addTopicExchangeMessageIds(String topic, long messageId) {
-        List<String> registeredSubscribers = getRegisteredSubscribersForTopic(topic);
-        for (String subscriber : registeredSubscribers) {
-            addMessageIdToSubscriberQueue(subscriber, messageId);
+        try {
+            List<String> registeredSubscribers = getRegisteredSubscribersForTopic(topic);
+            for (String subscriber : registeredSubscribers) {
+                addMessageIdToSubscriberQueue(subscriber, messageId);
+            }
+        } catch (Exception e) {
+            log.error("Error while adding Message Id to Subscriber queue" ,e);
         }
     }
     /**
@@ -980,6 +853,7 @@ public class CassandraMessageStore implements MessageStore {
         }
         return messages;
     }
+
     /**
      * Registers topic
      * Add an entry to the Topics column family to indicate that there is a subscriber for this topic
@@ -987,13 +861,7 @@ public class CassandraMessageStore implements MessageStore {
      * */
     private void registerTopic(String topic) {
         try {
-            Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
-            String columnName = topic;
-            String columnValue = topic;
-
-            mutator.insert("TOPICS", TOPICS,
-                    HFactory.createColumn(columnName, columnValue, stringSerializer, stringSerializer));
-            mutator.execute();
+            CassandraDataAccessHelper.addMappingToRaw(TOPICS_COLUMN_FAMILY, TOPICS_ROW, topic, topic, keyspace);
         } catch (Exception e) {
             log.error("Error in registering queue for the topic", e);
         }
@@ -1002,41 +870,64 @@ public class CassandraMessageStore implements MessageStore {
     /**
      * Getting all the topics where subscribers exists
      * */
-    public List<String> getTopics() {
-        List<String> topicList = new ArrayList<String>();
+    public List<String> getTopics() throws Exception {
         try {
-            SliceQuery<String, String, String> sliceQuery
-                    = HFactory.createSliceQuery(keyspace, stringSerializer, stringSerializer, stringSerializer);
-            sliceQuery.setKey("TOPICS");
-            sliceQuery.setColumnFamily(TOPICS);
-            sliceQuery.setRange("", "", false, 1000);
 
-            QueryResult<ColumnSlice<String, String>> result = sliceQuery.execute();
-            ColumnSlice<String, String> columnSlice = result.get();
-            for (HColumn<String, String> column : columnSlice.getColumns()) {
-                topicList.add(column.getValue());
-            }
+            List<String> topicList = CassandraDataAccessHelper.getRowList(TOPICS_COLUMN_FAMILY, TOPICS_ROW, keyspace);
+            return topicList;
 
         } catch (Exception e) {
-            log.error("Error in getting registered subscribers for the topic", e);
+            log.error("Error in getting the topic list", e);
+            throw e;
         }
-        return topicList;
+
+    }
+
+
+    public List<String> getUserQueues(String qpidQueueName) throws Exception {
+        if (keyspace == null) {
+            return new ArrayList<String>();
+        }
+        try {
+            List<String> userQueues = CassandraDataAccessHelper.getRowList(GLOBAL_QUEUE_TO_USER_QUEUE_COLUMN_FAMILY,
+                    qpidQueueName, keyspace);
+            return  userQueues;
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("Error in getting user queues for qpid queue :" + qpidQueueName,e);
+            throw e;
+        }
+    }
+
+
+    public List<String> getGlobalQueues() throws Exception {
+
+        if (keyspace == null) {
+            return new ArrayList<String>();
+        }
+
+        try {
+            List<String> globalQueues = CassandraDataAccessHelper.getRowList(GLOBAL_QUEUE_LIST_COLUMN_FAMILY,
+                    GLOBAL_QUEUE_LIST_ROW, keyspace);
+            return globalQueues;
+        } catch (Exception e) {
+            log.error("Error in getting global queues" ,e);
+            throw e;
+        }
     }
 
     /**
      * Remove the topic from the topics column family when there are no subscribers for that topic
      * @param topic
      * */
-    private void unRegisterTopic(String topic){
+    private void unRegisterTopic(String topic) throws AMQStoreException {
           try {
-            Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
-            mutator.addDeletion("TOPICS", TOPICS, topic, stringSerializer);
             if(log.isDebugEnabled()){
-                log.debug(" removing topic = " + topic  );
+                log.debug(" removing topic : " + topic  );
             }
-            mutator.execute();
+            CassandraDataAccessHelper.deleteStringColumnFromRaw(TOPICS_COLUMN_FAMILY, TOPICS_ROW, topic, keyspace);
         } catch (Exception e) {
-           log.error("Error in unregistering topic" ,e);
+           throw new AMQStoreException("Error in un registering topic" ,e);
         }
     }
 
@@ -1052,44 +943,27 @@ public class CassandraMessageStore implements MessageStore {
         }
         try {
             registerTopic(topic);
-            Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
-            String columnName = queueName;
-            String columnValue = queueName;
-
-            mutator.insert(topic, TOPIC_SUBSCRIBERS,
-                    HFactory.createColumn(columnName, columnValue, stringSerializer, stringSerializer));
-            mutator.execute();
+            CassandraDataAccessHelper.addMappingToRaw(TOPIC_SUBSCRIBERS, topic, queueName, queueName, keyspace);
         } catch (Exception e) {
             log.error("Error in registering queue for the topic",e);
         }
     }
 
     /**
-     * Retriving the names of the subscriptions (Queue Names) which are subscribed for the
+     * Retrieving the names of the subscriptions (Queue Names) which are subscribed for the
      * provided topic
      * @param topic - Name of the topic
      * @return List of names
      *
      * */
-    public List<String> getRegisteredSubscribersForTopic(String topic) {
-        List<String> queueList = new ArrayList<String>();
+    public List<String> getRegisteredSubscribersForTopic(String topic) throws Exception {
         try {
-            SliceQuery<String, String, String> sliceQuery
-                    = HFactory.createSliceQuery(keyspace, stringSerializer, stringSerializer, stringSerializer);
-            sliceQuery.setKey(topic);
-            sliceQuery.setColumnFamily(TOPIC_SUBSCRIBERS);
-            sliceQuery.setRange("", "", false, 1000);
-
-            QueryResult<ColumnSlice<String, String>> result = sliceQuery.execute();
-            ColumnSlice<String, String> columnSlice = result.get();
-            for (HColumn<String, String> column : columnSlice.getColumns()) {
-                queueList.add(column.getValue());
-            }
-
+            List<String> queueList = CassandraDataAccessHelper.getRowList(TOPIC_SUBSCRIBERS, topic, keyspace);
+            return queueList;
         } catch (Exception e) {
             log.error("Error in getting registered subscribers for the topic" ,e);
+            throw e;
         }
-        return queueList;
     }
     /**
      * Removing the subscription entry from the subscribers list for the topic
@@ -1097,18 +971,17 @@ public class CassandraMessageStore implements MessageStore {
      * @param queueName - Queue name to be removed
      * */
     public void unRegisterQueueFromTopic(String topic, String queueName) {
+
         try {
-            Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
-            mutator.addDeletion(topic, TOPIC_SUBSCRIBERS, queueName, stringSerializer);
             if(log.isDebugEnabled()){
                 log.debug(" removing queue = " + queueName + " from topic =" + topic);
             }
-            mutator.execute();
+            CassandraDataAccessHelper.deleteStringColumnFromRaw(TOPIC_SUBSCRIBERS, topic, queueName, keyspace);
+            if (getRegisteredSubscribersForTopic(topic).size() == 0) {
+                unRegisterTopic(topic);
+            }
         } catch (Exception e) {
-           log.error("Error in unregistering queue from the topic" ,e);
-        }
-        if( getRegisteredSubscribersForTopic(topic).size()==0){
-            unRegisterTopic(topic);
+           log.error("Error in un registering queue from the topic" ,e);
         }
     }
     /**
@@ -1260,7 +1133,7 @@ public class CassandraMessageStore implements MessageStore {
         List<String> bindings = new ArrayList<String>();
         try {
 
-            Mutator<String>  mutator = HFactory.createMutator(keyspace,stringSerializer);
+            Mutator<String>  mutator = HFactory.createMutator(keyspace, stringSerializer);
 
 
 
@@ -1336,37 +1209,19 @@ public class CassandraMessageStore implements MessageStore {
     public void createQueue(AMQQueue queue) {
         try {
             String owner = queue.getOwner() == null ? null : queue.getOwner().toString();
-            addQueueDetails(queue.getNameShortString().toString(), owner, queue.isExclusive());
-
+            String value = queue.getNameShortString().toString() + "|" + owner + "|" + (queue.isExclusive() ? "true" : "false");
+            CassandraDataAccessHelper.addMappingToRaw(QUEUE_DETAILS_COLUMN_FAMILY, QUEUE_DETAILS_ROW,
+                    queue.getNameShortString().toString(), value, keyspace);
         } catch (Exception e) {
             log.error("Error in creating queue" ,e);
         }
     }
 
-    private void addQueueDetails(String queueName, String owner, boolean isExclusive) {
-        try {
-
-            Mutator<String> mutator = HFactory.createMutator(keyspace,stringSerializer);
-
-            String value = queueName + "|" + owner + "|" + (isExclusive ? "true" : "false");
-
-            mutator.addInsertion("QUEUE_DETAILS", QUEUE_DETAILS_COLUMN_FAMILY,
-                    HFactory.createColumn(queueName, value, stringSerializer, stringSerializer));
-            mutator.execute();
-        } catch (Exception e) {
-            log.error("Error in adding queue details");
-        }
-    }
 
     public void synchQueues(VirtualHostConfigSynchronizer vhcs) throws Exception {
 
 
         try {
-
-
-            Mutator<String> mutator = HFactory.createMutator(keyspace,stringSerializer);
-
-
 
             // Retriving multiple rows with Range Slice Query
             SliceQuery<String, String, String> sliceQuery =
@@ -1452,25 +1307,20 @@ public class CassandraMessageStore implements MessageStore {
 
     /**
      * Add Global Queue to User Queue Mapping
-     *
      * @param globalQueueName
      */
-    public void addUserQueueToGlobalQueue(String globalQueueName) {
+    public void addUserQueueToGlobalQueue(String globalQueueName) throws AMQStoreException {
 
         try {
             ClusterManager clusterManager = ClusterResourceHolder.getInstance().getClusterManager();
             String userQueueName = globalQueueName + "_" + clusterManager.getNodeId();
             Mutator<String> qqMutator = HFactory.createMutator(keyspace, stringSerializer);
-            qqMutator.addInsertion(globalQueueName, GLOBAL_QUEUE_TO_USER_QUEUE_COLUMN_FAMILY,
-                    HFactory.createColumn(userQueueName, userQueueName, stringSerializer,
-                            stringSerializer));
-            qqMutator.addInsertion(GLOBAL_QUEUE_LIST_ROW, GLOBAL_QUEUE_LIST_COLUMN_FAMILY,
-                    HFactory.createColumn(globalQueueName, globalQueueName, stringSerializer,
-                            stringSerializer));
-
-            qqMutator.execute();
+            CassandraDataAccessHelper.addMappingToRaw(GLOBAL_QUEUE_TO_USER_QUEUE_COLUMN_FAMILY, globalQueueName,
+                    userQueueName, userQueueName, qqMutator, false);
+            CassandraDataAccessHelper.addMappingToRaw(GLOBAL_QUEUE_LIST_COLUMN_FAMILY, GLOBAL_QUEUE_LIST_ROW, globalQueueName,
+                    globalQueueName, qqMutator, true);
         } catch (Exception e) {
-           log.error("Error in adding user queue to global queue",e);
+           throw new AMQStoreException("Error in adding user queue to global queue",e);
         }
     }
 
@@ -1479,14 +1329,8 @@ public class CassandraMessageStore implements MessageStore {
             ClusterManager clusterManager = ClusterResourceHolder.getInstance().getClusterManager();
             String userQueueName = globalQueueName + "_" +
                     clusterManager.getNodeId();
-
-            Mutator<String> qqMutator = HFactory.createMutator(keyspace, stringSerializer);
-            qqMutator.addDeletion(
-                    globalQueueName.trim(),
-                    GLOBAL_QUEUE_TO_USER_QUEUE_COLUMN_FAMILY,
-                    userQueueName,
-                    stringSerializer);
-            qqMutator.execute();
+            CassandraDataAccessHelper.deleteStringColumnFromRaw(GLOBAL_QUEUE_TO_USER_QUEUE_COLUMN_FAMILY,
+                    globalQueueName.trim(), userQueueName, keyspace);
         } catch (Exception e) {
             log.error("Error in removing user queue from qpid queue",e);
         }
@@ -1517,34 +1361,30 @@ public class CassandraMessageStore implements MessageStore {
     private void performCommonConfiguration(Configuration configuration) throws Exception {
         String userName = (String) configuration.getProperty(USERNAME_KEY);
         String password = (String) configuration.getProperty(PASSWORD_KEY);
-        String hostName = (String) configuration.getProperty(HOST_KEY);
-        String port = (String) configuration.getProperty(PORT_KEY);
+        String connectionString = (String) configuration.getProperty(CONNECTION_STRING);
         String clusterName = (String) configuration.getProperty(CLUSTER_KEY);
 
 
-        cluster = createCluster(userName, password, clusterName, hostName, port);
-
+        cluster = CassandraDataAccessHelper.createCluster(userName, password, clusterName, connectionString);
+        keyspace = createKeySpace();
 
         contentDeletionTasks = new LinkedList<Long>();
-
-
-        removerTask = new ContentRemoverTask(ClusterResourceHolder.getInstance().getClusterConfiguration().
+        messageContentRemovalTask = new ContentRemoverTask(ClusterResourceHolder.getInstance().getClusterConfiguration().
                 getContentRemovalTaskInterval());
-        removerTask.setRunning(true);
-        Thread t = new Thread(removerTask);
-        t.setName(removerTask.getClass().getSimpleName()+"-Thread");
+        messageContentRemovalTask.setRunning(true);
+        Thread t = new Thread(messageContentRemovalTask);
+        t.setName(messageContentRemovalTask.getClass().getSimpleName()+"-Thread");
         t.start();
 
         pubSubMessageContentDeletionTasks = new ConcurrentHashMap<Long,Long>();
 
         ClusterConfiguration clusterConfiguration = ClusterResourceHolder.getInstance().getClusterConfiguration();
-        pubSubContentRemoverTask = new PubSubMessageContentRemoverTask(clusterConfiguration.
+        pubSubMessageContentRemoverTask = new PubSubMessageContentRemoverTask(clusterConfiguration.
                 getPubSubMessageRemovalTaskInterval());
-        pubSubContentRemoverTask.setRunning(true);
-        Thread th = new Thread(pubSubContentRemoverTask);
+        pubSubMessageContentRemoverTask.setRunning(true);
+        Thread th = new Thread(pubSubMessageContentRemoverTask);
         th.start();
 
-        keyspace = createKeyspace();
 
         AndesConsistantLevelPolicy consistencyLevel = new AndesConsistantLevelPolicy();
 
@@ -1556,7 +1396,13 @@ public class CassandraMessageStore implements MessageStore {
 
     @Override
     public void close() throws Exception {
-        throw new UnsupportedOperationException("Close function is not supported");
+        if(messageContentRemovalTask != null && messageContentRemovalTask.isRunning()) {
+            messageContentRemovalTask.setRunning(false);
+        }
+
+        if(pubSubMessageContentRemoverTask != null && pubSubMessageContentRemoverTask.isRunning()) {
+            pubSubMessageContentRemoverTask.setRunning(false);
+        }
     }
 
     @Override
@@ -1609,20 +1455,13 @@ public class CassandraMessageStore implements MessageStore {
     @Override
     public void createExchange(Exchange exchange) throws AMQStoreException {
         try {
-
-            Mutator<String> mutator = HFactory.createMutator(keyspace,stringSerializer);
-
             String name = exchange.getName();
             String type = exchange.getTypeShortString().asString();
             Short autoDelete = exchange.isAutoDelete() ? (short) 1 : (short) 0;
-
             String value = name + "|" + type + "|" + autoDelete;
-
-            mutator.addInsertion(EXCHANGE_ROW, EXCHANGE_COLUMN_FAMILY,
-                    HFactory.createColumn(name, value, stringSerializer, stringSerializer));
-            mutator.execute();
+            CassandraDataAccessHelper.addMappingToRaw(EXCHANGE_COLUMN_FAMILY, EXCHANGE_ROW, name, value, keyspace);
         } catch (Exception e) {
-            log.error("Error in creating exchange "+ exchange.getName() ,e);
+            throw new AMQStoreException("Error in creating exchange "+ exchange.getName() ,e);
         }
     }
 
@@ -1634,9 +1473,6 @@ public class CassandraMessageStore implements MessageStore {
         try {
 
 
-            Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
-
-
             SliceQuery<String, String, String> sliceQuery =
                     HFactory.createSliceQuery(keyspace, stringSerializer  , stringSerializer,
                             stringSerializer);
@@ -1646,8 +1482,6 @@ public class CassandraMessageStore implements MessageStore {
 
             QueryResult<ColumnSlice<String, String>> result = sliceQuery.execute();
             ColumnSlice<String, String> columnSlice = result.get();
-
-            long maxId = 0;
 
             for (Object column : columnSlice.getColumns()) {
                 if (column instanceof HColumn) {
@@ -1729,7 +1563,11 @@ public class CassandraMessageStore implements MessageStore {
     public void bindQueue(Exchange exchange, AMQShortString routingKey,
                           AMQQueue queue, FieldTable args) throws AMQStoreException {
 
-        addBinding(exchange, queue, routingKey.asString());
+        try {
+            addBinding(exchange, queue, routingKey.asString());
+        } catch (CassandraDataAccessException e) {
+            throw new AMQStoreException("Error adding Binding details to cassandra store" ,e);
+        }
 
     }
 
@@ -1832,7 +1670,11 @@ public class CassandraMessageStore implements MessageStore {
             HColumn<String, String> rc = result.get();
             if (rc != null) {
                 String qname = result.get().getValue();
-                CassandraMessageStore.this.removeMessageFromUserQueue(qname, "" + _messageId);
+                try {
+                    CassandraMessageStore.this.removeMessageFromUserQueue(qname, "" + _messageId);
+                } catch (AMQStoreException e) {
+                    log.error("Error remove message",e);
+                }
                 contentDeletionTasks.add(_messageId);
             } else {
                 throw new RuntimeException("Can't remove message : message does not exist");

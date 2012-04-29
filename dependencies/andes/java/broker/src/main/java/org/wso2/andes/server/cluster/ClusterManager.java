@@ -735,15 +735,15 @@ public class ClusterManager {
         return globalQueueManager.getMessageCount(queue);
     }
 
-    public List<String> getTopics() {
+    public List<String> getTopics() throws Exception {
         return globalQueueManager.getTopics();
     }
 
-    public List<String> getSubscribers(String topic) {
+    public List<String> getSubscribers(String topic) throws Exception {
         return globalQueueManager.getSubscribers(topic);
     }
 
-    public int getSubscriberCount(String topic) {
+    public int getSubscriberCount(String topic) throws Exception {
         return globalQueueManager.getSubscribers(topic).size();
     }
 

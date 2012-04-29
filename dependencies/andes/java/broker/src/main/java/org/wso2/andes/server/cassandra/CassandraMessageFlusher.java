@@ -73,7 +73,6 @@ public class CassandraMessageFlusher extends Thread{
                                 , messageCount);
 
 
-
                 if(messages.size() == messageCount) {
                     messageCount += 10;
                     if(messageCount > (ClusterResourceHolder.getInstance().getClusterConfiguration().getFlusherPoolSize())) {

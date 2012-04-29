@@ -83,11 +83,11 @@ public class GlobalQueueManager {
         return cassandraMessageStore.getMessageCountOfGlobalQueue(queueName);
     }
 
-    public List<String> getTopics(){
+    public List<String> getTopics() throws Exception {
         return cassandraMessageStore.getTopics();
     }
 
-    public List<String> getSubscribers(String topic){
+    public List<String> getSubscribers(String topic) throws Exception {
         return cassandraMessageStore.getRegisteredSubscribersForTopic(topic);
     }
 

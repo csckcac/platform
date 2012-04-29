@@ -64,14 +64,30 @@ public class ClusterManagementInformationMBean extends AMQManagedObject implemen
     }
 
     public List<String> getTopics() {
-        return clusterManager.getTopics();
+        List<String> topics = null;
+        try {
+            topics = clusterManager.getTopics();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return topics;
     }
 
     public List<String> getSubscribers(String topic){
-        return clusterManager.getSubscribers(topic);
+        List<String> subs = null;
+        try {
+            subs = clusterManager.getSubscribers(topic);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return subs;
     }
 
     public int getSubscriberCount(@MBeanOperationParameter(name = "Topic", description = "Topic name") String topic) {
-        return clusterManager.getSubscriberCount(topic);
+        try {
+            return clusterManager.getSubscriberCount(topic);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

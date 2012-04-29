@@ -87,7 +87,14 @@ public class LoadBalancerConfiguration {
      * Sample loadbalancer.conf:
      * 
      * loadbalancer {
-     * instances           1;
+     *  # minimum number of load balancer instances
+     *  instances           1;
+     *  # whether autoscaling enable or not
+     *  enable_autoscaler   true;
+     *  # End point reference of the Autoscaler Service
+     *  autoscaler_service_epr  https://10.100.3.81:9443/services/AutoscalerService/;
+     *  # interval between two task executions in milliseconds
+     *  autoscaler_task_interval 1000;
      * }
      * 
      * services {
@@ -126,6 +133,7 @@ public class LoadBalancerConfiguration {
 
         try {
 
+            // get loadbalancer.conf file as a String
             if (configURL.startsWith(File.separator)) {
                 lbConfigString = createLBConfigString(configURL);
             } else {
@@ -145,7 +153,7 @@ public class LoadBalancerConfiguration {
         Node lbConfigNode = rootNode.findChildNodeByName(Constants.LOAD_BALANCER_ELEMENT);
 
         if (lbConfigNode == null) {
-            new RuntimeException("Mandatory " + Constants.LOAD_BALANCER_ELEMENT +
+            throw new RuntimeException("Mandatory " + Constants.LOAD_BALANCER_ELEMENT +
                 " element can not be" + " found in configuration file.");
         }
 
@@ -156,7 +164,7 @@ public class LoadBalancerConfiguration {
         Node servicesConfigNode = rootNode.findChildNodeByName(Constants.SERVICES_ELEMENT);
 
         if (servicesConfigNode == null) {
-            new RuntimeException("Mandatory " + Constants.SERVICES_ELEMENT +
+            throw new RuntimeException("Mandatory " + Constants.SERVICES_ELEMENT +
                 " element can not be found in configuration file.");
         }
 
@@ -395,7 +403,7 @@ public class LoadBalancerConfiguration {
 
         scanner = new Scanner(configFile);
 
-        while (scanner.hasNextLine()) {
+        while (scanner.hasNextLine() ) {
             lbConfigString.append(scanner.nextLine().trim() + "\n");
         }
 
@@ -493,6 +501,7 @@ public class LoadBalancerConfiguration {
         private String elasticIP ;//= LoadBalancerConfigUtil.replaceVariables("${ELASTIC_IP}");
         private int instances = 1;
         private boolean isAutoscaleEnabled;
+        private int autoscalerTaskInterval=5000;
         private String autoscalerServiceEpr;
 
         public String getElasticIP() {
@@ -510,6 +519,10 @@ public class LoadBalancerConfiguration {
         public String getAutoscalerServiceEpr() {
             return autoscalerServiceEpr;
         }
+        
+        public int getAutoscalerTaskInterval() {
+            return autoscalerTaskInterval;
+        }
 
         public void setElastic_IP(String elasticIP) {
             this.elasticIP = LoadBalancerConfigUtil.replaceVariables(elasticIP);
@@ -525,6 +538,10 @@ public class LoadBalancerConfiguration {
         
         public void setAutoscaler_service_epr(String epr) {
             this.autoscalerServiceEpr = epr;
+        }
+        
+        public void setAutoscaler_task_interval(String interval) {
+            this.autoscalerTaskInterval = Integer.parseInt(interval);
         }
     }
 

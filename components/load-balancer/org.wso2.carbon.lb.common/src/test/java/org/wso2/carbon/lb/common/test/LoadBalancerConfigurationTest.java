@@ -39,6 +39,7 @@ public class LoadBalancerConfigurationTest extends TestCase {
             lbConfig.getLoadBalancerConfig();
         
         assertEquals(1, loadBalancerConfig.getInstances());
+        assertEquals(5000, loadBalancerConfig.getAutoscalerTaskInterval());
     }
 
     public final void testCreateServicesConfig() {

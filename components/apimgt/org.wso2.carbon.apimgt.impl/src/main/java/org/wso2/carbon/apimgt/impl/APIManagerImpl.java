@@ -926,10 +926,7 @@ public class APIManagerImpl implements APIManager {
      */
     public void createNewAPIVersion(API api, String newVersion) throws DuplicateAPIException,
             APIManagementException {
-        String apiSourcePath = APIConstants.API_LOCATION + RegistryConstants.PATH_SEPARATOR +
-                api.getId().getProviderName() + RegistryConstants.PATH_SEPARATOR +
-                api.getId().getApiName() + RegistryConstants.PATH_SEPARATOR +
-                api.getId().getVersion() + APIConstants.API_RESOURCE_NAME;
+        String apiSourcePath = APIUtil.getAPIPath(api.getId());
 
         String targetPath = APIConstants.API_LOCATION + RegistryConstants.PATH_SEPARATOR +
                 api.getId().getProviderName() +
@@ -940,7 +937,7 @@ public class APIManagerImpl implements APIManager {
             if (registry.resourceExists(targetPath)) {
                 throw new DuplicateAPIException("API version already exist with version :"
                         + newVersion);
-            } else {
+            }
                 Resource apiSourceArtifact = registry.get(apiSourcePath);
                 GenericArtifact artifact = artifactManager.getGenericArtifact(
                         apiSourceArtifact.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY));
@@ -956,8 +953,7 @@ public class APIManagerImpl implements APIManager {
                     artifact.setAttribute(APIConstants.API_OVERVIEW_STATUS, APIConstants.CREATED);
                 }
                 artifactManager.addGenericArtifact(artifact);
-                registry.addAssociation(APIConstants.API_LOCATION + RegistryConstants.PATH_SEPARATOR
-                        + api.getId().getProviderName(), targetPath,
+                registry.addAssociation(APIUtil.getAPIProviderPath(api.getId()), targetPath,
                         APIConstants.PROVIDER_ASSOCIATION);
 
                 // Make sure to unset the isLatest flag on the old version
@@ -965,7 +961,7 @@ public class APIManagerImpl implements APIManager {
                         apiSourceArtifact.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY));
                 oldArtifact.setAttribute(APIConstants.API_OVERVIEW_IS_LATEST, "false");
                 artifactManager.updateGenericArtifact(oldArtifact);
-            }
+
         } catch (RegistryException e) {
             String msg = "Failed to create new version : " + newVersion + " of : "
                     + api.getId().getApiName();
@@ -1099,31 +1095,9 @@ public class APIManagerImpl implements APIManager {
             artifactManager = new GenericArtifactManager(registry, APIConstants.DOCUMENTATION_KEY);
             GenericArtifact artifact =
                     artifactManager.newGovernanceArtifact(new QName(documentation.getName()));
-            artifact.setAttribute(APIConstants.DOC_NAME, documentation.getName());
-            artifact.setAttribute(APIConstants.DOC_SUMMARY, documentation.getSummary());
-            artifact.setAttribute(APIConstants.DOC_TYPE, documentation.getType().getType());
-
-            Documentation.DocumentSourceType sourceType = documentation.getSourceType();
-
-            switch (sourceType) {
-                case INLINE:
-                    sourceType = Documentation.DocumentSourceType.INLINE;
-                    break;
-                case URL:
-                    sourceType = Documentation.DocumentSourceType.URL;
-                    break;
-            }
-            artifact.setAttribute(APIConstants.DOC_SOURCE_TYPE, sourceType.name());
-            artifact.setAttribute(APIConstants.DOC_SOURCE_URL, documentation.getSourceUrl());
-            String basePath = apiId.getProviderName() + RegistryConstants.PATH_SEPARATOR +
-                    apiId.getApiName() + RegistryConstants.PATH_SEPARATOR +
-                    apiId.getVersion();
-            artifact.setAttribute(APIConstants.DOC_API_BASE_PATH, basePath);
-            artifactManager.addGenericArtifact(artifact);
-
-            String apiPath = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
-                    apiId.getProviderName() + RegistryConstants.PATH_SEPARATOR + apiId.getApiName() +
-                    RegistryConstants.PATH_SEPARATOR + apiId.getVersion() + APIConstants.API_RESOURCE_NAME;
+            artifactManager.addGenericArtifact(
+                    APIUtil.createDocArtifactContent(artifact, apiId, documentation));
+            String apiPath = APIUtil.getAPIPath(apiId);
             //Adding association from api to documentation . (API -----> doc)
             registry.addAssociation(apiPath, artifact.getPath(), APIConstants.DOCUMENTATION_ASSOCIATION);
 

@@ -236,11 +236,67 @@ public final class APIUtil {
 
     }
 
+    /**
+     * Utility method to get api path from APIIdentifier
+     * @param identifier APIIdentifier
+     * @return API path
+     */
     public static String getAPIPath(APIIdentifier identifier) {
         return APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
                 identifier.getProviderName() + RegistryConstants.PATH_SEPARATOR +
                 identifier.getApiName() + RegistryConstants.PATH_SEPARATOR +
                 identifier.getVersion() + APIConstants.API_RESOURCE_NAME;
+    }
+
+    /**
+     * Utility method to get API provider path
+     * @param identifier APIIdentifier
+     * @return API provider path
+     */
+    public static String getAPIProviderPath(APIIdentifier identifier){
+     return   APIConstants.API_LOCATION + RegistryConstants.PATH_SEPARATOR
+                + identifier.getProviderName();
+    }
+
+    /**
+     * This utility method used to create documentation artifact content
+     * @param artifact GovernanceArtifact
+     * @param apiId APIIdentifier
+     * @param documentation Documentation
+     * @return GenericArtifact
+     * @throws APIManagementException if failed to get GovernanceArtifact from Documentation
+     */
+    public static GenericArtifact createDocArtifactContent(GenericArtifact artifact,
+                                                           APIIdentifier apiId,
+                                                           Documentation documentation)
+            throws APIManagementException {
+        try {
+            artifact.setAttribute(APIConstants.DOC_NAME, documentation.getName());
+            artifact.setAttribute(APIConstants.DOC_SUMMARY, documentation.getSummary());
+            artifact.setAttribute(APIConstants.DOC_TYPE, documentation.getType().getType());
+
+            Documentation.DocumentSourceType sourceType = documentation.getSourceType();
+
+            switch (sourceType) {
+                case INLINE:
+                    sourceType = Documentation.DocumentSourceType.INLINE;
+                    break;
+                case URL:
+                    sourceType = Documentation.DocumentSourceType.URL;
+                    break;
+            }
+            artifact.setAttribute(APIConstants.DOC_SOURCE_TYPE, sourceType.name());
+            artifact.setAttribute(APIConstants.DOC_SOURCE_URL, documentation.getSourceUrl());
+            String basePath = apiId.getProviderName() + RegistryConstants.PATH_SEPARATOR +
+                    apiId.getApiName() + RegistryConstants.PATH_SEPARATOR +
+                    apiId.getVersion();
+            artifact.setAttribute(APIConstants.DOC_API_BASE_PATH, basePath);
+        } catch (GovernanceException e) {
+            String msg = "Filed to create doc artifact content from :" + documentation.getName();
+            log.error(msg, e);
+            throw new APIManagementException(msg, e);
+        }
+        return artifact;
     }
 
 }

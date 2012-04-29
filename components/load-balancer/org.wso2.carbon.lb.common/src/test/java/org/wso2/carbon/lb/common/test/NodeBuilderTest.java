@@ -57,8 +57,9 @@ public class NodeBuilderTest extends TestCase {
             "hosts                   appserver.cloud-test.wso2.com,as.cloud-test.wso2.com;\n"
                 + "domains   {\n" + "wso2.as1.domain {\n" + "tenant_range    1-100;\n" + "}\n"
                 + "wso2.as2.domain {\n" + "tenant_range    101-200;\n" + "}\n"
-                + "wso2.as3.domain {\n" + "tenant_range    *;\n" + "}\n" + "}\n"
-                + "payload                 resources/cluster_node.zip;\n"
+                + "wso2.as3.domain { # domain\n" + "tenant_range    *;\n" + "}\n" + "}\n"
+                + "# line comment \n"
+                + "payload                 resources/cluster_node.zip;# payload\n"
                 + "availability_zone       us-east-1c;\n";
 
         a = NodeBuilder.buildNode(a, content);

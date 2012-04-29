@@ -308,6 +308,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
     String[] carbonDataSourceNames = null;
 	boolean isXAType = false;
     String flag = request.getParameter("flag");
+    String ds = request.getParameter("ds");
     String visibility = request.getParameter("visibility");
     // Service name with the path
     String detailedServiceName = request.getParameter("detailedServiceName");
@@ -324,7 +325,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
     }
     if (configId != null && configId.trim().length() > 0) {
         Config dsConfig = dataService.getConfig(configId);
-        if (dsConfig == null) {
+        if (dsConfig == null || (dsConfig !=null && !flag.equals("edit"))) {
             //This is a request for addding new datasource
             //Observe selectedType & populate
             if (selectedType != null && selectedType.trim().length() > 0 && newConfig.getId() == null) {
@@ -409,7 +410,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
             }
 
             readOnly = true;
-            if (!flag.equals("")) {
+            if (!flag.equals("edit")) {
                 dataService.removeConfig(dsConfig);
                 Config conf = new Config();
                 conf.setId(configId);
@@ -494,7 +495,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
         if (configId != null && configId.trim().length() > 0) {
             Config dsConfig = dataService.getConfig(configId);
             
-            if (dsConfig == null) {
+            if (dsConfig == null || (dsConfig !=null && !flag.equals("edit"))) {
                 dsConfig = newConfig;
             }
             if (dsConfig != null) {
@@ -558,7 +559,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
 <div id="middle">
 <h2>
     <%
-        if (!configId.equals("") && flag.equals("")) {
+        if (flag.equals("edit")) {
     %>
     <fmt:message key="edit.data.source"/><%out.write(" (" + configId + ")");%>
     <%} else {%>
@@ -594,6 +595,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
             <input type="hidden" id="passwordProvider" name="passwordProvider"
                    value="<%=passwordProvider%>"/>
             <input type="hidden" id="isXAType" name="isXAType" value="<%=isXAType%>"/>
+             <input type="hidden" id="flag" name="flag" value="<%=flag%>"/>
             <input type="hidden" id="propertyCount" name="propertyCount" value="0"/>
             <% if(dataSourceType.equals("Cassandra")) {%>
                 <input type="hidden" id="org.wso2.ws.dataservice.driver" name="org.wso2.ws.dataservice.driver" value="org.apache.cassandra.cql.jdbc.CassandraDriver" />
@@ -1088,7 +1090,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                                String cassandraServerUrl = propertyValue;
                                if (propertyValue != null && !propertyValue.equals("")) {
                                    cassandraServerUrl = propertyValue.substring(DBConstants.CASSANDRA.CASSANDRA_URL_PREFIX.length());
-                               } else if(flag.equals("edit")) {
+                               } else if(ds.equals("edit")) {
                                    cassandraServerUrl = "[machine-name/ip]:[port]/[keySpace]";
                                }
                            %>
@@ -1214,7 +1216,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                      if (configId != null && configId.trim().length() > 0) {
                     Config dsConfig = dataService.getConfig(configId);
 
-                    if (dsConfig == null) {
+                    if (dsConfig == null || (dsConfig !=null && !flag.equals("edit"))) {
                         dsConfig = newConfig;
                     }
                     if (dsConfig != null) {

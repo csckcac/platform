@@ -1101,7 +1101,7 @@ function changeDataSourceType (obj, document) {
         obj.selectedIndex = 0;
         return false;
 	} else {
-		location.href = 'addDataSource.jsp?selectedType='+selectedType+'&configId='+selectedDS+'&flag=edit';
+		location.href = 'addDataSource.jsp?selectedType='+selectedType+'&configId='+selectedDS+'&ds=edit';
 	}	
 	
 		

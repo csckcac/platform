@@ -72,7 +72,7 @@
                 <%--<td><%=dsConfig.getDataSourceType()%>--%>
                 <%--</td>--%>
                 <td>
-                    <a class="icon-link" style="background-image:url(../admin/images/edit.gif);" href="addDataSource.jsp?configId=<%=configId%>"><fmt:message
+                    <a class="icon-link" style="background-image:url(../admin/images/edit.gif);" href="addDataSource.jsp?flag=edit&configId=<%=configId%>"><fmt:message
                             key="edit.datasource"/></a>
                     <a class="icon-link" style="background-image:url(../admin/images/delete.gif);" onclick="deleteDatasource(document.getElementById('<%=configId%>').value);" href="#"><fmt:message
                             key="delete.datasource"/></a>

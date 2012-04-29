@@ -130,6 +130,10 @@
     boolean remove = true;
     if (datasourceId != null) {
         Config dsConfig = dataService.getConfig(datasourceId);
+        if (flag.equals("") && dsConfig != null) {
+            String message = "Data source " + datasourceId + " is already available. Please use different data-source name.";
+            CarbonUIMessage.sendCarbonUIMessage(message, CarbonUIMessage.ERROR, request);
+        } else {
         if (dsConfig == null) {
             dsConfig = newConfig;
             dataService.setConfig(dsConfig);
@@ -284,6 +288,7 @@
                 }
             }
         }
+    }
     }
 %>
 <table>

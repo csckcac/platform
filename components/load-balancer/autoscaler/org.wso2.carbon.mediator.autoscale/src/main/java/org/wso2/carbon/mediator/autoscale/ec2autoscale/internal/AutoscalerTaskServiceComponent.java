@@ -188,8 +188,10 @@ public class AutoscalerTaskServiceComponent {
             taskDescription.setTaskClass(ServiceRequestsInFlightAutoscaler.class.getName());
             taskDescription.setName("autoscaler");
             taskDescription.setCount(SimpleTrigger.REPEAT_INDEFINITELY);
-            taskDescription.setInterval(10000);
-            taskDescription.setStartTime(new Date(System.currentTimeMillis() + 5000));
+            
+            int interval = lbConfig.getLoadBalancerConfig().getAutoscalerTaskInterval();
+            taskDescription.setInterval(interval);
+            taskDescription.setStartTime(new Date(System.currentTimeMillis() + interval));
 
             TaskSchedulingManager scheduler = new TaskSchedulingManager();
             scheduler.scheduleTask(taskDescription, dataMap, configurationContext);

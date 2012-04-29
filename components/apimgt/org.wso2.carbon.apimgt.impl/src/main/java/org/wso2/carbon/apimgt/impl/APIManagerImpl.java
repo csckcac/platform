@@ -394,11 +394,6 @@ public class APIManagerImpl implements APIManager {
      */
     public void rateAPI(APIIdentifier apiId, APIRating rating) throws APIManagementException {
         String path = APIUtil.getAPIPath(apiId);
-        /*
-           * String apiPath = apiId.getProviderName() +
-           * RegistryConstants.PATH_SEPARATOR + apiId.getApiName() +
-           * RegistryConstants.PATH_SEPARATOR + apiId.getVersion();
-           */
         try {
             registry.rateResource(path, rating.getRating());
         } catch (RegistryException e) {
@@ -535,10 +530,7 @@ public class APIManagerImpl implements APIManager {
      */
     public API getAPI(APIIdentifier identifier) throws APIManagementException {
         API api = null;
-        String apiPath = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
-                identifier.getProviderName() + RegistryConstants.PATH_SEPARATOR +
-                identifier.getApiName() + RegistryConstants.PATH_SEPARATOR +
-                identifier.getVersion() + APIConstants.API_RESOURCE_NAME;
+        String apiPath = APIUtil.getAPIPath(identifier);
         try {
             artifactManager = getArtifactManager(APIConstants.API_KEY);
             Resource apiResource = registry.get(apiPath);
@@ -748,27 +740,6 @@ public class APIManagerImpl implements APIManager {
         return count;
     }
 
-//    /**
-//     * Get list of APIs purchased by a consumer.
-//     *
-//     * @param subscriberEmail email
-//     * @return Set<SubscribedAPI>
-//     * @throws APIManagementException if failed to get subscribed API
-//     */
-//    @Override
-//    public Set<SubscribedAPI> getSubscribedAPIsBySubscriber(String subscriberEmail)
-//            throws APIManagementException {
-//
-//        Set<SubscribedAPI> subscribedAPIs;
-//        try {
-//            subscribedAPIs = apiMgtDAO.getSubscribedAPIsBySubscriber(subscriberEmail);
-//        } catch (APIManagementException e) {
-//            String msg = "Failed to get Subscribed APIs By Subscriber" + subscriberEmail;
-//            throw new APIManagementException(msg, e);
-//        }
-//        return subscribedAPIs;
-//    }
-
     /**
      * @param username Name of the user
      * @param password Password of the user
@@ -777,15 +748,6 @@ public class APIManagerImpl implements APIManager {
     public boolean login(String username, String password) {
         boolean result = false;
 //        //TODO this is not finish
-//        String epr = "";
-//        try {
-//            AuthenticationClient client = new AuthenticationClient(epr);
-//            result = client.login(username, password);
-//        } catch (AxisFault axisFault) {
-//            axisFault.printStackTrace();
-//        } catch (AuthenticationException e) {
-//            e.printStackTrace();
-//        }
         return result;
     }
 
@@ -796,16 +758,6 @@ public class APIManagerImpl implements APIManager {
      */
     public void logout(String username) {
         //TODO this is not finish
-//        String epr = "";
-//        try {
-//            AuthenticationClient client = new AuthenticationClient(epr);
-//            client.logout();
-//        } catch (AxisFault axisFault) {
-//            axisFault.printStackTrace();
-//        } catch (AuthenticationException e) {
-//            e.printStackTrace();
-//        }
-
     }
 
     /**
@@ -842,8 +794,7 @@ public class APIManagerImpl implements APIManager {
             GenericArtifact artifact = APIUtil.createAPIArtifactContent(genericArtifact, api);
             artifactManager.addGenericArtifact(artifact);
             String artifactPath = GovernanceUtils.getArtifactPath(registry, artifact.getId());
-            String providerPath = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
-                    api.getId().getProviderName();
+            String providerPath = APIUtil.getAPIProviderPath(api.getId());
             //provider ------provides----> API
             registry.addAssociation(providerPath, artifactPath, APIConstants.PROVIDER_ASSOCIATION);
             Set<String> tagSet = api.getTags();
@@ -978,9 +929,7 @@ public class APIManagerImpl implements APIManager {
      */
     public List<Documentation> getAllDocumentation(APIIdentifier apiId) throws APIManagementException {
         List<Documentation> documentationList = new ArrayList<Documentation>();
-        String apiResourcePath = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
-                apiId.getProviderName() + RegistryConstants.PATH_SEPARATOR + apiId.getApiName() +
-                RegistryConstants.PATH_SEPARATOR + apiId.getVersion() + APIConstants.API_RESOURCE_NAME;
+        String apiResourcePath =APIUtil.getAPIPath(apiId);
         try {
             Association[] docAssociations = registry.getAssociations(apiResourcePath,
                     APIConstants.DOCUMENTATION_ASSOCIATION);
@@ -1012,10 +961,7 @@ public class APIManagerImpl implements APIManager {
     public Documentation getDocumentation(APIIdentifier apiId, DocumentationType docType,
                                           String docName) throws APIManagementException {
         Documentation documentation = null;
-        String docPath = apiId.getProviderName() + RegistryConstants.PATH_SEPARATOR +
-                apiId.getApiName() + RegistryConstants.PATH_SEPARATOR + apiId.getVersion() +
-                RegistryConstants.PATH_SEPARATOR + APIConstants.DOC_DIR +
-                RegistryConstants.PATH_SEPARATOR + docName;
+        String docPath = APIUtil.getAPIDocPath(apiId) + docName;
         artifactManager = getArtifactManager(APIConstants.DOCUMENTATION_KEY);
         try {
             Association[] associations = registry.getAssociations(docPath, docType.getType());
@@ -1067,11 +1013,7 @@ public class APIManagerImpl implements APIManager {
      */
     public void removeDocumentation(APIIdentifier apiId, String docName, String docType)
             throws APIManagementException {
-        String docPath = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
-                apiId.getProviderName() + RegistryConstants.PATH_SEPARATOR +
-                apiId.getApiName() + RegistryConstants.PATH_SEPARATOR + apiId.getVersion() +
-                RegistryConstants.PATH_SEPARATOR + APIConstants.DOC_DIR +
-                RegistryConstants.PATH_SEPARATOR + docName;
+        String docPath = APIUtil.getAPIDocPath(apiId) + docName;
         try {
             Association[] associations = registry.getAssociations(docPath,
                     APIConstants.DOCUMENTATION_KEY);
@@ -1116,19 +1058,10 @@ public class APIManagerImpl implements APIManager {
      */
     public void addDocumentationContent(APIIdentifier identifier, String documentationName, String text)
             throws APIManagementException {
-        String documentationPath = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
-                identifier.getProviderName() + RegistryConstants.PATH_SEPARATOR +
-                identifier.getApiName() + RegistryConstants.PATH_SEPARATOR +
-                identifier.getVersion() + RegistryConstants.PATH_SEPARATOR +
-                APIConstants.DOC_DIR + RegistryConstants.PATH_SEPARATOR + documentationName;
 
-        String contentPath = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
-                identifier.getProviderName() + RegistryConstants.PATH_SEPARATOR +
-                identifier.getApiName() + RegistryConstants.PATH_SEPARATOR +
-                identifier.getVersion() + RegistryConstants.PATH_SEPARATOR +
-                APIConstants.DOC_DIR + RegistryConstants.PATH_SEPARATOR +
-                APIConstants.INLINE_DOCUMENT_CONTENT_DIR + RegistryConstants.PATH_SEPARATOR +documentationName;
-
+        String documentationPath = APIUtil.getAPIDocPath(identifier) + documentationName;
+        String contentPath = APIUtil.getAPIDocPath(identifier) + APIConstants.INLINE_DOCUMENT_CONTENT_DIR +
+                RegistryConstants.PATH_SEPARATOR + documentationName;
         try {
             Resource docContent = registry.newResource();
             docContent.setContent(text);

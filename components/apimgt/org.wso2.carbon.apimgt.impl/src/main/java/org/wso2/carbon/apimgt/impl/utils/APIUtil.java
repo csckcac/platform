@@ -259,6 +259,18 @@ public final class APIUtil {
     }
 
     /**
+     * Utility method to get documentation path
+     * @param apiId   APIIdentifiern
+     * @return  Doc path
+     */
+    public static String getAPIDocPath(APIIdentifier apiId) {
+        return apiId.getProviderName() + RegistryConstants.PATH_SEPARATOR +
+                apiId.getApiName() + RegistryConstants.PATH_SEPARATOR +
+                apiId.getVersion() + RegistryConstants.PATH_SEPARATOR +
+                APIConstants.DOC_DIR + RegistryConstants.PATH_SEPARATOR;
+    }
+
+    /**
      * This utility method used to create documentation artifact content
      * @param artifact GovernanceArtifact
      * @param apiId APIIdentifier

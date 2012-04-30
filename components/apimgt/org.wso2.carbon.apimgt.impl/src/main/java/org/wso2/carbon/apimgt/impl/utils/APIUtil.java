@@ -25,6 +25,7 @@ import org.wso2.carbon.apimgt.api.model.*;
 import org.wso2.carbon.apimgt.impl.APIConstants;
 import org.wso2.carbon.governance.api.common.dataobjects.GovernanceArtifact;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
+import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.registry.core.Registry;
@@ -309,6 +310,28 @@ public final class APIUtil {
             throw new APIManagementException(msg, e);
         }
         return artifact;
+    }
+
+    /**
+     * this method used to initialized the ArtifactManager
+     *
+     * @param registry Registry
+     * @param key , key name of the key
+     * @return GenericArtifactManager
+     * @throws APIManagementException if failed to initialized GenericArtifactManager
+     */
+    public static GenericArtifactManager getArtifactManager(Registry registry, String key)
+            throws APIManagementException {
+        GenericArtifactManager artifactManager;
+
+        try {
+            artifactManager = new GenericArtifactManager(registry, key);
+        } catch (RegistryException e) {
+            String msg = "Failed to initialized GenericArtifactManager";
+            log.error(msg, e);
+            throw new APIManagementException(msg, e);
+        }
+        return artifactManager;
     }
 
 }

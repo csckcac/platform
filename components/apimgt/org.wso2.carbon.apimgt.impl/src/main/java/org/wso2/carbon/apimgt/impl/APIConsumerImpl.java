@@ -67,7 +67,7 @@ public class APIConsumerImpl implements APIConsumer {
     public Set<API> getAPIsWithTag(String tag) throws APIManagementException {
         Set<API> apiSet = new HashSet<API>();
         try {
-            artifactManager = getArtifactManager(APIConstants.API_KEY);
+            artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
             GenericArtifact[] genericArtifacts = artifactManager.getAllGenericArtifacts();
             if (genericArtifacts == null || genericArtifacts.length == 0) {
                 return apiSet;
@@ -107,7 +107,7 @@ public class APIConsumerImpl implements APIConsumer {
     public Set<API> getAllPublishedAPIs() throws APIManagementException {
         SortedSet<API> apiSortedSet = new TreeSet<API>(new APINameComparator());
         try {
-            artifactManager = getArtifactManager(APIConstants.API_KEY);
+            artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
             GenericArtifact[] genericArtifacts = artifactManager.getAllGenericArtifacts();
             if (genericArtifacts == null || genericArtifacts.length == 0) {
                 return apiSortedSet;
@@ -157,7 +157,7 @@ public class APIConsumerImpl implements APIConsumer {
         int returnLimit = 0;
         SortedSet<API> apiSortedSet = new TreeSet<API>(new APINameComparator());
         try {
-            artifactManager = getArtifactManager(APIConstants.API_KEY);
+            artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
             GenericArtifact[] genericArtifacts = artifactManager.getAllGenericArtifacts();
             if (genericArtifacts == null || genericArtifacts.length == 0) {
                 return apiSortedSet;
@@ -196,7 +196,7 @@ public class APIConsumerImpl implements APIConsumer {
         Map<Date, GenericArtifact> apiMap = new HashMap<Date, GenericArtifact>();
         List<Date> dateList = new ArrayList<Date>();
         try {
-            artifactManager = getArtifactManager(APIConstants.API_KEY);
+            artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
             GenericArtifact[] genericArtifact = artifactManager.getAllGenericArtifacts();
             if (genericArtifact == null || genericArtifact.length == 0) {
                 return apiSortedSet;
@@ -239,7 +239,7 @@ public class APIConsumerImpl implements APIConsumer {
     public Set<Tag> getAllTags() throws APIManagementException {
         Set<Tag> tagSet = new HashSet<Tag>();
         try {
-            artifactManager = getArtifactManager(APIConstants.API_KEY);
+            artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
             GenericArtifact[] genericArtifact = artifactManager.getAllGenericArtifacts();
 
             if (genericArtifact == null || genericArtifact.length == 0) {
@@ -294,7 +294,7 @@ public class APIConsumerImpl implements APIConsumer {
         Pattern pattern;
         Matcher matcher;
         try {
-            artifactManager = getArtifactManager(APIConstants.API_KEY);
+            artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
             GenericArtifact[] genericArtifacts = artifactManager
                     .getAllGenericArtifacts();
             if (genericArtifacts == null || genericArtifacts.length == 0) {
@@ -323,7 +323,7 @@ public class APIConsumerImpl implements APIConsumer {
         Pattern pattern;
         Matcher matcher;
         try {
-            artifactManager = getArtifactManager(APIConstants.API_KEY);
+            artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
             GenericArtifact[] genericArtifacts = artifactManager
                     .getAllGenericArtifacts();
             if (genericArtifacts == null || genericArtifacts.length == 0) {
@@ -566,27 +566,8 @@ public class APIConsumerImpl implements APIConsumer {
         return subscribedAPISet;
     }
 
-
     private void handleException(String msg, Exception e) throws APIManagementException {
         log.error(msg, e);
         throw new APIManagementException(msg, e);
-    }
-
-    /**
-     * this method used to initialized the ArtifactManager
-     *
-     * @param key , key name of the key
-     * @return GenericArtifactManager
-     * @throws APIManagementException if failed to initialized GenericArtifactManager
-     */
-    private GenericArtifactManager getArtifactManager(String key) throws APIManagementException {
-        try {
-            artifactManager = new GenericArtifactManager(registry, key);
-        } catch (RegistryException e) {
-            String msg = "Failed to initialized GenericArtifactManager";
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
-        }
-        return artifactManager;
     }
 }

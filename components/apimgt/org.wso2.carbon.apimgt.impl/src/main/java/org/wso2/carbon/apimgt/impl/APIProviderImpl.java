@@ -51,7 +51,7 @@ public class APIProviderImpl implements APIProvider {
     @Override
     public Set<Provider> getAllProviders() throws APIManagementException {
         Set<Provider> providerSet = new HashSet<Provider>();
-        artifactManager = getArtifactManager(APIConstants.PROVIDER_KEY);
+        artifactManager = APIUtil.getArtifactManager(registry,APIConstants.PROVIDER_KEY);
         try {
             GenericArtifact[] genericArtifact = artifactManager.getAllGenericArtifacts();
             if (genericArtifact == null || genericArtifact.length == 0) {
@@ -89,7 +89,7 @@ public class APIProviderImpl implements APIProvider {
             String providerPath = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
                     providerId;
 
-            artifactManager = getArtifactManager(APIConstants.API_KEY);
+            artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
             Association[] associations = registry.getAssociations(providerPath,
                     APIConstants.PROVIDER_ASSOCIATION);
             for (Association association : associations) {
@@ -149,7 +149,7 @@ public class APIProviderImpl implements APIProvider {
         String providerPath = RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
                 APIConstants.PROVIDERS_PATH + RegistryConstants.PATH_SEPARATOR + providerName;
         try {
-            artifactManager = getArtifactManager(APIConstants.PROVIDER_KEY);
+            artifactManager = APIUtil.getArtifactManager(registry,APIConstants.PROVIDER_KEY);
             Resource providerResource = registry.get(providerPath);
             String artifactId =
                     providerResource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY);
@@ -275,7 +275,7 @@ public class APIProviderImpl implements APIProvider {
     @Override
     public void addAPI(API api) throws APIManagementException {
 
-        artifactManager = getArtifactManager(APIConstants.API_KEY);
+        artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
         try {
             GenericArtifact genericArtifact =
                     artifactManager.newGovernanceArtifact(new QName(api.getId().getApiName()));
@@ -511,23 +511,5 @@ public class APIProviderImpl implements APIProvider {
     private void handleException(String msg, Exception e) throws APIManagementException {
         log.error(msg, e);
         throw new APIManagementException(msg, e);
-    }
-
-    /**
-     * this method used to initialized the ArtifactManager
-     *
-     * @param key , key name of the key
-     * @return GenericArtifactManager
-     * @throws APIManagementException if failed to initialized GenericArtifactManager
-     */
-    private GenericArtifactManager getArtifactManager(String key) throws APIManagementException {
-        try {
-            artifactManager = new GenericArtifactManager(registry, key);
-        } catch (RegistryException e) {
-            String msg = "Failed to initialized GenericArtifactManager";
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
-        }
-        return artifactManager;
     }
 }

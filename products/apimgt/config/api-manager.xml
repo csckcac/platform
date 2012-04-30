@@ -1,6 +1,6 @@
 <APIManager>
     <Database>
-        <URL>jdbc:h2:target/repository/database/WSO2AM_DB</URL>
+        <URL>jdbc:h2:repository/database/WSO2AM_DB</URL>
         <Username>wso2carbon</Username>
         <Password>wso2carbon</Password>
         <Driver>org.h2.Driver</Driver>

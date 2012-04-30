@@ -133,10 +133,10 @@
                             <table id="table-1">
                                 <tr>
                                     <th><b>Test Suite</b></th>
+                                    <th><b>Total</b></th>
                                     <th><b>Passed</b></th>
                                     <th><b>Failed</b></th>
                                     <th><b>Skipped</b></th>
-                                    <th><b>Total</b></th>
                                     <th><b>Success Rate(%)</b></th>
                                     <th><b>Duration(min)</b></th>
                                     <%--<td><b>Skip</b></td>--%>
@@ -158,7 +158,13 @@
                                         <a href="testClasses.jsp?build=<%=buildData.get("build")%>&suite=<%=buildData.get("suite")%>"><%=buildData.get("suiteName")%>
                                         </a>
                                     </td>
+                                    <td>
+                                        <%
+                                            int total = (buildData.getInt(Constant.PASS) + buildData.getInt(Constant.FAIL) + buildData.getInt(Constant.SKIP));
+                                        %>
+                                        <%=total%>
 
+                                    </td>
 
                                     <td>
                                         <a href="testCaseBySuite.jsp?suite=<%=buildData.get("suite")%>&status=PASS"><%=buildData.get("pass")%>
@@ -177,13 +183,7 @@
                                         <a href="testCaseBySuite.jsp?suite=<%=buildData.get("suite")%>&status=SKIP"><%=buildData.get("skip")%>
                                         </a>
                                     </td>
-                                    <td>
-                                        <%
-                                            int total = (buildData.getInt(Constant.PASS) + buildData.getInt(Constant.FAIL) + buildData.getInt(Constant.SKIP));
-                                        %>
-                                        <%=total%>
 
-                                    </td>
                                     <td>
                                         <%
                                             double sr = 0;

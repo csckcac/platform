@@ -91,7 +91,7 @@ public class LXCAdapter extends Adapter {
 				// This assumes that in that particular host machine
 				// no further containers can be created.
 				// Hence making that as an unavailable host machine.
-				agentPersistenceManager.makeHostMachineUnavailable(containerInfo.getEpr());
+				agentPersistenceManager.changeHostMachineAvailability(containerInfo.getEpr(), false);
 			}
 			
 			// Now the LXC is started

@@ -79,12 +79,15 @@ public class HostMachineDAO extends AbstractDAO{
 
     /**
      * Make the host machine unavailable when the resources of the host machine is not enough for
-     * creating the largest possible container. This request comes if container creation call
-     * to agent manager returns false.
+     * creating the largest possible container. Also when the creation of container is failed, there
+     * may be temporary issue in the host machine. So we make that host machine unavailable. Later if
+     * we found that host machine which made unavailable is up, we make it available by passing true
+     * to this method.
      * @param endPoint
+     * @param availability true or false
      * @throws SQLException
      */
-    public void makeUnavailable(String endPoint) throws SQLException {
+    public void changeAvailability(String endPoint, boolean availability) throws SQLException {
         try{
             Class.forName(driver);
             con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
@@ -107,35 +110,6 @@ public class HostMachineDAO extends AbstractDAO{
         }
     }
 
-    /**
-     * Make the host machine available when the resources of the host machine is not enough for
-     * creating the largest possible container. This request comes if container creation call
-     * to agent manager returns false.
-     * @param endPoint
-     * @throws SQLException
-     */
-    public void makeAvailable(String endPoint) throws SQLException {
-        try{
-            Class.forName(driver);
-            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
-            statement = con.createStatement();
-            String sql =  "UPDATE host_machine SET available=false WHERE epr='" + endPoint + "'";
-                            statement.executeUpdate(sql);
-                            //make host machine unavailable
-        }catch (SQLException s){
-           String msg = "Error while deleting container data" + s.getMessage();
-           log.error(msg);
-           throw new SQLException(s + msg);
-        }catch (ClassNotFoundException s){
-           String msg = "Error while sql connection :" + s.getMessage();
-           log.error(msg);
-           throw new SQLException(msg);
-        }
-        finally {
-            try { if (statement != null) statement.close(); } catch(SQLException e) {}
-            try { if (con != null) con.close(); } catch(Exception e) {}
-        }
-    }
 
     /**
      * This returns true if the input epr is exist in the database. This will be called to check if

@@ -1,6 +1,7 @@
 package org.wso2.carbon.autoscaler.service.recovery;
 
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -9,6 +10,7 @@ import org.wso2.carbon.autoscaler.service.jvm.agentmgt.IAgentManagementService;
 import org.wso2.carbon.autoscaler.service.agent.clients.AgentServiceClient;
 import org.wso2.carbon.autoscaler.service.internal.AgentManagementDSHolder;
 import org.wso2.carbon.autoscaler.service.registry.JVMAdapterRegistry;
+import org.wso2.carbon.lb.common.persistence.AgentPersistenceManager;
 
 /**
  * Creates a new thread to recover an Agent Service.
@@ -94,7 +96,15 @@ public class JVMAgentServiceRecoverer extends Thread {
             
             // add it back to registry
             registry.setTemporarilySkippedAgentEprList(temporarilySkippedAgentEprList);
-            
+
+            //change the host machine availability true
+            AgentPersistenceManager agentPersistenceManager = AgentPersistenceManager.getPersistenceManager();
+            try {
+                agentPersistenceManager.changeHostMachineAvailability(epr, true);
+            } catch (SQLException e) {
+                String msg = "Database error while changing host machine availability ";
+                log.error(msg);
+            }
             log.debug("Agent Service (" + epr + ") recovered successfully!");
             
         } else {

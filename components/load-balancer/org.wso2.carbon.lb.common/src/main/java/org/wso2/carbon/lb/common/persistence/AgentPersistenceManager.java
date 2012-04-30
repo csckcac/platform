@@ -36,10 +36,10 @@ public class    AgentPersistenceManager {
         return hostMachineDAO.create(hostMachine, domains);
     }
     
-    public void makeHostMachineUnavailable(String endPoint)
+    public void changeHostMachineAvailability(String endPoint, boolean availability)
             throws SQLException {
         HostMachineDAO hostMachineDAO =  new HostMachineDAO();
-        hostMachineDAO.makeUnavailable(endPoint);
+        hostMachineDAO.changeAvailability(endPoint, availability);
     }
     public boolean addZone(Zone zone, String[] domains)
             throws SQLException {

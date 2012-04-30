@@ -507,7 +507,7 @@ public class CassandraMessageStore implements MessageStore {
     }
 
 
-    public void addMessageContent(String messageId, int offset, ByteBuffer src) {
+    public void addMessageContent(String messageId, int offset, ByteBuffer src) throws AMQStoreException {
 
         try {
             String rowKey = "mid" + messageId;
@@ -515,18 +515,11 @@ public class CassandraMessageStore implements MessageStore {
             byte[] chunkData = new byte[src.limit()];
 
             src.duplicate().get(chunkData);
-
-            Mutator<String> messageContentMutator = HFactory.createMutator(keyspace,
-                    stringSerializer);
-
-            messageContentMutator.addInsertion(
-                    rowKey.trim(),
-                    MESSAGE_CONTENT_COLUMN_FAMILY,
-                    HFactory.createColumn(offset, chunkData, integerSerializer, bytesArraySerializer));
-            messageContentMutator.execute();
+            CassandraDataAccessHelper.addIntegerByteArrayContentToRaw(MESSAGE_CONTENT_COLUMN_FAMILY,rowKey.trim(),
+                    offset,chunkData,keyspace);
 
         } catch (Exception e) {
-            log.error("Error in adding message content" ,e);
+            throw new AMQStoreException("Error in adding message content" ,e);
         }
     }
 
@@ -619,6 +612,7 @@ public class CassandraMessageStore implements MessageStore {
             mutator.addInsertion(QMD_ROW_NAME, QMD_COLUMN_FAMILY, HFactory.createColumn(messageId,
                     underlying, longSerializer, bytesArraySerializer));
             mutator.execute();
+
         } catch (Exception e) {
             log.error("Error in storing meta data" ,e);
         }
@@ -754,7 +748,12 @@ public class CassandraMessageStore implements MessageStore {
         try {
             List<String> registeredSubscribers = getRegisteredSubscribersForTopic(topic);
             for (String subscriber : registeredSubscribers) {
-                addMessageIdToSubscriberQueue(subscriber, messageId);
+
+                try {
+                    addMessageIdToSubscriberQueue(subscriber, messageId);
+                } catch (AMQStoreException e) {
+                    log.error("Error adding message id " + messageId + "To subscriber " + subscriber);
+                }
             }
         } catch (Exception e) {
             log.error("Error while adding Message Id to Subscriber queue" ,e);
@@ -920,20 +919,14 @@ public class CassandraMessageStore implements MessageStore {
      * @param queueName - Name of the queue
      * @param messageId - Message ID
      * */
-    private void addMessageIdToSubscriberQueue(String queueName, long messageId){
-        if (keyspace == null) {
-            return;
-        }
+    private void addMessageIdToSubscriberQueue(String queueName, long messageId) throws AMQStoreException {
         try {
-            Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
             long columnName = messageId;
             long columnValue = messageId;
+            CassandraDataAccessHelper.addLongContentToRow(PUB_SUB_MESSAGE_IDS,queueName,columnName,columnValue,keyspace);
 
-            mutator.insert(queueName, PUB_SUB_MESSAGE_IDS,
-                    HFactory.createColumn(columnName, columnValue, longSerializer, longSerializer));
-            mutator.execute();
         } catch (Exception e) {
-           log.error("Error in adding message Id to subscriber queue" ,e);
+           throw new AMQStoreException("Error in adding message Id to subscriber queue" ,e);
         }
     }
 
@@ -1510,7 +1503,11 @@ public class CassandraMessageStore implements MessageStore {
         @Override
         public void addContent(int offsetInMessage, ByteBuffer src) {
 
-            CassandraMessageStore.this.addMessageContent(_messageId + "", offsetInMessage, src);
+            try {
+                CassandraMessageStore.this.addMessageContent(_messageId + "", offsetInMessage, src);
+            } catch (AMQStoreException e) {
+                log.error("Error while adding Message Content to Store",e);
+            }
         }
 
         @Override

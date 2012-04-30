@@ -20,7 +20,6 @@ package org.wso2.andes.server.store.util;
 
 import me.prettyprint.cassandra.serializers.*;
 import me.prettyprint.cassandra.service.CassandraHostConfigurator;
-import me.prettyprint.cassandra.service.KeyspaceService;
 import me.prettyprint.cassandra.service.ThriftCfDef;
 import me.prettyprint.cassandra.service.ThriftKsDef;
 import me.prettyprint.hector.api.Cluster;
@@ -34,8 +33,6 @@ import me.prettyprint.hector.api.factory.HFactory;
 import me.prettyprint.hector.api.mutation.Mutator;
 import me.prettyprint.hector.api.query.QueryResult;
 import me.prettyprint.hector.api.query.SliceQuery;
-import org.wso2.andes.AMQSecurityException;
-import org.wso2.andes.AMQStoreException;
 import org.wso2.andes.server.store.CassandraConsistencyLevelPolicy;
 
 import java.util.*;
@@ -309,6 +306,103 @@ public class CassandraDataAccessHelper {
     }
 
     /**
+     * Add a new Column <int,byte[]> to a given row in a given column family
+     * @param columnFamily   column Family name
+     * @param row row name
+     * @param key key of the column
+     * @param value value of the column
+     * @param keyspace cassandra KeySpace
+     * @throws CassandraDataAccessException
+     */
+    public static void addIntegerByteArrayContentToRaw(String columnFamily,String row,int key,
+                                                       byte[]value,
+                                                       Keyspace keyspace) throws CassandraDataAccessException {
+        if(keyspace == null) {
+            throw new CassandraDataAccessException("Can't add Data , no keySpace provided ");
+        }
+
+        if(columnFamily == null || row == null || value == null) {
+             throw new CassandraDataAccessException("Can't add data with columnFamily = " + columnFamily +
+                    " and row=" + row + " key  = " + key + " value = " + value);
+        }
+
+        try {
+            Mutator<String> messageContentMutator = HFactory.createMutator(keyspace,
+                    stringSerializer);
+            messageContentMutator.addInsertion(
+                    row,
+                    columnFamily,
+                    HFactory.createColumn(key, value, integerSerializer, bytesArraySerializer));
+            messageContentMutator.execute();
+        } catch (Exception e) {
+            throw new CassandraDataAccessException("Error while adding new Column <int,byte[]> to cassandra store" , e);
+        }
+    }
+
+
+    /**
+     * Add new Column<long,long> to a given row in a given cassandra column family
+     * @param columnFamily column family name
+     * @param row row name
+     * @param key long key value of the column
+     * @param value long value of the column
+     * @param keyspace  Cassandra KeySpace
+     * @throws CassandraDataAccessException
+     */
+    public static void addLongContentToRow(String columnFamily,String row,long key,
+                                                       long value,
+                                                       Keyspace keyspace) throws CassandraDataAccessException {
+
+        if (keyspace == null) {
+            throw new CassandraDataAccessException("Can't add Data , no keySpace provided ");
+        }
+
+        if (columnFamily == null || row == null ) {
+            throw new CassandraDataAccessException("Can't add data with columnFamily = " + columnFamily +
+                    " and rowName=" + row + " key = " + key);
+        }
+
+        Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
+        mutator.insert(row, columnFamily,
+                HFactory.createColumn(key, value, longSerializer, longSerializer));
+        mutator.execute();
+    }
+
+    /**
+     * Add a new Column <long,byte[]> to a given row in a given column family
+     * @param columnFamily  column family name
+     * @param row  row name
+     * @param key  long key value
+     * @param value value as a byte array
+     * @param keyspace  CassandraKeySpace
+     * @throws CassandraDataAccessException
+     */
+    public static void addLongByteArrayColumnToRow(String columnFamily, String row, long key,
+                                                   byte[] value,
+                                                   Keyspace keyspace) throws CassandraDataAccessException {
+        if (keyspace == null) {
+            throw new CassandraDataAccessException("Can't add Data , no keySpace provided ");
+        }
+
+        if (columnFamily == null || row == null || value == null) {
+            throw new CassandraDataAccessException("Can't add data with columnFamily = " + columnFamily +
+                    " and row=" + row + " key  = " + key + " value = " + value);
+        }
+
+        try {
+            Mutator<String> messageContentMutator = HFactory.createMutator(keyspace,
+                    stringSerializer);
+            messageContentMutator.addInsertion(
+                    row,
+                    columnFamily,
+                    HFactory.createColumn(key, value, longSerializer, bytesArraySerializer));
+            messageContentMutator.execute();
+        } catch (Exception e) {
+            throw new CassandraDataAccessException("Error while adding new Column <int,byte[]> to cassandra store", e);
+        }
+    }
+
+    /**
      * Add a Mapping to a Given Row in cassandra column family.
      * Mappings are used as search indexes
      * @param columnFamily  columnFamilyName
@@ -322,7 +416,7 @@ public class CassandraDataAccessHelper {
                                        Keyspace keyspace) throws CassandraDataAccessException {
 
         if (keyspace == null) {
-            throw new CassandraDataAccessException("Can't add Data , no mutator provided ");
+            throw new CassandraDataAccessException("Can't add Data , no KeySpace provided ");
         }
 
         if (columnFamily == null || row == null || cKey == null) {

@@ -50,7 +50,7 @@ public class Utils {
         String[] headers = authHeader.split(APIMgtUsagePublisherConstants._OAUTH_HEADERS_SPLITTER);
         if (headers != null && headers.length > 0) {
             for (int i = 0; i < headers.length; i++) {
-                String[] elements = headers[i].split(APIMgtUsagePublisherConstants.HEADER_SEGMENT_DELIMETER);
+                String[] elements = headers[i].split(APIMgtUsagePublisherConstants.HEADER_SEGMENT_DELIMITER);
                 if (elements != null && elements.length > 1) {
                     int j = 0;
                     for (String element : elements) {

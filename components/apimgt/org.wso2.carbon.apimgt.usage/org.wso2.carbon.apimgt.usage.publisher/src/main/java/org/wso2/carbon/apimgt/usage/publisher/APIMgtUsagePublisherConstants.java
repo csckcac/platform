@@ -17,16 +17,12 @@
 */
 package org.wso2.carbon.apimgt.usage.publisher;
 
-import org.wso2.carbon.utils.CarbonUtils;
-
-import java.io.File;
-
 public final class APIMgtUsagePublisherConstants {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static String _OAUTH_HEADERS_SPLITTER = ",";
     public static String _OAUTH_CONSUMER_KEY = "Bearer";
-    public static  String HEADER_SEGMENT_DELIMETER = " ";
+    public static  String HEADER_SEGMENT_DELIMITER = " ";
 
     public static final String API_USAGE_TRACKING = "APIUsageTracking.";
     public static final String API_USAGE_ENABLED = API_USAGE_TRACKING + "Enabled";

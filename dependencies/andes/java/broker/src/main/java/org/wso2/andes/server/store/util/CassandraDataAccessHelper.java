@@ -20,6 +20,7 @@ package org.wso2.andes.server.store.util;
 
 import me.prettyprint.cassandra.serializers.*;
 import me.prettyprint.cassandra.service.CassandraHostConfigurator;
+import me.prettyprint.cassandra.service.KeyspaceService;
 import me.prettyprint.cassandra.service.ThriftCfDef;
 import me.prettyprint.cassandra.service.ThriftKsDef;
 import me.prettyprint.hector.api.Cluster;
@@ -33,6 +34,8 @@ import me.prettyprint.hector.api.factory.HFactory;
 import me.prettyprint.hector.api.mutation.Mutator;
 import me.prettyprint.hector.api.query.QueryResult;
 import me.prettyprint.hector.api.query.SliceQuery;
+import org.wso2.andes.AMQSecurityException;
+import org.wso2.andes.AMQStoreException;
 import org.wso2.andes.server.store.CassandraConsistencyLevelPolicy;
 
 import java.util.*;
@@ -430,6 +433,83 @@ public class CassandraDataAccessHelper {
              }
         } catch (Exception e) {
            throw new CassandraDataAccessException("Error while deleting " + key + " from " + columnFamily);
+        }
+    }
+
+    public static void deleteLongColumnFromRaw(String columnFamily, String row, long key,
+                                               Mutator<String> mutator, boolean execute) throws CassandraDataAccessException {
+
+
+        if (mutator == null) {
+            throw new CassandraDataAccessException("Can't delete Data , no mutator provided ");
+        }
+
+        if (columnFamily == null || row == null) {
+            throw new CassandraDataAccessException("Can't delete data in columnFamily = " + columnFamily +
+                    " and rowName=" + row + " key = " + key);
+        }
+
+        try {
+            mutator.addDeletion(row, columnFamily, key, longSerializer);
+
+            if (execute) {
+                mutator.execute();
+            }
+
+        } catch (Exception e) {
+            throw new CassandraDataAccessException("Error while deleting " + key + " from " + columnFamily);
+        }
+
+    }
+
+
+    public static void deleteIntegerColumnFromRow(String columnFamily, String row, int key,
+                                               Mutator<String> mutator, boolean execute) throws CassandraDataAccessException {
+
+
+        if (mutator == null) {
+            throw new CassandraDataAccessException("Can't delete Data , no mutator provided ");
+        }
+
+        if (columnFamily == null || row == null) {
+            throw new CassandraDataAccessException("Can't delete data in columnFamily = " + columnFamily +
+                    " and rowName=" + row + " key = " + key);
+        }
+
+        try {
+            mutator.addDeletion(row, columnFamily, key, integerSerializer);
+
+            if (execute) {
+                mutator.execute();
+            }
+
+        } catch (Exception e) {
+            throw new CassandraDataAccessException("Error while deleting " + key + " from " + columnFamily);
+        }
+
+    }
+
+    public static void deleteIntegerColumnFromRow(String columnFamily, String row, Integer key,
+                                                  Keyspace keyspace) throws CassandraDataAccessException {
+
+
+        if (keyspace == null) {
+            throw new CassandraDataAccessException("Can't delete Data , no keyspace provided ");
+        }
+
+        if (columnFamily == null || row == null) {
+            throw new CassandraDataAccessException("Can't delete data in columnFamily = " + columnFamily +
+                    " and rowName=" + row + " key = " + key);
+        }
+
+
+        try {
+            Mutator<String> mutator = HFactory.createMutator(keyspace,
+                    stringSerializer);
+            mutator.addDeletion(row, columnFamily, key, integerSerializer);
+            mutator.execute();
+        } catch (Exception e) {
+            throw new CassandraDataAccessException("Error while deleting data",e);
         }
     }
 }

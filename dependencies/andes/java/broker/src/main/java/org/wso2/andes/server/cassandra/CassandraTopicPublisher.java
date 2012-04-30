@@ -21,6 +21,7 @@ package org.wso2.andes.server.cassandra;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.andes.AMQException;
+import org.wso2.andes.AMQStoreException;
 import org.wso2.andes.exchange.ExchangeDefaults;
 import org.wso2.andes.server.ClusterResourceHolder;
 import org.wso2.andes.server.binding.Binding;
@@ -96,8 +97,9 @@ public class CassandraTopicPublisher extends Thread{
                 }
                 messageStore.removeDeliveredMessageIds(publishedMids, queue.getName());
             }
-        }
-        finally {
+        } catch (AMQStoreException e) {
+            log.error("Error removing delivered Message Ids from Message store " ,e);
+        } finally {
             working = false;
         }
     }

@@ -530,19 +530,12 @@ public class CassandraMessageStore implements MessageStore {
         }
     }
 
-    public void removeMessageContent(String messageId, boolean commit) {
+    public void removeMessageContent(String messageId) throws AMQStoreException {
         try {
             String rowKey = "mid" + messageId;
-
-            Mutator<String> messageContentMutator = HFactory.createMutator(keyspace,
-                    stringSerializer);
-
-            messageContentMutator.addDeletion(rowKey.trim(), MESSAGE_CONTENT_COLUMN_FAMILY, null, integerSerializer);
-            if (commit) {
-                messageContentMutator.execute();
-            }
+            CassandraDataAccessHelper.deleteIntegerColumnFromRow(MESSAGE_CONTENT_COLUMN_FAMILY,rowKey.trim(),null,keyspace);
         } catch (Exception e) {
-            log.error("Error in removing message content", e);
+            throw new AMQStoreException("Error in removing message content", e);
         }
     }
 
@@ -661,16 +654,12 @@ public class CassandraMessageStore implements MessageStore {
         return metaData;
     }
 
-    private void removeMetaData(long messageId) {
+    private void removeMetaData(long messageId) throws AMQStoreException {
         try {
             Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
-            mutator.addDeletion(QMD_ROW_NAME, QMD_COLUMN_FAMILY, messageId, longSerializer);
-            if (log.isDebugEnabled()) {
-                log.debug(" removing metadata of message id = " + messageId);
-            }
-            mutator.execute();
+            CassandraDataAccessHelper.deleteLongColumnFromRaw(QMD_COLUMN_FAMILY,QMD_ROW_NAME,messageId,mutator,true);
         } catch (Exception e) {
-            log.error("Error in removing metadata", e);
+            throw new AMQStoreException("Error in removing metadata", e);
         }
     }
 
@@ -694,13 +683,13 @@ public class CassandraMessageStore implements MessageStore {
      * When message contents are ready to remove , removing the reference to that from the acknowledged message
      * column family
      * */
-    private void removeAckedMessage(long messageId) {
+    private void removeAckedMessage(long messageId) throws AMQStoreException {
         try {
             Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
-            mutator.addDeletion(ACKED_MESSAGE_IDS_ROW, ACKED_MESSAGE_IDS_COLUMN_FAMILY, messageId, longSerializer);
-            mutator.execute();
+            CassandraDataAccessHelper.deleteLongColumnFromRaw(ACKED_MESSAGE_IDS_COLUMN_FAMILY, ACKED_MESSAGE_IDS_ROW,
+                    messageId, mutator, true);
         } catch (Exception e) {
-            log.error("Error in storing meta data", e);
+            throw new AMQStoreException("Error in storing meta data", e);
         }
     }
     /**
@@ -735,7 +724,7 @@ public class CassandraMessageStore implements MessageStore {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error while removing Message data",e);
             return false;
         }
     }
@@ -981,18 +970,20 @@ public class CassandraMessageStore implements MessageStore {
      * @param messageIdsToBeRemoved - List of delivered message ids to be removed
      * @param queueName - name of the queue
      * */
-    public void removeDeliveredMessageIds(List<Long> messageIdsToBeRemoved, String queueName) {
+    public void removeDeliveredMessageIds(List<Long> messageIdsToBeRemoved, String queueName)
+            throws AMQStoreException {
         try {
             Mutator<String> mutator =   HFactory.createMutator(keyspace, stringSerializer);
             for (Long mid : messageIdsToBeRemoved) {
-                mutator.addDeletion(queueName, PUB_SUB_MESSAGE_IDS, mid, longSerializer);
+                CassandraDataAccessHelper.
+                        deleteLongColumnFromRaw(PUB_SUB_MESSAGE_IDS, queueName, mid, mutator, false);
                 if(log.isDebugEnabled()){
                     log.debug(" removing mid = " + mid + " from ="  + queueName);
                 }
             }
             mutator.execute();
         } catch (Exception e) {
-            log.error("Error in removing message ids from subscriber queue" ,e);
+            throw new AMQStoreException("Error in removing message ids from subscriber queue" ,e);
         }
     }
 
@@ -1167,7 +1158,7 @@ public class CassandraMessageStore implements MessageStore {
 
             // Retrieving multiple rows with Range Slice Query
             ColumnSlice<String,String> columnSlice = CassandraDataAccessHelper.
-                    getStringTypeColumnsInARow(QUEUE_DETAILS_ROW,QUEUE_DETAILS_COLUMN_FAMILY,keyspace,Integer.MAX_VALUE);
+                    getStringTypeColumnsInARow(QUEUE_DETAILS_ROW, QUEUE_DETAILS_COLUMN_FAMILY, keyspace, Integer.MAX_VALUE);
             for (Object column : columnSlice.getColumns()) {
                 if (column instanceof HColumn) {
                     String columnName = ((HColumn<String, String>) column).getName();
@@ -1384,7 +1375,7 @@ public class CassandraMessageStore implements MessageStore {
         List<String> exchangeNames = new ArrayList<String>();
         try {
             ColumnSlice<String, String> columnSlice = CassandraDataAccessHelper.
-                    getStringTypeColumnsInARow(EXCHANGE_ROW,EXCHANGE_COLUMN_FAMILY,keyspace,Integer.MAX_VALUE);
+                    getStringTypeColumnsInARow(EXCHANGE_ROW, EXCHANGE_COLUMN_FAMILY, keyspace, Integer.MAX_VALUE);
             for (Object column : columnSlice.getColumns()) {
                 if (column instanceof HColumn) {
                     String columnName = ((HColumn<String, String>) column).getName();
@@ -1411,7 +1402,7 @@ public class CassandraMessageStore implements MessageStore {
         try {
             // Retriving multiple rows with Range Slice Query
             ColumnSlice<String, String> columnSlice = CassandraDataAccessHelper.
-                    getStringTypeColumnsInARow(EXCHANGE_ROW,EXCHANGE_COLUMN_FAMILY,keyspace,Integer.MAX_VALUE);
+                    getStringTypeColumnsInARow(EXCHANGE_ROW, EXCHANGE_COLUMN_FAMILY, keyspace, Integer.MAX_VALUE);
             for (Object column : columnSlice.getColumns()) {
                 if (column instanceof HColumn) {
                     String columnName = ((HColumn<String, String>) column).getName();
@@ -1631,19 +1622,19 @@ public class CassandraMessageStore implements MessageStore {
         public void run() {
             while (running) {
                 try {
-                while (!contentDeletionTasks.isEmpty()) {
-                    long messageID = contentDeletionTasks.poll();
+                    while (!contentDeletionTasks.isEmpty()) {
+                        long messageID = contentDeletionTasks.poll();
 
-                    CassandraMessageStore.this.removeMessageContent("" + messageID, true);
-                }
+                        CassandraMessageStore.this.removeMessageContent("" + messageID);
+                    }
 
-                try {
-                    Thread.sleep(waitInterval);
-                } catch (InterruptedException e) {
-                    log.error(e);
-                }
-                }catch (Throwable e ) {
-                  //  e.printStackTrace();
+                    try {
+                        Thread.sleep(waitInterval);
+                    } catch (InterruptedException e) {
+                        log.error("Error while Executing content removal Task", e);
+                    }
+                } catch (Throwable e) {
+                    log.error("Error while Executing content removal Task", e);
                 }
             }
 

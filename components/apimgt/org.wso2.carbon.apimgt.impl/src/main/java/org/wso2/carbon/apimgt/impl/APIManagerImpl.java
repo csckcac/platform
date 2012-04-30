@@ -25,35 +25,28 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.APIManager;
-import org.wso2.carbon.apimgt.api.dto.UserApplicationAPIUsage;
 import org.wso2.carbon.apimgt.api.model.*;
-import org.wso2.carbon.apimgt.api.model.Tag;
 import org.wso2.carbon.apimgt.impl.dao.ApiMgtDAO;
 import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 import org.wso2.carbon.apimgt.impl.utils.APIUtil;
-import org.wso2.carbon.apimgt.impl.utils.APIVersionComparator;
-import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
 import org.wso2.carbon.governance.api.util.GovernanceConstants;
-import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.registry.core.*;
-import org.wso2.carbon.registry.core.Collection;
-import org.wso2.carbon.registry.core.Comment;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.internal.RegistryCoreServiceComponent;
-import org.wso2.carbon.user.api.AuthorizationManager;
-import org.wso2.carbon.user.api.UserStoreException;
+import org.wso2.carbon.user.core.AuthorizationManager;
+import org.wso2.carbon.user.core.UserStoreException;
 
-import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * This class represent the implementation of APIManager interface.
@@ -110,418 +103,6 @@ public class APIManagerImpl implements APIManager {
     }    
 
     /**
-     * @param subscriberId id of the Subscriber
-     * @return Subscriber
-     * @throws APIManagementException if failed to get Subscriber
-     */
-    public Subscriber getSubscriber(String subscriberId) throws APIManagementException {
-        Subscriber subscriber = null;
-        try {
-            subscriber = apiMgtDAO.getSubscriber(subscriberId);
-        } catch (APIManagementException e) {
-            handleException("Failed to get Subscriber", e);
-        }
-        return subscriber;
-    }
-
-    /**
-     * Returns a list of #{@link org.wso2.carbon.apimgt.api.model.API} bearing the selected tag
-     *
-     * @param tag name of the tag
-     * @return set of API having the given tag name
-     * @throws APIManagementException if failed to get set of API
-     */
-    public Set<API> getAPIsWithTag(String tag) throws APIManagementException {
-        Set<API> apiSet = new HashSet<API>();
-        try {
-            artifactManager = getArtifactManager(APIConstants.API_KEY);
-            GenericArtifact[] genericArtifacts = artifactManager.getAllGenericArtifacts();
-            if (genericArtifacts == null || genericArtifacts.length == 0) {
-                return apiSet;
-            }
-            for (GenericArtifact artifact : genericArtifacts) {
-                String status = artifact.getAttribute(APIConstants.API_OVERVIEW_STATUS);
-                if (!status.equals(APIConstants.PUBLISHED)) {
-                    continue;
-                }
-                String artifactPath = artifact.getPath();
-                org.wso2.carbon.registry.core.Tag[] tags = registry.getTags(artifactPath);
-                if (tags == null || tags.length == 0) {
-                    break;
-                }
-                for (org.wso2.carbon.registry.core.Tag tag1 : tags) {
-                    if (tag.equals(tag1.getTagName())) {
-                        apiSet.add(APIUtil.getAPI(artifact, registry));
-                    }
-                }
-            }
-        } catch (RegistryException e) {
-            handleException("Failed to get API for tag " + tag, e);
-        }
-        return apiSet;
-    }
-
-    /**
-     * Returns a list of all #{@link org.wso2.carbon.apimgt.api.model.Provider} available on the system.
-     *
-     * @return Set<Provider>
-     * @throws APIManagementException if failed to get Providers
-     */
-    public Set<Provider> getAllProviders() throws APIManagementException {
-        Set<Provider> providerSet = new HashSet<Provider>();
-        artifactManager = getArtifactManager(APIConstants.PROVIDER_KEY);
-        try {
-            GenericArtifact[] genericArtifact = artifactManager.getAllGenericArtifacts();
-            if (genericArtifact == null || genericArtifact.length == 0) {
-                return providerSet;
-            }
-            for (GenericArtifact artifact : genericArtifact) {
-                Provider provider =
-                        new Provider(artifact.getAttribute(APIConstants.PROVIDER_OVERVIEW_NAME));
-                provider.setDescription(APIConstants.PROVIDER_OVERVIEW_DESCRIPTION);
-                provider.setEmail(APIConstants.PROVIDER_OVERVIEW_EMAIL);
-                providerSet.add(provider);
-            }
-        } catch (GovernanceException e) {
-            handleException("Failed to get all providers", e);
-        }
-        return providerSet;
-    }
-
-
-    /**
-     * Returns a list of all published APIs. If a given API has multiple APIs,
-     * only the latest version will be included in this list.
-     *
-     * @return set of API
-     * @throws APIManagementException if failed to API set
-     */
-    public Set<API> getAllPublishedAPIs() throws APIManagementException {
-        SortedSet<API> apiSortedSet = new TreeSet<API>(new APIComparator());
-        try {
-            artifactManager = getArtifactManager(APIConstants.API_KEY);
-            GenericArtifact[] genericArtifacts = artifactManager.getAllGenericArtifacts();
-            if (genericArtifacts == null || genericArtifacts.length == 0) {
-                return apiSortedSet;
-            }
-            Map<String,API> latestPublishedAPIs = new HashMap<String, API>();
-            Comparator<API> versionComparator = new APIVersionComparator();
-            for (GenericArtifact artifact : genericArtifacts) {
-                // adding the API provider can mark the latest API .
-                String status = artifact.getAttribute(APIConstants.API_OVERVIEW_STATUS);
-                // We are only interested in published APIs here...
-                if (status.equals(APIConstants.PUBLISHED)) {
-                    API api = APIUtil.getAPI(artifact, registry);
-                    String key = api.getId().getProviderName() + ":" + api.getId().getApiName(); 
-                    API existingAPI = latestPublishedAPIs.get(key);
-                    if (existingAPI != null) {
-                        // If we have already seen an API with the same name, make sure
-                        // this one has a higher version number
-                        if (versionComparator.compare(api, existingAPI) > 0) {
-                            latestPublishedAPIs.put(key, api);
-                        }
-                    } else {
-                        // We haven't seen this API before
-                        latestPublishedAPIs.put(key, api);
-                    }                    
-                }
-            }
-            
-            for (API api : latestPublishedAPIs.values()) {
-                apiSortedSet.add(api);
-            }
-        } catch (RegistryException e) {
-            handleException("Failed to get all publishers", e);
-        }
-        return apiSortedSet;
-    }
-
-    /**
-     * Get a list of APIs published by the given provider. If a given API has multiple APIs,
-     * only the latest version will be included in this list.
-     *
-     * @param providerId , provider id
-     * @return set of API
-     * @throws APIManagementException if failed to get set of API
-     */
-    public List<API> getAPIsByProvider(String providerId) throws APIManagementException {
-
-        List<API> apiSortedList = new ArrayList<API>();
-
-        try {
-            String providerPath = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
-                    providerId;
-
-            artifactManager = getArtifactManager(APIConstants.API_KEY);
-            Association[] associations = registry.getAssociations(providerPath,
-                    APIConstants.PROVIDER_ASSOCIATION);
-            for (Association association : associations) {
-                String apiPath = association.getDestinationPath();
-                Resource resource = registry.get(apiPath);
-                String apiArtifactId = resource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY);
-                if (apiArtifactId != null) {
-                    GenericArtifact apiArtifact = artifactManager.getGenericArtifact(apiArtifactId);
-                    apiSortedList.add(APIUtil.getAPI(apiArtifact, registry));
-                } else {
-                    throw new GovernanceException("artifact id is null of " + apiPath);
-                }
-            }
-
-        } catch (RegistryException e) {
-            handleException("Failed to get APIs for provider : " + providerId, e);
-        }
-        Collections.sort(apiSortedList, new APIComparator());
-
-        return apiSortedList;
-
-    }
-
-    /**
-     * Returns top rated APIs
-     *
-     * @param limit if -1, no limit. Return everything else, limit the return list to specified value.
-     * @return Set of API
-     * @throws APIManagementException if failed to get top rated APIs
-     */
-    public Set<API> getTopRatedAPIs(int limit) throws APIManagementException {
-        int returnLimit = 0;
-        SortedSet<API> apiSortedSet = new TreeSet<API>(new APIComparator());
-        try {
-            artifactManager = getArtifactManager(APIConstants.API_KEY);
-            GenericArtifact[] genericArtifacts = artifactManager.getAllGenericArtifacts();
-            if (genericArtifacts == null || genericArtifacts.length == 0) {
-                return apiSortedSet;
-            }
-            for (GenericArtifact genericArtifact : genericArtifacts) {
-                String status = genericArtifact.getAttribute(APIConstants.API_OVERVIEW_STATUS);
-                if (status.equals(APIConstants.PUBLISHED)) {
-                    String artifactPath = genericArtifact.getPath();
-
-                    float rating = registry.getAverageRating(artifactPath);
-                    if (rating > APIConstants.TOP_TATE_MARGIN && (returnLimit < limit)) {
-                        returnLimit++;
-                        apiSortedSet.add(APIUtil.getAPI(genericArtifact, registry));
-                    }
-                }
-            }
-        } catch (RegistryException e) {
-            handleException("Failed to get top rated API", e);
-        }
-        return apiSortedSet;
-    }
-
-    /**
-     * Get recently added APIs to the store
-     *
-     * @param limit if -1, no limit. Return everything else, limit the return list to specified value.
-     * @return set of API
-     * @throws APIManagementException if failed to get recently added APIs
-     */
-    public Set<API> getRecentlyAddedAPIs(int limit) throws APIManagementException {
-
-        int start = 0;
-        SortedSet<API> apiSortedSet = new TreeSet<API>(new APIComparator());
-        Map<Date, GenericArtifact> apiMap = new HashMap<Date, GenericArtifact>();
-        List<Date> dateList = new ArrayList<Date>();
-        try {
-            artifactManager = getArtifactManager(APIConstants.API_KEY);
-            GenericArtifact[] genericArtifact = artifactManager.getAllGenericArtifacts();
-            if (genericArtifact == null || genericArtifact.length == 0) {
-                return apiSortedSet;
-            }
-
-            for (GenericArtifact artifact : genericArtifact) {
-                String status = artifact.getAttribute(APIConstants.API_OVERVIEW_STATUS);
-                if (status.equals(APIConstants.PUBLISHED)) {
-                    String artifactPath = artifact.getPath();
-                    Resource resource = registry.get(artifactPath);
-                    Date createdDate = resource.getCreatedTime();
-                    apiMap.put(createdDate, artifact);
-                    dateList.add(createdDate);
-                }
-            }
-            Collections.sort(dateList);
-            if (limit < dateList.size()) {
-                start = dateList.size() - limit;
-            }
-            for (int i = start; i < dateList.size(); i++) {
-                GenericArtifact genericArtifact1 = apiMap.get(dateList.get(i));
-
-                apiSortedSet.add(APIUtil.getAPI(genericArtifact1, registry));
-            }
-
-        } catch (RegistryException e) {
-            handleException("Failed to get recently added APIs", e);
-        }
-        return apiSortedSet;
-    }
-
-    /**
-     * @return a list of all Tags applied to all APIs published.
-     * @throws APIManagementException if failed to get All the tags
-     */
-    public Set<Tag> getAllTags() throws APIManagementException {
-        Set<Tag> tagSet = new HashSet<Tag>();
-        try {
-            artifactManager = getArtifactManager(APIConstants.API_KEY);
-            GenericArtifact[] genericArtifact = artifactManager.getAllGenericArtifacts();
-
-            if (genericArtifact == null || genericArtifact.length == 0) {
-                return tagSet;
-            }
-            for (GenericArtifact artifact : genericArtifact) {
-                String path = artifact.getPath();
-                org.wso2.carbon.registry.core.Tag[] regTags = registry.getTags(path);
-                String status = artifact.getAttribute(APIConstants.API_OVERVIEW_STATUS);
-                if (status.equals(APIConstants.PUBLISHED) && regTags !=null && regTags.length>0) {
-                        for (org.wso2.carbon.registry.core.Tag regTag : regTags) {
-                            tagSet.add(new Tag(regTag.getTagName()));
-                    }
-                }
-            }
-        } catch (RegistryException e) {
-            handleException("Failed to get all the tags", e);
-        }
-        return tagSet;
-    }
-
-    /**
-     * Rate a particular API. This will be called when subscribers rate an API
-     *
-     * @param apiId  The API identifier
-     * @param rating The rating provided by the subscriber
-     * @throws APIManagementException If an error occurs while rating the API
-     */
-    public void rateAPI(APIIdentifier apiId, APIRating rating) throws APIManagementException {
-        String path = APIUtil.getAPIPath(apiId);
-        try {
-            registry.rateResource(path, rating.getRating());
-        } catch (RegistryException e) {
-            handleException("Failed to rate API : " + path, e);
-        }
-    }
-
-    /**
-     * Search matching APIs for given search terms
-     *
-     * @param searchTerm , name of the search term
-     * @return Set<API>
-     * @throws APIManagementException if failed to get APIs for given search term
-     */
-    public Set<API> searchAPI(String searchTerm) throws APIManagementException {
-        Set<API> apiSet = new HashSet<API>();
-        String regex = "[a-zA-Z0-9_.-|]*" + searchTerm + "[a-zA-Z0-9_.-|]*";
-        Pattern pattern;
-        Matcher matcher;
-        try {
-            artifactManager = getArtifactManager(APIConstants.API_KEY);
-            GenericArtifact[] genericArtifacts = artifactManager
-                    .getAllGenericArtifacts();
-            if (genericArtifacts == null || genericArtifacts.length == 0) {
-                return apiSet;
-            }
-            for (GenericArtifact artifact : genericArtifacts) {
-                String status = artifact
-                        .getAttribute(APIConstants.API_OVERVIEW_STATUS);
-                String apiName = artifact
-                        .getAttribute(APIConstants.API_OVERVIEW_NAME);
-                pattern = Pattern.compile(regex);
-                matcher = pattern.matcher(apiName);
-                if (matcher.matches() && status.equals(APIConstants.PUBLISHED)) {
-                        apiSet.add(APIUtil.getAPI(artifact, registry));
-                }
-            }
-        } catch (RegistryException e) {
-            handleException("Failed to Search APIs", e);
-        }
-        return apiSet;
-    }
-
-    public Set<API> searchAPI(String searchTerm, String searchType) throws APIManagementException {
-        Set<API> apiSet = new HashSet<API>();
-        String regex = "[a-zA-Z0-9_.-|]*" + searchTerm + "[a-zA-Z0-9_.-|]*";
-        Pattern pattern;
-        Matcher matcher;
-        try {
-            artifactManager = getArtifactManager(APIConstants.API_KEY);
-            GenericArtifact[] genericArtifacts = artifactManager
-                    .getAllGenericArtifacts();
-            if (genericArtifacts == null || genericArtifacts.length == 0) {
-                return apiSet;
-            }
-            for (GenericArtifact artifact : genericArtifacts) {
-                String status = artifact
-                        .getAttribute(APIConstants.API_OVERVIEW_STATUS);
-
-                pattern = Pattern.compile(regex);
-
-
-                if (searchType.equals("APIProvider")) {
-                    String api = artifact
-                            .getAttribute(APIConstants.API_OVERVIEW_PROVIDER);
-                    matcher = pattern.matcher(api);
-                } else if (searchType.equals("APIVersion")) {
-                    String api = artifact
-                            .getAttribute(APIConstants.API_OVERVIEW_VERSION);
-                    matcher = pattern.matcher(api);
-                } else if (searchType.equals("APIContext")) {
-                    String api = artifact
-                            .getAttribute(APIConstants.API_OVERVIEW_CONTEXT);
-                    matcher = pattern.matcher(api);
-                } else {
-                    String apiName = artifact
-                            .getAttribute(APIConstants.API_OVERVIEW_NAME);
-                    matcher = pattern.matcher(apiName);
-                }
-                if (matcher.matches() && status.equals(APIConstants.PUBLISHED)) {
-                        apiSet.add(APIUtil.getAPI(artifact, registry));
-                }
-            }
-        } catch (RegistryException e) {
-            handleException("Failed to search APIs with type", e);
-        }
-        return apiSet;
-    }
-
-    /**
-     * Returns a list of APIs purchased by the given Subscriber
-     *
-     * @param subscriber Subscriber
-     * @return Set<API>
-     * @throws APIManagementException if failed to get API for subscriber
-     */
-    public Set<SubscribedAPI> getSubscribedAPIs(Subscriber subscriber) throws APIManagementException {
-        Set<SubscribedAPI> subscribedAPIs = null;
-        try {
-            subscribedAPIs = apiMgtDAO.getSubscribedAPIs(subscriber);
-        } catch (APIManagementException e) {
-            handleException("Failed to get APIs of " + subscriber.getName(), e);
-        }
-        return subscribedAPIs;
-    }
-
-    /**
-     * Get SubscribedAPI set for given subscriber and APIIdentifier
-     *
-     * @param subscriber Subscriber
-     * @param identifier APIIdentifier
-     * @return Set<SubscribedAPI>
-     * @throws APIManagementException if failed to get set of SubscribedAPI of given Subscriber and
-     *                                APIIdentifier
-     */
-    public Set<SubscribedAPI> getSubscribedIdentifiers(Subscriber subscriber, APIIdentifier identifier)
-            throws APIManagementException {
-        Set<SubscribedAPI> subscribedAPISet = new HashSet<SubscribedAPI>();
-        Set<SubscribedAPI> subscribedAPIs = getSubscribedAPIs(subscriber);
-        for (SubscribedAPI api : subscribedAPIs) {
-            if (api.getApiId().equals(identifier)) {
-                subscribedAPISet.add(api);
-            }
-        }
-        return subscribedAPISet;
-    }
-
-    /**
      * returns details of an API
      *
      * @param identifier APIIdentifier
@@ -549,53 +130,6 @@ public class APIManagerImpl implements APIManager {
     }
 
     /**
-     * Get a list of all the consumers for all APIs
-     *
-     * @param providerId if of the provider
-     * @return Set<Subscriber>
-     * @throws APIManagementException if failed to get subscribed APIs of given provider
-     */
-    public Set<Subscriber> getSubscribersOfProvider(String providerId)
-            throws APIManagementException {
-
-        Set<Subscriber> subscriberSet = null;
-        try {
-            subscriberSet = apiMgtDAO.getSubscribersOfProvider(providerId);
-        } catch (APIManagementException e) {
-            handleException("Failed to get Subscribers for : " + providerId, e);
-        }
-        return subscriberSet;
-    }
-
-    /**
-     * get details of provider
-     *
-     * @param providerName name of the provider
-     * @return Provider
-     * @throws APIManagementException if failed to get Provider
-     */
-    public Provider getProvider(String providerName) throws APIManagementException {
-        Provider provider = null;
-        String providerPath = RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
-                APIConstants.PROVIDERS_PATH + RegistryConstants.PATH_SEPARATOR + providerName;
-        try {
-            artifactManager = getArtifactManager(APIConstants.PROVIDER_KEY);
-            Resource providerResource = registry.get(providerPath);
-            String artifactId =
-                    providerResource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY);
-            if (artifactId == null) {
-                throw new APIManagementException("artifact it is null");
-            }
-            GenericArtifact providerArtifact = artifactManager.getGenericArtifact(artifactId);
-            provider = APIUtil.getProvider(providerArtifact);
-
-        } catch (RegistryException e) {
-            handleException("Failed to get Provider form : " + providerName, e);
-        }
-        return provider;
-    }
-
-    /**
      * Check the Availability of given APIIdentifier
      *
      * @param identifier APIIdentifier
@@ -615,77 +149,6 @@ public class APIManagerImpl implements APIManager {
             handleException("Failed to check availability of api :" + path, e);
         }
         return availability;
-    }
-
-    /**
-     * @param apiIdentifier APIIdentifier
-     * @return Usage
-     */
-    public Usage getUsageByAPI(APIIdentifier apiIdentifier) {
-        return null;
-    }
-
-    /**
-     * @param providerId if of the provider
-     * @param apiName    name of the API
-     * @return Usage
-     */
-    public Usage getAPIUsageByUsers(String providerId, String apiName) {
-        return null;
-    }
-
-    /**
-     * Shows how a given consumer uses the given API.
-     *
-     * @param apiIdentifier APIIdentifier
-     * @param consumerEmail E-mal Address of consumer
-     * @return Usage
-     */
-    public Usage getAPIUsageBySubscriber(APIIdentifier apiIdentifier, String consumerEmail) {
-        return null;
-    }
-
-    /**
-     * Add new Subscriber
-     *
-     * @param identifier APIIdentifier
-     * @param userId     id of the user
-     * @throws APIManagementException if failed to add subscription details to database
-     */
-    public void addSubscription(APIIdentifier identifier, String userId, int applicationId)
-            throws APIManagementException {
-        apiMgtDAO.addSubscription(identifier, userId, applicationId);
-    }
-
-    /**
-     * Remove a Subscriber
-     *
-     * @param identifier APIIdentifier
-     * @param userId     id of the user
-     * @throws APIManagementException if failed to add subscription details to database
-     */
-    public void removeSubscriber(APIIdentifier identifier, String userId)
-            throws APIManagementException {
-        //TODO @sumedha : implement unsubscription
-    }
-
-    /**
-     * Returns full list of Subscribers of an API
-     *
-     * @param identifier APIIdentifier
-     * @return Set<Subscriber>
-     * @throws APIManagementException if failed to get Subscribers
-     */
-    public Set<Subscriber> getSubscribersOfAPI(APIIdentifier identifier)
-            throws APIManagementException {
-
-        Set<Subscriber> subscriberSet = null;
-        try {
-            subscriberSet = apiMgtDAO.getSubscribersOfAPI(identifier);
-        } catch (APIManagementException e) {
-            handleException("Failed to get subscribers for API : " + identifier.getApiName(), e);
-        }
-        return subscriberSet;
     }
 
     /**
@@ -723,24 +186,6 @@ public class APIManagerImpl implements APIManager {
     }
 
     /**
-     * this method returns the Set<APISubscriptionCount> for given provider and api
-     *
-     * @param identifier APIIdentifier
-     * @return Set<APISubscriptionCount>
-     * @throws APIManagementException if failed to get APISubscriptionCountByAPI
-     */
-    public long getAPISubscriptionCountByAPI(APIIdentifier identifier)
-            throws APIManagementException {
-        long count = 0L;
-        try {
-            count = apiMgtDAO.getAPISubscriptionCountByAPI(identifier);
-        } catch (APIManagementException e) {
-            handleException("Failed to get APISubscriptionCount for: " + identifier.getApiName(), e);            
-        }
-        return count;
-    }
-
-    /**
      * @param username Name of the user
      * @param password Password of the user
      * @return login status
@@ -760,58 +205,6 @@ public class APIManagerImpl implements APIManager {
         //TODO this is not finish
     }
 
-    /**
-     * Returns a list of pre-defined # {@link org.wso2.carbon.apimgt.api.model.Tier} in the system.
-     *
-     * @return Set<Tier>
-     */
-    public Set<Tier> getTiers() {
-        return null;
-    }
-
-    /**
-     * This method is to update the subscriber.
-     *
-     * @throws APIManagementException if failed to update subscription
-     */
-    public void updateSubscriptions(APIIdentifier identifier, String userId, int applicationId)
-            throws APIManagementException {
-        apiMgtDAO.updateSubscriptions(identifier, userId, applicationId);
-    }
-
-    /**
-     * Adds a new API to the Store
-     *
-     * @param api API
-     * @throws APIManagementException if failed to add API
-     */
-    public void addAPI(API api) throws APIManagementException {
-
-        artifactManager = getArtifactManager(APIConstants.API_KEY);
-        try {
-            GenericArtifact genericArtifact =
-                    artifactManager.newGovernanceArtifact(new QName(api.getId().getApiName()));
-            GenericArtifact artifact = APIUtil.createAPIArtifactContent(genericArtifact, api);
-            artifactManager.addGenericArtifact(artifact);
-            String artifactPath = GovernanceUtils.getArtifactPath(registry, artifact.getId());
-            String providerPath = APIUtil.getAPIProviderPath(api.getId());
-            //provider ------provides----> API
-            registry.addAssociation(providerPath, artifactPath, APIConstants.PROVIDER_ASSOCIATION);
-            Set<String> tagSet = api.getTags();
-            if (tagSet != null && tagSet.size() > 0) {
-                for (String tag : tagSet) {
-                    registry.applyTag(artifactPath, tag);
-                }
-            }
-            //Setting context name as property of API
-            Resource resource = registry.get(artifactPath);
-            resource.setProperty(APIConstants.API_CONTEXT_ID, api.getContext());
-            registry.put(artifactPath, resource);
-        } catch (RegistryException e) {
-            handleException("Error while adding API", e);
-        }
-    }
-
     public String addApiThumb(API api, FileItem fileItem) throws RegistryException, IOException,
             APIManagementException, UserStoreException, IdentityException {
         Resource thumb = registry.newResource();
@@ -829,7 +222,7 @@ public class APIManagerImpl implements APIManager {
 
         AuthorizationManager accessControlAdmin = ServiceReferenceHolder.getInstance().
                 getRegistryService().getUserRealm(IdentityUtil.getTenantIdOFUser(
-                        api.getId().getProviderName())).getAuthorizationManager();
+                api.getId().getProviderName())).getAuthorizationManager();
 
         registry.put(thumbPath, thumb);
 
@@ -844,80 +237,6 @@ public class APIManagerImpl implements APIManager {
                 + RegistryConstants.PATH_SEPARATOR + "_system"
                 + RegistryConstants.PATH_SEPARATOR + "governance"
                 + thumbPath;
-    }
-
-    /**
-     * Updates an existing API
-     *
-     * @param api API
-     * @throws APIManagementException if failed to update API
-     */
-    public void updateAPI(API api) throws APIManagementException {
-
-        APIIdentifier apiIdentifier = api.getId();
-        String path = APIUtil.getAPIPath(apiIdentifier);
-        try {
-            Resource resource = registry.get(path);
-            api.setContext(resource.getProperty(APIConstants.API_CONTEXT_ID));
-        } catch (RegistryException e) {
-            handleException("Failed set context id when updating the API", e);
-        }
-        addAPI(api);
-    }
-
-    /**
-     * Create a new version of the <code>api</code>, with version <code>newVersion</code>
-     *
-     * @param api        The API to be copied
-     * @param newVersion The version of the new API
-     * @throws org.wso2.carbon.apimgt.api.model.DuplicateAPIException
-     *          If the API trying to be created already exists
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException
-     *          If an error occurs while trying to create the new version of the API
-     */
-    public void createNewAPIVersion(API api, String newVersion) throws DuplicateAPIException,
-            APIManagementException {
-        String apiSourcePath = APIUtil.getAPIPath(api.getId());
-
-        String targetPath = APIConstants.API_LOCATION + RegistryConstants.PATH_SEPARATOR +
-                api.getId().getProviderName() +
-                RegistryConstants.PATH_SEPARATOR + api.getId().getApiName() +
-                RegistryConstants.PATH_SEPARATOR + newVersion +
-                APIConstants.API_RESOURCE_NAME;
-        try {
-            if (registry.resourceExists(targetPath)) {
-                throw new DuplicateAPIException("API version already exist with version :"
-                        + newVersion);
-            }
-                Resource apiSourceArtifact = registry.get(apiSourcePath);
-                GenericArtifact artifact = artifactManager.getGenericArtifact(
-                        apiSourceArtifact.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY));
-
-                //Create new API version
-                artifact.setId(UUID.randomUUID().toString());
-                artifact.setAttribute(APIConstants.API_OVERVIEW_VERSION, newVersion);
-
-                //Check the status of the existing api,if its not in 'CREATED' status set
-                //the new api status as "CREATED"
-                String status = artifact.getAttribute(APIConstants.API_OVERVIEW_STATUS);
-                if(!status.equals(APIConstants.CREATED)){
-                    artifact.setAttribute(APIConstants.API_OVERVIEW_STATUS, APIConstants.CREATED);
-                }
-                artifactManager.addGenericArtifact(artifact);
-                registry.addAssociation(APIUtil.getAPIProviderPath(api.getId()), targetPath,
-                        APIConstants.PROVIDER_ASSOCIATION);
-
-                // Make sure to unset the isLatest flag on the old version
-                GenericArtifact oldArtifact = artifactManager.getGenericArtifact(
-                        apiSourceArtifact.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY));
-                oldArtifact.setAttribute(APIConstants.API_OVERVIEW_IS_LATEST, "false");
-                artifactManager.updateGenericArtifact(oldArtifact);
-
-        } catch (RegistryException e) {
-            String msg = "Failed to create new version : " + newVersion + " of : "
-                    + api.getId().getApiName();
-            handleException(msg, e);
-        }
     }
 
     /**
@@ -1004,125 +323,6 @@ public class APIManagerImpl implements APIManager {
     }
 
     /**
-     * Removes a given documentation
-     *
-     * @param apiId   APIIdentifier
-     * @param docType the type of the documentation
-     * @param docName name of the document
-     * @throws APIManagementException if failed to remove documentation
-     */
-    public void removeDocumentation(APIIdentifier apiId, String docName, String docType)
-            throws APIManagementException {
-        String docPath = APIUtil.getAPIDocPath(apiId) + docName;
-        try {
-            Association[] associations = registry.getAssociations(docPath,
-                    APIConstants.DOCUMENTATION_KEY);
-            for (Association association : associations) {
-                registry.delete(association.getDestinationPath());
-            }
-        } catch (RegistryException e) {
-            handleException("Failed to delete documentation", e);
-        }
-    }
-
-    /**
-     * Adds Documentation to an API
-     * @param apiId APIIdentifier
-     * @param documentation Documentation
-     * @throws APIManagementException if failed to add documentation
-     */
-    public void addDocumentation(APIIdentifier apiId, Documentation documentation)
-            throws APIManagementException {
-        try {
-            artifactManager = new GenericArtifactManager(registry, APIConstants.DOCUMENTATION_KEY);
-            GenericArtifact artifact =
-                    artifactManager.newGovernanceArtifact(new QName(documentation.getName()));
-            artifactManager.addGenericArtifact(
-                    APIUtil.createDocArtifactContent(artifact, apiId, documentation));
-            String apiPath = APIUtil.getAPIPath(apiId);
-            //Adding association from api to documentation . (API -----> doc)
-            registry.addAssociation(apiPath, artifact.getPath(), APIConstants.DOCUMENTATION_ASSOCIATION);
-
-        } catch (RegistryException e) {
-            handleException("Failed to add documentation", e);
-        }
-    }
-
-    /**
-     * This method used to save the documentation content
-     *
-     * @param identifier, API identifier
-     * @param documentationName, name of the inline documentation
-     * @param  text, content of the inline documentation
-     * @throws APIManagementException if failed to add the document as a resource to registry
-     */
-    public void addDocumentationContent(APIIdentifier identifier, String documentationName, String text)
-            throws APIManagementException {
-
-        String documentationPath = APIUtil.getAPIDocPath(identifier) + documentationName;
-        String contentPath = APIUtil.getAPIDocPath(identifier) + APIConstants.INLINE_DOCUMENT_CONTENT_DIR +
-                RegistryConstants.PATH_SEPARATOR + documentationName;
-        try {
-            Resource docContent = registry.newResource();
-            docContent.setContent(text);
-            registry.put(contentPath, docContent);
-            registry.addAssociation(documentationPath, contentPath,
-                    APIConstants.DOCUMENTATION_CONTENT_ASSOCIATION);
-        } catch (RegistryException e) {
-            String msg = "Failed to add the documentation content of : "
-                    + documentationName + " of API :"+identifier.getApiName();
-            handleException(msg, e);
-        }
-    }
-
-    /**
-     * Updates a given documentation
-     *
-     * @param apiId         APIIdentifier
-     * @param documentation Documentation
-     * @throws APIManagementException if failed to update docs
-     */
-    public void updateDocumentation(APIIdentifier apiId, Documentation documentation)
-            throws APIManagementException {
-        try {
-            addDocumentation(apiId, documentation);
-        } catch (APIManagementException e) {
-            handleException("Failed to update doc", e);
-        }
-    }
-
-    /**
-     * Copies current Documentation into another version of the same API.
-     *
-     * @param toVersion Version to which Documentation should be copied.
-     * @param apiId     id of the APIIdentifier
-     * @throws APIManagementException if failed to copy docs
-     */
-    public void copyAllDocumentation(APIIdentifier apiId, String toVersion)
-            throws APIManagementException {
-
-        String oldVersion = APIUtil.getAPIDocPath(apiId);
-        String newVersion = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
-                apiId.getProviderName() + RegistryConstants.PATH_SEPARATOR + apiId.getApiName() +
-                RegistryConstants.PATH_SEPARATOR + toVersion + RegistryConstants.PATH_SEPARATOR +
-                APIConstants.DOC_DIR;
-
-        try {
-            Resource resource = registry.get(oldVersion);
-            if (resource instanceof Collection) {
-                String[] docsPaths = ((Collection) resource).getChildren();
-
-                for (String docPath : docsPaths) {
-                    registry.copy(docPath, newVersion);
-                }
-            }
-        } catch (RegistryException e) {
-            handleException("Failed to copy docs to new version : " + newVersion, e);
-        }
-
-    }
-
-    /**
      * Get the Subscriber from access token
      *
      * @param accessToken Subscriber key
@@ -1132,62 +332,6 @@ public class APIManagerImpl implements APIManager {
      */
     public Subscriber getSubscriberById(String accessToken) throws APIManagementException {
         return apiMgtDAO.getSubscriberById(accessToken);
-    }
-
-    /**
-     * Get the Subscriber from access token
-     *
-     * @param accessToken AccessToken
-     * @param context  Context
-     * @return Subscriber
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException
-     *          if failed to get Subscriber from access token
-     */
-    public Subscriber getSubscriberByAccessToken(String accessToken,String context)
-            throws APIManagementException {
-        return apiMgtDAO.getSubscriberByAccessToken(accessToken,context);
-    }
-
-    /**
-     * @param identifier Api identifier
-     * @param s          comment text
-     * @throws APIManagementException if failed to add comment for API
-     */
-    public void addComment(APIIdentifier identifier, String s) throws APIManagementException {
-        String apiPath = APIUtil.getAPIPath(identifier);
-        Comment comment = new Comment(s);
-        try {
-            registry.addComment(apiPath, comment);
-        } catch (RegistryException e) {
-            handleException("Failed to add comment for api " + apiPath, e);
-        }
-    }
-
-    /**
-     * @param identifier Api identifier
-     * @return Comments
-     * @throws APIManagementException if failed to get comments for identifier
-     */
-    public org.wso2.carbon.apimgt.api.model.Comment[] getComments(APIIdentifier identifier)
-            throws APIManagementException {
-        List<org.wso2.carbon.apimgt.api.model.Comment> commentList =
-                new ArrayList<org.wso2.carbon.apimgt.api.model.Comment>();
-        Comment[] comments;
-        String apiPath = APIUtil.getAPIPath(identifier);
-        try {
-            comments = registry.getComments(apiPath);
-            for (Comment comment : comments) {
-                org.wso2.carbon.apimgt.api.model.Comment comment1 =
-                        new org.wso2.carbon.apimgt.api.model.Comment();
-                comment1.setText(comment.getText());
-                comment1.setUser(comment.getUser());
-                commentList.add(comment1);
-            }
-            return commentList.toArray(new org.wso2.carbon.apimgt.api.model.Comment[commentList.size()]);
-        } catch (RegistryException e) {
-            handleException("Failed to get comments for api " + apiPath, e);
-        }
-        return null;
     }
 
     /**
@@ -1240,86 +384,6 @@ public class APIManagerImpl implements APIManager {
         }
         return available;
     }
-
-    /**
-     * Returns true if a given user has subscribed to the API
-     *
-     * @param apiIdentifier APIIdentifier
-     * @param userId        user id
-     * @return true, if giving api identifier is already subscribed
-     * @throws APIManagementException if failed to check the subscribed state
-     */
-    public boolean isSubscribed(APIIdentifier apiIdentifier, String userId)
-            throws APIManagementException {
-        boolean isSubscribed;
-        try {
-            isSubscribed = apiMgtDAO.isSubscribed(apiIdentifier, userId);
-        } catch (APIManagementException e) {
-            String msg = "Failed to check if user(" + userId + ") has subscribed to " + apiIdentifier;
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
-        }
-        return isSubscribed;
-    }
-
-    /**
-     * @param providerName Name of the API provider
-     * @return An array of UserApplicationAPIUsage instances
-     */
-    public UserApplicationAPIUsage[] getAllAPIUsageByProvider(
-            String providerName) throws APIManagementException {
-        return apiMgtDAO.getAllAPIUsageByProvider(providerName);
-    }
-
-    /**
-     * This method returns the set of APIs for given subscriber
-     *
-     * @param subscriber subscriber A valid Subscriber instance
-     * @return Set<API> A Set of APIs associated with the subscriber
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException
-     *          if failed to get SubscribedAPIs
-     */
-    public Set<API> getSubscriberAPIs(Subscriber subscriber) throws APIManagementException {
-        SortedSet<API> apiSortedSet = new TreeSet<API>(new APIComparator());
-        Set<SubscribedAPI> subscribedAPIs = apiMgtDAO.getSubscribedAPIs(subscriber);
-
-        for (SubscribedAPI subscribedAPI : subscribedAPIs) {
-            String apiPath = APIUtil.getAPIPath(subscribedAPI.getApiId());
-            Resource resource;
-            try {
-                resource = registry.get(apiPath);
-                artifactManager = new GenericArtifactManager(registry, APIConstants.API_KEY);
-                GenericArtifact artifact = artifactManager.getGenericArtifact(
-                        resource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY));
-                API api = APIUtil.getAPI(artifact, registry);
-                apiSortedSet.add(api);
-            } catch (RegistryException e) {
-                String msg = "Failed to get api";
-                throw new APIManagementException(msg, e);
-            }
-        }
-        return apiSortedSet;
-    }
-
-    /**
-     * @param application An Application instance to be added
-     * @param userId Current user ID
-     * @throws APIManagementException on error
-     */
-    public void addApplication(Application application, String userId)
-            throws APIManagementException {
-        apiMgtDAO.addApplication(application, userId);
-    }
-
-    /**
-     * @param subscriber A valid Subscriber instance
-     * @return All applications associated with the provided subscriber
-     * @throws APIManagementException
-     */
-    public Application[] getApplications(Subscriber subscriber) throws APIManagementException {
-        return apiMgtDAO.getApplications(subscriber);
-    }
-
     public void addSubscriber(Subscriber subscriber)
             throws APIManagementException {
         apiMgtDAO.addSubscriber(subscriber);
@@ -1345,15 +409,5 @@ public class APIManagerImpl implements APIManager {
     private void handleException(String msg, Exception e) throws APIManagementException {
         log.error(msg, e);
         throw new APIManagementException(msg, e);
-    }
-
-    /**
-     * This comparator used to order APIs by name.
-     */
-    private class APIComparator implements Comparator<API> {
-
-        public int compare(API api1, API api2) {
-            return api1.getId().getApiName().compareTo(api2.getId().getApiName());
-        }
     }
 }

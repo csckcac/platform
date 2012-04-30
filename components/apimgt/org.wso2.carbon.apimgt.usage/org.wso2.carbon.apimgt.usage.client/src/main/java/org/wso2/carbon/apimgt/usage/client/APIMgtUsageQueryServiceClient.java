@@ -24,6 +24,7 @@ import org.wso2.carbon.apimgt.api.model.API;
 import org.wso2.carbon.apimgt.api.model.APIIdentifier;
 import org.wso2.carbon.apimgt.api.model.Subscriber;
 import org.wso2.carbon.apimgt.impl.APIManagerImpl;
+import org.wso2.carbon.apimgt.impl.APIProviderImpl;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIServiceTimeDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUserUsageDTO;
@@ -55,6 +56,7 @@ public class APIMgtUsageQueryServiceClient {
     private QueryServiceStub qss;
 
     private APIManagerImpl apiManagerImpl;
+    private APIProviderImpl apiProviderImpl;
 
     private IndexAdminServiceStub indexAdminStub;
 
@@ -72,6 +74,7 @@ public class APIMgtUsageQueryServiceClient {
         }
         try{
             apiManagerImpl = new APIManagerImpl("admin","admin","https://localhost:9443/");
+            apiProviderImpl = new APIProviderImpl();
         }
         catch (APIManagementException e) {
             throw new APIMgtUsageQueryServiceClientException("Exception while instantiating APIManagerImpl", e);
@@ -351,7 +354,7 @@ public class APIMgtUsageQueryServiceClient {
     private Set<Subscriber> getSubscribersOfAPI(String providerId,String apiName, String version) throws APIMgtUsageQueryServiceClientException{
         Set<Subscriber> subscribers = null;
         try {
-            subscribers = apiManagerImpl.getSubscribersOfAPI(new APIIdentifier(providerId,apiName,version));
+            subscribers = apiProviderImpl.getSubscribersOfAPI(new APIIdentifier(providerId,apiName,version));
         } catch (APIManagementException e) {
             throw new APIMgtUsageQueryServiceClientException("Exception while getting subscribers for provider-api combination", e);
         }
@@ -361,7 +364,7 @@ public class APIMgtUsageQueryServiceClient {
     private List<API> getAPIsByProvider(String providerId) throws APIMgtUsageQueryServiceClientException{
         List<API> apis;
         try {
-            apis = apiManagerImpl.getAPIsByProvider(providerId);
+            apis = apiProviderImpl.getAPIsByProvider(providerId);
         } catch (APIManagementException e) {
             throw new APIMgtUsageQueryServiceClientException("Exception while retrieving APIs by provider", e);
         }

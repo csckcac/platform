@@ -42,7 +42,9 @@ import org.wso2.carbon.apimgt.api.model.Subscriber;
 import org.wso2.carbon.apimgt.api.model.Tier;
 import org.wso2.carbon.apimgt.api.model.URITemplate;
 import org.wso2.carbon.apimgt.hostobjects.utils.APIHostObjectUtil;
+import org.wso2.carbon.apimgt.impl.APIConsumerImpl;
 import org.wso2.carbon.apimgt.impl.APIManagerImpl;
+import org.wso2.carbon.apimgt.impl.APIProviderImpl;
 import org.wso2.carbon.apimgt.usage.client.APIMgtUsageQueryServiceClient;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIServiceTimeDTO;
@@ -89,6 +91,8 @@ public class APIProviderHostObject extends ScriptableObject {
 
     static boolean logStatus = false;
     static APIManagerImpl apiManagerImpl;
+    static APIProviderImpl apiProviderImpl;
+    static APIConsumerImpl apiConsumerImpl;
 
     public static boolean jsFunction_login(Context cx, Scriptable thisObj,
                                            Object[] args,
@@ -100,6 +104,8 @@ public class APIProviderHostObject extends ScriptableObject {
             if (!logStatus) {
                 try {
                     apiManagerImpl = hostObjectUtil.getApiManager();
+                    apiProviderImpl = hostObjectUtil.getApiProvider();
+                    apiConsumerImpl = hostObjectUtil.getApiConsumer();
                 } catch (APIManagementException e) {
                     log.error("Error from registry while while login the user", e);
                 }
@@ -200,13 +206,13 @@ public class APIProviderHostObject extends ScriptableObject {
             api.setStatus(APIStatus.CREATED);
             api.setContext(context);
 
-            apiManagerImpl.addAPI(api);
+            apiProviderImpl.addAPI(api);
             success = true;
             FileItem fi = getThumbFile(req);
 
             if (fi != null) {
                 api.setThumbnailUrl(apiManagerImpl.addApiThumb(api, fi));
-                apiManagerImpl.updateAPI(api);
+                apiProviderImpl.updateAPI(api);
             }
 
         } catch (APIManagementException e) {
@@ -325,13 +331,13 @@ public class APIProviderHostObject extends ScriptableObject {
             api.setWsdlUrl(wsdl);
             api.setLastUpdated(new Date());
 
-            apiManagerImpl.updateAPI(api);
+            apiProviderImpl.updateAPI(api);
 
             FileItem fi = getThumbFile(req);
 
             if (fi != null) {
                 api.setThumbnailUrl(apiManagerImpl.addApiThumb(api, fi));
-                apiManagerImpl.updateAPI(api);
+                apiProviderImpl.updateAPI(api);
             }
             success = true;
 
@@ -386,7 +392,7 @@ public class APIProviderHostObject extends ScriptableObject {
         try {
             API api = apiManagerImpl.getAPI(apiId);
 
-            Set<Subscriber> subs = apiManagerImpl.getSubscribersOfAPI(apiId);
+            Set<Subscriber> subs = apiProviderImpl.getSubscribersOfAPI(apiId);
 
             Set<URITemplate> uritemplates = api.getUriTemplates();
 
@@ -465,7 +471,7 @@ public class APIProviderHostObject extends ScriptableObject {
         String providerName = (String) args[0];
         if (providerName != null) {
             try {
-                List<API> apiList = apiManagerImpl.getAPIsByProvider(providerName);
+                List<API> apiList = apiProviderImpl.getAPIsByProvider(providerName);
                 Iterator it = apiList.iterator();
                 int i = 0;
                 while (it.hasNext()) {
@@ -478,7 +484,7 @@ public class APIProviderHostObject extends ScriptableObject {
                     row.put("version", row, apiIdentifier.getVersion());
                     row.put("status", row, checkValue(api.getStatus().toString()));
                     row.put("thumb", row, api.getThumbnailUrl());
-                    row.put("subs", row, apiManagerImpl.getSubscribersOfAPI(api.getId()).size());
+                    row.put("subs", row, apiProviderImpl.getSubscribersOfAPI(api.getId()).size());
 
                     myn.put(i, myn, row);
                     i++;
@@ -507,7 +513,7 @@ public class APIProviderHostObject extends ScriptableObject {
             }
             userName = (String) args[0];
             Subscriber subscriber = new Subscriber(userName);
-            Set<API> apiSet = apiManagerImpl.getSubscriberAPIs(subscriber);
+            Set<API> apiSet = apiConsumerImpl.getSubscriberAPIs(subscriber);
             Iterator it = apiSet.iterator();
             int i = 0;
             while (it.hasNext()) {
@@ -546,7 +552,7 @@ public class APIProviderHostObject extends ScriptableObject {
             }
             providerName = (String) args[0];
             if (providerName != null) {
-                UserApplicationAPIUsage[] apiUsages = apiManagerImpl.getAllAPIUsageByProvider(providerName);
+                UserApplicationAPIUsage[] apiUsages = apiProviderImpl.getAllAPIUsageByProvider(providerName);
                 for (int i = 0; i < apiUsages.length; i++) {
 
                     NativeObject row = new NativeObject();
@@ -695,7 +701,7 @@ public class APIProviderHostObject extends ScriptableObject {
         docContent = args[4].toString();
         APIIdentifier apiId = new APIIdentifier(providerName, apiName,
                                                 version);
-        apiManagerImpl.addDocumentationContent(apiId, docName, docContent);
+        apiProviderImpl.addDocumentationContent(apiId, docName, docContent);
 
 
     }
@@ -727,7 +733,7 @@ public class APIProviderHostObject extends ScriptableObject {
         doc.setSummary(summary);
         doc.setSourceUrl(sourceURL);
         try {
-            apiManagerImpl.addDocumentation(apiId, doc);
+            apiProviderImpl.addDocumentation(apiId, doc);
             success = true;
         } catch (APIManagementException e) {
             log.error("Error from registry while adding the document :" + docName + "for the api :" + apiName + "-" + version, e);
@@ -751,7 +757,7 @@ public class APIProviderHostObject extends ScriptableObject {
         APIIdentifier apiId = new APIIdentifier(providerName, apiName, version);
 
         try {
-            apiManagerImpl.removeDocumentation(apiId, docName, docType);
+            apiProviderImpl.removeDocumentation(apiId, docName, docType);
             success = true;
         } catch (APIManagementException e) {
             log.error("Error from registry while removing the document :" + docName + "for the api :" + apiName + "-" + version, e);
@@ -777,7 +783,7 @@ public class APIProviderHostObject extends ScriptableObject {
         APIIdentifier apiId = new APIIdentifier(providerName, apiName, version);
         API api = new API(apiId);
         try {
-            apiManagerImpl.createNewAPIVersion(api, newVersion);
+            apiProviderImpl.createNewAPIVersion(api, newVersion);
             success = true;
         } catch (APIManagementException e) {
             log.error("Error from registry while creating a new api version: " + newVersion, e);
@@ -808,7 +814,7 @@ public class APIProviderHostObject extends ScriptableObject {
         APIIdentifier apiId = new APIIdentifier(providerName, apiName, version);
         Set<Subscriber> subscribers;
         try {
-            subscribers = apiManagerImpl.getSubscribersOfAPI(apiId);
+            subscribers = apiProviderImpl.getSubscribersOfAPI(apiId);
             Iterator it = subscribers.iterator();
             int i = 0;
             while (it.hasNext()) {

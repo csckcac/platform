@@ -52,7 +52,7 @@
             </values>
         </field>
         <field type="options">
-            <name label="Tier Availability">Tier Availability</name>
+            <name label="Tier Availability">Tier</name>
             <values>
                 <value>Gold</value>
                 <value>Silver</value>

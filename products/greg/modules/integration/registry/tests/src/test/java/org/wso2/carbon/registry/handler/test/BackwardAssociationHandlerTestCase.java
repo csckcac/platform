@@ -66,6 +66,7 @@ public class BackwardAssociationHandlerTestCase {
             throws ResourceAdminServiceExceptionException, RemoteException,
             AddAssociationRegistryExceptionException,
             GetAssociationTreeRegistryExceptionException {
+        log.info("############## testBackwardAssociation started ...###################");
         String sourceResource = "/_system/associationResource/testFileSource";
         String targetResource = "/_system/associationResource/testFileTarget";
         ResourceAdminServiceStub resourceAdminServiceStub =
@@ -75,11 +76,13 @@ public class BackwardAssociationHandlerTestCase {
 
         resourceAdminServiceStub.addTextResource("/_system/associationResource",
                 "testFileSource", "plain/text", "testDESC", "testContent");
+        log.info("######sourceResource:"+sourceResource);
         assertNotNull(resourceAdminServiceStub.getResourceData(new String[]{sourceResource}),
                 "Resource data is null");
 
         resourceAdminServiceStub.addTextResource("/_system/associationResource",
                 "testFileTarget", "plain/text", "testDESC", "testContent");
+        log.info("######targetResource:"+targetResource);
         assertNotNull(resourceAdminServiceStub.getResourceData(new String[]{targetResource}),
                 "Resource data is null");
 
@@ -88,13 +91,15 @@ public class BackwardAssociationHandlerTestCase {
 
         AssociationTreeBean associationTreeBeanSourceFile = relationAdminServiceStub.getAssociationTree(
                 sourceResource, "calls");
-
+        log.info("###### associationTreeBean-SourceFile: "+associationTreeBeanSourceFile.getAssociationTree());
         assertTrue(associationTreeBeanSourceFile.getAssociationTree().contains(targetResource),
                 "Association not available");
         AssociationTreeBean associationTreeBeanTargetFile = relationAdminServiceStub.getAssociationTree(
                 targetResource, "calledBy");
+        log.info("###### associationTreeBean-TargetFile: "+associationTreeBeanTargetFile.getAssociationTree());
         assertTrue(associationTreeBeanTargetFile.getAssociationTree().contains(targetResource),
                 "Association not available");
+        log.info("###### associationTreeBean-TargetFile: "+associationTreeBeanTargetFile.getAssociationTree());
         assertEquals(associationTreeBeanTargetFile.getAssoType(), "calledBy", "Association type mismatch");
 
         //remove resources after test execution

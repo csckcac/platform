@@ -31,6 +31,8 @@
                         <include>**/*TestServerManager.java</include>
                         <include>**/**TestCase.java</include>
                         <!--<include>**/*SchemaTestCase.java</include>-->
+                        <!--<include>**/*BackwardAssociationHandlerTestCase.java</include>-->
+                        <!--<include>**/*WSDLTestCase.java</include>-->
                     </includes>
 
                     <systemProperties>

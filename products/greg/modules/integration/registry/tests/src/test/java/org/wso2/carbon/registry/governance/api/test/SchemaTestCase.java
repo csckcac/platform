@@ -17,6 +17,8 @@ package org.wso2.carbon.registry.governance.api.test;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -34,6 +36,7 @@ import java.net.URL;
 public class SchemaTestCase {
 
     private Registry registry;
+    private static final Log log = LogFactory.getLog(SchemaTestCase.class);
 
     @BeforeClass(groups = {"wso2.greg"})
     public void initTest() {
@@ -48,6 +51,7 @@ public class SchemaTestCase {
 
     @Test(groups = {"wso2.greg"})
     public void testAddSchema() throws Exception {
+        log.info("############## testAddSchema started ...###################");
         SchemaManager schemaManager = new SchemaManager(registry);
 
         Schema schema = schemaManager.newSchema("http://svn.wso2.org/repos/wso2/trunk/graphite/components/governance/org.wso2.carbon.governance.api/src/test/resources/test-resources/xsd/purchasing.xsd");
@@ -86,13 +90,13 @@ public class SchemaTestCase {
         Schema[] schemas = schemaManager.findSchemas(new SchemaFilter() {
             public boolean matches(Schema schema) throws GovernanceException {
                 if (schema.getAttribute("version").equals("0.01")) {
-                    System.out.println(">>>>> " + schema.getQName().toString());
+                    log.info("########Schema name" + schema.getQName().toString()+ "  schemaID : "+ schema.getId());
                     return true;
                 }
                 return false;
             }
         });
-        System.out.println(">>>>> Schema Len:" + schemas.length);
+        log.info("########Schema Len:" + schemas.length);
         Assert.assertEquals(schemas.length, 2);
         Assert.assertEquals(newSchema.getId(), schemas[0].getId());
 

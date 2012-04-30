@@ -18,6 +18,8 @@ package org.wso2.carbon.registry.governance.api.test;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -36,6 +38,7 @@ import java.util.List;
 public class WSDLTestCase {
 
     private Registry registry;
+    private static final Log log = LogFactory.getLog(WSDLTestCase.class);
 
     @BeforeClass(groups = {"wso2.greg"})
     public void initTest() {
@@ -50,6 +53,7 @@ public class WSDLTestCase {
 
     @Test(groups = {"wso2.greg"})
     public void testAddWSDL() throws Exception {
+        log.info("############## testAddWSDL started ...###################");
         WsdlManager wsdlManager = new WsdlManager(registry);
 
         Wsdl wsdl = wsdlManager.newWsdl("http://svn.wso2.org/repos/wso2/trunk/graphite/components/governance/org.wso2.carbon.governance.api/src/test/resources/test-resources/wsdl/BizService.wsdl");
@@ -101,6 +105,13 @@ public class WSDLTestCase {
         wsdlManager.updateWsdl(newWsdl);
 
         Schema[] schemas = newWsdl.getAttachedSchemas();
+
+       //test log
+        log.info("####Schemas#####");
+        for(Schema schema:schemas){
+            log.info("#####Schema:"+schemas[0].getId() + " schemaName" + schema.getQName().toString());
+        }
+
         Assert.assertEquals(schemas[schemas.length - 1].getPath(), "/trunk/schemas/org/bar/purchasing_dup/purchasing_dup.xsd");
 
 
@@ -109,12 +120,14 @@ public class WSDLTestCase {
                 Schema[] schemas = wsdl.getAttachedSchemas();
                 for (Schema schema : schemas) {
                     if (schema.getPath().equals("/trunk/schemas/org/bar/purchasing_dup/purchasing_dup.xsd")) {
+                        log.info("###### Matching Schemas name"+ schema.getQName().toString() + "  schemaID:"+schema.getId());
                         return true;
                     }
                 }
                 return false;
             }
         });
+        log.info("WSDL len:"+wsdls.length);
         Assert.assertEquals(wsdls.length, 1);
         Assert.assertEquals(newWsdl.getId(), wsdls[0].getId());
 

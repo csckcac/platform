@@ -45,8 +45,6 @@ public class HandlerGetConfigurationTestCase {
         log.debug("Get Handler Test Initialised");
         loggedInSessionCookie = util.login();
         frameworkPath = FrameworkSettings.getFrameworkPath();
-
-
     }
 
     @Test(groups = {"wso2.greg"})

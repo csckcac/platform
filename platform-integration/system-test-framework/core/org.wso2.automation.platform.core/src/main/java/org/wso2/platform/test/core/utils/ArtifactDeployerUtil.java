@@ -357,18 +357,18 @@ public class ArtifactDeployerUtil {
         FolderTraversar dirTraversar = new FolderTraversar(new File(scenarioConfigDir));
         String[] configDir = dirTraversar.getConfigDirectories();
         for (String aConfigDir : configDir) {
-            copyExtenders(scenarioConfigDir, aConfigDir, productName);
+           copyExtenders(scenarioConfigDir, aConfigDir, productName);
             copyClassesDir(scenarioConfigDir, aConfigDir, productName);
-            copyConfigurationDir(scenarioConfigDir, aConfigDir, productName);
+           // copyConfigurationDir(scenarioConfigDir, aConfigDir, productName);
             deployProxyServices(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
-            deployEndPoints(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
-            deploySequences(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
-            deployLocalEntry(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
-            deployEventSource(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
-            deployPriorityExecutors(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
-            deployMessageStore(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
-            deployMessageProcessor(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
-            deployTaskSheduler(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
+          //  deployEndPoints(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
+        //    deploySequences(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
+         //   deployLocalEntry(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
+         //   deployEventSource(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
+         //   deployPriorityExecutors(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
+          //  deployMessageStore(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
+          //  deployMessageProcessor(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
+          //  deployTaskSheduler(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
         }
         updateSynapseConfig(sessionCookie, backendURL, scenarioConfigDir);//update synapse xml
     }
@@ -635,7 +635,8 @@ public class ArtifactDeployerUtil {
                 URL proxy = new URL("file:///" + scenarioConfigDir + File.separator +
                                     PROXY_SERVICES_DIR + File.separator + aProxyServiceFiles);
                 DataHandler proxyDh = new DataHandler(proxy);
-                proxyAdmin.addProxyService(sessionCookie, proxyDh);
+                EsbEndpointSetter endpointSetter = new EsbEndpointSetter();
+                proxyAdmin.addProxyService(sessionCookie,endpointSetter.setEndpointURL(proxyDh));
             }
         }
     }

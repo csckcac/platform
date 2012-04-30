@@ -1572,9 +1572,6 @@ public class CassandraMessageStore implements MessageStore {
             try {
 
                 Mutator<String> mutator = HFactory.createMutator(keyspace,stringSerializer);
-
-
-
                 String name = queue.getResourceName();
                 LongSerializer ls = LongSerializer.get();
                 mutator.addInsertion(QUEUE_ENTRY_ROW, QUEUE_ENTRY_COLUMN_FAMILY,
@@ -1589,14 +1586,9 @@ public class CassandraMessageStore implements MessageStore {
 
         public void dequeueMessage(TransactionLogResource queue, Long messageId) throws AMQStoreException {
             try {
-
-                Mutator<String> mutator =
-                        HFactory.createMutator(keyspace, stringSerializer);
                 String name = queue.getResourceName();
-
-                mutator.addDeletion(QUEUE_ENTRY_ROW, QUEUE_ENTRY_COLUMN_FAMILY, name,
-                        stringSerializer);
-                mutator.execute();
+                CassandraDataAccessHelper.deleteStringColumnFromRaw(QUEUE_ENTRY_COLUMN_FAMILY,QUEUE_DETAILS_ROW,name,
+                        keyspace);
             } catch (Exception e) {
                 log.error("Error deleting Queue Entry" ,e);
                 throw new AMQStoreException("Error deleting Queue Entry :"

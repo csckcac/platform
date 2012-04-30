@@ -284,6 +284,16 @@ public class CassandraDataAccessHelper {
      */
     public static void addMessageToQueue(String columnFamily , String queue , String messageId ,
                                          byte []message , Keyspace keyspace) throws CassandraDataAccessException {
+
+       if (keyspace == null) {
+            throw new CassandraDataAccessException("Can't add Data , no mutator provided ");
+        }
+
+        if (columnFamily == null || queue == null || messageId== null || message == null) {
+            throw new CassandraDataAccessException("Can't add data with columnFamily = " + columnFamily +
+                    " and queue=" + queue + " message id  = " + messageId + " message = " + message);
+        }
+
         try {
             Mutator<String> mutator = HFactory.createMutator(keyspace,stringSerializer);
             mutator.addInsertion(queue.trim(), columnFamily,
@@ -307,6 +317,15 @@ public class CassandraDataAccessHelper {
      */
     public static void addMappingToRaw(String columnFamily, String row, String cKey, String cValue,
                                        Keyspace keyspace) throws CassandraDataAccessException {
+
+        if (keyspace == null) {
+            throw new CassandraDataAccessException("Can't add Data , no mutator provided ");
+        }
+
+        if (columnFamily == null || row == null || cKey == null) {
+            throw new CassandraDataAccessException("Can't add data with columnFamily = " + columnFamily +
+                    " and rowName=" + row + " key = " + cKey);
+        }
 
         try {
             Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
@@ -332,6 +351,15 @@ public class CassandraDataAccessHelper {
                                        Mutator<String> mutator, boolean execute)
             throws CassandraDataAccessException {
 
+        if (mutator == null) {
+            throw new CassandraDataAccessException("Can't add Data , no mutator provided ");
+        }
+
+        if (columnFamily == null || row == null || cKey == null) {
+            throw new CassandraDataAccessException("Can't add data with columnFamily = " + columnFamily +
+                    " and rowName=" + row + " key = " + cKey);
+        }
+
         try {
             mutator.addInsertion(row, columnFamily,
                     HFactory.createColumn(cKey, cValue.trim(), stringSerializer, stringSerializer));
@@ -354,10 +382,52 @@ public class CassandraDataAccessHelper {
      */
     public static void deleteStringColumnFromRaw(String columnFamily,String row, String key ,Keyspace keyspace)
             throws CassandraDataAccessException {
-         try {
+        if (keyspace == null) {
+            throw new CassandraDataAccessException("Can't delete Data , no keyspace provided ");
+        }
+
+        if (columnFamily == null || row == null || key == null) {
+            throw new CassandraDataAccessException("Can't delete data in columnFamily = " + columnFamily +
+                    " and rowName=" + row + " key = " + key);
+        }
+
+        try {
             Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
             mutator.addDeletion(row, columnFamily, key, stringSerializer);
             mutator.execute();
+        } catch (Exception e) {
+           throw new CassandraDataAccessException("Error while deleting " + key + " from " + columnFamily);
+        }
+    }
+
+
+    /**
+     * Delete a given string column in a raw in a column family
+     * @param columnFamily  ColumnFamily Name
+     * @param row row name
+     * @param key string key to of the column
+     * @param mutator Mutator reference
+     * @param execute execute the deletion ?
+     * @throws CassandraDataAccessException
+     */
+    public static void deleteStringColumnFromRaw(String columnFamily,String row, String key ,Mutator<String> mutator,
+                                                 boolean execute)
+            throws CassandraDataAccessException {
+
+        if (mutator == null) {
+            throw new CassandraDataAccessException("Can't delete Data , no mutator provided ");
+        }
+
+        if (columnFamily == null || row == null || key == null) {
+            throw new CassandraDataAccessException("Can't delete data in columnFamily = " + columnFamily +
+                    " and rowName=" + row + " key = " + key);
+        }
+
+         try {
+            mutator.addDeletion(row, columnFamily, key, stringSerializer);
+             if (execute) {
+                 mutator.execute();
+             }
         } catch (Exception e) {
            throw new CassandraDataAccessException("Error while deleting " + key + " from " + columnFamily);
         }

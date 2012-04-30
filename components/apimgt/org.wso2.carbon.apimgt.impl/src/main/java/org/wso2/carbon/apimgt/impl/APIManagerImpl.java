@@ -162,7 +162,8 @@ public class APIManagerImpl implements APIManager {
 
         Set<String> versionSet = new HashSet<String>();
         String apiPath = RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + APIConstants.API_LOCATION +
-                providerName + RegistryConstants.PATH_SEPARATOR + apiName;
+                RegistryConstants.PATH_SEPARATOR +providerName + RegistryConstants.PATH_SEPARATOR +
+                apiName;
         try {
             Resource resource = registry.get(apiPath);
             if (resource instanceof Collection) {

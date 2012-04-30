@@ -38,7 +38,7 @@
         <module>org.wso2.carbon.mapred.mgt</module>
         <module>org.wso2.carbon.mapred.mgt.ui</module>
         <module>org.wso2.carbon.mapred.jobtracker</module>
-	<module>org.wso2.carbon.hadoop.security.group.mapping</module>
+	<module>org.wso2.carbon.hadoop.security</module>
     </modules>
     
 </project>

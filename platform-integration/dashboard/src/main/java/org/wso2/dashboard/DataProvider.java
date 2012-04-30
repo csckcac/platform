@@ -407,6 +407,7 @@ public class DataProvider {
             while (rst.next()) {
                 JSONObject record = new JSONObject();
                 record.put("build", rst.getString("WA_BUILD_NUMBER"));
+                record.put("startTime", getBuildTime(rst.getInt("WA_BUILD_NUMBER")));
                 record.put(Constant.PASS, getCount(rst.getInt("WA_BUILD_NUMBER"), "PASS"));
                 record.put(Constant.FAIL, getCount(rst.getInt("WA_BUILD_NUMBER"), "FAIL"));
                 record.put(Constant.SKIP, getCount(rst.getInt("WA_BUILD_NUMBER"), "SKIP"));
@@ -741,6 +742,40 @@ public class DataProvider {
         }
         return record;
 
+    }
+
+    private static String getBuildTime(int buildNo) throws SQLException {
+
+        Statement st = null;
+        ResultSet rst = null;
+        String time ="";
+        try {
+            st = connection.createStatement();
+            rst = st.executeQuery("SELECT min(WA_START_TIME) AS START_TIME FROM WA_TEST_SUITE_DETAIL " +
+                                  "WHERE WA_BUILD_NUMBER=" + buildNo);
+
+
+            while (rst.next()) {
+                time = rst.getString("START_TIME").toString();
+
+            }
+        } finally {
+            if (rst != null) {
+                try {
+                    rst.close();
+                } catch (SQLException e) {
+
+                }
+            }
+            if (st != null) {
+                try {
+                    st.close();
+                } catch (SQLException e) {
+
+                }
+            }
+        }
+        return time;
     }
 
     public static JSONObject getTimeHistory(int suite, String testClassName) throws SQLException {

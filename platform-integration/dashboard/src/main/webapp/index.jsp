@@ -225,10 +225,11 @@
                 <table id="table-1">
                     <tr>
                         <th><b>Build</b></th>
+                        <th><b>Time</b></th>
+                        <th><b>Total</b></th>
                         <th><b>Passed</b></th>
                         <th><b>Failed</b></th>
                         <th><b>Skipped</b></th>
-                        <th><b>Total</b></th>
                         <th><b>Success Rate(%)</b></th>
                         <th><b>Duration(min)</b></th>
                     </tr>
@@ -248,6 +249,17 @@
                             </a>
                         </td>
                         <td>
+                            <%=buildData.get("startTime")%>
+
+                        </td>
+                        <td>
+                            <%
+                                int total = (buildData.getInt(Constant.PASS) + buildData.getInt(Constant.FAIL) + buildData.getInt(Constant.SKIP));
+                            %>
+                            <%=total%>
+
+                        </td>
+                        <td>
                             <a href="testCasesByBuild.jsp?build=<%=buildData.get("build")%>&state=PASS"><%=buildData.getString(Constant.PASS)%>
                             </a>
                         </td>
@@ -258,13 +270,6 @@
                         <td>
                             <a href="testCasesByBuild.jsp?build=<%=buildData.get("build")%>&state=SKIP"><%=buildData.getString(Constant.SKIP)%>
                             </a>
-                        </td>
-                        <td>
-                            <%
-                                int total = (buildData.getInt(Constant.PASS) + buildData.getInt(Constant.FAIL) + buildData.getInt(Constant.SKIP));
-                            %>
-                            <%=total%>
-
                         </td>
                         <td>
                             <%

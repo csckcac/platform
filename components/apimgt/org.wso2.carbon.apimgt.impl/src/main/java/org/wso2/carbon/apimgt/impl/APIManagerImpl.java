@@ -1101,11 +1101,7 @@ public class APIManagerImpl implements APIManager {
     public void copyAllDocumentation(APIIdentifier apiId, String toVersion)
             throws APIManagementException {
 
-        String oldVersion = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
-                apiId.getProviderName() + RegistryConstants.PATH_SEPARATOR +
-                apiId.getApiName() + RegistryConstants.PATH_SEPARATOR + apiId.getVersion() +
-                RegistryConstants.PATH_SEPARATOR + APIConstants.DOC_DIR;
-
+        String oldVersion = APIUtil.getAPIDocPath(apiId);
         String newVersion = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
                 apiId.getProviderName() + RegistryConstants.PATH_SEPARATOR + apiId.getApiName() +
                 RegistryConstants.PATH_SEPARATOR + toVersion + RegistryConstants.PATH_SEPARATOR +
@@ -1141,12 +1137,14 @@ public class APIManagerImpl implements APIManager {
     /**
      * Get the Subscriber from access token
      *
-     * @param accessToken
+     * @param accessToken AccessToken
+     * @param context  Context
      * @return Subscriber
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to get Subscriber from access token
      */
-    public Subscriber getSubscriberByAccessToken(String accessToken,String context) throws APIManagementException {
+    public Subscriber getSubscriberByAccessToken(String accessToken,String context)
+            throws APIManagementException {
         return apiMgtDAO.getSubscriberByAccessToken(accessToken,context);
     }
 
@@ -1251,7 +1249,8 @@ public class APIManagerImpl implements APIManager {
      * @return true, if giving api identifier is already subscribed
      * @throws APIManagementException if failed to check the subscribed state
      */
-    public boolean isSubscribed(APIIdentifier apiIdentifier, String userId) throws APIManagementException {
+    public boolean isSubscribed(APIIdentifier apiIdentifier, String userId)
+            throws APIManagementException {
         boolean isSubscribed;
         try {
             isSubscribed = apiMgtDAO.isSubscribed(apiIdentifier, userId);
@@ -1307,7 +1306,8 @@ public class APIManagerImpl implements APIManager {
      * @param userId Current user ID
      * @throws APIManagementException on error
      */
-    public void addApplication(Application application, String userId) throws APIManagementException {
+    public void addApplication(Application application, String userId)
+            throws APIManagementException {
         apiMgtDAO.addApplication(application, userId);
     }
 

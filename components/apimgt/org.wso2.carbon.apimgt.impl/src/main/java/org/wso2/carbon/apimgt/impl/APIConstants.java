@@ -19,9 +19,6 @@
 package org.wso2.carbon.apimgt.impl;
 
 import org.wso2.carbon.registry.core.RegistryConstants;
-import org.wso2.carbon.utils.CarbonUtils;
-
-import java.io.File;
 
 /**
  * This class represents the constants that are used for APIManager implementation
@@ -106,8 +103,8 @@ public final class APIConstants {
     public static final String RXT_PATH = RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
             RegistryConstants.GOVERNANCE_COMPONENT_PATH +
             RegistryConstants.PATH_SEPARATOR + "config";
-    public static final String PUBLISHED = "published";
-    public static final String CREATED = "created";
+    public static final String PUBLISHED = "PUBLISHED";
+    public static final String CREATED = "CREATED";
 
 
     public static class TokenStatus {

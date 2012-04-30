@@ -23,8 +23,8 @@ package org.wso2.carbon.apimgt.api.model;
 @SuppressWarnings("unused")
 public enum APIStatus {
 
-    CREATED("created"), DEPLOYED("deployed"), PUBLISHED("published"),
-    DEPRECATED("deprecated"), RETIRED("retired"), BLOCKED("blocked");
+    CREATED("CREATED"), DEPLOYED("DEPLOYED"), PUBLISHED("PUBLISHED"),
+    DEPRECATED("DEPRECATED"), RETIRED("RETIRED"), BLOCKED("BLOCKED");
 
     private String status;
 

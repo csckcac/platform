@@ -24,7 +24,7 @@ public class APIHostObjectUtil {
 
     public APIManagerImpl getApiManager() throws APIManagementException {
         if(apiManager == null){
-            apiManager = new APIManagerImpl("admin", "admin", "https://localhost:9443/services/");
+            apiManager = new APIManagerImpl();
         }
         return apiManager;
     }

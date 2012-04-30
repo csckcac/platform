@@ -73,7 +73,7 @@ public class APIMgtUsageQueryServiceClient {
             throw new APIMgtUsageQueryServiceClientException("Exception while instantiating QueryServiceStub", e);
         }
         try{
-            apiManagerImpl = new APIManagerImpl("admin","admin","https://localhost:9443/");
+            apiManagerImpl = new APIManagerImpl();
             apiProviderImpl = new APIProviderImpl();
         }
         catch (APIManagementException e) {

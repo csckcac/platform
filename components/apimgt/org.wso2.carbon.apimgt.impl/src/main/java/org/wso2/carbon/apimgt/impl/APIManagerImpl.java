@@ -64,9 +64,7 @@ public class APIManagerImpl implements APIManager {
     private ScheduledExecutorService scheduler;
     private Future keepAliveTask;
 
-    public APIManagerImpl(String user,
-                          String pass,
-                          String remoteAdd) throws APIManagementException {
+    public APIManagerImpl() throws APIManagementException {
         this.registry = getRegistry();
         startKeepAliveTask();
     }

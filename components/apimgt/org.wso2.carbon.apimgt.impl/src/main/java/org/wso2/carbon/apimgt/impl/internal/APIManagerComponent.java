@@ -63,7 +63,7 @@ public class APIManagerComponent {
             addRxtConfigs();
             APIManagerConfiguration configuration = new APIManagerConfiguration();
             String filePath = CarbonUtils.getCarbonHome() + File.separator + "repository" +
-                    File.separator + "conf" + File.separator + "amConfig.xml";
+                    File.separator + "conf" + File.separator + "api-manager.xml";
             configuration.load(filePath);
             APIManagerConfigurationServiceImpl configurationService =
                     new APIManagerConfigurationServiceImpl(configuration);

@@ -30,7 +30,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Global API Manager configuration. This is generally populated from the repository/conf/amConfig.xml
+ * Global API Manager configuration. This is generally populated from a special XML descriptor
  * file at system startup. Once successfully populated, this class does not allow more parameters
  * to be added to the configuration. The design of this class has been greatly inspired by
  * the ServerConfiguration class in Carbon core. This class uses a similar '.' separated
@@ -41,7 +41,15 @@ public class APIManagerConfiguration {
     private Map<String,List<String>> configuration = new ConcurrentHashMap<String, List<String>>();
 
     private boolean initialized;
-    
+
+    /**
+     * Populate this configuration by reading an XML file at the given location. This method
+     * can be executed only once on a given APIManagerConfiguration instance. Once invoked and
+     * successfully populated, it will ignore all subsequent invocations.
+     *
+     * @param filePath Path of the XML descriptor file
+     * @throws APIManagementException If an error occurs while reading the XML descriptor
+     */
     public void load(String filePath) throws APIManagementException {
         if (initialized) {
             return;

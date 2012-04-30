@@ -84,6 +84,23 @@ public class EsbEndpointSetter {
                     endPointElem.addAttribute(attribute2);
                 }
             } else {
+                if (((OMElementImpl) node).getLocalName().equals("target")) {
+                    Iterator nodIterator = ((OMElementImpl) node).getChildElements();
+                    while (nodIterator.hasNext()) {
+                        OMNode loadbalanceNode = (OMNode) nodIterator.next();
+                        if (((OMElementImpl) loadbalanceNode).getLocalName().equals("endpoint")) {
+                            Iterator endpointnode = ((OMElementImpl) loadbalanceNode).getChildElements();
+
+                            OMNode endpoint = (OMNode) endpointnode.next();
+                            String uri = ((OMElementImpl) endpoint).getAttribute(new QName("uri")).getAttributeValue();
+                            attribute = ((OMElementImpl) endpoint).getAttribute(new QName("uri"));
+                            ((OMElementImpl) endpoint).getAttribute(new QName("uri")).setAttributeValue(getUrl(uri));
+                            attribute2 = ((OMElementImpl) endpoint).getAttribute(new QName("uri"));
+                            System.out.println("Proxy Endpoint");
+                        }
+                    }
+                }
+
                 if (((OMElementImpl) node).getLocalName().equals("wsdl")) {
                     String urlValue = ((OMElementImpl) node).getAttribute(new QName("uri")).getAttributeValue();
 
@@ -136,7 +153,7 @@ public class EsbEndpointSetter {
                 }
                 if (codedEndpoint.contains(endpoint)) {
                     String service = endpoint.substring(endpoint.indexOf("services/"));
-                    newEndPoint = productLookup(product) + service;
+                    newEndPoint = "http://" + productLookup(product) + service;
                     endpointFound = true;
                     break;
                 }

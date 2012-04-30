@@ -67,6 +67,9 @@
                             org.apache.axiom.*,
                             *;resolution:=optional,
                         </Import-Package>
+                        <Bundle-Activator>
+                            org.wso2.carbon.mapred.mgt.HadoopJobRunnerActivator
+                        </Bundle-Activator>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
                 </configuration>

@@ -21,7 +21,6 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.testng.Assert;
 import org.wso2.automation.common.test.dss.utils.exception.ConcurrencyTestFailedError;
 import org.wso2.automation.common.test.dss.utils.exception.ExceptionHandler;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
@@ -42,7 +41,7 @@ public class ConcurrencyTest {
             throws ConcurrencyTestFailedError, InterruptedException {
         log.info("Starting Concurrency test with " + concurrencyNumber + " Threads and " + numberOfIterations
                  + " loop count");
-        ExceptionHandler handler = new ExceptionHandler();
+        final ExceptionHandler handler = new ExceptionHandler();
         Thread[] clientThread = new Thread[concurrencyNumber];
         final AxisServiceClient serviceClient = new AxisServiceClient();
         for (int i = 0; i < concurrencyNumber; i++) {
@@ -52,7 +51,7 @@ public class ConcurrencyTest {
                         try {
                             serviceClient.sendReceive(payload, serviceEndPoint, operation);
                         } catch (AxisFault axisFault) {
-                            Assert.fail("AxisFault when getting response. " + axisFault.getMessage());
+                            handler.setException(axisFault);
                         }
                     }
                 }

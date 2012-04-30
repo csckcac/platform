@@ -30,6 +30,11 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
         throwable = e;
         failCount++;
     }
+    
+    public void setException(Throwable e) {
+        throwable = e;
+        failCount++;
+    }
 
     public boolean isTestPass() {
         if (throwable == null) {

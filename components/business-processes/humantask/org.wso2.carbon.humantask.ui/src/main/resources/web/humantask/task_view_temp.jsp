@@ -20,6 +20,7 @@
 <%@ page
         import="org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskAuthorisationParams" %>
 <%@ page import="org.wso2.carbon.humantask.ui.util.HumanTaskUIUtil" %>
+<%@ page import="org.wso2.carbon.CarbonConstants" %>
 <%
     TTaskAbstract task = (TTaskAbstract) request.getAttribute("LoadedTask");
     boolean isNotification = task.getTaskType().equals("NOTIFICATION");
@@ -29,6 +30,8 @@
     String requestJSPContextPath = "/humantaskui/" + task.getTenantId() + "/" + task.getPackageName() + "/" + task.getName().getLocalPart() + "-input.jsp";
     String outputJspContextPath = "/humantaskui/" + task.getTenantId() + "/" + task.getPackageName() + "/" + task.getName().getLocalPart() + "-output.jsp";
     String responseJspContextPath = "/humantaskui/" + task.getTenantId() + "/" + task.getPackageName() + "/" + task.getName().getLocalPart() + "-response.jsp";
+    String taskListLink = HumanTaskUIUtil.getTaskListURL(client);
+    taskListLink = "/carbon" + taskListLink;
 %>
 <fmt:bundle basename="org.wso2.carbon.humantask.ui.i18n.Resources">
 
@@ -52,7 +55,7 @@
 </script>
 
 <div>
-    <a class="backToTaskList" href="" style="display:block;padding:0px 0px 10px 0px"><< Back to Task List</a>
+    <a class="backToTaskList" href="<%=taskListLink%>" style="display:block;padding:0px 0px 10px 0px"><< Back to Task List</a>
     <div class="titleStrip" id="taskSubjectTxt"><div class="titleStripSide">&nbsp;</div></div>
     <div id="errorStrip" style="display:none;"></div>
     <div class="contentPlacer">

@@ -24,6 +24,19 @@ public final class HumanTaskUIConstants {
     }
 
     /**
+     * Client constants.
+     */
+    public final class CLIENTS {
+        private  CLIENTS() {
+        }
+
+        public static final String CARBON = "carbon";
+
+        public static final String GADGET = "gadget";
+
+    }
+
+    /**
      * JSP pages to be referred throughout the ui module.
      */
     public final class PAGES {
@@ -33,6 +46,10 @@ public final class HumanTaskUIConstants {
         public static final String PACKAGE_LIST_PAGE = "/humantask/humantask_definition_list.jsp";
 
         public static final String UPLOAD_PAGE = "/humantask/upload_humantask.jsp";
+
+        public static final String TASK_LIST_PAGE_GADGET = "/humantask/task-list-gadget-ajaxprocessor.jsp";
+
+        public static final String TASK_LIST_PAGE_CARBON = "/humantask/task_list.jsp";
 
     }
 

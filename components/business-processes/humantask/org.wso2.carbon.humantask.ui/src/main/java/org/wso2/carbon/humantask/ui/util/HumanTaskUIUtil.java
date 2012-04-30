@@ -28,6 +28,7 @@ import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskAuthorisatio
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvent;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TTaskEvents;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.types.TUser;
+import org.wso2.carbon.humantask.ui.constants.HumanTaskUIConstants;
 import org.wso2.carbon.utils.xml.XMLPrettyPrinter;
 
 import java.io.ByteArrayInputStream;
@@ -299,8 +300,16 @@ public final class HumanTaskUIUtil {
         InputStream xmlIn = new ByteArrayInputStream(tRawXML.getBytes());
         XMLPrettyPrinter xmlPrettyPrinter = new XMLPrettyPrinter(xmlIn);
         tRawXML = xmlPrettyPrinter.xmlFormat();
-//        rawXML = rawXML.replaceAll("\n", "<br>");
-
         return tRawXML;
+    }
+
+    public static String getTaskListURL(String client) {
+        if(HumanTaskUIConstants.CLIENTS.GADGET.equals(client)) {
+            return  HumanTaskUIConstants.PAGES.TASK_LIST_PAGE_GADGET;
+        } else if (HumanTaskUIConstants.CLIENTS.CARBON.equals(client)) {
+            return  HumanTaskUIConstants.PAGES.TASK_LIST_PAGE_CARBON;
+        }
+
+        return "";
     }
 }

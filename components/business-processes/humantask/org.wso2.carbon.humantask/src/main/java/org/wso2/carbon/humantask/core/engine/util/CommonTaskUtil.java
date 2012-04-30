@@ -338,7 +338,7 @@ public final class CommonTaskUtil {
                         if (OrganizationalEntityDAO.OrganizationalEntityType.GROUP.equals(orgEntity.getOrgEntityType())) {
                             String roleName = orgEntity.getName();
 
-                            if (pqe.getUserNameListForRole(roleName).size() == 1) {
+                            if (pqe.isExistingRole(roleName) && pqe.getUserNameListForRole(roleName).size() == 1) {
                                 // There's only 1 user matching for potential owners. so we can safely reserve the
                                 // task for that particular user.
                                 GenericHumanRoleDAO actualOwnerRole =
@@ -347,9 +347,9 @@ public final class CommonTaskUtil {
                                 actualOwnerRole.setTask(task);
                                 task.addHumanRole(actualOwnerRole);
                                 task.setStatus(TaskStatus.RESERVED);
-                            } else if (pqe.getUserNameListForRole(roleName).size() > 1) {
-                                // this means there are more than 1 user for the given role. we cannot reserve the
-                                //task. So we are making it ready to be claimed.
+                            } else if (pqe.isExistingRole(roleName)) {
+                                // this means there might be more than 1 user or zero users with
+                                // the given role name. In both cases we make the task status to be READY.
                                 task.setStatus(TaskStatus.READY);
                             }
                         }

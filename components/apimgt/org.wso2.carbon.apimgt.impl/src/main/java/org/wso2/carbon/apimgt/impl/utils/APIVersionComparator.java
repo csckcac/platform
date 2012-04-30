@@ -18,6 +18,7 @@ package org.wso2.carbon.apimgt.impl.utils;
 
 import org.wso2.carbon.apimgt.api.model.API;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 /**
@@ -41,7 +42,7 @@ import java.util.Comparator;
  * numbers are compared in the conventional manner and the suffixes are compared
  * lexicographically.</p>
  */
-public class APIVersionComparator implements Comparator<API>{
+public class APIVersionComparator implements Comparator<API> ,Serializable{
 
     public int compare(API api1, API api2) {
         APIVersionTokenizer tokenizer1 = new APIVersionTokenizer(api1.getId().getVersion());

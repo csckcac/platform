@@ -120,7 +120,7 @@
                                         <path refid="h2.classpath"/>
                                     </classpath>
                                     <fileset
-                                            file="/opt/temp-svn/attachment-server/product/db-scripts/h2.sql"/>
+                                            file="${basedir}/target/h2.sql"/>
                                 </sql>
                                 <echo
                                         message="##################### END ########################"/>

@@ -303,7 +303,7 @@
             <fileMode>755</fileMode>
         </file>
         <file>
-            <source>../../../config/amConfig.xml</source>
+            <source>../../../config/api-manager.xml</source>
             <outputDirectory>wso2am-${pom.version}/repository/conf</outputDirectory>
             <filtered>true</filtered>
             <fileMode>755</fileMode>

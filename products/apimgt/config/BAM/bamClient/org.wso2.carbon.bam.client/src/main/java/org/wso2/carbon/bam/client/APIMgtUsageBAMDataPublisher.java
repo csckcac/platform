@@ -48,7 +48,7 @@ public class APIMgtUsageBAMDataPublisher {
 
     private EventReceiver createEventReceiver() throws IOException, XMLStreamException {
 
-        String config = FileUtil.readFileToString(System.getProperty("configFilePath") + "amConfig.xml");
+        String config = FileUtil.readFileToString(System.getProperty("configFilePath") + "api-manager.xml");
 
         OMElement omElement = AXIOMUtil.stringToOM(config);
 

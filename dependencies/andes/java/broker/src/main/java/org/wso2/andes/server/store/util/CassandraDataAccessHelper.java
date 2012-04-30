@@ -194,6 +194,44 @@ public class CassandraDataAccessHelper {
         return rowList;
     }
 
+    /**
+     * Get set of messages in a column family
+     * @param queueName QueueName
+     * @param columnFamilyName ColumnFamilyName
+     * @param keyspace  Cassandra KeySpace
+     * @param count  max message count limit
+     * @return  ColumnSlice which contain the messages
+     * @throws CassandraDataAccessException
+     */
+    public static ColumnSlice<String, byte[]> getMessagesFromQueue(String queueName,
+                                                            String columnFamilyName, Keyspace keyspace,
+                                                            int count) throws CassandraDataAccessException {
+        if (keyspace == null) {
+            throw new CassandraDataAccessException("Can't access Data , no keyspace provided ");
+        }
+
+        if(columnFamilyName == null || queueName == null) {
+            throw new CassandraDataAccessException("Can't access data with columnFamily = " + columnFamilyName +
+                    " and queueName=" + queueName);
+        }
+
+        try {
+            SliceQuery<String, String, byte[]> sliceQuery =
+                    HFactory.createSliceQuery(keyspace, stringSerializer, stringSerializer, bytesArraySerializer);
+            sliceQuery.setKey(queueName);
+            sliceQuery.setRange("", "", false, count);
+            sliceQuery.setColumnFamily(columnFamilyName);
+
+
+            QueryResult<ColumnSlice<String, byte[]>> result = sliceQuery.execute();
+            ColumnSlice<String, byte[]> columnSlice = result.get();
+
+            return columnSlice;
+        } catch (Exception e) {
+            throw new CassandraDataAccessException("Error while getting data from " + columnFamilyName);
+        }
+    }
+
 
     /**
      * Add Message to a Given Queue in Cassandra

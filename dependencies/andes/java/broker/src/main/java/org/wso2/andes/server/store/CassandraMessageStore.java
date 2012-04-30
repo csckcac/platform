@@ -165,7 +165,7 @@ public class CassandraMessageStore implements MessageStore {
     }
 
     public List<QueueEntry> getMessagesFromUserQueue(AMQQueue queue,
-                                                     int messageCount) {
+                                                     int messageCount) throws AMQStoreException {
 
 
         List<QueueEntry> messages = null;
@@ -174,18 +174,8 @@ public class CassandraMessageStore implements MessageStore {
         String key = queue.getResourceName()+"_" + clusterManager.getNodeId();
         try {
             messages = new ArrayList<QueueEntry>();
-
-            BytesArraySerializer bs = BytesArraySerializer.get();
-            SliceQuery<String, String, byte[]> sliceQuery =
-                    HFactory.createSliceQuery(keyspace, stringSerializer, stringSerializer, bs);
-            sliceQuery.setKey(key.trim());
-            sliceQuery.setRange("", "", false, messageCount);
-            sliceQuery.setColumnFamily(USER_QUEUES_COLUMN_FAMILY);
-
-
-            QueryResult<ColumnSlice<String, byte[]>> result = sliceQuery.execute();
-            ColumnSlice<String, byte[]> columnSlice = result.get();
-
+            ColumnSlice<String,byte[]> columnSlice = CassandraDataAccessHelper.getMessagesFromQueue(key,
+                    USER_QUEUES_COLUMN_FAMILY,keyspace,messageCount);
             for (Object column : columnSlice.getColumns()) {
                 if (column instanceof HColumn) {
                     String columnName = ((HColumn<String, byte[]>) column).getName();
@@ -203,11 +193,9 @@ public class CassandraMessageStore implements MessageStore {
                 }
             }
         } catch (NumberFormatException e) {
-            e.printStackTrace();
-            log.error(e);
+            throw new AMQStoreException("Error while accessing user queue" + key,e);
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error(e);
+            throw new AMQStoreException("Error while accessing user queue" + key,e);
         }
 
 
@@ -222,25 +210,15 @@ public class CassandraMessageStore implements MessageStore {
      * @param messageCount max message count
      * @return  List of Messages
      */
-    public List<CassandraQueueMessage> getMessagesFromUserQueue(String  userQueue,String globalQueue , int messageCount) {
+    public List<CassandraQueueMessage> getMessagesFromUserQueue(String  userQueue,String globalQueue,
+                                                                int messageCount) {
 
         List<CassandraQueueMessage> messages = new ArrayList<CassandraQueueMessage>();
 
         ClusterManager clusterManager = ClusterResourceHolder.getInstance().getClusterManager();
         try {
-
-            LongSerializer ls = LongSerializer.get();
-            BytesArraySerializer bs = BytesArraySerializer.get();
-            SliceQuery<String, String, byte[]> sliceQuery =
-                    HFactory.createSliceQuery(keyspace, stringSerializer, stringSerializer, bs);
-            sliceQuery.setKey(userQueue.trim());
-            sliceQuery.setRange("", "", false, messageCount);
-            sliceQuery.setColumnFamily(USER_QUEUES_COLUMN_FAMILY);
-
-
-            QueryResult<ColumnSlice<String, byte[]>> result = sliceQuery.execute();
-            ColumnSlice<String, byte[]> columnSlice = result.get();
-
+            ColumnSlice<String, byte[]> columnSlice = CassandraDataAccessHelper.getMessagesFromQueue(userQueue.trim(),
+                    USER_QUEUES_COLUMN_FAMILY,keyspace,messageCount);
             long maxId = 0;
 
             for (Object column : columnSlice.getColumns()) {
@@ -275,16 +253,8 @@ public class CassandraMessageStore implements MessageStore {
     public int getMessageCountOfGlobalQueue(String queueName) {
         int messageCount =0;
         try {
-            BytesArraySerializer bs = BytesArraySerializer.get();
-            SliceQuery<String, String, byte[]> sliceQuery =
-                    HFactory.createSliceQuery(keyspace, stringSerializer, stringSerializer, bs);
-            sliceQuery.setKey(queueName.trim());
-            sliceQuery.setRange("", "", false, Integer.MAX_VALUE);
-            sliceQuery.setColumnFamily(GLOBAL_QUEUES_COLUMN_FAMILY);
-
-
-            QueryResult<ColumnSlice<String, byte[]>> result = sliceQuery.execute();
-            ColumnSlice<String, byte[]> columnSlice = result.get();
+            ColumnSlice<String, byte[]> columnSlice = CassandraDataAccessHelper.getMessagesFromQueue(queueName.trim(),
+                    GLOBAL_QUEUES_COLUMN_FAMILY,keyspace,Integer.MAX_VALUE);
 
             messageCount = columnSlice.getColumns().size();
         } catch (NumberFormatException e) {
@@ -297,30 +267,18 @@ public class CassandraMessageStore implements MessageStore {
 
     /**
      * Get List of messages from a given Global queue
-     *
      * @param queueName    Global queue Name
      * @param messageCount Number of messages that must be fetched.
      * @return List of Messages.
      */
     public Queue<CassandraQueueMessage> getMessagesFromGlobalQueue(String queueName,
-                                                                   int messageCount) {
+                                                                   int messageCount) throws AMQStoreException {
         Queue<CassandraQueueMessage> messages = null;
 
         try {
             messages = new LinkedList<CassandraQueueMessage>();
-
-
-            BytesArraySerializer bs = BytesArraySerializer.get();
-            SliceQuery<String, String, byte[]> sliceQuery =
-                    HFactory.createSliceQuery(keyspace,stringSerializer,stringSerializer, bs);
-            sliceQuery.setKey(queueName.trim());
-            sliceQuery.setRange("", "", false, messageCount);
-            sliceQuery.setColumnFamily(GLOBAL_QUEUES_COLUMN_FAMILY);
-
-
-            QueryResult<ColumnSlice<String, byte[]>> result = sliceQuery.execute();
-            ColumnSlice<String, byte[]> columnSlice = result.get();
-
+            ColumnSlice<String,byte[]> columnSlice = CassandraDataAccessHelper.getMessagesFromQueue(queueName.trim(),
+                    GLOBAL_QUEUES_COLUMN_FAMILY,keyspace,messageCount);
             for (Object column : columnSlice.getColumns()) {
                 if (column instanceof HColumn) {
                     String messageId = ((HColumn<String, byte[]>) column).getName();
@@ -331,31 +289,22 @@ public class CassandraMessageStore implements MessageStore {
                 }
             }
         } catch (NumberFormatException e) {
-           log.error("Number format error in getting messages from global queue : "+ queueName,e );
+           throw new AMQStoreException("Number format error in getting messages from global queue : "+ queueName,e );
         } catch (Exception e) {
-            log.error("Error in getting messages from global queue: "+ queueName ,e);
+            throw new AMQStoreException("Error in getting messages from global queue: "+ queueName ,e);
         }
 
 
         return messages;
     }
-    public List<QueueEntry> getMessagesFromGlobalQueue(long subscriptionID, AMQQueue queue,
-                                                     AMQProtocolSession session, int messageCount) {
+    public List<QueueEntry> getMessagesFromGlobalQueue(AMQQueue queue,
+                                                     AMQProtocolSession session, int messageCount) throws AMQStoreException {
         List<QueueEntry> messages = null;
         SimpleQueueEntryList list = new SimpleQueueEntryList(queue);
         try {
             messages = new ArrayList<QueueEntry>();
-
-            BytesArraySerializer bs = BytesArraySerializer.get();
-            SliceQuery<String, String, byte[]> sliceQuery =
-                    HFactory.createSliceQuery(keyspace,stringSerializer,stringSerializer, bs);
-            sliceQuery.setKey(queue.getName().trim());
-            sliceQuery.setRange("", "", false, messageCount);
-            sliceQuery.setColumnFamily(GLOBAL_QUEUES_COLUMN_FAMILY);
-
-
-            QueryResult<ColumnSlice<String, byte[]>> result = sliceQuery.execute();
-            ColumnSlice<String, byte[]> columnSlice = result.get();
+            ColumnSlice<String, byte[]> columnSlice = CassandraDataAccessHelper.
+                    getMessagesFromQueue(queue.getName().trim(), GLOBAL_QUEUES_COLUMN_FAMILY, keyspace, messageCount);
             long maxId = 0;
 
             for (Object column : columnSlice.getColumns()) {
@@ -382,10 +331,8 @@ public class CassandraMessageStore implements MessageStore {
                     messages.add(list.add(amqMessage));
                 }
             }
-        } catch (NumberFormatException e) {
-            log.error(e);
         } catch (Exception e) {
-            log.error(e);
+           throw new AMQStoreException("Error while getting messages from queue : "  + queue ,e);
         }
 
 

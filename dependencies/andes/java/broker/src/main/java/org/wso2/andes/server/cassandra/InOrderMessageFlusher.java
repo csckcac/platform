@@ -19,6 +19,7 @@ package org.wso2.andes.server.cassandra;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.andes.AMQStoreException;
 import org.wso2.andes.server.ClusterResourceHolder;
 import org.wso2.andes.server.protocol.AMQProtocolSession;
 import org.wso2.andes.server.queue.AMQQueue;
@@ -65,30 +66,34 @@ public class InOrderMessageFlusher {
     public void send() {
                 CassandraMessageStore messageStore = ClusterResourceHolder.getInstance().
                         getCassandraMessageStore();
-                List<QueueEntry> messages = messageStore.
-                        getMessagesFromGlobalQueue(subscription.getSubscriptionID(), queue, session, messageCount);
-                if (messages.size() > 0) {
-                    for (QueueEntry message : messages) {
-                        try {
-                            if (subscription instanceof SubscriptionImpl.AckSubscription) {
-                                //Here we need to get the lock of relevant Channel in order to keep the
-                                //proper order in deliveryTagId
-                                synchronized (((SubscriptionImpl.AckSubscription) subscription).
-                                        getChannel()) {
-                                    subscription.send(message);
+        try {
+            List<QueueEntry> messages = messageStore.
+                    getMessagesFromGlobalQueue(queue, session, messageCount);
+            if (messages.size() > 0) {
+                for (QueueEntry message : messages) {
+                    try {
+                        if (subscription instanceof SubscriptionImpl.AckSubscription) {
+                            //Here we need to get the lock of relevant Channel in order to keep the
+                            //proper order in deliveryTagId
+                            synchronized (((SubscriptionImpl.AckSubscription) subscription).
+                                    getChannel()) {
+                                subscription.send(message);
 
-                                    messageStore.removeMessageFromGlobalQueue(queue.getName(),
-                                            message.getMessage().getMessageNumber() + "");
-                                }
+                                messageStore.removeMessageFromGlobalQueue(queue.getName(),
+                                        message.getMessage().getMessageNumber() + "");
                             }
-
-
-                        } catch (Exception e) {
-                            log.error("Unexpected Error in Message Flusher Task " +
-                                    "while delivering the message : ", e);
                         }
+
+
+                    } catch (Exception e) {
+                        log.error("Unexpected Error in Message Flusher Task " +
+                                "while delivering the message : ", e);
                     }
                 }
+            }
+        } catch (AMQStoreException e) {
+            log.error("Error while sending messages ",e);
+        }
     }
 
 

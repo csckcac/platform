@@ -19,6 +19,7 @@ package org.wso2.andes.server.cassandra;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.andes.AMQStoreException;
 import org.wso2.andes.server.ClusterResourceHolder;
 import org.wso2.andes.server.protocol.AMQProtocolSession;
 import org.wso2.andes.server.queue.AMQQueue;
@@ -63,31 +64,33 @@ public class QueueBrowserFlusher extends Thread {
     }
 
 
-    public void send() {
+    public void send(){
 
         //Todo get messages from both user queue and the global queue
         CassandraMessageStore messageStore = ClusterResourceHolder.getInstance().
                 getCassandraMessageStore();
         /* List<QueueEntry> messages = messageStore.
      getMessagesFromGlobalQueue(subscription.getSubscriptionID(), queue, session, messageCount);*/
-        List<QueueEntry> messages = messageStore.
-                getMessagesFromUserQueue(queue, messageCount);
-        int messageCount = 0;
-        if (messages.size() > 0) {
-            for (QueueEntry message : messages) {
-                try {
-                    if (subscription instanceof SubscriptionImpl.BrowserSubscription) {
-                        subscription.send(message);
-                        messageCount++;
-                    }
+        try {
+            List<QueueEntry> messages = messageStore.
+                    getMessagesFromUserQueue(queue, messageCount);
+            if (messages.size() > 0) {
+                for (QueueEntry message : messages) {
+                    try {
+                        if (subscription instanceof SubscriptionImpl.BrowserSubscription) {
+                            subscription.send(message);
+                        }
 
-                } catch (Exception e) {
-                    log.error("Unexpected Error in Message Flusher Task " +
-                            "while delivering the message : ", e);
+                    } catch (Exception e) {
+                        log.error("Unexpected Error in Message Flusher Task " +
+                                "while delivering the message : ", e);
+                    }
                 }
+                // It is essential to confirm auto close , since in the client side it waits to know the end of the messages
+                subscription.confirmAutoClose();
             }
-            // It is essential to confirm auto close , since in the client side it waits to know the end of the messages
-            subscription.confirmAutoClose();
+        } catch (AMQStoreException e) {
+            log.error("Error while sending message for Browser subscription",e);
         }
     }
 

@@ -33,6 +33,7 @@ import org.wso2.carbon.humantask.core.store.HumanTaskBaseConfiguration;
 import org.wso2.carbon.humantask.core.store.TaskConfiguration;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.UserRealm;
+import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 
 import javax.xml.namespace.QName;
 import java.util.*;
@@ -80,6 +81,9 @@ public class JobProcessorImpl implements Scheduler.JobProcessor {
         log.info("ON DEADLINE: " + " : now: " + new Date());
         TaskDAO task = HumanTaskServiceComponent.getHumanTaskServer().getDaoConnectionFactory().
                 getConnection().getTask(taskId);
+
+        CarbonContextHolder.getThreadLocalCarbonContextHolder().setTenantId(task.getTenantId());
+
         TaskConfiguration taskConf = (TaskConfiguration) HumanTaskServiceComponent.getHumanTaskServer().
                 getTaskStoreManager().getHumanTaskStore(task.getTenantId()).
                 getTaskConfiguration(QName.valueOf(task.getName()));
@@ -201,9 +205,6 @@ public class JobProcessorImpl implements Scheduler.JobProcessor {
                         log.error(errMsg);
                         throw new Scheduler.JobProcessorException(errMsg);
                     }
-
-                    HumanTaskServiceComponent.getHumanTaskServer().getTaskEngine().
-                            getPeopleQueryEvaluator().isExistingRole(roleName);
 
                     if (!isExistingRole(roleName, task.getTenantId())) {
                         log.warn("Role name " + roleName + " does not exist for tenant id" + task.getTenantId());

@@ -59,8 +59,16 @@
                 <value>Other</value>
             </values>
         </field>
-        <field type="text" required="true">
-            <name>Status</name>
+        <field type="options">
+            <name label="Status">Status</name>
+            <values>
+                <value>CREATED</value>
+                <value>DEPLOYED</value>
+                <value>PUBLISHED</value>
+                <value>RETIRED</value>
+                <value>DEPRECATED</value>
+                <value>BLOCKED</value>
+            </values>
         </field>
     </table>
     <table name="UriTemplates">            

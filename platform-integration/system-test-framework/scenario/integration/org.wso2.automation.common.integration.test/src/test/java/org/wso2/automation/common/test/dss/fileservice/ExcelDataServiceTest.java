@@ -26,6 +26,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.wso2.automation.common.test.dss.utils.ConcurrencyTest;
+import org.wso2.automation.common.test.dss.utils.exception.ConcurrencyTestFailedError;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
 import org.wso2.automation.common.test.dss.utils.DataServiceTest;
 
@@ -46,7 +48,7 @@ public class ExcelDataServiceTest extends DataServiceTest {
             OMElement result = new AxisServiceClient().sendReceive(payload, serviceEndPoint, "getProducts");
             log.info("Response :" + result);
             Assert.assertTrue((result.toString().indexOf("Products") == 1), "Expected Result Not found");
-            Assert.assertTrue(result.toString().contains("<Product>") , "Expected Result Not found");
+            Assert.assertTrue(result.toString().contains("<Product>"), "Expected Result Not found");
             Assert.assertTrue(result.toString().contains("<ID>"), "Expected Result Not found");
             Assert.assertTrue(result.toString().contains("<Name>"), "Expected Result Not found");
 
@@ -61,7 +63,9 @@ public class ExcelDataServiceTest extends DataServiceTest {
         OMElement payload = fac.createOMElement("getProductClassifications", omNs);
         for (int i = 0; i < 5; i++) {
             OMElement result = new AxisServiceClient().sendReceive(payload, serviceEndPoint, "getProductClassifications");
-            log.info("Response :" + result);
+            if (log.isDebugEnabled()) {
+                log.debug("Response :" + result);
+            }
             Assert.assertTrue((result.toString().indexOf("Products") == 1), "Expected Result Not found");
             Assert.assertTrue(result.toString().contains("<Product>"), "Expected Result Not found");
             Assert.assertTrue(result.toString().contains("<Product-Name>"), "Expected Result Not found");
@@ -71,5 +75,13 @@ public class ExcelDataServiceTest extends DataServiceTest {
         log.info("XSLT Transformation Success");
     }
 
+    @Test(priority = 2, dependsOnMethods = {"selectOperation"}, timeOut = 1000 * 60 * 1)
+    public void concurrencyTest() throws ConcurrencyTestFailedError, InterruptedException {
+        OMFactory fac = OMAbstractFactory.getOMFactory();
+        OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice", "ns1");
+        OMElement payload = fac.createOMElement("getProducts", omNs);
+        ConcurrencyTest concurrencyTest = new ConcurrencyTest(25, 20);
+        concurrencyTest.run(serviceEndPoint, payload, "getProducts");
+    }
 
 }

@@ -26,6 +26,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.wso2.automation.common.test.dss.utils.ConcurrencyTest;
+import org.wso2.automation.common.test.dss.utils.exception.ConcurrencyTestFailedError;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
 import org.wso2.automation.common.test.dss.utils.DataServiceTest;
 
@@ -52,6 +54,15 @@ public class GSpreadDataServiceTest extends DataServiceTest {
 
         }
         log.info("Service Invocation success");
+    }
+
+    @Test(priority = 2, dependsOnMethods = {"selectOperation"}, timeOut = 1000 * 60 * 2)
+    public void concurrencyTest() throws ConcurrencyTestFailedError, InterruptedException {
+        OMFactory fac = OMAbstractFactory.getOMFactory();
+        OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice/samples/gspread_sample_service", "ns1");
+        OMElement payload = fac.createOMElement("getCustomers", omNs);
+        ConcurrencyTest concurrencyTest = new ConcurrencyTest(25, 5);
+        concurrencyTest.run(serviceEndPoint, payload, "getProducts");
     }
 
 }

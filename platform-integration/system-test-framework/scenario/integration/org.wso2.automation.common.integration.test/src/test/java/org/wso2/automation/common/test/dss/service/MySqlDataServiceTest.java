@@ -26,6 +26,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.wso2.automation.common.test.dss.utils.ConcurrencyTest;
+import org.wso2.automation.common.test.dss.utils.exception.ConcurrencyTestFailedError;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
 import org.wso2.automation.common.test.dss.utils.DataServiceTest;
 
@@ -80,6 +82,13 @@ public class MySqlDataServiceTest extends DataServiceTest {
         }
         log.info("Delete operation success");
     }
+
+    @Test(priority = 6, dependsOnMethods = {"selectOperation"})
+        public void concurrencyTest() throws ConcurrencyTestFailedError, InterruptedException {
+            ConcurrencyTest concurrencyTest = new ConcurrencyTest(25, 20);
+            OMElement payload = fac.createOMElement("customersInBoston", omNs);
+            concurrencyTest.run(serviceEndPoint, payload, "customersInBoston");
+        }
 
 
     private void getCustomerInBoston(String serviceEndPoint) throws AxisFault {

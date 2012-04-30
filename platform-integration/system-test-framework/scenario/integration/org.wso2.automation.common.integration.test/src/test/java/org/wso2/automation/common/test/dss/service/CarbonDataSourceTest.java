@@ -29,6 +29,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.commons.datasource.DataSourceInformation;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.wso2.automation.common.test.dss.utils.ConcurrencyTest;
+import org.wso2.automation.common.test.dss.utils.exception.ConcurrencyTestFailedError;
 import org.wso2.carbon.admin.service.DataServiceAdminService;
 import org.wso2.carbon.admin.service.DataSourceAdminService;
 import org.wso2.carbon.admin.service.RSSAdminConsoleService;
@@ -136,6 +138,13 @@ public class CarbonDataSourceTest extends DataServiceTest {
     public void deleteService() throws ServiceAdminException, RemoteException {
         deleteService(serviceName);
         log.info(serviceName + " Deleted");
+    }
+
+    @Test(priority = 8, dependsOnMethods = {"selectOperation"})
+    public void concurrencyTest() throws ConcurrencyTestFailedError, InterruptedException {
+        ConcurrencyTest concurrencyTest = new ConcurrencyTest(25, 20);
+        OMElement payload = fac.createOMElement("customersInBoston", omNs);
+        concurrencyTest.run(serviceEndPoint, payload, "customersInBoston");
     }
 
 
@@ -246,11 +255,11 @@ public class CarbonDataSourceTest extends DataServiceTest {
             return new DataHandler(dbs);
 
         } catch (XMLStreamException e) {
-            log.error("XMLStreamException when Reading Service File" , e);
-            throw new XMLStreamException("XMLStreamException when Reading Service File" , e);
+            log.error("XMLStreamException when Reading Service File", e);
+            throw new XMLStreamException("XMLStreamException when Reading Service File", e);
         } catch (IOException e) {
-            log.error("IOException when Reading Service File" , e);
-            throw new IOException("IOException  when Reading Service File" , e);
+            log.error("IOException when Reading Service File", e);
+            throw new IOException("IOException  when Reading Service File", e);
         }
     }
 

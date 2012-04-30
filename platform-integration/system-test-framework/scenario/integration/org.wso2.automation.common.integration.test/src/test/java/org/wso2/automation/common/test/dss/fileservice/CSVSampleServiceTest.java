@@ -64,7 +64,7 @@ public class CSVSampleServiceTest extends DataServiceTest {
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice/samples/csv_sample_service", "ns1");
         OMElement payload = fac.createOMElement("getProducts", omNs);
-        ConcurrencyTest concurrencyTest = new ConcurrencyTest(20, 25);
+        ConcurrencyTest concurrencyTest = new ConcurrencyTest(25, 20);
         concurrencyTest.run(serviceEndPoint, payload, "getProducts");
     }
 }

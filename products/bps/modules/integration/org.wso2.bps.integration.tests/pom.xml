@@ -39,11 +39,11 @@
                         <include>**/*TestCase.java</include>
                     </includes>
                     <suiteXmlFiles>
-                        <suiteXmlFile>src/test/conf/testng1.xml</suiteXmlFile>
-                        <suiteXmlFile>src/test/conf/testng2.xml</suiteXmlFile>
-                        <suiteXmlFile>src/test/conf/testng3.xml</suiteXmlFile>
-                        <suiteXmlFile>src/test/conf/testng4.xml</suiteXmlFile>
-                        <suiteXmlFile>src/test/conf/testng5.xml</suiteXmlFile>
+                        <suiteXmlFile>src/test/conf/bps-deployment-tests.xml</suiteXmlFile>
+                        <suiteXmlFile>src/test/conf/bps-cleanup-tests.xml</suiteXmlFile>
+                        <suiteXmlFile>src/test/conf/bps-security-tests.xml</suiteXmlFile>
+                        <suiteXmlFile>src/test/conf/bps-bpel-operation-tests.xml</suiteXmlFile>
+                        <suiteXmlFile>src/test/conf/bps-humantask-operation-tests.xml</suiteXmlFile>
                     </suiteXmlFiles>
                     <systemProperties>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>

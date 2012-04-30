@@ -27,7 +27,6 @@
     <artifactId>org.wso2.carbon.billing.core</artifactId>
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - Billing Core</name>
-    <version>4.0.0-SNAPSHOT</version>
 
     <build>
 

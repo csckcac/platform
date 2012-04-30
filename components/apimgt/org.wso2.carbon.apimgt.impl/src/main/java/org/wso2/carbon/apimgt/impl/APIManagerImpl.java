@@ -161,7 +161,7 @@ public class APIManagerImpl implements APIManager {
             throws APIManagementException {
 
         Set<String> versionSet = new HashSet<String>();
-        String apiPath = RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + APIConstants.API_LOCATION +
+        String apiPath = APIConstants.API_LOCATION +
                 RegistryConstants.PATH_SEPARATOR +providerName + RegistryConstants.PATH_SEPARATOR +
                 apiName;
         try {

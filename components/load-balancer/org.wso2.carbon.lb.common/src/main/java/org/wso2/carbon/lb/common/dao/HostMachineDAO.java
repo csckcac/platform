@@ -108,6 +108,36 @@ public class HostMachineDAO extends AbstractDAO{
     }
 
     /**
+     * Make the host machine available when the resources of the host machine is not enough for
+     * creating the largest possible container. This request comes if container creation call
+     * to agent manager returns false.
+     * @param endPoint
+     * @throws SQLException
+     */
+    public void makeAvailable(String endPoint) throws SQLException {
+        try{
+            Class.forName(driver);
+            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
+            statement = con.createStatement();
+            String sql =  "UPDATE host_machine SET available=false WHERE epr='" + endPoint + "'";
+                            statement.executeUpdate(sql);
+                            //make host machine unavailable
+        }catch (SQLException s){
+           String msg = "Error while deleting container data" + s.getMessage();
+           log.error(msg);
+           throw new SQLException(s + msg);
+        }catch (ClassNotFoundException s){
+           String msg = "Error while sql connection :" + s.getMessage();
+           log.error(msg);
+           throw new SQLException(msg);
+        }
+        finally {
+            try { if (statement != null) statement.close(); } catch(SQLException e) {}
+            try { if (con != null) con.close(); } catch(Exception e) {}
+        }
+    }
+
+    /**
      * This returns true if the input epr is exist in the database. This will be called to check if
      * the input epr is already there before inserting a new host machine.
      * @param endPoint
@@ -226,6 +256,7 @@ public class HostMachineDAO extends AbstractDAO{
         HashMap containerToAgentMap = new HashMap<String, String>();
         ResultSet resultSetForContainer = null;
         ResultSet resultSetForBridge = null;
+        Statement statementForBridge = null;
         try{
             Class.forName(driver);
             con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
@@ -235,8 +266,9 @@ public class HostMachineDAO extends AbstractDAO{
             while(resultSetForContainer.next()){
                 String containerId = resultSetForContainer.getString("container_id");
                 String  bridgeIp = resultSetForContainer.getString("bridge");
-                sql =  "SELECT host_machine FROM bridge" ;
-                resultSetForBridge = statement.executeQuery(sql);
+                statementForBridge = con.createStatement();
+                sql =  "SELECT host_machine FROM bridge WHERE bridge_ip='" + bridgeIp +"'"  ;
+                resultSetForBridge = statementForBridge.executeQuery(sql);
                 String hostMachineEpr = null;
                 if(resultSetForBridge.next()){
                     hostMachineEpr = resultSetForBridge.getString("host_machine");
@@ -253,8 +285,8 @@ public class HostMachineDAO extends AbstractDAO{
             throw new SQLException(msg);
         }
         finally {
-            try { if (resultSetForContainer != null) resultSetForContainer.close(); } catch(Exception e) {}
             try { if (resultSetForBridge != null) resultSetForBridge.close(); } catch(Exception e) {}
+            try { if (resultSetForContainer != null) resultSetForContainer.close(); } catch(Exception e) {}
             try { if (statement != null) statement.close(); } catch(SQLException e) {}
             try { if (con != null) con.close(); } catch(Exception e) {}
         }
@@ -296,6 +328,5 @@ public class HostMachineDAO extends AbstractDAO{
         }
         return eprToContainerRootMap;
     }
-
 
 }

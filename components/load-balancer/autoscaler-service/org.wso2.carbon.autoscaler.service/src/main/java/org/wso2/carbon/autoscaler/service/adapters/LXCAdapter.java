@@ -60,7 +60,7 @@ public class LXCAdapter extends Adapter {
 				if (agentPersistenceManager.isHostMachinesAvailableInDomain(domainName)) {
 	
 					ContainerInformation container = agentManagementService.pickAContainer(domainName);
-
+                    container.setContainerId(instanceId);
 					int numOfPossibleAgents = 1; // TODO get this parameter from the database?
 					return tryToStartInstance(domainName, instanceId, numOfPossibleAgents , container);
 					

@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- *  This class handles the database access relevant to zone resource plan data
+ *  This class handles the database access relevant to zone and domain data
  *
  */
 public class ZoneDAO extends AbstractDAO{
@@ -120,6 +120,41 @@ public class ZoneDAO extends AbstractDAO{
             isExist = resultSet.next();
         }catch (SQLException s){
             String msg = "SQL statement is not executed for zone exist !";
+            log.error(msg);
+            throw new SQLException(s);
+        }catch (ClassNotFoundException s){
+            String msg = "DB connection not successful !";
+            log.error(msg);
+            throw new SQLException(msg);
+        }
+        finally {
+            try { if (resultSet != null) resultSet.close(); } catch(Exception e) {}
+            try { if (statement != null) statement.close(); } catch(SQLException e) {}
+            try { if (con != null) con.close(); } catch(Exception e) {}
+        }
+        return isExist;
+    }
+
+
+    /**
+     * This is for checking availability of domain
+     * @param domain
+     * @return whether the domain is in the database
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     */
+    public boolean isDomainExist(String domain) throws SQLException {
+        boolean isExist = false;
+        ResultSet resultSet = null;
+        try{
+            Class.forName(driver);
+            con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
+            statement = con.createStatement();
+            String sql =  "SELECT 1 FROM domain WHERE domain_name='" + domain + "'";
+            resultSet = statement.executeQuery(sql);
+            isExist = resultSet.next();
+        }catch (SQLException s){
+            String msg = "SQL statement is not executed for domain exist !";
             log.error(msg);
             throw new SQLException(s);
         }catch (ClassNotFoundException s){

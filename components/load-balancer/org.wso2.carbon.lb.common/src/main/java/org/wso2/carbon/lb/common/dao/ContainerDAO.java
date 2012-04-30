@@ -284,16 +284,16 @@ public class ContainerDAO extends AbstractDAO{
      * creating the container physically. This method use 'getAvailableHostMachine' and 'getAvailableIp'
      * for information gathering.
      *
-     * @param zone
+     * @param domain
      * @throws Exception
      */
 
 
-    public ContainerInformation retrieveAvailableContainerInformation(String zone)
+    public ContainerInformation retrieveAvailableContainerInformation(String domain)
             throws SQLException {
 
         ContainerInformation containerInformation = new ContainerInformation();
-        HostMachine hostMachine = getAvailableHostMachine(zone);
+        HostMachine hostMachine = getAvailableHostMachine(domain);
         containerInformation.setEpr(hostMachine.getEpr());
         Bridge[] bridges = hostMachine.getBridges();
         String bridgeIp = bridges[0].getBridgeIp();

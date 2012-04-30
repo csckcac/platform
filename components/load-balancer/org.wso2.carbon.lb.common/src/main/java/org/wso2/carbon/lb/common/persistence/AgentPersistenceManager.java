@@ -70,16 +70,22 @@ public class    AgentPersistenceManager {
         ContainerDAO containerDAO = new ContainerDAO();
         containerDAO.changeState(containerName, state);
     }
-    public ContainerInformation retrieveAvailableContainerInformation(String zone)
+    public ContainerInformation retrieveAvailableContainerInformation(String domain)
             throws SQLException {
         ContainerDAO containerDAO = new ContainerDAO();
-        return containerDAO.retrieveAvailableContainerInformation(zone);
+        return containerDAO.retrieveAvailableContainerInformation(domain);
     }
 
     public boolean isZoneExist(String zone) throws SQLException {
         ZoneDAO zoneDAO = new ZoneDAO();
         return zoneDAO.isZoneExist(zone);
     }
+    public boolean isDomainExist(String domain) throws SQLException {
+        ZoneDAO zoneDAO = new ZoneDAO();
+        return zoneDAO.isDomainExist(domain);
+    }
+
+
     public boolean updateDomainConfigs(String zone, String[] domains) throws SQLException {
         ZoneDAO zoneDAO = new ZoneDAO();
         return zoneDAO.update(zone, domains);

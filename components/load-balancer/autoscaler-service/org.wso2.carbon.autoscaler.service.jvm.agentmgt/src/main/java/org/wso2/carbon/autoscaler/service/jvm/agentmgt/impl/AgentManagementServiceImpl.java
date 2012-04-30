@@ -125,16 +125,17 @@ public class AgentManagementServiceImpl implements IAgentManagementService {
     }
 
 
-    public ContainerInformation pickAContainer(String zone)
+    public ContainerInformation pickAContainer(String domain)
             throws AgentNotFoundException, ClassNotFoundException, SQLException {
         ContainerInformation containerInformation = new ContainerInformation();
 
                 AgentPersistenceManager agentPersistenceManager
                         = AgentPersistenceManager.getPersistenceManager();
-                if(agentPersistenceManager.isZoneExist(zone)){
-                    containerInformation = agentPersistenceManager.retrieveAvailableContainerInformation(zone);
+                if(agentPersistenceManager.isDomainExist(domain)){//Domain exist check
+                    containerInformation = agentPersistenceManager.retrieveAvailableContainerInformation(domain);
+
                 }else {
-                    String msg = "Requested zone is not exist !";
+                    String msg = "Requested domain is not exist !";
                     log.error(msg);
                 }
         return containerInformation;

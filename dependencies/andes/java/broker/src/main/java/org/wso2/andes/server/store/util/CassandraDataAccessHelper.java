@@ -234,6 +234,46 @@ public class CassandraDataAccessHelper {
 
 
     /**
+     * Get Number of <String,String> type columns in a given row in a cassandra column family
+     * @param rowName row Name we are querying for
+     * @param columnFamilyName columnFamilName
+     * @param keyspace
+     * @param count
+     * @return
+     */
+    public static ColumnSlice<String, String> getStringTypeColumnsInARow(String rowName,
+                                                                         String columnFamilyName,
+                                                                         Keyspace keyspace,int count)
+            throws CassandraDataAccessException {
+
+        if (keyspace == null) {
+            throw new CassandraDataAccessException("Can't access Data , no keyspace provided ");
+        }
+
+        if (columnFamilyName == null || rowName == null) {
+            throw new CassandraDataAccessException("Can't access data with columnFamily = " + columnFamilyName +
+                    " and rowName=" + rowName);
+        }
+
+
+        try {
+            SliceQuery sliceQuery = HFactory.createSliceQuery(keyspace, stringSerializer,
+                    stringSerializer, stringSerializer);
+            sliceQuery.setKey(rowName);
+            sliceQuery.setColumnFamily(columnFamilyName);
+            sliceQuery.setRange("", "", false, count);
+
+            QueryResult<ColumnSlice<String, String>> result = sliceQuery.execute();
+            ColumnSlice<String, String> columnSlice = result.get();
+
+            return columnSlice;
+        } catch (Exception e) {
+            throw new CassandraDataAccessException("Error while getting data from : " + columnFamilyName);
+        }
+    }
+
+
+    /**
      * Add Message to a Given Queue in Cassandra
      * @param columnFamily ColumnFamily name
      * @param queue  queue name

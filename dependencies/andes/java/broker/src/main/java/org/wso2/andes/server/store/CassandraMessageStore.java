@@ -444,20 +444,15 @@ public class CassandraMessageStore implements MessageStore {
         return keyspace;
     }
 
-    private int getUserQueueCount(String qpidQueueName) {
+    private int getUserQueueCount(String qpidQueueName) throws AMQStoreException {
         int queueCount = 0;
         try {
-            SliceQuery sliceQuery = HFactory.createSliceQuery(keyspace,stringSerializer,
-                    stringSerializer, stringSerializer);
-            sliceQuery.setKey(qpidQueueName);
-            sliceQuery.setColumnFamily(GLOBAL_QUEUE_TO_USER_QUEUE_COLUMN_FAMILY);
-            sliceQuery.setRange("", "", false, 1000);
-
-            QueryResult<ColumnSlice<String, String>> result = sliceQuery.execute();
-            ColumnSlice<String, String> columnSlice = result.get();
+            ColumnSlice<String, String> columnSlice = CassandraDataAccessHelper.
+                    getStringTypeColumnsInARow(qpidQueueName, GLOBAL_QUEUE_TO_USER_QUEUE_COLUMN_FAMILY, keyspace,
+                            Integer.MAX_VALUE);
             queueCount = columnSlice.getColumns().size();
         } catch (Exception e) {
-            log.error("Error in getting user queue count",e);
+            throw new AMQStoreException("Error in getting user queue count",e);
         }
         return queueCount;
     }
@@ -858,7 +853,7 @@ public class CassandraMessageStore implements MessageStore {
                     GLOBAL_QUEUE_LIST_ROW, keyspace);
             return globalQueues;
         } catch (Exception e) {
-            log.error("Error in getting global queues" ,e);
+            log.error("Error in getting global queues", e);
             throw e;
         }
     }
@@ -976,7 +971,7 @@ public class CassandraMessageStore implements MessageStore {
                 }
 
             } catch (Exception e) {
-                log.error("Error in retriving message ids of the queue",e);
+                log.error("Error in retriving message ids of the queue", e);
             }
             return queueList;
         }
@@ -1170,35 +1165,23 @@ public class CassandraMessageStore implements MessageStore {
 
         try {
 
-            // Retriving multiple rows with Range Slice Query
-            SliceQuery<String, String, String> sliceQuery =
-                    HFactory.createSliceQuery(keyspace, stringSerializer, stringSerializer,
-                            stringSerializer);
-            sliceQuery.setKey("QUEUE_DETAILS");
-            sliceQuery.setRange("", "", false, 100);
-            sliceQuery.setColumnFamily(QUEUE_DETAILS_COLUMN_FAMILY);
-
-            QueryResult<ColumnSlice<String, String>> result = sliceQuery.execute();
-            ColumnSlice<String, String> columnSlice = result.get();
-
-            long maxId = 0;
-
+            // Retrieving multiple rows with Range Slice Query
+            ColumnSlice<String,String> columnSlice = CassandraDataAccessHelper.
+                    getStringTypeColumnsInARow(QUEUE_DETAILS_ROW,QUEUE_DETAILS_COLUMN_FAMILY,keyspace,Integer.MAX_VALUE);
             for (Object column : columnSlice.getColumns()) {
                 if (column instanceof HColumn) {
                     String columnName = ((HColumn<String, String>) column).getName();
                     String value = ((HColumn<String, String>) column).getValue();
-                    String stringValue = new String(value);
                     String[] valuesFields = value.split("|");
                     String owner = valuesFields[1];
                     boolean isExclusive = Boolean.parseBoolean(valuesFields[2]);
-
                     vhcs.queue(columnName, owner, isExclusive, null);
 
 
                 }
             }
-        } catch (NumberFormatException e) {
-            log.error("Error in queue synchronization" ,e);
+        } catch (Exception e) {
+            throw new AMQStoreException("Error in queue synchronization" ,e);
         }
 
 
@@ -1211,40 +1194,22 @@ public class CassandraMessageStore implements MessageStore {
         try {
 
 
-            Mutator<String>    mutator = HFactory.createMutator(keyspace,stringSerializer);
-
-
-
             // Retriving multiple rows with Range Slice Query
-            SliceQuery<String, String, String> sliceQuery = HFactory.createSliceQuery(keyspace,
-                    stringSerializer,stringSerializer,stringSerializer);
-            sliceQuery.setKey("QUEUE_DETAILS");
-            sliceQuery.setRange("", "", false, 100);
-            sliceQuery.setColumnFamily(QUEUE_DETAILS_COLUMN_FAMILY);
-
-            QueryResult<ColumnSlice<String, String>> result = sliceQuery.execute();
-            ColumnSlice<String, String> columnSlice = result.get();
-
-            long maxId = 0;
-
+            ColumnSlice<String, String> columnSlice = CassandraDataAccessHelper.
+                    getStringTypeColumnsInARow(QUEUE_DETAILS_ROW,QUEUE_DETAILS_COLUMN_FAMILY,keyspace,
+                            Integer.MAX_VALUE);
             for (Object column : columnSlice.getColumns()) {
                 if (column instanceof HColumn) {
                     String columnName = ((HColumn<String, String>) column).getName();
                     String value = ((HColumn<String, String>) column).getValue();
-                    String stringValue = new String(value);
-
-
                     String[] valuesFields = value.split("|");
                     String owner = valuesFields[1];
                     boolean isExclusive = Boolean.parseBoolean(valuesFields[2]);
-
                     qrh.queue(columnName, owner, isExclusive, null);
-
-
                 }
             }
-        } catch (NumberFormatException e) {
-           log.error("Error in loading queues",e);
+        } catch (Exception e) {
+           throw new AMQStoreException("Error in loading queues",e);
         }
 
 
@@ -1418,25 +1383,12 @@ public class CassandraMessageStore implements MessageStore {
 
         List<String> exchangeNames = new ArrayList<String>();
         try {
-
-
-            SliceQuery<String, String, String> sliceQuery =
-                    HFactory.createSliceQuery(keyspace, stringSerializer  , stringSerializer,
-                            stringSerializer);
-            sliceQuery.setKey(EXCHANGE_ROW);
-            sliceQuery.setRange("", "", false, 100);
-            sliceQuery.setColumnFamily(EXCHANGE_COLUMN_FAMILY);
-
-            QueryResult<ColumnSlice<String, String>> result = sliceQuery.execute();
-            ColumnSlice<String, String> columnSlice = result.get();
-
+            ColumnSlice<String, String> columnSlice = CassandraDataAccessHelper.
+                    getStringTypeColumnsInARow(EXCHANGE_ROW,EXCHANGE_COLUMN_FAMILY,keyspace,Integer.MAX_VALUE);
             for (Object column : columnSlice.getColumns()) {
                 if (column instanceof HColumn) {
                     String columnName = ((HColumn<String, String>) column).getName();
                     String value = ((HColumn<String, String>) column).getValue();
-                    String stringValue = new String(value);
-
-
                     String[] valuesFields = value.split("|");
                     String type = valuesFields[1];
                     short autoDelete = Short.parseShort(valuesFields[2]);
@@ -1445,8 +1397,8 @@ public class CassandraMessageStore implements MessageStore {
 
                 }
             }
-        } catch (NumberFormatException e) {
-            log.error("Error in loading exchanges",e);
+        } catch (Exception e) {
+            throw new AMQStoreException("Error in loading exchanges",e);
         }
 
 
@@ -1456,34 +1408,14 @@ public class CassandraMessageStore implements MessageStore {
     public List<String> synchExchanges(VirtualHostConfigSynchronizer vhcs) throws Exception {
 
         List<String> exchangeNames = new ArrayList<String>();
-
-
         try {
-
-
-            Mutator<String> mutator =
-                    HFactory.createMutator(keyspace,stringSerializer);
-
             // Retriving multiple rows with Range Slice Query
-            SliceQuery<String, String, String> sliceQuery = HFactory.createSliceQuery(keyspace,
-                    stringSerializer, stringSerializer, stringSerializer);
-
-            sliceQuery.setKey(EXCHANGE_ROW);
-            sliceQuery.setRange("", "", false, 100);
-            sliceQuery.setColumnFamily(EXCHANGE_COLUMN_FAMILY);
-
-            QueryResult<ColumnSlice<String, String>> result = sliceQuery.execute();
-            ColumnSlice<String, String> columnSlice = result.get();
-
-            long maxId = 0;
-
+            ColumnSlice<String, String> columnSlice = CassandraDataAccessHelper.
+                    getStringTypeColumnsInARow(EXCHANGE_ROW,EXCHANGE_COLUMN_FAMILY,keyspace,Integer.MAX_VALUE);
             for (Object column : columnSlice.getColumns()) {
                 if (column instanceof HColumn) {
                     String columnName = ((HColumn<String, String>) column).getName();
                     String value = ((HColumn<String, String>) column).getValue();
-                    String stringValue = new String(value);
-
-
                     String[] valuesFields = value.split("|");
                     String type = valuesFields[1];
                     short autoDelete = Short.parseShort(valuesFields[2]);
@@ -1492,8 +1424,8 @@ public class CassandraMessageStore implements MessageStore {
 
                 }
             }
-        } catch (NumberFormatException e) {
-            log.error("Error in synchronizing exchanges",e);
+        } catch (Exception e) {
+            throw new AMQStoreException("Error in synchronizing exchanges",e);
         }
 
 

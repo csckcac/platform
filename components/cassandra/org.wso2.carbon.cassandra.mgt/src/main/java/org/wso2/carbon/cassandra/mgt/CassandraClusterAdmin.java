@@ -19,7 +19,6 @@
 package org.wso2.carbon.cassandra.mgt;
 
 import org.apache.cassandra.db.ColumnFamilyStoreMBean;
-import org.apache.cassandra.dht.Token;
 import org.apache.cassandra.service.StorageServiceMBean;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,7 +27,11 @@ import org.wso2.carbon.core.AbstractAdmin;
 
 import java.lang.management.ManagementFactory;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Admin service for accessing a Cassandra Cluster
@@ -53,8 +56,8 @@ public class CassandraClusterAdmin extends AbstractAdmin {
     public NodeInformation[] getNodes() throws CassandraServerManagementException {
 
         StorageServiceMBean storageServiceMBean = cassandraMBeanLocator.locateStorageServiceMBean();
-        Map<Token, String> tokenToEndpoint = storageServiceMBean.getTokenToEndpointMap();
-        List<Token> sortedTokens = new ArrayList<Token>(tokenToEndpoint.keySet());
+        Map<String, String> tokenToEndpoint = storageServiceMBean.getTokenToEndpointMap();
+        List<String> sortedTokens = new ArrayList<String>(tokenToEndpoint.keySet());
         Collections.sort(sortedTokens);
 
         Collection<String> liveNodes = storageServiceMBean.getLiveNodes();
@@ -66,9 +69,9 @@ public class CassandraClusterAdmin extends AbstractAdmin {
         List<NodeInformation> nodeInformations = new ArrayList<NodeInformation>();
 
         // Calculate per-token ownership of the ring
-        Map<Token, Float> ownerships = storageServiceMBean.getOwnership();
+        Map<String, Float> ownerships = storageServiceMBean.getOwnership();
 
-        for (Token token : sortedTokens) {
+        for (String token : sortedTokens) {
             String primaryEndpoint = tokenToEndpoint.get(token);
             String status = liveNodes.contains(primaryEndpoint)
                     ? "Up"

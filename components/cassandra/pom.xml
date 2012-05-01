@@ -165,7 +165,7 @@
     </modules>
 
     <properties>
-        <cassandra.version>1.0.2-wso2v1</cassandra.version>
+        <cassandra.version>1.1.0-wso2v1</cassandra.version>
         <!--libthrift.version>0.8.0</libthrift.version-->
         <hector-core.version>1.0-3</hector-core.version>
         <axis2.osgi.version.range.cassandra>${axis2.osgi.version.range}

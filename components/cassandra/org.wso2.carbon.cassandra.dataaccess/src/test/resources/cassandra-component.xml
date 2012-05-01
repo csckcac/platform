@@ -16,7 +16,7 @@
 -->
 <Cassandra>
     <Cluster>
-        <Name>ClusterOne</Name>
+        <Name>Test Cluster</Name>
         <DefaultPort>9160</DefaultPort>
         <Nodes>localhost:9160</Nodes>
         <AutoDiscovery disable="false" delay="1000"/>

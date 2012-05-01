@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.wso2.carbon.hosting.wnagent.dto.ContainerInformation;
+import org.wso2.carbon.hosting.wnagent.beans.ContainerInformation;
 
 /**
  * Created by IntelliJ IDEA.
@@ -46,8 +46,8 @@ public class WNAgentTest {
 			container.setIp("10.100.80.2");
 			container.setContainerRoot("/mnt/lxc");
 			container.setContainerKeysFile("/home/wso2/container_steup/jailKeysFilePath");
-			container.setTemplate("template-ubuntu-lucid-lamp");
-			container.setZone("public");
+			//container.setTemplate("template-ubuntu-lucid-lamp");
+			//container.setZone("public");
 
 			container.setBridge("br-lxc");
 			container.setNetMask("255.255.255.0");

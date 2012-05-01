@@ -4,8 +4,8 @@
 		<name>Worker-node-1</name>
 		<ip>192.168.20.1</ip> 
 		<zone>srilanka</zone>
-		<templatePath>/mnt/lxc</templatePath>
-		<template name="wso2php" domain="wso2.php.domain" />
+		<templatePath>/mnt/lxc</templatePath> <!-- same as ContainerRoot -->
+		<template name="template-ubuntu-lucid-lamp" domain="wso2.php.domain" />
 		<template name="wso2as1" domain="wso2.as1.domain" />
 		<template name="wso2as2" domain="wso2.as2.domain" />
 		<bridges>
@@ -37,27 +37,34 @@
 				<gateway>192.168.23.81</gateway>
 			</bridge>
 		</bridges>
+		<domains>
+			<domain name="domain.1" />
+			<domain name="domain.2" />
+			<domain name="domain.3" />
+			<domain name="domain.4" />
+			<domain name="domain.4" />
+		</domains>
 	</workerNode>
 	<resourcePlan>
 		<plan name="S">
-			<memory>512</memory>
-			<swap>10</swap>
-			<cpuShares>4</cpuShares>
-			<cpuSets>4</cpuSets>
+			<memory>512M</memory>
+			<swap>10G</swap>
+			<cpuShares>300</cpuShares>
+			<cpuSets>0-7</cpuSets>
 			<storage>1900</storage>
 		</plan> 
 		<plan name="L">
-			<memory>1024</memory>
-			<swap>20</swap>
-			<cpuShares>6</cpuShares>
-			<cpuSets>6</cpuSets>
+			<memory>1024M</memory>
+			<swap>20G</swap>
+			<cpuShares>600</cpuShares>
+			<cpuSets>0-8</cpuSets>
 			<storage>4000</storage>
 		</plan>
 		<plan name="LX">
-			<memory>3122</memory>
-			<swap>20</swap>
-			<cpuShares>6</cpuShares>
-			<cpuSets>6</cpuSets>
+			<memory>3122M</memory>
+			<swap>20G</swap>
+			<cpuShares>900</cpuShares>
+			<cpuSets>0-9</cpuSets>
 			<storage>4000</storage>
 		</plan>
 	</resourcePlan>
@@ -67,5 +74,5 @@
 	<agentManagementHost url="http://127.0.0.1:9763/services/" />
 	<defaultPassword value="abc123"/>
 	<defaultUsername value="defaultUser"/>
-	<svnLocation url="">
+	<svnLocation url="" />
 </agentConfig>

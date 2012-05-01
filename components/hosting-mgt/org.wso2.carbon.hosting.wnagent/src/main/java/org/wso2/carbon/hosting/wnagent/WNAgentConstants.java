@@ -22,7 +22,7 @@ import org.wso2.carbon.utils.CarbonUtils;
 
 public class WNAgentConstants {
 
-	public static final String CONTAINER_ACTION = "./container_action.sh";
+	public static final String CONTAINER_ACTION = "./container_action";
 
 	public static final String CONTAINER_STOP_ACTION = "stop";
 
@@ -32,7 +32,7 @@ public class WNAgentConstants {
 
 	public static final String CONTAINER_CREATE_ACTION = "create";
 
-	public static final String WSO2_HOSTING_HOME = CarbonUtils.getCarbonHome(); // TODO get the bin folder 
+	public static final String CARBON_HOME = CarbonUtils.getCarbonHome();
 	// testing /home/wso2/work/testprojects/hosting-nonjava/source/hosting/container_setup
 
 }

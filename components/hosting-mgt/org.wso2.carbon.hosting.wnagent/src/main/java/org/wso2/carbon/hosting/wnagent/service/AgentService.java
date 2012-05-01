@@ -19,6 +19,8 @@ package org.wso2.carbon.hosting.wnagent.service;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -30,15 +32,18 @@ import org.apache.axis2.description.TransportInDescription;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.autoscaler.service.jvm.agentmgt.stub.AgentManagementServiceStub;
+import org.wso2.carbon.autoscaler.service.jvm.agentmgt.stub.beans.xsd.dto.Bridge;
+import org.wso2.carbon.autoscaler.service.jvm.agentmgt.stub.beans.xsd.dto.HostMachine;
 import org.wso2.carbon.hosting.wnagent.WNAgentConstants;
-import org.wso2.carbon.hosting.wnagent.dto.ContainerInformation;
-import org.wso2.carbon.hosting.wnagent.dto.PlanConfig;
+import org.wso2.carbon.hosting.wnagent.beans.PlanConfig;
 import org.wso2.carbon.hosting.wnagent.exception.AgentServiceException;
 import org.wso2.carbon.hosting.wnagent.util.PropertyFileReaderUtil;
+import org.wso2.carbon.lb.common.dto.ContainerInformation;
+
 
 /**
- * This web service is responsible for managing Linux Containers in the host machine (worker node) where the service
- * is deployed. 
+ * This web service is responsible for managing Linux Containers in the host machine where
  * 
  * Linux  Containers(LXC) are lightweight virtual machines, and are created from pre-created OS images 
  * with required products already installed, which is also called a template. 
@@ -54,65 +59,151 @@ public class AgentService {
 
 	private MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
 	
-	public AgentService() throws Exception {	
+	public AgentService() throws Exception {
 		PropertyFileReaderUtil.readAgentConfig();
+		if(log.isDebugEnabled()){
+			log.debug("Property file is successfully read");
+		}
     }
 	
 	
 	/**
 	 * 
 	 * @param domainName
-	 * @param userName This will be the tenant name, if not provided default value will be used
+	 * @param containerName This will be the instance id
 	 * @param containerInfo
-	 * @return
-	 * @throws AgentServiceException
+	 * @return true if container is created successfully
+	 * and also, further containers can be created in the same host machine
+	 * false, if container is created successfully but 
+	 * further containers cannot be created in the host machine.
+	 * @throws AgentServiceException if container creation is failed
 	 * 
 	 * Creates a container from a pre configured OS image template
 	 * 
 	 */
-	public boolean createContainer(String domainName, String userName, ContainerInformation containerInfo)
+	public boolean createContainer(String domainName, String containerName, ContainerInformation containerInfo)
 																				throws AgentServiceException {
+    	
+    	if(log.isDebugEnabled()) {    		
+    		StringBuilder logmsg =
+                new StringBuilder().append("Trying to create a container with id [")
+                                   .append(containerName)
+                                   .append("]");
+    		log.debug(logmsg);
+    	}
 		
-		if(log.isDebugEnabled()) {
-			
-		StringBuilder logmsg =
-		                       new StringBuilder().append("Trying to create a container for tenant [")
-		                                          .append(userName)
-		                                          .append("] with Container ip [ ")
-		                                          .append(containerInfo.getIp()).append("]");
-		log.debug(logmsg);
+		return invokeContainerCreateProcess(domainName, containerName, containerInfo);
+
+	}
+
+
+	
+	
+	/**
+	 * 
+	 * @param containerName
+	 * @return
+	 * @throws AgentServiceException
+	 * 
+	 * Start the container. Starting the container means starting the application installed in the container.
+	 * A container is normally started after creating it or, when it is in the
+	 * stopped state and user try to access it again. Also the container start operation is invoked from 
+	 * web UI directly
+	 * 
+	 */
+	public boolean startContainer(String containerName, String containerRoot) throws AgentServiceException {
 		
+		if (log.isDebugEnabled()) {
+
+			String msg =
+			             new StringBuilder().append("Trying to start container [")
+			                                .append(containerName).append("]").toString();
+
+			log.debug(msg);
+		}
+		
+		return invokeContainerStartProcess(containerName, containerRoot);
+	}
+
+
+	
+	/**
+	 * 
+	 * @param domainName
+	 * @param containerName
+	 * @param containerInfo
+	 * @return true if container is created and started successfully
+	 * and also, further containers can be created in the same host machine
+	 * false, if container is created and started successfully but 
+	 * further containers cannot be created in the host machine.
+	 * @throws AgentServiceException if the container creation of start operatoin is
+	 * failed 
+	 * 
+	 * This operation creates a container from a pre configured OS image template and starts it
+	 * 
+	 */
+	public boolean createAndStartContainer(String domainName, String containerName, ContainerInformation containerInfo) throws AgentServiceException{
+		
+		boolean canCreateMoreContainers =
+		                                  invokeContainerCreateProcess(domainName, containerName,
+		                                                               containerInfo);
+		try {
+			invokeContainerStartProcess(containerName, containerInfo.getContainerRoot());
+		} catch (AgentServiceException e) {
+			// If container failed to start, destroy it
+			invokeContainerDestroyProcess(containerName, containerInfo.getContainerRoot());
+			throw e;
 		}
 
-		// TODO validate mandatory parameters
-		
-		String template = getTemplateForDomain(domainName);
+		return canCreateMoreContainers;
+	}
+	
+	
+	
+	/**
+     * @param domainName
+     * @param containerName
+     * @param containerInfo
+     * @return
+     * @throws AgentServiceException
+     * 
+     */
+    private boolean invokeContainerCreateProcess(String domainName, String containerName,
+                                                 ContainerInformation containerInfo)
+                                                                                    throws AgentServiceException {
+    	String template = getTemplateForDomain(domainName);
 		PlanConfig plan = getPlanForType(containerInfo.getType());
 	
+		// TODO Add default user name parameter to ProcessBuilder, because UUID pattern
+		// is not allowed as Linux user names
 		ProcessBuilder pbInit =
 		                        new ProcessBuilder(WNAgentConstants.CONTAINER_ACTION,
-		                                           WNAgentConstants.WSO2_HOSTING_HOME,
+		                                           getScriptsPath(),
 		                                           WNAgentConstants.CONTAINER_CREATE_ACTION,
-		                                           userName,
-		                                           getDefaultTenantPassword(),
-		                                           containerInfo.getIp(),
-		                                           containerInfo.getNetMask(),
-		                                           containerInfo.getNetGateway(),
-		                                           containerInfo.getBridge(),
-		                                           containerInfo.getContainerRoot()
-		                                           /*can read from the config file,
-		                                            why passing it to database*/,
-		                                           containerInfo.getContainerKeysFile(),
+		                                           containerName,
+		                                           getDefaultContainerPassword(),
+		                                           containerInfo.getIp(), /*ContainerIp*/
+		                                           containerInfo.getNetMask(), /*NetMask*/
+		                                           containerInfo.getBridge(), /*BridgeIp*/
+		                                           containerInfo.getNetGateway(), /*Bridge name (br-lxc)*/
+		                                           containerInfo.getContainerRoot(),
+		                                           "tst",
 		                                           template,
 		                                           plan.getMemory(),
 		                                           plan.getSwap(),
 		                                           plan.getCpuShares(),
-		                                           plan.getCpuSets());
-		pbInit.directory(new File(WNAgentConstants.WSO2_HOSTING_HOME));
+		                                           plan.getCpuSets(),
+		                                           "sss" /*svn location*/,
+		                                           "sss");
+		if (log.isDebugEnabled()) {
+			log.debug("*** Logging create container commands ***" + pbInit.command());
+		}
+		pbInit.directory(new File(getScriptsPath()));
 		
 		Process procInit;
 		int exitVal = 0;
         try {
+
 	        procInit = pbInit.start();
 	        exitVal = procInit.waitFor();
 	        
@@ -124,8 +215,7 @@ public class AgentService {
         
 		if (exitVal == 0) {
 			String msg = "Container is successfully created";
-			log.debug(msg);
-			
+			log.debug(msg);			
 			// Check whether the remaining memory is enough for creating the largest container
 			return isAvailableMemoryEnoughForMaxContainer();
 		}
@@ -133,49 +223,63 @@ public class AgentService {
 		String msg = "Container creation is failed";
 		log.error(msg);		
         throw new AgentServiceException(msg);
+    }
 
-	}
-
-	
+    
+    
+    
 	/**
-	 * 
-	 * @param tenantName
-	 * @return
-	 * @throws IOException
-	 * @throws InterruptedException
-	 * @throws AgentServiceException
-	 * 
-	 * Start the container. Starting the container means starting the application installed in the container.
-	 * A container is normally started after creating it or, when it is in the
-	 * stopped state and user try to access it again. Also the container start operation is invoked from 
-	 * web UI directly
-	 * 
-	 */
-	public int startContainer(String tenantName) throws IOException,
-	                                                                   InterruptedException,
-	                                                                   AgentServiceException {
-		ProcessBuilder pbInit =
+     * @param containerName
+     * @param containerRoot
+     * @return
+     * @throws AgentServiceException
+     */
+    private boolean invokeContainerStartProcess(String containerName, String containerRoot)
+                                                                                       throws AgentServiceException {
+	    boolean containerStartStatus = false;
+    	
+    	ProcessBuilder pbInit =
 		                        new ProcessBuilder(WNAgentConstants.CONTAINER_ACTION,
-		                                           WNAgentConstants.WSO2_HOSTING_HOME,
+		                                           getScriptsPath(),
 		                                           WNAgentConstants.CONTAINER_START_ACTION,
-		                                           tenantName);
-		pbInit.directory(new File(WNAgentConstants.WSO2_HOSTING_HOME));
-		Process procInit = pbInit.start();
-		int exitVal = procInit.waitFor();
+		                                           containerName,
+		                                           containerRoot);
+		pbInit.directory(new File(getScriptsPath()));
+		Process procInit = null;
+		int exitVal = 0;
+        try {
+	        procInit = pbInit.start();
+	        exitVal = procInit.waitFor();	        
+        } catch (Exception e) {
+        	String msg = " Exception occurred in starting container. Reason :" + e.getMessage();
+        	log.error(msg);
+	        throw new AgentServiceException(msg, e);
+        }
+
 		if (exitVal == 0) {
-			String msg = "Hosting container start action executed successfully";
-			log.debug(msg);
+			containerStartStatus = true;
+			String msg = new StringBuilder()
+							.append("Container is started successfully with UserName [")
+							.append(containerName)
+							.append("]").toString();
+			if(log.isDebugEnabled())
+				log.debug(msg);
 		} else {
-			String msg = "Hosting container start action execution failed";
-			log.debug(msg);
+			String msg = new StringBuilder().append("Exception is occurred when starting container ")
+							.append(containerName).toString();
+			if(log.isDebugEnabled())
+				log.debug(msg);
+			throw new AgentServiceException(msg);
 		}
-		return exitVal;
-	}
+		return containerStartStatus;
+    }
 	
+	
+
 	
 	/**
 	 * 
-	 * @param tenantName
+	 * @param containerName
 	 * @return
 	 * @throws IOException
 	 * @throws InterruptedException
@@ -186,32 +290,69 @@ public class AgentService {
 	 * stopped using the web UI
 	 * 
 	 */
-	public int stopContainer(String tenantName) throws IOException,
-	                                                                 InterruptedException,
-	                                                                 AgentServiceException {
+	public boolean stopContainer(String containerName, String containerRoot) throws AgentServiceException {
 
-		ProcessBuilder pbInit =
-		                        new ProcessBuilder(WNAgentConstants.CONTAINER_ACTION,
-		                                           WNAgentConstants.WSO2_HOSTING_HOME,
-		                                           WNAgentConstants.CONTAINER_STOP_ACTION,
-		                                           tenantName);
-		pbInit.directory(new File(WNAgentConstants.WSO2_HOSTING_HOME));
-		Process procInit = pbInit.start();
-		int exitVal = procInit.waitFor();
-		if (exitVal == 0) {
-			String msg = "Hosting container stop action executed successfully";
-			log.debug(msg);
-		} else {
-			String msg = "Hosting container stop action execution failed";
+		
+		if (log.isDebugEnabled()) {
+			String msg = new StringBuilder().append("Trying to stop container [")
+			                                .append(containerName).append("]").toString();
 			log.debug(msg);
 		}
-		return exitVal;
+		
+		return invokeContainerStopProcess(containerName, containerRoot);
 	}
+
+
+	/**
+     * @param containerName
+     * @param containerRoot
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws AgentServiceException
+     */
+    private boolean invokeContainerStopProcess(String containerName, String containerRoot) throws AgentServiceException {
+    	
+    	int exitVal = 0;
+    	boolean containerStopStatus = false;
+		try {
+			ProcessBuilder pbInit =
+			                        new ProcessBuilder(WNAgentConstants.CONTAINER_ACTION,
+			                                           getScriptsPath(),
+			                                           WNAgentConstants.CONTAINER_STOP_ACTION,
+			                                           containerName, containerRoot);
+			pbInit.directory(new File(getScriptsPath()));
+			Process procInit = pbInit.start();
+			exitVal = procInit.waitFor();
+
+		} catch (Exception ex) {
+			String msg = " Exception occurred in starting container. Reason :" + ex.getMessage();
+			log.error(msg);
+			throw new AgentServiceException(msg, ex);
+		}
+		
+		if (exitVal == 0) {
+			containerStopStatus = true;
+			String msg =
+			             new StringBuilder().append("Container is stopped successfully with UserName [")
+			                                .append(containerName).append("]").toString();
+			if (log.isDebugEnabled())
+				log.debug(msg);
+		} else {
+			String msg =
+			             new StringBuilder().append("Exception is occurred when stopping container ")
+			                                .append(containerName).toString();
+			if (log.isDebugEnabled())
+				log.debug(msg);
+			throw new AgentServiceException(msg);
+		}
+		return containerStopStatus;
+    }
 
 		
 	/**
 	 * 
-	 * @param tenantName
+	 * @param containerName
 	 * @return
 	 * @throws IOException
 	 * @throws InterruptedException
@@ -221,32 +362,151 @@ public class AgentService {
 	 * When this method is called the container will be deleted.
 	 * 
 	 */
-	public int destroyContainer(String tenantName) throws IOException,
+	public boolean destroyContainer(String containerName, String containerRoot) throws IOException,
 	                                                                    InterruptedException,
 	                                                                    AgentServiceException {
 
-		ProcessBuilder pbInit =
-		                        new ProcessBuilder(WNAgentConstants.CONTAINER_ACTION,
-		                                           WNAgentConstants.WSO2_HOSTING_HOME,
-		                                           WNAgentConstants.CONTAINER_DESTROY_ACTION,
-		                                           tenantName);
-		pbInit.directory(new File(WNAgentConstants.WSO2_HOSTING_HOME));
-		Process procInit = pbInit.start();
-		int exitVal = procInit.waitFor();
-		if (exitVal == 0) {
-			String msg = "Hosting container destroy executed successfully";
-			log.debug(msg);
-		} else {
-			String msg = "Hosting container destroy execution failed";
+		if (log.isDebugEnabled()) {
+
+			String msg =
+			             new StringBuilder().append("Trying to destroy container [")
+			                                .append(containerName).append("]").toString();
+
 			log.debug(msg);
 		}
-		return exitVal;
-	}	
+		
+		return invokeContainerDestroyProcess(containerName, containerRoot);
+	}
+
+
+	/**
+     * @param containerName
+     * @param containerRoot
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws AgentServiceException
+     */
+    private  boolean invokeContainerDestroyProcess(String containerName, String containerRoot)
+                                                                                         throws AgentServiceException {
+	    
+    	boolean containerDestroyStatus = false; 
+    	int exitVal = 0;
+    	try {
+    	ProcessBuilder pbInit =
+		                        new ProcessBuilder(WNAgentConstants.CONTAINER_ACTION,
+		                                           getScriptsPath(),
+		                                           WNAgentConstants.CONTAINER_DESTROY_ACTION,
+		                                           containerName,
+		                                           containerRoot);
+		pbInit.directory(new File(getScriptsPath()));
+		Process procInit = pbInit.start();
+		exitVal = procInit.waitFor();
+    	} catch (Exception e) {
+    		String msg = " Exception occurred in destroying container. Reason :" + e.getMessage();
+			log.error(msg);
+			throw new AgentServiceException(msg, e);
+		}
+    	
+		if (exitVal == 0) {
+			containerDestroyStatus = true;
+			String msg =
+			             new StringBuilder().append("Container is destroyed successfully with UserName [")
+			                                .append(containerName).append("]").toString();
+			if (log.isDebugEnabled())
+				log.debug(msg);
+		} else {
+			String msg =
+			             new StringBuilder().append("Exception is occurred when destroying container ")
+			                                .append(containerName).toString();
+			if (log.isDebugEnabled())
+				log.debug(msg);
+			throw new AgentServiceException(msg);
+		}
+		return containerDestroyStatus;
+    }	
 
 	
+	/**
+	 * 
+	 * @param containerName
+	 * @param containerRoot
+	 * @return
+	 * @throws AgentServiceException
+	 */
+    public boolean stopAndDestroyContainer(String containerName, String containerRoot) throws AgentServiceException {
+    	
+    	// TODO limitation : if stopContainer is successful and destroyProcess gets failed, this will return an exception
+    	// so the controller thinks this container (instance) is not yet destroyed properly, hence will invoke this 
+    	// method with the same containerName (instanceId). Now, containerStop operation will fail because the container (instance) 
+    	// is already stopped. So, the container never gets destroyed
+    	// To avoid that check whether containerStopProcess returns an explicit exception of container already stopped exception, 
+    	// and handle accordingly
+    	
+    	invokeContainerStopProcess(containerName, containerRoot);
+    	return invokeContainerDestroyProcess(containerName, containerRoot);
+    }
+    
+	/**
+	 * This method is responsible for registering a Host Machine in AgentManagementService, and this is invoked
+	 * using a startup script
+	 * @throws Exception 
+	 */
+	public void registerInAgentManagementService() throws Exception {
+		
+		try {
+			String agentMgtUrl = PropertyFileReaderUtil.readAgentMgtServiceEpr();
+        	//log.info(" ** AgentMgmntService Url :" + agentMgtUrl);
+	        AgentManagementServiceStub stub = new AgentManagementServiceStub(agentMgtUrl);
+	        
+	        org.wso2.carbon.lb.common.dto.HostMachine hostMachineConfig = PropertyFileReaderUtil.readHostMachineConfig();
+	        HostMachine hostMachine = new HostMachine();
+	        hostMachine.setAvailable(hostMachineConfig.isAvailable());
+	        hostMachine.setContainerRoot(hostMachineConfig.getContainerRoot());
+	        hostMachine.setBridges(convertBridgeListToArray(hostMachineConfig));
+	        hostMachine.setEpr(getServiceUrl());
+	        hostMachine.setIp(hostMachineConfig.getIp());
+	        hostMachine.setZone(hostMachineConfig.getZone());
+	        String[] domainList = convertDomainListToArray(PropertyFileReaderUtil.readDomainList());
+	        stub.registerAgent(hostMachine, domainList);
+	        
+        } catch (Exception e) {
+	        log.error("Exception is occurred when registering host machine. Reason "+e.getMessage());
+	        throw e;
+        }
+
+	}
+
+	/**
+	 * Unregisters an agent from the system
+	 * @throws Exception 
+	 */
+	public void unregisterInAgentManagementService() throws Exception {
+		
+		AgentManagementServiceStub stub;
+        try {
+        	String agentMgtUrl = PropertyFileReaderUtil.readAgentMgtServiceEpr();
+        	//log.info(" ** AgentMgmntService Url :" + agentMgtUrl);
+	        stub = new AgentManagementServiceStub(agentMgtUrl);
+	        stub.unregisterAgent(getServiceUrl());
+        } catch (Exception e) {
+        	log.error("Exception is occurred when un-registering host machine. Reason "+e.getMessage());
+	        throw e;
+        }
+		
+	}
 	
+	/**
+     * @return the path where the container management scripts are located
+     * Location is <CARBON_HOME>/bin directory 
+     *  
+     */
+    private String getScriptsPath() {
+	    return new StringBuilder().append(WNAgentConstants.CARBON_HOME).append(File.separator).append("bin").toString(); 
+	    //return "/home/wso2/work/Tropos/wso2_container_image/bin";
+	}
 	
-	private String getDefaultTenantPassword() {
+	private String getDefaultContainerPassword() {
 	    return PropertyFileReaderUtil.readDefaultPassword();
     }
 
@@ -307,51 +567,64 @@ public class AgentService {
     }
 
 	
-	public void registerInAgentManagementService() {
 
-		// Invokes WorkerNodeRegistration Service method..
-		// With the machine details and
-		
-		
-		/*try {
-			WorkerNodeRegistrationServiceStub workerNodeRegStub =
-			                                                      new WorkerNodeRegistrationServiceStub(getEpr());
-			workerNodeRegStub.registerWorkerNode(getWorkerNode(), getZoneResourcePlan());
-
-		} catch (AxisFault e) {
-			e.printStackTrace();
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}*/
-
-	}
-	
-	public void unregisterInAgentManagementService() {
-		
-	}
-
-	private String getEpr() {
-		return PropertyFileReaderUtil.readAgentMgtServiceEpr();
+	private String[] convertDomainListToArray(List<String> domainList) {
+		return domainList.toArray(new String[domainList.size()]);
     }
 
 
-	private String getServiceUrl() {
+	/**
+     * @param workerNode
+     * @return
+     */
+    private Bridge[] convertBridgeListToArray(org.wso2.carbon.lb.common.dto.HostMachine workerNode) {
+    	
+    	List<Bridge> bridgeList = new ArrayList<Bridge>();
+    	
+    	org.wso2.carbon.lb.common.dto.Bridge[] bridgeArray = workerNode.getBridges();
+    	
+    	for (int i = 0; i < bridgeArray.length; i++) {
+    		
+    		org.wso2.carbon.lb.common.dto.Bridge bridgeConf = bridgeArray[i];
+	        Bridge bridge = new Bridge();
+	        bridge.setAvailable(bridgeConf.isAvailable());
+	        bridge.setBridgeIp(bridgeConf.getBridgeIp());
+	        bridge.setCurrentCountIps(bridgeConf.getCurrentCountIps());
+	        bridge.setHostMachine(getServiceUrl());
+	        bridge.setMaximumCountIps(bridgeConf.getMaximumCountIps());
+	        bridge.setNetGateway(bridgeConf.getNetGateway());
+	        bridge.setNetMask(bridgeConf.getNetMask());
+	        bridgeList.add(bridge);
+        }    	
+    	
+	    return bridgeList.toArray(new Bridge[bridgeList.size()]);
+    }
+	
+	
+
+
+	public String getServiceUrl() {
 		String baseURL = null;
 		MessageContext messageContext = MessageContext.getCurrentMessageContext();
 		AxisConfiguration configuration =
 		                                  messageContext.getConfigurationContext()
 		                                                .getAxisConfiguration();
-		TransportInDescription inDescription = configuration.getTransportIn("http");
+		TransportInDescription inDescription = configuration.getTransportIn("https");
+		
+		EndpointReference[] eprs = null;
 		try {
-			EndpointReference[] eprs =
+			eprs =
 			                           inDescription.getReceiver()
 			                                        .getEPRsForService(messageContext.getAxisService()
 			                                                                         .getName(),
 			                                                           null);
+			//log.info("EPR count : " + eprs.length);
 			baseURL = eprs[0].getAddress();
 		} catch (AxisFault axisFault) {
 		}
-
+		
+		log.info("*** Service URL of AgentService is : " + baseURL);
+        		
 		return baseURL;
 	}
 

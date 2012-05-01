@@ -13,15 +13,12 @@
 			elementFormDefaultQualified="true" />
 		<transports>
 			<transport>https</transport>
+			<transport>http</transport>
 		</transports>
 		<description>
-			Admin service for managing all hosting containers
+			Admin service for managing host machine containers
         </description>
 		<parameter name="ServiceClass">org.wso2.carbon.hosting.wnagent.service.AgentService</parameter>
-		<!-- 
-		<excludeOperations>
-			<operation>registerWorkerNode</operation>
-		</excludeOperations>  -->
 
 	</service>
 

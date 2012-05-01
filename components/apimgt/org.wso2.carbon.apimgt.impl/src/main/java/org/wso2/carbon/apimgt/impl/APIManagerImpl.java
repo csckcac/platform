@@ -111,7 +111,7 @@ public class APIManagerImpl implements APIManager {
         API api = null;
         String apiPath = APIUtil.getAPIPath(identifier);
         try {
-            artifactManager = getArtifactManager(APIConstants.API_KEY);
+            artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
             Resource apiResource = registry.get(apiPath);
             String artifactId = apiResource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY);
             if (artifactId == null) {
@@ -280,7 +280,7 @@ public class APIManagerImpl implements APIManager {
                                           String docName) throws APIManagementException {
         Documentation documentation = null;
         String docPath = APIUtil.getAPIDocPath(apiId) + docName;
-        artifactManager = getArtifactManager(APIConstants.DOCUMENTATION_KEY);
+        artifactManager = APIUtil.getArtifactManager(registry,APIConstants.DOCUMENTATION_KEY);
         try {
             Association[] associations = registry.getAssociations(docPath, docType.getType());
             for (Association association : associations) {
@@ -333,23 +333,6 @@ public class APIManagerImpl implements APIManager {
         return apiMgtDAO.getSubscriberById(accessToken);
     }
 
-    /**
-     * this method used to initialized the ArtifactManager
-     *
-     * @param key , key name of the key
-     * @return GenericArtifactManager
-     * @throws APIManagementException if failed to initialized GenericArtifactManager
-     */
-    private GenericArtifactManager getArtifactManager(String key) throws APIManagementException {
-        try {
-            artifactManager = new GenericArtifactManager(registry, key);
-        } catch (RegistryException e) {
-            String msg = "Failed to initialized GenericArtifactManager";
-            log.error(msg, e);
-            throw new APIManagementException(msg, e);
-        }
-        return artifactManager;
-    }
 
     private Registry getRegistry() throws APIManagementException {
         try {

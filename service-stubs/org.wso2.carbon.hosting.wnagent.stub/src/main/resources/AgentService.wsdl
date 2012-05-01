@@ -1,33 +1,31 @@
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax2124="http://beans.wnagent.hosting.carbon.wso2.org/xsd" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://service.wnagent.hosting.carbon.wso2.org" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ax2120="http://io.java/xsd" xmlns:ax2122="http://exception.wnagent.hosting.carbon.wso2.org/xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.wnagent.hosting.carbon.wso2.org">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax2124="http://dto.common.lb.carbon.wso2.org/xsd" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:tns="http://service.wnagent.hosting.carbon.wso2.org" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ax2120="http://exception.wnagent.hosting.carbon.wso2.org/xsd" xmlns:ax2122="http://io.java/xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.wnagent.hosting.carbon.wso2.org">
     <wsdl:documentation>AgentService</wsdl:documentation>
     <wsdl:types>
-        <xs:schema xmlns:ax2125="http://beans.wnagent.hosting.carbon.wso2.org/xsd" xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax2121="http://io.java/xsd" xmlns:ax2123="http://exception.wnagent.hosting.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
-            <xs:import namespace="http://io.java/xsd" />
+        <xs:schema xmlns:ax2125="http://dto.common.lb.carbon.wso2.org/xsd" xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax2121="http://exception.wnagent.hosting.carbon.wso2.org/xsd" xmlns:ax2123="http://io.java/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
             <xs:import namespace="http://exception.wnagent.hosting.carbon.wso2.org/xsd" />
-            <xs:import namespace="http://beans.wnagent.hosting.carbon.wso2.org/xsd" />
+            <xs:import namespace="http://io.java/xsd" />
+            <xs:import namespace="http://dto.common.lb.carbon.wso2.org/xsd" />
+            <xs:element name="AgentServiceException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="AgentServiceException" nillable="true" type="ns1:Exception" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string" />
+                </xs:sequence>
+            </xs:complexType>
             <xs:element name="unregisterInAgentManagementService">
                 <xs:complexType>
                     <xs:sequence />
                 </xs:complexType>
             </xs:element>
-            <xs:element name="AgentServiceIOException">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="IOException" nillable="true" type="ax2121:IOException" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="AgentServiceInterruptedException">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="InterruptedException" nillable="true" type="xs:anyType" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
             <xs:element name="AgentServiceAgentServiceException">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="AgentServiceException" nillable="true" type="ax2123:AgentServiceException" />
+                        <xs:element minOccurs="0" name="AgentServiceException" nillable="true" type="ax2121:AgentServiceException" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -42,7 +40,22 @@
             <xs:element name="stopContainerResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" type="xs:int" />
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="stopAndDestroyContainer">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="containerName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="containerRoot" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="stopAndDestroyContainerResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -57,13 +70,39 @@
             <xs:element name="startContainerResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" type="xs:int" />
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="registerInAgentManagementService">
                 <xs:complexType>
                     <xs:sequence />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceUrl">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getServiceUrlResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AgentServiceIOException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="IOException" nillable="true" type="ax2123:IOException" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AgentServiceInterruptedException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="InterruptedException" nillable="true" type="xs:anyType" />
+                    </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="destroyContainer">
@@ -77,7 +116,7 @@
             <xs:element name="destroyContainerResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" type="xs:int" />
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -97,14 +136,31 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:element name="createAndStartContainer">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="domainName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="containerName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="containerInfo" nillable="true" type="ax2125:ContainerInformation" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="createAndStartContainerResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
         </xs:schema>
-        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://beans.wnagent.hosting.carbon.wso2.org/xsd">
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://dto.common.lb.carbon.wso2.org/xsd">
             <xs:complexType name="ContainerInformation">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="bridge" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="containerId" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="containerKeysFile" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="containerRoot" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="epr" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="ip" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="netGateway" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="netMask" nillable="true" type="xs:string" />
@@ -129,20 +185,35 @@
     <wsdl:message name="stopContainerResponse">
         <wsdl:part name="parameters" element="ns1:stopContainerResponse" />
     </wsdl:message>
-    <wsdl:message name="AgentServiceIOException">
-        <wsdl:part name="parameters" element="ns1:AgentServiceIOException" />
-    </wsdl:message>
-    <wsdl:message name="AgentServiceInterruptedException">
-        <wsdl:part name="parameters" element="ns1:AgentServiceInterruptedException" />
-    </wsdl:message>
     <wsdl:message name="AgentServiceAgentServiceException">
         <wsdl:part name="parameters" element="ns1:AgentServiceAgentServiceException" />
+    </wsdl:message>
+    <wsdl:message name="stopAndDestroyContainerRequest">
+        <wsdl:part name="parameters" element="ns1:stopAndDestroyContainer" />
+    </wsdl:message>
+    <wsdl:message name="stopAndDestroyContainerResponse">
+        <wsdl:part name="parameters" element="ns1:stopAndDestroyContainerResponse" />
     </wsdl:message>
     <wsdl:message name="registerInAgentManagementServiceRequest">
         <wsdl:part name="parameters" element="ns1:registerInAgentManagementService" />
     </wsdl:message>
+    <wsdl:message name="AgentServiceException">
+        <wsdl:part name="parameters" element="ns1:AgentServiceException" />
+    </wsdl:message>
+    <wsdl:message name="createAndStartContainerRequest">
+        <wsdl:part name="parameters" element="ns1:createAndStartContainer" />
+    </wsdl:message>
+    <wsdl:message name="createAndStartContainerResponse">
+        <wsdl:part name="parameters" element="ns1:createAndStartContainerResponse" />
+    </wsdl:message>
     <wsdl:message name="unregisterInAgentManagementServiceRequest">
         <wsdl:part name="parameters" element="ns1:unregisterInAgentManagementService" />
+    </wsdl:message>
+    <wsdl:message name="getServiceUrlRequest">
+        <wsdl:part name="parameters" element="ns1:getServiceUrl" />
+    </wsdl:message>
+    <wsdl:message name="getServiceUrlResponse">
+        <wsdl:part name="parameters" element="ns1:getServiceUrlResponse" />
     </wsdl:message>
     <wsdl:message name="createContainerRequest">
         <wsdl:part name="parameters" element="ns1:createContainer" />
@@ -162,19 +233,39 @@
     <wsdl:message name="destroyContainerResponse">
         <wsdl:part name="parameters" element="ns1:destroyContainerResponse" />
     </wsdl:message>
+    <wsdl:message name="AgentServiceIOException">
+        <wsdl:part name="parameters" element="ns1:AgentServiceIOException" />
+    </wsdl:message>
+    <wsdl:message name="AgentServiceInterruptedException">
+        <wsdl:part name="parameters" element="ns1:AgentServiceInterruptedException" />
+    </wsdl:message>
     <wsdl:portType name="AgentServicePortType">
         <wsdl:operation name="stopContainer">
             <wsdl:input message="tns:stopContainerRequest" wsaw:Action="urn:stopContainer" />
             <wsdl:output message="tns:stopContainerResponse" wsaw:Action="urn:stopContainerResponse" />
-            <wsdl:fault message="tns:AgentServiceIOException" name="AgentServiceIOException" wsaw:Action="urn:stopContainerAgentServiceIOException" />
-            <wsdl:fault message="tns:AgentServiceInterruptedException" name="AgentServiceInterruptedException" wsaw:Action="urn:stopContainerAgentServiceInterruptedException" />
             <wsdl:fault message="tns:AgentServiceAgentServiceException" name="AgentServiceAgentServiceException" wsaw:Action="urn:stopContainerAgentServiceAgentServiceException" />
+        </wsdl:operation>
+        <wsdl:operation name="stopAndDestroyContainer">
+            <wsdl:input message="tns:stopAndDestroyContainerRequest" wsaw:Action="urn:stopAndDestroyContainer" />
+            <wsdl:output message="tns:stopAndDestroyContainerResponse" wsaw:Action="urn:stopAndDestroyContainerResponse" />
+            <wsdl:fault message="tns:AgentServiceAgentServiceException" name="AgentServiceAgentServiceException" wsaw:Action="urn:stopAndDestroyContainerAgentServiceAgentServiceException" />
         </wsdl:operation>
         <wsdl:operation name="registerInAgentManagementService">
             <wsdl:input message="tns:registerInAgentManagementServiceRequest" wsaw:Action="urn:registerInAgentManagementService" />
+            <wsdl:fault message="tns:AgentServiceException" name="AgentServiceException" wsaw:Action="urn:registerInAgentManagementServiceAgentServiceException" />
+        </wsdl:operation>
+        <wsdl:operation name="createAndStartContainer">
+            <wsdl:input message="tns:createAndStartContainerRequest" wsaw:Action="urn:createAndStartContainer" />
+            <wsdl:output message="tns:createAndStartContainerResponse" wsaw:Action="urn:createAndStartContainerResponse" />
+            <wsdl:fault message="tns:AgentServiceAgentServiceException" name="AgentServiceAgentServiceException" wsaw:Action="urn:createAndStartContainerAgentServiceAgentServiceException" />
         </wsdl:operation>
         <wsdl:operation name="unregisterInAgentManagementService">
             <wsdl:input message="tns:unregisterInAgentManagementServiceRequest" wsaw:Action="urn:unregisterInAgentManagementService" />
+            <wsdl:fault message="tns:AgentServiceException" name="AgentServiceException" wsaw:Action="urn:unregisterInAgentManagementServiceAgentServiceException" />
+        </wsdl:operation>
+        <wsdl:operation name="getServiceUrl">
+            <wsdl:input message="tns:getServiceUrlRequest" wsaw:Action="urn:getServiceUrl" />
+            <wsdl:output message="tns:getServiceUrlResponse" wsaw:Action="urn:getServiceUrlResponse" />
         </wsdl:operation>
         <wsdl:operation name="createContainer">
             <wsdl:input message="tns:createContainerRequest" wsaw:Action="urn:createContainer" />
@@ -184,8 +275,6 @@
         <wsdl:operation name="startContainer">
             <wsdl:input message="tns:startContainerRequest" wsaw:Action="urn:startContainer" />
             <wsdl:output message="tns:startContainerResponse" wsaw:Action="urn:startContainerResponse" />
-            <wsdl:fault message="tns:AgentServiceIOException" name="AgentServiceIOException" wsaw:Action="urn:startContainerAgentServiceIOException" />
-            <wsdl:fault message="tns:AgentServiceInterruptedException" name="AgentServiceInterruptedException" wsaw:Action="urn:startContainerAgentServiceInterruptedException" />
             <wsdl:fault message="tns:AgentServiceAgentServiceException" name="AgentServiceAgentServiceException" wsaw:Action="urn:startContainerAgentServiceAgentServiceException" />
         </wsdl:operation>
         <wsdl:operation name="destroyContainer">
@@ -198,6 +287,18 @@
     </wsdl:portType>
     <wsdl:binding name="AgentServiceSoap11Binding" type="tns:AgentServicePortType">
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="stopAndDestroyContainer">
+            <soap:operation soapAction="urn:stopAndDestroyContainer" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="AgentServiceAgentServiceException">
+                <soap:fault use="literal" name="AgentServiceAgentServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
         <wsdl:operation name="stopContainer">
             <soap:operation soapAction="urn:stopContainer" style="document" />
             <wsdl:input>
@@ -206,14 +307,8 @@
             <wsdl:output>
                 <soap:body use="literal" />
             </wsdl:output>
-            <wsdl:fault name="AgentServiceIOException">
-                <soap:fault use="literal" name="AgentServiceIOException" />
-            </wsdl:fault>
             <wsdl:fault name="AgentServiceAgentServiceException">
                 <soap:fault use="literal" name="AgentServiceAgentServiceException" />
-            </wsdl:fault>
-            <wsdl:fault name="AgentServiceInterruptedException">
-                <soap:fault use="literal" name="AgentServiceInterruptedException" />
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="registerInAgentManagementService">
@@ -221,12 +316,39 @@
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
+            <wsdl:fault name="AgentServiceException">
+                <soap:fault use="literal" name="AgentServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="createAndStartContainer">
+            <soap:operation soapAction="urn:createAndStartContainer" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="AgentServiceAgentServiceException">
+                <soap:fault use="literal" name="AgentServiceAgentServiceException" />
+            </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="unregisterInAgentManagementService">
             <soap:operation soapAction="urn:unregisterInAgentManagementService" style="document" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
+            <wsdl:fault name="AgentServiceException">
+                <soap:fault use="literal" name="AgentServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceUrl">
+            <soap:operation soapAction="urn:getServiceUrl" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="createContainer">
             <soap:operation soapAction="urn:createContainer" style="document" />
@@ -248,14 +370,8 @@
             <wsdl:output>
                 <soap:body use="literal" />
             </wsdl:output>
-            <wsdl:fault name="AgentServiceIOException">
-                <soap:fault use="literal" name="AgentServiceIOException" />
-            </wsdl:fault>
             <wsdl:fault name="AgentServiceAgentServiceException">
                 <soap:fault use="literal" name="AgentServiceAgentServiceException" />
-            </wsdl:fault>
-            <wsdl:fault name="AgentServiceInterruptedException">
-                <soap:fault use="literal" name="AgentServiceInterruptedException" />
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="destroyContainer">
@@ -279,6 +395,18 @@
     </wsdl:binding>
     <wsdl:binding name="AgentServiceSoap12Binding" type="tns:AgentServicePortType">
         <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+        <wsdl:operation name="stopAndDestroyContainer">
+            <soap12:operation soapAction="urn:stopAndDestroyContainer" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="AgentServiceAgentServiceException">
+                <soap12:fault use="literal" name="AgentServiceAgentServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
         <wsdl:operation name="stopContainer">
             <soap12:operation soapAction="urn:stopContainer" style="document" />
             <wsdl:input>
@@ -287,14 +415,8 @@
             <wsdl:output>
                 <soap12:body use="literal" />
             </wsdl:output>
-            <wsdl:fault name="AgentServiceIOException">
-                <soap12:fault use="literal" name="AgentServiceIOException" />
-            </wsdl:fault>
             <wsdl:fault name="AgentServiceAgentServiceException">
                 <soap12:fault use="literal" name="AgentServiceAgentServiceException" />
-            </wsdl:fault>
-            <wsdl:fault name="AgentServiceInterruptedException">
-                <soap12:fault use="literal" name="AgentServiceInterruptedException" />
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="registerInAgentManagementService">
@@ -302,12 +424,39 @@
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
+            <wsdl:fault name="AgentServiceException">
+                <soap12:fault use="literal" name="AgentServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="createAndStartContainer">
+            <soap12:operation soapAction="urn:createAndStartContainer" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="AgentServiceAgentServiceException">
+                <soap12:fault use="literal" name="AgentServiceAgentServiceException" />
+            </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="unregisterInAgentManagementService">
             <soap12:operation soapAction="urn:unregisterInAgentManagementService" style="document" />
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
+            <wsdl:fault name="AgentServiceException">
+                <soap12:fault use="literal" name="AgentServiceException" />
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceUrl">
+            <soap12:operation soapAction="urn:getServiceUrl" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="createContainer">
             <soap12:operation soapAction="urn:createContainer" style="document" />
@@ -329,14 +478,8 @@
             <wsdl:output>
                 <soap12:body use="literal" />
             </wsdl:output>
-            <wsdl:fault name="AgentServiceIOException">
-                <soap12:fault use="literal" name="AgentServiceIOException" />
-            </wsdl:fault>
             <wsdl:fault name="AgentServiceAgentServiceException">
                 <soap12:fault use="literal" name="AgentServiceAgentServiceException" />
-            </wsdl:fault>
-            <wsdl:fault name="AgentServiceInterruptedException">
-                <soap12:fault use="literal" name="AgentServiceInterruptedException" />
             </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="destroyContainer">
@@ -360,6 +503,15 @@
     </wsdl:binding>
     <wsdl:binding name="AgentServiceHttpBinding" type="tns:AgentServicePortType">
         <http:binding verb="POST" />
+        <wsdl:operation name="stopAndDestroyContainer">
+            <http:operation location="stopAndDestroyContainer" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
         <wsdl:operation name="stopContainer">
             <http:operation location="stopContainer" />
             <wsdl:input>
@@ -375,11 +527,29 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
         </wsdl:operation>
+        <wsdl:operation name="createAndStartContainer">
+            <http:operation location="createAndStartContainer" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
         <wsdl:operation name="unregisterInAgentManagementService">
             <http:operation location="unregisterInAgentManagementService" />
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getServiceUrl">
+            <http:operation location="getServiceUrl" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="createContainer">
             <http:operation location="createContainer" />
@@ -411,13 +581,13 @@
     </wsdl:binding>
     <wsdl:service name="AgentService">
         <wsdl:port name="AgentServiceHttpsSoap11Endpoint" binding="tns:AgentServiceSoap11Binding">
-            <soap:address location="https://192.168.254.1:9443/services/AgentService.AgentServiceHttpsSoap11Endpoint/" />
+            <soap:address location="https://175.157.149.65:9443/services/AgentService.AgentServiceHttpsSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="AgentServiceHttpsSoap12Endpoint" binding="tns:AgentServiceSoap12Binding">
-            <soap12:address location="https://192.168.254.1:9443/services/AgentService.AgentServiceHttpsSoap12Endpoint/" />
+            <soap12:address location="https://175.157.149.65:9443/services/AgentService.AgentServiceHttpsSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="AgentServiceHttpsEndpoint" binding="tns:AgentServiceHttpBinding">
-            <http:address location="https://192.168.254.1:9443/services/AgentService.AgentServiceHttpsEndpoint/" />
+            <http:address location="https://175.157.149.65:9443/services/AgentService.AgentServiceHttpsEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

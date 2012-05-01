@@ -64,6 +64,7 @@
 		<module>webharvest</module>	
 		<module>andes</module>
 		<module>closure-js-plugin</module>
+                <module>snappy-java</module>
 		<!-- orbit/modules -->
                 <module>orbit/cassandra</module>
                 <module>orbit/cassandra-jdbc</module>
@@ -87,6 +88,7 @@
                 <module>orbit/xkms</module>
 		<module>orbit/andes</module>
 		<module>orbit/andes-client</module>
+		<module>orbit/snappy-java</module>
 	     </modules>
    <dependencyManagement>
 	<dependencies>

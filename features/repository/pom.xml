@@ -477,6 +477,9 @@
 				<featureArtifactDef>
 				    org.wso2.carbon:org.wso2.carbon.attachment.mgt.feature:${carbon.version}
 				</featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.humantask.feature:${carbon.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>

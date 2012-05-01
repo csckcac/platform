@@ -183,7 +183,7 @@
 				<importFeatureDef>org.wso2.carbon.service.mgt.server:${wso2carbon.version}</importFeatureDef>
 				<importFeatureDef>org.wso2.carbon.system.statistics.server:${wso2carbon.version}</importFeatureDef>	
                                 <!--importFeatureDef>org.wso2.carbon.registry.extensions.server:${registry.extensions.feature.version}</importFeatureDef-->
-				<!--importFeatureDef>org.wso2.carbon.tryit.server:${wso2carbon.version}</importFeatureDef-->
+				<importFeatureDef>org.wso2.carbon.attachment.mgt.server:${wso2carbon.version}</importFeatureDef>
                             </importFeatures>
                         </configuration>
                     </execution>

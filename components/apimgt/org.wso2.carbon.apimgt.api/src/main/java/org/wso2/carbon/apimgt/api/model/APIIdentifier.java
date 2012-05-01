@@ -29,7 +29,7 @@ public class APIIdentifier {
     private final String providerName;
     private final String apiName;
     private final String version;
-    private  String tier;
+    private String tier;
     private String applicationId;
 
     public String getApplicationId() {
@@ -47,23 +47,25 @@ public class APIIdentifier {
     public void setTier(String tier) {
         this.tier = tier;
     }
+
     public APIIdentifier(String providerName, String apiName, String version) {
         this.providerName = providerName;
         this.apiName = apiName;
         this.version = version;
     }
 
-    public APIIdentifier(String apiId) throws APIManagementException{
+    public APIIdentifier(String apiId) throws APIManagementException {
         //eg: apiId = "P1_API1_v1.0.0"
         String[] split = apiId.split("_");
-        if(split.length == 3){
+        if (split.length == 3) {
             this.providerName = split[0];
             this.apiName = split[1];
             this.version = split[2];
-        }else{
-            throw new APIManagementException("Invalid API ID : "+apiId);
+        } else {
+            throw new APIManagementException("Invalid API ID : " + apiId);
         }
     }
+
     public String getProviderName() {
         return providerName;
     }
@@ -84,7 +86,7 @@ public class APIIdentifier {
         APIIdentifier that = (APIIdentifier) o;
 
         return apiName.equals(that.apiName) && providerName.equals(that.providerName) &&
-               version.equals(that.version);
+                version.equals(that.version);
     }
 
     @Override

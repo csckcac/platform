@@ -77,7 +77,7 @@ public class SubscribedAPI {
     }
 
     public void setLastAccessed(Date lastAccessed) {
-        if(lastAccessed != null){
+        if (lastAccessed != null) {
             this.lastAccessed = new Date(lastAccessed.getTime());
         }
     }
@@ -97,7 +97,7 @@ public class SubscribedAPI {
 
         SubscribedAPI that = (SubscribedAPI) o;
         return apiId.equals(that.apiId) && application.equals(that.application) &&
-               subscriber.equals(that.subscriber);
+                subscriber.equals(that.subscriber);
     }
 
     @Override

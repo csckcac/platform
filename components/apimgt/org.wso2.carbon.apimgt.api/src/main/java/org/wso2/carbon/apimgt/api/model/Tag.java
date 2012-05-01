@@ -19,6 +19,7 @@ package org.wso2.carbon.apimgt.api.model;
 
 /**
  * Represents a tag(s) used to categorize an API.
+ *
  * @see API
  */
 @SuppressWarnings("unused")

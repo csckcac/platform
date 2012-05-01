@@ -21,7 +21,7 @@
 import org.wso2.carbon.apimgt.api.model.APIIdentifier;
 
 /**
- * TODO: class description
+ * This class represent the API subscription count.
  */
 public class APISubscriptionCount {
     private APIIdentifier apiId;

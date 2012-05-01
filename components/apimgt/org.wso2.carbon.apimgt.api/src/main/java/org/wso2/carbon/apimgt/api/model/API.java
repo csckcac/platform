@@ -35,13 +35,13 @@ public class API {
     private String wsdlUrl;
     private String context;
     private String thumbnailUrl;
-	private Set<String> tags = new LinkedHashSet<String>();
+    private Set<String> tags = new LinkedHashSet<String>();
     private Set<Documentation> documents = new LinkedHashSet<Documentation>();
     private String httpVerb;
     private Date lastUpdated;
-    private Set<Tier> availableTiers = new LinkedHashSet<Tier> ();
+    private Set<Tier> availableTiers = new LinkedHashSet<Tier>();
     private AuthorizationPolicy authorizationPolicy;
-    private Set<URITemplate> uriTemplates = new LinkedHashSet<URITemplate> ();
+    private Set<URITemplate> uriTemplates = new LinkedHashSet<URITemplate>();
 
     private APIStatus status;
 
@@ -78,12 +78,15 @@ public class API {
     public void setUrl(String url) {
         this.url = url;
     }
+
     public String getWsdlUrl() {
         return wsdlUrl;
     }
+
     public void setContext(String context) {
         this.context = context;
     }
+
     public String getContext() {
         return context;
     }
@@ -91,13 +94,14 @@ public class API {
     public void setWsdlUrl(String wsdlUrl) {
         this.wsdlUrl = wsdlUrl;
     }
-    public String getThumbnailUrl() {
-		return thumbnailUrl;
-	}
 
-	public void setThumbnailUrl(String thumbnailUrl) {
-		this.thumbnailUrl = thumbnailUrl;
-	}
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
+    }
 
     public Set<String> getTags() {
         return Collections.unmodifiableSet(tags);
@@ -119,7 +123,7 @@ public class API {
         this.documents.addAll(documents);
     }
 
-    public void removeDocuments(Set<Documentation> documents){
+    public void removeDocuments(Set<Documentation> documents) {
         this.documents.removeAll(documents);
     }
 
@@ -182,7 +186,7 @@ public class API {
     /**
      * @return true if the current version of the API is the latest
      */
-    public boolean isLatest(){
+    public boolean isLatest() {
         return isLatest;
     }
 

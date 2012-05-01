@@ -18,7 +18,7 @@
 package org.wso2.carbon.apimgt.api.model;
 
 /**
- * TODO: class description
+ * This class represent the Tier
  */
 @SuppressWarnings("unused")
 public class Tier {

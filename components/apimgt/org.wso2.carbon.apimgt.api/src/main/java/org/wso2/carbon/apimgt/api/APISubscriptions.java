@@ -15,7 +15,7 @@
 * specific language governing permissions and limitations
 * under the License.
 */
- package org.wso2.carbon.apimgt.api;
+package org.wso2.carbon.apimgt.api;
 
 import org.wso2.carbon.apimgt.api.model.APIIdentifier;
 import org.wso2.carbon.apimgt.api.model.SubscribedAPI;
@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
- * TODO: class description
+ * This class represent API Subscriptions
  */
 public class APISubscriptions {
     private APIIdentifier apiId;

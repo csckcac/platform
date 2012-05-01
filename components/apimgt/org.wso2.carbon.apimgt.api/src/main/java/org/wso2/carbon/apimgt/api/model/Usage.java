@@ -18,7 +18,7 @@
 package org.wso2.carbon.apimgt.api.model;
 
 /**
- * TODO: class description
+ * This class represent the API usage
  */
 public class Usage {
 }

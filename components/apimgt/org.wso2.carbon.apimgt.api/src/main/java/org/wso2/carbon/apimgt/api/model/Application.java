@@ -78,7 +78,7 @@ public class Application {
     @Override
     public int hashCode() {
         int result = name.hashCode();
-        result = 31 * result + Integer.valueOf(id).hashCode() ;
+        result = 31 * result + Integer.valueOf(id).hashCode();
         result = 31 * result + subscriber.hashCode();
         return result;
     }

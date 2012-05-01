@@ -20,7 +20,9 @@ package org.wso2.carbon.apimgt.api.model;
 import java.util.Date;
 
 /**
- * Subscriber of API. Mapping between a particular Subscriber using a selected API is captured in {@link SubscribedAPI}.
+ * Subscriber of API. Mapping between a particular Subscriber using a selected API is captured in
+ * {@link SubscribedAPI}.
+ *
  * @see SubscribedAPI
  */
 @SuppressWarnings("unused")

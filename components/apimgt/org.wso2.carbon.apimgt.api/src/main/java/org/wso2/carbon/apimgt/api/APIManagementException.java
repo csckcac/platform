@@ -12,7 +12,8 @@ public class APIManagementException extends Exception {
     public APIManagementException(String msg, Throwable e) {
         super(msg, e);
     }
-    public APIManagementException(Throwable throwable){
+
+    public APIManagementException(Throwable throwable) {
         super(throwable);
     }
 }

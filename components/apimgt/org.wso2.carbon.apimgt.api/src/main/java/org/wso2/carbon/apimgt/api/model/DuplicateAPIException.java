@@ -18,22 +18,22 @@
 package org.wso2.carbon.apimgt.api.model;
 
 /**
- * TODO: class description
+ * This exception class use to handle duplicate APIs
  */
-public class DuplicateAPIException extends Exception{
+public class DuplicateAPIException extends Exception {
     public DuplicateAPIException() {
-        super();    
+        super();
     }
 
     public DuplicateAPIException(String message) {
-        super(message);    
+        super(message);
     }
 
     public DuplicateAPIException(String message, Throwable cause) {
-        super(message, cause);    
+        super(message, cause);
     }
 
     public DuplicateAPIException(Throwable cause) {
-        super(cause);    
+        super(cause);
     }
 }

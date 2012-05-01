@@ -5,7 +5,7 @@ import org.wso2.carbon.apimgt.api.model.*;
 import java.util.Set;
 
 /**
- * Manager responsible for providing helper functionality for API consumer
+ * APIConsumer responsible for providing helper functionality
  */
 public interface APIConsumer {
     /**

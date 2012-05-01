@@ -21,11 +21,12 @@ import java.util.Date;
 
 /**
  * Documentation for API. There can be several types of documentation. Refer {@link DocumentationType}.
+ *
  * @see DocumentationType
  */
 @SuppressWarnings("unused")
 public class Documentation {
-    private DocumentationType  type;
+    private DocumentationType type;
     private String name;
     private String summary;
     private DocumentSourceType sourceType;
@@ -39,6 +40,7 @@ public class Documentation {
     public void setSourceUrl(String sourceUrl) {
         this.sourceUrl = sourceUrl;
     }
+
     public Documentation(DocumentationType type, String name) {
         this.type = type;
         this.name = name;

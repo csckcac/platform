@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Manager responsible for providing helper functionality for API provider
+ * APIProvider responsible for providing helper functionality
  */
 public interface APIProvider {
     /**

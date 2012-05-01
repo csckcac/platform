@@ -40,5 +40,5 @@ public class Comment {
     }
 
     private String user;
-   private String text;
+    private String text;
 }

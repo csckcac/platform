@@ -342,6 +342,8 @@ public class ExecDriver extends Task<MapredWork> implements Serializable, Hadoop
       throw new RuntimeException(e.getMessage());
     }
 
+    // Explicitly set job jar. Otherwise it won't get picked up by setJarByClass under OSGi enviornment.   
+    job.setJar(conf.getVar(HiveConf.ConfVars.HIVEJAR));   
 
     // No-Op - we don't really write anything here ..
     job.setOutputKeyClass(Text.class);

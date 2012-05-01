@@ -138,6 +138,18 @@
             <groupId>org.antlr.wso2</groupId>
             <artifactId>antlr-runtime</artifactId>
         </dependency>
+        <dependency>
+            <groupId>snappy-java.wso2</groupId>
+            <artifactId>snappy-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>snaptree.wso2</groupId>
+            <artifactId>snaptree</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>metrics-core.wso2</groupId>
+            <artifactId>metrics-core</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -213,7 +225,9 @@
                                 <bundleDef>org.github.wso2:jamm</bundleDef>
                                 <bundleDef>antlr.wso2:antlr</bundleDef>
                                 <bundleDef>org.antlr.wso2:antlr-runtime</bundleDef>
-
+                                <bundleDef>snappy-java.wso2:snappy-java</bundleDef>
+                                <bundleDef>snaptree.wso2:snaptree</bundleDef>
+                                <bundleDef>metrics-core.wso2:metrics-core</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${wso2carbon.version}</importFeatureDef>

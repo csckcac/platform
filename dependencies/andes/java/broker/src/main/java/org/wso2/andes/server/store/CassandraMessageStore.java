@@ -689,20 +689,9 @@ public class CassandraMessageStore implements MessageStore {
 
         StorableMessageMetaData metaData = null;
         try {
-            LongSerializer ls = LongSerializer.get();
-            BytesArraySerializer bs = BytesArraySerializer.get();
-
-            ColumnQuery columnQuery = HFactory.createColumnQuery(keyspace, stringSerializer, ls, bs);
-            columnQuery.setColumnFamily(QMD_COLUMN_FAMILY);
-            columnQuery.setKey(QMD_ROW_NAME);
-            columnQuery.setName(messageId);
-
-            QueryResult<HColumn<Long, byte[]>> result = columnQuery.execute();
-
-            HColumn<Long, byte[]> column = result.get();
+            HColumn<Long, byte[]> column = CassandraDataAccessHelper.
+                    getLongByteArrayColumnInARow(QMD_ROW_NAME,QMD_COLUMN_FAMILY,messageId,keyspace);
             byte[] dataAsBytes = column.getValue();
-
-
             ByteBuffer buf = ByteBuffer.wrap(dataAsBytes);
             buf.position(1);
             buf = buf.slice();

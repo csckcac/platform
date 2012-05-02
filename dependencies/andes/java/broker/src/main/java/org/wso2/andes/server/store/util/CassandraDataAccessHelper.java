@@ -31,6 +31,7 @@ import me.prettyprint.hector.api.ddl.ComparatorType;
 import me.prettyprint.hector.api.ddl.KeyspaceDefinition;
 import me.prettyprint.hector.api.factory.HFactory;
 import me.prettyprint.hector.api.mutation.Mutator;
+import me.prettyprint.hector.api.query.ColumnQuery;
 import me.prettyprint.hector.api.query.QueryResult;
 import me.prettyprint.hector.api.query.SliceQuery;
 import org.wso2.andes.server.store.CassandraConsistencyLevelPolicy;
@@ -270,6 +271,46 @@ public class CassandraDataAccessHelper {
         } catch (Exception e) {
             throw new CassandraDataAccessException("Error while getting data from : " + columnFamilyName);
         }
+    }
+
+    /**
+     * Get a  HColumn<Long, byte[]> with a given key in a given row in a given column Family
+     * @param rowName name of the row
+     * @param columnFamily column Family name
+     * @param key   long type key of the column we are looking for
+     * @param keyspace cassandra keySpace instance
+     * @return     query result as a cassandra column
+     * @throws CassandraDataAccessException  in case of an Error when accessing data
+     */
+    public static HColumn<Long, byte[]> getLongByteArrayColumnInARow(String rowName,String columnFamily,
+                                                                        long key,Keyspace keyspace)
+            throws CassandraDataAccessException {
+
+        if (keyspace == null) {
+            throw new CassandraDataAccessException("Can't access Data , no keyspace provided ");
+        }
+
+        if (columnFamily == null || rowName == null) {
+            throw new CassandraDataAccessException("Can't access data with columnFamily = " + columnFamily +
+                    " and rowName=" + rowName);
+        }
+
+        try {
+            ColumnQuery columnQuery = HFactory.createColumnQuery(keyspace,
+                    stringSerializer, longSerializer, bytesArraySerializer);
+            columnQuery.setColumnFamily(columnFamily);
+            columnQuery.setKey(rowName);
+            columnQuery.setName(key);
+
+            QueryResult<HColumn<Long, byte[]>> result = columnQuery.execute();
+
+            HColumn<Long, byte[]> column = result.get();
+            return column;
+        } catch (Exception e) {
+            throw new CassandraDataAccessException("Error while executing quary for HColumn<Long, byte[]> with key =" +
+                    key + " in column Family = " + columnFamily);
+        }
+
     }
 
 

@@ -18,17 +18,17 @@
 <%@ page import="org.wso2.carbon.mediator.rule.RuleMediator" %>
 <%@ page import="org.wso2.carbon.mediator.rule.ui.internal.RuleMediatorClientHelper" %>
 <%@ page import="org.wso2.carbon.mediator.service.ui.Mediator" %>
+<%@ page import="org.wso2.carbon.rule.common.*" %>
+<%@ page import="org.wso2.carbon.rule.mediator.config.RuleMediatorConfig" %>
+<%@ page import="org.wso2.carbon.rule.mediator.config.Source" %>
+<%@ page import="org.wso2.carbon.rule.mediator.config.Target" %>
 <%@ page import="org.wso2.carbon.sequences.ui.util.SequenceEditorHelper" %>
+<%@ page import="org.wso2.carbon.sequences.ui.util.ns.NameSpacesInformation" %>
+<%@ page import="org.wso2.carbon.sequences.ui.util.ns.NameSpacesInformationRepository" %>
 <%@ page import="org.wso2.carbon.sequences.ui.util.ns.NameSpacesRegistrar" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
-<%@ page import="org.wso2.carbon.rule.mediator.config.RuleMediatorConfig" %>
-<%@ page import="org.wso2.carbon.rule.mediator.config.Target" %>
-<%@ page import="org.wso2.carbon.rule.mediator.config.Source" %>
-<%@ page import="org.wso2.carbon.rule.common.*" %>
-<%@ page import="org.wso2.carbon.sequences.ui.util.ns.NameSpacesInformation" %>
-<%@ page import="org.wso2.carbon.sequences.ui.util.ns.NameSpacesInformationRepository" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
 <%--
   ~  Copyright (c) 2008, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -94,6 +94,7 @@
     String targetXpath = target.getXpath() != null ? target.getXpath() : "";
     String targetAction = target.getAction() != null ? target.getAction() : "";
     Map<String, String> resultNSMap = target.getPrefixToNamespaceMap();
+  //  Map<String, String> targetNSMap = target.getPrefixToTargetNamespaceMap();
     if (resultNSMap != null) {
 
         NameSpacesInformationRepository repository = (NameSpacesInformationRepository) session.getAttribute(
@@ -106,6 +107,18 @@
         repository.addNameSpacesInformation(ownerID, "resultValue", nameSpacesInformation);
         session.setAttribute(NameSpacesInformationRepository.NAMESPACES_INFORMATION_REPOSITORY, repository);
     }
+//    if(targetNSMap != null){
+//           NameSpacesInformationRepository repository = (NameSpacesInformationRepository) session.getAttribute(
+//                NameSpacesInformationRepository.NAMESPACES_INFORMATION_REPOSITORY);
+//        if (repository == null) {
+//            repository = new NameSpacesInformationRepository();
+//        }
+//        NameSpacesInformation nameSpacesInformation = new NameSpacesInformation();
+//        nameSpacesInformation.setNameSpaces(targetNSMap);
+//        repository.addNameSpacesInformation(ownerID, "targetNS", nameSpacesInformation);
+//        session.setAttribute(NameSpacesInformationRepository.NAMESPACES_INFORMATION_REPOSITORY, repository);
+//
+//    }
 
     NameSpacesRegistrar nameSpacesRegistrar = NameSpacesRegistrar.getInstance();
     //Execution Set Metadata
@@ -256,12 +269,12 @@
                            name="mediator.rule.target.xpath"
                            style="width:300px;" value='<%=targetXpath%>'/>
                 </td>
-                    <%--      <td id="targetNsEditorButtonTD">
+                          <td id="targetNsEditorButtonTD">
                         <a href="#nsEditorLink" class="nseditor-icon-link"
                            style="padding-left:40px"
-                           onclick="showNameSpaceEditor('targetValue')"><fmt:message
+                           onclick="showNameSpaceEditor('resultValue')"><fmt:message
                                 key="namespaces"/></a>
-                    </td>--%>
+                    </td>
             </tr>
             <tr>
                 <td><fmt:message key="mediator.rule.target.action"/>

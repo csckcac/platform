@@ -40,6 +40,7 @@ import java.util.Map;
 public class RuleMediatorClientHelper {
     static NameSpacesInformationRepository repository;
     static NameSpacesInformation information = null;
+    static NameSpacesInformation targetNSInformation = null;
     static String ownerID;
 
     public static void init(HttpServletRequest request) {
@@ -88,11 +89,16 @@ public class RuleMediatorClientHelper {
         if (request.getParameter("mediator.rule.target.action") != null) {
             target.setAction(request.getParameter("mediator.rule.target.action"));
         }
-            if (repository != null) {
+        if (repository != null) {
             information = repository.getNameSpacesInformation(ownerID, "resultValue");
             if (information != null) {
                 target.setPrefixToNamespaceMap(information.getNameSpaces());
             }
+//            targetNSInformation = repository.getNameSpacesInformation(ownerID, "targetNS");
+//            if (targetNSInformation != null) {
+//                target.setPrefixToTargetNamespaceMap(targetNSInformation.getNameSpaces());
+//
+//            }
         }
 
     }

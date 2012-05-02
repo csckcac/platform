@@ -37,7 +37,7 @@
 	<dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.billing.core</artifactId>
-                <version>${wso2carbon.version}</version>
+                <version>${stratos.version}</version>
         </dependency>
 	 <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -68,7 +68,7 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-				<bundleDef>org.wso2.carbon:org.wso2.carbon.billing.core:${wso2carbon.version}</bundleDef>
+				<bundleDef>org.wso2.carbon:org.wso2.carbon.billing.core</bundleDef>
 				<bundleDef>org.wso2.carbon:org.wso2.carbon.billing.mgt</bundleDef>
                            </bundles>
                             <!--importFeatures>

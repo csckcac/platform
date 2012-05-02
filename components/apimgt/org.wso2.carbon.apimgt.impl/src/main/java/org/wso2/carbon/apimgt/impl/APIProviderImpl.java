@@ -51,7 +51,7 @@ public class APIProviderImpl implements APIProvider {
     @Override
     public Set<Provider> getAllProviders() throws APIManagementException {
         Set<Provider> providerSet = new HashSet<Provider>();
-        artifactManager = APIUtil.getArtifactManager(registry,APIConstants.PROVIDER_KEY);
+        artifactManager = APIUtil.getArtifactManager(registry, APIConstants.PROVIDER_KEY);
         try {
             GenericArtifact[] genericArtifact = artifactManager.getAllGenericArtifacts();
             if (genericArtifact == null || genericArtifact.length == 0) {
@@ -89,7 +89,7 @@ public class APIProviderImpl implements APIProvider {
             String providerPath = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
                     providerId;
 
-            artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
+            artifactManager = APIUtil.getArtifactManager(registry, APIConstants.API_KEY);
             Association[] associations = registry.getAssociations(providerPath,
                     APIConstants.PROVIDER_ASSOCIATION);
             for (Association association : associations) {
@@ -149,7 +149,7 @@ public class APIProviderImpl implements APIProvider {
         String providerPath = RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
                 APIConstants.PROVIDERS_PATH + RegistryConstants.PATH_SEPARATOR + providerName;
         try {
-            artifactManager = APIUtil.getArtifactManager(registry,APIConstants.PROVIDER_KEY);
+            artifactManager = APIUtil.getArtifactManager(registry, APIConstants.PROVIDER_KEY);
             Resource providerResource = registry.get(providerPath);
             String artifactId =
                     providerResource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY);
@@ -274,30 +274,7 @@ public class APIProviderImpl implements APIProvider {
      */
     @Override
     public void addAPI(API api) throws APIManagementException {
-
-        artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
-        try {
-            GenericArtifact genericArtifact =
-                    artifactManager.newGovernanceArtifact(new QName(api.getId().getApiName()));
-            GenericArtifact artifact = APIUtil.createAPIArtifactContent(genericArtifact, api);
-            artifactManager.addGenericArtifact(artifact);
-            String artifactPath = GovernanceUtils.getArtifactPath(registry, artifact.getId());
-            String providerPath = APIUtil.getAPIProviderPath(api.getId());
-            //provider ------provides----> API
-            registry.addAssociation(providerPath, artifactPath, APIConstants.PROVIDER_ASSOCIATION);
-            Set<String> tagSet = api.getTags();
-            if (tagSet != null && tagSet.size() > 0) {
-                for (String tag : tagSet) {
-                    registry.applyTag(artifactPath, tag);
-                }
-            }
-            //Setting context name as property of API
-            Resource resource = registry.get(artifactPath);
-            resource.setProperty(APIConstants.API_CONTEXT_ID, api.getContext());
-            registry.put(artifactPath, resource);
-        } catch (RegistryException e) {
-            handleException("Error while adding API", e);
-        }
+        createAPI(api);
     }
 
     /**
@@ -309,16 +286,7 @@ public class APIProviderImpl implements APIProvider {
      */
     @Override
     public void updateAPI(API api) throws APIManagementException {
-
-        APIIdentifier apiIdentifier = api.getId();
-        String path = APIUtil.getAPIPath(apiIdentifier);
-        try {
-            Resource resource = registry.get(path);
-            api.setContext(resource.getProperty(APIConstants.API_CONTEXT_ID));
-        } catch (RegistryException e) {
-            handleException("Failed set context id when updating the API", e);
-        }
-        addAPI(api);
+        createAPI(api);
     }
 
     /**
@@ -358,7 +326,7 @@ public class APIProviderImpl implements APIProvider {
             //Check the status of the existing api,if its not in 'CREATED' status set
             //the new api status as "CREATED"
             String status = artifact.getAttribute(APIConstants.API_OVERVIEW_STATUS);
-            if(!status.equals(APIConstants.CREATED)){
+            if (!status.equals(APIConstants.CREATED)) {
                 artifact.setAttribute(APIConstants.API_OVERVIEW_STATUS, APIConstants.CREATED);
             }
             artifactManager.addGenericArtifact(artifact);
@@ -413,19 +381,7 @@ public class APIProviderImpl implements APIProvider {
     @Override
     public void addDocumentation(APIIdentifier apiId, Documentation documentation)
             throws APIManagementException {
-        try {
-            artifactManager = new GenericArtifactManager(registry, APIConstants.DOCUMENTATION_KEY);
-            GenericArtifact artifact =
-                    artifactManager.newGovernanceArtifact(new QName(documentation.getName()));
-            artifactManager.addGenericArtifact(
-                    APIUtil.createDocArtifactContent(artifact, apiId, documentation));
-            String apiPath = APIUtil.getAPIPath(apiId);
-            //Adding association from api to documentation . (API -----> doc)
-            registry.addAssociation(apiPath, artifact.getPath(), APIConstants.DOCUMENTATION_ASSOCIATION);
-
-        } catch (RegistryException e) {
-            handleException("Failed to add documentation", e);
-        }
+        createDocumentation(apiId, documentation);
     }
 
     /**
@@ -452,7 +408,7 @@ public class APIProviderImpl implements APIProvider {
                     APIConstants.DOCUMENTATION_CONTENT_ASSOCIATION);
         } catch (RegistryException e) {
             String msg = "Failed to add the documentation content of : "
-                    + documentationName + " of API :"+identifier.getApiName();
+                    + documentationName + " of API :" + identifier.getApiName();
             handleException(msg, e);
         }
     }
@@ -468,11 +424,7 @@ public class APIProviderImpl implements APIProvider {
     @Override
     public void updateDocumentation(APIIdentifier apiId, Documentation documentation)
             throws APIManagementException {
-        try {
-            addDocumentation(apiId, documentation);
-        } catch (APIManagementException e) {
-            handleException("Failed to update doc", e);
-        }
+        createDocumentation(apiId, documentation);
     }
 
     /**
@@ -511,5 +463,61 @@ public class APIProviderImpl implements APIProvider {
     private void handleException(String msg, Exception e) throws APIManagementException {
         log.error(msg, e);
         throw new APIManagementException(msg, e);
+    }
+
+    /**
+     * Create an Api
+     *
+     * @param api API
+     * @throws APIManagementException if failed to create API
+     */
+    private void createAPI(API api) throws APIManagementException {
+        artifactManager = APIUtil.getArtifactManager(registry, APIConstants.API_KEY);
+        try {
+            GenericArtifact genericArtifact =
+                    artifactManager.newGovernanceArtifact(new QName(api.getId().getApiName()));
+            GenericArtifact artifact = APIUtil.createAPIArtifactContent(genericArtifact, api);
+            artifactManager.addGenericArtifact(artifact);
+            String artifactPath = GovernanceUtils.getArtifactPath(registry, artifact.getId());
+            String providerPath = APIUtil.getAPIProviderPath(api.getId());
+            //provider ------provides----> API
+            registry.addAssociation(providerPath, artifactPath, APIConstants.PROVIDER_ASSOCIATION);
+            Set<String> tagSet = api.getTags();
+            if (tagSet != null && tagSet.size() > 0) {
+                for (String tag : tagSet) {
+                    registry.applyTag(artifactPath, tag);
+                }
+            }
+            //Setting context name as property of API
+            Resource resource = registry.get(artifactPath);
+            resource.setProperty(APIConstants.API_CONTEXT_ID, api.getContext());
+            registry.put(artifactPath, resource);
+        } catch (RegistryException e) {
+            handleException("Error while adding API", e);
+        }
+    }
+
+    /**
+     * Create a documentation
+     *
+     * @param apiId         APIIdentifier
+     * @param documentation Documentation
+     * @throws APIManagementException if failed to add documentation
+     */
+    private void createDocumentation(APIIdentifier apiId, Documentation documentation)
+            throws APIManagementException {
+        try {
+            artifactManager = new GenericArtifactManager(registry, APIConstants.DOCUMENTATION_KEY);
+            GenericArtifact artifact =
+                    artifactManager.newGovernanceArtifact(new QName(documentation.getName()));
+            artifactManager.addGenericArtifact(
+                    APIUtil.createDocArtifactContent(artifact, apiId, documentation));
+            String apiPath = APIUtil.getAPIPath(apiId);
+            //Adding association from api to documentation . (API -----> doc)
+            registry.addAssociation(apiPath, artifact.getPath(), APIConstants.DOCUMENTATION_ASSOCIATION);
+
+        } catch (RegistryException e) {
+            handleException("Failed to add documentation", e);
+        }
     }
 }

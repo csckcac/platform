@@ -304,7 +304,7 @@ public class SnappyLoader
             IllegalArgumentException, IllegalAccessException, InvocationTargetException {
         if (loaderClass == null)
             throw new SnappyError(SnappyErrorCode.FAILED_TO_LOAD_NATIVE_LIBRARY, "missing snappy native loader class");
-
+        
         File nativeLib = findNativeLibrary();
         if (nativeLib != null) {
             // Load extracted or specified snappyjava native library. 
@@ -316,6 +316,11 @@ public class SnappyLoader
             Method loadMethod = loaderClass.getDeclaredMethod("loadLibrary", new Class[] { String.class });
             loadMethod.invoke(null, "snappyjava");
         }
+    }
+
+    private static void setJavaLibPath(String snappyNativeLibraryName) {
+        String tmpLocation =new File(System.getProperty(KEY_SNAPPY_TEMPDIR,System.getProperty("java.io.tmpdir"))).getAbsolutePath();
+        System.setProperty("java.lib.path",tmpLocation);
     }
 
     /**
@@ -426,6 +431,8 @@ public class SnappyLoader
         // Resolve the library file name with a suffix (e.g., dll, .so, etc.) 
         if (snappyNativeLibraryName == null)
             snappyNativeLibraryName = System.mapLibraryName("snappyjava");
+        
+        setJavaLibPath(snappyNativeLibraryName);
 
         if (snappyNativeLibraryPath != null) {
             File nativeLib = new File(snappyNativeLibraryPath, snappyNativeLibraryName);

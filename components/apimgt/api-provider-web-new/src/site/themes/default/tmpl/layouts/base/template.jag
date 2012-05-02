@@ -1,20 +1,24 @@
 <% jagg.template = function(data, params, jagg) { %>
+
 <div id="layouts_base">
     <div id="top">
+         <div class="navbar">
         <% jagg.includeTemplates(data.top); %>
+        </div>
     </div>
 
     <div id="left">
-        <div class="col_3">
+        <div class="span2">
             <% jagg.includeTemplates(data.left); %>
         </div>
     </div>
 
-
     <div id="right">
-        <div class="col_3">
+        <div class="span10">
             <% jagg.includeTemplates(data.right); %>
         </div>
     </div>
+
+
 </div>
 <% }; %>

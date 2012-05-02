@@ -16,12 +16,8 @@ var getParams = function () {
         ],
         "left":[
             {
-                "name":"",
-                "params":{
-                    "classes":"",
-                    "place":""
+                "name":""
 
-                }
             }
         ],
 

@@ -37,10 +37,7 @@
         <script type="text/javascript" src="<%=site.context%>/site/themes/default/lib/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js"></script>
         <script type="text/javascript" src="<%=site.context%>/site/themes/default/lib/jqplot/plugins/jqplot.categoryAxisRenderer.min.js"></script>
         <script type="text/javascript" src="<%=site.context%>/site/themes/default/lib/jqplot/plugins/jqplot.barRenderer.min.js"></script>
-        <script type="text/javascript" src="<%=site.context%>/site/themes/default/js/apiProviderApp.js"></script>
-        <script type="text/javascript" src="<%=site.context%>/site/themes/default/js/index/initIndex.js"></script>
-        <script type="text/javascript" src="<%=site.context%>/site/themes/default/js/provider/renderProvider.js"></script>
-        <script type="text/javascript" src="<%=site.context%>/site/themes/default/js/util.js"></script>
+
         <script src="http://malsup.github.com/jquery.form.js"></script>
 
 

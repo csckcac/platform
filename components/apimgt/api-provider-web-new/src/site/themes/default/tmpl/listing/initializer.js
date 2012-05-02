@@ -1,5 +1,5 @@
 var getTemplateFile = function() {
-    return "tmpl/item-listing/template.jag";
+    return "tmpl/listing/template.jag";
 };
 
 var initialize = function (jagg) {

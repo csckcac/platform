@@ -5,7 +5,6 @@ var site = require("/site/conf/site.json");
 var list = require("/core/apis/list.js");
 var result = list.getAPIsByProvider();
 var apis = result.apis;
-
 var params = {
     "name":"pages/base",
     "css":{},
@@ -25,7 +24,7 @@ var params = {
                         "top" : null,
                         "left" : null,
                         "right" : {
-                            "name" : "item-listing",
+                            "name" : "listing",
                             "params" : {
                                 "apis" : apis
                             }

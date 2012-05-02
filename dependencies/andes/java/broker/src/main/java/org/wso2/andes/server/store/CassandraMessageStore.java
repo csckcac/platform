@@ -115,6 +115,8 @@ public class CassandraMessageStore implements MessageStore {
     private final static String ACKED_MESSAGE_IDS_COLUMN_FAMILY = "acknowledgedMessageIds";
     private final static String ACKED_MESSAGE_IDS_ROW = "acknowledgedMessageIdsRow";
 
+    private final static String BROWSER_QUEUE_COLUMN_FAMILY="BrowserQueues";
+
     private final AtomicLong _messageId = new AtomicLong(0);
 
     private Queue<Long> contentDeletionTasks;
@@ -440,6 +442,7 @@ public class CassandraMessageStore implements MessageStore {
         CassandraDataAccessHelper.createColumnFamily(TOPIC_SUBSCRIBERS, KEYSPACE, this.cluster, UTF8_TYPE);
         CassandraDataAccessHelper.createColumnFamily(TOPICS_COLUMN_FAMILY, KEYSPACE, this.cluster, UTF8_TYPE);
         CassandraDataAccessHelper.createColumnFamily(ACKED_MESSAGE_IDS_COLUMN_FAMILY, KEYSPACE, this.cluster, LONG_TYPE);
+        CassandraDataAccessHelper.createColumnFamily(BROWSER_QUEUE_COLUMN_FAMILY,KEYSPACE,this.cluster,UTF8_TYPE);
 
         return keyspace;
     }
@@ -477,6 +480,69 @@ public class CassandraMessageStore implements MessageStore {
                     userQueue,e);
         }
     }
+
+    public void addMessageToBrowserQueue(String queue,List<CassandraQueueMessage> messages) throws Exception{
+
+        try {
+            for (CassandraQueueMessage message: messages) {
+                if(log.isDebugEnabled()){
+                    log.debug("Adding message with id "+ message.getMessageId() +" to browser queue "+ queue);
+                }
+                CassandraDataAccessHelper.addMessageToQueue(BROWSER_QUEUE_COLUMN_FAMILY,queue,message.getMessageId(),message.getMessage(),keyspace);
+            }
+        } catch (CassandraDataAccessException e) {
+             log.error("Error in adding message to browser queue " + queue, e);
+           throw new Exception("Error in adding message to browser queue " + queue, e);
+        }
+    }
+
+    public List<QueueEntry> getMessagesFromBrowserQueue(AMQQueue queue,
+                                                     AMQProtocolSession session, int messageCount) throws AMQStoreException {
+        List<QueueEntry> messages = null;
+        SimpleQueueEntryList list = new SimpleQueueEntryList(queue);
+        try {
+            messages = new ArrayList<QueueEntry>();
+            ColumnSlice<String, byte[]> columnSlice = CassandraDataAccessHelper.
+                    getMessagesFromQueue(queue.getName().trim(), BROWSER_QUEUE_COLUMN_FAMILY, keyspace, messageCount);
+            long maxId = 0;
+
+            for (Object column : columnSlice.getColumns()) {
+                if (column instanceof HColumn) {
+                    String columnName = ((HColumn<String, byte[]>) column).getName();
+                    byte[] value = ((HColumn<Long, byte[]>) column).getValue();
+
+
+                    long messageId = Long.parseLong(columnName);
+
+                    if (messageId > maxId) {
+                        maxId = messageId;
+                    }
+
+                    byte[] dataAsBytes = value;
+                    ByteBuffer buf = ByteBuffer.wrap(dataAsBytes);
+                    buf.position(1);
+                    buf = buf.slice();
+                    MessageMetaDataType type = MessageMetaDataType.values()[dataAsBytes[0]];
+                    StorableMessageMetaData metaData = type.getFactory().createMetaData(buf);
+                    StoredCassandraMessage message = new StoredCassandraMessage(messageId, metaData);
+                    AMQMessage amqMessage = new AMQMessage(message);
+                    amqMessage.setClientIdentifier(session);
+                    messages.add(list.add(amqMessage));
+                }
+            }
+        } catch (Exception e) {
+           throw new AMQStoreException("Error while getting messages from queue : "  + queue ,e);
+        }
+
+
+        return messages;
+    }
+
+   public void clearBrowserQueue(List<QueueEntry> messages,String queueName) throws CassandraDataAccessException {
+       for (QueueEntry message: messages) {
+           CassandraDataAccessHelper.deleteStringColumnFromRaw(BROWSER_QUEUE_COLUMN_FAMILY,queueName,message.getMessage().getMessageNumber()+"",keyspace);
+       }
+   }
 
     /**
      * Add message to global queue
@@ -891,7 +957,7 @@ public class CassandraMessageStore implements MessageStore {
             List<String> queueList = CassandraDataAccessHelper.getRowList(TOPIC_SUBSCRIBERS, topic, keyspace);
             return queueList;
         } catch (Exception e) {
-            log.error("Error in getting registered subscribers for the topic" ,e);
+            log.error("Error in getting registered subscribers for the topic", e);
             throw e;
         }
     }
@@ -986,7 +1052,7 @@ public class CassandraMessageStore implements MessageStore {
 
 
             Mutator<String> mutator =
-                    HFactory.createMutator(keyspace,stringSerializer);
+                    HFactory.createMutator(keyspace, stringSerializer);
 
 
             RangeSlicesQuery<String, String, String> rangeSliceQuery =

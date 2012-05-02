@@ -25,9 +25,11 @@ import org.wso2.andes.server.protocol.AMQProtocolSession;
 import org.wso2.andes.server.queue.AMQQueue;
 import org.wso2.andes.server.queue.QueueEntry;
 import org.wso2.andes.server.store.CassandraMessageStore;
+import org.wso2.andes.server.store.util.CassandraDataAccessException;
 import org.wso2.andes.server.subscription.Subscription;
 import org.wso2.andes.server.subscription.SubscriptionImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,7 +52,7 @@ public class QueueBrowserFlusher extends Thread {
     private AMQQueue queue;
     private AMQProtocolSession session;
     private String id;
-    private int defaultMessageCount = 100;
+    private int defaultMessageCount = Integer.MAX_VALUE;
     private int messageCount;
 
     private static Log log = LogFactory.getLog(QueueBrowserFlusher.class);
@@ -66,14 +68,8 @@ public class QueueBrowserFlusher extends Thread {
 
     public void send(){
 
-        //Todo get messages from both user queue and the global queue
-        CassandraMessageStore messageStore = ClusterResourceHolder.getInstance().
-                getCassandraMessageStore();
-        /* List<QueueEntry> messages = messageStore.
-     getMessagesFromGlobalQueue(subscription.getSubscriptionID(), queue, session, messageCount);*/
         try {
-            List<QueueEntry> messages = messageStore.
-                    getMessagesFromUserQueue(queue, messageCount);
+            List<QueueEntry> messages = getSortedMessages();
             if (messages.size() > 0) {
                 for (QueueEntry message : messages) {
                     try {
@@ -88,10 +84,36 @@ public class QueueBrowserFlusher extends Thread {
                 }
                 // It is essential to confirm auto close , since in the client side it waits to know the end of the messages
                 subscription.confirmAutoClose();
+                clearBrowserQueue(messages);
             }
         } catch (AMQStoreException e) {
             log.error("Error while sending message for Browser subscription",e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
+
+    private List<QueueEntry> getSortedMessages() throws Exception {
+
+        CassandraMessageStore messageStore = ClusterResourceHolder.getInstance().
+                getCassandraMessageStore();
+        List<String> userQueues = messageStore.getUserQueues(queue.getResourceName());
+        List<CassandraQueueMessage> queueMessages = new ArrayList<CassandraQueueMessage>();
+        for (String userQueue : userQueues) {
+            List<CassandraQueueMessage> messages
+                    =  messageStore.getMessagesFromUserQueue(userQueue, queue.getResourceName(), Integer.MAX_VALUE);
+            for (CassandraQueueMessage message : messages) {
+                queueMessages.add(message);
+            }
+        }
+        messageStore.addMessageToBrowserQueue(queue.getResourceName(), queueMessages);
+        return messageStore.getMessagesFromBrowserQueue(queue, session, messageCount);
+    }
+
+    private void clearBrowserQueue(List<QueueEntry> queueEntries ) throws CassandraDataAccessException {
+        CassandraMessageStore messageStore = ClusterResourceHolder.getInstance().
+                getCassandraMessageStore();
+        messageStore.clearBrowserQueue(queueEntries,queue.getResourceName());
     }
 
 

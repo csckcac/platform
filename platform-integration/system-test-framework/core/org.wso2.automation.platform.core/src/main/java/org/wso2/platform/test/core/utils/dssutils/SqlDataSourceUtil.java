@@ -57,6 +57,7 @@ public class SqlDataSourceUtil {
     private int dbInstanceId = -1;
     private int userPrivilegeGroupId = -1;
     private String jdbcUrl = null;
+    private String jdbcDriver = null;
     private int databaseUserId = -1;
     private String databaseName;
     private String databaseUser;
@@ -109,6 +110,9 @@ public class SqlDataSourceUtil {
                 if ("org.wso2.ws.dataservice.protocol".equals(value)) {
                     property.setText(jdbcUrl);
 
+                } else if ("org.wso2.ws.dataservice.driver".equals(value)) {
+                    property.setText(jdbcDriver);
+
                 } else if ("org.wso2.ws.dataservice.user".equals(value)) {
                     property.setText(databaseUser);
 
@@ -144,6 +148,7 @@ public class SqlDataSourceUtil {
             createUser();
         } else {
             jdbcUrl = frameworkProperties.getDataSource().getDbUrl();
+            jdbcDriver = frameworkProperties.getDataSource().getM_dbDriverName();
             databaseUser = frameworkProperties.getDataSource().getDbUser();
             databasePassword = frameworkProperties.getDataSource().getDbPassword();
             createDataBase(jdbcUrl, databaseUser, databasePassword);

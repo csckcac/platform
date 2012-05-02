@@ -42,7 +42,7 @@ import org.jaxen.JaxenException;
 import java.util.List;
 
 /**
- * <callout serviceURL="string" [action="string"]>
+ * <callout serviceURL="string" [action="string"] [initAxis2ClientOptions="boolean"]>
  *      <configuration [axis2xml="string"] [repository="string"]/>?
  *      <source xpath="expression" | key="string"> <!-- key can be a MC property or entry key -->
  *      <target xpath="expression" | key="string"/>
@@ -59,6 +59,7 @@ public class CalloutMediator extends AbstractMediator implements ManagedLifecycl
     private String targetKey = null;
     private String clientRepository = null;
     private String axis2xml = null;
+    private boolean initClientOptions = true;
     public final static String DEFAULT_CLIENT_REPO = "./samples/axis2Client/client_repo";
     public final static String DEFAULT_AXIS2_XML = "./samples/axis2Client/client_repo/conf/axis2.xml";
 
@@ -76,7 +77,16 @@ public class CalloutMediator extends AbstractMediator implements ManagedLifecycl
 
         try {
             ServiceClient sc = new ServiceClient(configCtx, null);
-            Options options = new Options();
+
+            Options options;
+            if (initClientOptions) {
+                options = new Options();
+            } else {
+                org.apache.axis2.context.MessageContext axis2MessageCtx =
+                        ((Axis2MessageContext) synCtx).getAxis2MessageContext();
+                options = axis2MessageCtx.getOptions();
+            }
+
             options.setTo(new EndpointReference(serviceURL));
 
             if (action != null) {
@@ -298,5 +308,13 @@ public class CalloutMediator extends AbstractMediator implements ManagedLifecycl
 
     public void setAxis2xml(String axis2xml) {
         this.axis2xml = axis2xml;
+    }
+
+    public boolean getInitClientOptions() {
+        return initClientOptions;
+    }
+
+    public void setInitClientOptions(boolean initClientOptions) {
+        this.initClientOptions = initClientOptions;
     }
 }

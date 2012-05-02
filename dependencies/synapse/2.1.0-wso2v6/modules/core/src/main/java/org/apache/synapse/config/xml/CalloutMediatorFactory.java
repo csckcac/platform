@@ -48,6 +48,7 @@ public class CalloutMediatorFactory extends AbstractMediatorFactory {
     private static final QName ATT_ACTION = new QName("action");
     private static final QName ATT_AXIS2XML = new QName("axis2xml");
     private static final QName ATT_REPOSITORY = new QName("repository");
+    private static final QName ATT_INIT_AXI2_CLIENT_OPTIONS = new QName("initAxis2ClientOptions");
     private static final QName Q_CONFIG
             = new QName(XMLConfigConstants.SYNAPSE_NAMESPACE, "configuration");
     private static final QName Q_SOURCE
@@ -61,6 +62,7 @@ public class CalloutMediatorFactory extends AbstractMediatorFactory {
 
         OMAttribute attServiceURL = elem.getAttribute(ATT_URL);
         OMAttribute attAction     = elem.getAttribute(ATT_ACTION);
+        OMAttribute initAxis2ClientOptions = elem.getAttribute(ATT_INIT_AXI2_CLIENT_OPTIONS);
         OMElement   configElt     = elem.getFirstChildWithName(Q_CONFIG);
         OMElement   sourceElt     = elem.getFirstChildWithName(Q_SOURCE);
         OMElement   targetElt     = elem.getFirstChildWithName(Q_TARGET);
@@ -73,6 +75,16 @@ public class CalloutMediatorFactory extends AbstractMediatorFactory {
 
         if (attAction != null) {
             callout.setAction(attAction.getAttributeValue());
+        }
+
+        if (initAxis2ClientOptions != null) {
+            if("true".equals(initAxis2ClientOptions.getAttributeValue().toLowerCase())){
+                callout.setInitClientOptions(true);
+            } else if ("false".equals(initAxis2ClientOptions.getAttributeValue().toLowerCase())){
+                callout.setInitClientOptions(false);
+            } else {
+                handleException("The 'initAxis2ClientOptions' attribute only accepts a boolean value.");
+            }
         }
 
         if (configElt != null) {

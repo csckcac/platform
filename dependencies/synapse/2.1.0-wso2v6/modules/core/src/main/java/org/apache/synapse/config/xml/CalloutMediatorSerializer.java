@@ -25,7 +25,7 @@ import org.apache.synapse.mediators.builtin.CalloutMediator;
 
 /**
  * <pre>
- * &lt;callout serviceURL="string" [action="string"]&gt;
+ * &lt;callout serviceURL="string" [action="string"] [initAxis2ClientOptions="boolean"]&gt;
  *      &lt;configuration [axis2xml="string"] [repository="string"]/&gt;?
  *      &lt;source xpath="expression" | key="string"&gt;
  *      &lt;target xpath="expression" | key="string"/&gt;
@@ -49,6 +49,11 @@ public class CalloutMediatorSerializer extends AbstractMediatorSerializer {
             callout.addAttribute(fac.createOMAttribute("action", nullNS, mediator.getAction()));
         }
 
+        if (!mediator.getInitClientOptions()) {
+            callout.addAttribute(fac.createOMAttribute(
+                    "initAxis2ClientOptions", nullNS, Boolean.toString(mediator.getInitClientOptions())));
+        }
+
         if (mediator.getClientRepository() != null || mediator.getAxis2xml() != null) {
             OMElement config = fac.createOMElement("configuration", synNS);
             if (mediator.getClientRepository() != null) {
@@ -67,7 +72,7 @@ public class CalloutMediatorSerializer extends AbstractMediatorSerializer {
             SynapseXPathSerializer.serializeXPath(mediator.getRequestXPath(), source, "xpath");
         } else if (mediator.getRequestKey() != null) {
             source.addAttribute(fac.createOMAttribute(
-                "key", nullNS, mediator.getRequestKey()));
+                    "key", nullNS, mediator.getRequestKey()));
         }
 
         OMElement target = fac.createOMElement("target", synNS, callout);
@@ -75,7 +80,7 @@ public class CalloutMediatorSerializer extends AbstractMediatorSerializer {
             SynapseXPathSerializer.serializeXPath(mediator.getTargetXPath(), target, "xpath");
         } else if (mediator.getTargetKey() != null) {
             target.addAttribute(fac.createOMAttribute(
-                "key", nullNS, mediator.getTargetKey()));
+                    "key", nullNS, mediator.getTargetKey()));
         }
 
         return callout;

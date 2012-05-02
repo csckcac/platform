@@ -58,6 +58,13 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
             new HashMap<String, ArrayList<String>>();
     
     /**
+     * Key - domain name, Value - pending instance count
+     * TODO persist this too
+     */
+    private Map<String, Integer> domainToPendingInstanceCountMap = 
+            new HashMap<String, Integer>();
+    
+    /**
      * Keeps a JVMAdapter instance.
      */
     private LXCAdapter containerAdapter = new LXCAdapter();
@@ -303,6 +310,32 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
     private String generateInstanceId() {
         UUID uniqueId = UUID.randomUUID();
         return uniqueId.toString();
+    }
+
+    @Override
+    public int getPendingInstanceCount(String domainName) {
+        
+        if(domainToPendingInstanceCountMap.containsKey(domainName)){
+            
+            return domainToPendingInstanceCountMap.get(domainName);
+            
+        }
+        
+        return 0;
+    }
+
+    @Override
+    public void addPendingInstanceCount(String domainName, int count) {
+
+        int currentVal = 0;
+        
+        if(domainToPendingInstanceCountMap.containsKey(domainName)){
+            
+            currentVal = domainToPendingInstanceCountMap.get(domainName);
+             
+        }
+        
+        domainToPendingInstanceCountMap.put(domainName, currentVal+count);
     }
 
     

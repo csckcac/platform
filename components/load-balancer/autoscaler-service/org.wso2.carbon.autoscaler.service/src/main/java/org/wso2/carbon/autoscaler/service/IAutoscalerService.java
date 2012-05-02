@@ -46,5 +46,22 @@ public interface IAutoscalerService {
      *  spawned.
      */
 	public boolean terminateInstance(String domainName) throws NoInstanceFoundException;
+	
+	/**
+	 * This will be called by the Autoscaler task, in order to get the pending instances
+	 * count of a particular domain.
+	 * @param domainName name of the domain.
+	 * @return number of pending instances for this domain. If this domain is not present,
+	 * zero will be returned.
+	 */
+	public int getPendingInstanceCount(String domainName);
+	
+	/**
+	 * This should be called in order to add to pending instance count for this domain.
+	 * If you want to deduct, you can simply send a negative value.
+	 * @param domainName name of the domain.
+	 * @param count number of instances to be added for this domain.
+	 */
+	public void addPendingInstanceCount(String domainName, int count);
     
 }

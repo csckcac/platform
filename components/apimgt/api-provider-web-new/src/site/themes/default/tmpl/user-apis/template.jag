@@ -1,0 +1,50 @@
+<% jagg.template = function(data, params, jagg) {
+
+        var userId = request.getParameter("uname");
+        var subs = require("/core/subscriptions/subscriptions.js");
+        var subAPIs = subs.getSubscribedAPIs(userId);
+        return {
+        "apis":subAPIs.apis
+        };
+%>
+<div id="user"><h2><%=request.getParameter("uname")%></h2>
+<form class="well form-search">
+    <input type="text" class="input-medium search-query" placeholder="API Name">
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+<div class="row">
+
+    <div class="span7">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>API</th>
+                <th>Last Accessed</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="userSubscribedAPIs">
+            <%var i, api, apis = data.apis, length = apis.length;
+            for(i = 0; i < length; i++) {
+            api = apis[i];
+            %>
+            <tr>
+            <td><i class="icon-user"></i><a href="?place=api-details&name=<%=api.name%>&version=<%=api.version%>"><%=api.name%></a></td>
+            <td><%=api.lastUpdatedDate%></td>
+            <td><i class="icon-edit"></i><a href="#">Stats</a>
+                <i class="icon-trash"></i><a href="#">Revoke Access</a>
+                <i class="icon-ban-circle"></i><a href="#">Block</a>
+            </td>
+            </tr>
+            <%}%>
+            </tbody>
+        </table>
+        <div class="pagination">
+        </div>
+    </div>
+
+</div>
+</div>
+
+
+<% }; %>

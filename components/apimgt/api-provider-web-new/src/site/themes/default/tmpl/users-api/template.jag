@@ -1,0 +1,71 @@
+<% jagg.template = function(data, params, jagg) {
+
+var apiName = request.getParameter("name");
+var apiVersion = request.getParameter("version");
+
+var subs = require("/core/subscriptions/subscriptions.js");
+var subsOfAPIs = subs.getSubscribersOfAPI(apiName,version);
+return {
+        "subscribers":subsOfAPIs.subscribers
+};
+%>
+        <div class="row-fluid">
+            <div class="span2">
+                <% include("/includes/provider/apiDetailsInfo.jag"); %>
+            </div>
+            <div class="span10">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Last Accessed</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="userList">
+                    <%
+        var i, subscriber, subscribers = data.subscribers, length = subscribers.length;
+
+        for(i = 0; i < length; i++) {
+        subscriber = subscribers[i];%>
+        <tr>
+        <td><i class="icon-user"></i><a href="?place=user&uname=<%=subscriber.userName%>"><%=subscriber.userName%></a></td>
+        <td><%=subscriber.subscribedDate%></td>
+        <td><i class="icon-edit"></i><a href="#">Stats</a>
+            <i class="icon-trash"></i><a href="#">Revoke Access</a>
+            <i class="icon-ban-circle"></i><a href="#">Block</a>
+        </td>
+        </tr>
+        <%}%>
+        </tbody>
+                </table>
+                <div class="pagination">
+                </div>
+            </div>
+        </div>
+
+        <!-- Row -->
+
+               <div class="row-fluid well">
+            <div class="span5">
+            <h3>API Usage by Subscribers</h3>
+                <div>
+                    <div id="userChart"></div>
+                </div>
+            </div>
+                <div class="span6">
+                    <table class="table" id="userTable">
+                          <tr>
+                            <th>User</th>
+                            <th>Usage</th>
+                          </tr>
+                      </table>
+                </div>
+        </div>
+
+
+
+
+
+
+<% }; %>

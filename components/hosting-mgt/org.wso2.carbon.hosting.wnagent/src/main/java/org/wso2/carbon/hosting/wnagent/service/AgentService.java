@@ -70,7 +70,6 @@ public class AgentService {
 	/**
 	 * 
 	 * @param domainName
-	 * @param containerName This will be the instance id
 	 * @param containerInfo
 	 * @return true if container is created successfully
 	 * and also, further containers can be created in the same host machine
@@ -81,18 +80,18 @@ public class AgentService {
 	 * Creates a container from a pre configured OS image template
 	 * 
 	 */
-	public boolean createContainer(String domainName, String containerName, ContainerInformation containerInfo)
+	public boolean createContainer(String domainName, ContainerInformation containerInfo)
 																				throws AgentServiceException {
     	
     	if(log.isDebugEnabled()) {    		
     		StringBuilder logmsg =
                 new StringBuilder().append("Trying to create a container with id [")
-                                   .append(containerName)
+                                   .append(containerInfo.getContainerId())
                                    .append("]");
     		log.debug(logmsg);
     	}
 		
-		return invokeContainerCreateProcess(domainName, containerName, containerInfo);
+		return invokeContainerCreateProcess(domainName, containerInfo);
 
 	}
 
@@ -130,7 +129,6 @@ public class AgentService {
 	/**
 	 * 
 	 * @param domainName
-	 * @param containerName
 	 * @param containerInfo
 	 * @return true if container is created and started successfully
 	 * and also, further containers can be created in the same host machine
@@ -142,16 +140,15 @@ public class AgentService {
 	 * This operation creates a container from a pre configured OS image template and starts it
 	 * 
 	 */
-	public boolean createAndStartContainer(String domainName, String containerName, ContainerInformation containerInfo) throws AgentServiceException{
+	public boolean createAndStartContainer(String domainName, ContainerInformation containerInfo) throws AgentServiceException{
 		
 		boolean canCreateMoreContainers =
-		                                  invokeContainerCreateProcess(domainName, containerName,
-		                                                               containerInfo);
+		                                  invokeContainerCreateProcess(domainName,containerInfo);
 		try {
-			invokeContainerStartProcess(containerName, containerInfo.getContainerRoot());
+			invokeContainerStartProcess(containerInfo.getContainerId(), containerInfo.getContainerRoot());
 		} catch (AgentServiceException e) {
 			// If container failed to start, destroy it
-			invokeContainerDestroyProcess(containerName, containerInfo.getContainerRoot());
+			invokeContainerDestroyProcess(containerInfo.getContainerId(), containerInfo.getContainerRoot());
 			throw e;
 		}
 
@@ -162,13 +159,12 @@ public class AgentService {
 	
 	/**
      * @param domainName
-     * @param containerName
      * @param containerInfo
      * @return
      * @throws AgentServiceException
      * 
      */
-    private boolean invokeContainerCreateProcess(String domainName, String containerName,
+    private boolean invokeContainerCreateProcess(String domainName,
                                                  ContainerInformation containerInfo)
                                                                                     throws AgentServiceException {
     	String template = getTemplateForDomain(domainName);
@@ -180,7 +176,7 @@ public class AgentService {
 		                        new ProcessBuilder(WNAgentConstants.CONTAINER_ACTION,
 		                                           getScriptsPath(),
 		                                           WNAgentConstants.CONTAINER_CREATE_ACTION,
-		                                           containerName,
+		                                           containerInfo.getContainerId(),
 		                                           getDefaultContainerPassword(),
 		                                           containerInfo.getIp(), /*ContainerIp*/
 		                                           containerInfo.getNetMask(), /*NetMask*/

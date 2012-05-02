@@ -30,6 +30,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.HashMap;
@@ -42,8 +43,9 @@ import java.util.Set;
  * Data object which hold configuration data of the load analyzer task
  */
 @SuppressWarnings("unused")
-public class LoadBalancerConfiguration {
+public class LoadBalancerConfiguration implements Serializable{
 
+    private static final long serialVersionUID = -5553545217542808233L;
 
     /**
      * Key - service clustering domain
@@ -426,7 +428,7 @@ public class LoadBalancerConfiguration {
     }
     
     @SuppressWarnings("unused")
-    public abstract class Configuration {
+    public abstract class Configuration implements Serializable{
 
         protected String availabilityZone;
         protected boolean availabilityZoneSet;
@@ -497,7 +499,7 @@ public class LoadBalancerConfiguration {
     }
 
     @SuppressWarnings("unused")
-    public class LBConfiguration extends Configuration {
+    public class LBConfiguration extends Configuration implements Serializable{
         private String elasticIP ;//= LoadBalancerConfigUtil.replaceVariables("${ELASTIC_IP}");
         private int instances = 1;
         private boolean isAutoscaleEnabled;
@@ -546,7 +548,7 @@ public class LoadBalancerConfiguration {
     }
 
     @SuppressWarnings("unused")
-    public class ServiceConfiguration extends Configuration {
+    public class ServiceConfiguration extends Configuration implements Serializable{
         private int minAppInstances = 1;
         private boolean minAppInstancesSet;
 

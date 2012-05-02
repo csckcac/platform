@@ -17,6 +17,7 @@
  */
 package org.wso2.carbon.lb.common.conf.structure;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +27,9 @@ import java.util.Map;
  * This is the basic data structure which holds a <i>Nginx</i> formatted configuration file.
  * 
  */
-public class Node {
+public class Node implements Serializable{
+
+    private static final long serialVersionUID = 4071569903421115370L;
 
     /**
      * Name of this Node element

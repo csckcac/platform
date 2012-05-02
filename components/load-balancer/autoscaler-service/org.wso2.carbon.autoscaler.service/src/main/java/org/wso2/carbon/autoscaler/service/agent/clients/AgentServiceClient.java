@@ -26,7 +26,7 @@ import org.wso2.carbon.hosting.wnagent.stub.services.AgentServiceAgentServiceExc
 import org.wso2.carbon.hosting.wnagent.stub.services.AgentServiceIOException;
 import org.wso2.carbon.hosting.wnagent.stub.services.AgentServiceInterruptedException;
 import org.wso2.carbon.hosting.wnagent.stub.services.AgentServiceStub;
-import org.wso2.carbon.hosting.wnagent.stub.services.xsd.beans.ContainerInformation;
+import org.wso2.carbon.hosting.wnagent.stub.services.xsd.common.ContainerInformation;
 
 /**
  * Client to communicate with Agent Service through Agent Service Stub.
@@ -49,41 +49,14 @@ public class AgentServiceClient {
             throw new AxisFault(msg, axisFault);
         }
     }
-
-    /**
-     * 
-     * @param domainName Domain name
-     * @param instanceId is used as the container name
-     * @param containerInfo
-     * @return
-     * @throws Exception
-     * 
-     * An LXC will be created
-     * 
-     */      
-    public boolean createContainer(String domainName, String instanceId, org.wso2.carbon.lb.common.dto.ContainerInformation containerInfo) throws Exception {
-    	ContainerInformation _containerInfo = convertContainerInformation(containerInfo);
-    	return stub.createContainer(domainName, instanceId, _containerInfo);    	
-    }
-    
     
     /**
      * 
-     * @param instanceId
-     * @param containerInfo
-     * @return
-     * @throws Exception
      * 
-     * An LXC will be started
      */
-    public boolean startContainer(String instanceId,
+    public boolean startContainerInstance(String domainName,
 			org.wso2.carbon.lb.common.dto.ContainerInformation containerInfo) throws Exception {
-    	int status = stub.startContainer(instanceId,
-				containerInfo.getContainerRoot());
-		if (status == 0) {
-			return true;
-		}
-		return false;
+    	return stub.createAndStartContainer(domainName, convertContainerInformation(containerInfo));    	
     }
 
     // This method converts a dto.ContainerInformation object to a xsd.ContainerInformation object
@@ -101,17 +74,8 @@ public class AgentServiceClient {
 		return info;
 	}
 
-	public boolean terminateInstance(String instanceId, String containerRoot ) throws Exception {
-
-        int stopContainerStatus = stub.stopContainer(instanceId, containerRoot);
-        if(stopContainerStatus != 0) {
-        	throw new Exception(" Exception occurred in stopping the container");
-        }
-        int destroyContainerStatus = stub.destroyContainer(instanceId, containerRoot);
-        if(destroyContainerStatus != 0) {
-        	throw new Exception(" Exception occurred in destroying the container");
-        }
-        return true;
+	public boolean terminateContainerInstance(String instanceId, String containerRoot ) throws Exception {
+		return stub.stopAndDestroyContainer(instanceId, containerRoot);
     }
     
 	public int getNumberOfInstances() throws RemoteException {

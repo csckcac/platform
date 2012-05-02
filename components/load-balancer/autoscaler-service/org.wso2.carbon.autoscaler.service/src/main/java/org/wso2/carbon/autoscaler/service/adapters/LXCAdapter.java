@@ -4,6 +4,7 @@
 package org.wso2.carbon.autoscaler.service.adapters;
 
 import java.rmi.RemoteException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +39,7 @@ public class LXCAdapter extends Adapter {
 	
 	private AgentPersistenceManager agentPersistenceManager  = AgentPersistenceManager.getPersistenceManager();
 	
-	public LXCAdapter() {
+	public LXCAdapter(){
 		//registry.setDomainNameToInstanceCountMap(domainNameToInstanceCountMap);
 		registry.setInstanceIdToAgentEprMap(getInstanceidEprMap());
 		registry.setEprToContainerRootMap(getEprtoContainerRootMap());
@@ -60,7 +61,8 @@ public class LXCAdapter extends Adapter {
 				if (agentPersistenceManager.isHostMachinesAvailableInDomain(domainName)) {
 	
 					ContainerInformation container = agentManagementService.pickAContainer(domainName);
-                    container.setContainerId(instanceId);
+					container.setContainerId(instanceId);
+					
 					int numOfPossibleAgents = 1; // TODO get this parameter from the database?
 					return tryToStartInstance(domainName, instanceId, numOfPossibleAgents , container);
 					
@@ -86,8 +88,9 @@ public class LXCAdapter extends Adapter {
 		// Try to connect to an Agent
 		try {
 			agentServiceClient = new AgentServiceClient(containerInfo.getEpr()); 
-			boolean createStatus = agentServiceClient.createContainer(domainName, instanceId, containerInfo);
-			if(!createStatus){
+			boolean canCreateMoreLXCs = agentServiceClient.startContainerInstance(domainName, containerInfo);
+						
+			if(!canCreateMoreLXCs){
 				// This assumes that in that particular host machine
 				// no further containers can be created.
 				// Hence making that as an unavailable host machine.
@@ -137,15 +140,7 @@ public class LXCAdapter extends Adapter {
 
             // add it back to registry
             registry.setEprToContainerRootMap(eprToContainerRootMap);
-
-        } else {
-            String msg =
-                "This epr (" + epr + ") is already in the Map. " +
-                    "This is something exceptional.";
-            log.error(msg);
-            throw new RuntimeException(msg);
-        }
-		
+        } 
 	}
 
 	private void tryToStartInstanceInAnotherAgent(String domainName,
@@ -191,15 +186,28 @@ public class LXCAdapter extends Adapter {
 	}
 
 	private Map<String, String> getInstanceidEprMap() {
-		// TODO Populate the map querying the database
-		// Instance id is same as the container name
-		return null;
+		Map<String, String> instanceIdEprMap = null;
+		try {
+			instanceIdEprMap = agentPersistenceManager.retrieveContainerIdToAgentMap();
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		return instanceIdEprMap;
+		//return new HashMap<String, String>();
 	}
 	
 
 	private Map<String, String> getEprtoContainerRootMap() {
-		// TODO Query from database
-		return null;
+		Map<String, String> eprContainerRootMap = null;
+		try {
+			eprContainerRootMap = agentPersistenceManager.retrieveAgentToContainerRootMap();
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+		return eprContainerRootMap;
+		//return new HashMap<String, String>();
 	}
 
 	@Override
@@ -239,7 +247,7 @@ public class LXCAdapter extends Adapter {
         try {
             agentClient = new AgentServiceClient(agentEpr);
 
-            if (agentClient.terminateInstance(instanceId, containerRoot)) {
+            if (agentClient.terminateContainerInstance(instanceId, containerRoot)) {
                 // remove relevant entry
                 instanceIdToAgentEprMap.remove(instanceId);
                 eprToContainerRootMap.remove(agentEpr);

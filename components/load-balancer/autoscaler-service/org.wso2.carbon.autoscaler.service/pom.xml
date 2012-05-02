@@ -53,11 +53,11 @@
                         </Export-Package>
                         <Private-Package>org.wso2.carbon.autoscaler.service.*, !org.wso2.carbon.autoscaler.service</Private-Package>
                         <Import-Package>
-                            org.wso2.carbon.autoscaler.agentmgt.service.*,
-                            org.wso2.carbon.autoscaler.service.jvm.agentmgt.*;   version="${carbon.platform.package.import.version.range}",
-                            org.wso2.carbon.hosting.wnagent.stub.*;   version="${carbon.platform.package.import.version.range}",
-                            org.apache.commons.logging,
-                            org.carbon.common.dto.*,
+                        	!org.apache.commons.logging,
+                            org.apache.commons.logging; version=0.0.0,
+                            org.wso2.carbon.autoscaler.service.jvm.agentmgt,
+                            org.wso2.carbon.hosting.wnagent.stub.*;   version=0.0.0,   
+                            org.wso2.carbon.lb.common.dto.*,
                             org.wso2.carbon.utils.*,
                             *; resolution:=optional
                         </Import-Package>

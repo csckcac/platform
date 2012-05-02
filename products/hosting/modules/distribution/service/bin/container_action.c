@@ -4,14 +4,16 @@
 #include <unistd.h>
 #include <string.h>
 
-//container_action.sh action=create jail-user=yang jail-password=yang jail-ip=192.168.254.2 jail-mask=255.255.255.0 jail-gateway=192.168.254.1 bridge=br-lxc jail-root=/mnt/lxc template=template-ubuntu-lucid-lamp memory=512M swap=1G cpu-shares=1024 cpuset-cpus=0-7
+//container_action.sh action=create jail-id=1234 jail-user=yang jail-password=yang host-machine-ip=10.100.1.20 jail-ip=192.168.254.2 jail-mask=255.255.255.0 jail-gateway=192.168.254.1 bridge=br-lxc jail-root=/mnt/lxc template=template-ubuntu-lucid-lamp memory=512M swap=1G cpu-shares=1024 cpuset-cpus=0-7
 
 int main(int argc, char *argv[])
 {
     char *stratos_server_path = NULL;
     char *jail_action = NULL;
+    char *jail_id = NULL;
     char *jail_user = NULL;
     char *jail_password = NULL;
+    char *host_machine_ip = NULL;
     char *jail_ip = NULL;
     char *jail_mask = NULL;
     char *jail_gateway = NULL;
@@ -30,7 +32,7 @@ int main(int argc, char *argv[])
 
     if ( argc < 5 )
     {
-        printf( "\nusage: %s <stratos_server_path> <create|destroy|start|stop> <jail user> <jail password> <jail ip> <jail mask> <jail gateway> \
+        printf( "\nusage: %s <stratos_server_path> <create|destroy|start|stop> <jail id> <jail user> <jail password> <host machine ip> <jail ip> <jail mask> <jail gateway> \
                 <bridge> <jail root> <keys file> <template> <memory> <swap> <cpu shares> <cpuset cpus> <svn url> <svn dir>\n", argv[0] );
         exit(1);
     } else {
@@ -38,70 +40,79 @@ int main(int argc, char *argv[])
         strcpy( stratos_server_path, argv[1] );
         jail_action = malloc( strlen( argv[2] ) + 1 );
         strcpy( jail_action, argv[2] );
-        jail_user = malloc( strlen( argv[3] ) + 1 );
-        strcpy(jail_user, argv[3]);
+        jail_id = malloc( strlen( argv[3] ) + 1 );
+        strcpy(jail_id, argv[3]);
         printf("action:%s\n", jail_action);
     }
     if (strcmp(jail_action, "create") == 0) {
-        if ( argc < 16 ) {
-            printf( "\nusage: %s <stratos_server_path> <create> <jail user> <jail password> <jail ip> <jail mask> <apache2 gateway> <bridge> \
+        if ( argc < 18 ) {
+            printf( "\nusage: %s <stratos_server_path> <create> <jail id> <jail user> <jail password> <host machine ip> <jail ip> <jail mask> <apache2 gateway> <bridge> \
                     <jail root> <keys file> <template> <memory> <swap> <cpu shares> <cpuset cpus> <svn url> <svn dir>\n", argv[0] );
             exit(1);
         }
+        jail_user = malloc( strlen( argv[4] ) + 1 );
+        strcpy(jail_user, argv[4]);
         
-        jail_password = malloc( strlen( argv[4] ) + 1 );
-        strcpy(jail_password, argv[4]);
+        jail_password = malloc( strlen( argv[5] ) + 1 );
+        strcpy(jail_password, argv[5]);
 
-        jail_ip = malloc( strlen( argv[5] ) + 1 );
-        strcpy( jail_ip, argv[5] );
+        host_machine_ip = malloc( strlen( argv[6] ) + 1 );
+        strcpy( host_machine_ip, argv[6] );
+      
+        jail_ip = malloc( strlen( argv[7] ) + 1 );
+        strcpy( jail_ip, argv[7] );
         
-        jail_mask = malloc( strlen( argv[6] ) + 1 );
-        strcpy( jail_mask, argv[6] );
+        jail_mask = malloc( strlen( argv[8] ) + 1 );
+        strcpy( jail_mask, argv[8] );
         
-        jail_gateway = malloc( strlen( argv[7] ) + 1 );
-        strcpy( jail_gateway, argv[7] );
+        jail_gateway = malloc( strlen( argv[9] ) + 1 );
+        strcpy( jail_gateway, argv[9] );
 
-        bridge = malloc( strlen( argv[8] ) + 1 );
-        strcpy(bridge, argv[8]);
+        bridge = malloc( strlen( argv[10] ) + 1 );
+        strcpy(bridge, argv[10]);
         
-        jail_root = malloc( strlen( argv[9] ) + 1 );
-        strcpy(jail_root, argv[9]);
+        jail_root = malloc( strlen( argv[11] ) + 1 );
+        strcpy(jail_root, argv[11]);
         
-        keys_file = malloc( strlen( argv[10] ) + 1 );
-        strcpy(keys_file, argv[10]);
+        keys_file = malloc( strlen( argv[12] ) + 1 );
+        strcpy(keys_file, argv[12]);
 
-        template = malloc( strlen( argv[11] ) + 1 );
-        strcpy(template, argv[11]);
+        template = malloc( strlen( argv[13] ) + 1 );
+        strcpy(template, argv[13]);
 
-        memory = malloc( strlen( argv[12] ) + 1 );
-        strcpy(memory, argv[12]);
+        memory = malloc( strlen( argv[14] ) + 1 );
+        strcpy(memory, argv[14]);
 
-        swap = malloc( strlen( argv[13] ) + 1 );
-        strcpy(swap, argv[13]);
+        swap = malloc( strlen( argv[15] ) + 1 );
+        strcpy(swap, argv[15]);
 
-        cpu_shares = malloc( strlen( argv[14] ) + 1 );
-        strcpy(cpu_shares, argv[14]);
+        cpu_shares = malloc( strlen( argv[16] ) + 1 );
+        strcpy(cpu_shares, argv[16]);
 
-        cpuset_cpus = malloc( strlen( argv[15] ) + 1 );
-        strcpy(cpuset_cpus, argv[15]);
+        cpuset_cpus = malloc( strlen( argv[17] ) + 1 );
+        strcpy(cpuset_cpus, argv[17]);
         
-        if(argv[16]) {
-            svn_url = malloc( strlen( argv[16] ) + 1 );
-            strcpy(svn_url, argv[16]);
+        if(argv[17]) {
+            svn_url = malloc( strlen( argv[18] ) + 1 );
+            strcpy(svn_url, argv[18]);
         }
        
-        if(argv[17]) {
-            svn_dir = malloc( strlen( argv[17] ) + 1 );
-            strcpy(svn_dir, argv[17]);
+        if(argv[18]) {
+            svn_dir = malloc( strlen( argv[19] ) + 1 );
+            strcpy(svn_dir, argv[19]);
         }
 
         jail_command = malloc(2048);
         strcat(jail_command, stratos_server_path);
         strcat(jail_command, "/container_action.sh action=create");
+        strcat(jail_command, " jail-id=");
+        strcat(jail_command, jail_id);
         strcat(jail_command, " jail-user=");
         strcat(jail_command, jail_user);
         strcat(jail_command, " jail-password=");
         strcat(jail_command, jail_password);
+        strcat(jail_command, " host-machine-ip=");
+        strcat(jail_command, host_machine_ip);
         strcat(jail_command, " jail-ip=");
         strcat(jail_command, jail_ip);
         strcat(jail_command, " jail-mask=");
@@ -139,8 +150,8 @@ int main(int argc, char *argv[])
         jail_command = malloc(1024);
         strcat(jail_command, stratos_server_path);
         strcat(jail_command, "/container_action.sh action=destroy");
-        strcat(jail_command, " jail-user=");
-        strcat(jail_command, jail_user);
+        strcat(jail_command, " jail-id=");
+        strcat(jail_command, jail_id);
         strcat(jail_command, " jail-root=");
         strcat(jail_command, jail_root);
 
@@ -150,8 +161,8 @@ int main(int argc, char *argv[])
         jail_command = malloc(1024);
         strcat(jail_command, stratos_server_path);
         strcat(jail_command, "/container_action.sh action=start");
-        strcat(jail_command, " jail-user=");
-        strcat(jail_command, jail_user);
+        strcat(jail_command, " jail-id=");
+        strcat(jail_command, jail_id);
         strcat(jail_command, " jail-root=");
         strcat(jail_command, jail_root);
     
@@ -161,8 +172,8 @@ int main(int argc, char *argv[])
         jail_command = malloc(1024);
         strcat(jail_command, stratos_server_path);
         strcat(jail_command, "/container_action.sh action=stop");
-        strcat(jail_command, " jail-user=");
-        strcat(jail_command, jail_user);
+        strcat(jail_command, " jail-id=");
+        strcat(jail_command, jail_id);
         strcat(jail_command, " jail-root=");
         strcat(jail_command, jail_root);
     }
@@ -177,8 +188,10 @@ int main(int argc, char *argv[])
 
     if(stratos_server_path) free(stratos_server_path);
     if(jail_action) free(jail_action);
+    if(jail_id) free(jail_id);
     if(jail_user) free(jail_user);
     if(jail_password) free(jail_password);
+    if(host_machine_ip) free(host_machine_ip);
     if(jail_ip) free(jail_ip);
     if(jail_mask) free(jail_mask);
     if(jail_gateway) free(jail_gateway);

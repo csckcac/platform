@@ -19,21 +19,29 @@
 
 package org.apache.synapse.util.xpath;
 
-import org.apache.axiom.om.OMAttribute;
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMNamespace;
+import org.apache.axiom.om.*;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.axiom.om.impl.dom.DOOMAbstractFactory;
 import org.apache.axiom.om.impl.llom.OMDocumentImpl;
 import org.apache.axiom.om.impl.llom.OMElementImpl;
 import org.apache.axiom.om.impl.llom.OMTextImpl;
 import org.apache.axiom.om.xpath.AXIOMXPath;
 import org.apache.axiom.soap.SOAPEnvelope;
+import org.apache.axiom.soap.impl.dom.factory.DOMSOAPFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
+import org.apache.synapse.SynapseConstants;
 import org.apache.synapse.SynapseException;
+import org.apache.synapse.config.SynapsePropertiesLoader;
 import org.jaxen.*;
 import org.jaxen.util.SingletonList;
 
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.util.*;
 
 /**
@@ -80,6 +88,12 @@ public class SynapseXPath extends AXIOMXPath {
     private static final long serialVersionUID = 7639226137534334222L;
 
     private static final Log log = LogFactory.getLog(SynapseXPath.class);
+
+    private DOMSynapseXPathNamespaceMap domNamespaceMap = new DOMSynapseXPathNamespaceMap();
+    private javax.xml.xpath.XPath domXpath = XPathFactory.newInstance().newXPath();
+    private String domXpathConfig = SynapsePropertiesLoader.loadSynapseProperties().
+            getProperty(SynapseConstants.FAIL_OVER_DOM_XPATH_PROCESSING);
+
 
     /**
      * <p>Initializes the <code>SynapseXPath</code> with the given <code>xpathString</code> as the
@@ -213,9 +227,31 @@ public class SynapseXPath extends AXIOMXPath {
 
             return textValue.toString();
 
+        } catch (UnresolvableException ex) {
+
+            //if fail-over xpath processing is set to true in synapse properties, perform
+            //xpath processing in DOM fashion which can support XPATH2.0 with supported XAPTH engine like SAXON
+            if ("true".equals(domXpathConfig)) {
+
+                if (log.isDebugEnabled()) {
+                    log.debug("AXIOM xpath evaluation failed with UnresolvableException, " +
+                            "trying to perform DOM based XPATH", ex);
+                }
+
+                try {
+                   return evaluateDOMXPath(synCtx);
+                } catch (Exception e) {
+                    handleException("Evaluation of the XPath expression " + this.toString() +
+                            " resulted in an error", e);
+                }
+
+            } else {
+                handleException("Evaluation of the XPath expression " + this.toString() +
+                        " resulted in an error", ex);
+            }
         } catch (JaxenException je) {
             handleException("Evaluation of the XPath expression " + this.toString() +
-                " resulted in an error", je);
+                    " resulted in an error", je);
         }
 
         return null;
@@ -254,6 +290,7 @@ public class SynapseXPath extends AXIOMXPath {
 
     public void addNamespace(OMNamespace ns) throws JaxenException {
         addNamespace(ns.getPrefix(), ns.getNamespaceURI());
+        domNamespaceMap.addNamespace(ns.getPrefix(), ns.getNamespaceURI());
     }
 
     /**
@@ -346,5 +383,63 @@ public class SynapseXPath extends AXIOMXPath {
         public MessageContext getMessageCtxt() {
             return ctxt;
         }
+    }
+
+    public String evaluateDOMXPath(MessageContext synCtx) throws XPathExpressionException {
+
+        OMElement element = synCtx.getEnvelope().getBody().getFirstElement();
+        OMElement doomElement;
+        if (element == null) {
+            doomElement = new DOMSOAPFactory().createOMElement(new QName(""));
+        } else {
+            doomElement = convertToDOOM(element);
+        }
+        domXpath.setNamespaceContext(domNamespaceMap);
+        domXpath.setXPathFunctionResolver(new GetPropertyFunctionResolver(synCtx));
+        domXpath.setXPathVariableResolver(new DOMSynapseXPathVariableResolver(this.getVariableContext(), synCtx));
+        XPathExpression expr = domXpath.compile(this.getRootExpr().getText());
+        Object result = expr.evaluate(doomElement);
+
+        if (result != null) {
+            return result.toString();
+        }
+        return null;
+
+    }
+
+    private OMElement convertToDOOM(OMElement element) {
+
+        XMLStreamReader llomReader = element.getXMLStreamReader();
+        OMFactory doomFactory = DOOMAbstractFactory.getOMFactory();
+        StAXOMBuilder doomBuilder = new StAXOMBuilder(doomFactory, llomReader);
+        return doomBuilder.getDocumentElement();
+    }
+
+    public void addNamespacesForFallbackProcessing(OMElement element){
+
+        OMElement currentElem = element;
+
+        while (currentElem != null) {
+            Iterator it = currentElem.getAllDeclaredNamespaces();
+            while (it.hasNext()) {
+
+                OMNamespace n = (OMNamespace) it.next();
+                // Exclude the default namespace as explained in the Javadoc above
+                if (n != null && !"".equals(n.getPrefix())) {
+
+                    domNamespaceMap.addNamespace(n.getPrefix(), n.getNamespaceURI());
+                }
+            }
+
+            OMContainer parent = currentElem.getParent();
+            //if the parent is a document element or parent is null ,then return
+            if (parent == null || parent instanceof OMDocument) {
+                return;
+            }
+            if (parent instanceof OMElement) {
+                currentElem = (OMElement) parent;
+            }
+        }
+
     }
 }

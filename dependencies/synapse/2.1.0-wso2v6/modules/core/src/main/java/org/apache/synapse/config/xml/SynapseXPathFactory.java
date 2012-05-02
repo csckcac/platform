@@ -46,6 +46,7 @@ public class SynapseXPathFactory {
 
             xpath = new SynapseXPath(xpathAttrib.getAttributeValue());
             OMElementUtils.addNameSpaces(xpath, elem, log);
+            xpath.addNamespacesForFallbackProcessing(elem);
 
         } else {
             handleException("Couldn't find the XPath attribute with the QName : "

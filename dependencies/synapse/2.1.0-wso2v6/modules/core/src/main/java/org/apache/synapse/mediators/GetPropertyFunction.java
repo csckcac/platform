@@ -32,12 +32,11 @@ import org.apache.synapse.config.xml.XMLConfigConstants;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.mediators.template.TemplateContext;
 import org.apache.synapse.registry.Registry;
-import org.jaxen.Context;
-import org.jaxen.Function;
-import org.jaxen.FunctionCallException;
-import org.jaxen.Navigator;
+import org.jaxen.*;
 import org.jaxen.function.StringFunction;
 
+import javax.xml.xpath.XPathFunction;
+import javax.xml.xpath.XPathFunctionException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -48,7 +47,7 @@ import java.util.Stack;
 /**
  * Implements the XPath extension function synapse:get-property(scope,prop-name)
  */
-public class GetPropertyFunction implements Function {
+public class GetPropertyFunction implements Function , XPathFunction {
 
     private static final Log log = LogFactory.getLog(GetPropertyFunction.class);
     private static final Log trace = LogFactory.getLog(SynapseConstants.TRACE_LOGGER);
@@ -348,5 +347,18 @@ public class GetPropertyFunction implements Function {
         }
     }
 
+    /**
+     * Wraps jaxon xpath function as a javax.xml.xpath.XPathFunction
+     * @param args  List of argument for custom xpath function
+     * @return result of xpath evaluation
+     * @throws XPathFunctionException
+     */
+    public Object evaluate(List args) throws XPathFunctionException {
+        try {
+            return call(new Context(new ContextSupport()) ,args);
+        } catch (FunctionCallException e) {
+            throw new XPathFunctionException(e);
+        }
+    }
 }
 

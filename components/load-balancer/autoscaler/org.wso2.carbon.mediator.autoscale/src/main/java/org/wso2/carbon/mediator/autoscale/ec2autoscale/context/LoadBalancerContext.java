@@ -17,11 +17,14 @@
 */
 package org.wso2.carbon.mediator.autoscale.ec2autoscale.context;
 
+import java.io.Serializable;
+
 /**
  * Contextual information related to autoscaling for a particular domain
  */
-public class LoadBalancerContext {
+public class LoadBalancerContext implements Serializable{
 
+    private static final long serialVersionUID = -2022110665957598060L;
     private int runningInstances;
     private int pendingInstances;
     

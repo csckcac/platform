@@ -30,6 +30,8 @@ import org.wso2.carbon.lb.common.conf.LoadBalancerConfiguration;
  */
 public class AppDomainContext extends LoadBalancerContext{
 
+    private static final long serialVersionUID = 6582721801663800609L;
+
     private static final Log log = LogFactory.getLog(AppDomainContext.class);
 
     /**

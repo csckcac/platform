@@ -110,10 +110,11 @@ public class AutoscalerTaskServiceComponent {
            
                         // we gonna add it!
                         inSequence.getList().add(0, new AutoscaleInMediator(lbConfig));
-                        
-                        log.debug("Added Mediator: " + inSequence.getChild(0) + "" +
-                            " to InMediator. Number of child mediators in InMediator" +
-                            " is " + inSequence.getList().size()+".");
+                        if (log.isDebugEnabled()) {
+                            log.debug("Added Mediator: " + inSequence.getChild(0) + "" +
+                                " to InMediator. Number of child mediators in InMediator" + " is " +
+                                inSequence.getList().size() + ".");
+                        }
                     }
 
                 }
@@ -129,9 +130,11 @@ public class AutoscalerTaskServiceComponent {
                         // we gonna add it!
                         outSequence.getList().add(0, new AutoscaleOutMediator());
                         
-                        log.debug("Added Mediator: " + outSequence.getChild(0) + "" +
+                        if (log.isDebugEnabled()) {
+                            log.debug("Added Mediator: " + outSequence.getChild(0) + "" +
                                 " to OutMediator. Number of child mediators in OutMediator" +
-                                " is " + outSequence.getList().size()+".");
+                                " is " + outSequence.getList().size() + ".");
+                        }
 
                     }
                 }
@@ -175,7 +178,7 @@ public class AutoscalerTaskServiceComponent {
 
             autoscalerTask.init(synapseEnv);
 
-            // specify sceduler task details
+            // specify scheduler task details
             JobDetail job = new JobDetail();
             job.setName("autoscalerJob");
             job.setJobClass(AutoscalingJob.class);

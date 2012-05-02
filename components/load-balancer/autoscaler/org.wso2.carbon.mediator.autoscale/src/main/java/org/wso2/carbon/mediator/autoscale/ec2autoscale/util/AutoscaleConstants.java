@@ -23,6 +23,11 @@ public final class AutoscaleConstants {
     public static final String APP_DOMAIN_CONTEXTS = "autoscale.app.domain.contexts";
     public static final String TARGET_DOMAIN = "autoscale.target.domain";
     public static final String LOAD_BALANCER_CONFIG = "loadbalancer.conf";
+    
+    /**
+     * we use this to track the changes happen to request token list lengths.
+     */
+    public static final String IS_TOUCHED = "is_touched";
 
     /**
      * Name of the EC2 instance tag which if set on an instance, the autoscaler will not

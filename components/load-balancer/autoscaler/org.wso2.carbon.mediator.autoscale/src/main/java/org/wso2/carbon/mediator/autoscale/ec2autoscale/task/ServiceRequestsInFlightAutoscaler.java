@@ -18,9 +18,12 @@
 package org.wso2.carbon.mediator.autoscale.ec2autoscale.task;
 
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.clustering.ClusteringAgent;
+import org.apache.axis2.clustering.ClusteringFault;
 import org.apache.axis2.clustering.Member;
 import org.apache.axis2.clustering.management.GroupManagementAgent;
 import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.ManagedLifecycle;
@@ -31,6 +34,8 @@ import org.wso2.carbon.lb.common.conf.LoadBalancerConfiguration;
 import org.wso2.carbon.mediator.autoscale.ec2autoscale.clients.AutoscaleServiceClient;
 import org.wso2.carbon.mediator.autoscale.ec2autoscale.context.LoadBalancerContext;
 import org.wso2.carbon.mediator.autoscale.ec2autoscale.context.AppDomainContext;
+import org.wso2.carbon.mediator.autoscale.ec2autoscale.replication.RequestTokenReplicationCommand;
+import org.wso2.carbon.mediator.autoscale.ec2autoscale.util.AutoscaleConstants;
 import org.wso2.carbon.mediator.autoscale.ec2autoscale.util.AutoscaleUtil;
 import org.wso2.carbon.mediator.autoscale.ec2autoscale.util.AutoscalerTaskDSHolder;
 import org.wso2.carbon.mediator.autoscale.ec2autoscale.util.ConfigHolder;
@@ -124,7 +129,29 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
             }
             autoscale();
         } finally {
+            // if there are any changes in the request length
+            if(Boolean.parseBoolean(System.getProperty(AutoscaleConstants.IS_TOUCHED))){
+                // primary LB will send out replication message to all load balancers
+                sendReplicationMessage();
+            }
             isTaskRunning = false;
+        }
+    }
+
+    private void sendReplicationMessage() {
+
+        ClusteringAgent clusteringAgent = ConfigHolder.getAgent();
+        if(clusteringAgent != null){
+            RequestTokenReplicationCommand msg = new RequestTokenReplicationCommand();
+            msg.setAppDomainContexts(appDomainContexts);
+            try {
+                clusteringAgent.sendMessage(msg, true);
+                System.setProperty(AutoscaleConstants.IS_TOUCHED, "false");
+                log.info("Request token replication messages sent out successfully!!");
+                
+            } catch (ClusteringFault e) {
+                log.error("Failed to send the request token replication message.", e);
+            }
         }
     }
 
@@ -148,33 +175,45 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
      * We compute the number of running instances of a particular domain using clustering agent.
      */
     private void computeRunningAndPendingInstances() {
+        
+        /** Calculate running instances of each service domain **/
+        
+        // get the list of service domains specified in loadbalancer config
         String[] serviceDomains = loadBalancerConfig.getServiceDomains();
 
         int runningInstances;
 
         for (String serviceDomain : serviceDomains) {
-            
+            // for each domain, get the clustering group management agent
             GroupManagementAgent agent = 
                     ConfigHolder.getAgent().getGroupManagementAgent(serviceDomain);
+            
+            // if it isn't null
             if (agent != null) {
+                // we calculate running instance count for this service domain
                 runningInstances = agent.getMembers().size();
             }
             else{
+                // if agent is null, we assume no service instances are running
                 runningInstances = 0;
             }
-            int diff;
+            
+            // int diff;
 
             if (appDomainContexts.get(serviceDomain) != null) {
-                if ((diff =
-                    appDomainContexts.get(serviceDomain).setRunningInstanceCount(runningInstances)) > 0) {
-                    // diff number of instances has been created after last execution, thus
-                    // decrement
-                    // that from pending instances count
-                    appDomainContexts.get(serviceDomain).decrementPendingInstancesIfNotZero(diff);
-                }
+                
+                appDomainContexts.get(serviceDomain).setRunningInstanceCount(runningInstances);
+//                if ((diff =
+//                    appDomainContexts.get(serviceDomain).setRunningInstanceCount(runningInstances)) > 0) {
+//                    // diff number of instances has been created after last execution, thus
+//                    // decrement
+//                    // that from pending instances count
+//                    appDomainContexts.get(serviceDomain).decrementPendingInstancesIfNotZero(diff);
+//                }
             }
         }
 
+        /** Calculate running load balancer instances **/
         // count this LB instance in.
         runningInstances = 1;
 
@@ -194,35 +233,47 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
 
         // TODO: debug and see whether this is the way, use a LB cluster
 
-        List<Member> members = ConfigHolder.getAgent().getMembers();
+        //List<Member> members = ConfigHolder.getAgent().getMembers();
 
-        if (!members.isEmpty()) {
-            runningInstances += members.size();
-        }
+//        if (!members.isEmpty()) {
+//            runningInstances += members.size();
+//        }
+        
+        runningInstances += ConfigHolder.getAgent().getAliveMemberCount();
+        
+        log.info("************ AliveMemberCount: "+ConfigHolder.getAgent().getAliveMemberCount());
 
-        int diff;
+        lbContext.setRunningInstanceCount(runningInstances);
+        
+//        int diff;
+//
+//        // set it in the LBContext
+//        if ((diff = lbContext.setRunningInstanceCount(runningInstances)) > 0) {
+//            // diff number of instances has been created after last execution, thus decrement
+//            // that from pending instances count
+//            lbContext.decrementPendingInstancesIfNotZero(diff);
+//        }
 
-        // set it in the LBContext
-        if ((diff = lbContext.setRunningInstanceCount(runningInstances)) > 0) {
-            // diff number of instances has been created after last execution, thus decrement
-            // that from pending instances count
-            lbContext.decrementPendingInstancesIfNotZero(diff);
-        }
-
+        /** Calculate pending instance count **/
+        //TODO: call autoscaler service and retrieve for each service domain and lb domain
     }
 
     /**
      * Sanity check to see whether the number of LBs is the number specified in the LB config
      */
     private void loadBalancerSanityCheck() {
+        // get current LB instance count
         int currentLBInstances = lbContext.getInstances();
+        
         LoadBalancerConfiguration.LBConfiguration lbConfig =
             loadBalancerConfig.getLoadBalancerConfig();
+        
+        // get minimum requirement of LB instances
         int requiredInstances = lbConfig.getInstances();
 
         if (currentLBInstances < requiredInstances) {
             log.warn("LB Sanity check failed. Current LB instances: " + currentLBInstances +
-                ". Required LB instances is: " + requiredInstances);
+                ". Required LB instances: " + requiredInstances);
             int diff = requiredInstances - currentLBInstances;
 
             // gets the domain of the LB
@@ -273,26 +324,37 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
      * FIXME: following check is not working at the moment. Discuss elastic IP thing.
      */
     private void nonPrimaryLBSanityCheck() {
-        if (!isPrimaryLoadBalancer) {
-            //String elasticIP = loadBalancerConfig.getLoadBalancerConfig().getElasticIP();
-            // Address address = ec2.describeAddress(elasticIP);
-            // if (address == null) {
-            // AutoscaleUtil.handleException("Elastic IP address " + elasticIP +
-            // " has  not been reserved");
-            // return;
-            // }
-            //String localInstanceId = System.getenv("instance_id");
-            // String elasticIPInstanceId = address.getInstanceId();
-            // if (elasticIPInstanceId == null || elasticIPInstanceId.isEmpty()) {
-            // ec2.associateAddress(localInstanceId, elasticIP);
-            isPrimaryLoadBalancer = true;
-//            log.info("Associated Elastic IP " + elasticIP + " with local instance " +
-//                localInstanceId);
-            // } else if (elasticIPInstanceId.equals(localInstanceId)) {
-            // isPrimaryLoadBalancer = true; // If the Elastic IP is assigned to this instance, it
-            // is the primary LB
-            // }
+        
+        ClusteringAgent clusteringAgent = ConfigHolder.getAgent();
+        if(clusteringAgent != null){
+           
+             isPrimaryLoadBalancer = clusteringAgent.isCoordinator();
+             log.info("*********** isPrimaryLoadBalancer: "+isPrimaryLoadBalancer);
+             
         }
+        
+        
+        
+//        if (!isPrimaryLoadBalancer) {
+//            //String elasticIP = loadBalancerConfig.getLoadBalancerConfig().getElasticIP();
+//            // Address address = ec2.describeAddress(elasticIP);
+//            // if (address == null) {
+//            // AutoscaleUtil.handleException("Elastic IP address " + elasticIP +
+//            // " has  not been reserved");
+//            // return;
+//            // }
+//            //String localInstanceId = System.getenv("instance_id");
+//            // String elasticIPInstanceId = address.getInstanceId();
+//            // if (elasticIPInstanceId == null || elasticIPInstanceId.isEmpty()) {
+//            // ec2.associateAddress(localInstanceId, elasticIP);
+//            isPrimaryLoadBalancer = true;
+////            log.info("Associated Elastic IP " + elasticIP + " with local instance " +
+////                localInstanceId);
+//            // } else if (elasticIPInstanceId.equals(localInstanceId)) {
+//            // isPrimaryLoadBalancer = true; // If the Elastic IP is assigned to this instance, it
+//            // is the primary LB
+//            // }
+//        }
     }
 
     /*

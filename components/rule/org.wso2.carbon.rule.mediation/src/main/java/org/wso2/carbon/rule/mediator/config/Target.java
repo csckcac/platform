@@ -31,7 +31,7 @@ public class Target {
     private String resultXpath;
     private String action;
     private Map<String, String> prefixToNamespaceMap;
-    private Map<String, String> prefixToTargetNamespaceMap;
+   // private Map<String, String> prefixToTargetNamespaceMap;
 
     public OMElement toOM(){
 
@@ -65,6 +65,15 @@ public class Target {
 
             }
         }
+//        if(this.prefixToTargetNamespaceMap != null){
+//
+//            for (String prefix : this.prefixToTargetNamespaceMap.keySet()){
+//
+//                String nsURI = this.prefixToTargetNamespaceMap.get(prefix);
+//                targetElement.declareNamespace(nsURI, prefix);
+//
+//            }
+//        }
 
         return targetElement;
     }
@@ -101,13 +110,13 @@ public class Target {
         this.prefixToNamespaceMap = prefixToNamespaceMap;
     }
 
-    public Map<String, String> getPrefixToTargetNamespaceMap(){
-        return prefixToTargetNamespaceMap;
-    }
-
-    public void setPrefixToTargetNamespaceMap(Map<String, String> prefixToTargetNamespaceMap){
-        this.prefixToTargetNamespaceMap = prefixToTargetNamespaceMap;
-    }
+//    public Map<String, String> getPrefixToTargetNamespaceMap(){
+//        return prefixToTargetNamespaceMap;
+//    }
+//
+//    public void setPrefixToTargetNamespaceMap(Map<String, String> prefixToTargetNamespaceMap){
+//        this.prefixToTargetNamespaceMap = prefixToTargetNamespaceMap;
+//    }
 
     public String getAction() {
         return action;

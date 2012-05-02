@@ -122,9 +122,9 @@
                                     <select id="ruleServiceScope" name="ruleServiceScope"
                                            >
                                          <%
-                            if ("request".equals(serviceScope)) {
+                            if ("tpSession".equals(serviceScope)) {
                         %>
-                                        <option id="request" value="request" selected="true">
+                                        <option id="request" value="request" >
                                             <fmt:message key="service.scope.request"/>
                                         </option>
                                         <option id="application" value="application">
@@ -133,7 +133,7 @@
                                         <option id="soapSession" value="soapSession">
                                             <fmt:message key="service.scope.soapS"/>
                                         </option>
-                                        <option id="tpSession" value="tpSession">
+                                        <option id="tpSession" value="tpSession" selected="true">
                                             <fmt:message key="service.scope.tps"/>
                                         </option>
                                            <% } else if("application".equals(serviceScope)){
@@ -167,7 +167,7 @@
                                         </option>
                                            <% } else {
                                            %>
-                                         <option id="request" value="request" >
+                                         <option id="request" value="request" selected="true">
                                             <fmt:message key="service.scope.request"/>
                                         </option>
                                         <option id="application" value="application">
@@ -176,7 +176,7 @@
                                         <option id="soapSession" value="soapSession">
                                             <fmt:message key="service.scope.soapS"/>
                                         </option>
-                                        <option id="tpSession" value="tpSession" selected="true">
+                                        <option id="tpSession" value="tpSession" >
                                             <fmt:message key="service.scope.tps"/>
                                         </option>
                                          <% }

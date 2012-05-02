@@ -6,12 +6,6 @@
         apiProviderApp.currentAPIName=apiName;
         apiProviderApp.currentVersion=apiVersion;
 
-        var api = require("/core/apis/list.js");
-        var result = api.getAPI(apiName,apiVersion);
-        return {
-        "api":result.api
-        };
-
 %>
 
  <div class="row-fluid">

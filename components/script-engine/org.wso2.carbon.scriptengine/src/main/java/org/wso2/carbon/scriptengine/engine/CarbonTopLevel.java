@@ -1,5 +1,6 @@
 package org.wso2.carbon.scriptengine.engine;
 
+import com.google.gson.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.*;
@@ -7,6 +8,9 @@ import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 import org.wso2.carbon.scriptengine.util.HostObjectUtil;
 
 import java.lang.reflect.Method;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 
 public class CarbonTopLevel extends ImporterTopLevel {
@@ -61,7 +65,11 @@ public class CarbonTopLevel extends ImporterTopLevel {
         if (!(args[0] instanceof String)) {
             HostObjectUtil.invalidArgsError(hostObjectName, hostObjectName, "1", "string", args[0], true);
         }
-        String source = "var x = " + args[0] + ";";
+
+        Gson gson = new Gson();
+        JsonElement element = gson.fromJson((String) args[0], JsonElement.class);
+
+        String source = "var x = " + element.toString() + ";";
         cx.evaluateString(funObj, source, "wso2js", 1, null);
         return funObj.get("x", funObj);
     }

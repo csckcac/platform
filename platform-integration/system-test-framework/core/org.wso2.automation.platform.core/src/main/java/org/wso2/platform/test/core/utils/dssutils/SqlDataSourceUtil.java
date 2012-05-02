@@ -31,7 +31,8 @@ import org.wso2.carbon.rssmanager.ui.stub.types.PrivilegeGroup;
 import org.wso2.carbon.rssmanager.ui.stub.types.RSSInstanceEntry;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
-import org.wso2.platform.test.core.utils.dbutils.MySqlDatabaseManager;
+import org.wso2.platform.test.core.utils.dbutils.DatabaseFactory;
+import org.wso2.platform.test.core.utils.dbutils.DatabaseManager;
 import org.wso2.platform.test.core.utils.fileutils.FileManager;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkProperties;
 
@@ -173,6 +174,7 @@ public class SqlDataSourceUtil {
             createUser();
         } else {
             jdbcUrl = frameworkProperties.getDataSource().getDbUrl();
+            jdbcDriver = frameworkProperties.getDataSource().getM_dbDriverName();
             databaseUser = frameworkProperties.getDataSource().getDbUser();
             databasePassword = frameworkProperties.getDataSource().getDbPassword();
             createDataBase(jdbcUrl, databaseUser, databasePassword);
@@ -206,7 +208,7 @@ public class SqlDataSourceUtil {
     private void createDataBase(String jdbc, String user, String password)
             throws ClassNotFoundException, SQLException {
         try {
-            MySqlDatabaseManager dbm = new MySqlDatabaseManager(jdbc, user, password);
+            DatabaseManager dbm = DatabaseFactory.getDatabaseConnector(jdbc, user, password);
             dbm.executeUpdate("DROP DATABASE IF EXISTS " + databaseName);
             dbm.executeUpdate("CREATE DATABASE " + databaseName);
             jdbcUrl = jdbc + "/" + databaseName;
@@ -282,7 +284,7 @@ public class SqlDataSourceUtil {
             throws IOException, ClassNotFoundException, SQLException {
 
         try {
-            MySqlDatabaseManager dbm = new MySqlDatabaseManager(jdbcUrl, databaseUser, databasePassword);
+            DatabaseManager dbm = DatabaseFactory.getDatabaseConnector(jdbcUrl, databaseUser, databasePassword);
             for (File sql : sqlFileList) {
                 dbm.executeUpdate(sql);
             }

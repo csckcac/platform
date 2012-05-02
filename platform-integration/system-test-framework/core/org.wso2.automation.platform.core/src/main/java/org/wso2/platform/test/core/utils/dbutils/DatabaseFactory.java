@@ -19,28 +19,41 @@ package org.wso2.platform.test.core.utils.dbutils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
+import org.wso2.platform.test.core.utils.frameworkutils.productvariables.DataSource;
 
 import java.sql.SQLException;
 
 public class DatabaseFactory {
     private static final Log log = LogFactory.getLog(DatabaseFactory.class);
 
-    private static final String MYSQL_DRIVER = "com.mysql.jdbc.Driver";
-    private static final String ORACLE_DRIVER = "oracle.jdbc.driver.OracleDriver";
-    private static final String H2_DRIVER = "org.h2.Driver";
+    private static final DataSource dbConfig = new EnvironmentBuilder().getFrameworkSettings().getDataSource();
 
-    public static DatabaseManager getDatabaseConnector(String databaseDriver, String jdbcUrl, String userName, String passWord) throws ClassNotFoundException, SQLException {
+    private static final String JDBC_URL = dbConfig.getDbUrl();
+    private static final String JDBC_DRIVER = dbConfig.getM_dbDriverName();
+    private static final String DB_USER = dbConfig.getDbUser();
+    private static final String DB_PASSWORD = dbConfig.getDbPassword();
 
-        if (MYSQL_DRIVER.equalsIgnoreCase(databaseDriver)) {
-            return new MySqlDatabaseManager(jdbcUrl, userName, passWord);
+    public static DatabaseManager getDatabaseConnector(String databaseDriver, String jdbcUrl,
+                                                       String userName, String passWord)
+            throws ClassNotFoundException, SQLException {
 
-        } else if (ORACLE_DRIVER.equalsIgnoreCase(databaseDriver)) {
-            return new OracleDatabaseManager(jdbcUrl, userName, passWord);
+        return new SqlDatabaseManager(databaseDriver, jdbcUrl, userName, passWord);
 
-        } else {
-            log.warn("No implementation for " + databaseDriver + " Database Connection");
-            return null;
-        }
+    }
+
+    public static DatabaseManager getDatabaseConnector(String jdbcUrl,
+                                                       String userName, String passWord)
+            throws ClassNotFoundException, SQLException {
+
+        return new SqlDatabaseManager(JDBC_DRIVER, jdbcUrl, userName, passWord);
+
+    }
+
+    public static DatabaseManager getDatabaseConnector()
+            throws ClassNotFoundException, SQLException {
+
+        return new SqlDatabaseManager(JDBC_DRIVER, JDBC_URL, DB_USER, DB_PASSWORD);
 
     }
 }

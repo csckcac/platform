@@ -26,7 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 
-public class OracleDatabaseManager implements DatabaseManager {
+public class OracleDatabaseManager {
     private static final Log log = LogFactory.getLog(OracleDatabaseManager.class);
 
     private Connection connection;

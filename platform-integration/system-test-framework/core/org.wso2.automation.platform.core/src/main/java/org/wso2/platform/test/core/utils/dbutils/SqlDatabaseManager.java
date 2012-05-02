@@ -17,23 +17,25 @@
 */
 package org.wso2.platform.test.core.utils.dbutils;
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.platform.test.core.utils.fileutils.FileManager;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 
-public class MySqlDatabaseManager {
-    private static final Log log = LogFactory.getLog(MySqlDatabaseManager.class);
+public class SqlDatabaseManager implements DatabaseManager {
+    private static final Log log = LogFactory.getLog(SqlDatabaseManager.class);
 
     private Connection connection;
 
-    public MySqlDatabaseManager(String jdbcUrl, String userName, String passWord)
+    public SqlDatabaseManager(String jdbcDriver, String jdbcUrl, String userName, String passWord)
             throws SQLException, ClassNotFoundException {
-        Class.forName("com.mysql.jdbc.Driver");
+        Class.forName(jdbcDriver);
         log.debug("JDBC Url: " + jdbcUrl);
         connection = DriverManager.getConnection(jdbcUrl, userName, passWord);
         log.debug("Connected to database");
@@ -84,12 +86,8 @@ public class MySqlDatabaseManager {
         log.debug("Sql execution Success");
     }
 
-    public ResultSet executeQuery(String sql) throws SQLException {
-        ResultSet rs;
-        Statement st = connection.createStatement();
-        log.debug(sql);
-        rs = st.executeQuery(sql);
-        return rs;
+    public Statement getStatement(String sql) throws SQLException {
+        return connection.createStatement();
 
     }
 
@@ -130,4 +128,3 @@ public class MySqlDatabaseManager {
     }
 
 }
-

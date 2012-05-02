@@ -212,10 +212,10 @@ public class GRegResourceSeleniumTest {
             Thread.sleep(3000L);
             driver.findElement(By.xpath("//div[2]/input[3]")).click();
             Thread.sleep(5000L);
-            selenium.mouseOver("//div[3]/a");
+            selenium.mouseOver("//tr[2]/td/div/div/table/tbody/tr/td[4]/div[15]/div/div[12]/div[3]/a");
             Thread.sleep(2000L);
             //Delete Tag
-            driver.findElement(By.xpath("//a[2]/img")).click();
+            driver.findElement(By.xpath("//div[3]/a[2]/img")).click();
             Thread.sleep(3000L);
             assertTrue(selenium.isTextPresent("WSO2 Carbon"), "Delete Tag Pop-up Title fail :");
             assertTrue(selenium.isTextPresent("exact:Are you sure you want to delete this tag?"), "Delete Tag Pop-up Message fail :");
@@ -275,16 +275,23 @@ public class GRegResourceSeleniumTest {
         try {
             driver.findElement(By.id("uLocationBar")).clear();
             driver.findElement(By.id("uLocationBar")).sendKeys(path);
-            driver.findElement(By.xpath("//input[2]")).click();
+            Thread.sleep(2000);
+            driver.findElement(By.xpath("/html/body/table/tbody/tr[2]/td[3]/table/tbody/tr[2]/td/div" +
+                                        "/div/table/tbody/tr/td/table/tbody/tr/td/input[2]")).click();
             Thread.sleep(3000L);
         } catch (WebDriverException e) {
-            log.info("GRegResourceSeleniumTest-findLocation() - WebDriver Exception :" + e.getMessage());
-            new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_findLocation");
-            throw new WebDriverException("GRegResourceSeleniumTest-findLocation() :" + e.getMessage());
+            log.info("Failed to find Location collection/resource path:- WebDriver Exception :" +
+                     e.getMessage());
+            new SeleniumScreenCapture().getScreenshot(driver, "greg",
+                                                      "GRegCollectionSeleniumTest_findLocation");
+            throw new WebDriverException("Failed to find Location collection/resource path:" +
+                                         e.getMessage());
         } catch (Exception e) {
-            log.info("GRegResourceSeleniumTest-findLocation() Fail :" + e.getMessage());
-            new SeleniumScreenCapture().getScreenshot(driver, "greg", "GRegResourceSeleniumTest_findLocation");
-            throw new Exception("GRegResourceSeleniumTest-findLocation() :" + e.getMessage());
+            log.info("Failed to find Location collection/resource path:" + e.getMessage());
+            new SeleniumScreenCapture().getScreenshot(driver, "greg",
+                                                      "GRegCollectionSeleniumTest_findLocation");
+            throw new Exception("Failed to find Location collection/resource path:" +
+                                e.getMessage());
         }
     }
 

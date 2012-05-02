@@ -102,7 +102,6 @@
                                     org.wso2.carbon:org.wso2.carbon.logging.mgt.feature:${carbon.version}
                                 </featureArtifactDef>
 
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.coordination.core.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.ntask.feature:${carbon.version}</featureArtifactDef>
 
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.wsdl.tools.feature:${carbon.version}
@@ -274,10 +273,6 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.registry.resource.properties.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.coordination.core.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
                                 <feature>

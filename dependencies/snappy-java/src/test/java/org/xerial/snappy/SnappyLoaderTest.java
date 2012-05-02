@@ -24,7 +24,11 @@
 //--------------------------------------
 package org.xerial.snappy;
 
-import static org.junit.Assert.*;
+import org.codehaus.plexus.classworlds.ClassWorld;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
+import org.junit.Test;
+import org.xerial.util.FileResource;
+import org.xerial.util.log.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -35,11 +39,8 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import org.codehaus.plexus.classworlds.ClassWorld;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
-import org.junit.Test;
-import org.xerial.util.FileResource;
-import org.xerial.util.log.Logger;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.fail;
 
 public class SnappyLoaderTest
 {
@@ -75,7 +76,6 @@ public class SnappyLoaderTest
         }
     }
 
-    @Test
     public void loadSnappyByDiffentClassloadersInTheSameJVM() throws Exception {
 
         // Parent class loader cannot see Snappy.class

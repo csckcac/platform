@@ -334,6 +334,11 @@
             <artifactId>json-simple</artifactId>
             <version>1.1.wso2v1</version>
         </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>2.1</version>
+            </dependency>
 
     </dependencies>
 
@@ -406,6 +411,7 @@
                                 <importBundleDef>jdom.wso2:jdom</importBundleDef>
                                 <importBundleDef>commons-cli:commons-cli</importBundleDef>
                                 <importBundleDef>com.googlecode.json-simple.wso2:json-simple</importBundleDef>
+				<importBundleDef>com.google.code.gson:gson</importBundleDef>
                             </importBundles>
 
 

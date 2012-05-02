@@ -39,6 +39,7 @@ import org.wso2.carbon.hosting.wnagent.WNAgentConstants;
 import org.wso2.carbon.hosting.wnagent.beans.PlanConfig;
 import org.wso2.carbon.hosting.wnagent.exception.AgentServiceException;
 import org.wso2.carbon.hosting.wnagent.util.PropertyFileReaderUtil;
+import org.wso2.carbon.hosting.wnagent.util.ServerStartupDetector;
 import org.wso2.carbon.lb.common.dto.ContainerInformation;
 
 
@@ -151,6 +152,10 @@ public class AgentService {
 			invokeContainerDestroyProcess(containerInfo.getContainerId(), containerInfo.getContainerRoot());
 			throw e;
 		}
+		
+		ServerStartupDetector detector = new ServerStartupDetector(this, containerInfo, domainName);
+		// we do not want to block this thread, hence use start()
+		detector.start();
 
 		return canCreateMoreContainers;
 	}
@@ -267,6 +272,7 @@ public class AgentService {
 				log.debug(msg);
 			throw new AgentServiceException(msg);
 		}
+		
 		return containerStartStatus;
     }
 	

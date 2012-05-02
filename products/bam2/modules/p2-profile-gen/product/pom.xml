@@ -106,19 +106,12 @@
                                 </featureArtifactDef>
                                 <!--END Dashboard Features-->
                                 <!--featureArtifactDef>org.wso2.carbon:org.wso2.carbon.gauges.ui.feature:${carbon.version}</featureArtifactDef-->
-                                <!--<featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.cassandra.dataaccess.feature:${carbon.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.cassandra.server.feature:${carbon.version}
-                                </featureArtifactDef>-->
-
-
-                                <featureArtifactDef>
-                                    org.wso2.carbon:org.wso2.carbon.cassandra.feature:${carbon.version}
                                 </featureArtifactDef>
-
-
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.logging.mgt.feature:${carbon.version}
                                 </featureArtifactDef>
@@ -246,7 +239,11 @@
                                     <version>${carbon.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.cassandra.feature.group</id>
+                                    <id>org.wso2.carbon.cassandra.dataaccess.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.cassandra.server.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
 

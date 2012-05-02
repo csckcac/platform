@@ -55,7 +55,7 @@ public class HostObjectUtil {
 
     public static String serializeJSON(Object obj) {
         StringWriter json = new StringWriter();
-        if(obj instanceof Wrapper) {
+        if (obj instanceof Wrapper) {
             obj = ((Wrapper) obj).unwrap();
         }
 
@@ -106,8 +106,7 @@ public class HostObjectUtil {
             String xml = (String) ScriptableObject.callMethod((ScriptableObject) obj, "toXMLString", new Object[0]);
             xml = xml.replaceAll("\\n", "\\\\n").replaceAll("\"", "\\\\\"");
             json.append("\"").append(xml).append("\"");
-        } else if (obj instanceof String ||
-                obj instanceof Integer ||
+        } else if (obj instanceof Integer ||
                 obj instanceof Long ||
                 obj instanceof Float ||
                 obj instanceof Double ||
@@ -115,6 +114,8 @@ public class HostObjectUtil {
                 obj instanceof BigInteger ||
                 obj instanceof BigDecimal ||
                 obj instanceof Boolean) {
+            json.append(obj.toString());
+        } else if (obj instanceof String) {
             json.append("\"").append(obj.toString()).append("\"");
         } else {
             json.append("{}");
@@ -123,7 +124,7 @@ public class HostObjectUtil {
     }
 
     public static String serializeObject(Object obj) {
-        if(obj instanceof Wrapper) {
+        if (obj instanceof Wrapper) {
             obj = ((Wrapper) obj).unwrap();
         }
 
@@ -137,7 +138,7 @@ public class HostObjectUtil {
                 obj instanceof BigDecimal ||
                 obj instanceof Boolean) {
             return obj.toString();
-        } else if(obj instanceof XML || obj instanceof XMLList) {
+        } else if (obj instanceof XML || obj instanceof XMLList) {
             return (String) ScriptableObject.callMethod((ScriptableObject) obj, "toXMLString", new Object[0]);
         } else {
             return serializeJSON(obj);
@@ -149,7 +150,7 @@ public class HostObjectUtil {
             StringBuilder sb = new StringBuilder();
             int count;
             while ((count = is.read()) != -1) {
-                sb.append((char)count);
+                sb.append((char) count);
             }
             is.close();
             return sb.toString();

@@ -124,7 +124,6 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="domainName" nillable="true" type="xs:string" />
-                        <xs:element minOccurs="0" name="containerName" nillable="true" type="xs:string" />
                         <xs:element minOccurs="0" name="containerInfo" nillable="true" type="ax2125:ContainerInformation" />
                     </xs:sequence>
                 </xs:complexType>
@@ -140,7 +139,6 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="domainName" nillable="true" type="xs:string" />
-                        <xs:element minOccurs="0" name="containerName" nillable="true" type="xs:string" />
                         <xs:element minOccurs="0" name="containerInfo" nillable="true" type="ax2125:ContainerInformation" />
                     </xs:sequence>
                 </xs:complexType>
@@ -581,13 +579,13 @@
     </wsdl:binding>
     <wsdl:service name="AgentService">
         <wsdl:port name="AgentServiceHttpsSoap11Endpoint" binding="tns:AgentServiceSoap11Binding">
-            <soap:address location="https://175.157.149.65:9443/services/AgentService.AgentServiceHttpsSoap11Endpoint/" />
+            <soap:address location="https://175.157.155.112:9443/services/AgentService.AgentServiceHttpsSoap11Endpoint/" />
         </wsdl:port>
         <wsdl:port name="AgentServiceHttpsSoap12Endpoint" binding="tns:AgentServiceSoap12Binding">
-            <soap12:address location="https://175.157.149.65:9443/services/AgentService.AgentServiceHttpsSoap12Endpoint/" />
+            <soap12:address location="https://175.157.155.112:9443/services/AgentService.AgentServiceHttpsSoap12Endpoint/" />
         </wsdl:port>
         <wsdl:port name="AgentServiceHttpsEndpoint" binding="tns:AgentServiceHttpBinding">
-            <http:address location="https://175.157.149.65:9443/services/AgentService.AgentServiceHttpsEndpoint/" />
+            <http:address location="https://175.157.155.112:9443/services/AgentService.AgentServiceHttpsEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

@@ -55,14 +55,6 @@ public class JNDIConfig extends DBCPSQLConfig {
 	}
 	
 	private void validateJNDIConfig() throws DataServiceFault {
-		if (DBUtils.isEmptyString(this.getProperty(DBConstants.JNDI.INITIAL_CONTEXT_FACTORY))) {
-			throw new DataServiceFault("Initial context factory cannot be null in config '" + 
-					this.getConfigId() + "'");
-		}
-        if (DBUtils.isEmptyString(this.getProperty(DBConstants.JNDI.PROVIDER_URL))) {
-        	throw new DataServiceFault("Provider URL cannot be null in config '" + 
-					this.getConfigId() + "'");
-		}
         if (DBUtils.isEmptyString(this.getProperty(DBConstants.JNDI.RESOURCE_NAME))) {
         	throw new DataServiceFault("Resource name cannot be null in config '" + 
 					this.getConfigId() + "'");

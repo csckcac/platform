@@ -141,7 +141,7 @@ public class ConfigFactory {
             return DataSourceTypes.SPARQL;
         } else if (properties.get(CSV.DATASOURCE) != null) {
 		    return DataSourceTypes.CSV;
-		} else if (properties.get(DBConstants.JNDI.INITIAL_CONTEXT_FACTORY) != null) {
+		} else if (properties.get(DBConstants.JNDI.RESOURCE_NAME) != null) {
 		    return DataSourceTypes.JNDI;
 		} else if (properties.get(GSpread.DATASOURCE) != null) {
 		    return DataSourceTypes.GDATA_SPREADSHEET;

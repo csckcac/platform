@@ -20,8 +20,6 @@ package org.wso2.carbon.dataservices.core.description.config;
 
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.dataservices.common.DBConstants;
 import org.wso2.carbon.dataservices.common.DBConstants.DataSourceTypes;
 import org.wso2.carbon.dataservices.core.engine.DataService;
@@ -30,8 +28,6 @@ import org.wso2.carbon.dataservices.core.engine.DataService;
  * This class represents a RDF based data source configuration.
  */
 public class SparqlEndpointConfig extends Config {
-
-	private static final Log log = LogFactory.getLog(ExcelConfig.class);
 	
 	private String sparqlEndpointUrl;
 	

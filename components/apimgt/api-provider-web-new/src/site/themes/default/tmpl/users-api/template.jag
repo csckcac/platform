@@ -3,16 +3,19 @@
 var apiName = request.getParameter("name");
 var apiVersion = request.getParameter("version");
 
+apiProviderApp.currentAPIName=apiName;
+apiProviderApp.currentVersion=apiVersion;
+
 var subs = require("/core/subscriptions/subscriptions.js");
 var subsOfAPIs = subs.getSubscribersOfAPI(apiName,version);
 return {
         "subscribers":subsOfAPIs.subscribers
 };
 %>
-        <div class="row-fluid">
-            <div class="span2">
-                <% include("/includes/provider/apiDetailsInfo.jag"); %>
-            </div>
+    <div class="row-fluid">
+        <div class="span2">
+            <% jagg.includeTemplate("item-nav-list", null); %>
+    </div>
             <div class="span10">
                 <table class="table table-bordered">
                     <thead>

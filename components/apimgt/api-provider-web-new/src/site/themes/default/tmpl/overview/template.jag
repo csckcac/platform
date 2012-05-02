@@ -2,6 +2,10 @@
         var apiName = request.getParameter("name");
         var apiVersion = request.getParameter("version");
 
+
+        apiProviderApp.currentAPIName=apiName;
+        apiProviderApp.currentVersion=apiVersion;
+
         var api = require("/core/apis/list.js");
         var result = api.getAPI(apiName,apiVersion);
         return {
@@ -11,6 +15,9 @@
 %>
 
  <div class="row-fluid">
+     <div class="span2">
+         <% jagg.includeTemplate("item-nav-list", null); %>
+    </div>
     <div class="span6">
         <div class="well" id="apiView">
         </div>

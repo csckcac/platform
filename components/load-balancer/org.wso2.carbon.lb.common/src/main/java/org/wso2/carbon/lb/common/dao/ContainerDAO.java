@@ -19,14 +19,14 @@ import java.sql.Statement;
  *
  */
 public class ContainerDAO extends AbstractDAO{
-    protected Log log = LogFactory.getLog(ContainerDAO.class);
-    Connection con = null;
-        String url = "jdbc:mysql://localhost:3306/";
-        String db = "hosting_mgt_db";
-        String driver = "com.mysql.jdbc.Driver";
-        String dbUsername = "root";
-        String dbPassword = "root";
-        Statement statement = null;
+    //protected Log log = LogFactory.getLog(ContainerDAO.class);
+    private Connection con = null;
+    private String url = "jdbc:mysql://localhost:3306/";
+    private String db = "hosting_mgt_db";
+    private String driver = "com.mysql.jdbc.Driver";
+    private String dbUsername = "root";
+    private String dbPassword = "root";
+    private Statement statement = null;
 
    /**
     *  This is for adding container details to database. This will be called after successfully
@@ -46,19 +46,19 @@ public class ContainerDAO extends AbstractDAO{
                         + container.getIp() + "','" + container.getBridge() + "')";
 
            statement.executeUpdate(sql);
-       }catch (SQLException s){
+        }catch (SQLException s){
            String msg = "Error while inserting container data" + s.getMessage();
            log.error(msg);
            throw new SQLException(s + msg);
-       }catch (ClassNotFoundException s){
+        }catch (ClassNotFoundException s){
             String msg = "Error while sql connection :" + s.getMessage();
             log.error(msg);
             throw new SQLException(msg, s);
-       }
-       finally {
+        }
+        finally {
             try { if (statement != null) statement.close(); } catch(SQLException e) {}
             try { if (con != null) con.close(); } catch(Exception e) {}
-       }
+        }
     }
 
     /**
@@ -76,19 +76,19 @@ public class ContainerDAO extends AbstractDAO{
             statement = con.createStatement();
             String sql = "DELETE FROM container WHERE container_id='" + containerId + "'";
             statement.executeUpdate(sql);
-       }catch (SQLException s){
+        }catch (SQLException s){
            String msg = "Error while deleting container data" + s.getMessage();
            log.error(msg);
            throw new SQLException(s + msg);
-       }catch (ClassNotFoundException s){
+        }catch (ClassNotFoundException s){
            String msg = "Error while sql connection :" + s.getMessage();
            log.error(msg);
            throw new SQLException(msg);
-       }
-       finally {
+        }
+        finally {
             try { if (statement != null) statement.close(); } catch(SQLException e) {}
             try { if (con != null) con.close(); } catch(Exception e) {}
-       }
+        }
     }
 
     /**
@@ -109,19 +109,19 @@ public class ContainerDAO extends AbstractDAO{
            String sql = "UPDATE container SET started="+ status +" WHERE container_id='"
                         + containerId+ "'";
            statement.executeUpdate(sql);
-       }catch (SQLException s){
+        }catch (SQLException s){
            String msg = "Error while deleting container data" + s.getMessage();
            log.error(msg);
            throw new SQLException(s + msg);
-       }catch (ClassNotFoundException s){
+        }catch (ClassNotFoundException s){
            String msg = "Error while sql connection :" + s.getMessage();
            log.error(msg);
            throw new SQLException(msg);
-       }
-       finally {
+        }
+        finally {
             try { if (statement != null) statement.close(); } catch(SQLException e) {}
             try { if (con != null) con.close(); } catch(Exception e) {}
-       }
+        }
     }
 
 
@@ -224,12 +224,14 @@ public class ContainerDAO extends AbstractDAO{
 
     /**
      * This method will return the next available ip for the input bridge ip. For a particular bridge
-     * there will be at-least one ip at the table. If there is only one ip, it is the available ip to
-     * next container to be created and that will be returned. Because ips are filled up to that level
-     * in the bridge. Then it should increase and put back to the table.
+     * there will be at-least one ip at the table.
+     * If there is only one ip, it is the available ip to next container to be created and that will
+     * be returned. Because ips are filled up to that level in the bridge and no ip is freed due to
+     * destruction of container.Then it will be increased and put back to the table.
+     *
      * If there are more than one ips, we need to select second of the result set to
-     * return and should be deleted as well. That's because we add un-used(ips of destroyed containers
-     * at the end of this table with relevant bridge
+     * return and should be deleted as well. That's because we add un-used(ips of destroyed containers)
+     * ips at the end of this table with relevant bridge
      *
      * @param bridgeIp
      * @throws Exception
@@ -244,21 +246,31 @@ public class ContainerDAO extends AbstractDAO{
             String sql =  "SELECT * FROM available_ip WHERE bridge='" + bridgeIp + "'" ;
             //Here we have to get all the ips relevant to the bridge then select the ip according to
             // the algorithms described at method comment. BTW:Here we have to get all the ips to be
-            // generic sql and hence we can't use LIMTI 2(LIMIT is mysql specific)
+            // generic sql and hence we can't use LIMIT 2(LIMIT is mysql specific)
             resultSet = statement.executeQuery(sql);
             int ipCount = 0;
             while(resultSet.next()){
+                //iterate through the available ip set
                 availableIp = resultSet.getString("ip").trim();
                 ipCount++;
                 if(ipCount == 2){
+                 // there are more than one ips
+
                     sql =  "DELETE FROM available_ip WHERE ip='" + availableIp+ "'";
+                    //delete the ip
+
                     statement.executeUpdate(sql);
                     break;
+                    //no need to count more than 2, as we need to extract second ip where more than
+                    // one ips available
                 }
             }
             if(ipCount == 1){
+            // there is only one ip
+
                 sql =  "UPDATE available_ip SET ip='"+ incrementIp(availableIp) +"' WHERE ip='"
                        + availableIp + "'";
+                //increment the ip
                 statement.executeUpdate(sql);
             }
         }catch (SQLException s){
@@ -277,6 +289,7 @@ public class ContainerDAO extends AbstractDAO{
         }
         return availableIp;
     }
+
 
 
     /**
@@ -304,10 +317,9 @@ public class ContainerDAO extends AbstractDAO{
         containerInformation.setNetMask(bridges[0].getNetMask());
         containerInformation.setType("S");        //set a default for current implementation
 
-        //Container type, container id can not be set from here. They will be set from adapter level.
+        //container id can not be set from here. They will be set from adapter level.
         return containerInformation;
     }
-
 
 
 }

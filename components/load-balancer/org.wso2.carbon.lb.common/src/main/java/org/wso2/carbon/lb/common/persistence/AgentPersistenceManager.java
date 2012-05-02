@@ -23,7 +23,7 @@ public class    AgentPersistenceManager {
     private static AgentPersistenceManager manager = new AgentPersistenceManager();
 
     /**
-         * Returning the hosting persistence manager instance : singleton pattern
+         * Returning the agent persistence manager instance : singleton pattern
          *
          * @return manager
          */

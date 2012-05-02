@@ -10,18 +10,19 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- *  This class handles the database access relevant to zone and domain data
+ *  This class handles the database access relevant to zone and domain
+ *  data
  *
  */
 public class ZoneDAO extends AbstractDAO{
-    protected Log log = LogFactory.getLog(HostMachineDAO.class);
-    Connection con = null;
-        String url = "jdbc:mysql://localhost:3306/";
-        String db = "hosting_mgt_db";
-        String driver = "com.mysql.jdbc.Driver";
-        String dbUsername = "root";
-        String dbPassword = "root";
-        Statement statement = null;
+    //protected Log log = LogFactory.getLog(HostMachineDAO.class);
+    private Connection con = null;
+    private String url = "jdbc:mysql://localhost:3306/";
+    private String db = "hosting_mgt_db";
+    private String driver = "com.mysql.jdbc.Driver";
+    private String dbUsername = "root";
+    private String dbPassword = "root";
+    private Statement statement = null;
 
     /**
      * This is called when new Host machine is registering. Zone and domains relevant to that zone are

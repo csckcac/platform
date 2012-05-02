@@ -47,11 +47,19 @@ public class HostMachine {
     }
 
     public Bridge[] getBridges() {
-        return bridges;
+
+        Bridge bridgesCopy[]= new Bridge[bridges.length];
+        System.arraycopy(bridges, 0, bridgesCopy, 0, bridges.length);
+        return bridgesCopy;
     }
 
     public void setBridges(Bridge[] bridges) {
-        this.bridges = bridges;
+        if(bridges != null){
+            this.bridges = new Bridge[0];
+            this.bridges = bridges;
+            this.bridges= new Bridge[bridges.length];
+            System.arraycopy(bridges, 0, this.bridges, 0, bridges.length);
+        }
     }
 
     public String getEpr() {
@@ -61,4 +69,5 @@ public class HostMachine {
     public void setEpr(String epr) {
         this.epr = epr;
     }
+
 }

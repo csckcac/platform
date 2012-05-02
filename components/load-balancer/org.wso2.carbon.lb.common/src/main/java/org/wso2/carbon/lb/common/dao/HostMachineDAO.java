@@ -19,14 +19,14 @@ import java.util.HashMap;
  */
 public class HostMachineDAO extends AbstractDAO{
 
-    protected Log log = LogFactory.getLog(HostMachineDAO.class);
-    Connection con = null;
-        String url = "jdbc:mysql://localhost:3306/";
-        String db = "hosting_mgt_db";
-        String driver = "com.mysql.jdbc.Driver";
-        String dbUsername = "root";
-        String dbPassword = "root";
-        Statement statement = null;
+    //protected Log log = LogFactory.getLog(HostMachineDAO.class);
+    private Connection con = null;
+    private String url = "jdbc:mysql://localhost:3306/";
+    private String db = "hosting_mgt_db";
+    private String driver = "com.mysql.jdbc.Driver";
+    private String dbUsername = "root";
+    private String dbPassword = "root";
+    private Statement statement = null;
 /* Register a host machine when it is physically added to a zone. When a host machine is first
  * created it will first check whether the zone is already exist. If not this method will call
  * methods to register zone first.
@@ -125,7 +125,6 @@ public class HostMachineDAO extends AbstractDAO{
             Class.forName(driver);
             con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
             statement = con.createStatement();
-            Statement statement = con.createStatement();
             String sql =  "SELECT 1 FROM host_machine WHERE epr='" + endPoint + "'";
             //return a result if there is a record
             resultSet = statement.executeQuery(sql);
@@ -162,7 +161,6 @@ public class HostMachineDAO extends AbstractDAO{
             Class.forName(driver);
             con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
             statement = con.createStatement();
-            Statement statement = con.createStatement();
             String sql =  "SELECT zone FROM domain WHERE domain_name='" + domain + "'";
             resultSet = statement.executeQuery(sql);
             if(resultSet.next()){ //get the first result as only one zone is per domain

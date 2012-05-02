@@ -318,9 +318,9 @@ public class SnappyLoader
         }
     }
 
-    private static void setJavaLibPath(String snappyNativeLibraryName) {
+    private static void setJavaLibPath() {
         String tmpLocation =new File(System.getProperty(KEY_SNAPPY_TEMPDIR,System.getProperty("java.io.tmpdir"))).getAbsolutePath();
-        System.setProperty("java.lib.path",tmpLocation);
+        System.setProperty("java.library.path", System.getProperty("java.library.path") + File.pathSeparator + tmpLocation);
     }
 
     /**
@@ -415,6 +415,8 @@ public class SnappyLoader
 
     static File findNativeLibrary() {
 
+        setJavaLibPath();
+
         boolean useSystemLib = Boolean.parseBoolean(System.getProperty(KEY_SNAPPY_USE_SYSTEMLIB, "false"));
         if (useSystemLib)
             return null;
@@ -431,8 +433,6 @@ public class SnappyLoader
         // Resolve the library file name with a suffix (e.g., dll, .so, etc.) 
         if (snappyNativeLibraryName == null)
             snappyNativeLibraryName = System.mapLibraryName("snappyjava");
-        
-        setJavaLibPath(snappyNativeLibraryName);
 
         if (snappyNativeLibraryPath != null) {
             File nativeLib = new File(snappyNativeLibraryPath, snappyNativeLibraryName);

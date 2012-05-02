@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://impl.service.autoscaler.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax21="http://exception.service.autoscaler.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://impl.service.autoscaler.carbon.wso2.org">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://service.autoscaler.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax23="http://sql.java/xsd" xmlns:ax21="http://exception.service.autoscaler.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.autoscaler.carbon.wso2.org">
     <wsdl:types>
-        <xs:schema xmlns:ax22="http://exception.service.autoscaler.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://impl.service.autoscaler.carbon.wso2.org">
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://sql.java/xsd">
+            <xs:complexType name="SQLException">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="SQLState" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="errorCode" type="xs:int"/>
+                    <xs:element minOccurs="0" name="nextException" nillable="true" type="ax23:SQLException"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax24="http://sql.java/xsd" xmlns:ax22="http://exception.service.autoscaler.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://service.autoscaler.carbon.wso2.org">
             <xs:import namespace="http://exception.service.autoscaler.carbon.wso2.org/xsd"/>
+            <xs:import namespace="http://sql.java/xsd"/>
             <xs:element name="AutoscalerServiceNoInstanceFoundException">
                 <xs:complexType>
                     <xs:sequence>
@@ -13,7 +23,7 @@
             <xs:element name="terminateInstance">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="domainName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="args0" nillable="true" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -24,10 +34,24 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:element name="AutoscalerServiceClassNotFoundException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="ClassNotFoundException" nillable="true" type="xs:anyType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AutoscalerServiceSQLException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="SQLException" nillable="true" type="ax23:SQLException"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="startInstance">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="domainName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="args0" nillable="true" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -38,6 +62,28 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:element name="getPendingInstanceCount">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="args0" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPendingInstanceCountResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addPendingInstanceCount">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="args0" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="args1" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
         </xs:schema>
         <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://exception.service.autoscaler.carbon.wso2.org/xsd">
             <xs:complexType name="NoInstanceFoundException">
@@ -45,6 +91,12 @@
             </xs:complexType>
         </xs:schema>
     </wsdl:types>
+    <wsdl:message name="getPendingInstanceCountRequest">
+        <wsdl:part name="parameters" element="ns:getPendingInstanceCount"/>
+    </wsdl:message>
+    <wsdl:message name="getPendingInstanceCountResponse">
+        <wsdl:part name="parameters" element="ns:getPendingInstanceCountResponse"/>
+    </wsdl:message>
     <wsdl:message name="terminateInstanceRequest">
         <wsdl:part name="parameters" element="ns:terminateInstance"/>
     </wsdl:message>
@@ -60,7 +112,20 @@
     <wsdl:message name="startInstanceResponse">
         <wsdl:part name="parameters" element="ns:startInstanceResponse"/>
     </wsdl:message>
+    <wsdl:message name="AutoscalerServiceClassNotFoundException">
+        <wsdl:part name="parameters" element="ns:AutoscalerServiceClassNotFoundException"/>
+    </wsdl:message>
+    <wsdl:message name="AutoscalerServiceSQLException">
+        <wsdl:part name="parameters" element="ns:AutoscalerServiceSQLException"/>
+    </wsdl:message>
+    <wsdl:message name="addPendingInstanceCountRequest">
+        <wsdl:part name="parameters" element="ns:addPendingInstanceCount"/>
+    </wsdl:message>
     <wsdl:portType name="AutoscalerServicePortType">
+        <wsdl:operation name="getPendingInstanceCount">
+            <wsdl:input message="ns:getPendingInstanceCountRequest" wsaw:Action="urn:getPendingInstanceCount"/>
+            <wsdl:output message="ns:getPendingInstanceCountResponse" wsaw:Action="urn:getPendingInstanceCountResponse"/>
+        </wsdl:operation>
         <wsdl:operation name="terminateInstance">
             <wsdl:input message="ns:terminateInstanceRequest" wsaw:Action="urn:terminateInstance"/>
             <wsdl:output message="ns:terminateInstanceResponse" wsaw:Action="urn:terminateInstanceResponse"/>
@@ -69,10 +134,24 @@
         <wsdl:operation name="startInstance">
             <wsdl:input message="ns:startInstanceRequest" wsaw:Action="urn:startInstance"/>
             <wsdl:output message="ns:startInstanceResponse" wsaw:Action="urn:startInstanceResponse"/>
+            <wsdl:fault message="ns:AutoscalerServiceClassNotFoundException" name="AutoscalerServiceClassNotFoundException" wsaw:Action="urn:startInstanceAutoscalerServiceClassNotFoundException"/>
+            <wsdl:fault message="ns:AutoscalerServiceSQLException" name="AutoscalerServiceSQLException" wsaw:Action="urn:startInstanceAutoscalerServiceSQLException"/>
+        </wsdl:operation>
+        <wsdl:operation name="addPendingInstanceCount">
+            <wsdl:input message="ns:addPendingInstanceCountRequest" wsaw:Action="urn:addPendingInstanceCount"/>
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="AutoscalerServiceSoap11Binding" type="ns:AutoscalerServicePortType">
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getPendingInstanceCount">
+            <soap:operation soapAction="urn:getPendingInstanceCount" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
         <wsdl:operation name="terminateInstance">
             <soap:operation soapAction="urn:terminateInstance" style="document"/>
             <wsdl:input>
@@ -85,6 +164,12 @@
                 <soap:fault use="literal" name="AutoscalerServiceNoInstanceFoundException"/>
             </wsdl:fault>
         </wsdl:operation>
+        <wsdl:operation name="addPendingInstanceCount">
+            <soap:operation soapAction="urn:addPendingInstanceCount" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
         <wsdl:operation name="startInstance">
             <soap:operation soapAction="urn:startInstance" style="document"/>
             <wsdl:input>
@@ -93,10 +178,25 @@
             <wsdl:output>
                 <soap:body use="literal"/>
             </wsdl:output>
+            <wsdl:fault name="AutoscalerServiceClassNotFoundException">
+                <soap:fault use="literal" name="AutoscalerServiceClassNotFoundException"/>
+            </wsdl:fault>
+            <wsdl:fault name="AutoscalerServiceSQLException">
+                <soap:fault use="literal" name="AutoscalerServiceSQLException"/>
+            </wsdl:fault>
         </wsdl:operation>
     </wsdl:binding>
     <wsdl:binding name="AutoscalerServiceSoap12Binding" type="ns:AutoscalerServicePortType">
         <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getPendingInstanceCount">
+            <soap12:operation soapAction="urn:getPendingInstanceCount" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
         <wsdl:operation name="terminateInstance">
             <soap12:operation soapAction="urn:terminateInstance" style="document"/>
             <wsdl:input>
@@ -109,6 +209,12 @@
                 <soap12:fault use="literal" name="AutoscalerServiceNoInstanceFoundException"/>
             </wsdl:fault>
         </wsdl:operation>
+        <wsdl:operation name="addPendingInstanceCount">
+            <soap12:operation soapAction="urn:addPendingInstanceCount" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
         <wsdl:operation name="startInstance">
             <soap12:operation soapAction="urn:startInstance" style="document"/>
             <wsdl:input>
@@ -117,10 +223,25 @@
             <wsdl:output>
                 <soap12:body use="literal"/>
             </wsdl:output>
+            <wsdl:fault name="AutoscalerServiceClassNotFoundException">
+                <soap12:fault use="literal" name="AutoscalerServiceClassNotFoundException"/>
+            </wsdl:fault>
+            <wsdl:fault name="AutoscalerServiceSQLException">
+                <soap12:fault use="literal" name="AutoscalerServiceSQLException"/>
+            </wsdl:fault>
         </wsdl:operation>
     </wsdl:binding>
     <wsdl:binding name="AutoscalerServiceHttpBinding" type="ns:AutoscalerServicePortType">
         <http:binding verb="POST"/>
+        <wsdl:operation name="getPendingInstanceCount">
+            <http:operation location="getPendingInstanceCount"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
         <wsdl:operation name="terminateInstance">
             <http:operation location="terminateInstance"/>
             <wsdl:input>
@@ -129,6 +250,12 @@
             <wsdl:output>
                 <mime:content type="text/xml" part="parameters"/>
             </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addPendingInstanceCount">
+            <http:operation location="addPendingInstanceCount"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
         </wsdl:operation>
         <wsdl:operation name="startInstance">
             <http:operation location="startInstance"/>

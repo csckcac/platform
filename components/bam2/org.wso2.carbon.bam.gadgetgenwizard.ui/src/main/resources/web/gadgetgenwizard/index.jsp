@@ -212,12 +212,12 @@
                 <h3>Pick Data Source</h3>
             </div>
 
-            <div style="height:115px;" id="div-form">
+            <div style="height:130px;" id="div-form">
                 <form>
-                <p>JDBC URL : <input type="text" size="50%" name="jdbcurl" value="jdbc:mysql://localhost:3306/gadgetgen"/></p>
-                <p>Driver Class Name : <input type="text" size="50%" name="driver" value="com.mysql.jdbc.Driver"/></p>
-                <p>Username : <input type="text" size="50%" name="username" value="root"/></p>
-                <p>Password : <input type="text" size="50%" name="password" value="root"/></p>
+                <p>JDBC URL : <input type="text" size="50%" name="jdbcurl" value="jdbc:h2:/Users/mackie/tmp/jaggery-1.0.0-SNAPSHOT_M4/repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE"/></p>
+                <p>Driver Class Name : <input type="text" size="50%" name="driver" value="org.h2.Driver"/></p>
+                <p>Username : <input type="text" size="50%" name="username" value="wso2carbon"/></p>
+                <p>Password : <input type="text" size="50%" name="password" value="wso2carbon"/></p>
                     <input type="hidden" name="page" id="page" value="01">
                 </form>
             </div>

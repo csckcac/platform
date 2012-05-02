@@ -4,6 +4,7 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
+import org.wso2.carbon.bam.gadgetgenwizard.stub.GadgetGenAdminServiceGadgetGenException;
 import org.wso2.carbon.bam.gadgetgenwizard.stub.GadgetGenAdminServiceStub;
 import org.wso2.carbon.bam.gadgetgenwizard.stub.types.WSMap;
 import org.wso2.carbon.bam.gadgetgenwizard.stub.types.WSMapElement;
@@ -45,7 +46,7 @@ public class GadgetGenAdminClient {
        }
 
 
-    public void generateGraph(WSMap map) throws RemoteException {
+    public void generateGraph(WSMap map) throws GadgetGenAdminServiceGadgetGenException, RemoteException {
         stub.createGadget(map);
     }
 

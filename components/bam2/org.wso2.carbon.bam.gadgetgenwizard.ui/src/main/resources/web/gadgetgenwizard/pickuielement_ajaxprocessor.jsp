@@ -39,6 +39,8 @@
     function uiElementChange() {
         if ($("#uielement").val() == "bar") {
             $("#bar-chart-options").show();
+        } else {
+            $("#bar-chart-options").hide();
         }
     }
     $(document).ready(function () {
@@ -58,10 +60,11 @@
         <option value="table">Table</option>
     </select>
     <div id="bar-chart-options">
-        <p><label>X-Axis Label : </label><input type="text" name="bar-xlabel" value=""/></p>
-        <p><label>X-Axis Column : </label><input type="text" name="bar-xcolumn"/></p>
-        <p><label>Y-Axis Label : </label><input type="text" name="bar-ylabel"/></p>
-        <p><label>Y-Axis Column : </label><input type="text" name="bar-ycolumn"/></p>
+        <p><label>Chart Title : </label><input type="text" name="bar-title" value="Product vs Total Amount"/></p>
+        <p><label>X-Axis Label : </label><input type="text" name="bar-xlabel" value="Product Name"/></p>
+        <p><label>X-Axis Column : </label><input type="text" name="bar-xcolumn" value="prod_name"/></p>
+        <p><label>Y-Axis Label : </label><input type="text" name="bar-ylabel" value="Total Amount (Rs.)"/></p>
+        <p><label>Y-Axis Column : </label><input type="text" name="bar-ycolumn" value="total_amount"/></p>
     </div>
     <input type="hidden" name="page" id="page" value="03"/>
 

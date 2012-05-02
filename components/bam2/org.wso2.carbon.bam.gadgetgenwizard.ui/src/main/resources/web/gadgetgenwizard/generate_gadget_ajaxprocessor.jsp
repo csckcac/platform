@@ -20,8 +20,11 @@
     String[] genericKeys = new String[] {"jdbcurl", "username", "password", "driver", "sql"};
     attrKeys.addAll(Arrays.asList(genericKeys));
 
-    if (session.getAttribute("uielement").equals("bar")) {
-        String[] barChartKeys = new String[] {"bar-xlabel", "bar-xcolumn", "bar-ylabel", "bar-ycolumn"};
+    System.out.println("UI element session attribute : " + ((String[]) session.getAttribute("uielement"))[0]);
+    System.out.println("Is equal to bar : " + ((String[]) session.getAttribute("uielement"))[0].equals("bar"));
+
+    if ((session.getAttribute("uielement") != null) && (((String[]) session.getAttribute("uielement"))[0].equals("bar")))                     {
+        String[] barChartKeys = new String[] {"bar-xlabel", "bar-xcolumn", "bar-ylabel", "bar-ycolumn", "bar-title"};
         attrKeys.addAll(Arrays.asList(barChartKeys));
     }
     WSMap wsMap = gadgetGenAdminClient.constructWSMap(session, attrKeys);

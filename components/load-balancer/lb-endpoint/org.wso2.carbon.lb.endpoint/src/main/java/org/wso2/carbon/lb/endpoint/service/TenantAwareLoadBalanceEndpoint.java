@@ -22,6 +22,7 @@ import org.apache.synapse.core.axis2.Axis2SynapseEnvironment;
 import org.apache.synapse.endpoints.DynamicLoadbalanceFaultHandler;
 import org.apache.synapse.endpoints.Endpoint;
 import org.apache.synapse.endpoints.algorithms.LoadbalanceAlgorithm;
+import org.apache.synapse.endpoints.dispatch.HttpSessionDispatcher;
 import org.apache.synapse.endpoints.dispatch.SALSessions;
 import org.apache.synapse.endpoints.dispatch.SessionInformation;
 import org.apache.synapse.transport.nhttp.NhttpConstants;
@@ -113,6 +114,8 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
             if (!salSessions.isInitialized()) {
                 salSessions.initialize(isClusteringEnabled, cfgCtx);
             }
+            setSessionAffinity(true);
+            setDispatcher( new HttpSessionDispatcher());
             initialized = true;
             log.info("ServiceDynamicLoadbalanceEndpoint initialized");
         }

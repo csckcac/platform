@@ -1,15 +1,17 @@
 var getTemplateFile = function() {
-    return "tmpl/search/template.jag";
+    return "tmpl/item-add/template.jag";
 };
 
 var initialize = function (jagg) {
-    addHeaderJS(global, "search", "search-events", "tmpl/search/js/search-key.js");
+  addHeaderJS(global, "add", "add", "tmpl/item-add/js/validate.js");
 };
 
 var getData = function (params) {
+
 };
 
 var getParams = function () {
+
 };
 
 var getTemplates = function () {

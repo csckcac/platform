@@ -44,7 +44,7 @@ public class CoordinationServerDSComponent {
 		try {
 			if (this.getServer() == null) {
 				String configPath = CarbonUtils.getCarbonConfigDirPath() + 
-						File.separator + "advanced" + File.separator + "zoo.cfg";
+						File.separator + "etc" + File.separator + "zoo.cfg";
 				this.server = new CoordinationServer(new String(
 						CarbonUtils.getBytesFromFile(new File(configPath))));
 				this.server.start();

@@ -32,8 +32,6 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <module>org.wso2.carbon.coordination.common</module>
-        <module>org.wso2.carbon.coordination.core</module>
         <module>org.wso2.carbon.coordination.server</module>
     </modules>
 

@@ -187,31 +187,37 @@ public class DSWrappedXMLStreamWriter implements XMLStreamWriter {
 
 	public void writeAttribute(String localName, String value)
 			throws XMLStreamException {
-		if (this.isBufferring) {
-		    this.addEvent(new XMLEvent(EVENT_WRITE_ATTRIBUTE2, localName, value));
-		} else {
-			this.xmlWriter.writeAttribute(localName, value);
-		}
+        if (value != null) {
+            if (this.isBufferring) {
+                this.addEvent(new XMLEvent(EVENT_WRITE_ATTRIBUTE2, localName, value));
+            } else {
+                this.xmlWriter.writeAttribute(localName, value);
+            }
+        }
 	}
 
 	public void writeAttribute(String namespaceURI, String localName,
 			String value) throws XMLStreamException {
-		if (this.isBufferring) {
-		    this.addEvent(new XMLEvent(EVENT_WRITE_ATTRIBUTE3, namespaceURI, 
-		    		localName, value));
-		} else {
-			this.xmlWriter.writeAttribute(namespaceURI, localName, value);
-		}
+        if (value != null) {
+            if (this.isBufferring) {
+                this.addEvent(new XMLEvent(EVENT_WRITE_ATTRIBUTE3, namespaceURI,
+                        localName, value));
+            } else {
+                this.xmlWriter.writeAttribute(namespaceURI, localName, value);
+            }
+        }
 	}
 
 	public void writeAttribute(String prefix, String namespaceURI,
 			String localName, String value) throws XMLStreamException {
-		if (this.isBufferring) {
-		    this.addEvent(new XMLEvent(EVENT_WRITE_ATTRIBUTE4, prefix, namespaceURI,		    		
-				localName, value));
-		} else {
-			this.xmlWriter.writeAttribute(prefix, namespaceURI, localName, value);
-		}
+        if (value != null) {
+            if (this.isBufferring) {
+                this.addEvent(new XMLEvent(EVENT_WRITE_ATTRIBUTE4, prefix, namespaceURI,
+                        localName, value));
+            } else {
+                this.xmlWriter.writeAttribute(prefix, namespaceURI, localName, value);
+            }
+        }
 	}
 
 	public void writeCData(String data) throws XMLStreamException {

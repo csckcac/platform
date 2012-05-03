@@ -26,7 +26,6 @@ import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.core.ArtifactUnloader;
 import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.utils.deployment.GhostDeployer;
-import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 import org.wso2.carbon.webapp.mgt.DataHolder;
 import org.wso2.carbon.webapp.mgt.TomcatGenericWebappsDeployer;
 import org.wso2.carbon.webapp.mgt.WebApplication;
@@ -65,61 +64,49 @@ public class WebappUnloader implements ArtifactUnloader {
     }
 
     private void unloadInactiveWebapps(ConfigurationContext configCtx,
-                                       String tenantDomain) /*throws AxisFault*/ {
+                                       String tenantDomain) {
         WebApplicationsHolder webApplicationsHolder = (WebApplicationsHolder)
                 configCtx.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
 
-        CarbonContextHolder currentCarbonContextHolder = null;
-        try {
-            currentCarbonContextHolder = CarbonContextHolder.
-                    getCurrentCarbonContextHolder(configCtx);
-            currentCarbonContextHolder.startTenantFlow();
-            currentCarbonContextHolder.setTenantId(0);
-            currentCarbonContextHolder.setTenantDomain(tenantDomain);
-            if (webApplicationsHolder != null) {
-                for (WebApplication webApplication :
-                        webApplicationsHolder.getStartedWebapps().values()) {
-                    if (!GhostWebappDeployerUtils.isGhostWebApp(webApplication)) {
-                        Long lastUsageTime = Long.parseLong((String) webApplication.
-                                getProperty(CarbonConstants.WEB_APP_LAST_USED_TIME));
-                        if (lastUsageTime != null && isInactive(lastUsageTime)) {
-                            GhostDeployer ghostDeployer = GhostWebappDeployerUtils.
-                                    getGhostDeployer(configCtx.getAxisConfiguration());
+        if (webApplicationsHolder != null) {
+            for (WebApplication webApplication :
+                    webApplicationsHolder.getStartedWebapps().values()) {
+                if (!GhostWebappDeployerUtils.isGhostWebApp(webApplication)) {
+                    Long lastUsageTime = Long.parseLong((String) webApplication.
+                            getProperty(CarbonConstants.WEB_APP_LAST_USED_TIME));
+                    if (lastUsageTime != null && isInactive(lastUsageTime)) {
+                        GhostDeployer ghostDeployer = GhostWebappDeployerUtils.
+                                getGhostDeployer(configCtx.getAxisConfiguration());
 
-                            DeploymentFileData webappFileData = ghostDeployer.
-                                    getFileData(webApplication.getWebappFile().getPath());
-                            log.info("Unloading actual webapp : " + webApplication.getWebappFile().
-                                    getName() + " and adding ghost webapp. Tenant Domain: " +
-                                     tenantDomain);
-                            try {
-                                TomcatGenericWebappsDeployer tomcatWebappDeployer =
-                                        (TomcatGenericWebappsDeployer) configCtx.
-                                                getProperty(CarbonConstants.
-                                                                    TOMCAT_GENERIC_WEBAPP_DEPLOYER);
-                                tomcatWebappDeployer.undeploy(webApplication.getWebappFile());
-                                File ghostFile = GhostWebappDeployerUtils.
-                                        getGhostFile(webappFileData.getAbsolutePath(),
-                                                     configCtx.getAxisConfiguration());
-                                if (ghostFile.exists()) {
-                                    WebApplication ghostWebapp = GhostWebappDeployerUtils.
-                                            createGhostWebApp(ghostFile, webappFileData.getFile());
+                        DeploymentFileData webappFileData = ghostDeployer.
+                                getFileData(webApplication.getWebappFile().getPath());
+                        log.info("Unloading actual webapp : " + webApplication.getWebappFile().
+                                getName() + " and adding Ghost webapp. Tenant Domain: " +
+                                 tenantDomain);
+                        try {
+                            TomcatGenericWebappsDeployer tomcatWebappDeployer =
+                                    (TomcatGenericWebappsDeployer) configCtx.
+                                            getProperty(CarbonConstants.
+                                                                TOMCAT_GENERIC_WEBAPP_DEPLOYER);
+                            tomcatWebappDeployer.undeploy(webApplication.getWebappFile());
+                            File ghostFile = GhostWebappDeployerUtils.
+                                    getGhostFile(webappFileData.getAbsolutePath(),
+                                                 configCtx.getAxisConfiguration());
+                            if (ghostFile.exists()) {
+                                WebApplication ghostWebapp = GhostWebappDeployerUtils.
+                                        createGhostWebApp(ghostFile, webappFileData.getFile());
 
-                                    webApplicationsHolder.getStartedWebapps().
-                                            put(webappFileData.getName(), ghostWebapp);
-                                    webApplicationsHolder.getFaultyWebapps().
-                                            remove(webappFileData.getName());
-                                }
-                            } catch (Exception e) {
-                                log.error("Error while unloading webapp : "
-                                          + webApplication.getWebappFile().getName(), e);
+                                webApplicationsHolder.getStartedWebapps().
+                                        put(webappFileData.getName(), ghostWebapp);
+                                webApplicationsHolder.getFaultyWebapps().
+                                        remove(webappFileData.getName());
                             }
+                        } catch (Exception e) {
+                            log.error("Error while unloading webapp : "
+                                      + webApplication.getWebappFile().getName(), e);
                         }
                     }
                 }
-            }
-        } finally {
-            if (currentCarbonContextHolder != null) {
-                currentCarbonContextHolder.endTenantFlow();
             }
         }
     }

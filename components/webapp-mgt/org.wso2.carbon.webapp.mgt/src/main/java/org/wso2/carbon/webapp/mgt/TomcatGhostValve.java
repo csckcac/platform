@@ -22,6 +22,7 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
 import org.wso2.carbon.webapp.mgt.utils.GhostWebappDeployerUtils;
 
@@ -42,16 +43,23 @@ public class TomcatGhostValve implements CarbonTomcatValve {
         }
 
         String requestURI = request.getRequestURI();
+        ConfigurationContext currentCtx;
+        if (requestURI.contains("/t/")) {
+            currentCtx = getCurrentConfigurationCtxFromURI(requestURI);
+        } else {
+            currentCtx = DataHolder.getServerConfigContext();
+        }
+
 
         WebApplication deployedWebapp;
-        if ((deployedWebapp = getDeployedWebappFromThisURI(requestURI)) == null) {
+        if ((deployedWebapp = getDeployedWebappFromThisURI(requestURI, currentCtx)) == null) {
             String webappContext = GhostWebappDeployerUtils.
                     dispatchWebAppFromTransitGhosts(requestURI,
-                                                    DataHolder.getServerConfigContext());
+                                                    currentCtx);
             if (webappContext != null) {
                 GhostWebappDeployerUtils.
                         waitForActualWebAppToDeploy(webappContext,
-                                                    DataHolder.getServerConfigContext());
+                                                    currentCtx);
                 try {
                     response.sendRedirect(requestURI);
                     return;
@@ -61,7 +69,7 @@ public class TomcatGhostValve implements CarbonTomcatValve {
             }
         } else {
             if (GhostWebappDeployerUtils.isGhostWebApp(deployedWebapp)) {
-                handleWebapp(deployedWebapp.getWebappFile().getName());
+                handleWebapp(deployedWebapp.getWebappFile().getName(), currentCtx);
                 try {
                     response.sendRedirect(requestURI);
                     return;
@@ -79,12 +87,13 @@ public class TomcatGhostValve implements CarbonTomcatValve {
         }
 
         String webappFileName = request.getParameter("webappFileName");
-        handleWebapp(webappFileName);
+        handleWebapp(webappFileName, currentCtx);
     }
 
-    private WebApplication getDeployedWebappFromThisURI(String requestURI) {
+    private WebApplication getDeployedWebappFromThisURI(String requestURI,
+                                                        ConfigurationContext cfgCtx) {
         WebApplication deployedWebapp = null;
-        WebApplicationsHolder webApplicationsHolder = getWebApplicationHolder();
+        WebApplicationsHolder webApplicationsHolder = getWebApplicationHolder(cfgCtx);
         for (WebApplication webApplication : webApplicationsHolder.getStartedWebapps().values()) {
             if (requestURI.contains(webApplication.getContextName())) {
                 deployedWebapp = webApplication;
@@ -93,28 +102,32 @@ public class TomcatGhostValve implements CarbonTomcatValve {
         return deployedWebapp;
     }
 
-    private WebApplicationsHolder getWebApplicationHolder() {
+    private WebApplicationsHolder getWebApplicationHolder(ConfigurationContext cfgCtx) {
         WebApplicationsHolder webApplicationsHolder;
-        ConfigurationContext serverConfigCtx = DataHolder.getServerConfigContext();
         webApplicationsHolder = (WebApplicationsHolder)
-                serverConfigCtx.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
+                cfgCtx.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
 
         return webApplicationsHolder;
     }
 
-    private void handleWebapp(String webappFileName) {
+    private void handleWebapp(String webappFileName, ConfigurationContext cfgCtx) {
         if (webappFileName != null) {
             WebApplication ghostWebapp;
-            WebApplicationsHolder webApplicationsHolder = getWebApplicationHolder();
+            WebApplicationsHolder webApplicationsHolder = getWebApplicationHolder(cfgCtx);
 
             if (webApplicationsHolder != null) {
                 ghostWebapp = webApplicationsHolder.getStartedWebapps().get(webappFileName);
 
                 if (ghostWebapp != null) {
                     GhostWebappDeployerUtils.
-                            deployActualWebApp(ghostWebapp, DataHolder.getServerConfigContext());
+                            deployActualWebApp(ghostWebapp, cfgCtx);
                 }
             }
         }
+    }
+
+    private ConfigurationContext getCurrentConfigurationCtxFromURI(String uri) {
+        return TenantAxisUtils.
+                getTenantConfigurationContextFromUrl(uri, DataHolder.getServerConfigContext());
     }
 }

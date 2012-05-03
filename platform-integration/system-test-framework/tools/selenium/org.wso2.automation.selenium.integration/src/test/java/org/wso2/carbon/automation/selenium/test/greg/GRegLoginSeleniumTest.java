@@ -17,53 +17,56 @@
 */
 package org.wso2.carbon.automation.selenium.test.greg;
 
-import com.thoughtworks.selenium.Selenium;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverBackedSelenium;
+import org.wso2.automation.selenium.page.HomePage;
+import org.wso2.automation.selenium.page.LoginPage;
+import org.wso2.automation.selenium.page.util.UIElementMapper;
 import org.wso2.platform.test.core.BrowserManager;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.gregutils.GregUserIDEvaluator;
 import org.wso2.platform.test.core.utils.seleniumutils.GRegBackEndURLEvaluator;
-import org.wso2.platform.test.core.utils.seleniumutils.GregUserLogin;
-import org.wso2.platform.test.core.utils.seleniumutils.GregUserLogout;
 import org.testng.annotations.*;
 
 import static org.testng.Assert.*;
 
-import java.net.MalformedURLException;
+import java.io.IOException;
 
 
-public class GregLoginSeleniumTest {
-    private static final Log log = LogFactory.getLog(GregLoginSeleniumTest.class);
-    private static Selenium selenium;
-    private static UserInfo tenantDetails;
+public class GRegLoginSeleniumTest {
+    private static final Log log = LogFactory.getLog(GRegLoginSeleniumTest.class);
     private static WebDriver driver;
+    private static LoginPage loginPage;
     String username;
     String password;
+    private UIElementMapper uiElementMapper;
+
 
     @BeforeClass(alwaysRun = true)
-    public void init() throws MalformedURLException {
+    public void init() throws IOException {
         int userId = new GregUserIDEvaluator().getTenantID();
         String baseUrl = new GRegBackEndURLEvaluator().getBackEndURL();
-        log.info("baseURL is " + baseUrl);
         driver = BrowserManager.getWebDriver();
-        selenium = new WebDriverBackedSelenium(driver, baseUrl);
         driver.get(baseUrl);
-        tenantDetails = UserListCsvReader.getUserInfo(userId);
-        username = tenantDetails.getUserName();
-        password = tenantDetails.getPassword();
+        UserInfo userInfo = UserListCsvReader.getUserInfo(userId);
+        username = userInfo.getUserName();
+        password = userInfo.getPassword();
+        loginPage = new LoginPage(driver);
+        uiElementMapper = UIElementMapper.getInstance();
     }
 
     @Test(groups = {"wso2.greg"}, description = "G-Reg user login to system")
-    public void testGRegUserLogin() throws InterruptedException {
-        new GregUserLogin().userLogin(driver, username, password);
-        selenium.waitForPageToLoad("30000");
-        assertTrue(selenium.isTextPresent("WSO2 Governance Registry Home"));
-        new GregUserLogout().userLogout(driver);
-        log.info("******GregLoginSeleniumTest -testGRegUserLogin()-Passed****** ");
+    public void testGRegUserLogin() throws InterruptedException, IOException {
+        HomePage home = loginPage.loginAs(username, password);
+        assertTrue(driver.findElement(By.id(uiElementMapper.getElement("home.logged.user.dev")))
+                           .getText().contains(username), "User name not found in the page");
+        home.logout();
+        assertTrue(driver.findElement(By.id(uiElementMapper.getElement("login.header.div")))
+                           .getText().contains("Sign-in"), "Cannot find sign-in text");
+        log.info("Login test was successful");
     }
 
     @AfterClass(alwaysRun = true)

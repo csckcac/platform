@@ -54,6 +54,11 @@
             <version>${wso2carbon.version.data-services}</version>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ndatasource.core</artifactId>
+            <version>${wso2carbon.version.data-services}</version>
+        </dependency>
+        <dependency>
             <groupId>au.com.bytecode.opencsv</groupId>
             <artifactId>opencsv</artifactId>
             <version>${opencsv.version.data-services}</version>

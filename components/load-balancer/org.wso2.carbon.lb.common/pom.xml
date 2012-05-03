@@ -33,6 +33,15 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.apache.synapse</groupId>
+            <artifactId>synapse-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>aws-java-sdk.wso2</groupId>
+            <artifactId>aws.java.sdk.wso2</artifactId>
+            <version>1.2.3.wso2v1</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>

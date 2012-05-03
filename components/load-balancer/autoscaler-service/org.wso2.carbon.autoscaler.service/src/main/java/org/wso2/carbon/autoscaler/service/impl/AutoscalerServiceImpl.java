@@ -29,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.autoscaler.service.IAutoscalerService;
 import org.wso2.carbon.autoscaler.service.adapters.Adapter;
 import org.wso2.carbon.autoscaler.service.adapters.LXCAdapter;
+import org.wso2.carbon.autoscaler.service.adapters.EC2Adapter;
 import org.wso2.carbon.autoscaler.service.exception.NoInstanceFoundException;
 import org.wso2.carbon.autoscaler.service.util.Policy;
 import org.wso2.carbon.autoscaler.service.xml.AutoscalerPolicyFileReader;
@@ -68,11 +69,16 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
      * Keeps a JVMAdapter instance.
      */
     private LXCAdapter containerAdapter = new LXCAdapter();
-    
+
+    /**
+     * Keeps a EC2Adapter instance.
+     */
+    private EC2Adapter ec2Adapter = new EC2Adapter();
+
     /**
      * Specify all available adapters here.
      */
-    private Adapter[] adapters = new Adapter[]{containerAdapter};
+    private Adapter[] adapters = new Adapter[]{ec2Adapter};
     
     /**
      * To read autoscaler-policy.xml file.
@@ -107,6 +113,17 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
         }
 
     }
+//
+//    public static void main(String[] args) {
+//        AutoscalerServiceImpl autoscalerService = new AutoscalerServiceImpl();
+//        try {
+//            autoscalerService.startInstance("wso2.as.domain");
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//        } catch (SQLException e) {
+//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//        }
+//    }
     
     /**
      * Algorithm:
@@ -312,7 +329,6 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
         return uniqueId.toString();
     }
 
-    @Override
     public int getPendingInstanceCount(String domainName) {
         
         if(domainToPendingInstanceCountMap.containsKey(domainName)){
@@ -326,7 +342,6 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
         return 0;
     }
 
-    @Override
     public void addPendingInstanceCount(String domainName, int count) {
 
         int currentVal = 0;

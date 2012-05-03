@@ -3,8 +3,8 @@ package org.wso2.carbon.autoscaler.service.adapters;
 import com.amazonaws.services.ec2.model.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.autoscaler.service.adapters.ec2.EC2InstanceManager;
-import org.wso2.carbon.autoscaler.service.adapters.ec2.EC2Util;
+import org.wso2.carbon.lb.common.ec2.EC2InstanceManager;
+import org.wso2.carbon.lb.common.ec2.EC2Util;
 import org.wso2.carbon.lb.common.conf.EC2Configuration;
 import org.wso2.carbon.utils.CarbonUtils;
 

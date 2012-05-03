@@ -41,7 +41,7 @@
         <module>org.wso2.carbon.lb.common</module>
         <module>lb-endpoint</module>
         <module>autoscaler-service</module>
-        <module>jvm-autoscaler-agent</module>
+        <!--module>jvm-autoscaler-agent</module-->
         <module>autoscaler</module>
         <!--module>autoscaler-service/jvmagentmgtservice</module>
         <module>autoscaler-service/autoscalerservice</module>

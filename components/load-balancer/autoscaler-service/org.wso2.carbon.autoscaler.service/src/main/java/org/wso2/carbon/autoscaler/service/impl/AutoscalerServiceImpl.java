@@ -317,7 +317,9 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
         
         if(domainToPendingInstanceCountMap.containsKey(domainName)){
             
-            return domainToPendingInstanceCountMap.get(domainName);
+            if(domainToPendingInstanceCountMap.get(domainName) > 0){
+                return domainToPendingInstanceCountMap.get(domainName);
+            }
             
         }
         

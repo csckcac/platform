@@ -1,8 +1,0 @@
-<%
-jagg.initializer("search/api-search", {
-
-    initialize:function () {
-
-    }
-});
-%>

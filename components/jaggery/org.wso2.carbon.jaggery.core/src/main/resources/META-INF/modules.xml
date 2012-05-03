@@ -99,10 +99,10 @@
             <path>scripts/http.js</path>
         </script>
     </module>
-    <module name="msg" namespace="$msg" expose="true">
+    <module name="email" namespace="$email" expose="true">
         <hostObject>
-            <className>org.wso2.carbon.hostobjects.email.EmailHostObject</className>
-            <name>Email</name>
+            <className>org.wso2.carbon.hostobjects.email.SenderHostObject</className>
+            <name>Sender</name>
         </hostObject>
     </module>
     <module name="ws" namespace="$ws" expose="true">

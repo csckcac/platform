@@ -113,17 +113,6 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
         }
 
     }
-//
-//    public static void main(String[] args) {
-//        AutoscalerServiceImpl autoscalerService = new AutoscalerServiceImpl();
-//        try {
-//            autoscalerService.startInstance("wso2.as.domain");
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//        } catch (SQLException e) {
-//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//        }
-//    }
     
     /**
      * Algorithm:

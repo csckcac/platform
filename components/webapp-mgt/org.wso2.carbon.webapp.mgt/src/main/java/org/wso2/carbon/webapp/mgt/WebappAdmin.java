@@ -25,6 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.core.AbstractAdmin;
+import org.wso2.carbon.tomcat.api.CarbonTomcatService;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.DataPaginator;
 import org.wso2.carbon.utils.NetworkUtils;
@@ -686,5 +687,15 @@ public class WebappAdmin extends AbstractAdmin {
         DataHandler handler = new DataHandler(datasource);
 
         return handler;
+    }
+
+    /**
+     * check if unpack wars enabled
+     *
+     * @return true if enabled.
+     */
+    public boolean isUnpackWARs(){
+        CarbonTomcatService carbonTomcatService = DataHolder.getCarbonTomcatService();
+        return carbonTomcatService.isUnpackWARs();
     }
 }

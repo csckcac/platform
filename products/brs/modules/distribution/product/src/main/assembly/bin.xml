@@ -77,11 +77,17 @@
     </fileSets>
 
     <dependencySets>
+        <dependencySet>
+            <outputDirectory>wso2as-${pom.version}/repository/lib</outputDirectory>
+            <includes>
+                <include>bouncycastle:bcprov-jdk15:jar</include>
+            </includes>
+        </dependencySet>
 	<dependencySet>
-		<outputDirectory>wso2brs-${pom.version}/repository/deployment/client/modules</outputDirectory>
-		<includes>
-			<include>org.apache.rampart:rampart:mar</include>
-		</includes>
+	    <outputDirectory>wso2brs-${pom.version}/repository/deployment/client/modules</outputDirectory>
+	    <includes>
+		<include>org.apache.rampart:rampart:mar</include>
+	    </includes>
 	</dependencySet>
     </dependencySets>
 
@@ -138,11 +144,6 @@
             <outputDirectory>wso2brs-${pom.version}/bin/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>target/wso2carbon-core-${carbon.version}/bin/wso2server.bat</source>
-            <outputDirectory>wso2brs-${pom.version}/bin/</outputDirectory>
-            <filtered>true</filtered>
         </file>
         <file>
             <source>target/wso2carbon-core-${carbon.version}/repository/conf/carbon.xml</source>

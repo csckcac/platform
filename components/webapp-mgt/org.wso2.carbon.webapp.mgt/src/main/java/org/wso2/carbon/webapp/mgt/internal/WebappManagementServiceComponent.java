@@ -68,33 +68,7 @@ public class WebappManagementServiceComponent {
             TomcatValveContainer.addValves(valves);
 
             if (!GhostWebappDeployerUtils.isGhostOn()) {
-                // Adding server url as a parameter to webapps servlet context init parameter
-                ConfigurationContext configurationContext = DataHolder.getServerConfigContext();
-
-                WebApplicationsHolder webApplicationsHolder = (WebApplicationsHolder)
-                        configurationContext.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
-
-                WebContextParameter serverUrlParam =
-                        new WebContextParameter("webServiceServerURL", CarbonUtils.
-                                getServerURL(ServerConfiguration.getInstance(),
-                                             configurationContext));
-
-                List<WebContextParameter> servletContextParameters =
-                        (ArrayList<WebContextParameter>) configurationContext.
-                                getProperty(CarbonConstants.SERVLET_CONTEXT_PARAMETER_LIST);
-
-                if (servletContextParameters != null) {
-                    servletContextParameters.add(serverUrlParam);
-                }
-
-                if (webApplicationsHolder != null) {
-                    for (WebApplication application :
-                            webApplicationsHolder.getStartedWebapps().values()) {
-                        application.getContext().getServletContext().
-                                setInitParameter(serverUrlParam.getName(),
-                                                 serverUrlParam.getValue());
-                    }
-                }
+               setServerURLParam(DataHolder.getServerConfigContext());
             }
         } catch (Throwable e) {
             log.error("Error occurred while activating WebappManagementServiceComponent", e);
@@ -133,5 +107,34 @@ public class WebappManagementServiceComponent {
          genericArtifactUnloader.registerArtifactUnloader(webappUnloader);
     }
     protected void unsetArtifactUnloaderService(GenericArtifactUnloader genericArtifactUnloader) {
+    }
+
+    private void setServerURLParam(ConfigurationContext configurationContext) {
+        // Adding server url as a parameter to webapps servlet context init parameter
+        WebApplicationsHolder webApplicationsHolder = (WebApplicationsHolder)
+                configurationContext.getProperty(CarbonConstants.WEB_APPLICATIONS_HOLDER);
+
+        WebContextParameter serverUrlParam =
+                new WebContextParameter("webServiceServerURL", CarbonUtils.
+                        getServerURL(ServerConfiguration.getInstance(),
+                                     configurationContext));
+
+        List<WebContextParameter> servletContextParameters =
+                (ArrayList<WebContextParameter>) configurationContext.
+                        getProperty(CarbonConstants.SERVLET_CONTEXT_PARAMETER_LIST);
+
+        if (servletContextParameters != null) {
+            servletContextParameters.add(serverUrlParam);
+        }
+
+        if (webApplicationsHolder != null) {
+            for (WebApplication application :
+                    webApplicationsHolder.getStartedWebapps().values()) {
+                application.getContext().getServletContext().
+                        setInitParameter(serverUrlParam.getName(),
+                                         serverUrlParam.getValue());
+            }
+        }
+
     }
 }

@@ -381,8 +381,8 @@ public class APIProviderHostObject extends ScriptableObject {
                                                 Function funObj) throws ScriptException {
         NativeArray myn = new NativeArray(0);
 
-        if (args.length != 3 && !isStringValues(args)) {
-            throw new ScriptException("Invalid number of parameters and their types.");
+        if (args.length != 3 || !isStringValues(args)) {
+            throw new ScriptException("Invalid number of parameters or their types.");
         }
         String providerName = args[0].toString();
         String apiName = args[1].toString();
@@ -508,8 +508,8 @@ public class APIProviderHostObject extends ScriptableObject {
         String userName = null;
         NativeArray myn = new NativeArray(0);
         try {
-            if (args.length != 1 && !isStringValues(args)) {
-                throw new ScriptException("Invalid number of parameters and their types.");
+            if (args.length != 1 || !isStringValues(args)) {
+                throw new ScriptException("Invalid number of parameters or their types.");
             }
             userName = (String) args[0];
             Subscriber subscriber = new Subscriber(userName);
@@ -591,8 +591,8 @@ public class APIProviderHostObject extends ScriptableObject {
         String providerName;
         NativeArray myn = new NativeArray(0);
         try {
-            if (args.length != 3 && !isStringValues(args)) {
-                throw new ScriptException("Invalid number of parameters and their types.");
+            if (args.length != 3 || !isStringValues(args)) {
+                throw new ScriptException("Invalid number of parameters or their types.");
             }
             providerName = args[0].toString();
             apiName = args[1].toString();
@@ -645,8 +645,8 @@ public class APIProviderHostObject extends ScriptableObject {
         String content;
         NativeArray myn = new NativeArray(0);
 
-        if (args.length != 4 && !isStringValues(args)) {
-            throw new ScriptException("Invalid number of parameters and their types.");
+        if (args.length != 4 || !isStringValues(args)) {
+            throw new ScriptException("Invalid number of parameters or their types.");
         }
         providerName = args[0].toString();
         apiName = args[1].toString();
@@ -691,8 +691,8 @@ public class APIProviderHostObject extends ScriptableObject {
         String docName;
         String docContent;
         //log.info(isStringValues(args)+"args.length"+args.length);
-        if (args.length != 5 && !isStringValues(args)) {
-            throw new ScriptException("Invalid number of parameters and their types.");
+        if (args.length != 5 || !isStringValues(args)) {
+            throw new ScriptException("Invalid number of parameters or their types.");
         }
         providerName = args[0].toString();
         apiName = args[1].toString();
@@ -709,8 +709,8 @@ public class APIProviderHostObject extends ScriptableObject {
     public static boolean jsFunction_addDocumentation(Context cx, Scriptable thisObj,
                                                       Object[] args, Function funObj)
             throws ScriptException {
-        if (args.length < 5 && !isStringValues(args)) {
-            throw new ScriptException("Invalid number of parameters and their types.");
+        if (args.length < 5 || !isStringValues(args)) {
+            throw new ScriptException("Invalid number of parameters or their types.");
         }
         boolean success = false;
         String providerName = args[0].toString();
@@ -744,8 +744,8 @@ public class APIProviderHostObject extends ScriptableObject {
     public static boolean jsFunction_removeDocumentation(Context cx, Scriptable thisObj,
                                                          Object[] args, Function funObj)
             throws ScriptException {
-        if (args.length != 5 && !isStringValues(args)) {
-            throw new ScriptException("Invalid number of parameters and their types.");
+        if (args.length != 5 || !isStringValues(args)) {
+            throw new ScriptException("Invalid number of parameters or their types.");
         }
         boolean success = false;
         String providerName = args[0].toString();
@@ -772,8 +772,8 @@ public class APIProviderHostObject extends ScriptableObject {
 
     {
         boolean success = false;
-        if (args.length != 4 && !isStringValues(args)) {
-            throw new ScriptException("Invalid number of parameters and their types.");
+        if (args.length != 4 || !isStringValues(args)) {
+            throw new ScriptException("Invalid number of parameters or their types.");
         }
         String providerName = args[0].toString();
         String apiName = args[1].toString();
@@ -803,8 +803,8 @@ public class APIProviderHostObject extends ScriptableObject {
         String version;
         String providerName;
         NativeArray myn = new NativeArray(0);
-        if (args.length != 3 && !isStringValues(args)) {
-            throw new ScriptException("Invalid number of parameters and their types.");
+        if (args.length != 3 || !isStringValues(args)) {
+            throw new ScriptException("Invalid number of parameters or their types.");
         }
 
         providerName = args[0].toString();

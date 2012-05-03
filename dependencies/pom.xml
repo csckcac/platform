@@ -65,6 +65,7 @@
 		<module>andes</module>
 		<module>closure-js-plugin</module>
                 <module>snappy-java</module>
+		<module>hive</module>
 		<!-- orbit/modules -->
                 <module>orbit/cassandra</module>
                 <module>orbit/cassandra-jdbc</module>
@@ -89,6 +90,7 @@
 		<module>orbit/andes</module>
 		<module>orbit/andes-client</module>
 		<module>orbit/snappy-java</module>
+		<module>orbit/hive</module>
 	     </modules>
    <dependencyManagement>
 	<dependencies>

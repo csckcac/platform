@@ -133,7 +133,9 @@ public class WebappDeployer extends AbstractDeployer {
             ArrayList<Object> listeners = new ArrayList<Object>(1);
 //            listeners.add(new CarbonServletRequestListener());
             tomcatWebappDeployer.deploy(deploymentFileData.getFile(),
-                                        servletContextParameters,
+                                        (ArrayList<WebContextParameter>) configContext.
+                                                getProperty(CarbonConstants.
+                                                                    SERVLET_CONTEXT_PARAMETER_LIST),
                                         listeners);
             super.deploy(deploymentFileData);
         } catch (Exception e) {

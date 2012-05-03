@@ -3,20 +3,20 @@ include("/jagg/jagg.jag");
 var site = require("/site/conf/site.json");
 
 (function () {
-    var apis, result, obj,
+    var apis, result, mod,
             tag = request.getParameter("tag"),
             query = request.getParameter("query");
     if (tag) {
-        obj = require("/modules/api/tagged.js");
-        result = obj.getAPIsByTag(tag);
+        mod = jagg.module("api");
+        result = mod.getAPIsByTag(tag);
         apis = result.apis;
     } else if(query) {
-        obj = require("/modules/search/apis.js");
-        result = obj.searchAPIs(query);
+        mod = jagg.module("search");
+        result = mod.searchAPIs(query);
         apis = result.apis;
     } else {
-        obj = require("/modules/api/published.js");
-        result = obj.getAllPublishedAPIs();
+        mod = jagg.module("api");
+        result = mod.getAllPublishedAPIs();
         apis = result.apis;
     }
 

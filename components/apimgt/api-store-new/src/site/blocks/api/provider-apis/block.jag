@@ -3,8 +3,8 @@ jagg.block("api/provider-apis", {
     getOutputs:function (inputs) {
         var providerId = inputs.providerId;
         // TODO : implement the apis of the provider and remove following lines
-        var recent = require("/modules/api/recently-added.js");
-        var result = recent.getRecentlyAddedAPIs(inputs.count);
+        var api = jagg.module("api");
+        var result = api.getRecentlyAddedAPIs(inputs.count);
         return {
             "apis":result.apis
         };

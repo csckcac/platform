@@ -7,8 +7,8 @@ var site = require("/site/conf/site.json");
     var version = request.getParameter("version");
     var provider = request.getParameter("provider");
 
-    var published = require("/modules/api/api.js");
-    var result = published.getAPIDescription({name:name, version:version, provider:provider}, site.defaultUser.username);
+    var mod = jagg.module("api");
+    var result = mod.getAPIDescription({name:name, version:version, provider:provider}, site.defaultUser.username);
     var api = result.api;
     var title = "API Store - " + api.name;
 

@@ -6,8 +6,8 @@ jagg.block("tag/tag-cloud", {
     },
 
     getOutputs:function (inputs) {
-        var result, tags, cloud = require("/modules/tag/cloud.js");
-        result = cloud.getAllTags();
+        var result, tags, mod = jagg.module("tag");
+        result = mod.getAllTags();
         tags = result.tags;
         return {
             "tags":tags

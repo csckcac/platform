@@ -5,8 +5,8 @@ jagg.block("api/recently-added", {
     },
 
     getOutputs:function (inputs) {
-        var result, apis, recent = require("/modules/api/recently-added.js");
-        result = recent.getRecentlyAddedAPIs(inputs.count);
+        var result, apis, api = jagg.module("api");
+        result = api.getRecentlyAddedAPIs(inputs.count);
         apis = result.apis;
         return {
             "apis":apis

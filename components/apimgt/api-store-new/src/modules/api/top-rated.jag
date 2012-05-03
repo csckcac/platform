@@ -1,16 +1,18 @@
-var getAllPublishedAPIs = function () {
-    var log = new Log();
-    var store = require("/core/greg/greg.js").getAPIStoreObj();
+<%
+var getTopRatedAPIs = function (limit) {
+    var list, i, length, api, apis,
+            log = new Log(),
+            store = jagg.module("greg").getAPIStoreObj();
 
     try {
-        var list = [];
-        var apis = store.getAllPublishedAPIs();
+        apis = store.getTopRatedAPIs(limit);
         if (log.isDebugEnabled()) {
-            log.debug("getAllPublishedAPIs : " + stringify(apis));
+            log.debug("getTopRatedAPIs : " + stringify(apis));
         }
-        var i, length = apis.length;
+        list = [];
+        length = apis.length;
         for (i = 0; i < length; i++) {
-            var api = apis[i];
+            api = apis[i];
             list.push({
                 name:api.name,
                 provider:api.provider,
@@ -35,3 +37,4 @@ var getAllPublishedAPIs = function () {
         };
     }
 };
+%>

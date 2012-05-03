@@ -1,16 +1,18 @@
-var getRecentlyAddedAPIs = function (limit) {
-    var log = new Log();
-    var store = require("/core/greg/greg.js").getAPIStoreObj();
+<%
+var searchAPIs = function (query) {
+    var list, i, length, api, apis,
+            log = new Log(),
+            store = require("/core/greg/greg.js").getAPIStoreObj();
 
     try {
-        var list = [];
-        var apis = store.getRecentlyAddedAPIs(limit);
+        apis = store.searchAPI(query);
         if (log.isDebugEnabled()) {
-            log.debug("getRecentlyAddedAPIs : " + stringify(apis));
+            log.debug("searchAPIs : " + stringify(apis));
         }
-        var i, length = apis.length;
+        list = [];
+        length = apis.length;
         for (i = 0; i < length; i++) {
-            var api = apis[i];
+            api = apis[i];
             list.push({
                 name:api.name,
                 provider:api.provider,
@@ -35,3 +37,4 @@ var getRecentlyAddedAPIs = function (limit) {
         };
     }
 };
+%>

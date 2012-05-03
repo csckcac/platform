@@ -4,11 +4,11 @@ var site = require("/site/conf/site.json");
 var msg = require("/site/conf/ui-messages.js");
 
 (function () {
-    var lib, obj, result, username, action = request.getParameter("action");
+    var mod, obj, result, username, action = request.getParameter("action");
     if (action === "login") {
-        lib = require("/modules/user/login.jag");
+        mod = jagg.module("user");
         username = request.getParameter("username");
-        result = lib.login(username, request.getParameter("password"));
+        result = mod.login(username, request.getParameter("password"));
         if (result.error) {
             obj = {
                 error:result.error,

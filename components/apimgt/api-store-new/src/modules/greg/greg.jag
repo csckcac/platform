@@ -1,4 +1,4 @@
-
+<%
 var getServerURL = function() {
     //TODO : this should be initially fetched using APIStore HostObject and store in Context for subsequent calls
     return "https://localhost:9443";
@@ -21,3 +21,4 @@ var getAPIStoreObj = function() {
     var store = require('apistore');
     return new store.APIStore();
 };
+%>

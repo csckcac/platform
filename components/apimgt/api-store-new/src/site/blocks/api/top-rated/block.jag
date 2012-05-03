@@ -6,8 +6,8 @@ jagg.block("api/top-rated", {
     },
 
     getOutputs:function (inputs) {
-        var result, apis, ratings = require("/modules/api/top-rated.js");
-        result = ratings.getTopRatedAPIs(inputs.count);
+        var result, apis, api = jagg.module("api");
+        result = api.getTopRatedAPIs(inputs.count);
         apis = result.apis;
         return {
             "apis":apis

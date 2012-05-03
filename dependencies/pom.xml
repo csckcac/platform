@@ -91,6 +91,7 @@
 		<module>orbit/andes-client</module>
 		<module>orbit/snappy-java</module>
 		<module>orbit/hive</module>
+		<module>orbit/datanucleus-core</module>
 	     </modules>
    <dependencyManagement>
 	<dependencies>

@@ -148,6 +148,10 @@
             <source>../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/conf/event-broker.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
         </file>
+	<file>
+            <source>../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/conf/etc/cassandra-auth.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc</outputDirectory>
+        </file>
         <file>
             <source>../../../README.txt</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/</outputDirectory>

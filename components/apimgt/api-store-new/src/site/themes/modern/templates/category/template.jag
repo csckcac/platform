@@ -1,0 +1,16 @@
+<div id="categories">
+    <ol>
+        <li><a>Books & Reference</a></li>
+        <li><a>Business</a></li>
+        <li><a>Comics</a></li>
+        <li><a>Communication</a></li>
+        <li><a>Education</a></li>
+        <li><a>Entertainment</a></li>
+        <li><a>Finance</a></li>
+        <li><a>Health & Fitness</a></li>
+        <li><a>Photography</a></li>
+        <li><a>Shopping</a></li>
+        <li><a>Social</a></li>
+        <li><a>Weather</a></li>
+    </ol>
+</div>

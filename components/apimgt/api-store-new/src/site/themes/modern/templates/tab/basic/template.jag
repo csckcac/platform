@@ -1,0 +1,32 @@
+<% jagg.template("tab/basic", function(inputs, outputs, jagg) { %>
+<div class="tabs-basic<%=(outputs.classes ? " " + outputs.classes : "")%>">
+    <%
+        var tabs = outputs.tabs, length = tabs.length;
+        var i, index, tab, classes;
+    %>
+    <ul class="tabs left">
+    <%
+    for(i = 0; i < length; i++) {
+        tab = tabs[i];
+        if(i == 0) {
+            clazz = "first current";
+        } else if(i == length - 1) {
+            clazz = "last";
+        } else {
+            clazz = "";
+        }
+    %>
+        <li class="<%=clazz%>">
+            <a href="#tab<%=String(i)%>"><%=tab.title%></a>
+        </li>
+    <% } %>
+    </ul>
+
+    <%
+    for(i = 0; i < length; i++) {
+        tab = tabs[i];
+    %>
+    <div class="tab-content clearfix" id="tab<%=String(i)%>"><% jagg.includeBlocks(tab.body); %></div>
+    <% } %>
+</div>
+<% }); %>

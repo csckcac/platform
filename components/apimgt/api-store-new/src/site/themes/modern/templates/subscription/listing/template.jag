@@ -1,0 +1,35 @@
+<% jagg.template = function(data, params, jagg) { %>
+<div class="subscription-listing">
+    <h2>My Subscriptions</h2>
+    <%
+    var i, app, api, apis, len, path, apps = data.applications, length = apps.length;
+    for(i = 0; i < length; i++) {
+        app = apps[i];
+    %>
+    <div id="subscriptionList" class="subscription-list">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a class="accordion-toggle"><%=app.name%></a>
+            </div>
+            <div class="accordion-body" style="display: block;">
+                <div class="accordion-inner">
+                    <%
+                    apis = app.subscriptions;
+                    len = apis.length;
+                    for(j = 0; j < len; j++) {
+                        api = apis[j];
+                        path = jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + api.name + "&version=" + api.version + "&provider=" + api.provider;
+                    %>
+                    <div class="application-api-listing">
+                        <a href="<%=path%>"><img alt="" src="<%=api.thumbURL%>"/></a>
+                        <div><a href="<%=path%>" class="service-name"><%=api.name%></a></div>
+                        <div class="company-name"><%=api.provider%></div>
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% } %>
+</div>
+<% }; %>

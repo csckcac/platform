@@ -34,7 +34,7 @@
 
     <modules>
         <module>org.wso2.carbon.mediator.autoscale</module>
-        <module>org.wso2.carbon.autoscale.mediators</module>
+        <!--module>org.wso2.carbon.autoscale.mediators</module-->
     </modules>
 
 </project>

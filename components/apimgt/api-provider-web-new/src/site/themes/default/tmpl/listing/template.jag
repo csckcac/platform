@@ -1,5 +1,6 @@
 <% jagg.template = function(data, params, jagg) { %>
-<div id="home">
+
+ <div id="home">
 <h2>My APIs</h2>
 
 <ul class="thumbnails">

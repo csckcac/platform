@@ -79,15 +79,26 @@ insertCode(jagg.global.code, function(code) {
               <% jagg.includeTemplate("header", null); %>
             </div>
 
-            <div class="clearfix wrap">
+            <div class="container-fluid content-section">
+            <div class="row-fluid">
                <% jagg.includeTemplates(data.body); %>
-                <div class="clear"></div>
+             </div>
+             <hr>
+             <div id="footer">
+             <div class="row-fluid">
+             <div class="pull-right">
+             <ul class="copy-msg">
+             <li>Copyright &copy; 2012 wso2.org</li>
+             <li>|</li>
+             <li><a>Terms of Usage</a></li>
+             <li>|</li>
+             <li><a>Support/Help</a></li>
+             </ul>
+             </div>
+             </div>
+             </div>
+             </div>
 
-                <div id="footer">
-                &copy; Copyright 2011–2012 All Rights Reserved.
-                    <a id="link-top" href="#top-of-page">Top</a>
-                </div>
-            </div>
         </body>
     </html>
     <% }; %>

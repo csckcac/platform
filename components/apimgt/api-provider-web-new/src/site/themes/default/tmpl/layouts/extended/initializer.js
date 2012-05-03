@@ -4,13 +4,7 @@ var getParent = function () {
 
 var getParams = function () {
     return {
-        "top":[
-            {
-                "name":"header",
-                "params":null
-            }
-
-        ],
+        "top":null,
         "left":[
 
             {"name":"side-bar" }

@@ -22,6 +22,9 @@ var getParams = function () {
 };
 
 var getTemplates = function () {
+    return [
+        "header"
+    ];
 
 };
 

@@ -6,21 +6,18 @@ var getParams = function () {
     return {
         "top":[
             {
-                "name":"",
-                "params":null
-            },
-            {
-                "name":"",
+                "name":"header",
                 "params":null
             }
+
         ],
         "left":[
-            {
-                "name":""
 
-            }
+            {"name":"side-bar" }
+
+
         ],
-
         "right":null
+
     };
 };

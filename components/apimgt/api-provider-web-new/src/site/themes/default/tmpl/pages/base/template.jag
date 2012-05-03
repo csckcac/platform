@@ -76,11 +76,11 @@ insertCode(jagg.global.code, function(code) {
         <body>
 
             <div id="header">
-
+              <% jagg.includeTemplate("header", null); %>
             </div>
 
             <div class="clearfix wrap">
-
+               <% jagg.includeTemplates(data.body); %>
                 <div class="clear"></div>
 
                 <div id="footer">

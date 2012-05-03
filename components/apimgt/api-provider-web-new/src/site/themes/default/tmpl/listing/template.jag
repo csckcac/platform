@@ -2,7 +2,6 @@
 <div id="home">
 <h2>My APIs</h2>
 
-
 <ul class="thumbnails">
 <span class="loading"></span>
 <%
@@ -17,6 +16,7 @@
             <img class="thumb" src="images/api-default.png" alt="">
             <%} else{%>
             <img class="thumb" src="<%=api.thumb%>" alt="">
+            <%}%>
             </a>
             <h5><a href="?place=api-details&name=<%=apiName%>&version=<%=apiVersion%>" class="label label-info">api.name + "-v" + api.version</a></h5>
             <div><a href="?place=api-details&name=<%=apiName%>&version=<%=apiVersion%>"><span id="noOfUsers">

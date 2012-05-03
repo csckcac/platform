@@ -1,9 +1,9 @@
 var getTemplateFile = function() {
-    return "tmpl/docs/template.jag";
+    return "tmpl/header/template.jag";
 };
 
 var initialize = function (jagg) {
-addHeaderJS(global, "docs", "docs", "tmpl/docs/js/docs.js");
+//addHeaderJS(global, "header", "header", "tmpl/header/js/header.js");
 };
 
 var getData = function (params) {

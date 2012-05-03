@@ -78,7 +78,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
     /**
      * Specify all available adapters here.
      */
-    private Adapter[] adapters = new Adapter[]{ec2Adapter};
+    private Adapter[] adapters = new Adapter[]{containerAdapter, ec2Adapter};
     
     /**
      * To read autoscaler-policy.xml file.

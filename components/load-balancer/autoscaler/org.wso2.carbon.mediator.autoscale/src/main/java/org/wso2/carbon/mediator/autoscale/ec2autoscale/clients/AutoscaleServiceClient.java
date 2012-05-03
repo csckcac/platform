@@ -38,7 +38,9 @@ public class AutoscaleServiceClient {
     public AutoscaleServiceClient(String epr) throws AxisFault {
 
         try {
+            
             stub = new AutoscalerServiceStub(epr);
+            stub._getServiceClient().getOptions().setTimeOutInMilliSeconds(90000);
 
         } catch (AxisFault axisFault) {
             String msg =

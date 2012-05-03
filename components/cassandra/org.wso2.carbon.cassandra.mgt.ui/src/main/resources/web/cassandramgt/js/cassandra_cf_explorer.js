@@ -1,5 +1,4 @@
 function loadNext(rowID, keySpace, columnFamily) {
-
     var startKey = document.getElementById("hfEndKey_" + rowID).value;
     var endKey = "";
     var isReversed = "false";
@@ -8,7 +7,6 @@ function loadNext(rowID, keySpace, columnFamily) {
 }
 
 function loadPrevious(rowID, keySpace, columnFamily) {
-
     var startKey = "";
     var endKey = document.getElementById("hfStartKey_" + rowID).value;
     var isReversed = "false";
@@ -17,7 +15,6 @@ function loadPrevious(rowID, keySpace, columnFamily) {
 }
 
 function getXMLHttpRequestObject() {
-
     var xmlhttp;
     if (!xmlhttp && typeof XMLHttpRequest != 'undefined') {
         try {
@@ -30,7 +27,6 @@ function getXMLHttpRequestObject() {
 }
 
 function loadWithAJAX(keySpace, columnFamily, rowId, startKey, endKey, isReversed) {
-
     var http = new getXMLHttpRequestObject();
 
     var url = "caller-ajaxprocessor.jsp";
@@ -71,12 +67,18 @@ function updateNextButtonStatusWithAJAX(keySpace, columnFamily, rowId, startKey,
             var responseText = "" + http.responseText + "";
             var responseJSON = JSON.parse(responseText.split("\n")[0]);
             if (responseJSON.length < 2) { // Disable Next button
-                document.getElementById("CfExplorerTable_" + rowId).getElementsByTagName("a")[2].className = "disabled";
-                document.getElementById("CfExplorerTable_" + rowId).getElementsByTagName("a")[2].setAttribute("onclick", "");
+                document.getElementById("CfExplorerTable_" + rowId)
+                    .getElementsByTagName("a")[2].className = "disabled";
+                document.getElementById("CfExplorerTable_" + rowId)
+                    .getElementsByTagName("a")[2].setAttribute("onclick", "");
             }
             else { // Enable Next button
-                document.getElementById("CfExplorerTable_" + rowId).getElementsByTagName("a")[2].className = "enabled";
-                document.getElementById("CfExplorerTable_" + rowId).getElementsByTagName("a")[2].setAttribute("onclick", "loadNext('" + rowId + "','" + keySpace + "','" + columnFamily + "')");
+                document.getElementById("CfExplorerTable_" + rowId)
+                    .getElementsByTagName("a")[2].className = "enabled";
+                document.getElementById("CfExplorerTable_" + rowId)
+                    .getElementsByTagName("a")[2]
+                    .setAttribute("onclick", "loadNext('" + rowId + "','" + keySpace + "','"
+                    + columnFamily + "')");
             }
         }
     }
@@ -101,12 +103,18 @@ function updatePrevButtonStatusWithAJAX(keySpace, columnFamily, rowId, startKey,
             var responseText = "" + http.responseText + "";
             var responseJSON = JSON.parse(responseText.split("\n")[0]);
             if (responseJSON.length < 2) { // Disable Prev button
-                document.getElementById("CfExplorerTable_" + rowId).getElementsByTagName("a")[1].className = "disabled";
-                document.getElementById("CfExplorerTable_" + rowId).getElementsByTagName("a")[1].setAttribute("onclick", "");
+                document.getElementById("CfExplorerTable_" + rowId)
+                    .getElementsByTagName("a")[1].className = "disabled";
+                document.getElementById("CfExplorerTable_" + rowId)
+                    .getElementsByTagName("a")[1].setAttribute("onclick", "");
             }
             else { // Enable Prev button
-                document.getElementById("CfExplorerTable_" + rowId).getElementsByTagName("a")[1].className = "enabled";
-                document.getElementById("CfExplorerTable_" + rowId).getElementsByTagName("a")[1].setAttribute("onclick", "loadPrevious('" + rowId + "','" + keySpace + "','" + columnFamily + "')");
+                document.getElementById("CfExplorerTable_" + rowId)
+                    .getElementsByTagName("a")[1].className = "enabled";
+                document.getElementById("CfExplorerTable_" + rowId)
+                    .getElementsByTagName("a")[1]
+                    .setAttribute("onclick", "loadPrevious('" + rowId + "','" + keySpace
+                    + "','" + columnFamily + "')");
             }
         }
     }
@@ -126,14 +134,12 @@ function updateRowTable(rowId, responseJSON) {
         tableHeader.cells[i + 1].firstChild.data = responseJSON[i].name;
         tableBody.cells[i + 1].firstChild.data = responseJSON[i].value;
     }
-
     // Fill empty strings
     for (var i = responseJSON.length; i < tableHeader.cells.length - 2; i++) {
         // 2 is used, as there is an extra column for buttons
         tableHeader.cells[i + 1].firstChild.data = "";
         tableBody.cells[i + 1].firstChild.data = "";
     }
-
     updateNewVariables(rowId, responseJSON[0].name, responseJSON[responseJSON.length - 1].name);
     updateButtonStatus(rowId);
 }
@@ -168,7 +174,6 @@ function loadNextRows(keySpace, columnFamily) {
 function loadPageSize(keySpace, columnFamily) {
 
     var pageSize = document.getElementById("ddlPageSize").value;
-
     location.href = 'cf_explorer.jsp?keyspace=' + keySpace + "&columnFamily=" + columnFamily +
         "&pageSize=" + pageSize;
 }
@@ -179,16 +184,19 @@ function viewExplorer(keyspace, index) {
 }
 
 function getDataForRow(keyspace, cf, rowID) {
-    location.href = 'cf_explorer.jsp?keyspace=' + keyspace + "&columnFamily=" + cf + "&rowID=" + rowID;
+    location.href = 'cf_explorer.jsp?keyspace=' + keyspace + "&columnFamily=" + cf + "&rowID="
+        + rowID;
 }
 
 function getDataForColumn(keyspace, cf, rowID, columnKey) {
-    location.href = 'row_explorer.jsp?keyspace=' + keyspace + "&columnFamily=" + cf + "&rowID=" + rowID +
+    location.href = 'row_explorer.jsp?keyspace=' + keyspace + "&columnFamily=" + cf + "&rowID="
+        + rowID +
         "&columnKey=" + columnKey;
 }
 
 function getDataPageForRow(keyspace, cf, rowID) {
-    location.href = 'row_explorer.jsp?keyspace=' + keyspace + "&columnFamily=" + cf + "&rowID=" + rowID;
+    location.href = 'row_explorer.jsp?keyspace=' + keyspace + "&columnFamily=" + cf + "&rowID="
+        + rowID;
 }
 
 function reloadDataTable(keyspace, cf) {

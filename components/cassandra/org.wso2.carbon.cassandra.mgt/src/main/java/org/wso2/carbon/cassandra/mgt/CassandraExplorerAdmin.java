@@ -25,7 +25,6 @@ import me.prettyprint.hector.api.beans.ColumnSlice;
 import me.prettyprint.hector.api.beans.HColumn;
 import me.prettyprint.hector.api.beans.OrderedRows;
 import me.prettyprint.hector.api.beans.Row;
-import me.prettyprint.hector.api.ddl.ColumnFamilyDefinition;
 import me.prettyprint.hector.api.factory.HFactory;
 import me.prettyprint.hector.api.query.QueryResult;
 import me.prettyprint.hector.api.query.RangeSlicesQuery;
@@ -59,7 +58,6 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
     private String[] queryRowsforColumnFamily(String keyspaceName, String columnFamily,
                                               String start, String finish, int limit)
             throws CassandraServerManagementException {
-        //change this once connected to UI
         ClusterInformation clusterInformation = new ClusterInformation("admin", "admin");
         clusterInformation.setClusterName("ClusterOne");
         DataAccessService dataAccessService =
@@ -89,11 +87,9 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
         return rowNameslist.toArray(rowKeyArray);
     }
 
-    /*public String[] getRowNamesForwardAndBackword(String keyspaceName, String columnFamily, String start, String finish, int limit){*/
     public String[] getRowNamesForColumnFamily(String keyspaceName, String columnFamily,
                                                String start, String finish, int limit)
             throws CassandraServerManagementException {
-
         if ("".equals(start) & "".equals(finish)) { // Query forward
             return this.queryRowsforColumnFamily(keyspaceName, columnFamily,
                     start, finish, limit);
@@ -123,7 +119,6 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
                         }
                     }
                 }
-
                 window2 = this.queryRowsforColumnFamily(keyspaceName, columnFamily,
                         window1[window1.length - 1], "", limit);
 
@@ -137,7 +132,7 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
                 justStarted = false;
             }
             return new String[0]; // Queried start/finish key is not existing
-        } else { // Not valid. Just use results of getRowNamesForColumnFamilyx
+        } else { // Not valid. Just use results ofqueryRowNamesForColumnFamily
             return this.queryRowsforColumnFamily(keyspaceName, columnFamily,
                     start, finish, limit);
         }
@@ -167,7 +162,8 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
         Keyspace keyspace = dataAccessService.getKeySpace(cluster, keyspaceName);
 
         SliceQuery<String, String, String> sliceQuery =
-                HFactory.createSliceQuery(keyspace, stringSerializer, stringSerializer, stringSerializer);
+                HFactory.createSliceQuery(keyspace, stringSerializer, stringSerializer,
+                        stringSerializer);
         sliceQuery.setColumnFamily(columnFamily);
         sliceQuery.setKey(rowName);
         sliceQuery.setRange(startKey, lastKey, isReversed, limit);
@@ -203,7 +199,6 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
     public Column[] getColumnsForRow(String keyspaceName, String columnFamily, String rowName,
                                      String startKey, String lastKey, int limit, boolean isReversed)
             throws CassandraServerManagementException {
-
         if ("".equals(startKey) & "".equals(lastKey)) { // Query forward
             return this.queryColumnForRow(keyspaceName, columnFamily, rowName,
                     startKey, lastKey, limit, isReversed);
@@ -214,7 +209,6 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
             boolean justStarted = true;
 
             while (window2.length > 1 | justStarted) {
-
                 if (justStarted) {
                     window1 = this.queryColumnForRow(keyspaceName, columnFamily, rowName,
                             "", "", limit, isReversed);
@@ -265,18 +259,16 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
      */
     public Column getColumn(String keySpace, String columnFamily, String rowID, String columnKey)
             throws CassandraServerManagementException {
-        //change this once connected to UI
-        /* ClusterInformation clusterInformation = new ClusterInformation("admin", "admin");
-        clusterInformation.setClusterName("ClusterOne");*/
         DataAccessService dataAccessService =
                 CassandraAdminComponentManager.getInstance().getDataAccessService();
-        ClusterAuthenticationUtil clusterAuthenticationUtil = new ClusterAuthenticationUtil(super.getHttpSession(),
-                super.getTenantDomain());
+        ClusterAuthenticationUtil clusterAuthenticationUtil =
+                new ClusterAuthenticationUtil(super.getHttpSession(), super.getTenantDomain());
         Cluster cluster = clusterAuthenticationUtil.getCluster(null);
         Keyspace keyspace = dataAccessService.getKeySpace(cluster, keySpace);
 
         SliceQuery<String, String, String> sliceQuery =
-                HFactory.createSliceQuery(keyspace, stringSerializer, stringSerializer, stringSerializer);
+                HFactory.createSliceQuery(keyspace, stringSerializer, stringSerializer,
+                        stringSerializer);
         sliceQuery.setColumnFamily(columnFamily);
         sliceQuery.setKey(rowID);
         sliceQuery.setColumnNames(columnKey);
@@ -304,8 +296,6 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
      */
     public int getNoOfRows(String keyspaceName, String columnFamily)
             throws CassandraServerManagementException {
-        /*ClusterInformation clusterInformation = new ClusterInformation("admin", "admin");
-        clusterInformation.setClusterName("ClusterOne");*/
         DataAccessService dataAccessService =
                 CassandraAdminComponentManager.getInstance().getDataAccessService();
         ClusterAuthenticationUtil clusterAuthenticationUtil =
@@ -341,9 +331,6 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
                                             String rowName, String startKey, String lastKey,
                                             int limit, boolean isReversed)
             throws CassandraServerManagementException {
-        //change this once connected to UI
-        /*ClusterInformation clusterInformation = new ClusterInformation("admin", "admin");
-        clusterInformation.setClusterName("ClusterOne");*/
         DataAccessService dataAccessService =
                 CassandraAdminComponentManager.getInstance().getDataAccessService();
         ClusterAuthenticationUtil clusterAuthenticationUtil =
@@ -376,17 +363,4 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
         Column[] columnArray = new Column[columnsList.size()];
         return columnsList.toArray(columnArray);
     }
-
-    private ColumnFamilyDefinition getColumnFamily(Cluster cluster, String keySpace,
-                                                   String columnFamilyName) {
-        List<ColumnFamilyDefinition> cfList = cluster.describeKeyspace(keySpace).getCfDefs();
-        for (ColumnFamilyDefinition columnFamilyDefinition : cfList) {
-            if (columnFamilyDefinition.getName().equals(columnFamilyName)) {
-                return columnFamilyDefinition;
-            }
-        }
-        return null;
-    }
-
-
 }

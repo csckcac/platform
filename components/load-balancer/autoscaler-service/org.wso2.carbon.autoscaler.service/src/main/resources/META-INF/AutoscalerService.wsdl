@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://service.autoscaler.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax23="http://sql.java/xsd" xmlns:ax21="http://exception.service.autoscaler.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.autoscaler.carbon.wso2.org">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://impl.service.autoscaler.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax23="http://sql.java/xsd" xmlns:ax21="http://exception.service.autoscaler.carbon.wso2.org/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://impl.service.autoscaler.carbon.wso2.org">
     <wsdl:types>
         <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://sql.java/xsd">
             <xs:complexType name="SQLException">
@@ -10,7 +10,7 @@
                 </xs:sequence>
             </xs:complexType>
         </xs:schema>
-        <xs:schema xmlns:ax24="http://sql.java/xsd" xmlns:ax22="http://exception.service.autoscaler.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://service.autoscaler.carbon.wso2.org">
+        <xs:schema xmlns:ax24="http://sql.java/xsd" xmlns:ax22="http://exception.service.autoscaler.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://impl.service.autoscaler.carbon.wso2.org">
             <xs:import namespace="http://exception.service.autoscaler.carbon.wso2.org/xsd"/>
             <xs:import namespace="http://sql.java/xsd"/>
             <xs:element name="AutoscalerServiceNoInstanceFoundException">
@@ -23,7 +23,7 @@
             <xs:element name="terminateInstance">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="args0" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="domainName" nillable="true" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -51,7 +51,7 @@
             <xs:element name="startInstance">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="args0" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="domainName" nillable="true" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -65,7 +65,7 @@
             <xs:element name="getPendingInstanceCount">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="args0" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="domainName" nillable="true" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -79,8 +79,8 @@
             <xs:element name="addPendingInstanceCount">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="args0" nillable="true" type="xs:string"/>
-                        <xs:element minOccurs="0" name="args1" type="xs:int"/>
+                        <xs:element minOccurs="0" name="domainName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="count" type="xs:int"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>

@@ -2,10 +2,6 @@
         var apiName = request.getParameter("name");
         var apiVersion = request.getParameter("version");
 
-        apiProviderApp.currentAPIName=apiName;
-        apiProviderApp.currentVersion=apiVersion;
-
-
 %>
 
 

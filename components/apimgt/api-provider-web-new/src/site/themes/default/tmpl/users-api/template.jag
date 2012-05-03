@@ -3,8 +3,10 @@
 var apiName = request.getParameter("name");
 var apiVersion = request.getParameter("version");
 
-apiProviderApp.currentAPIName=apiName;
-apiProviderApp.currentVersion=apiVersion;
+ var subs = require("/core/subscriptions/subscriptions.js");
+ var subsOfAPIs = subs.getSubscribersOfAPI(apiName, apiVersion);
+ var subscribers=subsOfAPIs.subscribers;
+
 %>
     <div class="row-fluid">
         <div class="span2">

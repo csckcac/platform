@@ -1,0 +1,35 @@
+<%
+include("/site/themes/jagg.jag");
+var site = require("/site/conf/site.json");
+
+
+var params = {
+    "name":"pages/modern",
+    "css":{},
+    "js":{},
+    "code":{},
+    "updates" : {
+        "css" : {},
+        "js" : {}
+    },
+    "params":
+        {
+            "title":"API Provider Login",
+            "body":[
+                {
+                    "name":"layouts/login-extended",
+                    "params": {
+                         "rBottom" : {
+                            "name" : "login"
+
+                        }
+                    }
+
+                }
+            ]
+        }
+};
+
+jagg.render(params);
+
+%>

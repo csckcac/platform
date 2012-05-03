@@ -35,7 +35,9 @@ import static org.testng.Assert.*;
 
 import java.io.IOException;
 
-
+/**
+ * Login  and logout from G-Reg management console
+ */
 public class GRegLoginSeleniumTest {
     private static final Log log = LogFactory.getLog(GRegLoginSeleniumTest.class);
     private static WebDriver driver;

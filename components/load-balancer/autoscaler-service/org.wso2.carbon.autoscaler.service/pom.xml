@@ -50,6 +50,7 @@
                         <Bundle-Name>${pom.artifactId}</Bundle-Name>
                         <Export-Package>
                             org.wso2.carbon.autoscaler.service
+                            org.wso2.carbon.autoscaler.service.adapters.ec2.*;
                         </Export-Package>
                         <Private-Package>org.wso2.carbon.autoscaler.service.*, !org.wso2.carbon.autoscaler.service</Private-Package>
                         <Import-Package>
@@ -69,6 +70,15 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.synapse</groupId>
+            <artifactId>synapse-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>aws-java-sdk.wso2</groupId>
+            <artifactId>aws.java.sdk.wso2</artifactId>
+            <version>1.2.3.wso2v1</version>
+        </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.core</artifactId>

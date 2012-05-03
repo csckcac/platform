@@ -172,6 +172,15 @@
                                 </featureArtifactDef>
                                 <!-- end BAM features -->
 
+			        <!-- Analytics features -->
+				<featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.analytics.server.feature:${carbon.version}
+                                </featureArtifactDef>
+				<featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.analytics.hive.server.feature:${carbon.version}
+                                </featureArtifactDef>
+                                <!-- end Analytics features -->
+
                                 <!-- Gadget IDE feature -->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.gadget.ide.feature:${carbon.version}
                                 </featureArtifactDef>
@@ -326,6 +335,17 @@
                                     <version>${carbon.version}</version>
                                 </feature>
                                 <!-- end BAM features -->
+
+				<!-- Analytics features -->
+                                <feature>
+                                    <id>org.wso2.carbon.analytics.server.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.analytics.hive.server.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <!-- end Analytics features -->				
 
                                 <feature>
                                     <id>org.wso2.carbon.reporting.feature.group</id>

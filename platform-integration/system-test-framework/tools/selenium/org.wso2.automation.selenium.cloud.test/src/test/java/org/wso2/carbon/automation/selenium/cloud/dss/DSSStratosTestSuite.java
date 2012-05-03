@@ -15,10 +15,10 @@
 *specific language governing permissions and limitations
 *under the License.
 */
-package org.wso2.automation.common.test.esb;
+package org.wso2.carbon.automation.selenium.cloud.dss;
 
 import org.testng.annotations.AfterSuite;
-import org.wso2.automation.common.test.esb.mediators.test.MediatorTest;
+import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.suiteutills.MasterTestSuite;
 import org.wso2.platform.test.core.utils.suiteutills.SuiteVariables;
 
@@ -26,21 +26,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ESBTestSuite extends MasterTestSuite {
-
+public class DSSStratosTestSuite extends MasterTestSuite{
     @AfterSuite
     public void suiteRunner() {
         List<SuiteVariables> suiteVariablesList = new ArrayList<SuiteVariables>();
-
-        suiteVariablesList.add(new SuiteVariables("CustomProxyTest", CustomProxyTest.class));
-        suiteVariablesList.add(new SuiteVariables("ServiceChainingTest", ServiceChainingTest.class));
-//        suiteVariablesList.add(new SuiteVariables("MediatorTest", MediatorTest.class));
-
-        superSuite("ESBTestSuite", suiteVariablesList).run();
+        EnvironmentBuilder env = new EnvironmentBuilder();
+        if (env.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
+            suiteVariablesList.add(new SuiteVariables("DSSPriviledgeGroupCreatorSeleniumTest",
+                                                      DSSPriviledgeGroupCreatorSeleniumTest.class));
+            suiteVariablesList.add(new SuiteVariables("DataBaseCreator",
+                                                      DSSDatabaseCreatorSeleniumTest.class));
+            superSuite("StratosDSSSeleniumTestSuite", suiteVariablesList).run();
+        }
     }
 
     public static void main(String[] args) {
-        ESBTestSuite esbTestSuite = new ESBTestSuite();
-        esbTestSuite.suiteRunner();
+        EnvironmentBuilder env = new EnvironmentBuilder();
+        if (env.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
+            new DSSStratosTestSuite().suiteRunner();
+        }
     }
 }

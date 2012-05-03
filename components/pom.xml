@@ -149,6 +149,7 @@
                 <!--module>apimgt</module-->
 		<module>andes</module>
 		<module>bam2</module>
+		<module>analytics</module>
 		<module>data-agents</module>
 		<module>gadget-ide</module>
 		<module>url-mapper</module>

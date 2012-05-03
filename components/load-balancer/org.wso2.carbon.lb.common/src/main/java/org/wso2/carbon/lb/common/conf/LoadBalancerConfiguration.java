@@ -17,9 +17,7 @@
 */
 package org.wso2.carbon.lb.common.conf;
 
-import org.apache.synapse.SynapseConstants;
 import org.apache.synapse.commons.util.PropertyHelper;
-import org.wso2.carbon.lb.common.LBConfigParser;
 import org.wso2.carbon.lb.common.conf.structure.Node;
 import org.wso2.carbon.lb.common.conf.structure.NodeBuilder;
 import org.wso2.carbon.lb.common.conf.util.LoadBalancerConfigUtil;
@@ -31,10 +29,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
@@ -45,44 +41,44 @@ import java.util.Set;
 @SuppressWarnings("unused")
 public class LoadBalancerConfiguration implements Serializable{
 
-    private static final long serialVersionUID = -5553545217542808233L;
+    protected static final long serialVersionUID = -5553545217542808233L;
 
     /**
      * Key - service clustering domain
      */
-    private Map<String, ServiceConfiguration> serviceConfigMap =
+    protected Map<String, ServiceConfiguration> serviceConfigMap =
             new HashMap<String, ServiceConfiguration>();
 
     /**
      * Key: service name eg: appserver
      * Value: domains Node
      */
-    private Map<String, Node> serviceToDomainsMap = new HashMap<String, Node>();
+    protected Map<String, Node> serviceToDomainsMap = new HashMap<String, Node>();
     
-    public Map<String, Node> getServiceToDomainsMap() {
+    protected Map<String, Node> getServiceToDomainsMap() {
         return serviceToDomainsMap;
     }
 
     /**
      * Key - host, Value - Node with service clustering domains of this host
      */
-    private Map<String, Node> hostDomainMap = new HashMap<String, Node>();
-    public Map<String, Node> getHostDomainMap() {
+    protected Map<String, Node> hostDomainMap = new HashMap<String, Node>();
+    protected Map<String, Node> getHostDomainMap() {
         return hostDomainMap;
     }
 
-    private ServiceConfiguration defaultServiceConfig;
-    private LBConfiguration lbConfig;
+    protected ServiceConfiguration defaultServiceConfig;
+    protected LBConfiguration lbConfig;
     
     /**
      * LBConfig file as a String
      */
-    private String lbConfigString;
+    protected String lbConfigString;
     
     /**
      * Root node object for loadbalancer.conf
      */
-    private Node rootNode ;
+    protected Node rootNode ;
     
 
     /**
@@ -356,7 +352,7 @@ public class LoadBalancerConfiguration implements Serializable{
         
     }
 
-    private void createConfiguration(Configuration config, Node node) {
+    protected void createConfiguration(Configuration config, Node node) {
         
         if(node == null){
             throw new RuntimeException("The configuration element for " +
@@ -430,31 +426,39 @@ public class LoadBalancerConfiguration implements Serializable{
     @SuppressWarnings("unused")
     public abstract class Configuration implements Serializable{
 
-        protected String availabilityZone;
+        protected String imageId = System.getenv("ami_id");
+        protected String payload;
+        protected boolean payloadSet;
+
+        protected String availability_zone = "us-east-1c";
         protected boolean availabilityZoneSet;
 
-        protected String[] security_groups = new String[]{};
+        protected String[] security_groups = new String[]{"default"};
         protected boolean securityGroupsSet;
 
-        protected String instance_type;
+        protected String instance_type = "m1.large";
         protected boolean instanceTypeSet;
 
         protected String additional_info;
+
+        public String getImageId() {
+            return imageId;
+        }
 
         public String getAdditionalInfo() {
             return additional_info;
         }
 
-        public String getAvailabilityZone() {
+        public String getAvailability_zone() {
             if (this instanceof LBConfiguration) {
-                return availabilityZone;
+                return availability_zone;
             }
             if (availabilityZoneSet) {
-                return availabilityZone;
+                return availability_zone;
             } else if (defaultServiceConfig != null && defaultServiceConfig.availabilityZoneSet) {
-                return defaultServiceConfig.availabilityZone;
+                return defaultServiceConfig.availability_zone;
             }
-            return availabilityZone;
+            return availability_zone;
         }
 
         public String[] getSecurityGroups() {
@@ -481,8 +485,29 @@ public class LoadBalancerConfiguration implements Serializable{
             return instance_type;
         }
 
+
+        public String getUserData() {
+            if (payload == null) {
+                payload = LoadBalancerConfigUtil.getUserData("resources/cluster_node.zip");
+            }
+            if (this instanceof LBConfiguration) {
+                return payload;
+            }
+            if (payloadSet) {
+                return payload;
+            } else if (defaultServiceConfig != null && defaultServiceConfig.payloadSet) {
+                return defaultServiceConfig.payload;
+            }
+            return payload;
+        }
+
+        public void setPayload(String payload) {
+            this.payload = LoadBalancerConfigUtil.getUserData(LoadBalancerConfigUtil.replaceVariables(payload));
+            this.payloadSet = true;
+        }
+
         public void setAvailability_zone(String availabilityZone) {
-            this.availabilityZone = LoadBalancerConfigUtil.replaceVariables(availabilityZone);
+            this.availability_zone = LoadBalancerConfigUtil.replaceVariables(availabilityZone);
             this.availabilityZoneSet = true;
         }
 
@@ -526,7 +551,7 @@ public class LoadBalancerConfiguration implements Serializable{
             return autoscalerTaskInterval;
         }
 
-        public void setElastic_IP(String elasticIP) {
+        public void setElasticIP(String elasticIP) {
             this.elasticIP = LoadBalancerConfigUtil.replaceVariables(elasticIP);
         }
 

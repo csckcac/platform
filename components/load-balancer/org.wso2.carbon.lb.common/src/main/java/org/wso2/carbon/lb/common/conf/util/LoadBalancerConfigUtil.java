@@ -15,10 +15,10 @@
  */
 package org.wso2.carbon.lb.common.conf.util;
 
-//import com.amazonaws.auth.AWSCredentials;
-//import com.amazonaws.auth.BasicAWSCredentials;
-//import com.amazonaws.services.ec2.AmazonEC2Client;
-//import com.amazonaws.services.ec2.model.GroupIdentifier;
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.ec2.AmazonEC2Client;
+import com.amazonaws.services.ec2.model.GroupIdentifier;
 import org.apache.axis2.clustering.ClusteringAgent;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
@@ -55,7 +55,7 @@ public final class LoadBalancerConfigUtil {
      */
     public static void handleException(String msg) {
         log.error(msg);
-        throw new SynapseException(msg);
+        throw new RuntimeException(msg);
     }
 
     /**
@@ -98,6 +98,90 @@ public final class LoadBalancerConfigUtil {
         }
         return text;
     }
+
+    public static String getUserData(String payloadFileName) {
+        String userData = null;
+        try {
+            File file = new File(payloadFileName);
+            if (!file.exists()) {
+                handleException("Payload file " + payloadFileName + " does not exist");
+            }
+            if (!file.canRead()) {
+                handleException("Payload file " + payloadFileName + " does cannot be read");
+            }
+            byte[] bytes = LoadBalancerConfigUtil.getBytesFromFile(file);
+            if (bytes != null) {
+                BASE64Encoder encoder = new BASE64Encoder();
+                userData = encoder.encode(bytes);
+            }
+        } catch (Exception e) {
+            LoadBalancerConfigUtil.handleException("Cannot read data from payload file " + payloadFileName,
+                    e);
+
+        }
+        return userData;
+    }
+
+    /**
+     * Returns the contents of the file in a byte array
+     *
+     * @param file - Input File
+     * @return Bytes from the file
+     * @throws java.io.IOException, if retrieving the file contents failed.
+     */
+    public static byte[] getBytesFromFile(File file) throws IOException {
+        if (!file.exists()) {
+            log.error("Payload file " + file.getAbsolutePath() + " does not exist");
+            return null;
+        }
+        InputStream is = new FileInputStream(file);
+        byte[] bytes;
+
+        try {
+            // Get the size of the file
+            long length = file.length();
+
+            // You cannot create an array using a long type.
+            // It needs to be an int type.
+            // Before converting to an int type, check
+            // to ensure that file is not larger than Integer.MAX_VALUE.
+            if (length > Integer.MAX_VALUE) {
+                if (log.isDebugEnabled()) {
+                    log.debug("File is too large");
+                }
+            }
+
+            // Create the byte array to hold the data
+            bytes = new byte[(int) length];
+
+            // Read in the bytes
+            int offset = 0;
+            int numRead;
+            while (offset < bytes.length
+                    && (numRead = is.read(bytes, offset, bytes.length - offset)) >= 0) {
+                offset += numRead;
+            }
+
+            // Ensure all the bytes have been read in
+            if (offset < bytes.length) {
+                throw new IOException("Could not completely read file " + file.getName());
+            }
+        } finally {
+            // Close the input stream and return bytes
+            is.close();
+        }
+
+        return bytes;
+    }
+
+//        public static EC2InstanceManager createEC2InstanceManager(String accessKey,
+//                                                              String secretKey,
+//                                                              String instanceMgtEPR) {
+//        AWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
+//        AmazonEC2Client ec2Client = new AmazonEC2Client(awsCredentials);
+//        ec2Client.setEndpoint(instanceMgtEPR);
+//        return new EC2InstanceManager(ec2Client);
+//    }
 
 
 }

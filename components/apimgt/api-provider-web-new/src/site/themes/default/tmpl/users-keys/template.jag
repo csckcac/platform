@@ -36,9 +36,14 @@
         apiName=api[0];
         version=api[1]; %>
         <a href="?place=api-details&name=<%=apiName%>&version=<%=version%>"><%=apis[n]%></a>
-        <% if(n!=apis.length-1){%> ,
 
-        <%}}%>
+
+        <% if(n!=apis.length-1){%> , <%}}}else{
+        api= apiList.split("-");
+        apiName = api[0];
+        version = api[1];%>
+        <a href="?place=api-details&name=<%=apiName%>&version=<%=version%>"><%=apiList%></a>
+        <%}%>
     </td>
     </tr>
 
@@ -50,7 +55,6 @@
         </div>
     </div>
 </div>
-< /div>
 
 
-<% }; %>
+<%};%>

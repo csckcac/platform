@@ -77,6 +77,7 @@ public class SchemaTestCase {
         Assert.assertEquals(newSchema.getPath(), "/trunk/schemas/org/wso2/ww2/schema_test/purchasing.xsd");
         Assert.assertFalse(registry.resourceExists("/trunk/test_schemas/org/bar/purchasing.xsd"));
 
+        Thread.sleep(5000);
         // doing an update without changing anything.
         schemaManager.updateSchema(newSchema);
 

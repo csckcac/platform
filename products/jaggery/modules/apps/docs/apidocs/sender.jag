@@ -58,7 +58,7 @@ include('/includes/topnavi.jag');
 </div>
 <div class="span12">
 <div class="content" id="email" name="email">
-<h3>Email</h3>
+<h3>Sender</h3>
 
 <pre class="prettyprint linenums">
 &lt%
@@ -67,16 +67,16 @@ include('/includes/topnavi.jag');
     var to = request.getParameter("to");
     var subject = request.getParameter("sub");
 
-    var msg = require('msg');
-    var email = new msg.Email("smtp.gmail.com", "25", "username", "password");
+    var email = require('email');
+    var sender = new msg.Sender("smtp.gmail.com", "25", "username", "password");
 
-    email.from = "";
-    email.to = to;
-    email.cc = "";
-    email.bcc = "";
-    email.subject = subject;
-    email.text = content;
-    email.send();
+    sender.from = "";
+    sender.to = to;
+    sender.cc = "";
+    sender.bcc = "";
+    sender.subject = subject;
+    sender.text = content;
+    sender.send();
 
     print("email successfully sent to " + to);
 %&gt
@@ -87,18 +87,18 @@ var emailCode = '&lt% \n var content = request.getParameter("cont");'
 + '\n var to = request.getParameter("to");'
 + '\n var subject = request.getParameter("sub");'
 + '\n '
-+ '\n var msg = require("msg");'
++ '\n var email = require("email");'
 + '\n //Add valid credentials'
-+ '\n var email = new msg.Email("smtp.gmail.com", "25", "username", "password");'
++ '\n var sender = new email.Sender("smtp.gmail.com", "25", "username", "password");'
 + '\n '
 + '\n //Fill the correct information'
-+ '\n email.from = "";'
-+ '\n email.to = to;'
-+ '\n email.cc = "";'
-+ '\n email.bcc = "";'
-+ '\n email.subject = subject;'
-+ '\n email.text = content;'
-+ '\n email.send();'
++ '\n sender.from = "";'
++ '\n sender.to = to;'
++ '\n sender.cc = "";'
++ '\n sender.bcc = "";'
++ '\n sender.subject = subject;'
++ '\n sender.text = content;'
++ '\n sender.send();'
 + '\n '
 + '\n print("email successfully sent to " + to); \n %&gt';
 
@@ -117,7 +117,7 @@ include('/includes/tryit_but.jag');
 <section id="overview">  
  	
 <h4>Overview</h4>
-<p class="description">The Email Object allows users to send out email from their apps.</p>
+<p class="description">The Sender Object allows users to send out email from their apps.</p>
 
 </section>	
 	
@@ -139,7 +139,7 @@ include('/includes/tryit_but.jag');
 
         <td><code>from</code></td>
         <td>String</td>
-        <td><pre class="prettyprint">email.from = "madhuka@wso2.com"; </pre>
+        <td><pre class="prettyprint">sender.from = "madhuka@wso2.com"; </pre>
             
             An optional property to set the "from" address of the
             email to be sent. If not set the user account used to
@@ -156,13 +156,13 @@ include('/includes/tryit_but.jag');
          <td>String or Array</td>
         <td>
 
-            <pre class="prettyprint">email.to = "nuwan@wso2.com"; </pre>
+            <pre class="prettyprint">sender.to = "nuwan@wso2.com"; </pre>
 
             <pre class="prettyprint">
 var to = new Array();
 to[0] = "nuwan@wso2.com";
 to[1] = "teague@wso2.com";
-email.to = to; </pre> 
+sender.to = to; </pre>
             This is a required property that denotes the "to"
             address of the email to be sent. (Optionally an array of
             strings denoting the "to" addresses can be passed as above.)
@@ -175,13 +175,13 @@ email.to = to; </pre>
 
         <td><code>cc </code></td>
         <td> String or Array</td>
-        <td> <pre class="prettyprint">email.cc = "madhuka@wso2.com"; </pre>
+        <td> <pre class="prettyprint">sender.cc = "madhuka@wso2.com"; </pre>
            
 <pre class="prettyprint">
 var cc = new Array();
 cc[0] = "nuwan@wso2.com";
 cc[1] = "teague@wso2.com";
-email.cc= cc; </pre>
+sender.cc= cc; </pre>
 
             This is an optional property that denotes the "cc"
             address of the email to be sent. (Optionally an array of
@@ -195,11 +195,11 @@ email.cc= cc; </pre>
            <td><code>bcc</code></td>
            <td>String or Array</td>
            <td>
-               <pre class="prettyprint">email.bcc = "jhon@wso2.com"; </pre>
+               <pre class="prettyprint">sender.bcc = "jhon@wso2.com"; </pre>
                <pre class="prettyprint"> var bcc = new Array();
     bcc[0] = "jonathan@wso2.com";
     bcc[1] = "nuwan@wso2.com";
-    email.bcc = bcc; </pre>
+    sender.bcc = bcc; </pre>
                This is an optional property that denotes the "bcc"
                address of the email to be sent. (Optionally an array of
                strings denoting the "bcc" addresses can be passed as below.)
@@ -214,7 +214,7 @@ email.cc= cc; </pre>
         <td><code>subject</code></td>
           <td>String</td>
         <td>
-            <pre class="prettyprint">email.subject = "WSO2 Jaggery on Released";</pre>
+            <pre class="prettyprint">sender.subject = "WSO2 Jaggery on Released";</pre>
             An optional property to set the subject of the email to
             be sent.
         </td>
@@ -225,7 +225,7 @@ email.cc= cc; </pre>
         <td><code>text</code></td>
          <td>String</td>
         <td>
-            <pre class="prettyprint">email.text = "Jaggery goes on live from 2012"; </pre>
+            <pre class="prettyprint">sender.text = "Jaggery goes on live from 2012"; </pre>
             An optional property to set the body text of the email
             to be sent.
 
@@ -237,9 +237,9 @@ email.cc= cc; </pre>
         <td><code>html</code></td>
         <td>String or XML Object</td>
         <td>
-           <pre class="prettyprint"> email.html = "&lt;h1&gt;Jaggery was Released on January 2012&lt;/h1&gt;";
+           <pre class="prettyprint"> sender.html = "&lt;h1&gt;Jaggery was Released on January 2012&lt;/h1&gt;";
 										// Setthing the HTML content as a String </pre>
-             <pre class="prettyprint">email.html = &lt;h1&gt;Jaggery was Released on January 2012&lt;/h1&gt;;
+             <pre class="prettyprint">sender.html = &lt;h1&gt;Jaggery was Released on January 2012&lt;/h1&gt;;
 										// Setting the HTML content as an XML object </pre>
             An optional property to set the body of the email to be
             sent. This function can be used to send HTML mail.
@@ -267,14 +267,14 @@ email.cc= cc; </pre>
 
     <tr>
 
-        <td><code>Email()</code></td>
+        <td><code>Sender()</code></td>
         <td>None</td>
         <td>
 		<pre class="prettyprint">
-var email = new Email("smtp.gmail.com", "username@gmail.com", "password");</pre>
+var sender = new email.Sender("smtp.gmail.com", "username@gmail.com", "password");</pre>
             <br/>
             <pre class="prettyprint">
-var email = new Email("smtp.gmail.com", "25", "username@gmail.com", "password");
+var sender = new email.Sender("smtp.gmail.com", "25", "username@gmail.com", "password");
                     </pre> 
             Has two constructors for different arguments<br>
             
@@ -290,7 +290,7 @@ var email = new Email("smtp.gmail.com", "25", "username@gmail.com", "password");
        <td>None</td>
         <td><pre class="prettyprint">
 var file = new File("temp.txt"); // A file exists at temp.txt
-email.addAttachement(file, "temp.txt");
+sender.addAttachement(file, "temp.txt");
             </pre>
         An optional property to add attchments to the email
             been sent. This function has a variable number of arguments,

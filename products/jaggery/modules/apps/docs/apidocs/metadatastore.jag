@@ -196,7 +196,7 @@ boolean existance = dataStore.resourceExists("middleware/wso2/products");
                             <code>newResource();</code>
                         </td>
                         <td>Resource</td>
-                        <td>Whe you insert a new Resource into the Metadata store, then you
+                        <td>Where you insert a new Resource into the Metadata store, then you
                             should use this method to create the initial Resource object.<br><br>
                         </td>
                     </tr>
@@ -205,7 +205,7 @@ boolean existance = dataStore.resourceExists("middleware/wso2/products");
                             <code>newCollection();</code>
                         </td>
                         <td>Collection</td>
-                        <td>Whe you insert a new Resource into the Metadata store, then you
+                        <td>Where you insert a new Resource into the Metadata store, then you
                             should use this method to create the initial Resource object.
                         </td>
                     </tr>

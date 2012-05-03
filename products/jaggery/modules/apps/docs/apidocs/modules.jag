@@ -58,7 +58,9 @@ include('/includes/navi.jag');
         <div class="span12">
             <div class="content" id="print" name="print">
                 <h3>modules.xml</h3>
-               <p>modules.xml is used to configure the modules that need to be loaded when the server is started up.
+                <span class="label important">Important !</span><em> Jaggery modules engine is experimental, Its likely to be changed in future </em>
+                </br></br>
+                <p>modules.xml is used to configure the modules that need to be loaded when the server is started up.
                    A module can be a set of JavaScript objects and functions defined either via
                    <a href="http://wso2.org/library/tutorials/writing-custom-hostobject" target="_blank">Rhino Hostobjects</a> or
                    just as *.js files which reside in &lt;JAGGERY_HOME&gt;/jaggery directory. </p>
@@ -125,6 +127,7 @@ include('/includes/navi.jag');
                 </li>
                     </ul>
             </div>
+
             <!-- /print div -->
             <br/>
             <br/>

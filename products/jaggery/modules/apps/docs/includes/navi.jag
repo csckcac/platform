@@ -112,10 +112,10 @@
 
     <h5>Add-ons</h5>
 
-    <h6>Messaging</h6>
+    <h6>Email</h6>
     <ul>
         <li id="email">
-            <a href="/docs/apidocs/email.jag">Email</a>
+            <a href="/docs/apidocs/sender.jag">Sender</a>
         </li>
     </ul>
 

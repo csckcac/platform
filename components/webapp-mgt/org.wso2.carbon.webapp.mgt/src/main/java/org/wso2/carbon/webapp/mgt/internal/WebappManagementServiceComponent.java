@@ -21,7 +21,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.base.ServerConfiguration;
-import org.wso2.carbon.core.multitenancy.GenericArtifactUnloader;
+import org.wso2.carbon.core.ArtifactUnloader;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.tomcat.ext.valves.CarbonTomcatValve;
 import org.wso2.carbon.tomcat.ext.valves.TomcatValveContainer;
@@ -51,12 +51,9 @@ import java.util.List;
  * cardinality="1..1" policy="dynamic" bind="setRealmService"  unbind="unsetRealmService"
  * @scr.reference name="registry.service" interface="org.wso2.carbon.registry.core.service.RegistryService"
  * cardinality="1..1" policy="dynamic"  bind="setRegistryService" unbind="unsetRegistryService"
- * @scr.reference name="artifact.unloader.service" interface="org.wso2.carbon.core.multitenancy.GenericArtifactUnloader"
- * cardinality="1..1" policy="dynamic"  bind="setArtifactUnloaderService" unbind="unsetArtifactUnloaderService"
  */
 public class WebappManagementServiceComponent {
     private static final Log log = LogFactory.getLog(WebappManagementServiceComponent.class);
-    private WebappUnloader webappUnloader;
 
 
     protected void activate(ComponentContext ctx) {
@@ -66,6 +63,11 @@ public class WebappManagementServiceComponent {
             valves.add(new TenantLazyLoaderValve());
             valves.add(new TomcatGhostValve());
             TomcatValveContainer.addValves(valves);
+
+            // registering WebappUnloader as an OSGi service
+            WebappUnloader webappUnloader = new WebappUnloader();
+            ctx.getBundleContext().registerService(ArtifactUnloader.class.getName(),
+                                                   webappUnloader, null);
 
             if (!GhostWebappDeployerUtils.isGhostOn()) {
                setServerURLParam(DataHolder.getServerConfigContext());
@@ -100,13 +102,6 @@ public class WebappManagementServiceComponent {
     }
 
     protected void unsetRegistryService(RegistryService registryService) {
-    }
-
-    protected void setArtifactUnloaderService(GenericArtifactUnloader genericArtifactUnloader) {
-         webappUnloader = new WebappUnloader();
-         genericArtifactUnloader.registerArtifactUnloader(webappUnloader);
-    }
-    protected void unsetArtifactUnloaderService(GenericArtifactUnloader genericArtifactUnloader) {
     }
 
     private void setServerURLParam(ConfigurationContext configurationContext) {

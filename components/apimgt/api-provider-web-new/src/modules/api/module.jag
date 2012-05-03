@@ -1,0 +1,28 @@
+<%
+jagg.module("api", {
+
+    saveAPI:function () {
+        return jagg.require(jagg.getModulesDir() + "api/add.jag").saveAPI.apply(this, arguments);
+    },
+    isContextExist:function () {
+        return jagg.require(jagg.getModulesDir() + "api/add.jag").isContextExist.apply(this, arguments);
+    },
+
+    createNewAPIVersion:function () {
+        return jagg.require(jagg.getModulesDir() + "api/copy.jag").createNewAPIVersion.apply(this, arguments);
+    },
+
+    getAPI:function () {
+        return jagg.require(jagg.getModulesDir() + "api/list.jag").getAPI.apply(this, arguments);
+    },
+    getAPIsByProvider:function () {
+        return jagg.require(jagg.getModulesDir() + "api/list.jag").getAPIsByProvider.apply(this, arguments);
+    },
+
+    updateAPI:function () {
+        return jagg.require(jagg.getModulesDir() + "api/update.jag").updateAPI.apply(this, arguments);
+    }
+
+
+});
+%>

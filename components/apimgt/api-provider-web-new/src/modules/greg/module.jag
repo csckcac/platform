@@ -1,0 +1,24 @@
+<%
+jagg.module("greg", {
+
+    getServerURL:function () {
+        return jagg.require(jagg.getModulesDir() + "greg/greg.jag").getServerURL.apply(this, arguments);
+    },
+
+    getPort:function () {
+        return jagg.require(jagg.getModulesDir() + "greg/greg.jag").getPort.apply(this, arguments);
+    },
+
+    getServer:function () {
+        return jagg.require(jagg.getModulesDir() + "greg/greg.jag").getServer.apply(this, arguments);
+    },
+
+    getAPIProviderObj:function () {
+        return jagg.require(jagg.getModulesDir() + "greg/greg.jag").getAPIProviderObj.apply(this, arguments);
+    },
+
+    invokeService:function () {
+        return jagg.require(jagg.getModulesDir() + "greg/client.jag").invokeService.apply(this, arguments);
+    }
+});
+%>

@@ -1,10 +1,7 @@
 <% jagg.template = function(data, params, jagg) {%>
 
         <div id="userKey"><h2>Users/Keys</h2>
-        <form class="well form-search">
-        <input type="text" class="input-medium search-query" placeholder="Search Term">
-        <button type="submit" class="btn btn-primary">Search</button>
-        </form>
+        <%jagg.includeTemplate("search", null); %>
         <div class="row">
         <div class="span12">
         <table class="table table-bordered">

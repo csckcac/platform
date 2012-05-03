@@ -176,8 +176,13 @@ public class DBDeployer extends AbstractDeployer {
 				service.setName(serviceHierarchy + service.getName());
 				/* save original value */
 				serviceActive = service.isActive();
-				serviceGroup.addService(service);
-				this.axisConfig.addServiceGroup(serviceGroup);
+
+                ArrayList<AxisService> services = new ArrayList<AxisService>();
+                services.add(service);
+
+                DeploymentEngine.addServiceGroup(serviceGroup, services,
+                        deploymentFileData.getFile().toURI().toURL(), deploymentFileData,
+                        this.axisConfig);
 			}
 			
 			/* restore original service active value */

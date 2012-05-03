@@ -15,7 +15,6 @@ import org.wso2.javascript.xmlimpl.XML;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
-import javax.activation.FileDataSource;
 import javax.mail.Address;
 import javax.mail.BodyPart;
 import javax.mail.Message;
@@ -30,14 +29,13 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 import java.io.IOException;
-import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 
 /**
  * <p/>
- * The Email host object allows users to send out email from their mashups.  It helps notify users
+ * The sender host object allows users to send out email from their mashups.  It helps notify users
  * of certain events and acts as a bridge between mashups and users.
  * <p/>
  * Notes:
@@ -49,13 +47,13 @@ import java.util.Properties;
  * and passwords. The section that corresponds to this is as follows.
  * <p/>
  * <p>
- * <!--Used to configure your default email account that will be used to send emails from mashups using the Email host Object-->
- * <EmailConfig>
+ * <!--Used to configure your default email account that will be used to send emails from mashups using the Sender host Object-->
+ * <SenderConfig>
  * <host>smtp.gmail.com</host>
  * <port>25</port>
  * <username>username@gmail.com</username>
  * <password>password</password>
- * </EmailConfig>
+ * </SenderConfig>
  * <p/>
  * </p>
  * <p/>
@@ -63,7 +61,7 @@ import java.util.Properties;
  * eg:
  * <p/>
  *     function sendEmail(){
- *          var email = new Email("host", "port", "username", "password");
+ *          var email = new Sender("host", "port", "username", "password");
  *          var file = new File("temp.txt");
  *          email.from = "keith@wso2.com";
  *          email.to = "keith@wso2.com"; // alternatively message.to can be a array of strings. Same goes for cc and bcc
@@ -78,9 +76,9 @@ import java.util.Properties;
  * </pre>
  * </p>
  */
-public class EmailHostObject extends ScriptableObject {
+public class SenderHostObject extends ScriptableObject {
 
-    private static final Log log = LogFactory.getLog(EmailHostObject.class);
+    private static final Log log = LogFactory.getLog(SenderHostObject.class);
     private Properties properties;
     private MimeMessage message;
     private String text;
@@ -95,12 +93,12 @@ public class EmailHostObject extends ScriptableObject {
      * method.
      */
     public String getClassName() {
-        return "Email";
+        return "Sender";
     }
 
     /**
      * <p>
-     * The Email Object has three different constructors. Choose one depending on your configuration
+     * The Sender Object has three different constructors. Choose one depending on your configuration
      * and your needs.
      * <p/>
      * 1. The first constructor takes no parameters and uses configuration information specified in the
@@ -108,27 +106,27 @@ public class EmailHostObject extends ScriptableObject {
      * account to send out mail from your mashups. It also reduces the hassle of having to key in
      * the configuration details each time you need a new email object.
      * <p/>
-     * var email = new Email();
+     * var email = new Sender();
      * <p/>
      * 2. The second constructor, unlike the first, requires the user to provide the configuration
      * details each time he creates a new email object.  The benefit is that no server configuration
      * is needed and you can use diffent accounts when ever you need. The configuration details
      * should be given as follows:
      * <p/>
-     * var email = new Email("smtp.gmail.com", "25", "username@gmail.com", "password"); // host, port, username, password
+     * var email = new Sender("smtp.gmail.com", "25", "username@gmail.com", "password"); // host, port, username, password
      * <p/>
      * 3. The third is a slight variant of the second. It does not require a port to be specified:
      * <p/>
-     * var email = new Email("smtp.gmail.com", "username@gmail.com", "password"); // host, username, password
+     * var email = new Sender("smtp.gmail.com", "username@gmail.com", "password"); // host, username, password
      * </p>
      */
     public static Scriptable jsConstructor(Context cx, Object[] args, Function ctorObj,
                                            boolean inNewExpr) throws ScriptException {
 
-        EmailHostObject emailHostObject = new EmailHostObject();
+        SenderHostObject senderHostObject = new SenderHostObject();
         Properties props = new Properties();
-        emailHostObject.properties = props;
-        emailHostObject.multipart = new MimeMultipart();
+        senderHostObject.properties = props;
+        senderHostObject.multipart = new MimeMultipart();
 
         String host, username, password;
         String port = null;
@@ -140,7 +138,7 @@ public class EmailHostObject extends ScriptableObject {
             host = (String) args[0];
             username = (String) args[1];
             password = (String) args[2];
-            port = serverConfig.getFirstProperty("EmailConfig.port");
+            port = serverConfig.getFirstProperty("SenderConfig.port");
         } else*/
         if (length == 4) {
             //We assume that the parameters are host, port, username and password
@@ -150,30 +148,30 @@ public class EmailHostObject extends ScriptableObject {
             password = (String) args[3];
         } else {
             throw new ScriptException("Incorrect number of arguments. Please specify host, username, " +
-                    "password or host, port, username, password within the constructor of Email hostobject.");
+                    "password or host, port, username, password within the constructor of Sender hostobject.");
         }
 
         if (host == null) {
             throw new ScriptException("Invalid host name. Please recheck the given details " +
-                    "within the constructor of Email hostobject.");
+                    "within the constructor of Sender hostobject.");
         }
-        emailHostObject.setProperty("mail.smtp.host", host);
+        senderHostObject.setProperty("mail.smtp.host", host);
 
         if (port != null) {
-            emailHostObject.setProperty("mail.smtp.port", port);
+            senderHostObject.setProperty("mail.smtp.port", port);
         }
 
         SMTPAuthenticator smtpAuthenticator = null;
         if (username != null) {
             smtpAuthenticator = new SMTPAuthenticator(username, password);
-            emailHostObject.setProperty("mail.smtp.auth", "true");
+            senderHostObject.setProperty("mail.smtp.auth", "true");
         }
         Session session = Session.getInstance(props, smtpAuthenticator);
-        emailHostObject.message = new MimeMessage(session);
+        senderHostObject.message = new MimeMessage(session);
 
-        emailHostObject.setProperty("mail.smtp.starttls.enable", "true");
+        senderHostObject.setProperty("mail.smtp.starttls.enable", "true");
 
-        return emailHostObject;
+        return senderHostObject;
     }
 
     private void setProperty(String key, String value) {
@@ -181,9 +179,9 @@ public class EmailHostObject extends ScriptableObject {
     }
 
     /**
-     * <p>The from address to appear in the email</p>
+     * <p>The from address to appear in the sender</p>
      * <pre>
-     * email.from = "keith@wso2.com";
+     * sender.from = "keith@wso2.com";
      * </pre>
      */
     public void jsSet_from(String from) throws ScriptException {
@@ -220,14 +218,14 @@ public class EmailHostObject extends ScriptableObject {
     /**
      * <p>The to address that the mail is sent to</p>
      * <pre>
-     * email.to = "keith@wso2.com";
+     * sender.to = "keith@wso2.com";
      *
      * OR
      *
      * var to = new Array();
      * to[0] = "jonathan@wso2.com";
      * to[1] =  "keith@wso2.com";
-     * email.to = to;
+     * sender.to = to;
      * </pre>
      */
     public void jsSet_to(Object toObject) throws ScriptException {
@@ -251,14 +249,14 @@ public class EmailHostObject extends ScriptableObject {
     /**
      * <p>The cc address that the mail is sent to</p>
      * <pre>
-     * email.cc = "keith@wso2.com";
+     * sender.cc = "keith@wso2.com";
      *
      * OR
      *
      * var cc = new Array();
      * cc[0] = "jonathan@wso2.com";
      * cc[1] =  "keith@wso2.com";
-     * email.cc = cc;
+     * sender.cc = cc;
      * </pre>
      */
     public void jsSet_cc(Object ccObject) throws ScriptException {
@@ -282,14 +280,14 @@ public class EmailHostObject extends ScriptableObject {
     /**
      * <p>The bcc address that the mail is sent to</p>
      * <pre>
-     * email.bcc = "keith@wso2.com";
+     * sender.bcc = "keith@wso2.com";
      *
      * OR
      *
      * var bcc = new Array();
      * bcc[0] = "jonathan@wso2.com";
      * bcc[1] =  "keith@wso2.com";
-     * email.bcc = bcc;
+     * sender.bcc = bcc;
      * </pre>
      */
     public void jsSet_bcc(Object bccObject) throws ScriptException {
@@ -300,7 +298,7 @@ public class EmailHostObject extends ScriptableObject {
     /**
      * <p>The subject of the mail been sent</p>
      * <pre>
-     * email.subject = "WSO2 Mashup server 1.0 Released";
+     * sender.subject = "WSO2 Mashup server 1.0 Released";
      * </pre>
      */
     public void jsSet_subject(String subject) throws ScriptException {
@@ -322,7 +320,7 @@ public class EmailHostObject extends ScriptableObject {
     /**
      * <p>The body text of the mail been sent</p>
      * <pre>
-     * email.text = "WSO2 Mashup server 1.0 was Released on 28th January 2008";
+     * sender.text = "WSO2 Mashup server 1.0 was Released on 28th January 2008";
      * </pre>
      */
     public void jsSet_text(String text) throws ScriptException {
@@ -341,11 +339,11 @@ public class EmailHostObject extends ScriptableObject {
     }
 
     /**
-     * <p>The body of the email to be sent. This function can be used to send HTML mail.</p>
+     * <p>The body of the sender to be sent. This function can be used to send HTML mail.</p>
      * <pre>
-     * email.html = "<h1>WSO2 Mashup server 1.0 was Released on 28th January 2008</h1>";  // Setthing the HTML content as a String
+     * sender.html = "<h1>WSO2 Mashup server 1.0 was Released on 28th January 2008</h1>";  // Setthing the HTML content as a String
      *                                                   OR
-     * email.html = <h1>WSO2 Mashup server 1.0 was Released on 28th January 2008</h1>;     // Setting the HTML content as an XML object
+     * sender.html = <h1>WSO2 Mashup server 1.0 was Released on 28th January 2008</h1>;     // Setting the HTML content as an XML object
      * </pre>
      */
     public void jsSet_html(Object html) throws ScriptException {
@@ -386,7 +384,7 @@ public class EmailHostObject extends ScriptableObject {
     /**
      * <p>Send the mail out</p>
      * <pre>
-     * email.send()
+     * sender.send()
      * </pre>
      */
     public void jsFunction_send() throws ScriptException {
@@ -403,19 +401,19 @@ public class EmailHostObject extends ScriptableObject {
      * each argument can be a File hostObject or a string representing a file.</p>
      * <pre>
      * var file = new File("temp.txt"); // A file exists at temp.txt
-     * email.addAttachement(file, "temp.txt");
+     * sender.addAttachement(file, "temp.txt");
      * </pre>
      */
     public static void jsFunction_addAttachment(Context cx, Scriptable thisObj, Object[] arguments,
                                                 Function funObj) throws ScriptException {
-        EmailHostObject emailHostObject = (EmailHostObject) thisObj;
+        SenderHostObject senderHostObject = (SenderHostObject) thisObj;
         for (Object argument : arguments) {
             final FileHostObject fileHostObject;
             Object object = argument;
             if (object instanceof FileHostObject) {
                 fileHostObject = (FileHostObject) object;
             } else if (object instanceof String) {
-                fileHostObject = (FileHostObject) cx.newObject(emailHostObject, "File", new Object[]{object});
+                fileHostObject = (FileHostObject) cx.newObject(senderHostObject, "File", new Object[]{object});
             } else {
                 throw new ScriptException("Invalid parameter. The attachment should be a " +
                         "FileHostObject or a string representing the path of a file");
@@ -458,7 +456,7 @@ public class EmailHostObject extends ScriptableObject {
             try {
                 messageBodyPart.setDataHandler(new DataHandler(source));
                 messageBodyPart.setFileName(fileHostObject.getName());
-                emailHostObject.multipart.addBodyPart(messageBodyPart);
+                senderHostObject.multipart.addBodyPart(messageBodyPart);
             } catch (MessagingException e) {
                 throw new ScriptException(e);
             }

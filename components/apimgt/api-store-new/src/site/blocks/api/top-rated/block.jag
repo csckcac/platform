@@ -1,0 +1,23 @@
+<%
+jagg.block("api/top-rated", {
+
+    initializer:function (data) {
+
+    },
+
+    getOutputs:function (inputs) {
+        var result, apis, ratings = require("/modules/api/top-rated.js");
+        result = ratings.getTopRatedAPIs(inputs.count);
+        apis = result.apis;
+        return {
+            "apis":apis
+        };
+    },
+
+    getInputs:function () {
+        return {
+            "count":5
+        };
+    }
+});
+%>

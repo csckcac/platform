@@ -1,0 +1,14 @@
+<%
+jagg.block("menu/primary", {
+
+    initialize:function (data) {
+
+    },
+
+    getStaticBlocks:function () {
+        return [
+            "user/login"
+        ];
+    }
+});
+%>

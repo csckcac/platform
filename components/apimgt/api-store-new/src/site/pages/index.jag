@@ -1,45 +1,68 @@
 <%
-include("/site/themes/jagg.jag");
+include("/jagg/jagg.jag");
 var site = require("/site/conf/site.json");
 
-var published = require("/core/apis/published.js");
-var result = published.getAllPublishedAPIs();
-var apis = result.apis;
+(function () {
+    var name = request.getParameter("name");
+    var version = request.getParameter("version");
+    var provider = request.getParameter("provider");
 
-var params = {
-    "name":"pages/base",
-    "css":{},
-    "js":{},
-    "code":{},
-    "updates" : {
-        "css" : {},
-        "js" : {}
-    },
-    "params":
-        {
-            "title":"API Store Listing",
+    var published = require("/modules/api/api.js");
+    var result = published.getAPIDescription({name:name, version:version, provider:provider}, site.defaultUser.username);
+    var api = result.api;
+    var title = "API Store - " + api.name;
+
+    jagg.render({
+        "name":"page/base",
+        "inputs":{
+            "title":title,
             "body":[
                 {
-                    "name":"layouts/extended",
-                    "params": {
-                        "top" : null,
-                        "left" : null,
-                        "middle" : {
-                            "name" : "apis/listing",
-                            "params" : {
-                                "apis" : apis
+                    "name":"layout/base",
+                    "inputs":{
+                        "top":{
+                            "name":"search/api-search",
+                            "inputs":null
+                        },
+                        "left":{
+                            "name":"api/provider-apis",
+                            "inputs":null
+                        },
+                        "middle":{
+                            "name":"api/api-info",
+                            "inputs":{
+                                "api":api,
+                                "tabs":{
+                                    "tabs":[
+                                        {
+                                            "title":"Overview",
+                                            "body":[
+                                                {
+                                                    "name":"api/overview",
+                                                    "inputs":{
+                                                        api:api
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "title":"Documentation",
+                                            "body":[
+                                                {
+                                                    "name":"api/documentation",
+                                                    "inputs":api
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
                             }
                         },
-                        "right" : null
+                        "right":null
                     }
                 }
             ]
         }
-};
-
-log(jagg == null);
-jagg.templates = {};
-jagg.global = params;
-jagg.render(params, jagg);
-
+    });
+}());
 %>

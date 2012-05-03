@@ -1,4 +1,4 @@
-<%
+//<%
 //TODO : remove this when log configs are implemented
 Log.prototype.isDebugEnabled = function () {
     return false;
@@ -40,6 +40,14 @@ var jagg = jagg || {};
         }
         ctx.put("url.map", urlMap);
         return urlMap[path];
+    };
+
+    var getMappedUrl = function (path) {
+        return getAbsoluteUrl(getUrlMapping(path));
+    };
+
+    var getAbsoluteUrl = function (path) {
+        return site.context + path;
     };
 
     var getTemplateFile = function (initializer) {
@@ -339,6 +347,11 @@ var jagg = jagg || {};
     ns.templates = null;
     ns.global = null;
     ns.getTemplateFile = getTemplateFile;
+    ns.getUser = getUser;
+    ns.setUser = setUser;
+    ns.getUrlMapping = getUrlMapping;
+    ns.getMappedUrl = getMappedUrl;
+    ns.getAbsoluteUrl = getAbsoluteUrl;
     ns.getInitializerFile = getInitializerFile;
     ns.getTheme = getTheme;
     ns.getThemesPath = getThemesPath;

@@ -1,5 +1,5 @@
 <%
-include("/site/themes/jagg.jag");
+include("/jagg/jagg.jag");
 var site = require("/site/conf/site.json");
 
 (function () {
@@ -7,30 +7,30 @@ var site = require("/site/conf/site.json");
     var version = request.getParameter("version");
     var provider = request.getParameter("provider");
 
-    var published = require("/core/apis/api.js");
-    var result = published.getAPI(name, version, provider, "admin");
+    var published = require("/modules/api/api.js");
+    var result = published.getAPIDescription({name:name, version:version, provider:provider}, site.defaultUser.username);
     var api = result.api;
     var title = "API Store - " + api.name;
 
     jagg.render({
-        "name":"pages/base",
-        "params":{
+        "name":"page/base",
+        "inputs":{
             "title":title,
             "body":[
                 {
-                    "name":"layouts/base",
-                    "params":{
+                    "name":"layout/base",
+                    "inputs":{
                         "top":{
                             "name":"search/api-search",
-                            "params":null
+                            "inputs":null
                         },
                         "left":{
-                            "name":"apis/provider-more",
-                            "params":null
+                            "name":"api/provider-apis",
+                            "inputs":null
                         },
                         "middle":{
-                            "name":"apis/api-info",
-                            "params":{
+                            "name":"api/api-info",
+                            "inputs":{
                                 "api":api
                             }
                         },

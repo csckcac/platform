@@ -1,0 +1,7 @@
+<%
+jagg.block("api/documentation", {
+    initializer:function (data) {
+
+    }
+});
+%>

@@ -1,0 +1,22 @@
+<%
+jagg.block("api/recently-added", {
+    initializer:function (data) {
+
+    },
+
+    getOutputs:function (inputs) {
+        var result, apis, recent = require("/modules/api/recently-added.js");
+        result = recent.getRecentlyAddedAPIs(inputs.count);
+        apis = result.apis;
+        return {
+            "apis":apis
+        };
+    },
+
+    getInputs:function () {
+        return {
+            "count":5
+        };
+    }
+});
+%>

@@ -1,0 +1,33 @@
+<% jagg.template("layout/base", function(inputs, outputs, jagg) { %>
+<%
+    var mw = 6;
+    if(!outputs.left && !outputs.right) {
+        mw = 12;
+    } else if(!outputs.left || !outputs.right) {
+        mw = 9;
+    }
+%>
+<div id="layouts_base">
+    <div id="top">
+        <% jagg.includeBlocks(outputs.top); %>
+    </div>
+
+    <div id="left">
+        <div class="col_3">
+            <% jagg.includeBlocks(outputs.left); %>
+        </div>
+    </div>
+
+    <div id="middle">
+        <div class="col_<%=String(mw)%>">
+            <% jagg.includeBlocks(outputs.middle); %>
+        </div>
+    </div>
+
+    <div id="right">
+        <div class="col_3">
+            <% jagg.includeBlocks(outputs.right); %>
+        </div>
+    </div>
+</div>
+<% }); %>

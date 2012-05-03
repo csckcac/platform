@@ -1,33 +1,39 @@
 <%
-include("/site/themes/jagg.jag");
+include("/jagg/jagg.jag");
 var site = require("/site/conf/site.json");
 
 (function () {
     var apis, result, obj,
-            tag = request.getParameter("tag");
+            tag = request.getParameter("tag"),
+            query = request.getParameter("query");
     if (tag) {
-        obj = require("/core/apis/tagged.js");
+        obj = require("/modules/api/tagged.js");
         result = obj.getAPIsByTag(tag);
         apis = result.apis;
+    } else if(query) {
+        obj = require("/modules/search/apis.js");
+        result = obj.searchAPIs(query);
+        apis = result.apis;
     } else {
-        obj = require("/core/apis/published.js");
+        obj = require("/modules/api/published.js");
         result = obj.getAllPublishedAPIs();
         apis = result.apis;
     }
 
+
     jagg.render({
-        "name":"pages/base",
-        "params":{
+        "name":"page/base",
+        "inputs":{
             "title":"API Store Listing",
             "body":[
                 {
-                    "name":"layouts/extended",
-                    "params":{
+                    "name":"layout/extended",
+                    "inputs":{
                         "top":null,
                         "left":null,
                         "middle":{
-                            "name":"apis/listing",
-                            "params":{
+                            "name":"api/listing",
+                            "inputs":{
                                 "apis":apis
                             }
                         },

@@ -7,7 +7,7 @@
     <div class="grid_9">
         <ul class="main-menu">
             <li><a href="index.jag" >APIs</a></li>
-            <li><a href="#" onclick="loadApplicationUI()">Applications</a></li>
+            <li><a href="applicationListing.jag" >Applications</a></li>
             <li><a href="#" onclick="loadAllSubscriptionsUI()">My Subscriptions</a></li>
         </ul>
     </div>

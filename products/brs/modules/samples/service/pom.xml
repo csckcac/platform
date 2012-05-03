@@ -23,7 +23,7 @@
     <parent>
     	<groupId>org.wso2.brs</groupId>
     	<artifactId>brs-samples-parent</artifactId>
-    	<version>1.2.0-SNAPSHOT</version>
+    	<version>2.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -32,24 +32,6 @@
     <packaging>bundle</packaging>
     <name>WSO2 Stratos BRS - Samples</name>
     <description>All the samples in Business Rules Server</description>
-
-<!--    <dependencies>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.rule.core</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.rulecep.adapters</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.rulecep.adapters.service</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
-        </dependency>
-    </dependencies> -->
 
     <build>
         <plugins>

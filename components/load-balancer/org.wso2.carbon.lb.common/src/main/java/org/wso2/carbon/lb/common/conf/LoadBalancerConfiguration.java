@@ -55,7 +55,7 @@ public class LoadBalancerConfiguration implements Serializable{
      */
     protected Map<String, Node> serviceToDomainsMap = new HashMap<String, Node>();
     
-    protected Map<String, Node> getServiceToDomainsMap() {
+    public Map<String, Node> getServiceToDomainsMap() {
         return serviceToDomainsMap;
     }
 
@@ -63,7 +63,7 @@ public class LoadBalancerConfiguration implements Serializable{
      * Key - host, Value - Node with service clustering domains of this host
      */
     protected Map<String, Node> hostDomainMap = new HashMap<String, Node>();
-    protected Map<String, Node> getHostDomainMap() {
+    public Map<String, Node> getHostDomainMap() {
         return hostDomainMap;
     }
 

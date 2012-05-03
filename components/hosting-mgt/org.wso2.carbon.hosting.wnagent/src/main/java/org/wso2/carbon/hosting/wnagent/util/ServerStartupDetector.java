@@ -52,7 +52,7 @@ public class ServerStartupDetector extends Thread {
     private ContainerInformation containerInfo;
     private String domainName;
     //TODO set following correctly
-    private String autoscalerEpr = "";
+    private String autoscalerEpr = "https://10.100.3.81:9443/services/AutoscalerService";
     
     public ServerStartupDetector(AgentService agent, ContainerInformation containerInfo, 
                                  String domain) {

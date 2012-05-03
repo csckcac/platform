@@ -10,7 +10,8 @@ var getData = function (params) {
     return {
         top:params.top,
         left:params.left,
-        right:params.right
+        rTop:params.rTop,
+        rBottom:params.rBottom
     };
 };
 
@@ -18,7 +19,8 @@ var getParams = function () {
     return {
         top:null,
         left:null,
-        right:null
+        rTop:null,
+        rBottom:null
     };
 };
 
@@ -30,6 +32,7 @@ var getTemplateParams = function () {
     return [
         "top",
         "left",
-        "right"
+        "rTop",
+        "rBottom"
     ];
 };

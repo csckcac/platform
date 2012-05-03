@@ -1,8 +1,7 @@
 <% jagg.template = function(data, params, jagg) { %>
 
- <div id="home">
+<div id="home">
 <h2>My APIs</h2>
-
 <ul class="thumbnails">
 <span class="loading"></span>
 <%
@@ -12,22 +11,22 @@
     %>
     <li class="span2">
         <div class="thumbnail">
-            <a href="?place=api-details&name=<%=apiName%>&version=<%=apiVersion%>">
+            <a href="?place=api-details&name=<%=api.name%>&version=<%=api.version%>">
             <% if(api.thumb==null){%>
-            <img class="thumb" src="images/api-default.png" alt="">
+            <img class="thumb" src="<%=site.context%>/site/themes/default/images/api-default.png" alt="">
             <%} else{%>
             <img class="thumb" src="<%=api.thumb%>" alt="">
             <%}%>
             </a>
-            <h5><a href="?place=api-details&name=<%=apiName%>&version=<%=apiVersion%>" class="label label-info">api.name + "-v" + api.version</a></h5>
-            <div><a href="?place=api-details&name=<%=apiName%>&version=<%=apiVersion%>"><span id="noOfUsers">
+            <h5><a href="?place=api-details&name=<%=api.name%>&version=<%=api.version%>" class="label label-info"><%=api.name%>-v<%=api.version%></a></h5>
+            <div><a href="?place=api-details&name=<%=api.name%>&version=<%=api.version%>"><span id="noOfUsers">
                    <% if (api.subs == "1"){%>
                     <%=api.subs%> User
                     <%}else{%>
                      <%=api.subs%> Users<%}%>
                     </span></a></div>
             <!--span>Up Time: 90%</span-->
-            <p class="status">api.status</p>
+            <p class="status"><%=api.status%></p>
         </div>
      </li>
       <%}%>

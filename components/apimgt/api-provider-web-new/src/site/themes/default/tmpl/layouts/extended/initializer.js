@@ -11,7 +11,13 @@ var getParams = function () {
 
 
         ],
-        "right":null
+        "rTop":[
+
+            {"name":"breadcumb" }
+
+
+        ],
+        "rBottom":null
 
     };
 };

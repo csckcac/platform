@@ -23,7 +23,8 @@ var params = {
                     "params": {
                         "top" : null,
                         "left" : null,
-                        "right" : {
+                        "rTop" : null,
+                        "rBottom" : {
                             "name" : "listing",
                             "params" : {
                                 "apis" : apis

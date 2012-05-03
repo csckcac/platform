@@ -1,0 +1,83 @@
+<% jagg.template = function(data, params, jagg) { %>
+<%
+                var place = request.getParameter("place");
+            %>
+            <ul class="breadcrumb">
+                <% if(place == null || place.equals("")){%>
+                    <li>
+                    APIs <span class="divider">/</span>
+                    </li>
+                    <li>
+                        <a href="?place=">My APIs</a>
+                    </li>
+                <% } %>
+                <% if(place != null && place.equals("api-details")){%>
+                <li>
+                    APIs <span class="divider">/</span>
+                </li>
+                <li>
+                    <a href="?place=">My APIs</a>
+                </li>
+                <li>
+                    <span class="divider">/</span>
+                </li>
+                <li>
+                    <a href="?place=api-details&name=<%=request.getParameter("name")%>&version=<%=request.getParameter("version")%>"><%=request.getParameter("name")%>-<%=request.getParameter("version")%></a>
+                </li>
+                <% } %>
+
+
+                <% if(place != null && place.equals("add")){%>
+                <li>
+                    APIs <span class="divider">/</span>
+                </li>
+                <li>
+                    <a href="?place=">My APIs</a>
+                </li>
+                <li>
+                    <span class="divider">/</span>
+                </li>
+                <li>
+                    <a href="?place=add">Add New API</a>
+                </li>
+                <% } %>
+
+
+
+                <% if(place != null && place.equals("user")){%>
+                <li>
+                    Manage <span class="divider">/</span>
+                </li>
+                <li>
+                    <a href="?place=users_keys">Users-Keys</a>
+                </li>
+                <li>
+                    <span class="divider">/</span>
+                </li>
+                <li>
+                    <a href="?place=user">User - <%=request.getParameter("uname")%></a>
+                </li>
+                <% } %>
+
+
+                <% if(place != null && place.equals("users_keys")){%>
+                <li>
+                    Manage <span class="divider">/</span>
+                </li>
+                <li>
+                    <a href="?place=users_keys">Users-Keys</a>
+                </li>
+                <% } %>
+
+
+                <% if(place != null && place.equals("stat-all")){%>
+                <li>
+                    Statistics <span class="divider">/</span>
+                </li>
+                <li>
+                    <a href="?place=users_keys">All</a>
+                </li>
+                <% } %>
+            </ul>
+
+             <% }; %>

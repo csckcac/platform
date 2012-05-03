@@ -15,7 +15,8 @@
 
     <div id="right">
         <div class="span10">
-            <% jagg.includeTemplates(data.right); %>
+            <% jagg.includeTemplates(data.rTop); %>
+            <% jagg.includeTemplates(data.rBottom); %>
         </div>
     </div>
 

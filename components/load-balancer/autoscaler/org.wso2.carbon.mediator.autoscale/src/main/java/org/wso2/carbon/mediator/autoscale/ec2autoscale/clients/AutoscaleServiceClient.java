@@ -18,6 +18,8 @@
 */
 package org.wso2.carbon.mediator.autoscale.ec2autoscale.clients;
 
+import java.rmi.RemoteException;
+
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -56,9 +58,9 @@ public class AutoscaleServiceClient {
         return stub.terminateInstance(instanceId);
     }
     
-    public int getPendingInstanceCount() {
-        // TODO WS call
-        return 0;
+    public int getPendingInstanceCount(String domainName) throws Exception{
+        
+        return stub.getPendingInstanceCount(domainName);
     }
 
 }

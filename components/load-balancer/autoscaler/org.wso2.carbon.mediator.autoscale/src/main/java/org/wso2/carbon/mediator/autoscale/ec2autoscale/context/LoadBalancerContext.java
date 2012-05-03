@@ -57,6 +57,11 @@ public class LoadBalancerContext implements Serializable{
     public synchronized int getInstances() {
         return runningInstances + pendingInstances;
     }
+    
+    public synchronized void setPendingInstanceCount(int count) {
+        
+        this.pendingInstances = count;
+    }
 
     public synchronized void incrementPendingInstances(int diff) {
 

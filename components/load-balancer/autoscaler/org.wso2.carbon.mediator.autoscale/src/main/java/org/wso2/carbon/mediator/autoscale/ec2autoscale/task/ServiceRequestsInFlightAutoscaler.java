@@ -176,14 +176,16 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
      */
     private void computeRunningAndPendingInstances() {
         
-        /** Calculate running instances of each service domain **/
         
         // get the list of service domains specified in loadbalancer config
         String[] serviceDomains = loadBalancerConfig.getServiceDomains();
 
-        int runningInstances;
+        int runningInstances, pendingInstanceCount=0;
 
         for (String serviceDomain : serviceDomains) {
+            
+            /** Calculate running instances of each service domain **/
+            
             // for each domain, get the clustering group management agent
             GroupManagementAgent agent = 
                     ConfigHolder.getAgent().getGroupManagementAgent(serviceDomain);
@@ -198,11 +200,26 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
                 runningInstances = 0;
             }
             
+            /** Calculate pending instances of each service domain **/
+            
+            try {
+                pendingInstanceCount = 
+                        autoscalerService.getPendingInstanceCount(serviceDomain);
+                
+            } catch (Exception e) {
+                log.error("Failed to retrieve pending instance count for domain "+
+                        serviceDomain , e);
+                
+            }
+            
             // int diff;
 
             if (appDomainContexts.get(serviceDomain) != null) {
                 
                 appDomainContexts.get(serviceDomain).setRunningInstanceCount(runningInstances);
+                
+                appDomainContexts.get(serviceDomain).setPendingInstanceCount(pendingInstanceCount);
+                
 //                if ((diff =
 //                    appDomainContexts.get(serviceDomain).setRunningInstanceCount(runningInstances)) > 0) {
 //                    // diff number of instances has been created after last execution, thus
@@ -244,6 +261,18 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
         log.info("************ AliveMemberCount: "+ConfigHolder.getAgent().getAliveMemberCount());
 
         lbContext.setRunningInstanceCount(runningInstances);
+        
+        String lbDomain = ConfigHolder.getAgent().getParameter("domain").getValue().toString();
+        
+        pendingInstanceCount = 0;
+        
+        try {
+            pendingInstanceCount = autoscalerService.getPendingInstanceCount(lbDomain);
+        } catch (Exception e) {
+            log.error("Failed to set pending instance count for domain "+lbDomain, e);
+        }
+        
+        lbContext.setPendingInstanceCount(pendingInstanceCount);
         
 //        int diff;
 //

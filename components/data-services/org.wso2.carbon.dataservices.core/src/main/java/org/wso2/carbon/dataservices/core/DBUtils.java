@@ -50,7 +50,9 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.user.core.service.RealmService;
+import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.carbon.utils.xml.XMLPrettyPrinter;
 import org.wso2.securevault.SecretResolver;
 
@@ -268,10 +270,10 @@ public class DBUtils {
             return new String[0];
         }
         /* first return the tenant id from the tenant domain */
-        SuperTenantCarbonContext carbonContext = SuperTenantCarbonContext
-                .getCurrentContext(httpSession);
+        CarbonContextHolder carbonContext = CarbonContextHolder.getCurrentCarbonContextHolder(msgContext);
         String tenantDomain = carbonContext.getTenantDomain();
         int tenantId = carbonContext.getTenantId();
+        userName = MultitenantUtils.getTenantAwareUsername(userName);
         try {
             if (tenantId < 0) {
                 tenantId = realmService.getTenantManager().getTenantId(tenantDomain);

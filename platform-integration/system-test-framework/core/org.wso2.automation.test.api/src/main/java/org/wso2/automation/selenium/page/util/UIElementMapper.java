@@ -28,11 +28,10 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- * Class to hold all ui element mapping. Each ui element or locator used inside test classes will have a matching
- * constant
+ * Read mapper.properties file and load it's uiElements into Properties object.
  */
 public class UIElementMapper {
-    public static final Properties prop = new Properties();
+    public static final Properties uiProperties = new Properties();
     private static final Log log = LogFactory.getLog(UIElementMapper.class);
     private static UIElementMapper instance;
 
@@ -41,23 +40,26 @@ public class UIElementMapper {
 
     public static synchronized UIElementMapper getInstance() throws IOException {
         if (instance == null) {
-            instance = new UIElementMapper();
             setStream();
+            instance = new UIElementMapper();
         }
         return instance;
     }
 
     public static Properties setStream() throws IOException {
-        InputStream inputStream = new FileInputStream
-                (getSystemResourceLocation() + File.separator + "mapper.properties");
-        prop.load(inputStream);
-        inputStream.close();
-        return prop;
+        String pathToMapperFile = getSystemResourceLocation() + File.separator + "mapper.properties";
+        InputStream inputStream = new FileInputStream(pathToMapperFile);
+        if (inputStream.available() > 0) {
+            uiProperties.load(inputStream);
+            inputStream.close();
+            return uiProperties;
+        }
+        return null;
     }
 
     public String getElement(String key) {
-        if (prop != null ){
-            return prop.getProperty(key);
+        if (uiProperties != null) {
+            return uiProperties.getProperty(key);
         }
         return null;
     }

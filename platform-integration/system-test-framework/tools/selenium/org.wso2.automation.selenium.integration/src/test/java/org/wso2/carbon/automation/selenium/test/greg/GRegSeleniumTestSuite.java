@@ -21,7 +21,7 @@ public class GRegSeleniumTestSuite extends MasterTestSuite {
                                                       GRegCollectionSeleniumTest.class));
             suiteVariablesList.add(new SuiteVariables("GReg_Resource_Level_Test",
                                                       GRegResourceSeleniumTest.class));
-            suiteVariablesList.add(new SuiteVariables("GReg_Login", GregLoginSeleniumTest.class));
+            suiteVariablesList.add(new SuiteVariables("GReg_Login", GRegLoginSeleniumTest.class));
             suiteVariablesList.add(new SuiteVariables("Selenium_Root_Level_Test",
                                                       GRegRootSeleniumTest.class));
             suiteVariablesList.add(new SuiteVariables("GReg_Upload_WSDL_from_URL",

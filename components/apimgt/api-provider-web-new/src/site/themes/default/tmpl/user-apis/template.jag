@@ -1,17 +1,8 @@
 <% jagg.template = function(data, params, jagg) {
 
-        var userId = request.getParameter("uname");
-        var subs = require("/core/subscriptions/subscriptions.js");
-        var subAPIs = subs.getSubscribedAPIs(userId);
-        return {
-        "apis":subAPIs.apis
-        };
 %>
 <div id="user"><h2><%=request.getParameter("uname")%></h2>
-<form class="well form-search">
-    <input type="text" class="input-medium search-query" placeholder="API Name">
-    <button type="submit" class="btn btn-primary">Search</button>
-</form>
+ <%jagg.includeTemplate("search", null); %>
 <div class="row">
 
     <div class="span7">

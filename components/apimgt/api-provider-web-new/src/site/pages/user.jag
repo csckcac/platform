@@ -2,6 +2,11 @@
 include("/site/themes/jagg.jag");
 var site = require("/site/conf/site.json");
 
+var userId = request.getParameter("uname");
+var subs = require("/core/subscriptions/subscriptions.js");
+var subAPIs = subs.getSubscribedAPIs(userId);
+var apis= subAPIs.apis;
+
 var params = {
     "name":"pages/base",
     "css":{},
@@ -13,7 +18,7 @@ var params = {
     },
     "params":
         {
-            "title":"API Provider -Add API",
+            "title":"API Provider -User",
             "body":[
                 {
                     "name":"layouts/extended",
@@ -22,7 +27,10 @@ var params = {
                         "left" : null,
                         "rTop" : null,
                         "rBottom" : {
-                            "name" : "item-add"
+                            "name" : "user-apis",
+                            "params" : {
+                                "apis" : apis
+                            }
 
                         }
                     }

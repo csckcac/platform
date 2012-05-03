@@ -1,0 +1,36 @@
+<%
+include("/site/themes/jagg.jag");
+var site = require("/site/conf/site.json");
+
+var params = {
+    "name":"pages/base",
+    "css":{},
+    "js":{},
+    "code":{},
+    "updates" : {
+        "css" : {},
+        "js" : {}
+    },
+    "params":
+        {
+            "title":"API Provider -Users Keys",
+            "body":[
+                {
+                    "name":"layouts/extended",
+                    "params": {
+                        "top" : null,
+                        "left" : null,
+                        "rTop" : null,
+                        "rBottom" : {
+                            "name" : "users-keys"
+
+                        }
+                    }
+                }
+            ]
+        }
+};
+
+jagg.render(params);
+
+%>

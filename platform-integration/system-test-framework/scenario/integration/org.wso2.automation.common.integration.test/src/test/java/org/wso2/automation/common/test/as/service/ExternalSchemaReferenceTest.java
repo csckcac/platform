@@ -31,6 +31,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceResourceAdmin;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.registry.api.RegistryException;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
 import org.wso2.platform.test.core.ProductConstant;
@@ -60,7 +61,8 @@ public class ExternalSchemaReferenceTest {
 
     @BeforeTest(alwaysRun = true)
     public void initializeProperties()
-            throws org.wso2.carbon.registry.core.exceptions.RegistryException, AxisFault {
+            throws org.wso2.carbon.registry.core.exceptions.RegistryException, RemoteException,
+                   LoginAuthenticationExceptionException {
         log.info("Running service read wsdl from G-Reg repo test...");
         int userId = 1;
         String serviceName = "calculatorImportSchema";

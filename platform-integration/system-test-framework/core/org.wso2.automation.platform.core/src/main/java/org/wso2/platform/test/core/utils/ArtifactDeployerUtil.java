@@ -43,6 +43,7 @@ import org.wso2.carbon.admin.service.AdminServiceSynapseConfigAdmin;
 import org.wso2.carbon.admin.service.AdminServiceTaskAdmin;
 import org.wso2.carbon.admin.service.AdminServiceWebAppAdmin;
 import org.wso2.carbon.admin.service.JaxwsWebappAdminClient;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
 import org.wso2.carbon.endpoint.stub.types.EndpointAdminEndpointAdminException;
 import org.wso2.carbon.localentry.stub.types.LocalEntryAdminException;
@@ -114,7 +115,8 @@ public class ArtifactDeployerUtil {
         adminServiceCarbonAppUploader.uploadCarbonAppArtifact(sessionCookie, artifact.getArtifactName(), dh);
     }
 
-    protected String login(String userName, String password, String hostName) {
+    protected String login(String userName, String password, String hostName)
+            throws LoginAuthenticationExceptionException, RemoteException {
         AdminServiceAuthentication loginClient = new AdminServiceAuthentication(hostName);
         return loginClient.login(userName, password, hostName);
     }
@@ -700,7 +702,8 @@ public class ArtifactDeployerUtil {
         }
     }
 
-    public EnvironmentVariables getProductEnvironment(String productName, int userId) {
+    public EnvironmentVariables getProductEnvironment(String productName, int userId)
+            throws LoginAuthenticationExceptionException, RemoteException {
         if (ProductConstant.APP_SERVER_NAME.equals(productName)) {
             EnvironmentBuilder builder = new EnvironmentBuilder().as(userId);
             return builder.build().getAs();
@@ -741,7 +744,8 @@ public class ArtifactDeployerUtil {
         return null;
     }
 
-    public EnvironmentVariables getClusterEnvironment(String productName, int userId) {
+    public EnvironmentVariables getClusterEnvironment(String productName, int userId)
+            throws LoginAuthenticationExceptionException, RemoteException {
         ClusterReader reader = new ClusterReader();
         String pid = reader.getActiveClusterNode(productName);
         EnvironmentBuilder builder = new EnvironmentBuilder().clusterNode(pid, userId);

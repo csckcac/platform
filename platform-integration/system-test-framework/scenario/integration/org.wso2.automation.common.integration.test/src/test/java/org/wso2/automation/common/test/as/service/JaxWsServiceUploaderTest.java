@@ -26,12 +26,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClientUtils;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
 
 import javax.xml.namespace.QName;
+
+import java.rmi.RemoteException;
 
 import static org.testng.Assert.assertTrue;
 
@@ -46,7 +49,8 @@ public class JaxWsServiceUploaderTest {
 
 
     @BeforeTest(alwaysRun = true)
-    public void initializeProperties() {
+    public void initializeProperties()
+            throws LoginAuthenticationExceptionException, RemoteException {
         log.info("Running JaxWS service upload test...");
         int userId = 1;
         builder = new EnvironmentBuilder().as(userId);

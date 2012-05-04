@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.admin.service.*;
 import org.wso2.carbon.application.mgt.stub.ApplicationAdminExceptionException;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
 import org.wso2.carbon.sequences.stub.types.SequenceEditorException;
@@ -157,7 +158,8 @@ public class ArtifactCleanerUtil {
         packageManager.undeployBPEL(fileName);
     }
 
-    protected String login(String userName, String password, String hostName) {
+    protected String login(String userName, String password, String hostName)
+            throws LoginAuthenticationExceptionException, RemoteException {
         AdminServiceAuthentication loginClient = new AdminServiceAuthentication(hostName);
         return loginClient.login(userName, password, hostName);
     }

@@ -7,12 +7,15 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceTracerAdmin;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.tracer.stub.types.carbon.MessagePayload;
 import org.wso2.carbon.tracer.stub.types.carbon.TracerServiceInfo;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClientUtils;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
 import org.wso2.platform.test.core.utils.httpclient.HttpClientUtil;
+
+import java.rmi.RemoteException;
 
 import static org.testng.Assert.assertTrue;
 
@@ -30,7 +33,7 @@ public class XFormURLEncodedBuilderWithWSDLTest {
     private static TracerServiceInfo tracerServiceInfo;
 
     @BeforeTest
-    public void testInitialize() {
+    public void testInitialize() throws LoginAuthenticationExceptionException, RemoteException {
         EnvironmentBuilder builder;
         builder = new EnvironmentBuilder().as(1).esb(1);
         ManageEnvironment environment = builder.build();

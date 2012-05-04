@@ -26,6 +26,7 @@ import org.wso2.carbon.account.mgt.stub.services.GetFullnameExceptionException;
 import org.wso2.carbon.account.mgt.stub.services.UpdateFullnameExceptionException;
 import org.wso2.carbon.admin.service.AdminServiceAuthentication;
 import org.wso2.carbon.admin.service.AdminServiceStratosAccountMgt;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
 
@@ -43,7 +44,8 @@ public class FullNameVerificationTest {
 
 
     @BeforeClass(groups = "stratos.manager", description = "initializing properties")
-    public void initializeProperties() throws RemoteException, GetFullnameExceptionException {
+    public void initializeProperties() throws RemoteException, GetFullnameExceptionException,
+                                              LoginAuthenticationExceptionException {
         int tenantId = 13;
         builder = new EnvironmentBuilder().manager(tenantId);
         ManageEnvironment manageEnvironment = builder.build();
@@ -93,7 +95,8 @@ public class FullNameVerificationTest {
         log.info("Test full name update test passed....");
     }
 
-    protected static String login(String userName, String password, String hostName) {
+    protected static String login(String userName, String password, String hostName)
+            throws LoginAuthenticationExceptionException, RemoteException {
         AdminServiceAuthentication loginClient = new AdminServiceAuthentication(hostName);
         return loginClient.login(userName, password, hostName);
     }

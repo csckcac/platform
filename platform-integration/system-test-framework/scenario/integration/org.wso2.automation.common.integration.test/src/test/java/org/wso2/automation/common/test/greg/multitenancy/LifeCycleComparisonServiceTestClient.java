@@ -3,6 +3,7 @@ package org.wso2.automation.common.test.greg.multitenancy;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
 import org.wso2.carbon.governance.api.wsdls.WsdlManager;
 import org.wso2.carbon.governance.api.wsdls.dataobjects.Wsdl;
@@ -14,6 +15,8 @@ import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.gregutils.GregUserCreator;
 import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
 import org.testng.annotations.*;
+
+import java.rmi.RemoteException;
 
 import static org.testng.Assert.*;
 
@@ -29,7 +32,8 @@ public class LifeCycleComparisonServiceTestClient {
 
 
     @BeforeClass(alwaysRun = true)
-    public void init() throws RegistryException, AxisFault, UserAdminException {
+    public void init() throws RegistryException, RemoteException, UserAdminException,
+                              LoginAuthenticationExceptionException {
         int tenantId = 3;
         int diff_Domainuser = 2;
         int tenantID_testUser = 3;

@@ -11,6 +11,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceMassageStoreAdmin;
 import org.wso2.carbon.admin.service.AdminServiceStatistic;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.message.store.stub.MessageInfo;
 import org.wso2.carbon.statistics.stub.types.carbon.ServiceStatistics;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClientUtils;
@@ -41,7 +42,8 @@ public class MessageProcessorTest {
     private static final int REQUEST_COUNT = 30;
 
     @BeforeTest(alwaysRun = true)
-    public void testInitialize() throws InterruptedException, RemoteException {
+    public void testInitialize()
+            throws InterruptedException, RemoteException, LoginAuthenticationExceptionException {
         EnvironmentBuilder builder;
         builder = new EnvironmentBuilder().as(1).esb(1);
         ManageEnvironment environment = builder.build();

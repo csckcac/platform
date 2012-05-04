@@ -21,12 +21,14 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceAuthentication;
 import org.wso2.carbon.admin.service.AdminServiceTenantMgtServiceAdmin;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.tenant.mgt.stub.beans.xsd.TenantInfoBean;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
 
+import java.rmi.RemoteException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -43,7 +45,8 @@ public class UpdateTenantInfoTest {
     private ManageEnvironment manageEnvironment;
 
     @BeforeClass
-    public void initializeProperties() {
+    public void initializeProperties()
+            throws LoginAuthenticationExceptionException, RemoteException {
         int tenantId = 13;
         builder = new EnvironmentBuilder().manager(tenantId);
         manageEnvironment = builder.build();
@@ -57,7 +60,8 @@ public class UpdateTenantInfoTest {
     }
 
     @Test(groups = "wso2.stratos", description = "update tenant info test", priority = 1)
-    public void testTenantInfoUpdate() {
+    public void testTenantInfoUpdate()
+            throws LoginAuthenticationExceptionException, RemoteException {
         log.info("Running update tenant info test");
         //get user credentials
         tenantInfoBeanGet = tenantStub.getTenant(sessionCookie, userInfo.getDomain());
@@ -128,7 +132,8 @@ public class UpdateTenantInfoTest {
     }
 
     @Test(groups = "wso2.stratos", description = "Reset tenant info", priority = 2)
-    public void testResetTenantInfo() {
+    public void testResetTenantInfo()
+            throws LoginAuthenticationExceptionException, RemoteException {
         //Reset tenant info to older values
         TenantInfoBean setTenantInfoBean = new TenantInfoBean();
         setTenantInfoBean.setActive(true);
@@ -151,7 +156,8 @@ public class UpdateTenantInfoTest {
         log.info("Tenant login successful with default credentials");
     }
 
-    protected static String login(String userName, String password, String hostName) {
+    protected static String login(String userName, String password, String hostName)
+            throws LoginAuthenticationExceptionException, RemoteException {
         AdminServiceAuthentication loginClient = new AdminServiceAuthentication(hostName);
         return loginClient.login(userName, password, hostName);
     }

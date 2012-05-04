@@ -19,14 +19,17 @@ package org.wso2.automation.cloud.regression;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeClass;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
+
+import java.rmi.RemoteException;
 
 public class StratosISServiceTest {
     private static final Log log = LogFactory.getLog(StratosISServiceTest.class);
 
     @BeforeClass
-    public void init() {
+    public void init() throws LoginAuthenticationExceptionException, RemoteException {
         EnvironmentBuilder builder = new EnvironmentBuilder().is(4);
         EnvironmentVariables isServer = builder.build().getIs();
     }

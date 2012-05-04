@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.ArtifactDeployerUtil;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
@@ -29,6 +30,7 @@ import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
 import org.wso2.platform.test.core.utils.webapputils.WebAppUtil;
 
 import java.io.File;
+import java.rmi.RemoteException;
 
 
 /*
@@ -44,7 +46,8 @@ public class FaultyWebAppTest {
     private String webAppURL;
 
     @BeforeTest(alwaysRun = true)
-    public void initializeProperties() throws AxisFault {
+    public void initializeProperties() throws RemoteException,
+                                              LoginAuthenticationExceptionException {
         log.info("Running Faulty webapp deployment test...");
         int userId = 1;
         String webappContext = "/SimpleServlet-faulty/simple-servlet";

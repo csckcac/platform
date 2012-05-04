@@ -21,6 +21,7 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.registry.app.RemoteRegistry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -31,6 +32,7 @@ import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.rmi.RemoteException;
 
 public class StratosGREGServiceTest {
     private static final Log log = LogFactory.getLog(StratosGREGServiceTest.class);
@@ -39,7 +41,7 @@ public class StratosGREGServiceTest {
     private UserInfo userInfo;
 
     @BeforeClass
-    public void init() {
+    public void init() throws LoginAuthenticationExceptionException, RemoteException {
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(4);
         EnvironmentVariables gregServer = builder.build().getGreg();
         userInfo = UserListCsvReader.getUserInfo(4);

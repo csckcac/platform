@@ -52,7 +52,7 @@ public class UserCountTest {
     private ManageEnvironment environment;
 
     @BeforeClass
-    public void init() throws AxisFault {
+    public void init() throws RemoteException, LoginAuthenticationExceptionException {
         int tenantId = 13;
         EnvironmentBuilder builder = new EnvironmentBuilder().is(tenantId).manager(tenantId);
         environment = builder.build();
@@ -108,7 +108,8 @@ public class UserCountTest {
     }
 
 
-    private void addRoleWithUser() throws UserAdminException {
+    private void addRoleWithUser()
+            throws UserAdminException, LoginAuthenticationExceptionException, RemoteException {
         String permission[] = {"/permission/admin/login"};
         String userList[] = {"admin123"};
         int tenantUserCount = 20;
@@ -147,7 +148,8 @@ public class UserCountTest {
         }
     }
 
-    protected static String login(String userName, String password, String hostName) {
+    protected static String login(String userName, String password, String hostName)
+            throws LoginAuthenticationExceptionException, RemoteException {
         AdminServiceAuthentication loginClient = new AdminServiceAuthentication(hostName);
         return loginClient.login(userName, password, hostName);
     }

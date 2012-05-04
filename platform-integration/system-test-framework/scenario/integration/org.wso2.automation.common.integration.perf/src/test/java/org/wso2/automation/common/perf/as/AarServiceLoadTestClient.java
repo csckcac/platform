@@ -29,11 +29,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClientUtils;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
 import org.wso2.platform.test.core.utils.webapputils.TestExceptionHandler;
+
+import java.rmi.RemoteException;
 
 import static org.testng.Assert.*;
 
@@ -49,7 +52,8 @@ public class AarServiceLoadTestClient {
 
 
     @BeforeTest(alwaysRun = true)
-    public void initializeProperties() {
+    public void initializeProperties()
+            throws LoginAuthenticationExceptionException, RemoteException {
         log.info("Running AAR service Load test...");
         int userId = 1;
         String serviceName = "Axis2Service";

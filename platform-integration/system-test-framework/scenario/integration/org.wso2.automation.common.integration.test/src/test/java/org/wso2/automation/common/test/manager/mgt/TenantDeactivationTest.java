@@ -66,7 +66,8 @@ public class TenantDeactivationTest {
     }
 
     @Test(groups = "wso2.stratos", description = "Reactivate tenants by super user", priority = 2)
-    public void testReactivateTenant() {
+    public void testReactivateTenant()
+            throws LoginAuthenticationExceptionException, RemoteException {
         int superTenantId = 0;
         EnvironmentBuilder builder = new EnvironmentBuilder().manager(superTenantId);
         ManageEnvironment environment = builder.build();
@@ -77,7 +78,8 @@ public class TenantDeactivationTest {
         log.info("Tenant activated after test execution");
     }
 
-    private static String login(String userName, String password, String hostName) {
+    private static String login(String userName, String password, String hostName)
+            throws LoginAuthenticationExceptionException, RemoteException {
         AdminServiceAuthentication loginClient = new AdminServiceAuthentication(hostName);
         return loginClient.login(userName, password, hostName);
     }

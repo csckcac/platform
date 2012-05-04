@@ -28,10 +28,13 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
+
+import java.rmi.RemoteException;
 
 /*
 Test class for Stratos BPS service test automation
@@ -43,7 +46,7 @@ public class StratosBPSServiceTest {
 
 
     @BeforeClass
-    public void init() {
+    public void init() throws LoginAuthenticationExceptionException, RemoteException {
         EnvironmentBuilder builder = new EnvironmentBuilder().bps(4);
         EnvironmentVariables bpsServer = builder.build().getBps();
         UserInfo userInfo = UserListCsvReader.getUserInfo(4);

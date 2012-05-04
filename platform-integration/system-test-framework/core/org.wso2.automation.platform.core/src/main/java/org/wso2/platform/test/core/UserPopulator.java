@@ -23,6 +23,7 @@ import org.wso2.carbon.admin.service.AdminServiceAuthentication;
 import org.wso2.carbon.admin.service.AdminServiceResourceAdmin;
 import org.wso2.carbon.admin.service.AdminServiceTenantMgtServiceAdmin;
 import org.wso2.carbon.admin.service.AdminServiceUserMgtService;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.user.mgt.common.UserAdminException;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
@@ -32,6 +33,7 @@ import org.wso2.platform.test.core.utils.frameworkutils.FrameworkFactory;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkProperties;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkSettings;
 
+import java.rmi.RemoteException;
 import java.util.List;
 
 public class UserPopulator {
@@ -46,7 +48,8 @@ public class UserPopulator {
         framework = env.getFrameworkSettings();
     }
 
-    public void populateUsers() throws UserAdminException, AxisFault {
+    public void populateUsers()
+            throws UserAdminException, RemoteException, LoginAuthenticationExceptionException {
         FrameworkProperties manProperties =
                 FrameworkFactory.getFrameworkProperties(ProductConstant.MANAGER_SERVER_NAME);
 
@@ -97,7 +100,8 @@ public class UserPopulator {
 
     private void createProductUsers(UserInfo adminDetails, String[] permissions, String[] userList,
                                     String backendUrl,
-                                    String hostName) throws UserAdminException, AxisFault {
+                                    String hostName)
+            throws UserAdminException, RemoteException, LoginAuthenticationExceptionException {
         String sessionCookieUser = login(adminDetails.getUserName(), adminDetails.getPassword(), backendUrl, hostName);
         AdminServiceResourceAdmin resourceAdmin = new AdminServiceResourceAdmin(backendUrl);
         String[] roleName = {"testRole"};
@@ -142,7 +146,8 @@ public class UserPopulator {
     }
 
     private void createStratosUsers(AdminServiceTenantMgtServiceAdmin tenantStub,
-                                    UserInfo superTenantDetails, int userCount) {
+                                    UserInfo superTenantDetails, int userCount)
+            throws LoginAuthenticationExceptionException, RemoteException {
         FrameworkProperties manProperties =
                 FrameworkFactory.getFrameworkProperties(ProductConstant.MANAGER_SERVER_NAME);
         String sessionCookie =
@@ -162,7 +167,8 @@ public class UserPopulator {
     }
 
     protected static String login(String userName, String password, String backendUrl,
-                                  String hostName) {
+                                  String hostName)
+            throws RemoteException, LoginAuthenticationExceptionException {
         AdminServiceAuthentication loginClient = new AdminServiceAuthentication(backendUrl);
         return loginClient.login(userName, password, hostName);
     }

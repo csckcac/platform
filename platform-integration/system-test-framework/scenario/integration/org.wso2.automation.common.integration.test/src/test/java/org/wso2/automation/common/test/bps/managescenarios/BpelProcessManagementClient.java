@@ -25,6 +25,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.*;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.bpel.stub.mgt.ProcessManagementException;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.RequestSender;
@@ -47,7 +48,7 @@ public class BpelProcessManagementClient {
     RequestSender requestSender;
 
     @BeforeTest(alwaysRun = true)
-    public void setEnvironment() {
+    public void setEnvironment() throws LoginAuthenticationExceptionException, RemoteException {
         EnvironmentBuilder builder = new EnvironmentBuilder().bps(3);
         ManageEnvironment environment = builder.build();
         backEndUrl = environment.getBps().getBackEndUrl();

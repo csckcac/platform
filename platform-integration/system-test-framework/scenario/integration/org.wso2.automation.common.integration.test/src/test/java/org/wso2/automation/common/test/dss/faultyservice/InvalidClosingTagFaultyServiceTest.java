@@ -24,6 +24,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.wso2.automation.common.test.dss.utils.DataServiceTest;
 import org.wso2.carbon.admin.service.AdminServiceCarbonServerAdmin;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.dataservices.ui.fileupload.stub.ExceptionException;
 import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSDAOExceptionException;
 import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
@@ -94,7 +95,7 @@ public class InvalidClosingTagFaultyServiceTest extends DataServiceTest {
     @Test(priority = 2, dependsOnMethods = {"isServiceFaulty"})
     public void ServerRestarting()
             throws org.wso2.carbon.server.admin.stub.Exception, RemoteException,
-                   InterruptedException {
+                   InterruptedException, LoginAuthenticationExceptionException {
         Thread.sleep(10000);
         log.info("Restarting Server.....");
         restartServer();

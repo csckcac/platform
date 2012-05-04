@@ -25,6 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.wso2.carbon.admin.service.AdminServiceAuthentication;
 import org.wso2.carbon.admin.service.AdminServiceCarbonServerAdmin;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.base.ServerConfigurationException;
 import org.wso2.platform.test.core.utils.ClientConnectionUtil;
 import org.wso2.platform.test.core.utils.UserInfo;
@@ -44,6 +45,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -285,7 +287,8 @@ public class ServerGroupManager {
         throw new RuntimeException("Port " + port + " is still open");
     }
 
-    protected static String login(String userName, String password, String hostName) {
+    protected static String login(String userName, String password, String hostName)
+            throws LoginAuthenticationExceptionException, RemoteException {
         AdminServiceAuthentication loginClient = new AdminServiceAuthentication(hostName);
         return loginClient.login(userName, password, hostName);
     }

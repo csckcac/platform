@@ -46,7 +46,8 @@ public class AuthorizationCachingTest {
     private ManageEnvironment environment;
 
     @BeforeClass
-    public void initializeProperties() {
+    public void initializeProperties()
+            throws LoginAuthenticationExceptionException, RemoteException {
         builder = new EnvironmentBuilder().is(10);
         environment = builder.build();
         userInfo = UserListCsvReader.getUserInfo(10);
@@ -58,7 +59,8 @@ public class AuthorizationCachingTest {
     }
 
     @Test(groups = "wso2.is", description = "authorization cashing test", priority = 1)
-    public void testAuthorizationCaching() throws UserAdminException {
+    public void testAuthorizationCaching()
+            throws UserAdminException, LoginAuthenticationExceptionException, RemoteException {
         log.info("Running Authorization cashing test");
         deleteUsers(); //delete the user if exists
         //Create user and add him to admin role
@@ -107,7 +109,8 @@ public class AuthorizationCachingTest {
         }
     }
 
-    protected static String login(String userName, String password, String hostName) {
+    protected static String login(String userName, String password, String hostName)
+            throws LoginAuthenticationExceptionException, RemoteException {
         AdminServiceAuthentication loginClient = new AdminServiceAuthentication(hostName);
         return loginClient.login(userName, password, hostName);
     }

@@ -26,6 +26,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceAuthentication;
 import org.wso2.carbon.admin.service.RSSAdminConsoleService;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.authenticator.stub.LogoutAuthenticationExceptionException;
 import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSDAOExceptionException;
 import org.wso2.carbon.rssmanager.ui.stub.types.DatabaseInstanceEntry;
 import org.wso2.carbon.rssmanager.ui.stub.types.DatabaseUserEntry;
@@ -64,7 +66,7 @@ public class RSSManagerTest {
 
 
     @BeforeClass
-    public void init() throws AxisFault {
+    public void init() throws RemoteException, LoginAuthenticationExceptionException {
         EnvironmentBuilder builder = new EnvironmentBuilder().dss(3);
         dssServer = builder.build().getDss();
 
@@ -77,7 +79,8 @@ public class RSSManagerTest {
 
     @Test(priority = 1)
     public void createDatabaseForTenant()
-            throws RSSAdminRSSDAOExceptionException, RemoteException, InterruptedException {
+            throws RSSAdminRSSDAOExceptionException, RemoteException, InterruptedException,
+                   LoginAuthenticationExceptionException, LogoutAuthenticationExceptionException {
         UserInfo user = UserListCsvReader.getUserInfo(2);
         String sc;
 

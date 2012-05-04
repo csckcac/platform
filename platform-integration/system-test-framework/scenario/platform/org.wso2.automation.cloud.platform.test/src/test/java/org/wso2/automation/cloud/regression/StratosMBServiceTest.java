@@ -21,6 +21,7 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
@@ -40,6 +41,7 @@ import javax.jms.TextMessage;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import java.rmi.RemoteException;
 import java.util.PriorityQueue;
 import java.util.Properties;
 
@@ -66,7 +68,7 @@ public class StratosMBServiceTest {
     UserInfo userInfo;
 
     @BeforeClass
-    public void init() {
+    public void init() throws LoginAuthenticationExceptionException, RemoteException {
         EnvironmentBuilder builder = new EnvironmentBuilder().mb(4);
         mbServer = builder.build().getMb();
         userInfo = UserListCsvReader.getUserInfo(4);

@@ -28,6 +28,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceAuthentication;
 import org.wso2.carbon.admin.service.AdminServiceProxyServiceAdmin;
 import org.wso2.carbon.admin.service.AdminServiceService;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.dataservices.ui.fileupload.stub.ExceptionException;
 import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminProxyAdminException;
 import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSDAOExceptionException;
@@ -73,7 +74,8 @@ public class EventingServiceTest extends DataServiceTest {
 
     @Test(priority = 0)
     public void addProxy()
-            throws ProxyServiceAdminProxyAdminException, RemoteException, ServiceAdminException {
+            throws ProxyServiceAdminProxyAdminException, RemoteException, ServiceAdminException,
+                   LoginAuthenticationExceptionException {
         createProxy();
         Assert.assertNotNull(proxyUrl, "proxy url is null");
         log.info("Proxy Service Added");
@@ -242,7 +244,8 @@ public class EventingServiceTest extends DataServiceTest {
     }
 
     private void createProxy()
-            throws ProxyServiceAdminProxyAdminException, RemoteException, ServiceAdminException {
+            throws ProxyServiceAdminProxyAdminException, RemoteException, ServiceAdminException,
+                   LoginAuthenticationExceptionException {
         EnvironmentBuilder builder = new EnvironmentBuilder().esb(3);
         EnvironmentVariables esbServer = builder.build().getEsb();
         String esbBackEndUrl = esbServer.getBackEndUrl();

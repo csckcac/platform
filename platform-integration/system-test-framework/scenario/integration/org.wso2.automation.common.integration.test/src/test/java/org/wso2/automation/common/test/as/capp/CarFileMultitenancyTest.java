@@ -28,10 +28,13 @@ import static org.testng.Assert.*;
 
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClientUtils;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
+
+import java.rmi.RemoteException;
 
 /**
  * Test multi tenancy of carbon applications (CAR) - Deploy a car from one tenant and
@@ -47,7 +50,8 @@ public class CarFileMultitenancyTest {
 
 
     @BeforeTest(alwaysRun = true)
-    public void initializeProperties() {
+    public void initializeProperties()
+            throws LoginAuthenticationExceptionException, RemoteException {
         log.info("Running CarFileMultitenancyTest test...");
         int userId = 13;
         serviceName = "Calculator";
@@ -76,7 +80,8 @@ public class CarFileMultitenancyTest {
     }
 
     @Test(groups = {"wso2.as"}, description = " Check service existence though other tenant login.", priority = 2)
-    public void testServiceMultitenancy() {
+    public void testServiceMultitenancy()
+            throws LoginAuthenticationExceptionException, RemoteException {
         if (stratosStatus) {
             int userIdOtherTenant = 12;
             EnvironmentBuilder builder = new EnvironmentBuilder().as(userIdOtherTenant);

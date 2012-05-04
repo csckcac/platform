@@ -20,6 +20,10 @@ package org.wso2.platform.test.core.utils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.admin.service.AdminServiceAuthentication;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.authenticator.stub.LogoutAuthenticationExceptionException;
+
+import java.rmi.RemoteException;
 
 /**
  * A utility for logging into & logging out of Carbon servers
@@ -42,7 +46,8 @@ public final class LoginLogoutUtil {
      * @param password  - login password
      * @return The session cookie on successful login
      */
-    public String login(String userName, String password, String backendURL) {
+    public String login(String userName, String password, String backendURL)
+            throws LoginAuthenticationExceptionException, RemoteException {
         ClientConnectionUtil.waitForPort(port, hostName);
         AdminServiceAuthentication loginClient = new AdminServiceAuthentication(backendURL);
         return loginClient.login(userName, password, hostName);
@@ -51,7 +56,7 @@ public final class LoginLogoutUtil {
     /**
      * Log out from carbon server
      */
-    public void logout() {
+    public void logout() throws LogoutAuthenticationExceptionException, RemoteException {
         AdminServiceAuthentication logoutClient = new AdminServiceAuthentication(hostName);
         logoutClient.logOut();
     }

@@ -28,6 +28,8 @@ import org.wso2.carbon.admin.service.AdminServiceAuthentication;
 import org.wso2.carbon.admin.service.AdminServiceBpelPackageManager;
 import org.wso2.carbon.admin.service.AdminServiceBpelProcessManager;
 import org.wso2.carbon.admin.service.AdminServiceBpelUploader;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.authenticator.stub.LogoutAuthenticationExceptionException;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
 import org.wso2.carbon.bpel.stub.mgt.ProcessManagementException;
 import org.wso2.platform.test.core.ProductConstant;
@@ -46,7 +48,7 @@ public class BpelRetireDeploymentClient {
     AdminServiceBpelProcessManager bpelProcrss;
     AdminServiceAuthentication adminServiceAuthentication;
     @BeforeTest(alwaysRun = true)
-    public void setEnvironment() {
+    public void setEnvironment() throws LoginAuthenticationExceptionException, RemoteException {
         EnvironmentBuilder builder = new EnvironmentBuilder().bps(3);
         ManageEnvironment environment = builder.build();
         backEndUrl = environment.getBps().getBackEndUrl();
@@ -71,7 +73,8 @@ public class BpelRetireDeploymentClient {
     }
 
     @AfterClass(alwaysRun = true)
-    public void cleanup() throws PackageManagementException, InterruptedException, RemoteException {
+    public void cleanup() throws PackageManagementException, InterruptedException, RemoteException,
+                                 LogoutAuthenticationExceptionException {
         bpelManager.undeployBPEL("HelloWorld-retire");
         adminServiceAuthentication.logOut();
     }

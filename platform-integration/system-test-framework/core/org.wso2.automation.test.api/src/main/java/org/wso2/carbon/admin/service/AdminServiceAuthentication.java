@@ -23,7 +23,6 @@ import org.apache.axis2.context.ServiceContext;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.testng.Assert;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.authenticator.stub.LogoutAuthenticationExceptionException;
@@ -37,41 +36,38 @@ public class AdminServiceAuthentication {
     private AuthenticationAdminStub authenticationAdminStub;
     private String endPoint;
 
-    public AdminServiceAuthentication(String backendUrl) {
+    public AdminServiceAuthentication(String backendUrl) throws AxisFault {
 
         String serviceName = "AuthenticationAdmin";
         this.endPoint = backendUrl + serviceName;
-        log.debug("EndPoint" + endPoint);
-        try {
-            authenticationAdminStub = new AuthenticationAdminStub(endPoint);
-        } catch (AxisFault axisFault) {
-            log.error("Initialization error of AuthenticationAdminStub : " + axisFault.getMessage());
-            Assert.fail("Initialization error of AuthenticationAdminStub  : " + axisFault.getMessage());
+        if (log.isDebugEnabled()) {
+            log.debug("EndPoint" + endPoint);
         }
+        authenticationAdminStub = new AuthenticationAdminStub(endPoint);
+
     }
 
-    public String login(String userName, String password, String host) {
-        Boolean loginStatus = false;
+    public String login(String userName, String password, String host)
+            throws LoginAuthenticationExceptionException, RemoteException {
+        Boolean loginStatus;
         ServiceContext serviceContext;
         String sessionCookie;
-        try {
-            loginStatus = authenticationAdminStub.login(userName, password, host);
-        } catch (RemoteException e) {
-            log.error("Login to " + endPoint + " fail :" + e.getMessage());
-            Assert.fail("Login to " + endPoint + " fail :" + e.getMessage());
-        } catch (LoginAuthenticationExceptionException e) {
-            log.error("Login to " + endPoint + " fail :" + e.getMessage());
-            Assert.fail("Login to " + endPoint + " fail :" + e.getMessage());
+
+        loginStatus = authenticationAdminStub.login(userName, password, host);
+
+        if (loginStatus == false) {
+            throw new LoginAuthenticationExceptionException("Login Unsuccessful. Return false as a login status by Server");
         }
-        Assert.assertTrue(loginStatus, "Login unsuccessful");
         log.info("Login Successful");
         serviceContext = authenticationAdminStub._getServiceClient().getLastOperationContext().getServiceContext();
         sessionCookie = (String) serviceContext.getProperty(HTTPConstants.COOKIE_STRING);
-        log.debug("SessionCookie :" + sessionCookie);
+        if (log.isDebugEnabled()) {
+            log.debug("SessionCookie :" + sessionCookie);
+        }
         return sessionCookie;
     }
 
-    public String login1(String userName, String password, String backEndURL) {
+    /*public String login1(String userName, String password, String backEndURL) {
         Boolean loginStatus = false;
         ServiceContext serviceContext;
         String sessionCookie;
@@ -90,7 +86,7 @@ public class AdminServiceAuthentication {
         sessionCookie = (String) serviceContext.getProperty(HTTPConstants.COOKIE_STRING);
         log.debug("SessionCookie :" + sessionCookie);
         return sessionCookie;
-    }
+    }*/
 
 
     public Boolean unsuccessfulLogin(String userName, String password, String backEndURL)
@@ -98,16 +94,10 @@ public class AdminServiceAuthentication {
         return authenticationAdminStub.login(userName, password, backEndURL);
     }
 
-    public void logOut() {
-        try {
-            authenticationAdminStub.logout();
-            log.info("log out");
-        } catch (RemoteException e) {
-            log.error("Logout fail " + e.getMessage());
-            Assert.fail("Logout fail " + e.getMessage());
-        } catch (LogoutAuthenticationExceptionException e) {
-            log.error("Logout fail " + e.getMessage());
-            Assert.fail("Logout fail " + e.getMessage());
-        }
+    public void logOut() throws LogoutAuthenticationExceptionException, RemoteException {
+
+        authenticationAdminStub.logout();
+        log.info("log out");
+
     }
 }

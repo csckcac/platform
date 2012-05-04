@@ -21,6 +21,7 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
@@ -30,6 +31,7 @@ import javax.jms.*;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import java.rmi.RemoteException;
 import java.util.Properties;
 
 public class StratosCEPServiceTest {
@@ -50,7 +52,7 @@ public class StratosCEPServiceTest {
 
 
     @BeforeClass
-    public void init() {
+    public void init() throws LoginAuthenticationExceptionException, RemoteException {
         EnvironmentBuilder builder = new EnvironmentBuilder().cep(4);
         EnvironmentVariables cepServer = builder.build().getCep();
         UserInfo userInfo = UserListCsvReader.getUserInfo(4);

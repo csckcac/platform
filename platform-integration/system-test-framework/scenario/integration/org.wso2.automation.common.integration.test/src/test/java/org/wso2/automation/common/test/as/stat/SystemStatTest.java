@@ -30,6 +30,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceAuthentication;
 import org.wso2.carbon.admin.service.AdminServiceStatistic;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.statistics.stub.types.carbon.SystemStatistics;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClientUtils;
@@ -55,7 +56,8 @@ public class SystemStatTest {
 
 
     @BeforeTest(alwaysRun = true)
-    public void initializeProperties() {
+    public void initializeProperties()
+            throws LoginAuthenticationExceptionException, RemoteException {
         log.info("Running AAR service stat test...");
         int userId = 15;
         String serviceName = "Axis2Service";
@@ -176,7 +178,8 @@ public class SystemStatTest {
         return after - before;
     }
 
-    protected static String login(String userName, String password, String hostName) {
+    protected static String login(String userName, String password, String hostName)
+            throws LoginAuthenticationExceptionException, RemoteException {
         AdminServiceAuthentication loginClient = new AdminServiceAuthentication(hostName);
         return loginClient.login(userName, password, hostName);
     }

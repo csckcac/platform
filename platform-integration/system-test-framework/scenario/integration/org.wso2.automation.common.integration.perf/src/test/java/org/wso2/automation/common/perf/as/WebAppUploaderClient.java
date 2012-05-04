@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
@@ -27,6 +28,7 @@ import org.wso2.platform.test.core.utils.webapputils.TestExceptionHandler;
 import org.wso2.platform.test.core.utils.webapputils.WebAppUtil;
 
 import java.io.*;
+import java.rmi.RemoteException;
 
 /**
  * Deploy same webapps by multiple uses and send HTTP GET request to invoke them.
@@ -44,7 +46,8 @@ public class WebAppUploaderClient {
     ManageEnvironment environment1;
 
     @BeforeTest(alwaysRun = true)
-    public void initializeProperties() {
+    public void initializeProperties()
+            throws LoginAuthenticationExceptionException, RemoteException {
         String resourcePath = ProductConstant.getResourceLocations(ProductConstant.APP_SERVER_NAME);
         EnvironmentBuilder builder1 = new EnvironmentBuilder().as(1);
         environment1 = builder1.build();

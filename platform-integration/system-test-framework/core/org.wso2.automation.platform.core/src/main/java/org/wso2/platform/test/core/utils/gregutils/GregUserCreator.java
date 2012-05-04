@@ -33,17 +33,20 @@ public class GregUserCreator {
     private String sessionCookie;
 
 
-    protected static String login(String userName, String password, String hostName) {
+    protected static String login(String userName, String password, String hostName)
+            throws RemoteException, LoginAuthenticationExceptionException {
         AdminServiceAuthentication loginClient = new AdminServiceAuthentication(hostName);
         return loginClient.login(userName, password, hostName);
     }
 
-    public void deleteUsers(int userId, String userID) {
+    public void deleteUsers(int userId, String userID)
+            throws LoginAuthenticationExceptionException, RemoteException {
         setInfoRolesAndUsers(userId);
         userAdminStub.deleteUser(sessionCookie, userID);
     }
 
-    public void addUser(int userId, String userID, String userPassword, String roleName) throws UserAdminException {
+    public void addUser(int userId, String userID, String userPassword, String roleName)
+            throws UserAdminException, LoginAuthenticationExceptionException, RemoteException {
         setInfoRolesAndUsers(userId);
         try {
             String roles[] = {roleName};
@@ -54,7 +57,8 @@ public class GregUserCreator {
         }
     }
 
-    public void setInfoRolesAndUsers(int userId) {
+    public void setInfoRolesAndUsers(int userId)
+            throws LoginAuthenticationExceptionException, RemoteException {
         FrameworkProperties isProperties = FrameworkFactory.getFrameworkProperties(ProductConstant.IS_SERVER_NAME);
         userAdminStub = new AdminServiceUserMgtService(isProperties.getProductVariables().getBackendUrl());
         userAdminDetails = UserListCsvReader.getUserInfo(userId);

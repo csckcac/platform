@@ -26,6 +26,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.*;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.authenticator.stub.LogoutAuthenticationExceptionException;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
 import org.wso2.carbon.bpel.stub.mgt.ProcessManagementException;
 import org.wso2.carbon.bpel.stub.mgt.types.ProcessStatus;
@@ -56,7 +58,7 @@ public class BpelVersioningClient {
     boolean activeProcessFound;
 
     @BeforeTest(alwaysRun = true)
-    public void setEnvironment() {
+    public void setEnvironment() throws LoginAuthenticationExceptionException, RemoteException {
         EnvironmentBuilder builder = new EnvironmentBuilder().bps(3);
         ManageEnvironment environment = builder.build();
         backEndUrl = environment.getBps().getBackEndUrl();
@@ -148,7 +150,8 @@ public class BpelVersioningClient {
     }
 
     @AfterClass(alwaysRun = true)
-    public void cleanup() throws PackageManagementException, InterruptedException, RemoteException {
+    public void cleanup() throws PackageManagementException, InterruptedException, RemoteException,
+                                 LogoutAuthenticationExceptionException {
         bpelManager.undeployBPEL("HelloWorld2");
         adminServiceAuthentication.logOut();
     }

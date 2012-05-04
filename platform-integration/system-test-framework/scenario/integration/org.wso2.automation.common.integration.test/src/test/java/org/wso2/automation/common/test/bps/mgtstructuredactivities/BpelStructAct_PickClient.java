@@ -24,6 +24,8 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import org.wso2.carbon.admin.service.*;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.authenticator.stub.LogoutAuthenticationExceptionException;
 import org.wso2.carbon.bpel.stub.mgt.InstanceManagementException;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
 import org.wso2.carbon.bpel.stub.mgt.ProcessManagementException;
@@ -51,7 +53,7 @@ public class BpelStructAct_PickClient {
     RequestSender requestSender;
 
     @BeforeTest(alwaysRun = true)
-    public void setEnvironment() {
+    public void setEnvironment() throws LoginAuthenticationExceptionException, RemoteException {
         EnvironmentBuilder builder = new EnvironmentBuilder().bps(3);
         ManageEnvironment environment = builder.build();
         backEndUrl = environment.getBps().getBackEndUrl();
@@ -97,7 +99,8 @@ public class BpelStructAct_PickClient {
     }
 
     @AfterClass(alwaysRun = true)
-    public void cleanup() throws PackageManagementException, InterruptedException, RemoteException {
+    public void cleanup() throws PackageManagementException, InterruptedException, RemoteException,
+                                 LogoutAuthenticationExceptionException {
       //  bpelManager.undeployBPEL("TestPickOneWay");
         adminServiceAuthentication.logOut();
     }

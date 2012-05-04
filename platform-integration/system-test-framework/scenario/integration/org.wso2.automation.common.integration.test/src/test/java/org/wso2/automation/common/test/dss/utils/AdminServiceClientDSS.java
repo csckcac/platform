@@ -22,6 +22,7 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.wso2.carbon.admin.service.*;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.authenticator.stub.LogoutAuthenticationExceptionException;
 import org.wso2.carbon.dataservices.ui.fileupload.stub.ExceptionException;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
 import org.wso2.carbon.security.mgt.stub.config.SecurityAdminServiceSecurityConfigExceptionException;
@@ -102,13 +103,14 @@ public class AdminServiceClientDSS {
     }
 
 
-    public String authenticate(String userName, String passWord) {
+    public String authenticate(String userName, String passWord)
+            throws LoginAuthenticationExceptionException, RemoteException {
         AdminServiceAuthentication adminServiceAuthentication = new AdminServiceAuthentication(backEndUrl);
         return adminServiceAuthentication.login(userName, passWord, "localhost");
 
     }
 
-    public void logOut() {
+    public void logOut() throws LogoutAuthenticationExceptionException, RemoteException {
         AdminServiceAuthentication adminServiceAuthentication = new AdminServiceAuthentication(backEndUrl);
         adminServiceAuthentication.logOut();
 

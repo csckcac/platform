@@ -25,11 +25,14 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceAuthentication;
 import org.wso2.carbon.admin.service.AdminServiceBillingDataAccessService;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
+
+import java.rmi.RemoteException;
 
 import static org.testng.Assert.*;
 
@@ -41,7 +44,8 @@ public class UsagePlanDowngradeTest {
     private EnvironmentBuilder builder;
 
     @BeforeClass
-    public void initializeProperties() throws AxisFault {
+    public void initializeProperties() throws RemoteException,
+                                              LoginAuthenticationExceptionException {
         int tenantId = 13;
         builder = new EnvironmentBuilder().manager(tenantId);
         ManageEnvironment environment = builder.build();
@@ -93,7 +97,8 @@ public class UsagePlanDowngradeTest {
         log.info("Usage plan has been reset to Demo");
     }
 
-    protected static String login(String userName, String password, String hostName) {
+    protected static String login(String userName, String password, String hostName)
+            throws LoginAuthenticationExceptionException, RemoteException {
         AdminServiceAuthentication loginClient = new AdminServiceAuthentication(hostName);
         return loginClient.login(userName, password, hostName);
     }

@@ -29,6 +29,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceSecurity;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.security.mgt.stub.config.SecurityAdminServiceSecurityConfigExceptionException;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
@@ -50,7 +51,7 @@ public class StratosAppServiceTest {
     private static String httpAppServerStratosUrl;
 
     @BeforeClass
-    public void init() {
+    public void init() throws LoginAuthenticationExceptionException, RemoteException {
         EnvironmentBuilder builder = new EnvironmentBuilder().as(4);
         EnvironmentVariables appServer = builder.build().getAs();
         UserInfo userInfo = UserListCsvReader.getUserInfo(4);

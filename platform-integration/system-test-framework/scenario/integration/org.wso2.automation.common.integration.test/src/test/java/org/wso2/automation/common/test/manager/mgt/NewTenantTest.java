@@ -22,8 +22,10 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceAuthentication;
 import org.wso2.carbon.admin.service.AdminServiceTenantMgtServiceAdmin;
 
+import java.rmi.RemoteException;
 import java.util.Random;
 
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.tenant.mgt.stub.beans.xsd.TenantInfoBean;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
@@ -37,7 +39,8 @@ public class NewTenantTest {
     private static final Log log = LogFactory.getLog(NewTenantTest.class);
 
     @Test(groups = "stratos.manager", description = "add new tenant to cloud as super user")
-    public void testAddNewTenantTest() {
+    public void testAddNewTenantTest()
+            throws LoginAuthenticationExceptionException, RemoteException {
         log.info("Running Add new tenant test");
         Random rand = new Random();
         int tenantID = 0;
@@ -73,7 +76,8 @@ public class NewTenantTest {
         login(firstName + "@" + domainName, password, manProperties.getProductVariables().getBackendUrl());
     }
 
-    protected static String login(String userName, String password, String hostName) {
+    protected static String login(String userName, String password, String hostName)
+            throws LoginAuthenticationExceptionException, RemoteException {
         AdminServiceAuthentication loginClient = new AdminServiceAuthentication(hostName);
         return loginClient.login(userName, password, hostName);
     }

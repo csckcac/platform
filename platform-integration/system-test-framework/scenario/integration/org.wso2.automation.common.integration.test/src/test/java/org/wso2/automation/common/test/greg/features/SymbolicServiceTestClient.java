@@ -19,6 +19,7 @@ import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.admin.service.AdminServiceResourceAdmin;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
 import org.wso2.carbon.registry.resource.stub.beans.xsd.CollectionContentBean;
 import static org.testng.Assert.*;
@@ -36,7 +37,7 @@ public class SymbolicServiceTestClient {
 
 
     @BeforeClass(alwaysRun = true)
-    public void init() throws AxisFault {
+    public void init() throws RemoteException, LoginAuthenticationExceptionException {
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(0);
         EnvironmentVariables gregServer = builder.build().getGreg();
         sessionCookie = gregServer.getSessionCookie();

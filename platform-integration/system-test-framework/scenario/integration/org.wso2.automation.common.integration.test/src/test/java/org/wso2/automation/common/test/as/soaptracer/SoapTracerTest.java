@@ -28,12 +28,15 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceAuthentication;
 import org.wso2.carbon.admin.service.AdminServiceTracerAdmin;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.tracer.stub.types.carbon.MessagePayload;
 import org.wso2.carbon.tracer.stub.types.carbon.TracerServiceInfo;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClientUtils;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
+
+import java.rmi.RemoteException;
 
 import static org.testng.Assert.*;
 
@@ -54,7 +57,8 @@ public class SoapTracerTest {
 
 
     @BeforeTest(alwaysRun = true)
-    public void initializeProperties() {
+    public void initializeProperties()
+            throws LoginAuthenticationExceptionException, RemoteException {
         log.info("Running SOAP Tracer test...");
         int userIdOfUser1 = 1;
         int userIdOfUser2 = 2;
@@ -190,7 +194,8 @@ public class SoapTracerTest {
         }
     }
 
-    protected static String login(String userName, String password, String hostName) {
+    protected static String login(String userName, String password, String hostName)
+            throws LoginAuthenticationExceptionException, RemoteException {
         AdminServiceAuthentication loginClient = new AdminServiceAuthentication(hostName);
         return loginClient.login(userName, password, hostName);
     }

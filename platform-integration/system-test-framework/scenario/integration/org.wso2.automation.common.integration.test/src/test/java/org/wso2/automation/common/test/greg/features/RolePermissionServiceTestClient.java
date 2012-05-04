@@ -22,10 +22,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.*;
 import org.wso2.carbon.admin.service.AdminServiceUserMgtService;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.user.mgt.common.UserAdminException;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkSettings;
+
+import java.rmi.RemoteException;
 
 
 public class RolePermissionServiceTestClient {
@@ -40,7 +43,7 @@ public class RolePermissionServiceTestClient {
 
 
     @BeforeClass(alwaysRun = true)
-    public void init() throws AxisFault {
+    public void init() throws RemoteException, LoginAuthenticationExceptionException {
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(0);
         gregServer = builder.build().getGreg();
         sessionCookie = gregServer.getSessionCookie();

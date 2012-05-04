@@ -23,6 +23,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceGadgetDashbordService;
 import org.wso2.carbon.admin.service.AdminServiceGadgetRepositoryService;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.dashboard.mgt.gadgetrepo.stub.GadgetRepoServiceStub;
 import org.wso2.carbon.dashboard.mgt.gadgetrepo.stub.types.carbon.Comment;
 import org.wso2.carbon.dashboard.mgt.gadgetrepo.stub.types.carbon.Gadget;
@@ -41,6 +42,7 @@ import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.rmi.RemoteException;
 
 public class StratosGSServiceTest {
 
@@ -51,7 +53,7 @@ public class StratosGSServiceTest {
 
 
     @BeforeClass
-    public void init() {
+    public void init() throws LoginAuthenticationExceptionException, RemoteException {
         EnvironmentBuilder builder = new EnvironmentBuilder().gs(4);
         EnvironmentVariables gsServer = builder.build().getGs();
         userInfo = UserListCsvReader.getUserInfo(4);

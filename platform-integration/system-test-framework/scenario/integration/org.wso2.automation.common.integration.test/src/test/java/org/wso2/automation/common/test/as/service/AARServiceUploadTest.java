@@ -26,10 +26,13 @@ import org.apache.commons.logging.LogFactory;
 import static org.testng.Assert.*;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClientUtils;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
+
+import java.rmi.RemoteException;
 
 
 /*
@@ -44,7 +47,8 @@ public class AARServiceUploadTest {
 
 
     @BeforeTest(alwaysRun = true)
-    public void initializeProperties() {
+    public void initializeProperties()
+            throws LoginAuthenticationExceptionException, RemoteException {
         log.info("Running AAR service upload test...");
         int userId = 1;
         String serviceName = "Axis2Service";
@@ -72,7 +76,8 @@ public class AARServiceUploadTest {
     }
 
     @Test(groups = {"wso2.as"}, description = "Test simple aar service multitenancy ", priority = 2)
-    public void testServiceMultitenancy() throws AxisFault {
+    public void testServiceMultitenancy()
+            throws RemoteException, LoginAuthenticationExceptionException {
         String operation = "echoInt";
         String expectedValue = "123";
         if (stratosStatus) {

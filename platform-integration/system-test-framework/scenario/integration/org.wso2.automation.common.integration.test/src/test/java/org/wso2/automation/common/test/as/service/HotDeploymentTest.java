@@ -28,6 +28,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.carbon.aarservices.stub.ExceptionException;
 import org.wso2.carbon.admin.service.AdminServiceCarbonServerAdmin;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.ArtifactCleanerUtil;
 import org.wso2.platform.test.core.utils.ArtifactDeployerUtil;
@@ -59,7 +60,8 @@ public class HotDeploymentTest {
     private static final int userId = 1;
 
     @BeforeTest(alwaysRun = true)
-    public void initializeProperties() {
+    public void initializeProperties()
+            throws LoginAuthenticationExceptionException, RemoteException {
         log.info("Running maintenance mode hot deployment test...");
         String serviceName = "Axis2Service";
         builder = new EnvironmentBuilder().as(userId);
@@ -89,7 +91,8 @@ public class HotDeploymentTest {
     }
 
     @Test(groups = {"wso2.as"}, description = "Verity service deployment after graceful restart", priority = 2)
-    public void testInvokeService() throws InterruptedException, AxisFault {
+    public void testInvokeService()
+            throws InterruptedException, RemoteException, LoginAuthenticationExceptionException {
         int httpsPort = Integer.parseInt(environment.getAs().getProductVariables().getHttpsPort());
         String operation = "echoInt";
         String expectedValue = "123";
@@ -114,7 +117,8 @@ public class HotDeploymentTest {
     }
 
     @AfterClass(groups = {"wso2.as"}, description = "Clean the deployed artifacts")
-    public void testCleanup() throws InterruptedException, RemoteException {
+    public void testCleanup()
+            throws InterruptedException, RemoteException, LoginAuthenticationExceptionException {
         builder = new EnvironmentBuilder().as(userId);
         environment = builder.build();
         ArtifactCleanerUtil artifactCleanerUtil = new ArtifactCleanerUtil();

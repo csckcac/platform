@@ -29,10 +29,13 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
+
+import java.rmi.RemoteException;
 
 public class StratosBRSServiceTest {
 
@@ -40,7 +43,7 @@ public class StratosBRSServiceTest {
     private static String httpRuleStratosUrl;
 
     @BeforeClass
-    public void init() {
+    public void init() throws LoginAuthenticationExceptionException, RemoteException {
         EnvironmentBuilder builder = new EnvironmentBuilder().brs(4);
         EnvironmentVariables brsServer = builder.build().getBrs();
         UserInfo userInfo = UserListCsvReader.getUserInfo(4);

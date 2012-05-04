@@ -1,6 +1,8 @@
 package org.wso2.platform.test.core.utils.environmentutils;
 
+import org.apache.axis2.AxisFault;
 import org.wso2.carbon.admin.service.AdminServiceAuthentication;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
@@ -10,6 +12,7 @@ import org.wso2.platform.test.core.utils.frameworkutils.FrameworkProperties;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkSettings;
 import org.wso2.platform.test.core.utils.frameworkutils.productvariables.ProductVariables;
 
+import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,7 +47,8 @@ public class EnvironmentBuilder {
     public EnvironmentBuilder() {
     }
 
-    public EnvironmentBuilder as(int userId) {
+    public EnvironmentBuilder as(int userId)
+            throws RemoteException, LoginAuthenticationExceptionException {
         productVariables = new EnvironmentVariables();
         FrameworkProperties frameworkProperties =
                 FrameworkFactory.getFrameworkProperties(ProductConstant.APP_SERVER_NAME);
@@ -59,7 +63,8 @@ public class EnvironmentBuilder {
         return this;
     }
 
-    public EnvironmentBuilder esb(int userId) {
+    public EnvironmentBuilder esb(int userId)
+            throws LoginAuthenticationExceptionException, RemoteException {
         productVariables = new EnvironmentVariables();
         FrameworkProperties frameworkProperties =
                 FrameworkFactory.getFrameworkProperties(ProductConstant.ESB_SERVER_NAME);
@@ -74,7 +79,8 @@ public class EnvironmentBuilder {
         return this;
     }
 
-    public EnvironmentBuilder is(int userId) {
+    public EnvironmentBuilder is(int userId)
+            throws LoginAuthenticationExceptionException, RemoteException {
         productVariables = new EnvironmentVariables();
         AdminServiceAuthentication adminServiceAuthentication;
         FrameworkProperties frameworkProperties =
@@ -89,7 +95,8 @@ public class EnvironmentBuilder {
         return this;
     }
 
-    public EnvironmentBuilder bps(int userId) {
+    public EnvironmentBuilder bps(int userId)
+            throws LoginAuthenticationExceptionException, RemoteException {
         productVariables = new EnvironmentVariables();
         AdminServiceAuthentication adminServiceAuthentication;
         FrameworkProperties frameworkProperties =
@@ -104,7 +111,8 @@ public class EnvironmentBuilder {
         return this;
     }
 
-    public EnvironmentBuilder dss(int userId) {
+    public EnvironmentBuilder dss(int userId)
+            throws LoginAuthenticationExceptionException, RemoteException {
         productVariables = new EnvironmentVariables();
         AdminServiceAuthentication adminServiceAuthentication;
         FrameworkProperties frameworkProperties =
@@ -119,7 +127,8 @@ public class EnvironmentBuilder {
         return this;
     }
 
-    public EnvironmentBuilder greg(int tenent) {
+    public EnvironmentBuilder greg(int tenent)
+            throws RemoteException, LoginAuthenticationExceptionException {
         productVariables = new EnvironmentVariables();
         AdminServiceAuthentication adminServiceAuthentication;
         FrameworkProperties frameworkProperties =
@@ -134,7 +143,8 @@ public class EnvironmentBuilder {
         return this;
     }
 
-    public EnvironmentBuilder bam(int tenent) {
+    public EnvironmentBuilder bam(int tenent)
+            throws LoginAuthenticationExceptionException, RemoteException {
         productVariables = new EnvironmentVariables();
         AdminServiceAuthentication adminServiceAuthentication;
         FrameworkProperties frameworkProperties =
@@ -150,7 +160,8 @@ public class EnvironmentBuilder {
     }
 
 
-    public EnvironmentBuilder brs(int tenent) {
+    public EnvironmentBuilder brs(int tenent)
+            throws RemoteException, LoginAuthenticationExceptionException {
         productVariables = new EnvironmentVariables();
         AdminServiceAuthentication adminServiceAuthentication;
         FrameworkProperties frameworkProperties =
@@ -165,7 +176,8 @@ public class EnvironmentBuilder {
         return this;
     }
 
-    public EnvironmentBuilder cep(int tenent) {
+    public EnvironmentBuilder cep(int tenent)
+            throws RemoteException, LoginAuthenticationExceptionException {
         productVariables = new EnvironmentVariables();
         AdminServiceAuthentication adminServiceAuthentication;
         FrameworkProperties frameworkProperties =
@@ -180,7 +192,8 @@ public class EnvironmentBuilder {
         return this;
     }
 
-    public EnvironmentBuilder gs(int tenent) {
+    public EnvironmentBuilder gs(int tenent)
+            throws RemoteException, LoginAuthenticationExceptionException {
         productVariables = new EnvironmentVariables();
         AdminServiceAuthentication adminServiceAuthentication;
         FrameworkProperties frameworkProperties =
@@ -195,7 +208,8 @@ public class EnvironmentBuilder {
         return this;
     }
 
-    public EnvironmentBuilder ms(int tenent) {
+    public EnvironmentBuilder ms(int tenent)
+            throws RemoteException, LoginAuthenticationExceptionException {
         productVariables = new EnvironmentVariables();
         AdminServiceAuthentication adminServiceAuthentication;
         FrameworkProperties frameworkProperties =
@@ -210,7 +224,8 @@ public class EnvironmentBuilder {
         return this;
     }
 
-    public EnvironmentBuilder mb(int tenent) {
+    public EnvironmentBuilder mb(int tenent)
+            throws RemoteException, LoginAuthenticationExceptionException {
         productVariables = new EnvironmentVariables();
         AdminServiceAuthentication adminServiceAuthentication;
         FrameworkProperties frameworkProperties =
@@ -226,7 +241,8 @@ public class EnvironmentBuilder {
     }
 
 
-    public EnvironmentBuilder manager(int tenent) {
+    public EnvironmentBuilder manager(int tenent)
+            throws RemoteException, LoginAuthenticationExceptionException {
         productVariables = new EnvironmentVariables();
         AdminServiceAuthentication adminServiceAuthentication;
         FrameworkProperties frameworkProperties =
@@ -242,7 +258,7 @@ public class EnvironmentBuilder {
     }
 
     public EnvironmentBuilder clusterNode(String node,int tenent)
-    {
+            throws RemoteException, LoginAuthenticationExceptionException {
         ClusterReader reader = new ClusterReader();
 
             reader.getProductName(node);
@@ -267,7 +283,8 @@ public class EnvironmentBuilder {
     private EnvironmentVariables loginSetup(int tenent, String httpPort,
                                             AdminServiceAuthentication adminServiceAuthentication,
                                             FrameworkProperties frameworkProperties,
-                                            ProductVariables productSetter) {
+                                            ProductVariables productSetter)
+            throws LoginAuthenticationExceptionException, RemoteException {
         UserInfo userInfo = UserListCsvReader.getUserInfo(tenent);
         sessionCookie = adminServiceAuthentication.login(userInfo.getUserName(),
                                                          userInfo.getPassword(), serverHostName);
@@ -280,7 +297,8 @@ public class EnvironmentBuilder {
     private EnvironmentVariables loginSetupAs(int user,
                                               AdminServiceAuthentication adminServiceAuthentication,
                                               FrameworkProperties frameworkProperties,
-                                              ProductVariables productSetter) {
+                                              ProductVariables productSetter)
+            throws LoginAuthenticationExceptionException, RemoteException {
         UserInfo userInfo = UserListCsvReader.getUserInfo(user);
         sessionCookie = adminServiceAuthentication.login(userInfo.getUserName(),
                                                          userInfo.getPassword(), serverHostName);

@@ -24,9 +24,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClientUtils;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
+
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +54,8 @@ public class ServiceChainingTest {
     private static String PERSONINFOSERVICE_EPR;
 
     @BeforeTest(alwaysRun = true)
-    public void initializeProperties() {
+    public void initializeProperties()
+            throws LoginAuthenticationExceptionException, RemoteException {
         int userId = 0;
         String jarServiceName = "CreditService";
         String creditProxyName = "CreditProxy";

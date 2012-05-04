@@ -24,6 +24,8 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceAuthentication;
 import org.wso2.carbon.admin.service.AdminServiceResourceAdmin;
 import org.wso2.carbon.admin.service.AdminServiceUserMgtService;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.authenticator.stub.LogoutAuthenticationExceptionException;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
 import org.wso2.carbon.user.mgt.common.UserAdminException;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
@@ -48,7 +50,7 @@ public class GRegLoginPermissionServiceTestClient {
 
 
     @BeforeClass(alwaysRun = true)
-    public void init() throws AxisFault {
+    public void init() throws RemoteException, LoginAuthenticationExceptionException {
         EnvironmentBuilder builder = new EnvironmentBuilder().greg(0);
         EnvironmentVariables gregServer = builder.build().getGreg();
         sessionCookie = gregServer.getSessionCookie();
@@ -76,7 +78,8 @@ public class GRegLoginPermissionServiceTestClient {
     @Test(groups = {"wso2.greg"}, description = "test add a role with login permission",
           priority = 1)
     public void testAddLoginPermissionUser()
-            throws UserAdminException, RemoteException, ResourceAdminServiceExceptionException {
+            throws UserAdminException, RemoteException, ResourceAdminServiceExceptionException,
+                   LoginAuthenticationExceptionException, LogoutAuthenticationExceptionException {
 
 
         String permission[] = {"/permission/admin/login"};

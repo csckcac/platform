@@ -27,6 +27,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceLogViewer;
 import org.wso2.carbon.admin.service.AdminServiceService;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogMessage;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
@@ -44,7 +45,8 @@ public class MediatorTest {
 
 
     @BeforeTest
-    private void setEnv() throws InterruptedException, RemoteException {
+    private void setEnv()
+            throws InterruptedException, RemoteException, LoginAuthenticationExceptionException {
         EnvironmentBuilder environmentBuilder = new EnvironmentBuilder().esb(1).as(1);
         environmentObj = environmentBuilder.build();
         AdminServiceService adminServiceService =

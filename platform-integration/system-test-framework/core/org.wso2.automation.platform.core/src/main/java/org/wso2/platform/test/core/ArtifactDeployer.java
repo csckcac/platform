@@ -19,6 +19,7 @@ package org.wso2.platform.test.core;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.platform.test.core.utils.Artifact;
 import org.wso2.platform.test.core.utils.ArtifactAssociation;
 import org.wso2.platform.test.core.utils.ArtifactDependency;
@@ -31,6 +32,7 @@ import org.wso2.platform.test.core.utils.frameworkutils.FrameworkProperties;
 
 import java.io.File;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.List;
 
 /**
@@ -128,7 +130,8 @@ public class ArtifactDeployer {
 
     private EnvironmentVariables getEnvironment(int userId, String productName,
                                                 ArtifactDeployerUtil deployerUtil,
-                                                EnvironmentBuilder builder) {
+                                                EnvironmentBuilder builder)
+            throws LoginAuthenticationExceptionException, RemoteException {
         EnvironmentVariables environmentVariables;
         if (builder.getFrameworkSettings().getEnvironmentSettings().isClusterEnable()) {
             environmentVariables = deployerUtil.getClusterEnvironment(productName, userId);

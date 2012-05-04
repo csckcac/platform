@@ -28,6 +28,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.wso2.automation.common.test.dss.service.CarbonDataSourceTest;
 import org.wso2.carbon.admin.service.AdminServiceCarbonServerAdmin;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
 import org.wso2.platform.test.core.utils.ClientConnectionUtil;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClient;
@@ -46,7 +47,7 @@ public class DataSourceInitializationAtStartUp extends CarbonDataSourceTest {
     @Test(priority = 7, dependsOnMethods = {"deleteOperation"})
     public void ServerRestarting()
             throws org.wso2.carbon.server.admin.stub.Exception, RemoteException,
-                   InterruptedException {
+                   InterruptedException, LoginAuthenticationExceptionException {
         log.info("Restarting Server.....");
         restartServer();
         logIn();

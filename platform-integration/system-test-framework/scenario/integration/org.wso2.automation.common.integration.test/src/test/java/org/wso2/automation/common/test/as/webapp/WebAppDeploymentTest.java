@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceWebAppAdmin;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
@@ -44,7 +45,8 @@ public class WebAppDeploymentTest {
 
 
     @BeforeTest(alwaysRun = true)
-    public void initializeProperties() throws AxisFault {
+    public void initializeProperties() throws RemoteException,
+                                              LoginAuthenticationExceptionException {
         log.info("Running WebApp redeployment test service stat test...");
         int userId = 1;
         EnvironmentBuilder builder = new EnvironmentBuilder().as(userId);

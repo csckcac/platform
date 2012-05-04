@@ -29,6 +29,8 @@ import org.wso2.carbon.admin.service.AdminServiceBpelInstanceManager;
 import org.wso2.carbon.admin.service.AdminServiceBpelPackageManager;
 import org.wso2.carbon.admin.service.AdminServiceBpelProcessManager;
 import org.wso2.carbon.admin.service.AdminServiceBpelUploader;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.authenticator.stub.LogoutAuthenticationExceptionException;
 import org.wso2.carbon.bpel.stub.mgt.PackageManagementException;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
@@ -49,7 +51,7 @@ public class BpelDeployClient {
     private String serviceUrl;
 
     @BeforeTest(alwaysRun = true)
-    public void setEnvironment() {
+    public void setEnvironment() throws LoginAuthenticationExceptionException, RemoteException {
         EnvironmentBuilder builder = new EnvironmentBuilder().bps(3);
         ManageEnvironment environment = builder.build();
         backEndUrl = environment.getBps().getBackEndUrl();
@@ -72,7 +74,8 @@ public class BpelDeployClient {
 
     @AfterClass(alwaysRun = true)
     public void removeArtifacts()
-            throws PackageManagementException, InterruptedException, RemoteException {
+            throws PackageManagementException, InterruptedException, RemoteException,
+                   LogoutAuthenticationExceptionException {
         bpelManager.undeployBPEL("TestE4XDirect");
         adminServiceAuthentication.logOut();
     }

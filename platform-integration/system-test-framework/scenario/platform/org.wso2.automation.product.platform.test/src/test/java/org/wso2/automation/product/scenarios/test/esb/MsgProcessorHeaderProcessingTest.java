@@ -11,6 +11,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceLogViewer;
 import org.wso2.carbon.admin.service.AdminServiceMassageStoreAdmin;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogMessage;
 import org.wso2.platform.test.core.utils.axis2client.AxisServiceClientUtils;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
@@ -35,7 +36,8 @@ public class MsgProcessorHeaderProcessingTest {
     private AdminServiceLogViewer logViewer;
 
     @BeforeTest(alwaysRun = true)
-    public void testInitialize() throws InterruptedException, RemoteException {
+    public void testInitialize()
+            throws InterruptedException, RemoteException, LoginAuthenticationExceptionException {
         EnvironmentBuilder builder;
         builder = new EnvironmentBuilder().as(1).esb(1);
         ManageEnvironment environment = builder.build();

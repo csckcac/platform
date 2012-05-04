@@ -30,10 +30,13 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
+
+import java.rmi.RemoteException;
 
 
 public class StratosESBServiceTest {
@@ -41,7 +44,7 @@ public class StratosESBServiceTest {
     private static String httpEsbStratosEpr;
 
     @BeforeClass
-    public void init() {
+    public void init() throws LoginAuthenticationExceptionException, RemoteException {
         EnvironmentBuilder builder = new EnvironmentBuilder().esb(4);
         EnvironmentVariables esbServer = builder.build().getEsb();
         UserInfo userInfo = UserListCsvReader.getUserInfo(4);

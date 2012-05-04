@@ -24,6 +24,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceAuthentication;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.rssmanager.ui.stub.RSSAdminRSSDAOExceptionException;
 import org.wso2.carbon.service.mgt.stub.ServiceAdminException;
 import org.wso2.platform.test.core.ProductConstant;
@@ -65,7 +66,7 @@ public abstract class DataServiceTest {
     protected abstract void setServiceName();
 
     @BeforeClass
-    public void init() {
+    public void init() throws LoginAuthenticationExceptionException, RemoteException {
         EnvironmentBuilder builder = new EnvironmentBuilder().dss(3);
         dssServer = builder.build().getDss();
 
@@ -150,7 +151,7 @@ public abstract class DataServiceTest {
         DataServiceUtility.deleteServiceIfExist(sessionCookie, dssBackEndUrl, serviceName);
     }
 
-    protected void logIn() {
+    protected void logIn() throws LoginAuthenticationExceptionException, RemoteException {
         AdminServiceAuthentication  adminServiceAuthentication = new AdminServiceAuthentication(dssBackEndUrl);
         sessionCookie = adminServiceAuthentication.login(userInfo.getUserName(), userInfo.getPassword(), dssServer.getProductVariables().getHostName());
     }

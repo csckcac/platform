@@ -28,6 +28,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.wso2.carbon.admin.service.AdminServiceCarbonServerAdmin;
 import org.wso2.carbon.admin.service.AdminServiceLogViewer;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogMessage;
 import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.ArtifactDeployerUtil;
@@ -65,7 +66,8 @@ public class CustomXpathTest {
 
 
     @BeforeTest(alwaysRun = true)
-    public void testInitialize() throws InterruptedException, RemoteException {
+    public void testInitialize()
+            throws InterruptedException, RemoteException, LoginAuthenticationExceptionException {
         builder = new EnvironmentBuilder().esb(1);
         environment = builder.build();
         PROXY_EPR = environment.getEsb().getServiceUrl(); //send to main sequence
@@ -77,7 +79,7 @@ public class CustomXpathTest {
                                              "configurations", priority = 1)
     public void testServerRestart()
             throws org.wso2.carbon.server.admin.stub.Exception, RemoteException,
-                   InterruptedException {
+                   InterruptedException, LoginAuthenticationExceptionException {
         log.info("Restarting server after config updates");
         serverAdmin.restartGracefully(environment.getEsb().getSessionCookie());
         Thread.sleep(5000); //This sleep should be there, since we have to give some time for
@@ -106,7 +108,7 @@ public class CustomXpathTest {
 
     @Test(groups = "wso2.esb", description = "verity logs for xpath properties", priority = 3,
           dependsOnMethods = "testCustomXpath")
-    public void testLogs() throws RemoteException {
+    public void testLogs() throws RemoteException, LoginAuthenticationExceptionException {
         builder = new EnvironmentBuilder().esb(1);
         environment = builder.build();//generating the environment after server restart
         logViewer = new AdminServiceLogViewer(environment.getEsb().getSessionCookie(),
@@ -146,7 +148,8 @@ public class CustomXpathTest {
 
     @Test(groups = "wso2.esb", description = "verity logs for after synapse config update", priority = 6,
           dependsOnMethods = "testSendRequestAgain")
-    public void testLogsAfterConfigUpdate() throws RemoteException {
+    public void testLogsAfterConfigUpdate()
+            throws RemoteException, LoginAuthenticationExceptionException {
         builder = new EnvironmentBuilder().esb(1);
         environment = builder.build();//generating the environment after server restart
         LogMessage[] logMessages = logViewer.getLogs("INFO", "LogMediator");

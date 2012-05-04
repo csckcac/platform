@@ -20,11 +20,13 @@ package org.wso2.platform.test.core;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.admin.service.AdminServiceAuthentication;
+import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.platform.test.core.utils.*;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
 import org.wso2.platform.test.core.utils.frameworkutils.FrameworkProperties;
 
+import java.rmi.RemoteException;
 import java.util.List;
 
 public class ArtifactCleaner {
@@ -107,7 +109,8 @@ public class ArtifactCleaner {
         }
     }
 
-    protected static String login(String userName, String password, String backendURL) {
+    protected static String login(String userName, String password, String backendURL)
+            throws LoginAuthenticationExceptionException, RemoteException {
         AdminServiceAuthentication loginClient = new AdminServiceAuthentication(backendURL);
         return loginClient.login(userName, password, backendURL);
     }

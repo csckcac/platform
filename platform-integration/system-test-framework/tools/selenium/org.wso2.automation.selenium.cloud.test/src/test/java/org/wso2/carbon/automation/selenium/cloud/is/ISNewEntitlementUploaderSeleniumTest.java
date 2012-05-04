@@ -73,10 +73,8 @@ public class ISNewEntitlementUploaderSeleniumTest {
 
 //    @Test(groups = {"wso2.is"}, description = "Apply xacmal policy IIA001 from file", priority = 1)
     public void testaddxacmlPolicyIIA001() throws Exception {
-        String policyfilePath = resourcePath + File.separator + "artifacts" + File.separator +
-                          "Selenium" + File.separator + "IS" + File.separator + "IIA001Policy.xml";
-        String requestFilePath = resourcePath + File.separator + "artifacts" + File.separator +
-                          "Selenium" + File.separator + "IS" + File.separator + "IIA001Request.xml";
+        String policyfilePath = resourcePath + File.separator + "artifacts" + File.separator + "IS" + File.separator + "IIA001Policy.xml";
+        String requestFilePath = resourcePath + File.separator + "artifacts" + File.separator + "IS" + File.separator + "IIA001Request.xml";
         String requestXML = getDatafromFile(requestFilePath);
         try {
             new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
@@ -116,9 +114,9 @@ public class ISNewEntitlementUploaderSeleniumTest {
     @Test(groups = {"wso2.is"}, description = "Apply xacmal policy IIA003 from file", priority = 2)
     public void testaddxacmlPolicyIIA003() throws Exception {
         String filePath = resourcePath + File.separator + "artifacts" + File.separator +
-                          "Selenium" + File.separator + "IS" + File.separator +"IIA003Policy.xml";
+                          "IS" + File.separator +"IIA003Policy.xml";
         String requestFilePath = resourcePath + File.separator + "artifacts" + File.separator +
-                          "Selenium" + File.separator + "IS" + File.separator +"IIA003Request.xml";
+                           "IS" + File.separator +"IIA003Request.xml";
         String requestXML = getDatafromFile(requestFilePath);
         try {
             new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
@@ -253,10 +251,7 @@ public class ISNewEntitlementUploaderSeleniumTest {
                 ex.printStackTrace();
             }
         }
-        log.info("Request xml file content is :" + "\n" + xmlString);
-
         return xmlString;
-
     }
 
 }

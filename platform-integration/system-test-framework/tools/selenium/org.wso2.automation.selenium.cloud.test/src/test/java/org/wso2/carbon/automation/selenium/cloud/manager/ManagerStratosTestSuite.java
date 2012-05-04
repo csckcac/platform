@@ -33,15 +33,22 @@ public class ManagerStratosTestSuite extends MasterTestSuite {
         EnvironmentBuilder env = new EnvironmentBuilder();
         if (env.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
             suiteVariablesList.add(new SuiteVariables("ManagerInvoicetest",
+
                                                       StratosManagerInvoiceSeleniumTest.class));
             suiteVariablesList.add(new SuiteVariables("AccountManagertest",
-                                                 StratosManagerAccountValidatorSeleniumTest.class));
+
+                                                      StratosManagerAccountValidatorSeleniumTest.class));
             suiteVariablesList.add(new SuiteVariables("ManagerCreateUser",
+
                                                       StratosManagerUserCreatorSeleniumTest.class));
             suiteVariablesList.add(new SuiteVariables("ManagerAddNewRole",
+
                                                       StratosManagerRoleCreatorSeleniumTest.class));
             suiteVariablesList.add(new SuiteVariables("ManagerLoginPermissionScenariotest",
-                                               StratosManagerPermissionScenarioSeleniumTest.class));
+                                                      StratosManagerPermissionScenarioSeleniumTest.class));
+
+            suiteVariablesList.add(new SuiteVariables("ManagerSSOTest", ManagerSSOTest.class));
+
             superSuite("StratosManagerSeleniumTestSuite", suiteVariablesList).run();
         }
     }

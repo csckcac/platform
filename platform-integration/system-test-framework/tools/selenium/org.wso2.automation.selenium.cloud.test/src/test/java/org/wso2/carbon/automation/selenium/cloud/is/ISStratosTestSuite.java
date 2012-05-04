@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class IsStratosTestSuite extends MasterTestSuite {
+public class ISStratosTestSuite extends MasterTestSuite {
     @AfterSuite
     public void suiteRunner() {
         List<SuiteVariables> suiteVariablesList = new ArrayList<SuiteVariables>();
@@ -57,7 +57,7 @@ public class IsStratosTestSuite extends MasterTestSuite {
     public static void main(String[] args) {
         EnvironmentBuilder env = new EnvironmentBuilder();
         if (env.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
-            new IsStratosTestSuite().suiteRunner();
+            new ISStratosTestSuite().suiteRunner();
         }
 
     }

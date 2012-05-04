@@ -160,7 +160,7 @@ public class ProductUrlGeneratorUtil {
     }
 
 
-    public String getServiceHomeURL(String productName) {
+    public String  getServiceHomeURL(String productName) {
         String indexURL;
         FrameworkProperties properties = FrameworkFactory.getFrameworkProperties(productName);
         boolean webContextEnabled = Boolean.parseBoolean(prop.getProperty("carbon.web.context.enable"));

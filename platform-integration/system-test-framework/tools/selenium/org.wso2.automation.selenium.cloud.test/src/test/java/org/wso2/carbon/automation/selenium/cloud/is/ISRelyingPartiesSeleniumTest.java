@@ -69,8 +69,7 @@ public class ISRelyingPartiesSeleniumTest {
 
     @Test(groups = {"wso2.greg"}, description = "test add new relying party", priority = 1)
     public void testAddTrustedRelyingParty() throws Exception {
-        String filePath = resourcePath + File.separator + "artifacts" + File.separator +
-                          "Selenium" + File.separator + "IS" + File.separator + "javarp.cer";
+        String filePath = resourcePath + File.separator + "artifacts" + File.separator + "IS" + File.separator + "javarp.cer";
 
         try {
             new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);

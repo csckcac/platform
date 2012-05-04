@@ -68,11 +68,11 @@ public class ISCreatePolicySetSeleniumTest {
     }
 
     @Test(groups = {"wso2.greg"}, description = "Apply policy algorithm to a set", priority = 1)
-    public void testAddSetofPolicy() throws Exception {
+    public void testAddSetOfPolicy() throws Exception {
         String filePath1 = resourcePath + File.separator + "artifacts" + File.separator +
-                          "Selenium" + File.separator + "IS" + File.separator + "IIA001Policy.xml";
+                           "IS" + File.separator + "IIA001Policy.xml";
         String filePath2 = resourcePath + File.separator + "artifacts" + File.separator +
-                          "Selenium" + File.separator + "IS" + File.separator +"IIA003Policy.xml";
+                           "IS" + File.separator +"IIA003Policy.xml";
         String policySetName = "testpolicygroup";
         String policyDescription = "test a set of policies";
         String resourceName = "groupfoo";

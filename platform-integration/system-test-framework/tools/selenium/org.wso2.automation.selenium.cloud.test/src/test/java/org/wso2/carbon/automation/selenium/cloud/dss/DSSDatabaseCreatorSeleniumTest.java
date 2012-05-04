@@ -412,9 +412,6 @@ public class DSSDatabaseCreatorSeleniumTest {
                 throw new IOException(ex);
             }
         }
-        log.info("Request xml file content is :" + "\n" + xmlString);
-
         return xmlString;
-
     }
 }

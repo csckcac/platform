@@ -4,21 +4,5 @@ jagg.block("item-edit", {
 
     }
 
-    getOutputs:function (inputs) {
-        var api = inputs.providerId;
-        // TODO : implement the apis of the provider and remove following lines
-        var api = jagg.module("api");
-        var result = api.getRecentlyAddedAPIs(inputs.count);
-        return {
-            "apis":result.apis
-        };
-    },
-
-    getInputs:function () {
-        return {
-            "api":null
-        };
-    }
-
 });
 %>

@@ -1,44 +1,43 @@
 <%
-include("/site/themes/jagg.jag");
+include("/jagg/jagg.jag");
 var site = require("/site/conf/site.json");
 
-var userId = request.getParameter("uname");
-var subs = require("/core/subscriptions/subscriptions.js");
-var subAPIs = subs.getSubscribedAPIs(userId);
-var apis= subAPIs.apis;
+(function () {
+    var userId = request.getParameter("uname");
+    var apis, result, mod;
 
-var params = {
-    "name":"pages/base",
-    "css":{},
-    "js":{},
-    "code":{},
-    "updates" : {
-        "css" : {},
-        "js" : {}
-    },
-    "params":
-        {
-            "title":"API Provider -User",
-            "body":[
-                {
-                    "name":"layouts/extended",
-                    "params": {
-                        "top" : null,
-                        "left" : null,
-                        "rTop" : null,
-                        "rBottom" : {
-                            "name" : "user-apis",
-                            "params" : {
-                                "apis" : apis
+    mod = jagg.module("subscription");
+    result = mod.getSubscribedAPIs(userId);
+    apis = result.apis;
+    jagg.render({
+                    "name":"page/base",
+                    "inputs":{
+                        "title":"API Provider- Users Keys",
+                        "body":[
+                            {
+                                "name":"layout/extended",
+                                "inputs":{
+                                    "top":null,
+                                    "left":null,
+                                    "rTop":null,
+                                    "rBottom" : {
+                                        "name" : "user-apis",
+                                        "params" : {
+                                            "apis" : apis
+                                        }
+
+                                    }
+                                }
                             }
-
-                        }
+                        ]
                     }
-                }
-            ]
-        }
-};
+                });
+}());
 
-jagg.render(params);
 
 %>
+
+
+
+
+

@@ -1,0 +1,8 @@
+<%
+jagg.block("users-api", {
+    initializer:function (data) {
+
+    }
+
+});
+%>

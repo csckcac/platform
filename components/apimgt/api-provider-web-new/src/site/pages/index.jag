@@ -1,41 +1,38 @@
 <%
-include("/site/themes/jagg.jag");
+include("/jagg/jagg.jag");
 var site = require("/site/conf/site.json");
 
-var list = require("/core/apis/list.js");
-var result = list.getAPIsByProvider();
-var apis = result.apis;
-var params = {
-    "name":"pages/base",
-    "css":{},
-    "js":{},
-    "code":{},
-    "updates" : {
-        "css" : {},
-        "js" : {}
-    },
-    "params":
-        {
-            "title":"API Provider Listing",
-            "body":[
-                {
-                    "name":"layouts/extended",
-                    "params": {
-                        "top" : null,
-                        "left" : null,
-                        "rTop" : null,
-                        "rBottom" : {
-                            "name" : "listing",
-                            "params" : {
-                                "apis" : apis
-                            }
-                        }
-                    }
-                }
-            ]
-        }
-};
+(function () {
+    var apis, result, mod;
 
-jagg.render(params);
+    mod = jagg.module("api");
+    result = mod.getAPIsByProvider();
+    apis = result.apis;
+
+
+    jagg.render({
+                    "name":"page/base",
+                    "inputs":{
+                        "title":"API Provider Listing",
+                        "body":[
+                            {
+                                "name":"layout/extended",
+                                "inputs":{
+                                    "top":null,
+                                    "left":null,
+                                    "rTop":null,
+                                    "rBottom":{
+                                        "name":"listing",
+                                        "inputs":{
+                                            "apis":apis
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                });
+}());
+
 
 %>

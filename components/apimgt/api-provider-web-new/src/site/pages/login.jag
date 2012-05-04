@@ -1,35 +1,55 @@
 <%
-include("/site/themes/jagg.jag");
+include("/jagg/jagg.jag");
 var site = require("/site/conf/site.json");
 
+(function () {
 
-var params = {
-    "name":"pages/modern",
-    "css":{},
-    "js":{},
-    "code":{},
-    "updates" : {
-        "css" : {},
-        "js" : {}
-    },
-    "params":
-        {
-            "title":"API Provider Login",
-            "body":[
-                {
-                    "name":"layouts/login-extended",
-                    "params": {
-                         "rBottom" : {
-                            "name" : "login"
 
-                        }
+    jagg.render({
+                    "name":"page/modern",
+                    "inputs":{
+                        "title":"API Provider- Login",
+                        "body":[
+                            {
+                                "name":"layout/login",
+                                "inputs":{
+                                    "top":null,
+                                    "left":null,
+                                    "rTop":null,
+                                    "rBottom" : {
+                                        "name" : "login"
+
+                                    }
+                                }
+                            }
+                        ]
                     }
+                });
+}());
 
-                }
-            ]
-        }
-};
-
-jagg.render(params);
 
 %>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

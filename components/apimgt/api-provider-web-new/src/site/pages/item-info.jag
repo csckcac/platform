@@ -1,0 +1,38 @@
+<%
+include("/jagg/jagg.jag");
+var site = require("/site/conf/site.json");
+
+(function () {
+    var apiName = request.getParameter("name");
+    var apiVersion = request.getParameter("version");
+
+    jagg.render({
+                    "name":"page/base",
+                    "inputs":{
+                        "title":"API Provider- API Info",
+                        "body":[
+                            {
+                                "name":"layout/extended",
+                                "inputs":{
+                                    "top":null,
+                                    "left":null,
+                                    "rTop":null,
+                                    "rBottom" : {
+                                        "name" : "item-info",
+                                        "params" : {
+                                            "apiName" : apiName,
+                                            "apiVersion" : apiVersion
+                                        }
+
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                });
+}());
+
+
+%>
+
+

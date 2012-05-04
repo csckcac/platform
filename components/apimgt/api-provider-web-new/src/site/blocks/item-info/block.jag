@@ -1,0 +1,8 @@
+<%
+jagg.block("item-info", {
+    initializer:function (data) {
+
+    }
+
+});
+%>

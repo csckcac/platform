@@ -1,0 +1,8 @@
+<%
+jagg.block("item-nav-list", {
+    initializer:function (data) {
+
+    }
+
+});
+%>

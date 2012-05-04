@@ -1,0 +1,8 @@
+<%
+jagg.block("side-bar", {
+    initializer:function (data) {
+
+    }
+
+});
+%>

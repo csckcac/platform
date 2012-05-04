@@ -1,11 +1,5 @@
-<% jagg.template = function(data, params, jagg) {
-var apiName = request.getParameter("name");
-var apiVersion = request.getParameter("version");
+<% jagg.template("item-edit", function(inputs, outputs, jagg) { %>
 
-var apiSelected = require("/core/apis/list.js");
-var result = apiSelected.getAPI(apiName,apiVersion);
-var api=result.api;
-%>
 <div class="row-fluid">
     <div class="span12">
         <form class="form-horizontal well" id="editAPIForm" action="<%=site.context%>/core/apis/update.js"  method="get" enctype="multipart/form-data">
@@ -155,4 +149,4 @@ var api=result.api;
 
 </div>
 
-<% }; %>
+<% }); %>

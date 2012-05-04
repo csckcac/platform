@@ -1,4 +1,4 @@
-<% jagg.template = function(data, params, jagg) { %>
+<% jagg.template("page/login", function(inputs, outputs, jagg) { %>
         <!DOCTYPE html>
         <html>
         <head>
@@ -92,7 +92,7 @@ insertCode(jagg.global.code, function(code) {
 
         </body>
     </html>
-    <% }; %>
+    <% }); %>
 
 
 

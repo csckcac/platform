@@ -1,4 +1,4 @@
-<% jagg.template = function(data, params, jagg) { %>
+<% jagg.template("breadcumb", function(inputs, outputs, jagg) { %>
 <%
                 var place = request.getParameter("place");
             %>
@@ -80,4 +80,4 @@
                 <% } %>
             </ul>
 
-             <% }; %>
+<% }); %>

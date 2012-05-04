@@ -2,6 +2,19 @@
 jagg.block("documentation", {
     initializer:function (data) {
 
+    },
+    getOutputs:function (inputs) {
+        var api = inputs.api;
+        var listDoc = jagg.module("user");
+        var docsList = listDoc.getAllDocumentation(api.name, api.version);
+        var docs = docsList.docs;
+        var user = jagg.module("user");
+        var result = user.getUser();
+        return {
+            "api":api,
+            "docs":docs,
+            "user": result.username
+        };
     }
 
 });

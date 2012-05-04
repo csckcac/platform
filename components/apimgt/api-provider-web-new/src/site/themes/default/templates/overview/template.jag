@@ -1,10 +1,5 @@
-<% jagg.template = function(data, params, jagg) {
-        var apiName = request.getParameter("name");
-        var apiVersion = request.getParameter("version");
-
-        var apiSelected = require("/core/apis/list.js");
-        var result = apiSelected.getAPI(apiName, apiVersion);
-        var api=result.api;
+<% jagg.template("overview", function(inputs, outputs, jagg) {
+   var api=outputs.api;
 
 %>
 
@@ -56,6 +51,4 @@
 </div>
 
 
-
-
-<% }; %>
+<% }); %>

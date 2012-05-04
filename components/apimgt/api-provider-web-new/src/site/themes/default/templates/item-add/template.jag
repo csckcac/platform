@@ -1,6 +1,6 @@
-<% jagg.template = function(data, params, jagg) { %>
+<% jagg.template("item-add", function(inputs, outputs, jagg) { %>
 
- <div id="newAPI">
+<div id="newAPI">
 <h2>Add New API</h2>
 
 <div class="row-fluid">
@@ -212,4 +212,4 @@
 
 
 
-<% }; %>
+<% }); %>

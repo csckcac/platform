@@ -1,4 +1,4 @@
-<% jagg.template = function(data, params, jagg) { %>
+<% jagg.template("login", function(inputs, outputs, jagg) { %>
   <div class="row">
         <div class="span4 offset4">
             <div class="alert alert-error" id="loginError" style="display:none">
@@ -20,4 +20,4 @@
         <!--/span-->
         <div class="span4"></div>
     </div>
-<%};%>
+<%});%>

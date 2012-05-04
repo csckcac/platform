@@ -1,11 +1,11 @@
-<% jagg.template = function(data, params, jagg) { %>
+<% jagg.template("listing", function(inputs, outputs, jagg) { %>
 
 <div id="home">
 <h2>My APIs</h2>
 <ul class="thumbnails">
 <span class="loading"></span>
 <%
-    var i, api, apis = data.apis, length = apis.length;
+    var i, api, apis = outputs.apis, length = apis.length;
     for(i = 0; i < length; i++) {
         api = apis[i];
     %>
@@ -39,4 +39,4 @@
 </div>
 </div>
 
-<% }; %>
+<% }); %>

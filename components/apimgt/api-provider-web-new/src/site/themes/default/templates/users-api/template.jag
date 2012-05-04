@@ -1,13 +1,4 @@
-<% jagg.template = function(data, params, jagg) {
-
-var apiName = request.getParameter("name");
-var apiVersion = request.getParameter("version");
-
- var subs = require("/core/subscriptions/subscriptions.js");
- var subsOfAPIs = subs.getSubscribersOfAPI(apiName, apiVersion);
- var subscribers=subsOfAPIs.subscribers;
-
-%>
+<% jagg.template("users-api", function(inputs, outputs, jagg) { %>
     <div class="row-fluid">
         <div class="span2">
             <% jagg.includeTemplate("item-nav-list", null); %>
@@ -23,7 +14,7 @@ var apiVersion = request.getParameter("version");
                     </thead>
                     <tbody id="userList">
                     <%
-        var i, subscriber, subscribers = data.subscribers, length = subscribers.length;
+        var i, subscriber, subscribers = outputs.subscribers, length = subscribers.length;
 
         for(i = 0; i < length; i++) {
         subscriber = subscribers[i];%>
@@ -67,4 +58,4 @@ var apiVersion = request.getParameter("version");
 
 
 
-<% }; %>
+<% }); %>

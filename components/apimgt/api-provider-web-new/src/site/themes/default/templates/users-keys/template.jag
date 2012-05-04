@@ -1,4 +1,4 @@
-<% jagg.template = function(data, params, jagg) {%>
+<% jagg.template("users-keys", function(inputs, outputs, jagg) { %>
 
         <div id="userKey"><h2>Users/Keys</h2>
         <%jagg.includeTemplate("search", null); %>
@@ -15,10 +15,9 @@
         <tbody id="users">
 
         <%
-        var i, subscriber, subscribers = data.subscribers, length = subscribers.length;
+        var i, subscriber, subscribers = outputs.subscribers, length = subscribers.length;
         for(i = 0; i < length; i++) {
         subscriber = subscribers[i];%>
-
         <tr>
         <td><i class="icon-user"></i><a href="?place=user&uname=<%=subscriber.userName%>"><%=subscriber.userName%></a></td>
         <td><%=subscriber.application%></td><td>
@@ -54,4 +53,4 @@
 </div>
 
 
-<%};%>
+<%});%>

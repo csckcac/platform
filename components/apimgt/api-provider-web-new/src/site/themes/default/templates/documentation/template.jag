@@ -1,13 +1,5 @@
-<% jagg.template = function(data, params, jagg) {
-var apiName = request.getParameter("name");
-var apiVersion = request.getParameter("version");
+<% jagg.template("documentation", function(inputs, outputs, jagg) { %>
 
-var listDoc = require("/core/docs/list.js");
-var docsList = listDoc.getAllDocumentation(apiProviderApp.currentAPIName, apiProviderApp.currentVersion);
-var docs=docsList.docs;
-var users = require("/core/users/users.js");
-var user=users.getUser().username;
-%>
         <div class="row-fluid">
         <div class="span2">
         <% jagg.includeTemplate("item-nav-list", null); %>
@@ -110,11 +102,11 @@ var user=users.getUser().username;
                         </tr>
                     </thead>
                     <tbody id="listDocs">
-                        <%var i, doc,user=data.username, docs = data.docs, length = docs.length;
+                        <%var i, doc,api=outputs.api,user=outputs.user, docs = outputs.docs, length = docs.length;
                         for(i = 0; i< length; i++) {
                                     doc= docs[i];
                         %>
-                    <tr id="<%=apiName%>-<%=doc.docName%>">
+                    <tr id="<%=api.name%>-<%=doc.docName%>">
                     <td><a href="#"><%=doc.docName%></a></td>
                     <td><%=doc.docType%></td>
                     <td><a href="#">View</a></td>
@@ -123,12 +115,12 @@ var user=users.getUser().username;
                     <td><a href="#"><%=user%></a></td>
                     <td><%=doc.lastUpdated%></td>
                     <td>
-                       <a href="javascript:updateDocumentation("<%=apiName%>","<%=apiVersion%>","<%=doc.docName%>","<%=doc.docType%>","<%=doc.summary%>","<%=doc.Url%>")">Update | </a>
+                       <a href="javascript:updateDocumentation("<%=api.name%>","<%=api.version%>","<%=doc.docName%>","<%=doc.docType%>","<%=doc.summary%>","<%=doc.Url%>")">Update | </a>
                        <%if(doc.sourceType == "INLINE") {%>
-                       <a href="javascript:editInlineContent("<%=apiName%>","<%=apiVersion%>","<%=doc.docName%>","<%=doc.docType%>","<%=doc.summary%>","<%=doc.Url%>")">Edit Content | </a>
+                       <a href="javascript:editInlineContent("<%=api.name%>","<%=api.version%>","<%=doc.docName%>","<%=doc.docType%>","<%=doc.summary%>","<%=doc.Url%>")">Edit Content | </a>
                        <%}%>
-                        <a href="javascript:removeDocumentation("<%=apiName%>","<%=apiVersion%>","<%=doc.docName%>","<%=doc.docType%>")">Delete | </a>
-                        <a href="javascript:copyDocumentation("<%=apiName%>","<%=apiVersion%>","<%=doc.docName%>","<%=doc.docType%>")">Copy</a></td>
+                        <a href="javascript:removeDocumentation("<%=api.name%>","<%=api.version%>","<%=doc.docName%>","<%=doc.docType%>")">Delete | </a>
+                        <a href="javascript:copyDocumentation("<%=api.name%>","<%=api.version%>","<%=doc.docName%>","<%=doc.docType%>")">Copy</a></td>
                     </tr>
                     <%}%>
                     </tbody>
@@ -138,13 +130,4 @@ var user=users.getUser().username;
             </div>
         </div>
         <!-- Row -->
-
-
-
-
-
-
-
-
-
-<%};%>
+<%});%>

@@ -1,4 +1,4 @@
-<% jagg.template = function(data, params, jagg) {
+<% jagg.template("user-apis", function(inputs, outputs, jagg) { %>
 
 %>
 <div id="user"><h2><%=request.getParameter("uname")%></h2>
@@ -15,7 +15,7 @@
             </tr>
             </thead>
             <tbody id="userSubscribedAPIs">
-            <%var i, api, apis = data.apis, length = apis.length;
+            <%var i, api, apis = outputs.apis, length = apis.length;
             for(i = 0; i < length; i++) {
             api = apis[i];
             %>
@@ -38,4 +38,4 @@
 </div>
 
 
-<% }; %>
+<% }); %>

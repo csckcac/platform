@@ -1,4 +1,4 @@
-<% jagg.template = function(data, params, jagg) {
+<% jagg.template("side-bar", function(inputs, outputs, jagg) { %>
  <%
     var place = request.getParameter("place");
     if(place == null){
@@ -18,4 +18,4 @@
     </ul>
 </div>
 
-<%};%>
+<%});%>

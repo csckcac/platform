@@ -1,8 +1,5 @@
-<% jagg.template = function(data, params, jagg) {
-var users = require("/core/users/users.js");
-var user=users.getUser().username;
+<% jagg.template("header", function(inputs, outputs, jagg) { %>
 
-%>
 <link href="<%=site.context%>/site/themes/default/lib/bootstrap/css/bootstrap.css" rel="stylesheet">
 <link href="<%=site.context%>/site/themes/default/lib/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 <link rel="shortcut icon" href="<%=site.context%>/site/themes/default/images/favicon.ico">
@@ -26,7 +23,7 @@ var user=users.getUser().username;
 
                        <div class="nav-collapse">
                        <ul class="nav pull-right">
-                           <li><a class="user-name" id="userNameShow"><%=user%></a></li>
+                           <li><a class="user-name" id="userNameShow"><%=outputs.user%></a></li>
                            <li class="divider-vertical"></li>
                            <li class="dropdown">
                              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class=" icon-asterisk icon-white"></i> <b class="caret"></b></a>
@@ -52,4 +49,4 @@ var user=users.getUser().username;
 
 
 
-<%};%>
+<%});%>

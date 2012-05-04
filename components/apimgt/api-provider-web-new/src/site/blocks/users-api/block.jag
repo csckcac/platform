@@ -2,7 +2,16 @@
 jagg.block("users-api", {
     initializer:function (data) {
 
-    }
+    },
+    getOutputs:function (inputs) {
+        var api = inputs.api;
+        var subs = jagg.module("subscription");
+        var result = subs.getSubscribersOfAPI(api.name, api.version);
+        return {
+            "subscribers": result.subscribers
+        };
+    },
+
 
 });
 %>

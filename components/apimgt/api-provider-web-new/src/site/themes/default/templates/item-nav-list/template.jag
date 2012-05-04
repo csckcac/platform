@@ -1,10 +1,5 @@
-<% jagg.template = function(data, params, jagg) {
-
-        var apiName = request.getParameter("name");
-        var apiVersion = request.getParameter("version");
-        var apiSelected = require("/core/apis/list.js");
-        var result = apiSelected.getAPI(apiName,apiVersion);
-        var api=result.api;
+<% jagg.template("item-nav-list", function(inputs, outputs, jagg) {
+        var api=outputs.api;
 %>
 
 <ul class="nav nav-list">
@@ -28,4 +23,4 @@
   <li><span id="version"><i class="icon-th"></i></span></li>
   <li><a href="#"  onclick="showTab('docsLink')"><i class="icon-file"></i> Docs</a></li>
 </ul>
-<% }; %>
+<% }); %>

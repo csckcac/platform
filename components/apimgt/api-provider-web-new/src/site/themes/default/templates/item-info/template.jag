@@ -1,11 +1,6 @@
-<% jagg.template = function(data, params, jagg) {
-        var apiName = request.getParameter("name");
-        var apiVersion = request.getParameter("version");
+<% jagg.template("item-info", function(inputs, outputs, jagg) { %>
 
-%>
-
-
-<div id="apiDetails"><h2><%=apiName%>-v<%=apiVersion%></h2>
+<div id="apiDetails"><h2><%=outputs.api.name%>-v<%=outputs.api.version%></h2>
 
 <ul id="tab" class="nav nav-tabs tabs">
     <li class="active"><a href="#view" data-toggle="tab" id="viewLink"><i class="icon-file"></i>Overview</a></li>
@@ -50,4 +45,4 @@
 
 
 
-<% }; %>
+<% }); %>

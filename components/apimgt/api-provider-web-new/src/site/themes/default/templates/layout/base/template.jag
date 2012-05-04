@@ -1,4 +1,4 @@
-<% jagg.template = function(data, params, jagg) { %>
+<% jagg.template("layout/base", function(inputs, outputs, jagg) { %>
 
 <div id="layouts_base">
     <div id="top">
@@ -22,4 +22,4 @@
 
 
 </div>
-<% }; %>
+<% }); %>

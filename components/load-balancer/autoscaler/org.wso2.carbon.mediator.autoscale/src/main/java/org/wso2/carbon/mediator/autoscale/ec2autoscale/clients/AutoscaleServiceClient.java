@@ -64,5 +64,9 @@ public class AutoscaleServiceClient {
         
         return stub.getPendingInstanceCount(domainName);
     }
+    
+    public void addPendingInstanceCount(String domainName, int count) throws Exception {
+        stub.addPendingInstanceCount(domainName, count);
+    }
 
 }

@@ -331,6 +331,7 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
                 } else {
                     if (context != null) {
                         context.incrementPendingInstances(1);
+                        autoscalerService.addPendingInstanceCount(domain, 1);
                     }
                 }
             } catch (Exception e) {
@@ -543,7 +544,9 @@ public class ServiceRequestsInFlightAutoscaler implements Task, ManagedLifecycle
             }
             // ask to scale down
             try {
-                autoscalerService.terminateInstance(serviceDomain);
+                if(autoscalerService.terminateInstance(serviceDomain)){
+                    appDomainContext.setRunningInstanceCount(runningInstances--);
+                }
 
             } catch (Exception e) {
                 log.error("Instance termination failed for domain " + serviceDomain);

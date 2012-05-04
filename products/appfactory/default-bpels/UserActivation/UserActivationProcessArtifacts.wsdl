@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://wso2.org" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:wsdl="http://services.registration.user.carbon.wso2.org" name="UserActivationProcess" targetNamespace="http://wso2.org">
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     TYPE DEFINITION - List of types participating in this BPEL process 
+     The BPEL Designer will generate default request and response types
+     but you can define or import any XML Schema type and use them as part 
+     of the message types.
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->    
+    <plnk:partnerLinkType name="UserActivationPLType">
+    <plnk:role name="UserActivationRole" portType="wsdl:UserRegistrationServicePortType"/>
+  </plnk:partnerLinkType>
+    <import location="UserRegistrationService.wsdl" namespace="http://services.registration.user.carbon.wso2.org"/>
+    <types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://wso2.org">
+
+            <element name="UserActivationProcessRequest">
+                <complexType>
+                    <sequence>
+                    	<element name="userName" type="string"/>
+                    	<element name="confirmationKey" type="string"/>
+                    	<element name="email" type="string"/>
+                    </sequence>
+                </complexType>
+            </element>
+
+            <element name="UserActivationProcessResponse">
+                <complexType>
+                    <sequence>
+                        <element name="success" type="boolean"/>
+                    </sequence>
+                </complexType>
+            </element>
+        </schema>
+    </types>
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     MESSAGE TYPE DEFINITION - Definition of the message types used as 
+     part of the port type defintions
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->    
+    <!-- types><xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://wso2.org"><xsd:element name="UserActivationProcessRequest" type="tns:UserActivationProcessRequestType"></xsd:element><xsd:element name="UserActivationProcessResponse" type="tns:UserCreationResponseType"></xsd:element>
+            <xsd:complexType name="UserActivationProcessRequestType">
+            	<xsd:sequence>
+            		<xsd:element name="userName" type="xsd:string"></xsd:element>
+            		<xsd:element name="email" type="xsd:string"></xsd:element>
+            		<xsd:element name="confirmationKey" type="xsd:string"></xsd:element>
+            	</xsd:sequence>
+            </xsd:complexType>
+
+            <xsd:complexType name="UserCreationResponseType">
+            	<xsd:sequence>
+            		<xsd:element name="success" type="xsd:boolean"></xsd:element>
+            	</xsd:sequence>
+            </xsd:complexType>
+</xsd:schema></types-->
+    <message name="UserActivationProcessRequestMessage">
+        <part element="tns:UserActivationProcessRequest" name="payload" />
+    </message>
+    <message name="UserActivationProcessResponseMessage">
+        <part element="tns:UserActivationProcessResponse" name="payload"/>
+    </message>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     PORT TYPE DEFINITION - A port type groups a set of operations into
+     a logical service unit.
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->    
+
+    <!-- portType implemented by the UserActivationProcess BPEL process -->
+    <portType name="UserActivationProcess">
+        <operation name="process">
+            <input message="tns:UserActivationProcessRequestMessage"/>
+            <output message="tns:UserActivationProcessResponseMessage"/>
+        </operation>
+    </portType>   
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     PARTNER LINK TYPE DEFINITION
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->    
+    <plnk:partnerLinkType name="UserActivationProcess">
+        <plnk:role name="UserActivationProcessProvider" portType="tns:UserActivationProcess"/>
+    </plnk:partnerLinkType>
+    
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     BINDING DEFINITION - Defines the message format and protocol details
+     for a web service.
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <binding name="UserActivationProcessBinding"
+    	type="tns:UserActivationProcess">
+    	<soap:binding style="document"
+    		transport="http://schemas.xmlsoap.org/soap/http" />
+    	<operation name="process">
+    		<soap:operation soapAction="http://wso2.org/process" />
+    		<input>
+    			<soap:body use="literal" />
+    		</input>
+    		<output>
+    			<soap:body use="literal" />
+    		</output>
+    	</operation>
+    </binding>
+
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     SERVICE DEFINITION - A service groups a set of ports into
+     a service unit.
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <service name="UserActivationProcess">
+    	<port binding="tns:UserActivationProcessBinding" name="UserActivationProcessPort">
+    		<soap:address location="http://192.168.4.26:9765/services/UserActivationProcess"/>
+    	</port>
+    </service>
+</definitions>

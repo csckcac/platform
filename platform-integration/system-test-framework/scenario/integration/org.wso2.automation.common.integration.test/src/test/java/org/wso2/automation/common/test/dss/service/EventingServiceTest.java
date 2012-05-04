@@ -244,9 +244,15 @@ public class EventingServiceTest extends DataServiceTest {
     }
 
     private void createProxy()
-            throws ProxyServiceAdminProxyAdminException, RemoteException, ServiceAdminException,
-                   LoginAuthenticationExceptionException {
-        EnvironmentBuilder builder = new EnvironmentBuilder().esb(3);
+            throws ProxyServiceAdminProxyAdminException, ServiceAdminException,
+                   LoginAuthenticationExceptionException, RemoteException {
+        EnvironmentBuilder builder;
+        try {
+            builder = new EnvironmentBuilder().esb(3);
+        } catch (RemoteException e) {
+            throw new RemoteException("No Response from ESB Server. Please Check whether ESB is up and running. "
+                                      + e.getMessage(), e);
+        }
         EnvironmentVariables esbServer = builder.build().getEsb();
         String esbBackEndUrl = esbServer.getBackEndUrl();
 

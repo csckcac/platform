@@ -31,10 +31,6 @@ import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUserUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionLastAccessDTO;
 import org.wso2.carbon.apimgt.usage.client.exception.APIMgtUsageQueryServiceClientException;
-import org.wso2.carbon.bam.index.stub.IndexAdminServiceConfigurationException;
-import org.wso2.carbon.bam.index.stub.IndexAdminServiceIndexingException;
-import org.wso2.carbon.bam.index.stub.IndexAdminServiceStub;
-import org.wso2.carbon.bam.index.stub.service.types.IndexDTO;
 import org.wso2.carbon.bam.presentation.stub.QueryServiceStoreException;
 import org.wso2.carbon.bam.presentation.stub.QueryServiceStub;
 
@@ -48,8 +44,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class APIMgtUsageQueryServiceClient {
 
@@ -58,17 +52,13 @@ public class APIMgtUsageQueryServiceClient {
     private APIManagerImpl apiManagerImpl;
     private APIProviderImpl apiProviderImpl;
 
-    private IndexAdminServiceStub indexAdminStub;
-
     public APIMgtUsageQueryServiceClient(String targetEndpoint) throws APIMgtUsageQueryServiceClientException {
         if (targetEndpoint == null || targetEndpoint.equals("")) {
             targetEndpoint = "https://localhost:9444/";
         }
         String queryServiceEndpoint = targetEndpoint + "services/QueryService";
-        String indexAdminServiceEndpoint = targetEndpoint + "services/IndexAdminService";
         try {
             qss = new QueryServiceStub(queryServiceEndpoint);
-            indexAdminStub = new IndexAdminServiceStub(indexAdminServiceEndpoint);
         } catch (AxisFault e) {
             throw new APIMgtUsageQueryServiceClientException("Exception while instantiating QueryServiceStub", e);
         }
@@ -110,39 +100,6 @@ public class APIMgtUsageQueryServiceClient {
         }
         return result;
     }
-
-    // Incorrect method to get usage count for for multiple versions of APIs provided by a particular provider.
-//    public List<ProviderAPIVersionUsageDTO> getProviderAPIVersionUsage(String api) throws APIMgtUsageQueryServiceClientException {
-//        List<ProviderAPIVersionUsageDTO> result = new ArrayList<ProviderAPIVersionUsageDTO>();
-//        OMElement omElement = null;
-//        QueryServiceStub.CompositeIndex[] compositeIndex = new QueryServiceStub.CompositeIndex[1];
-//        compositeIndex[0] = new QueryServiceStub.CompositeIndex();
-//        compositeIndex[0].setIndexName("api");
-//        compositeIndex[0].setRangeFirst(api);
-//        compositeIndex[0].setRangeLast(getNextStringInLexicalOrder(api));
-//        try {
-//            omElement = qss.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_VERSION_USAGE_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.API_VERSION_USAGE_SUMMARY_TABLE_INDEX, compositeIndex);
-//        } catch (RemoteException e) {
-//            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-//        } catch (QueryServiceStoreException e) {
-//            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-//        }
-//        String omElementString = omElement.toString();
-//        String temp = null;
-//        Pattern pattern = Pattern.compile("(<row>.*?</row>)");
-//        Matcher matcher = pattern.matcher(omElementString);
-//        while(matcher.find()) {
-//            temp = matcher.group(1);
-//            Pattern pattern1 = Pattern.compile("<version>(.*?)</version>");
-//	        Matcher matcher1 = pattern1.matcher(temp);
-//            Pattern pattern2 = Pattern.compile("<request>(.*?)</request>");
-//            Matcher matcher2 = pattern2.matcher(temp);
-//            if(matcher1.find() && matcher2.find()){
-//                result.add(new ProviderAPIVersionUsageDTO(matcher1.group(1),matcher2.group(1)));
-//            }
-//       }
-//        return result;
-//    }
 
     /**
      * This method can be used to get total request count by subscribers for a single API provided by a particular provider.
@@ -229,43 +186,6 @@ public class APIMgtUsageQueryServiceClient {
     }
 
     /**
-     * Incorrect method to get all API names and total request count for each API.
-     * @return  all API names and total request count for each API.
-     * @throws APIMgtUsageQueryServiceClientException
-     */
-//    public List<ProviderAPIUsageDTO> getProviderAPIUsage() throws APIMgtUsageQueryServiceClientException {
-//        List<ProviderAPIUsageDTO> result = new ArrayList<ProviderAPIUsageDTO>();
-//        OMElement omElement = null;
-//        String[] apiNames = getAPIList();
-//        if(apiNames != null){
-//            for (String apiName:apiNames){
-//                QueryServiceStub.CompositeIndex[] compositeIndex = new QueryServiceStub.CompositeIndex[1];
-//                compositeIndex[0] = new QueryServiceStub.CompositeIndex();
-//                compositeIndex[0].setIndexName("api");
-//                compositeIndex[0].setRangeFirst(apiName);
-//                compositeIndex[0].setRangeLast(getNextStringInLexicalOrder(apiName));
-//
-//                try {
-//                    omElement = qss.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_VERSION_USAGE_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.API_VERSION_USAGE_SUMMARY_TABLE_INDEX, compositeIndex);
-//                } catch (RemoteException e) {
-//                    throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-//                } catch (QueryServiceStoreException e) {
-//                     throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-//                }
-//                OMElement rowsElement = omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
-//                Iterator oMElementIterator = rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
-//                float requestCount = 0;
-//                while (oMElementIterator.hasNext()) {
-//                    OMElement element = (OMElement) oMElementIterator.next();
-//                    requestCount += Float.parseFloat(element.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST)).getText());
-//                }
-//                result.add(new ProviderAPIUsageDTO(apiName,((Float)requestCount).toString()));
-//            }
-//        }
-//        return result;
-//    }
-
-    /**
      * This method can be used to get last access time for each API versions by particular provider.
      * @return List<ProviderAPIVersionLastAccessDTO>.
      * @throws APIMgtUsageQueryServiceClientException
@@ -302,19 +222,57 @@ public class APIMgtUsageQueryServiceClient {
      */
     public List<ProviderAPIServiceTimeDTO> getProviderAPIServiceTime(String providerName) throws APIMgtUsageQueryServiceClientException {
         List<ProviderAPIServiceTimeDTO> result = new ArrayList<ProviderAPIServiceTimeDTO>();
-        OMElement omElement = this.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_SERVICE_TIME_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.API_SERVICE_TIME_SUMMARY_TABLE_INDEX, null);
+        OMElement serviceTime_omElement = this.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_VERSION_SERVICE_TIME_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.API_VERSION_SERVICE_TIME_SUMMARY_TABLE_INDEX, null);
+        OMElement usage_omElement = this.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_VERSION_USAGE_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.API_VERSION_USAGE_SUMMARY_TABLE_INDEX, null);
         List<API> apis = this.getAPIsByProvider(providerName);
-        for (API api:apis) {
-            OMElement rowsElement = omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
-            Iterator rowIterator = rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
-            while(rowIterator.hasNext()){
-                OMElement row = (OMElement)rowIterator.next();
-                if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.API)).getText().equals(api.getId().getApiName())){
-                    String serviceTime = (row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.SERVICE_TIME))).getText();
-                    result.add(new ProviderAPIServiceTimeDTO(api.getId().getApiName(), serviceTime));
+        Set<APIIdentifier> apiIdentifiers = new HashSet<APIIdentifier>();
+        for(API api:apis){
+        Set<String> versions = this.getAPIVersions(providerName,api.getId().getApiName());
+            for(String version:versions){
+                apiIdentifiers.add(new APIIdentifier(providerName, api.getId().getApiName(), version));
+            }
+        }
+        List<String[]> calculationList = new ArrayList<String[]>();
+        for (APIIdentifier apiIdentifier:apiIdentifiers) {
+            String[] apiVersion_serviceTime_usage = new String[3];
+            apiVersion_serviceTime_usage[0] = apiIdentifier.getApiName();
+            OMElement serviceTime_rowsElement = serviceTime_omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
+            OMElement usage_rowsElement = usage_omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
+            Iterator serviceTime_rowIterator = serviceTime_rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
+            Iterator usage_rowIterator = usage_rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
+            while(serviceTime_rowIterator.hasNext()){
+                OMElement row = (OMElement)serviceTime_rowIterator.next();
+                if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.API)).getText().equals(apiIdentifier.getApiName()) && row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.VERSION)).getText().equals(apiIdentifier.getVersion())){
+                    apiVersion_serviceTime_usage[1] = (row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.SERVICE_TIME))).getText();
                     break;
                 }
             }
+            while(usage_rowIterator.hasNext()){
+                OMElement row = (OMElement)usage_rowIterator.next();
+                if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.API)).getText().equals(apiIdentifier.getApiName()) && row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.VERSION)).getText().equals(apiIdentifier.getVersion())){
+                    apiVersion_serviceTime_usage[2] = (row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST))).getText();
+                    break;
+                }
+            }
+            calculationList.add(apiVersion_serviceTime_usage);
+        }
+        Map<String,Float> apiCumulativeServiceTimeMap = new HashMap<String,Float>();
+        Map<String,Integer> apiUsageMap = new HashMap<String,Integer>();
+        for(String[] item:calculationList){
+            if(apiCumulativeServiceTimeMap.containsKey(item[0])){
+                apiCumulativeServiceTimeMap.put(item[0],apiUsageMap.get(item[0])+Float.valueOf(item[1]) * Float.valueOf(item[2]));
+            }else{
+                apiCumulativeServiceTimeMap.put(item[0],Float.valueOf(item[1]) * Float.valueOf(item[2]));
+            }
+            if(apiUsageMap.containsKey(item[0])){
+                apiUsageMap.put(item[0],Float.valueOf(apiUsageMap.get(item[0])+Float.parseFloat(item[2])).intValue());
+            }else{
+                apiUsageMap.put(item[0],Float.valueOf(item[2]).intValue());
+            }
+        }
+        Set<String> keys = apiUsageMap.keySet();
+        for(String key:keys){
+            result.add(new ProviderAPIServiceTimeDTO(key,String.valueOf(apiCumulativeServiceTimeMap.get(key)/apiUsageMap.get(key))));
         }
         return result;
     }
@@ -374,28 +332,6 @@ public class APIMgtUsageQueryServiceClient {
             throw new APIMgtUsageQueryServiceClientException("Error while retrieving APIs by "+providerId, e);
         }
         return apis;
-    }
-
-    /**
-     * Incorrect method to get all API names
-     * @return
-     * @throws APIMgtUsageQueryServiceClientException
-     */
-    private String[] getAPIList() throws APIMgtUsageQueryServiceClientException {
-        IndexDTO indexDTO = null;
-        String[] apiNames = null;
-
-        try {
-            IndexDTO apiIndex = indexAdminStub.getIndex(APIMgtUsageQueryServiceClientConstants.API_VERSION_USAGE_SUMMARY_TABLE_INDEX);
-            apiNames = indexAdminStub.getIndexValues(APIMgtUsageQueryServiceClientConstants.API_VERSION_USAGE_SUMMARY_TABLE_INDEX,apiIndex.getIndexedColumns()[0]);
-        } catch (RemoteException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        } catch (IndexAdminServiceConfigurationException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        } catch (IndexAdminServiceIndexingException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while querying BAM server", e);
-        }
-        return apiNames;
     }
 
 }

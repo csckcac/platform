@@ -20,9 +20,9 @@ package org.wso2.carbon.apimgt.usage.client;
 public final class APIMgtUsageQueryServiceClientConstants {
 
 
-    public static final String API_SERVICE_TIME_SUMMARY_TABLE = "APIServiceTimeSummaryTable";
+    public static final String API_VERSION_SERVICE_TIME_SUMMARY_TABLE = "APIVersionServiceTimeSummaryTable";
 
-    public static final String API_SERVICE_TIME_SUMMARY_TABLE_INDEX = "APIServiceTimeSummaryTableIndex";
+    public static final String API_VERSION_SERVICE_TIME_SUMMARY_TABLE_INDEX = "APIVersionServiceTimeSummaryTableIndex";
 
     public static final String API_VERSION_USAGE_SUMMARY_TABLE = "APIVersionUsageSummaryTable";
 

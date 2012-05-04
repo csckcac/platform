@@ -155,12 +155,12 @@
                 nextRows = cassandraExplorerAdminClient.getRows(keyspace, columnFamily,
                         rows[rows.length - 1], "", 2);
 
-                if (previousRows.length > 1) {
+                if (previousRows != null && previousRows.length > 1) {
                     previousRowsExists = true;
                 } else {
                     previousRowsExists = false;
                 }
-                if (nextRows.length > 1) {
+                if (nextRows != null && nextRows.length > 1) {
                     nextRowsExists = true;
                 } else {
                     nextRowsExists = false;
@@ -175,12 +175,12 @@
                 nextRows = cassandraExplorerAdminClient.getRows(keyspace, columnFamily,
                         rows[rows.length - 1], "", 2);
 
-                if (previousRows.length > 1) {
+                if (previousRows!= null && previousRows.length > 1) {
                     previousRowsExists = true;
                 } else {
                     previousRowsExists = false;
                 }
-                if (nextRows.length > 1) {
+                if (nextRows!= null && nextRows.length > 1) {
                     nextRowsExists = true;
                 } else {
                     nextRowsExists = false;
@@ -202,12 +202,12 @@
             nextRows = cassandraExplorerAdminClient
                     .getRows(keyspace, columnFamily, rows[rows.length - 1], "", 2);
 
-            if (previousRows.length > 1) {
+            if (previousRows != null && previousRows.length > 1) {
                 previousRowsExists = true;
             } else {
                 previousRowsExists = false;
             }
-            if (nextRows.length > 1) {
+            if (nextRows != null && nextRows.length > 1) {
                 nextRowsExists = true;
             } else {
                 nextRowsExists = false;

@@ -83,7 +83,7 @@ public class GadgetRequestProcessor implements HttpGetRequestProcessor {
             DOMSource xmlSource = Util.getSigStream(axisService, null);
             Result result = new StreamResult(response.getOutputStream());
             Map<String, String> paramMap = new HashMap<String, String>();
-            paramMap.put("wsrequest-location", "../carbon/admin/js/WSRequest.js");
+            paramMap.put("wsrequest-location", "../../carbon/admin/js/WSRequest.js");
             paramMap.put("stub-location", "?stub");
 
             generateGadget(xmlSource, result, paramMap);

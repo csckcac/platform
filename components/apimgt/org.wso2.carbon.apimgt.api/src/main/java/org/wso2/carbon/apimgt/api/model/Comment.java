@@ -18,6 +18,8 @@
 
 package org.wso2.carbon.apimgt.api.model;
 
+import java.util.Date;
+
 /**
  * This class represent the model for API comments
  */
@@ -39,6 +41,15 @@ public class Comment {
         this.text = text;
     }
 
+    public Date getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
+    }
+
     private String user;
     private String text;
+    private Date createdTime;
 }

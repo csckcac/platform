@@ -877,6 +877,7 @@ public class APIStoreHostObject extends ScriptableObject {
 			NativeObject row = new NativeObject();			
 			row.put("userName", row, n.getUser());
 			row.put("comment", row, n.getText());			
+			row.put("createdTime", row, n.getCreatedTime().getTime());
 			myn.put(i, myn, row);
 			i++;
 		}

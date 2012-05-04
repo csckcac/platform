@@ -534,6 +534,7 @@ public class APIConsumerImpl implements APIConsumer {
                         new org.wso2.carbon.apimgt.api.model.Comment();
                 comment1.setText(comment.getText());
                 comment1.setUser(comment.getUser());
+                comment1.setCreatedTime(comment.getCreatedTime());
                 commentList.add(comment1);
             }
             return commentList.toArray(new org.wso2.carbon.apimgt.api.model.Comment[commentList.size()]);

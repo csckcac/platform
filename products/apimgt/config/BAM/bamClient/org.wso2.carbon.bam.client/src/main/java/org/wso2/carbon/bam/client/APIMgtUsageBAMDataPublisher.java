@@ -49,28 +49,23 @@ public class APIMgtUsageBAMDataPublisher {
     private EventReceiver createEventReceiver() throws IOException, XMLStreamException {
 
         String config = FileUtil.readFileToString(System.getProperty("configFilePath") + "api-manager.xml");
-
         OMElement omElement = AXIOMUtil.stringToOM(config);
-
-        OMElement apiMGTDataAgentConfig = omElement.getFirstChildWithName(new QName("apiMGTDataAgentConfig"));
-
+        OMElement apiMGTDataAgentConfig = omElement.getFirstChildWithName(new QName("APIUsageTracking"));
         bamServerThriftPort = apiMGTDataAgentConfig.getFirstChildWithName(
-                new QName("bamServerThriftPort")).getText();
+                new QName("ThriftPort")).getText();
         bamServerURL = apiMGTDataAgentConfig.getFirstChildWithName(
-                new QName("bamServerURL")).getText();
+                new QName("BAMServerURL")).getText();
         bamServerUser = apiMGTDataAgentConfig.getFirstChildWithName(
-                new QName("bamServerUser")).getText();
+                new QName("BAMUser")).getText();
         bamServerPassword = apiMGTDataAgentConfig.getFirstChildWithName(
-                new QName("bamServerPassword")).getText();
+                new QName("BAMPassword")).getText();
         bamAgentTrustStore = apiMGTDataAgentConfig.getFirstChildWithName(
-                new QName("bamAgentTrustStore")).getText();
-        
+                new QName("BAMTrustStore")).getText();
         String carbonHome = System.getProperty("carbon.home");
 
         bamAgentTrustStore = carbonHome + File.separator + bamAgentTrustStore;
         bamAgentTrustStorePassword = apiMGTDataAgentConfig.getFirstChildWithName(
-                new QName("bamAgentTrustStorePassword")).getText();
-
+                new QName("BAMTrustStorePassword")).getText();
 
         EventReceiver eventReceiver = new EventReceiver();
         System.setProperty("javax.net.ssl.trustStore",

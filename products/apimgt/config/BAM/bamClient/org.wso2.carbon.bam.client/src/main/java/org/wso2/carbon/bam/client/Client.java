@@ -80,8 +80,15 @@ public class Client {
 
 
         String classAnalyzerContent = FileUtil.readFileToString(System.getProperty("configFilePath") + "ClassAnalyzer.xml");
-        String apiVersionSummarySequenceContent = FileUtil.readFileToString( System.getProperty("configFilePath") +
-                                                                             "APIVersionSummarySequence.xml");
+        String apiVersionUsageSummarySequenceContent = FileUtil.readFileToString( System.getProperty("configFilePath") +
+                                                                             "APIVersionUsageSummarySequence.xml");
+        String apiVersionLastAccessSummarySequenceContent = FileUtil.readFileToString( System.getProperty("configFilePath") +
+                                                                             "APIVersionLastAccessSummarySequence.xml");
+        String apiServiceTimeSummarySequenceContent = FileUtil.readFileToString( System.getProperty("configFilePath") +
+                                                                             "APIServiceTimeSummarySequence.xml");
+        String apiVersionUserUsageSummarySequenceContent = FileUtil.readFileToString( System.getProperty("configFilePath") +
+                                                                             "APIVersionUserUsageSummarySequence.xml");
+
 
 
         try {
@@ -94,7 +101,7 @@ public class Client {
 
             apiMgtUsageBAMDataPublisher.publishEvent();
 
-            System.out.println("Adding class analyzer");
+            System.out.println("Adding ClassAnalyzer");
 
             analyzerAdminServiceStub.addTask(classAnalyzerContent);
 
@@ -103,26 +110,91 @@ public class Client {
             //Wait for 1:30 min
             Thread.sleep(1000*60 + 30000);
 
+            System.out.println("Adding APIVersionUsageSummarySequence Analyzer");
 
-            System.out.println("Adding API version summary analyzer");
+            analyzerAdminServiceStub.addTask(apiVersionUsageSummarySequenceContent);
 
-            analyzerAdminServiceStub.addTask(apiVersionSummarySequenceContent);
-
-            System.out.println("Waiting 1:30 min until analyzer creates the APIVersionSummary CF.......");
+            System.out.println("Waiting 1:30 min until analyzer creates the APIVersionUsageSummaryTable CF.......");
 
             //Wait for 1:30 min
             Thread.sleep(1000*60 + 30000);
 
+            System.out.println("Adding APIVersionLastAccessSummarySequence Analyzer");
+
+            analyzerAdminServiceStub.addTask(apiVersionLastAccessSummarySequenceContent);
+
+            System.out.println("Waiting 1:30 min until analyzer creates the APIVersionLastAccessSummaryTable CF.......");
+
+            //Wait for 1:30 min
+            Thread.sleep(1000*60 + 30000);
+
+            System.out.println("Adding APIServiceTimeSummarySequence Analyzer");
+
+            analyzerAdminServiceStub.addTask(apiServiceTimeSummarySequenceContent);
+
+            System.out.println("Waiting 1:30 min until analyzer creates the APIServiceTimeSummaryTable CF.......");
+
+            //Wait for 1:30 min
+            Thread.sleep(1000*60 + 30000);
+
+            System.out.println("Adding APIVersionUserUsageSummarySequence Analyzer");
+
+            analyzerAdminServiceStub.addTask(apiVersionUserUsageSummarySequenceContent);
+
+            System.out.println("Waiting 1:30 min until analyzer creates the APIVersionUserUsageSummaryTable CF.......");
+
+            //Wait for 1:30 min
+            Thread.sleep(1000*60 + 30000);
+
+            System.out.println("Creating APIVersionUsageSummaryTableIndex ...");
+
             IndexDTO index = new IndexDTO();
-            index.setIndexName("APIVersionSummaryIndex");
-            index.setIndexedTable("APIVersionSummary");
+            index.setIndexName("APIVersionUsageSummaryTableIndex");
+            index.setIndexedTable("APIVersionUsageSummaryTable");
             index.setDataSourceType("CASSANDRA");
             String[] indexColumns = {"api"};
             index.setIndexedColumns(indexColumns);
             index.setCron("1 * * * * ? *");
             index.setGranularity(null);
 
-            System.out.println("Adding API Version Summary Index");
+            indexAdminServiceStub.createIndex(index);
+
+            System.out.println("Creating APIVersionLastAccessSummaryTableIndex ...");
+
+            index = new IndexDTO();
+            index.setIndexName("APIVersionLastAccessSummaryTableIndex");
+            index.setIndexedTable("APIVersionLastAccessSummaryTable");
+            index.setDataSourceType("CASSANDRA");
+            indexColumns[0] = "api_version";
+            index.setIndexedColumns(indexColumns);
+            index.setCron("1 * * * * ? *");
+            index.setGranularity(null);
+
+            indexAdminServiceStub.createIndex(index);
+
+            System.out.println("Creating APIServiceTimeSummaryTableIndex ...");
+
+            index = new IndexDTO();
+            index.setIndexName("APIServiceTimeSummaryTableIndex");
+            index.setIndexedTable("APIServiceTimeSummaryTable");
+            index.setDataSourceType("CASSANDRA");
+            indexColumns[0] = "api";
+            index.setIndexedColumns(indexColumns);
+            index.setCron("1 * * * * ? *");
+            index.setGranularity(null);
+
+            indexAdminServiceStub.createIndex(index);
+
+            System.out.println("Creating APIVersionUserUsageSummaryTableIndex ...");
+
+            index = new IndexDTO();
+            index.setIndexName("APIVersionUserUsageSummaryTableIndex");
+            index.setIndexedTable("APIVersionUserUsageSummaryTable");
+            index.setDataSourceType("CASSANDRA");
+            indexColumns[0] = "api";
+            index.setIndexedColumns(indexColumns);
+            index.setCron("1 * * * * ? *");
+            index.setGranularity(null);
 
             indexAdminServiceStub.createIndex(index);
 

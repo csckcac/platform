@@ -161,6 +161,18 @@
            </includes>
         </fileSet>
 
+	<fileSet>
+           <directory>../../p2-profile-gen/product/target/wso2carbon-core-${carbon.version}/repository/conf/security/</directory>
+           <outputDirectory>wso2dataservices-${pom.version}/repository/conf/security</outputDirectory>
+           <includes>
+               	<include>**/jaas.conf</include>
+                <include>**/krb5.conf</include>
+           </includes>
+        </fileSet>
+
+
+
+
     </fileSets>
 
     <dependencySets>

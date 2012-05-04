@@ -148,6 +148,17 @@
                 <include>**/zoo.cfg</include>
            </includes>
         </fileSet>
+	
+	<!-- Copying Kerberos configurations -->
+        <fileSet>
+           <directory>../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/security/</directory>
+           <outputDirectory>wso2stratos-dss-${pom.version}/repository/conf/security</outputDirectory>
+           <includes>
+               	<include>**/jaas.conf</include>
+               	<include>**/krb5.conf</include>
+           </includes>
+        </fileSet>
+
 
 		<!-- copy the landing page webapp -->
         <fileSet>

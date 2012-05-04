@@ -1147,10 +1147,12 @@ public class SecurityConfigAdmin {
 
                 // Set system wide kerberos configurations
 
-                String carbonConfig = CarbonUtils.getCarbonConfigDirPath();
-                if (carbonConfig != null) {
+                String carbonSecurityConfigurationPath = RampartConfigUtil.getCarbonSecurityConfigurationPath();
+                if (carbonSecurityConfigurationPath != null) {
 
-                    String krbFile = carbonConfig + File.separatorChar + KerberosConfigData.KERBEROS_CONFIG_FILE_NAME;
+                    String krbFile = carbonSecurityConfigurationPath + File.separatorChar
+                            + KerberosConfigData.KERBEROS_CONFIG_FILE_NAME;
+
                     File krbFileObject = new File(krbFile);
 
                     if (!krbFileObject.exists()) {

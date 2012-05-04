@@ -241,12 +241,28 @@
 	    <fileMode>644</fileMode>
 	</file>
 
-		<file>
+	<file>
             <source>../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/identity.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
 	    	<filtered>true</filtered>
 	    	<fileMode>644</fileMode>
         </file>
+
+	<file>
+            <source>../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/security/jaas.conf</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/security</outputDirectory>
+	    	<filtered>true</filtered>
+	    	<fileMode>644</fileMode>
+        </file>
+
+	<file>
+            <source>../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/conf/security/krb5.conf</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/security</outputDirectory>
+	    	<filtered>true</filtered>
+	    	<fileMode>644</fileMode>
+        </file>
+
+
 
     </files>
 </assembly>

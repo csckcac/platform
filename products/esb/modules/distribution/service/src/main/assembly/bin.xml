@@ -129,6 +129,18 @@
                 <include>**/qpid-virtualhosts.xml</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <directory>
+                ../../p2-profile/service/target/wso2carbon-core-${carbon.version}/repository/conf/security
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/security
+            </outputDirectory>
+            <includes>
+                <include>**/jaas.conf</include>
+                <include>**/krb5.conf</include>
+            </includes>
+        </fileSet>
+
 
 		<!-- copy the landing page webapp -->
         <fileSet>

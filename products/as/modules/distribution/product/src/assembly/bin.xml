@@ -155,9 +155,9 @@
         <!--copying Kerberos conf files -->
         <fileSet>
             <directory>
-                ../../p2-profile-gen/product/target/wso2carbon-core-${wso2carbon.version}/repository/conf/
+                ../../p2-profile-gen/product/target/wso2carbon-core-${wso2carbon.version}/repository/conf/security
             </directory>
-            <outputDirectory>wso2as-${pom.version}/repository/conf</outputDirectory>
+            <outputDirectory>wso2as-${pom.version}/repository/conf/security</outputDirectory>
             <includes>
                 <include>**/krb5.conf</include>
                 <include>**/jaas.conf</include>

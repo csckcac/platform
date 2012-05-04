@@ -16,9 +16,11 @@
 * under the License.
 */
 package org.wso2.carbon.security.util;
+import java.io.File;
 import java.util.Properties;
 
 import org.wso2.carbon.security.util.ServerCrypto;
+import org.wso2.carbon.utils.CarbonUtils;
 
 /**
  * Utility methods to compute Rampart configuration
@@ -44,5 +46,11 @@ public class RampartConfigUtil {
             props.setProperty(ServerCrypto.PROP_ID_TRUST_STORES, trustedCertStoresStr.toString());
         }
         return props;
+    }
+
+    public static String getCarbonSecurityConfigurationPath() {
+        String carbonConfig = CarbonUtils.getCarbonConfigDirPath();
+
+        return carbonConfig + File.separatorChar + "security";
     }
 }

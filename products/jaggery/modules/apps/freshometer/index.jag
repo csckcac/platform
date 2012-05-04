@@ -19,7 +19,7 @@ function loadXMLDoc(titletxt)
      document.getElementById("myDiv").innerHTML = "<h2>Ha! tried a blank search didn't you? try again</h2>";  
      exit(0);
  }
-document.getElementById("myDiv").innerHTML = "<h2>Searching</h2>";    
+document.getElementById("myDiv").innerHTML = "<p align='center' style='margin-top:20px'><img src='images/loading.gif' width='50px' height='50px' /></p>";    
 var xmlhttp;
 if (window.XMLHttpRequest)
   {// code for IE7+, Firefox, Chrome, Opera, Safari

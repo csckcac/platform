@@ -66,6 +66,7 @@
 		<module>closure-js-plugin</module>
                 <module>snappy-java</module>
 		<module>hive</module>
+		<module>hadoop</module>
 		<!-- orbit/modules -->
                 <module>orbit/cassandra</module>
                 <module>orbit/cassandra-jdbc</module>
@@ -92,6 +93,7 @@
 		<module>orbit/snappy-java</module>
 		<module>orbit/hive</module>
 		<module>orbit/datanucleus-core</module>
+		<module>orbit/hadoop-core</module>
 	     </modules>
    <dependencyManagement>
 	<dependencies>

@@ -49,11 +49,20 @@ import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.core.RegistryResources;
 import org.wso2.carbon.core.Resources;
-import org.wso2.carbon.core.persistence.*;
-import org.wso2.carbon.core.persistence.file.*;
+import org.wso2.carbon.core.persistence.PersistenceException;
+import org.wso2.carbon.core.persistence.PersistenceFactory;
+import org.wso2.carbon.core.persistence.PersistenceUtils;
 
-import org.wso2.carbon.core.util.*;
-import org.wso2.carbon.registry.core.*;
+import org.wso2.carbon.core.persistence.file.ModuleFilePersistenceManager;
+import org.wso2.carbon.core.persistence.file.ServiceGroupFilePersistenceManager;
+import org.wso2.carbon.core.util.CryptoException;
+import org.wso2.carbon.core.util.CryptoUtil;
+import org.wso2.carbon.core.util.KeyStoreManager;
+import org.wso2.carbon.core.util.KeyStoreUtil;
+import org.wso2.carbon.core.util.ParameterUtil;
+import org.wso2.carbon.registry.core.Registry;
+import org.wso2.carbon.registry.core.RegistryConstants;
+import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.jdbc.utils.Transaction;
 import org.wso2.carbon.registry.core.session.UserRegistry;
@@ -65,7 +74,11 @@ import org.wso2.carbon.security.SecurityServiceHolder;
 import org.wso2.carbon.security.config.service.KerberosConfigData;
 import org.wso2.carbon.security.config.service.SecurityConfigData;
 import org.wso2.carbon.security.config.service.SecurityScenarioData;
-import org.wso2.carbon.security.util.*;
+import org.wso2.carbon.security.util.RahasUtil;
+import org.wso2.carbon.security.util.RampartConfigUtil;
+import org.wso2.carbon.security.util.SecurityTokenStore;
+import org.wso2.carbon.security.util.ServerCrypto;
+import org.wso2.carbon.security.util.ServicePasswordCallbackHandler;
 import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.utils.CarbonUtils;
@@ -76,7 +89,11 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -185,8 +202,7 @@ public class SecurityConfigAdmin {
             throws SecurityConfigException {
 
         AxisService service = axisConfig.getServiceForActivation(serviceName);
-        String serviceGroupId = service.getAxisServiceGroup().getServiceGroupName();
-        boolean isTransactionStarted = sfpm.isTransactionStarted(serviceGroupId);
+        String serviceGroupId = null;
         try {
             SecurityScenarioData data = null;
             if (service == null) {
@@ -202,6 +218,8 @@ public class SecurityConfigAdmin {
                 }
             }
 
+            serviceGroupId = service.getAxisServiceGroup().getServiceGroupName();
+            boolean isTransactionStarted = sfpm.isTransactionStarted(serviceGroupId);
             if(!isTransactionStarted) {
                 sfpm.beginTransaction(serviceGroupId);
             }

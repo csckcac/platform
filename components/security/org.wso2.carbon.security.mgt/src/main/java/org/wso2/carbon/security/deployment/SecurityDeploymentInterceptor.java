@@ -139,12 +139,7 @@ public class SecurityDeploymentInterceptor implements AxisObserver {
     public void init(AxisConfiguration axisConfig) {
 
         try {
-            if (axisConfig.getParameterValue(Resources.PERSISTENCE_FACTORY_PARAM_NAME) == null) {
-                pf = new PersistenceFactory(axisConfig);
-                axisConfig.addParameter(Resources.PERSISTENCE_FACTORY_PARAM_NAME, pf);
-            } else {
-                pf = (PersistenceFactory) axisConfig.getParameterValue(Resources.PERSISTENCE_FACTORY_PARAM_NAME);
-            }
+            pf = PersistenceFactory.getInstance(axisConfig);
             sfpm = pf.getServiceGroupFilePM();
             mfpm = pf.getModuleFilePM();
         } catch (AxisFault e) {

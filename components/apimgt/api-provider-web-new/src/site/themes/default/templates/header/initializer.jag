@@ -1,0 +1,8 @@
+<%
+jagg.initializer("header", {
+
+    initialize:function () {
+    jagg.addHeaderJS("header", "jagg", "templates/header/js/header.js");
+    }
+});
+%>

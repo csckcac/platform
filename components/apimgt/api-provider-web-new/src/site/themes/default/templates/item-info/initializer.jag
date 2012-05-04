@@ -1,0 +1,9 @@
+<%
+jagg.initializer("item-info", {
+
+    initialize:function () {
+    jagg.addHeaderJS("item-info", "jagg", "tmpl/item-info/js/load-tabs.js");
+    }
+});
+%>
+

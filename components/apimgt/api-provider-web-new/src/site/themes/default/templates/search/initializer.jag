@@ -1,0 +1,9 @@
+<%
+jagg.initializer("search", {
+
+    initialize:function () {
+    jagg.addHeaderJS("search", "jagg", "tmpl/search/js/search-key.js");
+    }
+});
+%>
+

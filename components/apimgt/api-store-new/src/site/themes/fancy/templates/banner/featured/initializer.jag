@@ -1,0 +1,8 @@
+<%
+jagg.initializer("banner/featured", {
+
+    initialize:function () {
+
+    }
+});
+%>

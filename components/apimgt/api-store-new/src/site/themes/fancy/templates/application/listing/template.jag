@@ -1,0 +1,34 @@
+<% jagg.template = function(data, params, jagg) { %>
+<%
+var i, classes, path, app, apps = data.applications, length = apps.length;
+for(i = 0; i < length; i++) {
+    app = apps[i];
+    if(i == 0) classes = "first";
+    else if(i + 1 == length) classes = "last";
+%>
+<div class="applications">
+    <h2>Applications</h2>
+    <% includeTemplate("applications/addition", null); %>
+    <table cellspacing="0" cellpadding="0" class="sortable">
+        <thead>
+            <tr class="alt first last">
+                <th value="Name" rel="0">Name</th>
+                <th value="Actions" rel="1">Actions</th>
+            </tr>
+        </thead>
+        <% if(
+        <tbody>
+            <tr class="<%=classes%>">
+                <td value="<%=app.name%>"><%=app.name%></td>
+                <td value="">
+                    <a>
+                        <span data-icon="T" class="icon black small" style="display: inline-block;">
+                            <span aria-hidden="true">T</span>
+                        </span>
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<% }; %>

@@ -1,0 +1,55 @@
+<% jagg.template("page/base", function(inputs, outputs, jagg) { %>
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%=outputs.title%></title>
+    <meta charset="UTF-8">
+    <meta name="description" content=""/>
+
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/jquery/jquery-1.7.1.min.js")%>"></script>
+    <!--[if lt IE 9]><script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/html5/html5.js")%>"></script><![endif]-->
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/kickStart/prettify.js")%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/kickStart/kickstart.js")%>"></script>
+    <script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/jquery/external/jquery.bgiframe-2.1.2.js")%>"></script>
+    <script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/jquery/ui/jquery.ui.core.min.js")%>"></script>
+    <script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/jquery/ui/jquery.ui.widget.min.js")%>"></script>
+    <script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/jquery/ui/jquery.ui.mouse.min.js")%>"></script>
+    <script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/jquery/ui/jquery.ui.button.min.js")%>"></script>
+    <script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/jquery/ui/jquery.ui.draggable.min.js")%>"></script>
+    <script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/jquery/ui/jquery.ui.position.min.js")%>"></script>
+    <script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/jquery/ui/jquery.ui.resizable.min.js")%>"></script>
+    <script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/jquery/ui/jquery.ui.dialog.min.js")%>"></script>
+    <script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/jquery/ui/jquery.effects.core.min.js")%>"></script>
+    <script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/jquery/external/jquery.corner.js")%>"></script>
+
+    <link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/kickStart/css/kickstart.css")%>" media="all"/>
+    <link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl("/site/themes/fancy/js/lib/jquery/css/start/jquery-ui-1.8.19.custom.css")%>"/>
+    <link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl("/site/themes/fancy/css/style.css")%>" media="all"/>
+    <!--[if IE 7]><link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl("/site/themes/fancy/css/style-ie7.css")%>" media="all"/><![endif]-->
+    <%
+    var data = jagg.data();
+    jagg.printGlobals(data.js);
+    jagg.printGlobals(data.css);
+    jagg.printGlobals(data.code);
+    %>
+</head>
+<body>
+<% jagg.includeJag("templates/page/base/dialog-box.jag"); %>
+<div id="header">
+    <a id="top-of-page"></a>
+    <% jagg.includeBlock("menu/primary", null); %>
+</div>
+
+<div class="clearfix wrap main-wrap">
+    <% jagg.includeBlocks(outputs.body); %>
+    <div class="clear"></div>
+
+    <div class="col_12" id="footer">
+       <div class="col_7">&copy; Copyright 2011–2012 All Rights Reserved.</div>
+       <div class="col_5"><a class="powered-by-logo"></a></div>
+   </div>
+
+</div>
+</body>
+</html>
+<% }); %>

@@ -1,0 +1,14 @@
+<%
+jagg.initializer("page/base", {
+
+    initialize:function (data) {
+        var jaggi = {
+            context:site.context
+        };
+        jagg.addHeaderJS("page/base", "jagg", "templates/page/base/js/jagg.js");
+        jagg.addHeaderJS("page/base", "bevelTabs", "templates/page/base/js/bevel-tab-corners.js");
+        jagg.addHeaderJSCode("page/base", "jagg.site", 'jagg.site = ' + stringify(jaggi) + ';');
+    }
+});
+%>
+

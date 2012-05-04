@@ -73,13 +73,14 @@ public class SchemaTestCase {
         schemaElement.addAttribute("targetNamespace", "http://ww2.wso2.org/schema-test", null);
         schemaElement.declareNamespace("http://ww2.wso2.org/schema-test", "tns");
         schemaManager.updateSchema(newSchema);
+        doSleep();
 
         Assert.assertEquals(newSchema.getPath(), "/trunk/schemas/org/wso2/ww2/schema_test/purchasing.xsd");
         Assert.assertFalse(registry.resourceExists("/trunk/test_schemas/org/bar/purchasing.xsd"));
 
-        Thread.sleep(5000);
         // doing an update without changing anything.
         schemaManager.updateSchema(newSchema);
+        doSleep();
 
         Assert.assertEquals(newSchema.getPath(), "/trunk/schemas/org/wso2/ww2/schema_test/purchasing.xsd");
         Assert.assertEquals(newSchema.getAttribute("version"), "0.01");
@@ -97,6 +98,7 @@ public class SchemaTestCase {
                 return false;
             }
         });
+        doSleep();
         log.info("########Schema Len:" + schemas.length);
         Assert.assertEquals(schemas.length, 2);
         Assert.assertEquals(newSchema.getId(), schemas[0].getId());
@@ -168,5 +170,12 @@ public class SchemaTestCase {
         Assert.assertEquals(oldSchemaPath, "/trunk/schemas/org/bar/purchasing/" + schema.getId() + ".xsd");
         Assert.assertTrue(
                 registry.resourceExists("/trunk/schemas/org/bar/purchasing/" + schema.getId() + ".xsd"));
+    }
+
+    private void doSleep(){
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+        }
     }
 }

@@ -60,7 +60,7 @@ public class WSDLTestCase {
         wsdl.addAttribute("creator", "it is me");
         wsdl.addAttribute("version", "0.01");
         wsdlManager.addWsdl(wsdl);
-
+        doSleep();
         Wsdl newWsdl = wsdlManager.getWsdl(wsdl.getId());
         Assert.assertEquals(newWsdl.getWsdlElement().toString(), wsdl.getWsdlElement().toString());
         Assert.assertEquals(newWsdl.getAttribute("creator"), "it is me");
@@ -75,12 +75,14 @@ public class WSDLTestCase {
         wsdlElement.addAttribute("targetNamespace", "http://ww2.wso2.org/test", null);
         wsdlElement.declareNamespace("http://ww2.wso2.org/test", "tns");
         wsdlManager.updateWsdl(newWsdl);
+        doSleep();
 
         Assert.assertEquals(newWsdl.getPath(), "/trunk/wsdls/org/wso2/ww2/test/BizService.wsdl");
         //assertFalse(registry.resourceExists("/wsdls/http/foo/com/BizService.wsdl"));
 
         // doing an update without changing anything.
         wsdlManager.updateWsdl(newWsdl);
+        doSleep();
 
         Assert.assertEquals(newWsdl.getPath(), "/trunk/wsdls/org/wso2/ww2/test/BizService.wsdl");
         Assert.assertEquals(newWsdl.getAttribute("version"), "0.01");
@@ -103,6 +105,7 @@ public class WSDLTestCase {
         importElement.addAttribute("namespace", "http://bar.org/purchasing_dup", null);
 
         wsdlManager.updateWsdl(newWsdl);
+        doSleep();
 
         Schema[] schemas = newWsdl.getAttachedSchemas();
 
@@ -134,6 +137,7 @@ public class WSDLTestCase {
         // deleting the wsdl
         wsdlManager.removeWsdl(newWsdl.getId());
         Wsdl deletedWsdl = wsdlManager.getWsdl(newWsdl.getId());
+        doSleep();
         Assert.assertNull(deletedWsdl);
 
         // add again
@@ -148,7 +152,7 @@ public class WSDLTestCase {
 
     }
 
-    @Test(groups = {"wso2.greg"})
+    @Test(groups = {"wso2.greg"} , dependsOnMethods = {"testAddWSDL"})
     public void testEditWSDL() throws Exception {
         WsdlManager wsdlManager = new WsdlManager(registry);
 
@@ -165,7 +169,7 @@ public class WSDLTestCase {
 
         // now do an update.
         wsdlManager.updateWsdl(wsdl);
-
+        doSleep();
         // now get the wsdl and check the update is there.
         Wsdl wsdl2 = wsdlManager.getWsdl(wsdl.getId());
         Assert.assertEquals(wsdl2.getAttribute("creator2"), "it is me");
@@ -183,6 +187,14 @@ public class WSDLTestCase {
             return null;
         }
         return nodes.get(0);
+    }
+
+    private void doSleep(){
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+
+        }
     }
 
 }

@@ -46,7 +46,7 @@ public class BackwardAssociationHandlerTestCase {
         frameworkPath = FrameworkSettings.getFrameworkPath();
     }
 
-    @Test(groups = {"wso2.greg"}, description = "Add handler configuration to registry", priority = 1)
+    @Test(groups = {"wso2.greg"}, description = "Add handler configuration to registry")
     public void testCopyHandler() throws ExceptionException, RemoteException {
         log.debug("Running SuccessCase");
         String sampleHandlerName = "backwardAssociationHandler.xml";
@@ -61,7 +61,7 @@ public class BackwardAssociationHandlerTestCase {
         assertNotNull(handlerConfig, "Handler config cannot be null - " + handlerName);
     }
 
-    @Test(groups = {"wso2.greg"}, description = "Test backward association handler", priority = 1)
+    @Test(groups = {"wso2.greg"}, description = "Test backward association handler", dependsOnMethods = {"testCopyHandler"})
     public void testBackwardAssociation()
             throws ResourceAdminServiceExceptionException, RemoteException,
             AddAssociationRegistryExceptionException,
@@ -91,11 +91,13 @@ public class BackwardAssociationHandlerTestCase {
 
         AssociationTreeBean associationTreeBeanSourceFile = relationAdminServiceStub.getAssociationTree(
                 sourceResource, "calls");
+        doSleep();
         log.info("###### associationTreeBean-SourceFile: "+associationTreeBeanSourceFile.getAssociationTree());
         assertTrue(associationTreeBeanSourceFile.getAssociationTree().contains(targetResource),
                 "Association not available");
         AssociationTreeBean associationTreeBeanTargetFile = relationAdminServiceStub.getAssociationTree(
                 targetResource, "calledBy");
+        doSleep();
         log.info("###### associationTreeBean-TargetFile: "+associationTreeBeanTargetFile.getAssociationTree());
         assertTrue(associationTreeBeanTargetFile.getAssociationTree().contains(targetResource),
                 "Association not available");
@@ -113,6 +115,13 @@ public class BackwardAssociationHandlerTestCase {
 //        handlerManagementServiceStub.deleteHandler(handlerName);
         util.logout();
 
+    }
+
+    private void doSleep(){
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+        }
     }
 
     public static String fileReader(String fileName) {

@@ -1,0 +1,8 @@
+<%
+jagg.initializer("login", {
+
+    initialize:function () {
+    jagg.addHeaderJS("login", "jagg", "tmpl/login/js/login.js");
+    }
+});
+%>

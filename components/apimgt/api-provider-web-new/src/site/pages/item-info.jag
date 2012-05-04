@@ -6,6 +6,11 @@ var site = require("/site/conf/site.json");
     var apiName = request.getParameter("name");
     var apiVersion = request.getParameter("version");
 
+    var api, result, mod;
+
+    mod = jagg.module("api");
+    result = mod.getAPI(apiName,apiVersion);
+    api = result.api;
     jagg.render({
                     "name":"page/base",
                     "inputs":{
@@ -20,8 +25,7 @@ var site = require("/site/conf/site.json");
                                     "rBottom" : {
                                         "name" : "item-info",
                                         "params" : {
-                                            "apiName" : apiName,
-                                            "apiVersion" : apiVersion
+                                            "api" : api
                                         }
 
                                     }

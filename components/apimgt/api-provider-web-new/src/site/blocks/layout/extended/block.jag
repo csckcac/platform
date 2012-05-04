@@ -1,0 +1,53 @@
+<%
+jagg.block("layout/extended", {
+
+    getParent:function () {
+        return "layout/base";
+    },
+
+    getOutputs:function (inputs) {
+        return {
+            "top":[
+                {
+                    "name":"header",
+                    "inputs":null
+                }
+            ],
+            "left":[
+                {
+                    "name":"side-bar",
+                    "inputs":null
+                }
+            ],
+            "rTop":[
+                {
+                    "name":"breadcumb",
+                    "inputs":null
+                }
+            ],
+            "rBottom":inputs.rBottom
+
+        };
+    },
+
+    getInputs:function () {
+        return {
+            "rBottom":null
+        };
+    },
+
+    getOutputBlocks:function () {
+        return [
+            "top",
+            "left",
+            "rTop",
+            "rBottom"
+        ];
+    },
+    getInputBlocks:function () {
+        return [
+            "rBottom"
+        ];
+    }
+});
+%>

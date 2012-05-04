@@ -1,10 +1,11 @@
 //<%
 include("/site/themes/jagg.jag");
-var site = require("/site/conf/site.json");
-var msg = require("/site/conf/ui-messages.js");
 
 (function () {
-    var lib, obj, result, user, username, action = "getApplications";
+    var lib, obj, result, user, username,
+            action = "getApplications",
+            site = require("/site/conf/site.json"),
+            msg = require("/site/conf/ui-messages.jag");
     user = jagg.getUser();
     if (!user) {
         print({

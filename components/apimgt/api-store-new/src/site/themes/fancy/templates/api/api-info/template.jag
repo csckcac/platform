@@ -2,7 +2,6 @@
 <% var stars = require("/site/themes/modern/utils/ratings/star-generator.js"); %>
 <% var i, length, app, api = outputs.api, apps = outputs.applications, user = outputs.user; %>
 <div class="api-info">
-    <h2><%=api.name%></h2>
     <h5><%=api.provider%></h5>
 
     <div class="col_12 no-padding">

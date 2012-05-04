@@ -20,6 +20,7 @@
 
     <div id="middle">
         <div class="col_<%=String(mw)%>">
+            <% if(outputs.title) { %><h2><%=outputs.title%></h2><% } %>
             <% jagg.includeBlocks(outputs.middle); %>
         </div>
     </div>

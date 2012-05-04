@@ -1,0 +1,12 @@
+<% jagg.template("application/application-add", function(inputs, outputs, jagg) { %>
+<div class="application-add">
+    <h4>Add New Application</h4>
+    <fieldset>
+        <label for="text1">Name</label>
+        <input type="text" class="col_12" id="text1"/>
+        <div class="custom-spacey-row">
+            <button class="small green"><span class="icon white small" data-icon="+"></span>Add</button>
+        </div>
+    </fieldset>
+</div>
+<% }); %>

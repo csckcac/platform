@@ -26,6 +26,7 @@ var site = require("/site/conf/site.json");
                 {
                     "name":"layout/base",
                     "inputs":{
+                        "title":api.name,
                         "top":{
                             "name":"search/api-search",
                             "inputs":null

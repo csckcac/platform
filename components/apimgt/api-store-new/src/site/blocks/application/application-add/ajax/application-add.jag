@@ -1,10 +1,10 @@
 <%
 include("/jagg/jagg.jag");
 (function () {
-    var mod, obj, name, version, provider, tier, applicationId, result, username,
+    var mod, obj, application, result, username,
             user = jagg.getUser(),
             msg = require("/site/conf/ui-messages"),
-            action = "addSubscription";
+            action = "addApplication";
     if (!user) {
         print({
             error:true,
@@ -13,19 +13,11 @@ include("/jagg/jagg.jag");
         return;
     }
 
-    name = request.getParameter("name");
-    version = request.getParameter("version");
-    provider = request.getParameter("provider");
-    tier = request.getParameter("tier");
-    applicationId = request.getParameter("applicationId");
+    application = request.getParameter("application");
     username = user.username;
 
     mod = jagg.module("application");
-    result = mod.addAPISubscription({
-        name:name,
-        version:version,
-        provider:provider
-    }, tier, applicationId, username);
+    result = mod.addApplication(username, application);
 
     if (result.error) {
         obj = {

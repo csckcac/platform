@@ -8,7 +8,7 @@
                     <a href="<%=jagg.getAbsoluteUrl("/")%>">APIs</a>
                 </li>
                 <li>
-                    <a href="">Applications</a>
+                    <a href="<%=jagg.getAbsoluteUrl("/site/pages/applications.jag")%>">Applications</a>
                 </li>
                 <li>
                     <a href="">My Subscriptions</a>

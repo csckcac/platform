@@ -440,3 +440,7 @@ input[type="text"]:focus, textarea:focus, button:focus, a.button:focus, select:f
     padding: 10px 0;
 }
 
+.custom-spacey-row {
+    padding: 10px 5px;
+}
+

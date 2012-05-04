@@ -1,0 +1,41 @@
+<%
+include("/jagg/jagg.jag");
+var site = require("/site/conf/site.json");
+
+(function () {
+    var apis, site, tag, query, result, mod, user = jagg.getUser();
+    if (!user) {
+        response.sendRedirect(jagg.getAbsoluteUrl("/"));
+        return;
+    }
+
+    jagg.render({
+        "name":"page/base",
+        "inputs":{
+            "title":"API Store Listing",
+            "body":[
+                {
+                    "name":"layout/extended",
+                    "inputs":{
+                        "title":"Applications",
+                        "middle":[
+                            {
+                                "name":"application/application-add",
+                                "inputs":{
+                                    "apis":apis
+                                }
+                            },
+                            {
+                                "name":"application/application-list",
+                                "inputs":{
+                                    "user":user
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    });
+}());
+%>

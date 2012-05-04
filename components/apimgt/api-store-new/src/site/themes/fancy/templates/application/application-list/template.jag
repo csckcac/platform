@@ -1,14 +1,8 @@
-<% jagg.template = function(data, params, jagg) { %>
-<%
-var i, classes, path, app, apps = data.applications, length = apps.length;
-for(i = 0; i < length; i++) {
-    app = apps[i];
-    if(i == 0) classes = "first";
-    else if(i + 1 == length) classes = "last";
-%>
-<div class="applications">
-    <h2>Applications</h2>
-    <% includeTemplate("applications/addition", null); %>
+<% jagg.template("application/application-list", function(inputs, outputs, jagg) { %>
+<div id="application-list">
+    <%
+    var i, classes, path, app, apps = outputs.applications, length = apps.length;
+    if(length > 0) { %>
     <table cellspacing="0" cellpadding="0" class="sortable">
         <thead>
             <tr class="alt first last">
@@ -16,8 +10,13 @@ for(i = 0; i < length; i++) {
                 <th value="Actions" rel="1">Actions</th>
             </tr>
         </thead>
-        <% if(
         <tbody>
+            <%
+            for(i = 0; i < length; i++) {
+                app = apps[i];
+                if(i == 0) classes = "first";
+                else if(i + 1 == length) classes = "last";
+            %>
             <tr class="<%=classes%>">
                 <td value="<%=app.name%>"><%=app.name%></td>
                 <td value="">
@@ -28,7 +27,11 @@ for(i = 0; i < length; i++) {
                     </a>
                 </td>
             </tr>
+            <% } %>
         </tbody>
     </table>
+    <% } else { %>
+    <p>No applications yet</p>
+    <% } %>
 </div>
-<% }; %>
+<% }); %>

@@ -7,6 +7,7 @@ jagg.block("layout/extended", {
 
     getOutputs:function (inputs) {
         return {
+            "title":inputs.title,
             "header":{
                 "name":"menu/primary",
                 "inputs":null
@@ -60,6 +61,7 @@ jagg.block("layout/extended", {
 
     getInputs:function () {
         return {
+            "title":null,
             "middle":null
         };
     },

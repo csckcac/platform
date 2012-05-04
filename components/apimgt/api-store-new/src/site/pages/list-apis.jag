@@ -29,15 +29,13 @@ var site = require("/site/conf/site.json");
                 {
                     "name":"layout/extended",
                     "inputs":{
-                        "top":null,
-                        "left":null,
+                        "title":null,
                         "middle":{
                             "name":"api/listing",
                             "inputs":{
                                 "apis":apis
                             }
-                        },
-                        "right":null
+                        }
                     }
                 }
             ]

@@ -1,5 +1,6 @@
 <% jagg.template("api/api-info", function(inputs, outputs, jagg) { %>
-<% var stars = require("/site/themes/modern/utils/ratings/star-generator.js"); %>
+<script src="<%=jagg.getAbsoluteUrl("/site/themes/fancy/templates/api/api-info/js/subscription_button.js")%>"></script>
+<% var stars = require("/site/themes/fancy/utils/ratings/star-generator.js"); %>
 <% var api = outputs.api; %>
 <div class="api-info">
     <h2><%=api.name%></h2>
@@ -31,7 +32,7 @@
             </table>
         </div>
         <div class="col_3">
-            <button class="medium green">Subscribe</button>
+            <button class="medium green" id="apiSubscribeButton">Subscribe</button>
         </div>
         <div class="col_12 tabs-section">
             <% jagg.includeBlock("tab/basic", outputs.tabs); %>

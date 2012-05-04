@@ -183,7 +183,7 @@ public class RMAdminGlobal extends AbstractAdmin {
             axisModule.addParameter(new Parameter(paramName, paramValue));
         }
 
-        PersistenceFactory persistenceFactory = new PersistenceFactory(getAxisConfig());
+        PersistenceFactory persistenceFactory = PersistenceFactory.getInstance(getAxisConfig());
         ModulePersistenceManager mpm = persistenceFactory.getModulePM();
 
         Parameter parameter = new Parameter(paramName, paramValue);

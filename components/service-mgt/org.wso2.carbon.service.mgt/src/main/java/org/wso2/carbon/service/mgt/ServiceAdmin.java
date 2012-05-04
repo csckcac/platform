@@ -1015,7 +1015,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
                                            getConfigSystemRegistry(),
                                            getAxisConfig()).getCurrentScenario(serviceName);
         } catch (SecurityConfigException e) {
-            String msg = "Cannot retrieve security scenario for service";
+            String msg = "Cannot retrieve security scenario for service "+serviceName;
             log.error(msg, e);
             throw new AxisFault(msg, e);
         }

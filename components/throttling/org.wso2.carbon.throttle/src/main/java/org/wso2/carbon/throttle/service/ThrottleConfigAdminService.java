@@ -31,11 +31,12 @@ import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyEngine;
 import org.apache.neethi.builders.xml.XmlPrimtiveAssertion;
 import org.wso2.carbon.core.AbstractAdmin;
-import org.wso2.carbon.core.RegistryResources;
 import org.wso2.carbon.core.Resources;
-import org.wso2.carbon.core.persistence.*;
-import org.wso2.carbon.core.persistence.file.*;
-import org.wso2.carbon.registry.core.Association;
+import org.wso2.carbon.core.persistence.PersistenceException;
+import org.wso2.carbon.core.persistence.PersistenceFactory;
+import org.wso2.carbon.core.persistence.PersistenceUtils;
+import org.wso2.carbon.core.persistence.file.ModuleFilePersistenceManager;
+import org.wso2.carbon.core.persistence.file.ServiceGroupFilePersistenceManager;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -50,7 +51,6 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import java.io.File;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -192,7 +192,7 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
             //persist the throttle builtPolicy
             try {
                 //to registry
-                if(isProxyService) {
+                if (isProxyService) {
                     String policyType = "" + PolicyInclude.AXIS_SERVICE_POLICY;
                     String registryServicePath = PersistenceUtils.getRegistryResourcePath(axisService);
                     pf.getServicePM().persistPolicyToRegistry(policyToPersist, policyType, registryServicePath);
@@ -507,7 +507,7 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
             }
 
             //to registry
-            if(isProxyService) {
+            if (isProxyService) {
                 String policyType = "" + PolicyInclude.AXIS_OPERATION_POLICY;
                 String registryServicePath = PersistenceUtils.getRegistryResourcePath(axisService);
                 pf.getServicePM().persistPolicyToRegistry(policyToPersist, policyType, registryServicePath);

@@ -76,12 +76,12 @@ public class ModuleAdminService extends AbstractAdmin {
 
     public ModuleAdminService() throws Exception {
         this.axisConfig = getAxisConfig();
-        pf = new PersistenceFactory(axisConfig);
+        pf = PersistenceFactory.getInstance(axisConfig);
     }
 
     public ModuleAdminService(AxisConfiguration ac) throws Exception {
         this.axisConfig = ac;
-        pf = new PersistenceFactory(axisConfig);
+        pf = PersistenceFactory.getInstance(axisConfig);
     }
 
     /**
@@ -183,7 +183,6 @@ public class ModuleAdminService extends AbstractAdmin {
         }
 
         return modules;
-
     }
 
     public ModuleMetaData[] listModulesForService(String serviceName) throws ModuleMgtException {

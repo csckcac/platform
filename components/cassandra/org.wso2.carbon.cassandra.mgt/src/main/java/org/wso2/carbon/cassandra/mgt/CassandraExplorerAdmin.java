@@ -29,8 +29,6 @@ import me.prettyprint.hector.api.factory.HFactory;
 import me.prettyprint.hector.api.query.QueryResult;
 import me.prettyprint.hector.api.query.RangeSlicesQuery;
 import me.prettyprint.hector.api.query.SliceQuery;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.cassandra.dataaccess.ClusterInformation;
 import org.wso2.carbon.cassandra.dataaccess.DataAccessService;
 import org.wso2.carbon.core.AbstractAdmin;
@@ -45,8 +43,6 @@ import java.util.List;
 public class CassandraExplorerAdmin extends AbstractAdmin {
 
     private static final StringSerializer stringSerializer = new StringSerializer();
-
-    private static final Log log = LogFactory.getLog(CassandraKeyspaceAdmin.class);
 
     /**
      * @param keyspaceName Selected KeySpace by tenant
@@ -87,6 +83,21 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
         return rowNameslist.toArray(rowKeyArray);
     }
 
+    /**
+     * if you need to go forward give start="" and finish="" with desired limit or
+     *                                start="startId" and finish="" with limit
+     *
+     *  if you need to go backwards give start ="" finish="finishID"  with limit. Here it will
+     *  return no of rows equal limit up to finishID from start. eg: 1,2,3,4,5,6
+     *  if you need to get 3,4,5  startId ="" finishId=5 and limit =3
+     * @param keyspaceName
+     * @param columnFamily
+     * @param start
+     * @param finish
+     * @param limit
+     * @return
+     * @throws CassandraServerManagementException
+     */
     public String[] getRowNamesForColumnFamily(String keyspaceName, String columnFamily,
                                                String start, String finish, int limit)
             throws CassandraServerManagementException {
@@ -103,8 +114,8 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
                 if (justStarted) {
                     window1 = this.queryRowsforColumnFamily(keyspaceName, columnFamily,
                             "", "", limit);
-                    for (int i = 0; i < window1.length; i++) {
-                        if (finish.equals(window1[i])) {
+                    for (String aWindow1 : window1) {
+                        if (finish.equals(aWindow1)) {
                             return this.queryRowsforColumnFamily(keyspaceName, columnFamily,
                                     "", finish, limit);
                         }
@@ -185,6 +196,13 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
     }
 
     /**
+     * f you need to go forward give start="" and finish="" with desired limit or
+     *                                start="startId" and finish="" with limit
+     *
+     *  if you need to go backwards give start ="" finish="finishID"  with limit. Here it will
+     *  return no of rows equal limit up to finishID from start. eg: 1,2,3,4,5,6
+     *  if you need to get 3,4,5  startId ="" finishId=5 and limit =3
+     *
      * @param keyspaceName
      * @param columnFamily
      * @param rowName
@@ -212,8 +230,8 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
                 if (justStarted) {
                     window1 = this.queryColumnForRow(keyspaceName, columnFamily, rowName,
                             "", "", limit, isReversed);
-                    for (int i = 0; i < window1.length; i++) {
-                        if (lastKey.equals(window1[i].getName())) {
+                    for (Column aWindow1 : window1) {
+                        if (lastKey.equals(aWindow1.getName())) {
                             return this.queryColumnForRow(keyspaceName, columnFamily, rowName,
                                     "", lastKey, limit, isReversed);
                         }

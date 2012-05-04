@@ -78,7 +78,8 @@ public class CassandraExplorerAdminClient {
      * @throws org.wso2.carbon.cassandra.mgt.stub.explorer.CassandraExplorerAdminCassandraServerManagementException
      *
      */
-    public String[] getRows(String keyspaceName, String columnFamily, String startKey, String endKey, int limit)
+    public String[] getRows(String keyspaceName, String columnFamily, String startKey,
+                            String endKey, int limit)
             throws RemoteException, CassandraExplorerAdminCassandraServerManagementException {
         return explorerAdminStub.getRowNamesForColumnFamily(keyspaceName, columnFamily, startKey,
                 endKey, limit);
@@ -100,7 +101,8 @@ public class CassandraExplorerAdminClient {
      * @throws org.wso2.carbon.cassandra.mgt.stub.explorer.CassandraExplorerAdminCassandraServerManagementException
      *
      */
-    public Column[] getColumnsForRowName(String keyspaceName, String columnFamily, String rowName, String startColumn,
+    public Column[] getColumnsForRowName(String keyspaceName, String columnFamily, String rowName,
+                                         String startColumn,
                                          String lastCoulmn, int limit, boolean isReversed)
             throws RemoteException, CassandraExplorerAdminCassandraServerManagementException {
         return explorerAdminStub.getColumnsForRow(keyspaceName, columnFamily, rowName, startColumn,
@@ -123,10 +125,11 @@ public class CassandraExplorerAdminClient {
      * @throws java.rmi.RemoteException
      */
     public Column[] getColumnsInUpdateOrder(String keyspaceName, String columnFamily, String rowName,
-                                            String startColumn, String lastColumn, int limit, boolean isReversed)
+                                            String startColumn, String lastColumn, int limit,
+                                            boolean isReversed)
             throws CassandraExplorerAdminCassandraServerManagementException, RemoteException {
-        return explorerAdminStub.getColumnsInUpdateOrder(keyspaceName, columnFamily, rowName, startColumn,
-                lastColumn, limit, isReversed);
+        return explorerAdminStub.getColumnsInUpdateOrder(keyspaceName, columnFamily, rowName,
+                startColumn, lastColumn, limit, isReversed);
     }
 
     /**
@@ -143,7 +146,6 @@ public class CassandraExplorerAdminClient {
      */
     public Column getColumn(String keyspace, String columnFamily, String rowName, String columnName)
             throws CassandraExplorerAdminCassandraServerManagementException, RemoteException {
-
         return explorerAdminStub.getColumn(keyspace, columnFamily, rowName, columnName);
     }
 

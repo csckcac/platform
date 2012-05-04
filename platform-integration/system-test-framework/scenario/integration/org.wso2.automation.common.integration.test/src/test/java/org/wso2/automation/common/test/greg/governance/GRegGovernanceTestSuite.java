@@ -16,6 +16,7 @@
 package org.wso2.automation.common.test.greg.governance;
 
 import org.testng.annotations.AfterSuite;
+import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.suiteutills.MasterTestSuite;
 import org.wso2.platform.test.core.utils.suiteutills.SuiteVariables;
 
@@ -37,7 +38,7 @@ public class GRegGovernanceTestSuite extends MasterTestSuite {
         suiteVariablesList.add(new SuiteVariables("WSDLImportTest", WSDLImportServiceTestClient.class));
         suiteVariablesList.add(new SuiteVariables("WSDLContentUpdateTest", WsdlUpadateContentServiceTestClient.class));
         suiteVariablesList.add(new SuiteVariables("WSDLWithSpecialCharTest", WSDLWithSpecialCharTest.class));
-
+        setServerList(ProductConstant.GREG_SERVER_NAME);
         superSuite("GovernanceTestSuite", suiteVariablesList).run();
     }
 

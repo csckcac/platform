@@ -17,6 +17,7 @@
 package org.wso2.automation.common.test.greg.wsapi;
 
 import org.testng.annotations.AfterSuite;
+import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.suiteutills.MasterTestSuite;
 import org.wso2.platform.test.core.utils.suiteutills.SuiteVariables;
 
@@ -48,6 +49,7 @@ public class GRegWSAPITestSuite extends MasterTestSuite {
         suiteVariablesList.add(new SuiteVariables("VersionHandlingTest", VersionHandlingTest.class));
         suiteVariablesList.add(new SuiteVariables("AddWSDLTest", AddWSDLTest.class));
 
+        setServerList(ProductConstant.GREG_SERVER_NAME);
         superSuite("WSAPITestSuite", suiteVariablesList).run();
     }
 

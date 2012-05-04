@@ -18,6 +18,7 @@
 package org.wso2.automation.common.perf.as;
 
 import org.testng.annotations.AfterSuite;
+import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.suiteutills.MasterTestSuite;
 import org.wso2.platform.test.core.utils.suiteutills.SuiteVariables;
 
@@ -34,6 +35,7 @@ public class ASPerformanceTestSuite extends MasterTestSuite {
         suiteVariablesList.add(new SuiteVariables("WebAppUploaderClient", WebAppUploaderClient.class));
         suiteVariablesList.add(new SuiteVariables("AarServiceLoadTestClient", AarServiceLoadTestClient.class));
 
+        setServerList(ProductConstant.APP_SERVER_NAME);
         superSuite("Appserver-perf-test-suite", suiteVariablesList).run();
     }
 

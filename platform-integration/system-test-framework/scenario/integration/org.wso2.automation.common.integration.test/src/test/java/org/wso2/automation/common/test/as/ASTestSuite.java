@@ -71,6 +71,7 @@ public class ASTestSuite extends MasterTestSuite {
             suiteVariablesList.add(new SuiteVariables("FaultyWebappTest", FaultyWebAppTest.class));
             suiteVariablesList.add(new SuiteVariables("AARServiceWithSpaceinFileNameTest", AARServiceSpaceInFileNameTest.class));
         }
+        setServerList("AS");
         superSuite("Appserver-test-suite", suiteVariablesList).run();
     }
 

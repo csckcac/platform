@@ -16,6 +16,7 @@ public class BPSBpelActivitiesTestSuite extends MasterTestSuite {
         List<SuiteVariables> suiteVariablesList=new ArrayList<SuiteVariables>();
         suiteVariablesList.add(new SuiteVariables("CombineUrl", BpelActCombineUrl.class));
         suiteVariablesList.add(new SuiteVariables("InstanceManagement", BpelActIgnoreMissingFromData.class));
+        setServerList("BPS");
         superSuite("BPSScenariosSuite",suiteVariablesList).run();
     }
 

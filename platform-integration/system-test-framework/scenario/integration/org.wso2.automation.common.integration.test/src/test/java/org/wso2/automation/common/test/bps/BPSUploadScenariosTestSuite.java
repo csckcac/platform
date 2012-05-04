@@ -1,6 +1,8 @@
 package org.wso2.automation.common.test.bps;
 
 import org.testng.annotations.AfterSuite;
+import org.wso2.platform.test.core.ProductConstant;
+import org.wso2.platform.test.core.utils.ProductConfig;
 import org.wso2.platform.test.core.utils.suiteutills.MasterTestSuite;
 import org.wso2.platform.test.core.utils.suiteutills.SuiteVariables;
 import org.wso2.automation.common.test.bps.uploadscenarios.*;
@@ -18,6 +20,8 @@ public class BPSUploadScenariosTestSuite extends MasterTestSuite {
         suiteVariablesList.add(new SuiteVariables("BpelRedeployClient", BpelRedeployClient.class));
         suiteVariablesList.add(new SuiteVariables("BpelRetireDeployment", BpelRetireDeploymentClient.class));
         suiteVariablesList.add(new SuiteVariables("BpelVersioningDeployment", BpelVersioningClient.class));
+
+        setServerList(ProductConstant.BPS_SERVER_NAME);
         superSuite("BPSUploadSuite",suiteVariablesList).run();
     }
 

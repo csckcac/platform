@@ -1,6 +1,7 @@
 package org.wso2.automation.common.test.greg.features;
 
 import org.testng.annotations.AfterSuite;
+import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.suiteutills.MasterTestSuite;
 import org.wso2.platform.test.core.utils.suiteutills.SuiteVariables;
 
@@ -21,6 +22,7 @@ public class GRegAdminServiceTestSuite extends MasterTestSuite {
                                                   GRegMetaDataPermissionServiceTestClient.class));
         suiteVariablesList.add(new SuiteVariables("RolePermissionServiceTestClient",
                                                   RolePermissionServiceTestClient.class));
+        setServerList(ProductConstant.GREG_SERVER_NAME);
         superSuite("GRegAdminServiceTestSuite", suiteVariablesList).run();
     }
 

@@ -1,6 +1,7 @@
 package org.wso2.automation.product.scenarios.test.esb;
 
 import org.testng.annotations.AfterSuite;
+import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.suiteutills.MasterTestSuite;
 import org.wso2.platform.test.core.utils.suiteutills.SuiteVariables;
 
@@ -15,6 +16,8 @@ public class ESBProductScenarioTestSuite extends MasterTestSuite {
         suiteVariablesList.add(new SuiteVariables("XFormURLEncodedBuilderTest", XFormURLEncodedBuilderTest.class));
         suiteVariablesList.add(new SuiteVariables("XFormURLEncodedBuilderWithWSDLTest", XFormURLEncodedBuilderWithWSDLTest.class));
         suiteVariablesList.add(new SuiteVariables("MessageProcessorTest", MessageProcessorTest.class));
+
+        setServerList(ProductConstant.ESB_SERVER_NAME + "," + ProductConstant.APP_SERVER_NAME);
         superSuite("ESBproductScenariosTestSuite", suiteVariablesList).run();
     }
 

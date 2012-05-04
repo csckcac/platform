@@ -2,6 +2,7 @@ package org.wso2.automation.common.test.bps;
 
 
 import org.testng.annotations.AfterSuite;
+import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.suiteutills.MasterTestSuite;
 import org.wso2.platform.test.core.utils.suiteutills.SuiteVariables;
 import org.wso2.automation.common.test.bps.managescenarios.BpelInstanceManagementClient;
@@ -17,6 +18,7 @@ public class BPSScenariosTestSuite extends MasterTestSuite {
         List<SuiteVariables> suiteVariablesList=new ArrayList<SuiteVariables>();
         suiteVariablesList.add(new SuiteVariables("ProcessManagement", BpelProcessManagementClient.class));
         suiteVariablesList.add(new SuiteVariables("InstanceManagement", BpelInstanceManagementClient.class));
+        setServerList(ProductConstant.BPS_SERVER_NAME);
         superSuite("BPSScenariosSuite",suiteVariablesList).run();
     }
 

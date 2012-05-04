@@ -18,6 +18,7 @@
 package org.wso2.automation.common.test.greg.remoteregistry;
 
 import org.testng.annotations.AfterSuite;
+import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.suiteutills.MasterTestSuite;
 import org.wso2.platform.test.core.utils.suiteutills.SuiteVariables;
 
@@ -45,6 +46,7 @@ public class GRegRemoteRegistryAPITestSuite extends MasterTestSuite{
         suiteVariablesList.add(new SuiteVariables("TestResources", TestResources.class));
         suiteVariablesList.add(new SuiteVariables("TestTagging", TestTagging.class));
 
+        setServerList(ProductConstant.GREG_SERVER_NAME);
         superSuite("RemoteRegistryTestSuite", suiteVariablesList).run();
     }
 

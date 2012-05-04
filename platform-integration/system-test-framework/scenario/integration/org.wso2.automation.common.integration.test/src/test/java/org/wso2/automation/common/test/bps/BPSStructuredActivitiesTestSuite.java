@@ -1,6 +1,7 @@
 package org.wso2.automation.common.test.bps;
 
 import org.testng.annotations.AfterSuite;
+import org.wso2.platform.test.core.ProductConstant;
 import org.wso2.platform.test.core.utils.suiteutills.MasterTestSuite;
 import org.wso2.platform.test.core.utils.suiteutills.SuiteVariables;
 import org.wso2.automation.common.test.bps.mgtstructuredactivities.*;
@@ -19,6 +20,8 @@ public class BPSStructuredActivitiesTestSuite extends MasterTestSuite {
         suiteVariablesList.add(new SuiteVariables("PickClient", BpelStructAct_PickClient.class));
         suiteVariablesList.add(new SuiteVariables("RepeatUntill", BpelStructAct_RepeatUntillClient.class));
         suiteVariablesList.add(new SuiteVariables("WhileClient", BpelStructAct_WhileClient.class));
+
+        setServerList(ProductConstant.BPS_SERVER_NAME);
         superSuite("BPSStructuredSuite",suiteVariablesList).run();
     }
 

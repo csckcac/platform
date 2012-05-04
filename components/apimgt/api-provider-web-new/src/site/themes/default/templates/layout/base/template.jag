@@ -9,7 +9,7 @@
 
     <div id="left">
         <div class="span2">
-            < <% jagg.includeBlocks(outputs.left); %>
+            <% jagg.includeBlocks(outputs.left); %>
         </div>
     </div>
 

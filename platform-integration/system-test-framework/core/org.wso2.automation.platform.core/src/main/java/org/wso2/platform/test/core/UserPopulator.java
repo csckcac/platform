@@ -48,7 +48,7 @@ public class UserPopulator {
         framework = env.getFrameworkSettings();
     }
 
-    public void populateUsers()
+    public void populateUsers(List<String> productList)
             throws UserAdminException, RemoteException, LoginAuthenticationExceptionException {
         FrameworkProperties manProperties =
                 FrameworkFactory.getFrameworkProperties(ProductConstant.MANAGER_SERVER_NAME);
@@ -68,7 +68,6 @@ public class UserPopulator {
                 String[] permissions = {"/permission/"};
                 String[] userList = null;
                 ClusterReader clusterReader = new ClusterReader();
-                List<String> productList = framework.getEnvironmentVariables().getProductList();
                 if (framework.getEnvironmentSettings().isClusterEnable()) {
                     clusterReader.getClusterList();
                     for (String id : clusterReader.getClusterList()) {

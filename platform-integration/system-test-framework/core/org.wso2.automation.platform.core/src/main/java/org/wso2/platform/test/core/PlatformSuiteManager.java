@@ -7,6 +7,9 @@ import org.testng.ISuite;
 import org.testng.ISuiteListener;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class PlatformSuiteManager implements ISuiteListener {
 
     private static final Log log = LogFactory.getLog(PlatformSuiteManager.class);
@@ -18,7 +21,7 @@ public class PlatformSuiteManager implements ISuiteListener {
         log.info("Starting all servers");
         setKeyStoreProperties();
         try {
-            startMulitpleServers();
+            startMulitpleServers(suite.getParameter("server.list"));
         } catch (Exception e) {  /*cannot throw the exception */
             Assert.fail("Fail start servers " + e.getMessage());
         }
@@ -31,7 +34,7 @@ public class PlatformSuiteManager implements ISuiteListener {
     public void onFinish(ISuite suite) {
         log.info("Stopping all server");
         try {
-            stopMultipleServers();
+            stopMultipleServers(suite.getParameter("server.list"));
         } catch (Exception e) { /*cannot throw the exception */
             Assert.fail("Fail to stop servers " + e.getMessage());
         }
@@ -44,12 +47,13 @@ public class PlatformSuiteManager implements ISuiteListener {
      *
      * @throws Exception if an error occurs while in server stop process
      */
-    protected void stopMultipleServers() throws Exception {
+    protected void stopMultipleServers(String serverList) throws Exception {
         EnvironmentBuilder environmentBuilder = new EnvironmentBuilder();
 
         if ( environmentBuilder.getFrameworkSettings().getEnvironmentSettings().isEnableDipFramework()
              && !environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
-            ServerGroupManager.shutdownServers();
+            List<String> productList = Arrays.asList(serverList.split(","));
+            ServerGroupManager.shutdownServers(productList);
         }
     }
 
@@ -63,16 +67,18 @@ public class PlatformSuiteManager implements ISuiteListener {
      *
      * @throws Exception if an error occurs while in server startup process
      */
-    private void startMulitpleServers() throws Exception {
+    private void startMulitpleServers(String serverList) throws Exception {
         EnvironmentBuilder environmentBuilder = new EnvironmentBuilder();
         boolean deploymentEnabled =
                 environmentBuilder.getFrameworkSettings().getEnvironmentSettings().isEnableDipFramework();
         boolean startosEnabled =
-                !environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos();
-        if (deploymentEnabled && startosEnabled) {
-            ServerGroupManager.startServers();
+                environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos();
+        if (deploymentEnabled && !startosEnabled) {
+            List<String> productList = Arrays.asList(serverList.split(","));
+            ServerGroupManager.startServers(productList);
         } else {
-            new UserPopulator().populateUsers();
+            List<String> productList = Arrays.asList(serverList.split(","));
+            new UserPopulator().populateUsers(productList);
         }
     }
 

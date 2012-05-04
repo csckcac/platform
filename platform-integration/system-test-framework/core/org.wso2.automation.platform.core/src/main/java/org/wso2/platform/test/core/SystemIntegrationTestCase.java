@@ -30,7 +30,7 @@ public class SystemIntegrationTestCase{
         if(framework.getEnvironmentSettings().isEnableDipFramework()) {
             startServers();
         }
-        new UserPopulator().populateUsers();
+//        new UserPopulator().populateUsers();
     }
 
 
@@ -42,7 +42,7 @@ public class SystemIntegrationTestCase{
         EnvironmentBuilder env = new EnvironmentBuilder();
         FrameworkSettings framework = env.getFrameworkSettings();
         if (!framework.getEnvironmentSettings().is_runningOnStratos()) {
-            ServerGroupManager.startServers();
+//            ServerGroupManager.startServers();
         }
     }
 }

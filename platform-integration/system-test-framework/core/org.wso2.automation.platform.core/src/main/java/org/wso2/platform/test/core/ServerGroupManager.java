@@ -61,20 +61,17 @@ public class ServerGroupManager {
 
     private static List<ServerManager> serverManagerList = new ArrayList<ServerManager>();
 
-    public static synchronized void startServers() throws Exception {
+    public static synchronized void startServers(List<String> productList) throws Exception {
         log.info("Server starting...");
         log.info("Server running " + serversRunning);
         EnvironmentBuilder env = new EnvironmentBuilder();
         if (!serversRunning) {
 
-            Assert.assertNotNull("Product List is not provided", env.getFrameworkSettings().
-                    getEnvironmentVariables().getProductList().toArray().toString());
             Assert.assertNotNull("Deployment Framework Home not provided", env.getFrameworkSettings().
                     getEnvironmentVariables().getDeploymentFrameworkPath());
             Assert.assertTrue(PackageCreator.createPackage());
 
             ServerManager serverManager;
-            List<String> productList = env.getFrameworkSettings().getEnvironmentVariables().getProductList();
 
             try {
                 OMElement commonConfig = AXIOMUtil.stringToOM(FileManager.readFile
@@ -120,7 +117,7 @@ public class ServerGroupManager {
             }
 
             //create users in each server
-            new UserPopulator().populateUsers();
+            new UserPopulator().populateUsers(productList);
 
 //            Runtime.getRuntime().addShutdownHook(new Thread() {
 //                public void run() {
@@ -224,11 +221,9 @@ public class ServerGroupManager {
         databaseManager.disconnect();
     }
 
-    public static synchronized void shutdownServers() throws Exception {
+    public static synchronized void shutdownServers(List<String> productList) throws Exception {
         if (serversRunning) {
             serversRunning = false;
-            EnvironmentBuilder env = new EnvironmentBuilder();
-            List<String> productList = env.getFrameworkSettings().getEnvironmentVariables().getProductList();
             UserInfo adminDetails = UserListCsvReader.getUserInfo(0);//get admin user of all products
             AdminServiceCarbonServerAdmin adminServiceCarbonServerAdmin;
             try {
@@ -290,6 +285,6 @@ public class ServerGroupManager {
     protected static String login(String userName, String password, String hostName)
             throws LoginAuthenticationExceptionException, RemoteException {
         AdminServiceAuthentication loginClient = new AdminServiceAuthentication(hostName);
-        return loginClient.login(userName, password, hostName);
+        return loginClient.login(userName, password, "127.0.0.1");
     }
 }

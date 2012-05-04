@@ -12,13 +12,14 @@ import java.io.File;
 import java.util.*;
 
 public class MasterTestSuite {
+    private Map<String, String> parameters = new HashMap<String, String>();
 
     public TestNG superSuite(String SuiteName, List<SuiteVariables> suiteVariablesList) {
         XmlSuite suite = new XmlSuite();
         suite.setName(SuiteName);
         suite.setVerbose(1);
         suite.setThreadCount(2);
-        Map<String, String> parameters = new HashMap<String, String>();
+
         parameters.put("first-name", "Cedric");
 
         suite.setParameters(parameters);                                        
@@ -44,4 +45,9 @@ public class MasterTestSuite {
         tng.setOutputDirectory(ProductConstant.REPORT_LOCATION + File.separator + "reports");
         return tng;
     }
+    
+    public void setServerList(String serverList) {
+        parameters.put("server.list", serverList);
+    }
+
 }

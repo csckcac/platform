@@ -59,7 +59,7 @@ public class    AgentPersistenceManager {
         containerDAO.delete(containerName);
     }
 
-    public boolean deleteWorkerNode(String epr)
+    public boolean deleteHostMachine(String epr)
             throws SQLException {
         HostMachineDAO hostMachineDAO = new HostMachineDAO();
         return hostMachineDAO.delete(epr);

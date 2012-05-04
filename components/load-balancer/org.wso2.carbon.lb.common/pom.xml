@@ -59,11 +59,11 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.logging</artifactId>
         </dependency>
-        <dependency>
+        <!--dependency>
         	<groupId>mysql</groupId>
         	<artifactId>mysql-connector-java</artifactId>
         	<version>5.1.6</version>
-        </dependency>
+        </dependency-->
         <!-- This mysql dependency is required for tests-->
     </dependencies>
 

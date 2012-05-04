@@ -34,7 +34,6 @@ public class ZoneDAO extends AbstractDAO{
      */
     public boolean create(Zone zone, String[] domains) throws SQLException {
         boolean successfullyAdded = false;
-        ResultSet resultSet = null;
         try{
             con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
             Class.forName(driver);
@@ -56,12 +55,12 @@ public class ZoneDAO extends AbstractDAO{
             throw new SQLException(msg);
         }
         finally {
-            try { if (resultSet != null) resultSet.close(); } catch(Exception e) {}
             try { if (statement != null) statement.close(); } catch(SQLException e) {}
             try { if (con != null) con.close(); } catch(Exception e) {}
         }
         return successfullyAdded;
     }
+
 
     /**
      * This is called when configuration update call came. It will update the domains.
@@ -170,6 +169,7 @@ public class ZoneDAO extends AbstractDAO{
         }
         return isExist;
     }
+
 
 
 }

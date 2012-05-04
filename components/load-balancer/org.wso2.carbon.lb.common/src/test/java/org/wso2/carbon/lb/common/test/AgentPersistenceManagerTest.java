@@ -21,6 +21,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.lb.common.persistence.AgentPersistenceManager;
 
+/**
+ * This test class is there to test the database access methods. There is a testng.xml to run these
+ * tests as a suit. It's located at test/resources. Currently it is disabled by commenting the class
+ * element at the xml file. Mysql driver dependancy at pom.xml is also disabled and it should be
+ * uncommented to support database activities.
+ */
 public class AgentPersistenceManagerTest {
 	
 	private static final Log log = LogFactory.getLog(AgentPersistenceManagerTest.class);;
@@ -152,18 +158,34 @@ public class AgentPersistenceManagerTest {
   @Test(dataProvider="dataProviderForDAO")
   public void addHostMachine(HostMachine hostMachine, String[] domains)  {
 
-//	  AgentPersistenceManager agentPersistenceManager = AgentPersistenceManager.getPersistenceManager();
-//      boolean isAdded = false;
-//	  try {
-//		  isAdded = agentPersistenceManager.addHostMachine(hostMachine, domains);
-//	  } catch (SQLException e) {
-//		  String msg = "Test failure while adding host machine";
-//		  log.error(msg);
-//	  }
-//      System.out.println(" HM added " + isAdded);
-//      Assert.assertEquals(isAdded, true);
+
+
+	  AgentPersistenceManager agentPersistenceManager = AgentPersistenceManager.getPersistenceManager();
+      boolean isAdded = false;
+	  try {
+		  isAdded = agentPersistenceManager.addHostMachine(hostMachine, domains);
+	  } catch (SQLException e) {
+		  String msg = "Test failure while adding host machine";
+		  log.error(msg);
+	  }
+      System.out.println(" HM added " + isAdded);
+      Assert.assertEquals(isAdded, true);
 
   }
+
+    @Test(dataProvider="dataProviderForDAO")
+    public void deleteHostMachine(HostMachine hostMachine) {
+        AgentPersistenceManager agentPersistenceManager = AgentPersistenceManager.getPersistenceManager();
+        boolean isDeleted = false;
+
+        try {
+            isDeleted = agentPersistenceManager.deleteHostMachine(hostMachine.getEpr());
+        } catch (SQLException e) {
+            String msg = "Test failure while deleting host machine";
+            log.error(msg);
+        }
+
+    }
 //
 //  @Test
 //  public void addInstance() {
@@ -186,11 +208,7 @@ public class AgentPersistenceManagerTest {
 //  public void deleteContainer() {
 //    throw new RuntimeException("Test not implemented");
 //  }
-//
-//  @Test
-//  public void deleteWorkerNode() {
-//    throw new RuntimeException("Test not implemented");
-//  }
+
 //
 //  @Test
 //  public void getPersistenceManager() {

@@ -149,7 +149,6 @@ public class ContainerDAO extends AbstractDAO{
             Class.forName(driver);
             con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
             statement = con.createStatement();
-
             String sqlDomain =  "SELECT zone FROM domain WHERE domain_name='" + domain + "'" ;
             //Here we get all the host machines that maps to zone
             resultSetForHM = statement.executeQuery(sqlDomain);
@@ -309,8 +308,8 @@ public class ContainerDAO extends AbstractDAO{
         HostMachine hostMachine = getAvailableHostMachine(domain);
         containerInformation.setEpr(hostMachine.getEpr());
         Bridge[] bridges = hostMachine.getBridges();
-        String bridgeIp = bridges[0].getBridgeIp();
         containerInformation.setContainerRoot(hostMachine.getContainerRoot());
+        String bridgeIp = bridges[0].getBridgeIp();
         containerInformation.setBridge(bridgeIp);
         containerInformation.setIp(getAvailableIp(bridgeIp));
         containerInformation.setNetGateway(bridges[0].getNetGateway());
@@ -320,6 +319,4 @@ public class ContainerDAO extends AbstractDAO{
         //container id can not be set from here. They will be set from adapter level.
         return containerInformation;
     }
-
-
 }

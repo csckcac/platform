@@ -127,10 +127,12 @@ public class HostMachineDAO extends AbstractDAO{
             Class.forName(driver);
             con = DriverManager.getConnection(url + db, dbUsername, dbPassword);
             statement = con.createStatement();
-            String sql =  "SELECT 1 FROM host_machine WHERE epr='" + endPoint + "'";
+            String sql =  "SELECT available FROM host_machine WHERE epr='" + endPoint + "'";
             //return a result if there is a record
             resultSet = statement.executeQuery(sql);
-            isExist = resultSet.next();
+            if(resultSet.next()){
+                isExist = resultSet.getBoolean("available");
+            }
         }catch (SQLException s){
             String msg = "SQL statement is not executed for host machine exist !";
             log.error(msg);
@@ -147,6 +149,7 @@ public class HostMachineDAO extends AbstractDAO{
         }
         return isExist;
     }
+
 
     /**
      * This is to check whether there are any available host machines in input domain and will be
@@ -167,9 +170,11 @@ public class HostMachineDAO extends AbstractDAO{
             resultSet = statement.executeQuery(sql);
             if(resultSet.next()){ //get the first result as only one zone is per domain
                 String zone = resultSet.getString("zone");
-                sql =  "SELECT 1 FROM host_machine WHERE zone='" + zone + "'";
+                sql =  "SELECT available FROM host_machine WHERE zone='" + zone + "'";
                 resultSet = statement.executeQuery(sql);
-                isAvailable = resultSet.next();
+                if(resultSet.next()){
+                    isAvailable = resultSet.getBoolean("available");
+                }
             }
         }catch (SQLException s){
             String msg = "SQL statement is not executed for host machine exist !";
@@ -187,6 +192,7 @@ public class HostMachineDAO extends AbstractDAO{
         }
         return isAvailable;
     }
+
 
     /**
      * This method will delete host machine from database when host machine is removed from the zone.
@@ -301,70 +307,6 @@ public class HostMachineDAO extends AbstractDAO{
             try { if (con != null) con.close(); } catch(Exception e) {}
         }
         return eprToContainerRootMap;
-    }
-
-
-    public static void main(String[] args) throws SQLException {
-        String epr = "epr4";
-        String zoneName = "zone1";
-              Bridge[] bridges = new Bridge[3];
-              bridges[0] = new Bridge();
-              bridges[1] = new Bridge();
-              bridges[2] = new Bridge();
-
-              bridges[0].setBridgeIp("168.192.1.0");
-              bridges[0].setAvailable(true);
-              bridges[0].setCurrentCountIps(0);
-              bridges[0].setMaximumCountIps(100);
-              bridges[0].setNetGateway("net_gateway");
-              bridges[0].setNetMask("net_mask");
-              bridges[0].setHostMachine(epr);
-              
-
-              bridges[1].setBridgeIp("168.192.2.0");
-              bridges[1].setAvailable(true);
-              bridges[1].setCurrentCountIps(0);
-              bridges[1].setMaximumCountIps(100);
-              bridges[1].setNetGateway("net_gateway");
-              bridges[1].setNetMask("net_mask");
-              bridges[1].setHostMachine(epr);
-
-              bridges[2].setBridgeIp("168.192.3.0");
-              bridges[2].setAvailable(true);
-              bridges[2].setCurrentCountIps(0);
-              bridges[2].setMaximumCountIps(100);
-              bridges[2].setNetGateway("net_gateway");
-              bridges[2].setNetMask("net_mask");
-              bridges[2].setHostMachine(epr);
-
-
-              HostMachine hostMachine = new HostMachine();
-              hostMachine.setAvailable(true);
-              hostMachine.setContainerRoot("ContainerRoot");
-              hostMachine.setIp("ip");
-              hostMachine.setZone(zoneName);
-              hostMachine.setBridges(bridges);
-              hostMachine.setEpr(epr);
-
-              String[] domains = new String[2];
-              domains[0] = "domian1";
-              domains[1] = "domain2";
-
-              Zone zone = new Zone();
-              zone.setName(zoneName);
-              zone.setAvailable(true);
-              AgentPersistenceManager agentPersistenceManager = AgentPersistenceManager.getPersistenceManager();
-              if (!agentPersistenceManager.isZoneExist(zone.getName())) {
-                  String msg = "Zone does not exists ";
-                  System.out.println(msg);
-                  agentPersistenceManager.addZone(zone, domains);
-              } else {
-                  String msg = "Zone exist";
-                  System.out.println(msg);
-              }
-
-        HostMachineDAO hostMachineDAO = new HostMachineDAO();
-        hostMachineDAO.create(hostMachine, domains);
     }
 
 }

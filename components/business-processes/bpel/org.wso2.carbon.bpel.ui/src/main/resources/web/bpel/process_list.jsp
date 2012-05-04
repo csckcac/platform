@@ -5,7 +5,6 @@
 <%@ page import="org.wso2.carbon.bpel.ui.BpelUIUtil" %>
 <%@ page import="org.wso2.carbon.bpel.ui.clients.BPELPackageManagementServiceClient" %>
 <%@ page import="org.wso2.carbon.bpel.ui.clients.ProcessManagementServiceClient" %>
-<%@ page import="org.wso2.carbon.registry.resource.ui.Utils" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>

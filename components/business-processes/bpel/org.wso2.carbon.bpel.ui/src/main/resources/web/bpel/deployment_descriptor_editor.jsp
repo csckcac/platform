@@ -26,12 +26,11 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="javax.xml.namespace.QName" %>
-<%@ page import="static org.wso2.carbon.bpel.stub.mgt.types.On_type1.Factory.fromValue" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Arrays" %>
+<%@ page import="java.util.List" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
-
-<fmt:bundle basename="org.wso2.carbon.bpel.ui.i18n.Resources">
 
 <jsp:useBean id="deployDescriptorUpdater" scope="session"
              class="org.wso2.carbon.bpel.ui.DeploymentDescriptorUpdater"/>
@@ -44,15 +43,12 @@
             CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/bpel/processes");
     boolean isAuthorizedToMonitor =
             CarbonUIUtil.isUserAuthorized(request, "/permission/admin/monitor/bpel");
-    boolean isAuthorizedToManageServices =
-            CarbonUIUtil.isUserAuthorized(request, "/permission/admin/manage/modify/service");
 
     String processID = request.getParameter("Pid");
     String operation = request.getParameter("operation");
     ProcessManagementServiceClient processMgtClient;
     ProcessDeployDetailsList_type0 processDeployDetailsListType;
     ArrayList<String> scopeNames = new ArrayList<String>();
-
 
     if (processID != null && processID.trim().length() > 0 &&
             (isAuthorizedToMonitor || isAuthorizedToManageProcesses)) {
@@ -115,7 +111,6 @@
             BpelUIUtil.updateBackEnd(processMgtClient, processDeployDetailsListType,
                     deployDescriptorUpdater, selecttype, scopeNames);
         } catch (Exception e) {
-            e.printStackTrace();
             response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
             CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
             session.setAttribute(CarbonUIMessage.ID, uiMsg);
@@ -126,18 +121,14 @@
     }
 } else {
     try {
-
         if (processDeployDetailsListType != null) {  //create a new bean instance with processDeployDetailsList_type0 data
             BpelUIUtil.configureDeploymentDescriptorUpdater(processDeployDetailsListType,
                     deployDescriptorUpdater);
         }
-
     } catch (Exception e) {
-
         response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
         CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
         session.setAttribute(CarbonUIMessage.ID, uiMsg);
-
 %>
 <jsp:include page="../admin/error.jsp"/>
 <%
@@ -222,6 +213,7 @@
 
 <link type="text/css" rel="stylesheet" href="css/style.css"/>
 <%--<link media="all" type="text/css" rel="stylesheet" href="css/xmlverbatim.css">--%>
+<fmt:bundle basename="org.wso2.carbon.bpel.ui.i18n.Resources">
 <carbon:breadcrumb
         label="dd.info"
         resourceBundle="org.wso2.carbon.bpel.ui.i18n.Resources"
@@ -465,7 +457,7 @@
         </td>
         <td>
             <%
-                String[] eventsList = deployDescriptorUpdater.getEvents();
+                List<String> eventsList = deployDescriptorUpdater.getEvents();
                 deployDescriptorUpdater.setEvents(new String[0]);
 
             %>
@@ -506,7 +498,7 @@
     </thead>
 
     <%
-        ScopeEventType[] scopeEvents = deployDescriptorUpdater.getScopeEvents();
+        List<ScopeEventType> scopeEvents = deployDescriptorUpdater.getScopeEvents();
         if (scopeEvents != null) {
 
     %>
@@ -530,7 +522,7 @@
 
         <%
             EnableEventListType scopeLevelenableEventList = scopeEvent.getEnabledEventList();
-            String[] scopeLevelEnabledEvents = scopeLevelenableEventList.getEnableEvent();
+            List<String> scopeLevelEnabledEvents = Arrays.asList(scopeLevelenableEventList.getEnableEvent());
         %>
         <td>
             <input type="checkbox" name="scopeevents" value="instanceLifecycle"
@@ -647,7 +639,7 @@
     <tr>
         <td>Success</td>
         <%
-            String[] successCategoryList = deployDescriptorUpdater.getSuccesstypecleanups();
+            List<String> successCategoryList = deployDescriptorUpdater.getSuccesstypecleanups();
             deployDescriptorUpdater.setSuccesstypecleanups(new String[0]);
         %>
 
@@ -689,7 +681,7 @@
     <tr>
         <td>Failure</td>
         <%
-            String[] failureCategoryList = deployDescriptorUpdater.getFailuretypecleanups();
+            List<String> failureCategoryList = deployDescriptorUpdater.getFailuretypecleanups();
             deployDescriptorUpdater.setFailuretypecleanups(new String[0]);
         %>
         <td>

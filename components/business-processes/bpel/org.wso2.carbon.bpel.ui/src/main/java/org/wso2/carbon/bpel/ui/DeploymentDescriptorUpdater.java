@@ -57,6 +57,7 @@ public class DeploymentDescriptorUpdater {
         successtypecleanups = new ArrayList<String>();
         failuretypecleanups = new ArrayList<String>();
         events = new ArrayList<String>();
+        scopeEvents = new ArrayList<ScopeEventType>();
     }
 
     public String getInmemorystatus() {
@@ -109,15 +110,21 @@ public class DeploymentDescriptorUpdater {
     }
 
     public void setSuccesstypecleanups(String[] successtypecleanups) {
-        Collections.addAll(this.successtypecleanups, successtypecleanups);
+        if (successtypecleanups != null) {
+            Collections.addAll(this.successtypecleanups, successtypecleanups);
+        }
     }
 
     public void setFailuretypecleanups(String[] failuretypecleanups) {
-        Collections.addAll(this.failuretypecleanups, failuretypecleanups);
+        if (failuretypecleanups != null) {
+            Collections.addAll(this.failuretypecleanups, failuretypecleanups);
+        }
     }
 
     public void setScopeEvents(ScopeEventType[] scopeEvents) {
-        Collections.addAll(this.scopeEvents, scopeEvents);
+        if (scopeEvents != null) {
+            Collections.addAll(this.scopeEvents, scopeEvents);
+        }
     }
 
     public void setPropertyList(PropertyListType propertyList) {
@@ -142,7 +149,9 @@ public class DeploymentDescriptorUpdater {
     }
 
     public void setEvents(String[] events) {
-        Collections.addAll(this.events, events);
+        if (events != null) {
+            Collections.addAll(this.events, events);
+        }
     }
 
     public void setGentype(String gentype) {

@@ -77,20 +77,20 @@ public class ProcessInstance
         this.processModel = processModel;
 	}
 
-//	/**
-//	 * Returns the name of the associated {@link ProcessModel}.
-//	 *
-//	 * @return The name of the associated {@link ProcessModel}.
-//	 */
-//	public String getProcessModelName() {
-//		String name = "";
-//
-//		if (this.processModel != null) {
-//			name = this.processModel.getName();
-//		}
-//
-//		return name;
-//	}
+	/**
+	 * Returns the name of the associated {@link ProcessModel}.
+	 *
+	 * @return The name of the associated {@link ProcessModel}.
+	 */
+	public String getProcessModelName() {
+		String name = "";
+
+		if (this.processModel != null) {
+			name = this.processModel.getName();
+		}
+
+		return name;
+	}
 
 	/**
 	 * Returns the value of iid.

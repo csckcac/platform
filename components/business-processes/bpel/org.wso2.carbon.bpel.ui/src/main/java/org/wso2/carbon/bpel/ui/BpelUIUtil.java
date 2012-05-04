@@ -729,12 +729,10 @@ public final class BpelUIUtil {
         return "";
     }
 
-    public static String isGivenEventChecked(String[] eventsList, String enabledEvent) {
-        if (eventsList != null) {
-            for (String targetEvent : eventsList) {
-                if (targetEvent.equalsIgnoreCase(enabledEvent)) {
-                    return CHECKED;
-                }
+    public static String isGivenEventChecked(List<String> eventsList, String enabledEvent) {
+        for (String targetEvent : eventsList) {
+            if (targetEvent.equalsIgnoreCase(enabledEvent)) {
+                return CHECKED;
             }
         }
         return "";

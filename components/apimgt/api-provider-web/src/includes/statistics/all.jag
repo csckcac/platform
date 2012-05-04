@@ -124,28 +124,33 @@ $(document).ready(function() {
             }
             if(json.data.usage.length > 0){
                 $('#serviceTimeTable').show();
+
+                var plot1 = $.jqplot('serviceTimeChart', [s1], {
+                    seriesDefaults:{
+                        renderer:$.jqplot.BarRenderer,
+                        rendererOptions: {fillToZero: true}
+                    },
+                    series:[
+                        {label:'API'}
+                    ],
+                    axes: {
+                        xaxis: {
+                            renderer: $.jqplot.CategoryAxisRenderer,
+                            ticks: ticks
+                        },
+                        yaxis: {
+                            pad: 1.05,
+                            tickOptions: {formatString: '%dms'}
+                        }
+                    }
+                });
+
             }else{
                 $('#serviceTimeTable').hide();
+                $('#serviceTimeChart').css("fontSize",14);
+                $('#serviceTimeChart').text('No Data Found ...');
             }
-            var plot1 = $.jqplot('serviceTimeChart', [s1], {
-                seriesDefaults:{
-                    renderer:$.jqplot.BarRenderer,
-                    rendererOptions: {fillToZero: true}
-                },
-                series:[
-                    {label:'API'}
-                ],
-                axes: {
-                    xaxis: {
-                        renderer: $.jqplot.CategoryAxisRenderer,
-                        ticks: ticks
-                    },
-                    yaxis: {
-                        pad: 1.05,
-                        tickOptions: {formatString: '%dms'}
-                    }
-                }
-            });
+
 
         }
     });
@@ -165,20 +170,24 @@ $(document).ready(function() {
             }
             if(json.data.usage.length > 0){
                 $('#apiTable').show();
+                var plot1 = jQuery.jqplot('apiChart', [data],
+                    {
+                        seriesDefaults:{
+                            renderer:jQuery.jqplot.PieRenderer,
+                            rendererOptions:{
+                                showDataLabels:true
+                            }
+                        },
+                        legend:{ show:true, location:'e' }
+                    }
+                );
+
             }else{
                 $('#apiTable').hide();
+                $('#apiChart').css("fontSize",14);
+                $('#apiChart').text('No Data Found ...');
             }
-            var plot1 = jQuery.jqplot('apiChart', [data],
-                {
-                    seriesDefaults:{
-                        renderer:jQuery.jqplot.PieRenderer,
-                        rendererOptions:{
-                            showDataLabels:true
-                        }
-                    },
-                    legend:{ show:true, location:'e' }
-                }
-            );
+
 
         }
     });
@@ -193,6 +202,10 @@ $(document).ready(function() {
             for (var i = 0; i < json.data.usage.length; i++) {
                 $('#lastAccessTable').append($('<tr><td>' + json.data.usage[i].api_version + '</td><td>' + json.data.usage[i].lastAccess + '</td></tr>'));
             }
+        }
+        if(json.data.usage.length == 0){
+            $('#lastAccessTable').css("fontSize",14);
+            $('#lastAccessTable').text('No Data Found ...');
         }
     });
 

@@ -48,20 +48,27 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
                  ['v1.4.0', 7],
                  ['v1.3.0', 9]
                  ];*/
-                var plot1 = jQuery.jqplot('versionChart', [data],
-                    {
-                        seriesDefaults:{
-                            // Make this a pie chart.
-                            renderer:jQuery.jqplot.PieRenderer,
-                            rendererOptions:{
-                                // Put data labels on the pie slices.
-                                // By default, labels show the percentage of the slice.
-                                showDataLabels:true
-                            }
-                        },
-                        legend:{ show:true, location:'e' }
-                    }
-                );
+                if(json.data.usage.length > 0){
+                    $('#versionTable').show();
+                    var plot1 = jQuery.jqplot('versionChart', [data],
+                        {
+                            seriesDefaults:{
+                                // Make this a pie chart.
+                                renderer:jQuery.jqplot.PieRenderer,
+                                rendererOptions:{
+                                    // Put data labels on the pie slices.
+                                    // By default, labels show the percentage of the slice.
+                                    showDataLabels:true
+                                }
+                            },
+                            legend:{ show:true, location:'e' }
+                        }
+                    );
+                }else{
+                    $('#versionTable').hide();
+                    $('#versionChart').css("fontSize",14);
+                    $('#versionChart').text('No Data Found ...');
+                }
 
             }
         });
@@ -92,20 +99,27 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
                  ['v1.4.0', 7],
                  ['v1.3.0', 9]
                  ];*/
-                var plot1 = jQuery.jqplot('userChart', [data],
-                    {
-                        seriesDefaults:{
-                            // Make this a pie chart.
-                            renderer:jQuery.jqplot.PieRenderer,
-                            rendererOptions:{
-                                // Put data labels on the pie slices.
-                                // By default, labels show the percentage of the slice.
-                                showDataLabels:true
-                            }
-                        },
-                        legend:{ show:true, location:'e' }
-                    }
-                );
+                if(json.data.usage.length > 0){
+                    $('#userTable').show();
+                    var plot1 = jQuery.jqplot('userChart', [data],
+                        {
+                            seriesDefaults:{
+                                // Make this a pie chart.
+                                renderer:jQuery.jqplot.PieRenderer,
+                                rendererOptions:{
+                                    // Put data labels on the pie slices.
+                                    // By default, labels show the percentage of the slice.
+                                    showDataLabels:true
+                                }
+                            },
+                            legend:{ show:true, location:'e' }
+                        }
+                    );
+                }else{
+                    $('#userTable').hide();
+                    $('#userChart').css("fontSize",14);
+                    $('#userChart').text('No Data Found ...');
+                }
 
             }
         });

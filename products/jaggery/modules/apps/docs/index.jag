@@ -115,9 +115,9 @@ include('/includes/topnavi.jag');
                     <span>Details on Usage of Jaggery</span>
                 </li>
 
-                <li><a href="tryitview.jag"><img src="images/icon-try.png" alt=""></a>
-                    <a href="tryitview.jag" class="linktext">Try it</a> <br>
-                    <span>Try the Jaggery executor</span>
+                <li><a href="samples.jag"><img src="images/icon-try.png" alt=""></a>
+                    <a href="samples.jag" class="linktext">Samples</a> <br>
+                    <span>Sample Apps using Jaggery</span>
                 </li>
                 <li><a href="https://wso2.org/jira/browse/JAGGERY#selectedTab=com.atlassian.jira.plugin.system.project%3Achangelog-panel"><img src="images/icon-changelog.png" alt=""></a>
                     <a href="https://wso2.org/jira/browse/JAGGERY#selectedTab=com.atlassian.jira.plugin.system.project%3Achangelog-panel" class="linktext">Change log</a> <br>

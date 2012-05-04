@@ -84,8 +84,8 @@ public class Client {
                                                                              "APIVersionUsageSummarySequence.xml");
         String apiVersionLastAccessSummarySequenceContent = FileUtil.readFileToString( System.getProperty("configFilePath") +
                                                                              "APIVersionLastAccessSummarySequence.xml");
-        String apiServiceTimeSummarySequenceContent = FileUtil.readFileToString( System.getProperty("configFilePath") +
-                                                                             "APIServiceTimeSummarySequence.xml");
+        String apiVersionServiceTimeSummarySequenceContent = FileUtil.readFileToString( System.getProperty("configFilePath") +
+                                                                             "APIVersionServiceTimeSummarySequence.xml");
         String apiVersionUserUsageSummarySequenceContent = FileUtil.readFileToString( System.getProperty("configFilePath") +
                                                                              "APIVersionUserUsageSummarySequence.xml");
 
@@ -128,11 +128,11 @@ public class Client {
             //Wait for 1:30 min
             Thread.sleep(1000*60 + 30000);
 
-            System.out.println("Adding APIServiceTimeSummarySequence Analyzer");
+            System.out.println("Adding APIVersionServiceTimeSummarySequence Analyzer");
 
-            analyzerAdminServiceStub.addTask(apiServiceTimeSummarySequenceContent);
+            analyzerAdminServiceStub.addTask(apiVersionServiceTimeSummarySequenceContent);
 
-            System.out.println("Waiting 1:30 min until analyzer creates the APIServiceTimeSummaryTable CF.......");
+            System.out.println("Waiting 1:30 min until analyzer creates the APIVersionServiceTimeSummaryTable CF.......");
 
             //Wait for 1:30 min
             Thread.sleep(1000*60 + 30000);
@@ -172,11 +172,11 @@ public class Client {
 
             indexAdminServiceStub.createIndex(index);
 
-            System.out.println("Creating APIServiceTimeSummaryTableIndex ...");
+            System.out.println("Creating APIVersionServiceTimeSummaryTableIndex ...");
 
             index = new IndexDTO();
-            index.setIndexName("APIServiceTimeSummaryTableIndex");
-            index.setIndexedTable("APIServiceTimeSummaryTable");
+            index.setIndexName("APIVersionServiceTimeSummaryTableIndex");
+            index.setIndexedTable("APIVersionServiceTimeSummaryTable");
             index.setDataSourceType("CASSANDRA");
             indexColumns[0] = "api";
             index.setIndexedColumns(indexColumns);

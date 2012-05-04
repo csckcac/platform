@@ -92,6 +92,7 @@ public class DSSTestSuite extends MasterTestSuite {
             suiteVariablesList.add(new SuiteVariables("InvalidClosingTagFaultyServiceTest", InvalidClosingTagFaultyServiceTest.class));
 
         }
+        setServerList(ProductConstant.DSS_SERVER_NAME + "," + ProductConstant.ESB_SERVER_NAME);
         superSuite("DataServiceServer", suiteVariablesList).run();
     }
 

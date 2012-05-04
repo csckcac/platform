@@ -342,8 +342,8 @@ public class ExecDriver extends Task<MapredWork> implements Serializable, Hadoop
       throw new RuntimeException(e.getMessage());
     }
 
-    // Explicitly set job jar. Otherwise it won't get picked up by setJarByClass under OSGi enviornment.   
-    job.setJar(conf.getVar(HiveConf.ConfVars.HIVEJAR));   
+    // Explicitly set job jar. Otherwise it won't get picked up by setJarByClass under OSGi enviornment.
+    job.setJar(HiveConf.getVar(job,HiveConf.ConfVars.HIVEJAR));   
 
     // No-Op - we don't really write anything here ..
     job.setOutputKeyClass(Text.class);
@@ -736,7 +736,8 @@ public class ExecDriver extends Task<MapredWork> implements Serializable, Hadoop
           continue;
         }
 
-        String oneValue = deltaP.getProperty(oneProp);
+        //String oneValue = deltaP.getProperty(oneProp);
+        String oneValue = hconf.get(oneProp);
 
         sb.append("-jobconf ");
         sb.append(oneProp);

@@ -166,7 +166,7 @@ public class MapRedTask extends ExecDriver implements Serializable {
       }
       // Generate the hiveConfArgs after potentially adding the jars
       String hiveConfArgs = generateCmdLine(conf);
-
+        
       // write out the plan to a local file
       Path planPath = new Path(ctx.getLocalTmpFileURI(), "plan.xml");
       OutputStream out = FileSystem.getLocal(conf).create(planPath);
@@ -200,8 +200,8 @@ public class MapRedTask extends ExecDriver implements Serializable {
 
         if (embeddedLocalMode != null && embeddedLocalMode.trim().equalsIgnoreCase("true")) {
              cmdLine = javaHome + File.separator + "bin" + File.separator +"java" + " -classpath " +
-                       pluginsClasspath + jarCmd + " -plan " + planPath.toString() + " " +
-                       isSilent + " " + "-Dproc_jar " + "-classpath " + pluginsClasspath +
+                       pluginsClasspath + " -Dproc_jar" + " -DCARBON_HOME=" + carbonHome + " " +
+                       jarCmd + " -plan " + planPath.toString() + " " + isSilent + " "  +
                        " " + hiveConfArgs;
         } else {
             cmdLine = hadoopExec + " jar " + jarCmd + " -plan "

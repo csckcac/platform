@@ -197,8 +197,6 @@ public class DBDeployer extends AbstractDeployer {
             if (faultyService != null) {
             	this.axisConfig.removeFaultyService(faultyServiceFilePath);
             }
-
-			super.deploy(deploymentFileData);
 		} catch (DataServiceFault e) {
 			errorMessage = DBUtils.getStacktraceFromException(e);
 			log.error(Messages.getMessage(DeploymentErrorMsgs.INVALID_SERVICE, 

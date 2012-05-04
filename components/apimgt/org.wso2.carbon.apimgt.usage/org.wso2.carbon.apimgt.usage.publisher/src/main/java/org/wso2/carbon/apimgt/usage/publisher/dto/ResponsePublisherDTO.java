@@ -49,6 +49,7 @@ public class ResponsePublisherDTO extends PublisherDTO {
         Map<String, ByteBuffer> eventMap = new HashMap<String, ByteBuffer>();
         eventMap.put("consumerKey", ByteBuffer.wrap(getConsumerKey().getBytes()));
         eventMap.put("context", ByteBuffer.wrap(getContext().getBytes()));
+        eventMap.put("api_version", ByteBuffer.wrap(getApi_version().getBytes()));
         eventMap.put("api", ByteBuffer.wrap(getApi().getBytes()));
         eventMap.put("resource", ByteBuffer.wrap(getResource().getBytes()));
         eventMap.put("method", ByteBuffer.wrap(getMethod().getBytes()));

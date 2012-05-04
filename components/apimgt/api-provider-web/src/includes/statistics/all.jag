@@ -19,29 +19,23 @@
 
 
 </div>
-<!--
+
 <h2>Average Service Time For APIs</h2>
--->
-        <div class="row-fluid well" style="display:none;">
+
+        <div class="row-fluid well">
         <div class="span5">
-
-            <div>
-                <div id="serviceTimeChart"></div>
-            </div>
-    </div>
-<!--
-            <div class="span6">
-
-                <table class="table" id="serviceTimeTable" style="display:none;">
-                      <tr>
-                        <th>API Name</th>
-                        <th>Average Service Time</th>
-                      </tr>
-                  </table>
-            </div>
--->
+            <div id="serviceTimeChart"></div>
+        </div>
+        <div class="span6">
+             <table class="table" id="serviceTimeTable">
+                <tr>
+                    <th>API Name</th>
+                    <th>Average Service Time (ms)</th>
+                </tr>
+             </table>
+        </div>
 </div>
-<!--
+
 <h2>Last Access Time of APIs</h2>
 
         <div class="row-fluid well">
@@ -51,23 +45,19 @@
             <div class="span6">
                 <table class="table" id="lastAccessTable">
                       <tr>
-                        <th>API Name</th>
-                        <th>Version</th>
+                        <th>API:Version</th>
                         <th>Last Access</th>
                       </tr>
                       <tr>
-                        <td>API 1</td>
-                        <td>v1.0.0</td>
+                        <td>API 1:v1.0.0</td>
                         <td>10/02/2012 16:53:02</td>
                       </tr>
                       <tr>
-                        <td>API 2</td>
-                        <td>v1.0.0</td>
+                        <td>API 2:v1.0.0</td>
                         <td>15/02/2012 08:15:44</td>
                       </tr>
                       <tr>
-                        <td>API 2</td>
-                        <td>v1.0.1</td>
+                        <td>API 2:v1.0.1</td>
                         <td>18/02/2012 21:07:24</td>
                       </tr>
                   </table>
@@ -75,7 +65,7 @@
 
 
 </div>
--->
+
 <script type="text/javascript">
 $(document).ready(function() {
 	$.jqplot('apiChart',
@@ -117,22 +107,21 @@ $(document).ready(function() {
                 }
             });
 
-    apiProviderApp.call("action=getProviderAPIServiceTime&providerId="+apiProviderApp.currentProviderName+"&server=https://localhost:9444/", function (json) {
+    apiProviderApp.call("action=getProviderAPIServiceTime&providerName="+apiProviderApp.loggedUser+"&server=https://localhost:9444/", function (json) {
         if (json.error == "true") {
             alert(json.message);
         }
         else {
             var s1 = new Array();
             var ticks = new Array();
+            $('#serviceTimeChart').empty();
             $('#serviceTimeTable').find("tr:gt(0)").remove();
             for (var i = 0; i < json.data.usage.length; i++) {
-                s1[i] = json.data.usage[i].apiName;
-                ticks[i] = parseFloat(json.data.usage[i].serviceTime)
+                s1[i] = parseFloat(json.data.usage[i].serviceTime);
+                ticks[i] = json.data.usage[i].apiName;
                 $('#serviceTimeTable').append($('<tr><td>' + json.data.usage[i].apiName + '</td><td>' + json.data.usage[i].serviceTime + '</td></tr>'));
 
             }
-            var s1 = [200, 600, 700];
-            var ticks = ['API 1', 'API 2', 'API 3'];
             if(json.data.usage.length > 0){
                 $('#serviceTimeTable').show();
             }else{
@@ -161,15 +150,16 @@ $(document).ready(function() {
         }
     });
 
-    apiProviderApp.call("action=getProviderAPIUsage&providerId="+apiProviderApp.currentProviderName+"&server=https://localhost:9444/", function (json) {
+    apiProviderApp.call("action=getProviderAPIUsage&providerName="+apiProviderApp.loggedUser+"&server=https://localhost:9444/", function (json) {
         if (json.error == "true") {
             alert(json.message);
         }
         else {
             var data = new Array();
+            $('#apiChart').empty();
             $('#apiTable').find("tr:gt(0)").remove();
             for (var i = 0; i < json.data.usage.length; i++) {
-                data[i] = [json.data.usage[i].apiName, parseFloat(json.data.usage[i].count)];
+                data[i] = [json.data.usage[i].apiName, parseInt(json.data.usage[i].count)];
                 $('#apiTable').append($('<tr><td>' + json.data.usage[i].apiName + '</td><td>' + json.data.usage[i].count + '</td></tr>'));
 
             }
@@ -193,7 +183,7 @@ $(document).ready(function() {
         }
     });
 
-    apiProviderApp.call("action=getProviderAPIVersionLastAccess&providerId="+apiProviderApp.currentProviderName+"&server=https://localhost:9444/", function (json) {
+    apiProviderApp.call("action=getProviderAPIVersionLastAccess&providerName="+apiProviderApp.loggedUser+"&server=https://localhost:9444/", function (json) {
         if (json.error == "true") {
             alert(json.message);
         }
@@ -201,9 +191,7 @@ $(document).ready(function() {
 
             $('#lastAccessTable').find("tr:gt(0)").remove();
             for (var i = 0; i < json.data.usage.length; i++) {
-
-                $('#lastAccessTable').append($('<tr><td>' + json.data.usage[i].apiName + '</td><td>' + json.data.usage[i].version + '</td><td>' + json.data.usage[i].lastAccess + '</td></tr>'));
-
+                $('#lastAccessTable').append($('<tr><td>' + json.data.usage[i].api_version + '</td><td>' + json.data.usage[i].lastAccess + '</td></tr>'));
             }
         }
     });

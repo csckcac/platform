@@ -174,8 +174,7 @@ function getProviderAPIVersionLastAccessFunc(providerName,server) {
 }else{
         for (var k = 0; k < usage.length ; k++){
         var elem = {
-        apiName:usage[k].api,
-        version:usage[k].version,
+        api_version:usage[k].api_version,
         lastAccess:usage[k].lastAccess
         };
 usageout.push(elem);
@@ -200,7 +199,7 @@ function getProviderAPIServiceTimeFunc(providerName,server) {
 }else{
         for (var k = 0; k < usage.length ; k++){
         var elem = {
-        apiName:usage[k].api,
+        apiName:usage[k].apiName,
         serviceTime:usage[k].serviceTime
         };
 usageout.push(elem);

@@ -23,6 +23,7 @@ public final class APIMgtUsagePublisherConstants {
     public static String _OAUTH_HEADERS_SPLITTER = ",";
     public static String _OAUTH_CONSUMER_KEY = "Bearer";
     public static  String HEADER_SEGMENT_DELIMITER = " ";
+    public static  String HTTP_METHOD = "HTTP_METHOD";
 
     public static final String API_USAGE_TRACKING = "APIUsageTracking.";
     public static final String API_USAGE_ENABLED = API_USAGE_TRACKING + "Enabled";
@@ -32,5 +33,12 @@ public final class APIMgtUsagePublisherConstants {
     public static final String API_USAGE_BAM_SERVER_PASSWORD = API_USAGE_TRACKING + "BAMPassword";
     public static final String API_USAGE_BAM_TRUSTSTORE = API_USAGE_TRACKING + "BAMTrustStore";
     public static final String API_USAGE_BAM_TRUSTSTORE_PASSWORD = API_USAGE_TRACKING + "BAMTrustStorePassword";
+    public static final String  CONSUMER_KEY = "consumerKey";
+    public static final String  CONTEXT = "context";
+    public static final String  API_VERSION = "api_version";
+    public static final String  API = "api";
+    public static final String  VERSION = "version";
+    public static final String  REQUEST_TIME = "requestTime";
+    public static final String  RESOURCE = "resource";
 
 }

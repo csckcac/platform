@@ -20,21 +20,21 @@ package org.wso2.carbon.apimgt.usage.client;
 public final class APIMgtUsageQueryServiceClientConstants {
 
 
-    public static final String API_SERVICE_TIME_SUMMARY_TABLE = "APIServiceTimeSummary";
+    public static final String API_SERVICE_TIME_SUMMARY_TABLE = "APIServiceTimeSummaryTable";
 
-    public static final String API_SERVICE_TIME_SUMMARY_TABLE_INDEX = "APIServiceTimeSummaryIndex";
+    public static final String API_SERVICE_TIME_SUMMARY_TABLE_INDEX = "APIServiceTimeSummaryTableIndex";
 
-    public static final String API_VERSION_SUMMARY_TABLE = "APIVersionSummary";
+    public static final String API_VERSION_USAGE_SUMMARY_TABLE = "APIVersionUsageSummaryTable";
 
-    public static final String API_VERSION_SUMMARY_TABLE_INDEX = "APIVersionSummaryIndex";
+    public static final String API_VERSION_USAGE_SUMMARY_TABLE_INDEX = "APIVersionUsageSummaryTableIndex";
 
-    public static final String API_VERSION_USER_SUMMARY_TABLE = "APIVersionUserSummary";
+    public static final String API_VERSION_USER_USAGE_SUMMARY_TABLE = "APIVersionUserUsageSummaryTable";
 
-    public static final String API_VERSION_USER_SUMMARY_TABLE_INDEX = "APIVersionUserSummaryIndex";
+    public static final String API_VERSION_USER_USAGE_SUMMARY_TABLE_INDEX = "APIVersionUserUsageSummaryTableIndex";
 
-    public static final String API_VERSION_LAST_ACCESS_TABLE = "APIVersionLastAccess";
+    public static final String API_VERSION_LAST_ACCESS_SUMMARY_TABLE = "APIVersionLastAccessSummaryTable";
 
-    public static final String API_VERSION_LAST_ACCESS_TABLE_INDEX = "APIVersionLastAccessIndex";
+    public static final String API_VERSION_LAST_ACCESS_SUMMARY_TABLE_INDEX = "APIVersionLastAccessSummaryTableIndex";
 
     public static final String ROWS = "rows";
 
@@ -43,6 +43,8 @@ public final class APIMgtUsageQueryServiceClientConstants {
     public static final String REQUEST = "request";
 
     public static final String API = "api";
+
+    public static final String API_VERSION = "api_version";
 
     public static final String SERVICE_TIME = "serviceTime";
 

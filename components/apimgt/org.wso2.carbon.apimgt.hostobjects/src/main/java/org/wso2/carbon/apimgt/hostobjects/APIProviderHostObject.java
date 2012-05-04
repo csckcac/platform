@@ -902,8 +902,7 @@ public class APIProviderHostObject extends ScriptableObject {
         List<ProviderAPIVersionUsageDTO> list = null;
         try {
             APIMgtUsageQueryServiceClient client = new APIMgtUsageQueryServiceClient(serverURL);
-            // list = client.getProviderAPIVersionUsage(providerName,APIname);
-            list = client.getProviderAPIVersionUsage(APIname);
+            list = client.getProviderAPIVersionUsage(providerName,APIname);
         } catch (Exception e) {
             log.error("Backend-Error while querying BAM server for ProviderAPIVersionUsage", e);
         }
@@ -932,8 +931,7 @@ public class APIProviderHostObject extends ScriptableObject {
         List<ProviderAPIUsageDTO> list = null;
         try {
             APIMgtUsageQueryServiceClient client = new APIMgtUsageQueryServiceClient(serverURL);
-            // list = client.getProviderAPIUsage(providerName);
-            list = client.getProviderAPIUsage();
+            list = client.getProviderAPIUsage(providerName);
         } catch (Exception e) {
             log.error("Backend-Error while querying BAM server for ProviderAPIUsage", e);
         }
@@ -1006,8 +1004,7 @@ public class APIProviderHostObject extends ScriptableObject {
                 NativeObject row = new NativeObject();
                 Object usageObject = it.next();
                 ProviderAPIVersionLastAccessDTO usage = (ProviderAPIVersionLastAccessDTO) usageObject;
-                row.put("api", row, usage.getApi());
-                row.put("version", row, usage.getVersion());
+                row.put("api_version", row, usage.getApi_version());
                 row.put("lastAccess", row, usage.getLastAccess());
                 myn.put(i, myn, row);
                 i++;
@@ -1036,7 +1033,7 @@ public class APIProviderHostObject extends ScriptableObject {
                 NativeObject row = new NativeObject();
                 Object usageObject = it.next();
                 ProviderAPIServiceTimeDTO usage = (ProviderAPIServiceTimeDTO) usageObject;
-                row.put("api", row, usage.getApiName());
+                row.put("apiName", row, usage.getApiName());
                 row.put("serviceTime", row, usage.getServiceTime());
                 myn.put(i, myn, row);
                 i++;

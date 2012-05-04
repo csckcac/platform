@@ -28,7 +28,6 @@ import org.wso2.carbon.apimgt.usage.publisher.dto.ResponsePublisherDTO;
 import org.wso2.carbon.apimgt.usage.publisher.internal.UsageComponent;
 import org.wso2.carbon.apimgt.usage.publisher.util.Utils;
 
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,6 +40,9 @@ public class APIMgtUsageHandler extends AbstractHandler {
     private static Log log   = LogFactory.getLog(APIMgtUsageHandler.class);
 
         public boolean handleRequest(MessageContext mc) {
+
+            String currentTime = String.valueOf(System.currentTimeMillis());
+
             if (!enabled) {
                 return true;
             }
@@ -53,114 +55,74 @@ public class APIMgtUsageHandler extends AbstractHandler {
                 }
             }
 
-            String currentTime = String.valueOf(System.currentTimeMillis());
-            RequestPublisherDTO requestPublisherDTO;
-            try{
-                mc.setProperty("requestTime",currentTime);
+            String consumerKey = Utils.extractCustomerKeyFromSynapseMessageContext(mc);
+            String context = (String)mc.getProperty(RESTConstants.REST_API_CONTEXT);
+            String api_version =  (String)mc.getProperty(RESTConstants.SYNAPSE_REST_API);
+            String api = api_version.split(":")[0];
+            String version = (String)mc.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION);
+            String resource = extractResource(mc);
+            String method =  (String)((Axis2MessageContext) mc).getAxis2MessageContext().getProperty(APIMgtUsagePublisherConstants.HTTP_METHOD);
 
-                requestPublisherDTO = new RequestPublisherDTO();
+            RequestPublisherDTO requestPublisherDTO = new RequestPublisherDTO();
+            requestPublisherDTO.setConsumerKey(consumerKey);
+            requestPublisherDTO.setContext(context);
+            requestPublisherDTO.setApi_version(api_version);
+            requestPublisherDTO.setApi(api);
+            requestPublisherDTO.setVersion(version);
+            requestPublisherDTO.setResource(resource);
+            requestPublisherDTO.setMethod(method);
+            requestPublisherDTO.setRequestTime(currentTime);
+            publisher.publishEvent(requestPublisherDTO);
 
-                String consumerKey;
-                Object headers = ((Axis2MessageContext)mc).getAxis2MessageContext().getProperty(org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS) ;
-                consumerKey = Utils.extractCustomerKeyFromAuthHeader((String) ((Map) headers).get(APIMgtUsagePublisherConstants.AUTHORIZATION_HEADER));
-                if (consumerKey == null){
-                    log.error("consumerKey is null in request context",new NullPointerException());
-                }
-                requestPublisherDTO.setConsumerKey(consumerKey);
-                mc.setProperty("consumerKey",consumerKey);
+            mc.setProperty(APIMgtUsagePublisherConstants.CONSUMER_KEY,consumerKey);
+            mc.setProperty(APIMgtUsagePublisherConstants.CONTEXT,context);
+            mc.setProperty(APIMgtUsagePublisherConstants.API_VERSION,api_version);
+            mc.setProperty(APIMgtUsagePublisherConstants.API,api);
+            mc.setProperty(APIMgtUsagePublisherConstants.VERSION,version);
+            mc.setProperty(APIMgtUsagePublisherConstants.RESOURCE,resource);
+            mc.setProperty(APIMgtUsagePublisherConstants.HTTP_METHOD,method);
+            mc.setProperty(APIMgtUsagePublisherConstants.REQUEST_TIME,currentTime);
 
-                if (mc.getProperty(RESTConstants.REST_API_CONTEXT) == null){
-                    log.error("API context is null in request context",new NullPointerException());
-                }
-                requestPublisherDTO.setContext((String) mc.getProperty(RESTConstants.REST_API_CONTEXT));
-
-                if (mc.getProperty(RESTConstants.SYNAPSE_REST_API) == null){
-                    log.error("API is null in request context",new NullPointerException());
-                }
-                requestPublisherDTO.setApi((String) mc.getProperty(RESTConstants.SYNAPSE_REST_API));
-
-                if (mc.getProperty(RESTConstants.REST_FULL_REQUEST_PATH) == null){
-                    log.error("Request path is null in request context",new NullPointerException());
-                }
-                Pattern pattern = Pattern.compile("^/.+?/.+?([/?].+)$");
-                Matcher matcher = pattern.matcher((String) mc.getProperty(RESTConstants.REST_FULL_REQUEST_PATH));
-                if(matcher.find()){
-                      requestPublisherDTO.setResource(matcher.group(1));
-                      mc.setProperty("resource",matcher.group(1));
-                }
-
-                if (((Axis2MessageContext) mc).getAxis2MessageContext().getProperty("HTTP_METHOD") == null){
-                    log.error("HTTP method is null in request context",new NullPointerException());
-                }
-                String method = (String) ((Axis2MessageContext) mc).getAxis2MessageContext().getProperty("HTTP_METHOD");
-                requestPublisherDTO.setMethod(method);
-                mc.setProperty("method",method);
-
-                if (mc.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION) == null){
-                    log.error("API version is null in request context",new NullPointerException());
-                }
-                requestPublisherDTO.setVersion((String) mc.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION));
-
-                requestPublisherDTO.setRequestTime(currentTime);
-
-                publisher.publishEvent(requestPublisherDTO);
-            } catch (Exception e){
-                log.error("Exception occurred while executing API usage request handler",e);
-            }
             return true; // Should never stop the message flow
         }
 
         public boolean handleResponse(MessageContext mc) {
+
+            Long currentTime = System.currentTimeMillis();
+
             if (!enabled) {
                 return true;
             }
-            Long currentTime = System.currentTimeMillis();
+
+            Long serviceTime = currentTime - Long.parseLong((String)mc.getProperty(APIMgtUsagePublisherConstants.REQUEST_TIME));
+
             ResponsePublisherDTO responsePublisherDTO = new ResponsePublisherDTO();
-            try{
-                responsePublisherDTO.setResponseTime(currentTime.toString());
+            responsePublisherDTO.setConsumerKey((String)mc.getProperty(APIMgtUsagePublisherConstants.CONSUMER_KEY));
+            responsePublisherDTO.setContext((String) mc.getProperty(APIMgtUsagePublisherConstants.CONTEXT));
+            responsePublisherDTO.setApi_version((String) mc.getProperty(APIMgtUsagePublisherConstants.API_VERSION));
+            responsePublisherDTO.setApi((String) mc.getProperty(APIMgtUsagePublisherConstants.API));
+            responsePublisherDTO.setVersion((String) mc.getProperty(APIMgtUsagePublisherConstants.VERSION));
+            responsePublisherDTO.setResource((String) mc.getProperty(APIMgtUsagePublisherConstants.RESOURCE));
+            responsePublisherDTO.setMethod((String)mc.getProperty(APIMgtUsagePublisherConstants.HTTP_METHOD));
+            responsePublisherDTO.setResponseTime(String.valueOf(currentTime));
+            responsePublisherDTO.setServiceTime(String.valueOf(serviceTime));
+            publisher.publishEvent(responsePublisherDTO);
 
-                Long serviceTime = currentTime - Long.parseLong((String)mc.getProperty("requestTime"));
-                responsePublisherDTO.setServiceTime(serviceTime.toString());
-
-                if (mc.getProperty("consumerKey") == null){
-                    log.error("consumerKey is null in response context",new NullPointerException());
-                }
-                responsePublisherDTO.setConsumerKey((String)mc.getProperty("consumerKey"));
-
-                if (mc.getProperty(RESTConstants.REST_API_CONTEXT) == null){
-                    log.error("API context is null in response context",new NullPointerException());
-                }
-                responsePublisherDTO.setContext((String) mc.getProperty(RESTConstants.REST_API_CONTEXT));
-
-                if (mc.getProperty(RESTConstants.SYNAPSE_REST_API) == null){
-                    log.error("API is null in response context",new NullPointerException());
-                }
-                responsePublisherDTO.setApi((String) mc.getProperty(RESTConstants.SYNAPSE_REST_API));
-
-                if (mc.getProperty("resource") == null){
-                    log.error("Resource is null in response context",new NullPointerException());
-                }
-                responsePublisherDTO.setResource((String) mc.getProperty("resource"));
-
-                if (mc.getProperty("method") == null){
-                    log.error("HTTP method is null in response context",new NullPointerException());
-                }
-                responsePublisherDTO.setMethod((String)mc.getProperty("method"));
-
-                if (mc.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION) == null){
-                    log.error("API version is null in response context",new NullPointerException());
-                }
-                responsePublisherDTO.setVersion((String) mc.getProperty(RESTConstants.SYNAPSE_REST_API_VERSION));
-
-                publisher.publishEvent(responsePublisherDTO);
-            } catch (Exception e){
-                log.error("Exception occurred while executing API usage response handler",e);
-            }
             return true; // Should never stop the message flow
         }
 
         public APIMgtUsageBAMDataPublisher getAPIMgtUsageBAMDataPublisher(){
             return publisher;
+        }
+
+        private String extractResource(MessageContext mc){
+            String resource = null;
+            Pattern pattern = Pattern.compile("^/.+?/.+?([/?].+)$");
+            Matcher matcher = pattern.matcher((String) mc.getProperty(RESTConstants.REST_FULL_REQUEST_PATH));
+            if(matcher.find()){
+                resource = matcher.group(1);
+            }
+            return resource;
         }
 
 }

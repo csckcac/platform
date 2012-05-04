@@ -27,6 +27,8 @@ public class PublisherDTO {
 
     private String context;
 
+    private String api_version;
+
     private String api;
 
     private String resource;
@@ -49,6 +51,14 @@ public class PublisherDTO {
 
     public void setContext(String context) {
         this.context = context;
+    }
+
+    public String getApi_version() {
+        return api_version;
+    }
+
+    public void setApi_version(String api_version) {
+        this.api_version = api_version;
     }
 
     public void setApi(String api) {
@@ -91,6 +101,7 @@ public class PublisherDTO {
         Map<String, ByteBuffer> eventMap = new HashMap<String, ByteBuffer>();
         eventMap.put("consumerKey", ByteBuffer.wrap(getConsumerKey().getBytes()));
         eventMap.put("context", ByteBuffer.wrap(getContext().getBytes()));
+        eventMap.put("api_version", ByteBuffer.wrap(getApi_version().getBytes()));
         eventMap.put("api", ByteBuffer.wrap(getApi().getBytes()));
         eventMap.put("resource", ByteBuffer.wrap(getResource().getBytes()));
         eventMap.put("method", ByteBuffer.wrap(getMethod().getBytes()));

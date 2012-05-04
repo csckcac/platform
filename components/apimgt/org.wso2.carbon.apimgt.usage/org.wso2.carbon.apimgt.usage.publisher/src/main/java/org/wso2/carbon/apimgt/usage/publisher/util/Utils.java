@@ -20,9 +20,12 @@ package org.wso2.carbon.apimgt.usage.publisher.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.synapse.MessageContext;
+import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.wso2.carbon.apimgt.usage.publisher.APIMgtUsagePublisherConstants;
 
 import java.net.InetAddress;
+import java.util.Map;
 
 
 public class Utils {
@@ -34,7 +37,7 @@ public class Utils {
      * @param authHeader Header string
      * @return extracted customer key value
      */
-    public static String extractCustomerKeyFromAuthHeader(String authHeader) {
+    private static String extractCustomerKeyFromAuthHeader(String authHeader) {
 
         // Expected header :
         //OAuth oauth_consumer_key="nq21LN39VlKe6OezcOndBx",
@@ -93,6 +96,13 @@ public class Utils {
             result |= octet & 0xff;
         }
         return result;
+    }
+
+    public static String extractCustomerKeyFromSynapseMessageContext(MessageContext mc){
+        String consumerKey;
+        Object headers = ((Axis2MessageContext)mc).getAxis2MessageContext().getProperty(org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS) ;
+        consumerKey = extractCustomerKeyFromAuthHeader((String) ((Map) headers).get(APIMgtUsagePublisherConstants.AUTHORIZATION_HEADER));
+        return consumerKey;
     }
 
 }

@@ -26,15 +26,16 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
 
     ////////////// edit tab
     if (clickedTab == "versions") {
-        apiProviderApp.call("action=getProviderAPIVersionUsage&providerName="+ apiProviderApp.currentProviderName +"&apiName="+ apiProviderApp.currentAPIName +"&server=https://localhost:9444/", function (json) {
+        apiProviderApp.call("action=getProviderAPIVersionUsage&providerName="+ apiProviderApp.loggedUser +"&apiName="+ apiProviderApp.currentAPIName +"&server=https://localhost:9444/", function (json) {
             if (json.error == "true") {
                 alert(json.message);
             }
             else {
                 var data = new Array();
+                $('#versionChart').empty();
                 $('#versionTable').find("tr:gt(0)").remove();
                 for (var i = 0; i < json.data.usage.length; i++) {
-                    data[i] = [json.data.usage[i].version, parseFloat(json.data.usage[i].count)];
+                    data[i] = [json.data.usage[i].version, parseInt(json.data.usage[i].count)];
                     $('#versionTable').append($('<tr><td>' + json.data.usage[i].version + '</td><td>' + json.data.usage[i].count + '</td></tr>'));
 
                 }
@@ -75,6 +76,7 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
             }
             else {
                 var data = new Array();
+                $('#userChart').empty();
                 $('#userTable').find("tr:gt(0)").remove();
                 for (var i = 0; i < json.data.usage.length; i++) {
                     data[i] = [json.data.usage[i].user, parseFloat(json.data.usage[i].count)];

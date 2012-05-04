@@ -34,13 +34,10 @@ public class StratosUserLogin {
 
     public void userLogin(WebDriver driver, Selenium selenium, String userName, String password,
                           String productName) throws InterruptedException {
-        waitTimeforElement(selenium, "//a[2]/img");
         driver.findElement(By.xpath("//a[2]/img")).click();
-        waitTimeforElement(selenium, "//td[2]/input");
         driver.findElement(By.id("username")).sendKeys(userName);
         driver.findElement(By.id("password")).sendKeys(password);
         driver.findElement(By.xpath("//tr[4]/td[2]/input")).click();
-        waitTimeforElement(selenium, "//li[3]/a");
 
         if (productName.equalsIgnoreCase("greg")) {
             assertTrue(driver.getPageSource().contains("WSO2 Governance Registry quick start dashboard"),
@@ -49,7 +46,6 @@ public class StratosUserLogin {
             assertTrue(selenium.isTextPresent("Identity & Entitlement quick start dashboard"),
                        "IS Home page Failed");
         } else if (productName.equalsIgnoreCase("manager")) {
-            waitTimeforElement(selenium, "//tr[12]/td/a");
             assertTrue(driver.getPageSource().contains("Application Server"),
                        "Manager Home page Failed");
             assertTrue(driver.getPageSource().contains("Mashup Server"), "Manager Home page Failed");
@@ -58,23 +54,5 @@ public class StratosUserLogin {
             assertTrue(driver.getPageSource().contains("Enterprise Service Bus"),
                        "Manager Home page Failed");
         }
-    }
-
-
-    private void waitTimeforElement(Selenium selenium, String elementName)
-            throws InterruptedException {
-        Calendar startTime = Calendar.getInstance();
-        long time;
-        boolean element = false;
-        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis()))
-               < 120 * 1000) {
-            if (selenium.isElementPresent(elementName)) {
-                element = true;
-                break;
-            }
-            Thread.sleep(1000);
-            log.info("waiting for element :" + elementName);
-        }
-        assertTrue(element, "Element Not Found within 2 minutes :");
     }
 }

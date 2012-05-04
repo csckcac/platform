@@ -21,7 +21,9 @@ public class PlatformSuiteManager implements ISuiteListener {
         log.info("Starting all servers");
         setKeyStoreProperties();
         try {
-            startMulitpleServers(suite.getParameter("server.list"));
+            if (suite.getParameter("server.list") != null) {
+                startMultpleServers(suite.getParameter("server.list"));
+            }
         } catch (Exception e) {  /*cannot throw the exception */
             Assert.fail("Fail start servers " + e.getMessage());
         }
@@ -34,7 +36,9 @@ public class PlatformSuiteManager implements ISuiteListener {
     public void onFinish(ISuite suite) {
         log.info("Stopping all server");
         try {
-            stopMultipleServers(suite.getParameter("server.list"));
+            if (suite.getParameter("server.list") != null) {
+                stopMultipleServers(suite.getParameter("server.list"));
+            }
         } catch (Exception e) { /*cannot throw the exception */
             Assert.fail("Fail to stop servers " + e.getMessage());
         }
@@ -50,8 +54,8 @@ public class PlatformSuiteManager implements ISuiteListener {
     protected void stopMultipleServers(String serverList) throws Exception {
         EnvironmentBuilder environmentBuilder = new EnvironmentBuilder();
 
-        if ( environmentBuilder.getFrameworkSettings().getEnvironmentSettings().isEnableDipFramework()
-             && !environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
+        if (environmentBuilder.getFrameworkSettings().getEnvironmentSettings().isEnableDipFramework()
+            && !environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
             List<String> productList = Arrays.asList(serverList.split(","));
             ServerGroupManager.shutdownServers(productList);
         }
@@ -67,13 +71,13 @@ public class PlatformSuiteManager implements ISuiteListener {
      *
      * @throws Exception if an error occurs while in server startup process
      */
-    private void startMulitpleServers(String serverList) throws Exception {
+    private void startMultpleServers(String serverList) throws Exception {
         EnvironmentBuilder environmentBuilder = new EnvironmentBuilder();
         boolean deploymentEnabled =
                 environmentBuilder.getFrameworkSettings().getEnvironmentSettings().isEnableDipFramework();
         boolean startosEnabled =
                 environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos();
-        if (deploymentEnabled && !startosEnabled) {
+        if (deploymentEnabled && !startosEnabled && serverList != null) {
             List<String> productList = Arrays.asList(serverList.split(","));
             ServerGroupManager.startServers(productList);
         } else {

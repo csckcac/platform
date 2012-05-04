@@ -48,6 +48,7 @@ public class ManagerStratosTestSuite extends MasterTestSuite {
                                                       StratosManagerPermissionScenarioSeleniumTest.class));
 
             suiteVariablesList.add(new SuiteVariables("ManagerSSOTest", ManagerSSOTest.class));
+            suiteVariablesList.add(new SuiteVariables("ManagerSuperAdminLoginTest", ManagerSuperAdminLoginTest.class));
 
             superSuite("StratosManagerSeleniumTestSuite", suiteVariablesList).run();
         }

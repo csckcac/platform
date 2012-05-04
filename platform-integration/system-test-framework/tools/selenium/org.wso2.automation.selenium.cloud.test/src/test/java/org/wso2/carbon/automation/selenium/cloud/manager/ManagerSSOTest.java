@@ -23,7 +23,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverBackedSelenium;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.platform.test.core.BrowserManager;
@@ -43,7 +42,7 @@ import static org.testng.Assert.assertTrue;
  * Class to test SSO feature on Stratos
  */
 public class ManagerSSOTest {
-    private static final Log log = LogFactory.getLog(StratosManagerAccountValidatorSeleniumTest.class);
+    private static final Log log = LogFactory.getLog(ManagerSSOTest.class);
     private static Selenium selenium;
     private static WebDriver driver;
     String productName = "manager";
@@ -63,7 +62,6 @@ public class ManagerSSOTest {
                 ProductConstant.MANAGER_SERVER_NAME);
         log.info("baseURL is :" + baseURL);
         driver = BrowserManager.getWebDriver();
-        selenium = new WebDriverBackedSelenium(driver, baseURL);
         driver.get(baseURL);
     }
 

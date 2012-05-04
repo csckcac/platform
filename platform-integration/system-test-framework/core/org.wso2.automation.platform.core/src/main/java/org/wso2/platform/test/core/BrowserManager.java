@@ -31,6 +31,7 @@ import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 public class BrowserManager {
     private static final Log log = LogFactory.getLog(BrowserManager.class);
@@ -41,10 +42,12 @@ public class BrowserManager {
         if (env.getFrameworkSettings().getSelenium().getRemoteWebDriver()) {
             log.info("Test runs on remote browser");
             getRemoteWebDriver();
+            driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
             return driver;
         } else {
             log.info("Test runs on " + driverSelection + "browser");
             getDriver(driverSelection);
+            driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
             return driver;
         }
     }

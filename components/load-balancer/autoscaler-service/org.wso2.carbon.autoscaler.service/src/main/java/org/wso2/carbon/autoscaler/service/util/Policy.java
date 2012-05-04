@@ -71,8 +71,8 @@ public class Policy {
         scaleDownOrderList.add("container");
         //scaleDownOrderList.add("jvm");
         
-        //scaleDownOrderIdToMinInstanceCountMap.put(0, 1);
-        scaleDownOrderIdToMinInstanceCountMap.put(1, 1);
+        scaleDownOrderIdToMinInstanceCountMap.put(0, 1);
+        //scaleDownOrderIdToMinInstanceCountMap.put(1, 1);
         
     }
 

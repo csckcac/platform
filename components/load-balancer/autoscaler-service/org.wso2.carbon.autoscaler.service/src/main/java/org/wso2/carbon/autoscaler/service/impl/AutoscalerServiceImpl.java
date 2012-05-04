@@ -29,7 +29,6 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.autoscaler.service.IAutoscalerService;
 import org.wso2.carbon.autoscaler.service.adapters.Adapter;
 import org.wso2.carbon.autoscaler.service.adapters.LXCAdapter;
-import org.wso2.carbon.autoscaler.service.adapters.EC2Adapter;
 import org.wso2.carbon.autoscaler.service.exception.NoInstanceFoundException;
 import org.wso2.carbon.autoscaler.service.util.Policy;
 import org.wso2.carbon.autoscaler.service.xml.AutoscalerPolicyFileReader;
@@ -73,12 +72,12 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
     /**
      * Keeps a EC2Adapter instance.
      */
-    private EC2Adapter ec2Adapter = new EC2Adapter();
+    //private EC2Adapter ec2Adapter = new EC2Adapter();
 
     /**
      * Specify all available adapters here.
      */
-    private Adapter[] adapters = new Adapter[]{containerAdapter, ec2Adapter};
+    private Adapter[] adapters = new Adapter[]{containerAdapter};
     
     /**
      * To read autoscaler-policy.xml file.
@@ -200,7 +199,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
 
         // gets the list of instance ids which are spawned for this domain
         if (domainToInstanceIdsMap.containsKey(domainName) &&
-            ((instanceIdsList = domainToInstanceIdsMap.get(domainName)).size() > 0)) {
+                ((instanceIdsList = domainToInstanceIdsMap.get(domainName)).size() > 0)) {
 
             // follow the scaleDown order
             for (String adapter : scaleDownOrder) {
@@ -219,8 +218,7 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
                                                        scaleDownOrder.indexOf(adapter));
 
                         // to be safe
-                        if ((anAdapter = findAdapter(adapterName)) != null &&
-                            anAdapter.getRunningInstanceCount() > minInstanceCount) {
+                        if ((anAdapter = findAdapter(adapterName)) != null) {
 
                             // terminate it!
                             isSuccessfullyTerminated = anAdapter.terminateInstance(instanceId);

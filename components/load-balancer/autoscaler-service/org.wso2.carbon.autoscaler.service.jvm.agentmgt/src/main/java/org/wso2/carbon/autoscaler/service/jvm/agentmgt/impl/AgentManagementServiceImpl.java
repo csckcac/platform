@@ -111,7 +111,7 @@ public class AgentManagementServiceImpl implements IAgentManagementService {
             throw new NullAgentException(msg);
         }
         // is a registered EPR?
-        else if (agentPersistenceManager.deleteWorkerNode(epr)) {
+        else if (agentPersistenceManager.deleteHostMachine(epr)) {
             log.info("Agent (" + epr + ") is successfully unregistered!");
             successfullyUnregistered = true;
         }
@@ -132,6 +132,7 @@ public class AgentManagementServiceImpl implements IAgentManagementService {
                 AgentPersistenceManager agentPersistenceManager
                         = AgentPersistenceManager.getPersistenceManager();
                 if(agentPersistenceManager.isDomainExist(domain)){//Domain exist check
+
                     containerInformation = agentPersistenceManager.retrieveAvailableContainerInformation(domain);
 
                 }else {

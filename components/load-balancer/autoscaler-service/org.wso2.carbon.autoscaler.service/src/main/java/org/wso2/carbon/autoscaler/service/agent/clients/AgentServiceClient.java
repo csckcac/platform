@@ -40,7 +40,10 @@ public class AgentServiceClient {
     public AgentServiceClient(String epr) throws AxisFault {
 
         try {
+
             stub = new AgentServiceStub(epr);
+            stub._getServiceClient().getOptions().setTimeOutInMilliSeconds(90000);
+
 
         } catch (AxisFault axisFault) {
             String msg =

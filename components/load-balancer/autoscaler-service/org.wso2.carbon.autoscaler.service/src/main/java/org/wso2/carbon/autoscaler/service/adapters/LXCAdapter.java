@@ -250,7 +250,6 @@ public class LXCAdapter extends Adapter {
             if (agentClient.terminateContainerInstance(instanceId, containerRoot)) {
                 // remove relevant entry
                 instanceIdToAgentEprMap.remove(instanceId);
-                eprToContainerRootMap.remove(agentEpr);
                 
                 //add it back to registry
                 registry.setInstanceIdToAgentEprMap(instanceIdToAgentEprMap);

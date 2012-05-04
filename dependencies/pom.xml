@@ -67,6 +67,7 @@
                 <module>snappy-java</module>
 		<module>hive</module>
 		<module>hadoop</module>
+		<module>datanucleus</module>
 		<!-- orbit/modules -->
                 <module>orbit/cassandra</module>
                 <module>orbit/cassandra-jdbc</module>

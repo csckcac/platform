@@ -1,0 +1,8 @@
+<%
+jagg.block("header", {
+    initializer:function (data) {
+
+    }
+
+});
+%>

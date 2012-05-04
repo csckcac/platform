@@ -1,5 +1,5 @@
 <%
-jagg.initializer("layout/base", {
+jagg.initializer("comment/comment-list", {
 
     preInitialize:function () {
 

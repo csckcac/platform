@@ -2,7 +2,7 @@
 var getAPIComments = function (api) {
     var list, i, length, comment, comments,
             log = new Log(),
-            store = require("/core/greg/greg.js").getAPIStoreObj();
+            store = jagg.module("greg").getAPIStoreObj();
 
     try {
         //TODO : how to idenftify the comment added user
@@ -15,8 +15,9 @@ var getAPIComments = function (api) {
         for (i = 0; i < length; i++) {
             comment = comments[i];
             list.push({
-                username:comments[i].userName,
-                comment:comments[i].comment
+                username:comment.userName,
+                comment:comment.comment,
+                createdTime:comment.createdTime
             });
         }
         return {

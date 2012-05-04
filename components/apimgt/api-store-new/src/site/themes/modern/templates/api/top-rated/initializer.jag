@@ -1,7 +1,7 @@
 <%
 jagg.initializer("api/top-rated", {
 
-    initialize:function () {
+    preInitialize:function () {
 
     }
 });

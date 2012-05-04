@@ -2,7 +2,7 @@
 var searchAPIs = function (query) {
     var list, i, length, api, apis,
             log = new Log(),
-            store = require("/core/greg/greg.js").getAPIStoreObj();
+            store = jagg.module("greg").getAPIStoreObj();
 
     try {
         apis = store.searchAPI(query);

@@ -1,10 +1,11 @@
 <%
 include("/jagg/jagg.jag");
-var site = require("/site/conf/site.json");
-var msg = require("/site/conf/ui-messages.js");
 
 (function () {
-    var mod, obj, result, username, action = request.getParameter("action");
+    var mod, obj, result, username,
+            action = request.getParameter("action"),
+            site = require("/site/conf/site.json"),
+            msg = require("/site/conf/ui-messages.jag");
     if (action === "login") {
         mod = jagg.module("user");
         username = request.getParameter("username");

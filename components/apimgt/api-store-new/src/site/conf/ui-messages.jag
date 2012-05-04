@@ -1,3 +1,4 @@
+<%
 var error = {
     loginRequired:function (action) {
         if (action == "addApplication") {
@@ -13,5 +14,10 @@ var error = {
 
     authError:function (action) {
         return "Error occurred while executing the action " + action;
+    },
+
+    contentMissing:function(action) {
+        return "Please provide all needed content in order to " + action;
     }
 };
+%>

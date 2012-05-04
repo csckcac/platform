@@ -5,7 +5,7 @@ var login = login || {};
     loginbox.login = function (username, password) {
         jagg.post("/site/blocks/user/login/ajax/login.jag", { action:"login", username:username, password:password },
                 function (result) {
-                    if (result.error == "false") {
+                    if (result.error == false) {
                         window.location.reload();
                     } else {
                         jagg.message(result.message);
@@ -15,7 +15,7 @@ var login = login || {};
 
     loginbox.logout = function () {
         jagg.post("/site/blocks/user/login/ajax/login.jag", {action:"logout"}, function (result) {
-            if (result.error == "false") {
+            if (result.error == false) {
                 window.location.reload();
             } else {
                 jagg.message(result.message);

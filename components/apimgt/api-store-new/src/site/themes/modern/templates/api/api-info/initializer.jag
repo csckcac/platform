@@ -1,8 +1,12 @@
 <%
 jagg.initializer("api/api-info", {
 
-    initialize:function () {
+    preInitialize:function () {
 
+    },
+
+    postInitialize:function(inputs, outputs) {
+        jagg.addFooterJSCode("api/api-info", "api", "jagg.api = " + stringify(inputs.api) + ";");
     }
 });
 %>

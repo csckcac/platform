@@ -1,7 +1,7 @@
 <%
 jagg.initializer("api/overview", {
 
-    initialize:function () {
+    preInitialize:function () {
 
     }
 });

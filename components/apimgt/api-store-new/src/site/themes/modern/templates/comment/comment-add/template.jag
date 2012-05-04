@@ -1,0 +1,7 @@
+<% jagg.template("comment/comment-add", function(inputs, outputs, jagg) { %>
+<div id="comment-add">
+    <h6>Comments:</h6>
+    <textarea id="comment-text" class="col_12 comment-box"></textarea>
+    <button id="comment-add-button" class="medium"><span class="icon gray small" data-icon="+"></span>Add</button>
+</div>
+<% }); %>

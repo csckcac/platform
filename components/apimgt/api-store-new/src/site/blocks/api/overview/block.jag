@@ -6,8 +6,15 @@ jagg.block("api/overview", {
 
     getInputs:function () {
         return {
-            "api":null
+            "api":null,
+            "user":null
         }
+    },
+
+    getStaticBlocks:function() {
+        return [
+            "comment/comment-add"
+        ];
     }
 });
 %>

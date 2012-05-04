@@ -344,3 +344,7 @@ ul.tabs li a:hover{
     display: none;
 }
 
+.simple-space-maker {
+    padding: 10px 0;
+}
+

@@ -26,9 +26,11 @@
     <link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl("/site/themes/modern/css/style.css")%>" media="all"/>
     <%
     var data = jagg.data();
-    jagg.printGlobals(data.js);
-    jagg.printGlobals(data.css);
-    jagg.printGlobals(data.code);
+    if(data.header) {
+        jagg.printData(data.header.js);
+        jagg.printData(data.header.css);
+        jagg.printData(data.header.code);
+    }
     %>
 </head>
 <body>
@@ -47,6 +49,13 @@
         <a id="link-top" href="#top-of-page">Top</a>
     </div>
 </div>
+<%
+if(data.footer) {
+    jagg.printData(data.footer.js);
+    jagg.printData(data.footer.css);
+    jagg.printData(data.footer.code);
+}
+%>
 </body>
 </html>
 <% }); %>

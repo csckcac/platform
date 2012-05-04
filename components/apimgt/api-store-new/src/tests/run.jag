@@ -1,12 +1,12 @@
 <%
-    var cases = require("tests.json");
-    var i, length = cases.length;
-    for(i = 0; i < length; i++) {
-        var tests = require(cases[i]);
-        for(var test in tests) {
-            if(tests.hasOwnProperty(test)) {
-                tests[test]();
-            }
-        }
-    }
+    include("/jagg/jagg.jag");
+    var comments, result;
+    var api = { "name" : "API1", "version" : "1.0.0", "provider" : "admin" };
+
+
+    //result = jagg.module("comment").addComment(api, "This is a comment");
+
+    result = jagg.module("comment").getAPIComments(api);
+    comments = result.comments;
+    log(result);
 %>

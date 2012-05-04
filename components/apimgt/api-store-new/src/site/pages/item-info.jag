@@ -3,14 +3,20 @@ include("/jagg/jagg.jag");
 var site = require("/site/conf/site.json");
 
 (function () {
-    var name = request.getParameter("name");
-    var version = request.getParameter("version");
-    var provider = request.getParameter("provider");
 
-    var mod = jagg.module("api");
-    var result = mod.getAPIDescription({name:name, version:version, provider:provider}, site.defaultUser.username);
-    var api = result.api;
-    var title = "API Store - " + api.name;
+    var result, api, title, mod,
+            name = request.getParameter("name"),
+            version = request.getParameter("version"),
+            provider = request.getParameter("provider");
+
+    result = jagg.module("api").getAPIDescription({
+        name:name,
+        version:version,
+        provider:provider
+    }, site.defaultUser.username);
+    api = result.api;
+
+    title = "API Store - " + api.name;
 
     jagg.render({
         "name":"page/base",
@@ -41,4 +47,4 @@ var site = require("/site/conf/site.json");
         }
     });
 }());
-%>
+//%>

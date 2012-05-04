@@ -1,7 +1,7 @@
 <%
 var addComment = function (api, comment) {
     var log = new Log(),
-            store = require("/core/greg/greg.js").getAPIStoreObj();
+            store = jagg.module("greg").getAPIStoreObj();
 
     try {
         //TODO : how to idenftify the comment added user

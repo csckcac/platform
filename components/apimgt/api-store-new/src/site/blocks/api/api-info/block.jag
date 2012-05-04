@@ -11,8 +11,16 @@ jagg.block("api/api-info", {
     },
 
     getOutputs:function (inputs) {
+
+        var applications, api = inputs.api, user = jagg.getUser();
+        if (user) {
+            result = jagg.module("application").getApplications(user.username);
+            applications = result.applications;
+        }
+
         return {
             "api":inputs.api,
+            "applications":applications,
             "tabs":{
                 "tabs":[
                     {
@@ -21,7 +29,8 @@ jagg.block("api/api-info", {
                             {
                                 "name":"api/overview",
                                 "inputs":{
-                                    "api":inputs.api
+                                    "api":api,
+                                    "user" : user
                                 }
                             }
                         ]
@@ -31,7 +40,7 @@ jagg.block("api/api-info", {
                         "body":[
                             {
                                 "name":"api/documentation",
-                                "inputs":inputs.api
+                                "inputs":api
                             }
                         ]
                     }

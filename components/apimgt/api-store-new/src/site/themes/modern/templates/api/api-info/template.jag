@@ -1,6 +1,6 @@
 <% jagg.template("api/api-info", function(inputs, outputs, jagg) { %>
 <% var stars = require("/site/themes/modern/utils/ratings/star-generator.js"); %>
-<% var api = outputs.api; %>
+<% var i, length, app, api = outputs.api, apps = outputs.applications, user = outputs.user; %>
 <div class="api-info">
     <h2><%=api.name%></h2>
     <h5><%=api.provider%></h5>
@@ -31,7 +31,21 @@
             </table>
         </div>
         <div class="col_3">
-            <button class="medium green">Subscribe</button>
+            <%
+            if(user && apps) {
+                length = apps.length;
+            %>
+            <select id="application-list" class="fancy">
+                <option value="0">-- Select an Application --</option>
+                <%
+                for(i = 0; i < length; i++) {
+                    app = apps[i];
+                %>
+                <option value="<%=app.id%>"><%=app.name%></option>
+                <% } %>
+            </select>
+            <% } %>
+                <div class="simple-space-maker"><button id="subscribe-button" class="medium green">Subscribe</button></div>
         </div>
         <div class="col_12 tabs-section">
             <% jagg.includeBlock("tab/basic", outputs.tabs); %>

@@ -28,9 +28,11 @@
     <!--[if IE 7]><link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl("/site/themes/fancy/css/style-ie7.css")%>" media="all"/><![endif]-->
     <%
     var data = jagg.data();
-    jagg.printGlobals(data.js);
-    jagg.printGlobals(data.css);
-    jagg.printGlobals(data.code);
+    if(data.header) {
+        jagg.printData(data.header.js);
+        jagg.printData(data.header.css);
+        jagg.printData(data.header.code);
+    }
     %>
 </head>
 <body>
@@ -50,6 +52,13 @@
    </div>
 
 </div>
+<%
+if(data.footer) {
+    jagg.printData(data.footer.js);
+    jagg.printData(data.footer.css);
+    jagg.printData(data.footer.code);
+}
+%>
 </body>
 </html>
 <% }); %>

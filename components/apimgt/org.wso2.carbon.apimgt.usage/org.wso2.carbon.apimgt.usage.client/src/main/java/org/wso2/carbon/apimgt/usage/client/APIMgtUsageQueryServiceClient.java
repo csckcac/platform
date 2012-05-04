@@ -237,24 +237,26 @@ public class APIMgtUsageQueryServiceClient {
             String[] apiVersion_serviceTime_usage = new String[3];
             apiVersion_serviceTime_usage[0] = apiIdentifier.getApiName();
             OMElement serviceTime_rowsElement = serviceTime_omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
-            OMElement usage_rowsElement = usage_omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
             Iterator serviceTime_rowIterator = serviceTime_rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
-            Iterator usage_rowIterator = usage_rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
+            outer:
             while(serviceTime_rowIterator.hasNext()){
-                OMElement row = (OMElement)serviceTime_rowIterator.next();
-                if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.API)).getText().equals(apiIdentifier.getApiName()) && row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.VERSION)).getText().equals(apiIdentifier.getVersion())){
-                    apiVersion_serviceTime_usage[1] = (row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.SERVICE_TIME))).getText();
-                    break;
+                OMElement serviceTime_row = (OMElement)serviceTime_rowIterator.next();
+                if(serviceTime_row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.API)).getText().equals(apiIdentifier.getApiName()) && serviceTime_row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.VERSION)).getText().equals(apiIdentifier.getVersion())){
+                    apiVersion_serviceTime_usage[1] = (serviceTime_row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.SERVICE_TIME))).getText();
+                    OMElement usage_rowsElement = usage_omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
+                    Iterator usage_rowIterator = usage_rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
+                    while(usage_rowIterator.hasNext()){
+                        OMElement usage_row = (OMElement)usage_rowIterator.next();
+                        if(usage_row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.API)).getText().equals(apiIdentifier.getApiName()) && usage_row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.VERSION)).getText().equals(apiIdentifier.getVersion())){
+                            apiVersion_serviceTime_usage[2] = (usage_row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST))).getText();
+                            calculationList.add(apiVersion_serviceTime_usage);
+                            break outer;
+                        }
+                    }
                 }
             }
-            while(usage_rowIterator.hasNext()){
-                OMElement row = (OMElement)usage_rowIterator.next();
-                if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.API)).getText().equals(apiIdentifier.getApiName()) && row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.VERSION)).getText().equals(apiIdentifier.getVersion())){
-                    apiVersion_serviceTime_usage[2] = (row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST))).getText();
-                    break;
-                }
-            }
-            calculationList.add(apiVersion_serviceTime_usage);
+
+
         }
         Map<String,Float> apiCumulativeServiceTimeMap = new HashMap<String,Float>();
         Map<String,Integer> apiUsageMap = new HashMap<String,Integer>();

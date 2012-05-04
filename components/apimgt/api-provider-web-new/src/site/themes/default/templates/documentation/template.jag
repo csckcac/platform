@@ -2,7 +2,7 @@
 
         <div class="row-fluid">
         <div class="span2">
-        <% jagg.includeTemplate("item-nav-list", null); %>
+        <% jagg.includeBlock("item-nav-list", null); %>
     </div>
             <div class="span10">
                 <div class="row row-fluid">

@@ -2,86 +2,59 @@
         <!DOCTYPE html>
         <html>
         <head>
-        <title><%=data.title%></title>
+        <title><%=outputs.title%></title>
         <meta charset="UTF-8">
         <meta name="description" content=""/>
 
-        <link href="<%=site.context%>/site/themes/default/lib/bootstrap/css/bootstrap.css" rel="stylesheet">
-        <link href="<%=site.context%>/site/themes/default/lib/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/css/bootstrap.css")%>" rel="stylesheet">
+        <link href="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/css/bootstrap-responsive.css")%>" rel="stylesheet">
 
     <!-- Le fav and touch icons -->
-        <link rel="shortcut icon" href="<%=site.context%>/site/themes/default/images/favicon.ico">
-        <link rel="apple-touch-icon" href="<%=site.context%>/site/themes/default/images/apple-touch-icon.png">
-        <link rel="apple-touch-icon" sizes="72x72" href="<%=site.context%>/site/themes/default/images/apple-touch-icon-72x72.png">
-        <link rel="apple-touch-icon" sizes="114x114" href="<%=site.context%>/site/themes/default/images/apple-touch-icon-114x114.png">
+        <link rel="shortcut icon" href="<%=jagg.getAbsoluteUrl("/site/themes/default/images/favicon.ico")%>">
+        <link rel="apple-touch-icon" href="<%=jagg.getAbsoluteUrl("/site/themes/default/images/apple-touch-icon.png")%>">
+        <link rel="apple-touch-icon" sizes="72x72" href="<%=jagg.getAbsoluteUrl("/site/themes/default/images/apple-touch-icon-72x72.png")%>">
+        <link rel="apple-touch-icon" sizes="114x114" href="<%=jagg.getAbsoluteUrl("/site/themes/default/images/apple-touch-icon-114x114.png")%>">
 
     <!--Loca styles-->
-        <link href="<%=site.context%>/site/themes/default/localcss/localstyles.css" rel="stylesheet">
-        <script type="text/javascript" src="<%=site.context%>/site/themes/default/lib/jquery-1.7.1.min.js"></script>
+        <link href="<%=jagg.getAbsoluteUrl("/site/themes/default/localcss/localstyles.css")%>" rel="stylesheet">
+        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/jquery-1.7.1.min.js")%>"></script>
 
-        <script type="text/javascript" src="<%=site.context%>/site/themes/default/lib/bootstrap/js/bootstrap-transition.js"></script>
-        <script type="text/javascript" src="<%=site.context%>/site/themes/default/lib/bootstrap/js/bootstrap-transition.js"></script>
-        <script type="text/javascript" src="<%=site.context%>/site/themes/default/lib/bootstrap/js/bootstrap-alert.js"></script>
-        <script type="text/javascript" src="<%=site.context%>/site/themes/default/lib/bootstrap/js/bootstrap-modal.js"></script>
-        <script type="text/javascript" src="<%=site.context%>/site/themes/default/lib/bootstrap/js/bootstrap-dropdown.js"></script>
-        <script type="text/javascript" src="<%=site.context%>/site/themes/default/lib/bootstrap/js/bootstrap-scrollspy.js"></script>
-        <script type="text/javascript" src="<%=site.context%>/site/themes/default/lib/bootstrap/js/bootstrap-tab.js"></script>
-        <script type="text/javascript" src="<%=site.context%>/site/themes/default/lib/bootstrap/js/bootstrap-tooltip.js"></script>
-        <script type="text/javascript" src="<%=site.context%>/site/themes/default/lib/bootstrap/js/bootstrap-popover.js"></script>
-        <script type="text/javascript" src="<%=site.context%>/site/themes/default/lib/bootstrap/js/bootstrap-button.js"></script>
-        <script type="text/javascript" src="<%=site.context%>/site/themes/default/lib/bootstrap/js/bootstrap-collapse.js"></script>
-        <script type="text/javascript" src="<%=site.context%>/site/themes/default/lib/bootstrap/js/bootstrap-carousel.js"></script>
-        <script type="text/javascript" src="<%=site.context%>/site/themes/default/lib/bootstrap/js/bootstrap-typeahead.js"></script>
-        <script type="text/javascript" src="<%=site.context%>/site/themes/default/lib/jqplot/plugins/jqplot.dateAxisRenderer.min.js"></script>
-        <script type="text/javascript" src="<%=site.context%>/site/themes/default/lib/jqplot/plugins/jqplot.canvasTextRenderer.min.js"></script>
-        <script type="text/javascript" src="<%=site.context%>/site/themes/default/lib/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js"></script>
-        <script type="text/javascript" src="<%=site.context%>/site/themes/default/lib/jqplot/plugins/jqplot.categoryAxisRenderer.min.js"></script>
-        <script type="text/javascript" src="<%=site.context%>/site/themes/default/lib/jqplot/plugins/jqplot.barRenderer.min.js"></script>
+        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-transition.js")%>"></script>
+        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-transition.js")%>"></script>
+        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-alert.js")%>"></script>
+        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-modal.js")%>"></script>
+        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-dropdown.js")%>"></script>
+        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-scrollspy.js")%>"></script>
+        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-tab.js")%>"></script>
+        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-tooltip.js")%>"></script>
+        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-popover.js")%>"></script>
+        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-button.js")%>"></script>
+        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-collapse.js")%>"></script>
+        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-carousel.js")%>"></script>
+        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-typeahead.js")%>"></script>
+        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/jqplot/plugins/jqplot.dateAxisRenderer.min.js")%>"></script>
+        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/jqplot/plugins/jqplot.canvasTextRenderer.min.js")%>"></script>
+        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js")%>"></script>
+        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/jqplot/plugins/jqplot.categoryAxisRenderer.min.js")%>"></script>
+        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/jqplot/plugins/jqplot.barRenderer.min.js")%>"></script>
 
         <script src="http://malsup.github.com/jquery.form.js"></script>
-
-
-
-        <%
-        var context = site.context;
-
-        var insertCode = function(list, fn) {
-        var obj, tmpl, key, path;
-        for(tmpl in list) {
-        if(list.hasOwnProperty(tmpl)) {
-        obj = list[tmpl];
-        for(key in obj) {
-        if(obj.hasOwnProperty(key)) {
-        path = "/" + context + obj[key];
-        fn(path);
-        }
-}
-}
-}
-};
-
-insertCode(jagg.global.js, function(path) {
-        print('<script type="text/javascript" src="' + path + '"></script>');
-        });
-
-insertCode(jagg.global.css, function(path) {
-        print('<link type="text/css" rel="stylesheet" href="' + path + '"/>');
-        });
-
-insertCode(jagg.global.code, function(code) {
-        print(code);
-        });
-%>
+    <%
+    var data = jagg.data();
+    jagg.printGlobals(data.js);
+    jagg.printGlobals(data.css);
+    jagg.printGlobals(data.code);
+    %>
     </head>
         <body>
 
             <div id="header">
-              <% jagg.includeTemplate("header", null); %>
+              <% jagg.includeBlock("header", null); %>
             </div>
 
             <div class="container-fluid content-section">
             <div class="row-fluid">
-               <% jagg.includeTemplates(data.body); %>
+               <% jagg.includeBlocks(outputs.body); %>
              </div>
              <hr>
              <div id="footer">

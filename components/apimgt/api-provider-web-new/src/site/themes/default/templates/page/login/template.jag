@@ -2,15 +2,15 @@
         <!DOCTYPE html>
         <html>
         <head>
-            <link href="<%=site.context%>/site/themes/default/images/favicon.png" rel="shortcut icon" type="image/x-icon"/>
+            <link href="<%=jagg.getAbsoluteUrl("/site/themes/default/images/favicon.png")%>" rel="shortcut icon" type="image/x-icon"/>
             <title>API Publisher</title>
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <meta name="description" content="">
             <meta name="author" content="">
 
             <!-- Le styles -->
-            <link href="<%=site.context%>/site/themes/default/lib/bootstrap/css/bootstrap.css" rel="stylesheet">
-            <link href="<%=site.context%>/site/themes/default/lib/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+            <link href="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/css/bootstrap.css")%>" rel="stylesheet">
+            <link href="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/css/bootstrap-responsive.css")%>" rel="stylesheet">
 
             <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
             <!--[if lt IE 9]>
@@ -18,58 +18,34 @@
             <![endif]-->
 
             <!-- Le fav and touch icons -->
-            <link href="<%=site.context%>/site/themes/default/images/favicon.png" rel="shortcut icon" type="image/x-icon"/>
-            <link rel="apple-touch-icon" href="<%=site.context%>/site/themes/default/images/apple-touch-icon.png">
-            <link rel="apple-touch-icon" sizes="72x72" href="<%=site.context%>/site/themes/default/images/apple-touch-icon-72x72.png">
-            <link rel="apple-touch-icon" sizes="114x114" href="<%=site.context%>/site/themes/default/images/apple-touch-icon-114x114.png">
+            <link href="<%=jagg.getAbsoluteUrl("/site/themes/default/images/favicon.png")%>" rel="shortcut icon" type="image/x-icon"/>
+            <link rel="apple-touch-icon" href="<%=jagg.getAbsoluteUrl("/site/themes/default/images/apple-touch-icon.png")%>">
+            <link rel="apple-touch-icon" sizes="72x72" href="<%=jagg.getAbsoluteUrl("/site/themes/default/images/apple-touch-icon-72x72.png")%>">
+            <link rel="apple-touch-icon" sizes="114x114" href="<%=jagg.getAbsoluteUrl("/site/themes/default/images/apple-touch-icon-114x114.png")%>">
 
             <!--Loca styles-->
-            <link href="<%=site.context%>/site/themes/default/css/localstyles.css" rel="stylesheet">
-            <script src="<%=site.context%>/site/themes/default/lib/jquery-1.7.1.min.js"></script>
-            <script type="text/javascript" src="<%=site.context%>/site/themes/default/lib/jquery-validation/jquery.validate.min.js"></script>
-            <script type="text/javascript" src="<%=site.context%>/site/themes/default/js/apiProviderApp.js"></script>
-            <script type="text/javascript" src="<%=site.context%>/site/themes/default/js/provider/renderProvider.js"></script>
-            <script type="text/javascript" src="<%=site.context%>/site/themes/default/js/util.js"></script>
-            <script type="text/javascript" src="<%=site.context%>/site/themes/default/js/login/initLogin.js"></script>
-             <%
-        var context = site.context;
-
-        var insertCode = function(list, fn) {
-        var obj, tmpl, key, path;
-        for(tmpl in list) {
-        if(list.hasOwnProperty(tmpl)) {
-        obj = list[tmpl];
-        for(key in obj) {
-        if(obj.hasOwnProperty(key)) {
-        path = "/" + context + obj[key];
-        fn(path);
-        }
-}
-}
-}
-};
-
-insertCode(jagg.global.js, function(path) {
-        print('<script type="text/javascript" src="' + path + '"></script>');
-        });
-
-insertCode(jagg.global.css, function(path) {
-        print('<link type="text/css" rel="stylesheet" href="' + path + '"/>');
-        });
-
-insertCode(jagg.global.code, function(code) {
-        print(code);
-        });
-%>
+            <link href="<%=jagg.getAbsoluteUrl("/site/themes/default/css/localstyles.css")%>" rel="stylesheet">
+            <script src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/jquery-1.7.1.min.js")%>"></script>
+            <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/jquery-validation/jquery.validate.min.js")%>"></script>
+            <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/js/apiProviderApp.js")%>"></script>
+            <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/js/provider/renderProvider.js")%>"></script>
+            <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/js/util.js")%>"></script>
+            <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/js/login/initLogin.js")%>"></script>
+    <%
+    var data = jagg.data();
+    jagg.printGlobals(data.js);
+    jagg.printGlobals(data.css);
+    jagg.printGlobals(data.code);
+    %>
         </head>
         <body>
 
-             <% jagg.includeTemplate("header/login", null); %>
+              <% jagg.includeBlock("header/login", null); %>
 
 
             <div class="container-fluid content-section">
 
-            <% jagg.includeTemplates(data.body); %>
+             <% jagg.includeBlocks(outputs.body); %>
 
              <hr>
              <div class="container content-section">

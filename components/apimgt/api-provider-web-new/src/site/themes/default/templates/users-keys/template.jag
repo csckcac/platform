@@ -1,7 +1,7 @@
 <% jagg.template("users-keys", function(inputs, outputs, jagg) { %>
 
         <div id="userKey"><h2>Users/Keys</h2>
-        <%jagg.includeTemplate("search", null); %>
+         <% jagg.includeBlock("search", null); %>
         <div class="row">
         <div class="span12">
         <table class="table table-bordered">

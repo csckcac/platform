@@ -3,20 +3,20 @@
 <div id="layouts_base">
     <div id="top">
          <div class="navbar">
-        <% jagg.includeTemplates(data.top); %>
+         <% jagg.includeBlocks(outputs.top); %>
         </div>
     </div>
 
     <div id="left">
         <div class="span2">
-            <% jagg.includeTemplates(data.left); %>
+            < <% jagg.includeBlocks(outputs.left); %>
         </div>
     </div>
 
     <div id="right">
         <div class="span10">
-            <% jagg.includeTemplates(data.rTop); %>
-            <% jagg.includeTemplates(data.rBottom); %>
+             <% jagg.includeBlocks(outputs.rTop); %>
+             <% jagg.includeBlocks(outputs.rBottom); %>
         </div>
     </div>
 

@@ -1,0 +1,31 @@
+<%
+jagg.block("page/base", {
+
+    initialize:function (data) {
+
+    },
+
+    getInputs:function () {
+        return {
+            title:null,
+            body:null
+        };
+    },
+
+    getOutputs:function (inputs) {
+        return inputs;
+    },
+
+    getStaticBlocks:function () {
+        return [
+            "header"
+        ];
+    },
+
+    getInputBlocks:function () {
+        return [
+            "body"
+        ];
+    }
+});
+%>

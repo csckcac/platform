@@ -1,8 +1,0 @@
-<analyzerSequence name="ClassAnalyzer">
-    <trigger cron="1 * * * * ? *"/>
-    <analyzers>
-        <get name="BASE" batchSize="1000"/>
-        <class className="org.wso2.carbon.apimgt.usage.analyzer.APIMgtUsageAnalyzer"></class>
-        <put name="BASEEnriched" dataSourceType="CASSANDRA"/>
-    </analyzers>
-</analyzerSequence>

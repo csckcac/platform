@@ -1,5 +1,6 @@
 package org.wso2.carbon.hostobjects.db;
 
+import com.google.gson.Gson;
 import org.apache.commons.dbcp.ConnectionFactory;
 import org.apache.commons.dbcp.DriverManagerConnectionFactory;
 import org.apache.commons.dbcp.PoolableConnectionFactory;
@@ -14,6 +15,9 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.NativeArray;
 import org.mozilla.javascript.NativeObject;
+import org.wso2.carbon.ndatasource.common.DataSourceException;
+import org.wso2.carbon.ndatasource.rdbms.RDBMSConfiguration;
+import org.wso2.carbon.ndatasource.rdbms.RDBMSDataSource;
 import org.wso2.carbon.scriptengine.util.HostObjectUtil;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 import org.wso2.carbon.scriptengine.engine.RhinoEngine;
@@ -61,7 +65,7 @@ public class DatabaseHostObject extends ScriptableObject {
     public static Scriptable jsConstructor(Context cx, Object[] args, Function ctorObj, boolean inNewExpr)
             throws ScriptException {
         int argsCount = args.length;
-        if (argsCount != 3 && argsCount != 4) {
+        if (argsCount != 4 && argsCount != 5) {
             HostObjectUtil.invalidNumberOfArgs(hostObjectName, hostObjectName, argsCount, true);
         }
 
@@ -76,34 +80,40 @@ public class DatabaseHostObject extends ScriptableObject {
         if (!(args[2] instanceof String) && !(args[2] instanceof Integer)) {
             HostObjectUtil.invalidArgsError(hostObjectName, hostObjectName, "3", "string", args[2], true);
         }
+        if (!(args[3] instanceof String) && !(args[2] instanceof Integer)) {
+            HostObjectUtil.invalidArgsError(hostObjectName, hostObjectName, "3", "string", args[2], true);
+        }
         NativeObject configs = null;
-        if (argsCount == 4) {
-            if (!(args[3] instanceof NativeObject)) {
+        if (argsCount == 5) {
+            if (!(args[4] instanceof NativeObject)) {
                 HostObjectUtil.invalidArgsError(hostObjectName, hostObjectName, "4", "object", args[3], true);
             }
-            configs = (NativeObject) args[3];
+            configs = (NativeObject) args[4];
         }
 
         String dbUrl = (String) args[0];
+        RDBMSConfiguration rdbmsConfig = new RDBMSConfiguration();
         try {
             DatabaseHostObject db = new DatabaseHostObject();
             if (configs != null) {
-                Object obj = configs.get("pooling", db);
-                if (!(obj instanceof Boolean)) {
-                    String msg = "Invalid value for the property \"pooling\" in the provided configs JSON.";
-                    log.warn(msg);
-                    throw new ScriptException(msg);
-                }
-                boolean pooling = (Boolean) obj;
-                //TODO : think about a way to implement pooling support
+                Gson gson = new Gson();
+                rdbmsConfig = gson.fromJson(HostObjectUtil.serializeJSON(configs), RDBMSConfiguration.class);
             }
-            ObjectPool pool = new GenericObjectPool();
-            ConnectionFactory driverFactory = new DriverManagerConnectionFactory(dbUrl, (String) args[1], (String) args[2]);
-            PoolableConnectionFactory factory = new PoolableConnectionFactory(driverFactory, pool, null, null, false, true);
-            pool.setFactory(factory);
-            PoolingDataSource ds = new PoolingDataSource(pool);
-            ds.setAccessToUnderlyingConnectionAllowed(true);
-            db.conn = ds.getConnection();
+
+            rdbmsConfig.setDriverClassName((String) args[1]);
+            rdbmsConfig.setUsername((String) args[2]);
+            rdbmsConfig.setPassword((String) args[3]);
+            rdbmsConfig.setUrl(dbUrl);
+
+            RDBMSDataSource rdbmsDataSource = null;
+            try {
+                rdbmsDataSource = new RDBMSDataSource(rdbmsConfig);
+
+            } catch (DataSourceException e) {
+                throw new ScriptException(e);
+            }
+
+            db.conn = rdbmsDataSource.getDataSource().getConnection();
             db.context = cx;
             return db;
         } catch (SQLException e) {

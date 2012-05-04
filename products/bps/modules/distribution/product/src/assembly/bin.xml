@@ -107,7 +107,7 @@
         <!-- BPEL Samples -->
         <fileSet>
             <directory>target/samples</directory>
-            <outputDirectory>wso2bps-${pom.version}/repository/deployment/server/bpel</outputDirectory>
+            <outputDirectory>wso2bps-${pom.version}/repository/samples/bpel</outputDirectory>
         </fileSet>
 
         <fileSet>

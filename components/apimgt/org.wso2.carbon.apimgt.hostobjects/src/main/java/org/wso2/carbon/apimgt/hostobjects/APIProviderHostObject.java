@@ -51,6 +51,7 @@ import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIServiceTimeDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUserUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionLastAccessDTO;
+import org.wso2.carbon.apimgt.usage.client.exception.APIMgtUsageQueryServiceClientException;
 import org.wso2.carbon.hostobjects.web.RequestHostObject;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.rest.api.ui.client.AuthAdminServiceClient;
@@ -903,8 +904,8 @@ public class APIProviderHostObject extends ScriptableObject {
         try {
             APIMgtUsageQueryServiceClient client = new APIMgtUsageQueryServiceClient(serverURL);
             list = client.getProviderAPIVersionUsage(providerName,APIname);
-        } catch (Exception e) {
-            log.error("Backend-Error while querying BAM server for ProviderAPIVersionUsage", e);
+        } catch (APIMgtUsageQueryServiceClientException e) {
+            log.error("Error while invoking APIMgtUsageQueryServiceClient for ProviderAPIVersionUsage", e);
         }
         NativeArray myn = new NativeArray(0);
         Iterator it = null;
@@ -932,8 +933,8 @@ public class APIProviderHostObject extends ScriptableObject {
         try {
             APIMgtUsageQueryServiceClient client = new APIMgtUsageQueryServiceClient(serverURL);
             list = client.getProviderAPIUsage(providerName);
-        } catch (Exception e) {
-            log.error("Backend-Error while querying BAM server for ProviderAPIUsage", e);
+        } catch (APIMgtUsageQueryServiceClientException e) {
+            log.error("Error while invoking APIMgtUsageQueryServiceClient for ProviderAPIUsage", e);
         }
         NativeArray myn = new NativeArray(0);
         Iterator it = null;
@@ -961,8 +962,8 @@ public class APIProviderHostObject extends ScriptableObject {
         try {
             APIMgtUsageQueryServiceClient client = new APIMgtUsageQueryServiceClient(serverURL);
             list = client.getProviderAPIUserUsage(providerName, apiName);
-        } catch (Exception e) {
-            log.error("Backend-Error while querying BAM server for ProviderAPIUserUsage", e);
+        } catch (APIMgtUsageQueryServiceClientException e) {
+            log.error("Error while invoking APIMgtUsageQueryServiceClient for ProviderAPIUserUsage", e);
         }
         NativeArray myn = new NativeArray(0);
         Iterator it = null;
@@ -990,8 +991,8 @@ public class APIProviderHostObject extends ScriptableObject {
         try {
             APIMgtUsageQueryServiceClient client = new APIMgtUsageQueryServiceClient(serverURL);
             list = client.getProviderAPIVersionLastAccess(providerName);
-        } catch (Exception e) {
-            log.error("Backend-Error while querying BAM server for ProviderAPIVersionLastAccess", e);
+        } catch (APIMgtUsageQueryServiceClientException e) {
+            log.error("Error while invoking APIMgtUsageQueryServiceClient for ProviderAPIVersionLastAccess", e);
         }
         NativeArray myn = new NativeArray(0);
         Iterator it = null;
@@ -1019,8 +1020,8 @@ public class APIProviderHostObject extends ScriptableObject {
         try {
             APIMgtUsageQueryServiceClient client = new APIMgtUsageQueryServiceClient(serverURL);
             list = client.getProviderAPIServiceTime(providerName);
-        } catch (Exception e) {
-            log.error("Backend-Error while querying BAM server for ProviderAPIServiceTime", e);
+        } catch (APIMgtUsageQueryServiceClientException e) {
+            log.error("Error while invoking APIMgtUsageQueryServiceClient for ProviderAPIServiceTime", e);
         }
         NativeArray myn = new NativeArray(0);
         Iterator it = null;

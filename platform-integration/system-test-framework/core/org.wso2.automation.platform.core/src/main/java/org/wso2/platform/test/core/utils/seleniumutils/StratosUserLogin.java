@@ -39,13 +39,7 @@ public class StratosUserLogin {
         driver.findElement(By.id("password")).sendKeys(password);
         driver.findElement(By.xpath("//tr[4]/td[2]/input")).click();
 
-        if (productName.equalsIgnoreCase("greg")) {
-            assertTrue(driver.getPageSource().contains("WSO2 Governance Registry quick start dashboard"),
-                       "Failed to display Home Page :");
-        } else if (productName.equalsIgnoreCase("is")) {
-            assertTrue(selenium.isTextPresent("Identity & Entitlement quick start dashboard"),
-                       "IS Home page Failed");
-        } else if (productName.equalsIgnoreCase("manager")) {
+        if (productName.equalsIgnoreCase("manager")) {
             assertTrue(driver.getPageSource().contains("Application Server"),
                        "Manager Home page Failed");
             assertTrue(driver.getPageSource().contains("Mashup Server"), "Manager Home page Failed");
@@ -53,6 +47,9 @@ public class StratosUserLogin {
             assertTrue(driver.getPageSource().contains("Message Broker"), "Manager Home page Failed");
             assertTrue(driver.getPageSource().contains("Enterprise Service Bus"),
                        "Manager Home page Failed");
+        } else {
+            assertTrue(driver.getPageSource().toLowerCase().contains("quick start dashboard"),
+                       "Failed to display service home Page :");
         }
     }
 }

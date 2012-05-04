@@ -13,7 +13,7 @@ public class GsSetter  extends EnvironmentSetter {
         if (!Boolean.parseBoolean(prop.getProperty("stratos.test"))) {
             hostName = (prop.getProperty("gs.host.name", "localhost"));
         } else {
-            hostName = prop.getProperty("gs.service.host.name", "identity.stratoslive.wso2.com");
+            hostName = prop.getProperty("gs.service.host.name", "gadget.stratoslive.wso2.com");
         }
         String httpPort = (prop.getProperty("gs.http.port", "9763"));
         String httpsPort = (prop.getProperty("gs.https.port", "9443"));

@@ -229,9 +229,9 @@ public class ServerGroupManager {
             try {
                 for (String product : productList) {
                     FrameworkProperties properties = FrameworkFactory.getFrameworkProperties(product);
-                    String backendURL = properties.getProductVariables().getBackendUrl();
-                    String sessionCookieUser = login(adminDetails.getUserName(), adminDetails.getPassword(), backendURL);
-                    adminServiceCarbonServerAdmin = new AdminServiceCarbonServerAdmin(backendURL);
+                    String hostName = properties.getProductVariables().getHostName();
+                    String sessionCookieUser = login(adminDetails.getUserName(), adminDetails.getPassword(), hostName);
+                    adminServiceCarbonServerAdmin = new AdminServiceCarbonServerAdmin(hostName);
                     adminServiceCarbonServerAdmin.shutdownGracefully(sessionCookieUser);
                     waitForServerShutDown(Integer.parseInt(properties.getProductVariables().
                             getHttpsPort()), properties.getProductVariables().getHostName());

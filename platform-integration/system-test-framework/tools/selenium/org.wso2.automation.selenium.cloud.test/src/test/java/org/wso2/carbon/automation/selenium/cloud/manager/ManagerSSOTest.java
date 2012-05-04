@@ -67,6 +67,9 @@ public class ManagerSSOTest {
 
     @Test(groups = {"wso2.manager"}, description = "Login to manager", priority = 1)
     public void testLoginToManager() throws Exception {
+        assertTrue(driver.getPageSource().
+                contains("Get instant access right now to enterprise-grade Middleware Platform-as-a-Service:"));
+        assertTrue(driver.getPageSource().contains("googleAnalyticsProcessor.js"));
         new StratosUserLogin().userLogin(driver, selenium, userName, password, productName);
         log.info("Stratos Manager Login Success");
     }

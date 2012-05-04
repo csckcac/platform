@@ -62,11 +62,11 @@ include('/includes/topnavi.jag');
 
         <pre class="prettyprint linenums">
 &lt%
-var db = new Database("jdbc:h2:demo", "admin", "admin");
+var db = new Database("jdbc:h2:demo", "org.h2.Driver", "admin", "admin");
 
 db.query("CREATE TABLE demo(name varchar(255), address varchar(255))");
 
-db.query("INSERT INTO demo VALUES(1, 'WSO2'), (2, '59 Flower Rd');");
+db.query("INSERT INTO demo VALUES('WSO2','59 Flower Rd'), ('WSO2 UK', 'Emsworth, Hampshire, UK');");
 
 var result = db.query("SELECT * FROM demo");
 
@@ -75,11 +75,11 @@ print(result);
 </pre>
                 <%
                 var sesCode = '&lt%'
-                + '\n var db = new Database("jdbc:h2:demo", "admin", "admin");'
+                + '\n var db = new Database("jdbc:h2:demo", "org.h2.Driver", "admin", "admin");'
                 + '\n '
                 + '\n db.query("CREATE TABLE demo(name varchar(255), address varchar(255));")'
                 + '\n '
-                + '\n db.query("INSERT INTO demo VALUES(1, \'WSO2\'), (2, \'59 Flower Rd\');");'
+                + '\n db.query("INSERT INTO demo VALUES(\'WSO2\',\'59 Flower Rd\'), (\'WSO2 UK\', \'Emsworth, Hampshire, UK\');");'
                 + '\n '
                 + '\n  var result = db.query("SELECT * FROM demo");'
                 + '\n print(result);'
@@ -91,10 +91,15 @@ print(result);
                 include('/includes/tryit_but.jag');
                 %>
 
+ <% hasMembers = false; %>
 <div id="pageLinks">
 <a class="navilink" href="#overview">Overview</a>
+    <%if(hasMembers) {%>
 <a class="navilink" href="#members">Members</a>
+        <%}%>
+        <%if(hasOps) {%>
 <a class="navilink" href="#operations">Operations</a>
+            <%}%>
 </div>
  <section id="overview">
 
@@ -105,39 +110,6 @@ and manipulation through the below members / functions.</p>
 
 </section>
 
-<section id="members">
-<h4>Members</h4>               
-                <table class="clsStd member-table">
-
-                    <tbody>
-
-                    <tr>
-
-                        <th>Member</th>
-                        <th>Type</th>
-                        <th>Description</th>
-
-                    </tr>
-
-
-                       <tr>
-
-                        <td><code>autoCommit</code></td>
-                        <td>Boolean</td>
-                        <td> <pre class="prettyprint">db.autoCommit = true</pre>
-                            Set auto commit in a transaction
-
-                        </td>
-
-
-                    </tr>
-
-
-
-                    </tbody>
-                </table>
-
-    </section>
                 <section id="operations">
                                        <h4>Operations</h4>
 
@@ -150,12 +122,39 @@ and manipulation through the below members / functions.</p>
                         </tr>
                         <tr>
 
-                        <td><code>Database(connectionUrl, username, password)</code></td>
-                        <td>None</td>
-                        <td><pre class="prettyprint">var db = new Database("jdbc:h2:demo", "admin", "admin");</pre>
+                        <td><code>Database(connectionUrl, <br/>driverName, username, password[, config])</code></td>
+                        <td>Database</td>
+                        <td><pre class="prettyprint">var db = new Database("jdbc:h2:demo", "org.h2.Driver", "admin", "admin");</pre>
                             Returns Database object for database communication
-                            <br>
+                            <br> <br/>
+                            <pre class="prettyprint">
+var config = {
+	defaultAutoCommit:boolean,
+	defaultReadOnly:boolean,
+	defaultTransactionIsolation:"string",
+	defaultCatalog:"string",
+	maxActive:number,
+	maxIdle:number,
+	minIdle:number,
+	initialSize:number,
+	maxWait:number,
+	testOnBorrow:boolean,
+	testOnReturn:boolean,
+	testWhileIdle:boolean,
+	validationQuery:"string",
+	accessToUnderlyingConnectionAllowed:boolean,
+	logAbandoned:boolean,
+	connectionProperties:"string",
+	initSQL:"string",
+	validationInterval:number,
+	maxAge:number,
+	suspectTimeout:number
+}
 
+var db = new Database("jdbc:h2:demo", "org.h2.Driver", "admin", "admin", config);
+                            </pre>
+                            Returns Database object for database communication with optional configurations
+                            <br/>
                         </td>
 
                     </tr>

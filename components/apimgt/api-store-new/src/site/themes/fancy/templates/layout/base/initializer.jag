@@ -1,7 +1,7 @@
 <%
 jagg.initializer("layout/base", {
 
-    initialize:function () {
+    preInitialize:function () {
 
     }
 });

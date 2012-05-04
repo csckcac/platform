@@ -1,7 +1,7 @@
 <%
 jagg.initializer("user/login", {
 
-    initialize:function (data) {
+    preInitialize:function (data) {
         jagg.addHeaderJS("user/login", "login", "templates/user/login/js/login.js");
         jagg.addHeaderCSS("user/login", "login", "templates/user/login/css/login.css");
     }

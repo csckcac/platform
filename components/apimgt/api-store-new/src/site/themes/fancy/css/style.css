@@ -432,3 +432,11 @@ input[type="text"]:focus, textarea:focus, button:focus, a.button:focus, select:f
     display:none;
 }
 
+.hidden {
+    display: none;
+}
+
+.simple-space-maker {
+    padding: 10px 0;
+}
+

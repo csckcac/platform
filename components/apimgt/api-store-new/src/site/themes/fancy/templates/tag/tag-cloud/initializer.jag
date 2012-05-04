@@ -1,7 +1,7 @@
 <%
 jagg.initializer("tag/tag-cloud", {
 
-    initialize:function () {
+    preInitialize:function () {
 
     }
 });

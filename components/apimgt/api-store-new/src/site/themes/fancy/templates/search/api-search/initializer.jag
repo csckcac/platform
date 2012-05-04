@@ -1,7 +1,7 @@
 <%
 jagg.initializer("search/api-search", {
 
-    initialize:function () {
+    preInitialize:function () {
 
     }
 });

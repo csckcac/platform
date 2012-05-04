@@ -5,7 +5,7 @@ var getRecentlyAddedAPIs = function (limit) {
             store = jagg.module("greg").getAPIStoreObj();
 
     try {
-        apis = store.getRecentlyAddedAPIs(limit);
+        apis = store.getRecentlyAddedAPIs(String(limit));
         if (log.isDebugEnabled()) {
             log.debug("getRecentlyAddedAPIs : " + stringify(apis));
         }

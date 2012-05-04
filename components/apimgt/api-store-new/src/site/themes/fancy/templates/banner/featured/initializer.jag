@@ -1,7 +1,7 @@
 <%
 jagg.initializer("banner/featured", {
 
-    initialize:function () {
+    preInitialize:function () {
 
     }
 });

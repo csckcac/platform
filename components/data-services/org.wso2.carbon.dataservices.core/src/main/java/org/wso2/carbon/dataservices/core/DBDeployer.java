@@ -156,34 +156,28 @@ public class DBDeployer extends AbstractDeployer {
 		/* Axis2 service to be deployed */
 		AxisService service = null;
 		try {
-			String serviceGroupName = serviceHierarchy + this.getServiceGroupFromDSContents(
-					deploymentFileData.getFile());
-			AxisServiceGroup serviceGroup = this.axisConfig.getServiceGroup(serviceGroupName);
-			
+			/* In the context of dataservices one service group will only contain one dataservice.
+            *  Hence assigning the service group as the service group name */
+            String serviceGroupName = serviceHierarchy +
+                    this.getServiceNameFromDSContents(deploymentFileData.getFile());
+
 			/* service active property */
-			boolean serviceActive = false;
-			
-			if (serviceGroup != null) {
-				service = processService(deploymentFileData, serviceGroup, this.configCtx);
-				service.setName(serviceHierarchy + service.getName());
-				/* save original value */
-				serviceActive = service.isActive();
-				this.axisConfig.addServiceToExistingServiceGroup(service, serviceGroupName);
-			} else {
-				serviceGroup = new AxisServiceGroup();
-				serviceGroup.setServiceGroupName(serviceGroupName);
-				service = processService(deploymentFileData, serviceGroup, this.configCtx);
-				service.setName(serviceHierarchy + service.getName());
-				/* save original value */
-				serviceActive = service.isActive();
+			boolean serviceActive;
 
-                ArrayList<AxisService> services = new ArrayList<AxisService>();
-                services.add(service);
+            AxisServiceGroup serviceGroup = new AxisServiceGroup();
+            serviceGroup.setServiceGroupName(serviceGroupName);
+            service = processService(deploymentFileData, serviceGroup, this.configCtx);
+            service.setName(serviceHierarchy + service.getName());
+            /* save original value */
+            serviceActive = service.isActive();
 
-                DeploymentEngine.addServiceGroup(serviceGroup, services,
-                        deploymentFileData.getFile().toURI().toURL(), deploymentFileData,
-                        this.axisConfig);
-			}
+            ArrayList<AxisService> services = new ArrayList<AxisService>();
+            services.add(service);
+
+            DeploymentEngine.addServiceGroup(serviceGroup, services,
+                    deploymentFileData.getFile().toURI().toURL(), deploymentFileData,
+                    this.axisConfig);
+
 			
 			/* restore original service active value */
 			service.setActive(serviceActive);
@@ -256,6 +250,18 @@ public class DBDeployer extends AbstractDeployer {
            }
 		}
 	}
+
+    private String getServiceNameFromDSContents(File file) throws Exception {
+        StAXOMBuilder builder = new StAXOMBuilder(new FileInputStream(file.getAbsoluteFile()));
+        OMElement serviceEl = builder.getDocumentElement();
+        String serviceName = serviceEl.getAttributeValue(new QName(DBSFields.NAME));
+        builder.close();
+        if (DBUtils.isEmptyString(serviceName)) {
+            throw new DataServiceFault("Service group cannot be determined for the data service at '"
+                            + file.getAbsolutePath() + "'");
+        }
+        return serviceName;
+    }
 
 
 		
@@ -380,9 +386,10 @@ public class DBDeployer extends AbstractDeployer {
 	        if (serviceHierarchy == null){
 	            serviceHierarchy = "";
 	        }
-	        String serviceGroupName = serviceHierarchy + dataService.getServiceGroup();
 	        String serviceName = serviceHierarchy + dataService.getName();
-			AxisServiceGroup serviceGroup = this.axisConfig.getServiceGroup(serviceGroupName);
+            /* In the context of dataservices one service group will only contain one dataservice.
+            *  Hence assigning the service group as the service group name */
+			AxisServiceGroup serviceGroup = this.axisConfig.getServiceGroup(serviceName);
 			if (serviceGroup == null) { /* must be a faulty service */
 				this.axisConfig.removeFaultyService(servicePath);
 			} else {
@@ -396,7 +403,7 @@ public class DBDeployer extends AbstractDeployer {
 				}
 			}
             if (log.isDebugEnabled()) {
-                log.debug(Messages.getMessage(DeploymentErrorMsgs.SERVICE_REMOVED, serviceGroupName));
+                log.debug(Messages.getMessage(DeploymentErrorMsgs.SERVICE_REMOVED, serviceName));
             }
             super.undeploy(servicePath);
 		} catch (Exception e) {
@@ -405,22 +412,7 @@ public class DBDeployer extends AbstractDeployer {
 			throw new DeploymentException(msg, e);
 		}
 	}
-	
-	private String getServiceGroupFromDSContents(File file) throws Exception {
-		StAXOMBuilder builder = new StAXOMBuilder(new FileInputStream(file.getAbsoluteFile()));
-    	OMElement serviceEl = builder.getDocumentElement();
-    	String serviceGroup = serviceEl.getAttributeValue(new QName(DBSFields.SERVICE_GROUP));
-    	if (DBUtils.isEmptyString(serviceGroup)) {
-    		serviceGroup = serviceEl.getAttributeValue(new QName(DBSFields.NAME));
-    	}
-    	builder.close();
-    	if (DBUtils.isEmptyString(serviceGroup)) {
-			throw new DataServiceFault("Service group cannot be determined for the data service at '"
-							+ file.getAbsolutePath() + "'");
-    	}
-    	return serviceGroup;
-    }
-
+    
 	/**
 	 * Configuration files prior to multiple data source support did not have id attribute 
 	 * for config element. Adding that & saving.

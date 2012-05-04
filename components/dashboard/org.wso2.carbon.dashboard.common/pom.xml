@@ -85,8 +85,8 @@
                             org.wso2.carbon.dashboard.common.*; version=1.0.0,
                             org.wso2.carbon.dashboard.common.oauth.*; version=1.0.0,
                         </Export-Package>
-                        <Import-Package>
-							com.google.common.*;version="[11.0.1.wso2v1,11.0.1.wso2v1]",
+						<Import-Package>
+							com.google.common.*;version="[1.0.0.wso2v2,2)",
                             com.google.inject.*;version="[2.0.0.wso2v2,2.5)",
                             *;resolution:=optional                
                         </Import-Package>

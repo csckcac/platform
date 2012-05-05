@@ -192,7 +192,7 @@ public class APIMgtUsageQueryServiceClient {
      */
     public List<ProviderAPIVersionUserLastAccessDTO> getProviderAPIVersionUserLastAccess(String providerName) throws APIMgtUsageQueryServiceClientException {
         List<ProviderAPIVersionUserLastAccessDTO> result = new ArrayList<ProviderAPIVersionUserLastAccessDTO>();
-        OMElement omElement = this.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_VERSION_USER_LAST_ACCESS_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.API_VERSION_USER_LAST_ACCESS_SUMMARY_TABLE_INDEX, null);
+        OMElement omElement = this.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_VERSION_KEY_LAST_ACCESS_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.API_VERSION_KEY_LAST_ACCESS_SUMMARY_TABLE_INDEX, null);
         List<API> apis = this.getAPIsByProvider(providerName);
         Set<SubscribedAPI> subscribedAPIs = new HashSet<SubscribedAPI>();
         for(API api:apis){

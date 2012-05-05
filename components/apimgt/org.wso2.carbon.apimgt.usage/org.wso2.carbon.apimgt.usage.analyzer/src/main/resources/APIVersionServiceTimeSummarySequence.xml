@@ -19,30 +19,31 @@
       <get name="BASEEnriched" batchSize="1000">
       </get>
       <groupBy>
-         <field name="api"/>
-         <field name="version"/>
+         <field name="api_version"/>
       </groupBy>
       <drop type="column">
          <fieldSet>
             <field name="consumerKey"/>
-            <field name="api_version"/>
+            <field name="api"/>
+            <field name="version"/>
             <field name="context"/>
             <field name="resource"/>
             <field name="method"/>
             <field name="userId"/>
 	    <field name="request"/>
 	    <field name="requestTime"/>
-	    <field name="response"/>
 	    <field name="responseTime"/>
          </fieldSet>
       </drop>
       <aggregate>
          <measure name="serviceTime" aggregationType="AVG"/>
+         <measure name="response" aggregationType="SUM"/>
       </aggregate>
       <put name="APIVersionServiceTimeSummaryTable" dataSourceType="CASSANDRA">
          <onExist>
             <aggregate>
                <measure name="serviceTime" aggregationType="AVG"/>
+               <measure name="response" aggregationType="SUM"/>
             </aggregate>
          </onExist>
       </put>

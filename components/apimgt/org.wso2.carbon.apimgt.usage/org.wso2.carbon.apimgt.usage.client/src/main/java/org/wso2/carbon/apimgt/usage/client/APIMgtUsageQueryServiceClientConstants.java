@@ -50,7 +50,7 @@ public final class APIMgtUsageQueryServiceClientConstants {
 
     public static final String VERSION = "version";
 
-    public static final String USER = "userId";
+    public static final String RESPONSE = "response";
 
     public static final String REQUEST_TIME = "requestTime";
 

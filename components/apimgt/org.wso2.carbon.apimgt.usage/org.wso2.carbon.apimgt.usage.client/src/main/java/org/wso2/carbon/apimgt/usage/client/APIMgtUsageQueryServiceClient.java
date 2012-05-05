@@ -222,8 +222,8 @@ public class APIMgtUsageQueryServiceClient {
      */
     public List<ProviderAPIServiceTimeDTO> getProviderAPIServiceTime(String providerName) throws APIMgtUsageQueryServiceClientException {
         List<ProviderAPIServiceTimeDTO> result = new ArrayList<ProviderAPIServiceTimeDTO>();
-        OMElement serviceTime_omElement = this.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_VERSION_SERVICE_TIME_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.API_VERSION_SERVICE_TIME_SUMMARY_TABLE_INDEX, null);
-        OMElement usage_omElement = this.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_VERSION_USAGE_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.API_VERSION_USAGE_SUMMARY_TABLE_INDEX, null);
+        OMElement omElement = this.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_VERSION_SERVICE_TIME_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.API_VERSION_SERVICE_TIME_SUMMARY_TABLE_INDEX, null);
+        //OMElement usage_omElement = this.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_VERSION_USAGE_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.API_VERSION_USAGE_SUMMARY_TABLE_INDEX, null);
         List<API> apis = this.getAPIsByProvider(providerName);
         Set<APIIdentifier> apiIdentifiers = new HashSet<APIIdentifier>();
         for(API api:apis){
@@ -234,28 +234,18 @@ public class APIMgtUsageQueryServiceClient {
         }
         List<String[]> calculationList = new ArrayList<String[]>();
         for (APIIdentifier apiIdentifier:apiIdentifiers) {
-            String[] apiVersion_serviceTime_usage = new String[3];
-            apiVersion_serviceTime_usage[0] = apiIdentifier.getApiName();
-            OMElement serviceTime_rowsElement = serviceTime_omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
-            Iterator serviceTime_rowIterator = serviceTime_rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
-            outer:
-            while(serviceTime_rowIterator.hasNext()){
-                OMElement serviceTime_row = (OMElement)serviceTime_rowIterator.next();
-                if(serviceTime_row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.API)).getText().equals(apiIdentifier.getApiName()) && serviceTime_row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.VERSION)).getText().equals(apiIdentifier.getVersion())){
-                    apiVersion_serviceTime_usage[1] = (serviceTime_row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.SERVICE_TIME))).getText();
-                    OMElement usage_rowsElement = usage_omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
-                    Iterator usage_rowIterator = usage_rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
-                    while(usage_rowIterator.hasNext()){
-                        OMElement usage_row = (OMElement)usage_rowIterator.next();
-                        if(usage_row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.API)).getText().equals(apiIdentifier.getApiName()) && usage_row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.VERSION)).getText().equals(apiIdentifier.getVersion())){
-                            apiVersion_serviceTime_usage[2] = (usage_row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST))).getText();
-                            calculationList.add(apiVersion_serviceTime_usage);
-                            break outer;
-                        }
-                    }
+            String[] api_serviceTime_usage = new String[3];
+            api_serviceTime_usage[0] = apiIdentifier.getApiName();
+            OMElement rowsElement = omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
+            Iterator rowIterator = rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
+            while(rowIterator.hasNext()){
+                OMElement row = (OMElement)rowIterator.next();
+                if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.API_VERSION)).getText().equals(apiIdentifier.getApiName()+":v"+apiIdentifier.getVersion())){
+                    api_serviceTime_usage[1] = (row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.SERVICE_TIME))).getText();
+                    api_serviceTime_usage[2] = (row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.RESPONSE))).getText();
+                    calculationList.add(api_serviceTime_usage);
                 }
             }
-
 
         }
         Map<String,Float> apiCumulativeServiceTimeMap = new HashMap<String,Float>();

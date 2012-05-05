@@ -25,5 +25,4 @@ import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.status.ProcessMode
  */
 public interface ProcessModelStatusMapping<M>
         extends StatusMapping<ProcessModelStatus, M> {
-
 }

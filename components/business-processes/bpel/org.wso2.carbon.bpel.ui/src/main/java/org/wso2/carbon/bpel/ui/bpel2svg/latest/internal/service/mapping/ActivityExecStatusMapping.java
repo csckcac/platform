@@ -25,5 +25,4 @@ import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.status.ActivityExe
  */
 public interface ActivityExecStatusMapping<M>
         extends StatusMapping<ActivityExecStatus, M> {
-
 }

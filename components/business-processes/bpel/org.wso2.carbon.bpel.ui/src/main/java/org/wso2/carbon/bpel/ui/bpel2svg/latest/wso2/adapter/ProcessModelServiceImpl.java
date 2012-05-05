@@ -115,10 +115,7 @@ public class ProcessModelServiceImpl implements ProcessModelService<String> {
     @Override
     public ProcessModel getProcessModel(String pid) throws BPIException {
         ProcessModel processModel = null;
-
-
         ProcessInfoType processInfo;
-
 
         try {
             /* Get additional information for the process model by calling the WebService */

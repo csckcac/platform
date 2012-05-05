@@ -20,8 +20,6 @@ import java.util.List;
 
 /**
  * This class represents an activity of a process model.
- *
- * @author Gregor Latuske
  */
 public abstract class Activity implements Serializable {
 

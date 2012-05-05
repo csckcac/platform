@@ -19,11 +19,8 @@ import java.util.Set;
 
 /**
  * This class represents the root activity that contains all activities with no parent activity.
- *
- * @author Gregor Latuske
  */
-public class ActivityRoot
-        extends ActivityChoice {
+public class ActivityRoot extends ActivityChoice {
 
     /**
      * Serial version UID

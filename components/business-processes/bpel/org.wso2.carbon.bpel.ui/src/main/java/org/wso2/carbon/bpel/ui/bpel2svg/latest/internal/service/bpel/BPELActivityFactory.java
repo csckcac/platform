@@ -18,8 +18,6 @@ import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.activity.*;
 
 /**
  * Factory-Class of the different {@link Activity}s.
- *
- * @author Gregor Latuske
  */
 public final class BPELActivityFactory {
     private BPELActivityFactory() {

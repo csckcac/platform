@@ -27,6 +27,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Dimension.getTypeImageDimension;
+
 /**
  * The SVG wrapper for the {@link ActivityRoot}.
  * 
@@ -45,7 +47,7 @@ public class ActivityRootElement
 	 * Constructor of ActivityRootElement.
 	 * 
 	 * @param value The associated {@link ActivityRoot}.
-	 * @param parent The parent element.
+	 * @param settings Settings.
 	 */
 	public ActivityRootElement(ActivityRoot value, Settings settings) {
 		super(value, settings);
@@ -64,12 +66,12 @@ public class ActivityRootElement
 
 		// Start icon
 		Position iconPos1 = new Position();
-		iconPos1.setX((getDimension().getWidthWithMargin() - getDimension().getWidth()) / 2);
-		iconPos1.setY(getDimension().getMarginVertical());
+		iconPos1.setX((getDimension().getWidthWithMargin() - getTypeImageDimension().getWidth()) / 2);
+		iconPos1.setY(getTypeImageDimension().getMarginVertical());
 		svg.append(new TypeImage("start", iconPos1));
 
 		// Positions pointer
-		Position pos = new Position(0, getDimension().getHeightWithMargin());
+		Position pos = new Position(0, getTypeImageDimension().getHeightWithMargin());
 
 		// Iterate over child activities
 		for (ActivityElement<?> child : getChildren()) {
@@ -118,7 +120,7 @@ public class ActivityRootElement
 
 		// End icon
 		Position iconPos2 = iconPos1.makeCopy();
-		iconPos2.setY(getDimension().getHeightWithMargin() - getDimension().getHeight() - iconPos2.getY());
+		iconPos2.setY(getDimension().getHeightWithMargin() - getTypeImageDimension().getHeight() - iconPos2.getY());
 		svg.append(new TypeImage("end", iconPos2));
 
 		// Footer
@@ -132,7 +134,7 @@ public class ActivityRootElement
 	public Position getTopPosition() {
 		Position pos = new Position();
 		pos.setX(getDimension().getWidthWithMargin() / 2);
-		pos.setY(getDimension().getHeight() + getDimension().getMarginVertical());
+		pos.setY(getTypeImageDimension().getHeight() + getTypeImageDimension().getMarginVertical());
 
 		return pos;
 	}
@@ -142,8 +144,8 @@ public class ActivityRootElement
 	public Position getBottomPosition() {
 		Position pos = new Position();
 		pos.setX(getDimension().getWidthWithMargin() / 2);
-		pos.setY(getDimension().getHeightWithMargin() - getDimension().getHeight()
-			- getDimension().getMarginVertical());
+		pos.setY(getDimension().getHeightWithMargin() - getTypeImageDimension().getHeight()
+			- getTypeImageDimension().getMarginVertical());
 
 		return pos;
 	}
@@ -193,7 +195,7 @@ public class ActivityRootElement
 	/**
 	 * Check the given elements for omission.
 	 * 
-	 * @param elements The elements to check.
+	 * @param element The elements to check.
 	 */
 	private void omitElements(ActivityComplexElement<?> element) {
 		List<ActivityElement<?>> omittedElements = new ArrayList<ActivityElement<?>>();

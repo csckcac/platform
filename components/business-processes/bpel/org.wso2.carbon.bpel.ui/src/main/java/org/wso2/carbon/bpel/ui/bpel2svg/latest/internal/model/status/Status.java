@@ -16,22 +16,20 @@ package org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.status;
 
 /**
  * This interface is the basis of all status enums.
- *
- * @author Gregor Latuske
  */
 public interface Status {
 
-	/**
-	 * Returns the name of the status starting with an upper case.
-	 *
-	 * @return The name of the status starting with an upper case.
-	 */
-	String getName();
+    /**
+     * Returns the name of the status starting with an upper case.
+     *
+     * @return The name of the status starting with an upper case.
+     */
+    String getName();
 
-	/**
-	 * Returns the name of the status with lower case.
-	 *
-	 * @return The name of the status with lower case.
-	 */
-	String getNameLowerCase();
+    /**
+     * Returns the name of the status with lower case.
+     *
+     * @return The name of the status with lower case.
+     */
+    String getNameLowerCase();
 }

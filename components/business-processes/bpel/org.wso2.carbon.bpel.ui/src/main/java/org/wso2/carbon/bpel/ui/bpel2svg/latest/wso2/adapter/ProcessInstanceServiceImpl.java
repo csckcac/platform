@@ -109,6 +109,7 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService<String
                                                 * The rest of the instance-info is available without this call (maybe avoidable in
                                                 * future releases)
                                                 */
+                                InstanceInfoType instanceInfo = getInstanceInfo(Long.parseLong(instance.getIid()));
 
                                 /* Create an the internal representation */
                                 ProcessInstance processInstance = new ProcessInstance(
@@ -116,6 +117,7 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService<String
                                         mapToStatus(instance.getStatus().toString()),
                                         instance.getDateStarted(),
                                         instance.getDateLastActive(),
+                                        instanceInfo.getDateErrorSince(),
                                         processModel);
 
                                 /* Add the process instance to the list of process instances */
@@ -178,8 +180,7 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService<String
      *                         If error occurred while
      *                         reading the process list from the backend
      */
-    private InstanceInfoType getInstanceInfo(long iid)
-            throws RemoteException, InstanceManagementException {
+    private InstanceInfoType getInstanceInfo(long iid) throws RemoteException, InstanceManagementException {
         /* Call WebService */
         return getStub().getInstanceInfo(iid);
     }

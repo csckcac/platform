@@ -22,8 +22,6 @@ import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Position;
 /**
  * The SVG wrapper for the
  * {@link org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.activity.ActivityChoice}.
- *
- * @author Gregor Latuske
  */
 public class ActivitySequenceElement
         extends ActivityComplexElement<ActivitySequence> {

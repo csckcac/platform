@@ -26,8 +26,6 @@ import java.util.List;
 
 /**
  * This class represents the basis of all {@link ActivityElement}s.
- *
- * @author Gregor Latuske
  */
 public abstract class ActivityElement<T extends Activity> /*implements Serializable*/ {
 

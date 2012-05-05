@@ -18,41 +18,43 @@ import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.frontend.model.SVGDataMo
 
 /**
  * This class is the basis of the ProcessModel and the ProcessInstance slider.
- * 
- * @author Gregor Latuske
  */
 public abstract class Slider extends Adjuster<String> {
 
-	/**
-	 * Constructor of ProcessModelSlider.
-	 * 
-	 * @param dataModel The associated SVGDataModel.
-	 */
-	public Slider(SVGDataModel dataModel) {
-		super(dataModel);
+    /**
+     * Constructor of ProcessModelSlider.
+     *
+     * @param dataModel The associated SVGDataModel.
+     */
+    public Slider(SVGDataModel dataModel) {
+        super(dataModel);
 
-		reset();
-	}
+        reset();
+    }
 
-	/**
-	 * Returns the value of maxRange.
-	 * 
-	 * @return The value of maxRange.
-	 */
-	public abstract int getMaxRange();
+    /**
+     * Returns the value of maxRange.
+     *
+     * @return The value of maxRange.
+     */
+    public abstract int getMaxRange();
 
-	/** {@inheritDoc} */
-	@Override
-	public void reset() {
-		super.setSelection("0");
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void reset() {
+        super.setSelection("0");
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public void setSelection(String selection) {
-		super.setSelection(selection);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setSelection(String selection) {
+        super.setSelection(selection);
 
-		generateSVG();
-	}
+        generateSVG();
+    }
 
 }

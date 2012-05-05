@@ -1,6 +1,4 @@
 /*
-   Copyright 2010 Gregor Latuske
-
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
@@ -36,8 +34,6 @@ import java.util.Map;
 /**
  * This class is used to parse the BPEL documents. Only the {@link Activity}s of the {@link ProcessModel} will
  * be parsed.
- *
- * @author Gregor Latuske
  */
 public final class BPELParser {
 

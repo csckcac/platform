@@ -25,8 +25,6 @@ import java.util.List;
 /**
  * This interface provides methods to access the data from the workflow engine. It wraps the methods of the
  * services or aggregates the data returned from the services.
- *
- * @author Gregor Latuske
  */
 public interface BPIService extends Service {
 
@@ -101,8 +99,6 @@ public interface BPIService extends Service {
 
     /**
      * Factory class to create a {@link BPIService}.
-     *
-     * @author Gregor Latuske
      */
     class BPIServiceFactory implements ServiceFactory<BPIService> {
 

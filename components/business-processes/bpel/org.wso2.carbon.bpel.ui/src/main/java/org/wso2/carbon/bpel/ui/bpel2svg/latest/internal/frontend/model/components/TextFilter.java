@@ -58,5 +58,4 @@ public class TextFilter
 
         return false;
     }
-
 }

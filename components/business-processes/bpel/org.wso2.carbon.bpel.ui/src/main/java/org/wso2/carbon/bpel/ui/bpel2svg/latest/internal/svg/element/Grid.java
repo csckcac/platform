@@ -21,8 +21,6 @@ import java.util.List;
 
 /**
  * The Grid is used to distribute the {@link ActivityElement} in the flow.
- *
- * @author Gregor Latuske
  */
 public class Grid {
 

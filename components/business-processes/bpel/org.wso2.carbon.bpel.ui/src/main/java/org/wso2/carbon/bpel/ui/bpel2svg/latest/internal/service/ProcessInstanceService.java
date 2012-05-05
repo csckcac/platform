@@ -25,8 +25,6 @@ import java.util.List;
 
 /**
  * This interface provides methods to access the {@link ProcessInstance}s stored at the workflow engine.
- *
- * @author Gregor Latuske
  */
 public interface ProcessInstanceService<M> extends Service, ProcessInstanceStatusMapping<M> {
 
@@ -61,8 +59,6 @@ public interface ProcessInstanceService<M> extends Service, ProcessInstanceStatu
 
     /**
      * Factory class to create a {@link ProcessInstanceService}.
-     *
-     * @author Gregor Latuske
      */
     class ProcessInstanceServiceFactory implements ServiceFactory<ProcessInstanceService<?>> {
 

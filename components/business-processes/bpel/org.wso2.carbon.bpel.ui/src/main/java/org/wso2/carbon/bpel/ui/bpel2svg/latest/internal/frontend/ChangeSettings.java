@@ -29,8 +29,6 @@ import java.io.IOException;
 /**
  * This servlet simply receives the change request from the index.jsp, changes
  * the {@link MainBean} if necessary and redirects to the index.jsp again
- *
- * @author Jakob Krein
  */
 public class ChangeSettings extends HttpServlet {
 
@@ -416,10 +414,10 @@ public class ChangeSettings extends HttpServlet {
             }
         }
 
-//        String redirectUrl = req.getParameter("redirect_url");
+        String redirectUrl = req.getParameter("redirect_url");
 
         /* Redirect to jsp */
-//		String urlWithSessionID = resp.encodeRedirectURL(redirectUrl);
+        resp.encodeRedirectURL(redirectUrl);
         //resp.sendRedirect(urlWithSessionID);
 
 //		RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/carbon/bpi/index.jsp");

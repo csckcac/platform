@@ -18,54 +18,51 @@ import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Position;
 
 /**
  * This class represents a text segment.
- *
- * @author Gregor Latuske
  */
-public class Text
-	extends Segment {
+public class Text extends Segment {
 
-	/**
-	 * Constructor of Text.
-	 *
-	 * @param text The text that should be displayed.
-	 * @param position The {@link Position} of the text.
-	 * @param cssClass The CSS class of the text.
-	 * @param attributes Additional attributes.
-	 */
-	public Text(String text, Position position, String cssClass, String... attributes) {
-		this(text, -1, position, cssClass, attributes);
-	}
+    /**
+     * Constructor of Text.
+     *
+     * @param text       The text that should be displayed.
+     * @param position   The {@link Position} of the text.
+     * @param cssClass   The CSS class of the text.
+     * @param attributes Additional attributes.
+     */
+    public Text(String text, Position position, String cssClass, String... attributes) {
+        this(text, -1, position, cssClass, attributes);
+    }
 
-	/**
-	 * Constructor of SVGText.
-	 *
-	 * @param title The text that should be displayed.
-	 * @param maxLength The maximum length of the text (-1 stands for full lenght)
-	 * @param position The {@link Position} of the text.
-	 * @param cssClass The CSS class of the text.
-	 * @param attributes Additional attributes.
-	 */
-	public Text(String title, int maxLength, Position position, String cssClass, String... attributes) {
-		String text = title;
-		// Cut title
-		if (maxLength >= 0 && text.length() > maxLength) {
-			text = text.substring(0, maxLength) + "...";
-		}
+    /**
+     * Constructor of SVGText.
+     *
+     * @param title      The text that should be displayed.
+     * @param maxLength  The maximum length of the text (-1 stands for full lenght)
+     * @param position   The {@link Position} of the text.
+     * @param cssClass   The CSS class of the text.
+     * @param attributes Additional attributes.
+     */
+    public Text(String title, int maxLength, Position position, String cssClass, String... attributes) {
+        String text = title;
+        // Cut title
+        if (maxLength >= 0 && text.length() > maxLength) {
+            text = text.substring(0, maxLength) + "...";
+        }
 
-		// XLink is used to show tool tip (text element does not work yet)
-		append("<a xlink:title=\"" + title + "\">\n");
-		append("<text class=\"" + cssClass + "\" ");
-		append("x=\"" + position.getX() + "\" y=\"" + position.getY() + "\"");
+        // XLink is used to show tool tip (text element does not work yet)
+        append("<a xlink:title=\"" + title + "\">\n");
+        append("<text class=\"" + cssClass + "\" ");
+        append("x=\"" + position.getX() + "\" y=\"" + position.getY() + "\"");
 
-		// Append additional attributes
-		for (String attribute : attributes) {
-			append(" " + attribute);
-		}
+        // Append additional attributes
+        for (String attribute : attributes) {
+            append(" " + attribute);
+        }
 
-		append(">" + text + "\n");
-		append("\t<title>" + title + "</title>\n");
-		append("</text>\n");
-		append("</a>\n");
-	}
+        append(">" + text + "\n");
+        append("\t<title>" + title + "</title>\n");
+        append("</text>\n");
+        append("</a>\n");
+    }
 
 }

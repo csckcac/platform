@@ -16,20 +16,16 @@ package org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.segment;
 
 /**
  * This class represents the footer segment.
- *
- * @author Gregor Latuske
  */
-public class Footer
-	extends Segment {
+public class Footer extends Segment {
 
-	/**
-	 * Constructor of Footer.
-	 *
+    /**
+     * Constructor of Footer.
      */
-	public Footer() {
-		super();
+    public Footer() {
+        super();
 
-		append("</svg>");
-	}
+        append("</svg>");
+    }
 
 }

@@ -22,8 +22,6 @@ import java.util.Calendar;
 
 /**
  * This class represents the execution event of an activity.
- *
- * @author Gregor Latuske
  */
 public class ActivityExecEvent
         implements Serializable {

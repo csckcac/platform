@@ -24,8 +24,6 @@ import java.util.List;
 
 /**
  * This interface provides methods to access the events stored at the workflow engine.
- *
- * @author Gregor Latuske
  */
 public interface EventService<M> extends Service, ActivityExecStatusMapping<M> {
 
@@ -44,8 +42,6 @@ public interface EventService<M> extends Service, ActivityExecStatusMapping<M> {
 
     /**
      * Factory class to create an {@link EventService}.
-     *
-     * @author Gregor Latuske
      */
     class EventServiceFactory implements ServiceFactory<EventService<?>> {
 

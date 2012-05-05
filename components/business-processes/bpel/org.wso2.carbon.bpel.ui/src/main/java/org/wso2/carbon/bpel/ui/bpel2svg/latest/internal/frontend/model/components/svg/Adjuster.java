@@ -19,69 +19,73 @@ import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.frontend.model.component
 
 /**
  * This class is the basis for all justing functions of the SVG.
- * 
- * @author Gregor Latuske
  */
 public abstract class Adjuster<S> {
 
-	/** The view mode of the data model (maximise & minimise). */
-	private final ViewMode viewMode;
+    /**
+     * The view mode of the data model (maximise & minimise).
+     */
+    private final ViewMode viewMode;
 
-	/** The selected item(s). */
-	private S selection;
+    /**
+     * The selected item(s).
+     */
+    private S selection;
 
-	/** The associated SVGDataModel. */
-	private final SVGDataModel dataModel;
+    /**
+     * The associated SVGDataModel.
+     */
+    private final SVGDataModel dataModel;
 
-	/**
-	 * Constructor of Adjuster.
-	 *
-	 * @param dataModel The associated SVGDataModel.
-	 */
-	public Adjuster(SVGDataModel dataModel) {
-		this.viewMode = new ViewMode(false);
-		this.dataModel = dataModel;
+    /**
+     * Constructor of Adjuster.
+     *
+     * @param dataModel The associated SVGDataModel.
+     */
+    public Adjuster(SVGDataModel dataModel) {
+        this.viewMode = new ViewMode(false);
+        this.dataModel = dataModel;
 
-		reset();
-	}
+        reset();
+    }
 
-	/**
-	 * Resets the component.
-	 */
-	public abstract void reset();
+    /**
+     * Resets the component.
+     */
+    public abstract void reset();
 
-	/**
-	 * Returns the value of viewMode.
-	 * 
-	 * @return The value of viewMode.
-	 */
-	public ViewMode getViewMode() {
-		return this.viewMode;
-	}
+    /**
+     * Returns the value of viewMode.
+     *
+     * @return The value of viewMode.
+     */
+    public ViewMode getViewMode() {
+        return this.viewMode;
+    }
 
-	/**
-	 * Returns the value of selection.
-	 * 
-	 * @return The value of selection.
-	 */
-	public S getSelection() {
-		return this.selection;
-	}
+    /**
+     * Returns the value of selection.
+     *
+     * @return The value of selection.
+     */
+    public S getSelection() {
+        return this.selection;
+    }
 
-	/**
-	 * Sets the value of leftSelection to selection.
-	 * 
-	 * @param selection selection
-	 */
-	public void setSelection(S selection) {
-		this.selection = selection;
-	}
+    /**
+     * Sets the value of leftSelection to selection.
+     *
+     * @param selection selection
+     */
+    public void setSelection(S selection) {
+        this.selection = selection;
+    }
 
-	/**
-	 * Generates the SVG output.
-	 */
-	protected void generateSVG() {
-		this.dataModel.updateSVG();
-	}
+    /**
+     * Generates the SVG output.
+     */
+    protected void generateSVG() {
+        this.dataModel.updateSVG();
+    }
 
 }

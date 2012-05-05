@@ -18,32 +18,34 @@ import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.frontend.model.SVGDataMo
 
 /**
  * This class is used to disable or enabled the compact mode.
- * 
- * @author Gregor Latuske
  */
 public class CompactModeAdjuster extends Adjuster<Boolean> {
 
-	/**
-	 * Constructor of ViewModeAdjuster.
-	 * 
-	 * @param dataModel The associated SVGDataModel.
-	 */
-	public CompactModeAdjuster(SVGDataModel dataModel) {
-		super(dataModel);
-	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public void reset() {
-		super.setSelection(false);
-	}
+    /**
+     * Constructor of ViewModeAdjuster.
+     *
+     * @param dataModel The associated SVGDataModel.
+     */
+    public CompactModeAdjuster(SVGDataModel dataModel) {
+        super(dataModel);
+    }
 
-	/** {@inheritDoc} */
-	@Override
-	public void setSelection(Boolean selection) {
-		super.setSelection(selection);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void reset() {
+        super.setSelection(false);
+    }
 
-		generateSVG();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setSelection(Boolean selection) {
+        super.setSelection(selection);
+
+        generateSVG();
+    }
 
 }

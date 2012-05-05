@@ -23,8 +23,6 @@ import java.util.List;
 
 /**
  * This interface provides methods to access the {@link ProcessModel}s stored at the workflow engine.
- *
- * @author Gregor Latuske
  */
 public interface ProcessModelService<M> extends Service, ProcessModelStatusMapping<M> {
 
@@ -47,8 +45,6 @@ public interface ProcessModelService<M> extends Service, ProcessModelStatusMappi
 
     /**
      * Factory class to create a {@link ProcessModelService}.
-     *
-     * @author Gregor Latuske
      */
     class ProcessModelServiceFactory implements ServiceFactory<ProcessModelService<?>> {
 

@@ -22,17 +22,21 @@ import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.GlobalSetti
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Position;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.wso2.svg.javascript.JSFunction;
 
-import static org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.Dimension.getStatusBasedActionImageDimension;
+import static org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.svg.settings.
+        Dimension.getStatusBasedActionImageDimension;
 
 public abstract class Button extends Segment {
 
-    public Button(String path, String name, String extension, Dimension dimension, Position position, JSFunction jsFunction) {
+    public Button(String path, String name, String extension, Dimension dimension,
+                  Position position, JSFunction jsFunction) {
         super();
         generateButton(path, name, extension, dimension, position, jsFunction);
     }
 
     public Button(String name, JSFunction jsFunction, Position buttonPos) {
-        this(GlobalSettings.getInstance().getStatusBasedActionImagePath(), name, GlobalSettings.getInstance().getStatusBasedActionImageExtension(), getStatusBasedActionImageDimension(), buttonPos, jsFunction);
+        this(GlobalSettings.getInstance().getStatusBasedActionImagePath(), name,
+                GlobalSettings.getInstance().getStatusBasedActionImageExtension(),
+                getStatusBasedActionImageDimension(), buttonPos, jsFunction);
     }
 
     /**
@@ -44,7 +48,8 @@ public abstract class Button extends Segment {
      * @param position
      * @param jsFunction - there should be a js function which should be visible to the svg generated.
      */
-    protected void generateButton(String path, String name, String extension, Dimension dimension, Position position, JSFunction jsFunction) {
+    protected void generateButton(String path, String name, String extension, Dimension dimension,
+                                  Position position, JSFunction jsFunction) {
         // XLink is used to show tool tip (title element does not work yet)
 		append("<a onmouseup=\"" + jsFunction.generateJSFunctionSignature() + "\" xlink:title=\"" + name + "\">\n");
 		append("\t<image xlink:href=\"" + geButtonImage(path, name, extension) + "\" ");

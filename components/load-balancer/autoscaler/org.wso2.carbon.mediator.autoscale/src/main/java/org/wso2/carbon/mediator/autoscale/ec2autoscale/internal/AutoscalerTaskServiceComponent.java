@@ -19,6 +19,7 @@ package org.wso2.carbon.mediator.autoscale.ec2autoscale.internal;
 
 import java.util.Date;
 import java.util.Map;
+
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.description.Parameter;
 import org.apache.commons.logging.Log;
@@ -38,6 +39,8 @@ import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.quartz.JobDetail;
 import org.quartz.SimpleTrigger;
+import org.wso2.carbon.mediator.autoscale.ec2autoscale.util.ConfigHolder;
+import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.mediator.autoscale.ec2autoscale.util.AutoscaleConstants;
 import org.wso2.carbon.lb.common.conf.LoadBalancerConfiguration;
 import org.wso2.carbon.mediator.autoscale.ec2autoscale.mediators.AutoscaleInMediator;
@@ -53,12 +56,14 @@ import org.wso2.carbon.utils.ConfigurationContextService;
 
 /**
  * @scr.component name="autoscaler.task.component" immediate="true"
- * 
  * @scr.reference name="carbon.core.configurationContextService"
- *                interface="org.wso2.carbon.utils.ConfigurationContextService"
- *                cardinality="1..1" policy="dynamic"
- *                bind="setConfigurationContextService" unbind="unsetConfigurationContextService"
- * 
+ * interface="org.wso2.carbon.utils.ConfigurationContextService"
+ * cardinality="1..1" policy="dynamic"
+ * bind="setConfigurationContextService" unbind="unsetConfigurationContextService"
+ * @scr.reference name="user.realmservice.default"
+ * interface="org.wso2.carbon.user.core.service.RealmService"
+ * cardinality="1..1" policy="dynamic" bind="setRealmService"
+ * unbind="unsetRealmService"
  */
 public class AutoscalerTaskServiceComponent {
 
@@ -74,10 +79,10 @@ public class AutoscalerTaskServiceComponent {
 
         // load synapse environment
         Parameter synEnv =
-            configurationContext.getAxisConfiguration().getParameter(SynapseConstants.SYNAPSE_ENV);
+                configurationContext.getAxisConfiguration().getParameter(SynapseConstants.SYNAPSE_ENV);
 
         if (synEnv == null || synEnv.getValue() == null ||
-            !(synEnv.getValue() instanceof SynapseEnvironment)) {
+                !(synEnv.getValue() instanceof SynapseEnvironment)) {
 
             String message = "Unable to initialize the Synapse Configuration : Can not find the ";
             log.fatal(message + "Synapse Environment");
@@ -87,7 +92,7 @@ public class AutoscalerTaskServiceComponent {
         SynapseEnvironment synapseEnv = (SynapseEnvironment) synEnv.getValue();
 
         /** Initializing autoscaleIn and autoscaleOut Mediators.**/
-        
+
         // check whether autoscaling is enabled
         if (lbConfig.getLoadBalancerConfig().isAutoscaleEnabled()) {
 
@@ -96,7 +101,7 @@ public class AutoscalerTaskServiceComponent {
 
             // get the main sequence mediator
             SequenceMediator mainSequence =
-                (SequenceMediator) synapseEnv.getSynapseConfiguration().getSequence("main");
+                    (SequenceMediator) synapseEnv.getSynapseConfiguration().getSequence("main");
 
             // iterate through its child mediators
             for (Mediator child : mainSequence.getList()) {
@@ -106,14 +111,14 @@ public class AutoscalerTaskServiceComponent {
                     InMediator inSequence = (InMediator) child;
 
                     // if the first child of InMediator isn't an AutoscaleInMediator
-                    if (!(inSequence.getList().get(0) instanceof AutoscaleInMediator) ) {
-           
+                    if (!(inSequence.getList().get(0) instanceof AutoscaleInMediator)) {
+
                         // we gonna add it!
                         inSequence.getList().add(0, new AutoscaleInMediator(lbConfig));
                         if (log.isDebugEnabled()) {
                             log.debug("Added Mediator: " + inSequence.getChild(0) + "" +
-                                " to InMediator. Number of child mediators in InMediator" + " is " +
-                                inSequence.getList().size() + ".");
+                                    " to InMediator. Number of child mediators in InMediator" + " is " +
+                                    inSequence.getList().size() + ".");
                         }
                     }
 
@@ -126,20 +131,20 @@ public class AutoscalerTaskServiceComponent {
 
                     // if the first child of OutMediator isn't an AutoscaleOutMediator
                     if (!(outSequence.getList().get(0) instanceof AutoscaleOutMediator)) {
-                        
+
                         // we gonna add it!
                         outSequence.getList().add(0, new AutoscaleOutMediator());
-                        
+
                         if (log.isDebugEnabled()) {
                             log.debug("Added Mediator: " + outSequence.getChild(0) + "" +
-                                " to OutMediator. Number of child mediators in OutMediator" +
-                                " is " + outSequence.getList().size() + ".");
+                                    " to OutMediator. Number of child mediators in OutMediator" +
+                                    " is " + outSequence.getList().size() + ".");
                         }
 
                     }
                 }
             }
-            
+
             /** Initializing Autoscaler Task **/
 
             BundleContext bundleContext = context.getBundleContext();
@@ -149,32 +154,32 @@ public class AutoscalerTaskServiceComponent {
 
             if (bundleContext.getServiceReference(TaskManagementService.class.getName()) != null) {
                 bundleContext.registerService(TaskManagementService.class.getName(),
-                                              new AutoscalerTaskMgmtAdminService(), null);
+                        new AutoscalerTaskMgmtAdminService(), null);
             }
-            
+
 
             AutoscalerTaskInitializer listener = new AutoscalerTaskInitializer();
 
             if (bundleContext.getServiceReference(Axis2ConfigurationContextObserver.class.getName()) != null) {
                 bundleContext.registerService(Axis2ConfigurationContextObserver.class.getName(),
-                                              listener, null);
+                        listener, null);
             }
-            
+
             if (configurationContext != null) {
                 TaskScheduler scheduler =
-                    (TaskScheduler) configurationContext.getProperty(AutoscalerTaskInitializer.CARBON_TASK_SCHEDULER);
+                        (TaskScheduler) configurationContext.getProperty(AutoscalerTaskInitializer.CARBON_TASK_SCHEDULER);
                 if (scheduler == null) {
                     scheduler = new TaskScheduler(TaskConstants.TASK_SCHEDULER);
                     scheduler.init(null);
                     configurationContext.setProperty(AutoscalerTaskInitializer.CARBON_TASK_SCHEDULER,
-                                                     scheduler);
+                            scheduler);
                 } else if (!scheduler.isInitialized()) {
                     scheduler.init(null);
                 }
             }
 
             ServiceRequestsInFlightAutoscaler autoscalerTask =
-                new ServiceRequestsInFlightAutoscaler();
+                    new ServiceRequestsInFlightAutoscaler();
 
             autoscalerTask.init(synapseEnv);
 
@@ -191,7 +196,7 @@ public class AutoscalerTaskServiceComponent {
             taskDescription.setTaskClass(ServiceRequestsInFlightAutoscaler.class.getName());
             taskDescription.setName("autoscaler");
             taskDescription.setCount(SimpleTrigger.REPEAT_INDEFINITELY);
-            
+
             int interval = lbConfig.getLoadBalancerConfig().getAutoscalerTaskInterval();
             taskDescription.setInterval(interval);
             taskDescription.setStartTime(new Date(System.currentTimeMillis() + interval));
@@ -228,6 +233,20 @@ public class AutoscalerTaskServiceComponent {
         }
         this.configurationContext = null;
         AutoscalerTaskDSHolder.getInstance().setConfigurationContextService(null);
+    }
+
+    protected void setRealmService(RealmService realmService) {
+        if (log.isDebugEnabled()) {
+            log.debug("Bound realm service from the Autoscaler task");
+        }
+        ConfigHolder.setRealmService(realmService);
+    }
+
+    protected void unsetRealmService(RealmService realmService) {
+        if (log.isDebugEnabled()) {
+            log.debug("Unbound realm service from the Autoscaler task");
+        }
+        ConfigHolder.setRealmService(null);
     }
 
 }

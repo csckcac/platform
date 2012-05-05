@@ -36,7 +36,7 @@
         </div>
 </div>
 
-<h2>Last Access Time of APIs</h2>
+<h2>Last Access Time Summary</h2>
 
         <div class="row-fluid well">
         <div class="span5">
@@ -45,19 +45,23 @@
             <div class="span6">
                 <table class="table" id="lastAccessTable">
                       <tr>
-                        <th>API:Version</th>
-                        <th>Last Access</th>
+                        <th>API Name:Version</th>
+                        <th>Subscriber</th>
+                        <th>Last Access Time</th>
                       </tr>
                       <tr>
                         <td>API 1:v1.0.0</td>
+                        <td>Subscriber 1</td>
                         <td>10/02/2012 16:53:02</td>
                       </tr>
                       <tr>
                         <td>API 2:v1.0.0</td>
+                        <td>Subscriber 2</td>
                         <td>15/02/2012 08:15:44</td>
                       </tr>
                       <tr>
                         <td>API 2:v1.0.1</td>
+                        <td>Subscriber 1</td>
                         <td>18/02/2012 21:07:24</td>
                       </tr>
                   </table>
@@ -192,7 +196,7 @@ $(document).ready(function() {
         }
     });
 
-    apiProviderApp.call("action=getProviderAPIVersionLastAccess&providerName="+apiProviderApp.loggedUser+"&server=https://localhost:9444/", function (json) {
+    apiProviderApp.call("action=getProviderAPIVersionUserLastAccess&providerName="+apiProviderApp.loggedUser+"&server=https://localhost:9444/", function (json) {
         if (json.error == "true") {
             alert(json.message);
         }
@@ -200,7 +204,7 @@ $(document).ready(function() {
 
             $('#lastAccessTable').find("tr:gt(0)").remove();
             for (var i = 0; i < json.data.usage.length; i++) {
-                $('#lastAccessTable').append($('<tr><td>' + json.data.usage[i].api_version + '</td><td>' + json.data.usage[i].lastAccess + '</td></tr>'));
+                $('#lastAccessTable').append($('<tr><td>' + json.data.usage[i].api_version + '</td><td>' + json.data.usage[i].user + '</td><td>' + json.data.usage[i].lastAccess + '</td></tr>'));
             }
         }
         if(json.data.usage.length == 0){

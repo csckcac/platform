@@ -41,7 +41,7 @@
         <div class="span6">
             <table class="table" id="userTable">
                   <tr>
-                    <th>User</th>
+                    <th>Subscriber</th>
                     <th>Usage</th>
                   </tr>
               </table>

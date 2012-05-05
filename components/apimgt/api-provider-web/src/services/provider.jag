@@ -54,11 +54,11 @@ if (action != null) {
         if(providerName!=null&&apiName!=null&&server!=null){
         		print(getProviderAPIUserUsage(providerName,apiName,server));
         }
-   }else if (action == "getProviderAPIVersionLastAccess"){
+   }else if (action == "getProviderAPIVersionUserLastAccess"){
         var providerName = request.getParameter("providerName");
         var server = request.getParameter("server");
         if(providerName!=null&&server!=null){
-        		print(getProviderAPIVersionLastAccess(providerName,server));
+        		print(getProviderAPIVersionUserLastAccess(providerName,server));
         }
    }else if (action == "getProviderAPIServiceTime"){
         var providerName = request.getParameter("providerName");

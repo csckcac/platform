@@ -17,8 +17,11 @@
 */
 package org.wso2.carbon.apimgt.usage.client.dto;
 
-public class ProviderAPIVersionLastAccessDTO {
+public class ProviderAPIVersionUserLastAccessDTO {
     private String api_version;
+
+    private String user;
+
     private String lastAccess;
 
     public String getLastAccess(){
@@ -29,6 +32,10 @@ public class ProviderAPIVersionLastAccessDTO {
         return api_version;
     }
 
+    public String getUser(){
+        return user;
+    }
+
     public void setLastAccess(String lastAccess){
         this.lastAccess = lastAccess;
     }
@@ -37,8 +44,13 @@ public class ProviderAPIVersionLastAccessDTO {
         this.api_version = api_version;
     }
 
-    public ProviderAPIVersionLastAccessDTO(String api_version, String lastAccess){
+    public void setUser(String user){
+        this.user = user;
+    }
+
+    public ProviderAPIVersionUserLastAccessDTO(String api_version, String user, String lastAccess){
         this.api_version = api_version;
+        this.user = user;
         this.lastAccess = lastAccess;
     }
 }

@@ -46,8 +46,8 @@ function getProviderAPIUsage(providerName,server) {
 function getProviderAPIUserUsage(providerName,apiName,server) {
     return getDataJSON(getProviderAPIUserUsageFunc(providerName,apiName,server), null, "Error while getting ProviderAPIUserUsage");
 }
-function getProviderAPIVersionLastAccess(providerName,server) {
-    return getDataJSON(getProviderAPIVersionLastAccessFunc(providerName,server), null, "Error while getting ProviderAPIVersionLastAccess");
+function getProviderAPIVersionUserLastAccess(providerName,server) {
+    return getDataJSON(getProviderAPIVersionUserLastAccessFunc(providerName,server), null, "Error while getting ProviderAPIVersionUserLastAccess");
 }
 function getProviderAPIServiceTime(providerName,server) {
     return getDataJSON(getProviderAPIServiceTimeFunc(providerName,server), null, "Error while getting ProviderAPIServiceTime");

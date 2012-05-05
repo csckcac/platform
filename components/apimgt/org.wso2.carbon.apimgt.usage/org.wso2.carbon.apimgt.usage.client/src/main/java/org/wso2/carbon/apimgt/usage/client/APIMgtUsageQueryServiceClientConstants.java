@@ -28,9 +28,9 @@ public final class APIMgtUsageQueryServiceClientConstants {
 
     public static final String API_VERSION_USAGE_SUMMARY_TABLE_INDEX = "APIVersionUsageSummaryTableIndex";
 
-    public static final String API_VERSION_LAST_ACCESS_SUMMARY_TABLE = "APIVersionLastAccessSummaryTable";
+    public static final String API_VERSION_USER_LAST_ACCESS_SUMMARY_TABLE = "APIVersionUserLastAccessSummaryTable";
 
-    public static final String API_VERSION_LAST_ACCESS_SUMMARY_TABLE_INDEX = "APIVersionLastAccessSummaryTableIndex";
+    public static final String API_VERSION_USER_LAST_ACCESS_SUMMARY_TABLE_INDEX = "APIVersionUserLastAccessSummaryTableIndex";
 
     public static final String KEY_USAGE_SUMMARY_TABLE = "KeyUsageSummaryTable";
 

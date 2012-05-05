@@ -50,7 +50,7 @@ import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIServiceTimeDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUserUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUsageDTO;
-import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionLastAccessDTO;
+import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUserLastAccessDTO;
 import org.wso2.carbon.apimgt.usage.client.exception.APIMgtUsageQueryServiceClientException;
 import org.wso2.carbon.hostobjects.web.RequestHostObject;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -986,11 +986,11 @@ public class APIProviderHostObject extends ScriptableObject {
         return myn;
     }
 
-    public static NativeArray jsFunction_getProviderAPIVersionLastAccess(String providerName,String serverURL) throws ScriptException {
-        List<ProviderAPIVersionLastAccessDTO> list = null;
+    public static NativeArray jsFunction_getProviderAPIVersionUserLastAccess(String providerName,String serverURL) throws ScriptException {
+        List<ProviderAPIVersionUserLastAccessDTO> list = null;
         try {
             APIMgtUsageQueryServiceClient client = new APIMgtUsageQueryServiceClient(serverURL);
-            list = client.getProviderAPIVersionLastAccess(providerName);
+            list = client.getProviderAPIVersionUserLastAccess(providerName);
         } catch (APIMgtUsageQueryServiceClientException e) {
             log.error("Error while invoking APIMgtUsageQueryServiceClient for ProviderAPIVersionLastAccess", e);
         }
@@ -1004,8 +1004,9 @@ public class APIProviderHostObject extends ScriptableObject {
             while (it.hasNext()) {
                 NativeObject row = new NativeObject();
                 Object usageObject = it.next();
-                ProviderAPIVersionLastAccessDTO usage = (ProviderAPIVersionLastAccessDTO) usageObject;
+                ProviderAPIVersionUserLastAccessDTO usage = (ProviderAPIVersionUserLastAccessDTO) usageObject;
                 row.put("api_version", row, usage.getApi_version());
+                row.put("user", row, usage.getUser());
                 row.put("lastAccess", row, usage.getLastAccess());
                 myn.put(i, myn, row);
                 i++;

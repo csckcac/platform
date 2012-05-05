@@ -1,13 +1,13 @@
-<analyzerSequence name="APIVersionLastAccessSummarySequence">
+<analyzerSequence name="APIVersionUserLastAccessSummarySequence">
    <trigger cron="1 * * * * ? *"/>
    <analyzers>
       <get name="BASEEnriched" batchSize="1000"/>
       <groupBy>
          <field name="api_version"/>
+         <field name="consumerKey"/>
       </groupBy>
       <drop type="column">
         <fieldSet>
-         <field name="consumerKey"/>
          <field name="api"/>
          <field name="version"/>
          <field name="context"/>
@@ -23,7 +23,7 @@
       <aggregate>
          <measure name="requestTime" aggregationType="MAX"/>
       </aggregate>
-      <put name="APIVersionLastAccessSummaryTable" dataSourceType="CASSANDRA">
+      <put name="APIVersionUserLastAccessSummaryTable" dataSourceType="CASSANDRA">
          <onExist>
             <aggregate>
                <measure name="requestTime" aggregationType="MAX"/>

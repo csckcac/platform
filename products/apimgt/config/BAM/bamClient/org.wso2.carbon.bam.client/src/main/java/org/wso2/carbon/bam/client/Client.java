@@ -178,7 +178,7 @@ public class Client {
             index.setIndexName("APIVersionServiceTimeSummaryTableIndex");
             index.setIndexedTable("APIVersionServiceTimeSummaryTable");
             index.setDataSourceType("CASSANDRA");
-            indexColumns[0] = "api";
+            indexColumns[0] = "api_version";
             index.setIndexedColumns(indexColumns);
             index.setCron("1 * * * * ? *");
             index.setGranularity(null);

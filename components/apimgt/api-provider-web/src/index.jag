@@ -121,12 +121,12 @@
                 <% } %>
 
 
-                <% if(place != null && place.equals("stat-all")){%>
+                <% if(place != null && place.equals("stats")){%>
                 <li>
                     Statistics <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="?place=users_keys">All</a>
+                    <a href="?place=stats">My APIs</a>
                 </li>
                 <% } %>
             </ul>
@@ -176,7 +176,7 @@
                 });
             </script>
             <% include("/includes/provider/userKey.jag"); %><% } %>
-            <% if(place != null && place.equals("stat-all")){%><% include("/includes/statistics/all.jag"); %><% } %>
+            <% if(place != null && place.equals("stats")){%><% include("/includes/provider/stats.jag"); %><% } %>
 
 
         </div><!--/span-->

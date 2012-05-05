@@ -82,8 +82,8 @@ public class Client {
         String classAnalyzerContent = FileUtil.readFileToString(System.getProperty("configFilePath") + "ClassAnalyzer.xml");
         String apiVersionUsageSummarySequenceContent = FileUtil.readFileToString( System.getProperty("configFilePath") +
                                                                              "APIVersionUsageSummarySequence.xml");
-        String apiVersionLastAccessSummarySequenceContent = FileUtil.readFileToString( System.getProperty("configFilePath") +
-                                                                             "APIVersionLastAccessSummarySequence.xml");
+        String apiVersionKeyLastAccessSummarySequenceContent = FileUtil.readFileToString( System.getProperty("configFilePath") +
+                                                                             "APIVersionKeyLastAccessSummarySequence.xml");
         String apiVersionServiceTimeSummarySequenceContent = FileUtil.readFileToString( System.getProperty("configFilePath") +
                                                                              "APIVersionServiceTimeSummarySequence.xml");
         String keyUsageSummarySequenceContent = FileUtil.readFileToString( System.getProperty("configFilePath") +
@@ -119,11 +119,11 @@ public class Client {
             //Wait for 1:30 min
             Thread.sleep(1000*60 + 30000);
 
-            System.out.println("Adding APIVersionLastAccessSummarySequence Analyzer");
+            System.out.println("Adding APIVersionKeyLastAccessSummarySequence Analyzer");
 
-            analyzerAdminServiceStub.addTask(apiVersionLastAccessSummarySequenceContent);
+            analyzerAdminServiceStub.addTask(apiVersionKeyLastAccessSummarySequenceContent);
 
-            System.out.println("Waiting 1:30 min until analyzer creates the APIVersionLastAccessSummaryTable CF.......");
+            System.out.println("Waiting 1:30 min until analyzer creates the APIVersionKeyLastAccessSummaryTable CF.......");
 
             //Wait for 1:30 min
             Thread.sleep(1000*60 + 30000);
@@ -159,11 +159,11 @@ public class Client {
 
             indexAdminServiceStub.createIndex(index);
 
-            System.out.println("Creating APIVersionLastAccessSummaryTableIndex ...");
+            System.out.println("Creating APIVersionKeyLastAccessSummaryTableIndex ...");
 
             index = new IndexDTO();
-            index.setIndexName("APIVersionLastAccessSummaryTableIndex");
-            index.setIndexedTable("APIVersionLastAccessSummaryTable");
+            index.setIndexName("APIVersionKeyLastAccessSummaryTableIndex");
+            index.setIndexedTable("APIVersionKeyLastAccessSummaryTable");
             index.setDataSourceType("CASSANDRA");
             indexColumns[0] = "api_version";
             index.setIndexedColumns(indexColumns);

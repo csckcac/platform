@@ -39,18 +39,18 @@ import java.util.Map;
 import java.util.Set;
 
 public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints.DynamicLoadbalanceEndpoint implements Serializable {
-    
+
     private static final long serialVersionUID = 1577351815951789938L;
     private static final Log log = LogFactory.getLog(TenantAwareLoadBalanceEndpoint.class);
     private String algorithm;
     private String configuration;
     private String failOver;
 
-    
+
     /**
      * Axis2 based membership handler which handles members in multiple clustering domains
      */
-    private TenantLoadBalanceMembershipHandler slbMembershipHandler;
+    private TenantLoadBalanceMembershipHandler tlbMembershipHandler;
 
     /**
      * Key - host, Value - domain
@@ -63,13 +63,13 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
         //  super.init(synapseEnvironment);
         //System.out.println("synapse - tenant aware LB initialized");
         try {
-            
+
             String configURL = System.getProperty("loadbalancer.conf");
             lbConfig = new LoadBalancerConfiguration();
             lbConfig.init(configURL);
-            
+
             hostDomainMap = loadHostDomainMap();
-            
+
         } catch (Exception e) {
             log.error("Error While reading Load Balancer configuration file" + e.toString());
         }
@@ -102,12 +102,12 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
                         }
                     }
                 }
-                slbMembershipHandler = new TenantLoadBalanceMembershipHandler(hostDomainMap,
+                tlbMembershipHandler = new TenantLoadBalanceMembershipHandler(hostDomainMap,
                         algorithm,
                         cfgCtx,
                         isClusteringEnabled,
                         getName());
-                
+
             }
             // Initialize the SAL Sessions if already has not been initialized.
             SALSessions salSessions = SALSessions.getInstance();
@@ -115,42 +115,42 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
                 salSessions.initialize(isClusteringEnabled, cfgCtx);
             }
             setSessionAffinity(true);
-            setDispatcher( new HttpSessionDispatcher());
+            setDispatcher(new HttpSessionDispatcher());
             initialized = true;
             log.info("ServiceDynamicLoadbalanceEndpoint initialized");
         }
     }
 
     private Map<String, TenantDomainRangeContext> loadHostDomainMap() {
-        
+
         Map<String, TenantDomainRangeContext> map = new HashMap<String, TenantDomainRangeContext>();
-        
+
         // get domains elements for each service 
         for (Map.Entry<String, Node> entry : lbConfig.getServiceToDomainsMap().entrySet()) {
             //String serviceName = entry.getKey();
             Node domains = entry.getValue();
             TenantDomainRangeContext domainRangeContext = new TenantDomainRangeContext();
-            
+
             // get domain to tenant range map for each domains element and iterate over it
             for (Map.Entry<String, String> entry2 : lbConfig.getdomainToTenantRangeMap(domains).entrySet()) {
-                
+
                 String domainName = entry2.getKey();
                 String tenantRange = entry2.getValue();
                 domainRangeContext.addTenantDomain(domainName, tenantRange);
             }
-            
+
             // get host to domains node map and iterate over it
             for (Map.Entry<String, Node> entry3 : lbConfig.getHostDomainMap().entrySet()) {
                 String host = entry3.getKey();
                 Node domainsNode = entry3.getValue();
-                
-                if(domainsNode.equals(domains)){
+
+                if (domainsNode.equals(domains)) {
                     map.put(host, domainRangeContext);
                 }
             }
-        
+
         }
-        
+
         return map;
     }
 
@@ -179,7 +179,7 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
     }
 
     public LoadBalanceMembershipHandler getLbMembershipHandler() {
-        return slbMembershipHandler;
+        return tlbMembershipHandler;
     }
 
 
@@ -226,8 +226,8 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
         ConfigurationContext configCtx =
                 ((Axis2MessageContext) synCtx).getAxis2MessageContext().getConfigurationContext();
 
-        if (slbMembershipHandler.getConfigurationContext() == null) {
-            slbMembershipHandler.setConfigurationContext(configCtx);
+        if (tlbMembershipHandler.getConfigurationContext() == null) {
+            tlbMembershipHandler.setConfigurationContext(configCtx);
         }
 
         TenantDynamicLoadBalanceFaultHandlerImpl faultHandler = new TenantDynamicLoadBalanceFaultHandlerImpl();
@@ -238,7 +238,7 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
             sendToApplicationMember(synCtx, currentMember, faultHandler, false);
         } else {
             // prepare for a new session
-            currentMember = slbMembershipHandler.getNextApplicationMember(targetHost, getTenantId(synCtx.toString()));
+            currentMember = tlbMembershipHandler.getNextApplicationMember(targetHost, getTenantId(synCtx.toString()));
             if (currentMember == null) {
                 String msg = "No application members available";
                 log.error(msg);
@@ -353,7 +353,7 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
                         errorCode.equals(NhttpConstants.CONNECT_CANCEL) ||
                         errorCode.equals(NhttpConstants.CONNECT_TIMEOUT)) {
                     // Try to resend to another member
-                    Member newMember = slbMembershipHandler.getNextApplicationMember(host, getTenantId(synCtx.toString()));
+                    Member newMember = tlbMembershipHandler.getNextApplicationMember(host, getTenantId(synCtx.toString()));
                     if (newMember == null) {
                         String msg = "No application members available";
                         log.error(msg);

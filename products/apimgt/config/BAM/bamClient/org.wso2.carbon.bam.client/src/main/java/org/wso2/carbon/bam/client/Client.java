@@ -86,8 +86,8 @@ public class Client {
                                                                              "APIVersionLastAccessSummarySequence.xml");
         String apiVersionServiceTimeSummarySequenceContent = FileUtil.readFileToString( System.getProperty("configFilePath") +
                                                                              "APIVersionServiceTimeSummarySequence.xml");
-        String apiVersionUserUsageSummarySequenceContent = FileUtil.readFileToString( System.getProperty("configFilePath") +
-                                                                             "APIVersionUserUsageSummarySequence.xml");
+        String keyUsageSummarySequenceContent = FileUtil.readFileToString( System.getProperty("configFilePath") +
+                                                                             "KeyUsageSummarySequence.xml");
 
 
 
@@ -137,11 +137,11 @@ public class Client {
             //Wait for 1:30 min
             Thread.sleep(1000*60 + 30000);
 
-            System.out.println("Adding APIVersionUserUsageSummarySequence Analyzer");
+            System.out.println("Adding KeyUsageSummarySequence Analyzer");
 
-            analyzerAdminServiceStub.addTask(apiVersionUserUsageSummarySequenceContent);
+            analyzerAdminServiceStub.addTask(keyUsageSummarySequenceContent);
 
-            System.out.println("Waiting 1:30 min until analyzer creates the APIVersionUserUsageSummaryTable CF.......");
+            System.out.println("Waiting 1:30 min until analyzer creates the KeyUsageSummaryTable CF.......");
 
             //Wait for 1:30 min
             Thread.sleep(1000*60 + 30000);
@@ -185,13 +185,13 @@ public class Client {
 
             indexAdminServiceStub.createIndex(index);
 
-            System.out.println("Creating APIVersionUserUsageSummaryTableIndex ...");
+            System.out.println("Creating KeyUsageSummaryTableIndex ...");
 
             index = new IndexDTO();
-            index.setIndexName("APIVersionUserUsageSummaryTableIndex");
-            index.setIndexedTable("APIVersionUserUsageSummaryTable");
+            index.setIndexName("KeyUsageSummaryTableIndex");
+            index.setIndexedTable("KeyUsageSummaryTable");
             index.setDataSourceType("CASSANDRA");
-            indexColumns[0] = "api";
+            indexColumns[0] = "consumerKey";
             index.setIndexedColumns(indexColumns);
             index.setCron("1 * * * * ? *");
             index.setGranularity(null);

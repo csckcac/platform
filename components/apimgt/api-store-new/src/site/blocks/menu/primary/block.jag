@@ -5,6 +5,39 @@ jagg.block("menu/primary", {
 
     },
 
+    getInputs:function () {
+        return {
+            "pagePath":null
+        };
+    },
+
+    getOutputs:function (inputs) {
+        var links = [], user = jagg.getUser(),
+                path = inputs.pagePath;
+        links.push({
+            "title":"APIs",
+            "url":jagg.getMappedUrl("/"),
+            "active":(path == "/site/pages/list-apis.jag")
+        });
+        if (user) {
+            links.push({
+                title:"Applications",
+                url:jagg.getMappedUrl("/site/pages/applications.jag"),
+                active:(path == "/site/pages/applications.jag")
+            });
+
+            links.push({
+                title:"My Subscriptions",
+                url:jagg.getMappedUrl("/site/pages/subscriptions.jag"),
+                active:(path == "/site/pages/subscriptions.jag")
+            });
+        }
+
+        return {
+            "links":links
+        };
+    },
+
     getStaticBlocks:function () {
         return [
             "user/login"

@@ -39,7 +39,7 @@
 <% jagg.includeJag("templates/page/base/dialog-box.jag"); %>
 <div id="header">
     <a id="top-of-page"></a>
-    <% jagg.includeBlock("menu/primary", null); %>
+    <% jagg.includeBlock("menu/primary", {"pagePath":outputs.pagePath}); %>
 </div>
 
 <div class="clearfix wrap main-wrap">

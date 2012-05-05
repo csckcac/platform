@@ -25,6 +25,7 @@ var site = require("/site/conf/site.json");
         "name":"page/base",
         "inputs":{
             "title":"API Store Listing",
+            "pagePath":"/site/pages/list-apis.jag",
             "body":[
                 {
                     "name":"layout/extended",

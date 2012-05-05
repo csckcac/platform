@@ -3,6 +3,7 @@ $(document).ready(function () {
         var comment = $("#comment-text").val();
         var api = jagg.api;
         jagg.post("/site/blocks/comment/comment-add/ajax/comment-add.jag", {
+            action:"addComment",
             comment:comment,
             name:api.name,
             version:api.version,

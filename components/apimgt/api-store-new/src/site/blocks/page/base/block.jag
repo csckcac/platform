@@ -8,6 +8,7 @@ jagg.block("page/base", {
     getInputs:function () {
         return {
             title:null,
+            pagePath:null,
             body:null
         };
     },

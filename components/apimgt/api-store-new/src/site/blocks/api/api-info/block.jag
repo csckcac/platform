@@ -12,15 +12,35 @@ jagg.block("api/api-info", {
 
     getOutputs:function (inputs) {
 
-        var applications, api = inputs.api, user = jagg.getUser();
+        var applications, application, i, j, lenI, lenJ, subscriptions, subscription, username, result,
+                list = [],
+                api = inputs.api,
+                user = jagg.getUser();
         if (user) {
-            result = jagg.module("application").getApplications(user.username);
+            username = user.username;
+            result = jagg.module("application").getApplications(username);
             applications = result.applications;
-        }
 
+            result = jagg.module("subscription").getAPISubscriptions(api, username);
+            subscriptions = result.subscriptions;
+            lenI = applications.length;
+            lenJ = subscriptions.length;
+            Label1:
+                    for (i = 0; i < lenI; i++) {
+                        application = applications[i];
+                        for (j = 0; j < lenJ; j++) {
+                            subscription = subscriptions[j];
+                            if (subscription.applicationId == application.id) {
+                                continue Label1;
+                            }
+                        }
+                        list.push(application);
+                    }
+        }
         return {
             "api":inputs.api,
-            "applications":applications,
+            "applications":list,
+            "user":user,
             "tabs":{
                 "tabs":[
                     {
@@ -30,7 +50,7 @@ jagg.block("api/api-info", {
                                 "name":"api/overview",
                                 "inputs":{
                                     "api":api,
-                                    "user" : user
+                                    "user":user
                                 }
                             }
                         ]

@@ -12,7 +12,7 @@ $(document).ready(function () {
             if (result.error == false) {
                 var elem = $("#application-list");
                 $("option[value=" + applicationId + "]", elem).remove();
-                if($("option", elem).length() == 0) {
+                if ($("option", elem).length() == 0) {
                     //elem.attr("disabled");
                     $("#subscribe-button").attr("disabled");
                 }

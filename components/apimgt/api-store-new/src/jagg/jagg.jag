@@ -131,6 +131,13 @@ var jagg = jagg || (function () {
         }
         if (populate) {
             blok = block(name);
+
+            if (!inputs) {
+                inputs = blok.getInputs ? blok.getInputs() : {};
+            } else {
+                mergeParams(inputs, blok.getInputs ? blok.getInputs() : null);
+            }
+
             if (blok.getOutputs) {
                 outputs = blok.getOutputs(inputs);
             } else if (blok.getInputs) {
@@ -168,6 +175,7 @@ var jagg = jagg || (function () {
         extInputs = obj.inputs || (obj.inputs = {});
         defInputs = blok.getInputs ? blok.getInputs() : {};
         mergeParams(extInputs, defInputs);
+
         if (blok.getInputBlocks) {
             inputBlocks = blok.getInputBlocks();
             length = inputBlocks.length;
@@ -274,9 +282,10 @@ var jagg = jagg || (function () {
     };
 
     var getUrlMapping = function (path) {
-        var urlMap = ctx.get("url.map"), configs, i, length, mapping, mappings, file;
+        var urlMap = ctx.get("url.map"), url, configs, i, length, mapping, mappings, file;
         if (urlMap) {
-            return urlMap[path];
+            url = urlMap[path];
+            return url ? url : path;
         }
         file = new File("/jaggery.conf");
         file.open("r");
@@ -291,7 +300,8 @@ var jagg = jagg || (function () {
             urlMap[mapping.path] = mapping.url;
         }
         ctx.put("url.map", urlMap);
-        return urlMap[path];
+        url = urlMap[path];
+        return url ? url : path;
     };
 
     var getMappedUrl = function (path) {

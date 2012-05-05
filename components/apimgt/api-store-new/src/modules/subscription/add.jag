@@ -1,11 +1,11 @@
 <%
-var addAPISubscription = function (api, tier, applicationId, userId) {
+var addAPISubscription = function (api, tier, applicationId, username) {
     var status,
             log = new Log(),
-            store = require("/core/greg/greg.js").getAPIStoreObj();
+            store = jagg.module("greg").getAPIStoreObj();
 
     try {
-        status = store.addSubscription(api.provider, api.name, api.version, tier, applicationId, userId);
+        status = store.addSubscription(api.provider, api.name, api.version, tier, applicationId, username);
         if (log.isDebugEnabled()) {
             log.debug("addAPISubscription");
         }

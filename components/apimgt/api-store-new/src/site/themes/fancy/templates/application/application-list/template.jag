@@ -19,13 +19,7 @@
             %>
             <tr class="<%=classes%>">
                 <td value="<%=app.name%>"><%=app.name%></td>
-                <td value="">
-                    <a>
-                        <span data-icon="T" class="icon black small" style="display: inline-block;">
-                            <span aria-hidden="true">T</span>
-                        </span>
-                    </a>
-                </td>
+                <td value=""><a><span class="icon black small" data-icon="T"></span></a></td>
             </tr>
             <% } %>
         </tbody>

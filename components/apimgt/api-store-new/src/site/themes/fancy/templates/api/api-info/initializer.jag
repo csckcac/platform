@@ -2,7 +2,7 @@
 jagg.initializer("api/api-info", {
 
     preInitialize:function () {
-
+        jagg.addHeaderJS("api/api-info", "api-info", "templates/api/api-info/js/api-info.js");
     },
 
     postInitialize:function(inputs, outputs) {

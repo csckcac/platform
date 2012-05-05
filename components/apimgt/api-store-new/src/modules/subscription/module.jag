@@ -7,6 +7,14 @@ jagg.module("subscription", {
 
     getAllSubscriptions:function () {
         return jagg.require(jagg.getModulesDir() + "subscription/list.jag").getAllSubscriptions.apply(this, arguments);
+    },
+
+    getAPISubscriptions:function () {
+        return jagg.require(jagg.getModulesDir() + "subscription/list.jag").getAPISubscriptions.apply(this, arguments);
+    },
+
+    generateAPIKey:function () {
+        return jagg.require(jagg.getModulesDir() + "subscription/key.jag").generateAPIKey.apply(this, arguments);
     }
 });
 %>

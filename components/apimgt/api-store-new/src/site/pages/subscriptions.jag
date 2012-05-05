@@ -1,77 +1,35 @@
-//<%
-var x = {
-    "name":"pages/page",
-    "css":[],
-    "js":[],
-    "code":[],
-    "data":function () {
-        return {
-            "title":"My Page",
+<%
+include("/jagg/jagg.jag");
+var site = require("/site/conf/site.json");
+
+(function () {
+    var apis, site, tag, query, result, mod, user = jagg.getUser();
+    if (!user) {
+        response.sendRedirect(jagg.getAbsoluteUrl("/"));
+        return;
+    }
+
+    jagg.render({
+        "name":"page/base",
+        "inputs":{
+            "title":"My Subscriptions",
+            "pagePath":"/site/pages/subscriptions.jag",
             "body":[
                 {
-                    "name":"layouts/layout0",
-                    "data":function () {
-                        return {
-                            "header":{
-                                "name":"/headers/header-strip",
-                                "data":null
-                            },
-                            "left":[
-                                {
-                                    "name":"ratings/top-rated",
-                                    "data":function () {
-                                        return {
-                                            "count":10
-                                        };
-                                    }
-                                },
-                                {
-                                    "name":"listing/recently-added",
-                                    "data":function () {
-                                        return {
-                                            "count":10
-                                        };
-                                    }
-                                }
-                            ],
-                            "right":[
-                                {
-                                    "name":"ratings/top-rated",
-                                    "data":function () {
-                                        return {
-                                            "count":5
-                                        };
-                                    }
-                                },
-                                {
-                                    "name":"listing/recently-added",
-                                    "data":function () {
-                                        return {
-                                            "count":5
-                                        };
-                                    }
-                                }
-                            ],
-                            "middle":{
-                                "name":"item-info/overview",
-                                "data":function () {
-                                    return {
-                                        "name":function () {
-                                            return "API1"
-                                        },
-                                        "version":function () {
-                                            return "1.0.0"
-                                        },
-                                        "provider":function () {
-                                            return "admin"
-                                        }
-                                    };
+                    "name":"layout/extended",
+                    "inputs":{
+                        "title":"My Subscriptions",
+                        "middle":[{
+                                "name":"subscription/subscription-list",
+                                "inputs":{
+                                    "user":user
                                 }
                             }
-                        }
+                        ]
                     }
                 }
             ]
-        };
-    }
-};
+        }
+    });
+}());
+%>

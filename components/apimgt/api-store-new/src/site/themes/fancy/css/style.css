@@ -444,3 +444,67 @@ input[type="text"]:focus, textarea:focus, button:focus, a.button:focus, select:f
     padding: 10px 5px;
 }
 
+/* Subscription accordion sections*/
+.accordion {
+  margin-bottom: 18px;
+}
+.accordion-group {
+  margin-bottom: 2px;
+  border: 1px solid #e5e5e5;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.accordion-group a{
+    cursor:pointer;
+}
+.accordion-heading {
+  border-bottom: 0;
+}
+.accordion-heading .accordion-toggle {
+  display: block;
+  padding: 8px 15px;
+}
+.accordion-inner {
+  border-top: 1px solid #e5e5e5;
+}
+.application-api-listing {
+    display:inline-block;
+    padding: 9px 16px 9px;
+    margin:0 10px 10px 0;
+    text-align: center;
+    font-size: 100%;
+    line-height: 12px;
+    border: 3px solid #fff;
+    box-shadow: 0 1px 1.5px 0 rgba(0, 0, 0, 0.45);
+    -moz-box-shadow: 0 1px 1.5px 0 rgba(0, 0, 0, 0.55);
+    -webkit-box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.45);
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    background: #fff;
+    background: -moz-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 50%, rgb(240, 240, 240) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgb(255, 255, 255)), color-stop(50%, rgb(255, 255, 255)), color-stop(100%, rgb(240, 240, 240)));
+    background: -webkit-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 50%, rgb(240, 240, 240) 100%);
+    background: -o-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 50%, rgb(240, 240, 240) 100%);
+    background: -ms-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 50%, rgb(240, 240, 240) 100%);
+}
+.application-api-listing img{
+    height:40px;
+    width:40px;
+}
+.application-api-listing div{
+    padding-top:10px;
+}
+
+.api-key-listing {
+    display: inline-block;
+}
+
+.accordion-inner .odd {
+    background: #F6F6F6;
+}
+
+.application-api {
+    padding: 9px 15px;
+}

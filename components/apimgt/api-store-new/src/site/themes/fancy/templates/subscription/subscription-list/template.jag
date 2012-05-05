@@ -1,0 +1,50 @@
+<% jagg.template("subscription/subscription-list", function(inputs, outputs, jagg) { %>
+<div class="subscription-listing">
+    <%
+    var i, j, app, api, apis, key, lenI, clazz, lenJ, path, apps = outputs.applications, lenI = apps.length;
+    for(i = 0; i < lenI; i++) {
+        app = apps[i];
+    %>
+    <div id="subscriptionList" class="subscription-list">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a class="accordion-toggle"><%=app.name%></a>
+            </div>
+            <div class="accordion-body" style="display: block;">
+                <div class="accordion-inner">
+                    <%
+                    apis = app.subscriptions;
+                    lenJ = apis.length;
+                    for(j = 0; j < lenJ; j++) {
+                        api = apis[j];
+                        key = api.key;
+                        clazz = (j%2) == 0 ? "even" : "odd";
+                        path = jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + api.name + "&version=" + api.version + "&provider=" + api.provider;
+                    %>
+                    <div class="application-api <%=clazz%>">
+                        <div class="application-api-listing">
+                            <a href="<%=path%>"><img alt="" src="<%=api.thumburl%>"/></a>
+                            <div><a href="<%=path%>" class="service-name"><%=api.name%></a></div>
+                            <div class="company-name"><%=api.provider%></div>
+                        </div>
+                        <div class="api-key-listing">
+                            <% if(key) { %>
+                            <div class="api-key"><%=key%></div>
+                            <% } else { %>
+                            <button class="key-generate-button"
+                                data-name="<%=api.name%>"
+                                data-version="<%=api.version%>"
+                                data-provider="<%=api.provider%>"
+                                data-context="<%=api.context%>"
+                                data-application="<%=app.name%>" class="small green">Generate</button>
+                            <% } %>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% } %>
+</div>
+<% }); %>

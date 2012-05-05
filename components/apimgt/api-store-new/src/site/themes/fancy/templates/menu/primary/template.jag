@@ -4,15 +4,15 @@
         <a class="logo"></a>
         <div class="col_8">
             <ul class="menu">
-                <li class="current">
-                    <a href="<%=jagg.getAbsoluteUrl("/")%>">APIs</a>
+                <%
+                var i, link, links = outputs.links, length = links.length;
+                for(i = 0; i < length; i++) {
+                    link = links[i];
+                %>
+                <li <%=(link.active ? 'class="current"' : '')%>>
+                    <a href="<%=link.url%>"><%=link.title%></a>
                 </li>
-                <li>
-                    <a href="<%=jagg.getAbsoluteUrl("/site/pages/applications.jag")%>">Applications</a>
-                </li>
-                <li>
-                    <a href="">My Subscriptions</a>
-                </li>
+                <% } %>
             </ul>
         </div>
         <% jagg.includeBlock("user/login", null); %>

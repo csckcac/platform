@@ -1,5 +1,5 @@
 <%
-var getAPIKey = function (api, context, application, username) {
+var generateAPIKey = function (api, context, application, username) {
     var key,
             log = new Log(),
             store = jagg.module("greg").getAPIStoreObj();
@@ -7,7 +7,7 @@ var getAPIKey = function (api, context, application, username) {
     try {
         key = store.getKey(api.provider, api.name, api.version, context, application, username);
         if (log.isDebugEnabled()) {
-            log.debug("getKey");
+            log.debug("generateAPIKey");
         }
         return {
             error:false,

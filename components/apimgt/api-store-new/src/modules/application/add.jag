@@ -1,7 +1,7 @@
 <%
 var addApplication = function (username, application) {
     var log = new Log(),
-            store = require("/core/greg/greg.js").getAPIStoreObj();
+            store = jagg.module("greg").getAPIStoreObj();
 
     try {
         store.addApplication(application, username);

@@ -5,10 +5,6 @@ jagg.module("api", {
         return jagg.require(jagg.getModulesDir() + "api/api.jag").getAPIDescription.apply(this, arguments);
     },
 
-    getAPIKey:function () {
-        return jagg.require(jagg.getModulesDir() + "api/key.jag").getAPIKey.apply(this, arguments);
-    },
-
     getAllPublishedAPIs:function () {
         return jagg.require(jagg.getModulesDir() + "api/published.jag").getAllPublishedAPIs.apply(this, arguments);
     },

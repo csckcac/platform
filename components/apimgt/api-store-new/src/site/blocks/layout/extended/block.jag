@@ -8,10 +8,6 @@ jagg.block("layout/extended", {
     getOutputs:function (inputs) {
         return {
             "title":inputs.title,
-            "header":{
-                "name":"menu/primary",
-                "inputs":null
-            },
             "top":[
                 {
                     "name":"banner/featured",

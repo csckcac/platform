@@ -18,6 +18,10 @@ var error = {
 
     contentMissing:function(action) {
         return "Please provide all needed content in order to " + action;
+    },
+
+    invalidAction:function(action) {
+        return action + " is not supported";
     }
 };
 %>

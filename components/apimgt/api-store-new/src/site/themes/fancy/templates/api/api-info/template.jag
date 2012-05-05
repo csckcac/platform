@@ -35,7 +35,7 @@
                 length = apps.length;
             %>
             <select id="application-list" class="fancy">
-                <option value="0">-- Select an Application --</option>
+                <option value="-">-- Select an Application --</option>
                 <%
                 for(i = 0; i < length; i++) {
                     app = apps[i];

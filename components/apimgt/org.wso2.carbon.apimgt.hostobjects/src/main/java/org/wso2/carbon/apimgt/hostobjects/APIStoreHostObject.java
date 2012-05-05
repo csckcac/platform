@@ -1201,6 +1201,7 @@ public class APIStoreHostObject extends ScriptableObject {
             for(SubscribedAPI api : apis) {
                 NativeObject row = new NativeObject();
                 row.put("application", row, api.getApplication().getName());
+                row.put("applicationId", row, api.getApplication().getId());
                 row.put("key", row, api.getKey());
                 myn.put(i++, myn, row);
             }
@@ -1228,19 +1229,19 @@ public class APIStoreHostObject extends ScriptableObject {
                 NativeObject appObj = new NativeObject();
                 appObj.put("id", appObj, subscribedAPI.getApplication().getId());
                 appObj.put("name", appObj, subscribedAPI.getApplication().getName());
-                addAPIObj(0,subscribedAPI, apisArray);
+                addAPIObj(subscribedAPI, apisArray);
                 appObj.put("subscriptions", appObj, apisArray);
                 appsObj.put(i++, appsObj, appObj);
                 //keep a subscriptions map in order to efficiently group appObj vice.
                 subscriptionsMap.put(subscribedAPI.getApplication().getId(), apisArray);
             } else {
-                addAPIObj(i++, subscribedAPI, apisArray);
+                addAPIObj(subscribedAPI, apisArray);
             }
         }
         return appsObj;
     }
 
-    private static void addAPIObj(int i, SubscribedAPI subscribedAPI, NativeArray apisArray) throws ScriptException {
+    private static void addAPIObj(SubscribedAPI subscribedAPI, NativeArray apisArray) throws ScriptException {
         NativeObject apiObj = new NativeObject();
         API api = null;
         try {
@@ -1249,7 +1250,9 @@ public class APIStoreHostObject extends ScriptableObject {
             apiObj.put("provider", apiObj, subscribedAPI.getApiId().getProviderName());
             apiObj.put("version", apiObj, subscribedAPI.getApiId().getVersion());
             apiObj.put("thumburl", apiObj, api.getThumbnailUrl());
-            apisArray.put(i, apisArray, apiObj);
+            apiObj.put("context", apiObj, api.getContext());
+            apiObj.put("key", apiObj, subscribedAPI.getKey());
+            apisArray.put(apisArray.getIds().length, apisArray, apiObj);
         } catch (APIManagementException e) {
             throw new ScriptException(e);
         }

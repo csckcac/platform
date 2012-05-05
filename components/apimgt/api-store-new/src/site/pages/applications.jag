@@ -12,7 +12,8 @@ var site = require("/site/conf/site.json");
     jagg.render({
         "name":"page/base",
         "inputs":{
-            "title":"API Store Listing",
+            "title":"Applications",
+            "pagePath":"/site/pages/applications.jag",
             "body":[
                 {
                     "name":"layout/extended",

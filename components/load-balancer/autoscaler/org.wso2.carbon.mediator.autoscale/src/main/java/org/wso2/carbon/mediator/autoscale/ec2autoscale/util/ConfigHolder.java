@@ -1,4 +1,3 @@
-
 /*
 *  Copyright (c) 2005-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
@@ -25,6 +24,9 @@ public class ConfigHolder {
     public ConfigHolder() {
     }
 
+    private RealmService realmService;
+    private static ClusteringAgent agent;
+
     public static ClusteringAgent getAgent() {
         return agent;
     }
@@ -33,6 +35,13 @@ public class ConfigHolder {
         ConfigHolder.agent = agent;
     }
 
-    private static ClusteringAgent agent;
+
+    public void setRealmService(RealmService realmService) {
+        this.realmService = realmService;
+    }
+
+    public RealmService getRealmService() {
+        return realmService;
+    }
 
 }

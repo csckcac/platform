@@ -21,11 +21,15 @@ import org.wso2.carbon.rule.kernel.internal.build.RuleEngineConfigBuilder;
 import org.wso2.carbon.rule.kernel.internal.config.CarbonRuleEngineConfigService;
 import org.wso2.carbon.rule.kernel.config.RuleEngineConfigService;
 import org.wso2.carbon.rule.common.exception.RuleConfigurationException;
+import org.wso2.carbon.event.core.EventBroker;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
  * @scr.component name="ruleengineconfig.component" immediate="true"
+ * @scr.reference name="eventbroker.service"
+ * interface="org.wso2.carbon.event.core.EventBroker" cardinality="1..1"
+ * policy="dynamic" bind="setEventBroker" unbind="unSetEventBroker"
  */
 public class RuleEngineConfigDS {
 
@@ -50,6 +54,18 @@ public class RuleEngineConfigDS {
         } catch (RuleConfigurationException e) {
             log.error("Can not create the Rule Config service ", e);
         }
+
+    }
+
+    protected void setEventBroker(EventBroker eventBroker) {
+        try {
+            RuleValueHolder.getInstance().registerEventBroker(eventBroker);
+        } catch (RuleConfigurationException e) {
+            log.error("Can not configure event broker ", e);
+        }
+    }
+
+    protected void unSetEventBroker(EventBroker eventBroker) {
 
     }
 

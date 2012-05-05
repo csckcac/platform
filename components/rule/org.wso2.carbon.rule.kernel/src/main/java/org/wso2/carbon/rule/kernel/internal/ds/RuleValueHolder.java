@@ -18,11 +18,29 @@ package org.wso2.carbon.rule.kernel.internal.ds;
 
 import org.wso2.carbon.rule.kernel.config.RuleEngineConfigService;
 import org.wso2.carbon.rule.kernel.config.RuleEngineProvider;
+import org.wso2.carbon.rule.common.exception.RuleConfigurationException;
+import org.wso2.carbon.event.core.EventBroker;
+import org.wso2.carbon.event.core.exception.EventBrokerException;
+import org.wso2.carbon.event.core.subscription.Subscription;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.util.Set;
+import java.util.HashSet;
 
 public class RuleValueHolder {
 
+    private static Log log = LogFactory.getLog(RuleValueHolder.class);
+
     private static RuleValueHolder ruleValueHolder = new RuleValueHolder();
     private RuleEngineConfigService ruleEngineConfigService;
+    private EventBroker eventBroker;
+
+    private Set<Subscription> pendingSubscriptions;
+
+    public RuleValueHolder() {
+        this.pendingSubscriptions = new HashSet();
+    }
 
     public static RuleValueHolder getInstance(){
         return ruleValueHolder;
@@ -37,6 +55,43 @@ public class RuleValueHolder {
     }
 
     public RuleEngineProvider getRuleEngineProvider(){
-        return this.ruleEngineConfigService.getRuleConfig().getRuleEngineProvider();
+        RuleEngineProvider ruleEngineProvider = null;
+        if (this.ruleEngineConfigService != null){
+            ruleEngineProvider = this.ruleEngineConfigService.getRuleConfig().getRuleEngineProvider();
+        }
+        return ruleEngineProvider;
+    }
+
+    public synchronized void registerEventBroker(EventBroker eventBroker) throws RuleConfigurationException {
+        this.eventBroker = eventBroker;
+        //subscribes the pending subscriptions
+        subscribePendingSubscriptions();
+        this.pendingSubscriptions.clear();
+    }
+
+    private void subscribePendingSubscriptions() throws RuleConfigurationException {
+        for (Subscription subscription : this.pendingSubscriptions) {
+            try {
+                this.eventBroker.subscribe(subscription);
+            } catch (EventBrokerException e) {
+                throw new RuleConfigurationException("Can not subscribe to topic " + subscription.getTopicName(), e);
+            }
+        }
+    }
+
+    public EventBroker getEventBroker(){
+        return this.eventBroker;
+    }
+
+    public synchronized void addSubscription(Subscription subscription) throws RuleConfigurationException {
+        if (this.eventBroker != null){
+            try {
+                this.eventBroker.subscribe(subscription);
+            } catch (EventBrokerException e) {
+                throw new RuleConfigurationException("Can not subscribe to topic " + subscription.getTopicName(), e);
+            }
+        } else {
+            this.pendingSubscriptions.add(subscription);
+        }
     }
 }

@@ -24,9 +24,20 @@ import org.wso2.carbon.rule.kernel.config.RuleEngineConfigService;
 import org.wso2.carbon.rule.kernel.internal.ds.RuleValueHolder;
 import org.wso2.carbon.rule.kernel.internal.build.RuleEngineConfigBuilder;
 import org.wso2.carbon.rule.kernel.internal.config.CarbonRuleEngineConfigService;
+import org.wso2.carbon.rule.kernel.internal.event.RuleChangeEventDispacher;
 import org.wso2.carbon.rule.common.exception.RuleRuntimeException;
 import org.wso2.carbon.rule.common.exception.RuleConfigurationException;
 import org.wso2.carbon.rule.common.RuleSet;
+import org.wso2.carbon.rule.common.Rule;
+import org.wso2.carbon.rule.common.util.Constants;
+import org.wso2.carbon.event.core.EventBroker;
+import org.wso2.carbon.event.core.exception.EventBrokerException;
+import org.wso2.carbon.event.core.subscription.Subscription;
+import org.wso2.carbon.context.CarbonContext;
+import org.wso2.carbon.CarbonConstants;
+import org.apache.axis2.context.ConfigurationContext;
+
+import java.util.Set;
 
 /**
  * this class is the layer in between top layers (i.e web service layer and the mediation layer) and the rule back end runtime.
@@ -35,6 +46,8 @@ import org.wso2.carbon.rule.common.RuleSet;
 public class RuleEngine {
 
     private RuleBackendRuntime ruleBackendRuntime;
+    private RuleSet ruleSet;
+    private ClassLoader factClassLoader;
 
     /**
      * Creates a Rule Engine Object. Rule engine object is kept per mediator and per service. When creating the rule
@@ -46,6 +59,42 @@ public class RuleEngine {
     public RuleEngine(RuleSet ruleSet,
                       ClassLoader factClassLoader) throws RuleConfigurationException {
 
+        this.ruleSet = ruleSet;
+        this.factClassLoader = factClassLoader;
+
+        //if the rules stored in registry we need to refresh the rule runtime when rules get changed.
+        //so we check whether the rule source is registry and register a listner.
+        RuleChangeEventDispacher ruleChangeEventDispacher = new RuleChangeEventDispacher(this);
+
+        for (Rule rule : ruleSet.getRules()){
+            if (rule.getSourceType().equals(Constants.RULE_SOURCE_TYPE_REGISTRY)){
+                String updateTopicName = getUpdateTopicName(rule.getValue());
+                Subscription subscription = new Subscription();
+                subscription.setEventDispatcher(ruleChangeEventDispacher);
+                subscription.setTopicName(updateTopicName);
+                subscription.setTenantId(CarbonContext.getCurrentContext().getTenantId());
+                subscription.setOwner(CarbonConstants.REGISTRY_SYSTEM_USERNAME);
+                RuleValueHolder.getInstance().addSubscription(subscription);
+            }
+        }
+
+        loadRuleBackendRuntime();
+
+    }
+
+    private String getUpdateTopicName(String registryKey) throws RuleConfigurationException {
+        String updateTopicName = "/registry/notifications/ResourceUpdated/_system/";
+        if (registryKey.startsWith(Constants.RULE_SOURCE_REGISTRY_TYPE_CONFIGURATION)){
+            updateTopicName += registryKey.replace("conf:","config/");
+        }else if (registryKey.startsWith(Constants.RULE_SOURCE_REGISTRY_TYPE_GOVERNANCE)){
+            updateTopicName += registryKey.replace("gov:","governance/");
+        } else {
+            throw new RuleConfigurationException("In valide registry with registry key " + registryKey);
+        }
+        return updateTopicName;
+    }
+
+    public synchronized void loadRuleBackendRuntime()  throws RuleConfigurationException {
         RuleEngineProvider ruleEngineProvider = null;
         try {
             ruleEngineProvider = RuleValueHolder.getInstance().getRuleEngineProvider();
@@ -63,8 +112,8 @@ public class RuleEngine {
             RuleBackendRuntimeFactory ruleBackendRuntimeFactory =
                     (RuleBackendRuntimeFactory) ruleBackendRuntimeFactoryClass.newInstance();
             this.ruleBackendRuntime =
-                    ruleBackendRuntimeFactory.getRuleBackendRuntime(ruleEngineProvider.getProperties(),factClassLoader);
-            this.ruleBackendRuntime.addRuleSet(ruleSet);
+                    ruleBackendRuntimeFactory.getRuleBackendRuntime(ruleEngineProvider.getProperties(), this.factClassLoader);
+            this.ruleBackendRuntime.addRuleSet(this.ruleSet);
 
         } catch (ClassNotFoundException e) {
             throw new RuleConfigurationException("Class " + ruleEngineProvider.getClassName() + " can not be found ");
@@ -73,7 +122,6 @@ public class RuleEngine {
         } catch (InstantiationException e) {
             throw new RuleConfigurationException("Can not instantiate the " + ruleEngineProvider.getClassName() + " class");
         }
-
     }
 
     /**

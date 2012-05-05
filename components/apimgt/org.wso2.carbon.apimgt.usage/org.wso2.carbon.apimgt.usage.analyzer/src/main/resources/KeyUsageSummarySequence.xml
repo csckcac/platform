@@ -1,16 +1,15 @@
-<analyzerSequence name="APIVersionUserUsageSummarySequence">
+<analyzerSequence name="KeyUsageSummarySequence">
    <trigger cron="1 * * * * ? *"/>
    <analyzers>
       <get name="BASEEnriched" batchSize="1000"/>
       <groupBy>
-         <field name="api"/>
-          <field name="version"/>
-         <field name="userId"/>
+        <field name="consumerKey"/>
       </groupBy>
       <drop type="column">
         <fieldSet>
-          <field name="consumerKey"/>
           <field name="api_version"/>
+          <field name="api"/>
+          <field name="version"/>
           <field name="context"/>
           <field name="resource"/>
           <field name="method"/>
@@ -18,12 +17,13 @@
 	      <field name="response"/>
 	      <field name="responseTime"/>
 	      <field name="serviceTime"/>
+          <field name="userId"/>
         </fieldSet>
       </drop>
       <aggregate>
          <measure name="request" aggregationType="SUM"/>
       </aggregate>
-      <put name="APIVersionUserUsageSummaryTable" dataSourceType="CASSANDRA">
+      <put name="KeyUsageSummaryTable" dataSourceType="CASSANDRA">
          <onExist>
             <aggregate>
                <measure name="request" aggregationType="SUM"/>

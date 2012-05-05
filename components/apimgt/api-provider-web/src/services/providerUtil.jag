@@ -149,7 +149,7 @@ function getProviderAPIUserUsageFunc(providerName,apiName,server) {
 }else{
         for (var k = 0; k < usage.length ; k++){
         var elem = {
-        apiName:usage[k].api,
+        user:usage[k].user,
         count:usage[k].count
         };
 usageout.push(elem);

@@ -28,13 +28,13 @@ public final class APIMgtUsageQueryServiceClientConstants {
 
     public static final String API_VERSION_USAGE_SUMMARY_TABLE_INDEX = "APIVersionUsageSummaryTableIndex";
 
-    public static final String API_VERSION_USER_USAGE_SUMMARY_TABLE = "APIVersionUserUsageSummaryTable";
-
-    public static final String API_VERSION_USER_USAGE_SUMMARY_TABLE_INDEX = "APIVersionUserUsageSummaryTableIndex";
-
     public static final String API_VERSION_LAST_ACCESS_SUMMARY_TABLE = "APIVersionLastAccessSummaryTable";
 
     public static final String API_VERSION_LAST_ACCESS_SUMMARY_TABLE_INDEX = "APIVersionLastAccessSummaryTableIndex";
+
+    public static final String KEY_USAGE_SUMMARY_TABLE = "KeyUsageSummaryTable";
+
+    public static final String KEY_USAGE_SUMMARY_TABLE_INDEX = "KeyUsageSummaryTableIndex";
 
     public static final String ROWS = "rows";
 
@@ -53,5 +53,7 @@ public final class APIMgtUsageQueryServiceClientConstants {
     public static final String USER = "userId";
 
     public static final String REQUEST_TIME = "requestTime";
+
+    public static final String CONSUMER_KEY = "consumerKey";
 
 }

@@ -1105,48 +1105,6 @@ public class ApiMgtDAO {
         return subscriber;
     }
 
-    /**
-     *
-     * @param accessToken
-     * @return Subscriber
-     * @throws APIManagementException
-     */
-    public Subscriber getSubscriberByAccessToken(String accessToken,String context) throws APIManagementException {
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet result = null;
-        Subscriber subscriber = null;
-        String query = " SELECT" +
-                " SB.USER_ID ,SB.DATE_SUBSCRIBED" +
-                " FROM AM_SUBSCRIBER SB , AM_SUBSCRIPTION SP, AM_APPLICATION APP, AM_KEY_CONTEXT_MAPPING MAP" +
-                " WHERE MAP.ACCESS_TOKEN=?" +
-                " AND MAP.CONTEXT=?" +
-                " AND MAP.KEY_CONTEXT_MAPPING_ID=SP.KEY_CONTEXT_MAPPING_ID" +
-                " AND SP.APPLICATION_ID=APP.APPLICATION_ID" +
-                " AND APP.SUBSCRIBER_ID=SB.SUBSCRIBER_ID";
-
-        try {
-            connection = APIMgtDBUtil.getConnection();
-            ps = connection.prepareStatement(query);
-            ps.setString(1, accessToken);
-            ps.setString(2, context);
-
-            result = ps.executeQuery();
-            while (result.next()) {
-                subscriber = new Subscriber(result.getString(APIConstants.SUBSCRIBER_FIELD_USER_ID));
-                subscriber.setSubscribedDate(result.getDate(APIConstants.SUBSCRIBER_FIELD_DATE_SUBSCRIBED));
-
-            }
-
-        } catch (SQLException e) {
-            String msg = "Failed to get Subscriber for accessToken";
-            throw new APIManagementException(msg, e);
-        } finally {
-            APIMgtDBUtil.closeAllConnections(ps, connection, result);
-        }
-        return subscriber;
-    }
-
     public String[] addOAuthConsumer(String username, int tenantId) throws IdentityOAuthAdminException, APIManagementException {
         Connection connection = null;
         PreparedStatement prepStmt = null;

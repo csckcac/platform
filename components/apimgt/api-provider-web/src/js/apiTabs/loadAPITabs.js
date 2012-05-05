@@ -77,7 +77,7 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
     }
 
     if (clickedTab == "users") {
-        apiProviderApp.call("action=getProviderAPIUserUsage&providerName="+ apiProviderApp.currentProviderName +"&apiName="+ apiProviderApp.currentAPIName +"&server=https://localhost:9444/", function (json) {
+        apiProviderApp.call("action=getProviderAPIUserUsage&providerName="+ apiProviderApp.loggedUser +"&apiName="+ apiProviderApp.currentAPIName +"&server=https://localhost:9444/", function (json) {
             if (json.error == "true") {
                 alert(json.message);
             }
@@ -86,7 +86,7 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
                 $('#userChart').empty();
                 $('#userTable').find("tr:gt(0)").remove();
                 for (var i = 0; i < json.data.usage.length; i++) {
-                    data[i] = [json.data.usage[i].user, parseFloat(json.data.usage[i].count)];
+                    data[i] = [json.data.usage[i].user, parseInt(json.data.usage[i].count)];
                     $('#userTable').append($('<tr><td>' + json.data.usage[i].user + '</td><td>' + json.data.usage[i].count + '</td></tr>'));
 
                 }

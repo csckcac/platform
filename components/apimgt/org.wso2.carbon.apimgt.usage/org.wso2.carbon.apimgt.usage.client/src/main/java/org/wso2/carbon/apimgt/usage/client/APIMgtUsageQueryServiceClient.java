@@ -22,7 +22,9 @@ import org.apache.axis2.AxisFault;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.model.API;
 import org.wso2.carbon.apimgt.api.model.APIIdentifier;
+import org.wso2.carbon.apimgt.api.model.SubscribedAPI;
 import org.wso2.carbon.apimgt.api.model.Subscriber;
+import org.wso2.carbon.apimgt.impl.APIConsumerImpl;
 import org.wso2.carbon.apimgt.impl.APIManagerImpl;
 import org.wso2.carbon.apimgt.impl.APIProviderImpl;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUsageDTO;
@@ -51,6 +53,7 @@ public class APIMgtUsageQueryServiceClient {
 
     private APIManagerImpl apiManagerImpl;
     private APIProviderImpl apiProviderImpl;
+    private APIConsumerImpl apiConsumerImpl;
 
     public APIMgtUsageQueryServiceClient(String targetEndpoint) throws APIMgtUsageQueryServiceClientException {
         if (targetEndpoint == null || targetEndpoint.equals("")) {
@@ -65,9 +68,10 @@ public class APIMgtUsageQueryServiceClient {
         try{
             apiManagerImpl = new APIManagerImpl();
             apiProviderImpl = new APIProviderImpl();
+            apiConsumerImpl = new APIConsumerImpl();
         }
         catch (APIManagementException e) {
-            throw new APIMgtUsageQueryServiceClientException("Exception while instantiating APIManagerImpl", e);
+            throw new APIMgtUsageQueryServiceClientException("Exception while instantiating Impl classes", e);
         }
     }
 
@@ -109,39 +113,35 @@ public class APIMgtUsageQueryServiceClient {
     public List<ProviderAPIUserUsageDTO> getProviderAPIUserUsage(String providerName, String apiName) throws APIMgtUsageQueryServiceClientException {
         List<ProviderAPIUserUsageDTO> result = new ArrayList<ProviderAPIUserUsageDTO>();
         OMElement omElement = null;
-        QueryServiceStub.CompositeIndex[] compositeIndex = new QueryServiceStub.CompositeIndex[1];
-        compositeIndex[0] = new QueryServiceStub.CompositeIndex();
-        compositeIndex[0].setIndexName("api");
-        compositeIndex[0].setRangeFirst(apiName);
-        compositeIndex[0].setRangeLast(getNextStringInLexicalOrder(apiName));
-        omElement = this.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_VERSION_USER_USAGE_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.API_VERSION_USER_USAGE_SUMMARY_TABLE_INDEX, compositeIndex);
+        omElement = this.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.KEY_USAGE_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.KEY_USAGE_SUMMARY_TABLE_INDEX, null);
         Set<String> versions = this.getAPIVersions(providerName,apiName);
-        Set<APIIdentifier> apiIdentifiers = null;
+        Set<SubscribedAPI> subscribedAPIs = new HashSet<SubscribedAPI>();
         for(String version:versions){
-            apiIdentifiers.add(new APIIdentifier(providerName, apiName, version));
-        }
-        Map<String,Float> map = new HashMap<String,Float>();
-        for(APIIdentifier apiIdentifier:apiIdentifiers){
-            Set<Subscriber> subscribers = this.getSubscribersOfAPI(providerName,apiName,apiIdentifier.getVersion());
+            Set<Subscriber> subscribers = this.getSubscribersOfAPI(providerName,apiName,version);
             for(Subscriber subscriber:subscribers){
-                OMElement rowsElement = omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
-                Iterator rowIterator = rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
-                while(rowIterator.hasNext()){
-                    OMElement row = (OMElement)rowIterator.next();
-                    if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.VERSION)).getText().equals(apiIdentifier.getVersion()) && row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.USER)).getText().equals(subscriber.getName())){
-                        if(map.containsKey(subscriber.getName())){
-                            map.put(subscriber.getName(),map.get(subscriber.getName())+Float.parseFloat(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST)).getText()));
-                        }else{
-                            map.put(subscriber.getName(),Float.parseFloat(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST)).getText()));
-                        }
-                        break;
+                subscribedAPIs = this.getSubscribedIdentifiers(subscriber, providerName, apiName, version);
+            }
+        }
+        Map<String,Float> userUsageMap = new HashMap<String,Float>();
+        for(SubscribedAPI subscribedAPI:subscribedAPIs){
+            OMElement rowsElement = omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
+            Iterator rowIterator = rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
+            while(rowIterator.hasNext()){
+                OMElement row = (OMElement)rowIterator.next();
+                if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.CONSUMER_KEY)).getText().equals(subscribedAPI.getKey())){
+                    String userId = subscribedAPI.getSubscriber().getName();
+                    if(userUsageMap.containsKey(userId)){
+                        userUsageMap.put(userId,userUsageMap.get(userId)+Float.parseFloat(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST)).getText()));
+                    }else{
+                        userUsageMap.put(userId,Float.parseFloat(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST)).getText()));
                     }
                 }
             }
         }
-        Set<String> keys = map.keySet();
+        Set<String> keys = userUsageMap.keySet();
         for(String key:keys){
-            result.add(new ProviderAPIUserUsageDTO(key,map.get(key).toString()));
+            int count = userUsageMap.get(key).intValue();
+            result.add(new ProviderAPIUserUsageDTO(key,String.valueOf(count)));
         }
         return result;
     }
@@ -334,6 +334,17 @@ public class APIMgtUsageQueryServiceClient {
             throw new APIMgtUsageQueryServiceClientException("Error while retrieving APIs by "+providerId, e);
         }
         return apis;
+    }
+
+    private Set<SubscribedAPI> getSubscribedIdentifiers(Subscriber subscriber, String providerName,String apiName, String version) throws APIMgtUsageQueryServiceClientException{
+        Set<SubscribedAPI> subscribedAPIs = null;
+        APIIdentifier apiIdentifier = new APIIdentifier(providerName, apiName, version);
+        try {
+            subscribedAPIs = apiConsumerImpl.getSubscribedIdentifiers(subscriber, apiIdentifier);
+        } catch (APIManagementException e) {
+            throw new APIMgtUsageQueryServiceClientException("Error while getting subscribedAPIs for "+subscriber.getName()+"-"+providerName+"-"+apiName+"-"+version+" combination", e);
+        }
+        return subscribedAPIs;
     }
 
 }

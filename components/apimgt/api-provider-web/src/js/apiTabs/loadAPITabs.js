@@ -154,6 +154,7 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
     }
 
     if (clickedTab == "users") {
+
         apiProviderApp.call("action=getProviderAPIUserUsage&providerName="+ apiProviderApp.loggedUser +"&apiName="+ apiProviderApp.currentAPIName +"&server=https://localhost:9444/", function (json) {
             if (json.error == "true") {
                 alert(json.message);
@@ -201,6 +202,92 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
             }
         });
 
+
+        apiProviderApp.call("action=getProviderAPIVersionUserUsage&providerName="+ apiProviderApp.loggedUser +"&apiName="+ apiProviderApp.currentAPIName +"&server=https://localhost:9444/", function (json) {
+            if (json.error == "true") {
+                alert(json.message);
+            }
+            else {
+
+                $('#userVersionChart').empty();
+                $('#userVersionTable').find("tr:gt(0)").remove();
+                var user_version_associative_array = new Array();
+                for (var i = 0; i < json.data.usage.length; i++) {
+                    if(!user_version_associative_array.hasOwnProperty(json.data.usage[i].user)){
+                        user_version_associative_array[json.data.usage[i].user] = new Array();
+                    }
+                    for (var j = 0; j < json.data.usage.length; j++) {
+                        user_version_associative_array[json.data.usage[i].user][json.data.usage[j].version] = "0";
+                    }
+                }
+                for (var i = 0; i < json.data.usage.length; i++) {
+                    user_version_associative_array[json.data.usage[i].user][json.data.usage[i].version] = json.data.usage[i].count;
+                }
+
+                var data = new Array();
+                var ticks = new Array();
+                var series = new Array();
+
+                var key;
+                for(key in user_version_associative_array){
+                    ticks[ticks.length] = key;
+                }
+                for(key in user_version_associative_array[ticks[0]]){
+                    series[series.length] = {label:key};
+                }
+                for(var i = 0; i<ticks.length; i++){
+                    if(i==0){
+                        data[i] = new Array();
+                    }
+                    for(var j = 0; j<series.length; j++){
+                        data[i][j] = user_version_associative_array[ticks[i]][[series[j].label]];
+                    }
+                }
+                for (var i = 0; i < json.data.usage.length; i++) {
+                    $('#userVersionTable').append($('<tr><td>' + json.data.usage[i].user + '</td><td>' + json.data.usage[i].version + '</td></tr><td>' + json.data.usage[i].count + '</td></tr>'));
+                }
+
+                if(json.data.usage.length > 0){
+                    $('#userVersionTable').show();
+                    var plot1 = $.jqplot('userVersionChart', data, {
+
+                        stackSeries: true,
+                        captureRightClick: true,
+                        seriesDefaults:{
+                          renderer:$.jqplot.BarRenderer,
+                          rendererOptions: {
+                              barMargin: 30,
+                              highlightMouseDown: true
+                          },
+                          pointLabels: {show: true}
+                        },
+
+                        series:series,
+
+                        legend: {
+                          show: true,
+                          location: 'e',
+                          placement: 'outside'
+                        },
+                        axes: {
+                            xaxis: {
+                                renderer: $.jqplot.CategoryAxisRenderer,
+                                ticks: ticks
+                            },
+                            yaxis: {
+                                padMin: 0,
+                                tickOptions: {formatString: '%d'}
+                            }
+                        }
+                    });
+
+                }else{
+                    $('#versionUserTable').hide();
+                    $('#versionUserChart').css("fontSize",14);
+                    $('#versionUserChart').text('No Data Found ...');
+                }
+            }
+        });
 
     }
 });

@@ -48,7 +48,7 @@
                 <div class="simple-space-maker"><button id="subscribe-button" class="medium green">Subscribe</button></div>
         </div>
         <div class="col_12 tabs-section">
-            <% jagg.includeBlock("tab/basic", outputs.tabs); %>
+            <% jagg.includeBlock("ui/tab", outputs.tabs); %>
         </div>
     </div>
 </div>

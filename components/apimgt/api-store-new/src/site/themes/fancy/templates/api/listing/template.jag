@@ -1,5 +1,5 @@
 <% jagg.template("api/listing", function(inputs, outputs, jagg) { %>
-<% var stars = require("/site/themes/modern/utils/ratings/star-generator.js"); %>
+<% var stars = require("/site/themes/fancy/utils/ratings/star-generator.js"); %>
 
  <table class="no-surround-table">
     <%

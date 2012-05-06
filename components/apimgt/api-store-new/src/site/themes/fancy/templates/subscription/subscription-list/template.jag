@@ -5,12 +5,12 @@
     for(i = 0; i < lenI; i++) {
         app = apps[i];
     %>
-    <div id="subscriptionList" class="subscription-list">
+    <div class="subscription-list">
         <div class="accordion-group">
             <div class="accordion-heading">
                 <a class="accordion-toggle"><%=app.name%></a>
             </div>
-            <div class="accordion-body" style="display: block;">
+            <div class="accordion-body">
                 <div class="accordion-inner">
                     <%
                     apis = app.subscriptions;

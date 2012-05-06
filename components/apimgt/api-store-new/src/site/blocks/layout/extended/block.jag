@@ -20,7 +20,7 @@ jagg.block("layout/extended", {
             ],
             "left":[
                 {
-                    "name":"tab/basic",
+                    "name":"ui/tab",
                     "inputs":{
                         "classes":"cat_and_charts",
                         "tabs":[

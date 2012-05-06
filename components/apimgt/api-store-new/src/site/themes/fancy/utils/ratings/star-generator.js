@@ -25,8 +25,8 @@ var getStaticStars = function (context, rating) {
         } else {
             image = "star-0.png";
         }
+        html += getHTML(image);
     }
-    html += getHTML(image);
     for (j = 0; j < nonstars; j++) {
         html += getHTML("star-0.png");
     }

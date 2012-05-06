@@ -1,4 +1,4 @@
-<% jagg.template("tab/basic", function(inputs, outputs, jagg) { %>
+<% jagg.template("ui/tab", function(inputs, outputs, jagg) { %>
 <div class="tabs-basic<%=(outputs.classes ? " " + outputs.classes : "")%>">
     <%
         var tabs = outputs.tabs, length = tabs.length;

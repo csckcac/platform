@@ -1,5 +1,5 @@
 <% jagg.template("api/provider-apis", function(inputs, outputs, jagg) { %>
-<% var stars = require("/site/themes/modern/utils/ratings/star-generator.js"); %>
+<% var stars = require("/site/themes/fancy/utils/ratings/star-generator.js"); %>
 <div class="provider-more">
     <h4>More from provider</h4>
     <hr/>

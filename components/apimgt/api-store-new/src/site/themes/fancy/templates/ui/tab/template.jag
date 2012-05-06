@@ -1,5 +1,5 @@
-<% jagg.template("tab/basic", function(inputs, outputs, jagg) { %>
-<div class="tabs-basic<%=(outputs.classes ? " " + outputs.classes : "")%>">
+<% jagg.template("ui/tab", function(inputs, outputs, jagg) { %>
+<div class="ui-tab<%=(outputs.classes ? " " + outputs.classes : "")%>">
     <%
         var tabs = outputs.tabs, length = tabs.length;
         var i, index, tab, classes;

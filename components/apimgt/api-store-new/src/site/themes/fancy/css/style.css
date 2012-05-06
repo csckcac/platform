@@ -559,3 +559,24 @@ input[type="text"]:focus, textarea:focus, button:focus, a.button:focus, select:f
 .remove-rating:hover {
     background: url("../images/myRatingRemove-hover.png") no-repeat scroll left center transparent;
 }
+
+.documentation {
+    padding: 10px;
+}
+
+.documentation hr {
+    margin: 5px 0;
+}
+
+.api-documentation div.accordion-body {
+    display: none;
+}
+
+.subscription-list div.accordion-body {
+    display: none;
+}
+
+.documentaion-body {
+    margin-bottom: 15px;
+}
+

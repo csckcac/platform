@@ -60,7 +60,9 @@ jagg.block("api/api-info", {
                         "body":[
                             {
                                 "name":"api/documentation",
-                                "inputs":api
+                                "inputs": {
+                                    "api":api
+                                }
                             }
                         ]
                     }
@@ -71,7 +73,7 @@ jagg.block("api/api-info", {
 
     getStaticBlocks:function () {
         return [
-            "tab/basic"
+            "ui/tab"
         ];
     },
 

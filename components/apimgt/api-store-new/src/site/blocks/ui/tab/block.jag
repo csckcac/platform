@@ -1,5 +1,5 @@
 <%
-jagg.block("tab/basic", {
+jagg.block("ui/tab", {
 
     initialize:function (data) {
 

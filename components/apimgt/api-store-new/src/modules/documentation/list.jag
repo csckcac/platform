@@ -1,0 +1,23 @@
+<%
+var getAllDocumentations = function (api) {
+    var documentations,
+            log = new Log(),
+            store = jagg.module("greg").getAPIStoreObj();
+
+    try {
+        documentations = store.getAllDocumentation(api.provider, api.name, api.version);
+        if (log.isDebugEnabled()) {
+            log.debug("getAllDocumentation : " + stringify(documentations));
+        }
+        return {
+            error:false,
+            documentations:documentations
+        };
+    } catch (e) {
+        log.error(e.message);
+        return {
+            error:e,
+            documentations:null
+        };
+    }
+};

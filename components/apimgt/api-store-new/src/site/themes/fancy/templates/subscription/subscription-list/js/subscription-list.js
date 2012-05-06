@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $('#subscriptionList div.accordion-body').each(
+   /* $('.subscription-list div.accordion-body').each(
             function (index) {
                 if (index == 0) {
                     $(this).show();
@@ -7,8 +7,8 @@ $(document).ready(function () {
                     $(this).hide();
                 }
             }
-    );
-    $('#subscriptionList a.accordion-toggle').click(
+    );*/
+    $('.subscription-list a.accordion-toggle').click(
             function () {
                 $(this).parent().next().toggle('blind');
             }

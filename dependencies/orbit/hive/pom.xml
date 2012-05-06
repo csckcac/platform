@@ -76,13 +76,6 @@
 	   </dependency>
     </dependencies>
 
-    <properties>
-        <!--ode.version>2.1.2-wso2-SNAPSHOT</ode.version-->
-        <!--<ode.version>1.3.5-SNAPSHOT</ode.version>
-        <ode.extension.version>1.0-SNAPSHOT</ode.extension.version>-->
-
-    </properties>
-
     <build>
         <plugins>
             <plugin>
@@ -97,16 +90,18 @@
                         <_nouses>true</_nouses>
                         <Export-Package>
                             org.apache.hadoop.hive.*;-split-package:=merge-last,
-			    org.apache.thrift.*
+			    org.apache.hadoop.hive.cassandra.*,
+			    org.apache.thrift.*;version="${hive.thrift.osgi.version}"
                         </Export-Package>
                         <_exportcontents>
                             org.apache.hadoop.hive.*;-split-package:=merge-last,
-			    org.apache.thrift.*
+			    org.apache.hadoop.hive.cassandra.*,
+			    org.apache.thrift.*;version="${hive.thrift.osgi.version}"
                         </_exportcontents>
                         <Import-Package>
                             !org.apache.hadoop.hive.*,
-                            org.apache.hadoop.hive.*,
-			    org.apache.cassandra.thrift,
+		            org.antlr.runtime.*;version="${antlr.osgi.version}",
+			    org.apache.cassandra.thrift;resolution:=optional,
                             *;resolution:=optional
                         </Import-Package>
                         <Embed-Dependency>
@@ -118,4 +113,10 @@
             </plugin>
         </plugins>
     </build>
+
+    <properties>
+        <hive.thrift.osgi.version>0.7.5.wso2v1</hive.thrift.osgi.version>
+        <antlr.osgi.version>3.2.0.wso2v1</antlr.osgi.version>
+    </properties>
+
 </project>

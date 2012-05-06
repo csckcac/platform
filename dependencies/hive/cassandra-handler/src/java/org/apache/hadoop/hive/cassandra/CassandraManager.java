@@ -8,6 +8,7 @@ import org.apache.hadoop.hive.metastore.api.Table;
 import org.apache.thrift.TException;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,9 @@ import java.util.Map;
 public class CassandraManager {
   final static public int DEFAULT_REPLICATION_FACTOR = 1;
   final static public String DEFAULT_STRATEGY = "org.apache.cassandra.locator.SimpleStrategy";
+
+  final static public String USERNAME_PROPERTY = "username";
+  final static public String PASSWORD_PROPERTY = "password";
 
   //Cassandra Host Name
   private final String host;
@@ -36,6 +40,12 @@ public class CassandraManager {
 
   //key space name
   private String keyspace;
+
+  //username to authenticate to keyspace
+  private String username;
+
+  //password to authenticate to keyspace
+  private String password;
 
   //column family name
   private String columnFamilyName;
@@ -56,6 +66,16 @@ public class CassandraManager {
     String cassandraPortStr = serdeParam.get(AbstractColumnSerDe.CASSANDRA_PORT);
     if (cassandraPortStr == null) {
       cassandraPortStr = AbstractColumnSerDe.DEFAULT_CASSANDRA_PORT;
+    }
+
+    String userName = serdeParam.get(AbstractColumnSerDe.CASSANDRA_KEYSPACE_USERNAME);
+    if (userName != null) {
+      this.username = userName;
+    }
+
+    String password = serdeParam.get(AbstractColumnSerDe.CASSANDRA_KEYSPACE_PASSWORD);
+    if (password != null) {
+      this.password = password;
     }
 
     try {
@@ -80,8 +100,20 @@ public class CassandraManager {
    * @throws MetaException
    */
   public void openConnection() throws MetaException {
+
+    Map<String, String> credentials = null;
+    if (username != null) {
+      credentials = new HashMap<String,String>();
+      credentials.put(USERNAME_PROPERTY,this.username);
+      credentials.put(PASSWORD_PROPERTY,this.password);
+    }
+
     try {
-      clientHolder =  new CassandraProxyClient(host, port, framedConnection, true);
+      if (username != null) {
+        clientHolder = new CassandraProxyClient(host,port, keyspace, credentials, framedConnection, true);
+      } else {
+        clientHolder =  new CassandraProxyClient(host, port, keyspace, framedConnection, true);
+      }
     } catch (CassandraException e) {
       throw new MetaException("Unable to connect to the server " + e.getMessage());
     }

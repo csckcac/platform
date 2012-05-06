@@ -348,7 +348,7 @@ public class ExecDriver extends Task<MapredWork> implements Serializable, Hadoop
     // No-Op - we don't really write anything here ..
     job.setOutputKeyClass(Text.class);
     job.setOutputValueClass(Text.class);
-
+       
     // Transfer HIVEAUXJARS and HIVEADDEDJARS to "tmpjars" so hadoop understands
     // it
     String auxJars = HiveConf.getVar(job, HiveConf.ConfVars.HIVEAUXJARS);

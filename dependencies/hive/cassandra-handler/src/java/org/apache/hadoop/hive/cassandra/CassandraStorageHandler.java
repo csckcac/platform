@@ -110,6 +110,13 @@ public class CassandraStorageHandler
 
     jobProperties.put(AbstractColumnSerDe.CASSANDRA_CF_COUNTERS,
             tableProperties.getProperty(AbstractColumnSerDe.CASSANDRA_CF_COUNTERS, "false"));
+
+    jobProperties.put(AbstractColumnSerDe.CASSANDRA_INPUT_KEYSPACE_USERNAME_CONFIG,
+        tableProperties.getProperty(AbstractColumnSerDe.CASSANDRA_KEYSPACE_USERNAME, ""));
+
+    jobProperties.put(AbstractColumnSerDe.CASSANDRA_INPUT_KEYSPACE_PASSWD_CONFIG,
+            tableProperties.getProperty(AbstractColumnSerDe.CASSANDRA_KEYSPACE_PASSWORD, ""));
+      
   }
 
   @Override

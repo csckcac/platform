@@ -34,6 +34,10 @@ public abstract class AbstractColumnSerDe implements SerDe {
   public static final String CASSANDRA_KEYSPACE_NAME = "cassandra.ks.name"; // keyspace
   public static final String CASSANDRA_KEYSPACE_REPFACTOR = "cassandra.ks.repfactor"; //keyspace replication factor
   public static final String CASSANDRA_KEYSPACE_STRATEGY = "cassandra.ks.strategy"; //keyspace replica placement strategy
+  public static final String CASSANDRA_KEYSPACE_USERNAME = "cassandra.ks.username"; //username to authenticate with keyspace
+  public static final String CASSANDRA_KEYSPACE_PASSWORD = "cassandra.ks.password"; //password to authenticate with keyspace    
+  public static final String CASSANDRA_INPUT_KEYSPACE_USERNAME_CONFIG = "cassandra.input.keyspace.username"; //corresponding username property used in ColumnFamilyRecordReader
+  public static final String CASSANDRA_INPUT_KEYSPACE_PASSWD_CONFIG = "cassandra.input.keyspace.passwd"; //corresponding password property used in ColumnFamilyRecordReader
 
   public static final String CASSANDRA_CF_NAME = "cassandra.cf.name"; // column family
   public static final String CASSANDRA_CF_COUNTERS = "cassandra.cf.counters"; // flag this as a counter CF

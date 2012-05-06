@@ -1,14 +1,20 @@
 package org.apache.hadoop.hive.cassandra;
 
+import org.apache.cassandra.thrift.AuthenticationException;
+import org.apache.cassandra.thrift.AuthenticationRequest;
+import org.apache.cassandra.thrift.AuthorizationException;
 import org.apache.cassandra.thrift.Cassandra;
 import org.apache.cassandra.thrift.InvalidRequestException;
 import org.apache.commons.lang.StringUtils;
+import org.apache.hadoop.hive.metastore.api.MetaException;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 public class CassandraClientHolder
 {
@@ -18,17 +24,17 @@ public class CassandraClientHolder
     private final TTransport transport;
     private String keyspace;
 
-    public CassandraClientHolder(TTransport transport) throws CassandraException
+    public CassandraClientHolder(TTransport transport, String keyspace) throws CassandraException
     {
-        this(transport, null);
+        this(transport, null,null);
     }
 
-    public CassandraClientHolder(TTransport transport, String keyspace) throws CassandraException
+    public CassandraClientHolder(TTransport transport, String keyspace, Map<String, String> credentials) throws CassandraException
 
     {
         this.transport = transport;
         this.keyspace = keyspace;
-        initClient();
+        initClient(credentials);
     }
 
     public boolean isOpen()
@@ -41,7 +47,7 @@ public class CassandraClientHolder
         return keyspace;
     }
 
-    private void initClient() throws CassandraException
+    private void initClient(Map<String, String> credentials) throws CassandraException
     {
         try
         {
@@ -51,7 +57,23 @@ public class CassandraClientHolder
             throw new CassandraException("unable to connect to server", e);
         }
 
+        // If username is provided authenticate with keyspace         
         client = new Cassandra.Client(new TBinaryProtocol(transport));
+
+        if (credentials != null) {
+          try {
+            client.login(new AuthenticationRequest(credentials));
+          } catch (AuthenticationException e) {
+            throw new CassandraException("Unable to authenticate to keyspace " + this.keyspace + "\n" +
+              e.getMessage());
+          } catch (AuthorizationException e) {
+            throw new CassandraException("Unable to authrorize to keyspace " + this.keyspace + "\n" +
+              e.getMessage());
+          } catch (TException e) {
+            throw new CassandraException("Unable to connect to keyspace " + this.keyspace + "\n" +
+              e.getMessage());
+          }
+        }
 
         // connect to last known keyspace
         setKeyspace(keyspace);

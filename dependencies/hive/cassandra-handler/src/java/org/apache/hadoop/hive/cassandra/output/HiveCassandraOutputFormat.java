@@ -1,8 +1,11 @@
 package org.apache.hadoop.hive.cassandra.output;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
+import org.apache.cassandra.auth.IAuthenticator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.fs.FileSystem;
@@ -33,10 +36,20 @@ public class HiveCassandraOutputFormat implements HiveOutputFormat<Text, Cassand
     final String cassandraHost = jc.get(AbstractColumnSerDe.CASSANDRA_HOST);
     final int cassandraPort = Integer.parseInt(jc.get(AbstractColumnSerDe.CASSANDRA_PORT));
 
+    final String username = jc.get(AbstractColumnSerDe.CASSANDRA_INPUT_KEYSPACE_USERNAME_CONFIG);
+    final String password = jc.get(AbstractColumnSerDe.CASSANDRA_INPUT_KEYSPACE_PASSWD_CONFIG);
+
+    Map<String, String> credentials = null;
+    if (username != null) {
+       credentials = new HashMap<String, String>();
+       credentials.put(IAuthenticator.USERNAME_KEY, username);
+       credentials.put(IAuthenticator.PASSWORD_KEY, password);
+    }
+
     final CassandraProxyClient client;
     try {
       client = new CassandraProxyClient(
-        cassandraHost, cassandraPort, true, true);
+        cassandraHost, cassandraPort, cassandraKeySpace, credentials, true, true);
     } catch (CassandraException e) {
       throw new IOException(e);
     }

@@ -59,6 +59,11 @@ public class CassandraProxyClient implements java.lang.reflect.InvocationHandler
   private String ringKs;
 
   /**
+   * The key space to get the ring information from.
+   */
+  private Map<String, String> ringKsCredentials;
+
+  /**
    * Option to choose the next server from the ring. Default is RoundRobin unless
    * specified by the client to choose randomizer.
    */
@@ -76,6 +81,8 @@ public class CassandraProxyClient implements java.lang.reflect.InvocationHandler
    *          cassandra host
    * @param port
    *          cassandra port
+   * @param keyspace
+   *          cassandra keyspace
    * @param framed
    *          true to used framed connection
    * @param randomizeConnections
@@ -84,7 +91,7 @@ public class CassandraProxyClient implements java.lang.reflect.InvocationHandler
    * @return a Brisk Client Interface
    * @throws IOException
    */
-  public CassandraProxyClient(String host, int port, boolean framed, boolean randomizeConnections)
+  public CassandraProxyClient(String host, int port, String keyspace, boolean framed, boolean randomizeConnections)
       throws CassandraException {
     this.host = host;
     this.port = port;
@@ -98,7 +105,43 @@ public class CassandraProxyClient implements java.lang.reflect.InvocationHandler
       nextServerGen = new RoundRobinOption();
     }
 
-    initializeConnection();
+    initializeConnection(keyspace, null);
+  }
+
+  /**
+   * Construct a proxy connection.
+   *
+   * @param host
+   *          cassandra host
+   * @param port
+   *          cassandra port
+   * @param keyspace
+   *          cassandra keyspace
+   * @param credentials
+   *          crednetials to connect to keyspace
+   * @param framed
+   *          true to used framed connection
+   * @param randomizeConnections
+   *          true if randomly choosing a server when connection fails; false to use round-robin
+   *          mechanism
+   * @return a Brisk Client Interface
+   * @throws IOException
+   */
+  public CassandraProxyClient(String host, int port, String keyspace, Map<String, String> credentials, boolean framed, boolean randomizeConnections)
+      throws CassandraException {
+    this.host = host;
+    this.port = port;
+    this.lastUsedHost = host;
+    this.lastPoolCheck = 0;
+
+    // If randomized to choose a connection, initialize the random generator.
+    if (randomizeConnections) {
+      nextServerGen = new RandomizerOption();
+    } else {
+      nextServerGen = new RoundRobinOption();
+    }
+
+    initializeConnection(keyspace, credentials);
   }
 
   /**
@@ -129,11 +172,18 @@ public class CassandraProxyClient implements java.lang.reflect.InvocationHandler
    * @throws CassandraException
    *           error
    */
-  private CassandraClientHolder createConnection(String host) throws CassandraException {
+  private CassandraClientHolder createConnection(String host, String keyspace, Map<String, String> credentials) throws CassandraException {
     TSocket socket = new TSocket(host, port);
     TTransport trans = new TFramedTransport(socket);
 
-    CassandraClientHolder ch = new CassandraClientHolder(trans);
+    CassandraClientHolder ch;
+    if (keyspace != null) {
+        ch = new CassandraClientHolder(trans, keyspace, credentials);
+    } else {
+        ch = new CassandraClientHolder(trans, keyspace, credentials);
+        this.ringKs = keyspace;
+        this.ringKsCredentials = credentials;
+    }
 
     return ch;
   }
@@ -148,8 +198,8 @@ public class CassandraProxyClient implements java.lang.reflect.InvocationHandler
    *
    * @throws IOException
    */
-  private void initializeConnection() throws CassandraException {
-    clientHolder = createConnection(host);
+  private void initializeConnection(String keyspace, Map<String, String> credentials) throws CassandraException {
+    clientHolder = createConnection(host, keyspace, credentials);
 
     if (logger.isDebugEnabled()) {
       logger.debug("Connected to cassandra at " + host + ":" + port);
@@ -255,12 +305,12 @@ public class CassandraProxyClient implements java.lang.reflect.InvocationHandler
     String endpoint = nextServerGen.getNextServer(lastUsedHost);
 
     if (endpoint != null) {
-      clientHolder = createConnection(endpoint);
+      clientHolder = createConnection(endpoint, null, null);
       lastUsedHost = endpoint; // Assign the last successfully connected server.
       checkRing(); // Refresh the servers in the ring.
       logger.info("Connected to cassandra at " + endpoint + ":" + port);
     } else {
-      clientHolder = createConnection(lastUsedHost);
+      clientHolder = createConnection(lastUsedHost, null, null);
     }
   }
 

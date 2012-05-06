@@ -164,6 +164,7 @@ public class MapRedTask extends ExecDriver implements Serializable {
           libJarsOption = " -libjars " + addedJars + "," + auxJars + " ";
         }
       }
+
       // Generate the hiveConfArgs after potentially adding the jars
       String hiveConfArgs = generateCmdLine(conf);
         

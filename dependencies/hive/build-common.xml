@@ -22,10 +22,7 @@
          xmlns:artifact="urn:maven-artifact-ant"
          name="hivecommon" default="jar">
 
-  <echo message="HIVE ROOT BEFORE: ${hive.root}"/>
-  <echo message="BASE DIR BEFORE : ${basedir}"/>
   <property name="hive.root" location="${basedir}/.."/>
-  <echo message="HIVE ROOT AFTER: ${hive.root}"/>
   <property file="${hive.root}/build.properties"/>
   <property file="${user.home}/build.properties" />
   <property file="${basedir}/build.properties" />
@@ -84,7 +81,6 @@
   </path>
 
 
-  <echo message="IVY CONF DIR : ${ivy.conf.dir}"/>
   <loadproperties srcfile="${ivy.conf.dir}/libraries.properties"/>
 
   <condition property="offline">

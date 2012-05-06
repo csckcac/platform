@@ -20,7 +20,6 @@
 <project name="builtins" default="jar">
 
   <property name="src.dir"  location="${basedir}/src"/>
-    <echo message="BASE DIR AT BUILTINS : ${basedir}"/>
   <import file="../build-common.xml"/>
 
   <target name="compile" depends="init, setup">

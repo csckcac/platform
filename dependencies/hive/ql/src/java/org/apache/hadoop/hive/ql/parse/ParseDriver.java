@@ -307,7 +307,6 @@ public class ParseDriver {
       errors = new ArrayList<ParseError>();
     }
 
-    @Override
     protected void mismatch(IntStream input, int ttype, BitSet follow)
         throws RecognitionException {
 
@@ -315,7 +314,7 @@ public class ParseDriver {
     }
 
     @Override
-    public void recoverFromMismatchedSet(IntStream input,
+    public Object recoverFromMismatchedSet(IntStream input,
         RecognitionException re, BitSet follow) throws RecognitionException {
       throw re;
     }

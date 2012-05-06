@@ -1,0 +1,22 @@
+<%
+var addRating = function (api, rating) {
+    var log = new Log(),
+            store = jagg.module("greg").getAPIStoreObj();
+
+    try {
+        //TODO : how to idenftify the rated user
+        store.rateAPI(api.provider, api.name, api.version, String(rating));
+        if (log.isDebugEnabled()) {
+            log.debug("addRating");
+        }
+        return {
+            error:false
+        };
+    } catch (e) {
+        log.error(e.message);
+        return {
+            error:e
+        };
+    }
+};
+%>

@@ -508,3 +508,54 @@ input[type="text"]:focus, textarea:focus, button:focus, a.button:focus, select:f
 .application-api {
     padding: 9px 15px;
 }
+
+.average-rating {
+    background: url("../images/bigstar.png") no-repeat scroll 0 0 transparent;
+    float: right;
+    font-size: 20px;
+    font-weight: bold;
+    height: 64px;
+    line-height: 70px;
+    padding-left: 28px;
+    width: 50px;
+}
+
+.star-0 {
+    background: url("../images/star-0.png") no-repeat scroll left center transparent;
+    cursor: pointer;
+    display: block;
+    float: left;
+    height: 14px;
+    margin-top: 3px;
+    width: 15px;
+}
+
+.star-1 {
+    background: url("../images/star-1.0.png") no-repeat scroll left center transparent;
+    cursor: pointer;
+    display: block;
+    float: left;
+    height: 14px;
+    margin-top: 3px;
+    width: 15px;
+}
+
+.dynamic-rating span {
+   float: left;
+   margin-right: 5px;
+   clear:left;
+}
+
+.remove-rating {
+    background: url("../images/myRatingRemove.png") no-repeat scroll left center transparent;
+    cursor: pointer;
+    display: block;
+    float: left;
+    height: 12px;
+    margin-top: 5px;
+    width: 12px;
+}
+
+.remove-rating:hover {
+    background: url("../images/myRatingRemove-hover.png") no-repeat scroll left center transparent;
+}

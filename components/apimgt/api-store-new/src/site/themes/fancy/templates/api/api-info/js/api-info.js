@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $("#subscribe-button").click(function () {
-        if(!jagg.loggedIn) {
+        if (!jagg.loggedIn) {
             $("#login-form").dialog("open");
             return;
         }
@@ -28,4 +28,22 @@ $(document).ready(function () {
 
         $(this).html('Please wait...').removeClass('green').addClass('disabled').attr('disabled', 'disabled');
     });
+
+    jagg.initStars($(".api-info"), function (rating, api) {
+        jagg.post("/site/blocks/api/api-info/ajax/api-info.jag", {
+            action:"addRating",
+            name:api.name,
+            version:api.version,
+            provider:api.provider,
+            rating:rating
+        }, function (result) {
+            if (result.error == false) {
+                window.location.reload();
+            } else {
+                jagg.message(result.message);
+            }
+        }, "json");
+    }, function (api) {
+
+    }, jagg.api);
 });

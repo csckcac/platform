@@ -1,0 +1,8 @@
+<%
+jagg.module("rating", {
+
+    addRating:function () {
+        return jagg.require(jagg.getModulesDir() + "rating/add.jag").addRating.apply(this, arguments);
+    }
+});
+%>

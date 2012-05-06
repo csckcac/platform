@@ -1,5 +1,5 @@
 <% jagg.template("api/api-info", function(inputs, outputs, jagg) { %>
-<% var stars = require("/site/themes/modern/utils/ratings/star-generator.js"); %>
+<% var stars = require("/site/themes/fancy/utils/ratings/star-generator.js"); %>
 <% var i, length, app, api = outputs.api, apps = outputs.applications, user = outputs.user; %>
 <div class="api-info">
     <h5><%=api.provider%></h5>
@@ -12,10 +12,12 @@
             <table cellspacing="0" cellpadding="0">
                 <tbody>
                 <tr>
-                    <th>Rating:</th>
+                    <th>Rating:<% if(user) { %><div class="average-rating"><%=String(api.rating)%></div><% } %></th>
                     <td>
-                        <div class="star-ratings"><%=stars.getStaticStars(site.context, api.rating)%></div>
-                        <div>(250)</div>
+                        <div class="star-ratings">
+                            <% if(user) { %><%=stars.getDynamicStars(api.rating)%>
+                            <% } else { %><%=stars.getStaticStars(site.context, api.rating)%><% } %>
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -24,7 +26,7 @@
                 </tr>
                 <tr>
                     <th>Updated:</th>
-                    <td>April 6, 2012</td>
+                    <td><%=api.updatedTime%></td>
                 </tr>
                 </tbody>
             </table>

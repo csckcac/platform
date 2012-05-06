@@ -15,6 +15,7 @@ var getAPIDescription = function (api, username) {
                 name:api.name,
                 provider:api.provider,
                 version:api.version,
+                updatedTime:api.updatedDate,
                 description:api.description,
                 rating:api.rates,
                 subscribed:api.subscribed,

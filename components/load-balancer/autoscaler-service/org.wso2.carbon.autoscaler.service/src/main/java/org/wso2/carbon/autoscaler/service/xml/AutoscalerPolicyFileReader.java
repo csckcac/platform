@@ -70,11 +70,13 @@ public class AutoscalerPolicyFileReader {
 	 * Path to policy file, which specifies the policies to use when scaling up
 	 * and down.
 	 */
-	private static final String AUTOSCALER_POLICY_XML_FILE = 
-            CarbonUtils.getCarbonConfigDirPath() + File.separator + "autoscaler-policy.xml";
+	private String autoscalerPolicyXMLFile;
 	
 	
 	public AutoscalerPolicyFileReader() throws Exception{
+	    
+	    autoscalerPolicyXMLFile = 
+	            CarbonUtils.getCarbonConfigDirPath() + File.separator + "autoscaler-policy.xml";
 		
 		/**
 		 * Parse the configuration file.
@@ -84,15 +86,35 @@ public class AutoscalerPolicyFileReader {
 			DocumentBuilder db = dbf.newDocumentBuilder();
 
 			//parse using builder to get DOM representation of the XML file
-			dom = db.parse(AUTOSCALER_POLICY_XML_FILE);
+			dom = db.parse(autoscalerPolicyXMLFile);
 			
 
 		}catch(Exception ex) {
-			String msg = "Error occurred when parsing the "+AUTOSCALER_POLICY_XML_FILE+".";
+			String msg = "Error occurred when parsing the "+autoscalerPolicyXMLFile+".";
 			log.error(msg, ex);
 			throw new Exception(msg, ex);
 		}
 	}
+	
+	public AutoscalerPolicyFileReader(String file) throws Exception{
+        
+        /**
+         * Parse the configuration file.
+         */
+        try {
+            //Using factory, get an instance of document builder
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            
+            //parse using builder to get DOM representation of the XML file
+            dom = db.parse(file);
+            
+
+        }catch(Exception ex) {
+            String msg = "Error occurred when parsing the "+file+".";
+            log.error(msg, ex);
+            throw new Exception(msg, ex);
+        }
+    }
 	
 	/**
 	 * This will return the policy object instance that autoscaler service should follow.
@@ -106,26 +128,24 @@ public class AutoscalerPolicyFileReader {
 	    /**
          * Read document elements.
          */
-        //get the root element
+        //get the root element i.e. autoscalePolicy
         Element docEle = dom.getDocumentElement();
-
-        //get list of instance elements
-        NodeList nl = docEle.getElementsByTagName("autoscalePolicy");
         
-        //check whether there are elements
+        // read the useDefault attribute, if attribute is not specified this will get false
+        boolean useDefault = Boolean.parseBoolean(docEle.getAttribute("useDefault"));
+        
+        //get list of child nodes
+        NodeList nl = docEle.getChildNodes();
+        
+        //check whether there are nodes
         if (nl != null && nl.getLength() > 0) {
 
-            // read the autoscalePolicy element
-            Element el = (Element) nl.item(0);
-            // read the useDefault attribute, if attribute is not specified this will get false
-            boolean useDefault = Boolean.parseBoolean(el.getAttribute("useDefault"));
-            
             //if useDefault set to false
             if(!useDefault){
                 
                 //read custom policy
-                loadScaleUpOrder(el);
-                loadScaleDownOrder(el);
+                loadScaleUpOrder(docEle);
+                loadScaleDownOrder(docEle);
                
                 if( scaleUpOrder != null && scaleUpOrder.size() > 0){
                     policyObj.setScaleUpOrderList(scaleUpOrder);
@@ -187,7 +207,7 @@ public class AutoscalerPolicyFileReader {
 	private void populateAdapterScaleUpPolicy(Element el) {
 
         // get list of instance elements
-        NodeList nl = el.getChildNodes();
+        NodeList nl = el.getElementsByTagName("adapter");
 
         // check whether there are child nodes
         if (nl != null && nl.getLength() > 0) {
@@ -197,9 +217,7 @@ public class AutoscalerPolicyFileReader {
             for (int i = 0; i < nl.getLength(); i++) {
                 // read the adapter element
                 Element e = (Element) nl.item(i);
-                if (e.getNodeName().trim().equals("adapter")) {
-                    scaleUpOrder.add(e.getAttribute("name"));
-                }
+                scaleUpOrder.add(e.getAttribute("name"));
             }
             
         }
@@ -218,7 +236,7 @@ public class AutoscalerPolicyFileReader {
         scaleDownMap = new HashMap<Integer, Integer>();
         
         // get list of instance elements
-        NodeList nl = el.getChildNodes();
+        NodeList nl = el.getElementsByTagName("adapter");
 
         // check whether there are child nodes
         if (nl != null && nl.getLength() > 0) {
@@ -228,11 +246,9 @@ public class AutoscalerPolicyFileReader {
             for (int i = 0; i < nl.getLength(); i++) {
                 // read the adapter element
                 Element e = (Element) nl.item(i);
-                if (e.getNodeName().trim().equals("adapter")) {
-                    scaleDownOrder.add(e.getAttribute("name"));
-                    int minInstanceCount = Integer.parseInt(e.getAttribute("minInstanceCount"));
-                    scaleDownMap.put(i, minInstanceCount);
-                }
+                scaleDownOrder.add(e.getAttribute("name"));
+                int minInstanceCount = Integer.parseInt(e.getAttribute("minInstanceCount"));
+                scaleDownMap.put(i, minInstanceCount);
             }
             
         }

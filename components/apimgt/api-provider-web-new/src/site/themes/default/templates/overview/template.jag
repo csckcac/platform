@@ -1,11 +1,11 @@
-<% jagg.template("overview", function(inputs, outputs, jagg) {
-   var api=outputs.api;
-
+<% jagg.template("overview", function(inputs, outputs, jagg) { %>
+<%
+var api=outputs.api;
 %>
 
  <div class="row-fluid">
      <div class="span2">
-          <% jagg.includeBlock("item-nav-list", null); %>
+          <% //jagg.includeBlock("item-nav-list", null); %>
     </div>
     <div class="span6">
         <div class="well" id="apiView">

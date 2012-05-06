@@ -3,35 +3,38 @@ include("/jagg/jagg.jag");
 var site = require("/site/conf/site.json");
 
 (function () {
-    var apis, result, mod;
+    var apis, result, mod, user = jagg.getUser();
+    if (!user) {
+        response.sendRedirect(jagg.getAbsoluteUrl("/"));
+        return;
+    }
 
     mod = jagg.module("api");
-    result = mod.getAPIsByProvider();
+    result = mod.getAPIsByProvider(user.username);
     apis = result.apis;
 
-
     jagg.render({
-                    "name":"page/base",
+        "name":"page/base",
+        "inputs":{
+            "title":"API Provider Listing",
+            "header":{
+                "name":"menu/primary"
+            },
+            "body":[
+                {
+                    "name":"layout/extended",
                     "inputs":{
-                        "title":"API Provider Listing",
-                        "body":[
-                            {
-                                "name":"layout/extended",
-                                "inputs":{
-                                    "top":null,
-                                    "left":null,
-                                    "rTop":null,
-                                    "rBottom":{
-                                        "name":"listing",
-                                        "inputs":{
-                                            "apis":apis
-                                        }
-                                    }
-                                }
+                        "middle":{
+                            "name":"listing",
+                            "inputs":{
+                                "apis":apis
                             }
-                        ]
+                        }
                     }
-                });
+                }
+            ]
+        }
+    });
 }());
 
 

@@ -1,7 +1,8 @@
 <%
 jagg.initializer("listing", {
 
-    initialize:function () {
+    preInitialize:function () {
+
     }
 });
 %>

@@ -8,7 +8,10 @@ jagg.block("page/base", {
     getInputs:function () {
         return {
             title:null,
-            body:null
+            pagePath:null,
+            header:null,
+            body:null,
+            footer:null
         };
     },
 
@@ -18,13 +21,15 @@ jagg.block("page/base", {
 
     getStaticBlocks:function () {
         return [
-            "header"
+            "menu/primary"
         ];
     },
 
     getInputBlocks:function () {
         return [
-            "body"
+            "header",
+            "body",
+            "footer"
         ];
     }
 });

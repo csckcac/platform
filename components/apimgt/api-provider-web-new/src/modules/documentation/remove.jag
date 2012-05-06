@@ -1,23 +1,15 @@
 <%
-var removeDocumentation = function(apiName, version, docName, docType) {
-    var apiProvider = jagg.module("greg").getAPIProviderObj();
-    var user = jagg.module("user").getUser();
-    var log = new Log();
-    var providerName = user.username;
+var removeDocumentation = function (api, doc) {
+    var log = new Log(),
+            provider = jagg.module("greg").getAPIProviderObj();
     try {
-        var success = apiProvider.removeDocumentation(providerName, apiName, version, docName, docType);
+        var success = provider.removeDocumentation(api.provider, api.name, api.version, doc.name, doc.type);
         if (log.isDebugEnabled()) {
-            log.debug("removeDocumentation : " + docName);
+            log.debug("removeDocumentation : " + doc.name);
         }
-        if (success) {
-            return {
-                error:false
-            };
-        } else {
-            return {
-                error:true
-            };
-        }
+        return {
+            error:success
+        };
     } catch (e) {
         log.error(e.message);
         return {
@@ -25,4 +17,5 @@ var removeDocumentation = function(apiName, version, docName, docType) {
 
         };
     }
-};%>
+};
+%>

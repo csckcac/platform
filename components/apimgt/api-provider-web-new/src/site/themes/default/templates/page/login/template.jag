@@ -31,12 +31,14 @@
             <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/js/provider/renderProvider.js")%>"></script>
             <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/js/util.js")%>"></script>
             <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/js/login/initLogin.js")%>"></script>
-    <%
-    var data = jagg.data();
-    jagg.printGlobals(data.js);
-    jagg.printGlobals(data.css);
-    jagg.printGlobals(data.code);
-    %>
+            <%
+            var data = jagg.data();
+            if(data.header) {
+                jagg.printData(data.header.js);
+                jagg.printData(data.header.css);
+                jagg.printData(data.header.code);
+            }
+            %>
         </head>
         <body>
 
@@ -65,7 +67,13 @@
     </div>
 </div>
              </div>
-
+<%
+if(data.footer) {
+    jagg.printData(data.footer.js);
+    jagg.printData(data.footer.css);
+    jagg.printData(data.footer.code);
+}
+%>
         </body>
     </html>
     <% }); %>

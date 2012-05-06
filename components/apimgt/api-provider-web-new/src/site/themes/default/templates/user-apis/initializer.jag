@@ -1,8 +1,8 @@
 <%
 jagg.initializer("user-apis", {
 
-    initialize:function () {
-    jagg.addHeaderJS("user-apis", "jagg", "tmpl/user-apis/js/lineCharts.js");
+    preInitialize:function () {
+        jagg.addHeaderJS("user-apis", "line-charts", "templates/user-apis/js/lineCharts.js");
     }
 });
 %>

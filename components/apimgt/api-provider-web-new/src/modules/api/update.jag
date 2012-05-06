@@ -1,25 +1,15 @@
 <%
-var updateAPI = function(apiData) {
-    var log = new Log();
-    var apiProvider = jagg.module("greg").getAPIProviderObj();
-    var user = jagg.module("user").getUser();
-    apiData.provider = user.username;
-    apiData.request = request;
+var updateAPI = function (api) {
+    var log = new Log(),
+            provider = jagg.module("greg").getAPIProviderObj();
     try {
-        var success = apiProvider.updateAPI(apiData);
+        var success = provider.updateAPI(api);
         if (log.isDebugEnabled()) {
-            log.debug("updateAPI : " + apiData.apiName + "-" + apiData.version);
+            log.debug("updateAPI : " + api.name + "-" + api.version);
         }
-        if (success) {
-            return {
-                error:false
-            };
-        } else {
-            return {
-                error:true
-
-            };
-        }
+        return {
+            error:success
+        };
     } catch (e) {
         log.error(e.message);
         return {
@@ -27,6 +17,5 @@ var updateAPI = function(apiData) {
 
         };
     }
-
 };
 %>

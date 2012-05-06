@@ -1,47 +1,35 @@
 <%
-var apiProvider = jagg.module("greg").getAPIProviderObj();
-var user = jagg.module("user").getUser();
-var log = new Log();
-
-var getAPI = function(apiName, version) {
-
-    var providerName = user.username;
-    var apiOut = [];
-    var apii = [];
+var getAPI = function (api) {
+    var api, result,
+            log = new Log(),
+            provider = jagg.module("greg").getAPIProviderObj();
     try {
-        apii = apiProvider.getAPI(providerName, apiName, version);
+        result = provider.getAPI(api.provider, api.name, api.version);
         if (log.isDebugEnabled()) {
-            log.debug("getAPI : " + stringify(apii));
+            log.debug("getAPI : " + stringify(result));
         }
-        if (apii == null) {
-            return {
-                error:true
-            };
+        api = {
+            name:result[0],
+            version:result[4],
+            provider:api.provider,
+            description:result[1],
+            endpoint:result[2],
+            wsdl:result[3],
+            tags:result[5],
+            availableTiers:result[6],
+            status:result[7],
+            thumb:result[8],
+            context:result[9],
+            lastUpdated:result[10],
+            subs:result[11],
+            templates:result[12]
 
-        } else {
-            var elem = {
-                name:apii[0],
-                description:apii[1],
-                endpoint:apii[2],
-                wsdl:apii[3],
-                version:apii[4],
-                tags:apii[5],
-                availableTiers:apii[6],
-                status:apii[7],
-                thumb:apii[8],
-                context:apii[9],
-                lastUpdated:apii[10],
-                subs:apii[11],
-                templates:apii[12]
+        };
 
-            };
-            apiOut.push(elem);
-
-            return {
-                error:false,
-                api:apiOut
-            };
-        }
+        return {
+            error:false,
+            api:api
+        };
     } catch (e) {
         log.error(e.message);
         return {
@@ -51,38 +39,33 @@ var getAPI = function(apiName, version) {
     }
 };
 
-var getAPIsByProvider = function() {
-    var apisOut = [];
-    var apis = [];
+var getAPIsByProvider = function (username) {
+    var i, length, api, apis,
+            list = [],
+            log = new Log(),
+            provider = jagg.module("greg").getAPIProviderObj();
 
-    var provider = user.username;
     try {
-        apis = apiProvider.getAPIsByProvider(provider);
+        apis = provider.getAPIsByProvider(username);
         if (log.isDebugEnabled()) {
             log.debug("getAPIsByProvider : " + stringify(apis));
         }
-        if (apis == null) {
-            return {
-                error:true
-            };
+        length = apis.length;
+        for (i = 0; i < length; i++) {
+            api = apis[i];
+            list.push({
+                name:api.apiName,
+                version:api.version,
+                status:api.status,
+                thumb:api.thumb,
+                subs:api.subs
+            });
         }
-        else {
-            for (var k = 0; k < apis.length; k++) {
-                var elem = {
-                    name:apis[k].apiName,
-                    version:apis[k].version,
-                    status:apis[k].status,
-                    thumb:apis[k].thumb,
-                    subs:apis[k].subs
+        return {
+            error:false,
+            apis:list
+        };
 
-                };
-                apisOut.push(elem);
-            }
-            return {
-                error:false,
-                apis:apisOut
-            };
-        }
     } catch (e) {
         log.error(e.message);
         return {
@@ -90,6 +73,5 @@ var getAPIsByProvider = function() {
             apis:null
         };
     }
-
 };
 %>

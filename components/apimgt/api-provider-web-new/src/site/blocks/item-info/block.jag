@@ -2,7 +2,13 @@
 jagg.block("item-info", {
     initializer:function (data) {
 
-    }
+    },
+
+    getInputs:function () {
+        return {
+            "api":null
+        }
+    },
 
 });
 %>

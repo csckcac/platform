@@ -1,8 +1,6 @@
 <% jagg.template("user-apis", function(inputs, outputs, jagg) { %>
-
-%>
 <div id="user"><h2><%=request.getParameter("uname")%></h2>
-  <% jagg.includeBlock("search", null); %>
+  <% jagg.includeBlock("search/api-search", null); %>
 <div class="row">
 
     <div class="span7">

@@ -1,25 +1,37 @@
 <% jagg.template("layout/base", function(inputs, outputs, jagg) { %>
-
-<div id="layouts_base">
-    <div id="top">
-         <div class="navbar">
-         <% jagg.includeBlocks(outputs.top); %>
+<%
+    var mw = 8;
+    if(!outputs.left && !outputs.right) {
+        mw = 12;
+    } else if(!outputs.left || !outputs.right) {
+        mw = 10;
+    }
+%>
+<div id="layout-base" class="container-fluid content-section">
+    <div class="row-fluid">
+        <% if(outputs.top) { %>
+        <div id="top">
+            <% jagg.includeBlocks(outputs.top); %>
         </div>
-    </div>
-
-    <div id="left">
-        <div class="span2">
+        <% } %>
+        <% if(outputs.left) { %>
+        <div id="left" class="span2">
             <% jagg.includeBlocks(outputs.left); %>
         </div>
-    </div>
-
-    <div id="right">
-        <div class="span10">
-             <% jagg.includeBlocks(outputs.rTop); %>
-             <% jagg.includeBlocks(outputs.rBottom); %>
+        <% } %>
+        <div id="middle" class="span<%=mw%>">
+            <% jagg.includeBlocks(outputs.middle); %>
         </div>
+        <% if(outputs.right) { %>
+        <div id="right" class="span2">
+            <% jagg.includeBlocks(outputs.right); %>
+        </div>
+        <% } %>
+        <% if(outputs.bottom) { %>
+        <div id="bottom">
+            <% jagg.includeBlocks(outputs.bottom); %>
+        </div>
+        <% } %>
     </div>
-
-
 </div>
 <% }); %>

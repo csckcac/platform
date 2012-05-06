@@ -1,30 +1,20 @@
 <%
-var createNewAPIVersion = function(apiName, version, newVersion) {
-    var log = new Log();
-    var apiProvider = jagg.module("greg").getAPIProviderObj();
-    var user = jagg.module("user").getUser();
-    var providerName = user.username;
+var copyAPI = function (api, newVersion) {
+    var success, log = new Log(),
+            provider = jagg.module("greg").getAPIProviderObj();
 
     try {
-        var success = apiProvider.createNewAPIVersion(providerName, apiName, version, newVersion);
+        success = provider.createNewAPIVersion(api.provider, api.name, api.version, newVersion);
         if (log.isDebugEnabled()) {
-            log.debug("createNewAPIVersion for : " + apiName + "-" + version + " as " + apiName + "-" + newVersion);
+            log.debug("copyAPI for : " + api.name + "-" + api.version + " as " + api.name + "-" + newVersion);
         }
-        if (success) {
-            return {
-                error:false
-            };
-        } else {
-            return {
-                error:true
-
-            };
-        }
+        return {
+            error:success
+        };
     } catch (e) {
         log.error(e.message);
         return {
             error:e
-
         };
     }
 };

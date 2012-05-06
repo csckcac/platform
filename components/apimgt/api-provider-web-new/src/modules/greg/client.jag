@@ -1,11 +1,11 @@
 <%
 var invokeService = function (cookie, service, action, payload, opts) {
     var conf = require("/conf/greg.json");
-    var server = jagg.module("greg");
+    var mod = jagg.module("greg");
     var ws = require('ws');
     var client = new ws.WSRequest();
 
-    var url = server.getServerURL() + "/" + conf.servicesContext + "/" + service;
+    var url = mod.getServerURL() + "/" + conf.servicesContext + "/" + service;
 
     var options = [];
     options.useSOAP = 1.2;
@@ -40,4 +40,5 @@ var invokeService = function (cookie, service, action, payload, opts) {
             error:e
         };
     }
-};%>
+};
+%>

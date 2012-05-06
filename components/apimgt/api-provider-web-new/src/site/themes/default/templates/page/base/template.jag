@@ -1,77 +1,75 @@
 <% jagg.template("page/base", function(inputs, outputs, jagg) { %>
-        <!DOCTYPE html>
-        <html>
-        <head>
-        <title><%=outputs.title%></title>
-        <meta charset="UTF-8">
-        <meta name="description" content=""/>
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%=outputs.title%></title>
+    <meta charset="UTF-8">
+    <meta name="description" content=""/>
 
-        <link href="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/css/bootstrap.css")%>" rel="stylesheet">
-        <link href="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/css/bootstrap-responsive.css")%>" rel="stylesheet">
+    <link href="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/css/bootstrap.css")%>" rel="stylesheet">
+    <link href="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/css/bootstrap-responsive.css")%>" rel="stylesheet">
 
     <!-- Le fav and touch icons -->
-        <link rel="shortcut icon" href="<%=jagg.getAbsoluteUrl("/site/themes/default/images/favicon.ico")%>">
-        <link rel="apple-touch-icon" href="<%=jagg.getAbsoluteUrl("/site/themes/default/images/apple-touch-icon.png")%>">
-        <link rel="apple-touch-icon" sizes="72x72" href="<%=jagg.getAbsoluteUrl("/site/themes/default/images/apple-touch-icon-72x72.png")%>">
-        <link rel="apple-touch-icon" sizes="114x114" href="<%=jagg.getAbsoluteUrl("/site/themes/default/images/apple-touch-icon-114x114.png")%>">
+    <link rel="shortcut icon" href="<%=jagg.getAbsoluteUrl("/site/themes/default/images/favicon.ico")%>">
+    <link rel="apple-touch-icon" href="<%=jagg.getAbsoluteUrl("/site/themes/default/images/apple-touch-icon.png")%>">
+    <link rel="apple-touch-icon" sizes="72x72" href="<%=jagg.getAbsoluteUrl("/site/themes/default/images/apple-touch-icon-72x72.png")%>">
+    <link rel="apple-touch-icon" sizes="114x114" href="<%=jagg.getAbsoluteUrl("/site/themes/default/images/apple-touch-icon-114x114.png")%>">
 
     <!--Loca styles-->
-        <link href="<%=jagg.getAbsoluteUrl("/site/themes/default/localcss/localstyles.css")%>" rel="stylesheet">
-        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/jquery-1.7.1.min.js")%>"></script>
+    <link href="<%=jagg.getAbsoluteUrl("/site/themes/default/css/localstyles.css")%>" rel="stylesheet">
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/jquery-1.7.1.min.js")%>"></script>
 
-        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-transition.js")%>"></script>
-        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-transition.js")%>"></script>
-        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-alert.js")%>"></script>
-        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-modal.js")%>"></script>
-        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-dropdown.js")%>"></script>
-        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-scrollspy.js")%>"></script>
-        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-tab.js")%>"></script>
-        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-tooltip.js")%>"></script>
-        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-popover.js")%>"></script>
-        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-button.js")%>"></script>
-        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-collapse.js")%>"></script>
-        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-carousel.js")%>"></script>
-        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-typeahead.js")%>"></script>
-        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/jqplot/plugins/jqplot.dateAxisRenderer.min.js")%>"></script>
-        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/jqplot/plugins/jqplot.canvasTextRenderer.min.js")%>"></script>
-        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js")%>"></script>
-        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/jqplot/plugins/jqplot.categoryAxisRenderer.min.js")%>"></script>
-        <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/jqplot/plugins/jqplot.barRenderer.min.js")%>"></script>
-
-        <script src="http://malsup.github.com/jquery.form.js"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-transition.js")%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-transition.js")%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-alert.js")%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-modal.js")%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-dropdown.js")%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-scrollspy.js")%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-tab.js")%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-tooltip.js")%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-popover.js")%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-button.js")%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-collapse.js")%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-carousel.js")%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl("/site/themes/default/lib/bootstrap/js/bootstrap-typeahead.js")%>"></script>
     <%
     var data = jagg.data();
-    jagg.printGlobals(data.js);
-    jagg.printGlobals(data.css);
-    jagg.printGlobals(data.code);
+    if(data.header) {
+        jagg.printData(data.header.js);
+        jagg.printData(data.header.css);
+        jagg.printData(data.header.code);
+    }
     %>
-    </head>
-        <body>
+</head>
+<body>
+    <div id="header"><% jagg.includeBlocks(outputs.header); %></div>
+    <div id="body"><% jagg.includeBlocks(outputs.body); %></div>
+    <hr>
+    <div id="footer"><% jagg.includeBlocks(outputs.footer); %></div>
+    <%
+    if(data.footer) {
+        jagg.printData(data.footer.js);
+        jagg.printData(data.footer.css);
+        jagg.printData(data.footer.code);
+    }
+    %>
 
-            <div id="header">
-              <% jagg.includeBlock("header", null); %>
+        <div class="container content-section">
+            <div class="row">
+                <div class="span5 offset3">
+
+                    <ul class="copy-msg">
+                        <li>Copyright &copy; 2012 wso2.org</li>
+                        <li>|</li>
+                        <li><a>Terms of Usage</a></li>
+                        <li>|</li>
+                        <li><a>Support/Help</a></li>
+                    </ul>
+                    <div style="clear:both"></div>
+
+                </div>
             </div>
-
-            <div class="container-fluid content-section">
-            <div class="row-fluid">
-               <% jagg.includeBlocks(outputs.body); %>
-             </div>
-             <hr>
-             <div id="footer">
-             <div class="row-fluid">
-             <div class="pull-right">
-             <ul class="copy-msg">
-             <li>Copyright &copy; 2012 wso2.org</li>
-             <li>|</li>
-             <li><a>Terms of Usage</a></li>
-             <li>|</li>
-             <li><a>Support/Help</a></li>
-             </ul>
-             </div>
-             </div>
-             </div>
-             </div>
-
-        </body>
-    </html>
-    <% }); %>
+        </div>
+</body>
+</html>
+<% }); %>

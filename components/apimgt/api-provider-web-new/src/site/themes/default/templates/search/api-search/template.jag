@@ -1,4 +1,4 @@
-<% jagg.template("search", function(inputs, outputs, jagg) { %>
+<% jagg.template("search/api-search", function(inputs, outputs, jagg) { %>
 <form class="well form-search">
     <input type="text" id="apiSearch" class="input-medium search-query" placeholder="Filter APIs" />
     <input type="button" class="btn btn-primary" onClick="apiProviderApp.searchAPIs()" value="Search" />

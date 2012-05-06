@@ -1,11 +1,11 @@
 <%
 jagg.initializer("page/login", {
 
-    initialize:function (data) {
-        var jaggi = {
+    preInitialize:function (data) {
+        /*var jaggi = {
             context:site.context
         };
-        jagg.addHeaderJSCode("page/login", "jagg.site", 'jagg.site = ' + stringify(jaggi) + ';');
+        jagg.addHeaderJSCode("page/login", "jagg.site", 'jagg.site = ' + stringify(jaggi) + ';'); */
     }
 });
 %>

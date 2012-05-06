@@ -1,61 +1,40 @@
 <%
-var saveAPI = function(apiData) {
-    var log = new Log();
-    var apiProvider = jagg.module("greg").getAPIProviderObj();
-    var user = jagg.module("user").getUser();
-    apiData.provider = user.username;
-    apiData.request = request;
+var addAPI = function (api) {
+    var success, log = new Log(),
+            provider = jagg.module("greg").getAPIProviderObj();
     try {
-        var success = apiProvider.addAPI(apiData);
+        success = provider.addAPI(api);
         if (log.isDebugEnabled()) {
-            log.debug("addAPI : " + apiData.apiName + "-" + apiData.version);
+            log.debug("addAPI : " + api.name + "-" + api.version);
         }
-        if (success) {
-            return {
-                error:false
-            };
-        } else {
-            return {
-                error:true
-            };
-        }
+        return {
+            error:success
+        };
     } catch (e) {
         log.error(e.message);
         return {
             error:e
-
         };
     }
 };
 
-var isContextExist = function(context) {
+var isContextExist = function (context) {
+    var exists, log = new Log(),
+            provider = jagg.module("greg").getAPIProviderObj();
     try {
-        var contextExist = apiProvider.isContextExist(context);
+        exists = provider.isContextExist(context);
         if (log.isDebugEnabled()) {
-            log.debug("isContext exist for : " + context + " : " + contextExist);
+            log.debug("isContext exist for : " + context + " : " + exists);
         }
         return {
             error:false,
-            contextExist:contextExist
+            exist:exists
         };
     } catch (e) {
         log.error(e.message);
         return {
             error:e
-
         };
     }
-
 };
-
-
-
-
-
-
-
-
-
-
-
 %>

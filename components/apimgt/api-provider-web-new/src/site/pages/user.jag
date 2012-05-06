@@ -3,37 +3,32 @@ include("/jagg/jagg.jag");
 var site = require("/site/conf/site.json");
 
 (function () {
-    var userId = request.getParameter("uname");
+    var userId = request.getParameter("username");
     var apis, result, mod;
 
     mod = jagg.module("subscription");
-    result = mod.getSubscribedAPIs(userId);
+    result = mod.getSubscribedAPIs("admin");
     apis = result.apis;
     jagg.render({
-                    "name":"page/base",
+        "name":"page/base",
+        "inputs":{
+            "title":"API Provider- Users Keys",
+            "body":[
+                {
+                    "name":"layout/extended",
                     "inputs":{
-                        "title":"API Provider- Users Keys",
-                        "body":[
-                            {
-                                "name":"layout/extended",
-                                "inputs":{
-                                    "top":null,
-                                    "left":null,
-                                    "rTop":null,
-                                    "rBottom" : {
-                                        "name" : "user-apis",
-                                        "params" : {
-                                            "apis" : apis
-                                        }
-
-                                    }
-                                }
+                        "middle":{
+                            "name":"user-apis",
+                            "inputs":{
+                                "apis":apis
                             }
-                        ]
+                        }
                     }
-                });
+                }
+            ]
+        }
+    });
 }());
-
 
 %>
 

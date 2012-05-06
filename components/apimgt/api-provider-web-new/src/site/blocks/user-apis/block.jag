@@ -2,7 +2,12 @@
 jagg.block("user-apis", {
     initializer:function (data) {
 
-    }
+    },
 
+    getStaticBlocks:function() {
+        return [
+            "search/api-search"
+        ];
+    }
 });
 %>

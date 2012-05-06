@@ -3,28 +3,23 @@ include("/jagg/jagg.jag");
 var site = require("/site/conf/site.json");
 
 (function () {
-
-
     jagg.render({
-                    "name":"page/base",
+        "name":"page/base",
+        "inputs":{
+            "title":"API Provider- Add API",
+            "body":[
+                {
+                    "name":"layout/extended",
                     "inputs":{
-                        "title":"API Provider- Add API",
-                        "body":[
-                            {
-                                "name":"layout/extended",
-                                "inputs":{
-                                    "top":null,
-                                    "left":null,
-                                    "rTop":null,
-                                    "rBottom" : {
-                                        "name" : "item-add"
+                        "middle":{
+                            "name":"item-add"
 
-                                    }
-                                }
-                            }
-                        ]
+                        }
                     }
-                });
+                }
+            ]
+        }
+    });
 }());
 
 

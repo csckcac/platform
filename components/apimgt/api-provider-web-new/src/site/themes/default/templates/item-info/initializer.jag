@@ -1,8 +1,8 @@
 <%
 jagg.initializer("item-info", {
 
-    initialize:function () {
-    jagg.addHeaderJS("item-info", "jagg", "tmpl/item-info/js/load-tabs.js");
+    preInitialize:function () {
+        jagg.addHeaderJS("item-info", "load-tabs", "templates/item-info/js/load-tabs.js");
     }
 });
 %>

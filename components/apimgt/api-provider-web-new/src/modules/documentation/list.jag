@@ -1,43 +1,29 @@
 <%
-var apiProvider = jagg.module("greg").getAPIProviderObj();
-var user = jagg.module("user").getUser();
-var log = new Log();
-
-var getAllDocumentation = function(apiName, version) {
-
-    var providerName = user.username;
-    var docsOut = [];
-    var docs = [];
+var getAllDocumentation = function (api) {
+    var i, doc, docs, list = [],
+            log = new Log(),
+            provider = jagg.module("greg").getAPIProviderObj();
     try {
-        docs = apiProvider.getAllDocumentation(providerName, apiName, version);
+        docs = provider.getAllDocumentation(api.provider, api.name, api.version);
         if (log.isDebugEnabled()) {
             log.debug("getAllDocumentation : " + stringify(docs));
         }
-        if (docs == null) {
-            return {
-                error:true
-            };
 
-        } else {
-            for (var k = 0; k < docs.length; k++) {
-
-                var elem = {
-                    docName:docs[k].docName,
-                    docType:docs[k].docType,
-                    sourceType:docs[k].sourceType,
-                    summary:docs[k].summary,
-                    lastUpdated:docs[k].docLastUpdated
-                };
-                if (docs[k].sourceUrl != null) {
-                    elem.docUrl = docs[k].sourceUrl;
-                }
-                docsOut.push(elem);
-            }
-            return {
-                error:false,
-                docs:docsOut
-            };
+        for (i = 0; i < docs.length; i++) {
+            doc = docs[i];
+            list.push({
+                name:doc.docName,
+                type:doc.docType,
+                sourceType:doc.sourceType,
+                summary:doc.summary,
+                lastUpdated:doc.docLastUpdated,
+                sourceUrl:doc.sourceUrl
+            });
         }
+        return {
+            error:false,
+            docs:list
+        };
     } catch (e) {
         log.error(e.message);
         return {
@@ -48,29 +34,26 @@ var getAllDocumentation = function(apiName, version) {
 
 };
 
-var getInlineContent = function(apiName, version, docName) {
-    var providerName = user.username;
-    var docOut = [];
-    var doc = [];
+var getInlineContent = function (api, docName) {
+    var doc, log = new Log(),
+            provider = jagg.module("greg").getAPIProviderObj();
     try {
-        doc = apiProvider.getInlineContent(providerName, apiName, version, docName);
+        doc = provider.getInlineContent(api.provider, api.name, api.version, docName);
         if (log.isDebugEnabled()) {
             log.debug("getInlineContent for : " + docName);
         }
-        var k = 0;
-        var elem = {
-            apiProvider:providerName,
-            apiName:apiName,
-            apiVersion:version,
-            docName:doc[k].docName,
-            docContent:doc[k].content
+        doc = {
+            provider:user.username,
+            name:api.name,
+            version:api.version,
+            doc:{
+                name:doc[0].docName,
+                content:doc[0].content
+            }
         };
-
-        docOut.push(elem);
-
         return {
             error:false,
-            doc:docOut
+            doc:doc
         };
     } catch (e) {
         log.error(e.message);
@@ -79,5 +62,5 @@ var getInlineContent = function(apiName, version, docName) {
             doc:null
         };
     }
-
-};%>
+};
+%>

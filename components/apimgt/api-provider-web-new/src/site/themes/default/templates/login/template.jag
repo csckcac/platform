@@ -1,5 +1,6 @@
 <% jagg.template("login", function(inputs, outputs, jagg) { %>
-  <div class="row">
+<div class="container content-section">
+    <div class="row">
         <div class="span4 offset4">
             <div class="alert alert-error" id="loginError" style="display:none">
                 <span id="loginErrorSpan"></span>
@@ -20,4 +21,6 @@
         <!--/span-->
         <div class="span4"></div>
     </div>
+    <!--/row-->
+</div>
 <%});%>

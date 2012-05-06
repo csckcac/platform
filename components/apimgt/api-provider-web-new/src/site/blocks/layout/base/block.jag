@@ -7,29 +7,26 @@ jagg.block("layout/base", {
 
     getInputs:function () {
         return {
+            title:null,
             top:null,
             left:null,
-            rTop:null,
-            rBottom:null
+            middle:null,
+            right:null,
+            bottom:null
         };
     },
 
     getOutputs:function (inputs) {
-        return {
-            top:inputs.top,
-            left:inputs.left,
-            rTop:inputs.rTop,
-            rBottom:inputs.rBottom
-        };
-
+        return inputs;
     },
 
     getInputBlocks:function () {
         return [
             "top",
             "left",
-            "rTop",
-            "rBottom"
+            "middle",
+            "right",
+            "bottom"
         ];
     }
 });

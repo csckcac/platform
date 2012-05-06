@@ -1,29 +1,19 @@
 <%
-var apiProvider = jagg.module("greg").getAPIProviderObj();
-var user = jagg.module("user").getUser();
-var log = new Log();
-
-var addDocumentation = function(apiName, version, docName, docType, summary, sourceType,
-                                sourceUrl) {
-
-
-    var providerName = user.username;
+var addDocumentation = function (api, doc) {
+    var log = new Log(),
+            provider = jagg.module("greg").getAPIProviderObj();
     try {
-        var success = apiProvider.addDocumentation(providerName, apiName, version, docName, docType, summary, sourceType, sourceUrl);
+        var success = provider.addDocumentation(api.provider, api.name, api.version,
+                doc.name, doc.type, doc.summary, doc.sourceType, doc.sourceUrl);
         if (log.isDebugEnabled()) {
-            log.debug("addNewDocumentation : " + sourceType);
+            log.debug("addNewDocumentation : " + doc.sourceType);
         }
-        if (sourceType == "inline") {
-            var inlineContent = addInlineContent(apiName, version, docName, "");
+        if (success && doc.sourceType == "inline") {
+            return addInlineContent(api.name, api.version, doc);
 
-        }
-        if (success) {
-            return {
-                error:false
-            };
         } else {
             return {
-                error:true
+                error:success
             };
         }
     } catch (e) {
@@ -33,31 +23,25 @@ var addDocumentation = function(apiName, version, docName, docType, summary, sou
             docs:null
         };
     }
-
-
 };
 
 
-var addInlineContent = function(apiName, version, docName, docContent) {
-    var providerName = user.username;
-    var docOut = [];
-    var doc = [];
+var addInlineContent = function (api, doc) {
+    var log = new Log(),
+            provider = jagg.module("greg").getAPIProviderObj();
     try {
-        apiProvider.addInlineContent(providerName, apiName, version, docName, docContent);
+        provider.addInlineContent(api.provider, api.name, api.version, doc.name, doc.content);
         if (log.isDebugEnabled()) {
-            log.debug("addInlineContent for : " + docName + "with the content : " + docContent);
+            log.debug("addInlineContent for : " + doc.name + "with the content : " + doc.content);
         }
         return {
-            error:false,
-            message:"success"
+            error:false
         };
     } catch (e) {
         log.error(e.message);
         return {
-            error:e,
-            doc:null
+            error:e
         };
     }
-
 };
 %>

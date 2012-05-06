@@ -1,7 +1,8 @@
 <%
 jagg.initializer("login", {
 
-    initialize:function () {
+    preInitialize:function () {
+
     }
 });
 %>

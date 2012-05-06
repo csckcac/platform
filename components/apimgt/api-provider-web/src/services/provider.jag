@@ -41,6 +41,14 @@ if (action != null) {
          		print(getProviderAPIVersionUsage(providerName, apiName,server));
          }
     }
+    else if (action == "getProviderAPIVersionUserUsage"){
+         var providerName = request.getParameter("providerName");
+         var apiName = request.getParameter("apiName");
+         var server = request.getParameter("server");
+         if(providerName!=null&&apiName!=null&& server!=null){
+         		print(getProviderAPIVersionUserUsage(providerName, apiName,server));
+         }
+    }
     else if (action == "getProviderAPIUsage"){
         var server = request.getParameter("server");
         var providerName = request.getParameter("providerName");

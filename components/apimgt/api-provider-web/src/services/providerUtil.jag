@@ -112,6 +112,26 @@ return {
         };
 }
 
+function getProviderAPIVersionUserUsageFunc(providerName, apiName, server) {
+        var usage=  new Array();
+        var usageout=  new Array();
+        usage= apiProvider.getProviderAPIVersionUserUsage(providerName, apiName, server);
+        for (var k = 0; k < usage.length ; k++){
+        var elem = {
+        version:usage[k].version,
+        user:usage[k].user,
+        count:usage[k].count
+        };
+usageout.push(elem);
+
+
+}
+return {
+        error:false,
+        usage:usageout
+        };
+}
+
 function getProviderAPIUsageFunc(providerName,server) {
         var usage=  new Array();
         var usageout=  new Array();

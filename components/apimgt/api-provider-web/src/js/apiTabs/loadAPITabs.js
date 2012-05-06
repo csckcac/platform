@@ -73,7 +73,84 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
             }
         });
 
+        apiProviderApp.call("action=getProviderAPIVersionUserUsage&providerName="+ apiProviderApp.loggedUser +"&apiName="+ apiProviderApp.currentAPIName +"&server=https://localhost:9444/", function (json) {
+            if (json.error == "true") {
+                alert(json.message);
+            }
+            else {
 
+                $('#versionUserChart').empty();
+                $('#versionUserTable').find("tr:gt(0)").remove();
+                var version_user_associative_array = new Array();
+                for (var i = 0; i < json.data.usage.length; i++) {
+                    if(!version_user_associative_array.hasOwnProperty(json.data.usage[i].version)){
+                        version_user_associative_array[json.data.usage[i].version] = new Array();
+                    }
+                    for (var j = 0; j < json.data.usage.length; j++) {
+                        version_user_associative_array[json.data.usage[i].version][json.data.usage[j].user] = "0";
+                    }
+                }
+                for (var i = 0; i < json.data.usage.length; i++) {
+                    version_user_associative_array[json.data.usage[i].version][json.data.usage[i].user] = json.data.usage[i].count;
+                }
+
+                var data = new Array();
+                var ticks = new Array();
+                var series = new Array();
+
+                var key;
+                for(key in version_user_associative_array){
+                    ticks[ticks.length] = key;
+                }
+                for(key in version_user_associative_array[ticks[0]]){
+                    series[series.length] = {label:key};
+                }
+                for(var i = 0; i<ticks.length; i++){
+                    if(i==0){
+                        data[i] = new Array();
+                    }
+                    for(var j = 0; j<series.length; j++){
+                        data[i][j] = version_user_associative_array[ticks[i]][[series[j].label]];
+                    }
+                }
+                for (var i = 0; i < json.data.usage.length; i++) {
+                    $('#versionUserTable').append($('<tr><td>' + json.data.usage[i].version + '</td><td>' + json.data.usage[i].user + '</td></tr><td>' + json.data.usage[i].count + '</td></tr>'));
+                }
+
+                if(json.data.usage.length > 0){
+                    $('#versionUserTable').show();
+                    var plot1 = $.jqplot('versionUserChart', data, {
+
+                        seriesDefaults:{
+                            renderer:$.jqplot.BarRenderer,
+                            rendererOptions: {fillToZero: true}
+                        },
+
+                        series:series,
+
+                        legend: {
+                            show: true,
+                            placement: 'outsideGrid'
+                        },
+                        axes: {
+                            xaxis: {
+                                renderer: $.jqplot.CategoryAxisRenderer,
+                                ticks: ticks
+                            },
+                            yaxis: {
+                                pad: 1.05,
+                                tickOptions: {formatString: '%d'}
+                            }
+                        }
+                    });
+
+                }else{
+                    $('#versionUserTable').hide();
+                    $('#versionUserChart').css("fontSize",14);
+                    $('#versionUserChart').text('No Data Found ...');
+                }
+            }
+        });
     }
 
     if (clickedTab == "users") {
@@ -127,6 +204,14 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
 
     }
 });
+
+Object.size = function(obj) {
+    var size = 0, key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+};
 
 var resourcesCount = 1;
 var rowNums = new Array();

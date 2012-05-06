@@ -32,6 +32,7 @@ import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIServiceTimeDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUserUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUserLastAccessDTO;
+import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUserUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.exception.APIMgtUsageQueryServiceClientException;
 import org.wso2.carbon.bam.presentation.stub.QueryServiceStoreException;
 import org.wso2.carbon.bam.presentation.stub.QueryServiceStub;
@@ -106,6 +107,42 @@ public class APIMgtUsageQueryServiceClient {
     }
 
     /**
+     * This method can be used to get total request count for each combination of API version and subscriber for provider.
+     * @return  List<ProviderAPIVersionUserUsageDTO>
+     * @throws APIMgtUsageQueryServiceClientException
+     */
+    public List<ProviderAPIVersionUserUsageDTO> getProviderAPIVersionUserUsage(String providerName, String apiName) throws APIMgtUsageQueryServiceClientException {
+        List<ProviderAPIVersionUserUsageDTO> result = new ArrayList<ProviderAPIVersionUserUsageDTO>();
+        OMElement omElement = null;
+        QueryServiceStub.CompositeIndex[] compositeIndex = new QueryServiceStub.CompositeIndex[1];
+        compositeIndex[0] = new QueryServiceStub.CompositeIndex();
+        compositeIndex[0].setIndexName("api");
+        compositeIndex[0].setRangeFirst(apiName);
+        compositeIndex[0].setRangeLast(getNextStringInLexicalOrder(apiName));
+        omElement = this.queryColumnFamily(APIMgtUsageQueryServiceClientConstants.API_VERSION_KEY_USAGE_SUMMARY_TABLE, APIMgtUsageQueryServiceClientConstants.API_VERSION_KEY_USAGE_SUMMARY_TABLE_INDEX, compositeIndex);
+        Set<String> versions = this.getAPIVersions(providerName, apiName);
+        Set<SubscribedAPI> subscribedAPIs = new HashSet<SubscribedAPI>();
+        for(String version:versions){
+            Set<Subscriber> subscribers = this.getSubscribersOfAPI(providerName,apiName,version);
+            for(Subscriber subscriber:subscribers){
+                subscribedAPIs = this.getSubscribedIdentifiers(subscriber, providerName, apiName, version);
+            }
+        }
+        for(SubscribedAPI subscribedAPI:subscribedAPIs){
+            OMElement rowsElement = omElement.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROWS));
+            Iterator rowIterator = rowsElement.getChildrenWithName(new QName(APIMgtUsageQueryServiceClientConstants.ROW));
+            while(rowIterator.hasNext()){
+                OMElement row = (OMElement)rowIterator.next();
+                if(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.VERSION)).getText().equals(subscribedAPI.getApiId().getVersion()) && row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.CONSUMER_KEY)).getText().equals(subscribedAPI.getKey())){
+                    result.add(new ProviderAPIVersionUserUsageDTO(subscribedAPI.getApiId().getVersion(), subscribedAPI.getSubscriber().getName(),String.valueOf((Float.valueOf(row.getFirstChildWithName(new QName(APIMgtUsageQueryServiceClientConstants.REQUEST)).getText())).intValue())));
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
      * This method can be used to get total request count by subscribers for a single API provided by a particular provider.
      * @return  List<ProviderAPIUserUsageDTO>
      * @throws APIMgtUsageQueryServiceClientException
@@ -148,7 +185,7 @@ public class APIMgtUsageQueryServiceClient {
 
     /**
      * This method can be used to get total request count for each API by provider.
-     * @return  List<ProviderAPIDTO>
+     * @return  List<ProviderAPIUsageDTO>
      * @throws APIMgtUsageQueryServiceClientException
      */
     public List<ProviderAPIUsageDTO> getProviderAPIUsage(String providerName) throws APIMgtUsageQueryServiceClientException {
@@ -186,8 +223,8 @@ public class APIMgtUsageQueryServiceClient {
     }
 
     /**
-     * This method can be used to get last access time for each API versions by particular provider.
-     * @return List<ProviderAPIVersionLastAccessDTO>.
+     * This method can be used to get last access time for each combination of API version and subscriber for particular provider.
+     * @return List<ProviderAPIVersionUserLastAccessDTO>.
      * @throws APIMgtUsageQueryServiceClientException
      */
     public List<ProviderAPIVersionUserLastAccessDTO> getProviderAPIVersionUserLastAccess(String providerName) throws APIMgtUsageQueryServiceClientException {

@@ -51,6 +51,7 @@ import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIServiceTimeDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUserUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUserLastAccessDTO;
+import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUserUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.exception.APIMgtUsageQueryServiceClientException;
 import org.wso2.carbon.hostobjects.web.RequestHostObject;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -919,6 +920,37 @@ public class APIProviderHostObject extends ScriptableObject {
                 Object usageObject = it.next();
                 ProviderAPIVersionUsageDTO usage = (ProviderAPIVersionUsageDTO) usageObject;
                 row.put("version", row, usage.getVersion());
+                row.put("count", row, usage.getCount());
+                myn.put(i, myn, row);
+                i++;
+
+            }
+        }
+        return myn;
+    }
+
+    public static NativeArray jsFunction_getProviderAPIVersionUserUsage(String providerName, String APIname, String serverURL)
+            throws ScriptException {
+        List<ProviderAPIVersionUserUsageDTO> list = null;
+        try {
+            APIMgtUsageQueryServiceClient client = new APIMgtUsageQueryServiceClient(serverURL);
+            list = client.getProviderAPIVersionUserUsage(providerName,APIname);
+        } catch (APIMgtUsageQueryServiceClientException e) {
+            log.error("Error while invoking APIMgtUsageQueryServiceClient for ProviderAPIVersionUserUsage", e);
+        }
+        NativeArray myn = new NativeArray(0);
+        Iterator it = null;
+        if (list != null) {
+            it = list.iterator();
+        }
+        int i = 0;
+        if (it != null) {
+            while (it.hasNext()) {
+                NativeObject row = new NativeObject();
+                Object usageObject = it.next();
+                ProviderAPIVersionUserUsageDTO usage = (ProviderAPIVersionUserUsageDTO) usageObject;
+                row.put("version", row, usage.getVersion());
+                row.put("user", row, usage.getUser());
                 row.put("count", row, usage.getCount());
                 myn.put(i, myn, row);
                 i++;

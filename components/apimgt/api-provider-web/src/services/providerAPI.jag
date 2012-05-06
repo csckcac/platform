@@ -40,6 +40,9 @@ function getProviders() {
 function getProviderAPIVersionUsage(providerName, apiName,server) {
     return getDataJSON(getProviderAPIVersionUsageFunc(providerName, apiName,server), null, "Error while getting ProviderAPIVersionUsage");
 }
+function getProviderAPIVersionUserUsage(providerName, apiName,server) {
+    return getDataJSON(getProviderAPIVersionUserUsageFunc(providerName, apiName,server), null, "Error while getting ProviderAPIVersionUserUsage");
+}
 function getProviderAPIUsage(providerName,server) {
     return getDataJSON(getProviderAPIUsageFunc(providerName,server), null, "Error while getting ProviderAPIUsage");
 }

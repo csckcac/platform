@@ -20,6 +20,7 @@ package org.wso2.carbon.autoscaler.service.impl;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -218,7 +219,8 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
                                                        scaleDownOrder.indexOf(adapter));
 
                         // to be safe
-                        if ((anAdapter = findAdapter(adapterName)) != null) {
+                        if ((anAdapter = findAdapter(adapterName)) != null &&
+                                getRunningInstanceCount(anAdapter.getName()) > minInstanceCount) {
 
                             // terminate it!
                             isSuccessfullyTerminated = anAdapter.terminateInstance(instanceId);
@@ -327,6 +329,27 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
         }
         
         return 0;
+    }
+    
+    /**
+     * Gets the total entries in {@link #instanceIdToAdapterMap} which is belong
+     * to this adapter.
+     * @param anAdapter name of the adapter
+     * @return number of occurrences of this adapter in the {@link #instanceIdToAdapterMap}.
+     */
+    private int getRunningInstanceCount(String anAdapter) {
+
+        int count = 0;
+
+        for (Iterator iterator = instanceIdToAdapterMap.values().iterator(); iterator.hasNext();) {
+            Adapter val = (Adapter) iterator.next();       
+           
+            if(anAdapter.equals(val.getName())){
+                count++;
+            }
+        }
+       
+        return count;
     }
 
     public void addPendingInstanceCount(String domainName, int count) {

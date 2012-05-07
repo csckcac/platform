@@ -1,0 +1,13 @@
+<%
+    var path = "/testfile.txt";
+    var file = new File(path);
+    file.open("r");
+     
+    var message = "";
+     
+    while ((message = file.readLine()) != null) {
+    	print(message);
+    }
+     
+    file.close();
+%>

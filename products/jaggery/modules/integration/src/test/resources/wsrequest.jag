@@ -1,0 +1,25 @@
+<%
+    function invokeGetVersion(){
+	    var ws = require('ws');
+	     
+	    var version = new ws.WSRequest();
+	    var options = new Array();
+	    options.useSOAP = 1.2;
+	    options.useWSA = 1.0;
+	    options.action = "urn:getVersion";
+	    var payload = null;
+	    var result;
+     
+	    try {
+	    	version.open(options,"http://localhost:9763/services/Version", false);
+	    	version.send(payload);
+	    	result = version.responseE4X;
+	    } catch (e) {
+	    	system.log(e.toString(),"error");
+	    	return e.toString();
+	    }
+    	return result;
+    }
+     
+    print(invokeGetVersion());
+%>

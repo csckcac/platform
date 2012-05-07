@@ -1,0 +1,8 @@
+<%
+	var blogURL = "http://madhukaudantha.blogspot.com/feeds/posts/default";
+ 
+	var feed= new Feed(blogURL);
+ 
+	print(feed.title);
+
+%>

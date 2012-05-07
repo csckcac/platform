@@ -160,10 +160,18 @@
         </fileSet>
 
 
-		<!-- copy the landing page webapp -->
+	<!-- copy the landing page webapp -->
         <fileSet>
 			<directory>lib/home</directory>
 			<outputDirectory>wso2stratos-dss-${pom.version}/repository/deployment/server/webapps/STRATOS_ROOT</outputDirectory>
+        </fileSet>
+
+        <fileSet>
+            <directory>../../p2-profile-gen/service/target/wso2carbon-core-${wso2carbon.version}/dbscripts/identity/</directory>
+            <outputDirectory>wso2stratos-dss-${pom.version}/dbscripts/identity</outputDirectory>
+            <includes>
+                <include>**/**.sql</include>
+            </includes>
         </fileSet>
     </fileSets>
 

@@ -29,8 +29,7 @@ function loginFunc(username, password, remoteAddress) {
             cookie:null
         };
     }
-    apiProvider.login(username, password);
-    log(username);
+    apiProvider.login();
     log(xml);
     var cookie = result.client.getResponseHeader("Set-Cookie");
     log(cookie);

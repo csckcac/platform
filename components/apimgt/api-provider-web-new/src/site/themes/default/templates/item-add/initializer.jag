@@ -1,7 +1,7 @@
 <%
 jagg.initializer("item-add", {
 
-    initialize:function () {
+    preInitialize:function () {
     jagg.addHeaderJS("item-add", "jagg", "templates/item-add/js/validate.js");
     jagg.addHeaderJS("add-resource", "jagg", "templates/item-add/js/resource-template.js");
     }

@@ -1,0 +1,55 @@
+<%
+include("/jagg/jagg.jag");
+
+(function () {
+    var mod, obj, result, username,
+            action = request.getParameter("action"),
+            site = require("/site/conf/site.json"),
+            msg = require("/site/conf/ui-messages.jag");
+    if (action === "addAPI") {
+        mod = jagg.module("api");
+        var apiData = {};
+        apiData.apiName = request.getParameter("apiName");
+        apiData.version = request.getParameter("version");
+        apiData.description = request.getParameter("description");
+        apiData.endpoint = request.getParameter("endpoint");
+        apiData.wsdl = request.getParameter("wsdl");
+        apiData.tags = request.getParameter("tags");
+        apiData.tier = request.getParameter("tier");
+        apiData.imageUrl = request.getParameter("apiThumb");
+        apiData.context = request.getParameter("context");
+        var resCount = new Array();
+        if (request.getParameter("resourceCount") != null) {
+            var resCount = request.getParameter("resourceCount").split(',');
+        }
+        var uriTemplateArr = [];
+        var uriMethodArr = [];
+
+        for (var i = 0; i < resCount.length; i++) {
+            uriTemplateArr.push(request.getParameter("uriTemplate-" + resCount[i]));
+            uriMethodArr.push(request.getParameter("resourceMethod-" + resCount[i]))
+        }
+        apiData.uriTemplateArr = uriTemplateArr;
+        apiData.uriMethodArr = uriMethodArr;
+
+        result = mod.addAPI(apiData);
+        if (result.error) {
+            obj = {
+                error:result.error,
+                message:msg.error.backendError(action)
+            };
+        } else {
+            obj = {
+                error:false
+            }
+        }
+
+        print(obj);
+    } else {
+        print({
+                  error:true,
+                  message:msg.error.invalidAction(action)
+              });
+    }
+}());
+%>

@@ -5,11 +5,11 @@
         <div class="span12">
             <form class="form-horizontal well"
               id="addAPIForm"
-              action="<%=site.context%>/core/apis/add.js"
+              action="/modules/apis/add.jag"
               method="get"
               enctype="multipart/form-data">
 
-                <input type="hidden" name="action" id="saveAPI" value="saveAPI"/>
+                <input type="hidden" name="action" id="addAPI" value="addAPI"/>
 
                 <div class="control-group">
                     <label class="control-label" for="apiName">Name:<span class="requiredAstrix">*</span></label>

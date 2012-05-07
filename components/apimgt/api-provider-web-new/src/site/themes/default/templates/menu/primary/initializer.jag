@@ -1,8 +1,8 @@
 <%
 jagg.initializer("menu/primary", {
 
-    initialize:function () {
-    jagg.addHeaderJS("menu/primary", "jagg", "templates/menu/primary/js/header.js");
+    preInitialize:function () {
+    jagg.addHeaderJS("menu/primary", "jagg", "templates/menu/primary/js/logout.js");
     }
 });
 %>

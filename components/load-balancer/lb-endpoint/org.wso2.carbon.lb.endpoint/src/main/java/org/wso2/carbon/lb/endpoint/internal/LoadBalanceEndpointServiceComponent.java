@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.wso2.carbon.lb.endpoint;
+package org.wso2.carbon.lb.endpoint.internal;
 
 import org.apache.axis2.deployment.DeploymentEngine;
 import org.apache.axis2.engine.AxisConfiguration;
@@ -26,6 +26,8 @@ import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.deployers.SynapseArtifactDeploymentStore;
 import org.apache.synapse.endpoints.Endpoint;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.lb.endpoint.EndpointDeployer;
+import org.wso2.carbon.lb.endpoint.LoadBalanceEndpointException;
 import org.wso2.carbon.lb.endpoint.util.ConfigHolder;
 import org.wso2.carbon.mediation.dependency.mgt.services.DependencyManagementService;
 import org.wso2.carbon.mediation.initializer.ServiceBusConstants;

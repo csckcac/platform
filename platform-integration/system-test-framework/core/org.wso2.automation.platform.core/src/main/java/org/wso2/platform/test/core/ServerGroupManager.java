@@ -230,8 +230,9 @@ public class ServerGroupManager {
                 for (String product : productList) {
                     FrameworkProperties properties = FrameworkFactory.getFrameworkProperties(product);
                     String hostName = properties.getProductVariables().getHostName();
-                    String sessionCookieUser = login(adminDetails.getUserName(), adminDetails.getPassword(), hostName);
-                    adminServiceCarbonServerAdmin = new AdminServiceCarbonServerAdmin(hostName);
+                    String backEndUrl = properties.getProductVariables().getBackendUrl();
+                    String sessionCookieUser = login(adminDetails.getUserName(), adminDetails.getPassword(), backEndUrl, hostName);
+                    adminServiceCarbonServerAdmin = new AdminServiceCarbonServerAdmin(backEndUrl);
                     adminServiceCarbonServerAdmin.shutdownGracefully(sessionCookieUser);
                     waitForServerShutDown(Integer.parseInt(properties.getProductVariables().
                             getHttpsPort()), properties.getProductVariables().getHostName());
@@ -282,9 +283,10 @@ public class ServerGroupManager {
         throw new RuntimeException("Port " + port + " is still open");
     }
 
-    protected static String login(String userName, String password, String hostName)
+    private static String login(String userName, String password, String backEndUrl,
+                                String hostName)
             throws LoginAuthenticationExceptionException, RemoteException {
-        AdminServiceAuthentication loginClient = new AdminServiceAuthentication(hostName);
+        AdminServiceAuthentication loginClient = new AdminServiceAuthentication(backEndUrl);
         return loginClient.login(userName, password, hostName);
     }
 }

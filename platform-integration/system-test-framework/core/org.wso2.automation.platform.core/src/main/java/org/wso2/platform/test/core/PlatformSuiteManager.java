@@ -25,6 +25,7 @@ public class PlatformSuiteManager implements ISuiteListener {
                 startMultipleServers(suite.getParameter("server.list"));
             }
         } catch (Exception e) {  /*cannot throw the exception */
+            log.error(e);
             Assert.fail("Fail start servers " + e.getMessage());
         }
     }
@@ -40,6 +41,7 @@ public class PlatformSuiteManager implements ISuiteListener {
                 stopMultipleServers(suite.getParameter("server.list"));
             }
         } catch (Exception e) { /*cannot throw the exception */
+            log.error(e);
             Assert.fail("Fail to stop servers " + e.getMessage());
         }
     }

@@ -45,9 +45,10 @@ import org.wso2.carbon.apimgt.hostobjects.utils.APIHostObjectUtil;
 import org.wso2.carbon.apimgt.impl.APIConsumerImpl;
 import org.wso2.carbon.apimgt.impl.APIManagerImpl;
 import org.wso2.carbon.apimgt.impl.APIProviderImpl;
+import org.wso2.carbon.apimgt.impl.utils.APINameComparator;
 import org.wso2.carbon.apimgt.usage.client.APIMgtUsageQueryServiceClient;
-import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIServiceTimeDTO;
+import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUserUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIVersionUserLastAccessDTO;
@@ -66,6 +67,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -73,6 +75,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class APIProviderHostObject extends ScriptableObject {
     private static final Log log = LogFactory.getLog(APIProviderHostObject.class);
@@ -1180,6 +1184,67 @@ public class APIProviderHostObject extends ScriptableObject {
         }
         return thumb;
 
+    }
+
+    public static NativeArray jsFunction_searchAPIs(Context cx, Scriptable thisObj,
+                                                    Object[] args,
+                                                    Function funObj) throws ScriptException {
+        NativeArray myn = new NativeArray(0);
+
+        if (args.length == 0) {
+            throw new ScriptException("Invalid number of parameters.");
+        }
+        String providerName = (String) args[0];
+        String apiName = (String) args[1];
+
+        if (providerName != null) {
+            try {
+                //TODO : this regex pattern matching has to be moved to APIManager API implementation
+                List<API> apiList = apiProviderImpl.getAPIsByProvider(providerName);
+                List<API> searchedList = new ArrayList<API>();
+                String regex = "[a-zA-Z0-9_.-|]*" + apiName.toUpperCase()+ "[a-zA-Z0-9_.-|]*";
+                Pattern pattern;
+                Matcher matcher;
+                for (API api : apiList) {
+                    APIIdentifier apiIdentifier = api.getId();
+                    String name = apiIdentifier.getApiName().toUpperCase();
+                    pattern = Pattern.compile(regex);
+                    matcher = pattern.matcher(name);
+                    if (matcher.matches()) {
+                        searchedList.add(apiManagerImpl.getAPI(apiIdentifier));
+                    }
+
+                }
+                Collections.sort(searchedList, new APINameComparator());
+
+                Iterator it = searchedList.iterator();
+                int i = 0;
+                while (it.hasNext()) {
+
+                    NativeObject row = new NativeObject();
+                    Object apiObject = it.next();
+                    API api = (API) apiObject;
+                    APIIdentifier apiIdentifier = api.getId();
+                    row.put("apiName", row, apiIdentifier.getApiName());
+                    row.put("version", row, apiIdentifier.getVersion());
+                    row.put("status", row, checkValue(api.getStatus().toString()));
+                    row.put("thumb", row, api.getThumbnailUrl());
+                    row.put("subs", row, apiProviderImpl.getSubscribersOfAPI(api.getId()).size());
+                    myn.put(i, myn, row);
+                    i++;
+
+                }
+            } catch (APIManagementException e) {
+                log.error("Error from registry while getting the APIs information for the searched API: " + apiName, e);
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+
+            }
+
+
+        }
+
+        return myn;
     }
 }
 

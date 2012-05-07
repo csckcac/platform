@@ -27,7 +27,6 @@
             <directory>target/wso2carbon-core-${carbon.version}</directory>
             <outputDirectory>wso2stratos-bps-${pom.version}</outputDirectory>
             <excludes>
-                <exclude>**/native/*</exclude>
                 <exclude>**/*.sh</exclude>
                 <exclude>**/wso2server.bat</exclude>
                 <exclude>**/services/sample01.aar</exclude>
@@ -38,26 +37,22 @@
                 <exclude>**/README*</exclude>
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/axis2/axis2.xml</exclude>
-                <exclude>**/wrapper.conf</exclude>
                 <exclude>**/dbscripts/**</exclude>
 	            <exclude>**/INSTALL.txt</exclude>
                 <exclude>**/README.txt</exclude>
                 <exclude>**/LICENSE.txt</exclude>
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/log4j.properties</exclude>
-                <!--exclude>**/eclipse/provisioning/artifacts.xml</exclude-->
             </excludes>
         </fileSet>
         <fileSet>
             <directory>target/wso2carbon-core-${carbon.version}</directory>
             <outputDirectory>wso2stratos-bps-${pom.version}</outputDirectory>
             <excludes>
-                <exclude>**/daemon.sh</exclude>
                 <exclude>**/wso2server.bat</exclude>                 
             </excludes>
             <includes>
                 <include>**/*.sh</include>
-                <include>**/native/*</include>
             </includes>
             <fileMode>755</fileMode>
         </fileSet>
@@ -314,18 +309,6 @@
             <outputDirectory>wso2stratos-bps-${pom.version}/bin/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>744</fileMode>
-        </file>
-        <file>
-            <source>target/wso2carbon-core-${carbon.version}/repository/conf/wrapper.conf</source>
-            <outputDirectory>wso2stratos-bps-${pom.version}/repository/conf/</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>target/wso2carbon-core-${carbon.version}/bin/daemon.sh</source>
-            <outputDirectory>wso2stratos-bps-${pom.version}/bin/</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>755</fileMode>
         </file>
         <file>
             <source>../../p2-profile-gen/service/target/wso2carbon-core-${carbon.version}/repository/resources/security/userRP.jks</source>

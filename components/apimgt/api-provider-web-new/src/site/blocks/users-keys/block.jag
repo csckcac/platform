@@ -2,6 +2,16 @@
 jagg.block("users-keys", {
     initializer:function (data) {
 
+    },
+    getInputs:function () {
+        return {
+            "subscribers":null
+        };
+    },
+    getStaticBlocks:function() {
+        return [
+            "search/api-search"
+        ];
     }
 
 });

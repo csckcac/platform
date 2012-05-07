@@ -21,4 +21,8 @@ var getAPIProviderObj = function() {
     var store = require('apistore');
     return new store.APIProvider();
 };
+var getAPIStoreObj = function() {
+    var store = require('apistore');
+    return new store.APIStore();
+};
 %>

@@ -1,0 +1,10 @@
+<%
+jagg.module("search", {
+
+    searchAPI:function () {
+        return jagg.require(jagg.getModulesDir() + "search/search.jag").searchAPI.apply(this, arguments);
+    }
+
+
+});
+%>

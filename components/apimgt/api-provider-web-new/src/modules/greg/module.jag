@@ -16,6 +16,9 @@ jagg.module("greg", {
     getAPIProviderObj:function () {
         return jagg.require(jagg.getModulesDir() + "greg/greg.jag").getAPIProviderObj.apply(this, arguments);
     },
+    getAPIStoreObj:function () {
+        return jagg.require(jagg.getModulesDir() + "greg/greg.jag").getAPIStoreObj.apply(this, arguments);
+    },
 
     invokeService:function () {
         return jagg.require(jagg.getModulesDir() + "greg/client.jag").invokeService.apply(this, arguments);

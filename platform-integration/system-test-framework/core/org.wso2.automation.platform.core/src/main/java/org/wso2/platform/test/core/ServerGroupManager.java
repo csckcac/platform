@@ -47,6 +47,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -56,6 +57,7 @@ public class ServerGroupManager {
     private static final Log log = LogFactory.getLog(ServerGroupManager.class);
 
     private static final long TIMEOUT = 60 * 1000;
+    private static HashMap<String, ServerManager> servers = new HashMap<String, ServerManager>();
 
     public static synchronized void startServers(List<String> productList) throws Exception {
         log.info("Server starting...");
@@ -89,6 +91,7 @@ public class ServerGroupManager {
                 }
                 serverManager = new ServerManager(carbonHome);
                 serverManager.start();
+                servers.put(product, serverManager);
             }
 
         } catch (ServerConfigurationException e) {
@@ -224,12 +227,15 @@ public class ServerGroupManager {
                 String sessionCookieUser = login(adminDetails.getUserName(), adminDetails.getPassword(), backEndUrl, hostName);
                 adminServiceCarbonServerAdmin = new AdminServiceCarbonServerAdmin(backEndUrl);
                 adminServiceCarbonServerAdmin.shutdownGracefully(sessionCookieUser);
+                Assert.assertTrue(servers.get(product).isServerHalt(), "Server Shutdown message not Found");
+                servers.remove(product);
                 waitForServerShutDown(Integer.parseInt(properties.getProductVariables().
                         getHttpsPort()), properties.getProductVariables().getHostName());
                 assertFalse(ClientConnectionUtil.isPortOpen(Integer.parseInt(properties.getProductVariables().
                         getHttpsPort()), properties.getProductVariables().getHostName()),
                             "Port " + Integer.parseInt(properties.getProductVariables().getHttpsPort()) +
                             " shouldn't be open when the server is gracefully shutting down");
+
 
             }
         } catch (Exception e) {
@@ -253,22 +259,10 @@ public class ServerGroupManager {
                     } catch (InterruptedException ignored) {
                     }
                 } else {
-                    try {
-                        Thread.sleep(15000);
-                        //reserve time to shut down server
-                    } catch (InterruptedException e) {
-
-                    }
                     return;
                 }
             } catch (IOException e) {
                 log.info("Cannot create the socket");
-                try {
-                    Thread.sleep(15000);
-                    //reserve time to shut down server
-                } catch (InterruptedException interruptedException) {
-
-                }
                 return;
             } finally {
                 try {

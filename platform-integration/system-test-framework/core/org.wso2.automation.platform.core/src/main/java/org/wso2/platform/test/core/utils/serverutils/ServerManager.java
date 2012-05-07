@@ -68,12 +68,12 @@ public class ServerManager {
             if (System.getProperty("os.name").toLowerCase().contains("windows")) {
 
                 tempProcess = Runtime.getRuntime().exec(new String[]{"cmd.exe", "/C", "bin\\wso2server.bat", "-Dsetup"},
-                        null, new File(carbonHome));
+                                                        null, new File(carbonHome));
             } else {
                 //when starting wso2greg it crate all tables in registry
 
                 tempProcess = Runtime.getRuntime().exec(new String[]{"sh", "bin/wso2server.sh", "-Dsetup test"},
-                        null, new File(carbonHome));
+                                                        null, new File(carbonHome));
             }
 //            Runtime.getRuntime().addShutdownHook(new Thread() {
 //                public void run() {
@@ -138,11 +138,11 @@ public class ServerManager {
         String fileSeparator = (File.separator.equals("\\")) ? "\\" : "/";
         String extractedCarbonDir =
                 carbonServerZipFile.substring(carbonServerZipFile.lastIndexOf(fileSeparator) + 1,
-                        indexOfZip);
+                                              indexOfZip);
         FileManipulator.deleteDir(extractedCarbonDir);
         new ArchiveManipulator().extract(carbonServerZipFile, "carbontmp");
         return new File(".").getAbsolutePath() + File.separator + "carbontmp" +
-                File.separator + extractedCarbonDir;
+               File.separator + extractedCarbonDir;
     }
 
     public synchronized static void exportEmmaCoverage() {
@@ -211,27 +211,27 @@ public class ServerManager {
 
 
             FileUtils.copyFile(new File(emmaHome + emmaJarName),
-                    new File(carbonHome + File.separator + "repository" +
-                            File.separator + "components" + File.separator + "plugins" +
-                            File.separator + "emma.jar"));
+                               new File(carbonHome + File.separator + "repository" +
+                                        File.separator + "components" + File.separator + "plugins" +
+                                        File.separator + "emma.jar"));
             FileUtils.copyFile(new File(emmaHome + emmaJarName),
-                    new File(carbonHome + File.separator + "repository" +
-                            File.separator + "components" + File.separator + "lib" +
-                            File.separator + "emma.jar"));
+                               new File(carbonHome + File.separator + "repository" +
+                                        File.separator + "components" + File.separator + "lib" +
+                                        File.separator + "emma.jar"));
             FileUtils.copyFile(new File(emmaHome + emmaJarName),
-                    new File(carbonHome + File.separator + "lib" +
-                            File.separator + "emma.jar"));
+                               new File(carbonHome + File.separator + "lib" +
+                                        File.separator + "emma.jar"));
             for (File file : new File[]{new File(carbonHome), emmaOutput}) {
                 FileUtils.copyFileToDirectory(new File(carbonHome + File.separator + "lib" +
-                        File.separator + "emma.jar"), file);
+                                                       File.separator + "emma.jar"), file);
                 FileUtils.copyFileToDirectory(new File(emmaHome + "gen_emma_coverage.rb"), file);
                 FileUtils.copyFileToDirectory(new File(jarList), file);
             }
 
             String temp;
             Process process = Runtime.getRuntime().exec(new String[]{"ruby",
-                    "gen_emma_coverage.rb", "instrument", System.getenv("JAVA_HOME")}, null,
-                    new File(carbonHome));
+                                                                     "gen_emma_coverage.rb", "instrument", System.getenv("JAVA_HOME")}, null,
+                                                        new File(carbonHome));
             BufferedReader reader = new BufferedReader(
                     new InputStreamReader(process.getInputStream()));
             try {
@@ -242,7 +242,7 @@ public class ServerManager {
                 log.error(ignored);
             }
             FileUtils.copyFileToDirectory(new File(carbonHome + File.separator + "coverage.em"),
-                    emmaOutput);
+                                          emmaOutput);
         } finally {
             System.setProperty("user.dir", workingDir);
         }
@@ -285,4 +285,37 @@ public class ServerManager {
         }
     }
 
+    public boolean isServerHalt() {
+        boolean state = false;
+        if (process != null) {
+            try {
+                String temp;
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(process.getInputStream()));
+                long time = System.currentTimeMillis() + DEFAULT_START_STOP_WAIT_MS;
+                while ((temp = reader.readLine()) != null && System.currentTimeMillis() < time) {
+                    if (temp.contains(SERVER_SHUTDOWN_MESSAGE)) {
+                        state = true;
+                        break;
+                    }
+                }
+
+            } catch (IOException ignored) {
+            }
+            try {
+                consoleLogPrinter.interrupt();
+            } catch (Exception e) {
+                log.error(e);
+            }
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ignored) {
+                log.error(ignored);
+            }
+
+
+        }
+        return state;
+    }
 }

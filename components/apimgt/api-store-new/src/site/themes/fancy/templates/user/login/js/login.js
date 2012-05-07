@@ -52,7 +52,7 @@ $(document).ready(function () {
     });
 
     $(".need-login").click(function() {
-        $("#login-form").data("url", $(this).attr("href")).dialog("open");
+        $("#login-form").dialog("open").data("url", $(this).attr("href"));
         return false;
     });
 });

@@ -231,7 +231,17 @@
             <p>Then check the command line and you will be able to see the XML Message that you
                 types in the provided space.
             </p>
-
+            <h3>Clustering support of WSO2 Message Broker</h3>
+            <p>
+            	WSO2 MB  is now supporting clustering. That means high availability and failover support
+            	is there. You can setup several Message Broker nodes and configure them up to work as a cluster 
+            	so that if one node is down message routing and handling will be taken over by other nodes in the cluster.
+            	At the same time overhead of routing messages is distributed among the Message Broker cluster nodes so
+            	that overall performance of Message Brokering goes up. Thus, having a lot of publishers and subscribers will
+            	not be a problem anymore as there is no significant performance degrade with the number of publishers, 
+            	subscribers and exchanges. Scalability is beyond you with WSO2 MB with combined resources you have. 
+            	Fault tolerance brings you great benefits in deployment apart from the performance gain. 
+            	</p> 
             <h3>How to enable clustering support</h3>
             <p>
                 New MB version (2.0) supports clustering. Clustering makes WSO2 MB run on several machines providing

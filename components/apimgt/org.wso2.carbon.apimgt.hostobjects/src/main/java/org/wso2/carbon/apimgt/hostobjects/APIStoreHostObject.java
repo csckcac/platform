@@ -1337,12 +1337,14 @@ public class APIStoreHostObject extends ScriptableObject {
         if (isStringArray(args)) {
             String username = args[0].toString();
             Application[] applications = apiConsumerImpl.getApplications(new Subscriber(username));
-            int i = 0;
-            for(Application application : applications) {
-                NativeObject row = new NativeObject();
-                row.put("name", row, application.getName());
-                row.put("id", row, application.getId());
-                myn.put(i++, myn, row);
+            if(applications != null) {
+                int i = 0;
+                for(Application application : applications) {
+                    NativeObject row = new NativeObject();
+                    row.put("name", row, application.getName());
+                    row.put("id", row, application.getId());
+                    myn.put(i++, myn, row);
+                }
             }
         }
         return myn;

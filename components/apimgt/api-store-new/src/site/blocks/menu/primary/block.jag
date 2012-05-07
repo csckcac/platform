@@ -24,14 +24,14 @@ jagg.block("menu/primary", {
         links.push({
             "title":"My Applications",
             "url":jagg.getMappedUrl("/site/pages/applications.jag"),
-            "classes":"link-myapplications need-login",
+            "classes":"link-myapplications" + (user ? "" : " need-login"),
             "active":(path == "/site/pages/applications.jag")
         });
 
         links.push({
             "title":"My Subscriptions",
             "url":jagg.getMappedUrl("/site/pages/subscriptions.jag"),
-            "classes":"link-mysubscriptions need-login",
+            "classes":"link-mysubscriptions" + (user ? "" : " need-login"),
             "active":(path == "/site/pages/subscriptions.jag")
         });
 

@@ -36,8 +36,7 @@ $(document).ready(function () {
         modal:true,
         buttons:{
             "Login":function () {
-                login.loginbox.login($("#username").val(), $("#password").val(), $(this).data("url"));
-                $(this).dialog("close");
+                login.loginbox.login($("#username").val(), $("#password").val(), $(this).dialog("close").data("url"));
             },
             "Cancel":function () {
                 $(this).data("url", null).dialog("close");

@@ -87,11 +87,11 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
                         version_user_associative_array[json.data.usage[i].version] = new Array();
                     }
                     for (var j = 0; j < json.data.usage.length; j++) {
-                        version_user_associative_array[json.data.usage[i].version][json.data.usage[j].user] = "0";
+                        version_user_associative_array[json.data.usage[i].version][json.data.usage[j].user] = 0;
                     }
                 }
                 for (var i = 0; i < json.data.usage.length; i++) {
-                    version_user_associative_array[json.data.usage[i].version][json.data.usage[i].user] = json.data.usage[i].count;
+                    version_user_associative_array[json.data.usage[i].version][json.data.usage[i].user] = parseInt(json.data.usage[i].count);
                 }
 
                 var data = new Array();
@@ -217,11 +217,11 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
                         user_version_associative_array[json.data.usage[i].user] = new Array();
                     }
                     for (var j = 0; j < json.data.usage.length; j++) {
-                        user_version_associative_array[json.data.usage[i].user][json.data.usage[j].version] = "0";
+                        user_version_associative_array[json.data.usage[i].user][json.data.usage[j].version] = 0;
                     }
                 }
                 for (var i = 0; i < json.data.usage.length; i++) {
-                    user_version_associative_array[json.data.usage[i].user][json.data.usage[i].version] = json.data.usage[i].count;
+                    user_version_associative_array[json.data.usage[i].user][json.data.usage[i].version] = parseInt(json.data.usage[i].count);
                 }
 
                 var data = new Array();

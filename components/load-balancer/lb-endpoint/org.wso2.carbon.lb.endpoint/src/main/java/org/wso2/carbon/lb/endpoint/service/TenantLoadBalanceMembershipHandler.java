@@ -29,7 +29,7 @@ public class TenantLoadBalanceMembershipHandler implements LoadBalanceMembership
     /**
      * Key - Host, Value - DomainAlgorithmContext
      */
-    private Map<String, DomainAlgorithmContext> hostDomainAlgorithmContextMap =
+    private static Map<String, DomainAlgorithmContext> hostDomainAlgorithmContextMap =
             new HashMap<String, DomainAlgorithmContext>();
     private ClusteringAgent clusteringAgent;
 
@@ -125,6 +125,16 @@ public class TenantLoadBalanceMembershipHandler implements LoadBalanceMembership
         return null;
     }
 
+    /**
+     * This method allows get clustering domain from tenantId and host
+     * @param targetHost address of the host
+     * @param tenantId   tenant id of given tenant
+     * @return returns clustering domain of given tenant for given host address
+     */
+    public static String getDomainFormHostTenant(String targetHost, int tenantId)
+    {
+      return hostDomainAlgorithmContextMap.get(targetHost).getDomain(tenantId);
+    }
     /**
      * POJO for maintaining the domain & AlgorithmContext for a particular host
      */

@@ -26,7 +26,6 @@ import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.deployers.SynapseArtifactDeploymentStore;
 import org.apache.synapse.endpoints.Endpoint;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.endpoint.common.EndpointAdminException;
 import org.wso2.carbon.lb.endpoint.util.ConfigHolder;
 import org.wso2.carbon.mediation.dependency.mgt.services.DependencyManagementService;
 import org.wso2.carbon.mediation.initializer.ServiceBusConstants;
@@ -39,6 +38,7 @@ import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.utils.ConfigurationContextService;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.user.core.service.RealmService;
+
 import java.io.File;
 import java.util.Map;
 import java.util.Set;
@@ -106,7 +106,7 @@ public class LoadBalanceEndpointServiceComponent {
                         entry.getValue().getConfigurationContext().getAxisConfiguration(),
                         entry.getValue().getSynapseEnvironment());
             }
-        } catch (EndpointAdminException e) {
+        } catch (Exception e) {
             log.warn("Couldn't remove the EndpointDeployer");
         }
     }
@@ -118,7 +118,7 @@ public class LoadBalanceEndpointServiceComponent {
      * @param synapseEnvironment SynapseEnvironment to which this deployer belongs
      */
     private void unregisterDeployer(AxisConfiguration axisConfig, SynapseEnvironment synapseEnvironment)
-            throws EndpointAdminException {
+            throws LoadBalanceEndpointException {
         if (axisConfig != null) {
             DeploymentEngine deploymentEngine = (DeploymentEngine) axisConfig.getConfigurator();
             String synapseConfigPath = ServiceBusUtils.getSynapseConfigAbsPath(
@@ -137,7 +137,7 @@ public class LoadBalanceEndpointServiceComponent {
      * @param synapseEnvironment SynapseEnvironment to which this deployer belongs
      */
     private void registerDeployer(AxisConfiguration axisConfig, SynapseEnvironment synapseEnvironment)
-            throws EndpointAdminException {
+            throws LoadBalanceEndpointException {
         SynapseConfiguration synCfg = synapseEnvironment.getSynapseConfiguration();
         DeploymentEngine deploymentEngine = (DeploymentEngine) axisConfig.getConfigurator();
         SynapseArtifactDeploymentStore deploymentStore = synCfg.getArtifactDeploymentStore();
@@ -275,7 +275,7 @@ public class LoadBalanceEndpointServiceComponent {
             if (axisConfig != null) {
                 try {
                     unregisterDeployer(axisConfig, env);
-                } catch (EndpointAdminException e) {
+                } catch (Exception e) {
                     log.warn("Couldn't remove the EndpointDeployer");
                 }
             }

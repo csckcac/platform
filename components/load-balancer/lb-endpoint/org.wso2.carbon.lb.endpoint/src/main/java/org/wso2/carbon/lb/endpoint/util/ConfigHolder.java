@@ -20,7 +20,7 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.config.SynapseConfiguration;
-import org.wso2.carbon.endpoint.common.EndpointAdminException;
+import org.wso2.carbon.lb.endpoint.LoadBalanceEndpointException;
 import org.wso2.carbon.mediation.dependency.mgt.services.DependencyManagementService;
 import org.wso2.carbon.mediation.initializer.services.SynapseEnvironmentService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
@@ -66,7 +66,7 @@ public class ConfigHolder {
         return instance;
     }
 
-    public SynapseConfiguration getSynapseConfiguration() throws EndpointAdminException {
+    public SynapseConfiguration getSynapseConfiguration() throws LoadBalanceEndpointException {
         assertNull("SynapseConfiguration", synapseConfiguration);
         return synapseConfiguration;
     }
@@ -75,7 +75,7 @@ public class ConfigHolder {
         this.synapseConfiguration = synapseConfiguration;
     }
 
-    public AxisConfiguration getAxisConfiguration() throws EndpointAdminException {
+    public AxisConfiguration getAxisConfiguration() throws LoadBalanceEndpointException {
         assertNull("AxisConfiguration", axisConfiguration);
         return axisConfiguration;
     }
@@ -84,7 +84,7 @@ public class ConfigHolder {
         this.axisConfiguration = axisConfiguration;
     }
 
-    public UserRegistry getConfigRegistry() throws EndpointAdminException {
+    public UserRegistry getConfigRegistry() throws LoadBalanceEndpointException {
         assertNull("Registry", configRegistry);
         return configRegistry;
     }
@@ -101,11 +101,11 @@ public class ConfigHolder {
         this.dependencyManager = dependencyManager;
     }
 
-    private void assertNull(String name, Object object) throws EndpointAdminException {
+    private void assertNull(String name, Object object) throws LoadBalanceEndpointException {
         if (object == null) {
             String message = name + " reference in the proxy admin config holder is null";
             log.error(message);
-            throw new EndpointAdminException(message);
+            throw new LoadBalanceEndpointException(message);
         }
     }
 

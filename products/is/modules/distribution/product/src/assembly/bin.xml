@@ -26,7 +26,6 @@
             <directory>target/wso2carbon-core-${wso2carbon.version}</directory>
             <outputDirectory>wso2is-${pom.version}</outputDirectory>
             <excludes>
-                <exclude>**/native/*</exclude>
                 <exclude>**/*.sh</exclude>
                 <exclude>**/wso2server.bat</exclude>
                 <exclude>**/axis2services/sample01.aar</exclude>
@@ -37,7 +36,6 @@
                 <exclude>**/README*</exclude>
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/axis2/axis2.xml</exclude>
-                <exclude>**/wrapper.conf</exclude>                
 		        <exclude>**/LICENSE.txt</exclude>
                 <exclude>**/INSTALL.txt</exclude>
                 <exclude>**/release-notes.html</exclude>
@@ -50,12 +48,10 @@
             <directory>target/wso2carbon-core-${wso2carbon.version}</directory>
             <outputDirectory>wso2is-${pom.version}</outputDirectory>
             <excludes>
-                <exclude>**/daemon.sh</exclude>
                 <exclude>**/wso2server.bat</exclude>
             </excludes>
             <includes>
                 <include>**/*.sh</include>
-                <include>**/native/*</include>
             </includes>
             <fileMode>755</fileMode>
         </fileSet>
@@ -174,17 +170,6 @@
             <outputDirectory>wso2is-${pom.version}/bin/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>target/wso2carbon-core-${wso2carbon.version}/repository/conf/wrapper.conf</source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>target/wso2carbon-core-${wso2carbon.version}/bin/daemon.sh</source>
-            <outputDirectory>wso2is-${pom.version}/bin/</outputDirectory>
-            <filtered>true</filtered>
         </file>
 
         <file>

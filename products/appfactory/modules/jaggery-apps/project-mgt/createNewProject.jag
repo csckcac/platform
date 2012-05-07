@@ -1,0 +1,49 @@
+<%
+    include('includes/template_header.jag');
+    // userName variable is taken from template_header.jag
+%>
+<div id="middle">
+    <h2>Add a New Project</h2>
+
+    <div id="workArea">
+        <form method='post' action='createNewProjectSubmit.jag?userName=<%=userName%>'>
+            <table class="styledLeft" id="projectInputTbl">
+                <thead>
+                <tr>
+                    <th colspan="2">Please enter the following information.</th>
+                </tr>
+                </thead>
+                <tr>
+                    <td class="formRow">Project Key:</td>
+                    <td class="formRow"><input type='text' name='projectKey' size='50'/></td>
+                </tr>
+                <tr>
+                    <td class="formRow">project Name:</td>
+                    <td class="formRow"><input type='text' name='projectName' size='50'/></td>
+                </tr>
+                <tr>
+                    <td class="formRow">Project Description:</td>
+                    <td class="formRow"><input type='text' name='projectDescription' size='50'/></td>
+                </tr>
+                <tr>
+                    <td class="formRow">Add tasks(a temp field):</td>
+                    <td class="formRow"><input type='text' name='task' size='50'/></td>
+                </tr>
+            </table>
+            <table class="styledLeft">
+                <tr>
+                    <td class="buttonRow">
+                        <input type='submit' name='Submit' value='Submit' class='button'/>
+                        <input type="button" onclick="location.href='index.jag?'" value='Cancel' class='button'/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    alternateTableRows('projectInputTbl', 'tableEvenRow', 'tableOddRow');
+</script>
+<%
+    include('includes/template_footer.jag');
+%>

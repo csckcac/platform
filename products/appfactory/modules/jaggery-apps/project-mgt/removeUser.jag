@@ -1,0 +1,27 @@
+<%
+    include('includes/template_header.jag');
+
+    var projectName = request.getParameter("projectName");
+    var projectKey = request.getParameter("projectKey");
+    var userName = request.getParameter("userName");
+%>
+
+<div id="middle">
+    <div id="workArea">
+        <h2><%= projectName%>
+        </h2>
+        <h5>Are you sure you want to remove this user?<%=userName%> from <%=projectName%>
+            <%=projectKey%>
+        </h5>
+        <input type='submit' name='Submit' value='Delete'/>
+        </br>
+        <%
+            var action = "project.jag?projectName=" + projectName + "&projectKey=" + projectKey + " ";
+            var form = '<FORM ACTION=' + action + ' METHOD=POST></a><button class="btn primary">Cancel</button></FORM>';
+            print(form);
+        %>
+    </div>
+</div>
+<%
+    include('includes/template_footer.jag');
+%>

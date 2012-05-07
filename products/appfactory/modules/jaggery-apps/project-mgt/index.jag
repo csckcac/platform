@@ -1,0 +1,24 @@
+<%
+    include('includes/template_header.jag');
+%>
+<div id="middle">
+    <h2>Your Projects</h2>
+
+    <div id="workArea">
+        <%
+            include('mgt/registryAccessManager.jag');
+            var projectList = getProjectsOfUser(userName);
+            for (var i = 0; i <= projectList.length - 1; ++i) {
+                var projectKey = projectList[i].props.projectKey;
+                var projectName = projectList[i].props.projectName;
+        %>
+        <a href="project.jag?projectName=<%=projectName%>&projectKey=<%=projectKey%>"><%=projectName%></a>
+        </br>
+        <%
+            }
+        %>
+    </div>
+</div>
+<%
+    include('includes/template_footer.jag');
+%>

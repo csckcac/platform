@@ -1,0 +1,47 @@
+<%
+    include('includes/template_header.jag');
+
+    var projectKey = request.getParameter("projectKey");
+    var projectName = request.getParameter("projectName");
+%>
+<div id="middle">
+    <div id="workArea">
+        <%
+            var registry = new Registry("SYSTEM_CONFIGURATION");
+            if (registry.resourceExists("projects/")) {
+                var collection = registry.get("projects/");
+
+                if (collection != null) {
+                    var noOfChildren = collection.getChildren();
+                    if (noOfChildren != null) {
+                        if (registry.resourceExists("userProjectMapping/" + userName)) {
+                            var mapResource = registry.get("userProjectMapping/" + userName);
+                            if (mapResource != null) {
+                                var projectArray = mapResource.getProperty("projects").split(",");
+                                for (var i = 0; i <= projectArray.length - 1; ++i) {
+                                    var key = projectArray[i];
+                                    var path = "projects/" + key;
+                                    if (registry.resourceExists(path)) {
+                                        var project = registry.get(path);
+                                        if (project.getProperty("task") == "1") {
+                                            var name = project.getProperty("projectName");
+        %>
+        </br>                               <a href="approvals.jag?projectName=<%=name%>&projectKey=<%=key%>"><%=name%></a>
+        <%
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+
+        %>
+
+    </div>
+</div>
+<%
+    include('includes/template_footer.jag');
+%>

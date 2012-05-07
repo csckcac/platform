@@ -1,0 +1,150 @@
+<%
+    //var registry = new Registry("SYSTEM_CONFIGURATION");
+
+    include('../constants.jag');
+    include('../process/registryDAO.jag');
+
+    //check whether the key given for the new project already exist
+    function isProjectKeyAlreadyTaken(newKey) {
+        var path = PROJECTS + newKey;
+        try {
+            return resourceExists(path);
+        } catch (e) {
+            log("Error while accessing registry resource \n"+e.message);
+            //throw "Error while storing registry resource";
+        }
+    }
+
+    //add project details to registry
+    function addProjectToApp(projectKey, projectName, projectDescription, repoLink) {
+        //var resource = registry.newResource();
+        try {
+            var resource = createResource();
+        } catch (e) {
+            log("Error while creating registry resource \n"+e.message);
+            throw "Error while creating registry resource";
+        }
+
+        resource.addProperty(PROJECT_KEY, projectKey);
+        resource.addProperty(PROJECT_NAME, projectName);
+        resource.addProperty(PROJECT_DESC, projectDescription);
+        resource.addProperty(REPO_LINK, repoLink);
+
+        ////temp code
+        var task = request.getParameter("task");
+        resource.addProperty("task", task);
+
+        var path = PROJECTS + projectKey;
+        //registry.put(path, resource);
+        try {
+            putResource(path, resource);
+        } catch (e) {
+            log("Error while creating storing resource \n"+e.message);
+            //throw "Error while creating registry resource";
+        }
+    }
+
+    // add the project key to the users' projects list in registry
+    function addProjectToUser(newUser, projectKey) {
+
+        var path = USER_PROJECTS_MAPPING + newUser;
+
+        // if the user already have any project, append the new one
+        //if (registry.resourceExists(path)) {
+        //if (resourceExists(path)) {
+            var result = resourceExists(path);
+            log("in addProjectToUser, user mapping exists "+result);
+        if(result =="true") {
+            log("create proj- user already exist");
+            log("add project to User "+ resourceExists(path));
+            //var resource = registry.get(path);
+            var resource = getResource(path);
+            var existingProjectsList = resource.getProperty(PROJECT_LIST);
+            log("projects list "+existingProjectsList);
+
+            if(!containsProject(existingProjectsList, projectKey)) {
+                var newProjectsList = existingProjectsList + "," + projectKey;
+                log("new project list "+newProjectsList);
+                resource.setProperty(PROJECT_LIST, newProjectsList);
+                //registry.put(path, resource);
+                putResource(path, resource);
+            }
+
+        }
+        // add the new project to user to user-projects mapping in registry
+        else {
+            log("create proj- user doesn't exist");
+            //var resource = registry.newResource();
+            var resource = createResource();
+            var projectsList = projectKey;
+            log("new project list "+projectsList);
+            resource.setProperty(PROJECT_LIST, projectsList);
+            //registry.put(path, resource);
+            putResource(path, resource);
+        }
+    }
+
+    function containsProject(existingProjects, newProject){
+        var projectAlreadyExist = false;
+        var projectArray = existingProjects.split(",");
+        for (var i = 0; i <= projectArray.length - 1; ++i) {
+            log("existing project : new project "+ projectArray[i] +" "+newProject)
+            if(projectArray[i] == newProject) {
+                projectAlreadyExist = true;
+                log("new project already exist in existing project list");
+                break;
+            }
+        }
+        return projectAlreadyExist;
+    }
+
+    function getProjectsOfUser(userName) {
+        //log("USER EXISTS " + registry.resourceExists(USER_PROJECTS_MAPPING + userName));
+        log("USER EXISTS " + resourceExists(USER_PROJECTS_MAPPING + userName));
+        var projectList = [];
+        //if (registry.resourceExists(USER_PROJECTS_MAPPING + userName)) {
+        //if (resourceExists(USER_PROJECTS_MAPPING + userName)) {
+
+        var result = resourceExists(USER_PROJECTS_MAPPING + userName);
+        log("get user projects "+result);
+        if(result == "true") {
+            log("get projects of user - resource exists "+ resourceExists(USER_PROJECTS_MAPPING + userName));
+            //get the comma separated project keys that the user can access
+            //var mapResource = registry.get(USER_PROJECTS_MAPPING + userName);
+            var mapResource = getResource(USER_PROJECTS_MAPPING + userName);
+
+            if (mapResource != null) {
+                var projectArray = mapResource.getProperty(PROJECT_LIST).split(",");
+                log("getting user projects "+projectArray);
+
+                // read the project details from projects/ collection and display link to project
+                for (var i = 0; i <= projectArray.length - 1; ++i) {
+                    var resource = {};
+                    var key = projectArray[i];
+                    var path = PROJECTS + key;
+
+                    //if (registry.resourceExists(path)) {
+                    if (resourceExists(path)) {
+                        //var project = registry.get(path);
+                        var project = getResource(path);
+                        log("resource exist for key "+key+" : "+project);
+                        resource.props = {};
+                        resource.props.projectKey = key;
+                        resource.props.projectName = project.getProperty(PROJECT_NAME);
+                    }
+                    projectList.push(resource)
+                }
+            }
+        }
+        return projectList;
+    }
+
+    function getRepositoryPath(projectKey){
+        path = PROJECTS + projectKey;
+        //if(registry.resourceExists(path)) {
+        if(resourceExists(path)) {
+            //return registry.get(path).getProperty(REPO_LINK);
+            return getResource(path).getProperty(REPO_LINK);
+        }
+    }
+%>

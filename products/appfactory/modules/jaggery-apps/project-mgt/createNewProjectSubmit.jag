@@ -1,0 +1,40 @@
+<%
+    include('includes/template_header.jag');
+
+    var projectKey = request.getParameter("projectKey");
+    var projectName = request.getParameter("projectName");
+    var projectDescription = request.getParameter("projectDescription");
+    var userName = request.getParameter("userName");
+
+%>
+<div id="middle">
+    <div id="workArea">
+        <%
+            include('mgt/registryAccessManager.jag');
+            include('mgt/projectManager.jag');
+            try {
+                var keyTaken = isProjectKeyAlreadyTaken(projectKey);
+
+                if (keyTaken == "false") {
+                    //if project key is not already taken, proceed with creating the project
+                    ////print(createProject(projectKey, projectName, projectDescription));
+                    print(createNewProject(projectKey, projectName, projectDescription, userName));
+                    ////var repoLink = createRepository(projectKey);
+                    var repoLink = createProjectRepository(projectKey);
+                    log("&&&&&&&&&&&&&&&&&& ropo got created " + repoLink);
+                    addProjectToApp(projectKey, projectName, projectDescription, repoLink);
+                    addProjectToUser(userName, projectKey);
+                } else {
+                    print("<h5>Project key is already taken</h5>");
+                }
+            } catch (e) {
+                print(e);
+            }
+        %>
+    </div>
+</div>
+<%
+    include('includes/template_footer.jag');
+%>
+
+

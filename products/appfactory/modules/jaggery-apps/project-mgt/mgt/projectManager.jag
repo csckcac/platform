@@ -1,0 +1,136 @@
+<%
+    include('../process/webServiceUtil.jag');
+
+    function createNewProject(projectKey, projectName, projectDescription, userName) {
+        try {
+            var result = createProject(projectKey, projectName, projectDescription);
+            if( result != null) {
+                return result;
+            } else {
+                throw "Error while creating the project";
+            }
+        } catch(e) {
+            throw "Error while creating the project";
+        }
+    }
+
+    function createProjectRepository(projectKey){
+        try {
+            var result = createRepository(projectKey);
+            if( result != null) {
+                var repoLink = null;
+                repoLink = result.split("<ns:return>")[1].split("</ns:return>")[0];
+                return repoLink;
+            } else {
+                throw "Error while creating repository";
+            }
+        } catch(e) {
+            throw "Error while creating repository";
+        }
+    }
+
+    function inviteUserToProject(projectKey, requestersUsername, newUsername, newUserRole) {
+        try {
+            var result = addUserToProject(projectKey, requestersUsername, newUsername, newUserRole);
+            if( result != null) {
+                return result;
+            } else {
+                throw "Error while adding user as developer";
+            }
+        } catch(e) {
+            throw "Error while adding user as developer";
+        }
+    }
+
+    function getUserRolesForProject(projectKey, userName) {
+        try {
+            var result = getRoles(projectKey, userName);
+            if( result != null) {
+                var roleArray = result.*::["return"].text();
+                return roleArray;
+            } else {
+                throw "Error while retrieving roles";
+            }
+        } catch(e) {
+            throw "Error while retrieving roles";
+        }
+    }
+
+    function getUsersOfProject(projectKey) {
+        try {
+            var result = getUsers(projectKey);
+            if( result != null) {
+                return result;
+            } else {
+                throw "Error while retrieving users of project";
+            }
+        } catch(e) {
+            throw "Error while retrieving users of project";
+        }
+    }
+
+    //create the user when user registers
+    function createUserAccount(userName, password, email, firstName, lastName) {
+        try {
+            var result = createUser(userName, password, email, firstName, lastName);
+            if( result != null) {
+                return result;
+            } else {
+                throw "Error while creating the user account";
+            }
+        } catch(e) {
+            throw "Error while creating the user account";
+        }
+    }
+
+    // check whether the logged in user plays any role in the given project
+    function isUserInProject(projectKey, userName) {
+        try {
+            var roleArray = getUserRolesForProject(projectKey, userName);
+            if(roleArray.length() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch(e) {
+            throw "Error while checking user access to project";
+        }
+    }
+
+    // checks whether the logged in user is the owner of the given project
+    function isOwner(projectKey, userName) {
+        try {
+            var roleArray = getUserRolesForProject(projectKey, userName);
+            log("roleArray :"+roleArray);
+            log("roleArray length : "+roleArray.length());
+            var isOwner = false;
+            for(var i =0; i < roleArray.length(); ++i) {
+                print(roleArray[i]);
+                if(roleArray[i] == "Owner") {
+                    isOwner = true;
+                }
+            }
+            return isOwner;
+        } catch(e) {
+            throw "Error while checking ownership of project";
+        }
+    }
+
+    function isUserADevOp(projectKey, userName) {
+        try {
+            var roleArray = getUserRolesForProject(projectKey, userName);
+            log("roleArray :"+roleArray);
+            log("roleArray length : "+roleArray.length());
+            var isADevOp = false;
+            for(var i =0; i < roleArray.length(); ++i) {
+                if(roleArray[i] == "devOp") {
+                    isADevOp = true;
+                }
+            }
+            return isADevOp;
+        } catch(e) {
+            throw "Error while checking ownership of project";
+        }
+    }
+
+%>

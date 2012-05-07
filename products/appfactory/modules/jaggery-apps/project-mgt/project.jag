@@ -1,0 +1,162 @@
+<%
+    include('includes/template_header.jag');
+%>
+<script>
+    $(document).ready(function() {
+        var defaultTabId = "overview";//Set this to the default tab that needed to be selected
+        var tabId = "pageTabs";
+        $('#' + tabId + ' a').each(function() {
+            if ($(this).attr('name') == defaultTabId) {
+                $('#' + $(this).attr('name')).show('fold');
+                $(this).addClass('selected');
+            } else {
+                $('#' + $(this).attr('name')).hide();
+                $(this).removeClass('selected');
+            }
+
+        });
+        $('#' + tabId + ' a').click(function() {
+            $('#' + tabId + ' a').removeClass('selected');
+            $('#' + tabId + ' a').each(function() {
+                $('#' + $(this).attr('name')).hide();
+            });
+            $(this).addClass('selected');
+            $('#' + $(this).attr('name')).show('fold');
+        });
+    });
+</script>
+<%
+    var projectName = request.getParameter("projectName");
+    var projectKey = request.getParameter("projectKey");
+
+    include('mgt/projectManager.jag');
+    var userHasAccess = false;
+    try {
+        // userName variable is taken from template_header.jag
+        userHasAccess = isUserInProject(projectKey, userName);
+    } catch (e) {
+        log (e);
+    }
+    if(userHasAccess) {
+        var userIsOwner = false;
+        var isADevOp = false;
+        try {
+            userIsOwner = isOwner(projectKey, userName);
+            isADevOp = isUserADevOp(projectKey, userName);
+            print("isDevOp "+isADevOp);
+
+            // TODO remove this assignment when the devOp UI is ready ********
+            isADevOp = false;
+        } catch (e) {
+            log (e);
+        }
+
+        log("user is an Owner "+userIsOwner);
+        
+        %>
+        <div id="middle">
+            <div id="workArea">
+                <%
+                    if (projectName != null && projectKey != null) {
+                %>
+                    <h2><%= projectName%>
+                </h2>
+                <%
+        //                //temp code
+        //                var registry = new Registry("SYSTEM_CONFIGURATION");
+        //                log("registry.get(projects/projectKey) ===> " + projectKey);
+        //                var resource = registry.get("projects/" + projectKey);
+        //                var projectSVN = resource.getProperty("repoLink");
+                        include('mgt/registryAccessManager.jag');
+                        var projectSVN = getRepositoryPath(projectKey);
+                %>
+                    <!-- Including the tabbed navigation -->
+                    <div id="pageTabs" class="page-tabs">
+                        <a name="overview" class="tab">Overview</a><!-- Basicaly create a div with id="overview" and add content -->
+                        <%
+                            if(userIsOwner) {
+                        %>
+                        <a name="admin" class="tab selected">Admin</a>
+                        <%
+                            }
+                        %>
+                        <%
+                            if(isADevOp) {
+                        %>
+                        <a name="devOp" class="tab selected">Operations</a>
+                        <%
+                            }
+                        %>
+                    </div>
+                    <div style="clear:both"></div>
+        
+                    <!-- information common to all project users -->
+                    <div class="content-box" id="overview">
+                        <h3>Project overview</h3>
+        
+                        <div>
+                            <table>
+                                <tr>
+                                    <td>SVN location:</td>
+                                    <td><%= projectSVN%>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- end of user information -->
+        
+                    <!-- admin content -->
+                    <%
+                        if(userIsOwner) {
+                    %>
+                    <div class="content-box" id="admin">
+                        <h3>Admin Portal</h3>
+                        <%
+                            include('userList.jag');
+                        %>
+                        <table class="styledLeft">
+                            <tr>
+                                <td class="buttonRow">
+                                    <input type="button" onclick="location.href='inviteUser.jag?projectName=<%=projectName%>&projectKey=<%=projectKey%>'" value='Invite User' class='button'/>
+                                    <input type="button" onclick="location.href='approvals.jag?projectName=<%=projectName%>&projectKey=<%=projectKey%>'" value='Pending Approvals' class='button'/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <%
+                        }
+                    %>
+                    <!-- end of admin information -->
+
+                <!-- devOp information -->
+                    <%
+                        if (isADevOp) {
+                    %>
+                    <div class="content-box" id="devOp">
+                        <h3>devOp operations</h3>
+                        <table class="styledLeft">
+                            <tr>
+                                <td class="buttonRow">
+                                    <input type="button" value='Deploy to QA' class='button'/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <%
+                        }
+                    %>
+                    <%
+                    }
+
+    } else {
+        %>
+            <p>Access denied for the project <%=projectName%></p>
+        <%
+    }
+            %>
+    </div>
+</div>
+<%
+    include('includes/template_footer.jag');
+%>

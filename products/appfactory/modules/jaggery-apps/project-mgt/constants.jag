@@ -1,0 +1,15 @@
+<%
+    // collection names
+    var PROJECTS = "projects/";
+    var USER_PROJECTS_MAPPING = "userProjectMapping/";
+
+    // property keys of registry 'project' resource
+    var PROJECT_KEY = "projectKey";
+    var PROJECT_NAME = "projectName";
+    var PROJECT_DESC = "projectDescription";
+    var REPO_LINK = "repoLink";
+
+    // property keys of registry 'userProjectMapping' resource
+    var PROJECT_LIST = "projects";
+
+%>

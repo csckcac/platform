@@ -1,0 +1,46 @@
+<%
+    //var registry = new Registry("SYSTEM_CONFIGURATION");
+	var registry = new MetadataStore("admin", "admin");
+
+    // checks whether any resource exists in the given path
+    function resourceExists(path) {
+        try {
+            if (registry.resourceExists(path)) {
+                return "true";
+            } else {
+                return "false";
+            }
+        } catch (e) {
+            log("Error while accessing registry resource \n"+e.message);
+            //throw "Error while accessing registry resource";
+        }
+    }
+
+    function putResource(path, resource) {
+        try {
+            registry.put(path, resource);
+        } catch (e) {
+            log("Error while storing registry resource \n"+e.message);
+            //throw "Error while storing registry resource";
+        }
+    }
+
+    function getResource(path) {
+        try {
+            return registry.get(path);
+        } catch (e) {
+            log("Error while retrieving registry resource \n"+e.message);
+            log("Error ---------: "+e);
+            //throw "Error while retrieving registry resource";
+        }
+    }
+
+    function createResource() {
+        try {
+            return registry.newResource();
+        } catch (e) {
+            log("Error while creating registry resource \n"+e.message);
+            //throw "Error while creating registry resource";
+        }
+    }
+%>

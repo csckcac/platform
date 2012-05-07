@@ -1,0 +1,27 @@
+<td id="menu-panel" valign="top">
+    <table id="menu-table" border="0" cellspacing="0">
+        <tr>
+            <div id="menu" style="min-height: 400px;">
+                <ul class="main">
+                    <li class="normal">
+                        <ul class="sub">
+                            <li class="menu-disabled-link">Projects</li>
+                            <li class="normal">
+                                <ul class="sub">
+                                    <li>
+                                        <a href="index.jag" class="menu-default"
+                                           style="background-image: url(images/default-menu-icon.gif);">List</a>
+                                    </li>
+                                    <li>
+                                        <a href="createNewProject.jag" class="menu-default"
+                                           style="background-image: url(images/default-menu-icon.gif);">Add</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </tr>
+    </table>
+</td>

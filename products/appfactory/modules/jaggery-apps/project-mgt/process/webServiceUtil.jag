@@ -1,0 +1,158 @@
+<%
+    include('../config_reader.jag');
+
+    // creates project in stratos
+    function createProject(projectKey, projectName, projectDescription, userName) {
+
+        //// temp hard coded value. change bpel to get this
+        var emailAddress = "ashansa@wso2.com";
+        var ws = require('ws');
+        var request = new ws.WSRequest();
+        var options = new Array();
+        options.useSOAP = 1.1;
+        options.timeout = 1000000;
+        options.action = "urn:process";
+
+        var payload = '<p:CreateProjectRequest xmlns:p="http://wso2.org/createproject"><projectKey xmlns="http://wso2.org/createproject">' + projectKey + '</projectKey><projectName xmlns="http://wso2.org/createproject">' + projectName + '</projectName><projectDescription xmlns="http://wso2.org/createproject">' + projectDescription + '</projectDescription><username xmlns="http://wso2.org/createproject">' + userName + '</username><emailAddress xmlns="http://wso2.org/createproject">' + emailAddress + '</emailAddress></p:CreateProjectRequest>';
+        var result;
+        try {
+            var endPoint = getProperty('webService.createProject');
+            request.open(options, endPoint, false);
+            request.send(payload);
+            result = request.responseE4X;
+        } catch (e) {
+            log("Error while creating project \n"+e.message);
+            throw "Error while creating project";
+        }
+        return result;
+    }
+
+    // creates an svn repository for the created project
+    function createRepository(projectKey) {
+        var ws = require('ws');
+        var request = new ws.WSRequest();
+        var options = new Array();
+        options.useSOAP = 1.1;
+        options.timeout = 1000000;
+        options.action = "urn:process";
+
+        var payload = '<p:createRepository xmlns:p="http://SCMClient.ws.scm.sonia"><projectKey xmlns="http://SCMClient.ws.scm.sonia">' + projectKey + '</projectKey></p:createRepository>';
+        var result;
+        try {
+            var endPoint = getProperty('webService.createRepo');
+            log("repo end point " + endPoint + "---");
+            request.open(options, endPoint, false);
+            request.send(payload);
+            result = request.responseText;
+            log("reuslt........." + result);
+        } catch (e) {
+            log("Error while creating repository \n"+e.message);
+            throw "Error while creating repository";
+        }
+
+//        var repoLink = null;
+//        if (result != null) {
+//            repoLink = result.split("<ns:return>")[1].split("</ns:return>")[0];
+//        }
+//        return repoLink;
+        return result;
+    }
+
+    // add the user to the project in LDAP
+    function addUserToProject(projectKey, requestersUsername, newUsername, newUserRole) {
+
+        var ws = require('ws');
+        var request = new ws.WSRequest();
+        var options = new Array();
+        options.useSOAP = 1.1;
+        options.timeout = 1000000;
+        options.action = "urn:process";
+
+        var payload = '<p:AddUserToProjectRequest xmlns:p="http://wso2.org/addusertoproject"><projectKey xmlns="http://wso2.org/addusertoproject">' + projectKey + '</projectKey><requestersUsername xmlns="http://wso2.org/addusertoproject">' + requestersUsername + '</requestersUsername><newUsername xmlns="http://wso2.org/addusertoproject">' + newUsername + '</newUsername><newUserRole xmlns="http://wso2.org/addusertoproject">' + newUserRole + '</newUserRole></p:AddUserToProjectRequest>';
+        var result;
+
+        try {
+            var endPoint = getProperty('webService.addUserToProject');
+            request.open(options, endPoint, false);
+            request.send(payload);
+            result = request.responseE4X;
+        } catch (e) {
+            log("Error while adding user to project \n"+e.message);
+            throw "Error while adding user to project";
+        }
+        return result;
+    }
+
+    // get the roles of the logged in user for the given project
+    function getRoles(projectKey, userName) {
+        var ws = require('ws');
+        var request = new ws.WSRequest();
+        var options = new Array();
+        options.useSOAP = 1.1;
+        options.timeout = 1000000;
+        options.action = "urn:getRolesOfUserPerProject";
+
+        var payload = '<p:getRolesOfUserPerProject xmlns:p="http://service.role.user.ws.idtme.carbon.wso2.org"><projectKey xmlns="http://service.role.user.ws.idtme.carbon.wso2.org">' + projectKey + '</projectKey><userName xmlns="http://service.role.user.ws.idtme.carbon.wso2.org">' + userName + '</userName></p:getRolesOfUserPerProject>';
+        var result;
+
+        try {
+            var endPoint = getProperty('webService.getRolesOfUserForProject');
+            request.open(options, endPoint, false);
+            request.send(payload);
+            result = request.responseE4X;
+        } catch (e) {
+            log("Error while retrieving roles \n"+e.message);
+            throw "Error while retrieving roles";
+        }
+        /*var roleArray = result.*::["return"].text();
+        return roleArray;*/
+        return result;
+    }
+
+    //getUsers of the project
+    function getUsers(projectKey) {
+        var ws = require('ws');
+        var request = new ws.WSRequest();
+        var options = new Array();
+        options.useSOAP = 1.1;
+        options.timeout = 1000000;
+        options.action = "urn:process";
+
+        var payload = '<p:getUserListForProject xmlns:p="http://services.mgt.tenant.carbon.wso2.org"><projectKey xmlns="http://services.mgt.tenant.carbon.wso2.org">' + projectKey + '</projectKey></p:getUserListForProject>';
+        var result;
+        try {
+            var endPoint = getProperty('webService.getUsersOfProject');
+            request.open(options, endPoint, false);
+            request.send(payload);
+            result = request.responseE4X;
+        } catch (e) {
+            log("Error while retrieving users of project \n"+e.message);
+            throw "Error while retrieving users of project";
+        }
+        return result;
+    }
+
+    // creating a user
+    function createUser(userName, password, email, firstName, lastName) {
+        var ws = require('ws');
+        var request = new ws.WSRequest();
+        var options = new Array();
+        options.useSOAP = 1.1;
+        options.timeout = 1000000;
+        options.action = "urn:process";
+
+        var payload = '<p:UserCreationProcessRequest xmlns:p="http://wso2.org"><userName xmlns="http://wso2.org">' + userName + '</userName><password xmlns="http://wso2.org">' + password + '</password><email xmlns="http://wso2.org">' + email + '</email><firstName xmlns="http://wso2.org">' + firstName + '</firstName><lastName xmlns="http://wso2.org">' + lastName + '</lastName></p:UserCreationProcessRequest>';
+        var result;
+        try {
+            var endPoint = getProperty('bpel.createUser');
+            //var endPoint = "http://192.168.4.26:9765/services/UserCreationProcess/";
+            request.open(options, endPoint, false);
+            request.send(payload);
+            result = request.responseE4X;
+        } catch (e) {
+            log("Error while creating the user account \n"+e.message);
+            throw "Error while creating the user account";
+        }
+        return result;
+    }
+%>

@@ -1,0 +1,42 @@
+<%
+var module =require("carbon");
+var carbon = new module.CarbonObject();
+var CARBON_HOME=carbon.getCarbonHome();
+var file = new File("file:///"+CARBON_HOME+"/repository/conf/idtme.xml");
+file.open("r");
+var config=file.readAll();
+var app= new XML(config);
+
+function getPropertyTemp(expression) {
+    switch (expression) {
+        case "sso.name":
+            return app.sso.name.text();
+        case "sso.identityProviderURL":
+            return app.sso.identityProviderURL.text();
+        case "sso.keyStorePassword":
+            return app.sso.keyStorePassword.text();
+        case "sso.identityAlias":
+            return app.sso.identityAlias.text();
+        case "sso.keyStoreName":
+            return app.sso.keyStoreName.text();
+        case "webService.addUserToProject":
+            return app.webService.addUserToProject.text();
+        case "webService.createProject":
+            return app.webService.createProject.text();
+        case "webService.createRepo":
+            return app.webService.createRepo.text();
+        case "webService.getRolesOfUserForProject":
+            return app.webService.getRolesOfUserForProject.text();
+        case "webService.getUsersOfProject":
+            return app.webService.getUsersOfProject.text();
+        case "bpel.createUser":
+            return app.bpel.createUser.text();
+        default:
+            return;
+    }
+}
+ function getProperty(expression){
+    return ""+getPropertyTemp(expression);
+ }
+
+%>

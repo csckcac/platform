@@ -260,10 +260,16 @@ public class ServerGroupManager {
                 isPortOpen = socket.isConnected();
                 if (isPortOpen) {
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(2000);
                     } catch (InterruptedException ignored) {
                     }
                 } else {
+                    try {
+                        Thread.sleep(15000);
+                        //reserve time to shut down server
+                    } catch (InterruptedException e) {
+
+                    }
                     return;
                 }
             } catch (IOException e) {

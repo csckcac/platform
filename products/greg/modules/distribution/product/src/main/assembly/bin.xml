@@ -25,7 +25,6 @@
             <directory>target/wso2carbon-core-${carbon.version}</directory>
             <outputDirectory>${pom.artifactId}-${build.version}</outputDirectory>
             <excludes>
-                <exclude>**/native/*</exclude>
                 <exclude>**/*.aar</exclude>
                 <exclude>**/services/echo/**</exclude>
                 <exclude>**/repository/axis2/service/artifacts/services/version/**</exclude>
@@ -47,11 +46,9 @@
             <directory>target/wso2carbon-core-${carbon.version}</directory>
             <outputDirectory>${pom.artifactId}-${build.version}</outputDirectory>
             <excludes>
-                <exclude>**/daemon.sh</exclude>
                 <exclude>**/ciphertool.sh</exclude>
             </excludes>
             <includes>
-                <include>**/native/*</include>
                 <include>**/*.sh</include>
             </includes>
             <fileMode>755</fileMode>
@@ -368,12 +365,6 @@
             <outputDirectory>${pom.artifactId}-${build.version}/bin/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>target/wso2carbon-core-${carbon.version}/bin/daemon.sh</source>
-            <outputDirectory>${pom.artifactId}-${build.version}/bin/</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>755</fileMode>
         </file>
         <file>
             <source>${basedir}/src/main/resources/carbon-home/bin/checkin-client.sh</source>

@@ -93,12 +93,8 @@ this directory.
                 --debug <port>  Start the server in remote debugging mode.
                                 port: The remote debugging port.
 
-                --run           Run the server.
                 --start         Start Carbon as a Unix daemon in the background.
-                --console       Start Carbon as a Unix daemon in the foreground.
                 --stop          Stop the Carbon Unix daemon.
-                --status        Get the status of the Carbon Unix daemon.
-                --dump          Print a thread dump of the Carbon Unix daemon.
                 --restart       Restart the Carbon Unix daemon.
                 --cleanRegistry Clean registry space.
                                 [CAUTION] All Registry data will be lost..

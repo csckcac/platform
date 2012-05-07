@@ -47,7 +47,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -56,68 +55,61 @@ import static org.testng.Assert.assertFalse;
 public class ServerGroupManager {
     private static final Log log = LogFactory.getLog(ServerGroupManager.class);
 
-    private static boolean serversRunning = false;
     private static final long TIMEOUT = 60 * 1000;
-
-    private static List<ServerManager> serverManagerList = new ArrayList<ServerManager>();
 
     public static synchronized void startServers(List<String> productList) throws Exception {
         log.info("Server starting...");
-        log.info("Server running " + serversRunning);
         EnvironmentBuilder env = new EnvironmentBuilder();
-        if (!serversRunning) {
 
-            Assert.assertNotNull("Deployment Framework Home not provided", env.getFrameworkSettings().
-                    getEnvironmentVariables().getDeploymentFrameworkPath());
-            Assert.assertTrue(PackageCreator.createPackage());
+        Assert.assertNotNull("Deployment Framework Home not provided", env.getFrameworkSettings().
+                getEnvironmentVariables().getDeploymentFrameworkPath());
+        Assert.assertTrue(PackageCreator.createPackage());
 
-            ServerManager serverManager;
+        ServerManager serverManager;
 
-            try {
-                OMElement commonConfig = AXIOMUtil.stringToOM(FileManager.readFile
-                        (env.getFrameworkSettings().getEnvironmentVariables().
-                                getDeploymentFrameworkPath() + File.separator + "config" +
-                         File.separator + "commonConfig.xml").trim());
-                OMElement databaseMount = commonConfig.getFirstChildWithName(new QName("MountDatabase"));
+        try {
+            OMElement commonConfig = AXIOMUtil.stringToOM(FileManager.readFile
+                    (env.getFrameworkSettings().getEnvironmentVariables().
+                            getDeploymentFrameworkPath() + File.separator + "config" +
+                     File.separator + "commonConfig.xml").trim());
+            OMElement databaseMount = commonConfig.getFirstChildWithName(new QName("MountDatabase"));
 
-                if (databaseMount != null) {
-                    createRegistryDB(databaseMount);
-                    log.info("WSO2 Registry Created");
-                }
-
-                for (String product : productList) {
-                    String carbonHome = ProductConstant.getCarbonHome(product);
-                    OMElement databaseConfig = getCurrentDatabaseConfig(carbonHome);
-                    if (!"org.h2.Driver".equalsIgnoreCase
-                            (databaseConfig.getFirstChildWithName(new QName("driverName")).getText().trim())) {
-                        createRegistryDB(databaseConfig);
-                        log.info("local Registry Created");
-                    }
-                    serverManager = new ServerManager(carbonHome);
-                    serverManager.start();
-                    serversRunning = true;
-//                    serverManagerList.add(serverManager);
-                }
-
-            } catch (ServerConfigurationException e) {
-                log.error("Server configuration error " + e.getMessage());
-                throw new ServerConfigurationException("Server configuration error " + e.getMessage());
-            } catch (ClassNotFoundException e) {
-                log.error("Database Driver Not Found " + e.getMessage());
-                throw new ClassNotFoundException("Database Driver Not Found " + e.getMessage());
-            } catch (SQLException e) {
-                log.error("Database Server connection failed " + e.getMessage());
-                throw new SQLException("Database Server connection failed " + e.getMessage());
-            } catch (IOException e) {
-                log.error("Exception while reading  commonConfig.xml in deployment framework " + e.getMessage());
-                throw new IOException("Exception while reading  commonConfig.xml in deployment framework " + e.getMessage());
-            } catch (XMLStreamException e) {
-                log.error("Exception while reading  commonConfig.xml in deployment framework " + e.getMessage());
-                throw new XMLStreamException("Exception while reading  commonConfig.xml in deployment framework " + e.getMessage());
+            if (databaseMount != null) {
+                createRegistryDB(databaseMount);
+                log.info("WSO2 Registry Created");
             }
 
-            //create users in each server
-            new UserPopulator().populateUsers(productList);
+            for (String product : productList) {
+                String carbonHome = ProductConstant.getCarbonHome(product);
+                OMElement databaseConfig = getCurrentDatabaseConfig(carbonHome);
+                if (!"org.h2.Driver".equalsIgnoreCase
+                        (databaseConfig.getFirstChildWithName(new QName("driverName")).getText().trim())) {
+                    createRegistryDB(databaseConfig);
+                    log.info("local Registry Created");
+                }
+                serverManager = new ServerManager(carbonHome);
+                serverManager.start();
+            }
+
+        } catch (ServerConfigurationException e) {
+            log.error("Server configuration error " + e.getMessage());
+            throw new ServerConfigurationException("Server configuration error " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            log.error("Database Driver Not Found " + e.getMessage());
+            throw new ClassNotFoundException("Database Driver Not Found " + e.getMessage());
+        } catch (SQLException e) {
+            log.error("Database Server connection failed " + e.getMessage());
+            throw new SQLException("Database Server connection failed " + e.getMessage());
+        } catch (IOException e) {
+            log.error("Exception while reading  commonConfig.xml in deployment framework " + e.getMessage());
+            throw new IOException("Exception while reading  commonConfig.xml in deployment framework " + e.getMessage());
+        } catch (XMLStreamException e) {
+            log.error("Exception while reading  commonConfig.xml in deployment framework " + e.getMessage());
+            throw new XMLStreamException("Exception while reading  commonConfig.xml in deployment framework " + e.getMessage());
+        }
+
+        //create users in each server
+        new UserPopulator().populateUsers(productList);
 
 //            Runtime.getRuntime().addShutdownHook(new Thread() {
 //                public void run() {
@@ -133,7 +125,7 @@ public class ServerGroupManager {
 //                    }
 //                }
 //            });
-        }
+//        }
     }
 
     private static String getDatabaseName(String driverName, String url) {
@@ -222,30 +214,27 @@ public class ServerGroupManager {
     }
 
     public static synchronized void shutdownServers(List<String> productList) throws Exception {
-        if (serversRunning) {
-            serversRunning = false;
-            UserInfo adminDetails = UserListCsvReader.getUserInfo(0);//get admin user of all products
-            AdminServiceCarbonServerAdmin adminServiceCarbonServerAdmin;
-            try {
-                for (String product : productList) {
-                    FrameworkProperties properties = FrameworkFactory.getFrameworkProperties(product);
-                    String hostName = properties.getProductVariables().getHostName();
-                    String backEndUrl = properties.getProductVariables().getBackendUrl();
-                    String sessionCookieUser = login(adminDetails.getUserName(), adminDetails.getPassword(), backEndUrl, hostName);
-                    adminServiceCarbonServerAdmin = new AdminServiceCarbonServerAdmin(backEndUrl);
-                    adminServiceCarbonServerAdmin.shutdownGracefully(sessionCookieUser);
-                    waitForServerShutDown(Integer.parseInt(properties.getProductVariables().
-                            getHttpsPort()), properties.getProductVariables().getHostName());
-                    assertFalse(ClientConnectionUtil.isPortOpen(Integer.parseInt(properties.getProductVariables().
-                            getHttpsPort()), properties.getProductVariables().getHostName()),
-                                "Port " + Integer.parseInt(properties.getProductVariables().getHttpsPort()) +
-                                " shouldn't be open when the server is gracefully shutting down");
+        UserInfo adminDetails = UserListCsvReader.getUserInfo(0);//get admin user of all products
+        AdminServiceCarbonServerAdmin adminServiceCarbonServerAdmin;
+        try {
+            for (String product : productList) {
+                FrameworkProperties properties = FrameworkFactory.getFrameworkProperties(product);
+                String hostName = properties.getProductVariables().getHostName();
+                String backEndUrl = properties.getProductVariables().getBackendUrl();
+                String sessionCookieUser = login(adminDetails.getUserName(), adminDetails.getPassword(), backEndUrl, hostName);
+                adminServiceCarbonServerAdmin = new AdminServiceCarbonServerAdmin(backEndUrl);
+                adminServiceCarbonServerAdmin.shutdownGracefully(sessionCookieUser);
+                waitForServerShutDown(Integer.parseInt(properties.getProductVariables().
+                        getHttpsPort()), properties.getProductVariables().getHostName());
+                assertFalse(ClientConnectionUtil.isPortOpen(Integer.parseInt(properties.getProductVariables().
+                        getHttpsPort()), properties.getProductVariables().getHostName()),
+                            "Port " + Integer.parseInt(properties.getProductVariables().getHttpsPort()) +
+                            " shouldn't be open when the server is gracefully shutting down");
 
-                }
-            } catch (Exception e) {
-                log.error("Error when shutting down the server.", e);
-                throw new Exception("Error when shutting down the server.", e);
             }
+        } catch (Exception e) {
+            log.error("Error when shutting down the server.", e);
+            throw new Exception("Error when shutting down the server.", e);
         }
     }
 

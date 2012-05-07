@@ -27,7 +27,11 @@ h2{
 .cat_and_charts h4{
     font-size:15px;
 }
-h5{
+h4{
+    color:#58595b;
+    font-size:14px;
+    margin:5px 0;
+}h5{
     color:#58595b;
     font-size:12px;
     margin:0;
@@ -36,7 +40,9 @@ thead th,
 tbody th {
     font-family: arial, verdana, sans-serif;
 }
-
+fieldset{
+    margin-top:10px;
+}
 button,
 a.btn,
 input[type="submit"],
@@ -243,6 +249,9 @@ a.logo{
 .cat_and_charts hr{
     margin:0;
 }
+.tab-content hr{
+    margin:5px 0;
+}
 /* start tag cloud */
 .clouds a{color:#6e9215;}
 .clouds a:hover{color:#fff;background-color:#6e9215;}
@@ -445,6 +454,13 @@ input[type="text"]:focus, textarea:focus, button:focus, a.button:focus, select:f
 .accordion-heading .accordion-toggle {
   display: block;
   padding: 8px 15px;
+     background: -moz-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 50%, rgb(240, 240, 240) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgb(255, 255, 255)), color-stop(50%, rgb(255, 255, 255)), color-stop(100%, rgb(240, 240, 240)));
+    background: -webkit-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 50%, rgb(240, 240, 240) 100%);
+    background: -o-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 50%, rgb(240, 240, 240) 100%);
+    background: -ms-linear-gradient(top, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 50%, rgb(240, 240, 240) 100%);
+    filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=0,StartColorStr='#ffffff',EndColorStr='#f0f0f0'); /* IE8 */
+      -ms-filter: progid: DXImageTransform.Microsoft.gradient(gradientType = 0, startColor = '#ffffff', endColoStr = '#f0f0f0'); /*Transparent back */
 }
 .accordion-inner {
   border-top: 1px solid #e5e5e5;
@@ -489,7 +505,9 @@ input[type="text"]:focus, textarea:focus, button:focus, a.button:focus, select:f
 .application-api {
     padding: 9px 15px;
 }
-
+.application-api img{
+    width:60px;
+}
 .average-rating {
     background: url("../images/bigstar.png") no-repeat scroll 0 0 transparent;
     font-size: 20px;
@@ -552,10 +570,6 @@ input[type="text"]:focus, textarea:focus, button:focus, a.button:focus, select:f
     display: none;
 }
 
-.subscription-list div.accordion-body {
-    display: none;
-}
-
 .documentaion-body {
     margin-bottom: 15px;
 }
@@ -564,5 +578,9 @@ input[type="text"]:focus, textarea:focus, button:focus, a.button:focus, select:f
 }
 .info-table{
     margin-top:-25px;
+}
+.comment-text{
+    padding:5px;
+    color:#888;
 }
 

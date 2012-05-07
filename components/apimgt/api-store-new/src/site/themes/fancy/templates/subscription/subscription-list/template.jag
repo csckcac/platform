@@ -11,6 +11,8 @@
                 <a class="accordion-toggle"><%=app.name%></a>
             </div>
             <div class="accordion-body">
+            <table cellspacing="0" cellpadding="0" class="">
+                <tbody>
                 <div class="accordion-inner">
                     <%
                     apis = app.subscriptions;
@@ -21,12 +23,17 @@
                         clazz = (j%2) == 0 ? "even" : "odd";
                         path = jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + api.name + "&version=" + api.version + "&provider=" + api.provider;
                     %>
-                    <div class="application-api <%=clazz%>">
-                        <div class="application-api-listing">
-                            <a href="<%=path%>"><img alt="" src="<%=api.thumburl%>"/></a>
-                            <div><a href="<%=path%>" class="service-name"><%=api.name%></a></div>
-                            <div class="company-name"><%=api.provider%></div>
-                        </div>
+                    <tr class="application-api <%=clazz%>">
+                        <td>
+                             <a href="<%=path%>"><img alt="" src="<%=api.thumburl%>"/></a>
+                        </td>
+                        <td>
+                            <a href="<%=path%>" class="service-name"><%=api.name%></a>
+                        </td>
+                        <td>
+                            <%=api.provider%>
+                        </td>
+                        <td>
                         <div class="api-key-listing">
                             <% if(key) { %>
                             <div class="api-key"><%=key%></div>
@@ -39,9 +46,13 @@
                                 data-application="<%=app.name%>" class="small green">Generate</button>
                             <% } %>
                         </div>
-                    </div>
+                        </td>
+                    </tr>
                     <% } %>
                 </div>
+                </tbody>
+                </table>
+
             </div>
         </div>
     </div>

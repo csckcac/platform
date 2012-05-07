@@ -1,13 +1,5 @@
 $(document).ready(function () {
-   /* $('.subscription-list div.accordion-body').each(
-            function (index) {
-                if (index == 0) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            }
-    );*/
+
     $('.subscription-list a.accordion-toggle').click(
             function () {
                 $(this).parent().next().toggle('blind');

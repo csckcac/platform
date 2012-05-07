@@ -88,7 +88,7 @@
 
     <dependencySets>
         <dependencySet>
-            <outputDirectory>wso2as-${pom.version}/repository/lib</outputDirectory>
+            <outputDirectory>wso2brs-${pom.version}/repository/lib</outputDirectory>
             <includes>
                 <include>bouncycastle:bcprov-jdk15:jar</include>
             </includes>

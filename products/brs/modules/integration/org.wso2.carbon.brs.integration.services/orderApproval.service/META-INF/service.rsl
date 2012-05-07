@@ -4,7 +4,7 @@
         targetNamespace="http://com.test/orderApproval"
         backendRuntimeFactory="org.wso2.carbon.rule.backend.drools.DroolsBackendRuntimeFactory">
   <ruleSet>
-        <rule resourceType="drl" sourceType="file">orderApprovalRules.drl</rule>
+        <rule resourceType="regular" sourceType="file">orderApprovalRules.drl</rule>
     </ruleSet>
     <operation name="placeOrder">
         <input wrapperElementName="placeOrder" namespace="http://com.test/placeorder">

@@ -4,7 +4,7 @@
         targetNamespace="http://com.test/insurance"
         backendRuntimeFactory="org.wso2.carbon.rule.backend.drools.DroolsBackendRuntimeFactory">
     <ruleSet>
-        <rule resourceType="drl" sourceType="inline">
+        <rule resourceType="regular" sourceType="inline">
             <![CDATA[
                 package insurance
 

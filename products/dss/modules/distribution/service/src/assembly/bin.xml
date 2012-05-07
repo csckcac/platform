@@ -25,7 +25,6 @@
             <directory>target/wso2carbon-core-${carbon.version}</directory>
             <outputDirectory>wso2stratos-dss-${pom.version}</outputDirectory>
             <excludes>
-                <exclude>**/native/*</exclude>
                 <exclude>**/*.sh</exclude>
                 <exclude>**/wso2server.bat</exclude>
                 <exclude>**/repository/deployment/server/axis2services/echo/**</exclude>
@@ -35,7 +34,6 @@
                 <exclude>**/README*</exclude>
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/axis2/axis2.xml</exclude>
-                <exclude>**/wrapper.conf</exclude>
                 <exclude>**/ciphertool.bat</exclude>
                 <exclude>**/INSTALL.txt</exclude>
                 <exclude>**/LICENSE.txt</exclude>
@@ -47,13 +45,11 @@
             <directory>target/wso2carbon-core-${carbon.version}</directory>
             <outputDirectory>wso2stratos-dss-${pom.version}</outputDirectory>
             <excludes>
-                <exclude>**/daemon.sh</exclude>
                 <exclude>**/wso2server.bat</exclude>
                 <exclude>**/ciphertool.sh</exclude>
             </excludes>
             <includes>
                 <include>**/*.sh</include>
-                <include>**/native/*</include>
             </includes>
             <fileMode>755</fileMode>
         </fileSet>
@@ -237,17 +233,6 @@
             <outputDirectory>wso2stratos-dss-${pom.version}/bin/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>target/wso2carbon-core-${carbon.version}/repository/conf/wrapper.conf</source>
-            <outputDirectory>wso2stratos-dss-${pom.version}/repository/conf/</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>target/wso2carbon-core-${carbon.version}/bin/daemon.sh</source>
-            <outputDirectory>wso2stratos-dss-${pom.version}/bin/</outputDirectory>
-            <filtered>true</filtered>
         </file>
 	<!-- Including event-broker.xml file -->
 	<file>

@@ -55,7 +55,7 @@ public class JSR94BackendRuntimeFactory implements RuleBackendRuntimeFactory {
             }
             // RuleServiceProviderImpl will automatically registered
             // via a static initialization block
-            providerClass = classLoader.loadClass(providerClassName);
+            providerClass = Class.forName(providerClassName);
             if (log.isDebugEnabled()) {
                 log.debug("RuleServiceProvider has been initialized." +
                         " provider class : " + providerClassName);
@@ -92,7 +92,7 @@ public class JSR94BackendRuntimeFactory implements RuleBackendRuntimeFactory {
 
             try {
                 if (defaultPropertyProviderClassName != null){
-                    Class defaultPropertyProviderClass = classLoader.loadClass(defaultPropertyProviderClassName);
+                    Class defaultPropertyProviderClass = Class.forName(defaultPropertyProviderClassName);
                     Object defaultPropertyProvider = defaultPropertyProviderClass.newInstance();
                     jsr94BackendRuntime.setDefaultPropertiesProvider((DefaultPropertiesProvider)defaultPropertyProvider);
                 }

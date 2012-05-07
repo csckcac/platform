@@ -92,19 +92,24 @@ public class JSR94BackendRuntime implements RuleBackendRuntime {
                     defaultPropertiesProvider.getRuleExecutionSetCreationDefaultProperties(classLoader);
             properties.putAll(map);
         }
-        //if there isn't already source , then set it to XML
-        if (!properties.containsKey(Constants.RULE_SOURCE)) {
-            properties.put(Constants.RULE_SOURCE, Constants.RULE_SOURCE_DRL);
-        }
 
         for (Rule rule : ruleSet.getRules()) {
+
+            Map<String, Object> ruleProperties = new HashMap();
+            ruleProperties.putAll(properties);
+            if (rule.getResourceType().equals(Constants.RULE_RESOURCE_TYPE_REGULAR)) {
+                ruleProperties.put(Constants.RULE_SOURCE, Constants.RULE_SOURCE_DRL);
+            } else if (rule.getResourceType().equals(Constants.RULE_RESOURCE_TYPE_DTABLE)){
+                 ruleProperties.put(Constants.RULE_SOURCE, "javax.rules.admin.RuleExecutionSet.source.decisiontable");
+            }
+
             InputStream ruleInputStream = RuleSetLoader.getRuleSetAsStream(rule, classLoader);
 
             if (ruleInputStream == null) {
                 throw new RuleConfigurationException(" The input stream form rule script is null.");
             }
             String bindURI =
-                    registerRuleExecutionSet(ruleInputStream, properties, ruleSet.getBindURI(), ruleSet.getProperties());
+                    registerRuleExecutionSet(ruleInputStream, ruleProperties, ruleSet.getBindURI(), ruleSet.getProperties());
             if (ruleSet.getBindURI() == null) {
                 ruleSet.setBindURI(bindURI);
             }

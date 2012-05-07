@@ -120,7 +120,7 @@
                                         <path refid="h2.classpath"/>
                                     </classpath>
                                     <fileset
-                                            file="${basedir}/target/h2.sql"/>
+                                            file="${basedir}/src/test/resources/h2.sql"/>
                                 </sql>
                                 <echo
                                         message="##################### END ########################"/>
@@ -251,9 +251,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.12</version>
                 <configuration>
-		    <excludes>
-            		<exclude>**/AttachmentMgtDAOBasicOperationsTest.java</exclude>
-          	    </excludes>
                     <systemProperties>
                         <property>
                             <name>Attachment-Mgt-DBConfigurationPath</name>

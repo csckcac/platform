@@ -101,7 +101,7 @@ public class AttachmentMgtDAOBasicOperationsTest extends TestCase {
     /**
      * This method tests whether it's possible to get the attachment-info for a given attachment url
      */
-    public void ignoreTestAttachmentDAOGetInfoFromURLTest() {
+    public void testAttachmentDAOGetInfoFromURLTest() {
         AttachmentManagerService service = new AttachmentManagerService();
 
         try {

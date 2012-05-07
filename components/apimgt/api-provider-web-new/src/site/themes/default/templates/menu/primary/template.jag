@@ -1,4 +1,4 @@
-<% jagg.template("header", function(inputs, outputs, jagg) { %>
+<% jagg.template("menu/primary", function(inputs, outputs, jagg) { %>
 
 <link href="<%=site.context%>/site/themes/default/lib/bootstrap/css/bootstrap.css" rel="stylesheet">
 <link href="<%=site.context%>/site/themes/default/lib/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">

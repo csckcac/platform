@@ -1,5 +1,5 @@
 <%
-jagg.initializer("side-bar", {
+jagg.initializer("menu/left", {
 
     initialize:function () {
     }

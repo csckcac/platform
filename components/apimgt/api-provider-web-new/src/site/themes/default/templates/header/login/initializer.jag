@@ -1,8 +1,0 @@
-<%
-jagg.initializer("header/login", {
-
-    preInitialize:function () {
-
-    }
-});
-%>

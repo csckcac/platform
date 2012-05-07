@@ -1,9 +1,8 @@
 <%
-jagg.initializer("login", {
+jagg.initializer("menu/login", {
 
     preInitialize:function () {
 
     }
 });
 %>
-

@@ -1,4 +1,4 @@
-<% jagg.template("header/login", function(inputs, outputs, jagg) { %>
+<% jagg.template("menu/login", function(inputs, outputs, jagg) { %>
 <div class="navbar">
     <div class="navbar-inner">
         <div class="container">

@@ -1,5 +1,5 @@
 <%
-jagg.block("header/login", {
+jagg.block("menu/login", {
     initializer:function (data) {
 
     }

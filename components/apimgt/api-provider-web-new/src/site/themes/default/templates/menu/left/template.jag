@@ -1,4 +1,4 @@
-<% jagg.template("side-bar", function(inputs, outputs, jagg) { %>
+<% jagg.template("menu/left", function(inputs, outputs, jagg) { %>
  <%
     var place = request.getParameter("place");
     if(place == null){

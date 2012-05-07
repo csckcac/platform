@@ -15,14 +15,12 @@
 * specific language governing permissions and limitations
 * under the License.
 */
+
 package org.wso2.carbon.apimgt.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.api.APIConsumer;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.model.*;
-import org.wso2.carbon.apimgt.impl.dao.ApiMgtDAO;
 import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 import org.wso2.carbon.apimgt.impl.utils.APINameComparator;
 import org.wso2.carbon.apimgt.impl.utils.APIUtil;
@@ -30,38 +28,29 @@ import org.wso2.carbon.apimgt.impl.utils.APIVersionComparator;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
 import org.wso2.carbon.governance.api.util.GovernanceConstants;
-import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.session.UserRegistry;
 
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class APIConsumerImpl implements APIConsumer {
+public class APIConsumerImpl extends APIManagerImpl implements APIConsumer {
 
-    private static final Log log = LogFactory.getLog(APIConsumerImpl.class);
-    
-    private ApiMgtDAO apiMgtDAO;
-    private Registry registry;
+    private UserRegistry userRegistry = null;
 
     public APIConsumerImpl() throws APIManagementException {
-        this.apiMgtDAO = new ApiMgtDAO();
-        try {            
-            this.registry = ServiceReferenceHolder.getInstance().
-                    getRegistryService().getGovernanceSystemRegistry();
-        } catch (RegistryException e) {
-            handleException("Error while obtaining system registry", e);
-        }
+        super();
     }
     
     public APIConsumerImpl(String username) throws APIManagementException {
-        this.apiMgtDAO = new ApiMgtDAO();
+        this();
         try {
-            this.registry = ServiceReferenceHolder.getInstance().
+            userRegistry = ServiceReferenceHolder.getInstance().
                     getRegistryService().getGovernanceUserRegistry(username);
         } catch (RegistryException e) {
-            handleException("Error while obtaining user registry", e);
+            throw new APIManagementException(e);
         }
     }
 
@@ -293,7 +282,7 @@ public class APIConsumerImpl implements APIConsumer {
     public void rateAPI(APIIdentifier apiId, APIRating rating) throws APIManagementException {
         String path = APIUtil.getAPIPath(apiId);
         try {
-            registry.rateResource(path, rating.getRating());
+            userRegistry.rateResource(path, rating.getRating());
         } catch (RegistryException e) {
             handleException("Failed to rate API : " + path, e);
         }
@@ -504,7 +493,7 @@ public class APIConsumerImpl implements APIConsumer {
         String apiPath = APIUtil.getAPIPath(identifier);
         org.wso2.carbon.registry.core.Comment comment = new org.wso2.carbon.registry.core.Comment(s);
         try {
-            registry.addComment(apiPath, comment);
+            userRegistry.addComment(apiPath, comment);
         } catch (RegistryException e) {
             handleException("Failed to add comment for api " + apiPath, e);
         }

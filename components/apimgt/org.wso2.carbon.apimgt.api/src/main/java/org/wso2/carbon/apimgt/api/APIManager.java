@@ -15,6 +15,7 @@
 * specific language governing permissions and limitations
 * under the License.
 */
+
 package org.wso2.carbon.apimgt.api;
 
 import org.wso2.carbon.apimgt.api.model.*;
@@ -26,6 +27,7 @@ import java.util.Set;
  * Manager responsible for providing helper functionality on Subscribers, Providers, APIs.
  */
 public interface APIManager {
+
     /**
      * returns details of an API
      *
@@ -132,7 +134,7 @@ public interface APIManager {
      *
      * @param subscriberId The subscriber id of the subscriber to be returned
      * @return The looked up subscriber or null if the requested subscriber does not exist
-     * @throws APIManagementException if faild to get Subscriber
+     * @throws APIManagementException if failed to get Subscriber
      */
     public Subscriber getSubscriber(int subscriberId) throws APIManagementException;
 

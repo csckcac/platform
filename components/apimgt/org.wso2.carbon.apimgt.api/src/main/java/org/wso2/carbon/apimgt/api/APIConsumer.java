@@ -24,7 +24,7 @@ import java.util.Set;
 /**
  * APIConsumer responsible for providing helper functionality
  */
-public interface APIConsumer {
+public interface APIConsumer extends APIManager {
     /**
      * @param subscriberId id of the Subscriber
      * @return Subscriber

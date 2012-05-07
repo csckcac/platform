@@ -1,13 +1,9 @@
 package org.wso2.carbon.apimgt.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.APIProvider;
 import org.wso2.carbon.apimgt.api.dto.UserApplicationAPIUsage;
 import org.wso2.carbon.apimgt.api.model.*;
-import org.wso2.carbon.apimgt.impl.dao.ApiMgtDAO;
-import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 import org.wso2.carbon.apimgt.impl.utils.APINameComparator;
 import org.wso2.carbon.apimgt.impl.utils.APIUtil;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
@@ -16,7 +12,6 @@ import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
 import org.wso2.carbon.governance.api.util.GovernanceConstants;
 import org.wso2.carbon.governance.api.util.GovernanceUtils;
 import org.wso2.carbon.registry.core.Association;
-import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -24,21 +19,10 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import javax.xml.namespace.QName;
 import java.util.*;
 
-public class APIProviderImpl implements APIProvider {
+public class APIProviderImpl extends APIManagerImpl implements APIProvider {
     
-    private static final Log log = LogFactory.getLog(APIProviderImpl.class);
-
-    private ApiMgtDAO apiMgtDAO;
-    private Registry registry;
-
     public APIProviderImpl() throws APIManagementException {
-        this.apiMgtDAO = new ApiMgtDAO();
-        try {
-            this.registry = ServiceReferenceHolder.getInstance().
-                    getRegistryService().getGovernanceSystemRegistry();
-        } catch (RegistryException e) {
-            handleException("Error while obtaining registry objects", e);
-        }
+        super();
     }
 
     /**

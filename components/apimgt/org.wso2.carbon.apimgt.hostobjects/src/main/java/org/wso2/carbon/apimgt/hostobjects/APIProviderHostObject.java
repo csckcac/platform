@@ -15,6 +15,7 @@
 * specific language governing permissions and limitations
 * under the License.
 */
+
 package org.wso2.carbon.apimgt.hostobjects;
 
 import org.apache.commons.fileupload.FileItem;
@@ -41,9 +42,7 @@ import org.wso2.carbon.apimgt.api.model.DuplicateAPIException;
 import org.wso2.carbon.apimgt.api.model.Subscriber;
 import org.wso2.carbon.apimgt.api.model.Tier;
 import org.wso2.carbon.apimgt.api.model.URITemplate;
-import org.wso2.carbon.apimgt.hostobjects.utils.APIHostObjectUtil;
 import org.wso2.carbon.apimgt.impl.APIConsumerImpl;
-import org.wso2.carbon.apimgt.impl.APIManagerImpl;
 import org.wso2.carbon.apimgt.impl.APIProviderImpl;
 import org.wso2.carbon.apimgt.impl.utils.APINameComparator;
 import org.wso2.carbon.apimgt.usage.client.APIMgtUsageQueryServiceClient;
@@ -158,8 +157,8 @@ public class APIProviderHostObject extends ScriptableObject {
 
         APIIdentifier apiId = new APIIdentifier(provider, name, version);
         try {
-            APIManagerImpl apiManagerImpl = new APIManagerImpl();
-            boolean apiExist = apiManagerImpl.isAPIAvailable(apiId);
+            APIProviderImpl apiProvider = new APIProviderImpl();
+            boolean apiExist = apiProvider.isAPIAvailable(apiId);
             if (apiExist) {
                 throw new ScriptException("Failed saving the new API due to an API already exists " +
                                           " with same name: " + name + " and version: "
@@ -201,10 +200,10 @@ public class APIProviderHostObject extends ScriptableObject {
             FileItem fi = getThumbFile(req);
 
             if (fi != null) {
-                api.setThumbnailUrl(apiManagerImpl.addApiThumb(api, fi));
+                api.setThumbnailUrl(apiProviderImpl.addApiThumb(api, fi));
                 apiProviderImpl.updateAPI(api);
             }
-            apiManagerImpl.cleanup();
+            apiProviderImpl.cleanup();
 
         } catch (APIManagementException e) {
             log.error("Error from registry while adding the API: " + name + "-" + version, e);
@@ -269,8 +268,8 @@ public class APIProviderHostObject extends ScriptableObject {
         }
         APIIdentifier oldApiId = new APIIdentifier(provider, name, version);
         try {
-            APIManagerImpl apiManagerImpl = new APIManagerImpl();
-            API oldapi = apiManagerImpl.getAPI(oldApiId);
+            APIProviderImpl apiProviderImpl = new APIProviderImpl();
+            API oldapi = apiProviderImpl.getAPI(oldApiId);
             HttpServletRequest req = ((RequestHostObject) apiData.get("request", apiData)).getHttpServletRequest();
 
             String tier = (String) apiData.get("tier", apiData);
@@ -322,18 +321,16 @@ public class APIProviderHostObject extends ScriptableObject {
             api.setStatus(getApiStatus(status));
             api.setWsdlUrl(wsdl);
             api.setLastUpdated(new Date());
-
-            APIProviderImpl apiProviderImpl = new APIProviderImpl();
             apiProviderImpl.updateAPI(api);
 
             FileItem fi = getThumbFile(req);
 
             if (fi != null) {
-                api.setThumbnailUrl(apiManagerImpl.addApiThumb(api, fi));
+                api.setThumbnailUrl(apiProviderImpl.addApiThumb(api, fi));
                 apiProviderImpl.updateAPI(api);
             }
             success = true;
-            apiManagerImpl.cleanup();
+            apiProviderImpl.cleanup();
 
         } catch (APIManagementException e) {
             log.error("Error from registry while updating the API :" + name + "-" + version, e);
@@ -384,9 +381,8 @@ public class APIProviderHostObject extends ScriptableObject {
 
         APIIdentifier apiId = new APIIdentifier(providerName, apiName, version);
         try {
-            APIManagerImpl apiManagerImpl = new APIManagerImpl();
             APIProviderImpl apiProviderImpl = new APIProviderImpl();
-            API api = apiManagerImpl.getAPI(apiId);
+            API api = apiProviderImpl.getAPI(apiId);
 
             Set<Subscriber> subs = apiProviderImpl.getSubscribersOfAPI(apiId);
 
@@ -436,7 +432,7 @@ public class APIProviderHostObject extends ScriptableObject {
                 }
 
                 myn.put(12, myn, uriTempArr);
-                apiManagerImpl.cleanup();
+                apiProviderImpl.cleanup();
             }
         } catch (APIManagementException e) {
             log.error("Error from registry while getting API information for the api: " + apiName + "-" + version, e);
@@ -599,8 +595,8 @@ public class APIProviderHostObject extends ScriptableObject {
             version = args[2].toString();
             APIIdentifier apiId = new APIIdentifier(providerName, apiName, version);
 
-            APIManagerImpl apiManagerImpl = new APIManagerImpl();
-            List<Documentation> docsList = apiManagerImpl.getAllDocumentation(apiId);
+            APIProviderImpl apiProviderImpl = new APIProviderImpl();
+            List<Documentation> docsList = apiProviderImpl.getAllDocumentation(apiId);
             Iterator it = docsList.iterator();
             int i = 0;
             while (it.hasNext()) {
@@ -624,7 +620,7 @@ public class APIProviderHostObject extends ScriptableObject {
                 i++;
 
             }
-            apiManagerImpl.cleanup();
+            apiProviderImpl.cleanup();
 
         } catch (APIManagementException e) {
             log.error("Error from registry while getting document information for the api: " + apiName + "-" + version, e);
@@ -657,9 +653,9 @@ public class APIProviderHostObject extends ScriptableObject {
         APIIdentifier apiId = new APIIdentifier(providerName, apiName,
                                                 version);
         try {
-            APIManagerImpl apiManagerImpl = new APIManagerImpl();
-            content = apiManagerImpl.getDocumentationContent(apiId, docName);
-            apiManagerImpl.cleanup();
+            APIProviderImpl apiProviderImpl = new APIProviderImpl();
+            content = apiProviderImpl.getDocumentationContent(apiId, docName);
+            apiProviderImpl.cleanup();
             //log.info(content);
             //log.info(URLEncoder.encode(content));
         } catch (Exception e) {
@@ -849,9 +845,9 @@ public class APIProviderHostObject extends ScriptableObject {
         String context = (String) args[0];
         if (context != null) {
             try {
-                APIManagerImpl apiManagerImpl = new APIManagerImpl();
-                contextExist = apiManagerImpl.isContextExist(context);
-                apiManagerImpl.cleanup();
+                APIProviderImpl apiProviderImpl = new APIProviderImpl();
+                contextExist = apiProviderImpl.isContextExist(context);
+                apiProviderImpl.cleanup();
             } catch (APIManagementException e) {
                 log.error("Error from registry while checking the input context is already exist", e);
             }
@@ -1180,9 +1176,9 @@ public class APIProviderHostObject extends ScriptableObject {
         if (args.length == 1 && isStringValues(args)) {
             String thumbPath = args[0].toString();
             try {
-                APIManagerImpl apiManagerImpl = new APIManagerImpl();
-                thumb = apiManagerImpl.getThumbAsString(thumbPath);
-                apiManagerImpl.cleanup();
+                APIProviderImpl apiProviderImpl = new APIProviderImpl();
+                thumb = apiProviderImpl.getThumbAsString(thumbPath);
+                apiProviderImpl.cleanup();
             } catch (APIManagementException e) {
                 log.error(e.getMessage(), e);
             } catch (RegistryException e) {
@@ -1215,14 +1211,13 @@ public class APIProviderHostObject extends ScriptableObject {
                 String regex = "[a-zA-Z0-9_.-|]*" + apiName.toUpperCase()+ "[a-zA-Z0-9_.-|]*";
                 Pattern pattern;
                 Matcher matcher;
-                APIManagerImpl apiManagerImpl = new APIManagerImpl();
                 for (API api : apiList) {
                     APIIdentifier apiIdentifier = api.getId();
                     String name = apiIdentifier.getApiName().toUpperCase();
                     pattern = Pattern.compile(regex);
                     matcher = pattern.matcher(name);
                     if (matcher.matches()) {
-                        searchedList.add(apiManagerImpl.getAPI(apiIdentifier));
+                        searchedList.add(apiProviderImpl.getAPI(apiIdentifier));
                     }
 
                 }
@@ -1245,7 +1240,7 @@ public class APIProviderHostObject extends ScriptableObject {
                     i++;
 
                 }
-                apiManagerImpl.cleanup();
+                apiProviderImpl.cleanup();
             } catch (APIManagementException e) {
                 log.error("Error from registry while getting the APIs information for the searched API: " + apiName, e);
             } catch (Exception e) {

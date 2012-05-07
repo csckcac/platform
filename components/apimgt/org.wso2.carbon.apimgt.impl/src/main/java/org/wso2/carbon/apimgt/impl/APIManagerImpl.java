@@ -50,20 +50,20 @@ import java.util.concurrent.*;
 /**
  * This class represent the implementation of APIManager interface.
  */
-public class APIManagerImpl implements APIManager {
+public abstract class APIManagerImpl implements APIManager {
     
-    private static  Log log = LogFactory.getLog(APIManagerImpl.class);
+    protected Log log = LogFactory.getLog(getClass());
     
     private static final long KEEP_ALIVE_TASK_PERIOD = 950000L;
     
-    private GenericArtifactManager artifactManager;
-    private Registry registry;
-    private ApiMgtDAO apiMgtDAO = new ApiMgtDAO();
+    protected Registry registry;
+    protected ApiMgtDAO apiMgtDAO;
     
     private ScheduledExecutorService scheduler;
     private Future keepAliveTask;
 
     public APIManagerImpl() throws APIManagementException {
+        apiMgtDAO = new ApiMgtDAO();
         try {
             this.registry = ServiceReferenceHolder.getInstance().
                     getRegistryService().getGovernanceSystemRegistry();
@@ -79,6 +79,7 @@ public class APIManagerImpl implements APIManager {
                 return new Thread(r, "am-registry-keep-alive-task");
             }
         });
+
         keepAliveTask = scheduler.scheduleAtFixedRate(new Runnable() {
             public void run() {
                 if (log.isDebugEnabled()) {
@@ -115,7 +116,8 @@ public class APIManagerImpl implements APIManager {
         API api = null;
         String apiPath = APIUtil.getAPIPath(identifier);
         try {
-            artifactManager = APIUtil.getArtifactManager(registry, APIConstants.API_KEY);
+            GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry,
+                    APIConstants.API_KEY);
             Resource apiResource = registry.get(apiPath);
             String artifactId = apiResource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY);
             if (artifactId == null) {
@@ -259,7 +261,8 @@ public class APIManagerImpl implements APIManager {
             for (Association association : docAssociations) {
                 String docPath = association.getDestinationPath();
                 Resource docResource = registry.get(docPath);
-                artifactManager = new GenericArtifactManager(registry, APIConstants.DOCUMENTATION_KEY);
+                GenericArtifactManager artifactManager = new GenericArtifactManager(registry,
+                        APIConstants.DOCUMENTATION_KEY);
                 GenericArtifact docArtifact = artifactManager.getGenericArtifact(
                         docResource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY));
                 Documentation doc = APIUtil.getDocumentation(docArtifact);
@@ -285,7 +288,8 @@ public class APIManagerImpl implements APIManager {
                                           String docName) throws APIManagementException {
         Documentation documentation = null;
         String docPath = APIUtil.getAPIDocPath(apiId) + docName;
-        artifactManager = APIUtil.getArtifactManager(registry,APIConstants.DOCUMENTATION_KEY);
+        GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry,
+                APIConstants.DOCUMENTATION_KEY);
         try {
             Association[] associations = registry.getAssociations(docPath, docType.getType());
             for (Association association : associations) {
@@ -342,7 +346,8 @@ public class APIManagerImpl implements APIManager {
     public boolean isContextExist(String context) throws APIManagementException {
         boolean available = false;
         try {
-            artifactManager = new GenericArtifactManager(registry, APIConstants.API_KEY);
+            GenericArtifactManager artifactManager = new GenericArtifactManager(registry,
+                    APIConstants.API_KEY);
             GenericArtifact[] artifacts = artifactManager.getAllGenericArtifacts();
             for (GenericArtifact artifact : artifacts) {
                 String artifactContext = artifact.getAttribute(APIConstants.API_OVERVIEW_CONTEXT);

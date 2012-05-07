@@ -25,7 +25,6 @@ import org.wso2.carbon.apimgt.api.model.APIIdentifier;
 import org.wso2.carbon.apimgt.api.model.SubscribedAPI;
 import org.wso2.carbon.apimgt.api.model.Subscriber;
 import org.wso2.carbon.apimgt.impl.APIConsumerImpl;
-import org.wso2.carbon.apimgt.impl.APIManagerImpl;
 import org.wso2.carbon.apimgt.impl.APIProviderImpl;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIServiceTimeDTO;
@@ -52,7 +51,6 @@ public class APIMgtUsageQueryServiceClient {
 
     private QueryServiceStub qss;
 
-    private APIManagerImpl apiManagerImpl;
     private APIProviderImpl apiProviderImpl;
     private APIConsumerImpl apiConsumerImpl;
 
@@ -66,12 +64,11 @@ public class APIMgtUsageQueryServiceClient {
         } catch (AxisFault e) {
             throw new APIMgtUsageQueryServiceClientException("Exception while instantiating QueryServiceStub", e);
         }
+
         try{
-            apiManagerImpl = new APIManagerImpl();
             apiProviderImpl = new APIProviderImpl();
             apiConsumerImpl = new APIConsumerImpl();
-        }
-        catch (APIManagementException e) {
+        } catch (APIManagementException e) {
             throw new APIMgtUsageQueryServiceClientException("Exception while instantiating Impl classes", e);
         }
     }
@@ -336,7 +333,7 @@ public class APIMgtUsageQueryServiceClient {
         Set<String> temp_result = null;
         Set<String> return_result = new HashSet<String>();
         try {
-            temp_result = apiManagerImpl.getAPIVersions(providerId, apiName);
+            temp_result = apiProviderImpl.getAPIVersions(providerId, apiName);
         } catch (APIManagementException e) {
             throw new APIMgtUsageQueryServiceClientException("Error while retrieving versions for "+providerId+"-"+apiName+" combination", e);
         }

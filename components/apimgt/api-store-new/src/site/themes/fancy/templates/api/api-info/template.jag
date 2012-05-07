@@ -8,45 +8,49 @@
         <div class="col_3">
             <img src="<%=api.thumbURL%>">
         </div>
-        <div class="col_6">
-            <table cellspacing="0" cellpadding="0">
+        <div class="col_9">
+            <table cellspacing="0" cellpadding="0" class="info-table">
                 <tbody>
                 <tr>
-                    <th>Rating:<% if(user) { %><div class="average-rating"><%=String(api.rating)%></div><% } %></th>
+                    <th>Rating:</th>
+                    <td>
+                        <% if(user) { %><div class="average-rating"><%=String(api.rating)%></div><% } %>
+                    </td>
                     <td>
                         <div class="star-ratings">
                             <% if(user) { %><%=stars.getDynamicStars(api.rating)%>
                             <% } else { %><%=stars.getStaticStars(site.context, api.rating)%><% } %>
                         </div>
                     </td>
+                    <td rowspan="3">
+                               <%
+                                if(user && apps) {
+                                    length = apps.length;
+                                %>
+                                <select id="application-list" class="fancy">
+                                    <option value="-">-- Select an Application --</option>
+                                    <%
+                                    for(i = 0; i < length; i++) {
+                                        app = apps[i];
+                                    %>
+                                    <option value="<%=app.id%>"><%=app.name%></option>
+                                    <% } %>
+                                </select>
+                                <% } %>
+                                    <div class="simple-space-maker"><button id="subscribe-button" class="medium green">Subscribe</button></div>
+
+                    </td>
                 </tr>
                 <tr>
                     <th>Version:</th>
-                    <td><%=api.version%></td>
+                    <td colspan="2"><%=api.version%></td>
                 </tr>
                 <tr>
                     <th>Updated:</th>
-                    <td><%=api.updatedTime%></td>
+                    <td colspan="2"><%=api.updatedTime%></td>
                 </tr>
                 </tbody>
             </table>
-        </div>
-        <div class="col_3">
-            <%
-            if(user && apps) {
-                length = apps.length;
-            %>
-            <select id="application-list" class="fancy">
-                <option value="-">-- Select an Application --</option>
-                <%
-                for(i = 0; i < length; i++) {
-                    app = apps[i];
-                %>
-                <option value="<%=app.id%>"><%=app.name%></option>
-                <% } %>
-            </select>
-            <% } %>
-                <div class="simple-space-maker"><button id="subscribe-button" class="medium green">Subscribe</button></div>
         </div>
         <div class="col_12 tabs-section">
             <% jagg.includeBlock("ui/tab", outputs.tabs); %>

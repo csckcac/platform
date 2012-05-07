@@ -16,12 +16,13 @@ h1, h2, h3, h4, h5, h6 {
     font-family: arial, verdana, sans-serif;
 }
 h1{
-    font-size:24px;
     color:#317a91;
 }
 h2{
     color:#58595b;
     margin:0;
+    font-size:20px;
+    font-weight:normal;
 }
 .cat_and_charts h4{
     font-size:15px;
@@ -117,6 +118,7 @@ body {
 }
 .no-padding{
     width:100%;
+    padding-left:0;
 }
 a.powered-by-logo{
     background:transparent url(../images/poweredByLogo.png) no-repeat 0 0;
@@ -191,6 +193,7 @@ a.logo{
 .tab-content{
     background-color:#f6f6f6;
     min-height:300px;
+    padding:5px;
 }
 #link-top {
     position: absolute;
@@ -218,7 +221,7 @@ a.logo{
 }
 .clouds{
     margin-top:-20px;
-    margin-left:32px;
+    margin-left:25px;
 }
 .cat_and_charts{
     margin-top:-10px;
@@ -243,38 +246,13 @@ a.logo{
 /* start tag cloud */
 .clouds a{color:#6e9215;}
 .clouds a:hover{color:#fff;background-color:#6e9215;}
-.ts1 {font-size:35%;text-decoration:none;}
-.ts2 {font-size:40%;text-decoration:none;}
-.ts3 {font-size:50%;text-decoration:none;}
-.ts4 {font-size:60%;text-decoration:none;}
-.ts5 {font-size:65%;text-decoration:none;}
-.ts6 {font-size:70%;text-decoration:none;}
-.ts7 {font-size:75%;text-decoration:none;}
-.ts8 {font-size:80%;text-decoration:none;}
-.ts9 {font-size:90%;text-decoration:none;}
-.ts10 {font-size:100%;text-decoration:none;}
-.tslg1 {font-size:45%;text-decoration:none;}
-.tslg2 {font-size:60%;text-decoration:none;}
-.tslg3 {font-size:70%;text-decoration:none;}
-.tslg4 {font-size:80%;text-decoration:none;}
-.tslg5 {font-size:90%;text-decoration:none;}
-.tslg6 {font-size:100%;text-decoration:none;}
-.tslg7 {font-size:105%;text-decoration:none;}
-.tslg8 {font-size:120%;text-decoration:none;}
-.tslg9 {font-size:130%;text-decoration:none;}
-.tslg10 {font-size:150%;text-decoration:none;}
-.tsxl1 {font-size:85%;text-decoration:none;}
-.tsxl2 {font-size:95%;text-decoration:none;}
-.tsxl3 {font-size:105%;text-decoration:none;}
-.tsxl4 {font-size:120%;text-decoration:none;}
-.tsxl5 {font-size:130%;text-decoration:none;}
-.tsxl6 {font-size:140%;text-decoration:none;}
-.tsxl7 {font-size:150%;text-decoration:none;}
-.tsxl8 {font-size:160%;text-decoration:none;}
-.tsxl9 {font-size:180%;text-decoration:none;}
-.tsxl10 {font-size:200%;text-decoration:none;}
+
 #cloud {font-size:120%;line-height:1.2em;}
 
+.tags a{
+    display:inline-block;
+    padding:5px;
+}
 
 div.thumbnail {
     padding: 3px;
@@ -305,6 +283,9 @@ div.thumbnail a{
     cursor:pointer;
     background:none;
     border:none;
+}
+div.star-ratings{
+
 }
 div.star-ratings img{
     display:inline-block;
@@ -511,13 +492,12 @@ input[type="text"]:focus, textarea:focus, button:focus, a.button:focus, select:f
 
 .average-rating {
     background: url("../images/bigstar.png") no-repeat scroll 0 0 transparent;
-    float: right;
     font-size: 20px;
     font-weight: bold;
     height: 64px;
+    width:48px;
     line-height: 70px;
-    padding-left: 28px;
-    width: 50px;
+    padding-left: 28px;''
 }
 
 .star-0 {
@@ -578,5 +558,11 @@ input[type="text"]:focus, textarea:focus, button:focus, a.button:focus, select:f
 
 .documentaion-body {
     margin-bottom: 15px;
+}
+.content-section{
+    margin-left:15px;
+}
+.info-table{
+    margin-top:-25px;
 }
 

@@ -274,6 +274,12 @@ public class ServerGroupManager {
                 }
             } catch (IOException e) {
                 log.info("Cannot create the socket");
+                try {
+                    Thread.sleep(15000);
+                    //reserve time to shut down server
+                } catch (InterruptedException interruptedException) {
+
+                }
                 return;
             } finally {
                 try {

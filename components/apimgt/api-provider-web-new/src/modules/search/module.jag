@@ -1,8 +1,8 @@
 <%
 jagg.module("search", {
 
-    searchAPI:function () {
-        return jagg.require(jagg.getModulesDir() + "search/search.jag").searchAPI.apply(this, arguments);
+    searchAPIs:function () {
+        return jagg.require(jagg.getModulesDir() + "search/search.jag").searchAPIs.apply(this, arguments);
     }
 
 

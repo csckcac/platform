@@ -1,15 +1,15 @@
 <%
-var searchAPI = function (apiName) {
-        var i,api,apis, log = new Log(),
-        store = jagg.module("greg").getAPIStoreObj();
+var searchAPIs = function (username,apiName) {
+        var i,api,apis,length, log = new Log(), list = [],
+        provider = jagg.module("greg").getAPIProviderObj();
         try {
-        apis = store.searchAPI(apiName);
+        apis = provider.searchAPIs(username,apiName);
         if (log.isDebugEnabled()) {
         log.debug("searchAPI : " + stringify(apis));
         }
 length = apis.length;
-for (i = 0; i
-    < length; i++) {
+
+for (i = 0; i < length; i++) {
             api = apis[i];
             list.push({
             name:api.apiName,

@@ -28,7 +28,7 @@
     </Authenticator>
 
     <!-- Authenticator Configurations for SAML2SSOAuthenticator -->
-    <Authenticator name="SAML2SSOAuthenticator" disabled="true">
+    <Authenticator name="SAML2SSOAuthenticator" >
         <Priority>10</Priority>
         <Config>
             <Parameter name="LoginPage">/carbon/admin/login.jsp</Parameter>

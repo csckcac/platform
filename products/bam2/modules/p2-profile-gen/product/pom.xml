@@ -183,6 +183,15 @@
                                 </featureArtifactDef>
                                 <!-- end Gadget IDE feature -->
 
+			        <!-- ntask features -->
+				<featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.ntask.feature:${carbon.version}
+                                </featureArtifactDef>
+				<!--<featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.coordination.feature:${carbon.version}
+                                </featureArtifactDef>-->
+                                <!-- end ntask features -->
+
                                 <!-- reporting features -->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.reporting.feature:${carbon.version}
                                 </featureArtifactDef>
@@ -368,6 +377,17 @@
                                     <id>org.wso2.carbon.task.server.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
+				<!-- ntask features -->
+                                <feature>
+                                    <id>org.wso2.carbon.ntask.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <!--<feature>
+                                    <id>org.wso2.carbon.coordination.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>-->
+                                <!-- end ntask features -->
+	
                                 <!--<feature>
                                     <id>org.wso2.carbon.admin.mgt.server.feature.group</id>
                                     <version>${carbon.version}</version>

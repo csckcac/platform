@@ -39,13 +39,7 @@
 
     <dependencyManagement>
         <dependencies>
- 	    <!--Cassandra -->
-
-            <dependency>
-                <groupId>org.apache.cassandra.wso2</groupId>
-                <artifactId>apache-cassandra</artifactId>
-                <version>${cassandra.version}</version>
-            </dependency>
+ 	   
 
             <!--Hector-->
             <dependency>
@@ -109,7 +103,7 @@
     <properties>
         <wso2carbon.version.logging.mgt>${wso2carbon.version}</wso2carbon.version.logging.mgt>
         <spring.framework.wso2.version>${orbit.version.spring}</spring.framework.wso2.version>
-         <cassandra.version>1.1.0.wso2v1</cassandra.version>
+        
         <hector-core.version>1.0-3</hector-core.version>
         <libthrift.version>0.7.wso2v1</libthrift.version>
         <perf4j.version>0.9.12.wso2v1</perf4j.version>

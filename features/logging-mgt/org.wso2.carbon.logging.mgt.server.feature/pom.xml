@@ -41,10 +41,7 @@
             <groupId>org.springframework.ws.wso2</groupId>
             <artifactId>spring.framework</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.apache.cassandra.wso2</groupId>
-            <artifactId>apache-cassandra</artifactId>
-        </dependency>
+     
         <dependency>
             <groupId>me.prettyprint.wso2</groupId>
             <artifactId>hector-core</artifactId>
@@ -125,7 +122,7 @@
                             <bundles>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.logging.service</bundleDef>
                                 <bundleDef>org.springframework.ws.wso2:spring.framework</bundleDef>
-                                <bundleDef>org.apache.cassandra.wso2:apache-cassandra</bundleDef>
+                             
                                 <bundleDef>libthrift.wso2:libthrift</bundleDef>
                                 <bundleDef>org.perf4j.wso2:perf4j</bundleDef>
                                 <bundleDef>org.cliffc.high_scale_lib.wso2:high-scale-lib</bundleDef>

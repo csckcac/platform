@@ -285,6 +285,6 @@ public class ServerGroupManager {
     protected static String login(String userName, String password, String hostName)
             throws LoginAuthenticationExceptionException, RemoteException {
         AdminServiceAuthentication loginClient = new AdminServiceAuthentication(hostName);
-        return loginClient.login(userName, password, "127.0.0.1");
+        return loginClient.login(userName, password, hostName);
     }
 }

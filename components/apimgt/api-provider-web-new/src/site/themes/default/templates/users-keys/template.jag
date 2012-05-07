@@ -15,7 +15,9 @@
         <tbody id="users">
 
         <%
-        var i, subscriber, subscribers = outputs.subscribers, length = subscribers.length;
+        var i, subscriber, subscribers = outputs.subscribers;
+        if(subscribers!=null){
+        var length = subscribers.length;
         for(i = 0; i < length; i++) {
         subscriber = subscribers[i];%>
         <tr>
@@ -43,7 +45,7 @@
     </td>
     </tr>
 
-    <%}%>
+    <%}}%>
 
         </tbody>
         </table>

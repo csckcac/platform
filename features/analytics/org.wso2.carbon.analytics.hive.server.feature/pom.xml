@@ -240,9 +240,6 @@
                                 <importBundleDef>antlr.wso2:antlr</importBundleDef>
 				<importBundleDef>org.antlr.wso2:antlr-runtime</importBundleDef>
 				<importBundleDef>org.apache.zookeeper.wso2:apache-zookeeper</importBundleDef>
-                                <importBundleDef>antlr.wso2:antlr</importBundleDef>
-				<importBundleDef>org.antlr.wso2:antlr-runtime</importBundleDef>
-				<importBundleDef>org.apache.zookeeper.wso2:apache-zookeeper</importBundleDef>
                                 <importBundleDef>asm.wso2:asm</importBundleDef>
 				<importBundleDef>commons-cli.wso2:commons-cli</importBundleDef>
 				<importBundleDef>commons-codec.wso2:commons-codec</importBundleDef>

@@ -80,7 +80,7 @@ public class InOrderMessageFlusher {
                                 subscription.send(message);
 
                                 messageStore.removeMessageFromGlobalQueue(queue.getName(),
-                                        message.getMessage().getMessageNumber() + "");
+                                        message.getMessage().getMessageNumber());
                             }
                         }
 

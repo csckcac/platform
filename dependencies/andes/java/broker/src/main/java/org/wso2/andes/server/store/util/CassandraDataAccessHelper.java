@@ -200,11 +200,52 @@ public class CassandraDataAccessHelper {
      * @param queueName QueueName
      * @param columnFamilyName ColumnFamilyName
      * @param keyspace  Cassandra KeySpace
+     * @param lastProcessedId Last processed Message id to use as a off set
      * @param count  max message count limit
      * @return  ColumnSlice which contain the messages
      * @throws CassandraDataAccessException
      */
-    public static ColumnSlice<String, byte[]> getMessagesFromQueue(String queueName,
+    public static ColumnSlice<Long, byte[]> getMessagesFromQueue(String queueName,
+                                                            String columnFamilyName, Keyspace keyspace,
+                                                            long lastProcessedId,int count) throws CassandraDataAccessException {
+        if (keyspace == null) {
+            throw new CassandraDataAccessException("Can't access Data , no keyspace provided ");
+        }
+
+        if(columnFamilyName == null || queueName == null) {
+            throw new CassandraDataAccessException("Can't access data with columnFamily = " + columnFamilyName +
+                    " and queueName=" + queueName);
+        }
+
+        try {
+            SliceQuery<String, Long, byte[]> sliceQuery =
+                    HFactory.createSliceQuery(keyspace, stringSerializer, longSerializer, bytesArraySerializer);
+            sliceQuery.setKey(queueName);
+            sliceQuery.setRange(lastProcessedId + 1 ,Long.MAX_VALUE,false, count);
+            sliceQuery.setColumnFamily(columnFamilyName);
+
+
+            QueryResult<ColumnSlice<Long, byte[]>> result = sliceQuery.execute();
+            ColumnSlice<Long, byte[]> columnSlice = result.get();
+
+            return columnSlice;
+        } catch (Exception e) {
+            throw new CassandraDataAccessException("Error while getting data from " + columnFamilyName);
+        }
+    }
+
+
+
+        /**
+     * Get set of messages in a column family
+     * @param queueName QueueName
+     * @param columnFamilyName ColumnFamilyName
+     * @param keyspace  Cassandra KeySpace
+     * @param count  max message count limit
+     * @return  ColumnSlice which contain the messages
+     * @throws CassandraDataAccessException
+     */
+    public static ColumnSlice<Long, byte[]> getMessagesFromQueue(String queueName,
                                                             String columnFamilyName, Keyspace keyspace,
                                                             int count) throws CassandraDataAccessException {
         if (keyspace == null) {
@@ -217,15 +258,15 @@ public class CassandraDataAccessHelper {
         }
 
         try {
-            SliceQuery<String, String, byte[]> sliceQuery =
-                    HFactory.createSliceQuery(keyspace, stringSerializer, stringSerializer, bytesArraySerializer);
+            SliceQuery<String, Long, byte[]> sliceQuery =
+                    HFactory.createSliceQuery(keyspace, stringSerializer, longSerializer, bytesArraySerializer);
             sliceQuery.setKey(queueName);
-            sliceQuery.setRange("", "", false, count);
+            sliceQuery.setRange((long)0,Long.MAX_VALUE,false, count);
             sliceQuery.setColumnFamily(columnFamilyName);
 
 
-            QueryResult<ColumnSlice<String, byte[]>> result = sliceQuery.execute();
-            ColumnSlice<String, byte[]> columnSlice = result.get();
+            QueryResult<ColumnSlice<Long, byte[]>> result = sliceQuery.execute();
+            ColumnSlice<Long, byte[]> columnSlice = result.get();
 
             return columnSlice;
         } catch (Exception e) {
@@ -346,6 +387,75 @@ public class CassandraDataAccessHelper {
         }
     }
 
+
+    /**
+     * Add Message to a Given Queue in Cassandra
+     * @param columnFamily ColumnFamily name
+     * @param queue  queue name
+     * @param messageId  Message id
+     * @param message  message in bytes
+     * @param keyspace  Cassandra KeySpace
+     * @throws CassandraDataAccessException  In case of database access error
+     */
+    public static void addMessageToQueue(String columnFamily , String queue , long messageId ,
+                                         byte []message , Keyspace keyspace) throws CassandraDataAccessException {
+
+       if (keyspace == null) {
+            throw new CassandraDataAccessException("Can't add Data , no mutator provided ");
+        }
+
+        if (columnFamily == null || queue == null || message == null) {
+            throw new CassandraDataAccessException("Can't add data with columnFamily = " + columnFamily +
+                    " and queue=" + queue + " message id  = " + messageId + " message = " + message);
+        }
+
+        try {
+            Mutator<String> mutator = HFactory.createMutator(keyspace,stringSerializer);
+            mutator.addInsertion(queue.trim(), columnFamily,
+                    HFactory.createColumn(messageId, message,longSerializer, bytesArraySerializer));
+            mutator.execute();
+
+        } catch (Exception e) {
+            throw new CassandraDataAccessException("Error while adding message to Queue" ,e);
+        }
+    }
+
+
+/**
+     * Add Message to a Given Queue in Cassandra
+     * @param columnFamily ColumnFamily name
+     * @param queue  queue name
+     * @param messageId  Message id
+     * @param message  message in bytes
+     * @param mutator  Cassandra KeySpace
+     * @throws CassandraDataAccessException  In case of database access error
+     */
+    public static void addMessageToQueue(String columnFamily , String queue , long messageId ,
+                                         byte []message , Mutator<String> mutator , boolean execute) throws CassandraDataAccessException {
+
+       if (mutator == null) {
+            throw new CassandraDataAccessException("Can't add Data , no mutator provided ");
+        }
+
+        if (columnFamily == null || queue == null || message == null) {
+            throw new CassandraDataAccessException("Can't add data with columnFamily = " + columnFamily +
+                    " and queue=" + queue + " message id  = " + messageId + " message = " + message);
+        }
+
+        try {
+            mutator.addInsertion(queue.trim(), columnFamily,
+                    HFactory.createColumn(messageId, message,longSerializer, bytesArraySerializer));
+
+            if (execute) {
+                mutator.execute();
+            }
+
+        } catch (Exception e) {
+            throw new CassandraDataAccessException("Error while adding message to Queue" ,e);
+        }
+    }
+
+
     /**
      * Add a new Column <int,byte[]> to a given row in a given column family
      * @param columnFamily   column Family name
@@ -403,10 +513,14 @@ public class CassandraDataAccessHelper {
                     " and rowName=" + row + " key = " + key);
         }
 
-        Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
-        mutator.insert(row, columnFamily,
-                HFactory.createColumn(key, value, longSerializer, longSerializer));
-        mutator.execute();
+        try {
+            Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
+            mutator.insert(row, columnFamily,
+                    HFactory.createColumn(key, value, longSerializer, longSerializer));
+            mutator.execute();
+        } catch (Exception e) {
+            throw new CassandraDataAccessException("Error while adding long content to a row",e);
+        }
     }
 
     /**
@@ -475,6 +589,10 @@ public class CassandraDataAccessHelper {
         }
     }
 
+
+
+
+
     /**
      *  Add an Mapping Entry to a raw in a given column family
      * @param columnFamily ColumnFamily name
@@ -537,6 +655,38 @@ public class CassandraDataAccessHelper {
            throw new CassandraDataAccessException("Error while deleting " + key + " from " + columnFamily);
         }
     }
+
+
+    /**
+     * Delete a given string column in a raw in a column family
+     * @param columnFamily  column family name
+     * @param row  row name
+     * @param key  key name
+     * @param keyspace cassandra keySpace
+     * @throws CassandraDataAccessException  In case of database access error or data error
+     */
+    public static void deleteLongColumnFromRaw(String columnFamily,String row, long key ,Keyspace keyspace)
+            throws CassandraDataAccessException {
+        if (keyspace == null) {
+            throw new CassandraDataAccessException("Can't delete Data , no keyspace provided ");
+        }
+
+        if (columnFamily == null || row == null ) {
+            throw new CassandraDataAccessException("Can't delete data in columnFamily = " + columnFamily +
+                    " and rowName=" + row + " key = " + key);
+        }
+
+        try {
+            Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
+            mutator.addDeletion(row, columnFamily, key, longSerializer);
+            mutator.execute();
+        } catch (Exception e) {
+           throw new CassandraDataAccessException("Error while deleting " + key + " from " + columnFamily);
+        }
+    }
+
+
+
 
 
     /**

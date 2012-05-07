@@ -60,6 +60,10 @@ public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEn
             new ConcurrentHashMap<AMQChannel, Map<Long, Semaphore>>();
 
 
+    private Map<AMQChannel,QueueSubscriptionAcknowledgementHandler> acknowledgementHandlerMap =
+            new ConcurrentHashMap<AMQChannel,QueueSubscriptionAcknowledgementHandler>();
+
+
     public void init()  {
         executor =  Executors.newFixedThreadPool(ClusterResourceHolder.getInstance().getClusterConfiguration().
                 getSubscriptionPoolSize());
@@ -214,6 +218,11 @@ public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEn
 
     public Map<AMQChannel, Map<Long, Semaphore>> getUnAcknowledgedMessageLocks() {
         return unAckedMessagelocks;
+    }
+
+    @Override
+    public Map<AMQChannel, QueueSubscriptionAcknowledgementHandler> getAcknowledgementHandlerMap() {
+        return acknowledgementHandlerMap;
     }
 
 

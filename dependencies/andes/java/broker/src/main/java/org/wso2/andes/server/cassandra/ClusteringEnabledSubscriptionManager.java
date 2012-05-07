@@ -62,4 +62,6 @@ public interface ClusteringEnabledSubscriptionManager {
      */
     public Map<AMQChannel,Map<Long, Semaphore>> getUnAcknowledgedMessageLocks();
 
+
+    public Map<AMQChannel,QueueSubscriptionAcknowledgementHandler> getAcknowledgementHandlerMap();
 }

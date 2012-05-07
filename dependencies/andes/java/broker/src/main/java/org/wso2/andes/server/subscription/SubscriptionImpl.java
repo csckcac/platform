@@ -29,6 +29,7 @@ import org.wso2.andes.framing.AMQShortString;
 import org.wso2.andes.framing.FieldTable;
 import org.wso2.andes.server.AMQChannel;
 import org.wso2.andes.server.ClusterResourceHolder;
+import org.wso2.andes.server.cassandra.QueueSubscriptionAcknowledgementHandler;
 import org.wso2.andes.server.configuration.ConfigStore;
 import org.wso2.andes.server.configuration.ConfiguredObject;
 import org.wso2.andes.server.configuration.SessionConfig;
@@ -252,49 +253,43 @@ public abstract class SubscriptionImpl implements Subscription, FlowCreditManage
 
             // The send may of course still fail, in which case, as
             // the message is unacked, it will be lost.
+            long deliveryTag = 0;
+            synchronized (getChannel()) {
 
-            synchronized (getChannel())
-            {
+                deliveryTag = getChannel().getNextDeliveryTag();
+            }
+            try {
+                recordMessageDelivery(entry, deliveryTag);
 
-                    long deliveryTag = getChannel().getNextDeliveryTag();
+                QueueSubscriptionAcknowledgementHandler ackHandler = ClusterResourceHolder.getInstance().
+                        getSubscriptionManager().getAcknowledgementHandlerMap().get(getChannel());
 
-                    Semaphore lock = new Semaphore(1);
-                try {
-
-                    lock.acquire();
-                    Map<AMQChannel,Map<Long,Semaphore>> deliveryMap =
-                                    ClusterResourceHolder.getInstance().getSubscriptionManager().
-                                    getUnAcknowledgedMessageLocks();
-
-                    Map<Long,Semaphore>  perChannelDMap;
-                    if(deliveryMap.containsKey(getChannel())) {
-                        perChannelDMap = deliveryMap.get(getChannel());
-                    } else {
-                        perChannelDMap = new ConcurrentHashMap<Long,Semaphore>();
-                        deliveryMap.put(getChannel(),perChannelDMap);
+                if (ackHandler == null) {
+                    synchronized (getChannel()) {
+                        if (ClusterResourceHolder.getInstance().
+                                getSubscriptionManager().getAcknowledgementHandlerMap().get(getChannel()) == null) {
+                            QueueSubscriptionAcknowledgementHandler handler =
+                                    new QueueSubscriptionAcknowledgementHandler(ClusterResourceHolder.getInstance().
+                                            getCassandraMessageStore(), entry.getQueue().getResourceName());
+                            ClusterResourceHolder.getInstance().
+                                    getSubscriptionManager().getAcknowledgementHandlerMap().put(getChannel(), handler);
+                            ackHandler = handler;
+                        }
                     }
 
-
-                    perChannelDMap.put(deliveryTag,lock);
-                    recordMessageDelivery(entry, deliveryTag);
-                    sendToClient(entry, deliveryTag);
-
-
-                    lock.tryAcquire(ClusterResourceHolder.getInstance().getClusterConfiguration().getMaxAckWaitTime(),TimeUnit.SECONDS);
-
-                } catch (InterruptedException e) {
-                    Map<Long,Semaphore> deliveryMap =
-                                    ClusterResourceHolder.getInstance().getSubscriptionManager().
-                                    getUnAcknowledgedMessageLocks().get(getChannel());
-                    if(deliveryMap.containsKey(deliveryTag)) {
-                        deliveryMap.remove(deliveryTag);
-                    }
-                    e.printStackTrace();
-                    lock.release();
-                    throw new AMQException(e.toString());
                 }
 
+                if (ackHandler.checkAndRegisterSent(deliveryTag, entry.getMessage().getMessageNumber(),
+                        entry.getQueue().getResourceName())) {
+                    sendToClient(entry, deliveryTag);
+
+                }
+
+            } catch (Exception e) {
+                throw new AMQException(e.toString());
             }
+
+
         }
 
 

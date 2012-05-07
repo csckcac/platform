@@ -14,8 +14,7 @@ import org.wso2.andes.server.subscription.Subscription;
 import org.wso2.andes.server.subscription.SubscriptionImpl;
 
 import java.util.*;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * <code>CassandraMessageFlusher</code> Handles the task of polling the user queues and flushing
@@ -34,13 +33,20 @@ public class CassandraMessageFlusher extends Thread{
 
     private static Log log = LogFactory.getLog(CassandraMessageFlusher.class);
 
-    private WorkerPool executor =  null;
+    private ExecutorService executor =  null;
 
 
     private int messageCount = 20;
 
 
     private int ackTime;
+
+
+    private long lastProcessedId = 0;
+
+    private int resetCounter;
+
+    private int resetCount = 20;
 
     public CassandraMessageFlusher(AMQQueue queue ,Map<String,CassandraSubscription> cassandraSubscriptions) {
 
@@ -51,7 +57,7 @@ public class CassandraMessageFlusher extends Thread{
         this.messageCount = clusterConfiguration.
                 getMessageBatchSizeForSubscribers();
 
-        this.executor = new WorkerPool(clusterConfiguration.getFlusherPoolSize());
+        this.executor = Executors.newFixedThreadPool(clusterConfiguration.getFlusherPoolSize());
 
         this.ackTime = ClusterResourceHolder.getInstance().getClusterConfiguration().getMaxAckWaitTime();
     }
@@ -66,12 +72,15 @@ public class CassandraMessageFlusher extends Thread{
             // 4) dequeue acked messages
 
             try {
+
+                if(resetOffset()) {
+                    lastProcessedId = 0;
+                }
                 CassandraMessageStore messageStore = ClusterResourceHolder.getInstance().
                         getCassandraMessageStore();
                 List<QueueEntry> messages = messageStore.
                         getMessagesFromUserQueue(queue
-                                , messageCount);
-
+                                , messageCount,lastProcessedId);
 
                 if(messages.size() == messageCount) {
                     messageCount += 10;
@@ -84,14 +93,13 @@ public class CassandraMessageFlusher extends Thread{
                         messageCount=20;
                     }
                 }
-                Semaphore barrier;
 
                 if (messages.size() > 0 && cassandraSubscriptions.size() > 0) {
 
-                    barrier = new Semaphore(messages.size());
-                    barrier.acquire(messages.size());
                     Iterator<CassandraSubscription> subs = cassandraSubscriptions.values().iterator();
-                    for (QueueEntry message : messages) {
+                    for (int i = 0; i < messages.size(); i++) {
+                        QueueEntry message = messages.get(i);
+
                         try {
 
                             Subscription subscription;
@@ -110,7 +118,11 @@ public class CassandraMessageFlusher extends Thread{
 
                             ((AMQMessage) message.getMessage()).setClientIdentifier(session);
 
-                            deliverAsynchronously(subscription, message, barrier);
+                            deliverAsynchronously(subscription, message);
+
+                            if (i == messages.size() -1) {
+                                lastProcessedId = message.getMessage().getMessageNumber();
+                            }
                         } catch (Exception e) {
                             log.error("Unexpected Error in Message Flusher Task " +
                                     "while delivering the message : ", e);
@@ -119,9 +131,7 @@ public class CassandraMessageFlusher extends Thread{
                     }
 
                     try {
-                        barrier.tryAcquire(messages.size(),ackTime*messages.size(), TimeUnit.SECONDS);
-
-
+                        Thread.sleep(ackTime*messages.size() * 1000);
 
                     } catch (InterruptedException e) {
 
@@ -156,23 +166,14 @@ public class CassandraMessageFlusher extends Thread{
 
 
 
-    private void deliverAsynchronously(final Subscription subscription , final QueueEntry message ,
-                                       final Semaphore barrier) {
+    private void deliverAsynchronously(final Subscription subscription , final QueueEntry message) {
         Runnable r = new Runnable() {
             @Override
             public void run() {
                 try {
                     if (subscription instanceof SubscriptionImpl.AckSubscription) {
 
-
                         subscription.send(message);
-
-                        ArrayList<QueueEntry> msg = new ArrayList<QueueEntry>();
-                        msg.add(message);
-
-                        ClusterResourceHolder.getInstance().getCassandraMessageStore().
-                                dequeueMessages(queue, msg);
-                        barrier.release();
 
                     } else {
                         log.error("Unexpected Subscription Implementation : " +
@@ -193,54 +194,14 @@ public class CassandraMessageFlusher extends Thread{
         running = false;
     }
 
-    public class WorkerPool {
-        private final int nThreads;
-        private final PoolWorker[] threads;
-        private final LinkedList queue;
 
-        public WorkerPool(int nThreads) {
-            this.nThreads = nThreads;
-            queue = new LinkedList();
-            threads = new PoolWorker[this.nThreads];
 
-            for (int i = 0; i < this.nThreads; i++) {
-                threads[i] = new PoolWorker();
-                threads[i].start();
-            }
+    private  boolean resetOffset() {
+
+        if(resetCounter++ > resetCount ) {
+            return true;
         }
 
-        public void execute(Runnable r) {
-            synchronized (queue) {
-                queue.addLast(r);
-                queue.notify();
-            }
-        }
-
-        private class PoolWorker extends Thread {
-            public void run() {
-                Runnable r;
-
-                while (true) {
-                    synchronized (queue) {
-                        while (queue.isEmpty()) {
-                            try {
-                                queue.wait();
-                            } catch (InterruptedException ignored) {
-                            }
-                        }
-
-                        r = (Runnable) queue.removeFirst();
-                    }
-
-                    // If we don't catch Throwable,
-                    // the pool could leak threads
-                    try {
-                        r.run();
-                    } catch (Throwable e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
+        return false;
     }
 }

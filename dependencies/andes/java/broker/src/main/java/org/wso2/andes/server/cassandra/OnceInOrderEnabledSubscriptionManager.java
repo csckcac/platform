@@ -95,6 +95,11 @@ public class OnceInOrderEnabledSubscriptionManager implements ClusteringEnabledS
         return unAckedMessagelocks;
     }
 
+    @Override
+    public Map<AMQChannel, QueueSubscriptionAcknowledgementHandler> getAcknowledgementHandlerMap() {
+        throw new UnsupportedOperationException("Not yet supported for Once In order impl");
+    }
+
     private void start() {
         active = true;
         executor.submit(new CassandraReliableMessageFlusherManagerTask());

@@ -577,8 +577,8 @@ public class SimpleAMQQueue implements AMQQueue, Subscription.StateListener
             try
             {
                 entry = _entries.add(message);
-
-                deliverToSubscription(exclusiveSub, entry);
+               // commenting this code since we do not need this in the andes delivery path
+              //  deliverToSubscription(exclusiveSub, entry);
             }
             finally
             {
@@ -1564,12 +1564,15 @@ public class SimpleAMQQueue implements AMQQueue, Subscription.StateListener
 
     public void deliverAsync()
     {
-        QueueRunner runner = new QueueRunner(this, _stateChangeCount.incrementAndGet());
+         // Here i m removing this code as queue processing is handled in a different path in andes.
 
-        if (_asynchronousRunner.compareAndSet(null, runner))
-        {
-            _asyncDelivery.execute(runner);
-        }
+
+//        QueueRunner runner = new QueueRunner(this, _stateChangeCount.incrementAndGet());
+//
+//        if (_asynchronousRunner.compareAndSet(null, runner))
+//        {
+//            _asyncDelivery.execute(runner);
+//        }
     }
 
     public void deliverAsync(Subscription sub)

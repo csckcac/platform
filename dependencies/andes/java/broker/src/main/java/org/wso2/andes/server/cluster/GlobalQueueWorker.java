@@ -76,35 +76,42 @@ public class GlobalQueueWorker implements Runnable{
                         cassandraSubscriptionManager.getUserQueues(globalQueueName);
                 Random jRandom = new Random();
                 if (subscriptions != null && subscriptions.size() > 0) {
-                     List<String> addedMsgs = new ArrayList<String>();
+                     List<Long> addedMsgs = new ArrayList<Long>();
                     try {
 
                         for (int i = 0; i < size; i++) {
 
 
-                            CassandraQueueMessage msg = cassandraMessages.poll();
+                            CassandraQueueMessage msg = cassandraMessages.peek();
 
                             int random = jRandom.nextInt(subscriptions.size());
-                            cassandraMessageStore.addMessageToUserQueue(
-                                    subscriptions.get(random),
-                                    msg.getMessageId(),
-                                    msg.getMessage());
+                            msg.setQueue(subscriptions.get(random));
                             addedMsgs.add(msg.getMessageId());
 
 
                         }
+                        cassandraMessageStore.addMessageBatchToUserQueues(cassandraMessages.
+                                toArray(new CassandraQueueMessage[cassandraMessages.size()]));
                     } finally {
 
-                        for (String mid : addedMsgs) {
+                        for (Long mid : addedMsgs) {
                             cassandraMessageStore.removeMessageFromGlobalQueue(globalQueueName,
                                     mid);
+                        }
+                    }
+
+                    if (size < messageCount) {
+                        try {
+                            Thread.sleep(ClusterResourceHolder.getInstance().getClusterConfiguration().getQueueWorkerInterval());
+                        } catch (InterruptedException e) {
+                            //ignore
                         }
                     }
                 } else {
                     try {
                         Thread.sleep(ClusterResourceHolder.getInstance().getClusterConfiguration().getQueueWorkerInterval());
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                       //ignore
                     }
                 }
             } catch (Exception e) {

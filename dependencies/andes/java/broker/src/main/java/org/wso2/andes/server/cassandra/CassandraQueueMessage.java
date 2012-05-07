@@ -24,11 +24,12 @@ package org.wso2.andes.server.cassandra;
  */
 public class CassandraQueueMessage {
 
-    private String messageId;
+    private long messageId;
     private String queue;
     private byte[] message;
 
-    public CassandraQueueMessage(String messageId , String queue , byte[] data) {
+
+    public CassandraQueueMessage(long messageId , String queue , byte[] data) {
         this.messageId = messageId;
         this.queue = queue;
         this.message = data;
@@ -55,7 +56,11 @@ public class CassandraQueueMessage {
      * Get qpid message id of the message
      * @return  message id
      */
-    public String getMessageId() {
+    public long getMessageId() {
         return messageId;
+    }
+
+    public void setQueue(String queue) {
+        this.queue = queue;
     }
 }

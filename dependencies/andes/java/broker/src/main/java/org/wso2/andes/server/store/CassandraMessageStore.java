@@ -157,7 +157,7 @@ public class CassandraMessageStore implements MessageStore {
                 buf = buf.slice();
 
                 metaData.writeToBuffer(0, buf);
-                addMessageToGlobalQueue(destinationQueue.getResourceName(), messageId + "",
+                addMessageToGlobalQueue(destinationQueue.getResourceName(), messageId,
                         underlying);
             } catch (Exception e) {
                log.error("Error in adding incoming message",e);
@@ -176,13 +176,12 @@ public class CassandraMessageStore implements MessageStore {
         String key = queue.getResourceName()+"_" + clusterManager.getNodeId();
         try {
             messages = new ArrayList<QueueEntry>();
-            ColumnSlice<String,byte[]> columnSlice = CassandraDataAccessHelper.getMessagesFromQueue(key,
+            ColumnSlice<Long,byte[]> columnSlice = CassandraDataAccessHelper.getMessagesFromQueue(key,
                     USER_QUEUES_COLUMN_FAMILY,keyspace,messageCount);
             for (Object column : columnSlice.getColumns()) {
                 if (column instanceof HColumn) {
-                    String columnName = ((HColumn<String, byte[]>) column).getName();
+                    long messageId = ((HColumn<Long, byte[]>) column).getName();
                     byte[] value = ((HColumn<Long, byte[]>) column).getValue();
-                    long messageId = Long.parseLong(columnName);
                     byte[] dataAsBytes = value;
                     ByteBuffer buf = ByteBuffer.wrap(dataAsBytes);
                     buf.position(1);
@@ -205,6 +204,50 @@ public class CassandraMessageStore implements MessageStore {
     }
 
     /**
+     *  Get a given Number of Messages from User queue using the given offset
+     * @param queue Queue name
+     * @param messageCount messagecount
+     * @param lastMessageId  last processed message id. we will try  to get messages from
+     * lasProcessedMessageId+1 .. lasProcessedMessageId+1 + count
+     * @return List of messages
+     * @throws AMQStoreException in case of an Data Access Error
+     */
+    public List<QueueEntry> getMessagesFromUserQueue(AMQQueue queue,
+                                                     int messageCount , long lastMessageId) throws AMQStoreException {
+
+        List<QueueEntry> messages = null;
+        SimpleQueueEntryList list = new SimpleQueueEntryList(queue);
+        ClusterManager clusterManager = ClusterResourceHolder.getInstance().getClusterManager();
+        String key = queue.getResourceName()+"_" + clusterManager.getNodeId();
+        try {
+            messages = new ArrayList<QueueEntry>();
+            ColumnSlice<Long,byte[]> columnSlice = CassandraDataAccessHelper.getMessagesFromQueue(key,
+                    USER_QUEUES_COLUMN_FAMILY,keyspace,lastMessageId,messageCount);
+            for (Object column : columnSlice.getColumns()) {
+                if (column instanceof HColumn) {
+                    long messageId = ((HColumn<Long, byte[]>) column).getName();
+                    byte[] value = ((HColumn<Long, byte[]>) column).getValue();
+                    byte[] dataAsBytes = value;
+                    ByteBuffer buf = ByteBuffer.wrap(dataAsBytes);
+                    buf.position(1);
+                    buf = buf.slice();
+                    MessageMetaDataType type = MessageMetaDataType.values()[dataAsBytes[0]];
+                    StorableMessageMetaData metaData = type.getFactory().createMetaData(buf);
+                    StoredCassandraMessage message = new StoredCassandraMessage(messageId, metaData);
+                    AMQMessage amqMessage = new AMQMessage(message);
+                    messages.add(list.add(amqMessage));
+                }
+            }
+        } catch (NumberFormatException e) {
+            throw new AMQStoreException("Error while accessing user queue" + key,e);
+        } catch (Exception e) {
+            throw new AMQStoreException("Error while accessing user queue" + key,e);
+        }
+
+
+        return messages;
+    }
+    /**
      * Get given number of messages from User Queue. If number of messages in the queue (qn) is less than the requested
      * Number of messages(rn) (qn <= rn) this will return all the messages in the given user queue
      * @param userQueue  User Queue name
@@ -219,27 +262,18 @@ public class CassandraMessageStore implements MessageStore {
 
         ClusterManager clusterManager = ClusterResourceHolder.getInstance().getClusterManager();
         try {
-            ColumnSlice<String, byte[]> columnSlice = CassandraDataAccessHelper.getMessagesFromQueue(userQueue.trim(),
+            ColumnSlice<Long, byte[]> columnSlice = CassandraDataAccessHelper.getMessagesFromQueue(userQueue.trim(),
                     USER_QUEUES_COLUMN_FAMILY,keyspace,messageCount);
-            long maxId = 0;
-
             for (Object column : columnSlice.getColumns()) {
                 if (column instanceof HColumn) {
-                    String columnName = ((HColumn<String, byte[]>) column).getName();
+                    long messageId = ((HColumn<Long, byte[]>) column).getName();
                     byte[] value = ((HColumn<Long, byte[]>) column).getValue();
-
-
-                    long messageId = Long.parseLong(columnName);
-
-                    if (messageId > maxId) {
-                        maxId = messageId;
-                    }
 
                     byte[] dataAsBytes = value;
                     ByteBuffer buf = ByteBuffer.wrap(dataAsBytes);
                     buf.position(1);
                     buf = buf.slice();
-                    CassandraQueueMessage cqm = new CassandraQueueMessage(""+messageId,globalQueue,dataAsBytes);
+                    CassandraQueueMessage cqm = new CassandraQueueMessage(messageId,globalQueue,dataAsBytes);
                     messages.add(cqm);
                 }
             }
@@ -255,7 +289,7 @@ public class CassandraMessageStore implements MessageStore {
     public int getMessageCountOfGlobalQueue(String queueName) {
         int messageCount =0;
         try {
-            ColumnSlice<String, byte[]> columnSlice = CassandraDataAccessHelper.getMessagesFromQueue(queueName.trim(),
+            ColumnSlice<Long, byte[]> columnSlice = CassandraDataAccessHelper.getMessagesFromQueue(queueName.trim(),
                     GLOBAL_QUEUES_COLUMN_FAMILY,keyspace,Integer.MAX_VALUE);
 
             messageCount = columnSlice.getColumns().size();
@@ -279,11 +313,11 @@ public class CassandraMessageStore implements MessageStore {
 
         try {
             messages = new LinkedList<CassandraQueueMessage>();
-            ColumnSlice<String,byte[]> columnSlice = CassandraDataAccessHelper.getMessagesFromQueue(queueName.trim(),
+            ColumnSlice<Long,byte[]> columnSlice = CassandraDataAccessHelper.getMessagesFromQueue(queueName.trim(),
                     GLOBAL_QUEUES_COLUMN_FAMILY,keyspace,messageCount);
             for (Object column : columnSlice.getColumns()) {
                 if (column instanceof HColumn) {
-                    String messageId = ((HColumn<String, byte[]>) column).getName();
+                    long messageId = ((HColumn<Long, byte[]>) column).getName();
                     byte[] value = ((HColumn<Long, byte[]>) column).getValue();
                     CassandraQueueMessage msg
                             = new CassandraQueueMessage(messageId, queueName, value);
@@ -305,22 +339,13 @@ public class CassandraMessageStore implements MessageStore {
         SimpleQueueEntryList list = new SimpleQueueEntryList(queue);
         try {
             messages = new ArrayList<QueueEntry>();
-            ColumnSlice<String, byte[]> columnSlice = CassandraDataAccessHelper.
+            ColumnSlice<Long, byte[]> columnSlice = CassandraDataAccessHelper.
                     getMessagesFromQueue(queue.getName().trim(), GLOBAL_QUEUES_COLUMN_FAMILY, keyspace, messageCount);
-            long maxId = 0;
 
             for (Object column : columnSlice.getColumns()) {
                 if (column instanceof HColumn) {
-                    String columnName = ((HColumn<String, byte[]>) column).getName();
+                    long messageId = ((HColumn<Long, byte[]>) column).getName();
                     byte[] value = ((HColumn<Long, byte[]>) column).getValue();
-
-
-                    long messageId = Long.parseLong(columnName);
-
-                    if (messageId > maxId) {
-                        maxId = messageId;
-                    }
-
                     byte[] dataAsBytes = value;
                     ByteBuffer buf = ByteBuffer.wrap(dataAsBytes);
                     buf.position(1);
@@ -353,10 +378,7 @@ public class CassandraMessageStore implements MessageStore {
             String key = queue.getResourceName() +"_" + clusterManager.getNodeId();
 
             for (QueueEntry queueEntry : messages) {
-
-                String messageID = queueEntry.getMessage().getMessageNumber()+"";
-
-                removeMessageFromUserQueue(key, messageID);
+                removeMessageFromUserQueue(key, queueEntry.getMessage().getMessageNumber());
             }
         } catch (Exception e) {
             log.error("Error in dequeuing messages from "+ queue.getName(),e);
@@ -370,9 +392,9 @@ public class CassandraMessageStore implements MessageStore {
      * @param queueName User queue name
      * @param messageId message id
      */
-    public void removeMessageFromUserQueue(String queueName, String messageId) throws AMQStoreException {
+    public void removeMessageFromUserQueue(String queueName, long messageId) throws AMQStoreException {
         try {
-            CassandraDataAccessHelper.deleteStringColumnFromRaw(USER_QUEUES_COLUMN_FAMILY, queueName, messageId, keyspace);
+            CassandraDataAccessHelper.deleteLongColumnFromRaw(USER_QUEUES_COLUMN_FAMILY, queueName, messageId, keyspace);
         } catch (CassandraDataAccessException e) {
             throw new AMQStoreException("Error while removing message from User queue",e);
         }
@@ -386,9 +408,9 @@ public class CassandraMessageStore implements MessageStore {
      * @param queueName
      * @param messageId
      */
-    public void removeMessageFromGlobalQueue(String queueName, String messageId) {
+    public void removeMessageFromGlobalQueue(String queueName, long messageId) {
         try {
-            CassandraDataAccessHelper.deleteStringColumnFromRaw(GLOBAL_QUEUES_COLUMN_FAMILY,
+            CassandraDataAccessHelper.deleteLongColumnFromRaw(GLOBAL_QUEUES_COLUMN_FAMILY,
                     queueName, messageId, keyspace);
         } catch (CassandraDataAccessException e) {
             log.error("Error while removing messages from global queue " + queueName ,e);
@@ -432,17 +454,17 @@ public class CassandraMessageStore implements MessageStore {
         CassandraDataAccessHelper.createColumnFamily(QUEUE_DETAILS_COLUMN_FAMILY, KEYSPACE, this.cluster, UTF8_TYPE);
         CassandraDataAccessHelper.createColumnFamily(QUEUE_ENTRY_COLUMN_FAMILY, KEYSPACE, this.cluster, UTF8_TYPE);
         CassandraDataAccessHelper.createColumnFamily(EXCHANGE_COLUMN_FAMILY, KEYSPACE, this.cluster, UTF8_TYPE);
-        CassandraDataAccessHelper.createColumnFamily(USER_QUEUES_COLUMN_FAMILY, KEYSPACE, this.cluster, UTF8_TYPE);
+        CassandraDataAccessHelper.createColumnFamily(USER_QUEUES_COLUMN_FAMILY, KEYSPACE, this.cluster, LONG_TYPE);
         CassandraDataAccessHelper.createColumnFamily(MESSAGE_QUEUE_MAPPING_COLUMN_FAMILY, KEYSPACE, this.cluster,
                 UTF8_TYPE);
-        CassandraDataAccessHelper.createColumnFamily(GLOBAL_QUEUES_COLUMN_FAMILY, KEYSPACE, this.cluster, UTF8_TYPE);
+        CassandraDataAccessHelper.createColumnFamily(GLOBAL_QUEUES_COLUMN_FAMILY, KEYSPACE, this.cluster, LONG_TYPE);
         CassandraDataAccessHelper.createColumnFamily(GLOBAL_QUEUE_LIST_COLUMN_FAMILY, KEYSPACE, this.cluster, UTF8_TYPE);
         CassandraDataAccessHelper.createColumnFamily(TOPIC_EXCHANGE_MESSAGE_IDS, KEYSPACE, this.cluster, LONG_TYPE);
         CassandraDataAccessHelper.createColumnFamily(PUB_SUB_MESSAGE_IDS, KEYSPACE, this.cluster, LONG_TYPE);
         CassandraDataAccessHelper.createColumnFamily(TOPIC_SUBSCRIBERS, KEYSPACE, this.cluster, UTF8_TYPE);
         CassandraDataAccessHelper.createColumnFamily(TOPICS_COLUMN_FAMILY, KEYSPACE, this.cluster, UTF8_TYPE);
         CassandraDataAccessHelper.createColumnFamily(ACKED_MESSAGE_IDS_COLUMN_FAMILY, KEYSPACE, this.cluster, LONG_TYPE);
-        CassandraDataAccessHelper.createColumnFamily(BROWSER_QUEUE_COLUMN_FAMILY,KEYSPACE,this.cluster,UTF8_TYPE);
+        CassandraDataAccessHelper.createColumnFamily(BROWSER_QUEUE_COLUMN_FAMILY,KEYSPACE,this.cluster,LONG_TYPE);
 
         return keyspace;
     }
@@ -467,18 +489,37 @@ public class CassandraMessageStore implements MessageStore {
      * @param messageId message id
      * @param message   message content.
      */
-    public void addMessageToUserQueue(String userQueue, String messageId, byte[] message)
+    public void addMessageToUserQueue(String userQueue, long messageId, byte[] message , Mutator<String> mutator)
             throws CassandraDataAccessException {
         try {
 
-            CassandraDataAccessHelper.addMessageToQueue(USER_QUEUES_COLUMN_FAMILY, userQueue, messageId, message, keyspace);
-
+            CassandraDataAccessHelper.addMessageToQueue(USER_QUEUES_COLUMN_FAMILY, userQueue,
+                        messageId, message, mutator, false);
             CassandraDataAccessHelper.addMappingToRaw(MESSAGE_QUEUE_MAPPING_COLUMN_FAMILY, MESSAGE_QUEUE_MAPPING_ROW,
-                    messageId, userQueue, keyspace);
+                        "" + messageId, userQueue, mutator, false);
         } catch (Exception e) {
             throw new CassandraDataAccessException("Error in adding message :" + messageId +" to user queue :" +
                     userQueue,e);
         }
+    }
+
+
+public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws CassandraDataAccessException {
+
+    try {
+        Mutator<String> mutator = HFactory.createMutator(keyspace, stringSerializer);
+        try {
+            for (CassandraQueueMessage message : messages) {
+                addMessageToUserQueue(message.getQueue(), message.getMessageId(), message.getMessage(), mutator);
+            }
+        } finally {
+            mutator.execute();
+        }
+
+
+    } catch (CassandraDataAccessException e) {
+        throw new CassandraDataAccessException("Error in adding message batch to Queues ", e);
+    }
     }
 
     public void addMessageToBrowserQueue(String queue,List<CassandraQueueMessage> messages) throws Exception{
@@ -502,22 +543,12 @@ public class CassandraMessageStore implements MessageStore {
         SimpleQueueEntryList list = new SimpleQueueEntryList(queue);
         try {
             messages = new ArrayList<QueueEntry>();
-            ColumnSlice<String, byte[]> columnSlice = CassandraDataAccessHelper.
+            ColumnSlice<Long, byte[]> columnSlice = CassandraDataAccessHelper.
                     getMessagesFromQueue(queue.getName().trim(), BROWSER_QUEUE_COLUMN_FAMILY, keyspace, messageCount);
-            long maxId = 0;
-
             for (Object column : columnSlice.getColumns()) {
                 if (column instanceof HColumn) {
-                    String columnName = ((HColumn<String, byte[]>) column).getName();
+                    long messageId = ((HColumn<Long, byte[]>) column).getName();
                     byte[] value = ((HColumn<Long, byte[]>) column).getValue();
-
-
-                    long messageId = Long.parseLong(columnName);
-
-                    if (messageId > maxId) {
-                        maxId = messageId;
-                    }
-
                     byte[] dataAsBytes = value;
                     ByteBuffer buf = ByteBuffer.wrap(dataAsBytes);
                     buf.position(1);
@@ -550,7 +581,7 @@ public class CassandraMessageStore implements MessageStore {
      * @param messageId
      * @param message
      */
-    public void addMessageToGlobalQueue(String queue, String messageId, byte[] message) throws Exception {
+    public void addMessageToGlobalQueue(String queue, long messageId, byte[] message) throws Exception {
         if (log.isDebugEnabled()) {
             log.debug("Adding Message with id " + messageId + " to Queue " + queue);
         }
@@ -561,7 +592,7 @@ public class CassandraMessageStore implements MessageStore {
 
             CassandraDataAccessHelper.addMessageToQueue(GLOBAL_QUEUES_COLUMN_FAMILY, queue, messageId, message, keyspace);
 
-            CassandraDataAccessHelper.addMappingToRaw(GLOBAL_QUEUES_COLUMN_FAMILY, GLOBAL_QUEUE_LIST_ROW, queue,
+            CassandraDataAccessHelper.addMappingToRaw(GLOBAL_QUEUE_LIST_COLUMN_FAMILY, GLOBAL_QUEUE_LIST_ROW, queue,
                     queue, keyspace);
 
             clusterManager.handleQueueAddition(queue);
@@ -1593,7 +1624,7 @@ public class CassandraMessageStore implements MessageStore {
             if (rc != null) {
                 String qname = result.get().getValue();
                 try {
-                    CassandraMessageStore.this.removeMessageFromUserQueue(qname, "" + _messageId);
+                    CassandraMessageStore.this.removeMessageFromUserQueue(qname,_messageId);
                 } catch (AMQStoreException e) {
                     log.error("Error remove message",e);
                 }

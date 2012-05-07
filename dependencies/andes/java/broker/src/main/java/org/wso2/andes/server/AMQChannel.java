@@ -31,6 +31,7 @@ import org.wso2.andes.server.ack.UnacknowledgedMessageMap;
 import org.wso2.andes.server.ack.UnacknowledgedMessageMapImpl;
 import org.wso2.andes.server.cassandra.CassandraSubscription;
 import org.wso2.andes.server.cassandra.ClusteringEnabledSubscriptionManager;
+import org.wso2.andes.server.cassandra.QueueSubscriptionAcknowledgementHandler;
 import org.wso2.andes.server.configuration.*;
 import org.wso2.andes.server.exchange.Exchange;
 import org.wso2.andes.server.flow.FlowCreditManager;
@@ -816,10 +817,10 @@ public class AMQChannel implements SessionConfig, AMQSessionModel
 
 
             try {
-                Map<Long, Semaphore> msgLocks = ClusterResourceHolder.getInstance().
-                        getSubscriptionManager().getUnAcknowledgedMessageLocks().get(this);
-                Semaphore ml = msgLocks.remove(deliveryTag);
-                ml.release();
+                QueueSubscriptionAcknowledgementHandler acknowledgementHandler = ClusterResourceHolder.getInstance().
+                        getSubscriptionManager().getAcknowledgementHandlerMap().get(this);
+                acknowledgementHandler.handleAcknowledge(deliveryTag);
+
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 throw new AMQException(e.getMessage());

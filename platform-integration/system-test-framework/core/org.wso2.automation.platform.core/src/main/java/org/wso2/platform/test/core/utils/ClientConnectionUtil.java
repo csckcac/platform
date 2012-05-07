@@ -137,7 +137,7 @@ public final class ClientConnectionUtil {
                 log.info("Successfully connected to the server on port " + port);
             }
         } catch (IOException e) {
-            log.info("Waiting until server starts on port " + port);
+            log.info("Port " + port + " is Closed");
             isPortOpen = false;
         } finally {
             try {

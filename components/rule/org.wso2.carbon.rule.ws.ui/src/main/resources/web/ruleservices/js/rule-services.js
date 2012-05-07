@@ -10,14 +10,12 @@ function setRuleScriptType(type) {
         rulesetCreationTR.style.display = "";
         ruleScriptSourceTR.style.display = "none";
         ruleScriptUploadTR.style.display = "none";
-        rulesetCreationUploadTR.style.display = "none";
         ruleScriptURLTR.style.display = "none";
     } else if ('upload' == type) {
         ruleScriptSourceTR.style.display = "none";
         ruleScriptKeyTR.style.display = "none";
-        rulesetCreationTR.style.display = "none";
+        rulesetCreationTR.style.display = "";
         ruleScriptUploadTR.style.display = "";
-        rulesetCreationUploadTR.style.display = "";
         ruleScriptURLTR.style.display = "none";
     }
     else if ('url' == type) {
@@ -25,14 +23,12 @@ function setRuleScriptType(type) {
         ruleScriptKeyTR.style.display = "none";
         rulesetCreationTR.style.display = "";
         ruleScriptURLTR.style.display = "";
-        rulesetCreationUploadTR.style.display = "none";
         ruleScriptUploadTR.style.display = "none";
     }else {
         ruleScriptSourceTR.style.display = "";
         rulesetCreationTR.style.display = "";
         ruleScriptKeyTR.style.display = "none";
         ruleScriptUploadTR.style.display = "none";
-        rulesetCreationUploadTR.style.display = "none";
         ruleScriptURLTR.style.display = "none";
     }
 

@@ -19,8 +19,7 @@ package org.wso2.carbon.rule.backend.drools;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.drools.KnowledgeBase;
-import org.drools.builder.KnowledgeBuilder;
-import org.drools.builder.ResourceType;
+import org.drools.builder.*;
 import org.drools.definition.KnowledgePackage;
 import org.drools.io.ResourceFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
@@ -58,18 +57,18 @@ public class DroolsBackendRuntime implements RuleBackendRuntime {
         for (Rule rule : ruleSet.getRules()) {
             InputStream ruleInputStream = RuleSetLoader.getRuleSetAsStream(rule, classLoader);
 
-            ResourceType resourceType = null;
-            if (rule.getResourceType().equals(Constants.RULE_RESOURCE_TYPE_DRL)){
-                resourceType = ResourceType.DRL;
-            } else if (rule.getResourceType().equals(Constants.RULE_RESOURCE_TYPE_DTABLE)){
-                resourceType = ResourceType.DTABLE;
+            if (rule.getResourceType().equals(Constants.RULE_RESOURCE_TYPE_REGULAR)) {
+                this.knowledgeBuilder.add(ResourceFactory.newInputStreamResource(ruleInputStream), ResourceType.DRL);
+            } else if (rule.getResourceType().equals(Constants.RULE_RESOURCE_TYPE_DTABLE)) {
+                DecisionTableConfiguration dtconf = KnowledgeBuilderFactory.newDecisionTableConfiguration();
+                dtconf.setInputType(DecisionTableInputType.XLS);
+                this.knowledgeBuilder.add(ResourceFactory.newInputStreamResource(ruleInputStream),
+                        ResourceType.DTABLE, dtconf);
             }
 
-            this.knowledgeBuilder.add(
-            ResourceFactory.newInputStreamResource(ruleInputStream), resourceType);
             if (this.knowledgeBuilder.hasErrors()) {
                 throw new RuleConfigurationException("Error during creating rule set: " +
-                this.knowledgeBuilder.getErrors());
+                        this.knowledgeBuilder.getErrors());
             }
 
             Collection<KnowledgePackage> pkgs = this.knowledgeBuilder.getKnowledgePackages();
@@ -77,28 +76,6 @@ public class DroolsBackendRuntime implements RuleBackendRuntime {
         }
 
     }
-
-    private InputStream getRegistryAsStream(String type, String value) throws RegistryException {
-
-        RuleServiceValueHolder ruleServiceValueHolder = RuleServiceValueHolder.getInstance();
-        InputStream inputStream = null;
-
-
-            if (type.equals(Constants.RULE_SOURCE_REGISTRY_TYPE_CONFIGURATION)) {
-
-                inputStream = ruleServiceValueHolder.getRegistryService()
-                        .getConfigSystemRegistry().get(value).getContentStream();
-            } else if (type.equals(Constants.RULE_SOURCE_REGISTRY_TYPE_GOVERNANCE)) {
-                inputStream =  ruleServiceValueHolder.getRegistryService()
-                        .getGovernanceSystemRegistry().get(value).getContentStream();
-
-            }
-
-        return inputStream;
-
-    }
-
-
 
     public Session createSession(int type) throws RuleRuntimeException {
 

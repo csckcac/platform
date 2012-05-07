@@ -44,7 +44,7 @@ public class TestDroolsBackendRuntimeFactory extends TestCase {
         List<Rule> rules = new ArrayList<Rule>();
         Rule rule = new Rule();
         rule.setSourceType(Constants.RULE_SOURCE_TYPE_INLINE);
-        rule.setResourceType(Constants.RULE_RESOURCE_TYPE_DRL);
+        rule.setResourceType(Constants.RULE_RESOURCE_TYPE_REGULAR);
 
 
 

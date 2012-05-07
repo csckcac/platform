@@ -35,7 +35,7 @@ public interface Constants {
     public static final String RULE_SOURCE_REGISTRY_TYPE_GOVERNANCE ="gov";
 
 
-    public static final String RULE_RESOURCE_TYPE_DRL = "drl";
+    public static final String RULE_RESOURCE_TYPE_REGULAR = "regular";
     public static final String RULE_RESOURCE_TYPE_DTABLE = "dtable";
 
     public static final String RULE_CONF_ELE_RULE_SERVICE = "ruleService";

@@ -131,7 +131,7 @@
     String ruleKeyDisplay = isRegistry ? "" : "display:none;";
     String ruleUploadDisplay = isPath ? "" : "display:none;";
     String ruleURLDisplay = isURL ? "" : "display:none;";
-    String rulesetCreationDisplay = (isSource || isRegistry) ? "" : "display:none;";
+    String rulesetCreationDisplay = "";
 
 %>
 <fmt:bundle basename="org.wso2.carbon.rule.ws.ui.i18n.Resources">
@@ -388,18 +388,9 @@
                             <%} %></td>
                     </tr>
                     <%} %>
-
                 </table>
             </form>
         </td>
-    </tr>
-    <tr id="rulesetCreationUploadTR" style="<%=ruleUploadDisplay%>">
-        <td><label><fmt:message
-                key="ruleset.creation.property"/></label></td>
-        <td><a href="#propertyEditorLink"
-               class="fact-selector-icon-link"
-               style="padding-left:40px"
-               onclick="showPropertyEditor()"></a></td>
     </tr>
 </table>
 
@@ -440,8 +431,6 @@
                         </td>
                     </tr>
 
-
-
                     <tr id="ruleScriptSourceTR" style="<%=ruleSourceDisplay%>">
                         <td><fmt:message key="rule.source.inlined"/></td>
                         <td><textarea cols="80" rows="15"
@@ -449,13 +438,20 @@
                                       id="ruleSourceInlined"><%=ruleSourceAsObject.toString()%>
                         </textarea></td>
                     </tr>
+
                     <tr id="rulesetCreationTR" style="<%=rulesetCreationDisplay%>">
                         <td><label><fmt:message
-                                key="ruleset.creation.property"/></label></td>
-                        <td><a href="#propertyEditorLink"
-                               class="fact-selector-icon-link"
-                               style="padding-left:40px"
-                               onclick="showPropertyEditor()"></a></td>
+                                key="rule.resource.type"/></label></td>
+                        <td>
+                            <select id="ruleResouceTypeID" name="ruleResouceType">
+                                <option id="regularID" value="<%=Constants.RULE_RESOURCE_TYPE_REGULAR%>">
+                                    <fmt:message key="rule.resource.type.regular"/>
+                                </option>
+                                <option id="dtableID" value="<%=Constants.RULE_RESOURCE_TYPE_DTABLE%>">
+                                    <fmt:message key="rule.resource.type.dtable"/>
+                                </option>
+                            </select>
+                        </td>
                     </tr>
                 </table>
             </td>
@@ -463,8 +459,7 @@
         <tr>
             <td class="buttonRow">
                 <input type="hidden" id="stepID" name="stepID" value="step2"/>
-                <input type="hidden" id="ruleSourceType" name="ruleSourceType"
-                       value="inline"/>
+                <input type="hidden" id="ruleSourceType" name="ruleSourceType"  value="inline"/>
                 <input type="hidden" id="registryResourcePath" name="registryResourcePath" value="">
                 <input type="hidden" id="ruleResourceURL" name="ruleResourceURL" value="">
                 <input class="button" type="button" value="< <fmt:message key="back"/>"

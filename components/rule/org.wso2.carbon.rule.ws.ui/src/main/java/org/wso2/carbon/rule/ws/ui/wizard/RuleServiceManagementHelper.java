@@ -111,6 +111,8 @@ public class RuleServiceManagementHelper {
 
         String ruleScriptType = request.getParameter("ruleSourceType");
 
+        String ruleResourceType = request.getParameter("ruleResouceType");
+
         if ("key".equals(ruleScriptType)) {
             String registryType = request.getParameter("registryResourcePath");
             int index = registryType.indexOf("/_system/governance/");
@@ -130,7 +132,7 @@ public class RuleServiceManagementHelper {
                     rule = rules.get(0);
                 }
                 rule.setSourceType(Constants.RULE_SOURCE_TYPE_REGISTRY);
-                rule.setResourceType(Constants.RULE_RESOURCE_TYPE_DRL);
+                rule.setResourceType(ruleResourceType);
                 if (index >= 0) {
                     value = "gov:" +
                             registryType.trim().substring("/_system/governance/".length());
@@ -157,7 +159,7 @@ public class RuleServiceManagementHelper {
                     rule = rules.get(0);
                 }
                 rule.setSourceType(Constants.RULE_SOURCE_TYPE_URL);
-                rule.setResourceType(Constants.RULE_RESOURCE_TYPE_DRL);
+                rule.setResourceType(ruleResourceType);
                 rule.setValue(ruleSourceURL.trim());
             }
 
@@ -177,7 +179,7 @@ public class RuleServiceManagementHelper {
                     rule = rules.get(0);
                 }
                 rule.setSourceType(Constants.RULE_SOURCE_TYPE_FILE);
-                rule.setResourceType(Constants.RULE_RESOURCE_TYPE_DRL);
+                rule.setResourceType(ruleResourceType);
                 rule.setValue(filePath.trim());
             }
 
@@ -196,7 +198,7 @@ public class RuleServiceManagementHelper {
                     rule = rules.get(0);
                 }
                 rule.setSourceType(Constants.RULE_SOURCE_TYPE_INLINE);
-                rule.setResourceType(Constants.RULE_RESOURCE_TYPE_DRL);
+                rule.setResourceType(ruleResourceType);
                 rule.setValue(inlinedSource.trim());
             }
         }

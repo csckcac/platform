@@ -94,7 +94,7 @@ public class JSR94BackendRuntime implements RuleBackendRuntime {
         }
         //if there isn't already source , then set it to XML
         if (!properties.containsKey(Constants.RULE_SOURCE)) {
-            properties.put(Constants.RULE_SOURCE, Constants.RULE_SOURCE);
+            properties.put(Constants.RULE_SOURCE, Constants.RULE_SOURCE_DRL);
         }
 
         for (Rule rule : ruleSet.getRules()) {

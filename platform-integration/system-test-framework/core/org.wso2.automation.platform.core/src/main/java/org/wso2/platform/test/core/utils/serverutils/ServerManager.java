@@ -302,17 +302,6 @@ public class ServerManager {
 
             } catch (IOException ignored) {
             }
-            try {
-                consoleLogPrinter.interrupt();
-            } catch (Exception e) {
-                log.error(e);
-            }
-
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ignored) {
-                log.error(ignored);
-            }
 
 
         }

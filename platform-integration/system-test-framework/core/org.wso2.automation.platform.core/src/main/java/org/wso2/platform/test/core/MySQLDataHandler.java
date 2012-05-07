@@ -70,4 +70,10 @@ public class MySQLDataHandler {
             log.error(e);
         }*/
     }
+
+    public static void main(String[] args) {
+        new MySQLDataHandler().writeResultData();
+    }
+
+
 }

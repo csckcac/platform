@@ -204,6 +204,7 @@ public class APIProviderHostObject extends ScriptableObject {
                 api.setThumbnailUrl(apiManagerImpl.addApiThumb(api, fi));
                 apiProviderImpl.updateAPI(api);
             }
+            apiManagerImpl.cleanup();
 
         } catch (APIManagementException e) {
             log.error("Error from registry while adding the API: " + name + "-" + version, e);
@@ -332,6 +333,7 @@ public class APIProviderHostObject extends ScriptableObject {
                 apiProviderImpl.updateAPI(api);
             }
             success = true;
+            apiManagerImpl.cleanup();
 
         } catch (APIManagementException e) {
             log.error("Error from registry while updating the API :" + name + "-" + version, e);
@@ -434,6 +436,7 @@ public class APIProviderHostObject extends ScriptableObject {
                 }
 
                 myn.put(12, myn, uriTempArr);
+                apiManagerImpl.cleanup();
             }
         } catch (APIManagementException e) {
             log.error("Error from registry while getting API information for the api: " + apiName + "-" + version, e);
@@ -621,6 +624,7 @@ public class APIProviderHostObject extends ScriptableObject {
                 i++;
 
             }
+            apiManagerImpl.cleanup();
 
         } catch (APIManagementException e) {
             log.error("Error from registry while getting document information for the api: " + apiName + "-" + version, e);
@@ -655,6 +659,7 @@ public class APIProviderHostObject extends ScriptableObject {
         try {
             APIManagerImpl apiManagerImpl = new APIManagerImpl();
             content = apiManagerImpl.getDocumentationContent(apiId, docName);
+            apiManagerImpl.cleanup();
             //log.info(content);
             //log.info(URLEncoder.encode(content));
         } catch (Exception e) {
@@ -846,6 +851,7 @@ public class APIProviderHostObject extends ScriptableObject {
             try {
                 APIManagerImpl apiManagerImpl = new APIManagerImpl();
                 contextExist = apiManagerImpl.isContextExist(context);
+                apiManagerImpl.cleanup();
             } catch (APIManagementException e) {
                 log.error("Error from registry while checking the input context is already exist", e);
             }
@@ -1176,6 +1182,7 @@ public class APIProviderHostObject extends ScriptableObject {
             try {
                 APIManagerImpl apiManagerImpl = new APIManagerImpl();
                 thumb = apiManagerImpl.getThumbAsString(thumbPath);
+                apiManagerImpl.cleanup();
             } catch (APIManagementException e) {
                 log.error(e.getMessage(), e);
             } catch (RegistryException e) {
@@ -1238,6 +1245,7 @@ public class APIProviderHostObject extends ScriptableObject {
                     i++;
 
                 }
+                apiManagerImpl.cleanup();
             } catch (APIManagementException e) {
                 log.error("Error from registry while getting the APIs information for the searched API: " + apiName, e);
             } catch (Exception e) {

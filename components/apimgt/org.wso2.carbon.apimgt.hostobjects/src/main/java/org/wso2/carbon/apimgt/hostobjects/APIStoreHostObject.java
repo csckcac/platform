@@ -656,6 +656,7 @@ public class APIStoreHostObject extends ScriptableObject {
         try {
             APIManagerImpl apiManagerImpl = new APIManagerImpl();
             api = apiManagerImpl.getAPI(apiIdentifyer);
+            apiManagerImpl.cleanup();
         } catch (APIManagementException e) {
             log.error("Error from Registry API while getting get API Information on " + apiName
                     + e);
@@ -824,6 +825,7 @@ public class APIStoreHostObject extends ScriptableObject {
 		try{
             APIManagerImpl apiManagerImpl = new APIManagerImpl();
 		    doclist = apiManagerImpl.getAllDocumentation(apiIdentifyer);
+            apiManagerImpl.cleanup();
 		} catch (APIManagementException e) {
 			log.error("Error from Registry API while getting All Documentation on"+ apiName
 					+ e);
@@ -1278,6 +1280,7 @@ public class APIStoreHostObject extends ScriptableObject {
             apiObj.put("context", apiObj, api.getContext());
             apiObj.put("key", apiObj, subscribedAPI.getKey());
             apisArray.put(apisArray.getIds().length, apisArray, apiObj);
+            apiManagerImpl.cleanup();
         } catch (APIManagementException e) {
             throw new ScriptException(e);
         }
@@ -1335,6 +1338,7 @@ public class APIStoreHostObject extends ScriptableObject {
             try{
                 APIManagerImpl apiManagerImpl = new APIManagerImpl();
                 apiManagerImpl.addSubscriber(subscriber);
+                apiManagerImpl.cleanup();
              }catch (APIManagementException e) {
 				log.error("Error from Registry API while adding Subscriber" 
 						+ e);
@@ -1415,6 +1419,7 @@ public class APIStoreHostObject extends ScriptableObject {
 				try {
                     APIManagerImpl apiManagerImpl = new APIManagerImpl();
                     content = apiManagerImpl.getDocumentationContent(apiId,docName);
+                    apiManagerImpl.cleanup();
                     log.info(content);
                 } catch (Exception e) {
                     log.error("Error while getting Inline Document Content ", e);

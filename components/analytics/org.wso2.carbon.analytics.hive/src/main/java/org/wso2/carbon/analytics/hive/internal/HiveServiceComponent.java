@@ -17,6 +17,7 @@ package org.wso2.carbon.analytics.hive.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.apache.hadoop.hive.common.LogUtils;
 import org.apache.hadoop.hive.common.ServerUtils;
@@ -28,6 +29,9 @@ import org.apache.thrift.server.TThreadPoolServer;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TServerTransport;
 import org.apache.thrift.transport.TTransportFactory;
+import org.wso2.carbon.analytics.hive.ServiceHolder;
+import org.wso2.carbon.analytics.hive.impl.HiveExecutorServiceImpl;
+import org.wso2.carbon.analytics.hive.service.HiveExecutorService;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import java.util.Map;
@@ -45,9 +49,15 @@ public class HiveServiceComponent {
 
     private static final String CARBON_HOME_ENV = "CARBON_HOME";
 
+    private ServiceRegistration hiveServiceRegistration;
+
     private ExecutorService hiveServerPool = Executors.newSingleThreadExecutor();
 
     protected void activate(ComponentContext ctx) {
+
+        if (log.isDebugEnabled()) {
+            log.debug("Starting 'HiveServiceComponent'");
+        }
 
         // Set CARBON_HOME if not already set for the use of Hive in order to load hive configurations.
         String carbonHome = System.getProperty(CARBON_HOME_ENV);
@@ -57,6 +67,23 @@ public class HiveServiceComponent {
         }
 
         hiveServerPool.submit(new HiveRunnable());
+
+        // Set and register HiveExecutorService
+        ServiceHolder.setHiveExecutorService(new HiveExecutorServiceImpl());
+
+        hiveServiceRegistration = ctx.getBundleContext().registerService(
+                HiveExecutorService.class.getName(),
+                ServiceHolder.getHiveExecutorService(),
+                null);
+
+    }
+
+    protected void deactivate(ComponentContext ctxt) {
+
+        if (log.isDebugEnabled()) {
+            log.debug("Stopping 'HiveServiceComponent'");
+        }
+        ctxt.getBundleContext().ungetService(hiveServiceRegistration.getReference());
 
     }
 
@@ -114,7 +141,7 @@ public class HiveServiceComponent {
                 server.serve();
 
             } catch (Exception e) {
-               log.error("Hive server initialization failed..", e);
+                log.error("Hive server initialization failed..", e);
             }
         }
     }

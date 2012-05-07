@@ -28,8 +28,6 @@
             <excludes>
                 <exclude>**/*.sh</exclude>
                 <exclude>**/conf/axis2/axis2.xml</exclude>
-                <exclude>**/conf/wrapper.conf</exclude>
-                <exclude>**/native/*</exclude>
                 <exclude>**/services/sample01.aar</exclude>
                 <exclude>**/repository/services/version/**</exclude>
                 <exclude>**/version.txt</exclude>
@@ -47,12 +45,8 @@
         <fileSet>
             <directory>target/wso2carbon-core-${carbon.version}</directory>
             <outputDirectory>wso2cep-${pom.version}</outputDirectory>
-            <excludes>
-                <exclude>**/daemon.sh</exclude>
-            </excludes>
             <includes>
                 <include>**/*.sh</include>
-                <include>**/native/*</include>
             </includes>
             <fileMode>755</fileMode>
         </fileSet>
@@ -250,17 +244,5 @@
             <outputDirectory>wso2cep-${pom.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
         </file>
-        <file>
-            <source>target/wso2carbon-core-${carbon.version}/repository/conf/wrapper.conf</source>
-            <outputDirectory>wso2cep-${pom.version}/repository/conf/</outputDirectory>
-            <filtered>true</filtered>
-        </file>
-        <file>
-            <source>target/wso2carbon-core-${carbon.version}/bin/daemon.sh</source>
-            <outputDirectory>wso2cep-${pom.version}/bin/</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>755</fileMode>
-        </file>
-
     </files>
 </assembly>

@@ -79,8 +79,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class APIProviderHostObject extends ScriptableObject {
+    
     private static final Log log = LogFactory.getLog(APIProviderHostObject.class);
-    private static APIHostObjectUtil hostObjectUtil = APIHostObjectUtil.getApiHostObjectUtils();
 
     public String getClassName() {
         return "APIProvider";
@@ -95,28 +95,12 @@ public class APIProviderHostObject extends ScriptableObject {
     }
 
 
-    static boolean logStatus = false;
-    static APIManagerImpl apiManagerImpl;
-    static APIProviderImpl apiProviderImpl;
-    static APIConsumerImpl apiConsumerImpl;
-
     public static boolean jsFunction_login(Context cx, Scriptable thisObj,
                                            Object[] args,
                                            Function funObj)
             throws ScriptException {
 
-        if (!logStatus) {
-            try {
-                apiManagerImpl = hostObjectUtil.getApiManager();
-                apiProviderImpl = hostObjectUtil.getApiProvider();
-                apiConsumerImpl = hostObjectUtil.getApiConsumer();
-            } catch (APIManagementException e) {
-                log.error("Error from registry while while login the user", e);
-            }
-            logStatus = true;
-        }
-
-        return logStatus;
+        return true;
     }
 
 
@@ -174,6 +158,7 @@ public class APIProviderHostObject extends ScriptableObject {
 
         APIIdentifier apiId = new APIIdentifier(provider, name, version);
         try {
+            APIManagerImpl apiManagerImpl = new APIManagerImpl();
             boolean apiExist = apiManagerImpl.isAPIAvailable(apiId);
             if (apiExist) {
                 throw new ScriptException("Failed saving the new API due to an API already exists " +
@@ -210,6 +195,7 @@ public class APIProviderHostObject extends ScriptableObject {
             api.setStatus(APIStatus.CREATED);
             api.setContext(context);
 
+            APIProviderImpl apiProviderImpl = new APIProviderImpl();
             apiProviderImpl.addAPI(api);
             success = true;
             FileItem fi = getThumbFile(req);
@@ -282,6 +268,7 @@ public class APIProviderHostObject extends ScriptableObject {
         }
         APIIdentifier oldApiId = new APIIdentifier(provider, name, version);
         try {
+            APIManagerImpl apiManagerImpl = new APIManagerImpl();
             API oldapi = apiManagerImpl.getAPI(oldApiId);
             HttpServletRequest req = ((RequestHostObject) apiData.get("request", apiData)).getHttpServletRequest();
 
@@ -335,6 +322,7 @@ public class APIProviderHostObject extends ScriptableObject {
             api.setWsdlUrl(wsdl);
             api.setLastUpdated(new Date());
 
+            APIProviderImpl apiProviderImpl = new APIProviderImpl();
             apiProviderImpl.updateAPI(api);
 
             FileItem fi = getThumbFile(req);
@@ -394,6 +382,8 @@ public class APIProviderHostObject extends ScriptableObject {
 
         APIIdentifier apiId = new APIIdentifier(providerName, apiName, version);
         try {
+            APIManagerImpl apiManagerImpl = new APIManagerImpl();
+            APIProviderImpl apiProviderImpl = new APIProviderImpl();
             API api = apiManagerImpl.getAPI(apiId);
 
             Set<Subscriber> subs = apiProviderImpl.getSubscribersOfAPI(apiId);
@@ -475,6 +465,7 @@ public class APIProviderHostObject extends ScriptableObject {
         String providerName = (String) args[0];
         if (providerName != null) {
             try {
+                APIProviderImpl apiProviderImpl = new APIProviderImpl();
                 List<API> apiList = apiProviderImpl.getAPIsByProvider(providerName);
                 Iterator it = apiList.iterator();
                 int i = 0;
@@ -517,6 +508,7 @@ public class APIProviderHostObject extends ScriptableObject {
             }
             userName = (String) args[0];
             Subscriber subscriber = new Subscriber(userName);
+            APIConsumerImpl apiConsumerImpl = new APIConsumerImpl();
             Set<API> apiSet = apiConsumerImpl.getSubscriberAPIs(subscriber);
             Iterator it = apiSet.iterator();
             int i = 0;
@@ -556,6 +548,7 @@ public class APIProviderHostObject extends ScriptableObject {
             }
             providerName = (String) args[0];
             if (providerName != null) {
+                APIProviderImpl apiProviderImpl = new APIProviderImpl();
                 UserApplicationAPIUsage[] apiUsages = apiProviderImpl.getAllAPIUsageByProvider(providerName);
                 for (int i = 0; i < apiUsages.length; i++) {
 
@@ -603,6 +596,7 @@ public class APIProviderHostObject extends ScriptableObject {
             version = args[2].toString();
             APIIdentifier apiId = new APIIdentifier(providerName, apiName, version);
 
+            APIManagerImpl apiManagerImpl = new APIManagerImpl();
             List<Documentation> docsList = apiManagerImpl.getAllDocumentation(apiId);
             Iterator it = docsList.iterator();
             int i = 0;
@@ -659,6 +653,7 @@ public class APIProviderHostObject extends ScriptableObject {
         APIIdentifier apiId = new APIIdentifier(providerName, apiName,
                                                 version);
         try {
+            APIManagerImpl apiManagerImpl = new APIManagerImpl();
             content = apiManagerImpl.getDocumentationContent(apiId, docName);
             //log.info(content);
             //log.info(URLEncoder.encode(content));
@@ -705,9 +700,8 @@ public class APIProviderHostObject extends ScriptableObject {
         docContent = args[4].toString();
         APIIdentifier apiId = new APIIdentifier(providerName, apiName,
                                                 version);
+        APIProviderImpl apiProviderImpl = new APIProviderImpl();
         apiProviderImpl.addDocumentationContent(apiId, docName, docContent);
-
-
     }
 
     public static boolean jsFunction_addDocumentation(Context cx, Scriptable thisObj,
@@ -737,6 +731,7 @@ public class APIProviderHostObject extends ScriptableObject {
         doc.setSummary(summary);
         doc.setSourceUrl(sourceURL);
         try {
+            APIProviderImpl apiProviderImpl = new APIProviderImpl();
             apiProviderImpl.addDocumentation(apiId, doc);
             success = true;
         } catch (APIManagementException e) {
@@ -761,6 +756,7 @@ public class APIProviderHostObject extends ScriptableObject {
         APIIdentifier apiId = new APIIdentifier(providerName, apiName, version);
 
         try {
+            APIProviderImpl apiProviderImpl = new APIProviderImpl();
             apiProviderImpl.removeDocumentation(apiId, docName, docType);
             success = true;
         } catch (APIManagementException e) {
@@ -787,6 +783,7 @@ public class APIProviderHostObject extends ScriptableObject {
         APIIdentifier apiId = new APIIdentifier(providerName, apiName, version);
         API api = new API(apiId);
         try {
+            APIProviderImpl apiProviderImpl = new APIProviderImpl();
             apiProviderImpl.createNewAPIVersion(api, newVersion);
             success = true;
         } catch (APIManagementException e) {
@@ -818,6 +815,7 @@ public class APIProviderHostObject extends ScriptableObject {
         APIIdentifier apiId = new APIIdentifier(providerName, apiName, version);
         Set<Subscriber> subscribers;
         try {
+            APIProviderImpl apiProviderImpl = new APIProviderImpl();
             subscribers = apiProviderImpl.getSubscribersOfAPI(apiId);
             Iterator it = subscribers.iterator();
             int i = 0;
@@ -846,6 +844,7 @@ public class APIProviderHostObject extends ScriptableObject {
         String context = (String) args[0];
         if (context != null) {
             try {
+                APIManagerImpl apiManagerImpl = new APIManagerImpl();
                 contextExist = apiManagerImpl.isContextExist(context);
             } catch (APIManagementException e) {
                 log.error("Error from registry while checking the input context is already exist", e);
@@ -1175,7 +1174,10 @@ public class APIProviderHostObject extends ScriptableObject {
         if (args.length == 1 && isStringValues(args)) {
             String thumbPath = args[0].toString();
             try {
+                APIManagerImpl apiManagerImpl = new APIManagerImpl();
                 thumb = apiManagerImpl.getThumbAsString(thumbPath);
+            } catch (APIManagementException e) {
+                log.error(e.getMessage(), e);
             } catch (RegistryException e) {
                 log.error(e.getMessage(), e);
             } catch (IOException e) {

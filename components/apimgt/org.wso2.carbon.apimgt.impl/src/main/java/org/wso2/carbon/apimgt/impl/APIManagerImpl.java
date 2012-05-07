@@ -36,7 +36,6 @@ import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.registry.core.*;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.registry.core.internal.RegistryCoreServiceComponent;
 import org.wso2.carbon.user.core.AuthorizationManager;
 import org.wso2.carbon.user.core.UserStoreException;
 
@@ -65,7 +64,12 @@ public class APIManagerImpl implements APIManager {
     private Future keepAliveTask;
 
     public APIManagerImpl() throws APIManagementException {
-        this.registry = getRegistry();
+        try {
+            this.registry = ServiceReferenceHolder.getInstance().
+                    getRegistryService().getGovernanceSystemRegistry();
+        } catch (RegistryException e) {
+            handleException("Error while obtaining registry objects", e);
+        }
         startKeepAliveTask();
     }
 
@@ -111,7 +115,7 @@ public class APIManagerImpl implements APIManager {
         API api = null;
         String apiPath = APIUtil.getAPIPath(identifier);
         try {
-            artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
+            artifactManager = APIUtil.getArtifactManager(registry, APIConstants.API_KEY);
             Resource apiResource = registry.get(apiPath);
             String artifactId = apiResource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY);
             if (artifactId == null) {
@@ -204,6 +208,7 @@ public class APIManagerImpl implements APIManager {
         //TODO this is not finish
     }
 
+    // TODO: This method does not belong here
     public String addApiThumb(API api, FileItem fileItem) throws RegistryException, IOException,
             APIManagementException, UserStoreException, IdentityException {
         Resource thumb = registry.newResource();
@@ -303,11 +308,7 @@ public class APIManagerImpl implements APIManager {
      */
     public String getDocumentationContent(APIIdentifier identifier, String documentationName)
             throws APIManagementException {
-        String contentPath = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
-                identifier.getProviderName() + RegistryConstants.PATH_SEPARATOR +
-                identifier.getApiName() + RegistryConstants.PATH_SEPARATOR +
-                identifier.getVersion() + RegistryConstants.PATH_SEPARATOR +
-                APIConstants.DOC_DIR + RegistryConstants.PATH_SEPARATOR +
+        String contentPath = APIUtil.getAPIDocPath(identifier) +
                 APIConstants.INLINE_DOCUMENT_CONTENT_DIR + RegistryConstants.PATH_SEPARATOR +
                 documentationName;
         try {
@@ -331,16 +332,6 @@ public class APIManagerImpl implements APIManager {
      */
     public Subscriber getSubscriberById(String accessToken) throws APIManagementException {
         return apiMgtDAO.getSubscriberById(accessToken);
-    }
-
-
-    private Registry getRegistry() throws APIManagementException {
-        try {
-            registry = RegistryCoreServiceComponent.getRegistryService().getGovernanceSystemRegistry();
-        } catch (RegistryException e) {
-            handleException("Error while obtaining a registry instance", e);
-        }
-        return registry;
     }
 
     /**

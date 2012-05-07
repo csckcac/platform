@@ -23,6 +23,7 @@ import org.wso2.carbon.apimgt.api.APIConsumer;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.model.*;
 import org.wso2.carbon.apimgt.impl.dao.ApiMgtDAO;
+import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 import org.wso2.carbon.apimgt.impl.utils.APINameComparator;
 import org.wso2.carbon.apimgt.impl.utils.APIUtil;
 import org.wso2.carbon.apimgt.impl.utils.APIVersionComparator;
@@ -32,7 +33,6 @@ import org.wso2.carbon.governance.api.util.GovernanceConstants;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.registry.core.internal.RegistryCoreServiceComponent;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -40,18 +40,28 @@ import java.util.regex.Pattern;
 
 public class APIConsumerImpl implements APIConsumer {
 
-    private static Log log = LogFactory.getLog(APIConsumerImpl.class);
+    private static final Log log = LogFactory.getLog(APIConsumerImpl.class);
+    
     private ApiMgtDAO apiMgtDAO;
-    private GenericArtifactManager artifactManager;
     private Registry registry;
 
     public APIConsumerImpl() throws APIManagementException {
         this.apiMgtDAO = new ApiMgtDAO();
-        try {
-            this.registry = RegistryCoreServiceComponent.getRegistryService().
-                    getGovernanceSystemRegistry();
+        try {            
+            this.registry = ServiceReferenceHolder.getInstance().
+                    getRegistryService().getGovernanceSystemRegistry();
         } catch (RegistryException e) {
-            throw new APIManagementException("Failed to initialize the registry");
+            handleException("Error while obtaining system registry", e);
+        }
+    }
+    
+    public APIConsumerImpl(String username) throws APIManagementException {
+        this.apiMgtDAO = new ApiMgtDAO();
+        try {
+            this.registry = ServiceReferenceHolder.getInstance().
+                    getRegistryService().getGovernanceUserRegistry(username);
+        } catch (RegistryException e) {
+            handleException("Error while obtaining user registry", e);
         }
     }
 
@@ -61,7 +71,6 @@ public class APIConsumerImpl implements APIConsumer {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to get Subscriber
      */
-    @Override
     public Subscriber getSubscriber(String subscriberId) throws APIManagementException {
         Subscriber subscriber = null;
         try {
@@ -80,11 +89,10 @@ public class APIConsumerImpl implements APIConsumer {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to get set of API
      */
-    @Override
     public Set<API> getAPIsWithTag(String tag) throws APIManagementException {
         Set<API> apiSet = new HashSet<API>();
         try {
-            artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
+            GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
             GenericArtifact[] genericArtifacts = artifactManager.getAllGenericArtifacts();
             if (genericArtifacts == null || genericArtifacts.length == 0) {
                 return apiSet;
@@ -120,11 +128,10 @@ public class APIConsumerImpl implements APIConsumer {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to API set
      */
-    @Override
     public Set<API> getAllPublishedAPIs() throws APIManagementException {
         SortedSet<API> apiSortedSet = new TreeSet<API>(new APINameComparator());
         try {
-            artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
+            GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
             GenericArtifact[] genericArtifacts = artifactManager.getAllGenericArtifacts();
             if (genericArtifacts == null || genericArtifacts.length == 0) {
                 return apiSortedSet;
@@ -169,12 +176,11 @@ public class APIConsumerImpl implements APIConsumer {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to get top rated APIs
      */
-    @Override
     public Set<API> getTopRatedAPIs(int limit) throws APIManagementException {
         int returnLimit = 0;
         SortedSet<API> apiSortedSet = new TreeSet<API>(new APINameComparator());
         try {
-            artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
+            GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
             GenericArtifact[] genericArtifacts = artifactManager.getAllGenericArtifacts();
             if (genericArtifacts == null || genericArtifacts.length == 0) {
                 return apiSortedSet;
@@ -205,7 +211,6 @@ public class APIConsumerImpl implements APIConsumer {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to get recently added APIs
      */
-    @Override
     public Set<API> getRecentlyAddedAPIs(int limit) throws APIManagementException {
 
         int start = 0;
@@ -213,7 +218,7 @@ public class APIConsumerImpl implements APIConsumer {
         Map<Date, GenericArtifact> apiMap = new HashMap<Date, GenericArtifact>();
         List<Date> dateList = new ArrayList<Date>();
         try {
-            artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
+            GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
             GenericArtifact[] genericArtifact = artifactManager.getAllGenericArtifacts();
             if (genericArtifact == null || genericArtifact.length == 0) {
                 return apiSortedSet;
@@ -252,11 +257,10 @@ public class APIConsumerImpl implements APIConsumer {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to get All the tags
      */
-    @Override
     public Set<Tag> getAllTags() throws APIManagementException {
         Set<Tag> tagSet = new HashSet<Tag>();
         try {
-            artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
+            GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
             GenericArtifact[] genericArtifact = artifactManager.getAllGenericArtifacts();
 
             if (genericArtifact == null || genericArtifact.length == 0) {
@@ -286,7 +290,6 @@ public class APIConsumerImpl implements APIConsumer {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          If an error occurs while rating the API
      */
-    @Override
     public void rateAPI(APIIdentifier apiId, APIRating rating) throws APIManagementException {
         String path = APIUtil.getAPIPath(apiId);
         try {
@@ -304,14 +307,13 @@ public class APIConsumerImpl implements APIConsumer {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to get APIs for given search term
      */
-    @Override
     public Set<API> searchAPI(String searchTerm) throws APIManagementException {
         Set<API> apiSet = new HashSet<API>();
         String regex = "[a-zA-Z0-9_.-|]*" + searchTerm + "[a-zA-Z0-9_.-|]*";
         Pattern pattern;
         Matcher matcher;
         try {
-            artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
+            GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
             GenericArtifact[] genericArtifacts = artifactManager
                     .getAllGenericArtifacts();
             if (genericArtifacts == null || genericArtifacts.length == 0) {
@@ -334,13 +336,13 @@ public class APIConsumerImpl implements APIConsumer {
         return apiSet;
     }
 
-        public Set<API> searchAPI(String searchTerm, String searchType) throws APIManagementException {
+    public Set<API> searchAPI(String searchTerm, String searchType) throws APIManagementException {
         Set<API> apiSet = new HashSet<API>();
         String regex = "[a-zA-Z0-9_.-|]*" + searchTerm + "[a-zA-Z0-9_.-|]*";
         Pattern pattern;
         Matcher matcher;
         try {
-            artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
+            GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry,APIConstants.API_KEY);
             GenericArtifact[] genericArtifacts = artifactManager
                     .getAllGenericArtifacts();
             if (genericArtifacts == null || genericArtifacts.length == 0) {
@@ -388,7 +390,6 @@ public class APIConsumerImpl implements APIConsumer {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to get API for subscriber
      */
-    @Override
     public Set<SubscribedAPI> getSubscribedAPIs(Subscriber subscriber) throws APIManagementException {
         Set<SubscribedAPI> subscribedAPIs = null;
         try {
@@ -407,7 +408,6 @@ public class APIConsumerImpl implements APIConsumer {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to get API for subscriber
      */
-    @Override
     public Set<API> getSubscriberAPIs(Subscriber subscriber) throws APIManagementException {
         SortedSet<API> apiSortedSet = new TreeSet<API>(new APINameComparator());
         Set<SubscribedAPI> subscribedAPIs = apiMgtDAO.getSubscribedAPIs(subscriber);
@@ -417,7 +417,7 @@ public class APIConsumerImpl implements APIConsumer {
             Resource resource;
             try {
                 resource = registry.get(apiPath);
-                artifactManager = new GenericArtifactManager(registry, APIConstants.API_KEY);
+                GenericArtifactManager artifactManager = new GenericArtifactManager(registry, APIConstants.API_KEY);
                 GenericArtifact artifact = artifactManager.getGenericArtifact(
                         resource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY));
                 API api = APIUtil.getAPI(artifact, registry);
@@ -439,7 +439,6 @@ public class APIConsumerImpl implements APIConsumer {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to check the subscribed state
      */
-    @Override
     public boolean isSubscribed(APIIdentifier apiIdentifier, String userId)
             throws APIManagementException {
         boolean isSubscribed;
@@ -462,7 +461,6 @@ public class APIConsumerImpl implements APIConsumer {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to add subscription details to database
      */
-    @Override
     public void addSubscription(APIIdentifier identifier, String userId, int applicationId)
             throws APIManagementException {
         apiMgtDAO.addSubscription(identifier, userId, applicationId);
@@ -476,10 +474,10 @@ public class APIConsumerImpl implements APIConsumer {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to add subscription details to database
      */
-    @Override
     public void removeSubscriber(APIIdentifier identifier, String userId)
             throws APIManagementException {
-        //TODO @sumedha : implement unsubscription
+        // TODO
+        throw new UnsupportedOperationException("Unsubscribe operation is not yet implemented");
     }
 
     /**
@@ -491,7 +489,6 @@ public class APIConsumerImpl implements APIConsumer {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to update subscription
      */
-    @Override
     public void updateSubscriptions(APIIdentifier identifier, String userId, int applicationId)
             throws APIManagementException {
         apiMgtDAO.updateSubscriptions(identifier, userId, applicationId);
@@ -503,7 +500,6 @@ public class APIConsumerImpl implements APIConsumer {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to add comment for API
      */
-    @Override
     public void addComment(APIIdentifier identifier, String s) throws APIManagementException {
         String apiPath = APIUtil.getAPIPath(identifier);
         org.wso2.carbon.registry.core.Comment comment = new org.wso2.carbon.registry.core.Comment(s);
@@ -520,7 +516,6 @@ public class APIConsumerImpl implements APIConsumer {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to get comments for identifier
      */
-    @Override
     public org.wso2.carbon.apimgt.api.model.Comment[] getComments(APIIdentifier identifier)
             throws APIManagementException {
         List<org.wso2.carbon.apimgt.api.model.Comment> commentList =
@@ -552,7 +547,6 @@ public class APIConsumerImpl implements APIConsumer {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to add Application
      */
-    @Override
     public void addApplication(Application application, String userId)
             throws APIManagementException {
         apiMgtDAO.addApplication(application, userId);
@@ -566,12 +560,10 @@ public class APIConsumerImpl implements APIConsumer {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to applications for given subscriber
      */
-    @Override
     public Application[] getApplications(Subscriber subscriber) throws APIManagementException {
         return apiMgtDAO.getApplications(subscriber);
     }
 
-    @Override
     public Set<SubscribedAPI> getSubscribedIdentifiers(Subscriber subscriber, APIIdentifier identifier)
             throws APIManagementException {
         Set<SubscribedAPI> subscribedAPISet = new HashSet<SubscribedAPI>();

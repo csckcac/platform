@@ -41,24 +41,32 @@ public class APIStoreHostObject extends ScriptableObject {
 	private static final long serialVersionUID = -3169012616750937045L;
 	private static final Log log = LogFactory.getLog(APIStoreHostObject.class);
     private static final String hostObjectName = "APIStore";
-    private static APIHostObjectUtil hostObjectUtil = APIHostObjectUtil.getApiHostObjectUtils();
     private static SubscriberKeyMgtClient keyMgtClient = null;
-    private static APIProviderImpl apiProviderImpl;
-    private static APIConsumerImpl apiConsumerImpl;
+    
+    private String username = "admin"; // TODO: Init with the current username
 
-	@Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
 	public String getClassName() {
 		return hostObjectName;
 	}
 
 	// The zero-argument constructor used for create instances for runtime
-	public APIStoreHostObject() {
+	public APIStoreHostObject() throws APIManagementException {
+        login();
 	}
 
 	// Method jsConstructor defines the JavaScript constructor
 	public void jsConstructor() throws ScriptException, APIManagementException {
 		// jsFunction_registerLogin(username, password);
 	}
+    
+    private static String getUsernameFromObject(Scriptable obj) {
+        return ((APIStoreHostObject) obj).getUsername();
+    }
 
 	/*
 	 * getting key for API subscriber args[] list String subscriberID, String
@@ -129,30 +137,31 @@ public class APIStoreHostObject extends ScriptableObject {
         return "" + logStatus;
 	}
 
-	public static boolean login() throws ScriptException,
-			APIManagementException {
-		if (!logStatus) {
-			apiManagerImpl = hostObjectUtil.getApiManager();
-            apiConsumerImpl = hostObjectUtil.getApiConsumer();
-            apiProviderImpl = hostObjectUtil.getApiProvider();
+    public static boolean login() throws APIManagementException {
+        if (!logStatus) {
             try {
                 keyMgtClient = new SubscriberKeyMgtClient(getBackendUrl(), "admin", "admin");
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+                throw new APIManagementException(e);
+            }
+            logStatus = true;
+        }
+        return logStatus;
+    }
+
+	public static boolean login(String userName, String password)
+            throws Exception {
+        if (!logStatus) {
+            try {
+                keyMgtClient = new SubscriberKeyMgtClient(getBackendUrl(), userName, password);
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
                 throw new ScriptException(e);
             }
             logStatus = true;
-		}
-		return logStatus;
-	}
-
-	public static boolean login(String userName, String password)
-            throws Exception {
-
-		apiManagerImpl = hostObjectUtil.getApiManager();
-        keyMgtClient = new SubscriberKeyMgtClient(getBackendUrl(), userName, password);
-		logStatus = true;
-		return logStatus;
+        }
+        return logStatus;
 	}
 
 	/**
@@ -184,8 +193,6 @@ public class APIStoreHostObject extends ScriptableObject {
 		return myn;
 	}
 
-	static APIManagerImpl apiManagerImpl;
-
 	/**
 	 * Returns top rated APIs
 	 *            if -1, no limit. Return everything else, limit the return list
@@ -204,6 +211,7 @@ public class APIStoreHostObject extends ScriptableObject {
 			int limit = Integer.parseInt(limitArg);
 			Set<API> apiSet;
 			try {
+                APIConsumerImpl apiConsumerImpl = new APIConsumerImpl();
 				apiSet = apiConsumerImpl.getTopRatedAPIs(limit);
 			} catch (APIManagementException e) {
 				log.error("Error from Registry API while getting Top Rated APIs Information "
@@ -258,6 +266,7 @@ public class APIStoreHostObject extends ScriptableObject {
 			int limit = Integer.parseInt(limitArg);
 			Set<API> apiSet;
 			try {
+                APIConsumerImpl apiConsumerImpl = new APIConsumerImpl();
 				apiSet = apiConsumerImpl.getRecentlyAddedAPIs(limit);
 			} catch (APIManagementException e) {
 				log.error("Error from Registry API while getting Recently Added APIs Information "
@@ -305,6 +314,7 @@ public class APIStoreHostObject extends ScriptableObject {
 			String searchTerm = args[0].toString();
 			Set<API> apiSet;
 			try {
+                APIConsumerImpl apiConsumerImpl = new APIConsumerImpl();
 				apiSet = apiConsumerImpl.searchAPI(searchTerm);
 			} catch (APIManagementException e) {
 				log.error("Error from Registry API while getting SearchAPI Information "
@@ -359,6 +369,7 @@ public class APIStoreHostObject extends ScriptableObject {
 			String searchType = args[1].toString();
 			Set<API> apiSet;
 			try {
+                APIConsumerImpl apiConsumerImpl = new APIConsumerImpl();
 				apiSet = apiConsumerImpl.searchAPI(searchTerm,searchType);
 			} catch (APIManagementException e) {
 				log.error("Error from Registry API while getting SearchAPI by type Information "
@@ -412,21 +423,21 @@ public class APIStoreHostObject extends ScriptableObject {
 			String tagName = args[0].toString();
 			Set<API> apiSet;
 			try{
-
-			apiSet = apiConsumerImpl.getAPIsWithTag(tagName);
-
-		} catch (APIManagementException e) {
-			log.error("Error from Registry API while getting APIs With Tag Information "
-					+ e);
-			return apiArray;
-		} catch (NullPointerException e) {
-			log.error("Error from Registry API while getting APIs With Tag Information, No APIs in Registry "
-					+ e);
-			return apiArray;
-		} catch (Exception e) {
-			log.error("Error while getting APIs With Tag Information" + e);
-			return apiArray;
-		}
+                APIConsumerImpl apiConsumerImpl = new APIConsumerImpl();
+                apiSet = apiConsumerImpl.getAPIsWithTag(tagName);    
+            } catch (APIManagementException e) {
+                log.error("Error from Registry API while getting APIs With Tag Information "
+                        + e);
+                return apiArray;
+            } catch (NullPointerException e) {
+                log.error("Error from Registry API while getting APIs With Tag Information, No APIs in Registry "
+                        + e);
+                return apiArray;
+            } catch (Exception e) {
+                log.error("Error while getting APIs With Tag Information" + e);
+                return apiArray;
+            }
+            
 			Iterator it = apiSet.iterator();
 			int i = 0;
 			while (it.hasNext()) {
@@ -471,7 +482,7 @@ public class APIStoreHostObject extends ScriptableObject {
 		if (isStringArray(args)) {
 			String limitArg = args[0].toString();
 			int limit = Integer.parseInt(limitArg);
-
+            APIConsumerImpl apiConsumerImpl = new APIConsumerImpl();
 			Set<API> apiSet = apiConsumerImpl.getTopRatedAPIs(limit);
 			Iterator it = apiSet.iterator();
 			int i = 0;
@@ -509,7 +520,8 @@ public class APIStoreHostObject extends ScriptableObject {
 		NativeArray tagArray = new NativeArray(0);
 		Set<Tag> tags;
 		try{
-		tags = apiConsumerImpl.getAllTags();
+            APIConsumerImpl apiConsumerImpl = new APIConsumerImpl();
+		    tags = apiConsumerImpl.getAllTags();
 		} catch (APIManagementException e) {
 			log.error("Error from Registry API while getting AllTags Information "
 					+ e);
@@ -555,6 +567,7 @@ public class APIStoreHostObject extends ScriptableObject {
 		login();
 		NativeArray myn = new NativeArray(0);
 		try {
+            APIConsumerImpl apiConsumerImpl = new APIConsumerImpl();
 			apiSet = apiConsumerImpl.getAllPublishedAPIs();
 
 		} catch (APIManagementException e) {
@@ -641,6 +654,7 @@ public class APIStoreHostObject extends ScriptableObject {
 		NativeArray myn = new NativeArray(0);
 		API api;
         try {
+            APIManagerImpl apiManagerImpl = new APIManagerImpl();
             api = apiManagerImpl.getAPI(apiIdentifyer);
         } catch (APIManagementException e) {
             log.error("Error from Registry API while getting get API Information on " + apiName
@@ -656,6 +670,7 @@ public class APIStoreHostObject extends ScriptableObject {
         }
         if (username != null) {
             //TODO @sumedha : remove hardcoded tenant Id
+            APIConsumerImpl apiConsumerImpl = new APIConsumerImpl();
             isSubscribed = apiConsumerImpl.isSubscribed(apiIdentifyer, username);
         }
         NativeObject row = new NativeObject();
@@ -726,6 +741,7 @@ public class APIStoreHostObject extends ScriptableObject {
 	    apiName = (String) args[1];
 		version = (String) args[2];
 		APIIdentifier apiIdentifyer = new APIIdentifier(providerName, apiName, version);
+        APIConsumerImpl apiConsumerImpl = new APIConsumerImpl();
         return username != null && apiConsumerImpl.isSubscribed(apiIdentifyer, username);
     }
 
@@ -806,7 +822,8 @@ public class APIStoreHostObject extends ScriptableObject {
 				version);
 		NativeArray myn = new NativeArray(0);
 		try{
-		doclist = apiManagerImpl.getAllDocumentation(apiIdentifyer);
+            APIManagerImpl apiManagerImpl = new APIManagerImpl();
+		    doclist = apiManagerImpl.getAllDocumentation(apiIdentifyer);
 		} catch (APIManagementException e) {
 			log.error("Error from Registry API while getting All Documentation on"+ apiName
 					+ e);
@@ -858,7 +875,8 @@ public class APIStoreHostObject extends ScriptableObject {
 		APIIdentifier apiIdentifyer = new APIIdentifier(providerName, apiName,
 				version);
 		NativeArray myn = new NativeArray(0);
-		try{
+		try {
+            APIConsumerImpl apiConsumerImpl = new APIConsumerImpl();
 			commentlist = apiConsumerImpl.getComments(apiIdentifyer);
 		} catch (APIManagementException e) {
 			log.error("Error from Registry API while getting Comments for "+ apiName
@@ -903,7 +921,8 @@ public class APIStoreHostObject extends ScriptableObject {
 		APIIdentifier apiIdentifyer = new APIIdentifier(providerName, apiName,
 				version);
 		NativeArray myn = new NativeArray(0);
-		try{
+		try {
+            APIConsumerImpl apiConsumerImpl = new APIConsumerImpl(getUsernameFromObject(thisObj));
 			apiConsumerImpl.addComment(apiIdentifyer, commentStr);
 		} catch (APIManagementException e) {
 			log.error("Error from Registry API while adding Comments for "+ apiName
@@ -1030,6 +1049,7 @@ public class APIStoreHostObject extends ScriptableObject {
         apiIdentifyer.setTier(tier);
 
 		try {
+            APIConsumerImpl apiConsumerImpl = new APIConsumerImpl();
 			apiConsumerImpl.addSubscription(apiIdentifyer, userId, applicationId);
             return true;
 		} catch (APIManagementException e) {
@@ -1056,6 +1076,7 @@ public class APIStoreHostObject extends ScriptableObject {
 				version);
         apiIdentifyer.setApplicationId(application);
 		try {
+            APIConsumerImpl apiConsumerImpl = new APIConsumerImpl();
 			apiConsumerImpl.removeSubscriber(apiIdentifyer, userId);
             return true;
         } catch (APIManagementException e) {
@@ -1088,6 +1109,7 @@ public class APIStoreHostObject extends ScriptableObject {
 			}
 			try {
 				APIIdentifier apiId = new APIIdentifier(providerName, apiName, version);
+                APIConsumerImpl apiConsumerImpl = new APIConsumerImpl(getUsernameFromObject(thisObj));
 				switch (rate) {
 				   case 1: { 
 					  apiConsumerImpl.rateAPI(apiId, APIRating.RATING_ONE);
@@ -1196,6 +1218,7 @@ public class APIStoreHostObject extends ScriptableObject {
 
             APIIdentifier apiIdentifier = new APIIdentifier(providerName, apiName, version);
             Subscriber subscriber = new Subscriber(user);
+            APIConsumerImpl apiConsumerImpl = new APIConsumerImpl();
             Set<SubscribedAPI> apis = apiConsumerImpl.getSubscribedIdentifiers(subscriber, apiIdentifier);
             int i = 0;
             for(SubscribedAPI api : apis) {
@@ -1220,6 +1243,7 @@ public class APIStoreHostObject extends ScriptableObject {
         Subscriber subscriber = new Subscriber(user);
         Map<Integer, NativeArray> subscriptionsMap = new HashMap<Integer, NativeArray>();
         NativeArray appsObj = new NativeArray(0);
+        APIConsumerImpl apiConsumerImpl = new APIConsumerImpl();
         Set<SubscribedAPI> subscribedAPIs = apiConsumerImpl.getSubscribedAPIs(subscriber);
         int i = 0;
         for(SubscribedAPI subscribedAPI : subscribedAPIs) {
@@ -1245,6 +1269,7 @@ public class APIStoreHostObject extends ScriptableObject {
         NativeObject apiObj = new NativeObject();
         API api = null;
         try {
+            APIManagerImpl apiManagerImpl = new APIManagerImpl();
             api = apiManagerImpl.getAPI(subscribedAPI.getApiId());
             apiObj.put("name", apiObj, subscribedAPI.getApiId().getApiName());
             apiObj.put("provider", apiObj, subscribedAPI.getApiId().getProviderName());
@@ -1267,7 +1292,8 @@ public class APIStoreHostObject extends ScriptableObject {
             String userName = args[0].toString();
             Subscriber subscriber;
             try{
-            subscriber = apiConsumerImpl.getSubscriber(userName);
+                APIConsumerImpl apiConsumerImpl = new APIConsumerImpl();
+                subscriber = apiConsumerImpl.getSubscriber(userName);
             }catch (APIManagementException e) {
 				log.error("Error from Registry API while getting Subscriber" 
 						+ e);
@@ -1307,7 +1333,8 @@ public class APIStoreHostObject extends ScriptableObject {
             subscriber.setEmail("");
             subscriber.setTenantId(0);
             try{
-            apiManagerImpl.addSubscriber(subscriber);
+                APIManagerImpl apiManagerImpl = new APIManagerImpl();
+                apiManagerImpl.addSubscriber(subscriber);
              }catch (APIManagementException e) {
 				log.error("Error from Registry API while adding Subscriber" 
 						+ e);
@@ -1336,8 +1363,9 @@ public class APIStoreHostObject extends ScriptableObject {
         NativeArray myn = new NativeArray(0);
         if (isStringArray(args)) {
             String username = args[0].toString();
+            APIConsumerImpl apiConsumerImpl = new APIConsumerImpl();
             Application[] applications = apiConsumerImpl.getApplications(new Subscriber(username));
-            if(applications != null) {
+            if (applications != null) {
                 int i = 0;
                 for(Application application : applications) {
                     NativeObject row = new NativeObject();
@@ -1358,6 +1386,7 @@ public class APIStoreHostObject extends ScriptableObject {
             String name = (String) args[0];
             String username = (String) args[1];
             Application application = new Application(name, new Subscriber(username));
+            APIConsumerImpl apiConsumerImpl = new APIConsumerImpl();
             apiConsumerImpl.addApplication(application, username);
             return true;
         }
@@ -1384,12 +1413,13 @@ public class APIStoreHostObject extends ScriptableObject {
 				APIIdentifier apiId = new APIIdentifier(providerName, apiName,
 						version);
 				try {
-				content = apiManagerImpl.getDocumentationContent(apiId,docName);
-				log.info(content);
-			} catch (Exception e) {
-				log.error("Error while getting Inline Document Content ", e);
-				return null;
-			}
+                    APIManagerImpl apiManagerImpl = new APIManagerImpl();
+                    content = apiManagerImpl.getDocumentationContent(apiId,docName);
+                    log.info(content);
+                } catch (Exception e) {
+                    log.error("Error while getting Inline Document Content ", e);
+                    return null;
+                }
 				NativeObject row = new NativeObject();
 				row.put("providerName", row, providerName);
 				row.put("apiName", row, apiName);

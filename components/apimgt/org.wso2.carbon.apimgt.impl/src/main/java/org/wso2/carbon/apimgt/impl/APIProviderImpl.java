@@ -7,6 +7,7 @@ import org.wso2.carbon.apimgt.api.APIProvider;
 import org.wso2.carbon.apimgt.api.dto.UserApplicationAPIUsage;
 import org.wso2.carbon.apimgt.api.model.*;
 import org.wso2.carbon.apimgt.impl.dao.ApiMgtDAO;
+import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 import org.wso2.carbon.apimgt.impl.utils.APINameComparator;
 import org.wso2.carbon.apimgt.impl.utils.APIUtil;
 import org.wso2.carbon.governance.api.exception.GovernanceException;
@@ -19,26 +20,25 @@ import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.RegistryConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.registry.core.internal.RegistryCoreServiceComponent;
 
 import javax.xml.namespace.QName;
 import java.util.*;
 
 public class APIProviderImpl implements APIProvider {
-    private static Log log = LogFactory.getLog(APIProviderImpl.class);
-    private GenericArtifactManager artifactManager;
-    private Registry registry;
+    
+    private static final Log log = LogFactory.getLog(APIProviderImpl.class);
+
     private ApiMgtDAO apiMgtDAO;
+    private Registry registry;
 
     public APIProviderImpl() throws APIManagementException {
         this.apiMgtDAO = new ApiMgtDAO();
         try {
-            this.registry = RegistryCoreServiceComponent.getRegistryService().
-                    getGovernanceSystemRegistry();
+            this.registry = ServiceReferenceHolder.getInstance().
+                    getRegistryService().getGovernanceSystemRegistry();
         } catch (RegistryException e) {
-            throw new APIManagementException("Failed to initialize the registry");
+            handleException("Error while obtaining registry objects", e);
         }
-
     }
 
     /**
@@ -48,10 +48,10 @@ public class APIProviderImpl implements APIProvider {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to get Providers
      */
-    @Override
     public Set<Provider> getAllProviders() throws APIManagementException {
         Set<Provider> providerSet = new HashSet<Provider>();
-        artifactManager = APIUtil.getArtifactManager(registry, APIConstants.PROVIDER_KEY);
+        GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry,
+                APIConstants.PROVIDER_KEY);
         try {
             GenericArtifact[] genericArtifact = artifactManager.getAllGenericArtifacts();
             if (genericArtifact == null || genericArtifact.length == 0) {
@@ -80,7 +80,6 @@ public class APIProviderImpl implements APIProvider {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to get set of API
      */
-    @Override
     public List<API> getAPIsByProvider(String providerId) throws APIManagementException {
 
         List<API> apiSortedList = new ArrayList<API>();
@@ -89,7 +88,8 @@ public class APIProviderImpl implements APIProvider {
             String providerPath = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
                     providerId;
 
-            artifactManager = APIUtil.getArtifactManager(registry, APIConstants.API_KEY);
+            GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry,
+                    APIConstants.API_KEY);
             Association[] associations = registry.getAssociations(providerPath,
                     APIConstants.PROVIDER_ASSOCIATION);
             for (Association association : associations) {
@@ -122,7 +122,6 @@ public class APIProviderImpl implements APIProvider {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to get subscribed APIs of given provider
      */
-    @Override
     public Set<Subscriber> getSubscribersOfProvider(String providerId)
             throws APIManagementException {
 
@@ -143,13 +142,13 @@ public class APIProviderImpl implements APIProvider {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to get Provider
      */
-    @Override
     public Provider getProvider(String providerName) throws APIManagementException {
         Provider provider = null;
         String providerPath = RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH +
                 APIConstants.PROVIDERS_PATH + RegistryConstants.PATH_SEPARATOR + providerName;
         try {
-            artifactManager = APIUtil.getArtifactManager(registry, APIConstants.PROVIDER_KEY);
+            GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry,
+                    APIConstants.PROVIDER_KEY);
             Resource providerResource = registry.get(providerPath);
             String artifactId =
                     providerResource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY);
@@ -171,7 +170,6 @@ public class APIProviderImpl implements APIProvider {
      * @param apiIdentifier APIIdentifier
      * @return Usage
      */
-    @Override
     public Usage getUsageByAPI(APIIdentifier apiIdentifier) {
         return null;
     }
@@ -183,7 +181,6 @@ public class APIProviderImpl implements APIProvider {
      * @param apiName    name of the API
      * @return Usage
      */
-    @Override
     public Usage getAPIUsageByUsers(String providerId, String apiName) {
         return null;
     }
@@ -196,7 +193,6 @@ public class APIProviderImpl implements APIProvider {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          If failed to get UserApplicationAPIUsage
      */
-    @Override
     public UserApplicationAPIUsage[] getAllAPIUsageByProvider(
             String providerName) throws APIManagementException {
         return apiMgtDAO.getAllAPIUsageByProvider(providerName);
@@ -209,7 +205,6 @@ public class APIProviderImpl implements APIProvider {
      * @param consumerEmail E-mal Address of consumer
      * @return Usage
      */
-    @Override
     public Usage getAPIUsageBySubscriber(APIIdentifier apiIdentifier, String consumerEmail) {
         return null;
     }
@@ -222,7 +217,6 @@ public class APIProviderImpl implements APIProvider {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to get Subscribers
      */
-    @Override
     public Set<Subscriber> getSubscribersOfAPI(APIIdentifier identifier)
             throws APIManagementException {
 
@@ -243,7 +237,6 @@ public class APIProviderImpl implements APIProvider {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to get APISubscriptionCountByAPI
      */
-    @Override
     public long getAPISubscriptionCountByAPI(APIIdentifier identifier)
             throws APIManagementException {
         long count = 0L;
@@ -260,7 +253,6 @@ public class APIProviderImpl implements APIProvider {
      *
      * @return Set<Tier>
      */
-    @Override
     public Set<Tier> getTiers() {
         return null;
     }
@@ -272,7 +264,6 @@ public class APIProviderImpl implements APIProvider {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to add API
      */
-    @Override
     public void addAPI(API api) throws APIManagementException {
         createAPI(api);
     }
@@ -284,7 +275,6 @@ public class APIProviderImpl implements APIProvider {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to update API
      */
-    @Override
     public void updateAPI(API api) throws APIManagementException {
         createAPI(api);
     }
@@ -300,7 +290,6 @@ public class APIProviderImpl implements APIProvider {
      *          If an error occurs while trying to create
      *          the new version of the API
      */
-    @Override
     public void createNewAPIVersion(API api, String newVersion) throws DuplicateAPIException,
             APIManagementException {
         String apiSourcePath = APIUtil.getAPIPath(api.getId());
@@ -316,6 +305,8 @@ public class APIProviderImpl implements APIProvider {
                         + newVersion);
             }
             Resource apiSourceArtifact = registry.get(apiSourcePath);
+            GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry,
+                    APIConstants.PROVIDER_KEY);
             GenericArtifact artifact = artifactManager.getGenericArtifact(
                     apiSourceArtifact.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY));
 
@@ -355,7 +346,6 @@ public class APIProviderImpl implements APIProvider {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to remove documentation
      */
-    @Override
     public void removeDocumentation(APIIdentifier apiId, String docName, String docType)
             throws APIManagementException {
         String docPath = APIUtil.getAPIDocPath(apiId) + docName;
@@ -376,9 +366,8 @@ public class APIProviderImpl implements APIProvider {
      * @param apiId         APIIdentifier
      * @param documentation Documentation
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
-     *          if failed to add documetation
+     *          if failed to add documentation
      */
-    @Override
     public void addDocumentation(APIIdentifier apiId, Documentation documentation)
             throws APIManagementException {
         createDocumentation(apiId, documentation);
@@ -393,7 +382,6 @@ public class APIProviderImpl implements APIProvider {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to add the document as a resource to registry
      */
-    @Override
     public void addDocumentationContent(APIIdentifier identifier, String documentationName, String text)
             throws APIManagementException {
 
@@ -421,7 +409,6 @@ public class APIProviderImpl implements APIProvider {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to update docs
      */
-    @Override
     public void updateDocumentation(APIIdentifier apiId, Documentation documentation)
             throws APIManagementException {
         createDocumentation(apiId, documentation);
@@ -435,7 +422,6 @@ public class APIProviderImpl implements APIProvider {
      * @throws org.wso2.carbon.apimgt.api.APIManagementException
      *          if failed to copy docs
      */
-    @Override
     public void copyAllDocumentation(APIIdentifier apiId, String toVersion)
             throws APIManagementException {
 
@@ -449,7 +435,6 @@ public class APIProviderImpl implements APIProvider {
             Resource resource = registry.get(oldVersion);
             if (resource instanceof org.wso2.carbon.registry.core.Collection) {
                 String[] docsPaths = ((org.wso2.carbon.registry.core.Collection) resource).getChildren();
-
                 for (String docPath : docsPaths) {
                     registry.copy(docPath, newVersion);
                 }
@@ -472,7 +457,8 @@ public class APIProviderImpl implements APIProvider {
      * @throws APIManagementException if failed to create API
      */
     private void createAPI(API api) throws APIManagementException {
-        artifactManager = APIUtil.getArtifactManager(registry, APIConstants.API_KEY);
+        GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry,
+                APIConstants.API_KEY);
         try {
             GenericArtifact genericArtifact =
                     artifactManager.newGovernanceArtifact(new QName(api.getId().getApiName()));
@@ -507,15 +493,16 @@ public class APIProviderImpl implements APIProvider {
     private void createDocumentation(APIIdentifier apiId, Documentation documentation)
             throws APIManagementException {
         try {
-            artifactManager = new GenericArtifactManager(registry, APIConstants.DOCUMENTATION_KEY);
+            GenericArtifactManager artifactManager = new GenericArtifactManager(registry,
+                    APIConstants.DOCUMENTATION_KEY);
             GenericArtifact artifact =
                     artifactManager.newGovernanceArtifact(new QName(documentation.getName()));
             artifactManager.addGenericArtifact(
                     APIUtil.createDocArtifactContent(artifact, apiId, documentation));
             String apiPath = APIUtil.getAPIPath(apiId);
             //Adding association from api to documentation . (API -----> doc)
-            registry.addAssociation(apiPath, artifact.getPath(), APIConstants.DOCUMENTATION_ASSOCIATION);
-
+            registry.addAssociation(apiPath, artifact.getPath(),
+                    APIConstants.DOCUMENTATION_ASSOCIATION);
         } catch (RegistryException e) {
             handleException("Failed to add documentation", e);
         }

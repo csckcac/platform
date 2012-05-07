@@ -41,19 +41,19 @@ public class APIHostObjectUtil {
 
     public APIManagerImpl getApiManager() throws APIManagementException {
         if(apiManager == null){
-            apiManager = new APIManagerImpl();
+            //apiManager = new APIManagerImpl();
         }
         return apiManager;
     }
     public APIProviderImpl getApiProvider() throws APIManagementException{
         if(apiProvider==null){
-            apiProvider = new APIProviderImpl();
+            //apiProvider = new APIProviderImpl();
         }
         return apiProvider;
     }
     public APIConsumerImpl getApiConsumer() throws APIManagementException{
         if(apiConsumer == null){
-            apiConsumer = new APIConsumerImpl();
+            //apiConsumer = new APIConsumerImpl();
         }
         return apiConsumer;
     }

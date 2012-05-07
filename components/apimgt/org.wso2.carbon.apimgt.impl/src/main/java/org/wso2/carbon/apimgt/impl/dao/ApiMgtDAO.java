@@ -1234,7 +1234,7 @@ public class ApiMgtDAO {
      * @throws APIManagementException if failed to get Applications for given subscriber.
      */
     public Application[] getApplications(Subscriber subscriber) throws APIManagementException {
-        if(subscriber == null){
+        if (subscriber == null){
             return null;
         }
         Connection connection = null;
@@ -1264,8 +1264,8 @@ public class ApiMgtDAO {
             //getSubscriberId
             if(subscriber.getId() == 0){
                 Subscriber subs;
-                subs = getSubscriber(subscriber.getName(),tenantId);
-                if(subs == null){
+                subs = getSubscriber(subscriber.getName(), tenantId);
+                if (subs == null) {
                     return null;
                 }else{
                     subscriber = subs;
@@ -1304,7 +1304,7 @@ public class ApiMgtDAO {
      * @return  Subscriber
      * @throws APIManagementException if failed to get subscriber
      */
-    private Subscriber getSubscriber(String username,int tenantId) throws APIManagementException {
+    private Subscriber getSubscriber(String username, int tenantId) throws APIManagementException {
         Connection connection = null;
         PreparedStatement prepStmt = null;
         ResultSet rs = null;

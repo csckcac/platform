@@ -255,7 +255,7 @@ public final class APIUtil {
      * @return API provider path
      */
     public static String getAPIProviderPath(APIIdentifier identifier){
-     return   APIConstants.API_LOCATION + RegistryConstants.PATH_SEPARATOR
+     return APIConstants.API_LOCATION + RegistryConstants.PATH_SEPARATOR
                 + identifier.getProviderName();
     }
 
@@ -265,7 +265,8 @@ public final class APIUtil {
      * @return  Doc path
      */
     public static String getAPIDocPath(APIIdentifier apiId) {
-        return apiId.getProviderName() + RegistryConstants.PATH_SEPARATOR +
+        return  APIConstants.API_LOCATION + RegistryConstants.PATH_SEPARATOR +
+                apiId.getProviderName() + RegistryConstants.PATH_SEPARATOR +
                 apiId.getApiName() + RegistryConstants.PATH_SEPARATOR +
                 apiId.getVersion() + RegistryConstants.PATH_SEPARATOR +
                 APIConstants.DOC_DIR + RegistryConstants.PATH_SEPARATOR;

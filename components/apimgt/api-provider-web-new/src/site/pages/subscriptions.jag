@@ -4,30 +4,29 @@ var site = require("/site/conf/site.json");
 
 (function () {
     var subs, result, mod;
-
+    var user = jagg.getUser();
     mod = jagg.module("subscription");
-    result = mod.getSubscribersOfProvider();
+    result = mod.getSubscribersOfProvider(user);
     subs = result.subscribers;
 
     jagg.render({
                     "name":"page/base",
                     "inputs":{
                         "title":"API Provider- Users Keys",
+                        "header":{
+                "name":"menu/primary"
+            },
                         "body":[
                             {
                                 "name":"layout/extended",
                                 "inputs":{
-                                    "top":null,
-                                    "left":null,
-                                    "rTop":null,
-                                    "rBottom" : {
-                                        "name" : "users-keys",
-                                        "params" : {
-                                            "subscribers" : subs
-                                        }
-
-                                    }
-                                }
+                        "middle":{
+                            "name":"users-keys",
+                            "inputs":{
+                                "subscribers":subs
+                            }
+                        }
+                    }
                             }
                         ]
                     }

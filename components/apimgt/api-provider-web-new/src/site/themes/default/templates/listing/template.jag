@@ -5,7 +5,17 @@
     <ul class="thumbnails">
         <span class="loading"></span>
         <%
-        var i, api, apis = outputs.apis, length = apis.length;
+        var i, api, apis = outputs.apis;
+        if(apis==null ){
+        if(request.getParameter("query")!=null){
+        return;
+        }else{
+        response.sendRedirect(jagg.getMappedUrl("/site/pages/add.jag"));
+        return;
+        }
+        }
+        else{
+        var length = apis.length;
         for(i = 0; i < length; i++) {
             api = apis[i];
         %>
@@ -33,7 +43,7 @@
                 <p class="status"><%=api.status%></p>
             </div>
         </li>
-        <% } %>
+        <% }} %>
     </ul>
     <div class="pagination" id="pagination"></div>
 </div>

@@ -101,7 +101,7 @@
                         <Import-Package>
                             !org.apache.hadoop.hive.*,
 		            org.antlr.runtime.*;version="${antlr.osgi.version}",
-			    org.apache.cassandra.thrift;resolution:=optional,
+			    org.apache.cassandra.*,
                             *;resolution:=optional
                         </Import-Package>
                         <Embed-Dependency>

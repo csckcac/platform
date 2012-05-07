@@ -24,6 +24,7 @@ import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.mediators.AbstractMediator;
 import org.wso2.carbon.lb.common.conf.LoadBalancerConfiguration;
+import org.wso2.carbon.lb.endpoint.service.TenantLoadBalanceMembershipHandler;
 import org.wso2.carbon.mediator.autoscale.ec2autoscale.context.AppDomainContext;
 import org.wso2.carbon.mediator.autoscale.ec2autoscale.util.AutoscaleConstants;
 import org.wso2.carbon.mediator.autoscale.ec2autoscale.util.AutoscaleUtil;
@@ -34,7 +35,7 @@ import java.util.Map;
  * This Synapse mediator generates a token per request received. These tokens are used for tracking
  * the number of requests in flight. Once a response is received, the relevant token will be removed
  * by the {@link AutoscaleOutMediator}
- * 
+ *
  * @see AutoscaleOutMediator
  */
 public class AutoscaleInMediator extends AbstractMediator implements ManagedLifecycle {
@@ -54,24 +55,22 @@ public class AutoscaleInMediator extends AbstractMediator implements ManagedLife
         }
 
         ConfigurationContext configCtx =
-            ((Axis2MessageContext) synCtx).getAxis2MessageContext().getConfigurationContext();
+                ((Axis2MessageContext) synCtx).getAxis2MessageContext().getConfigurationContext();
         String uuid = org.apache.axiom.util.UIDGenerator.generateUID();
         synCtx.setProperty(AutoscaleConstants.REQUEST_ID, uuid);
 
         Map<String, AppDomainContext> appDomainContexts =
-            AutoscaleUtil.getAppDomainContexts(configCtx, lbConfig);
+                AutoscaleUtil.getAppDomainContexts(configCtx, lbConfig);
         String targetHost = AutoscaleUtil.getTargetHost(synCtx);
         int tenantId = AutoscaleUtil.getTenantId(synCtx.toString());
-        // TODO tenant aware fix should go here, and following line is commented thus far
-        String domain = "wso2.as.domain";//
-        //LBConfig.getDomain(targetHost, tenantId);
-        synCtx.setProperty(AutoscaleConstants.TARGET_DOMAIN, domain);
-        AppDomainContext appDomainContext = appDomainContexts.get(domain);
+        String lbDomain = TenantLoadBalanceMembershipHandler.getDomainFormHostTenant(targetHost, tenantId);
+        synCtx.setProperty(AutoscaleConstants.TARGET_DOMAIN, lbDomain);
+        AppDomainContext appDomainContext = appDomainContexts.get(lbDomain);
         if (appDomainContext != null) {
             appDomainContext.addRequestToken(uuid);
             System.setProperty(AutoscaleConstants.IS_TOUCHED, "true");
         } else {
-            log.error("AppDomainContext not found for domain " + domain);
+            log.error("AppDomainContext not found for domain " + lbDomain);
         }
 
         return true;

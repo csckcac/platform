@@ -28,7 +28,7 @@ import org.apache.synapse.endpoints.dispatch.SessionInformation;
 import org.apache.synapse.transport.nhttp.NhttpConstants;
 import org.wso2.carbon.lb.common.conf.LoadBalancerConfiguration;
 import org.wso2.carbon.lb.common.conf.structure.Node;
-import org.wso2.carbon.lb.endpoint.service.TenantLoadBalanceMembershipHandler;
+import org.wso2.carbon.lb.endpoint.TenantLoadBalanceMembershipHandler;
 import org.wso2.carbon.lb.endpoint.util.ConfigHolder;
 import org.wso2.carbon.lb.endpoint.util.TenantDomainRangeContext;
 import org.wso2.carbon.utils.CarbonUtils;

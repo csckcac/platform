@@ -1,4 +1,4 @@
-package org.wso2.carbon.lb.endpoint.service;
+package org.wso2.carbon.lb.endpoint;
 
 
 import org.apache.axis2.clustering.ClusteringAgent;

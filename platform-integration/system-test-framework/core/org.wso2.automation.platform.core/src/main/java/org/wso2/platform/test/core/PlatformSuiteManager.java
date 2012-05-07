@@ -22,7 +22,7 @@ public class PlatformSuiteManager implements ISuiteListener {
         setKeyStoreProperties();
         try {
             if (suite.getParameter("server.list") != null) {
-                startMultpleServers(suite.getParameter("server.list"));
+                startMultipleServers(suite.getParameter("server.list"));
             }
         } catch (Exception e) {  /*cannot throw the exception */
             Assert.fail("Fail start servers " + e.getMessage());
@@ -71,13 +71,13 @@ public class PlatformSuiteManager implements ISuiteListener {
      *
      * @throws Exception if an error occurs while in server startup process
      */
-    private void startMultpleServers(String serverList) throws Exception {
+    private void startMultipleServers(String serverList) throws Exception {
         EnvironmentBuilder environmentBuilder = new EnvironmentBuilder();
         boolean deploymentEnabled =
                 environmentBuilder.getFrameworkSettings().getEnvironmentSettings().isEnableDipFramework();
         boolean startosEnabled =
                 environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos();
-        if (deploymentEnabled && !startosEnabled && serverList != null) {
+        if (deploymentEnabled && !startosEnabled) {
             List<String> productList = Arrays.asList(serverList.split(","));
             ServerGroupManager.startServers(productList);
         } else {

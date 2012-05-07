@@ -69,13 +69,7 @@
                 <artifactId>org.wso2.carbon.logging</artifactId>
                 <version>${wso2carbon.version.logging}</version>
             </dependency>
-<!--Cassandra -->
 
-		<dependency>
-			<groupId>org.apache.cassandra</groupId>
-			<artifactId>apache-cassandra</artifactId>
-			<version>${cassandra.version}</version>
-		</dependency>
 
 		<!--Hector -->
 		<dependency>
@@ -132,7 +126,7 @@
         <wso2carbon.version.logging>${wso2carbon.version}</wso2carbon.version.logging>
         <axis2.wso2.verison.logging>${axis2.wso2.version}</axis2.wso2.verison.logging>
         <orbit.version.commons.httpclient.logging>${orbit.version.commons.httpclient}</orbit.version.commons.httpclient.logging>
-	<cassandra.version>0.7.0-wso2v2</cassandra.version>
+	
 		<libthrift.version>0.5</libthrift.version>
 		<hector-core.version>0.7.0-23.wso2v1</hector-core.version>
 		<perf4j.version>0.9.12.wso2v1</perf4j.version>

@@ -92,14 +92,7 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.logging</artifactId>
         </dependency>
-       <!--Cassandra -->
-
-		<dependency>
-			<groupId>org.apache.cassandra</groupId>
-			<artifactId>apache-cassandra</artifactId>
-			<version>${cassandra.version}</version>
-		</dependency>
-
+      
 		<!--Hector -->
 		<dependency>
 			<groupId>me.prettyprint.wso2</groupId>
@@ -149,7 +142,7 @@
     </dependencies>
 	  <properties>
       
-	<cassandra.version>0.7.0-wso2v2</cassandra.version>
+	
 		<libthrift.version>0.5</libthrift.version>
 		<hector-core.version>0.7.0-23.wso2v1</hector-core.version>
 		<perf4j.version>0.9.12.wso2v1</perf4j.version>

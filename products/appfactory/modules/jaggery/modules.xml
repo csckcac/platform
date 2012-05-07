@@ -1,21 +1,21 @@
 <modules xmlns="http://wso2.org/projects/jaggery/modules.xml">
 	<module name="ssoRelyingParty" expose="true">
-		    <hostObject>
-		       <className>org.wso2.carbon.hostobjects.sso.SAMLSSORelyingPartyObject</className>
-		       <name>SSORelyingParty</name>
-		   </hostObject>
-	   </module>
-	   <module name="svnClient" expose="true">
-		   <hostObject>
-		        <className>org.wso2.carbon.hostobjects.svnclient.SVNClientHostObject</className>
-		        <name>SVNClient</name>
-		   </hostObject>
-	   </module>
+		<hostObject>
+			<className>org.wso2.carbon.hostobjects.sso.SAMLSSORelyingPartyObject</className>
+			<name>SSORelyingParty</name>
+		</hostObject>
+	</module>
+	<module name="svnClient" expose="true">
+		<hostObject>
+			<className>org.wso2.carbon.hostobjects.svnclient.SVNClientHostObject</className>
+			<name>SVNClient</name>
+		</hostObject>
+	</module>
 	<module name="carbon" expose="true">
-		    <hostObject>
-		        <className>org.wso2.carbon.hostobjects.carbon.CarbonObject</className>
-		        <name>CarbonObject</name>
-		    </hostObject>
+		<hostObject>
+			<className>org.wso2.carbon.hostobjects.carbon.CarbonObject</className>
+			<name>CarbonObject</name>
+		</hostObject>
 	</module>
 </modules>
 

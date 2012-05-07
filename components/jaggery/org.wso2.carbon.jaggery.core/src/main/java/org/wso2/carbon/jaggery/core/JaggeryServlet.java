@@ -16,6 +16,7 @@ import java.io.IOException;
 public class JaggeryServlet extends HttpServlet {
 
     private static final Log log = LogFactory.getLog(JaggeryServlet.class);
+    public static final String JAGGERY_MODULES_DIR = "modules";
 
     private WebAppManager manager = null;
 
@@ -23,12 +24,12 @@ public class JaggeryServlet extends HttpServlet {
         super.init(config);
         try {
             //init scope with global scripts
-            String jaggeryDir = System.getProperty("carbon.home");
+            String jaggeryDir = System.getProperty("jaggery.home");
             if (jaggeryDir == null) {
                 jaggeryDir = System.getProperty("catalina.home");
             }
             if(jaggeryDir != null) {
-                jaggeryDir += File.separator + "jaggery";
+                jaggeryDir += File.separator + JAGGERY_MODULES_DIR;
             }
             manager = new WebAppManager(jaggeryDir);
         } catch (ScriptException e) {

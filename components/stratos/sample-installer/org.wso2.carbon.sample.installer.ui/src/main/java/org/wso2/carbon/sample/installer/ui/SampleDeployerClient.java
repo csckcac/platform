@@ -25,7 +25,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.CarbonException;
-import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.sample.installer.stub.SampleDeployerCallbackHandler;
 import org.wso2.carbon.sample.installer.stub.SampleDeployerStub;
 import org.wso2.carbon.sample.installer.stub.SampleInformation;
@@ -355,17 +354,12 @@ public class SampleDeployerClient {
             }
 
             try {
-                SuperTenantCarbonContext.startTenantFlow();
-                SuperTenantCarbonContext.getCurrentContext().setTenantDomain(this.tenantDomain, true);
-                SuperTenantCarbonContext.getCurrentContext().getTenantId(true);
                 sampleDeployer(this.sampleName, this.tenantDomain);
                 tracker.put(this.tenantDomain, System.nanoTime());
             } catch (CarbonException e) {
                 String msg = "An error occurred while installing " + this.sampleName +
                              " for tenant " + this.tenantDomain;
                 log.error(msg, e);
-            } finally {
-                SuperTenantCarbonContext.endTenantFlow();
             }
         }
 

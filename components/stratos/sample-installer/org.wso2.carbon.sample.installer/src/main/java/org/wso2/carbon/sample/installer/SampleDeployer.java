@@ -150,46 +150,51 @@ public class SampleDeployer extends CarbonAppUploader {
      * @throws RegistryException Thrown if an error occurs while accessing the Registry
      */
     public boolean uploadSample(String sampleName, String tenantDomain) throws RegistryException {
-        SuperTenantCarbonContext.startTenantFlow();
-        SuperTenantCarbonContext.getCurrentContext().setTenantDomain(tenantDomain, true);
-        SuperTenantCarbonContext.getCurrentContext().getTenantId(true);
+        try {
+            SuperTenantCarbonContext.startTenantFlow();
+            SuperTenantCarbonContext.getCurrentContext().setTenantDomain(tenantDomain, true);
+            SuperTenantCarbonContext.getCurrentContext().getTenantId(true);
 
-        Registry registry = (Registry) SuperTenantCarbonContext.getCurrentContext().getRegistry(RegistryType.SYSTEM_GOVERNANCE);
-        try {
-            if (registry.resourceExists(getSamplePath(sampleName))) {
-                return true;
+            Registry registry = (Registry) SuperTenantCarbonContext.getCurrentContext().getRegistry(RegistryType.SYSTEM_GOVERNANCE);
+            try {
+                if (registry.resourceExists(getSamplePath(sampleName))) {
+                    return true;
+                }
+            } catch (Exception ignored) {
+                // Ignore any exceptions that may occur in the process, and try to re-upload the sample
+                // assuming that it is not already on the registry.
+                // Basically continue even though an exception does occur.
             }
-        } catch (Exception ignored) {
-            // Ignore any exceptions that may occur in the process, and try to re-upload the sample
-            // assuming that it is not already on the registry.
-        }
-        String path = CarbonUtils.getCarbonHome() + File.separator + "samples" + File.separator +
-                "bin" + File.separator + sampleName + APP_ARCHIVE_EXTENSION;
-        String tenantSpecificPath;
-        try {
-            long start = System.nanoTime();
-            tenantSpecificPath = Util.generateAppArchiveForTenant(path, getSession());
-            if (log.isInfoEnabled()) {
-                log.info("Generated Sample for Tenant in " +
-                        (((System.nanoTime() - start)/1000)/1000) + "ms");
+            String path = CarbonUtils.getCarbonHome() + File.separator + "samples" + File.separator +
+                          "bin" + File.separator + sampleName + APP_ARCHIVE_EXTENSION;
+            String tenantSpecificPath;
+            try {
+                long start = System.nanoTime();
+                tenantSpecificPath = Util.generateAppArchiveForTenant(path, getSession());
+                if (log.isInfoEnabled()) {
+                    log.info("Generated Sample for Tenant in " +
+                             (((System.nanoTime() - start) / 1000) / 1000) + "ms");
+                }
+            } catch (IOException e) {
+                log.error("Failed to generate sample for tenant", e);
+                return false;
             }
-        } catch (IOException e) {
-            log.error("Failed to generate sample for tenant", e);
-            return false;
-        }
-        try {
-            File sampleFile = new File(tenantSpecificPath);
-            RegistryClientUtils.importToRegistry(sampleFile, REGISTRY_SAMPLE_LOCATION, registry);
-        } finally {
-            if (!path.equals(tenantSpecificPath)) {
-                try {
-                    FileUtils.deleteDirectory(new File(tenantSpecificPath).getParentFile());
-                } catch (IOException e) {
-                    log.warn("Unable to delete temporary file", e);
+            try {
+                File sampleFile = new File(tenantSpecificPath);
+                RegistryClientUtils.importToRegistry(sampleFile, REGISTRY_SAMPLE_LOCATION, registry);
+            } finally {
+                if (!path.equals(tenantSpecificPath)) {
+                    try {
+                        FileUtils.deleteDirectory(new File(tenantSpecificPath).getParentFile());
+                    } catch (IOException e) {
+                        log.warn("Unable to delete temporary file", e);
+                    }
                 }
             }
+        } finally {
+            // Ultimately cleanup the tenant information before exiting the thread.
+            SuperTenantCarbonContext.endTenantFlow();
         }
-        SuperTenantCarbonContext.endTenantFlow();
         return true;
     }
 

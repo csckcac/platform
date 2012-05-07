@@ -19,12 +19,13 @@ package org.wso2.carbon.mediator.autoscale.ec2autoscale.util;
 
 
 import org.apache.axis2.clustering.ClusteringAgent;
+import org.wso2.carbon.user.core.service.RealmService;
 
 public class ConfigHolder {
     public ConfigHolder() {
     }
 
-    private RealmService realmService;
+    private static RealmService realmService;
     private static ClusteringAgent agent;
 
     public static ClusteringAgent getAgent() {
@@ -36,8 +37,8 @@ public class ConfigHolder {
     }
 
 
-    public void setRealmService(RealmService realmService) {
-        this.realmService = realmService;
+    public static void setRealmService(RealmService realmService) {
+        ConfigHolder.realmService = realmService;
     }
 
     public RealmService getRealmService() {

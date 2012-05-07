@@ -192,6 +192,10 @@ public final class AutoscaleUtil {
         }
         return true;
     } */
+
+    /**
+     * TODO These methods should use to common place since these are using endpoints and mediators
+     */
     public static int getTenantId(String url) {
         String address = url;
         String servicesPrefix = "/t/";
@@ -214,6 +218,9 @@ public final class AutoscaleUtil {
         return 0;
     }
 
+    /**
+     * TODO These methods should use to common place since these are using endpoints and mediators
+     */
     public static String getTargetHost(MessageContext synCtx) {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) synCtx).getAxis2MessageContext();

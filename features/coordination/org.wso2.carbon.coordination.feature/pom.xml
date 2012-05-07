@@ -39,12 +39,6 @@
             <version>${project.version}</version>
             <type>zip</type>
         </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.coordination.core.feature</artifactId>
-            <version>${project.version}</version>
-            <type>zip</type>
-        </dependency>
     </dependencies>
 
     <build>
@@ -65,7 +59,6 @@
                             <propertiesFile>../../etc/feature.properties</propertiesFile>
                             <includedFeatures>
                                 <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.coordination.server.feature</includedFeatureDef>
-                                <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.coordination.core.feature</includedFeatureDef>
                             </includedFeatures>
                         </configuration>
                     </execution>

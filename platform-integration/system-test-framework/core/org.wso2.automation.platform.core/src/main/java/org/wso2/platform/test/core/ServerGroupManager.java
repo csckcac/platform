@@ -227,14 +227,14 @@ public class ServerGroupManager {
                 String sessionCookieUser = login(adminDetails.getUserName(), adminDetails.getPassword(), backEndUrl, hostName);
                 adminServiceCarbonServerAdmin = new AdminServiceCarbonServerAdmin(backEndUrl);
                 adminServiceCarbonServerAdmin.shutdownGracefully(sessionCookieUser);
-                Assert.assertTrue(servers.get(product).isServerHalt(), "Server Shutdown message not Found");
-                servers.remove(product);
+                servers.get(product).isServerHalt();
                 waitForServerShutDown(Integer.parseInt(properties.getProductVariables().
                         getHttpsPort()), properties.getProductVariables().getHostName());
                 assertFalse(ClientConnectionUtil.isPortOpen(Integer.parseInt(properties.getProductVariables().
                         getHttpsPort()), properties.getProductVariables().getHostName()),
                             "Port " + Integer.parseInt(properties.getProductVariables().getHttpsPort()) +
                             " shouldn't be open when the server is gracefully shutting down");
+                servers.remove(product);
 
 
             }

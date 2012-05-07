@@ -61,9 +61,10 @@ public class AutoscaleInMediator extends AbstractMediator implements ManagedLife
         Map<String, AppDomainContext> appDomainContexts =
             AutoscaleUtil.getAppDomainContexts(configCtx, lbConfig);
         String targetHost = AutoscaleUtil.getTargetHost(synCtx);
-        int tenantId;
+        int tenantId = AutoscaleUtil.getTenantId(synCtx.toString());
         // TODO tenant aware fix should go here, and following line is commented thus far
-        String domain = "wso2.as.domain";// LBConfig.getDomain(targetHost, tenantId);
+        String domain = "wso2.as.domain";//
+        //LBConfig.getDomain(targetHost, tenantId);
         synCtx.setProperty(AutoscaleConstants.TARGET_DOMAIN, domain);
         AppDomainContext appDomainContext = appDomainContexts.get(domain);
         if (appDomainContext != null) {

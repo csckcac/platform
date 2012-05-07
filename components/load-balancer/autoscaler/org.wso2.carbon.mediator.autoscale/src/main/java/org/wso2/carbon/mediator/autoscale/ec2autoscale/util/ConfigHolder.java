@@ -41,7 +41,7 @@ public class ConfigHolder {
         ConfigHolder.realmService = realmService;
     }
 
-    public RealmService getRealmService() {
+    public static RealmService getRealmService() {
         return realmService;
     }
 

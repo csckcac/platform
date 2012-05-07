@@ -192,6 +192,27 @@ public final class AutoscaleUtil {
         }
         return true;
     } */
+    public static int getTenantId(String url) {
+        String address = url;
+        String servicesPrefix = "/t/";
+        if (address != null && address.contains(servicesPrefix)) {
+            int domainNameStartIndex =
+                    address.indexOf(servicesPrefix) + servicesPrefix.length();
+            int domainNameEndIndex = address.indexOf('/', domainNameStartIndex);
+            String domainName = address.substring(domainNameStartIndex,
+                    domainNameEndIndex == -1 ? address.length() : domainNameEndIndex);
+            // return tenant id if domain name is not null
+            if (domainName != null) {
+                try {
+                    return ConfigHolder.getRealmService().getTenantManager().getTenantId(domainName);
+                } catch (org.wso2.carbon.user.api.UserStoreException e) {
+                    log.error("An error occurred while obtaining the tenant id.", e);
+                }
+            }
+        }
+        // return 0 if the domain name is null
+        return 0;
+    }
 
     public static String getTargetHost(MessageContext synCtx) {
         org.apache.axis2.context.MessageContext axis2MessageContext =

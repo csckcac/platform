@@ -15,28 +15,17 @@ Standalone Mode
    system & wso2server.bat file on Windows operating systems.
 
 4. Either of the following commands can be used to start the Mashup Server
-      i)  ./wso2server.sh {console|start|stop|restart|status|dump|version}
-     ii)  ./daemon.sh {console|start|stop|restart|status|dump}
-    iii)  wso2server.bat {start|stop|version}
+      i)  ./wso2server.sh {start|stop|restart|version}
+     ii)  wso2server.bat {start|stop|version}
 
     Usage: wso2server.sh [command]
     command:
     	--debug <port> 	Start the server in remote debugging mode.
     			port: The remote debugging port.
-    	--run		Run the server
     	--start		Start Carbon as a Unix daemon in the background
-    	--console	Start Carbon as a Unix daemon in the foreground
     	--stop		Stop the Carbon Unix daemon
-    	--status	Get the status of the Carbon Unix daemon
-    	--dump		Print a thread dump of the Carbon Unix daemon
     	--restart	Restart the Carbon Unix daemon
     	--version	What version of the Carbon server are you running
-	--n 		Start Multiple Instances of the same server after you 
-			have successfully installed the Multiple-instances features
-			from a feature repo.
-
-
-
 
 System Requirements
 -------------------

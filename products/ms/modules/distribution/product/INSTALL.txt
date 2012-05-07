@@ -25,29 +25,19 @@ Standalone Mode
                 --debug <port>     
                                 Start the server in remote debugging mode.
                                 port: The remote debugging port.
-                --run        
-                                Run the server.
+
                 --start        
                                 Start Carbon as a Unix daemon in the background.
-                --console    
-                                Start Carbon as a Unix daemon in the foreground.
                 --stop        
                                 Stop the Carbon Unix daemon.
-                --status    
-                                Get the status of the Carbon Unix daemon.
-                --dump        
-                                Print a thread dump of the Carbon Unix daemon.
+
                 --restart    
                                 Restart the Carbon Unix daemon.
                 --cleanRegistry    
                                 Clean registry space.
                 --version    
                                 The version of the product you are running.
-                --n <instances>
-                                Start Multiple Instances of the same server after you
-                                have successfully installed the Multiple-instances features
-                                from a feature repo.
-                                instances: the number of instances to start.
+
             system-properties:
                 -DhttpPort    
                                 Overrides the HTTP port defined in the

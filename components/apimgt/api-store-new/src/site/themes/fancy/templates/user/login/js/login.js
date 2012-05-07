@@ -2,11 +2,15 @@ var login = login || {};
 (function () {
     var loginbox = login.loginbox || (login.loginbox = {});
 
-    loginbox.login = function (username, password) {
+    loginbox.login = function (username, password, url) {
         jagg.post("/site/blocks/user/login/ajax/login.jag", { action:"login", username:username, password:password },
                 function (result) {
                     if (result.error == false) {
-                        window.location.reload();
+                        if(url) {
+                            window.location.href = url;
+                        } else {
+                            window.location.reload();
+                        }
                     } else {
                         jagg.message(result.message);
                     }
@@ -32,11 +36,11 @@ $(document).ready(function () {
         modal:true,
         buttons:{
             "Login":function () {
-                login.loginbox.login($("#username").val(), $("#password").val());
+                login.loginbox.login($("#username").val(), $("#password").val(), $(this).data("url"));
                 $(this).dialog("close");
             },
             "Cancel":function () {
-                $(this).dialog("close");
+                $(this).data("url", null).dialog("close");
             }
         },
         close:function () {
@@ -44,11 +48,12 @@ $(document).ready(function () {
         }
     });
 
-    $("#login-link").click(function () {
-        $("#login-form").dialog("open");
-    });
-
     $("#logout-link").click(function () {
         login.loginbox.logout();
+    });
+
+    $(".need-login").click(function() {
+        $("#login-form").data("url", $(this).attr("href")).dialog("open");
+        return false;
     });
 });

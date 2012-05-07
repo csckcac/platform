@@ -17,21 +17,23 @@ jagg.block("menu/primary", {
         links.push({
             "title":"APIs",
             "url":jagg.getMappedUrl("/"),
+            "classes":"link-home",
             "active":(path == "/site/pages/list-apis.jag")
         });
-        if (user) {
-            links.push({
-                title:"Applications",
-                url:jagg.getMappedUrl("/site/pages/applications.jag"),
-                active:(path == "/site/pages/applications.jag")
-            });
 
-            links.push({
-                title:"My Subscriptions",
-                url:jagg.getMappedUrl("/site/pages/subscriptions.jag"),
-                active:(path == "/site/pages/subscriptions.jag")
-            });
-        }
+        links.push({
+            "title":"My Applications",
+            "url":jagg.getMappedUrl("/site/pages/applications.jag"),
+            "classes":"link-myapplications need-login",
+            "active":(path == "/site/pages/applications.jag")
+        });
+
+        links.push({
+            "title":"My Subscriptions",
+            "url":jagg.getMappedUrl("/site/pages/subscriptions.jag"),
+            "classes":"link-mysubscriptions need-login",
+            "active":(path == "/site/pages/subscriptions.jag")
+        });
 
         return {
             "links":links

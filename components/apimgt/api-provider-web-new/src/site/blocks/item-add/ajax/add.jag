@@ -20,7 +20,7 @@ include("/jagg/jagg.jag");
         apiData.context = request.getParameter("context");
         var resCount = new Array();
         if (request.getParameter("resourceCount") != null) {
-            var resCount = request.getParameter("resourceCount").split(',');
+            resCount = request.getParameter("resourceCount").split(',');
         }
         var uriTemplateArr = [];
         var uriMethodArr = [];
@@ -43,8 +43,24 @@ include("/jagg/jagg.jag");
                 error:false
             }
         }
+        print(obj);
+    } else if (action === "isContextExist") {
+        mod = jagg.module("api");
+        var context = request.getParameter("context");
+        result = mod.isContextExist(context);
+        if (result.error) {
+            obj = {
+                error:result.error,
+                message:msg.error.backendError(action)
+            };
+        } else {
+            obj = {
+                error:false
+            }
+        }
 
         print(obj);
+
     } else {
         print({
                   error:true,

@@ -1202,11 +1202,13 @@ public class APIProviderHostObject extends ScriptableObject {
         if (providerName != null) {
             try {
                 //TODO : this regex pattern matching has to be moved to APIManager API implementation
+                APIProviderImpl apiProviderImpl = new APIProviderImpl();
                 List<API> apiList = apiProviderImpl.getAPIsByProvider(providerName);
                 List<API> searchedList = new ArrayList<API>();
                 String regex = "[a-zA-Z0-9_.-|]*" + apiName.toUpperCase()+ "[a-zA-Z0-9_.-|]*";
                 Pattern pattern;
                 Matcher matcher;
+                APIManagerImpl apiManagerImpl = new APIManagerImpl();
                 for (API api : apiList) {
                     APIIdentifier apiIdentifier = api.getId();
                     String name = apiIdentifier.getApiName().toUpperCase();

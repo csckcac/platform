@@ -39,7 +39,7 @@ import java.util.List;
 public class UserPopulator {
     private static final Log log = LogFactory.getLog(UserPopulator.class);
     private AdminServiceUserMgtService userMgtAdmin;
-    private static boolean isUsersPopulated = true;
+    private boolean isUsersPopulated = false;
     EnvironmentBuilder env;
     FrameworkSettings framework;
 
@@ -53,7 +53,7 @@ public class UserPopulator {
         FrameworkProperties manProperties =
                 FrameworkFactory.getFrameworkProperties(ProductConstant.MANAGER_SERVER_NAME);
 
-        if (isUsersPopulated) {
+        if (!isUsersPopulated) {
             if (framework.getEnvironmentSettings().is_runningOnStratos()) {
                 AdminServiceTenantMgtServiceAdmin tenantStub =
                         new AdminServiceTenantMgtServiceAdmin(manProperties.getProductVariables().
@@ -92,7 +92,7 @@ public class UserPopulator {
                 }
             }
             //users are populated. user population disabled
-            isUsersPopulated = false;
+            isUsersPopulated = true;
 //        }
         }
     }

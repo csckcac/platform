@@ -62,7 +62,7 @@ public class AttachmentUploadClient {
         attachment.setContentType(handler.getContentType());
 
         attachment.setCreatedBy("DummyUser");  //TODO: Remove this hard-coded value
-        attachment.setContent(fileItemData.getDataHandler());
+        attachment.setContent(handler);
         String attachmentID = stub.add(attachment);
         log.info("Attachment was uploaded with id:" + attachmentID);
         return attachmentID;

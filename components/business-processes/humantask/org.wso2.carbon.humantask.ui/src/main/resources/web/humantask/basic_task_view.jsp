@@ -127,6 +127,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <td width="10px">&nbsp;</td>
                             <tr>
                                 <td>
                                     <table class="styledLeft" id="taskAttachmentInfo">
@@ -162,13 +163,15 @@
                     <form id="attachment_upload_form" method="post" name="attachmentUpload" action="../../fileupload/attachment-mgt"
                       enctype="multipart/form-data" target="_self">
                         <input type="hidden" id="uRedirect" name="redirect" value="humantask/task_list.jsp"/>
-                        <input type="hidden" id="taskID" name="taskID" value="<%=taskId%>"/>
+                        <input type="hidden" id="taskId" name="taskId" value="<%=taskId%>"/>
                     <table>
                         <tbody>
+                        <td width="10px">&nbsp;</td>
                         <tr>
                             <td>File</td>
-                            <td><input type="file" name="fileToUpload"/></td>
+                            <td><input class="button" type="file" name="fileToUpload"/></td>
                         </tr>
+                        <td width="10px">&nbsp;</td>
                         </tbody>
                         <tfoot>
                         <tr>

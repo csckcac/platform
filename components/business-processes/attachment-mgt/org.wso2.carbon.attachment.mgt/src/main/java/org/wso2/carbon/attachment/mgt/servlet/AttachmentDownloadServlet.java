@@ -24,6 +24,7 @@ import org.wso2.carbon.attachment.mgt.core.service.AttachmentManagerService;
 import org.wso2.carbon.attachment.mgt.skeleton.AttachmentMgtException;
 import org.wso2.carbon.attachment.mgt.skeleton.types.TAttachment;
 
+import javax.activation.DataHandler;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
@@ -54,13 +55,17 @@ public class AttachmentDownloadServlet extends HttpServlet {
         String url = request.getRequestURI();
         String attachmentUniqueID = url.substring(url.lastIndexOf("/") + 1);
 
-        response.setHeader("Content-Disposition", "attachment; filename=" + attachmentUniqueID);
-        response.setContentType("application/download");
+
 
         InputStream contentStream = null;
         ServletOutputStream servletOutputStream = null;
         try {
-            contentStream = getFileFromUniqueID(url);
+            TAttachment fileAttachment = getFileFromUniqueID(url);
+
+            response.setHeader("Content-Disposition", "attachment; filename=" + fileAttachment.getName());
+            response.setContentType(fileAttachment.getContentType());
+            contentStream = fileAttachment.getContent().getInputStream();
+
             servletOutputStream = response.getOutputStream();
 
             IOUtils.copy(contentStream, servletOutputStream);
@@ -82,21 +87,20 @@ public class AttachmentDownloadServlet extends HttpServlet {
 
     /**
      * Generate an {@code InputStream} for the attachment specified by the {@code attachmentURL}
+     *
+     *
      * @param attachmentURL an unique url value which can be used to retrieve an attachment
      * @return {@code InputStream} relevant to the particular {@code attachmentURL}
      * @throws AttachmentMgtException
      */
-    private InputStream getFileFromUniqueID(String attachmentURL) throws AttachmentMgtException {
+    private TAttachment getFileFromUniqueID(String attachmentURL) throws AttachmentMgtException {
         AttachmentManagerService service = new AttachmentManagerService();
         try {
             TAttachment attachment = service.getAttachmentInfoFromURL(attachmentURL);
-            return attachment.getContent().getInputStream();
+            return attachment;
         } catch (AttachmentMgtException e) {
             log.error(e.getLocalizedMessage(), e);
             throw e;
-        } catch (IOException e) {
-            log.error(e.getLocalizedMessage(), e);
-            throw new AttachmentMgtException(e.getLocalizedMessage(), e);
         }
     }
 

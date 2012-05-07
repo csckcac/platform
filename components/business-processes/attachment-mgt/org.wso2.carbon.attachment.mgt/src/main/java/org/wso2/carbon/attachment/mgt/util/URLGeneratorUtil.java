@@ -127,11 +127,11 @@ public class URLGeneratorUtil {
         }
 
         String tenantDomain = String.valueOf(MultitenantConstants.SUPER_TENANT_ID);
-        /*try {
+        try {
             tenantDomain = SuperTenantCarbonContext.getCurrentContext().getTenantDomain(true);
-        } catch (Exception npe) {
-            log.error(npe.getLocalizedMessage(), npe);
-        }*/
+        } catch (Throwable e) {
+            tenantDomain = null;
+        }
 
         String url = null;
         try {

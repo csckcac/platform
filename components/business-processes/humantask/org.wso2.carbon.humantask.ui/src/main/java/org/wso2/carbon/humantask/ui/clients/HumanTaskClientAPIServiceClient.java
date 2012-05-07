@@ -121,7 +121,9 @@ public class HumanTaskClientAPIServiceClient {
         }
     }
 
-    public boolean addAttachment(String taskID, String attachmentID) throws RemoteException, IllegalStateFault,
+    public boolean addAttachment(String taskID, String attachmentName, String contentType, String attachmentID) throws
+                                                                                                 RemoteException,
+                                                                                          IllegalStateFault,
                                                                             IllegalOperationFault,
                                                                             IllegalArgumentFault,
                                                                             IllegalAccessFault, URI.MalformedURIException {
@@ -129,7 +131,7 @@ public class HumanTaskClientAPIServiceClient {
         try {
             log.warn("Some of the attributes(like accessType) defined in the Service WSDLs are ignored and nulls are " +
                      "passed from to the service call");
-            return stub.addAttachment(new URI(taskID), null, null, null, attachmentID);
+            return stub.addAttachment(new URI(taskID), attachmentName, "dummyAccessType", contentType, attachmentID);
         } catch (RemoteException e) {
             log.error(errorMsg, e);
             throw e;

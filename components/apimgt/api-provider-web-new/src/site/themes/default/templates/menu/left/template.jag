@@ -6,15 +6,16 @@
     }
 %>
 
+
 <div class="sidebar-nav well">
     <ul class="nav nav-list">
        <li class="nav-header">APIs</li>
-        <li <% if(place.equals("") || place.equals("api-details")){%>class="active"<% } %>><a href="index.jag">Browse</a></li>
-        <li <% if(place.equals("add")){%>class="active"<% } %>><a href="?place=add" >Add</a></li>
+        <li <% if(place.equals("") || place.equals("api-details")){%>class="active"<% } %>><a href="<%=jagg.getMappedUrl("/site/pages/index.jag")%>">Browse</a></li>
+        <li <% if(place.equals("add")){%>class="active"<% } %>><a href="<%=jagg.getMappedUrl("/site/pages/add.jag")%>">Add</a></li>
         <li class="nav-header">Manage</li>
-        <li <% if(place.equals("users_keys")|| place.equals("user")){%>class="active"<% } %>><a href="?place=users_keys" >Users/Keys</a></li>
+        <li <% if(place.equals("users_keys")|| place.equals("user")){%>class="active"<% } %>><a href="<%=jagg.getMappedUrl("/site/pages/subscriptions.jag")%>">Users/Keys</a></li>
         <li class="nav-header">Statistics</li>
-        <li <% if(place.equals("stat-all")){%>class="active"<% } %>><a href="?place=stat-all" >My APIs</a></li>
+        <li <% if(place.equals("stat-all")){%>class="active"<% } %>><a href="<%=jagg.getMappedUrl("/site/pages/statistics.jag")%>">My APIs</a></li>
     </ul>
 </div>
 

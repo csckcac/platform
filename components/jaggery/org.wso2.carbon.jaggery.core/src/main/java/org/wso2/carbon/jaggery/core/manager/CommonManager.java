@@ -1,6 +1,5 @@
 package org.wso2.carbon.jaggery.core.manager;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mozilla.javascript.Context;
@@ -15,13 +14,13 @@ import org.wso2.carbon.jaggery.core.modules.JaggeryModule;
 import org.wso2.carbon.jaggery.core.modules.JaggeryScript;
 import org.wso2.carbon.jaggery.core.modules.ModuleManager;
 import org.wso2.carbon.scriptengine.cache.CacheManager;
-import org.wso2.carbon.scriptengine.cache.ScriptCachingContext;
 import org.wso2.carbon.scriptengine.engine.RhinoEngine;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 import org.wso2.carbon.scriptengine.util.HostObjectUtil;
 
-import javax.servlet.ServletContext;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -38,9 +37,7 @@ public class CommonManager {
 
     public static final int ENV_WEBAPP = 0;
 
-    public static final int ENV_COMMAND_LINE = 1;
     public static final String JAGGERY_CONTEXT = "jaggeryContext";
-    public static final String JAGGERY_PREFIX = "$j";
     public static final String JAGGERY_URLS_MAP = "jaggery.urls.map";
 
     public static final String HOST_OBJECT_NAME = "CarbonTopLevel";
@@ -60,10 +57,6 @@ public class CommonManager {
 
     public ModuleManager getModuleManager() {
         return this.moduleManager;
-    }
-
-    public String getScriptsDir() {
-        return this.scriptsDir;
     }
 
     private void init() throws ScriptException {
@@ -215,12 +208,12 @@ public class CommonManager {
     private void exposeModule(JaggeryModule module) {
         List<JaggeryHostObject> hostObjects = module.getJaggeryHostObjects();
         for (JaggeryHostObject hostObject : hostObjects) {
-            this.engine.defineProperty(hostObject.getName(), hostObject.getConstructor(), ScriptableObject.READONLY);
+            this.engine.defineProperty(hostObject.getName(), hostObject.getConstructor(), ScriptableObject.PERMANENT);
         }
 
         List<JaggeryMethod> methods = module.getJaggeryMethods();
         for (JaggeryMethod method : methods) {
-            this.engine.defineFunction(method.getName(), method.getMethod(), ScriptableObject.READONLY);
+            this.engine.defineFunction(method.getName(), method.getMethod(), ScriptableObject.PERMANENT);
         }
 
         List<JaggeryScript> scripts = module.getJaggeryScripts();

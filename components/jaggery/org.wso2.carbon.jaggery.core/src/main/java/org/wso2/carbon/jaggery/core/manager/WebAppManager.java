@@ -85,16 +85,16 @@ public class WebAppManager extends CommonManager {
             source = new ScriptReader(context.getResourceAsStream(fileURL)) {
                 @Override
                 protected void build() throws IOException {
-                        try {
-                            if(isJSON) {
-                                sourceReader = new StringReader("(" + HostObjectUtil.streamToString(sourceIn) + ")");
-                            } else {
-                                sourceReader = new StringReader(HostObjectUtil.streamToString(sourceIn));
-                            }
-                        } catch (ScriptException e) {
-                            throw new IOException(e);
+                    try {
+                        if(isJSON) {
+                            sourceReader = new StringReader("(" + HostObjectUtil.streamToString(sourceIn) + ")");
+                        } else {
+                            sourceReader = new StringReader(HostObjectUtil.streamToString(sourceIn));
                         }
+                    } catch (ScriptException e) {
+                        throw new IOException(e);
                     }
+                }
             };
         } else {
             source = new ScriptReader(context.getResourceAsStream(fileURL));
@@ -146,6 +146,8 @@ public class WebAppManager extends CommonManager {
             return executeScript(jaggeryContext, object, param, true, true);
         } else if(ext.equalsIgnoreCase("js")) {
             return executeScript(jaggeryContext, object, param, false, true);
+        } else if(ext.equalsIgnoreCase("jag")) {
+            return executeScript(jaggeryContext, object, param, false, false);
         } else {
             String msg = "Unsupported file type for require() method : ." + ext;
             log.error(msg);
@@ -194,7 +196,7 @@ public class WebAppManager extends CommonManager {
     }
 
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String scriptPath = getScriptPath(request.getServletPath(), request);
+        String scriptPath = getScriptPath(request);
         InputStream sourceIn = request.getServletContext().getResourceAsStream(scriptPath);
         if (sourceIn == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, request.getRequestURI());
@@ -222,7 +224,8 @@ public class WebAppManager extends CommonManager {
         }
     }
 
-    private String getScriptPath(String url, HttpServletRequest request) {
+    public static String getScriptPath(HttpServletRequest request) {
+        String url = request.getServletPath();
         Map<String, Object> urlMappings = (Map<String, Object>) request.getServletContext()
                 .getAttribute(CommonManager.JAGGERY_URLS_MAP);
         if (urlMappings == null) {
@@ -237,7 +240,7 @@ public class WebAppManager extends CommonManager {
         return path == null ? url : path;
     }
 
-    private String resolveScriptPath(List<String> parts, Map<String, Object> map) {
+    private static String resolveScriptPath(List<String> parts, Map<String, Object> map) {
         String part = parts.remove(0);
         if (parts.isEmpty()) {
             Object obj = map.get(part);

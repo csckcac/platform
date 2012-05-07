@@ -30,7 +30,6 @@
                 <exclude>**/conf/axis2/axis2.xml</exclude>
                 <exclude>**/conf/mgt-transports.xml</exclude>
                 <exclude>**/conf/synapse.xml</exclude>
-                <exclude>**/conf/wrapper.conf</exclude>
                 <exclude>**/conf/cipher-text.properties</exclude>
                 <exclude>**/log4j.properties</exclude>
                 <exclude>**/native/*</exclude>
@@ -214,19 +213,6 @@
             </source>
             <outputDirectory>wso2lb-${pom.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
-        </file>
-        <file>
-            <source>
-                target/wso2carbon-core-${carbon.version}/repository/conf/wrapper.conf
-            </source>
-            <outputDirectory>wso2lb-${pom.version}/repository/conf/</outputDirectory>
-            <filtered>true</filtered>
-        </file>
-        <file>
-            <source>target/wso2carbon-core-${carbon.version}/bin/daemon.sh</source>
-            <outputDirectory>wso2lb-${pom.version}/bin/</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>755</fileMode>
         </file>
     </files>
 </assembly>

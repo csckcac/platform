@@ -190,22 +190,10 @@ elif [ "$CMD" = "stop" ]; then
   export CARBON_HOME=$CARBON_HOME
   kill -9 `cat $CARBON_HOME/wso2carbon.pid`
   exit 0
-elif [ "$CMD" = "console" ]; then
-  export CARBON_HOME=$CARBON_HOME
-  $CARBON_HOME/bin/daemon.sh console
-  exit 0
 elif [ "$CMD" = "restart" ]; then
   export CARBON_HOME=$CARBON_HOME
   kill -9 `cat $CARBON_HOME/wso2carbon.pid`
   nohup $CARBON_HOME/bin/wso2server.sh &
-  exit 0
-elif [ "$CMD" = "dump" ]; then
-  export CARBON_HOME=$CARBON_HOME
-  $CARBON_HOME/bin/daemon.sh dump
-  exit 0
-elif [ "$CMD" = "status" ]; then
-  export CARBON_HOME=$CARBON_HOME
-  $CARBON_HOME/bin/daemon.sh status
   exit 0
 elif [ "$CMD" = "test" ]; then
     JAVACMD="exec "$JAVACMD""

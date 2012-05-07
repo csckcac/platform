@@ -110,6 +110,7 @@
                         <configuration>
                             <tasks>
                                 <property name="tempdir" value="target/docs-temp"/>
+                                <property name="jardir" value="target/jars"/>
                                 <mkdir dir="${tempdir}"/>
                                 <unzip dest="${tempdir}">
                                     <fileset dir="target">
@@ -119,9 +120,24 @@
                                 <copy todir="target/wso2carbon-core-${carbon.platform.version}/repository/components"
                                       overwrite="true">
                                     <fileset
-                                            dir="${tempdir}/jaggery-${carbon.product.version}/repository/components">
+                                            dir="${tempdir}/jaggery-${carbon.product.version}/carbon/repository/components">
                                     </fileset>
                                 </copy>
+                                <!--jar destfile="target/wso2carbon-core-${carbon.platform.version}/repository/components/plugins/org.wso2.carbon.jaggery.deployer_${jaggery.components.version}.jar" update="true">
+                                    <fileset dir="src/resources/jar"/>
+                                    <zipfileset includes="**/*" src="target/wso2carbon-core-${carbon.platform.version}/repository/components/plugins/org.wso2.carbon.jaggery.deployer_${jaggery.components.version}.jar"/>
+                                </jar-->
+                                <unzip src="target/wso2carbon-core-${carbon.platform.version}/repository/components/plugins/org.wso2.carbon.jaggery.deployer_${jaggery.components.version}.jar"
+                                       dest="${jardir}/deployer">
+                                    <patternset>
+                                        <exclude name="**/component.xml"/>
+                                    </patternset>
+                                </unzip>
+                                <copy file="src/resources/jar/META-INF/component.xml" todir="${jardir}/deployer/META-INF"/>
+                                <delete file="target/wso2carbon-core-${carbon.platform.version}/repository/components/plugins/org.wso2.carbon.jaggery.deployer_${jaggery.components.version}.jar"></delete>
+                                <zip destfile="target/wso2carbon-core-${carbon.platform.version}/repository/components/plugins/org.wso2.carbon.jaggery.deployer_${jaggery.components.version}.jar" basedir="${jardir}/deployer"/>
+
+
                                 <delete file="target/jaggery-${carbon.product.version}.zip"/>
                                 <delete dir="${tempdir}"/>
                                 <mkdir dir="${tempdir}"/>
@@ -184,6 +200,8 @@
                         <phase>install</phase>
                         <configuration>
                             <tasks>
+                                <delete dir="target/jars"/>
+                                <delete dir="target/*.xml"/>
                                 <delete dir="target/archive-tmp"/>
                                 <delete dir="target/dependency-maven-plugin-markers"/>
                                 <delete dir="target/maven-archiver"/>

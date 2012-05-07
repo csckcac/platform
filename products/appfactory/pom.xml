@@ -30,7 +30,7 @@
     <groupId>org.wso2.appfactory</groupId>
     <artifactId>wso2appfactory-parent</artifactId>
     <packaging>pom</packaging>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <name>WSO2 AppFacotry - Parent</name>
     <url>http://wso2.org/projects/appfactory/java</url>
     <description>WSO2 Business Process Server</description>
@@ -45,6 +45,7 @@
     <modules>
         <module>modules/p2-profile-gen</module>
         <module>modules/distribution</module>
+		<module>modules/bpels</module>
     </modules>
 
     <profiles>

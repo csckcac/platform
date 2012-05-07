@@ -100,20 +100,18 @@ public class APIProviderHostObject extends ScriptableObject {
                                            Object[] args,
                                            Function funObj)
             throws ScriptException {
-        if (args.length == 2 && isStringValues(args)) {
-            String userName = (String) args[0];
-            String password = (String) args[1];
-            if (!logStatus) {
-                try {
-                    apiManagerImpl = hostObjectUtil.getApiManager();
-                    apiProviderImpl = hostObjectUtil.getApiProvider();
-                    apiConsumerImpl = hostObjectUtil.getApiConsumer();
-                } catch (APIManagementException e) {
-                    log.error("Error from registry while while login the user", e);
-                }
-                logStatus = true;
+
+        if (!logStatus) {
+            try {
+                apiManagerImpl = hostObjectUtil.getApiManager();
+                apiProviderImpl = hostObjectUtil.getApiProvider();
+                apiConsumerImpl = hostObjectUtil.getApiConsumer();
+            } catch (APIManagementException e) {
+                log.error("Error from registry while while login the user", e);
             }
+            logStatus = true;
         }
+
         return logStatus;
     }
 

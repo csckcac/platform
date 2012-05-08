@@ -43,7 +43,7 @@
                         <carbon.zip>
                             ${basedir}/../distribution/product/target/wso2hosting-${project.version}.zip
                         </carbon.zip>
-                        <sec.verifier.dir>${basedir}/../../../integration/security-verifier/</sec.verifier.dir>
+                        <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
                         <samples.dir>${basedir}/../samples/product</samples.dir>
                         <extracted.dir>wso2hosting-${project.version}</extracted.dir>
                     </systemProperties>
@@ -58,6 +58,24 @@
                         <goals>
                             <goal>test-jar</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                    	<id>copy-secVerifier</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/security-verifier</outputDirectory>
+                            <includeTypes>aar</includeTypes>
+                            <includeArtifactIds>SecVerifier</includeArtifactIds>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -156,6 +174,12 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.rm.stub</artifactId>
             <version>${carbon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>SecVerifier</artifactId>
+            <version>${carbon.version}</version>
+            <type>aar</type>
         </dependency>
     </dependencies>
 </project>

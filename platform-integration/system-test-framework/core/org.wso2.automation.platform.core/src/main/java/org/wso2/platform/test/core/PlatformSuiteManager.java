@@ -18,7 +18,6 @@ public class PlatformSuiteManager implements ISuiteListener {
      * This method is invoked before the SuiteRunner starts.
      */
     public void onStart(ISuite suite) {
-        log.info("Starting all servers");
         setKeyStoreProperties();
         try {
             if (suite.getParameter("server.list") != null) {
@@ -35,7 +34,6 @@ public class PlatformSuiteManager implements ISuiteListener {
      * the test suites.
      */
     public void onFinish(ISuite suite) {
-        log.info("Stopping all server");
         try {
             if (suite.getParameter("server.list") != null) {
                 stopMultipleServers(suite.getParameter("server.list"));
@@ -59,6 +57,7 @@ public class PlatformSuiteManager implements ISuiteListener {
         if (environmentBuilder.getFrameworkSettings().getEnvironmentSettings().isEnableDipFramework()
             && !environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
             List<String> productList = Arrays.asList(serverList.split(","));
+            log.info("Stopping all server");
             ServerGroupManager.shutdownServers(productList);
         }
     }
@@ -81,6 +80,7 @@ public class PlatformSuiteManager implements ISuiteListener {
                 environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos();
         if (deploymentEnabled && !startosEnabled) {
             List<String> productList = Arrays.asList(serverList.split(","));
+            log.info("Starting all servers");
             ServerGroupManager.startServers(productList);
         } else {
             List<String> productList = Arrays.asList(serverList.split(","));

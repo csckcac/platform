@@ -14,6 +14,7 @@
  */
 package org.wso2.carbon.bpel.ui.bpel2svg.latest.wso2.adapter;
 
+import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.commons.logging.Log;
@@ -30,6 +31,7 @@ import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.status.ProcessInst
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.service.ProcessInstanceService;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.service.ProcessModelService;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.wso2.service.InstanceNotFoundException;
+import org.wso2.carbon.bpel.ui.clients.InstanceManagementServiceClient;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -165,9 +167,9 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService<String
      */
     private PaginatedInstanceList getPaginatedInstanceList(String filter, String order, int limit,
                                                            int page)
-            throws RemoteException, InstanceManagementException {
+            throws Exception {
         /* Call WebService */
-        return getStub().getPaginatedInstanceList(filter, order, limit, page);
+        return getClient().getPaginatedInstanceList(filter, order, limit, page);
     }
 
     /**
@@ -180,29 +182,21 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService<String
      *                         If error occurred while
      *                         reading the process list from the backend
      */
-    private InstanceInfoType getInstanceInfo(long iid) throws RemoteException, InstanceManagementException {
+    private InstanceInfoType getInstanceInfo(long iid) throws Exception {
         /* Call WebService */
-        return getStub().getInstanceInfo(iid);
+        return getClient().getInstanceInfo(iid);
     }
 
     /**
-     * Creates an {@link InstanceManagementServiceStub} of the process instances management WebService.
+     * Creates an {@link InstanceManagementServiceClient} of the process instances management WebService.
      *
-     * @return The {@link InstanceManagementServiceStub}
-     * @throws RemoteException If stub operation invocation fail
+     * @return The {@link InstanceManagementServiceClient}
+     * @throws AxisFault If stub creation operation fails
      */
-    private InstanceManagementServiceStub getStub() throws RemoteException {
-        String instanceMgtService = "InstanceManagementService";
-        String serviceURL = AuthenticationManager.getBackendServerURL() + instanceMgtService;
-
-        InstanceManagementServiceStub stub = new InstanceManagementServiceStub(null, serviceURL);
-        ServiceClient client = stub._getServiceClient();
-        Options option = client.getOptions();
-        option.setManageSession(true);
-        option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING,
-                AuthenticationManager.getCookie());
-
-        return stub;
+    private InstanceManagementServiceClient getClient() throws AxisFault {
+        InstanceManagementServiceClient client = new InstanceManagementServiceClient(AuthenticationManager.getCookie
+                (), AuthenticationManager.getBackendServerURL(), AuthenticationManager.getConfigContext());
+        return client;
     }
 
 }

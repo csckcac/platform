@@ -29,6 +29,8 @@ import org.wso2.andes.server.cassandra.DefaultClusteringEnabledSubscriptionManag
 import org.wso2.andes.server.cluster.ClusterManagementInformationMBean;
 import org.wso2.andes.server.cluster.ClusterManager;
 import org.wso2.andes.server.cluster.coordination.ReferenceTime;
+import org.wso2.andes.server.cluster.coordination.SubscriptionCoordinationManager;
+import org.wso2.andes.server.cluster.coordination.SubscriptionCoordinationManagerImpl;
 import org.wso2.andes.server.configuration.ClusterConfiguration;
 import org.wso2.andes.server.configuration.ServerConfiguration;
 import org.wso2.andes.server.configuration.ServerNetworkTransportConfiguration;
@@ -276,6 +278,14 @@ public class Broker
             ReferenceTime referenceTime = new ReferenceTime(refTime);
             ClusterResourceHolder.getInstance().setReferenceTime(referenceTime);
 
+
+            if(ClusterResourceHolder.getInstance().getSubscriptionCoordinationManager() == null) {
+
+                SubscriptionCoordinationManager subscriptionCoordinationManager =
+                        new SubscriptionCoordinationManagerImpl();
+                subscriptionCoordinationManager.init();
+                ClusterResourceHolder.getInstance().setSubscriptionCoordinationManager(subscriptionCoordinationManager);
+            }
 
             ClusterManager clusterManager = null;
 

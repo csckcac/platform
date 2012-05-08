@@ -37,14 +37,14 @@
             <keystorePath>/path/to/keystore.ks</keystorePath>
             <keystorePassword>keystorepass</keystorePassword>
         </ssl>
-        <port>5672</port>
+        <port>5673</port>
         <sslport>8672</sslport>
         <socketReceiveBuffer>262144</socketReceiveBuffer>
         <socketSendBuffer>262144</socketSendBuffer>
     </connector>
     <management>
-        <enabled>true</enabled>
-        <jmxport>8999</jmxport>
+        <enabled>false</enabled>
+        <jmxport>8998</jmxport>
         <ssl>
             <enabled>false</enabled>
             <!-- Update below path to your keystore location, or run the bin/create-example-ssl-stores(.sh|.bat)
@@ -94,7 +94,7 @@
 
     <clustering>
 
-        <enabled>false</enabled>
+        <enabled>true</enabled>
         <OnceInOrderSupportEnabled>false</OnceInOrderSupportEnabled>
 
 
@@ -159,7 +159,7 @@
 
                 <!-- Virtual host sync interval seconds in for the Virtual host syncing Task which will sync the
                 Virtual host details across the cluster -->
-                <virtualHostSyncTaskInterval>10</virtualHostSyncTaskInterval>
+                <virtualHostSyncTaskInterval>3600</virtualHostSyncTaskInterval>
             </waitTimes>
         </tuning>
 

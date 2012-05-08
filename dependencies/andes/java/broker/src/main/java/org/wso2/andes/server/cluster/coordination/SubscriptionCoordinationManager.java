@@ -17,25 +17,19 @@
 */
 package org.wso2.andes.server.cluster.coordination;
 
-
-public final class CoordinationConstants {
-
-    public static String QUEUE_WORKER_COORDINATION_PARENT = "/queue_workers_parent";
-
-    public static String QUEUE_WORKER_NODE = "/queue_worker_node";
-
-    public static String QUEUE_FAIL_OVER_HANDLING_PARENT = "/queue_fail_over_handling_parent";
-
-    public static String QUEUE_FAIL_OVER_HANDLING_NODE = "/queue_fail_over_handling_node";
-
-    public static String QUEUE_RESOURCE_LOCK_PARENT = "/queue_resource_lock_parent";
-
-    public static String QUEUE_RESOURCE_LOCK_NODE = "/queue_resource_lock_node";
-
-    public static final String SUBSCRIPTION_COORDINATION_PARENT = "/subscription_coordination_parent";
+/**
+ *
+ */
+public interface SubscriptionCoordinationManager {
 
 
+    public void init() throws CoordinationException;
 
-    public static String NODE_SEPARATOR = "/";
+    public void notifySubscriptionChange();
 
+    public void handleSubscriptionChange() throws CoordinationException;
+
+    public void registerSubscriptionListener(SubscriptionListener listener);
+
+    public void removeSubscriptionListener(SubscriptionListener listener);
 }

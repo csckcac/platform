@@ -20,6 +20,7 @@ package org.wso2.andes.server.cluster.coordination;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.zookeeper.*;
+import org.jboss.netty.handler.codec.frame.CorruptedFrameException;
 
 import java.io.IOException;
 
@@ -129,6 +130,23 @@ public class ZooKeeperAgent implements Watcher{
             throw new CoordinationException(msg, e);
         }
 
+    }
+
+
+    public void initSubscriptionCoordination() throws CoordinationException {
+        try {
+            if (zk.exists(CoordinationConstants.SUBSCRIPTION_COORDINATION_PARENT,
+                    false) == null) {
+                zk.create(CoordinationConstants.SUBSCRIPTION_COORDINATION_PARENT,
+                        new byte[0],
+                        ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+            }
+
+        } catch (Exception e) {
+            String msg = "Error while creating Subscription coordination parent at " +
+                    CoordinationConstants.SUBSCRIPTION_COORDINATION_PARENT;
+            throw new CoordinationException(msg, e);
+        }
     }
 
 

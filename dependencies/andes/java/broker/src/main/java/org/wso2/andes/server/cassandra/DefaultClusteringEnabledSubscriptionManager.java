@@ -23,6 +23,8 @@ import org.wso2.andes.AMQStoreException;
 import org.wso2.andes.server.AMQChannel;
 import org.wso2.andes.server.ClusterResourceHolder;
 import org.wso2.andes.server.cluster.ClusterManager;
+import org.wso2.andes.server.cluster.coordination.SubscriptionCoordinationManager;
+import org.wso2.andes.server.cluster.coordination.SubscriptionListener;
 import org.wso2.andes.server.queue.AMQQueue;
 import org.wso2.andes.server.store.CassandraMessageStore;
 import org.wso2.andes.server.subscription.Subscription;
@@ -68,6 +70,20 @@ public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEn
         executor =  Executors.newFixedThreadPool(ClusterResourceHolder.getInstance().getClusterConfiguration().
                 getSubscriptionPoolSize());
         executor.submit(new CassandraSubscriptionsSynchronizer());
+
+        SubscriptionCoordinationManager subscriptionCoordinationManager =
+                ClusterResourceHolder.getInstance().getSubscriptionCoordinationManager();
+
+        subscriptionCoordinationManager.registerSubscriptionListener(new SubscriptionListener() {
+            @Override
+            public void subscriptionsChanged() {
+                try {
+                    syncUserQueues();
+                } catch (Exception e) {
+                    log.error("Error while Syncing Subscriptions " ,e);
+                }
+            }
+        });
     }
 
     /**
@@ -77,6 +93,8 @@ public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEn
      * @param subscription
      */
     public void addSubscription(AMQQueue queue, CassandraSubscription subscription) {
+
+
 
         if (subscription.getSubscription() instanceof SubscriptionImpl.BrowserSubscription) {
             QueueBrowserFlusher flusher = new QueueBrowserFlusher(subscription.getSubscription(),queue,subscription.getSession());
@@ -112,6 +130,12 @@ public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEn
             }
 
         }
+
+        try {
+            ClusterResourceHolder.getInstance().getSubscriptionCoordinationManager().handleSubscriptionChange();
+        }catch (Exception e) {
+            log.error("Error while notifying Subscription change");
+        }
     }
 
 
@@ -121,6 +145,9 @@ public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEn
      * @param subId  SubscriptionId
      */
     public void removeSubscription(String queue, String subId) {
+
+
+
 
         try {
             Map<String,CassandraSubscription> subs = subscriptionMap.get(queue);
@@ -141,6 +168,12 @@ public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEn
             }
         } catch (Exception e) {
             log.error("Error while removing subscription for queue: " + queue,e);
+        }
+
+        try {
+            ClusterResourceHolder.getInstance().getSubscriptionCoordinationManager().handleSubscriptionChange();
+        } catch (Exception e) {
+            log.error("Error while notifying Subscription change");
         }
 
     }
@@ -232,21 +265,30 @@ public class DefaultClusteringEnabledSubscriptionManager implements ClusteringEn
             while (true) {
 
                 try {
-                    CassandraMessageStore messageStore = ClusterResourceHolder.getInstance().
-                            getCassandraMessageStore();
-                    List<String> globalQueueList = messageStore.getGlobalQueues();
-                    for (String  globalQueue : globalQueueList) {
-                       List<String> userQueueList = messageStore.getUserQueues(globalQueue);
-                       userQueuesMap.put(globalQueue,userQueueList);
-
-                    }
-                    Thread.sleep(500);
+                    syncUserQueues();
+                    Thread.sleep(ClusterResourceHolder.getInstance().
+                            getClusterConfiguration().getVirtualHostSyncTaskInterval() * 1000);
                 } catch (Exception e) {
                     log.error("Error while polling for data " ,e);
                 }
             }
         }
     }
+
+
+    private void syncUserQueues() throws Exception {
+        CassandraMessageStore messageStore = ClusterResourceHolder.getInstance().
+                getCassandraMessageStore();
+        List<String> globalQueueList = messageStore.getGlobalQueues();
+        for (String globalQueue : globalQueueList) {
+            List<String> userQueueList = messageStore.getUserQueues(globalQueue);
+            userQueuesMap.put(globalQueue, userQueueList);
+
+        }
+    }
+
+
+
 
 
 }

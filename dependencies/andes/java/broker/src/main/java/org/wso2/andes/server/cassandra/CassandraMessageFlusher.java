@@ -58,7 +58,6 @@ public class CassandraMessageFlusher extends Thread{
                 getMessageBatchSizeForSubscribers();
 
         this.executor = Executors.newFixedThreadPool(clusterConfiguration.getFlusherPoolSize());
-
         this.ackTime = ClusterResourceHolder.getInstance().getClusterConfiguration().getMaxAckWaitTime();
     }
 

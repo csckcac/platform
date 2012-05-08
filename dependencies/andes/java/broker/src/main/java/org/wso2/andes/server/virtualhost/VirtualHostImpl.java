@@ -30,6 +30,8 @@ import org.wso2.andes.framing.FieldTable;
 import org.wso2.andes.server.AMQBrokerManagerMBean;
 import org.wso2.andes.server.ClusterResourceHolder;
 import org.wso2.andes.server.binding.BindingFactory;
+import org.wso2.andes.server.cluster.coordination.SubscriptionCoordinationManager;
+import org.wso2.andes.server.cluster.coordination.SubscriptionCoordinationManagerImpl;
 import org.wso2.andes.server.configuration.*;
 import org.wso2.andes.server.connection.ConnectionRegistry;
 import org.wso2.andes.server.connection.IConnectionRegistry;
@@ -241,9 +243,24 @@ public class VirtualHostImpl implements VirtualHost
         
         initialiseStatistics();
 
+
+        if (ClusterResourceHolder.getInstance().getSubscriptionCoordinationManager() == null) {
+
+            SubscriptionCoordinationManager subscriptionCoordinationManager =
+                    new SubscriptionCoordinationManagerImpl();
+            subscriptionCoordinationManager.init();
+            ClusterResourceHolder.getInstance().setSubscriptionCoordinationManager(subscriptionCoordinationManager);
+        }
+
         _VirtualHostConfigSynchronizer = new VirtualHostConfigSynchronizer(this,
                 ClusterResourceHolder.getInstance().getClusterConfiguration().getVirtualHostSyncTaskInterval());
+
+
+        ClusterResourceHolder.getInstance().setVirtualHostConfigSynchronizer(_VirtualHostConfigSynchronizer);
         _VirtualHostConfigSynchronizer.start();
+
+        ClusterResourceHolder.getInstance().getSubscriptionCoordinationManager().
+                registerSubscriptionListener(_VirtualHostConfigSynchronizer);
     }
 
 	private void initialiseHouseKeeping(long period)
@@ -610,6 +627,8 @@ public class VirtualHostImpl implements VirtualHost
         }
 
         CurrentActor.get().message(VirtualHostMessages.CLOSED());
+        ClusterResourceHolder.getInstance().getSubscriptionCoordinationManager().
+                removeSubscriptionListener(_VirtualHostConfigSynchronizer);
     }
 
     public ManagedObject getBrokerMBean()

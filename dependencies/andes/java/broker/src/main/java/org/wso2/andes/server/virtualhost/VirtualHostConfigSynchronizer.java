@@ -1,35 +1,35 @@
 package org.wso2.andes.server.virtualhost;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Logger;
 import org.wso2.andes.AMQException;
 import org.wso2.andes.framing.AMQShortString;
 import org.wso2.andes.framing.FieldTable;
 import org.wso2.andes.server.ClusterResourceHolder;
 import org.wso2.andes.server.binding.BindingFactory;
+import org.wso2.andes.server.cluster.coordination.SubscriptionListener;
 import org.wso2.andes.server.exchange.Exchange;
-import org.wso2.andes.server.logging.subjects.MessageStoreLogSubject;
 import org.wso2.andes.server.queue.AMQQueue;
 import org.wso2.andes.server.queue.AMQQueueFactory;
 import org.wso2.andes.server.store.ConfigurationRecoveryHandler;
 
 import java.nio.ByteBuffer;
 import java.util.Map;
-import java.util.TreeMap;
-import java.util.concurrent.ExecutorService;
 
 public class VirtualHostConfigSynchronizer implements
         ConfigurationRecoveryHandler.QueueRecoveryHandler,
         ConfigurationRecoveryHandler.ExchangeRecoveryHandler,
-        ConfigurationRecoveryHandler.BindingRecoveryHandler {
+        ConfigurationRecoveryHandler.BindingRecoveryHandler , SubscriptionListener {
 
     private final VirtualHost _virtualHost;
-    private MessageStoreLogSubject _logSubject;
-    private final Map<String, Integer> _queueRecoveries = new TreeMap<String, Integer>();
+//     private final Map<String, Integer> _queueRecoveries = new TreeMap<String, Integer>();
     private static final Logger _logger = Logger.getLogger(VirtualHostConfigSynchronizer.class);
     private int _syncInterval;
     private boolean running = false;
 
-    ExecutorService executorService;
+    private static Log log = LogFactory.getLog(VirtualHostConfigSynchronizer.class);
+
 
     public VirtualHostConfigSynchronizer(VirtualHost _virtualHost, int synchInterval) {
         this._virtualHost = _virtualHost;
@@ -113,10 +113,9 @@ public class VirtualHostConfigSynchronizer implements
             }
 
 
-            //Record that we have a queue for recovery
-            _queueRecoveries.put(queueName, 0);
+//            //Record that we have a queue for recovery
+//            _queueRecoveries.put(queueName, 0);
         } catch (AMQException e) {
-            // TODO
             throw new RuntimeException(e);
         }
 
@@ -131,7 +130,24 @@ public class VirtualHostConfigSynchronizer implements
         if (!running) {
             running = true;
             Thread t = new Thread(new VirtualHostConfigSynchronizingTask(this));
+            t.setName(this.getClass().getSimpleName());
             t.start();
+
+        }
+    }
+
+    @Override
+    public void subscriptionsChanged() {
+        if (ClusterResourceHolder.getInstance().getCassandraMessageStore() != null &&
+                ClusterResourceHolder.getInstance().getCassandraMessageStore().isConfigured()) {
+
+            try {
+                ClusterResourceHolder.getInstance().getCassandraMessageStore().synchExchanges(this);
+                ClusterResourceHolder.getInstance().getCassandraMessageStore().synchQueues(this);
+                ClusterResourceHolder.getInstance().getCassandraMessageStore().synchBindings(this);
+            } catch (Exception e) {
+                log.error("Error while syncing Virtual host details ");
+            }
         }
     }
 
@@ -147,7 +163,6 @@ public class VirtualHostConfigSynchronizer implements
         public void run() {
             while (running) {
 
-                //todo write synchronization logic
                 try {
                     if (ClusterResourceHolder.getInstance().getCassandraMessageStore() != null &&
                             ClusterResourceHolder.getInstance().getCassandraMessageStore().isConfigured()) {
@@ -156,13 +171,12 @@ public class VirtualHostConfigSynchronizer implements
                         ClusterResourceHolder.getInstance().getCassandraMessageStore().synchBindings(syc);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.error("Error while syncing Virtual host details ");
                 }
                 try {
                     Thread.sleep(_syncInterval * 1000);
                 } catch (InterruptedException e) {
-                    // log this
-                    e.printStackTrace();
+                    // ignore
                 }
 
             }

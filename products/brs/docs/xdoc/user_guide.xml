@@ -140,7 +140,7 @@ OrderReject. Those can be captured using Java beans as follows. </p>
             </pre>
 
 <p>Using above three rules, fact and result definitions, we can now define our
-rules using a rule language of a rule engine. WSO2 BRS 1.2.0 is based on the
+rules using a rule language of a rule engine. WSO2 BRS is based on the
 JSR 94 Java Rule Specification and uses the open source Drools rule engine as
 the default JSR 94 provider. Let us write the rules of our example using Drools
 rule language. </p>

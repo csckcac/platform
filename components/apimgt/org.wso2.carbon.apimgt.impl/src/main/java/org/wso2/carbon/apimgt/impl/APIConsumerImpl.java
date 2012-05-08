@@ -27,7 +27,6 @@ import org.wso2.carbon.apimgt.impl.utils.APIUtil;
 import org.wso2.carbon.apimgt.impl.utils.APIVersionComparator;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
-import org.wso2.carbon.governance.api.util.GovernanceConstants;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
@@ -36,30 +35,12 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class APIConsumerImpl extends APIManagerImpl implements APIConsumer {
-
-    private UserRegistry userRegistry = null;
+public class APIConsumerImpl extends APIManagerImpl implements APIConsumer {    
 
     public APIConsumerImpl() throws APIManagementException {
         super();
-    }
-    
-    public APIConsumerImpl(String username) throws APIManagementException {
-        this();
-        try {
-            userRegistry = ServiceReferenceHolder.getInstance().
-                    getRegistryService().getGovernanceUserRegistry(username);
-        } catch (RegistryException e) {
-            throw new APIManagementException(e);
-        }
-    }
+    }    
 
-    /**
-     * @param subscriberId id of the Subscriber
-     * @return Subscriber
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException
-     *          if failed to get Subscriber
-     */
     public Subscriber getSubscriber(String subscriberId) throws APIManagementException {
         Subscriber subscriber = null;
         try {
@@ -70,14 +51,6 @@ public class APIConsumerImpl extends APIManagerImpl implements APIConsumer {
         return subscriber;
     }
 
-    /**
-     * Returns a list of #{@link org.wso2.carbon.apimgt.api.model.API} bearing the selected tag
-     *
-     * @param tag name of the tag
-     * @return set of API having the given tag name
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException
-     *          if failed to get set of API
-     */
     public Set<API> getAPIsWithTag(String tag) throws APIManagementException {
         Set<API> apiSet = new HashSet<API>();
         try {
@@ -108,15 +81,6 @@ public class APIConsumerImpl extends APIManagerImpl implements APIConsumer {
         return apiSet;
     }
 
-    /**
-     * Returns a list of all published APIs. If a given API has multiple APIs,
-     * only the latest version will be included
-     * in this list.
-     *
-     * @return set of API
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException
-     *          if failed to API set
-     */
     public Set<API> getAllPublishedAPIs() throws APIManagementException {
         SortedSet<API> apiSortedSet = new TreeSet<API>(new APINameComparator());
         try {
@@ -157,14 +121,6 @@ public class APIConsumerImpl extends APIManagerImpl implements APIConsumer {
         return apiSortedSet;
     }
 
-    /**
-     * Returns top rated APIs
-     *
-     * @param limit if -1, no limit. Return everything else, limit the return list to specified value.
-     * @return Set of API
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException
-     *          if failed to get top rated APIs
-     */
     public Set<API> getTopRatedAPIs(int limit) throws APIManagementException {
         int returnLimit = 0;
         SortedSet<API> apiSortedSet = new TreeSet<API>(new APINameComparator());
@@ -192,14 +148,6 @@ public class APIConsumerImpl extends APIManagerImpl implements APIConsumer {
         return apiSortedSet;
     }
 
-    /**
-     * Get recently added APIs to the store
-     *
-     * @param limit if -1, no limit. Return everything else, limit the return list to specified value.
-     * @return set of API
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException
-     *          if failed to get recently added APIs
-     */
     public Set<API> getRecentlyAddedAPIs(int limit) throws APIManagementException {
 
         int start = 0;
@@ -239,13 +187,6 @@ public class APIConsumerImpl extends APIManagerImpl implements APIConsumer {
         return apiSortedSet;
     }
 
-    /**
-     * Get all tags of published APIs
-     *
-     * @return a list of all Tags applied to all APIs published.
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException
-     *          if failed to get All the tags
-     */
     public Set<Tag> getAllTags() throws APIManagementException {
         Set<Tag> tagSet = new HashSet<Tag>();
         try {
@@ -271,31 +212,18 @@ public class APIConsumerImpl extends APIManagerImpl implements APIConsumer {
         return tagSet;
     }
 
-    /**
-     * Rate a particular API. This will be called when subscribers rate an API
-     *
-     * @param apiId  The API identifier
-     * @param rating The rating provided by the subscriber
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException
-     *          If an error occurs while rating the API
-     */
-    public void rateAPI(APIIdentifier apiId, APIRating rating) throws APIManagementException {
+    public void rateAPI(APIIdentifier apiId, APIRating rating,
+                        String user) throws APIManagementException {
         String path = APIUtil.getAPIPath(apiId);
         try {
+            UserRegistry userRegistry = ServiceReferenceHolder.getInstance().
+                    getRegistryService().getGovernanceUserRegistry(user);
             userRegistry.rateResource(path, rating.getRating());
         } catch (RegistryException e) {
             handleException("Failed to rate API : " + path, e);
         }
     }
 
-    /**
-     * Search matching APIs for given search terms
-     *
-     * @param searchTerm , name of the search term
-     * @return Set<API>
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException
-     *          if failed to get APIs for given search term
-     */
     public Set<API> searchAPI(String searchTerm) throws APIManagementException {
         Set<API> apiSet = new HashSet<API>();
         String regex = "[a-zA-Z0-9_.-|]*" + searchTerm + "[a-zA-Z0-9_.-|]*";
@@ -371,14 +299,6 @@ public class APIConsumerImpl extends APIManagerImpl implements APIConsumer {
         return apiSet;
     }
 
-    /**
-     * Returns a set of SubscribedAPI purchased by the given Subscriber
-     *
-     * @param subscriber Subscriber
-     * @return Set<API>
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException
-     *          if failed to get API for subscriber
-     */
     public Set<SubscribedAPI> getSubscribedAPIs(Subscriber subscriber) throws APIManagementException {
         Set<SubscribedAPI> subscribedAPIs = null;
         try {
@@ -387,47 +307,8 @@ public class APIConsumerImpl extends APIManagerImpl implements APIConsumer {
             handleException("Failed to get APIs of " + subscriber.getName(), e);
         }
         return subscribedAPIs;
-    }
+    }    
 
-    /**
-     * Returns a set of APIs purchased by the given Subscriber
-     *
-     * @param subscriber Subscriber
-     * @return Set<API>
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException
-     *          if failed to get API for subscriber
-     */
-    public Set<API> getSubscriberAPIs(Subscriber subscriber) throws APIManagementException {
-        SortedSet<API> apiSortedSet = new TreeSet<API>(new APINameComparator());
-        Set<SubscribedAPI> subscribedAPIs = apiMgtDAO.getSubscribedAPIs(subscriber);
-
-        for (SubscribedAPI subscribedAPI : subscribedAPIs) {
-            String apiPath = APIUtil.getAPIPath(subscribedAPI.getApiId());
-            Resource resource;
-            try {
-                resource = registry.get(apiPath);
-                GenericArtifactManager artifactManager = new GenericArtifactManager(registry, APIConstants.API_KEY);
-                GenericArtifact artifact = artifactManager.getGenericArtifact(
-                        resource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY));
-                API api = APIUtil.getAPI(artifact, registry);
-                apiSortedSet.add(api);
-            } catch (RegistryException e) {
-                String msg = "Failed to get api";
-                throw new APIManagementException(msg, e);
-            }
-        }
-        return apiSortedSet;
-    }
-
-    /**
-     * Returns true if a given user has subscribed to the API
-     *
-     * @param apiIdentifier APIIdentifier
-     * @param userId        user id
-     * @return true, if giving api identifier is already subscribed
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException
-     *          if failed to check the subscribed state
-     */
     public boolean isSubscribed(APIIdentifier apiIdentifier, String userId)
             throws APIManagementException {
         boolean isSubscribed;
@@ -441,70 +322,33 @@ public class APIConsumerImpl extends APIManagerImpl implements APIConsumer {
         return isSubscribed;
     }
 
-    /**
-     * Add new Subscriber
-     *
-     * @param identifier    APIIdentifier
-     * @param userId        id of the user
-     * @param applicationId Application Id
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException
-     *          if failed to add subscription details to database
-     */
     public void addSubscription(APIIdentifier identifier, String userId, int applicationId)
             throws APIManagementException {
         apiMgtDAO.addSubscription(identifier, userId, applicationId);
     }
 
-    /**
-     * Remove a Subscriber
-     *
-     * @param identifier APIIdentifier
-     * @param userId     id of the user
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException
-     *          if failed to add subscription details to database
-     */
     public void removeSubscriber(APIIdentifier identifier, String userId)
             throws APIManagementException {
-        // TODO
         throw new UnsupportedOperationException("Unsubscribe operation is not yet implemented");
     }
 
-    /**
-     * This method is to update the subscriber.
-     *
-     * @param identifier    APIIdentifier
-     * @param userId        user id
-     * @param applicationId Application Id
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException
-     *          if failed to update subscription
-     */
     public void updateSubscriptions(APIIdentifier identifier, String userId, int applicationId)
             throws APIManagementException {
         apiMgtDAO.updateSubscriptions(identifier, userId, applicationId);
     }
 
-    /**
-     * @param identifier Api identifier
-     * @param s          comment text
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException
-     *          if failed to add comment for API
-     */
-    public void addComment(APIIdentifier identifier, String s) throws APIManagementException {
+    public void addComment(APIIdentifier identifier, String s, String user) throws APIManagementException {
         String apiPath = APIUtil.getAPIPath(identifier);
         org.wso2.carbon.registry.core.Comment comment = new org.wso2.carbon.registry.core.Comment(s);
         try {
+            UserRegistry userRegistry = ServiceReferenceHolder.getInstance().
+                    getRegistryService().getGovernanceUserRegistry(user);
             userRegistry.addComment(apiPath, comment);
         } catch (RegistryException e) {
             handleException("Failed to add comment for api " + apiPath, e);
         }
     }
 
-    /**
-     * @param identifier Api identifier
-     * @return Comments
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException
-     *          if failed to get comments for identifier
-     */
     public org.wso2.carbon.apimgt.api.model.Comment[] getComments(APIIdentifier identifier)
             throws APIManagementException {
         List<org.wso2.carbon.apimgt.api.model.Comment> commentList =
@@ -528,27 +372,11 @@ public class APIConsumerImpl extends APIManagerImpl implements APIConsumer {
         return null;
     }
 
-    /**
-     * Adds an application
-     *
-     * @param application Application
-     * @param userId      User Id
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException
-     *          if failed to add Application
-     */
     public void addApplication(Application application, String userId)
             throws APIManagementException {
         apiMgtDAO.addApplication(application, userId);
     }
 
-    /**
-     * Returns a list of applications for a given subscriber
-     *
-     * @param subscriber Subscriber
-     * @return Applications
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException
-     *          if failed to applications for given subscriber
-     */
     public Application[] getApplications(Subscriber subscriber) throws APIManagementException {
         return apiMgtDAO.getApplications(subscriber);
     }
@@ -563,10 +391,5 @@ public class APIConsumerImpl extends APIManagerImpl implements APIConsumer {
             }
         }
         return subscribedAPISet;
-    }
-
-    private void handleException(String msg, Exception e) throws APIManagementException {
-        log.error(msg, e);
-        throw new APIManagementException(msg, e);
     }
 }

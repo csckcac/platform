@@ -15,6 +15,7 @@
 * specific language governing permissions and limitations
 * under the License.
 */
+
 package org.wso2.carbon.apimgt.api;
 
 import org.wso2.carbon.apimgt.api.model.*;
@@ -25,6 +26,7 @@ import java.util.Set;
  * APIConsumer responsible for providing helper functionality
  */
 public interface APIConsumer extends APIManager {
+
     /**
      * @param subscriberId id of the Subscriber
      * @return Subscriber
@@ -82,9 +84,10 @@ public interface APIConsumer extends APIManager {
      *
      * @param apiId  The API identifier
      * @param rating The rating provided by the subscriber
+     * @param user Username of the subscriber providing the rating
      * @throws APIManagementException If an error occurs while rating the API
      */
-    public void rateAPI(APIIdentifier apiId, APIRating rating) throws APIManagementException;
+    public void rateAPI(APIIdentifier apiId, APIRating rating, String user) throws APIManagementException;
 
     /**
      * Search matching APIs for given search terms
@@ -102,16 +105,7 @@ public interface APIConsumer extends APIManager {
      * @return Set<API>
      * @throws APIManagementException if failed to get API for subscriber
      */
-    public Set<SubscribedAPI> getSubscribedAPIs(Subscriber subscriber) throws APIManagementException;
-
-    /**
-     * Returns a set of APIs purchased by the given Subscriber
-     *
-     * @param subscriber Subscriber
-     * @return Set<API>
-     * @throws APIManagementException if failed to get API for subscriber
-     */
-    public Set<API> getSubscriberAPIs(Subscriber subscriber) throws APIManagementException;
+    public Set<SubscribedAPI> getSubscribedAPIs(Subscriber subscriber) throws APIManagementException;    
 
     /**
      * Returns true if a given user has subscribed to the API
@@ -157,10 +151,12 @@ public interface APIConsumer extends APIManager {
 
     /**
      * @param identifier Api identifier
-     * @param s          comment text
+     * @param comment comment text
+     * @param user Username of the comment author                        
      * @throws APIManagementException if failed to add comment for API
      */
-    public void addComment(APIIdentifier identifier, String s) throws APIManagementException;
+    public void addComment(APIIdentifier identifier, String comment, 
+                           String user) throws APIManagementException;
 
     /**
      * @param identifier Api identifier
@@ -189,4 +185,6 @@ public interface APIConsumer extends APIManager {
 
     public Set<SubscribedAPI> getSubscribedIdentifiers(Subscriber subscriber,
                                                        APIIdentifier identifier) throws APIManagementException;
+
+    public Set<API> searchAPI(String searchTerm, String searchType) throws APIManagementException;
 }

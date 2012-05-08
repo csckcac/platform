@@ -429,11 +429,6 @@ public class APIProviderImpl extends APIManagerImpl implements APIProvider {
 
     }
 
-    private void handleException(String msg, Exception e) throws APIManagementException {
-        log.error(msg, e);
-        throw new APIManagementException(msg, e);
-    }
-
     /**
      * Create an Api
      *

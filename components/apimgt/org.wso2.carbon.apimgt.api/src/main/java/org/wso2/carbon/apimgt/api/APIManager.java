@@ -20,25 +20,27 @@ package org.wso2.carbon.apimgt.api;
 
 import org.wso2.carbon.apimgt.api.model.*;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 
 /**
- * Manager responsible for providing helper functionality on Subscribers, Providers, APIs.
+ * Core API management interface which provides functionality related to APIs, API metadata
+ * and API subscribers (consumers).
  */
 public interface APIManager {
 
     /**
-     * returns details of an API
+     * Returns details of an API
      *
      * @param identifier APIIdentifier
-     * @return API
+     * @return An API object related to the given identifier or null
      * @throws APIManagementException if failed get API from APIIdentifier
      */
     public API getAPI(APIIdentifier identifier) throws APIManagementException;
 
     /**
-     * Check the Availability of given APIIdentifier
+     * Checks the Availability of given APIIdentifier
      *
      * @param identifier APIIdentifier
      * @return true, if already exists. False, otherwise
@@ -47,32 +49,27 @@ public interface APIManager {
     public boolean isAPIAvailable(APIIdentifier identifier) throws APIManagementException;
 
     /**
-     * this method return Set of versions for given provider and api
+     * Checks whether the given API context is already registered in the system
+     *
+     * @param context A String representing an API context
+     * @return true if the context already exists and false otherwise
+     * @throws APIManagementException if failed to check the context availability
+     */
+    public boolean isContextExist(String context) throws APIManagementException;
+
+    /**
+     * Returns a set of API versions for the given provider and API name
      *
      * @param providerName name of the provider (common)
      * @param apiName      name of the api
-     * @return Set of version
+     * @return Set of version strings (possibly empty)
      * @throws APIManagementException if failed to get version for api
      */
     public Set<String> getAPIVersions(String providerName, String apiName)
             throws APIManagementException;
 
     /**
-     * @param username Name of the user
-     * @param password Password of the user
-     * @return login status
-     */
-    public boolean login(String username, String password);
-
-    /**
-     * Log out user
-     *
-     * @param username name of the user
-     */
-    public void logout(String username);
-
-    /**
-     * Returns a list of all Documentation attached to a particular API Version
+     * Returns a list of documentation attached to a particular API
      *
      * @param apiId APIIdentifier
      * @return List<Documentation>
@@ -81,7 +78,7 @@ public interface APIManager {
     public List<Documentation> getAllDocumentation(APIIdentifier apiId) throws APIManagementException;
 
     /**
-     * Returns a given documentation
+     * Returns the specified document attached to the given API
      *
      * @param apiId   APIIdentifier
      * @param docType type of the documentation
@@ -105,7 +102,7 @@ public interface APIManager {
             throws APIManagementException;
 
     /**
-     * Get the Subscriber from access token
+     * Retrieves the subscriber from the given access token
      *
      * @param accessToken Subscriber key
      * @return Subscriber
@@ -114,7 +111,7 @@ public interface APIManager {
     public Subscriber getSubscriberById(String accessToken) throws APIManagementException;
 
     /**
-     * Creates a new subscriber, the newly created subscriber id will be set in the given object.
+     * Creates a new subscriber. The newly created subscriber id will be set in the given object.
      *
      * @param subscriber The subscriber to be added
      * @throws APIManagementException if failed add subscriber
@@ -122,7 +119,7 @@ public interface APIManager {
     public void addSubscriber(Subscriber subscriber) throws APIManagementException;
 
     /**
-     * Updates the given subscriber.
+     * Updates the details of the given subscriber.
      *
      * @param subscriber The subscriber to be updated
      * @throws APIManagementException if failed to update subscriber
@@ -130,12 +127,49 @@ public interface APIManager {
     public void updateSubscriber(Subscriber subscriber) throws APIManagementException;
 
     /**
-     * Returns the subscriber with the given subscriber id.
+     * Returns the subscriber for the given subscriber id.
      *
      * @param subscriberId The subscriber id of the subscriber to be returned
      * @return The looked up subscriber or null if the requested subscriber does not exist
      * @throws APIManagementException if failed to get Subscriber
      */
     public Subscriber getSubscriber(int subscriberId) throws APIManagementException;
+
+    /**
+     * Returns a set of APIs purchased by the given Subscriber
+     *
+     * @param subscriber Subscriber
+     * @return Set<API>
+     * @throws APIManagementException if failed to get API for subscriber
+     */
+    public Set<API> getSubscriberAPIs(Subscriber subscriber) throws APIManagementException;
+
+    /**
+     * Associates the given icon image with the specified API
+     * 
+     * @param identifier an ID representing an API
+     * @param in InputStream for an image
+     * @param contentType Content type (media type) for the image
+     * @return a String URL pointing to the image that was added
+     * @throws APIManagementException if an error occurs while adding the icon image
+     */
+    public String addIcon(APIIdentifier identifier, InputStream in,
+                        String contentType) throws APIManagementException;
+
+    /**
+     * Retrieves the icon image associated with a particular API as a stream.
+     *
+     * @param identifier ID representing the API
+     * @return an InputStream for an image or null of an image does not exist
+     * @throws APIManagementException if an error occurs while retrieving the image
+     */
+    public InputStream getIcon(APIIdentifier identifier) throws APIManagementException;
+
+    /**
+     * Cleans up any resources acquired by this APIManager instance
+     *
+     * @throws APIManagementException if an error occurs while cleaning up
+     */
+    public void cleanup() throws APIManagementException;
 
 }

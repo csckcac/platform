@@ -54,6 +54,8 @@ public final class APIConstants {
 
     //registry location for consumer
     public static final String API_ROOT_LOCATION = "/apimgt/applicationdata/provider";
+    
+    public static final String API_ICON_IMAGE = "icon";
 
     // Those constance are used in API artifact.
     public static final String API_OVERVIEW_NAME = "overview_name";

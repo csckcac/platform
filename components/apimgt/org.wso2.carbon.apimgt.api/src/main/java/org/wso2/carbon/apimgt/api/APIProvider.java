@@ -27,6 +27,7 @@ import java.util.Set;
  * APIProvider responsible for providing helper functionality
  */
 public interface APIProvider extends APIManager {
+
     /**
      * Returns a list of all #{@link org.wso2.carbon.apimgt.api.model.Provider} available on the system.
      *

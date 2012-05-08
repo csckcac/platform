@@ -18,8 +18,6 @@
 
 package org.wso2.carbon.apimgt.impl;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
@@ -28,6 +26,7 @@ import org.wso2.carbon.apimgt.api.APIManager;
 import org.wso2.carbon.apimgt.api.model.*;
 import org.wso2.carbon.apimgt.impl.dao.ApiMgtDAO;
 import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
+import org.wso2.carbon.apimgt.impl.utils.APINameComparator;
 import org.wso2.carbon.apimgt.impl.utils.APIUtil;
 import org.wso2.carbon.governance.api.generic.GenericArtifactManager;
 import org.wso2.carbon.governance.api.generic.dataobjects.GenericArtifact;
@@ -35,32 +34,24 @@ import org.wso2.carbon.governance.api.util.GovernanceConstants;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.registry.core.*;
+import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.user.core.AuthorizationManager;
 import org.wso2.carbon.user.core.UserStoreException;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.*;
+import java.io.InputStream;
+import java.util.*;
 
 /**
- * This class represent the implementation of APIManager interface.
+ * The basic abstract implementation of the core APIManager interface. This implementation uses
+ * the governance system registry for storing APIs and related metadata.
  */
 public abstract class APIManagerImpl implements APIManager {
     
     protected Log log = LogFactory.getLog(getClass());
     
-    private static final long KEEP_ALIVE_TASK_PERIOD = 950000L;
-    
     protected Registry registry;
     protected ApiMgtDAO apiMgtDAO;
-    
-    private ScheduledExecutorService scheduler;
-    private Future keepAliveTask;
 
     public APIManagerImpl() throws APIManagementException {
         apiMgtDAO = new ApiMgtDAO();
@@ -70,50 +61,13 @@ public abstract class APIManagerImpl implements APIManager {
         } catch (RegistryException e) {
             handleException("Error while obtaining registry objects", e);
         }
-        startKeepAliveTask();
     }
 
-    private void startKeepAliveTask() {
-        scheduler = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
-            public Thread newThread(Runnable r) {
-                return new Thread(r, "am-registry-keep-alive-task");
-            }
-        });
-
-        keepAliveTask = scheduler.scheduleAtFixedRate(new Runnable() {
-            public void run() {
-                if (log.isDebugEnabled()) {
-                    log.debug("Executing registry keep-alive task");
-                }
-                try {
-                    registry.resourceExists("/");
-                } catch (RegistryException e) {
-                    log.warn("Error occurred while checking registry availability", e);
-                }
-            }
-        }, KEEP_ALIVE_TASK_PERIOD, KEEP_ALIVE_TASK_PERIOD, TimeUnit.MILLISECONDS);
-    }
-
-    /**
-     * This method use to clean up the spawned
-     * RegistryKeepAliveTask thread in a server shutdown
-     */
     public void cleanup() {
-        if (keepAliveTask != null) {
-            keepAliveTask.cancel(true);
-        }
-        scheduler.shutdownNow();
+
     }    
 
-    /**
-     * returns details of an API
-     *
-     * @param identifier APIIdentifier
-     * @return API
-     * @throws APIManagementException if failed get API from APIIdentifier
-     */
     public API getAPI(APIIdentifier identifier) throws APIManagementException {
-        API api = null;
         String apiPath = APIUtil.getAPIPath(identifier);
         try {
             GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry,
@@ -124,52 +78,32 @@ public abstract class APIManagerImpl implements APIManager {
                 throw new APIManagementException("artifact id is null for : " + apiPath);
             }
             GenericArtifact apiArtifact = artifactManager.getGenericArtifact(artifactId);
-            api = APIUtil.getAPI(apiArtifact, registry);
+            return APIUtil.getAPI(apiArtifact, registry);
 
         } catch (RegistryException e) {
             handleException("Failed to get API from : " + apiPath, e);
+            return null;
         }
-
-        return api;
     }
 
-    /**
-     * Check the Availability of given APIIdentifier
-     *
-     * @param identifier APIIdentifier
-     * @return true, if already exists. False, otherwise
-     * @throws APIManagementException if failed to get API availability
-     */
     public boolean isAPIAvailable(APIIdentifier identifier) throws APIManagementException {
-        boolean availability = false;
         String path = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
                 identifier.getProviderName() + RegistryConstants.PATH_SEPARATOR +
                 identifier.getApiName() + RegistryConstants.PATH_SEPARATOR + identifier.getVersion();
         try {
-            if (registry.resourceExists(path)) {
-                availability = true;
-            }
+            return registry.resourceExists(path);
         } catch (RegistryException e) {
             handleException("Failed to check availability of api :" + path, e);
+            return false;
         }
-        return availability;
     }
 
-    /**
-     * this method return Set of versions for given provider and api
-     *
-     * @param providerName name of the provider
-     * @param apiName      name of the api
-     * @return Set of version
-     * @throws APIManagementException if failed to get version for api
-     */
     public Set<String> getAPIVersions(String providerName, String apiName)
             throws APIManagementException {
 
         Set<String> versionSet = new HashSet<String>();
-        String apiPath = APIConstants.API_LOCATION +
-                RegistryConstants.PATH_SEPARATOR +providerName + RegistryConstants.PATH_SEPARATOR +
-                apiName;
+        String apiPath = APIConstants.API_LOCATION + RegistryConstants.PATH_SEPARATOR +
+                providerName + RegistryConstants.PATH_SEPARATOR + apiName;
         try {
             Resource resource = registry.get(apiPath);
             if (resource instanceof Collection) {
@@ -182,7 +116,7 @@ public abstract class APIManagerImpl implements APIManager {
                     versionSet.add(path.split(apiPath)[1]);
                 }
             } else {
-                throw new APIManagementException("API version should be a collection " + apiName);
+                throw new APIManagementException("API version must be a collection " + apiName);
             }
         } catch (RegistryException e) {
             handleException("Failed to get versions for API: " + apiName, e);            
@@ -190,68 +124,47 @@ public abstract class APIManagerImpl implements APIManager {
         return versionSet;
     }
 
-    /**
-     * @param username Name of the user
-     * @param password Password of the user
-     * @return login status
-     */
-    public boolean login(String username, String password) {
-        boolean result = false;
-//        //TODO this is not finish
-        return result;
-    }
+    public String addIcon(APIIdentifier identifier, InputStream in,
+                        String contentType) throws APIManagementException {
+        try {
+            Resource thumb = registry.newResource();
+            thumb.setContentStream(in);
+            thumb.setMediaType(contentType);
 
-    /**
-     * Log out user
-     *
-     * @param username name of the user
-     */
-    public void logout(String username) {
-        //TODO this is not finish
-    }
+            String artifactPath = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
+                    identifier.getProviderName() + RegistryConstants.PATH_SEPARATOR +
+                    identifier.getApiName() + RegistryConstants.PATH_SEPARATOR + identifier.getVersion();
 
-    // TODO: This method does not belong here
-    public String addApiThumb(API api, FileItem fileItem) throws RegistryException, IOException,
-            APIManagementException, UserStoreException, IdentityException {
-        Resource thumb = registry.newResource();
-        thumb.setContentStream(fileItem.getInputStream());
-        thumb.setMediaType(fileItem.getContentType());
+            String thumbPath = artifactPath + RegistryConstants.PATH_SEPARATOR + APIConstants.API_ICON_IMAGE;
 
-        String artifactPath = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
-                api.getId().getProviderName() + RegistryConstants.PATH_SEPARATOR + api.getId().getApiName()
-                + RegistryConstants.PATH_SEPARATOR + api.getId().getVersion();
+            AuthorizationManager accessControlAdmin = ServiceReferenceHolder.getInstance().
+                    getRegistryService().getUserRealm(IdentityUtil.getTenantIdOFUser(
+                    identifier.getProviderName())).getAuthorizationManager();
 
-        String thumbPath = artifactPath + RegistryConstants.PATH_SEPARATOR + fileItem.getName();
+            registry.put(thumbPath, thumb);
 
-        //AuthorizationManager accessControlAdmin =
-        //CarbonContext.getCurrentContext().getUserRealm().getAuthorizationManager();
+            if (!accessControlAdmin.isRoleAuthorized(CarbonConstants.REGISTRY_ANONNYMOUS_ROLE_NAME,
+                    RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + thumbPath, ActionConstants.GET)) {
+                // Can we get rid of this?
+                accessControlAdmin.authorizeRole(CarbonConstants.REGISTRY_ANONNYMOUS_ROLE_NAME,
+                        RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + thumbPath, ActionConstants.GET);
+            }
 
-        AuthorizationManager accessControlAdmin = ServiceReferenceHolder.getInstance().
-                getRegistryService().getUserRealm(IdentityUtil.getTenantIdOFUser(
-                api.getId().getProviderName())).getAuthorizationManager();
-
-        registry.put(thumbPath, thumb);
-
-        if (!accessControlAdmin.isRoleAuthorized(CarbonConstants.REGISTRY_ANONNYMOUS_ROLE_NAME,
-                RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + thumbPath, ActionConstants.GET)) {
-            accessControlAdmin.authorizeRole(CarbonConstants.REGISTRY_ANONNYMOUS_ROLE_NAME,
-                    RegistryConstants.GOVERNANCE_REGISTRY_BASE_PATH + thumbPath, ActionConstants.GET);
+            return RegistryConstants.PATH_SEPARATOR + "registry"
+                    + RegistryConstants.PATH_SEPARATOR + "resource"
+                    + RegistryConstants.PATH_SEPARATOR + "_system"
+                    + RegistryConstants.PATH_SEPARATOR + "governance"
+                    + thumbPath;
+        } catch (RegistryException e) {
+            handleException("Error while adding the icon image to the registry", e);
+        } catch (UserStoreException e) {
+            handleException("Error while obtaining the authorization manager", e);
+        } catch (IdentityException e) {
+            handleException("Error while checking user permissions", e);
         }
-
-        return RegistryConstants.PATH_SEPARATOR + "registry"
-                + RegistryConstants.PATH_SEPARATOR + "resource"
-                + RegistryConstants.PATH_SEPARATOR + "_system"
-                + RegistryConstants.PATH_SEPARATOR + "governance"
-                + thumbPath;
+        return null;
     }
 
-    /**
-     * Returns a list of all Documentation attached to a particular API Version
-     *
-     * @param apiId APIIdentifier
-     * @return List<Documentation>
-     * @throws APIManagementException if failed to get Documentations
-     */
     public List<Documentation> getAllDocumentation(APIIdentifier apiId) throws APIManagementException {
         List<Documentation> documentationList = new ArrayList<Documentation>();
         String apiResourcePath =APIUtil.getAPIPath(apiId);
@@ -275,15 +188,6 @@ public abstract class APIManagerImpl implements APIManager {
         return documentationList;
     }
 
-    /**
-     * Returns a given documentation
-     *
-     * @param apiId   APIIdentifier
-     * @param docType type of the documentation
-     * @param docName name of the doc
-     * @return Documentation
-     * @throws APIManagementException if failed to get Documentation
-     */
     public Documentation getDocumentation(APIIdentifier apiId, DocumentationType docType,
                                           String docName) throws APIManagementException {
         Documentation documentation = null;
@@ -303,13 +207,6 @@ public abstract class APIManagerImpl implements APIManager {
         return documentation;
     }
 
-    /**
-     * This method used to get the content of a documentation
-     *
-     * @param identifier, API identifier
-     * @param documentationName, name of the inline documentation
-     * @throws APIManagementException if the asking documentation content is unavailable
-     */
     public String getDocumentationContent(APIIdentifier identifier, String documentationName)
             throws APIManagementException {
         String contentPath = APIUtil.getAPIDocPath(identifier) +
@@ -319,32 +216,18 @@ public abstract class APIManagerImpl implements APIManager {
             Resource docContent = registry.get(contentPath);
             return new String((byte[])docContent.getContent());
         } catch (RegistryException e) {
-            String msg = "No document content found for documentation : "
-                    + documentationName + " of API :"+identifier.getApiName();
+            String msg = "No document content found for documentation: "
+                    + documentationName + " of API: "+identifier.getApiName();
             handleException(msg, e);
         }
         return null;
     }
 
-    /**
-     * Get the Subscriber from access token
-     *
-     * @param accessToken Subscriber key
-     * @return Subscriber
-     * @throws org.wso2.carbon.apimgt.api.APIManagementException
-     *          if failed to get Subscriber from access token
-     */
     public Subscriber getSubscriberById(String accessToken) throws APIManagementException {
         return apiMgtDAO.getSubscriberById(accessToken);
     }
 
-    /**
-     * @param context api context url
-     * @return context availability
-     * @throws APIManagementException if failed to check context availability
-     */
     public boolean isContextExist(String context) throws APIManagementException {
-        boolean available = false;
         try {
             GenericArtifactManager artifactManager = new GenericArtifactManager(registry,
                     APIConstants.API_KEY);
@@ -352,16 +235,15 @@ public abstract class APIManagerImpl implements APIManager {
             for (GenericArtifact artifact : artifacts) {
                 String artifactContext = artifact.getAttribute(APIConstants.API_OVERVIEW_CONTEXT);
                 if (artifactContext.equals(context)) {
-                    available = true;
-                    break;
+                    return true;
                 }
             }
         } catch (RegistryException e) {
-            String msg = "Failed to check context availability : " + context;
-            throw new APIManagementException(msg, e);
+            handleException("Failed to check context availability : " + context, e);
         }
-        return available;
+        return false;
     }
+
     public void addSubscriber(Subscriber subscriber)
             throws APIManagementException {
         apiMgtDAO.addSubscriber(subscriber);
@@ -377,14 +259,45 @@ public abstract class APIManagerImpl implements APIManager {
         return apiMgtDAO.getSubscriber(subscriberId);
     }
 
-    public String getThumbAsString(String thumbPath) throws RegistryException, IOException {
-        Resource res = registry.get(thumbPath);
-        res.getContent();
-        InputStreamReader r = new InputStreamReader(res.getContentStream());
-        return IOUtils.toString(res.getContentStream(), r.getEncoding());
+    public InputStream getIcon(APIIdentifier identifier) throws APIManagementException {
+        String artifactPath = APIConstants.API_ROOT_LOCATION + RegistryConstants.PATH_SEPARATOR +
+                identifier.getProviderName() + RegistryConstants.PATH_SEPARATOR +
+                identifier.getApiName() + RegistryConstants.PATH_SEPARATOR + identifier.getVersion();
+
+        String thumbPath = artifactPath + RegistryConstants.PATH_SEPARATOR + APIConstants.API_ICON_IMAGE;
+        try {
+            if (registry.resourceExists(thumbPath)) {
+                Resource res = registry.get(thumbPath);
+                return res.getContentStream();
+            }
+        } catch (RegistryException e) {
+            handleException("Error while loading API icon from the registry", e);
+        }
+        return null;
+    }
+
+    public Set<API> getSubscriberAPIs(Subscriber subscriber) throws APIManagementException {
+        SortedSet<API> apiSortedSet = new TreeSet<API>(new APINameComparator());
+        Set<SubscribedAPI> subscribedAPIs = apiMgtDAO.getSubscribedAPIs(subscriber);
+
+        for (SubscribedAPI subscribedAPI : subscribedAPIs) {
+            String apiPath = APIUtil.getAPIPath(subscribedAPI.getApiId());
+            Resource resource;
+            try {
+                resource = registry.get(apiPath);
+                GenericArtifactManager artifactManager = new GenericArtifactManager(registry, APIConstants.API_KEY);
+                GenericArtifact artifact = artifactManager.getGenericArtifact(
+                        resource.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY));
+                API api = APIUtil.getAPI(artifact, registry);
+                apiSortedSet.add(api);
+            } catch (RegistryException e) {
+                handleException("Failed to get APIs for subscriber: " + subscriber.getName(), e);
+            }
+        }
+        return apiSortedSet;
     }
     
-    private void handleException(String msg, Exception e) throws APIManagementException {
+    protected void handleException(String msg, Exception e) throws APIManagementException {
         log.error(msg, e);
         throw new APIManagementException(msg, e);
     }

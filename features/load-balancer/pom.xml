@@ -29,7 +29,7 @@
     <name>Load Balancer Feature Aggregator Module</name>
     <url>http://wso2.org</url>
     <modules>
-        <module>org.wso2.carbon.lb.endpoint.feature</module>
+        <module>org.wso2.carbon.lb.endpoint.server.feature</module>
     </modules>
 </project>
 

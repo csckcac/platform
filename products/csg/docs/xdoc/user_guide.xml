@@ -102,6 +102,9 @@
                 <li>
                     <a href="#References">References</a>
                 </li>
+                <li>
+                    <a href="#Appendix">Appendix</a>
+                </li>
             </ul>
         <!--</div>-->
 
@@ -327,7 +330,8 @@
         &lt;CSG>15002&lt;/CSG&gt;
         &lt;/Ports&gt;
 
-        <p>By default Thrift server uses the port 15001. Also note that this port has to be
+        <p>By default Thrift server uses the port 15001 and this value will be overridden
+            by the property 'csg-thrift-server-port', see Appendix. Also note that this port has to be
             enabled from the firewall at the CSG Agent side.
         </p>
 
@@ -569,11 +573,84 @@
             and<a href="tracer/docs/userguide.html">SOAP tracer</a>.
         </p>
 
-        <h2 id="References">
-            References
-        </h2>
-        <p>
-            <a href="installation_guide.html">WSO2 CSG Installation Guide</a>
-        </p>
+        <h2 id="References">References</h2>
+        <ul>
+            <li>
+                <a href="installation_guide.html">WSO2 CSG Installation Guide</a>
+            </li>
+        </ul>
+
+        <h2 id="Appendix">Appendix</h2>
+        <p>List of properties available via csg.properties file.</p>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <th>Parameter Name</th>
+                    <th>Description</th>
+                    <th>Default Value</th>
+                </tr>
+                <tr>
+                    <td>csg-t-core</td>
+                    <td>Number of core threads in the pool</td>
+                    <td>20</td>
+                </tr>
+                <tr>
+                    <td>csg-t-max</td>
+                    <td>Number of maximum threads in the pool</td>
+                    <td>500</td>
+                </tr>
+                <tr>
+                    <td>csg-t-alive-sec</td>
+                    <td>Keep alive value for the pool</td>
+                    <td>5</td>
+                </tr>
+                <tr>
+                    <td>csg-t-qlen</td>
+                    <td>Queue length of the worker pool</td>
+                    <td>Integer.MAX_VALUE</td>
+                </tr>
+                <tr>
+                    <td>csg-time-unit</td>
+                    <td>Time unit to consider. Possible value second, minute, hour, day</td>
+                    <td>Default value is hour.</td>
+                </tr>
+                <tr>
+                    <td>no-of-csg-scheduler-time-units</td>
+                    <td>The no of time units that the dead message clean up scheduler should run. So
+                        the task will run once a 'csg-time-unit' x 'no-of-csg-scheduler-time-units'
+                    </td>
+                    <td>24L</td>
+                </tr>
+                <tr>
+                    <td>no-of-idle-msg-time-units</td>
+                    <td>The age time unit of a message to mark the message as dead(i.e. should be
+                        swept).
+                        Messages which old 'no-of-idle-msg-time-units'x'csg-time-unit' will be
+                        marked for removing.
+                    </td>
+                    <td>24L</td>
+                </tr>
+                <tr>
+                    <td>csg-thrift-server-port</td>
+                    <td>The in built Thrift server port.</td>
+                    <td>15001</td>
+                </tr>
+                <tr>
+                    <td>csg-thrift-server-hostname</td>
+                    <td>The in built Thrift server host name.</td>
+                    <td>localhost</td>
+                </tr>
+                <tr>
+                    <td>csg-thrift-timeout</td>
+                    <td>The in built Thrift server socket timeout.</td>
+                    <td>15 minutes</td>
+                </tr>
+                <tr>
+                    <td>csg-so-timeout</td>
+                    <td>The timeout for the semaphore which holds the for two way messages.</td>
+                    <td>48 hours</td>
+                </tr>
+            </tbody>
+        </table>
     </body>
 </html>

@@ -87,4 +87,26 @@ public interface RuleServiceAdminHandler {
      * @return A list of the facts
      */
     public String[] getAllFacts(AxisConfiguration axisConfiguration, String serviceName) throws RuleServiceAdminException;
+
+ /**
+     * Retrieves the all facts applicable for a rule service
+     *
+     * @param axisConfiguration Axis2 Environment configuration
+     * @param serviceName       the name of the rule service
+     * @return A list of the fact archive list
+     */
+    public String[] getFactArchiveList(AxisConfiguration axisConfiguration, String serviceName) throws RuleServiceAdminException;
+
+    /**
+     * Delete fact archives that are not needed
+     *
+     * @param axisConfiguration Axis2 Environment configuration
+     * @param serviceName       The name of the service that facts are belonged
+     * @param fileName          fact file name
+     */
+    public void deleteFactArchive(AxisConfiguration axisConfiguration,
+                                String serviceName,
+                                String fileName) throws RuleServiceAdminException;
 }
+
+

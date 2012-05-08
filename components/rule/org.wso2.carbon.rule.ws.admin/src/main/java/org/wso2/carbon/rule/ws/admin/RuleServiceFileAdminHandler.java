@@ -21,9 +21,9 @@ package org.wso2.carbon.rule.ws.admin;
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.engine.AxisConfiguration;
-import org.wso2.carbon.rule.ws.admin.exception.RuleServiceAdminException;
-import org.wso2.carbon.rule.common.util.Constants;
 import org.wso2.carbon.rule.common.RuleService;
+import org.wso2.carbon.rule.common.util.Constants;
+import org.wso2.carbon.rule.ws.admin.exception.RuleServiceAdminException;
 import org.wso2.carbon.utils.FileManipulator;
 
 import javax.activation.DataHandler;
@@ -32,7 +32,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -92,6 +91,15 @@ public class RuleServiceFileAdminHandler extends AbstractRuleServiceAdminHandler
                                 String serviceName) {
         final List<String> facts = new ArrayList<String>();
         return facts.toArray(new String[facts.size()]);
+    }
+
+    public String[] getFactArchiveList(AxisConfiguration axisConfiguration, String serviceName)  {
+        final List<String> factArchives = new ArrayList<String>();
+        return factArchives.toArray(new String[factArchives.size()]);
+    }
+
+    public void deleteFactArchive(AxisConfiguration axisConfiguration, String serviceName, String fileName) throws RuleServiceAdminException {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     private Paths createTempRuleServiceFile(AxisConfiguration axisConfig,

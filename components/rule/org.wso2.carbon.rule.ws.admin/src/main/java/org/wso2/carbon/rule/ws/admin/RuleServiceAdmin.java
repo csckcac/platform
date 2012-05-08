@@ -33,11 +33,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.core.AbstractAdmin;
-import org.wso2.carbon.rule.ws.admin.exception.RuleServiceAdminException;
-import org.wso2.carbon.rule.common.util.Constants;
 import org.wso2.carbon.rule.common.RuleService;
-import org.wso2.carbon.rule.common.exception.RuleConfigurationException;
 import org.wso2.carbon.rule.common.config.RuleServiceHelper;
+import org.wso2.carbon.rule.common.exception.RuleConfigurationException;
+import org.wso2.carbon.rule.common.util.Constants;
+import org.wso2.carbon.rule.ws.admin.exception.RuleServiceAdminException;
 
 import javax.activation.DataHandler;
 import java.util.ArrayList;
@@ -292,5 +292,19 @@ public class RuleServiceAdmin extends AbstractAdmin {
         } else {
             throw new RuleServiceAdminException("Invalid file extension : " + fileExtension);
         }
+    }
+
+    public String[] getFactArchiveList(String serviceName) throws RuleServiceAdminException {
+        AxisConfiguration axisConfig = getAxisConfig();
+        RuleServiceAdminHandler adminHandler = getRuleServiceAdminHandler(
+                Constants.RULE_SERVICE_ARCHIVE_EXTENSION);
+        return adminHandler.getFactArchiveList(axisConfig, serviceName);
+    }
+
+    public void deleteFactArchive(String serviceName, String fileName) throws RuleServiceAdminException {
+        AxisConfiguration axisConfig = getAxisConfig();
+        RuleServiceAdminHandler adminHandler = getRuleServiceAdminHandler(
+                Constants.RULE_SERVICE_ARCHIVE_EXTENSION);
+        adminHandler.deleteFactArchive(axisConfig, serviceName, fileName);
     }
 }

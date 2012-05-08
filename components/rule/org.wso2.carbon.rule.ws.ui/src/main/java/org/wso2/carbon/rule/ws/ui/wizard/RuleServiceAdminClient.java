@@ -198,11 +198,56 @@ public class RuleServiceAdminClient {
                 session.setAttribute(serviceName.trim(), facts);
                 return facts;
             } catch (Exception e) {
-                throw new RuleServiceClientException("Error getting all facts fro rule service : " +
+                throw new RuleServiceClientException("Error getting all facts for rule service : " +
                         serviceName);
             }
         }
     }
+
+/**
+     * Gets all facts belong to the service with the given name
+     *
+     * @param ruleService information about the service
+     * @param session                HttpSession
+     * @return A string array of the factArchives names
+     */
+    public String[] getFactArchiveList(RuleService ruleService,
+                                javax.servlet.http.HttpSession session) {
+        String serviceName = ruleService.getName();
+//        String[] archiveList = (String[]) session.getAttribute("allArchives");
+//        if (archiveList != null && archiveList.length > 1) { // message class already there: need the length to be > 1
+//            return archiveList;
+//        } else {
+            try {
+                String[] archiveList = ruleServiceAdminStub.getFactArchiveList(serviceName);
+                session.setAttribute("allArchives", archiveList);
+                return archiveList;
+            } catch (Exception e) {
+                throw new RuleServiceClientException("Error getting all facts archives for rule service : " +
+                        serviceName);
+            }
+      //  }
+    }
+
+  /**
+     * Delete fact archives that are not needed
+     *
+     * @param @param session                HttpSession
+     * @param ruleService       The name of the service that fact archives are belonged
+     * @param fileName          archive file name
+     */
+    public void deleteFactArchive(RuleService ruleService, String fileName,
+                                javax.servlet.http.HttpSession session) {
+        String serviceName = ruleService.getName();
+        try {
+            ruleServiceAdminStub.deleteFactArchive(serviceName,fileName);
+        } catch (Exception e) {
+           throw new RuleServiceClientException("Error deleting fact archive : " + fileName +"  rule service : " +
+                        serviceName);
+        }
+
+    }
+
 
     /**
      * Save the rule service based on the information in the given

@@ -184,6 +184,25 @@ function deleteOperation(name, i) {
     return false;
 }
 
+function deleteFactArchives(name) {
+    alert("test") ;
+
+    CARBON.showConfirmationDialog(ruleservicejsi18n["operation.delete.confirmation"], function() {
+        var suffix = "factArchiveName=" + name;
+        var url = 'fact_archive_delete-ajaxprocessor.jsp?' + suffix;
+        jQuery.get(url, ({}),
+                function(data, status) {
+                    if (status != "success") {
+                        CARBON.showWarningDialog(ruleservicejsi18n['error.occurred']);
+                        return false;
+                    }
+                });
+    });
+
+    return false;
+}
+
+
 function getSelectedValue(id) {
     var variableType = document.getElementById(id);
     var variableType_indexstr = null;

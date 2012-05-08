@@ -1,21 +1,21 @@
 <% jagg.template("menu/left", function(inputs, outputs, jagg) { %>
- <%
-    var place = request.getParameter("place");
-    if(place == null){
-        place = "";
-    }
+<% var reqUrl=request.getRequestURI();
+var listUrl=jagg.getMappedUrl("/site/pages/index.jag");
+var addUrl=jagg.getMappedUrl("/site/pages/add.jag");
+var subsUrl=jagg.getMappedUrl("/site/pages/subscriptions.jag");
+var userUrl=jagg.getMappedUrl("/site/pages/user.jag");
+var statsUrl=jagg.getMappedUrl("/site/pages/statistics.jag");
 %>
-
 
 <div class="sidebar-nav well">
     <ul class="nav nav-list">
        <li class="nav-header">APIs</li>
-        <li <% if(place.equals("") || place.equals("api-details")){%>class="active"<% } %>><a href="<%=jagg.getMappedUrl("/site/pages/index.jag")%>">Browse</a></li>
-        <li <% if(place.equals("add")){%>class="active"<% } %>><a href="<%=jagg.getMappedUrl("/site/pages/add.jag")%>">Add</a></li>
+        <li <% if(reqUrl.indexOf(listUrl)>=0){%>class="active"<% } %>><a href="<%=listUrl%>">Browse</a></li>
+        <li <% if(reqUrl.indexOf(addUrl)>=0){%>class="active"<% } %>><a href="<%=addUrl%>">Add</a></li>
         <li class="nav-header">Manage</li>
-        <li <% if(place.equals("users_keys")|| place.equals("user")){%>class="active"<% } %>><a href="<%=jagg.getMappedUrl("/site/pages/subscriptions.jag")%>">Users/Keys</a></li>
+        <li <% if(reqUrl.indexOf(subsUrl)>=0|| request.getRequestURI().indexOf(userUrl)>=0){%>class="active"<% } %>><a href="<%=subsUrl%>">Users/Keys</a></li>
         <li class="nav-header">Statistics</li>
-        <li <% if(place.equals("stat-all")){%>class="active"<% } %>><a href="<%=jagg.getMappedUrl("/site/pages/statistics.jag")%>">My APIs</a></li>
+        <li <% if(reqUrl.indexOf(statsUrl)>=0){%>class="active"<% } %>><a href="<%=statsUrl%>">My APIs</a></li>
     </ul>
 </div>
 

@@ -1,22 +1,28 @@
 <% jagg.template("breadcumb", function(inputs, outputs, jagg) { %>
-<%
-                var place = request.getParameter("place");
+            <%
+                var reqUrl = request.getRequestURI();
+                var listUrl=jagg.getMappedUrl("/site/pages/index.jag");
+                var infoUrl=jagg.getMappedUrl("/site/pages/item-info.jag");
+                var addUrl=jagg.getMappedUrl("/site/pages/add.jag");
+                var subsUrl=jagg.getMappedUrl("/site/pages/subscriptions.jag");
+                var userUrl=jagg.getMappedUrl("/site/pages/user.jag");
+                var statsUrl=jagg.getMappedUrl("/site/pages/statistics.jag");
             %>
             <ul class="breadcrumb">
-                <% if(place == null || place.equals("")){%>
+                <% if(reqUrl.indexOf(listUrl)>=0){%>
                     <li>
                     APIs <span class="divider">/</span>
                     </li>
                     <li>
-                        <a href="?place=">My APIs</a>
+                        <a href="<%=listUrl%>">My APIs</a>
                     </li>
                 <% } %>
-                <% if(place != null && place.equals("api-details")){%>
+                <% if(reqUrl.indexOf(infoUrl)>=0){%>
                 <li>
                     APIs <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="?place=">My APIs</a>
+                    <a href="<%=listUrl%>">My APIs</a>
                 </li>
                 <li>
                     <span class="divider">/</span>
@@ -27,55 +33,55 @@
                 <% } %>
 
 
-                <% if(place != null && place.equals("add")){%>
+                <% if(reqUrl.indexOf(addUrl)>=0){%>
                 <li>
                     APIs <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="?place=">My APIs</a>
+                    <a href="<%=listUrl%>">My APIs</a>
                 </li>
                 <li>
                     <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="?place=add">Add New API</a>
+                    <a href="<%=addUrl%>">Add New API</a>
                 </li>
                 <% } %>
 
 
 
-                <% if(place != null && place.equals("user")){%>
+                <% if(reqUrl.indexOf(userUrl)>=0){%>
                 <li>
                     Manage <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="?place=users_keys">Users-Keys</a>
+                    <a href="<%=subsUrl%>">Users-Keys</a>
                 </li>
                 <li>
                     <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="?place=user">User - <%=request.getParameter("uname")%></a>
+                    <a href="<%=userUrl%>">User - <%=request.getParameter("uname")%></a>
                 </li>
                 <% } %>
 
 
-                <% if(place != null && place.equals("users_keys")){%>
+                <% if(reqUrl.indexOf(subsUrl)>=0){%>
                 <li>
                     Manage <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="?place=users_keys">Users-Keys</a>
+                    <a href="<%=subsUrl%>">Users-Keys</a>
                 </li>
                 <% } %>
 
 
-                <% if(place != null && place.equals("stat-all")){%>
+                <% if(reqUrl.indexOf(statsUrl)>=0){%>
                 <li>
                     Statistics <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="?place=users_keys">All</a>
+                    <a href="<%=statsUrl%>">All</a>
                 </li>
                 <% } %>
             </ul>

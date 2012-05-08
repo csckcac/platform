@@ -33,15 +33,22 @@ public class GRegBackEndURLEvaluator {
                 FrameworkFactory.getFrameworkProperties(ProductConstant.GREG_SERVER_NAME);
         ProductVariables gregProperties = properties.getProductVariables();
 
-        if (gregProperties.getWebContextRoot() != null) {
-            baseUrl = "https://" + gregProperties.getHostName() + ":" + gregProperties.getHttpsPort()
-                      + "/" + gregProperties.getWebContextRoot() + "/"
-                      + "carbon" + "/";
-        } else {
-            baseUrl = "https://" + properties.getProductVariables().getHostName() + ":" +
-                      properties.getProductVariables().getHttpsPort() + "/" +
-                      "carbon" + "/";
-
+//        if (gregProperties.getWebContextRoot() != null) {
+//            baseUrl = "https://" + gregProperties.getHostName() + ":" + gregProperties.getHttpsPort()
+//                      + "/" + gregProperties.getWebContextRoot() + "/"
+//                      + "carbon" + "/";
+//        } else {
+//            baseUrl = "https://" + properties.getProductVariables().getHostName() + ":" +
+//                      properties.getProductVariables().getHttpsPort() + "/" +
+//                      "carbon" + "/";
+//
+//        }
+        baseUrl = "https://" + gregProperties.getHostName();
+        if (properties.getEnvironmentSettings().isEnablePort()) {
+            baseUrl = baseUrl + ":" + gregProperties.getHttpsPort();
+        }
+        if (properties.getEnvironmentSettings().isEnableCarbonWebContext()) {
+            baseUrl = baseUrl + "/" + gregProperties.getWebContextRoot() + "/" + "carbon" + "/";
         }
         return baseUrl;
     }

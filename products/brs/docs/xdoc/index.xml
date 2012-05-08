@@ -21,24 +21,24 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
-  <title>Welcome to WSO2 BRS v1.2.0 </title>
+  <title>Welcome to WSO2 BRS v@product.version@ </title>
   <link href="css/brs-docs.css" rel="stylesheet" />
   <link href="styles/dist-docs.css" rel="stylesheet" type="text/css"
   media="all" />
 </head>
 
 <body xml:lang="en" lang="en">
-<h1>Welcome to WSO2 Business Rules Server (BRS) v1.2.0 </h1>
+<h1>Welcome to WSO2 Business Rules Server (BRS) v@product.version@ </h1>
 
 <p>WSO2 Business Rules Server (WSO2 BRS) is to be your Business Rule Management
 System (BRMS). Our ultimate goal is to provide you with the suitable capability
 of codifying, executing, and maintaining your organization's decisions. </p>
 
-<p>BRS 1.2.0 supports exposing your organization' decisions as <strong>Secure,
+<p>BRS @product.version@ supports exposing your organization' decisions as <strong>Secure,
 Reliable Web services</strong>. The integration with our Enterprise Service Bus
 supports incorporating your dynamic integration decisions to the your
 enterprise' applications integration solution. 
-<p>WSO2 BRS 1.2.0 is developed on top of the revolutionary <a
+<p>WSO2 BRS @product.version@ is developed on top of the revolutionary <a
 href="http://wso2.org/projects/carbon">Carbon platform</a>
 , and is based on the OSGi framework to achieve the better modularity for
 your Service Oriented Architecture (SOA). This also contains a lots of new
@@ -57,7 +57,7 @@ try. </p>
 fairly simple.</p>
 <ol>
   <li><a href="http://wso2.org/downloads/brs">Download</a> the WSO2 BRS
-  1.2.0</li>
+  @product.version@</li>
   <li>Read through the <a href="docs_index.html">Documentation Index</a></li>
   <li>Visit our <a href="http://wso2.com/products/business-rules-server/">Official Web
     site</a></li>

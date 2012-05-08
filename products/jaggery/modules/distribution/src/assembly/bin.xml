@@ -147,6 +147,11 @@
             <fileMode>644</fileMode>
         </file>
         <file>
+            <source>src/resources/db/demo.h2.db</source>
+            <outputDirectory>jaggery-${carbon.product.version}/carbon/tmp/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+        <file>
             <source>target/wso2carbon-core-${carbon.platform.version}/repository/conf/README</source>
             <outputDirectory>jaggery-${carbon.product.version}/carbon/repository/conf/</outputDirectory>
             <filtered>true</filtered>

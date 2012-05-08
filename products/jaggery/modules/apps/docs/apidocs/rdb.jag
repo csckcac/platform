@@ -62,9 +62,7 @@ include('/includes/topnavi.jag');
 
         <pre class="prettyprint linenums">
 &lt%
-var db = new Database("jdbc:h2:demo", "org.h2.Driver", "admin", "admin");
-
-db.query("CREATE TABLE demo(name varchar(255), address varchar(255))");
+var db = new Database("jdbc:h2:tmp/demo", "admin", "admin");
 
 db.query("INSERT INTO demo VALUES('WSO2','59 Flower Rd'), ('WSO2 UK', 'Emsworth, Hampshire, UK');");
 
@@ -75,9 +73,7 @@ print(result);
 </pre>
                 <%
                 var sesCode = '&lt%'
-                + '\n var db = new Database("jdbc:h2:demo", "org.h2.Driver", "admin", "admin");'
-                + '\n '
-                + '\n db.query("CREATE TABLE demo(name varchar(255), address varchar(255));")'
+                + '\n var db = new Database("jdbc:h2:tmp/demo", "admin", "admin");'
                 + '\n '
                 + '\n db.query("INSERT INTO demo VALUES(\'WSO2\',\'59 Flower Rd\'), (\'WSO2 UK\', \'Emsworth, Hampshire, UK\');");'
                 + '\n '
@@ -122,9 +118,9 @@ and manipulation through the below members / functions.</p>
                         </tr>
                         <tr>
 
-                        <td><code>Database(connectionUrl, <br/>driverName, username, password[, config])</code></td>
+                        <td><code>Database(connectionUrl, username, password[, config])</code></td>
                         <td>Database</td>
-                        <td><pre class="prettyprint">var db = new Database("jdbc:h2:demo", "org.h2.Driver", "admin", "admin");</pre>
+                        <td><pre class="prettyprint">var db = new Database("jdbc:h2:demo", "admin", "admin");</pre>
                             Returns Database object for database communication
                             <br> <br/>
                             <pre class="prettyprint">
@@ -151,7 +147,7 @@ var config = {
 	suspectTimeout:number
 }
 
-var db = new Database("jdbc:h2:demo", "org.h2.Driver", "admin", "admin", config);
+var db = new Database("jdbc:h2:demo", "admin", "admin", config);
                             </pre>
                             Returns Database object for database communication with optional configurations
                             <br/>

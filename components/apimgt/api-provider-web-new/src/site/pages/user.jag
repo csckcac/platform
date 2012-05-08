@@ -18,6 +18,9 @@ var site = require("/site/conf/site.json");
         "name":"page/base",
         "inputs":{
             "title":"API Provider- Users Keys",
+             "header":{
+                "name":"menu/primary"
+            },
             "body":[
                 {
                     "name":"layout/extended",

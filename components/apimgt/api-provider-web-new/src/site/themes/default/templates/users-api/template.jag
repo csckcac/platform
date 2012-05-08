@@ -1,7 +1,12 @@
 <% jagg.template("users-api", function(inputs, outputs, jagg) { %>
+<% var api=outputs.api;
+   var subs = jagg.module("subscription");
+   var result = subs.getSubscribersOfAPI(api.name, api.version);
+   var subscribers = result.subscribers;
+%>
     <div class="row-fluid">
         <div class="span2">
-             <% //jagg.includeBlock("item-nav-list", null); %>
+             <% jagg.includeBlock("item-nav-list",{api:api}); %>
     </div>
             <div class="span10">
                 <table class="table table-bordered">
@@ -13,13 +18,14 @@
                     </tr>
                     </thead>
                     <tbody id="userList">
-                    <%
-        var i, subscriber, subscribers = outputs.subscribers, length = subscribers.length;
-
+        <%
+        var i, subscriber,path,length = subscribers.length;
         for(i = 0; i < length; i++) {
-        subscriber = subscribers[i];%>
+        subscriber = subscribers[i];
+        path = jagg.getMappedUrl("/site/pages/user.jag") + "?uname=" + subscriber.userName;
+        %>
         <tr>
-        <td><i class="icon-user"></i><a href="?place=user&uname=<%=subscriber.userName%>"><%=subscriber.userName%></a></td>
+        <td><i class="icon-user"></i><a href="<%=path%></a></td>
         <td><%=subscriber.subscribedDate%></td>
         <td><i class="icon-edit"></i><a href="#">Stats</a>
             <i class="icon-trash"></i><a href="#">Revoke Access</a>

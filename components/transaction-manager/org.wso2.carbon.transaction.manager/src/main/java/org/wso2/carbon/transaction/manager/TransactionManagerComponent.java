@@ -20,20 +20,31 @@ package org.wso2.carbon.transaction.manager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
+import org.wso2.carbon.user.api.Tenant;
+import org.wso2.carbon.user.api.UserStoreException;
+import org.wso2.carbon.user.core.service.RealmService;
+import org.wso2.carbon.utils.Axis2ConfigurationContextObserver;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.naming.Context;
-import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
 import javax.transaction.TransactionManager;
 import javax.transaction.UserTransaction;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @scr.component name="transactionmanager.component" immediate="true"
  * @scr.reference name="transactionmanager" interface="javax.transaction.TransactionManager"
- * cardinality="0..1" policy="dynamic" bind="setTransactionManager"  unbind="unsetTransactionManager"
+ * cardinality="1..1" policy="dynamic" bind="setTransactionManager"  unbind="unsetTransactionManager"
  * @scr.reference name="usertransaction" interface="javax.transaction.UserTransaction"
- * cardinality="0..1" policy="dynamic" bind="setUserTransaction"  unbind="unsetUserTransaction"
+ * cardinality="1..1" policy="dynamic" bind="setUserTransaction"  unbind="unsetUserTransaction"
+ * @scr.reference name="user.realmservice.default"
+ * interface="org.wso2.carbon.user.core.service.RealmService" cardinality="1..1" policy="dynamic"
+ * bind="setRealmService" unbind="unsetRealmService"
  */
 public class TransactionManagerComponent {
 
@@ -43,9 +54,21 @@ public class TransactionManagerComponent {
 
     private static UserTransaction userTransaction;
 
-    private static Object txManagerComponentLock = new Object(); /* class level lock for controlling synchronized access to static variables */
+    private static RealmService realmService;
 
-    protected void activate(ComponentContext ctxt) {
+    /* class level lock for controlling synchronized access to static variables */
+    private static Object txManagerComponentLock = new Object();
+
+    protected void activate(ComponentContext ctxt) throws Exception {
+        BundleContext bundleContext = ctxt.getBundleContext();
+        bundleContext.registerService(Axis2ConfigurationContextObserver.class.getName(),
+                new TransactionManagerAxis2ConfigurationContextObserver(), null);
+
+        //Register transaction-manager with JNDI for all available tenants.
+        List<Integer> tenants = this.getAllTenantIds();
+        for (int tid : tenants) {
+            bindTransactionManagerWithJNDIForTenant(tid);
+        }
         log.debug("Transaction Manager bundle is activated ");
     }
 
@@ -59,23 +82,6 @@ public class TransactionManagerComponent {
                 log.debug("Setting the Transaction Manager Service");
             }
             TransactionManagerComponent.txManager = txManager;
-            try {
-                InitialContext ctx = new InitialContext();
-                Context javaCtx = null;
-                try {
-                    javaCtx = (Context) ctx.lookup("java:comp");
-                } catch (NameNotFoundException ignore) {
-                    //ignore
-                }
-
-                if (javaCtx == null) {
-                    javaCtx = ctx.createSubcontext("java:comp");
-                }
-
-                javaCtx.bind("TransactionManager", txManager);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -98,24 +104,6 @@ public class TransactionManagerComponent {
                 log.debug("Setting the UserTransaction Service");
             }
             TransactionManagerComponent.userTransaction = userTransaction;
-            try {
-                InitialContext ctx = new InitialContext();
-                Context javaCtx = null;
-
-                try {
-                    javaCtx = (Context) ctx.lookup("java:comp");
-                } catch (NameNotFoundException ignore) {
-                    //ignore
-                }
-
-                if (javaCtx == null) {
-                    javaCtx = ctx.createSubcontext("java:comp");
-                }
-
-                javaCtx.bind("UserTransaction", userTransaction);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -132,4 +120,54 @@ public class TransactionManagerComponent {
         return userTransaction;
     }
 
+    private List<Integer> getAllTenantIds() throws Exception {
+		try {
+			Tenant[] tenants = TransactionManagerComponent.getRealmService().getTenantManager().
+					getAllTenants();
+			List<Integer> tids = new ArrayList<Integer>();
+			for (Tenant tenant : tenants) {
+				tids.add(tenant.getId());
+			}
+			tids.add(MultitenantConstants.SUPER_TENANT_ID);
+			return tids;
+		} catch (UserStoreException e) {
+			throw new Exception("Error in listing all the tenants", e);
+		}
+	}
+
+    protected void setRealmService(RealmService realmService) {
+    	TransactionManagerComponent.realmService = realmService;
+    }
+
+    protected void unsetRealmService(RealmService realmService) {
+    	TransactionManagerComponent.realmService = null;
+    }
+
+    public static RealmService getRealmService() {
+    	return TransactionManagerComponent.realmService;
+    }
+    
+    protected static void bindTransactionManagerWithJNDIForTenant(int tid) {
+        SuperTenantCarbonContext.startTenantFlow();
+        SuperTenantCarbonContext.getCurrentContext().setTenantId(tid);
+
+        try {
+            Context currentCtx = SuperTenantCarbonContext.getCurrentContext().getJNDIContext();
+            Context javaCtx = null;
+            try {
+                javaCtx = (Context) currentCtx.lookup("java:comp");
+            } catch (NameNotFoundException ignore) {
+                //ignore
+            }
+            if (javaCtx == null) {
+                currentCtx = currentCtx.createSubcontext("java:comp");
+            }
+            currentCtx.bind("TransactionManager", getTransactionManager());
+            currentCtx.bind("UserTransaction", getUserTransaction());
+        } catch (Exception e) {
+           log.error("Error in binding transaction manager for tenant: " + tid, e);
+        } finally {
+            SuperTenantCarbonContext.endTenantFlow();
+        }
+    }
 }

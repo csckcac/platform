@@ -1,7 +1,7 @@
 <%
-var module =require("carbon");
-var carbon = new module.CarbonObject();
-var CARBON_HOME=carbon.getCarbonHome();
+var module =require("systemPropertyReader");
+var sysPropertyReader = new module.SystemPropertyReaderObject();
+var CARBON_HOME=sysPropertyReader.getProperty("carbon.home");
 var file = new File("file:///"+CARBON_HOME+"/repository/conf/idtme.xml");
 file.open("r");
 var config=file.readAll();

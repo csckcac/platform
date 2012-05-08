@@ -85,7 +85,7 @@ public class HostUtil {
     public static boolean isMappingExist(String mappingName) throws UrlMapperException {
         mappingName = UrlMapperConstants.HostProperties.FILE_SERPERATOR
                 + UrlMapperConstants.HostProperties.HOSTINFO + mappingName;
-        List<String> mappings = getAllHostsFromRegistry();
+        List<String> mappings = getAllMappingsFromRegistry();
         boolean isExist = false;
         if (mappings != null) {
             for (String mapping : mappings) {
@@ -104,6 +104,29 @@ public class HostUtil {
      * @throws UrlMapperException
      */
     public static List<String> getAllHostsFromRegistry() throws UrlMapperException {
+        List<String> allHosts = new ArrayList<String>();
+        try {
+            // get all virtual host from the registry
+            Collection mappings = registryManager.getHostsFromRegistry();
+            if (mappings != null) {
+                String[] mappingNames = mappings.getChildren();
+                for (String mappingName : mappingNames) {
+                	mappingName = mappingName.replace(UrlMapperConstants.HostProperties.FILE_SERPERATOR
+                	        + UrlMapperConstants.HostProperties.HOSTINFO , "");
+                	String webApp = registryManager.getWebAppNameForHost(mappingName);
+                	if (webApp != null) {
+                		  allHosts.add(mappingName);
+                	}
+                }
+            }
+        } catch (Exception e) {
+            log.error("Failed to get all hosts ", e);
+            throw new UrlMapperException("Failed to get all hosts ", e);
+        }
+        return allHosts;
+    }
+    
+    public static List<String> getAllMappingsFromRegistry() throws UrlMapperException {
         List<String> allHosts = new ArrayList<String>();
         try {
             // get all virtual host from the registry
@@ -213,11 +236,12 @@ public class HostUtil {
         }
         Host host = addHostToEngine(hostName);
         try {
-            // add entry to registry with the tenant domain if exist in the uri
-            registryManager.addHostToRegistry(hostName, uri);
+    
             // deploying the copied webapp as the root in our own host directory
             /* TODO add listeners once integrate with webapp-mgt */
             DataHolder.getInstance().getCarbonTomcatService().addWebApp(host, "/", webAppPath);
+            // add entry to registry with the tenant domain if exist in the uri if adding virtual host is successful.
+            registryManager.addHostToRegistry(hostName, uri);
 
         } catch (Exception e) {
             log.error("error in adding the virtual host to tomcat engine", e);
@@ -272,7 +296,7 @@ public class HostUtil {
      * @param newHost the hostname given
      * @throws UrlMapperException throws when error while removing oldHost or adding newHost
      */
-    public static void editHostInEngine(String webAppName, String oldHost, String newHost)
+    public static void editHostInEngine(String webAppName, String newHost, String oldHost)
             throws UrlMapperException {
         removeHostFromEngine(oldHost);
         addWebAppToHost(newHost, webAppName);

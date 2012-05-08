@@ -150,7 +150,7 @@ public class UrlMapperServiceComponent {
         if (hosts != null) {
             for (String hostName : hosts) {
                 //getting hostname by removing the path
-                hostName = hostName.substring(UrlMapperConstants.HostProperties.HOSTINFO_DIR.length());
+              //  hostName = hostName.substring(UrlMapperConstants.HostProperties.HOSTINFO_DIR.length());
                 //add webapp to host and adding them to tomcat
                 addHostToEngine(hostName);
             }

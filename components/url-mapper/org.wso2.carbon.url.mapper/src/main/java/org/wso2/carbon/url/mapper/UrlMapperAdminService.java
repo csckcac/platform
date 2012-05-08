@@ -19,6 +19,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.url.mapper.internal.exception.UrlMapperException;
 import org.wso2.carbon.url.mapper.internal.util.HostUtil;
+import org.wso2.carbon.url.mapper.internal.util.UrlMapperConstants;
 
 import java.util.List;
 
@@ -31,7 +32,8 @@ public class UrlMapperAdminService {
     public void addWebAppToHost(String hostName, String uri) throws UrlMapperException {
         //TODO have to figure out exception handling
         try {
-            HostUtil.addWebAppToHost(hostName, uri);
+			hostName = hostName + UrlMapperConstants.HostProperties.DOMAIN_NAME_PREFIX;
+			HostUtil.addWebAppToHost(hostName, uri);
         } catch (Exception e) {
             log.error(e);  //To change body of catch statement use File | Settings | File Templates.
             throw new UrlMapperException("Failed to add webapp to host ", e);
@@ -39,11 +41,13 @@ public class UrlMapperAdminService {
     }
 
     public void addServiceDomain(String hostName, String url) throws UrlMapperException {
-        HostUtil.addDomainToServiceEpr(hostName, url);
-    }
+		hostName = hostName + UrlMapperConstants.HostProperties.DOMAIN_NAME_PREFIX;
+		HostUtil.addDomainToServiceEpr(hostName, url);
+	}
 
     public void editServiceDomain(String newHost, String oldhost) throws UrlMapperException {
-        HostUtil.updateEprToRegistry(newHost, oldhost);
+		newHost = newHost + UrlMapperConstants.HostProperties.DOMAIN_NAME_PREFIX;
+		HostUtil.updateEprToRegistry(newHost, oldhost);
     }
 
     public void deleteServiceDomain(String hostName) throws UrlMapperException {
@@ -60,8 +64,9 @@ public class UrlMapperAdminService {
         return domains.toArray(new String[domains.size()]);
     }
 
-    public boolean editHost(String webappName, String oldhost, String newHost) throws UrlMapperException {
-        HostUtil.editHostInEngine(webappName, oldhost, newHost);
+    public boolean editHost(String webappName, String newHost, String oldhost) throws UrlMapperException {
+    	newHost = newHost  + UrlMapperConstants.HostProperties.DOMAIN_NAME_PREFIX;
+        HostUtil.editHostInEngine(webappName, newHost, oldhost);
         return true;
     }
 

@@ -1,16 +1,19 @@
 package org.wso2.carbon.hostobjects.web;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Function;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.*;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 import org.wso2.carbon.scriptengine.util.HostObjectUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.*;
 
 public class RequestHostObject extends ScriptableObject {
 
@@ -20,9 +23,19 @@ public class RequestHostObject extends ScriptableObject {
 
     private HttpServletRequest request;
 
+    private boolean isMultipart = false;
+
+    private boolean isParsed = false;
+
+    private Map<String, String> parameterMap = new HashMap<String, String>();
+    private Map<String, Scriptable> fileMap = new HashMap<String, Scriptable>();
+
+    private Scriptable parameterFields = null;
+    private Scriptable fileFields = null;
+
     private Object content = null;
 
-    private Context cx;
+    private Context context;
 
     public RequestHostObject() {
 
@@ -39,7 +52,8 @@ public class RequestHostObject extends ScriptableObject {
         }
         RequestHostObject rho = new RequestHostObject();
         rho.request = (HttpServletRequest) args[0];
-        rho.cx = cx;
+        rho.isMultipart = ServletFileUpload.isMultipartContent(rho.request);
+        rho.context = cx;
         return rho;
     }
 
@@ -121,7 +135,8 @@ public class RequestHostObject extends ScriptableObject {
         return rho.request.getContentType();
     }
 
-    public static int jsFunction_getContentLength(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+    public static int jsFunction_getContentLength(Context cx, Scriptable thisObj, Object[] args, Function funObj)
+            throws ScriptException {
         String functionName = "getContentLength";
         int argsCount = args.length;
         if (argsCount != 0) {
@@ -130,6 +145,32 @@ public class RequestHostObject extends ScriptableObject {
 
         RequestHostObject rho = (RequestHostObject) thisObj;
         return rho.request.getContentLength();
+    }
+
+    public static Scriptable jsFunction_getParameterMap(Context cx, Scriptable thisObj, Object[] args, Function funObj)
+            throws ScriptException {
+        String functionName = "getParameterMap";
+        int argsCount = args.length;
+        if (argsCount != 0) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+
+        RequestHostObject rho = (RequestHostObject) thisObj;
+        parse(rho);
+        return rho.parameterFields;
+    }
+
+    public static Scriptable jsFunction_getFileMap(Context cx, Scriptable thisObj, Object[] args, Function funObj)
+            throws ScriptException {
+        String functionName = "getFileMap";
+        int argsCount = args.length;
+        if (argsCount != 0) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+
+        RequestHostObject rho = (RequestHostObject) thisObj;
+        parse(rho);
+        return rho.fileFields;
     }
 
     public static String jsFunction_getRequestURI(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
@@ -157,7 +198,7 @@ public class RequestHostObject extends ScriptableObject {
         RequestHostObject rho = (RequestHostObject) thisObj;
         return rho.request.getHeader((String) args[0]);
     }
-    
+
     public static String jsFunction_getRemoteAddr(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
         String functionName = "getRemoteAddr";
         int argsCount = args.length;
@@ -179,9 +220,9 @@ public class RequestHostObject extends ScriptableObject {
         RequestHostObject rho = (RequestHostObject) thisObj;
         return rho.request.getPathInfo();
     }
-    
+
     public static int jsFunction_getLocalPort(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
-        String functionName = "getPathInfo";
+        String functionName = "getLocalPort";
         int argsCount = args.length;
         if (argsCount != 0) {
             HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
@@ -190,6 +231,7 @@ public class RequestHostObject extends ScriptableObject {
         RequestHostObject rho = (RequestHostObject) thisObj;
         return rho.request.getLocalPort();
     }
+
     public static String jsFunction_getParameter(Context cx, Scriptable thisObj, Object[] args, Function funObj)
             throws ScriptException {
         String functionName = "getParameter";
@@ -200,12 +242,99 @@ public class RequestHostObject extends ScriptableObject {
         if (!(args[0] instanceof String)) {
             HostObjectUtil.invalidArgsError(hostObjectName, functionName, "1", "string", args[0], false);
         }
+        String parameter = (String) args[0];
         RequestHostObject rho = (RequestHostObject) thisObj;
-        return rho.request.getParameter((String) args[0]);
+        if (rho.isMultipart) {
+            parse(rho);
+            return rho.parameterMap.get(parameter);
+        } else {
+            return rho.request.getParameter(parameter);
+        }
+    }
+
+    public static Scriptable jsFunction_getFile(Context cx, Scriptable thisObj, Object[] args, Function funObj)
+            throws ScriptException {
+        String functionName = "getFile";
+        int argsCount = args.length;
+        if (argsCount != 1) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+        if (!(args[0] instanceof String)) {
+            HostObjectUtil.invalidArgsError(hostObjectName, functionName, "1", "string", args[0], false);
+        }
+        String parameter = (String) args[0];
+        RequestHostObject rho = (RequestHostObject) thisObj;
+        if (rho.isMultipart) {
+            parse(rho);
+            return rho.fileMap.get(parameter);
+        } else {
+            return null;
+        }
     }
 
     public HttpServletRequest getHttpServletRequest() {
         return this.request;
+    }
+
+    private static void parse(RequestHostObject rho) throws ScriptException {
+        if (rho.isParsed) {
+            return;
+        }
+        if (rho.isMultipart) {
+            try {
+                parseMultipart(rho);
+            } catch (FileUploadException e) {
+                log.error(e.getMessage(), e);
+                throw new ScriptException(e);
+            }
+        } else {
+            try {
+                parseParameters(rho);
+            } catch (FileUploadException e) {
+                log.error(e.getMessage(), e);
+                throw new ScriptException(e);
+            }
+        }
+    }
+
+    private static void parseMultipart(RequestHostObject rho) throws FileUploadException {
+        FileItemFactory factory = new DiskFileItemFactory();
+        ServletFileUpload upload = new ServletFileUpload(factory);
+        List items = upload.parseRequest(rho.request);
+
+        List<String> paramsNames = new ArrayList<String>();
+        List<String> fileNames = new ArrayList<String>();
+
+        // Process the uploaded items
+        String name;
+        for (Object obj : items) {
+            FileItem item = (FileItem) obj;
+            name = item.getFieldName();
+            if (item.isFormField()) {
+                rho.parameterMap.put(name, item.getString());
+                paramsNames.add(name);
+            } else {
+                rho.fileMap.put(item.getFieldName(), rho.context.newObject(rho, "File", new Object[]{item}));
+                fileNames.add(name);
+            }
+        }
+
+        rho.parameterFields = rho.context.newArray(rho, paramsNames.toArray());
+        rho.fileFields = rho.context.newArray(rho, fileNames.toArray());
+
+        rho.isParsed = true;
+    }
+
+    private static void parseParameters(RequestHostObject rho) throws FileUploadException {
+        List<String> paramsNames = new ArrayList<String>();
+
+        Enumeration params = rho.request.getParameterNames();
+        while (params.hasMoreElements()) {
+            paramsNames.add((String) params.nextElement());
+        }
+
+        rho.parameterFields = rho.context.newArray(rho, paramsNames.toArray());
+        rho.isParsed = true;
     }
 
 

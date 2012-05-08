@@ -30,9 +30,7 @@ public class FileHostObject extends ScriptableObject {
         if (argsCount != 1) {
             HostObjectUtil.invalidNumberOfArgs(hostObjectName, hostObjectName, argsCount, true);
         }
-        if (!(args[0] instanceof String)) {
-            HostObjectUtil.invalidArgsError(hostObjectName, hostObjectName, "1", "string", args[0], true);
-        }
+
         FileHostObject fho = new FileHostObject();
         Object obj = cx.getThreadLocal(JAVASCRIPT_FILE_MANAGER);
         if (obj instanceof JavaScriptFileManager) {
@@ -40,7 +38,7 @@ public class FileHostObject extends ScriptableObject {
         } else {
             fho.manager = new JavaScriptFileManagerImpl();
         }
-        fho.file = fho.manager.getFile((String) args[0]);
+        fho.file = fho.manager.getJavaScriptFile(args[0]);
         fho.file.construct();
         fho.context = cx;
         return fho;
@@ -50,7 +48,8 @@ public class FileHostObject extends ScriptableObject {
         return hostObjectName;
     }
 
-    public static void jsFunction_open(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+    public static void jsFunction_open(Context cx, Scriptable thisObj, Object[] args, Function funObj)
+            throws ScriptException {
         String functionName = "open";
         int argsCount = args.length;
         if (argsCount != 1) {
@@ -75,21 +74,6 @@ public class FileHostObject extends ScriptableObject {
         fho.file.write(data);
     }
 
-    public static void jsFunction_writeLine(Context cx, Scriptable thisObj, Object[] args, Function funObj)
-            throws ScriptException {
-        String functionName = "writeLine";
-        int argsCount = args.length;
-        if (argsCount != 1) {
-            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
-        }
-        if (!(args[0] instanceof String)) {
-            HostObjectUtil.invalidArgsError(hostObjectName, functionName, "1", "string", args[0], false);
-        }
-        FileHostObject fho = (FileHostObject) thisObj;
-        String data = HostObjectUtil.serializeObject(args[0]);
-        fho.file.writeLine(data);
-    }
-
     public static String jsFunction_read(Context cx, Scriptable thisObj, Object[] args, Function funObj)
             throws ScriptException {
         String functionName = "read";
@@ -103,17 +87,6 @@ public class FileHostObject extends ScriptableObject {
         FileHostObject fho = (FileHostObject) thisObj;
         int count = ((Number) args[0]).intValue();
         return fho.file.read(count);
-    }
-
-    public static String jsFunction_readLine(Context cx, Scriptable thisObj, Object[] args, Function funObj)
-            throws ScriptException {
-        String functionName = "readLine";
-        int argsCount = args.length;
-        if (argsCount != 0) {
-            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
-        }
-        FileHostObject fho = (FileHostObject) thisObj;
-        return fho.file.readLine();
     }
 
     public static String jsFunction_readAll(Context cx, Scriptable thisObj, Object[] args, Function funObj)
@@ -153,6 +126,21 @@ public class FileHostObject extends ScriptableObject {
         return fho.file.move((String)args[0]);
     }
 
+    public static boolean jsFunction_saveAs(Context cx, Scriptable thisObj, Object[] args, Function funObj)
+            throws ScriptException {
+        String functionName = "saveAs";
+        int argsCount = args.length;
+        if (argsCount != 1) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+        if (!(args[0] instanceof String)) {
+            HostObjectUtil.invalidArgsError(hostObjectName, functionName, "1", "string", args[0], false);
+        }
+
+        FileHostObject fho = (FileHostObject) thisObj;
+        return fho.file.saveAs((String)args[0]);
+    }
+
     public static boolean jsFunction_del(Context cx, Scriptable thisObj, Object[] args, Function funObj)
             throws ScriptException {
         String functionName = "del";
@@ -164,7 +152,8 @@ public class FileHostObject extends ScriptableObject {
         return fho.file.del();
     }
 
-    public static long jsFunction_getLength(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+    public static long jsFunction_getLength(Context cx, Scriptable thisObj, Object[] args, Function funObj)
+            throws ScriptException {
         String functionName = "getLength";
         int argsCount = args.length;
         if (argsCount != 0) {
@@ -174,7 +163,8 @@ public class FileHostObject extends ScriptableObject {
         return fho.file.getLength();
     }
 
-    public static long jsFunction_getLastModified(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+    public static long jsFunction_getLastModified(Context cx, Scriptable thisObj, Object[] args, Function funObj)
+            throws ScriptException {
         String functionName = "getLastModified";
         int argsCount = args.length;
         if (argsCount != 0) {
@@ -184,7 +174,8 @@ public class FileHostObject extends ScriptableObject {
         return fho.file.getLastModified();
     }
 
-    public static String jsFunction_getName(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+    public static String jsFunction_getName(Context cx, Scriptable thisObj, Object[] args, Function funObj)
+            throws ScriptException {
         String functionName = "getName";
         int argsCount = args.length;
         if (argsCount != 0) {
@@ -194,8 +185,9 @@ public class FileHostObject extends ScriptableObject {
         return fho.file.getName();
     }
 
-    public static boolean jsFunction_exists(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
-        String functionName = "exists";
+    public static boolean jsFunction_isExists(Context cx, Scriptable thisObj, Object[] args, Function funObj)
+            throws ScriptException {
+        String functionName = "isExists";
         int argsCount = args.length;
         if (argsCount != 0) {
             HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
@@ -204,7 +196,19 @@ public class FileHostObject extends ScriptableObject {
         return fho.file.isExist();
     }
 
-    public static Scriptable jsFunction_getStream(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+    public static String jsFunction_getContentType(Context cx, Scriptable thisObj, Object[] args, Function funObj)
+            throws ScriptException {
+        String functionName = "getContentType";
+        int argsCount = args.length;
+        if (argsCount != 0) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+        FileHostObject fho = (FileHostObject) thisObj;
+        return fho.file.getContentType();
+    }
+
+    public static Scriptable jsFunction_getStream(Context cx, Scriptable thisObj, Object[] args, Function funObj)
+            throws ScriptException {
         String functionName = "getStream";
         int argsCount = args.length;
         if (argsCount != 0) {

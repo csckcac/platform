@@ -3,6 +3,8 @@ package org.wso2.carbon.jaggery.core.plugins;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.hostobjects.file.JavaScriptFile;
+import org.wso2.carbon.hostobjects.file.JavaScriptFileManager;
+import org.wso2.carbon.hostobjects.file.JavaScriptFileManagerImpl;
 import org.wso2.carbon.jaggery.core.manager.CommonManager;
 import org.wso2.carbon.jaggery.core.manager.WebAppContext;
 import org.wso2.carbon.jaggery.core.manager.WebAppManager;
@@ -24,11 +26,12 @@ public class WebAppFile implements JavaScriptFile {
     private String path = null;
     private boolean opened = false;
 
+    private JavaScriptFileManager fileManager = null;
+
     private boolean readable = false;
     private boolean writable = false;
 
     public WebAppFile(String path, ServletContext context) {
-        //this.path = path.startsWith("/") ? path.substring(1) : path;
         this.path = path;
         this.context = context;
     }
@@ -141,42 +144,7 @@ public class WebAppFile implements JavaScriptFile {
         }
         try {
             file.close();
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-            throw new ScriptException(e);
-        }
-    }
-
-    @Override
-    public String readLine() throws ScriptException {
-        if(!opened) {
-            log.warn("You need to open the file for reading");
-            return null;
-        }
-        if(!readable) {
-            log.warn("File has not opened in a readable mode.");
-            return null;
-        }
-        try {
-            return file.readLine();
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-            throw new ScriptException(e);
-        }
-    }
-
-    @Override
-    public void writeLine(String data) throws ScriptException {
-        if(!opened) {
-            log.warn("You need to open the file for writing");
-            return;
-        }
-        if(!writable) {
-            log.warn("File has not opened in a writable mode.");
-            return;
-        }
-        try {
-            file.writeBytes(data + "\n");
+            opened = false;
         } catch (IOException e) {
             log.error(e.getMessage(), e);
             throw new ScriptException(e);
@@ -252,7 +220,7 @@ public class WebAppFile implements JavaScriptFile {
             log.warn("Please close the file before moving");
             return false;
         }
-        return new File(path).renameTo(new File(path));
+        return new File(path).renameTo(fileManager.getFile(path));
     }
 
     @Override
@@ -312,5 +280,14 @@ public class WebAppFile implements JavaScriptFile {
     @Override
     public String getContentType() throws ScriptException {
         return FileTypeMap.getDefaultFileTypeMap().getContentType(getName());
+    }
+
+    @Override
+    public boolean saveAs(String dest) throws ScriptException {
+        return move(dest);
+    }
+
+    public void setFileManager(JavaScriptFileManager fileManager) {
+        this.fileManager = fileManager;
     }
 }

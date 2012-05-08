@@ -34,10 +34,6 @@
             <name>File</name>
         </hostObject>
         <hostObject>
-            <className>org.wso2.carbon.hostobjects.file.FileUploadHostObject</className>
-            <name>FileUpload</name>
-        </hostObject>
-        <hostObject>
             <className>org.wso2.carbon.hostobjects.extra.TwitterConnectHostObject</className>
             <name>TwitterConnect</name>
         </hostObject>
@@ -61,6 +57,10 @@
         <hostObject>
             <className>org.wso2.carbon.hostobjects.web.SessionHostObject</className>
             <name>Session</name>
+        </hostObject>
+        <hostObject>
+            <className>org.wso2.carbon.hostobjects.web.ApplicationHostObject</className>
+            <name>Application</name>
         </hostObject>
         <hostObject>
             <className>org.wso2.carbon.hostobjects.stream.StreamHostObject</className>

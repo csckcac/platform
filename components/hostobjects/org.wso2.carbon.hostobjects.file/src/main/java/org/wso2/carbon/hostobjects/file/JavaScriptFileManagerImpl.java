@@ -15,7 +15,18 @@ public class JavaScriptFileManagerImpl implements JavaScriptFileManager {
     private static final Log log = LogFactory.getLog(JavaScriptFileManagerImpl.class);
 
     @Override
-    public JavaScriptFile getFile(String path) throws ScriptException {
+    public JavaScriptFile getJavaScriptFile(Object object) throws ScriptException {
+        if (object instanceof String) {
+            return new JavaScriptFileImpl(getFile((String) object).getAbsolutePath());
+        } else {
+            String msg = "Unsupported parameter to the File constructor : " + object.getClass();
+            log.error(msg);
+            throw new ScriptException(msg);
+        }
+    }
+
+    @Override
+    public File getFile(String path) throws ScriptException {
         File file;
         if (path.startsWith("file://")) {
             try {
@@ -39,6 +50,6 @@ public class JavaScriptFileManagerImpl implements JavaScriptFileManager {
             log.error(msg);
             throw new ScriptException(msg);
         }
-        return new JavaScriptFileImpl(file.getAbsolutePath());
+        return file;
     }
 }

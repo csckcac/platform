@@ -121,42 +121,7 @@ public class JavaScriptFileImpl implements JavaScriptFile {
         }
         try {
             file.close();
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-            throw new ScriptException(e);
-        }
-    }
-
-    @Override
-    public String readLine() throws ScriptException {
-        if(!opened) {
-            log.warn("You need to open the file for reading");
-            return null;
-        }
-        if(!readable) {
-            log.warn("File has not opened in a readable mode.");
-            return null;
-        }
-        try {
-            return file.readLine();
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-            throw new ScriptException(e);
-        }
-    }
-
-    @Override
-    public void writeLine(String data) throws ScriptException {
-        if(!opened) {
-            log.warn("You need to open the file for writing");
-            return;
-        }
-        if(!writable) {
-            log.warn("File has not opened in a writable mode.");
-            return;
-        }
-        try {
-            file.writeBytes(data + "\n");
+            opened = false;
         } catch (IOException e) {
             log.error(e.getMessage(), e);
             throw new ScriptException(e);
@@ -292,5 +257,10 @@ public class JavaScriptFileImpl implements JavaScriptFile {
     @Override
     public String getContentType() throws ScriptException {
         return FileTypeMap.getDefaultFileTypeMap().getContentType(getName());
+    }
+
+    @Override
+    public boolean saveAs(String dest) throws ScriptException {
+        return move(dest);
     }
 }

@@ -13,10 +13,6 @@ public interface JavaScriptFile {
 
     public void close() throws ScriptException;
 
-    public String readLine() throws ScriptException;
-
-    public void writeLine(String data) throws ScriptException;
-
     public String read(long count) throws ScriptException;
 
     public void write(String data) throws ScriptException;
@@ -40,4 +36,6 @@ public interface JavaScriptFile {
     public OutputStream getOutputStream() throws ScriptException;
 
     public String getContentType() throws ScriptException;
+
+    public boolean saveAs(String dest) throws ScriptException;
 }

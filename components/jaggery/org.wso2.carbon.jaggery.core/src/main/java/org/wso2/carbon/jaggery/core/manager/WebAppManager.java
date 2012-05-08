@@ -39,6 +39,7 @@ public class WebAppManager extends CommonManager {
     private BaseFunction requestFunc = null;
     private BaseFunction responseFunc = null;
     private BaseFunction sessionFunc = null;
+    private BaseFunction applicationFunc = null;
 
     public WebAppManager(String jaggeryDir) throws ScriptException {
         super(jaggeryDir);
@@ -174,8 +175,10 @@ public class WebAppManager extends CommonManager {
                 responseFunc = hostObject.getConstructor();
             } else if ("Session".equals(hostObject.getName())) {
                 sessionFunc = hostObject.getConstructor();
+            } else if ("Application".equals(hostObject.getName())) {
+                applicationFunc = hostObject.getConstructor();
             }
-            if ((requestFunc != null) && (responseFunc != null) && (sessionFunc != null)) {
+            if ((requestFunc != null) && (responseFunc != null) && (sessionFunc != null) && (applicationFunc != null)) {
                 break;
             }
         }
@@ -270,6 +273,9 @@ public class WebAppManager extends CommonManager {
                 ScriptableObject.READONLY);
         RhinoEngine.defineProperty(jaggery, "session",
                 sessionFunc.construct(cx, jaggery, new Object[]{ctx.getServletRequest().getSession()}),
+                ScriptableObject.READONLY);
+        RhinoEngine.defineProperty(jaggery, "application",
+                applicationFunc.construct(cx, jaggery, new Object[]{ctx.getServletConext()}),
                 ScriptableObject.READONLY);
 
         RhinoEngine.exitContext();

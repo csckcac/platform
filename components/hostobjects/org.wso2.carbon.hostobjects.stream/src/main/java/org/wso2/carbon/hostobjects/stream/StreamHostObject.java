@@ -9,6 +9,7 @@ import org.mozilla.javascript.ScriptableObject;
 import org.wso2.carbon.scriptengine.exceptions.ScriptException;
 import org.wso2.carbon.scriptengine.util.HostObjectUtil;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 public class StreamHostObject extends ScriptableObject {
@@ -34,12 +35,27 @@ public class StreamHostObject extends ScriptableObject {
         if (argsCount != 1) {
             HostObjectUtil.invalidNumberOfArgs(hostObjectName, hostObjectName, argsCount, true);
         }
-        if (!(args[0] instanceof InputStream)) {
-            HostObjectUtil.getReservedHostObjectWarn(hostObjectName);
-        }
+
         StreamHostObject sho = new StreamHostObject();
-        sho.stream = (InputStream) args[0];
+        if(args[0] instanceof String) {
+            sho.stream = new ByteArrayInputStream(((String)args[0]).getBytes());
+        } else if (args[0] instanceof InputStream) {
+            sho.stream = (InputStream) args[0];
+        } else {
+            HostObjectUtil.invalidArgsError(hostObjectName, hostObjectName, "1", "string", args[0], true);
+        }
         return sho;
+    }
+
+    public static String jsFunction_toString(Context cx, Scriptable thisObj, Object[] args, Function funObj)
+            throws ScriptException {
+        String functionName = "toString";
+        int argsCount = args.length;
+        if (argsCount != 0) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+        StreamHostObject fho = (StreamHostObject) thisObj;
+        return HostObjectUtil.streamToString(fho.stream);
     }
 
     public InputStream getStream() {

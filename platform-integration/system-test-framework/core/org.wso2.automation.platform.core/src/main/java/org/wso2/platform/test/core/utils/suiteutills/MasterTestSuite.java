@@ -40,7 +40,7 @@ public class MasterTestSuite {
         listnerClasses.add(PlatformReportManager.class);
         listnerClasses.add(PlatformPriorityManager.class);
         tng.setListenerClasses(listnerClasses);
-        tng.setDefaultSuiteName("DefaultSuite");
+        tng.setDefaultSuiteName(SuiteName);
         tng.setXmlSuites(Arrays.asList(new XmlSuite[]{suite}));
         tng.setOutputDirectory(ProductConstant.REPORT_LOCATION + File.separator + "reports");
         return tng;

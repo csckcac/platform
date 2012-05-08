@@ -35,7 +35,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
+class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
 
     public APIConsumerImpl() throws APIManagementException {
         super();

@@ -159,7 +159,7 @@ public final class APIUtil {
             artifact.setAttribute(APIConstants.API_OVERVIEW_THUMBNAIL_URL, api.getThumbnailUrl());
             artifact.setAttribute(APIConstants.API_OVERVIEW_STATUS, apiStatus);
             artifact.setAttribute(APIConstants.API_OVERVIEW_TIER, api.getAvailableTiers().iterator().next().getName());
-            if(APIConstants.PUBLISHED.equals(apiStatus)){
+            if (APIConstants.PUBLISHED.equals(apiStatus)){
                 artifact.setAttribute(APIConstants.API_OVERVIEW_IS_LATEST, "true");
             }
             Set<URITemplate> uriTemplateSet = api.getUriTemplates();
@@ -167,7 +167,6 @@ public final class APIUtil {
                 artifact.addAttribute(APIConstants.API_URI_TEMPLATES,
                         uriTemplate.getMethod() + ":" + uriTemplate.getUriTemplate());
             }
-
 
         } catch (GovernanceException e) {
             String msg = "Failed to create API for : " + api.getId().getApiName();

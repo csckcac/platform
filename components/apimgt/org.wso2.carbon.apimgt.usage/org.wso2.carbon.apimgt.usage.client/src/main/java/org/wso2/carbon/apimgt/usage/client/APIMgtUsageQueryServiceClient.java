@@ -15,17 +15,19 @@
 * specific language governing permissions and limitations
 * under the License.
 */
+
 package org.wso2.carbon.apimgt.usage.client;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
+import org.wso2.carbon.apimgt.api.APIConsumer;
 import org.wso2.carbon.apimgt.api.APIManagementException;
+import org.wso2.carbon.apimgt.api.APIProvider;
 import org.wso2.carbon.apimgt.api.model.API;
 import org.wso2.carbon.apimgt.api.model.APIIdentifier;
 import org.wso2.carbon.apimgt.api.model.SubscribedAPI;
 import org.wso2.carbon.apimgt.api.model.Subscriber;
-import org.wso2.carbon.apimgt.impl.APIConsumerImpl;
-import org.wso2.carbon.apimgt.impl.APIProviderImpl;
+import org.wso2.carbon.apimgt.impl.APIManagerFactory;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUsageDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIServiceTimeDTO;
 import org.wso2.carbon.apimgt.usage.client.dto.ProviderAPIUserUsageDTO;
@@ -51,8 +53,8 @@ public class APIMgtUsageQueryServiceClient {
 
     private QueryServiceStub qss;
 
-    private APIProviderImpl apiProviderImpl;
-    private APIConsumerImpl apiConsumerImpl;
+    private APIProvider apiProviderImpl;
+    private APIConsumer apiConsumerImpl;
 
     public APIMgtUsageQueryServiceClient(String targetEndpoint) throws APIMgtUsageQueryServiceClientException {
         if (targetEndpoint == null || targetEndpoint.equals("")) {
@@ -65,9 +67,9 @@ public class APIMgtUsageQueryServiceClient {
             throw new APIMgtUsageQueryServiceClientException("Exception while instantiating QueryServiceStub", e);
         }
 
-        try{
-            apiProviderImpl = new APIProviderImpl();
-            apiConsumerImpl = new APIConsumerImpl();
+        try {
+            apiProviderImpl = APIManagerFactory.getInstance().getAPIProvider();
+            apiConsumerImpl = APIManagerFactory.getInstance().getAPIConsumer();
         } catch (APIManagementException e) {
             throw new APIMgtUsageQueryServiceClientException("Exception while instantiating Impl classes", e);
         }

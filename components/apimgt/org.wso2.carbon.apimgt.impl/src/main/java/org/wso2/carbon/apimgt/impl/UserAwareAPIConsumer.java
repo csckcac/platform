@@ -16,11 +16,8 @@
 
 package org.wso2.carbon.apimgt.impl;
 
-import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.apimgt.api.APIManagementException;
-import org.wso2.carbon.apimgt.api.model.API;
-import org.wso2.carbon.apimgt.api.model.DuplicateAPIException;
 import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 import org.wso2.carbon.core.util.AnonymousSessionUtil;
 import org.wso2.carbon.registry.core.service.RegistryService;
@@ -29,16 +26,16 @@ import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.service.RealmService;
 
-/**
- * User aware APIProvider implementation which ensures that the invoking user has the
- * necessary privileges to execute the operations.
- */
-public class UserAwareAPIProviderImpl extends APIProviderImpl {
-    
+public class UserAwareAPIConsumer extends APIConsumerImpl {
+
     private String username;
     private AuthorizationManager authorizationManager;
-    
-    public UserAwareAPIProviderImpl(String username) throws APIManagementException {
+
+    UserAwareAPIConsumer() throws APIManagementException {
+        super();
+    }
+
+    UserAwareAPIConsumer(String username) throws APIManagementException {
         super();
         this.username = username;
         RegistryService registryService = ServiceReferenceHolder.getInstance().getRegistryService();
@@ -51,45 +48,6 @@ public class UserAwareAPIProviderImpl extends APIProviderImpl {
             handleException("Error while loading user realm for user: " + username, e);
         } catch (UserStoreException e) {
             handleException("Error while loading the authorization manager", e);
-        }
-    }
-
-    @Override
-    public void addAPI(API api) throws APIManagementException {
-        checkPermission(APIConstants.Permissions.API_CREATE);
-        super.addAPI(api);
-    }
-
-    @Override
-    public void createNewAPIVersion(API api, String newVersion) throws DuplicateAPIException,
-            APIManagementException {
-        checkPermission(APIConstants.Permissions.API_CREATE);
-        super.createNewAPIVersion(api, newVersion);
-    }
-
-    @Override
-    public void updateAPI(API api) throws APIManagementException {
-        API oldApi = getAPI(api.getId());
-        String oldStatus = oldApi.getStatus().getStatus();
-        String newStatus = api.getStatus().getStatus();
-        if ("CREATED".equals(oldStatus) && "PUBLISHED".equals(newStatus)) {
-            checkPermission(APIConstants.Permissions.API_PUBLISH);
-        }
-        super.updateAPI(api);
-    }
-
-    private void checkPermission(String permission) throws APIManagementException {
-        boolean authorized;
-        try {
-            authorized = authorizationManager.isUserAuthorized(username, permission,
-                    CarbonConstants.UI_PERMISSION_ACTION);
-        } catch (UserStoreException e) {
-            throw new APIManagementException("Error while checking user authorization", e);
-        }
-
-        if (!authorized) {
-            throw new APIManagementException("User: " + username + " does not have the " +
-                    "required permission: " + permission);
         }
     }
 }

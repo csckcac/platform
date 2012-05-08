@@ -17,6 +17,7 @@
 package org.wso2.carbon.apimgt.handlers.security;
 
 import org.wso2.carbon.apimgt.impl.dto.xsd.APIKeyValidationInfoDTO;
+import org.wso2.carbon.apimgt.impl.utils.LRUCache;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -59,42 +60,5 @@ public class APIKeyCache {
             info = invalidKeys.get(key);
         }
         return info;
-    }
-
-    private static class LRUCache<K,V> extends LinkedHashMap<K,V> {
-
-        private int maxEntries;
-        private ReadWriteLock lock;
-
-        public LRUCache(int maxEntries) {
-            super(maxEntries + 1, 1, false);
-            this.maxEntries = maxEntries;
-            this.lock = new ReentrantReadWriteLock();
-        }
-
-        @Override
-        public V get(Object key) {
-            lock.readLock().lock();
-            try {
-                return super.get(key);
-            } finally {
-                lock.readLock().unlock();
-            }
-        }
-
-        @Override
-        public V put(K key, V value) {
-            lock.writeLock().lock();
-            try {
-                return super.put(key, value);
-            } finally {
-                lock.writeLock().unlock();
-            }
-        }
-
-        @Override
-        protected boolean removeEldestEntry(Map.Entry eldest) {
-            return size() > maxEntries;
-        }
     }
 }

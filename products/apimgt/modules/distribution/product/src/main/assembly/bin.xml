@@ -106,7 +106,7 @@
         </fileSet>
         <fileSet>
             <directory>../../jaggery</directory>
-            <outputDirectory>wso2am-${pom.version}/jaggery</outputDirectory>
+            <outputDirectory>wso2am-${pom.version}/modules</outputDirectory>
             <includes>
                 <include>**/**.xml</include>
             </includes>

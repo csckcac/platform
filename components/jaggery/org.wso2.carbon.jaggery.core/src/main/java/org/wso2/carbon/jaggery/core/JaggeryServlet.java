@@ -26,8 +26,9 @@ public class JaggeryServlet extends HttpServlet {
             //init scope with global scripts
             String jaggeryDir = System.getProperty("jaggery.home");
             if (jaggeryDir == null) {
-                jaggeryDir = System.getProperty("catalina.home");
+                jaggeryDir = System.getProperty("carbon.home");
             }
+
             if(jaggeryDir != null) {
                 jaggeryDir += File.separator + JAGGERY_MODULES_DIR;
             }

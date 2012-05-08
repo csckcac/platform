@@ -150,11 +150,32 @@
     </dependencySets>
 
     <files>
-        <!--file>
-           <source>../features/p2-profile-generation/target/wso2carbon-core-${carbon.version}/repository/components/artifacts.xml</source>
-           <outputDirectory>wso2appfactory-${pom.version}/webapps/ROOT/WEB-INF/eclipse/provisioning</outputDirectory>
-           <fileMode>644</fileMode>
-       </file-->
+        <!-- Deploy the bpels -->
+         <file>
+            <source>../../bpels/DeployProjectToDev/target/DeployProjectToDev.zip</source>
+            <outputDirectory>wso2appfactory-${pom.version}/repository/deployment/server/bpel</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../../bpels/DeployProjectToLive/target/DeployProjectToLive.zip</source>
+            <outputDirectory>wso2appfactory-${pom.version}/repository/deployment/server/bpel</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../../bpels/UserActivation/target/UserActivation.zip</source>
+            <outputDirectory>wso2appfactory-${pom.version}/repository/deployment/server/bpel</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../../bpels/UserCreation/target/UserCreation.zip</source>
+            <outputDirectory>wso2appfactory-${pom.version}/repository/deployment/server/bpel</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <!-- Deploy the project management tool-->
         <file>
             <source>../../../INSTALL.txt</source>
             <outputDirectory>wso2appfactory-${pom.version}</outputDirectory>
@@ -230,26 +251,6 @@
             <outputDirectory>wso2appfactory-${pom.version}/repository/conf</outputDirectory>
             <fileMode>644</fileMode>
         </file>
-
-	<!--file>
-            <source>../../../modules/samples/product/sample-utils/src/main/conf/server/axis2.xml</source>
-            <outputDirectory>wso2appfactory-${pom.version}/samples/axis2Server/repository/conf</outputDirectory>
-            <destName>axis2.xml</destName>
-        </file>
-        <file>
-            <source>../../../modules/samples/product/sample-utils/src/main/conf/server/sample-server-wrapper.conf</source>
-            <outputDirectory>wso2appfactory-${pom.version}/repository/conf</outputDirectory>
-            <destName>sample-server-wrapper.conf</destName>
-        </file>
-        <file>
-            <source>../../../modules/samples/product/sample-utils/src/main/conf/server/README.txt</source>
-            <outputDirectory>wso2appfactory-${pom.version}/tmp/sampleServer</outputDirectory>
-            <destName>README.txt</destName>
-        </file>
-        <file>
-            <source>../../../modules/services/CreditRatingService/target/CreditRatingService-${pom.version}.aar</source>
-            <outputDirectory>wso2appfactory-${pom.version}/samples/axis2Server/repository/services</outputDirectory>
-        </file-->
 	   
     </files>
 

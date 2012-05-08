@@ -48,6 +48,7 @@
     </dependencyManagement>
 
     <properties>
+	<wso2.h2.orbit.version>${version.h2.engine}.wso2v1</wso2.h2.orbit.version>
     </properties>
 
 </project>

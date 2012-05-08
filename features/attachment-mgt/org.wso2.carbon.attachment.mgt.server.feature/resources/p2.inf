@@ -1,0 +1,4 @@
+instructions.configure = \
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/features/org.wso2.carbon.attachment.mgt.server_${feature.version}/conf/attach-mgt-conf.properties,target:${installFolder}/../conf/attach-mgt-conf.properties,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/features/org.wso2.carbon.attachment.mgt.server_${feature.version}/conf/attachmentdb.h2.db,target:${installFolder}/../database/attachmentdb.h2.db,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/features/org.wso2.carbon.attachment.mgt.server_${feature.version}/conf);

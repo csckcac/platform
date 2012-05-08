@@ -1,89 +1,97 @@
 <% jagg.template("breadcumb", function(inputs, outputs, jagg) { %>
             <%
                 var reqUrl = request.getRequestURI();
-                var listUrl=jagg.getMappedUrl("/site/pages/index.jag");
-                var infoUrl=jagg.getMappedUrl("/site/pages/item-info.jag");
-                var addUrl=jagg.getMappedUrl("/site/pages/add.jag");
-                var subsUrl=jagg.getMappedUrl("/site/pages/subscriptions.jag");
-                var userUrl=jagg.getMappedUrl("/site/pages/user.jag");
-                var statsUrl=jagg.getMappedUrl("/site/pages/statistics.jag");
+                var listUrl=jagg.getAbsoluteUrl("/site/pages/index.jag");
+                var listMappedUrl=jagg.getMappedUrl("/site/pages/index.jag");
+                var infoUrl=jagg.getAbsoluteUrl("/site/pages/item-info.jag");
+                var infoMappedUrl=jagg.getMappedUrl("/site/pages/item-info.jag");
+                var addUrl=jagg.getAbsoluteUrl("/site/pages/add.jag");
+                var addMappedUrl=jagg.getMappedUrl("/site/pages/add.jag");
+                var subsUrl=jagg.getAbsoluteUrl("/site/pages/subscriptions.jag");
+                var subsMappedUrl=jagg.getMappedUrl("/site/pages/subscriptions.jag");
+                var userUrl=jagg.getAbsoluteUrl("/site/pages/user.jag");
+                var userMappedUrl=jagg.getMappedUrl("/site/pages/user.jag");
+                var statsUrl=jagg.getAbsoluteUrl("/site/pages/statistics.jag");
+                var statsMappedUrl=jagg.getMappedUrl("/site/pages/statistics.jag");
             %>
             <ul class="breadcrumb">
-                <% if(reqUrl.indexOf(listUrl)>=0){%>
+                <% if(reqUrl.indexOf(listUrl)>=0 ||reqUrl.indexOf(listMappedUrl)>=0){%>
                     <li>
                     APIs <span class="divider">/</span>
                     </li>
                     <li>
-                        <a href="<%=listUrl%>">My APIs</a>
+                        <a href="<%=listMappedUrl%>">My APIs</a>
                     </li>
                 <% } %>
-                <% if(reqUrl.indexOf(infoUrl)>=0){%>
+                <% if(reqUrl.indexOf(infoUrl)>=0||reqUrl.indexOf(infoMappedUrl)>=0){%>
                 <li>
                     APIs <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="<%=listUrl%>">My APIs</a>
+                    <a href="<%=listMappedUrl%>">My APIs</a>
                 </li>
                 <li>
                     <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="?place=api-details&name=<%=request.getParameter("name")%>&version=<%=request.getParameter("version")%>"><%=request.getParameter("name")%>-<%=request.getParameter("version")%></a>
+                    <a href="<%=infoMappedUrl%>&name=<%=request.getParameter("name")%>&version=<%=request.getParameter("version")%>"><%=request.getParameter("name")%>-<%=request.getParameter("version")%></a>
                 </li>
                 <% } %>
 
 
-                <% if(reqUrl.indexOf(addUrl)>=0){%>
+                <% if(reqUrl.indexOf(addUrl)>=0||reqUrl.indexOf(addMappedUrl)>=0){%>
                 <li>
                     APIs <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="<%=listUrl%>">My APIs</a>
+                    <a href="<%=listMappedUrl%>">My APIs</a>
                 </li>
                 <li>
                     <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="<%=addUrl%>">Add New API</a>
+                    <a href="<%=addMappedUrl%>">Add New API</a>
                 </li>
                 <% } %>
 
 
 
-                <% if(reqUrl.indexOf(userUrl)>=0){%>
+                <% if(reqUrl.indexOf(userUrl)>=0||reqUrl.indexOf(userMappedUrl)>=0){%>
                 <li>
                     Manage <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="<%=subsUrl%>">Users-Keys</a>
+                    <a href="<%=subsMappedUrl%>">Users-Keys</a>
                 </li>
                 <li>
                     <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="<%=userUrl%>">User - <%=request.getParameter("uname")%></a>
+                    <a href="<%=userMappedUrl%>">User - <%=request.getParameter("uname")%></a>
                 </li>
                 <% } %>
 
 
-                <% if(reqUrl.indexOf(subsUrl)>=0){%>
+                <% if(reqUrl.indexOf(subsUrl)>=0||reqUrl.indexOf(subsMappedUrl)>=0){%>
                 <li>
                     Manage <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="<%=subsUrl%>">Users-Keys</a>
+                    <a href="<%=subsMappedUrl%>">Users-Keys</a>
                 </li>
                 <% } %>
 
 
-                <% if(reqUrl.indexOf(statsUrl)>=0){%>
+                <% if(reqUrl.indexOf(statsUrl)>=0||reqUrl.indexOf(statsMappedUrl)>=0){%>
                 <li>
                     Statistics <span class="divider">/</span>
                 </li>
                 <li>
-                    <a href="<%=statsUrl%>">All</a>
+                    <a href="<%=statsMappedUrl%>">All</a>
                 </li>
                 <% } %>
             </ul>
+
+
 
 <% }); %>

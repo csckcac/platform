@@ -1,21 +1,28 @@
 <% jagg.template("menu/left", function(inputs, outputs, jagg) { %>
-<% var reqUrl=request.getRequestURI();
-var listUrl=jagg.getMappedUrl("/site/pages/index.jag");
-var addUrl=jagg.getMappedUrl("/site/pages/add.jag");
-var subsUrl=jagg.getMappedUrl("/site/pages/subscriptions.jag");
-var userUrl=jagg.getMappedUrl("/site/pages/user.jag");
-var statsUrl=jagg.getMappedUrl("/site/pages/statistics.jag");
+<%  var reqUrl = request.getRequestURI();
+    var listUrl=jagg.getAbsoluteUrl("/site/pages/index.jag");
+    var listMappedUrl=jagg.getMappedUrl("/site/pages/index.jag");
+    var infoUrl=jagg.getAbsoluteUrl("/site/pages/item-info.jag");
+    var infoMappedUrl=jagg.getMappedUrl("/site/pages/item-info.jag");
+    var addUrl=jagg.getAbsoluteUrl("/site/pages/add.jag");
+    var addMappedUrl=jagg.getMappedUrl("/site/pages/add.jag");
+    var subsUrl=jagg.getAbsoluteUrl("/site/pages/subscriptions.jag");
+    var subsMappedUrl=jagg.getMappedUrl("/site/pages/subscriptions.jag");
+    var userUrl=jagg.getAbsoluteUrl("/site/pages/user.jag");
+    var userMappedUrl=jagg.getMappedUrl("/site/pages/user.jag");
+    var statsUrl=jagg.getAbsoluteUrl("/site/pages/statistics.jag");
+    var statsMappedUrl=jagg.getMappedUrl("/site/pages/statistics.jag");
 %>
 
 <div class="sidebar-nav well">
     <ul class="nav nav-list">
        <li class="nav-header">APIs</li>
-        <li <% if(reqUrl.indexOf(listUrl)>=0){%>class="active"<% } %>><a href="<%=listUrl%>">Browse</a></li>
-        <li <% if(reqUrl.indexOf(addUrl)>=0){%>class="active"<% } %>><a href="<%=addUrl%>">Add</a></li>
+        <li <% if(reqUrl.indexOf(listUrl)>=0 || reqUrl.indexOf(listMappedUrl)>=0||reqUrl.indexOf(infoUrl)>=0 || reqUrl.indexOf(infoMappedUrl)>=0){%>class="active"<% } %>><a href="<%=listMappedUrl%>">Browse</a></li>
+        <li <% if(reqUrl.indexOf(addUrl)>=0 || reqUrl.indexOf(addMappedUrl)>=0){%>class="active"<% } %>><a href="<%=addMappedUrl%>">Add</a></li>
         <li class="nav-header">Manage</li>
-        <li <% if(reqUrl.indexOf(subsUrl)>=0|| request.getRequestURI().indexOf(userUrl)>=0){%>class="active"<% } %>><a href="<%=subsUrl%>">Users/Keys</a></li>
+        <li <% if(reqUrl.indexOf(subsUrl)>=0|| reqUrl.indexOf(userUrl)>=0||reqUrl.indexOf(userMappedUrl)>=0||reqUrl.indexOf(subsMappedUrl)>=0){%>class="active"<% } %>><a href="<%=subsMappedUrl%>">Users/Keys</a></li>
         <li class="nav-header">Statistics</li>
-        <li <% if(reqUrl.indexOf(statsUrl)>=0){%>class="active"<% } %>><a href="<%=statsUrl%>">My APIs</a></li>
+        <li <% if(reqUrl.indexOf(statsUrl)>=0||reqUrl.indexOf(statsMappedUrl)>=0){%>class="active"<% } %>><a href="<%=statsMappedUrl%>">My APIs</a></li>
     </ul>
 </div>
 

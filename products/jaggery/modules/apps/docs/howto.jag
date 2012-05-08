@@ -15,8 +15,16 @@
     <link href="css/bootstrap.css" rel="stylesheet">
     <style type="text/css">
         body {
-            padding-top: 60px;
+            margin-top: 60px;
         }
+		 h2, h3 { margin-top:20px; }
+		
+		.toc li { margin-top:5px; list-style:square;}
+		
+		.toc li a { text-decoration:underline }
+		
+		.navilink { display:none !important; }
+		
     </style>
     <link href="css/prettify.css" rel="stylesheet">
     <!-- Le fav and touch icons -->
@@ -36,16 +44,38 @@ include('/includes/topnavi.jag');
 
 <div class="container">
 
-    <!-- Main hero unit for a primary marketing message or call to action -->
+<div class="row" style="margin-bottom:20px;margin-top:10px; border-bottom:1px solid #ccc;">
+	<div class="span-two-thirds">
+		<h3>Table of Contents</h2>
+		<ul class="toc">
+			<li><a href="#settingup">Setting up Jaggery</a></li>
+			<li><a href="#deploying">How To Deploy A Jaggery App</a></li>
+			<li><a href="#helloworld">The "Hello World" Jaggery App</a></li>
+			<li><a href="#jaggeryserver">Jaggery Server</a></li>
+			<li><a href="#commandline">Jaggery Command Line Client</a></li>
+			<li><a href="#commands">The List Of Commands</a></li>
+			<li><a href="#shell">The Shell Mode</a></li>
+		</ul>
+	</div>
+	
+<span id="settingup"></span>
+	<div class="span-one-third" id="pageLinks">
+		<img src="images/jaglogo.png" style="margin-top:20px; margin-bottom:10px;" align="right" />
+		<p align="right">The Delicious Javascript Framework. - How to set it up and how to get started.</p>
+            <p align="right" style="margin-top:20px;">
+                <a class="btn success large" href="http://dist.wso2.org/products/jaggery/dl/jaggery-1.0.0-SNAPSHOT_M4.zip">Download Jaggery (M4) </a>
+            </p>
+        </div>
+</div>
+
 
     <div class="row">
-        <div class="span-two-thirds">
-            <div class="page-header">
+        <div class="span16">
                 <h2>
                     Setting up Jaggery
                 </h2>
-            </div>
 
+<span id="deploying"></span>
             <ol>
                 <li>Extract <code>jaggery-1.0.0-SNAPSHOT_M4.zip</code></li>
                 <li>The bin folder will contain all the Jaggery execution scripts.</li>
@@ -53,16 +83,14 @@ include('/includes/topnavi.jag');
             </ol>
 
         </div>
-        <div class="span-one-third">
-            <p align="right">
-                <a class="btn success large" href="http://dist.wso2.org/products/jaggery/dl/jaggery-1.0.0-SNAPSHOT_M4.zip">Download Jaggery (M4) </a>
-            </p>
-        </div>
+      
     </div>
+			
     <div class="row">
         <div class="span16">
             <h2>How To Deploy A Jaggery App</h2>
 
+<span id="helloworld"></span>
             <p>In-order to compose a Jaggery script you will need to give it a <code>.jag</code> extension.</p>
 
             <p>There are no restrictions for the directory structure, add your <code>.jag</code> files where ever you want, and copy the entire directory to <code>{JAGGERY_HOME}/repository/deployment/server/jaggeryapps/</code> The Jaggery Server
@@ -76,13 +104,13 @@ include('/includes/topnavi.jag');
     </div>
     <br/>
         <div class="row">
-        <div class="span-two-thirds">
+        <div class="span16">
             <div class="page-header">
-                <h2>
+                <h2 >
                     The "Hello World" Jaggery App
                 </h2>
             </div>
-
+<span id="jaggeryserver"></span>
             <ol>
                 <li>Create a directory called helloapp at <code><code>{JAGGERY_HOME}/repository/deployment/server/jaggeryapps/</code></code></li>
                 <li>Create a jaggery file <code>helloworld.jag</code> inside the helloapp directory and add the following code snippet</li>
@@ -100,13 +128,12 @@ include('/includes/topnavi.jag');
     </div>
     <br/>
 	<div class="row">
-	    <div class="span-two-thirds">
+	    <div class="span16">
 	        <div class="page-header">
 	            <h2>
 	                Jaggery Server
 	            </h2>
 	        </div>
-	
 	        <p>
 	            Jaggery Server is the Runtime Environment that hosts Jaggery applications.
 	            <br/>  <br/>
@@ -118,42 +145,46 @@ include('/includes/topnavi.jag');
 	            <br/> <br/>
 	            Management console can be accessed by <code>{https://localhost:9443/carbon}</code>
 	        </p>
+			<span id="commandline"></span>
+	
 	        <img alt="Jaggery Management Console" src="images/j-mgt-console.png"/>
 	
 	    </div>
 	</div>
     <br/>
     <div class="row">
-        <div class="span-two-thirds">
+        <div class="span16">
             <div class="page-header">
                 <h2>
                     Jaggery Command Line Client
                 </h2>
             </div>
-
             <p>
                 The Jaggery command line client ships with the Jaggery server and can be executed at bin/jaggery.bat or bin/jaggery.sh
                 based on your platform. Using this it is possible to enter into the command line console.
             </p>
 
             <p>Jaggery CMD is still experimental, and is for developer preview. You are welcome to play with it and please do provide us your <a href="https://wso2.org/jira/browse/JAGGERY">feedback</a></p>
-            <img alt="Jaggery Command Line" src="images/commandline.png"/>
+            
+<span id="commands"></span>
+			<img alt="Jaggery Command Line" src="images/commandline.png"/>
         </div>
     </div>
     <br/>
     <div class="row">
-        <div class="span-two-thirds">
+        <div class="span16">
             <div class="page-header">
                 <h2>
                     The List Of Commands
                 </h2>
             </div>
+			
             <p><code>&lt;script.jag&gt;</code> - Load Jaggery script (script.jag) from the current path.
             <br/><br/><code>Eg :- sh jaggery.sh script.jag</code></p>
 
             <br/>
             <img alt="Jaggery Commands" src="images/load.png"/>
-
+<span id="shell"></span>
             <p><code>-help</code> &#150 Shows all the commands for help.</p>
 
             <p><code>-quit</code> &#150 Quits the Jaggery command line (Only applicable for shell mode).</p>
@@ -165,9 +196,9 @@ include('/includes/topnavi.jag');
     </div>
     <br/>
     <div class="row">
-    <div class="span-two-thirds">
+    <div class="span16">
         <div class="page-header">
-            <h2>
+            <h2 id="shell">
                 The Shell Mode
             </h2>
         </div>
@@ -193,13 +224,12 @@ include('/includes/topnavi.jag');
 
 </div>
 <!-- /container -->
-<script src="js/google-code-prettify/prettify.js"></script>
-<script src="js/jquery-1.7.1.min.js"></script>
-<script>
-    $(function () {
-        prettyPrint();
-    })
+<%
+include('/includes/scripts.jag')
+%>
 
+<script>
+   
     $(document).ready(function () {
         $('#howto').toggleClass('active')
     })

@@ -54,6 +54,7 @@
         String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
 
         String taskId = request.getParameter("taskId");
+        String taskClient = request.getParameter("taskClient");
         TTaskAuthorisationParams authParams = null;
 
         HumanTaskClientAPIServiceClient taskAPIClient;
@@ -162,7 +163,7 @@
                 <div id="attachmnetUploadTable">
                     <form id="attachment_upload_form" method="post" name="attachmentUpload" action="../../fileupload/attachment-mgt"
                       enctype="multipart/form-data" target="_self">
-                        <input type="hidden" id="uRedirect" name="redirect" value="humantask/task_list.jsp"/>
+                        <input type="hidden" id="uRedirect" name="redirect" value="humantask/basic_task_view.jsp?taskClient=<%=taskClient%>&taskId=<%=taskId%>"/>
                         <input type="hidden" id="taskId" name="taskId" value="<%=taskId%>"/>
                     <table>
                         <tbody>

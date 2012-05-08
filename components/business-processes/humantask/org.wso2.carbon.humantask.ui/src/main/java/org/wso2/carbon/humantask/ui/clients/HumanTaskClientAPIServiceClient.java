@@ -127,7 +127,7 @@ public class HumanTaskClientAPIServiceClient {
                                                                             IllegalOperationFault,
                                                                             IllegalArgumentFault,
                                                                             IllegalAccessFault, URI.MalformedURIException {
-        String errorMsg = "Error occurred while performing addAttachment operation";
+        String errorMsg = "Error occurred while performing addAttachment operation.";
         try {
             log.warn("Some of the attributes(like accessType) defined in the Service WSDLs are ignored and nulls are " +
                      "passed from to the service call");
@@ -148,6 +148,7 @@ public class HumanTaskClientAPIServiceClient {
             log.error(errorMsg, e);
             throw e;
         } catch (URI.MalformedURIException e) {
+            String errorMessage = errorMsg + " TaskId: \"" + taskID + "\"";
             log.error(errorMsg, e);
             throw e;
         }

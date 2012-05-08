@@ -34,6 +34,7 @@ import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.registry.core.session.UserRegistry;
+import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.FileUtil;
 
@@ -46,7 +47,10 @@ import java.util.Properties;
  * @scr.component name="org.wso2.apimgt.impl.services" immediate="true"
  * @scr.reference name="registry.service"
  * interface="org.wso2.carbon.registry.core.service.RegistryService"
- * cardinality="1..1" policy="dynamic"  bind="setRegistryService" unbind="unsetRegistryService"
+ * cardinality="1..1" policy="dynamic" bind="setRegistryService" unbind="unsetRegistryService"
+ * @scr.reference name="user.realm.service"
+ * interface="org.wso2.carbon.user.core.service.RealmService"
+ * cardinality="1..1" policy="dynamic" bind="setRealmService" unbind="unsetRealmService"
  */
 public class APIManagerComponent {
 
@@ -94,13 +98,15 @@ public class APIManagerComponent {
         ServiceReferenceHolder.getInstance().setRegistryService(null);
     }
 
-    public static RegistryService getRegistryService() throws RegistryException {
-        RegistryService registryService = ServiceReferenceHolder.getInstance().getRegistryService();
-        if (registryService == null) {
-            log.error("Failed to get RegistryService");
-            throw new RegistryException("Registry Service instance null");
+    protected void setRealmService(RealmService realmService) {
+        if (realmService != null && log.isDebugEnabled()) {
+            log.debug("Realm service initialized");
         }
-        return registryService;
+        ServiceReferenceHolder.getInstance().setRealmService(realmService);
+    }
+
+    protected void unsetRealmService(RealmService realmService) {
+        ServiceReferenceHolder.getInstance().setRealmService(null);
     }
 
     private static void addRxtConfigs() throws APIManagementException {

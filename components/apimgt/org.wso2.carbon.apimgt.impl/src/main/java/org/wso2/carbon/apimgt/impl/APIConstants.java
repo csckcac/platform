@@ -117,5 +117,11 @@ public final class APIConstants {
 
     public static final String RXT_MEDIA_TYPE = "application/vnd.wso2.registry-ext-type+xml";
     public static final int TOP_TATE_MARGIN = 4;
+    
+    public static final class Permissions {
+        public static final String API_CREATE = "/permission/admin/manage/api/creation";
+        public static final String API_PUBLISH = "/permission/admin/manage/api/publishing";
+        public static final String API_SUBSCRIBE = "/permission/admin/manage/api/subscription";
+    }
 
 }

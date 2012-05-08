@@ -1,7 +1,7 @@
 <%
 jagg.initializer("item-nav-list", {
 
-    initialize:function () {
+   preInitialize:function () {
     }
 });
 %>

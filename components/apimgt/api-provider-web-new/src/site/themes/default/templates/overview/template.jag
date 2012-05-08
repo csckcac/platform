@@ -2,28 +2,12 @@
 <% var api=outputs.api; %>
 <div class="row-fluid">
     <div class="span2">
-        <ul class="nav">
-            <li><div class="api-thumb"><img src="<%=api.thumb%>" alt=""/></div></li>
-            <!--li><span id="version"><i class="icon-pencil"></i><%=api.version%></span></li>
-            <li><span id="status"><i class="icon-th"></i><%=api.status%></span></li-->
-        </ul>
+         <% jagg.includeBlock("item-nav-list",{api:api}); %>
     </div>
     <div class="span6">
         <div class="well" id="apiView"><%=api.description%></div>
         <table class="table table-bordered">
             <tbody>
-            <tr>
-                <td><strong>API Name</strong></td>
-                <td id="api-name"><%=api.name%></td>
-            </tr>
-            <tr>
-                <td><strong>API Version</strong></td>
-                <td id="api-version"><%=api.version%></td>
-            </tr>
-            <tr>
-                <td><strong>Status</strong></td>
-                <td id="api-status"><%=api.status%></td>
-            </tr>
             <tr>
                 <td>Endpoint URL</td>
                 <td id="inUrl"><%=api.endpoint%></td>

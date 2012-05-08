@@ -1,33 +1,48 @@
 <% jagg.template("item-edit", function(inputs, outputs, jagg) { %>
+<% var api = outputs.api; log(api);%>
 <div class="row-fluid">
     <div class="span12">
-        <form class="form-horizontal well" id="editAPIForm" action="<%=site.context%>/core/apis/update.js" method="get"
-              enctype="multipart/form-data">
+        <form class="form-horizontal well" id="editAPIForm" action="<%=site.context%>/site/blocks/item-edit/ajax/item-edit.jag"
+                method="GET" enctype="multipart/form-data">
 
             <input type="hidden" name="action" id="action" value="updateAPI"/>
             <input type="hidden" name="apiName" id="apiName"/>
             <input type="hidden" name="version" id="version"/>
 
             <div class="control-group">
-                <label class="control-label" for="editDescription">Description:</label>
+                <label class="control-label" for="apiName">Name:<span class="requiredAstrix">*</span></label>
                 <div class="controls">
-                    <textarea class="input-xlarge" id="editDescription" rows="3"
-                              style="margin-left: 0px; margin-right: 0px; width: 501px; " name="description">
-                    </textarea>
+                    <input type="text" class="input-xlarge" validation="required" id="apiName" name="apiName" value="<%=api.name%>" <%=(api ? 'disabled="disabled" ' : '')%>autofocus="autofocus"/>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="version">Version:<span class="requiredAstrix">*</span></label>
+                <div class="controls">
+                    <input type="text" class="input" validation="versionNumber required" id="version" name="version" <%=(api ? 'disabled="disabled" ' : '')%>value="<%=api.version%>"/>
                 </div>
             </div>
 
             <div class="control-group">
                 <label class="control-label" for="context">Context:<span class="requiredAstrix">*</span></label>
                 <div class="controls">
-                    <input type="text" class="input-xlarge" id="context" name="context" validation="required" onChange="isContextExist()"/>
+                    <input type="text" class="input-xlarge" id="context" name="context" validation="required validContext" <%=(api ? 'disabled="disabled" ' : '')%>value="<%=api.context%>"/>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="editDescription">Description:</label>
+                <div class="controls">
+                    <textarea class="input-xlarge" id="editDescription" rows="3"
+                              style="margin-left: 0px; margin-right: 0px; width: 501px; " name="description"><%=api.description%>
+                    </textarea>
                 </div>
             </div>
 
             <div class="control-group">
                 <label class="control-label" for="imageUrl">Icon</label>
                 <div class="controls">
-                    <div><img id="apiEditThumb" alt=""/></div>
+                    <div><img id="apiEditThumb" alt="" src="<%=api.thumb%>"/></div>
                     <a onclick="javascript:$('#imageUrl').toggle('slow')">
                         <i class="icon-picture"></i> Change Icon
                     </a>
@@ -40,7 +55,7 @@
             <div class="control-group">
                 <label class="control-label" for="editEndpoint">Endpoint URL:</label>
                 <div class="controls">
-                    <input type="text" class="input-xlarge" id="editEndpoint" name="endpoint"/>
+                    <input type="text" class="input-xlarge" id="editEndpoint" name="endpoint" value="<%=api.endpoint%>"/>
                     <p class="help-block">Ex:http://appserver/services/echo</p>
                 </div>
             </div>
@@ -48,7 +63,7 @@
             <div class="control-group">
                 <label class="control-label" for="editWsdl">WSDL/WADL:</label>
                 <div class="controls">
-                    <input type="text" class="input-xlarge" id="editWsdl" name="wsdl">
+                    <input type="text" class="input-xlarge" id="editWsdl" name="wsdl" value="<%=api.wsdl%>">
                     <button class="btn" id="registryPicker" rel="tooltip" title="Pick From Registry" type="button"
                             data-toggle="modal" href="#myModal">..
                     </button>
@@ -59,7 +74,7 @@
             <div class="control-group">
                 <label class="control-label" for="editTags">Tags:</label>
                 <div class="controls">
-                    <input type="text" class="input-xlarge" id="editTags" name="tags"/>
+                    <input type="text" class="input-xlarge" id="editTags" name="tags" value="<%=api.tags%>"/>
                 </div>
             </div>
 
@@ -68,8 +83,8 @@
                 <label class="control-label" for="editTier">Tier Availability:</label>
                 <div class="controls">
                     <select id="editTier" name="tier">
-                        <option value="Gold">Gold</option>
-                        <option value="Silver">Silver</option>
+                        <option value="Gold"<%=(api.availableTiers == "Gold" ? ' selected="selected"' : '')%>>Gold</option>
+                        <option value="Silver"<%=(api.availableTiers == "Silver" ? ' selected="selected"' : '')%>>Silver</option>
                     </select>
                 </div>
             </div>
@@ -78,14 +93,14 @@
                 <label class="control-label" for="editStatus" name="state">State:</label>
                 <div class="controls">
                     <select id="editStatus" name="status">
-                        <option value="CREATED">CREATED</option>
-                        <option value="PUBLISHED">PUBLISHED</option>
-                        <option value="DEPRECATED">DEPRECATED</option>
-                        <option value="RETIRED">RETIRED</option>
-                        <option value="RETIRED">BLOCKED</option>
+                        <option value="CREATED"<%=(api.status == "CREATED" ? ' selected="selected"' : '')%>>CREATED</option>
+                        <option value="PUBLISHED"<%=(api.status == "PUBLISHED" ? ' selected="selected"' : '')%>>PUBLISHED</option>
+                        <option value="DEPRECATED"<%=(api.status == "DEPRECATED" ? ' selected="selected"' : '')%>>DEPRECATED</option>
+                        <option value="RETIRED"<%=(api.status == "RETIRED" ? ' selected="selected"' : '')%>>RETIRED</option>
+                        <option value="BLOCKED"<%=(api.status == "BLOCKED" ? ' selected="selected"' : '')%>>BLOCKED</option>
                     </select>
                     <div class="resourceTableDiv" id="resourceTableDiv">
-                        <table class="table table-bordered table-striped" id="resourceTable">
+                        <table class="table table-bordered table-striped" id="resource-table">
                             <thead>
                             <tr>
                                 <th>Resource URI Template</th>
@@ -95,12 +110,12 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr id="resourceRow">
+                            <tr id="uri-template-row">
                                 <td>
-                                    <input type="text" class="input" id="uriTemplate" name="resourceTemplate"/>
+                                    <input type="text" class="input resource-uri" name="resource-uri"/>
                                 </td>
                                 <td>
-                                    <select class="input-small" id="resourceMethod" name="resourceMethod">
+                                    <select class="input-small resource-method" name="resource-method">
                                         <option value="GET" selected="true">GET</option>
                                         <option value="PUT">PUT</option>
                                         <option value="POST">POST</option>
@@ -109,7 +124,7 @@
                                     </select>
                                 </td>
                                 <td id="buttons">
-                                    <a class="btn btn-primary" id="resourceAddBtn" onClick="updateResourcesToApi()">
+                                    <a class="btn btn-primary uri-template-button">
                                         <i class="icon-plus icon-white"></i> Add
                                     </a>
                                 </td>

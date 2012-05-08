@@ -103,3 +103,11 @@ table a{
     padding-top:10px;
 }
 
+#copy-api {
+    display: none;
+}
+
+.api-thumb {
+    margin-bottom: 5px;
+}
+

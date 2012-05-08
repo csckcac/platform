@@ -1,5 +1,6 @@
 <%
 jagg.block("item-info", {
+
     initializer:function (data) {
 
     },
@@ -9,6 +10,13 @@ jagg.block("item-info", {
             "api":null
         }
     },
+
+    getStaticBlocks:function() {
+        return [
+            "overview",
+            "item-edit"
+        ];
+    }
 
 });
 %>

@@ -1,17 +1,29 @@
 <% jagg.template("overview", function(inputs, outputs, jagg) { %>
-<%
-var api=outputs.api;
-%>
-
- <div class="row-fluid">
-     <div class="span2">
-          <% //jagg.includeBlock("item-nav-list", null); %>
+<% var api=outputs.api; %>
+<div class="row-fluid">
+    <div class="span2">
+        <ul class="nav">
+            <li><div class="api-thumb"><img src="<%=api.thumb%>" alt=""/></div></li>
+            <!--li><span id="version"><i class="icon-pencil"></i><%=api.version%></span></li>
+            <li><span id="status"><i class="icon-th"></i><%=api.status%></span></li-->
+        </ul>
     </div>
     <div class="span6">
-        <div class="well" id="apiView">
-        </div>
+        <div class="well" id="apiView"><%=api.description%></div>
         <table class="table table-bordered">
             <tbody>
+            <tr>
+                <td><strong>API Name</strong></td>
+                <td id="api-name"><%=api.name%></td>
+            </tr>
+            <tr>
+                <td><strong>API Version</strong></td>
+                <td id="api-version"><%=api.version%></td>
+            </tr>
+            <tr>
+                <td><strong>Status</strong></td>
+                <td id="api-status"><%=api.status%></td>
+            </tr>
             <tr>
                 <td>Endpoint URL</td>
                 <td id="inUrl"><%=api.endpoint%></td>
@@ -39,14 +51,16 @@ var api=outputs.api;
 <!-- Row -->
 
 <div class="row-fluid">
-    <form class="well" id="copyToVersion" style="display:none">
+    <div class="well" id="copy-api">
         <label>To Version</label>
-        <input type="text" class="span3" id="newVersion"> <span class="help-inline">Ex:v1.0.1</span>
-        <div><button type="button" class="btn btn-primary" onclick="copyAPIToNewVersion()">Done</button>
-            <button type="button" class="btn" onclick="javascript:$('#copyToVersion').toggle('slow');$('#copyButtonContainer').toggle()">Cancel</button></div>
-      </form>
-    <div class="form-actions" id="copyButtonContainer">
-        <button type="submit" class="btn" onclick="javascript:$('#copyToVersion').toggle('slow');$('#copyButtonContainer').toggle()">Copy</button>
+        <input type="text" class="span3" id="new-version"><span class="help-inline">Ex:v1.0.1</span>
+        <div class="copy-buttons">
+            <button type="button" class="btn btn-primary copy-button">Done</button>
+            <button type="button" class="btn cancel-button">Cancel</button>
+        </div>
+    </div>
+    <div id="show-copy-api" class="form-actions" >
+        <button type="submit" class="btn">Copy</button>
     </div>
 </div>
 

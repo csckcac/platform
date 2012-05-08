@@ -1,8 +1,8 @@
 <%
 jagg.initializer("item-edit", {
 
-    initialize:function () {
-    jagg.addHeaderJS("item-edit", "jagg", "templates/item-edit/js/edit.js");
+    preInitialize:function () {
+        jagg.addHeaderJS("item-edit", "item-edit", "templates/item-edit/js/item-edit.js");
     }
 });
 %>

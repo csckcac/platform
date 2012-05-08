@@ -76,7 +76,7 @@ public class UndeploymentTestCase {
     }
 
 
-    @Test(groups = {"wso2.bps", "e"}, dependsOnGroups = "d", description = "Undeployment test")
+    @Test(groups = {"wso2.bps", "e"}, dependsOnGroups = "d", description = "UnDeployment test")
     public void UndeploymentTestService() throws Exception {
 
         undeploy("HelloWorld2", bpelPackageManagementServiceStub);
@@ -97,14 +97,16 @@ public class UndeploymentTestCase {
                 listDeployedPackagesPaginated(0);
 
         boolean packageUndeployed = true;
-        for (Package_type0 bpelPackage : deployedPackages.get_package()) {
-            log.info(bpelPackage.getName());
-            if (bpelPackage.getName().equals(packageName)) {
-                log.info(packageName + " has undeployed successfully");
-                packageUndeployed = false;
+        if (deployedPackages.get_package() != null) {
+            for (Package_type0 bpelPackage : deployedPackages.get_package()) {
+                log.info(bpelPackage.getName());
+                if (bpelPackage.getName().equals(packageName)) {
+                    log.info(packageName + " has un-deployed successfully");
+                    packageUndeployed = false;
+                }
             }
         }
-        assertFalse(!packageUndeployed, packageName + " undeplyment failed");
+        assertFalse(!packageUndeployed, packageName + " un-deployment failed");
 
     }
 

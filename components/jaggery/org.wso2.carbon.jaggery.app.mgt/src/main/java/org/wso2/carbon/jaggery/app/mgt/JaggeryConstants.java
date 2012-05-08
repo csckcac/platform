@@ -21,6 +21,7 @@ package org.wso2.carbon.jaggery.app.mgt;
 public final class JaggeryConstants {
     public static final String WEBAPP_PREFIX = "jaggeryapps";
     public static final String WEBAPP_DEPLOYMENT_FOLDER = "jaggeryapps";
+    public static final String WEBAPP_DEPLOYMENT_FOLDER_IN_JAGGERY = "apps";
     public static final String WEBAPP_EXTENSION = "zip";
     public static final String JAGGERY_SERVLET_NAME = "JaggeryServlet";
     public static final String JAGGERY_SERVLET_CLASS =

@@ -44,9 +44,9 @@ public class JaggeryAppAdmin extends AbstractAdmin {
 
     private static final int BYTE_BUFFER_SIZE = 8192;
 
-	private static final Log log = LogFactory.getLog(
+    private static final Log log = LogFactory.getLog(
             org.wso2.carbon.jaggery.app.mgt.JaggeryAppAdmin.class);
-    
+
     public JaggeryAppAdmin() {
     }
 
@@ -599,8 +599,13 @@ public class JaggeryAppAdmin extends AbstractAdmin {
 
         AxisConfiguration axisConfig = getAxisConfig();
         String repoPath = axisConfig.getRepository().getPath();
-        File webappsDir = new File(repoPath + File.separator +
-                JaggeryConstants.WEBAPP_DEPLOYMENT_FOLDER);
+        String jaggeryAppsPath = repoPath + File.separator +
+                JaggeryConstants.WEBAPP_DEPLOYMENT_FOLDER;
+        if (!repoPath.endsWith("/deployment/server/")) {
+            jaggeryAppsPath = repoPath + File.separator +
+                    JaggeryConstants.WEBAPP_DEPLOYMENT_FOLDER_IN_JAGGERY;
+        }
+        File webappsDir = new File(jaggeryAppsPath);
         if (!webappsDir.exists() && !webappsDir.mkdirs()) {
             log.warn("Could not create directory " + webappsDir.getAbsolutePath());
         }
@@ -633,10 +638,16 @@ public class JaggeryAppAdmin extends AbstractAdmin {
      * @return the corresponding data handler of the .war that needs to be downloaded
      */
     public DataHandler downloadWarFileHandler(String fileName) {
-        String repoPath = getAxisConfig().getRepository().getPath() +
-                JaggeryConstants.WEBAPP_DEPLOYMENT_FOLDER + File.separator + fileName;
 
-        File webAppFile = new File(repoPath);
+        String repoPath = getAxisConfig().getRepository().getPath();
+        String jaggeryAppsPath = repoPath + File.separator +
+                JaggeryConstants.WEBAPP_DEPLOYMENT_FOLDER + File.separator + fileName;
+        if (!repoPath.endsWith("/deployment/server/")) {
+            jaggeryAppsPath = repoPath + File.separator +
+                    JaggeryConstants.WEBAPP_DEPLOYMENT_FOLDER_IN_JAGGERY + File.separator + fileName;
+        }
+
+        File webAppFile = new File(jaggeryAppsPath);
         DataHandler handler = null;
 
         if (webAppFile.isDirectory()) {
@@ -652,8 +663,8 @@ public class JaggeryAppAdmin extends AbstractAdmin {
                 }
             }
         } else {
-        	FileDataSource datasource = new FileDataSource(new File(repoPath));
-        	handler = new DataHandler(datasource);
+            FileDataSource datasource = new FileDataSource(new File(repoPath));
+            handler = new DataHandler(datasource);
         }
         return handler;
     }
@@ -661,24 +672,24 @@ public class JaggeryAppAdmin extends AbstractAdmin {
     private static void zipDirectory(File directory, File zip) throws IOException {
         ZipOutputStream zos = null;
         try {
-	        zos = new ZipOutputStream(new FileOutputStream(zip));
-	        zip(directory, directory, zos);
+            zos = new ZipOutputStream(new FileOutputStream(zip));
+            zip(directory, directory, zos);
         } catch (Exception e) {
-        	log.error("Error zipping directory " + directory.getName() + " " + zip.getName(), e);
-        	
+            log.error("Error zipping directory " + directory.getName() + " " + zip.getName(), e);
+
         } finally {
-        	try {
-        		if (zos != null) {
-        			zos.close();
-        		}
-        	} catch (Exception e) {
-        		log.error("Error closing output stream ", e);
-        	}
+            try {
+                if (zos != null) {
+                    zos.close();
+                }
+            } catch (Exception e) {
+                log.error("Error closing output stream ", e);
+            }
         }
     }
 
     private static void zip(File directory, File base,
-                                  ZipOutputStream zos)  {
+                            ZipOutputStream zos) {
         File[] files = directory.listFiles();
         byte[] buffer = new byte[BYTE_BUFFER_SIZE];
         int read = 0;
@@ -686,40 +697,40 @@ public class JaggeryAppAdmin extends AbstractAdmin {
             if (files[i].isDirectory()) {
                 zip(files[i], base, zos);
             } else {
-                FileInputStream in = null; 
-               try {
-	                in = new FileInputStream(files[i]);
-	                ZipEntry entry = new ZipEntry(files[i].getPath().substring(
-	                        base.getPath().length() + 1));
-	                zos.putNextEntry(entry);
-	                while (-1 != (read = in.read(buffer))) {
-	                    zos.write(buffer, 0, read);
-	                }
+                FileInputStream in = null;
+                try {
+                    in = new FileInputStream(files[i]);
+                    ZipEntry entry = new ZipEntry(files[i].getPath().substring(
+                            base.getPath().length() + 1));
+                    zos.putNextEntry(entry);
+                    while (-1 != (read = in.read(buffer))) {
+                        zos.write(buffer, 0, read);
+                    }
                 } catch (IOException e) {
-                	log.error("Error zipping file " + files[i].getName(), e);
-                	
-                } finally { 
-                	try { 
-                		if (in != null) { 
-                			in.close();
-                		} 
-                	} catch(IOException e) {
-                			log.error("Error closing input stream ", e);
-                	}
+                    log.error("Error zipping file " + files[i].getName(), e);
+
+                } finally {
+                    try {
+                        if (in != null) {
+                            in.close();
+                        }
+                    } catch (IOException e) {
+                        log.error("Error closing input stream ", e);
+                    }
                 }
             }
         }
     }
 
     private static void unZip(InputStream is, String destDir) {
-    	BufferedOutputStream dest = null;
+        BufferedOutputStream dest = null;
         try {
             File unzipDestinationDirectory = new File(destDir);
-            
+
             boolean created = unzipDestinationDirectory.mkdir();
             if (!created) {
-            	log.error("Could not create DIR : " + unzipDestinationDirectory.getAbsolutePath());
-            	return;
+                log.error("Could not create DIR : " + unzipDestinationDirectory.getAbsolutePath());
+                return;
             }
 
             ZipInputStream zis = new
@@ -730,8 +741,8 @@ public class JaggeryAppAdmin extends AbstractAdmin {
                     File entryDir = new File(unzipDestinationDirectory.getAbsolutePath() + File.separator + entry.getName());
                     created = entryDir.mkdir();
                     if (!created) {
-                    	log.error("Could not create DIR : " + unzipDestinationDirectory.getAbsolutePath() + 
-                    			File.separator + entry.getName());
+                        log.error("Could not create DIR : " + unzipDestinationDirectory.getAbsolutePath() +
+                                File.separator + entry.getName());
                     }
                 } else {
                     int count;
@@ -752,13 +763,13 @@ public class JaggeryAppAdmin extends AbstractAdmin {
         } catch (IOException e) {
             log.error("Could not unzip the Jaggery App Archive", e);
         } finally {
-        	try { 
-        		if (dest != null) {
-        			dest.close(); 
-        		}
-        	} catch(IOException e) {/* we can't do anything */
-        		
-        	}
+            try {
+                if (dest != null) {
+                    dest.close();
+                }
+            } catch (IOException e) {/* we can't do anything */
+
+            }
         }
     }
 

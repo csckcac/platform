@@ -273,6 +273,11 @@
             <fileMode>744</fileMode>
         </file>
 
+	<file>
+            <source>conf/attach-mgt-conf.properties</source>
+            <outputDirectory>wso2bps-${pom.version}/repository/conf</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
         <file>
             <source>conf/bps.xml</source>
             <outputDirectory>wso2bps-${pom.version}/repository/conf</outputDirectory>

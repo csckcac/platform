@@ -117,7 +117,6 @@
                                 <delete dir="src/main/resources"/>
                                 <delete dir="src/main"/>
                                 <delete dir="src"/>
-				<delete file="resources/conf/attachmentdb.h2.db"/>
                             </tasks>
                         </configuration>
                         <goals>

@@ -257,7 +257,7 @@ public abstract class SubscriptionImpl implements Subscription, FlowCreditManage
             synchronized (getChannel()) {
 
                 deliveryTag = getChannel().getNextDeliveryTag();
-            }
+
             try {
                 recordMessageDelivery(entry, deliveryTag);
 
@@ -265,18 +265,12 @@ public abstract class SubscriptionImpl implements Subscription, FlowCreditManage
                         getSubscriptionManager().getAcknowledgementHandlerMap().get(getChannel());
 
                 if (ackHandler == null) {
-                    synchronized (getChannel()) {
-                        if (ClusterResourceHolder.getInstance().
-                                getSubscriptionManager().getAcknowledgementHandlerMap().get(getChannel()) == null) {
-                            QueueSubscriptionAcknowledgementHandler handler =
-                                    new QueueSubscriptionAcknowledgementHandler(ClusterResourceHolder.getInstance().
-                                            getCassandraMessageStore(), entry.getQueue().getResourceName());
-                            ClusterResourceHolder.getInstance().
-                                    getSubscriptionManager().getAcknowledgementHandlerMap().put(getChannel(), handler);
-                            ackHandler = handler;
-                        }
-                    }
-
+                    QueueSubscriptionAcknowledgementHandler handler =
+                            new QueueSubscriptionAcknowledgementHandler(ClusterResourceHolder.getInstance().
+                                    getCassandraMessageStore(), entry.getQueue().getResourceName());
+                    ClusterResourceHolder.getInstance().
+                            getSubscriptionManager().getAcknowledgementHandlerMap().put(getChannel(), handler);
+                    ackHandler = handler;
                 }
 
                 if (ackHandler.checkAndRegisterSent(deliveryTag, entry.getMessage().getMessageNumber(),
@@ -288,7 +282,7 @@ public abstract class SubscriptionImpl implements Subscription, FlowCreditManage
             } catch (Exception e) {
                 throw new AMQException(e.toString());
             }
-
+        }
 
         }
 

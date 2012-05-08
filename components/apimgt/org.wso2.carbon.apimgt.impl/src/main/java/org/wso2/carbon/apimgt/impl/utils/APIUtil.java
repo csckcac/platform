@@ -37,13 +37,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * This class contain the utility methods used for APIManagerImpl
+ * This class contains the utility methods used by the implementations of APIManager, APIProvider
+ * and APIConsumer interfaces.
  */
 public final class APIUtil {
-   private static Log log = LogFactory.getLog(APIUtil.class);
 
-    private APIUtil() {
-    }
+    private static final Log log = LogFactory.getLog(APIUtil.class);
 
     /**
      * This method used to get API from governance artifact
@@ -261,7 +260,7 @@ public final class APIUtil {
 
     /**
      * Utility method to get documentation path
-     * @param apiId   APIIdentifiern
+     * @param apiId   APIIdentifier
      * @return  Doc path
      */
     public static String getAPIDocPath(APIIdentifier apiId) {

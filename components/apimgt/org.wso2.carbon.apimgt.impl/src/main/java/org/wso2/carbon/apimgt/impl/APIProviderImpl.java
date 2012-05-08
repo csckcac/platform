@@ -19,7 +19,7 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import javax.xml.namespace.QName;
 import java.util.*;
 
-public class APIProviderImpl extends APIManagerImpl implements APIProvider {
+public class APIProviderImpl extends AbstractAPIManager implements APIProvider {
     
     public APIProviderImpl() throws APIManagementException {
         super();

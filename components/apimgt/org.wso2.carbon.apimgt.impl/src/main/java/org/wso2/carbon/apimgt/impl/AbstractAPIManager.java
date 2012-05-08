@@ -46,14 +46,14 @@ import java.util.*;
  * The basic abstract implementation of the core APIManager interface. This implementation uses
  * the governance system registry for storing APIs and related metadata.
  */
-public abstract class APIManagerImpl implements APIManager {
+public abstract class AbstractAPIManager implements APIManager {
     
     protected Log log = LogFactory.getLog(getClass());
     
     protected Registry registry;
     protected ApiMgtDAO apiMgtDAO;
 
-    public APIManagerImpl() throws APIManagementException {
+    public AbstractAPIManager() throws APIManagementException {
         apiMgtDAO = new ApiMgtDAO();
         try {
             this.registry = ServiceReferenceHolder.getInstance().

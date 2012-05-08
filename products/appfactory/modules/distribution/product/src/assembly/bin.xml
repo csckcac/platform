@@ -183,6 +183,12 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
+        <file>
+            <source>../../bpels/ProjectCreation/target/ProjectCreation.zip</source>
+            <outputDirectory>wso2appfactory-${pom.version}/repository/deployment/server/bpel</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
         <!-- Deploy the project management tool-->
         <file>
             <source>../../jaggery-apps/project-mgt/target/project-mgt.zip</source>

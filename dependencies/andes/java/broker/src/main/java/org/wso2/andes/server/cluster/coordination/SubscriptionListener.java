@@ -17,8 +17,19 @@
 */
 package org.wso2.andes.server.cluster.coordination;
 
+
+/**
+ * <code>SubscriptionListener</code> handles subscription change events
+ * This can be due to subscription addition in a node or subscription removal in a node
+ */
 public interface SubscriptionListener {
 
+    /**
+     * Handle the subscription change event.
+     *
+     * Note : Do not to any assumptions about number of times this get invoked = the number of subscription changes
+     * This can be changed in some scenarios
+     */
     public void subscriptionsChanged();
 
 }

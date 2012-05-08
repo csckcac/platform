@@ -33,10 +33,6 @@ public class SubscriptionCoordinationManagerImpl implements SubscriptionCoordina
 
     private static Log log = LogFactory.getLog(SubscriptionCoordinationManagerImpl.class);
 
-    private String zkHost;
-
-    private int zkPort;
-
 
     private ZooKeeperAgent zooKeeperAgent;
 
@@ -51,9 +47,9 @@ public class SubscriptionCoordinationManagerImpl implements SubscriptionCoordina
         try {
             ClusterConfiguration clusterConfiguration = ClusterResourceHolder.getInstance().getClusterConfiguration();
             if(clusterConfiguration.isClusteringEnabled()) {
-                this.zkHost = clusterConfiguration.getZookeeperHost();
-                this.zkPort = clusterConfiguration.getZookeeperPort();
-                this.zooKeeperAgent  = new ZooKeeperAgent(zkHost,zkPort);
+                String zkHost = clusterConfiguration.getZookeeperHost();
+                int zkPort = clusterConfiguration.getZookeeperPort();
+                this.zooKeeperAgent  = new ZooKeeperAgent(zkHost, zkPort);
                 this.zooKeeperAgent.initSubscriptionCoordination();
                 ZooKeeper zk = zooKeeperAgent.getZooKeeper();
                 this.subscriptionParentDataChangeListener = new SubscriptionParentDataChangeListener();
@@ -72,9 +68,27 @@ public class SubscriptionCoordinationManagerImpl implements SubscriptionCoordina
 
         log.debug("Notifying subscribers on Subscription changes ");
 
-        for(SubscriptionListener listener : subscriptionListeners) {
-            listener.subscriptionsChanged();
-        }
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                for (SubscriptionListener listener : subscriptionListeners) {
+
+                    try {
+                        listener.subscriptionsChanged();
+                    } catch (Exception e) {
+                        log.error("Error handling the subscription change " ,e);
+                    }
+                }
+            }
+        };
+
+
+        // Here we do not want to block the Thread which invoked this method.
+        // Since Subscription Listener may take long time time to handle the event
+        Thread t = new Thread(r);
+        t.setName(SubscriptionListener.class.getSimpleName());
+        t.start();
+
 
     }
 
@@ -100,7 +114,8 @@ public class SubscriptionCoordinationManagerImpl implements SubscriptionCoordina
 
        }
 
-       // Notify Local Listeners
+       // Notify Local Listeners    In this case Local node is notified twice
+       // but that is safe as zookeeper call might get lost
        notifySubscriptionChange();
 
     }

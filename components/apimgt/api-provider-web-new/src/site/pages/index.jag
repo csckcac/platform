@@ -6,7 +6,7 @@ var site = require("/site/conf/site.json");
 
   var apis, result, mod,user = jagg.getUser();
     if (!user) {
-        response.sendRedirect("login.jag");
+        response.sendRedirect(jagg.getAbsoluteUrl("/site/pages/login.jag"));
         return;
     }
     query = request.getParameter("query");

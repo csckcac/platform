@@ -6,7 +6,7 @@ var site = require("/site/conf/site.json");
     var subs, result, mod;
     var user = jagg.getUser();
     if (!user) {
-        response.sendRedirect("login.jag");
+        response.sendRedirect(jagg.getAbsoluteUrl("/site/pages/login.jag"));
         return;
     }
     mod = jagg.module("subscription");

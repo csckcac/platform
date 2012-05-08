@@ -1,0 +1,220 @@
+<%
+log = new Log(),
+apiProvider = jagg.module("greg").getAPIProviderObj(),
+user = jagg.getUser();
+
+//methods for usage monitoring
+function getProviderAPIVersionUsage(providerName, apiName, server) {
+    var usage = [];
+    var usageout = [];
+    try {
+        usage = apiProvider.getProviderAPIVersionUsage(providerName, apiName, server);
+        if (log.isDebugEnabled()) {
+            log.debug("getProviderAPIVersionUsage for : " + server);
+        }
+        for (var k = 0; k < usage.length; k++) {
+            var elem = {
+                version:usage[k].version,
+                count:usage[k].count
+            };
+            usageout.push(elem);
+        }
+        return {
+            error:false,
+            usage:usageout
+        };
+    } catch (e) {
+        log.error(e.message);
+        return {
+            error:e,
+            usage:null
+
+        };
+    }
+
+}
+
+function getProviderAPIVersionUserUsage(providerName, apiName, server) {
+    var usage = [];
+    var usageout = [];
+    try {
+        usage = apiProvider.getProviderAPIVersionUserUsage(providerName, apiName, server);
+        if (log.isDebugEnabled()) {
+            log.debug("getProviderAPIVersionUserUsage for : " + server);
+        }
+        for (var k = 0; k < usage.length; k++) {
+            var elem = {
+                version:usage[k].version,
+                user:usage[k].user,
+                count:usage[k].count
+            };
+            usageout.push(elem);
+        }
+        return {
+            error:false,
+            usage:usageout
+        };
+    } catch (e) {
+        log.error(e.message);
+        return {
+            error:e,
+            usage:null
+
+        };
+    }
+}
+
+function getProviderAPIUsage(providerName, server) {
+    var usage = [];
+    var usageout = [];
+    try {
+        usage = apiProvider.getProviderAPIUsage(providerName, server);
+        if (log.isDebugEnabled()) {
+            log.debug("getProviderAPIUsage for : " + server);
+        }
+        if (usage == null) {
+            return {
+                error:true
+            };
+
+        } else {
+            for (var k = 0; k < usage.length; k++) {
+                var elem = {
+                    apiName:usage[k].apiName,
+                    count:usage[k].count
+                };
+                usageout.push(elem);
+
+
+            }
+            return {
+                error:false,
+                usage:usageout
+            };
+        }
+    } catch (e) {
+        log.error(e.message);
+        return {
+            error:e,
+            usage:null
+
+        };
+    }
+}
+
+function getProviderAPIUserUsage(providerName, apiName, server) {
+    var usage = [];
+    var usageout = [];
+    try {
+        usage = apiProvider.getProviderAPIUserUsage(providerName, apiName, server);
+        if (log.isDebugEnabled()) {
+            log.debug("getProviderAPIUserUsage for : " + server);
+        }
+        if (usage == null) {
+            return {
+                error:true
+            };
+
+        } else {
+            for (var k = 0; k < usage.length; k++) {
+                var elem = {
+                    user:usage[k].user,
+                    count:usage[k].count
+                };
+                usageout.push(elem);
+
+
+            }
+            return {
+                error:false,
+                usage:usageout
+            };
+        }
+    } catch (e) {
+        log.error(e.message);
+        return {
+            error:e,
+            usage:null
+
+        };
+    }
+}
+
+function getProviderAPIVersionUserLastAccess(providerName, server) {
+    var usage = [];
+    var usageout = [];
+    try {
+        usage = apiProvider.getProviderAPIVersionUserLastAccess(providerName, server);
+        if (log.isDebugEnabled()) {
+            log.debug("getProviderAPIVersionUserLastAccess for : " + server);
+        }
+        if (usage == null) {
+            return {
+                error:true
+            };
+
+        } else {
+            for (var k = 0; k < usage.length; k++) {
+                var elem = {
+                    api_version:usage[k].api_version,
+                    user:usage[k].user,
+                    lastAccess:usage[k].lastAccess
+                };
+                usageout.push(elem);
+
+
+            }
+            return {
+                error:false,
+                usage:usageout
+            };
+        }
+    } catch (e) {
+        log.error(e.message);
+        return {
+            error:e,
+            usage:null
+
+        };
+    }
+}
+
+function getProviderAPIServiceTime(providerName, server) {
+    var usage = [];
+    var usageout = [];
+    try {
+        usage = apiProvider.getProviderAPIServiceTime(providerName, server);
+        if (log.isDebugEnabled()) {
+            log.debug("getProviderAPIServiceTime for : " + server);
+        }
+        if (usage == null) {
+            return {
+                error:true
+            };
+
+        } else {
+            for (var k = 0; k < usage.length; k++) {
+                var elem = {
+                    apiName:usage[k].apiName,
+                    serviceTime:usage[k].serviceTime
+                };
+                usageout.push(elem);
+
+
+            }
+            return {
+                error:false,
+                usage:usageout
+            };
+        }
+    } catch (e) {
+        log.error(e.message);
+        return {
+            error:e,
+            usage:null
+
+        };
+    }
+}
+
+%>

@@ -1,0 +1,17 @@
+<%
+jagg.module("statistics", {
+
+    getProviderAPIVersionUsage:function () {
+        return jagg.require(jagg.getModulesDir() + "statistics/usage.jag").getProviderAPIVersionUsage.apply(this, arguments);
+    },getProviderAPIVersionUserUsage:function () {
+        return jagg.require(jagg.getModulesDir() + "statistics/usage.jag").getProviderAPIVersionUserUsage.apply(this, arguments);
+    },getProviderAPIUsage:function () {
+        return jagg.require(jagg.getModulesDir() + "statistics/usage.jag").getProviderAPIUsage.apply(this, arguments);
+    },getProviderAPIVersionUserLastAccess:function () {
+        return jagg.require(jagg.getModulesDir() + "statistics/usage.jag").getProviderAPIVersionUserLastAccess.apply(this, arguments);
+    },getProviderAPIVersionUserLastAccess:function () {
+        return jagg.require(jagg.getModulesDir() + "statistics/usage.jag").getProviderAPIVersionUserLastAccess.apply(this, arguments);
+    }
+
+});
+%>

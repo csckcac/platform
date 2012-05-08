@@ -1,0 +1,9 @@
+<%
+jagg.initializer("documentation/inline-editor", {
+
+    preInitialize:function () {
+        jagg.addHeaderJS("documentation/inline-editor", "jagg", "templates/documentation/inline-editor/js/inline.js");
+    }
+
+});
+%>

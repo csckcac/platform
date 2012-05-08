@@ -1,0 +1,65 @@
+<%
+include("/jagg/jagg.jag");
+
+(function () {
+    var mod, obj, result, username,
+            action = request.getParameter("action"),
+            site = require("/site/conf/site.json"),
+            msg = require("/site/conf/ui-messages.jag");
+    if (action === "addDocumentation") {
+        mod = jagg.module("documentation");
+        var api= {};
+        var doc= {};
+        api.provider = jagg.getUser().username;
+        api.name = request.getParameter("apiName");
+        api.version = request.getParameter("version");
+        doc.name = request.getParameter("docName");
+        doc.type = request.getParameter("docType");
+        doc.sourceType = request.getParameter("sourceType");
+        doc.sourceUrl = request.getParameter("docUrl");
+        doc.summary = request.getParameter("summary");
+
+
+        result = mod.addDocumentation(api,doc);
+        if (result.error == "true") {
+            obj = {
+                error:result.error,
+                message:msg.error.backendError(action)
+            };
+        } else {
+            obj = {
+                error:false
+            }
+        }
+        print(obj);
+
+    }else if (action === "removeDocumentation") {
+        mod = jagg.module("documentation");
+        var api= {};
+        var doc= {};
+        api.provider = jagg.getUser().username;
+        api.name = request.getParameter("apiName");
+        api.version = request.getParameter("version");
+        doc.name = request.getParameter("docName");
+        doc.type = request.getParameter("docType");
+        result = mod.removeDocumentation(api,doc);
+        if (result.error == "true") {
+            obj = {
+                error:result.error,
+                message:msg.error.backendError(action)
+            };
+        } else {
+            obj = {
+                error:false
+            }
+        }
+        print(obj);
+
+    }else {
+        print({
+                  error:true,
+                  message:msg.error.invalidAction(action)
+              });
+    }
+}());
+%>

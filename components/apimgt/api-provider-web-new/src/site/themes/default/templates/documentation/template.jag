@@ -124,12 +124,12 @@
                     <td><a href="#"><%=user.username%></a></td>
                     <td><%=doc.lastUpdated%></td>
                     <td>
-                        <a href="javascript:updateDocumentation("<%=api.name%>","<%=api.version%>","<%=doc.docName%>","<%=doc.docType%>","<%=doc.summary%>","<%=doc.Url%>")">Update | </a>
+                        <a href="javascript:updateDocumentation('<%=api.name%>','<%=api.version%>','<%=doc.name%>','<%=doc.type%>','<%=doc.summary%>','<%=doc.sourceUrl%>')">Update | </a>
                         <% if(doc.sourceType == "INLINE") { %>
-                        <a href="javascript:editInlineContent("<%=api.name%>","<%=api.version%>","<%=doc.docName%>","<%=doc.docType%>","<%=doc.summary%>","<%=doc.Url%>")">Edit Content | </a>
+                        <a href="javascript:editInlineContent('<%=api.name%>','<%=api.version%>','<%=doc.name%>','<%=doc.type%>','<%=doc.summary%>','<%=doc.sourceUrl%>')">Edit Content | </a>
                         <% } %>
-                        <a href="javascript:removeDocumentation("<%=api.name%>","<%=api.version%>","<%=doc.docName%>","<%=doc.docType%>")">Delete | </a>
-                        <a href="javascript:copyDocumentation("<%=api.name%>","<%=api.version%>","<%=doc.docName%>","<%=doc.docType%>")">Copy</a>
+                        <a href="javascript:removeDocumentation('<%=api.name%>','<%=api.version%>','<%=doc.name%>','<%=doc.type%>')">Delete | </a>
+                        <a href="javascript:copyDocumentation('<%=api.name%>','<%=api.version%>','<%=doc.name%>','<%=doc.type%>')">Copy</a>
                     </td>
                 </tr>
                 <% } %>

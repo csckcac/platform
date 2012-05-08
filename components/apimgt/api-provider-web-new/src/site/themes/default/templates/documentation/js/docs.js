@@ -1,30 +1,40 @@
 var addNewDoc = function () {
-    var apiName = apiProviderApp.currentAPIName;
-    var version = apiProviderApp.currentVersion;
+    var apiName = $("#item-info h2")[0].innerHTML.split("-v")[0];
+    var version = $("#item-info h2")[0].innerHTML.split("-v")[1];
     var docName = $("#docName").val();
     var summary = $("#summary").val();
     var docType = getRadioValue($('input[name=optionsRadios]:radio:checked'));
     var sourceType = getRadioValue($('input[name=optionsRadios1]:radio:checked'));
     var docUrl = $("#docUrl").val();
 
-    var doc = require("/core/docs/add.js");
-    var result = doc.addDocumentation(apiName, version, docName, docType, summary, sourceType, docUrl);
-    if (result.error) {
-        alert(result.message);
-    } else {
-        clearDocs();
-    }
+    jagg.post("/site/blocks/documentation/ajax/docs.jag", { action:"addDocumentation",
+        apiName:apiName, version:version,docName:docName,docType:docType,summary:summary,sourceType:sourceType,
+        docUrl:docUrl},
+              function (result) {
+                  if (!result.error) {
+                      clearDocs();
+                      window.location.reload();
+                  } else {
+                      jagg.message(result.message);
+                  }
+              }, "json");
 
 
 };
 
 
 var removeDocumentation = function (apiName, version, docName, docType) {
-    var doc = require("/core/docs/remove.js");
-    var result = doc.removeDocumentation(apiName, version, docName, docType);
-    if (!result.error) {
-        $('#' + apiName + '-' + docName).hide('slow');
-    }
+
+    jagg.post("/site/blocks/documentation/ajax/docs.jag", { action:"removeDocumentation",
+        apiName:apiName, version:version,docName:docName,docType:docType},
+              function (result) {
+                  if (!result.error) {
+                      $('#' + apiName + '-' + docName).hide('slow');
+                  } else {
+                      jagg.message(result.message);
+                  }
+              }, "json");
+
 
 };
 
@@ -34,10 +44,11 @@ var copyDocumentation = function (apiName, version, docName, docType, summary) {
     $('#newDoc #docName').val(docName + '-copy');
     $('#newDoc #summary').val(summary);
 
-    for (var i = 1; i <= 6; i++)
+    for (var i = 1; i <= 6; i++) {
         if ($('#optionsRadios' + i).val().toUpperCase().indexOf(docType.toUpperCase()) >= 0) {
             $('#optionsRadios' + i).attr('checked', true)
         }
+    }
 };
 
 var updateDocumentation = function (apiName, version, docName, docType, summary, docUrl) {
@@ -51,24 +62,35 @@ var updateDocumentation = function (apiName, version, docName, docType, summary,
         $('#newDoc #docUrl').show();
     }
 
-    for (var i = 1; i <= 6; i++)
+    for (var i = 1; i <= 6; i++) {
         if ($('#optionsRadios' + i).val().toUpperCase().indexOf(docType.toUpperCase()) >= 0) {
             $('#optionsRadios' + i).attr('checked', true);
         }
+    }
 };
 
-var editInlineContent = function (apiName, version, docName, docType, summary, docUrl) {
-
-    window.open("includes/provider/inLineEditor.jag?docName=" + docName + "&apiName=" + apiName + "&version=" + version);
+var editInlineContent = function (apiName, version, docName) {
+    window.open("site/pages/inline-editor.jag?docName=" + docName + "&apiName=" + apiName + "&version=" + version);
 
 };
 
 var clearDocs = function () {
-    var doc=document;
+    var doc = document;
     doc.getElementById('docName').value = '';
     doc.getElementById('summary').value = '';
     doc.getElementById('docUrl').value = '';
     $('#newDoc').hide('slow');
 };
+
+var getRadioValue = function (radioButton) {
+    if (radioButton.length > 0) {
+        return radioButton.val();
+    }
+    else {
+        return 0;
+    }
+};
+
+
 
 

@@ -41,11 +41,11 @@ public class Output {
                 omFactory.createOMElement(Constants.RULE_CONF_ELE_OUTPUT,
                                           Constants.RULE_CONF_NAMESPACE,
                                           Constants.RULE_CONF_NAMESPACE_PREFIX);
-        if(this.nameSpace != null){
+        if((this.nameSpace != null) && (!this.nameSpace.trim().equals(""))){
             ruleOutputOMElement.addAttribute(Constants.RULE_CONF_ATTR_NAMESPACE,
                                              this.nameSpace, null);
         }
-        if(this.wrapperElementName != null){
+        if((this.wrapperElementName != null) && (!this.wrapperElementName.trim().equals(""))){
             ruleOutputOMElement.addAttribute(Constants.RULE_CONF_ATTR_WRAPPER_ELEMENT_NAME,
                                              this.wrapperElementName, null);
         }

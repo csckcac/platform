@@ -35,16 +35,16 @@
                 omFactory.createOMElement(Constants.RULE_CONF_ELE_RULE,
                                           Constants.RULE_CONF_NAMESPACE,
                                           Constants.RULE_CONF_NAMESPACE_PREFIX);
-        if(this.resourceType != null){
+        if((this.resourceType != null) && (!this.resourceType.trim().equals(""))){
             ruleOMElement.addAttribute(Constants.RULE_CONF_ATTR_RESOURCE_TYPE,
                                        this.resourceType, null);
 
         }
-        if(this.sourceType != null){
+        if((this.sourceType != null) && (!this.sourceType.trim().equals(""))){
             ruleOMElement.addAttribute(Constants.RULE_CONF_ATTR_SOURCE_TYPE,
                                         this.sourceType, null );
         }
-        if(this.value != null){
+        if((this.value != null) && (!this.value.trim().equals(""))){
             if(sourceType.equals(Constants.RULE_SOURCE_TYPE_INLINE)) {
                 omFactory.createOMText(ruleOMElement, this.value, XMLStreamConstants.CDATA);
             }

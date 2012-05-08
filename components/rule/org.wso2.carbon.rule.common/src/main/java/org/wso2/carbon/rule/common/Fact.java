@@ -40,19 +40,19 @@ public class Fact {
                                           Constants.RULE_CONF_NAMESPACE,
                                           Constants.RULE_CONF_NAMESPACE_PREFIX);
 
-        if(this.elementName != null){
+        if((this.elementName != null) && (!this.elementName.trim().equals(""))){
             ruleFactOMElement.addAttribute(Constants.RULE_CONF_ATTR_ELEMENT_NAME,
                                             this.elementName, null);
         }
-        if(this.namespace != null){
+        if((this.namespace != null) && (!this.namespace.trim().equals(""))){
             ruleFactOMElement.addAttribute(Constants.RULE_CONF_ATTR_NAMESPACE,
                                             this.namespace, null);
         }
-        if(this.type != null){
+        if((this.type != null) && (!this.type.trim().equals(""))){
             ruleFactOMElement.addAttribute(Constants.RULE_CONF_ATTR_TYPE,
                                             this.type, null);
         }
-        if(this.xpath != null){
+        if((this.xpath != null) && (!this.xpath.trim().equals(""))){
             ruleFactOMElement.addAttribute(Constants.RULE_CONF_ATTR_XPATH,
                                             this.xpath, null);
         }

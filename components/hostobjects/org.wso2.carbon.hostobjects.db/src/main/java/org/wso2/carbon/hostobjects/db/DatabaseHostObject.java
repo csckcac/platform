@@ -44,6 +44,12 @@ public class DatabaseHostObject extends ScriptableObject {
     private static final Log log = LogFactory.getLog(DatabaseHostObject.class);
 
     private static final String hostObjectName = "Database";
+    public static final String COM_MYSQL_JDBC_DRIVER = "com.mysql.jdbc.Driver";
+    public static final String ORG_H2_DRIVER = "org.h2.Driver";
+    public static final String ORACLE_JDBC_ORACLE_DRIVER = "oracle.jdbc.OracleDriver";
+    public static final String MYSQL = "jdbc:mysql";
+    public static final String H2 = "jdbc:h2";
+    public static final String ORACLE = "jdbc:oracle";
 
     private boolean autoCommit = true;
 
@@ -65,7 +71,7 @@ public class DatabaseHostObject extends ScriptableObject {
     public static Scriptable jsConstructor(Context cx, Object[] args, Function ctorObj, boolean inNewExpr)
             throws ScriptException {
         int argsCount = args.length;
-        if (argsCount != 4 && argsCount != 5) {
+        if (argsCount != 3 && argsCount != 4) {
             HostObjectUtil.invalidNumberOfArgs(hostObjectName, hostObjectName, argsCount, true);
         }
 
@@ -80,15 +86,13 @@ public class DatabaseHostObject extends ScriptableObject {
         if (!(args[2] instanceof String) && !(args[2] instanceof Integer)) {
             HostObjectUtil.invalidArgsError(hostObjectName, hostObjectName, "3", "string", args[2], true);
         }
-        if (!(args[3] instanceof String) && !(args[2] instanceof Integer)) {
-            HostObjectUtil.invalidArgsError(hostObjectName, hostObjectName, "3", "string", args[2], true);
-        }
+
         NativeObject configs = null;
-        if (argsCount == 5) {
-            if (!(args[4] instanceof NativeObject)) {
+        if (argsCount == 4) {
+            if (!(args[3] instanceof NativeObject)) {
                 HostObjectUtil.invalidArgsError(hostObjectName, hostObjectName, "4", "object", args[3], true);
             }
-            configs = (NativeObject) args[4];
+            configs = (NativeObject) args[3];
         }
 
         String dbUrl = (String) args[0];
@@ -100,9 +104,13 @@ public class DatabaseHostObject extends ScriptableObject {
                 rdbmsConfig = gson.fromJson(HostObjectUtil.serializeJSON(configs), RDBMSConfiguration.class);
             }
 
-            rdbmsConfig.setDriverClassName((String) args[1]);
-            rdbmsConfig.setUsername((String) args[2]);
-            rdbmsConfig.setPassword((String) args[3]);
+            if (rdbmsConfig.getDriverClassName() == null || rdbmsConfig.getDriverClassName().equals("")) {
+                rdbmsConfig.setDriverClassName(getDriverClassName(dbUrl));
+            }
+
+
+            rdbmsConfig.setUsername((String) args[1]);
+            rdbmsConfig.setPassword((String) args[2]);
             rdbmsConfig.setUrl(dbUrl);
 
             RDBMSDataSource rdbmsDataSource = null;
@@ -120,6 +128,18 @@ public class DatabaseHostObject extends ScriptableObject {
             String msg = "Error connecting to the database : " + dbUrl;
             log.warn(msg, e);
             throw new ScriptException(msg, e);
+        }
+    }
+
+    private static String getDriverClassName(String dburl) {
+        if (dburl.contains(MYSQL)) {
+            return COM_MYSQL_JDBC_DRIVER;
+        } else if (dburl.contains(H2)) {
+            return ORG_H2_DRIVER;
+        } else if (dburl.contains(ORACLE)) {
+            return ORACLE_JDBC_ORACLE_DRIVER;
+        } else {
+            return null;
         }
     }
 

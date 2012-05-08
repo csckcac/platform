@@ -127,6 +127,14 @@
                 <include>**/jaas.conf</include>
             </includes>
         </fileSet>
+
+		<fileSet>
+            <directory>../../jaggery</directory>
+            <outputDirectory>wso2appfactory-${pom.version}/jaggery</outputDirectory>
+            <includes>
+                <include>**/**.xml</include>
+            </includes>
+        </fileSet>
 	
     </fileSets>
 
@@ -176,6 +184,13 @@
             <fileMode>644</fileMode>
         </file>
         <!-- Deploy the project management tool-->
+        <file>
+            <source>../../jaggery-apps/project-mgt/target/project-mgt.zip</source>
+            <outputDirectory>wso2appfactory-${pom.version}/repository/deployment/server/jaggeryapps</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
         <file>
             <source>../../../INSTALL.txt</source>
             <outputDirectory>wso2appfactory-${pom.version}</outputDirectory>

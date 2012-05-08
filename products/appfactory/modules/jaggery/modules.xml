@@ -11,10 +11,10 @@
 			<name>SVNClient</name>
 		</hostObject>
 	</module>
-	<module name="carbon" expose="true">
+	<module name="systemPropertyReader" expose="true">
 		<hostObject>
-			<className>org.wso2.carbon.hostobjects.carbon.CarbonObject</className>
-			<name>CarbonObject</name>
+			<className>org.wso2.carbon.hostobjects.sysprop.SystemPropertyReaderObject</className>
+			<name>SystemPropertyReaderObject</name>
 		</hostObject>
 	</module>
 </modules>

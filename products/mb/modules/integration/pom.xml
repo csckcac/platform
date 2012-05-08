@@ -99,6 +99,12 @@
             <artifactId>org.wso2.carbon.event.client</artifactId>
             <version>${carbon.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>SecVerifier</artifactId>
+            <version>${carbon.version}</version>
+            <type>aar</type>
+        </dependency>
     </dependencies>
 
     <licenses>
@@ -139,7 +145,7 @@
                             ${basedir}/../distribution/product/target/wso2mb-${project.version}.zip
                         </carbon.zip>
                         <sec.verifier.dir>
-                            ${basedir}/../../../integration/security-verifier/
+                            ${basedir}/target/security-verifier/
                         </sec.verifier.dir>
                         <samples.dir>${basedir}/../samples/product</samples.dir>
                         <extracted.dir>wso2mb-${project.version}</extracted.dir>
@@ -155,6 +161,24 @@
                         <goals>
                             <goal>test-jar</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                    	<id>copy-secVerifier</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/security-verifier</outputDirectory>
+                            <includeTypes>aar</includeTypes>
+                            <includeArtifactIds>SecVerifier</includeArtifactIds>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

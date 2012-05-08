@@ -5,7 +5,8 @@ var copyAPIToNewVersion = function () {
     jagg.post("/site/blocks/overview/ajax/overview.jag", { action:"createNewAPI", apiName:apiName, version:version, newVersion:newVersion },
               function (result) {
                   if (!result.error) {
-                      location.href = 'index.jag';
+                      $("#copy-api #new-version").val('');
+                      location.href ='site/pages/index.jag';
                   } else {
                       jagg.message(result.message);
                   }

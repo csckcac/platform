@@ -35,6 +35,7 @@
                 <exclude>**/README.txt</exclude>
                 <exclude>**/INSTALL.txt</exclude>
                 <exclude>**/release-notes.html</exclude>
+                <exclude>**/index.html</exclude>
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/web.xml</exclude>
             </excludes>
@@ -135,6 +136,13 @@
             <source>../../../docs/xdoc/release-notes.xml</source>
             <outputDirectory>wso2brs-${pom.version}</outputDirectory>
             <destName>release-notes.html</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>../../../docs/xdoc/index.xml</source>
+            <outputDirectory>wso2brs-${pom.version}</outputDirectory>
+            <destName>index.html</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>

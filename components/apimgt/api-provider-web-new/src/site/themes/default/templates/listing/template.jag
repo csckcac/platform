@@ -5,7 +5,7 @@
     <ul class="thumbnails">
         <span class="loading"></span>
         <%
-        var i, api, apis = outputs.apis;
+        var i, api,path, apis = outputs.apis;
         if(apis==null ){
         if(request.getParameter("query")!=null){
         return;
@@ -18,10 +18,11 @@
         var length = apis.length;
         for(i = 0; i < length; i++) {
             api = apis[i];
+            path = jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + api.name + "&version=" + api.version;
         %>
         <li class="span2">
             <div class="thumbnail">
-                <a href="?place=api-details&name=<%=api.name%>&version=<%=api.version%>">
+                <a href="<%=path%>">
                     <% if(api.thumb == null) { %>
                     <img class="thumb" src="<%=site.context%>/site/themes/default/images/api-default.png" alt=""/>
                     <% } else{ %>
@@ -29,12 +30,12 @@
                     <% } %>
                 </a>
                 <h5>
-                    <a href="?place=api-details&name=<%=api.name%>&version=<%=api.version%>" class="label label-info">
+                    <a href="<%=path%>" class="label label-info">
                         <%=api.name%>-v<%=api.version%>
                     </a>
                 </h5>
                 <div>
-                    <a href="?place=api-details&name=<%=api.name%>&version=<%=api.version%>">
+                    <a href="<%=path%>">
                         <span id="noOfUsers">
                             <% if (api.subs == "1") { %><%=api.subs%> User<% } else { %><%=api.subs%> Users<% } %>
                         </span>

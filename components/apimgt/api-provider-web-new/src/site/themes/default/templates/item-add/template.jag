@@ -5,7 +5,7 @@
         <div class="span12">
             <form class="form-horizontal well"
               id="addAPIForm"
-              action="/modules/apis/add.jag"
+              action="<%=site.context%>/site/blocks/item-add/ajax/add.jag"
               method="get"
               enctype="multipart/form-data">
 

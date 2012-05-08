@@ -3,6 +3,11 @@ include("/jagg/jagg.jag");
 var site = require("/site/conf/site.json");
 
 (function () {
+    var user = jagg.getUser();
+    if (!user) {
+        response.sendRedirect("login.jag");
+        return;
+    }
     jagg.render({
         "name":"page/base",
         "inputs":{

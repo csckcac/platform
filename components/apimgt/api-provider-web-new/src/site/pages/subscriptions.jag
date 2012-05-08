@@ -5,8 +5,12 @@ var site = require("/site/conf/site.json");
 (function () {
     var subs, result, mod;
     var user = jagg.getUser();
+    if (!user) {
+        response.sendRedirect("login.jag");
+        return;
+    }
     mod = jagg.module("subscription");
-    result = mod.getSubscribersOfProvider(user);
+    result = mod.getSubscribersOfProvider(user.username);
     subs = result.subscribers;
 
     jagg.render({

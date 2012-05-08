@@ -9,6 +9,8 @@ include("/jagg/jagg.jag");
     if (action === "addAPI") {
         mod = jagg.module("api");
         var apiData = {};
+        apiData.provider= jagg.getUser().username;
+        apiData.request = request;
         apiData.apiName = request.getParameter("apiName");
         apiData.version = request.getParameter("version");
         apiData.description = request.getParameter("description");
@@ -33,7 +35,7 @@ include("/jagg/jagg.jag");
         apiData.uriMethodArr = uriMethodArr;
 
         result = mod.addAPI(apiData);
-        if (result.error) {
+        if (result.error=="true") {
             obj = {
                 error:result.error,
                 message:msg.error.backendError(action)
@@ -48,7 +50,7 @@ include("/jagg/jagg.jag");
         mod = jagg.module("api");
         var context = request.getParameter("context");
         result = mod.isContextExist(context);
-        if (result.error) {
+        if (result.error=="true") {
             obj = {
                 error:result.error,
                 message:msg.error.backendError(action)

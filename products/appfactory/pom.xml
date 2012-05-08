@@ -43,10 +43,10 @@
     </licenses>
 
     <modules>
-        <module>modules/p2-profile-gen</module>
-        <module>modules/distribution</module>
 		<module>modules/bpels</module>
 		<module>modules/jaggery-apps/project-mgt</module>
+        <module>modules/p2-profile-gen</module>
+        <module>modules/distribution</module>
     </modules>
 
     <profiles>

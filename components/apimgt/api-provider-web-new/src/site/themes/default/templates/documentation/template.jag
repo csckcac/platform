@@ -1,8 +1,18 @@
 <% jagg.template("documentation", function(inputs, outputs, jagg) { %>
 <div class="row-fluid">
+     <% var api = outputs.api;
+        var user = jagg.getUser();
+        var mod = jagg.module("documentation");
+        var apiData={};
+        apiData.provider= user.username;
+        apiData.name= api.name;
+        apiData.version= api.version;
+        var result = mod.getAllDocumentation(apiData);
+        var docs = result.docs;
 
+     %>
     <div class="span2">
-        <% //jagg.includeBlock("item-nav-list", null); %>
+        <% jagg.includeBlock("item-nav-list", {api:api}); %>
     </div>
 
     <div class="span10">
@@ -102,16 +112,16 @@
                 </thead>
                 <tbody id="listDocs">
                 <%
-                var i, doc, api = outputs.api, user = outputs.user, docs = outputs.docs, length = docs.length;
+                var i, doc, length = docs.length;
                 for(i = 0; i < length; i++) {
                     doc= docs[i];
                 %>
-                <tr id="<%=api.name%>-<%=doc.docName%>">
-                    <td><a href="#"><%=doc.docName%></a></td>
-                    <td><%=doc.docType%></td>
+                <tr id="<%=api.name%>-<%=doc.name%>">
+                    <td><a href="#"><%=doc.name%></a></td>
+                    <td><%=doc.type%></td>
                     <td><a href="#">View</a></td>
 
-                    <td><a href="#"><%=user%></a></td>
+                    <td><a href="#"><%=user.username%></a></td>
                     <td><%=doc.lastUpdated%></td>
                     <td>
                         <a href="javascript:updateDocumentation("<%=api.name%>","<%=api.version%>","<%=doc.docName%>","<%=doc.docType%>","<%=doc.summary%>","<%=doc.Url%>")">Update | </a>

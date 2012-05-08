@@ -14,7 +14,8 @@ jagg.block("item-info", {
     getStaticBlocks:function() {
         return [
             "overview",
-            "item-edit"
+            "item-edit",
+            "documentation"
         ];
     }
 

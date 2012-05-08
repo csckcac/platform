@@ -12,8 +12,8 @@
     <div id="myTabContent" class="tab-content">
         <div class="tab-pane fade active in" id="view"><% jagg.includeBlock("overview", {api:api}); %></div>
         <div class="tab-pane fade" id="edit"><% jagg.includeBlock("item-edit", {api:api}); %></div>
-        <div class="tab-pane fade" id="versions"><% //jagg.includeBlock("item-nav-list", null); %></div>
-        <div class="tab-pane fade" id="docs"><% //jagg.includeBlock("documentation", null); %></div>
+        <div class="tab-pane fade" id="versions"><%jagg.includeBlock("item-nav-list",{api:api}); %></div>
+        <div class="tab-pane fade" id="docs"><%jagg.includeBlock("documentation", {api:api}); %></div>
         <div class="tab-pane fade" id="users"><% //jagg.includeBlock("users-api", null); %></div>
     </div>
 </div>

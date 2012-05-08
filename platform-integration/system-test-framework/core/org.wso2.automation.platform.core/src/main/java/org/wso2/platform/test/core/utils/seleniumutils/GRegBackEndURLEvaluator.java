@@ -44,12 +44,15 @@ public class GRegBackEndURLEvaluator {
 //
 //        }
         baseUrl = "https://" + gregProperties.getHostName();
-        if (properties.getEnvironmentSettings().isEnablePort()) {
+        if (properties.getEnvironmentSettings().isEnablePort()
+            && gregProperties.getHttpsPort() != null) {
             baseUrl = baseUrl + ":" + gregProperties.getHttpsPort();
         }
-        if (properties.getEnvironmentSettings().isEnableCarbonWebContext()) {
-            baseUrl = baseUrl + "/" + gregProperties.getWebContextRoot() + "/" + "carbon" + "/";
+        if (properties.getEnvironmentSettings().isEnableCarbonWebContext()
+            && gregProperties.getWebContextRoot() != null) {
+            baseUrl = baseUrl + "/" + gregProperties.getWebContextRoot();
         }
-        return baseUrl;
+
+        return baseUrl + "/" + "carbon" + "/";
     }
 }

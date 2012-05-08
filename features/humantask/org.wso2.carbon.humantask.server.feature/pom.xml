@@ -171,6 +171,7 @@
                                 <importBundleDef>org.apache.ws.commons.axiom.wso2:axiom</importBundleDef>
                                 <importBundleDef>hsqldb.wso2:hsqldb</importBundleDef>
                                 <importBundleDef>org.wso2.carbon:org.wso2.carbon.bpel.common</importBundleDef>
+                                <importBundleDef>org.wso2.carbon:org.wso2.carbon.unifiedendpoint.core</importBundleDef>
                                 <importBundleDef>org.apache.ode.wso2:ode</importBundleDef>
                                 <importBundleDef>net.sf.saxon.wso2:saxon.bps</importBundleDef>
                                 <importBundleDef>org.apache.geronimo.specs.wso2:geronimo-j2ee-connector_1.5_spec</importBundleDef>

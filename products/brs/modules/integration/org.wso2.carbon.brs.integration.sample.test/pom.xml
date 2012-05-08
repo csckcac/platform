@@ -162,7 +162,7 @@
                         </samples.dir>
                         <extracted.dir>wso2brs-${project.version}</extracted.dir>
                         <sec.verifier.dir>
-                           ${basedir}/../../../../integration/security-verifier/ 
+                           ${basedir}/target/security-verifier/ 
                         </sec.verifier.dir>
                         <emma.home>${basedir}/target/emma</emma.home>
                         <emma.output>${basedir}/target/emma</emma.output> 
@@ -185,6 +185,7 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>copy-emma-dependencies</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
@@ -193,6 +194,19 @@
                             <outputDirectory>${project.build.directory}/emma</outputDirectory>
                             <includeTypes>jar</includeTypes>
                             <includeArtifactIds>emma,org.wso2.carbon.integration.framework</includeArtifactIds>
+                        </configuration>
+                    </execution>
+                    <execution>
+                    	<id>copy-secVerifier</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/security-verifier</outputDirectory>
+                            <includeTypes>aar</includeTypes>
+                            <includeArtifactIds>SecVerifier</includeArtifactIds>
+                            <stripVersion>true</stripVersion>
                         </configuration>
                     </execution>
                 </executions>
@@ -233,6 +247,11 @@
             <artifactId>emma</artifactId>
             <version>${emma.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>SecVerifier</artifactId>
+            <version>${carbon.version}</version>
+            <type>aar</type>
+        </dependency>
     </dependencies>
 </project>

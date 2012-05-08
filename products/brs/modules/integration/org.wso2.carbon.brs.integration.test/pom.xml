@@ -35,7 +35,7 @@
                         </samples.dir>
                         <extracted.dir>wso2brs-${project.version}</extracted.dir>
                         <sec.verifier.dir>
-                            ${basedir}/../../../../integration/security-verifier/
+                            ${basedir}/target/security-verifier/
                         </sec.verifier.dir>
                     </systemProperties>
                     <workingDirectory>${basedir}/target</workingDirectory>
@@ -49,6 +49,24 @@
                         <goals>
                             <goal>test-jar</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                    	<id>copy-secVerifier</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/security-verifier</outputDirectory>
+                            <includeTypes>aar</includeTypes>
+                            <includeArtifactIds>SecVerifier</includeArtifactIds>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -83,6 +101,11 @@
             <groupId>commons-fileupload.wso2</groupId>
             <version>1.2.2.wso2v1</version>
          </dependency>
-
+         <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>SecVerifier</artifactId>
+            <version>${carbon.version}</version>
+            <type>aar</type>
+         </dependency>
     </dependencies>
 </project>

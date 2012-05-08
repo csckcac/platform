@@ -180,8 +180,9 @@
                           class="org.wso2.carbon.relay.ExpandingMessageFormatter"/>
         <messageFormatter contentType="img/gif"
                           class="org.wso2.carbon.relay.ExpandingMessageFormatter"/>
-        <messageFormatter contentType="application/xop+xml"
-                          class="org.wso2.carbon.relay.ExpandingMessageFormatter"/>
+        <!--See CARBON-13027-->
+        <!--<messageFormatter contentType="application/xop+xml"-->
+                          <!--class="org.wso2.carbon.relay.ExpandingMessageFormatter"/>-->
         <messageFormatter contentType="multipart/related"
                           class="org.wso2.carbon.relay.ExpandingMessageFormatter"/>
         <messageFormatter contentType="utf8"
@@ -357,8 +358,9 @@
                         class="org.wso2.carbon.relay.BinaryRelayBuilder"/>
         <messageBuilder contentType="img/gif"
                         class="org.wso2.carbon.relay.BinaryRelayBuilder"/>
-        <messageBuilder contentType="application/xop+xml"
-                        class="org.wso2.carbon.relay.BinaryRelayBuilder"/>
+        <!--See CARBON-13027-->
+        <!--<messageBuilder contentType="application/xop+xml"-->
+                        <!--class="org.wso2.carbon.relay.BinaryRelayBuilder"/>-->
         <messageBuilder contentType="multipart/related"
                         class="org.wso2.carbon.relay.BinaryRelayBuilder"/>
         <messageBuilder contentType="utf8"

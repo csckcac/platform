@@ -19,6 +19,8 @@
 package org.wso2.carbon.registry.common.services;
 
 import org.apache.axis2.context.MessageContext;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.registry.core.Registry;
@@ -29,8 +31,9 @@ import javax.servlet.http.HttpSession;
 
 public abstract class RegistryAbstractAdmin extends AbstractAdmin {
 
+    private static final Log log = LogFactory.getLog(RegistryAbstractAdmin.class);
 
-public final static String SERVELT_SESSION = "comp.mgt.servlet.session";
+    public final static String SERVELT_SESSION = "comp.mgt.servlet.session";
 
     public Registry getRootRegistry() {
         if (getHttpSession() != null) {
@@ -39,6 +42,9 @@ public final static String SERVELT_SESSION = "comp.mgt.servlet.session";
                             RegistryConstants.ROOT_REGISTRY_INSTANCE);
             if (registry != null) {
                 return registry;
+            } else {
+                // TODO ideally there should also be an exception
+                log.error("Unable to find root registry instance in http session");
             }
         }
         return null;

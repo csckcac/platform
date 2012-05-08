@@ -42,7 +42,7 @@ public class StratosServicesTestSuite extends MasterTestSuite {
 //        suiteVariablesList.add(new SuiteVariables("StratosManagerServiceTest", StratosManagerServiceTest.class));
         suiteVariablesList.add(new SuiteVariables("StratosMBServiceTest", StratosMBServiceTest.class));
         suiteVariablesList.add(new SuiteVariables("StratosMSServiceTest", StratosMSServiceTest.class));
-        superSuite("Stratos Server invocation test",suiteVariablesList).run();
+        superSuite("StratosServerInvocationTest",suiteVariablesList).run();
     }
 
     public static void main(String[] args) {

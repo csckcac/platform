@@ -72,7 +72,6 @@ import org.wso2.andes.server.virtualhost.VirtualHost;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -819,7 +818,7 @@ public class AMQChannel implements SessionConfig, AMQSessionModel
             try {
                 QueueSubscriptionAcknowledgementHandler acknowledgementHandler = ClusterResourceHolder.getInstance().
                         getSubscriptionManager().getAcknowledgementHandlerMap().get(this);
-                acknowledgementHandler.handleAcknowledge(deliveryTag);
+                acknowledgementHandler.handleAcknowledgement(deliveryTag);
 
             } catch (Exception e) {
                 System.out.println(e.getMessage());

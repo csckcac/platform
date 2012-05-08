@@ -17,6 +17,8 @@
 */
 package org.wso2.andes.server.cassandra;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.andes.AMQStoreException;
 import org.wso2.andes.server.store.CassandraMessageStore;
 
@@ -37,14 +39,18 @@ public class QueueSubscriptionAcknowledgementHandler {
 
     private Map<Long,QueueMessageTag> sentMessagesMap = new ConcurrentHashMap<Long,QueueMessageTag>();
 
+    private SortedMap<Long,Long> timeStampMessageIdMap = new TreeMap<Long,Long>();
+
+    private QueueMessageTagCleanupJob cleanupJob ;
+
+    private long timeOutInMills;
+
+    private static Log log = LogFactory.getLog(QueueSubscriptionAcknowledgementHandler.class);
+
     public QueueSubscriptionAcknowledgementHandler(CassandraMessageStore cassandraMessageStore , String queue) {
         this.cassandraMessageStore = cassandraMessageStore;
     }
 
-    public QueueSubscriptionAcknowledgementHandler(CassandraMessageStore cassandraMessageStore , String queue ,
-                                                   boolean isOnceInOrderMode) {
-        this.cassandraMessageStore = cassandraMessageStore;
-    }
 
 
 
@@ -52,7 +58,19 @@ public class QueueSubscriptionAcknowledgementHandler {
         if (!sentMessagesMap.containsKey(messageId)) {
             deliveryTagMessageMap.put(deliveryTag, new QueueMessageTag(queue, deliveryTag, messageId));
             sentMessagesMap.put(messageId, new QueueMessageTag(queue, deliveryTag, messageId));
+            timeStampMessageIdMap.put(System.currentTimeMillis(),messageId);
 
+            if(cleanupJob == null) {
+                synchronized (this) {
+                    if(cleanupJob == null) {
+                        cleanupJob = new QueueMessageTagCleanupJob();
+
+                        Thread t = new Thread(cleanupJob);
+                        t.setName(cleanupJob.getClass().getSimpleName());
+                        t.start();
+                    }
+                }
+            }
             return true;
         }
         return false;
@@ -61,7 +79,7 @@ public class QueueSubscriptionAcknowledgementHandler {
 
 
 
-    public void handleAcknowledge(long deliveryTag) {
+    public void handleAcknowledgement(long deliveryTag) {
 
         if(deliveryTagMessageMap.containsKey(deliveryTag)) {
             QueueMessageTag tag= deliveryTagMessageMap.get(deliveryTag);
@@ -93,7 +111,7 @@ public class QueueSubscriptionAcknowledgementHandler {
         public QueueMessageTag(String queue , long deliveryTag , long msgId) {
             this.queue = queue;
             this.deliveryTag = deliveryTag;
-            this.messageId = messageId;
+            this.messageId = msgId;
         }
 
         public long getDeliveryTag() {
@@ -110,6 +128,69 @@ public class QueueSubscriptionAcknowledgementHandler {
     }
 
 
+    /**
+     * This will clean up TimedOut QueueMessageTags from the Maps
+     */
+    private class QueueMessageTagCleanupJob implements Runnable{
+
+        private boolean running = true;
+        @Override
+        public void run() {
+
+            long currentTime = System.currentTimeMillis();
+
+            while (running) {
+                try {
+                    if(timeStampMessageIdMap.lastKey() + timeOutInMills <= currentTime) {
+                        // we should handle timeout
+                        SortedMap<Long,Long> tailMap =
+                                timeStampMessageIdMap.tailMap(currentTime-timeOutInMills);
+
+                        if(tailMap.size() > 0) {
+                            for(Long l : tailMap.keySet()) {
+                                long mid = tailMap.get(l);
+                                QueueMessageTag mtag =  sentMessagesMap.get(mid);
+
+
+                                if (mtag != null) {
+
+                                    long deliveryTag = mtag.getDeliveryTag();
+                                    if (deliveryTagMessageMap.containsKey(deliveryTag)) {
+                                        QueueMessageTag tag = deliveryTagMessageMap.get(deliveryTag);
+                                        try {
+                                            if (tag != null) {
+                                                cassandraMessageStore.removeMessageFromUserQueue(tag.getQueue(), tag.getMessageId());
+                                                if (sentMessagesMap.containsKey(tag.getMessageId())) {
+                                                    sentMessagesMap.remove(tag.getMessageId());
+                                                }
+                                                deliveryTagMessageMap.remove(deliveryTag);
+                                            }
+
+                                        } catch (AMQStoreException e) {
+                                           log.error("Error while running Queue Message Tag Cleanup Task" ,e );
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    log.error("Error while running Queue Message Tag Cleanup Task" ,e );
+                } finally {
+                    try {
+                        Thread.sleep(20*60*1000);
+                    } catch (InterruptedException e) {
+                        //Ignore
+                    }
+                }
+            }
+
+        }
+
+        public void stop() {
+
+        }
+    }
 
 
 }

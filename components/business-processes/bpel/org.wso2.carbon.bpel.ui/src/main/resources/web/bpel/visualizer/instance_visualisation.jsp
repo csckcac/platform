@@ -9,6 +9,8 @@
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
 <%@ page import="org.apache.commons.logging.LogFactory" %>
 <%@ page import="org.apache.commons.logging.Log" %>
+<%@ page import="org.wso2.carbon.CarbonConstants" %>
+<%@ page import="org.apache.axis2.context.ConfigurationContext" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!--
 ~ Copyright (c) 20011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -32,7 +34,9 @@
     /**Storing the backend server url and session cookie to be reused during visualization tasks*/
     String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
-    AuthenticationManager.init(backendServerURL, cookie);
+    ConfigurationContext configContext =
+            (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
+    AuthenticationManager.init(backendServerURL, cookie, configContext);
 
     final Log log = LogFactory.getLog("instance_visualization.jsp");
     String instanceId = request.getParameter("iid").trim();

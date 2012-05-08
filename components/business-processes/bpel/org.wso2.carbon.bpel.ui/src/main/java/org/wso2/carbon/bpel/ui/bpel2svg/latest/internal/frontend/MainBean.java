@@ -80,7 +80,7 @@ public class MainBean /*implements Serializable*/ {
         this.pmDataModel = new ProcessModelDataModel(this.piDataModel);
 
         // Initial refresh
-        refresh();
+        //refresh();
     }
 
     /**

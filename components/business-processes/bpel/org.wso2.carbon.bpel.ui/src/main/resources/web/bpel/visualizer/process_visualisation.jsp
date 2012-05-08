@@ -9,6 +9,8 @@
 <%@ page import="org.wso2.carbon.bpel.ui.bpel2svg.latest.wso2.frontend.ProcessModelBean" %>
 <%@ page import="org.wso2.carbon.bpel.ui.bpel2svg.latest.wso2.adapter.AuthenticationManager" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIUtil" %>
+<%@ page import="org.apache.axis2.context.ConfigurationContext" %>
+<%@ page import="org.wso2.carbon.CarbonConstants" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!--
 ~ Copyright (c) 20011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -31,8 +33,10 @@
 <%
     /**Storing the backend server url and session cookie to be reused during visualization tasks*/
     String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
+    ConfigurationContext configContext =
+            (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
-    AuthenticationManager.init(backendServerURL, cookie);
+    AuthenticationManager.init(backendServerURL, cookie, configContext);
 
     final Log log = LogFactory.getLog("process_visualization.jsp");
     String processID = request.getParameter("processID").trim();

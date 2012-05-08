@@ -16,17 +16,30 @@
 
 package org.wso2.carbon.bpel.ui.bpel2svg.latest.wso2.adapter;
 
+import org.apache.axis2.context.ConfigurationContext;
+
 public final class AuthenticationManager {
     private static String cookie = null;
 
     private static String backendServerURL = null;
 
+    private static ConfigurationContext configContext = null;
+
     private AuthenticationManager() {
     }
 
-    public static void init(String backendServerURL, String cookie) {
+    public static void init(String backendServerURL, String cookie, ConfigurationContext configContext) {
         setBackendServerURL(backendServerURL);
         setCookie(cookie);
+        setConfigContext(configContext);
+    }
+
+    private static void setConfigContext(ConfigurationContext configContext) {
+        AuthenticationManager.configContext = configContext;
+    }
+
+    public static ConfigurationContext getConfigContext() {
+        return AuthenticationManager.configContext;
     }
 
     public static String getBackendServerURL() {

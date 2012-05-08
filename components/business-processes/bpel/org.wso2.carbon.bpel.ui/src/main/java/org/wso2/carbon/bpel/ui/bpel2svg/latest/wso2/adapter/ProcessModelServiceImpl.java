@@ -14,6 +14,7 @@
  */
 package org.wso2.carbon.bpel.ui.bpel2svg.latest.wso2.adapter;
 
+import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.commons.logging.Log;
@@ -27,6 +28,7 @@ import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.BPIException;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.ProcessModel;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.model.status.ProcessModelStatus;
 import org.wso2.carbon.bpel.ui.bpel2svg.latest.internal.service.ProcessModelService;
+import org.wso2.carbon.bpel.ui.clients.ProcessManagementServiceClient;
 
 import javax.xml.namespace.QName;
 import java.rmi.RemoteException;
@@ -76,6 +78,9 @@ public class ProcessModelServiceImpl implements ProcessModelService<String> {
         } catch (RemoteException e) {
             throw new BPIException("Error occurred during communication with back-end while getting " +
                     "the paginated process list.", e);
+        } catch (Exception e) {
+            throw new BPIException("Error occurred in back-end service while getting the paginated " +
+                    "process list.", e);
         }
 
         /* Transform each process model into an internal representation of the model */
@@ -152,9 +157,9 @@ public class ProcessModelServiceImpl implements ProcessModelService<String> {
      */
     private PaginatedProcessInfoList getPaginatedProcessList(String filter, String orderBy,
                                                              int pageNumber)
-            throws RemoteException, ProcessManagementException {
+            throws Exception {
         /* Call Web-Service */
-        return getStub().getPaginatedProcessList(filter, orderBy, pageNumber);
+        return getClient().getPaginatedProcessList(filter, orderBy, pageNumber);
     }
 
     /**
@@ -171,27 +176,23 @@ public class ProcessModelServiceImpl implements ProcessModelService<String> {
     private ProcessInfoType getProcessInfo(String pid)
             throws RemoteException, ProcessManagementException {
         /* Call Web-Service */
-        return getStub().getProcessInfo(QName.valueOf(pid));
+        ProcessInfoType type =  getClient().getProcessInfo(QName.valueOf(pid));
+        return type;
+
     }
 
     /**
-     * Creates a {@link ProcessManagementServiceStub} of the process management WebService.
+     * Creates a {@link ProcessManagementServiceClient} of the process management WebService.
      *
-     * @return The {@link ProcessManagementServiceStub}
-     * @throws RemoteException If stub operation invocation fail
+     * @return The {@link ProcessManagementServiceClient}
+     * @throws AxisFault If client creation operation fails
      */
-    private ProcessManagementServiceStub getStub() throws RemoteException {
-        String processMgtService = "ProcessManagementService";
-        String serviceURL = AuthenticationManager.getBackendServerURL() + processMgtService;
+    private ProcessManagementServiceClient getClient() throws AxisFault {
+        ProcessManagementServiceClient client = new ProcessManagementServiceClient(AuthenticationManager.getCookie(),
+                                                                                   AuthenticationManager.getBackendServerURL(),
+                                                                                   AuthenticationManager.getConfigContext(),
+                                                                                   null);
 
-        ProcessManagementServiceStub stub = new ProcessManagementServiceStub(null, serviceURL);
-        ServiceClient client = stub._getServiceClient();
-        Options option = client.getOptions();
-        option.setManageSession(true);
-        option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING,
-                AuthenticationManager.getCookie());
-
-        return stub;
+        return client;
     }
-
 }

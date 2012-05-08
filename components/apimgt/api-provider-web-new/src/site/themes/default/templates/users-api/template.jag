@@ -19,7 +19,9 @@
                     </thead>
                     <tbody id="userList">
         <%
-        var i, subscriber,path,length = subscribers.length;
+        var i, subscriber,path;
+        if(subscribers!=null){
+        var length = subscribers.length;
         for(i = 0; i < length; i++) {
         subscriber = subscribers[i];
         path = jagg.getMappedUrl("/site/pages/user.jag") + "?uname=" + subscriber.userName;
@@ -32,7 +34,7 @@
             <i class="icon-ban-circle"></i><a href="#">Block</a>
         </td>
         </tr>
-        <%}%>
+        <%}}%>
         </tbody>
                 </table>
                 <div class="pagination">

@@ -1,0 +1,70 @@
+<%
+include("/jagg/jagg.jag");
+
+(function () {
+    var mod, obj, result, username,
+            action = request.getParameter("action"),
+            site = require("/site/conf/site.json"),
+            msg = require("/site/conf/ui-messages.jag");
+    if (action === "getProviderAPIVersionUsage") {
+        mod = jagg.module("statistics");
+        var provider = jagg.getUser().username;
+        var apiName = request.getParameter("apiName");
+        var server = request.getParameter("server");
+
+        result = mod.getProviderAPIVersionUsage(provider, apiName, server);
+        if (result.error == "true") {
+            obj = {
+                error:result.error,
+                message:msg.error.backendError(action)
+            };
+        } else {
+            obj = {
+                error:false
+            }
+        }
+        print(obj);
+    } else if (action === "getProviderAPIVersionUserUsage") {
+        mod = jagg.module("statistics");
+        var provider = jagg.getUser().username;
+        var apiName = request.getParameter("apiName");
+        var server = request.getParameter("server");
+        result = mod.getProviderAPIVersionUserUsage(provider, apiName, server);
+        if (result.error == "true") {
+            obj = {
+                error:result.error,
+                message:msg.error.backendError(action)
+            };
+        } else {
+            obj = {
+                error:false
+            }
+        }
+        print(obj);
+
+    } else if (action === "getProviderAPIUserUsage") {
+        mod = jagg.module("statistics");
+        var provider = jagg.getUser().username;
+        var apiName = request.getParameter("apiName");
+        var server = request.getParameter("server");
+        result = mod.getProviderAPIUserUsage(provider, apiName, server);
+        if (result.error == "true") {
+            obj = {
+                error:result.error,
+                message:msg.error.backendError(action)
+            };
+        } else {
+            obj = {
+                error:false
+            }
+        }
+        print(obj);
+
+    } else {
+        print({
+                  error:true,
+                  message:msg.error.invalidAction(action)
+              });
+    }
+}());
+%>

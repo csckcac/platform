@@ -90,6 +90,10 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
      */
     private Policy autoscalerPolicy;
     
+    /**
+     * Path to default policy 
+     */
+    private static final String DEFAULT_POLICY = "conf/autoscaler-policy.xml";
 
     /**
      * Within constructor, we read the policy file and loads the {@link #autoscalerPolicy} object.
@@ -107,8 +111,18 @@ public class AutoscalerServiceImpl implements IAutoscalerService{
 
         } catch (Exception e) {
             log.warn("Using default policy configurations....");
+            
             // if an exception occurred when reading policy file use default policy
-            autoscalerPolicy = new Policy();
+            try {
+                
+                policyReader = new AutoscalerPolicyFileReader(DEFAULT_POLICY);
+                autoscalerPolicy = policyReader.getPolicy();
+                
+            } catch (Exception e1) {
+                String msg = "Couldn't read default values of autoscaling policy.";
+                log.error(msg, e1);
+                throw new RuntimeException(msg);
+            }
 
         }
 

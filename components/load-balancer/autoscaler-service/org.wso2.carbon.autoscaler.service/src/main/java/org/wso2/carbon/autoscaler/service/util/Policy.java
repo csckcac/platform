@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.autoscaler.service.xml.AutoscalerPolicyFileReader;
 
 /**
  * <p>
@@ -36,6 +39,8 @@ import java.util.Map;
  * 
  */
 public class Policy {
+    
+    private static final Log log = LogFactory.getLog(Policy.class);
     
     /**
      * This list is populated after reading autoscaler-policy XML.
@@ -58,23 +63,8 @@ public class Policy {
     private Map<Integer, Integer> scaleDownOrderIdToMinInstanceCountMap = 
             new HashMap<Integer, Integer>();
     
-    /**
-     * Defines the default Policy. Developers should edit this as and when they adds different
-     * adapters.
-     */
-    public Policy() {
-
-        //default policy
-        scaleUpOrderList.add("container");
-        //scaleUpOrderList.add("ec2");
-        
-        scaleDownOrderList.add("container");
-        //scaleDownOrderList.add("jvm");
-        
-        scaleDownOrderIdToMinInstanceCountMap.put(0, 1);
-        //scaleDownOrderIdToMinInstanceCountMap.put(1, 1);
-        
-    }
+    
+    public Policy() {}
 
     public List<String> getScaleUpOrderList() {
         return scaleUpOrderList;

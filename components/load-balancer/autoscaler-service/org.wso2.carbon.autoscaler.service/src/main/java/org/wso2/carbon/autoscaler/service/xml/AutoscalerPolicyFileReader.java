@@ -119,8 +119,9 @@ public class AutoscalerPolicyFileReader {
 	/**
 	 * This will return the policy object instance that autoscaler service should follow.
 	 * @return Policy object instance
+	 * @throws Exception if we're to use default policy.
 	 */
-	public Policy getPolicy() {
+	public Policy getPolicy() throws Exception {
 	    
         // create a policy object having default policy.
         Policy policyObj = new Policy();
@@ -157,6 +158,10 @@ public class AutoscalerPolicyFileReader {
                 }
                 
                                 
+            }
+            else{
+                // use default policy
+                throw new Exception();
             }
         }
 

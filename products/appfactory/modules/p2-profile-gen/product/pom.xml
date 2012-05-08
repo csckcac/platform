@@ -83,19 +83,19 @@
                                 <!-- bpel hosting-->    
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.bpel.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.humantask.feature:${carbon.version}</featureArtifactDef>
-				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.ntask.feature:${carbon.version}</featureArtifactDef>
-				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.coordination.core.feature:${carbon.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.ntask.feature:${carbon.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.coordination.core.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.unifiedendpoint.server.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.security.mgt.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.service.mgt.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.system.statistics.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.datasource.server.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.tryit.feature:${carbon.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.attachment.mgt.feature:${carbon.version}</featureArtifactDef>
 
                                 <!-- jaggary hosting -->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.jaggery.server.feature:1.0.0-SNAPSHOT</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.jaggery.ui.feature:1.0.0-SNAPSHOT</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.jaggery.styles.feature:1.0.0-SNAPSHOT_M4</featureArtifactDef>
                          
                                 <!-- registry related features-->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.core.feature:${carbon.version}</featureArtifactDef>
@@ -170,10 +170,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.jaggery.ui.feature.group</id>
                                     <version>1.0.0-SNAPSHOT</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.jaggery.styles.feature.group</id>
-                                    <version>1.0.0-SNAPSHOT_M4</version>
                                 </feature>
 
                                 <!--registry-->

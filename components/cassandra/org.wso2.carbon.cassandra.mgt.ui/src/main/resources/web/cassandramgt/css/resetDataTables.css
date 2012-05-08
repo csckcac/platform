@@ -15,7 +15,7 @@ table.dataTable th {
 
     color: #111111;
     font-family: "Lucida Grande","Lucida Sans","Microsoft Sans Serif","Lucida Sans Unicode","Verdana","Sans-serif","trebuchet ms" !important;
-
+	background:transparent url("../../admin/images/table-header.gif") repeat-x left bottom !important; 
 }
 
 table.dataTable td {
@@ -47,4 +47,7 @@ tr.odd td.sorting_1 {
 }
 .dataTables_paginate{
     padding:10px 0 !important;
+}
+tr.odd td{
+	background-color: #EFECF5;
 }

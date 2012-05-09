@@ -25,9 +25,7 @@ import org.apache.axis2.client.Stub;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.governance.notifications.worklist.stub.ClaimService;
-import org.wso2.carbon.governance.notifications.worklist.stub.ClaimServiceStub;
-import org.wso2.carbon.governance.notifications.worklist.stub.xsd.Cust_type0;
+import org.wso2.carbon.governance.notifications.worklist.stub.WorkListServiceStub;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.IllegalArgumentFault;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.IllegalStateFault;
 import org.wso2.carbon.humantask.stub.ui.task.client.api.TaskOperationsStub;
@@ -46,21 +44,19 @@ import org.wso2.carbon.utils.ServerConstants;
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpSession;
 import java.rmi.RemoteException;
-import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 public class HumanTaskClient {
 
     private TaskOperationsStub htStub;
     private UserAdminStub umStub;
-    private ClaimServiceStub wlStub;
+    private WorkListServiceStub wlStub;
 
     //TODO: Create static initializer for these
-    private static final String SERVER_URL = "https://localhost:9443/services/";
-    private static final String USERNAME = "admin";
-    private static final String PASSWORD = "admin";
+    private static final String SERVER_URL = null;
+    private static final String USERNAME = null;
+    private static final String PASSWORD = null;
 
     public HumanTaskClient(ServletConfig config, HttpSession session) throws AxisFault {
         ConfigurationContext configContext =
@@ -75,7 +71,7 @@ public class HumanTaskClient {
         umStub = new UserAdminStub(configContext, backendServerURL + "UserAdmin");
         configureServiceClient(umStub, session);
 
-        wlStub = new ClaimServiceStub(configContext, backendServerURL + "ClaimService");
+        wlStub = new WorkListServiceStub(configContext, backendServerURL + "WorkListService");
         configureServiceClient(wlStub, session);
     }
 
@@ -123,13 +119,7 @@ public class HumanTaskClient {
 
     public void createTask(String role, String description, String priority)
             throws RemoteException {
-        //TODO: Make the method body meaningful
-        Cust_type0 custom = new Cust_type0();
-        custom.setFirstname("sanjaya");
-        custom.setLastname("vithanagama");
-        custom.setId("235235");
-        int rand = Integer.parseInt(priority);
-        wlStub.approve(custom, 2600 + rand, "LK", rand, new GregorianCalendar(2012, 2, 9, 1, 1, 1));
+        wlStub.addTask(role, description, Integer.parseInt(priority));
     }
 
 }

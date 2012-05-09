@@ -41,9 +41,9 @@ under the License.
 <script type="text/javascript">
     function createTask() {
         var addSuccess = false;
-        var role = jQuery('#workListRoleInput').getValue();
-        var description = jQuery('#workListDescriptionInput').getValue();
-        var priority = jQuery('#workListPriorityInput').getValue();
+        var role = jQuery('#workListRoleInput').val();
+        var description = jQuery('#workListDescriptionInput').val();
+        var priority = jQuery('#workListPriorityInput').val();
         sessionAwareFunction(function() {
             new Ajax.Request('../worklist/create-task-ajaxprocessor.jsp', {
                 method: 'post',

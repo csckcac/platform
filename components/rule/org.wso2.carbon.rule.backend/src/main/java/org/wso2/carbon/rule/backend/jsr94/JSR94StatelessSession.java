@@ -16,19 +16,15 @@
 
 package org.wso2.carbon.rule.backend.jsr94;
 
-import org.wso2.carbon.rule.kernel.backend.Session;
 import org.wso2.carbon.rule.common.exception.RuleRuntimeException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.rule.kernel.backend.Session;
 
-import javax.rules.StatelessRuleSession;
 import javax.rules.InvalidRuleSessionException;
-import java.util.List;
+import javax.rules.StatelessRuleSession;
 import java.rmi.RemoteException;
+import java.util.List;
 
 public class JSR94StatelessSession implements Session {
-
-    private static Log log = LogFactory.getLog(JSR94StatelessSession.class);
 
     /**
      * JSR94 StatelessSession

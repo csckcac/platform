@@ -190,8 +190,8 @@ public class RuleMediator extends AbstractMediator {
         OMElement omElement = null;
         try {
             AXIOMXPath axiomXPath = new AXIOMXPath(xpath);
-            for (String prefix : prefixToNamespaceMap.keySet()) {
-                axiomXPath.addNamespace(prefix, prefixToNamespaceMap.get(prefix));
+            for (Map.Entry<String, String> entry : prefixToNamespaceMap.entrySet()) {
+                axiomXPath.addNamespace(entry.getKey(), entry.getValue());
             }
             omElement = (OMElement) axiomXPath.selectSingleNode(inputOMElement);
         } catch (JaxenException e) {

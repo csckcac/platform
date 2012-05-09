@@ -24,9 +24,7 @@ import org.drools.definition.KnowledgePackage;
 import org.drools.io.ResourceFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.StatelessKnowledgeSession;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.rule.backend.util.RuleSetLoader;
-import org.wso2.carbon.rule.backend.util.ds.RuleServiceValueHolder;
 import org.wso2.carbon.rule.common.Rule;
 import org.wso2.carbon.rule.common.RuleSet;
 import org.wso2.carbon.rule.common.exception.RuleConfigurationException;
@@ -79,7 +77,7 @@ public class DroolsBackendRuntime implements RuleBackendRuntime {
 
     public Session createSession(int type) throws RuleRuntimeException {
 
-        Session sesson = null;
+        Session sesson;
         if (type == Constants.RULE_STATEFUL_SESSION) {
 
             StatefulKnowledgeSession ruleSession =

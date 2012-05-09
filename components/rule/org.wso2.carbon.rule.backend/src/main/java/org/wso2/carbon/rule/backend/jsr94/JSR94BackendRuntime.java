@@ -81,11 +81,10 @@ public class JSR94BackendRuntime implements RuleBackendRuntime {
      * Adds the rule set and returns the bind URI for the rule set. The bind URI should be used to
      * create a session associated with this rule set
      *
-     * @return the URI to associate with the rule set
      */
     public void addRuleSet(RuleSet ruleSet) throws RuleConfigurationException {
 
-        Map<String, Object> properties = new HashMap();
+        Map<String, Object> properties = new HashMap<String, Object>();
         properties.putAll(ruleSet.getProperties());
         if (defaultPropertiesProvider != null) {
             Map<String, Object> map =
@@ -95,7 +94,7 @@ public class JSR94BackendRuntime implements RuleBackendRuntime {
 
         for (Rule rule : ruleSet.getRules()) {
 
-            Map<String, Object> ruleProperties = new HashMap();
+            Map<String, Object> ruleProperties = new HashMap<String, Object>();
             ruleProperties.putAll(properties);
             if (rule.getResourceType().equals(Constants.RULE_RESOURCE_TYPE_REGULAR)) {
                 ruleProperties.put(Constants.RULE_SOURCE, Constants.RULE_SOURCE_DRL);
@@ -124,7 +123,6 @@ public class JSR94BackendRuntime implements RuleBackendRuntime {
 
             //TODO: check whether this is useful
             final Map<String, Object> properties = new HashMap<String, Object>();
-
 
             if (stateful) {
                 if (log.isDebugEnabled()) {
@@ -182,8 +180,8 @@ public class JSR94BackendRuntime implements RuleBackendRuntime {
     /**
      * Removed the rule execution set runtime from the rule runtime based on the information
      * in the given rule set description
-     *
-     * @param ruleSet information about the rule set to be removed
+     * @param ruleSet - remove the rules of this rule set
+     * @throws RuleConfigurationException - if there is a problem with the configuration
      */
     public void removeRuleSet(RuleSet ruleSet) throws RuleConfigurationException {
         String bindUri = ruleSet.getBindURI();
@@ -214,17 +212,19 @@ public class JSR94BackendRuntime implements RuleBackendRuntime {
     /**
      * Helper method to register a rule execution set in the local rule set execution provider
      *
-     * @param in          Rule set as an input stream
+     * @param in Rule set as an input stream
      * @param properties  properties to be used in the registration process.
      * @param bindUri     the URI to be associated with the rule set
      * @param registrationProperties registration properties
      * @return the URI associated with the rule set
+     * @throws RuleConfigurationException - if there is a problem with the configuration
      */
+
     private String registerRuleExecutionSet(InputStream in,
                                             Map<String, Object> properties,
                                             String bindUri,
                                             Map<String, String> registrationProperties)
-                       throws RuleConfigurationException {
+            throws RuleConfigurationException {
         try {
             //Create the rule execution set
             RuleExecutionSet ruleExecutionSet =

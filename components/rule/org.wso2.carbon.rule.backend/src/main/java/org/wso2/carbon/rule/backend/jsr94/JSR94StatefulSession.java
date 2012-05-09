@@ -16,30 +16,22 @@
 
 package org.wso2.carbon.rule.backend.jsr94;
 
-import org.wso2.carbon.rule.kernel.backend.Session;
 import org.wso2.carbon.rule.common.exception.RuleRuntimeException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.rule.kernel.backend.Session;
 
-import javax.rules.StatefulRuleSession;
-import javax.rules.Handle;
-import javax.rules.InvalidHandleException;
 import javax.rules.InvalidRuleSessionException;
-import java.util.List;
+import javax.rules.StatefulRuleSession;
 import java.rmi.RemoteException;
+import java.util.List;
 
 public class JSR94StatefulSession implements Session {
 
-     private static Log log = LogFactory.getLog(JSR94StatefulSession.class);
     private StatefulRuleSession statefulRuleSession;
-    private long nextTime;
-    private final static long DEFAULT_INTERVAL = 1000 * 60 * 10;
     /* Lock used to ensure thread-safe execution of the rule engine */
     private final Object resourceLock = new Object();
 
     public JSR94StatefulSession(StatefulRuleSession statefulRuleSession) {
         this.statefulRuleSession = statefulRuleSession;
-        this.nextTime = System.currentTimeMillis() + DEFAULT_INTERVAL;
     }
 
     @Override
@@ -50,10 +42,7 @@ public class JSR94StatefulSession implements Session {
 
                 statefulRuleSession.addObjects(facts);
                 statefulRuleSession.executeRules();
-
-                List results = statefulRuleSession.getObjects();
-
-                return results;
+                return statefulRuleSession.getObjects();
             }
         } catch (InvalidRuleSessionException e) {
             throw new RuleRuntimeException("Error was occurred when executing stateful session", e);

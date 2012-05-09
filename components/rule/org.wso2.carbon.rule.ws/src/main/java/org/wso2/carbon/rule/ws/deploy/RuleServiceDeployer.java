@@ -193,9 +193,7 @@ public class RuleServiceDeployer extends AbstractDeployer {
             populateServiceXMLData(deploymentFileData.getFile().getAbsolutePath(), axisService);
         }
 
-        SchemaBuilder schemaBuilder = new SchemaBuilder(ruleService.getTargetNamespace(),
-                axisService.getClassLoader(),
-                axisService);
+        SchemaBuilder schemaBuilder = new SchemaBuilder(axisService.getClassLoader(), axisService);
 
         for (Operation operation : ruleService.getOperations()) {
             Input input = operation.getInput();

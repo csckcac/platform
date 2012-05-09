@@ -25,14 +25,12 @@ import org.wso2.carbon.registry.core.service.RegistryService;
 
 /**
  * @scr.component name="ruleService.component" immediate="true"
- *  @scr.reference name="registry.service"
+ * @scr.reference name="registry.service"
  * interface="org.wso2.carbon.registry.core.service.RegistryService"
  * cardinality="1..1" policy="dynamic" bind="setRegistryService" unbind="unsetRegistryService"
  */
 
 public class RuleServiceDS {
-    private static final Log log = LogFactory.getLog(RuleServiceDS.class);
-
 
     protected void setRegistryService(RegistryService registryService) throws RegistryException {
         RuleServiceValueHolder.getInstance().setRegistryService(registryService);

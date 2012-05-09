@@ -33,13 +33,10 @@ import java.util.HashMap;
 
 public class SchemaBuilder {
 
-    private String defaultNamespace;
     private RuleSchemaGenerator ruleSchemaGenerator;
 
-    public SchemaBuilder(String defaultNamespace,
-                         ClassLoader classLoader,
+    public SchemaBuilder(ClassLoader classLoader,
                          AxisService axisService) throws RuleConfigurationException {
-        this.defaultNamespace = defaultNamespace;
         try {
             this.ruleSchemaGenerator = new RuleSchemaGenerator(classLoader, axisService);
             this.ruleSchemaGenerator.setPkg2nsmap(new HashMap<String, String>());

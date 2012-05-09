@@ -31,8 +31,6 @@ import org.wso2.carbon.registry.core.service.RegistryService;
  */
 
 public class RuleServiceDS {
-    private static final Log log = LogFactory.getLog(RuleServiceDS.class);
-
 
     protected void setRegistryService(RegistryService registryService) throws RegistryException {
         RuleServiceValueHolder.getInstance().setRegistryService(registryService);

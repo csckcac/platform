@@ -16,16 +16,15 @@
 
 package org.wso2.carbon.rule.backend.drools;
 
-import org.drools.runtime.StatelessKnowledgeSession;
-import org.drools.runtime.ExecutionResults;
 import org.drools.command.Command;
 import org.drools.command.CommandFactory;
+import org.drools.runtime.ExecutionResults;
+import org.drools.runtime.StatelessKnowledgeSession;
 import org.wso2.carbon.rule.kernel.backend.Session;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.io.InputStream;
+import java.util.List;
 
 public class DroolsStatelessSession implements Session {
 

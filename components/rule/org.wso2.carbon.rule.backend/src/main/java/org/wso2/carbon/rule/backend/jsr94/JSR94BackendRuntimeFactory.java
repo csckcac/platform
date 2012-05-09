@@ -47,7 +47,7 @@ public class JSR94BackendRuntimeFactory implements RuleBackendRuntimeFactory {
                                                                              throws RuleConfigurationException {
         String providerClassName = properties.get(PROVIDER_PRO_CLASS);
        
-        Class providerClass = null;
+        Class providerClass;
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Trying to initialize the RuleServiceProvider " +

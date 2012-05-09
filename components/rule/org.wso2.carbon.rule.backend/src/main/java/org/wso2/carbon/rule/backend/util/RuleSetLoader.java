@@ -31,39 +31,37 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class    RuleSetLoader {
-
+public class RuleSetLoader {
 
 
     public static InputStream getRuleSetAsStream(Rule rule, ClassLoader classLoader) throws RuleConfigurationException {
         InputStream ruleInputStream = null;
 
         if (rule.getSourceType().equals(Constants.RULE_SOURCE_TYPE_INLINE)) {
-                ruleInputStream = new ByteArrayInputStream(rule.getValue().getBytes());
-            } else if (rule.getSourceType().equals(Constants.RULE_SOURCE_TYPE_REGISTRY)) {
-                String[] vale = rule.getValue().toString().split(":");
-                String type = vale[0];
-                String key = vale[1];
+            ruleInputStream = new ByteArrayInputStream(rule.getValue().getBytes());
+        } else if (rule.getSourceType().equals(Constants.RULE_SOURCE_TYPE_REGISTRY)) {
+            String[] vale = rule.getValue().split(":");
+            String type = vale[0];
+            String key = vale[1];
 
-                try {
-                    ruleInputStream = getRegistryAsStream(type, key);
-                } catch (RegistryException e) {
-                            throw new RuleConfigurationException("Can not access the registry : ", e);
-                }
-
-            } else if (rule.getSourceType().equals(Constants.RULE_SOURCE_TYPE_FILE)) {
-                ruleInputStream = classLoader.getResourceAsStream(
-                        Constants.RULE_SOURCE_FILE_DIRECTORY+ File.separator+rule.getValue().toString());
+            try {
+                ruleInputStream = getRegistryAsStream(type, key);
+            } catch (RegistryException e) {
+                throw new RuleConfigurationException("Can not access the registry : ", e);
             }
-        else if (rule.getSourceType().equals(Constants.RULE_SOURCE_TYPE_URL)){
+
+        } else if (rule.getSourceType().equals(Constants.RULE_SOURCE_TYPE_FILE)) {
+            ruleInputStream = classLoader.getResourceAsStream(
+                    Constants.RULE_SOURCE_FILE_DIRECTORY + File.separator + rule.getValue());
+        } else if (rule.getSourceType().equals(Constants.RULE_SOURCE_TYPE_URL)) {
             String url = rule.getValue();
-            try{
+            try {
 
                 URL ruleURL = new URL(url);
                 ruleInputStream = ruleURL.openStream();
-            } catch (MalformedURLException e){
+            } catch (MalformedURLException e) {
                 throw new RuleConfigurationException("Unknown protocol is specified : ", e);
-            } catch (IOException e){
+            } catch (IOException e) {
                 throw new RuleConfigurationException("Can not access the URL : ", e);
             }
 
@@ -75,19 +73,19 @@ public class    RuleSetLoader {
     }
 
     private static InputStream getRegistryAsStream(String type, String key) throws RegistryException {
-                RuleServiceValueHolder ruleServiceValueHolder = RuleServiceValueHolder.getInstance();
+        RuleServiceValueHolder ruleServiceValueHolder = RuleServiceValueHolder.getInstance();
         InputStream inputStream = null;
 
 
-            if (type.equals(Constants.RULE_SOURCE_REGISTRY_TYPE_CONFIGURATION)) {
+        if (type.equals(Constants.RULE_SOURCE_REGISTRY_TYPE_CONFIGURATION)) {
 
-                inputStream = ruleServiceValueHolder.getRegistryService()
-                        .getConfigSystemRegistry().get(key).getContentStream();
-            } else if (type.equals(Constants.RULE_SOURCE_REGISTRY_TYPE_GOVERNANCE)) {
-                inputStream =  ruleServiceValueHolder.getRegistryService()
-                        .getGovernanceSystemRegistry().get(key).getContentStream();
+            inputStream = ruleServiceValueHolder.getRegistryService()
+                    .getConfigSystemRegistry().get(key).getContentStream();
+        } else if (type.equals(Constants.RULE_SOURCE_REGISTRY_TYPE_GOVERNANCE)) {
+            inputStream = ruleServiceValueHolder.getRegistryService()
+                    .getGovernanceSystemRegistry().get(key).getContentStream();
 
-            }
+        }
 
         return inputStream;
     }

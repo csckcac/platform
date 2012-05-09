@@ -33,10 +33,10 @@ public class DroolsStatefulSession implements Session {
 
     public List execute(List facts) {
         for (Object fact : facts) {
-            statefulKnowledgeSession.insert(fact);
+            this.statefulKnowledgeSession.insert(fact);
         }
-        statefulKnowledgeSession.fireAllRules();
-        Iterator results = statefulKnowledgeSession.getObjects().iterator();
+        this.statefulKnowledgeSession.fireAllRules();
+        Iterator results = this.statefulKnowledgeSession.getObjects().iterator();
         final List tobeReturn = new ArrayList();
         while (results.hasNext()) {
             Object result = results.next();

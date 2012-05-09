@@ -22,7 +22,7 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.service.RegistryService;
 
 public class RuleServiceValueHolder {
-    private static RegistryService registryService;
+    private RegistryService registryService;
     private static RuleServiceValueHolder ruleServiceValueHolder = new RuleServiceValueHolder();
 
 
@@ -35,11 +35,11 @@ public class RuleServiceValueHolder {
     }
 
     public void setRegistryService(RegistryService registryService) {
-        ruleServiceValueHolder.registryService = registryService;
+        this.registryService = registryService;
     }
 
     public void unsetRegistryService() {
-        ruleServiceValueHolder.registryService = null;
+        this.registryService = null;
     }
 
 }

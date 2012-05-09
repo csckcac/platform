@@ -35,8 +35,7 @@ public class TestSchemaBuilder extends TestCase {
 
         try {
             SchemaBuilder schemaBuilder =
-                    new SchemaBuilder("http://test.com/rule",
-                            this.getClass().getClassLoader(), new AxisService());
+                    new SchemaBuilder(this.getClass().getClassLoader(), new AxisService());
             StAXOMBuilder stAXOMBuilder =
                     new StAXOMBuilder(this.getClass().getResourceAsStream("/placeOrder.rsl"));
             RuleService ruleService =

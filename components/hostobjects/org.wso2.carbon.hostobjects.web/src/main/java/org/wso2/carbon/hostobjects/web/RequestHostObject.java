@@ -102,6 +102,28 @@ public class RequestHostObject extends ScriptableObject {
         return rho.request.getMethod();
     }
 
+    public static String jsFunction_getContextPath(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+        String functionName = "getContextPath";
+        int argsCount = args.length;
+        if (argsCount != 0) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+
+        RequestHostObject rho = (RequestHostObject) thisObj;
+        return rho.request.getContextPath();
+    }
+
+    public static String jsFunction_getPathTranslated(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
+        String functionName = "getPathTranslated";
+        int argsCount = args.length;
+        if (argsCount != 0) {
+            HostObjectUtil.invalidNumberOfArgs(hostObjectName, functionName, argsCount, false);
+        }
+
+        RequestHostObject rho = (RequestHostObject) thisObj;
+        return rho.request.getPathTranslated();
+    }
+
     public static String jsFunction_getProtocol(Context cx, Scriptable thisObj, Object[] args, Function funObj) throws ScriptException {
         String functionName = "getProtocol";
         int argsCount = args.length;

@@ -84,7 +84,7 @@ public class WSRequestHostObjectTestCase {
   		} catch (IOException e) {
   			e.printStackTrace();
   		} finally {
-  	        assertEquals(finalOutput, "Jaggery Runtime-1.0.0-SNAPSHOT_M4");
+  	        assertEquals(finalOutput, "Jaggery Runtime-1.0.0-SNAPSHOT_M5");
   		}
           
       }

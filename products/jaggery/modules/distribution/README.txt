@@ -47,7 +47,7 @@ Jaggery has native JSON support and also E4X support for XML manipulation.
     * [JAGGERY-141] - XML class does not work with text read from an XML file
     * [JAGGERY-143] - Documentation inconsistencies
     * [JAGGERY-144] - Doc sample > download button still says 'M3' in its label
-    * [JAGGERY-145] - /products/jaggery/dl/jaggery-1.0.0-SNAPSHOT_M4.zip Not found
+    * [JAGGERY-145] - /products/jaggery/dl/jaggery-1.0.0-SNAPSHOT_M5.zip Not found
     * [JAGGERY-146] - Usability: Enable browser BACK button from "Say Hello to Jaggery" try-it page
     * [JAGGERY-147] - Gets an 'AuthenticationFailedException' even when correct credentials are used in the email sample
     * [JAGGERY-149] - Fix File hostobject to work according to the paths specified using "file URI scheme"

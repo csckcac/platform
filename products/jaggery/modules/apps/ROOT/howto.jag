@@ -63,7 +63,7 @@ include('/includes/topnavi.jag');
 		<img src="images/jaglogo.png" style="margin-top:20px; margin-bottom:10px;" align="right" />
 		<p align="right">The Delicious Javascript Framework. - How to set it up and how to get started.</p>
             <p align="right" style="margin-top:20px;">
-                <a class="btn success large" href="http://dist.wso2.org/products/jaggery/dl/jaggery-1.0.0-SNAPSHOT_M4.zip">Download Jaggery (M4) </a>
+                <a class="btn success large" href="http://dist.wso2.org/products/jaggery/dl/jaggery-1.0.0-SNAPSHOT_M5.zip">Download Jaggery (M4) </a>
             </p>
         </div>
 </div>
@@ -77,7 +77,7 @@ include('/includes/topnavi.jag');
 
 <span id="deploying"></span>
             <ol>
-                <li>Extract <code>jaggery-1.0.0-SNAPSHOT_M4.zip</code></li>
+                <li>Extract <code>jaggery-1.0.0-SNAPSHOT_M5.zip</code></li>
                 <li>The bin folder will contain all the Jaggery execution scripts.</li>
                 <li>Run <code>sh bin/server.sh (bin/server.bat)</code> command to start the server.</li>
             </ol>

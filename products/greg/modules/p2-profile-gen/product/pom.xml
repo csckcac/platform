@@ -81,22 +81,14 @@
                             <featureArtifacts>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.core.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.logging.mgt.feature:${carbon.version}</featureArtifactDef>
-
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.security.mgt.feature:${carbon.version}</featureArtifactDef>
-
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.system.statistics.feature:${carbon.version}</featureArtifactDef>
-
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.event.server.feature:${carbon.version}</featureArtifactDef>
-                                <!--featureArtifactDef>org.wso2.carbon:org.wso2.carbon.qpid.server.feature:${carbon.version}</featureArtifactDef-->
-
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.core.ui.feature:${carbon.version}</featureArtifactDef>
-
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.user.profile.ui.feature:${carbon.version}</featureArtifactDef>
-
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.activities.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.webdav.feature:${carbon.version}</featureArtifactDef>
 				                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.jcr.feature:${carbon.version}</featureArtifactDef>
-
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.handler.configuration.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.associations.dependencies.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.community.features.feature:${carbon.version}</featureArtifactDef>
@@ -104,31 +96,22 @@
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.ws.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.uddi.feature:${carbon.version}</featureArtifactDef>
 				                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.social.feature:${carbon.version}</featureArtifactDef>
-				                <!--featureArtifactDef>org.wso2.carbon:org.wso2.carbon.gadget.initializer.feature:${carbon.version}</featureArtifactDef-->
 				                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.gadget.editor.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.gadget.editor.ui.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.governance.lifecycle.management.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.governance.gadgets.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.governance.metadata.feature:${carbon.version}</featureArtifactDef>
-                                <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.governance.people.feature:${carbon.version}</featureArtifactDef>-->
-                                <!--<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.governance.processes.feature:${carbon.version}</featureArtifactDef>-->
-
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.governance.notifications.configuration.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.core.feature:${carbon.version}</featureArtifactDef>
-
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.ui.menu.governance.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.profiles.feature:${carbon.version}</featureArtifactDef>
-
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.resource.properties.feature:${carbon.version}</featureArtifactDef>
-
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.contentsearch.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.discovery.core.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.discovery.proxy.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.governance:org.wso2.governance.styles.feature:${project.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.dashboard.feature:${carbon.version}</featureArtifactDef>
-
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.dashboard.dashboardpopulator.server.feature:${carbon.version}</featureArtifactDef>
-                                <!--featureArtifactDef>org.wso2.carbon:org.wso2.carbon.gauges.ui.feature:${carbon.version}</featureArtifactDef-->
                             	<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.authenticator.token.feature:${carbon.version}</featureArtifactDef>
 				                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.event.common.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.application.mgt.feature:${carbon.version}</featureArtifactDef>
@@ -144,7 +127,7 @@
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.ntask.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.humantask.server.feature:${carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.service.mgt.server.feature:${carbon.version}</featureArtifactDef>
-				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.attachment.mgt.feature:${carbon.version}</featureArtifactDef>
+				            <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.attachment.mgt.feature:${carbon.version}</featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -184,22 +167,12 @@
                                     <id>org.wso2.carbon.event.server.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-                                <!--feature>
-                                    <id>org.wso2.carbon.qpid.server.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature-->
-                                <!--feature>
-                                    <id>org.wso2.carbon.identity.core.server.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature-->
+
                                 <feature>
                                     <id>org.wso2.carbon.identity.core.ui.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-                                <!--feature>
-                                    <id>org.wso2.carbon.identity.user.profile.server.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature-->
+
                                 <feature>
                                     <id>org.wso2.carbon.identity.user.profile.ui.feature.group</id>
                                     <version>${carbon.version}</version>
@@ -241,10 +214,7 @@
                                     <id>org.wso2.carbon.registry.social.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-				                <!--feature>
-                                    <id>org.wso2.carbon.gadget.initializer.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature-->
+
 				                <feature>
                                     <id>org.wso2.carbon.gadget.editor.feature.group</id>
                                     <version>${carbon.version}</version>
@@ -266,18 +236,7 @@
                                     <id>org.wso2.carbon.governance.metadata.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-<!--
-                                <feature>
-                                    <id>org.wso2.carbon.governance.people.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
--->
-<!--
-                                <feature>
-                                    <id>org.wso2.carbon.governance.processes.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
--->
+
                                  <feature>
                                     <id>org.wso2.carbon.registry.webdav.feature.group</id>
                                     <version>${carbon.version}</version>
@@ -335,10 +294,7 @@
                                     <id>org.wso2.carbon.dashboard.dashboardpopulator.server.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-				                <!--feature>
-                                    <id>org.wso2.carbon.gauges.ui.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature-->
+
                                 <feature>
 					            <id>org.wso2.carbon.identity.authenticator.token.feature.group</id>
 					            <version>${carbon.version}</version>
@@ -402,7 +358,7 @@
                                     <id>org.wso2.carbon.service.mgt.server.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>
-				<feature>
+				                <feature>
                                     <id>org.wso2.carbon.attachment.mgt.feature.group</id>
                                     <version>${carbon.version}</version>
                                 </feature>

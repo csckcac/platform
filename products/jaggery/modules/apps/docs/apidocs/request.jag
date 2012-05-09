@@ -207,7 +207,18 @@ include('/includes/topnavi.jag');
                         <td>String</td>
                         <td>
                             <pre class="prettyprint">request.getPathInfo()</pre>
-                            Returns the request extra path information
+                            Returns any extra path information associated with the URL the client sent when it made this request
+                        </td>
+
+                    </tr>
+                    <tr>
+
+                        <td><code>getContextPath()</code>
+                        </td>
+                        <td>String</td>
+                        <td>
+                            <pre class="prettyprint">request.getContextPath()</pre>
+                            Returns the portion of the request URI that indicates the context of the request
                         </td>
 
                     </tr>

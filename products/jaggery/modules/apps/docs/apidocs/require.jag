@@ -88,6 +88,9 @@ function myFunc() {
 
                     <p class="description">In-built function <code>require()</code> allows to get a reference for any
                         available Jaggery module. Adding a Jaggery module is detailed <a href="modules.jag">here</a>.
+                        
+                        <br/><br/>
+                        Apart from Jaggery modules, <code>require()</code> can import javascript files (or .json) and assign it to a variable / property
                         </p>
                 </section>
 
@@ -101,13 +104,23 @@ function myFunc() {
                             <th>Description</th>
                         </tr>
                         <tr>
-                            <td><code>require()</code></td>
+                            <td><code>require('module_name')</code></td>
                             <td>Object</td>
                             <td>
 <pre class="prettyprint">
 var module = require("module_name");
 </pre>
                                 Returns a module object with keyed references to all methods and objects of the module.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>require('js_file.js')</code></td>
+                            <td>Object</td>
+                            <td>
+<pre class="prettyprint">
+var foo = require("foo.js");
+</pre>
+                                Assign the javascript in <code>foo.js</code> a variable
                             </td>
                         </tr>
                         </tbody>

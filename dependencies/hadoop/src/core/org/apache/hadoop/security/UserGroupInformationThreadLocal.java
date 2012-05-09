@@ -8,4 +8,7 @@ public class UserGroupInformationThreadLocal {
 	public static UserGroupInformation get() {
 		return ugiThreadLocal.get();
 	}
+        public static void remove() {
+                ugiThreadLocal.remove();
+        }
 }

@@ -325,7 +325,9 @@ public class UserGroupInformation {
 
     @Override
     public AppConfigurationEntry[] getAppConfigurationEntry(String appName) {
-      LOG.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> getAppConfigurationEntry("+appName+") Thread ID "+Thread.currentThread().getId());
+      if (LOG.isDebugEnabled()) {
+         LOG.debug("Getting AppConfigurationEntry " +appName+" from Thread "+Thread.currentThread().getId());
+      }
       Map<String,String> USER_KERBEROS_OPTIONS = new HashMap<String,String>();
       Map<String,String> KEYTAB_KERBEROS_OPTIONS = new HashMap<String,String>();
       if (SIMPLE_CONFIG_NAME.equals(appName)) {
@@ -334,10 +336,16 @@ public class UserGroupInformation {
         return SIMPLE_CONF;
       } else if (USER_KERBEROS_CONFIG_NAME.equals(appName)) {
     	Krb5TicketCacheFinder tktCacheFinder = null;
-    	if ((tktCacheFinder = UserGroupInformation.getKrb5TicketCacheFinder()) != null)
+    	if ((tktCacheFinder = UserGroupInformation.getKrb5TicketCacheFinder()) != null) {
+                if (LOG.isDebugEnabled()) {
+			LOG.debug("Searching for Tenant's KRB5 Ticket Cache...");
+                }
     		ticketCache = tktCacheFinder.getTenantTicketCache();
+        }
         if (ticketCache != null) {
-        	LOG.info(">>>>>>>>>>>>>>>>> "+ticketCache);
+                if (LOG.isDebugEnabled()) {
+        		LOG.debug("Using KRB5 Ticket Cache "+ticketCache);
+                }
         	USER_KERBEROS_OPTIONS.put("ticketCache", ticketCache);
         } 
         USER_KERBEROS_OPTIONS.put("doNotPrompt", "true");
@@ -426,10 +434,12 @@ public class UserGroupInformation {
   static UserGroupInformation getLoginUser() throws IOException {
     UserGroupInformation loginUser = UserGroupInformationThreadLocal.get();;
     Subject subject = null;
-    if (loginUser != null)
-      LOG.info(">>>>>>>>>> UGI Information: "+"User "+loginUser.getUserName()+" from Thread ID "+Thread.currentThread().getId()+" Object "+loginUser.hashCode());
-    else 
-      LOG.info(">>>>>>>>>> UGI Information: loginUser is null!!");
+    if (LOG.isDebugEnabled()) {
+    	if (loginUser != null)
+      		LOG.debug("UGI Information: "+"User "+loginUser.getUserName()+" from Thread ID "+Thread.currentThread().getId()+" Object "+loginUser.hashCode());
+    	else
+      		LOG.debug("UGI Information: Not created yet");
+    }
     if (loginUser == null) {
       try {
         subject = new Subject();

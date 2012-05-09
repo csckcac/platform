@@ -18,7 +18,7 @@ ShoutApp = new function() {
 
 	this.sendVerificationCode = function() {
 		if($('#authKey').val()==""){
-			alert("Please Enter the Verification Code")
+			alert("Please enter the Verification Code")
 		}else{
 		ShoutAppUtil.makeRequest("/shout/twitter.jag?atoken="
 				+ $('#authKey').val(), "", function(html) {
@@ -59,7 +59,7 @@ ShoutApp = new function() {
 
 	this.postIt = function() {
 		$("#feed_scroll").html("");
-		if($('#shout_txt').val()==""){alert("Please Type what to be Share before Click Shout.")}else{
+		if($('#shout_txt').val()==""){alert("Please type what to be share before click Shout.")}else{
 		ShoutAppUtil.makeRequest("/shout/twitter.jag?share="
 				+ $('#shout_txt').val(), "", function(html) {
 

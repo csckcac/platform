@@ -28,6 +28,9 @@
         <li id="ses">
             <a href="/docs/apidocs/session.jag">session</a>
         </li>
+        <li id="app">
+            <a href="/docs/apidocs/application.jag">application</a>
+        </li>
     </ul>
 
     <h6>Http Client</h6>
@@ -74,9 +77,6 @@
     <ul>
         <li id="file">
             <a href="/docs/apidocs/file.jag">File</a>
-        </li>
-        <li id="fileUpload">
-            <a href="/docs/apidocs/fileupload.jag">FileUpload</a>
         </li>
     </ul>
 

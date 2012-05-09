@@ -249,6 +249,21 @@ include('/includes/topnavi.jag');
 
                     </tr>
 
+                    <tr>
+
+                        <td><code>getFile(formFeildName)</code>
+                        </td>
+                           <td>String</td>
+                        <td>
+                            <pre class="prettyprint">request.getFile("fieldName")</pre>
+                            Returns a file object when the content type is <code>multipart/form-data</code>
+                                                        <br/><br/>
+<pre class="prettyprint">var file = request.getFile("userfile");
+file.saveAs(file.getName());</pre>
+                        </td>
+
+                    </tr>
+
 
                     </tbody>
                 </table>

@@ -296,6 +296,14 @@ file.close();</pre>
                     </tr>
                     <tr>
                         <td>
+                            <code>saveAs(string targetLocation)</code>
+                        </td>
+                        <td>Boolean</td>
+                        <td>Save the file to the given target file. Returns True if the file was successfully moved.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <code>del()</code>
                         </td>
                         <td>Boolean</td>

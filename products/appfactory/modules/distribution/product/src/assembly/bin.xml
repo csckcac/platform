@@ -129,8 +129,8 @@
         </fileSet>
 
 		<fileSet>
-            <directory>../../jaggery</directory>
-            <outputDirectory>wso2appfactory-${pom.version}/jaggery</outputDirectory>
+			<directory>resources/jaggery-modules</directory>
+            <outputDirectory>wso2appfactory-${pom.version}/modules</outputDirectory>
             <includes>
                 <include>**/**.xml</include>
             </includes>

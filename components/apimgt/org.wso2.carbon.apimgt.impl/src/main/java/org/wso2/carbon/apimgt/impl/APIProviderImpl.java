@@ -290,7 +290,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
             }
             Resource apiSourceArtifact = registry.get(apiSourcePath);
             GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry,
-                    APIConstants.PROVIDER_KEY);
+                    APIConstants.API_KEY);
             GenericArtifact artifact = artifactManager.getGenericArtifact(
                     apiSourceArtifact.getProperty(GovernanceConstants.ARTIFACT_ID_PROP_KEY));
 

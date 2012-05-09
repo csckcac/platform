@@ -100,12 +100,7 @@ public class JUDDIJAXWSDeployer extends JAXWSDeployer {
     @Override
     protected AxisServiceGroup deployClasses(String groupName, URL location, ClassLoader classLoader, List<String> classList) throws ClassNotFoundException, InstantiationException, IllegalAccessException, AxisFault {
         ArrayList<AxisService> axisServiceList = new ArrayList<AxisService>();
-        boolean flag=false;
         for (String className : classList) {
-            if(className.matches("org.apache.juddi.api.impl.*")){
-                System.out.println("***"+className);
-                flag=true;
-            }
             Class<?> pojoClass;
             try {
                 pojoClass = Loader.loadClass(this.getClass().getClassLoader(), className);
@@ -137,9 +132,6 @@ public class JUDDIJAXWSDeployer extends JAXWSDeployer {
                     axisServiceList.add(axisService);
                 }
             }
-        }
-        if(flag==false){
-            System.out.println("+++++ Not a single org.apache.juddi.api.impl.* class found ++++++");
         }
         int size = axisServiceList.size();
         if (size <= 0) {

@@ -27,8 +27,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * utility class to parse the rule service OMElement and get the Rule service object structure.
+ */
 public class RuleServiceHelper {
 
+    /**
+     * returns the RuleService Object for given OMElement object.
+     * @param ruleServiceElement - OMElement contatins the detials of the
+     * @return   - corresponding Rule Service Object
+     * @throws RuleConfigurationException  - if there is a problem.
+     */
     public static RuleService getRuleService(OMElement ruleServiceElement)
             throws RuleConfigurationException {
 

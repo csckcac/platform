@@ -24,8 +24,10 @@ import javax.xml.namespace.QName;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * this class orverrides some methods of the axis2 schema generator. 
+ */
 public class RuleSchemaGenerator extends DefaultSchemaGenerator {
-
 
     public RuleSchemaGenerator(ClassLoader classLoader,
                                AxisService axisService) throws Exception {

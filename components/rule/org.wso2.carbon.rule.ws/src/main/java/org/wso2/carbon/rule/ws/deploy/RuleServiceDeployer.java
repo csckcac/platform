@@ -54,6 +54,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 /**
+ * this is the deployer extension to axis2 of rule deployer
  * rule service deployer. This reads either the .aar or .rsl files under the ruleservices folder and create AxisServices
  * from that.
  */

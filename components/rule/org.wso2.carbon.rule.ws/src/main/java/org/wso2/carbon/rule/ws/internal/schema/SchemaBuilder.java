@@ -31,6 +31,10 @@ import javax.xml.namespace.QName;
 import java.util.List;
 import java.util.HashMap;
 
+/**
+ * this class is used to generate the schema for the rule services. It generates the schema for the wrapper elements and
+ * uses axis2 to generate the schema for fact classes.
+ */
 public class SchemaBuilder {
 
     private RuleSchemaGenerator ruleSchemaGenerator;

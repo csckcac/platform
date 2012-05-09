@@ -30,9 +30,12 @@ import org.wso2.carbon.rule.common.exception.RuleRuntimeException;
 import org.wso2.carbon.rule.common.Input;
 import org.wso2.carbon.rule.common.Output;
 
+/**
+ * message receiver is the class which plugs the rule engine to the Axis2 kernel. After invoking the handlers Axis2 kernal invokes the
+ * message receiver which does the proccessing. At the deployment time we set the message receiver to each and every operation.
+ */
 public class RuleMessageReceiver extends AbstractInOutMessageReceiver {
 
-    //TODO: handle sessions properly
     private RuleEngine ruleEngine;
     private Input input;
     private Output output;
@@ -43,13 +46,19 @@ public class RuleMessageReceiver extends AbstractInOutMessageReceiver {
         this.output = output;
     }
 
+    /**
+     * this is the method invoke by the axis2 engine
+     * @param inMessageContext   - input message context from which we can get the in comming OMElement
+     * @param outMessageContext  - output message context to which we can set the out going soap message.
+     * @throws AxisFault  - throws if some problem happens with the processing.
+     */
     public void invokeBusinessLogic(MessageContext inMessageContext,
                                     MessageContext outMessageContext) throws AxisFault {
         OMElement inputOMElement = inMessageContext.getEnvelope().getBody().getFirstElement();
 
         SOAPFactory soapFactory = getSOAPFactory(inMessageContext);
         SOAPEnvelope soapEnvelope = soapFactory.getDefaultEnvelope();
-        RuleSession ruleSession = null;
+        RuleSession ruleSession;
         try {
             ruleSession = getRuleSession(inMessageContext);
             soapEnvelope.getBody().addChild(ruleSession.execute(inputOMElement, this.input, this.output));
@@ -61,6 +70,13 @@ public class RuleMessageReceiver extends AbstractInOutMessageReceiver {
 
     }
 
+    /**
+     * we handles the rule sessions with the axis2 sessions. Axis2 manages sessions using the service context. Therefore we can store the rule session
+     * on the service context as well.
+     * @param inMessageContext  - in comming message context. From which we can obtain the service context object.
+     * @return  - rule session to use
+     * @throws RuleRuntimeException - if there is a problem of getting the rule session.
+     */
     private RuleSession getRuleSession(MessageContext inMessageContext) throws RuleRuntimeException {
         ServiceContext serviceContext = inMessageContext.getServiceContext();
         RuleSession ruleSession =

@@ -16,6 +16,9 @@
 
 package org.wso2.carbon.rule.ws.internal.schema;
 
+/**
+ * this is a dummy class used to trick a call for an axis2 schema generator.
+ */
 public class DummyRuleService {
     
 }

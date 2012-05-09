@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <wso2registry>
+
+    <!-- These are used to define the DB configuration and the basic parameters to be used for the registry -->
+
     <currentDBConfig>wso2registry</currentDBConfig>
     <readOnly>false</readOnly>
     <enableCache>true</enableCache>
     <registryRoot>/</registryRoot>
+
+    <!-- This defines the default database and its configuration of the registry -->
 
     <dbConfig name="wso2registry">
         <url>jdbc:h2:repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000</url>
@@ -15,11 +20,15 @@
         <minIdle>5</minIdle>
     </dbConfig>
 
+    <!-- This handler provides the feature to add a simlink to a given resource -->
+
     <handler class="org.wso2.carbon.registry.extensions.handlers.ExtensionsSymLinkHandler">
         <filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.URLMatcher">
             <property name="pattern">.*</property>
         </filter>
     </handler>
+
+    <!-- This handler provides resource retention locking for the resources -->
 
     <handler class="org.wso2.carbon.registry.extensions.handlers.RetentionHandler" 
             methods="PUT,DELETE,MOVE,RENAME,IMPORT,COPY,ADD_ASSOCIATION,REMOVE_ASSOCIATION,RESTORE,RESTORE_VERSION">
@@ -28,11 +37,15 @@
         </filter>
     </handler>
 
+    <!-- This handler processes the resources of the given type (i.e.:matching filter) being added to Synapse repository  -->
+
     <handler class="org.wso2.carbon.registry.extensions.handlers.SynapseRepositoryHandler">
         <filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher">
             <property name="mediaType">application/vnd.apache.synapse</property>
         </filter>
     </handler>
+
+    <!-- This handler processes the resources of the given type (i.e.:matching filter) being added to Synapse repository  -->
 
     <handler class="org.wso2.carbon.registry.extensions.handlers.SynapseRepositoryHandler">
         <filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher">
@@ -40,17 +53,23 @@
         </filter>
     </handler>
 
+    <!-- This handler processes the collections of Axis2 repository type which matches the given filter -->
+
     <handler class="org.wso2.carbon.registry.extensions.handlers.Axis2RepositoryHandler">
         <filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher">
             <property name="mediaType">application/vnd.apache.axis2</property>
         </filter>
     </handler>
 
+    <!-- This handler process the collections of Axis2 repository type which matches the given filter -->
+
     <handler class="org.wso2.carbon.registry.extensions.handlers.Axis2RepositoryHandler">
         <filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher">
             <property name="mediaType">application/vnd.wso2.wsas</property>
         </filter>
     </handler>
+
+    <!-- This handler process the uploaded  WSDL files -->
 
     <handler class="org.wso2.carbon.registry.extensions.handlers.WSDLMediaTypeHandler">
         <!--property name="createService">false</property>
@@ -69,6 +88,8 @@
             <property name="mediaType">application/wsdl+xml</property>
         </filter>
     </handler>
+
+    <!-- This handler processes .zip & .gar files being added to the registry -->
 
     <handler class="org.wso2.carbon.registry.extensions.handlers.ZipWSDLMediaTypeHandler">
         <property name="wsdlMediaType">application/wsdl+xml</property>
@@ -94,6 +115,8 @@
         </filter>
     </handler>
 
+    <!-- This handler processes the services being added to the registry -->
+
     <handler class="org.wso2.carbon.registry.extensions.handlers.ServiceMediaTypeHandler">
         <!--property name="disableWSDLValidation">true</property-->
         <property name="smartLifecycleLinks" type="xml">
@@ -106,28 +129,15 @@
         </filter>
     </handler>
 
+    <!-- This handler provides the ability to remove the entire heirarchy for a given service while deleting the service -->
+
     <!--handler class="org.wso2.carbon.registry.extensions.handlers.DeleteServiceHandler">
         <filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher">
             <property name="mediaType">application/vnd.wso2-service+xml</property>
         </filter>
-    </handler-->
+    </handler-->    
 
-    <handler class="org.wso2.carbon.registry.extensions.handlers.ProcessMediaTypeHandler">
-        <property name="smartLifecycleLinks" type="xml">
-            <key>dev</key>
-            <key>qa</key>
-            <key>live</key>
-        </property>
-        <filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher">
-            <property name="mediaType">application/vnd.wso2-process+xml</property>
-        </filter>
-    </handler>
-
-    <handler class="org.wso2.carbon.registry.extensions.handlers.SLAMediaTypeHandler">
-        <filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher">
-            <property name="mediaType">application/vnd.wso2-sla+xml</property>
-        </filter>
-    </handler>
+    <!-- This handler processes the links for the lifecycle -->
 
     <handler class="org.wso2.carbon.registry.extensions.handlers.SmartLifecycleLinkHandler">
         <property name="states" type="xml">
@@ -140,11 +150,7 @@
         </filter>
     </handler>
 
-    <handler class="org.wso2.carbon.registry.extensions.handlers.PeopleMediaTypeHandler">
-        <filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher">
-            <property name="mediaType">application/vnd.wso2-people+xml</property>
-        </filter>
-    </handler>
+    <!-- This handler processes the policy files of the given media type defined by the filter -->
 
     <handler class="org.wso2.carbon.registry.extensions.handlers.PolicyMediaTypeHandler">
 	<property name="policyLocationConfiguration" type="xml">
@@ -154,6 +160,8 @@
             <property name="mediaType">application/policy+xml</property>
         </filter>
     </handler>
+
+    <!-- This handler processes the schema types which are defined by the filter  -->
 
     <handler class="org.wso2.carbon.registry.extensions.handlers.XSDMediaTypeHandler">
         <!--property name="disableSchemaValidation">true</property-->
@@ -165,11 +173,15 @@
         </filter>
     </handler>
 
+    <!-- This handler processes making an external link to a given resource -->
+
     <handler class="org.wso2.carbon.registry.extensions.handlers.ExternalLinkHandler">
         <filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher">
             <property name="mediaType">application/vnd.wso2-hyperlink</property>
         </filter>
     </handler>
+
+    <!-- This handler processes service end-points defined in the WSDL files being uploaded to the registry -->
 
     <handler class="org.wso2.carbon.registry.extensions.handlers.EndpointMediaTypeHandler">
         <property name="endpointMediaType">application/vnd.wso2.endpoint</property>
@@ -178,13 +190,17 @@
         </property>
         <filter class="org.wso2.carbon.registry.extensions.filters.EndpointMediaTypeMatcher">
         </filter>
-    </handler>
+    </handler>   
 
+    <!-- This defines the Atom based remote registry instance configuration -->
+    
     <!--remoteInstance url="https://localhost:9443/registry">
 	<id>instanceid</id>
 	<username>username</username>
 	<password>password</password>
     </remoteInstance-->
+
+    <!-- This defines the Atom based remote registry instance configuration -->
 
     <!--remoteInstance url="https://localhost:9443/registry">
         <id>instanceid</id>
@@ -192,6 +208,8 @@
         <password>password</password>
         <type>ws</type>
     </remoteInstance-->
+
+    <!-- This defines the JDBC based remote registry instance configuration  -->
 
     <!--remoteInstance url="https://localhost:9443/registry">
         <id>instanceid</id>
@@ -201,11 +219,15 @@
         <registryRoot>/</registryRoot>
     </remoteInstance-->
 
+    <!-- This defines the mount configuration to be used with the remote instance and the target path for the mount -->
+
     <!--mount path="/_system/config" overwrite="true|false|virtual">
         <instanceId>instanceid</instanceId>
         <targetPath>/_system/nodes</targetPath>
     </mount-->
 
+    <!-- This defines index cofiguration which is used in meta data search feature of the registry -->
+		
     <indexingConfiguration>
         <startingDelayInSeconds>300</startingDelayInSeconds>
         <indexingFrequencyInSeconds>60</indexingFrequencyInSeconds>
@@ -227,7 +249,9 @@
             <exclusion pathRegEx="/_system/local/repository/components/org[.]wso2[.]carbon[.]registry/mount/.*"/>
         </exclusions>
     </indexingConfiguration>
-
+   
+    <!-- This static configuration is suppose to be modified before any data being loaded to the registry (i.e.: before the first startup) -->
+    
     <staticConfiguration>
         <versioningProperties>true</versioningProperties>
         <versioningComments>true</versioningComments>
@@ -236,6 +260,9 @@
         <!-- Location you want to add service and default location will be /services/ -->
         <servicePath>/trunk/services/</servicePath>
     </staticConfiguration>
-		
+
+    <!-- This enables auto-versioning of resources (non-collection). Whenever a resource is updated a new version will be created -->
+  
     <versionResourcesOnChange>true</versionResourcesOnChange>
+
 </wso2registry>

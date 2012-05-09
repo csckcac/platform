@@ -207,7 +207,7 @@ sed -i "s/temp_cpuset_cpus/$jail_cpuset_cpus/" ./hooks.d/configure_lxc
 sed -i "s#temp_svn_url#$svn_url#" ./hooks.d/configure_lxc
 sed -i "s#temp_svn_dir#$svn_dir#" ./hooks.d/configure_lxc
 
-./lxc-ubuntu-x $jail_id $jail_root/$jail_id.rootfs $jail_template
+./lxc-ubuntu-x $jail_id $jail_root/$jail_id.rootfs $jail_template $jail_ip $host_machine_ip
 cd ..
 echo
 echo Release: $RELEASE

@@ -3,6 +3,8 @@
 HOST=$1
 ROOTFS=$2
 TEMPLATE=$3
+CONTAINER_IP=$4
+HM_IP=$5
 
 #
 # Locale settings (en_GB for Redcoats, en_US for Yanks):
@@ -500,8 +502,10 @@ template-wso2-carbon-server-esb() {
     chroot $ROOTFS chmod +x /opt/wso2_esb_service_node.sh
     cp -Lrf /opt/java $ROOTFS/opt/
 
-	if [ -d "$CARBON_SERVER_DIR" ]; then
-        cp -rf $CARBON_SERVER_DIR $ROOTFS/opt/
+	if [ -d "/opt/$CARBON_SERVER_DIR" ]; then
+        cp -rf /opt/$CARBON_SERVER_DIR $ROOTFS/opt/
+        sed -i "s#<parameter name=\"localMemberHost\">*.*</parameter>#<parameter name=\"localMemberHost\">$HM_IP</parameter>#" $ROOTFS/opt/$CARBON_SERVER_DIR/repository/conf/axis2.xml
+        sed -i "s#<parameter name=\"localMemberBindAddress\">*.*</parameter>#<parameter name=\"localMemberBindAddress\">$CONTAINER_IP</parameter>#" $ROOTFS/opt/$CARBON_SERVER_DIR/repository/conf/axis2.xml
     fi
 
 
@@ -557,8 +561,10 @@ template-wso2-carbon-server-as() {
     chroot $ROOTFS chmod +x /opt/wso2_as_service_node.sh
     cp -Lrf /opt/java $ROOTFS/opt/
 
-	if [ -d "$CARBON_SERVER_DIR" ]; then
-        cp -rf $CARBON_SERVER_DIR $ROOTFS/opt/
+	if [ -d "/opt/$CARBON_SERVER_DIR" ]; then
+        cp -rf /opt/$CARBON_SERVER_DIR $ROOTFS/opt/
+        sed -i "s#<parameter name=\"localMemberHost\">*.*</parameter>#<parameter name=\"localMemberHost\">$HM_IP</parameter>#" $ROOTFS/opt/$CARBON_SERVER_DIR/repository/conf/axis2/axis2.xml
+        sed -i "s#<parameter name=\"localMemberBindAddress\">*.*</parameter>#<parameter name=\"localMemberBindAddress\">$CONTAINER_IP</parameter>#" $ROOTFS/opt/$CARBON_SERVER_DIR/repository/conf/axis2/axis2.xml
     fi
 
 

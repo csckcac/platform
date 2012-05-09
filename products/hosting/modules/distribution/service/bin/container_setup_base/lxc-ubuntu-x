@@ -199,7 +199,7 @@ configure_container() {
 	# $1 is $HOST, $2 is $ROOTFS, $3 is $TEMPLATE
 	$CONFDIR/hooks.d/configure_fstab $1 $2 $3
 	$CONFDIR/hooks.d/configure_network $1 $2 $3
-	$CONFDIR/hooks.d/configure_software $1 $2 $3
+	$CONFDIR/hooks.d/configure_software $1 $2 $3 $4 $5
 	$CONFDIR/hooks.d/configure_lxc $1 $2 $3
 }
 
@@ -208,6 +208,8 @@ configure_container() {
 HOST=$1
 ROOTFS=$2
 TEMPLATE=$3
+CONTAINER_IP=$4
+HM_IP=$5
 
 
 # Die on any error:
@@ -276,7 +278,7 @@ if [ ! -f "$BASEDIR/$TEMPLATE.tgz" ]; then
 	if [ ! -d "$BASEDIR/$TEMPLATE.rootfs" ]; then
         export CLONE="false"
 		initialize_rootfs $TEMPLATE "$BASEDIR/$TEMPLATE.rootfs"
-		configure_container $TEMPLATE "$BASEDIR/$TEMPLATE.rootfs" $TEMPLATE
+		configure_container $TEMPLATE "$BASEDIR/$TEMPLATE.rootfs" $TEMPLATE $CONTAINER_IP $HM_IP
 	fi
 	
 	# tar it up for future use as a template:
@@ -308,7 +310,7 @@ rmdir $TEMPDIR
 
 
 # Finally, configure and create the container:
-configure_container $HOST $ROOTFS $TEMPLATE
+configure_container $HOST $ROOTFS $TEMPLATE $CONTAINER_IP $HM_IP
 
 lxc-create -f "$BASEDIR/$HOST.conf" -n $HOST
 

@@ -39,7 +39,6 @@
     String columnFamily = request.getParameter("columnFamily");
     String columnKey = request.getParameter("columnKey");
     String rowID = request.getParameter("rowID");
-    String clusterName = null;
     CassandraExplorerAdminClient cassandraExplorerAdminClient
             = new CassandraExplorerAdminClient(config.getServletContext(), session);
 %>
@@ -85,7 +84,7 @@
                 } else {
                     columns = cassandraExplorerAdminClient.
                             getColumnsForRowName(keyspace, columnFamily, rowID, "", "",
-                                    Integer.MAX_VALUE, false);
+                                    1, false);
                 }
             %>
             <script type="text/javascript" charset="utf-8">
@@ -103,13 +102,20 @@
                 $(document).ready(function () {
                     $('#dynamic').html('<table cellpadding="10" cellspacing="0" border="0" class="display dataTable" id="example"></table>');
                     $('#example').dataTable({
-                                "aaData":aDataSet,
+                                "sAjaxSource":"datatable_ajaxprocessor.jsp",
                                 "aoColumns":[
                                     { "sTitle":"Column Name" },
                                     { "sTitle":"Column Value" },
                                     { "sTitle":"Time Stamp" }
                                 ],
-                                "sPaginationType":"full_numbers" }
+                                "bProcessing": true,
+                                "bServerSide": true,
+                                "fnServerParams":function (aoData) {
+                                    aoData.push({ "name":"row_id", "value":'<%=rowID%>' },
+                                            {"name":"columnFamily", "value":'<%=columnFamily%>'},
+                                            {"name": "keySpace", "value": '<%=keyspace%>'});
+                                }
+                            }
                     );
                 });
             </script>

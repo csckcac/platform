@@ -105,8 +105,14 @@ public class CassandraExplorerAdminClient {
                                          String startColumn,
                                          String lastCoulmn, int limit, boolean isReversed)
             throws RemoteException, CassandraExplorerAdminCassandraServerManagementException {
-        return explorerAdminStub.getColumnsForRow(keyspaceName, columnFamily, rowName, startColumn,
+        long startTime = System.currentTimeMillis();
+        Column[] columns = explorerAdminStub.getColumnsForRow(keyspaceName, columnFamily,
+                rowName, startColumn,
                 lastCoulmn, limit, isReversed);
+        long endTime = System.currentTimeMillis();
+        System.out.println("Total elapsed time in execution for webservice  " +
+                (endTime - startTime));
+        return columns;
     }
 
     /**
@@ -119,10 +125,8 @@ public class CassandraExplorerAdminClient {
      * @param lastColumn
      * @param limit
      * @param isReversed
-     * @return
-     * @throws org.wso2.carbon.cassandra.mgt.stub.explorer.CassandraExplorerAdminCassandraServerManagementException
-     *
      * @throws java.rmi.RemoteException
+     * @ * @throws org.wso2.carbon.cassandra.mgt.stub.explorer.CassandraExplorerAdminCassandraServerManagementException
      */
     public Column[] getColumnsInUpdateOrder(String keyspaceName, String columnFamily, String rowName,
                                             String startColumn, String lastColumn, int limit,
@@ -147,6 +151,30 @@ public class CassandraExplorerAdminClient {
     public Column getColumn(String keyspace, String columnFamily, String rowName, String columnName)
             throws CassandraExplorerAdminCassandraServerManagementException, RemoteException {
         return explorerAdminStub.getColumn(keyspace, columnFamily, rowName, columnName);
+    }
+
+    public Column[] paginate(String keyspace, String columnFamily, String rowName,
+                             int startingNo, int limit)
+            throws CassandraExplorerAdminCassandraServerManagementException, RemoteException {
+        return explorerAdminStub.paginate(keyspace, columnFamily, rowName, startingNo, limit);
+    }
+
+    public int getNoOfColumns(String keyspace, String columnFamily, String rowName)
+            throws CassandraExplorerAdminCassandraServerManagementException, RemoteException {
+        return explorerAdminStub.getNoOfColumns(keyspace, columnFamily, rowName);
+    }
+
+    public Column[] search(String keyspace, String columnFamily, String rowName, String searchKey,
+                           int startingNo, int limit)
+            throws CassandraExplorerAdminCassandraServerManagementException, RemoteException {
+        return explorerAdminStub.searchColumns(keyspace, columnFamily, rowName, searchKey,
+                startingNo, limit);
+    }
+
+    public int getNoOfFilteredResults(String keyspace, String columnFamily, String rowName,
+                                      String searchKey)
+            throws CassandraExplorerAdminCassandraServerManagementException, RemoteException {
+        return explorerAdminStub.getNoSearchResults(keyspace, columnFamily, rowName, searchKey);
     }
 
 }

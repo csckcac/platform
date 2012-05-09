@@ -164,6 +164,7 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
                                        String rowName, String startKey, String lastKey,
                                        int limit, boolean isReversed)
             throws CassandraServerManagementException {
+        long startTime = System.currentTimeMillis();
         DataAccessService dataAccessService =
                 CassandraAdminComponentManager.getInstance().getDataAccessService();
         ClusterAuthenticationUtil clusterAuthenticationUtil =
@@ -192,6 +193,8 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
             columnsList.add(column);
         }
         Column[] columnArray = new Column[columnsList.size()];
+        long endTime = System.currentTimeMillis();
+        System.out.println("Total elapsed time in execution  "+ (endTime-startTime));
         return columnsList.toArray(columnArray);
     }
 
@@ -217,7 +220,7 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
     public Column[] getColumnsForRow(String keyspaceName, String columnFamily, String rowName,
                                      String startKey, String lastKey, int limit, boolean isReversed)
             throws CassandraServerManagementException {
-        if ("".equals(startKey) & "".equals(lastKey)) { // Query forward
+        if ("".equals(startKey) && "".equals(lastKey)) { // Query forward
             return this.queryColumnForRow(keyspaceName, columnFamily, rowName,
                     startKey, lastKey, limit, isReversed);
         } else if ("".equals(startKey) & !("".equals(lastKey))) { // Query backwards
@@ -226,7 +229,7 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
 
             boolean justStarted = true;
 
-            while (window2.length > 1 | justStarted) {
+            while (window2.length > 1 || justStarted) {
                 if (justStarted) {
                     window1 = this.queryColumnForRow(keyspaceName, columnFamily, rowName,
                             "", "", limit, isReversed);
@@ -380,5 +383,155 @@ public class CassandraExplorerAdmin extends AbstractAdmin {
         Collections.sort(columnsList);
         Column[] columnArray = new Column[columnsList.size()];
         return columnsList.toArray(columnArray);
+    }
+
+    public Column[] searchColumns(String keyspaceName, String columnFamily,
+                                  String rowName,String searchKey,int startingNo, int limit)
+            throws CassandraServerManagementException {
+        DataAccessService dataAccessService =
+                CassandraAdminComponentManager.getInstance().getDataAccessService();
+        ClusterAuthenticationUtil clusterAuthenticationUtil =
+                new ClusterAuthenticationUtil(super.getHttpSession(),
+                        super.getTenantDomain());
+        Cluster cluster = clusterAuthenticationUtil.getCluster(null);
+        Keyspace keyspace = dataAccessService.getKeySpace(cluster, keyspaceName);
+
+        SliceQuery<String, String, String> sliceQuery =
+                HFactory.createSliceQuery(keyspace, stringSerializer, stringSerializer,
+                        stringSerializer);
+        sliceQuery.setColumnFamily(columnFamily);
+        sliceQuery.setKey(rowName);
+        sliceQuery.setRange("", "", false, Integer.MAX_VALUE);
+        QueryResult<ColumnSlice<String, String>> result = sliceQuery.execute();
+
+        List<HColumn<String, String>> hColumnsList;
+        ArrayList<Column> columnsList = new ArrayList<Column>();
+        hColumnsList = result.get().getColumns();
+
+        for (HColumn hColumn : hColumnsList) {
+            Column column = new Column();
+            column.setName(hColumn.getName().toString());
+            column.setValue(hColumn.getValue().toString());
+            column.setTimeStamp(hColumn.getClock());
+
+            if ((column.getName().contains(searchKey) || column.getValue().contains(searchKey))) {
+                columnsList.add(column);
+            }
+        }
+        // if no of results returned are fewer than limit (or display size)
+        if(columnsList.size()<limit){
+           limit = columnsList.size();
+        }
+
+        Column[] columnArray = new Column[limit];
+         for(int i=startingNo; i<limit; i++){
+           columnArray[i] = columnsList.get(i);
+         }
+        return columnArray;
+    }
+
+    public int getNoSearchResults(String keyspaceName, String columnFamily,
+                                  String rowName,String searchKey)
+            throws CassandraServerManagementException {
+        DataAccessService dataAccessService =
+                CassandraAdminComponentManager.getInstance().getDataAccessService();
+        ClusterAuthenticationUtil clusterAuthenticationUtil =
+                new ClusterAuthenticationUtil(super.getHttpSession(),
+                        super.getTenantDomain());
+        Cluster cluster = clusterAuthenticationUtil.getCluster(null);
+        Keyspace keyspace = dataAccessService.getKeySpace(cluster, keyspaceName);
+
+        SliceQuery<String, String, String> sliceQuery =
+                HFactory.createSliceQuery(keyspace, stringSerializer, stringSerializer,
+                        stringSerializer);
+        sliceQuery.setColumnFamily(columnFamily);
+        sliceQuery.setKey(rowName);
+        sliceQuery.setRange("", "", false, Integer.MAX_VALUE);
+        QueryResult<ColumnSlice<String, String>> result = sliceQuery.execute();
+
+        List<HColumn<String, String>> hColumnsList;
+        ArrayList<Column> columnsList = new ArrayList<Column>();
+        hColumnsList = result.get().getColumns();
+
+        for (HColumn hColumn : hColumnsList) {
+            Column column = new Column();
+            column.setName(hColumn.getName().toString());
+            column.setValue(hColumn.getValue().toString());
+            column.setTimeStamp(hColumn.getClock());
+
+            if ((column.getName().contains(searchKey) || column.getValue().contains(searchKey))) {
+                columnsList.add(column);
+            }
+        }
+        return columnsList.size();
+    }
+
+    public Column[] paginate(String keyspaceName, String columnFamily, String rowName,
+                             int startingNo, int limit) throws CassandraServerManagementException {
+        DataAccessService dataAccessService =
+                CassandraAdminComponentManager.getInstance().getDataAccessService();
+        ClusterAuthenticationUtil clusterAuthenticationUtil =
+                new ClusterAuthenticationUtil(super.getHttpSession(),
+                        super.getTenantDomain());
+        Cluster cluster = clusterAuthenticationUtil.getCluster(null);
+        Keyspace keyspace = dataAccessService.getKeySpace(cluster, keyspaceName);
+        //get the results up to the startingNo
+        SliceQuery<String, String, String> sliceQuery =
+                HFactory.createSliceQuery(keyspace, stringSerializer, stringSerializer,
+                        stringSerializer);
+        sliceQuery.setColumnFamily(columnFamily);
+        sliceQuery.setKey(rowName);
+        if (startingNo != 0) {
+            sliceQuery.setRange("", "", false, startingNo);
+        } else {
+            sliceQuery.setRange("", "", false, limit);
+        }
+        QueryResult<ColumnSlice<String, String>> result = sliceQuery.execute();
+        List<HColumn<String, String>>  tmpHColumnsList = result.get().getColumns();
+
+        //TODO handle if results are empty
+        HColumn startingColumn = tmpHColumnsList.get(tmpHColumnsList.size() - 1);
+        String startingColumnName = (String) startingColumn.getName();
+
+        sliceQuery.setRange(startingColumnName, "", false, limit);
+        result = sliceQuery.execute();
+
+        List<HColumn<String, String>> hColumnsList;
+        ArrayList<Column> columnsList = new ArrayList<Column>();
+        hColumnsList = result.get().getColumns();
+
+        for (HColumn hColumn : hColumnsList) {
+            Column column = new Column();
+            column.setName(hColumn.getName().toString());
+            column.setValue(hColumn.getValue().toString());
+            column.setTimeStamp(hColumn.getClock());
+            columnsList.add(column);
+        }
+        Column[] columnArray = new Column[columnsList.size()];
+        return columnsList.toArray(columnArray);
+    }
+
+    public int getNoOfColumns(String keyspaceName, String columnFamily, String rowName) throws
+            CassandraServerManagementException {
+        DataAccessService dataAccessService =
+                CassandraAdminComponentManager.getInstance().getDataAccessService();
+        ClusterAuthenticationUtil clusterAuthenticationUtil =
+                new ClusterAuthenticationUtil(super.getHttpSession(),
+                        super.getTenantDomain());
+        Cluster cluster = clusterAuthenticationUtil.getCluster(null);
+        System.out.println(cluster.describeClusterName());
+        Keyspace keyspace = dataAccessService.getKeySpace(cluster, keyspaceName);
+
+        SliceQuery<String, String, String> sliceQuery =
+                HFactory.createSliceQuery(keyspace, stringSerializer, stringSerializer,
+                        stringSerializer);
+        sliceQuery.setColumnFamily(columnFamily);
+        sliceQuery.setKey(rowName);
+        sliceQuery.setRange("", "", false, Integer.MAX_VALUE);
+        QueryResult<ColumnSlice<String, String>> result = sliceQuery.execute();
+
+        List<HColumn<String, String>> hColumnsList;
+        hColumnsList = result.get().getColumns();
+        return hColumnsList.size();
     }
 }

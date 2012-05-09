@@ -97,24 +97,22 @@
 <div id="middle">
 <table>
     <tr>
+        <td>Page Size:</td>
+        <td width="40%">
+        <select id="ddlPageSize" onchange="loadPageSize('<%=keyspace%>','<%=columnFamily%>');">
+            <option>10</option>
+            <option>25</option>
+            <option>50</option>
+            <option>100</option>
+        </select>
+    </td>
         <form>
-            <td>Row ID:</td>
+            <td>Row Key:</td>
             <td><input type="text" name="rowid" id="rowid"/></td>
             <td><input type="button" value="Explore Row "
                        onclick="getDataForRow('<%=keyspace%>',
                                '<%=columnFamily%>',document.getElementById('rowid').value);"/></td>
         </form>
-    </tr>
-    <tr>
-        <td>Page Size:</td>
-        <td>
-            <select id="ddlPageSize" onchange="loadPageSize('<%=keyspace%>','<%=columnFamily%>');">
-                <option>10</option>
-                <option>25</option>
-                <option>50</option>
-                <option>100</option>
-            </select>
-        </td>
     </tr>
 </table>
 
@@ -240,7 +238,7 @@
 <table class="styledLeft" id="<%=cfExplorerTableID%>" width="100%" style="margin-left: 0px;">
     <thead>
     <tr>
-        <th width="25%">Row <%=i + 1%>
+      <th width="25%">
         </th>
         <%
             org.wso2.carbon.cassandra.mgt.stub.explorer.xsd.Column[] columns

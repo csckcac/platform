@@ -1,23 +1,22 @@
 <app>
     <sso>
-        <name>Jaggery-sso-app1</name>
-        <keyStorePassword>32</keyStorePassword>
-        <identityProviderURL>https://localhost:9453/samlsso</identityProviderURL>
+        <name>WSO2 AppFactory Project Management</name>
+        <identityProviderURL>https://localhost:9443/samlsso</identityProviderURL>
         <keyStorePassword>wso2carbon</keyStorePassword>
-        <identityAlias>identityAlias</identityAlias>
-        <keyStoreName>/home/aja/training/stratos/temp/wso2stratos-is-1.1.0-SNAPSHOT/repository/resources/security/wso2carbon.jks</keyStoreName>
+        <identityAlias>wso2carbon</identityAlias>
+		<keyStoreName>E:\src\java\carbon_trunk\platform\products\appfactory\modules\distribution\product\target\wso2appfactory-1.0.0-SNAPSHOT/repository/resources/security/wso2carbon.jks</keyStoreName>
     </sso>
 
     <webService>
-        <addUserToProject>http://192.168.4.26:9765/services/AddUserToProjectService/process</addUserToProject>
-        <createProject>http://192.168.4.26:9765/services/CreateProjectService/process</createProject>
-        <createRepo>http://192.168.4.26:9767/services/IDTMESVNService/createRepository</createRepo>
-        <getRolesOfUserForProject>http://192.168.4.26:9767/services/UserRoleService/getRolesOfUserPerProject</getRolesOfUserForProject>
-        <getUsersOfProject>http://192.168.4.26:9767/services/UserMgtService/getUserListForProject</getUsersOfProject>
+        <addUserToProject>http://localhost:9763/services/AddUserToProjectService/process</addUserToProject>
+        <createProject>http://localhost:9763/services/CreateProjectService/process</createProject>
+        <createRepo>http://localhost:9763/services/IDTMESVNService/createRepository</createRepo>
+        <getRolesOfUserForProject>http://localhost:9763/services/UserRoleService/getRolesOfUserPerProject</getRolesOfUserForProject>
+        <getUsersOfProject>http://localhost:9763/services/UserMgtService/getUserListForProject</getUsersOfProject>
     </webService>
 
     <bpel>
-        <createUser>http://192.168.4.26:9765/services/UserCreationProcess</createUser>
+        <createUser>http://localhost:9763/services/UserCreationProcess</createUser>
     </bpel>
-
 </app>
+

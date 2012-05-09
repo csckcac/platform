@@ -2,16 +2,16 @@
 jagg.initializer("stats", {
 
     preInitialize:function () {
-    jagg.addHeaderJS("stats", "jagg", "templates/stats/js/stats.js");
-    jagg.addHeaderCSS("utils", "jagg", "templates/utils/jqplot/jquery.jqplot.min.css");
-    jagg.addHeaderJS("utils", "jagg", "templates/utils/jqplot/jquery.jqplot.min.js");
-    jagg.addHeaderJS("utils", "jagg", "templates/utils/jqplot/plugins/jqplot.pieRenderer.min.js");
-    jagg.addHeaderJS("utils", "jagg", "templates/utils/jqplot/plugins/jqplot.donutRenderer.min.js");
-    jagg.addHeaderJS("utils", "jagg", "templates/utils/jqplot/plugins/jqplot.dateAxisRenderer.min.js");
-    jagg.addHeaderJS("utils", "jagg", "templates/utils/jqplot/plugins/jqplot.canvasTextRenderer.min.js");
-    jagg.addHeaderJS("utils", "jagg", "templates/utils/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js");
-    jagg.addHeaderJS("utils", "jagg", "templates/utils/jqplot/plugins/jqplot.categoryAxisRenderer.min.js");
-    jagg.addHeaderJS("utils", "jagg", "templates/utils/jqplot/plugins/jqplot.barRenderer.min.js");
+    jagg.addHeaderJS("stats", "jplot", "templates/stats/js/stats.js");
+    jagg.addHeaderCSS("stats", "jplot1", "templates/utils/jqplot/jquery.jqplot.min.css");
+    jagg.addHeaderJS("stats", "jplot2", "templates/utils/jqplot/jquery.jqplot.min.js");
+    jagg.addHeaderJS("stats", "jplot3", "templates/utils/jqplot/plugins/jqplot.pieRenderer.min.js");
+    jagg.addHeaderJS("stats", "jplot4", "templates/utils/jqplot/plugins/jqplot.donutRenderer.min.js");
+    jagg.addHeaderJS("stats", "jplot5", "templates/utils/jqplot/plugins/jqplot.pointLabels.min.js");
+    jagg.addHeaderJS("stats", "jplot6", "templates/utils/jqplot/plugins/jqplot.highlighter.min.js");
+    jagg.addHeaderJS("stats", "jplot7", "templates/utils/jqplot/plugins/jqplot.cursor.min.js");
+    jagg.addHeaderJS("stats", "jplot8", "templates/utils/jqplot/plugins/jqplot.categoryAxisRenderer.min.js");
+    jagg.addHeaderJS("stats", "jplot9", "templates/utils/jqplot/plugins/jqplot.barRenderer.min.js");
     }
 });
 %>

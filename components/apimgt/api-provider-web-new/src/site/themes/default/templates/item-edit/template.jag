@@ -1,34 +1,12 @@
 <% jagg.template("item-edit", function(inputs, outputs, jagg) { %>
-<% var api = outputs.api; log(api);%>
+<% var api = outputs.api;%>
 <div class="row-fluid">
     <div class="span12">
-        <form class="form-horizontal well" id="editAPIForm" action="<%=site.context%>/site/blocks/item-edit/ajax/item-edit.jag"
-                method="GET" enctype="multipart/form-data">
+        <form class="form-horizontal well" id="editAPIForm"  enctype="multipart/form-data">
 
             <input type="hidden" name="action" id="action" value="updateAPI"/>
-            <input type="hidden" name="apiName" id="apiName"/>
-            <input type="hidden" name="version" id="version"/>
-
-            <div class="control-group">
-                <label class="control-label" for="apiName">Name:<span class="requiredAstrix">*</span></label>
-                <div class="controls">
-                    <input type="text" class="input-xlarge" validation="required" id="apiName" name="apiName" value="<%=api.name%>" <%=(api ? 'disabled="disabled" ' : '')%>autofocus="autofocus"/>
-                </div>
-            </div>
-
-            <div class="control-group">
-                <label class="control-label" for="version">Version:<span class="requiredAstrix">*</span></label>
-                <div class="controls">
-                    <input type="text" class="input" validation="versionNumber required" id="version" name="version" <%=(api ? 'disabled="disabled" ' : '')%>value="<%=api.version%>"/>
-                </div>
-            </div>
-
-            <div class="control-group">
-                <label class="control-label" for="context">Context:<span class="requiredAstrix">*</span></label>
-                <div class="controls">
-                    <input type="text" class="input-xlarge" id="context" name="context" validation="required validContext" <%=(api ? 'disabled="disabled" ' : '')%>value="<%=api.context%>"/>
-                </div>
-            </div>
+            <input type="hidden" name="name" id="name" value="<%=api.name%>"/>
+            <input type="hidden" name="version" id="version" value="<%=api.version%>"/>
 
             <div class="control-group">
                 <label class="control-label" for="editDescription">Description:</label>
@@ -40,9 +18,17 @@
             </div>
 
             <div class="control-group">
+                <label class="control-label" for="context">Context:<span class="requiredAstrix">*</span></label>
+                <div class="controls">
+                    <input type="text" class="input-xlarge" id="context" name="context" validation="required validContext" value="<%=api.context%>"/>
+                </div>
+            </div>
+
+            <div class="control-group">
                 <label class="control-label" for="imageUrl">Icon</label>
                 <div class="controls">
-                    <div><img id="apiEditThumb" alt="" src="<%=api.thumb%>"/></div>
+                     <% if(api.thumb==null){%> <div><img id="apiEditThumb" alt="" src="<%=site.context%>/site/themes/default/images/api-default.png%>"/></div><%}else{%>
+                    <div><img id="apiEditThumb" alt="" src="<%=api.thumb%>"/></div> <%}%>
                     <a onclick="javascript:$('#imageUrl').toggle('slow')">
                         <i class="icon-picture"></i> Change Icon
                     </a>
@@ -165,11 +151,32 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Save</button>
+                <input type="submit" id="updateButton" class="btn btn-primary" value="Save"/>
                 <input type="reset" class="btn btn-primary" value="Cancel">
             </div>
 
         </form>
     </div>
 </div>
+
+ <script type="text/javascript">
+$(document).ready(function() {
+$('input#updateButton').click( function() {
+    $.ajax({
+        url: '<%=site.context%>/site/blocks/item-add/ajax/add.jag',
+        type: 'post',
+        dataType: 'json',
+        data: $('form#editAPIForm').serialize(),
+        success: function(data) {
+                  if(!data.error){
+                      location.href = "site/pages/index.jag";
+                      $("#editAPIForm")[0].reset();
+                  }
+                 }
+    });
+});
+});
+ </script>
+
+
 <% }); %>

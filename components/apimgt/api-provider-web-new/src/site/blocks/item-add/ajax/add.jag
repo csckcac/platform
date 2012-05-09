@@ -6,12 +6,12 @@ include("/jagg/jagg.jag");
             action = request.getParameter("action"),
             site = require("/site/conf/site.json"),
             msg = require("/site/conf/ui-messages.jag");
-    if (action === "addAPI") {
+    if (action === "addAPI" ||action === "updateAPI") {
         mod = jagg.module("api");
         var apiData = {};
         apiData.provider= jagg.getUser().username;
         apiData.request = request;
-        apiData.apiName = request.getParameter("apiName");
+        apiData.apiName = request.getParameter("name");
         apiData.version = request.getParameter("version");
         apiData.description = request.getParameter("description");
         apiData.endpoint = request.getParameter("endpoint");
@@ -33,8 +33,12 @@ include("/jagg/jagg.jag");
         }
         apiData.uriTemplateArr = uriTemplateArr;
         apiData.uriMethodArr = uriMethodArr;
-
+        if(action === "addAPI"){
         result = mod.addAPI(apiData);
+        }else{
+        apiData.status = request.getParameter("status");
+        result = mod.updateAPI(apiData);
+        }
         if (result.error=="true") {
             obj = {
                 error:result.error,

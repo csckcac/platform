@@ -12,7 +12,7 @@
                 <div class="control-group">
                     <label class="control-label" for="apiName">Name:<span class="requiredAstrix">*</span></label>
                     <div class="controls">
-                        <input type="text" class="input-xlarge" validation="required" id="apiName" name="apiName" autofocus="autofocus"/>
+                        <input type="text" class="input-xlarge" validation="required" id="name" name="name" autofocus="autofocus"/>
                     </div>
                 </div>
 
@@ -188,6 +188,7 @@
 </div>
 
  <script type="text/javascript">
+         $(document).ready(function() {
 $('input#addNewAPIButton').click( function() {
     $.ajax({
         url: '<%=site.context%>/site/blocks/item-add/ajax/add.jag',
@@ -202,6 +203,7 @@ $('input#addNewAPIButton').click( function() {
                  }
     });
 });
+         });
 
  </script>
 <% }); %>

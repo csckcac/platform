@@ -127,6 +127,13 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>src/main/resources/worklist</directory>
+            <outputDirectory>${pom.artifactId}-${build.version}/repository/deployment/server/humantask</outputDirectory>
+            <includes>
+                <include>**/*.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>src/main/resources/humantask/sql</directory>
             <outputDirectory>${pom.artifactId}-${build.version}/dbscripts/bps/ht</outputDirectory>
             <excludes>

@@ -15,23 +15,23 @@ public class GRegSeleniumTestSuite extends MasterTestSuite {
     @AfterSuite
     public void suiteRunner() {
         EnvironmentBuilder env = new EnvironmentBuilder();
-        if (!env.getFrameworkSettings().getEnvironmentSettings().is_enableSelenium()) {
+        if (!env.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
             List<SuiteVariables> suiteVariablesList = new ArrayList<SuiteVariables>();
             suiteVariablesList.add(new SuiteVariables("GReg_Collection_Level_Test",
                                                       GRegCollectionSeleniumTest.class));
-//            suiteVariablesList.add(new SuiteVariables("GReg_Resource_Level_Test",
-//                                                      GRegResourceSeleniumTest.class));
-//            suiteVariablesList.add(new SuiteVariables("GReg_Login", GRegLoginSeleniumTest.class));
-//            suiteVariablesList.add(new SuiteVariables("Selenium_Root_Level_Test",
-//                                                      GRegRootSeleniumTest.class));
-//            suiteVariablesList.add(new SuiteVariables("GReg_Upload_WSDL_from_URL",
-//                                                      GRegWSDLUploaderFromURLSeleniumTest.class));
-//            suiteVariablesList.add(new SuiteVariables("GReg_Create_Service",
-//                                                      GRegServiceCreatorSeleniumTest.class));
-//            suiteVariablesList.add(new SuiteVariables("GReg_Schema_Uploader",
-//                                                      GRegSchemaUploaderSeleniumTest.class));
-//            suiteVariablesList.add(new SuiteVariables("GReg_Policy_Uploader", GRegPolicyUploaderSeleniumTest.class));
-//            suiteVariablesList.add(new SuiteVariables("GRegLifeCyclePromoteTest", GRegLifeCyclePromoteTest.class));
+            suiteVariablesList.add(new SuiteVariables("GReg_Resource_Level_Test",
+                                                      GRegResourceSeleniumTest.class));
+            suiteVariablesList.add(new SuiteVariables("GReg_Login", GRegLoginSeleniumTest.class));
+            suiteVariablesList.add(new SuiteVariables("Selenium_Root_Level_Test",
+                                                      GRegRootSeleniumTest.class));
+            suiteVariablesList.add(new SuiteVariables("GReg_Upload_WSDL_from_URL",
+                                                      GRegWSDLUploaderFromURLSeleniumTest.class));
+            suiteVariablesList.add(new SuiteVariables("GReg_Create_Service",
+                                                      GRegServiceCreatorSeleniumTest.class));
+            suiteVariablesList.add(new SuiteVariables("GReg_Schema_Uploader",
+                                                      GRegSchemaUploaderSeleniumTest.class));
+            suiteVariablesList.add(new SuiteVariables("GReg_Policy_Uploader", GRegPolicyUploaderSeleniumTest.class));
+            suiteVariablesList.add(new SuiteVariables("GRegLifeCyclePromoteTest", GRegLifeCyclePromoteTest.class));
             superSuite("GRegSeleniumTestSuite", suiteVariablesList).run();
         }
     }

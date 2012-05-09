@@ -23,12 +23,10 @@ import org.openqa.selenium.WebElement;
 
 public class GregUserLogin {
     public void userLogin(WebDriver driver, String userID, String userPassword) {
-        driver.findElement(By.xpath("//a[2]/img")).click();
         WebElement username = driver.findElement(By.name("username"));
         WebElement password = driver.findElement(By.name("password"));
         username.sendKeys(userID);
         password.sendKeys(userPassword);
-        driver.findElement(By.xpath("//tr[4]/td[2]/input")).click();
-//        driver.findElement(By.className("button")).click();
+        driver.findElement(By.className("button")).click();
     }
 }

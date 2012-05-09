@@ -26,6 +26,16 @@ import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.service.RealmService;
 
+/**
+ * User aware APIConsumer implementation which ensures that the invoking user has the
+ * necessary privileges to execute the operations. Users can use this class as an
+ * entry point to accessing the core API provider functionality. In order to ensure
+ * proper initialization and cleanup of these objects, the constructors of the class
+ * has been hidden. Users should use the APIManagerFactory class to obtain an instance
+ * of this class. This implementation also allows anonymous access to some of the
+ * available operations. However if the user attempts to execute a privileged operation
+ * when the object had been created in the anonymous mode, an exception will be thrown.
+ */
 public class UserAwareAPIConsumer extends APIConsumerImpl {
 
     private String username;

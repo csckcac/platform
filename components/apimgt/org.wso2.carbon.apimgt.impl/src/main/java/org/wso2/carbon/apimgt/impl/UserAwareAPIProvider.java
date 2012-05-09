@@ -20,6 +20,8 @@ import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.model.API;
+import org.wso2.carbon.apimgt.api.model.APIIdentifier;
+import org.wso2.carbon.apimgt.api.model.Documentation;
 import org.wso2.carbon.apimgt.api.model.DuplicateAPIException;
 import org.wso2.carbon.apimgt.impl.internal.ServiceReferenceHolder;
 import org.wso2.carbon.core.util.AnonymousSessionUtil;
@@ -31,7 +33,13 @@ import org.wso2.carbon.user.core.service.RealmService;
 
 /**
  * User aware APIProvider implementation which ensures that the invoking user has the
- * necessary privileges to execute the operations.
+ * necessary privileges to execute the operations. Users can use this class as an
+ * entry point to accessing the core API provider functionality. In order to ensure
+ * proper initialization and cleanup of these objects, the constructors of the class
+ * has been hidden. Users should use the APIManagerFactory class to obtain an instance
+ * of this class. This implementation also allows anonymous access to some of the
+ * available operations. However if the user attempts to execute a privileged operation
+ * when the object had been created in the anonymous mode, an exception will be thrown.
  */
 public class UserAwareAPIProvider extends APIProviderImpl {
     
@@ -80,6 +88,40 @@ public class UserAwareAPIProvider extends APIProviderImpl {
             checkPermission(APIConstants.Permissions.API_PUBLISH);
         }
         super.updateAPI(api);
+    }
+
+    @Override
+    public void addDocumentation(APIIdentifier apiId,
+                                 Documentation documentation) throws APIManagementException {
+        checkPermission(APIConstants.Permissions.API_CREATE);
+        super.addDocumentation(apiId, documentation);
+    }
+
+    @Override
+    public void removeDocumentation(APIIdentifier apiId, String docName,
+                                    String docType) throws APIManagementException {
+        checkPermission(APIConstants.Permissions.API_CREATE);
+        super.removeDocumentation(apiId, docName, docType);
+    }
+
+    @Override
+    public void updateDocumentation(APIIdentifier apiId,
+                                    Documentation documentation) throws APIManagementException {
+        checkPermission(APIConstants.Permissions.API_CREATE);
+        super.updateDocumentation(apiId, documentation);
+    }
+
+    @Override
+    public void addDocumentationContent(APIIdentifier identifier, String documentationName,
+                                        String text) throws APIManagementException {
+        checkPermission(APIConstants.Permissions.API_CREATE);
+        super.addDocumentationContent(identifier, documentationName, text);
+    }
+
+    @Override
+    public void copyAllDocumentation(APIIdentifier apiId, String toVersion) throws APIManagementException {
+        checkPermission(APIConstants.Permissions.API_CREATE);
+        super.copyAllDocumentation(apiId, toVersion);
     }
 
     private void checkPermission(String permission) throws APIManagementException {

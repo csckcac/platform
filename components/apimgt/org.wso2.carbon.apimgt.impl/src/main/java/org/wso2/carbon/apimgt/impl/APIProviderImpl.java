@@ -19,6 +19,17 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import javax.xml.namespace.QName;
 import java.util.*;
 
+/**
+ * This class provides the core API provider functionality. It is implemented in a very
+ * self-contained and 'pure' manner, without taking requirements like security into account,
+ * which are subject to frequent change. Due to this 'pure' nature and the significance of
+ * the class to the overall API management functionality, the visibility of the class has
+ * been reduced to package level. This means we can still use it for internal purposes and
+ * possibly even extend it, but it's totally off the limits of the users. Users wishing to
+ * programmatically access this functionality should use one of the extensions of this
+ * class which is visible to them. These extensions may add additional features like
+ * security to this class.
+ */
 class APIProviderImpl extends AbstractAPIManager implements APIProvider {
     
     public APIProviderImpl() throws APIManagementException {

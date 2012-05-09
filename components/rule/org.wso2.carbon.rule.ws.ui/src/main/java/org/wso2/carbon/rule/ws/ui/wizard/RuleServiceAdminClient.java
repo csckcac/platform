@@ -188,11 +188,21 @@ public class RuleServiceAdminClient {
     public String[] getAllFacts(RuleService ruleService,
                                 javax.servlet.http.HttpSession session) {
         String serviceName = ruleService.getName();
-        String[] classes = (String[]) session.getAttribute("allFacts");
-        if (classes != null && classes.length > 1) { // message class already there: need the length to be > 1
-            return classes;
-        } else {
-            try {
+//        String[] classes = (String[]) session.getAttribute("allFacts");
+//        if (classes != null && classes.length > 1) { // message class already there: need the length to be > 1
+//            return classes;
+//        } else {
+//            try {
+//                String[] facts = ruleServiceAdminStub.getAllFacts(
+//                        ruleService.getExtension(), serviceName);
+//                session.setAttribute(serviceName.trim(), facts);
+//                return facts;
+//            } catch (Exception e) {
+//                throw new RuleServiceClientException("Error getting all facts for rule service : " +
+//                        serviceName);
+//            }
+//        }
+        try {
                 String[] facts = ruleServiceAdminStub.getAllFacts(
                         ruleService.getExtension(), serviceName);
                 session.setAttribute(serviceName.trim(), facts);
@@ -201,7 +211,6 @@ public class RuleServiceAdminClient {
                 throw new RuleServiceClientException("Error getting all facts for rule service : " +
                         serviceName);
             }
-        }
     }
 
 /**

@@ -101,13 +101,13 @@
                 <tr>
 
                     <td>
-                        <table class="normal">
+                        <table id="factArchiveListTable" class="normal">
                                 <%
                                     if(factArchiveList != null) {
                                         for(String factArchieName : factArchiveList){
 
                                 %>
-                            <tr>
+                            <tr id="<%=factArchieName%>">
                             <td>
                                     <label><%=factArchieName%></label>
 

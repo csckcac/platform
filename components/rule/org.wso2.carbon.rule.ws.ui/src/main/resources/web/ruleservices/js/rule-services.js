@@ -185,13 +185,13 @@ function deleteOperation(name, i) {
 }
 
 function deleteFactArchives(name) {
-    alert("test") ;
-
     CARBON.showConfirmationDialog(ruleservicejsi18n["operation.delete.confirmation"], function() {
+       // deleteFactArchiveRaw(name);
         var suffix = "factArchiveName=" + name;
         var url = 'fact_archive_delete-ajaxprocessor.jsp?' + suffix;
         jQuery.get(url, ({}),
                 function(data, status) {
+                    location.reload();
                     if (status != "success") {
                         CARBON.showWarningDialog(ruleservicejsi18n['error.occurred']);
                         return false;
@@ -201,6 +201,20 @@ function deleteFactArchives(name) {
 
     return false;
 }
+
+//function deleteFactArchiveRaw(name) {
+//    var propRow1 = document.getElementById(name);
+//    if (propRow1 != undefined && propRow1 != null) {
+//        var parentTBody1 = propRow1.parentNode;
+//        if (parentTBody1 != undefined && parentTBody1 != null) {
+//            parentTBody1.removeChild(propRow1);
+//            if (!isContainRaw(parentTBody1)) {
+//                var factTable1 = document.getElementById("factArchiveListTable");
+//                factTable1.style.display = "none";
+//            }
+//        }
+//    }
+//}
 
 
 function getSelectedValue(id) {
@@ -342,6 +356,7 @@ function deleteRaw(category, i) {
         }
     }
 }
+
 
 function isContainRaw(tbody) {
     if (tbody.childNodes == null || tbody.childNodes.length == 0) {

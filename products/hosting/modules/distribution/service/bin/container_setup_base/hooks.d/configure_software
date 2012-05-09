@@ -442,8 +442,9 @@ template-wso2-carbon-server() {
     chroot $ROOTFS chmod +x /opt/wso2_service_node.sh
     cp -Lrf /opt/java $ROOTFS/opt/
 
-    #temp
-    cp -rf /opt/wso2as-4.1.0 $ROOTFS/opt/
+	if [ -d "$CARBON_SERVER_DIR" ]; then
+        cp -rf $CARBON_SERVER_DIR $ROOTFS/opt/
+    fi
 
 
     # Install from app repositories
@@ -485,6 +486,122 @@ s/          or starting networking)/#          or starting network-manager/
 ' < ufw.conf-dist > ufw.conf
 	
 }
+
+
+#WSO2 products template for esb
+template-wso2-carbon-server-esb() {
+	# First, install all the base stuff
+	default   
+	
+	# MySQL still prompts.  Bug.
+	#DEBCONF_FRONTEND='noninteractive' 
+
+    cp -f $CONFDIR/custom/wso2_esb_service_node.sh $ROOTFS/opt/
+    chroot $ROOTFS chmod +x /opt/wso2_esb_service_node.sh
+    cp -Lrf /opt/java $ROOTFS/opt/
+
+	if [ -d "$CARBON_SERVER_DIR" ]; then
+        cp -rf $CARBON_SERVER_DIR $ROOTFS/opt/
+    fi
+
+
+    # Install from app repositories
+    if [ $CLONE = "false" ]; then
+        chroot $ROOTFS apt-get install -y \
+         nano \
+         curl wget mailutils \
+         openssl ssl-cert ldap-utils \
+         mcrypt ufw fail2ban puppet
+        
+        chroot $ROOTFS apt-get update --fix-missing
+    fi
+	# Be sure to have a new SSL cert for this new LXC host:
+	rm -f $ROOTFS/etc/ssl/private/ssl-cert-snakeoil.key
+	chroot $ROOTFS dpkg-reconfigure ssl-cert
+
+	# Enable HTTPS:
+	chroot $ROOTFS a2enmod ssl
+	chroot $ROOTFS a2ensite default-ssl	
+
+pushd $ROOTFS/etc
+    echo "#!/bin/sh -e
+/opt/wso2_esb_service_node.sh > /dev/null &2>1
+exit 0
+    " > rc.local
+    popd	
+
+	# Next, fix a couple of Debian gotchas:
+
+	# See http://blog.bodhizazen.net/linux/lxc-configure-ubuntu-lucid-containers/
+	# This requirement is confirmed on 10.04.1 LTS.  Within LXC, the
+	# upstart "startup" signal is sent, but not "network-interface", etc.
+	pushd $ROOTFS/etc/init/
+	cp -a ufw.conf ufw.conf-dist
+	sed '
+s/start on (starting network-interface/start on startup\n#start on (starting network-interface/
+s/          or starting network-manager/#          or starting network-manager/
+s/          or starting networking)/#          or starting network-manager/
+' < ufw.conf-dist > ufw.conf
+	
+}
+
+#WSO2 products template for app server
+template-wso2-carbon-server-as() {
+	# First, install all the base stuff
+	default   
+	
+	# MySQL still prompts.  Bug.
+	#DEBCONF_FRONTEND='noninteractive' 
+
+    cp -f $CONFDIR/custom/wso2_as_service_node.sh $ROOTFS/opt/
+    chroot $ROOTFS chmod +x /opt/wso2_as_service_node.sh
+    cp -Lrf /opt/java $ROOTFS/opt/
+
+	if [ -d "$CARBON_SERVER_DIR" ]; then
+        cp -rf $CARBON_SERVER_DIR $ROOTFS/opt/
+    fi
+
+
+    # Install from app repositories
+    if [ $CLONE = "false" ]; then
+        chroot $ROOTFS apt-get install -y \
+         nano \
+         curl wget mailutils \
+         openssl ssl-cert ldap-utils \
+         mcrypt ufw fail2ban puppet
+        
+        chroot $ROOTFS apt-get update --fix-missing
+    fi
+	# Be sure to have a new SSL cert for this new LXC host:
+	rm -f $ROOTFS/etc/ssl/private/ssl-cert-snakeoil.key
+	chroot $ROOTFS dpkg-reconfigure ssl-cert
+
+	# Enable HTTPS:
+	chroot $ROOTFS a2enmod ssl
+	chroot $ROOTFS a2ensite default-ssl	
+
+pushd $ROOTFS/etc
+    echo "#!/bin/sh -e
+/opt/wso2_as_service_node.sh > /dev/null &2>1
+exit 0
+    " > rc.local
+    popd	
+
+	# Next, fix a couple of Debian gotchas:
+
+	# See http://blog.bodhizazen.net/linux/lxc-configure-ubuntu-lucid-containers/
+	# This requirement is confirmed on 10.04.1 LTS.  Within LXC, the
+	# upstart "startup" signal is sent, but not "network-interface", etc.
+	pushd $ROOTFS/etc/init/
+	cp -a ufw.conf ufw.conf-dist
+	sed '
+s/start on (starting network-interface/start on startup\n#start on (starting network-interface/
+s/          or starting network-manager/#          or starting network-manager/
+s/          or starting networking)/#          or starting network-manager/
+' < ufw.conf-dist > ufw.conf
+	
+}
+
 
 
 # Don't prompt when running apt-get:

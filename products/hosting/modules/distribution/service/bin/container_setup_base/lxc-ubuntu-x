@@ -227,7 +227,7 @@ if [ -d /etc/lxc-ubuntu-x/hooks.d ] && [ -f /etc/lxc-ubuntu-x/lxc-ubuntu-x.conf 
 fi
 source $CONFDIR/lxc-ubuntu-x.conf
 # Export theses config vars so they are visible to the hooks:
-export BASEDIR INSTALL_USERNAME INSTALL_PASSWORD AUTHORIZED_KEYS_TO_COPY SVN_URL SVN_WORK_DIRECTORY
+export BASEDIR INSTALL_USERNAME INSTALL_PASSWORD AUTHORIZED_KEYS_TO_COPY SVN_URL SVN_WORK_DIRECTORY CARBON_SERVER_DIR
 
 
 # If no host name was given, use the first available name of the form servername-lxc-1:

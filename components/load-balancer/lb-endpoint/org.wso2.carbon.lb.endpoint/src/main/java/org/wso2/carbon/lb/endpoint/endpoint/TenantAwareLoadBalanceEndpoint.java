@@ -190,7 +190,7 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
         Member currentMember = null;
         SessionInformation sessionInformation = null;
        // if (isSessionAffinityBasedLB()) {
-        if (tenantId>=0) {
+        if (isSessionAffinityBasedLB()) {
             // first check if this session is associated with a session. if so, get the endpoint
             // associated for that session.
             sessionInformation =

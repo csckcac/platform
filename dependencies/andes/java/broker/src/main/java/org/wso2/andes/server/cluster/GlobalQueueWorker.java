@@ -59,7 +59,8 @@ public class GlobalQueueWorker implements Runnable{
 
 
     public void run() {
-
+        String originalName = Thread.currentThread().getName();
+        Thread.currentThread().setName(this.getClass().getSimpleName()+":" + originalName);
 
         while (running) {
             try {
@@ -100,7 +101,7 @@ public class GlobalQueueWorker implements Runnable{
                         }
                     }
 
-                    if (size < messageCount) {
+                    if (size == 0) {
                         try {
                             Thread.sleep(ClusterResourceHolder.getInstance().getClusterConfiguration().getQueueWorkerInterval());
                         } catch (InterruptedException e) {

@@ -143,12 +143,12 @@ public class QueueSubscriptionAcknowledgementHandler {
                 try {
                     if(timeStampMessageIdMap.lastKey() + timeOutInMills <= currentTime) {
                         // we should handle timeout
-                        SortedMap<Long,Long> tailMap =
-                                timeStampMessageIdMap.headMap(currentTime-timeOutInMills);
+                        SortedMap<Long,Long> headMap =
+                                timeStampMessageIdMap.headMap(currentTime - timeOutInMills);
 
-                        if(tailMap.size() > 0) {
-                            for(Long l : tailMap.keySet()) {
-                                long mid = tailMap.get(l);
+                        if(headMap.size() > 0) {
+                            for(Long l : headMap.keySet()) {
+                                long mid = headMap.get(l);
                                 QueueMessageTag mtag =  sentMessagesMap.get(mid);
 
 
@@ -157,20 +157,22 @@ public class QueueSubscriptionAcknowledgementHandler {
                                     long deliveryTag = mtag.getDeliveryTag();
                                     if (deliveryTagMessageMap.containsKey(deliveryTag)) {
                                         QueueMessageTag tag = deliveryTagMessageMap.get(deliveryTag);
-                                        try {
-                                            if (tag != null) {
-                                                cassandraMessageStore.removeMessageFromUserQueue(tag.getQueue(), tag.getMessageId());
-                                                if (sentMessagesMap.containsKey(tag.getMessageId())) {
-                                                    sentMessagesMap.remove(tag.getMessageId());
-                                                }
-                                                deliveryTagMessageMap.remove(deliveryTag);
-                                            }
 
-                                        } catch (AMQStoreException e) {
-                                           log.error("Error while running Queue Message Tag Cleanup Task" ,e );
+                                        if (tag != null) {
+
+                                            if (sentMessagesMap.containsKey(tag.getMessageId())) {
+                                                sentMessagesMap.remove(tag.getMessageId());
+                                            }
+                                            deliveryTagMessageMap.remove(deliveryTag);
                                         }
+
+
                                     }
                                 }
+                            }
+
+                            for(Long key : headMap.keySet()) {
+                                timeStampMessageIdMap.remove(key);
                             }
                         }
                     }

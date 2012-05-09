@@ -1,5 +1,6 @@
 package org.wso2.andes.server.cassandra;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.andes.AMQException;
@@ -58,6 +59,7 @@ public class CassandraMessageFlusher extends Thread{
                 getMessageBatchSizeForSubscribers();
 
         this.executor = Executors.newFixedThreadPool(clusterConfiguration.getFlusherPoolSize());
+
         this.ackTime = ClusterResourceHolder.getInstance().getClusterConfiguration().getMaxAckWaitTime();
     }
 
@@ -80,7 +82,6 @@ public class CassandraMessageFlusher extends Thread{
                 List<QueueEntry> messages = messageStore.
                         getMessagesFromUserQueue(queue
                                 , messageCount,lastProcessedId);
-
                 if(messages.size() == messageCount) {
                     messageCount += 10;
                     if(messageCount > (ClusterResourceHolder.getInstance().getClusterConfiguration().getFlusherPoolSize())) {
@@ -116,7 +117,6 @@ public class CassandraMessageFlusher extends Thread{
                             session = cassandraSubscription.getSession();
 
                             ((AMQMessage) message.getMessage()).setClientIdentifier(session);
-
                             deliverAsynchronously(subscription, message);
 
                             if (i == messages.size() -1) {
@@ -128,15 +128,6 @@ public class CassandraMessageFlusher extends Thread{
                             e.printStackTrace();
                         }
                     }
-
-                    try {
-                        Thread.sleep(ackTime*messages.size() * 1000);
-
-                    } catch (InterruptedException e) {
-
-                        //Ignore
-                    }
-
 
                 } else {
                     try {
@@ -169,9 +160,10 @@ public class CassandraMessageFlusher extends Thread{
         Runnable r = new Runnable() {
             @Override
             public void run() {
+                String oldName = Thread.currentThread().getName();
+                Thread.currentThread().setName("MessageFlusher-AsyncDelivery-Thread : " + oldName);
                 try {
                     if (subscription instanceof SubscriptionImpl.AckSubscription) {
-
                         subscription.send(message);
 
                     } else {

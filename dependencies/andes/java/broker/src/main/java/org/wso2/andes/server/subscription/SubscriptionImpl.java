@@ -255,7 +255,6 @@ public abstract class SubscriptionImpl implements Subscription, FlowCreditManage
             // the message is unacked, it will be lost.
             long deliveryTag = 0;
             synchronized (getChannel()) {
-
                 deliveryTag = getChannel().getNextDeliveryTag();
 
             try {
@@ -275,6 +274,7 @@ public abstract class SubscriptionImpl implements Subscription, FlowCreditManage
 
                 if (ackHandler.checkAndRegisterSent(deliveryTag, entry.getMessage().getMessageNumber(),
                         entry.getQueue().getResourceName())) {
+
                     sendToClient(entry, deliveryTag);
 
                 }

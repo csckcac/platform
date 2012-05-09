@@ -1,11 +1,11 @@
 <%
-var module =require("systemPropertyReader");
+var module = require("systemPropertyReader");
 var sysPropertyReader = new module.SystemPropertyReaderObject();
 var CARBON_HOME=sysPropertyReader.getProperty("carbon.home");
-var file = new File("file:///"+CARBON_HOME+"/repository/conf/idtme.xml");
+var file = new File("file:///"+CARBON_HOME+"/repository/conf/appfactory.xml");
 file.open("r");
-var config=file.readAll();
-var app= new XML(config);
+var config = file.readAll();
+var app = new XML(config);
 
 function getPropertyTemp(expression) {
     switch (expression) {

@@ -162,6 +162,8 @@ if [[ (-n $action) && ($action == "destroy") ]]; then
     if [ -d $jail_root/$jail_id.rootfs ]; then
         echo 'this deletes all files of the container!'
         rm -rf $jail_root/$jail_id.*
+    fi
+    if [ -d "./$jail_id" ]; then
         rm -rf ./$jail_id
     fi
     exit 0

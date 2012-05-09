@@ -30,7 +30,7 @@ import java.util.Map;
 
 /**
  * Data object which hold configuration data of the load ec2 configuration
- * This object looks similar to LoadBalancerConfiguration with some changes
+ * This extends  LoadBalancerConfiguration
  */
 @SuppressWarnings("unused")
 public class EC2Configuration extends LoadBalancerConfiguration{
@@ -159,7 +159,7 @@ public class EC2Configuration extends LoadBalancerConfiguration{
      *     }
      * }
 
-     * @param configURL URL of the load balancer config
+     * @param configURL URL of the ec2 config
      */
     public void init(String configURL) {
 

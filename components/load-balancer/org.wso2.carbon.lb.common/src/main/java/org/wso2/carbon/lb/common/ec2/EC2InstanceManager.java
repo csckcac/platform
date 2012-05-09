@@ -33,7 +33,8 @@ public class EC2InstanceManager {
         this.ec2 = ec2;
     }
 
-    public void runInstances(RunInstancesRequest request) {
+    public List<String> runInstances(RunInstancesRequest request) {
+        List<String> instanceIdList = new ArrayList<String>();
         try {
             RunInstancesResult result = ec2.runInstances(request);
             Reservation reservation = result.getReservation();
@@ -41,10 +42,12 @@ public class EC2InstanceManager {
             List<Instance> instances = reservation.getInstances();
             for (Instance instance : instances) {
                 log.info("Starting instance " + instance.getInstanceId());
+                instanceIdList.add(instance.getInstanceId());
             }
         } catch (AmazonClientException e) {
             handleException(e);
         }
+        return instanceIdList;
     }
 
     public void terminateInstances(List<String> instanceIds) throws AmazonClientException {

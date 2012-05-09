@@ -101,7 +101,7 @@
 
         <!--copying appfactory dbscripts-->
         <fileSet>
-            <directory>sql</directory>
+			<directory>resources/bpel/sql</directory>
             <outputDirectory>wso2appfactory-${pom.version}/dbscripts/bps</outputDirectory>
             <!--excludes>
                 <exclude>**/ht/**</exclude>
@@ -252,23 +252,23 @@
         </file>
 
         <file>
-            <source>conf/bps.xml</source>
+			<source>resources/bpel/conf/bps.xml</source>
             <outputDirectory>wso2appfactory-${pom.version}/repository/conf</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>conf/datasources.properties</source>
+			<source>resources/bpel/conf/datasources.properties</source>
             <outputDirectory>wso2appfactory-${pom.version}/repository/conf</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>conf/log4j.properties</source>
+			<source>resources/bpel/conf/log4j.properties</source>
             <outputDirectory>wso2appfactory-${pom.version}/repository/conf</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         
         <file>
-            <source>conf/humantask.xml</source>
+			<source>resources/bpel/conf/humantask.xml</source>
             <outputDirectory>wso2appfactory-${pom.version}/repository/conf</outputDirectory>
             <fileMode>644</fileMode>
         </file>

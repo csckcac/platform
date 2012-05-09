@@ -110,6 +110,7 @@
 
     <properties>
         <carbon.product.version>1.0.0-SNAPSHOT_M4</carbon.product.version>
+        <carbon.version>4.0.0-SNAPSHOT</carbon.version>
         <jaggery.version>1.0.0-SNAPSHOT_M4</jaggery.version>
         <jaggery.components.version>1.0.0.SNAPSHOT</jaggery.components.version>
     </properties>

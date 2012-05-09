@@ -27,7 +27,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>wso2ms-integration</artifactId>
+    <artifactId>wso2jaggery-integration</artifactId>
     <packaging>jar</packaging>
     <name>Jaggery Integration Tests</name>
     <url>http://wso2.org/projects/jaggery</url>
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.integration.core</artifactId>
-            <version>${carbon.product.version}</version>
+            <version>${carbon.version}</version>
             <classifier>tests</classifier>
             <scope>test</scope>
             <exclusions>

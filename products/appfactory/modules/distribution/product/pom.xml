@@ -167,7 +167,7 @@
                                         <path refid="h2.classpath"/>
                                     </classpath>
                                     <fileset
-                                            file="${basedir}/sql/bpel/h2.sql"/>
+										file="${basedir}/resources/bpel/sql/bpel/h2.sql"/>
                                 </sql>
                                 <echo
                                         message="##################### END ############################"/>
@@ -183,7 +183,7 @@
                                         <path refid="h2.classpath"/>
                                     </classpath>
                                     <fileset
-                                            file="${basedir}/sql/ht/h2.sql"/>
+										file="${basedir}/resources/bpel/sql/ht/h2.sql"/>
                                 </sql>
                                 <echo
                                         message="##################### END ############################"/>

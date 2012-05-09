@@ -28,9 +28,9 @@ public interface RuleBackendRuntimeFactory {
     /**
      * This interface is used to create the Back end runtimes in different types. We use a factory to pass properties
      * and other backend specific things so that the factory and take care of creating the real runtimes.
-     * @param properties
-     * @param classLoader
-     * @return
+     * @param properties - backend runtime properties
+     * @param classLoader  - class loader to be used to load the classes
+     * @return   - back end runtime object corresponding to the given factory
      */
      public RuleBackendRuntime getRuleBackendRuntime(Map<String, String> properties,
                                                     ClassLoader classLoader) throws RuleConfigurationException;

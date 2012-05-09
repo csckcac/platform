@@ -64,10 +64,10 @@ public class HelperUtil {
         }
     }
 
-    public static Map getPrefixToNamespaceMap(OMElement omElement) {
+    public static Map<String, String> getPrefixToNamespaceMap(OMElement omElement) {
         Iterator iterator = omElement.getAllDeclaredNamespaces();
-        OMNamespace omNamespace = null;
-        Map prefixToNamespaceMap = new HashMap();
+        OMNamespace omNamespace;
+        Map<String,String> prefixToNamespaceMap = new HashMap<String, String>();
         for (; iterator.hasNext();) {
             omNamespace = (OMNamespace) iterator.next();
             prefixToNamespaceMap.put(omNamespace.getPrefix(), omNamespace.getNamespaceURI());

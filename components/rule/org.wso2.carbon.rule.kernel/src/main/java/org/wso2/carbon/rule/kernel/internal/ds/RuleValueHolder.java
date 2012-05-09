@@ -16,21 +16,17 @@
 
 package org.wso2.carbon.rule.kernel.internal.ds;
 
-import org.wso2.carbon.rule.kernel.config.RuleEngineConfigService;
-import org.wso2.carbon.rule.kernel.config.RuleEngineProvider;
-import org.wso2.carbon.rule.common.exception.RuleConfigurationException;
 import org.wso2.carbon.event.core.EventBroker;
 import org.wso2.carbon.event.core.exception.EventBrokerException;
 import org.wso2.carbon.event.core.subscription.Subscription;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.rule.common.exception.RuleConfigurationException;
+import org.wso2.carbon.rule.kernel.config.RuleEngineConfigService;
+import org.wso2.carbon.rule.kernel.config.RuleEngineProvider;
 
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 public class RuleValueHolder {
-
-    private static Log log = LogFactory.getLog(RuleValueHolder.class);
 
     private static RuleValueHolder ruleValueHolder = new RuleValueHolder();
     private RuleEngineConfigService ruleEngineConfigService;
@@ -39,7 +35,7 @@ public class RuleValueHolder {
     private Set<Subscription> pendingSubscriptions;
 
     public RuleValueHolder() {
-        this.pendingSubscriptions = new HashSet();
+        this.pendingSubscriptions = new HashSet<Subscription>();
     }
 
     public static RuleValueHolder getInstance(){

@@ -16,24 +16,20 @@
 
 package org.wso2.carbon.rule.mediator;
 
-import org.apache.synapse.config.xml.AbstractMediatorFactory;
-import org.apache.synapse.Mediator;
 import org.apache.axiom.om.OMElement;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.synapse.Mediator;
+import org.apache.synapse.config.xml.AbstractMediatorFactory;
+import org.wso2.carbon.rule.common.config.HelperUtil;
+import org.wso2.carbon.rule.common.exception.RuleConfigurationException;
 import org.wso2.carbon.rule.common.util.Constants;
+import org.wso2.carbon.rule.kernel.engine.RuleEngine;
 import org.wso2.carbon.rule.mediator.config.RuleMediatorConfig;
 import org.wso2.carbon.rule.mediator.internal.config.RuleMediatorConfigHelper;
-import org.wso2.carbon.rule.kernel.engine.RuleEngine;
-import org.wso2.carbon.rule.common.exception.RuleConfigurationException;
-import org.wso2.carbon.rule.common.config.HelperUtil;
 
 import javax.xml.namespace.QName;
 import java.util.Properties;
 
 public class RuleMediatorFactory extends AbstractMediatorFactory {
-
-    private static final Log log = LogFactory.getLog(RuleMediatorFactory.class);
 
     protected Mediator createSpecificMediator(OMElement omElement, Properties properties) {
 

@@ -53,7 +53,7 @@ public class RuleSetHelper {
             Iterator propertiesIter =
                     propertiesElement.getChildrenWithName(new QName(
                             Constants.RULE_CONF_NAMESPACE, Constants.RULE_CONF_ELE_PROPERTY));
-            OMElement property = null;
+            OMElement property;
             for (; propertiesIter.hasNext();) {
                 property = (OMElement) propertiesIter.next();
                 properties.put(HelperUtil.getAttributeValue(property, Constants.RULE_CONF_ATTR_NAME),

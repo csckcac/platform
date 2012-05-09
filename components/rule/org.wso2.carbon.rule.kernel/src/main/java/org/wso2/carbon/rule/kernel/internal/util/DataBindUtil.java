@@ -31,17 +31,18 @@ import org.wso2.carbon.rule.common.exception.RuleRuntimeException;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
-public class        DataBindUtil {
+public class DataBindUtil {
 
     /**
      * Utility method to convert the java objects to OMElements
-     * @param object
-     * @param parentQname
-     * @return
+     *
+     * @param object  - POJO object to be converted to an OMElement
+     * @param parentQname - Top element QName for this POJO object
+     * @return  - corresponding OMElement for POJO Object
      */
     public static OMElement toOM(Object object, QName parentQname) {
 
-        OMElement omElement = null;
+        OMElement omElement;
         if (SimpleTypeMapper.isSimpleType(object)) {
             OMFactory omFactory = OMAbstractFactory.getOMFactory();
             OMNamespace omNamespace = omFactory.createOMNamespace(
@@ -59,10 +60,11 @@ public class        DataBindUtil {
 
     /**
      * utility method convert the OMElements to java objects.
-     * @param omElement
-     * @param type
-     * @return
-     * @throws RuleRuntimeException
+     *
+     * @param omElement - OMElement to be used to get the POJO object value
+     * @param type  - class name of the POJO element to be created
+     * @return    - the created fact object
+     * @throws RuleRuntimeException - if there is a problem in creating POJO object
      */
     public static Object getValue(OMElement omElement,
                                   Class type)

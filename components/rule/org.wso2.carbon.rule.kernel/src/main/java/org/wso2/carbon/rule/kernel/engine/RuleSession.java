@@ -48,12 +48,12 @@ public class RuleSession {
      * @param inputElement - in comming message OMElement
      * @param input   - input configuration which specify which classes to be used with which Elements.
      * @param output  - output configuration to be used to convert the results back to OMElements
-     * @return
-     * @throws RuleRuntimeException
+     * @return - Result OMElement after applying the rules
+     * @throws RuleRuntimeException - if there are problems with the configuration
      */
     public OMElement execute(OMElement inputElement, Input input, Output output) throws RuleRuntimeException {
 
-        List inputFactObjects = new ArrayList();
+        List<Object> inputFactObjects = new ArrayList<Object>();
         for (Fact fact : input.getFacts()){
             inputFactObjects.addAll(getFacts(inputElement, fact, input.getNameSpace()));
         }
@@ -83,15 +83,15 @@ public class RuleSession {
 
     /**
      * return the list of facts corresponing to the given OMElement.
-     * @param inputElement
-     * @param fact
-     * @param factElementNamespace
-     * @return
-     * @throws RuleRuntimeException
+     * @param inputElement  - input OMElement which is to be used to get the facts.
+     * @param fact  - fact configuration object
+     * @param factElementNamespace  - namespace of the fact object
+     * @return   - list of facts for this input element
+     * @throws RuleRuntimeException - if there is a problem with converting the objects
      */
-    private List getFacts(OMElement inputElement, Fact fact, String factElementNamespace) throws RuleRuntimeException {
+    private List<Object> getFacts(OMElement inputElement, Fact fact, String factElementNamespace) throws RuleRuntimeException {
 
-        List results = new ArrayList();
+        List<Object> results = new ArrayList<Object>();
         if ((fact.getXpath() != null) && (!fact.getXpath().equals(""))){
             try {
                 AXIOMXPath axiomxPath = new AXIOMXPath(fact.getXpath());

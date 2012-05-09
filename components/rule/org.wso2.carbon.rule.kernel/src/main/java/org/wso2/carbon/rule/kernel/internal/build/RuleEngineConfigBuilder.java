@@ -24,6 +24,8 @@ import org.wso2.carbon.rule.common.config.HelperUtil;
 import org.wso2.carbon.utils.ServerConstants;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLInputFactory;
@@ -37,10 +39,12 @@ import java.io.*;
  */
 public class RuleEngineConfigBuilder {
 
+    private static Log log = LogFactory.getLog(RuleEngineConfigBuilder.class);
+
     /**
      * provides the rule engine provider list
      * @return  lost of rule engine providers given in the rule conf file.
-     * @throws RuleConfigurationException
+     * @throws RuleConfigurationException  - if there is a problem with configuration
      */
     public RuleEngineConfig getRuleConfig() throws RuleConfigurationException {
         OMElement ruleConfigOMElement = getOMElement();
@@ -53,7 +57,7 @@ public class RuleEngineConfigBuilder {
 
         // if the cep config file not exists then simply return null.
         File ruleConfigFile = new File(path);
-        if (!ruleConfigFile.exists()) {                                                                             ;
+        if (!ruleConfigFile.exists()) {
             return null;
         }
 
@@ -78,8 +82,7 @@ public class RuleEngineConfigBuilder {
                     inputStream.close();
                 }
             } catch (IOException e) {
-                String errorMessage = "Can not close the input stream";
-                throw new RuleConfigurationException(errorMessage, e);
+                log.error("Can not close the input stream ", e);
             }
         }
     }
@@ -110,10 +113,10 @@ public class RuleEngineConfigBuilder {
 
         Iterator propertyElementIter = ruleEngineProviderElement.getChildrenWithName(
                 new QName(Constants.RULE_ENGINE_CONF_NAMESPACE, Constants.RULE_ENGINE_CONF_ELE_PROPERTY));
-        OMElement propertElement = null;
+        OMElement propertElement;
 
-        String name = null;
-        String value = null;
+        String name;
+        String value;
 
         for (; propertyElementIter.hasNext();) {
             propertElement = (OMElement) propertyElementIter.next();

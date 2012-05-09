@@ -16,12 +16,11 @@
 
 package org.wso2.carbon.rule.mediator.config;
 
+import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
-import org.apache.axiom.om.OMAbstractFactory;
 import org.wso2.carbon.rule.common.util.Constants;
 
-import java.security.PrivateKey;
 import java.util.Map;
 
 public class Target {
@@ -31,7 +30,6 @@ public class Target {
     private String resultXpath;
     private String action;
     private Map<String, String> prefixToNamespaceMap;
-   // private Map<String, String> prefixToTargetNamespaceMap;
 
     public OMElement toOM(){
 
@@ -65,16 +63,6 @@ public class Target {
 
             }
         }
-//        if(this.prefixToTargetNamespaceMap != null){
-//
-//            for (String prefix : this.prefixToTargetNamespaceMap.keySet()){
-//
-//                String nsURI = this.prefixToTargetNamespaceMap.get(prefix);
-//                targetElement.declareNamespace(nsURI, prefix);
-//
-//            }
-//        }
-
         return targetElement;
     }
 
@@ -109,14 +97,6 @@ public class Target {
     public void setPrefixToNamespaceMap(Map<String, String> prefixToNamespaceMap) {
         this.prefixToNamespaceMap = prefixToNamespaceMap;
     }
-
-//    public Map<String, String> getPrefixToTargetNamespaceMap(){
-//        return prefixToTargetNamespaceMap;
-//    }
-//
-//    public void setPrefixToTargetNamespaceMap(Map<String, String> prefixToTargetNamespaceMap){
-//        this.prefixToTargetNamespaceMap = prefixToTargetNamespaceMap;
-//    }
 
     public String getAction() {
         return action;

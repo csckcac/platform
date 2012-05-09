@@ -17,11 +17,7 @@
 package org.wso2.carbon.rule.common;
 
 import junit.framework.TestCase;
-import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMFactory;
 import org.wso2.carbon.rule.common.config.RuleSetHelper;
-import org.wso2.carbon.rule.common.util.Constants;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,15 +26,11 @@ public class TestRuleSet extends TestCase{
 
     public void testRuleSet(){
         RuleSet ruleSet = new RuleSet();
-        OMFactory omFactory = OMAbstractFactory.getOMFactory();
-        OMElement testElement =
-                omFactory.createOMElement(Constants.RULE_CONF_ELE_RULE_SET,
-                                          Constants.RULE_CONF_NAMESPACE,
-                                          Constants.RULE_CONF_NAMESPACE_PREFIX);
 
-            String resourceType = "drl";
-            String sourceType = "inline";
-            String value =  "package ruleTest;\n" +
+
+        String resourceType = "drl";
+        String sourceType = "inline";
+        String value = "package ruleTest;\n" +
                 "\n" +
                 "import org.wso2.carbon.rule.common.Test;\n" +
                 "\n" +
@@ -49,7 +41,7 @@ public class TestRuleSet extends TestCase{
                 "\n" +
                 "then\n" +
                 "$test.setMessage(\" Test Passed \");\n" +
-                "\n" ;
+                "\n";
 
         // Add rule
         Rule rule = new Rule();
@@ -64,7 +56,6 @@ public class TestRuleSet extends TestCase{
         propertyMAP.put("name2", "value2");
 
         ruleSet.setProperties(propertyMAP);
-
 
 
         RuleSet resultRuleSet = RuleSetHelper.getRuleSet(ruleSet.toOM());

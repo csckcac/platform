@@ -40,7 +40,7 @@ public class OutputHelper {
         Iterator factIterator =
                 outputElement.getChildrenWithName(new QName(
                         Constants.RULE_CONF_NAMESPACE, Constants.RULE_CONF_ELE_FACT));
-        OMElement factElement = null;
+        OMElement factElement;
         List<Fact> facts = new ArrayList<Fact>();
         for (; factIterator.hasNext();) {
             factElement = (OMElement) factIterator.next();

@@ -16,28 +16,23 @@
 
 package org.wso2.carbon.rule.kernel.engine;
 
+import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.context.CarbonContext;
+import org.wso2.carbon.event.core.subscription.Subscription;
+import org.wso2.carbon.rule.common.Rule;
+import org.wso2.carbon.rule.common.RuleSet;
+import org.wso2.carbon.rule.common.exception.RuleConfigurationException;
+import org.wso2.carbon.rule.common.exception.RuleRuntimeException;
+import org.wso2.carbon.rule.common.util.Constants;
 import org.wso2.carbon.rule.kernel.backend.RuleBackendRuntime;
-import org.wso2.carbon.rule.kernel.backend.Session;
 import org.wso2.carbon.rule.kernel.backend.RuleBackendRuntimeFactory;
-import org.wso2.carbon.rule.kernel.config.RuleEngineProvider;
+import org.wso2.carbon.rule.kernel.backend.Session;
 import org.wso2.carbon.rule.kernel.config.RuleEngineConfigService;
-import org.wso2.carbon.rule.kernel.internal.ds.RuleValueHolder;
+import org.wso2.carbon.rule.kernel.config.RuleEngineProvider;
 import org.wso2.carbon.rule.kernel.internal.build.RuleEngineConfigBuilder;
 import org.wso2.carbon.rule.kernel.internal.config.CarbonRuleEngineConfigService;
+import org.wso2.carbon.rule.kernel.internal.ds.RuleValueHolder;
 import org.wso2.carbon.rule.kernel.internal.event.RuleChangeEventDispacher;
-import org.wso2.carbon.rule.common.exception.RuleRuntimeException;
-import org.wso2.carbon.rule.common.exception.RuleConfigurationException;
-import org.wso2.carbon.rule.common.RuleSet;
-import org.wso2.carbon.rule.common.Rule;
-import org.wso2.carbon.rule.common.util.Constants;
-import org.wso2.carbon.event.core.EventBroker;
-import org.wso2.carbon.event.core.exception.EventBrokerException;
-import org.wso2.carbon.event.core.subscription.Subscription;
-import org.wso2.carbon.context.CarbonContext;
-import org.wso2.carbon.CarbonConstants;
-import org.apache.axis2.context.ConfigurationContext;
-
-import java.util.Set;
 
 /**
  * this class is the layer in between top layers (i.e web service layer and the mediation layer) and the rule back end runtime.
@@ -54,7 +49,7 @@ public class RuleEngine {
      * Engine it has to pass the Backe end runtime factory and the class loader to load the fact classes properly.
      * @param ruleSet  - rule set specified either in the web service descriptor file or rule mediator file.
      * @param factClassLoader   - class loader which other pojo classes may exists.
-     * @throws RuleConfigurationException
+     * @throws RuleConfigurationException  - if there is a problem with the configuration
      */
     public RuleEngine(RuleSet ruleSet,
                       ClassLoader factClassLoader) throws RuleConfigurationException {
@@ -126,9 +121,9 @@ public class RuleEngine {
 
     /**
      * creates a session to be used with a pirticular service invocation. 
-     * @param type
-     * @return
-     * @throws RuleRuntimeException
+     * @param type -  whther it is stateful or state less
+     * @return - session created
+     * @throws RuleRuntimeException - if problem occurs when creating session
      */
     public RuleSession createSession(int type) throws RuleRuntimeException {
 

@@ -1,8 +1,7 @@
 <ruleService
         name="testService"
         xmlns="http://wso2.org/carbon/rules"
-        targetNamespace=""
-        backendRuntimeFactory="">
+        targetNamespace="">
     <ruleSet uri="">
         <rule type="inline">
 

@@ -28,17 +28,17 @@ public interface RuleBackendRuntime {
 
     /**
      * Adds the rule set to back end runtime. Here the rule is depends on the real rule implementation.
-     * @param ruleSet
-     * @throws RuleConfigurationException
+     * @param ruleSet - rule set to be added to runtime
+     * @throws RuleConfigurationException - if there are problems with the configuaration
      */
     public void addRuleSet(RuleSet ruleSet) throws RuleConfigurationException;
 
     /**
      * Some rules engines support different sessions types. For an example State ful and state less. We abstract this
      * concept with session interface.
-     * @param type
-     * @return
-     * @throws RuleRuntimeException
+     * @param type - whether it is a stateful or stateless sesstion
+     * @return  - session created
+     * @throws RuleRuntimeException - if could not create the session
      */
     public Session createSession(int type) throws RuleRuntimeException;
 }

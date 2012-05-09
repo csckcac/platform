@@ -16,42 +16,42 @@
 
 package org.wso2.carbon.rule.ws.deploy;
 
-import org.apache.axis2.deployment.*;
-import org.apache.axis2.deployment.repository.util.DeploymentFileData;
-import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.engine.AxisConfiguration;
-import org.apache.axis2.engine.ServiceLifeCycle;
-import org.apache.axis2.description.*;
-import org.apache.axis2.AxisFault;
-import org.apache.axis2.util.XMLUtils;
-import org.apache.axis2.i18n.Messages;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.axis2.AxisFault;
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.deployment.*;
+import org.apache.axis2.deployment.repository.util.DeploymentFileData;
+import org.apache.axis2.description.*;
+import org.apache.axis2.engine.AxisConfiguration;
+import org.apache.axis2.engine.ServiceLifeCycle;
+import org.apache.axis2.util.XMLUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.rule.common.RuleService;
-import org.wso2.carbon.rule.ws.internal.schema.SchemaBuilder;
-import org.wso2.carbon.rule.common.config.RuleServiceHelper;
-import org.wso2.carbon.rule.ws.receiver.RuleMessageReceiver;
-import org.wso2.carbon.rule.kernel.engine.RuleEngine;
-import org.wso2.carbon.rule.common.exception.RuleConfigurationException;
-import org.wso2.carbon.rule.common.*;
-import org.wso2.carbon.rule.common.config.HelperUtil;
-import org.wso2.carbon.rule.common.Operation;
-import org.wso2.carbon.rule.common.util.Constants;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.rule.common.Input;
+import org.wso2.carbon.rule.common.Operation;
+import org.wso2.carbon.rule.common.Output;
+import org.wso2.carbon.rule.common.RuleService;
+import org.wso2.carbon.rule.common.config.HelperUtil;
+import org.wso2.carbon.rule.common.config.RuleServiceHelper;
+import org.wso2.carbon.rule.common.exception.RuleConfigurationException;
+import org.wso2.carbon.rule.common.util.Constants;
+import org.wso2.carbon.rule.kernel.engine.RuleEngine;
+import org.wso2.carbon.rule.ws.internal.schema.SchemaBuilder;
+import org.wso2.carbon.rule.ws.receiver.RuleMessageReceiver;
 import org.wso2.carbon.utils.ServerConstants;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import java.io.*;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.zip.ZipInputStream;
 import java.util.zip.ZipEntry;
-import java.net.MalformedURLException;
+import java.util.zip.ZipInputStream;
 
 /**
  * rule service deployer. This reads either the .aar or .rsl files under the ruleservices folder and create AxisServices
@@ -167,9 +167,10 @@ public class RuleServiceDeployer extends AbstractDeployer {
      * creates the axis service by reading the .rsl file for the service.
      * @param rslFileInputStream  - input stream for the .rsl file
      * @param serviceClassLoader  - class loader of the service
+     * @param deploymentFileData  - deploy artifact file
      * @return     - corresponding axis service for this rule archive.
-     * @throws RuleConfigurationException
-     * @throws AxisFault
+     * @throws RuleConfigurationException - if there is a problem with the configuration
+     * @throws AxisFault - if the service can not be created sucessfully
      */
     private AxisService createService(InputStream rslFileInputStream,
                                       ClassLoader serviceClassLoader,
@@ -235,9 +236,9 @@ public class RuleServiceDeployer extends AbstractDeployer {
     /**
      * after reading the Rule servie from the configuration file we need to set some default values for some optional elements
      * and also keep a class instance in order to avoid any futrue class loading issues.
-     * @param ruleService
-     * @param classLoader
-     * @throws RuleConfigurationException
+     * @param ruleService  - Rule configuration details
+     * @param classLoader - classloder to be used to load the fact classes
+     * @throws RuleConfigurationException - if there is a problem witht the configuration
      */
     private void processDefaultValues(RuleService ruleService, ClassLoader classLoader)
                                                         throws RuleConfigurationException {
@@ -298,7 +299,7 @@ public class RuleServiceDeployer extends AbstractDeployer {
         //remove this service from the AxisConfiguration
         File file = new File(s);
         AxisConfiguration axisConfiguration = this.configurationContext.getAxisConfiguration();
-        AxisServiceGroup serviceGroup = null;
+        AxisServiceGroup serviceGroup;
         try {
             serviceGroup =
                     axisConfiguration.removeServiceGroup(this.fileNameToServiceNameMap.get(file.getAbsolutePath()));

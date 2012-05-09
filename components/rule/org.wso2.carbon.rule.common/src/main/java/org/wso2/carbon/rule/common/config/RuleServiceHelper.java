@@ -62,7 +62,7 @@ public class RuleServiceHelper {
         Iterator operationIter =
                 ruleServiceElement.getChildrenWithName(new QName(
                         Constants.RULE_CONF_NAMESPACE, Constants.RULE_CONF_ELE_OPERATION));
-        OMElement operationElement = null;
+        OMElement operationElement;
         for (; operationIter.hasNext(); ) {
             operationElement = (OMElement) operationIter.next();
             operations.add(OperationHelper.getOperation(operationElement));

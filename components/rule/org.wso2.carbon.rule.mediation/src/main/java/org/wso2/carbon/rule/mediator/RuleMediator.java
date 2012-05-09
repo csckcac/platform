@@ -16,28 +16,22 @@
 
 package org.wso2.carbon.rule.mediator;
 
-import org.apache.synapse.mediators.AbstractMediator;
-import org.apache.synapse.MessageContext;
 import org.apache.axiom.om.*;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
-import org.apache.axiom.om.util.StAXUtils;
 import org.apache.axiom.om.xpath.AXIOMXPath;
-import org.wso2.carbon.rule.kernel.engine.RuleEngine;
-import org.wso2.carbon.rule.kernel.engine.RuleSession;
-import org.wso2.carbon.rule.common.exception.RuleRuntimeException;
-import org.wso2.carbon.rule.mediator.config.Source;
-import org.wso2.carbon.rule.mediator.config.Target;
-import org.wso2.carbon.rule.common.util.Constants;
+import org.apache.synapse.MessageContext;
+import org.apache.synapse.mediators.AbstractMediator;
+import org.jaxen.JaxenException;
 import org.wso2.carbon.rule.common.Input;
 import org.wso2.carbon.rule.common.Output;
-import org.jaxen.JaxenException;
+import org.wso2.carbon.rule.common.exception.RuleRuntimeException;
+import org.wso2.carbon.rule.common.util.Constants;
+import org.wso2.carbon.rule.kernel.engine.RuleEngine;
+import org.wso2.carbon.rule.kernel.engine.RuleSession;
+import org.wso2.carbon.rule.mediator.config.Source;
+import org.wso2.carbon.rule.mediator.config.Target;
 
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamException;
 import java.util.ArrayList;
 import java.util.Map;
-import java.io.InputStream;
-import java.io.ByteArrayInputStream;
 
 public class RuleMediator extends AbstractMediator {
 

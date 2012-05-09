@@ -28,13 +28,15 @@ public interface Session {
 
     /**
      * apply the rules to the given sent of facts and send the result facts back.
-     * @param facts
-     * @return
+     * @param facts  - list of facts given as POJOs to be executed against backend runtime
+     * @return   - list of facts after applying the rules
+     * @throws RuleRuntimeException - if there is a problem occurs
      */
     public List execute(List facts) throws RuleRuntimeException;
 
     /**
-     * cleaning up work of the session.
+     *
+     * @throws RuleRuntimeException - if there is a problem occurs
      */
     public void destroy() throws RuleRuntimeException;
 }

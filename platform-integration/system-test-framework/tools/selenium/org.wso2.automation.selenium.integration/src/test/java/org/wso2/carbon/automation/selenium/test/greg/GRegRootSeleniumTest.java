@@ -412,7 +412,7 @@ public class GRegRootSeleniumTest {
     private void userLogin() {
         new GregUserLogin().userLogin(driver, username, password);
         selenium.waitForPageToLoad("30000");
-        assertTrue(selenium.isTextPresent("WSO2 Governance Registry Home"), "GReg Home page not present :");
+        assertTrue(selenium.isTextPresent("WSO2 Governance Registry"), "GReg Home page not present :");
     }
 
     private int getResourceId(String resourceName) {

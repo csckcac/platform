@@ -77,59 +77,67 @@ public class JaggeryDeployer extends AbstractDeployer {
     }
 
     public void deploy(DeploymentFileData deploymentFileData) throws DeploymentException {
-
         try {
-            // Object can be of listeners interfaces in javax.servlet.*
-
-            ArrayList<Object> listeners = new ArrayList<Object>(1);
-            // listeners.add(new CarbonServletRequestListener());
-
-            ServletParameter jaggeryServletParameter = new ServletParameter();
-            ServletParameter jsspParameter = new ServletParameter();
-
-            jaggeryServletParameter.setServletName(JaggeryConstants.JAGGERY_SERVLET_NAME);
-            jaggeryServletParameter.setServletClass(JaggeryConstants.JAGGERY_SERVLET_CLASS);
-
-            jsspParameter.setServletName(JaggeryConstants.JSSP_NAME);
-            jsspParameter.setServletClass(JaggeryConstants.JSSP_CLASS);
-            jsspParameter.setLoadOnStartup(2);
-            HashMap<String, String> jsspInitParamMap = new HashMap<String, String>();
-            jsspInitParamMap.put("fork", "false");
-            jsspParameter.setInitParams(jsspInitParamMap);
-
-            List<ServletParameter> servletParamList =
-                    new ArrayList<ServletParameter>();
-            servletParamList.add(jaggeryServletParameter);
-            servletParamList.add(jsspParameter);
-
-            ServletMappingParameter jaggeryServletMappingParameter = new ServletMappingParameter();
-            ServletMappingParameter jsspMappingParameter = new ServletMappingParameter();
-
-            jaggeryServletMappingParameter.setServletName(JaggeryConstants.JAGGERY_SERVLET_NAME);
-            jaggeryServletMappingParameter.setUrlPattern(JaggeryConstants.JAGGERY_SERVLET_URL_PATTERN);
-
-            SecurityConstraint securityConstraint = new SecurityConstraint();
-            securityConstraint.setAuthConstraint(true);
-
-            SecurityCollection securityCollection = new SecurityCollection();
-            securityCollection.setName("ConfigDir");
-            securityCollection.setDescription("Jaggery Configuration Dir");
-            securityCollection.addPattern("/" + JaggeryConstants.JAGGERY_CONF_FILE);
-
-            securityConstraint.addCollection(securityCollection);
-
-            List<ServletMappingParameter> servletMappingParamList =
-                    new ArrayList<ServletMappingParameter>();
-            servletMappingParamList.add(jaggeryServletMappingParameter);
-            servletMappingParamList.add(jsspMappingParameter);
-
-            tomcatJaggeryDeployer.deploy(deploymentFileData.getFile(), servletContextParameters, listeners, servletParamList, servletMappingParamList, securityConstraint);
-            super.deploy(deploymentFileData);
+            //avoiding hirachical deployment
+            String filePath = deploymentFileData.getAbsolutePath();
+            String appWithDeploymentDir = File.separator + webappsDir + File.separator + deploymentFileData.getName();
+            if (filePath.contains(appWithDeploymentDir)) {
+                doDeploy(deploymentFileData);
+            }
         } catch (Exception e) {
             String msg = "Error occurred while deploying webapp " + deploymentFileData.getFile().getAbsolutePath();
             log.error(msg, e);
             throw new DeploymentException(msg, e);
         }
+    }
+
+    private void doDeploy(DeploymentFileData deploymentFileData) throws CarbonException, DeploymentException {
+        // Object can be of listeners interfaces in javax.servlet.*
+
+        ArrayList<Object> listeners = new ArrayList<Object>(1);
+        // listeners.add(new CarbonServletRequestListener());
+
+        ServletParameter jaggeryServletParameter = new ServletParameter();
+        ServletParameter jsspParameter = new ServletParameter();
+
+        jaggeryServletParameter.setServletName(JaggeryConstants.JAGGERY_SERVLET_NAME);
+        jaggeryServletParameter.setServletClass(JaggeryConstants.JAGGERY_SERVLET_CLASS);
+
+        jsspParameter.setServletName(JaggeryConstants.JSSP_NAME);
+        jsspParameter.setServletClass(JaggeryConstants.JSSP_CLASS);
+        jsspParameter.setLoadOnStartup(2);
+        HashMap<String, String> jsspInitParamMap = new HashMap<String, String>();
+        jsspInitParamMap.put("fork", "false");
+        jsspParameter.setInitParams(jsspInitParamMap);
+
+        List<ServletParameter> servletParamList =
+                new ArrayList<ServletParameter>();
+        servletParamList.add(jaggeryServletParameter);
+        servletParamList.add(jsspParameter);
+
+        ServletMappingParameter jaggeryServletMappingParameter = new ServletMappingParameter();
+        ServletMappingParameter jsspMappingParameter = new ServletMappingParameter();
+
+        jaggeryServletMappingParameter.setServletName(JaggeryConstants.JAGGERY_SERVLET_NAME);
+        jaggeryServletMappingParameter.setUrlPattern(JaggeryConstants.JAGGERY_SERVLET_URL_PATTERN);
+
+        SecurityConstraint securityConstraint = new SecurityConstraint();
+        securityConstraint.setAuthConstraint(true);
+
+        SecurityCollection securityCollection = new SecurityCollection();
+        securityCollection.setName("ConfigDir");
+        securityCollection.setDescription("Jaggery Configuration Dir");
+        securityCollection.addPattern("/" + JaggeryConstants.JAGGERY_CONF_FILE);
+
+        securityConstraint.addCollection(securityCollection);
+
+        List<ServletMappingParameter> servletMappingParamList =
+                new ArrayList<ServletMappingParameter>();
+        servletMappingParamList.add(jaggeryServletMappingParameter);
+        servletMappingParamList.add(jsspMappingParameter);
+
+        tomcatJaggeryDeployer.deploy(deploymentFileData.getFile(), servletContextParameters, listeners, servletParamList, servletMappingParamList, securityConstraint);
+        super.deploy(deploymentFileData);
     }
 
     public void setDirectory(String repoDir) {

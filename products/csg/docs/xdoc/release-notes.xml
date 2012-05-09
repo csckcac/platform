@@ -115,6 +115,7 @@
         <li>CARBON-12782 - Updated the documentation to include information about the 'csguser'.</li>
         <li>CARBON-12940 - Added all csg.properties into an appendix.</li>
         <li>CARBON-13027 - Fixed issue when clicking Registry browser.</li>
+        <li>CARBON-13028 - Source packs for CSG products and CSG service.</li>
     </ol>
 
     <h2>Release 1.0.0-alpha RC3</h2>

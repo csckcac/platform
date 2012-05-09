@@ -22,10 +22,13 @@ import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.admin.service.utils.AuthenticateStub;
+import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceResourceServiceExceptionException;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceStub;
 import org.wso2.carbon.registry.resource.stub.beans.xsd.CollectionContentBean;
+import org.wso2.carbon.registry.resource.stub.beans.xsd.ContentBean;
+import org.wso2.carbon.registry.resource.stub.beans.xsd.MetadataBean;
 import org.wso2.carbon.registry.resource.stub.common.xsd.ResourceData;
 
 import javax.activation.DataHandler;
@@ -312,6 +315,75 @@ public class AdminServiceResourceAdmin {
         } catch (ResourceAdminServiceResourceServiceExceptionException e) {
             handleException("Fail to add registry permission", e);
         }
+    }
+
+    public String getProperty(String sessionCookie, String resourcePath, String key)
+            throws AxisFault {
+        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
+        try {
+            return resourceAdminServiceStub.getProperty(resourcePath, key);
+        } catch (RemoteException e) {
+            handleException("Fail to get resource property", e);
+        } catch (ResourceAdminServiceExceptionException e) {
+            handleException("Fail to get resource property", e);
+        }
+        return null;
+    }
+
+    public MetadataBean getMetadata(String sessionCookie, String resourcePath)
+            throws AxisFault {
+        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
+        try {
+            return resourceAdminServiceStub.getMetadata(resourcePath);
+
+        } catch (RemoteException e) {
+            handleException("Fail to get resource property", e);
+        } catch (ResourceAdminServiceExceptionException e) {
+            handleException("Fail to get resource property", e);
+        }
+        return null;
+    }
+
+    public ContentBean getResourceContent(String sessionCookie, String resourcePath)
+            throws AxisFault {
+        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
+        try {
+            return resourceAdminServiceStub.getContentBean(resourcePath);
+            
+
+        } catch (RemoteException e) {
+            handleException("Fail to get resource property", e);
+        } catch (ResourceAdminServiceExceptionException e) {
+            handleException("Fail to get resource property", e);
+        }
+        return null;
+    }
+
+    public ResourceData[] getResourceData(String sessionCookie, String resourcePath)
+            throws AxisFault {
+        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
+        String[] resourceArray = {resourcePath};
+        try {
+            return resourceAdminServiceStub.getResourceData(resourceArray);
+        } catch (RemoteException e) {
+            handleException("Fail to get resource property", e);
+        } catch (ResourceAdminServiceExceptionException e) {
+            handleException("Fail to get resource property", e);
+        }
+        return null;
+    }
+
+    public String getHumanReadableMediaTypes(String sessionCookie, String resourcePath)
+            throws AxisFault {
+        AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
+        try {
+            resourceAdminServiceStub.getHumanReadableMediaTypes();
+        } catch (RemoteException e) {
+            handleException("Fail to get resource property", e);
+        } catch (ResourceAdminServiceExceptionException e) {
+            handleException("Fail to get resource property", e);
+        }
+        return null;
     }
 
     private void handleException(String msg, Exception e) throws AxisFault {

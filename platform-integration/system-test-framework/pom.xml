@@ -27,7 +27,7 @@
                 <checksumPolicy>ignore</checksumPolicy>
             </releases>
         </repository>
-        <!-- <repository>
+        <repository>
            <id>wso2-maven2-repository</id>
            <name>WSO2 Maven2 Repository</name>
            <url>http://dist.wso2.org/maven2</url>
@@ -39,7 +39,7 @@
                <updatePolicy>never</updatePolicy>
                <checksumPolicy>fail</checksumPolicy>
            </releases>
-       </repository> -->
+       </repository>
 
         <!--
                 <repository>

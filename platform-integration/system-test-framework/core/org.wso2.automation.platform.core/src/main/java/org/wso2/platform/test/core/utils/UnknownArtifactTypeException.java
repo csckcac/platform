@@ -1,4 +1,4 @@
-package org.wso2.platform.test.core.utils;/*
+/*
 *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 *WSO2 Inc. licenses this file to you under the Apache License,
@@ -15,7 +15,7 @@ package org.wso2.platform.test.core.utils;/*
 *specific language governing permissions and limitations
 *under the License.
 */
-
+package org.wso2.platform.test.core.utils;
 public class UnknownArtifactTypeException extends Exception {
     public UnknownArtifactTypeException(String s) {
         super("Unknown artifact Type Exception");

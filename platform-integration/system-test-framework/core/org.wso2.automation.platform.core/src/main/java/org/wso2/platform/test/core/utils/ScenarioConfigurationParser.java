@@ -42,7 +42,7 @@ public class ScenarioConfigurationParser {
 
     private static Log log = LogFactory.getLog(ScenarioConfigurationParser.class);
 
-    private static ScenarioConfigurationParser instance = new ScenarioConfigurationParser();
+    private static ScenarioConfigurationParser instance;
     private static final String SCENARIO = "scenario";
     private static final String TEST_NAME = "testName";
     private static final String PRODUCT = "product";
@@ -59,17 +59,21 @@ public class ScenarioConfigurationParser {
     private static final String ASSOCIATION = "association";
     private static final String ASSOCIATION_NAME = "name";
     private static final String ASSOCIATION_VALUE = "value";
-    private TestScenarioConfig testScenarioConfig = new TestScenarioConfig();
+    private static final String PRODUCTS = "products";
+    private static TestScenarioConfig testScenarioConfig = new TestScenarioConfig();
 
     private ScenarioConfigurationParser() {
-        readConfig();
     }
 
-    public static ScenarioConfigurationParser getInstance() {
+    public static ScenarioConfigurationParser getInstance() throws Exception {
+        if (instance == null) {
+            readConfig();
+            instance = new ScenarioConfigurationParser();
+        }
         return instance;
     }
 
-    private void readConfig() {
+    private static void readConfig() throws Exception {
         //get test configuration file path
         String testConfigFilePath = ArtifactReader.SYSTEM_TEST_RESOURCE_LOCATION +
                                     File.separator + "conf" + File.separator + "testconfig.xml";
@@ -85,19 +89,31 @@ public class ScenarioConfigurationParser {
                 documentElement = builder.getDocumentElement();
                 processScenarioConfigurationElements(documentElement);
 
-            } catch (FileNotFoundException ignored) {
-                log.error("Config file not found");
-            } catch (XMLStreamException ignored) {
+            } catch (FileNotFoundException e) {
+                String msg = "Config file not found";
+                log.error(msg, e);
+                throw new Exception(msg, e);
+
+            } catch (XMLStreamException e) {
+                String msg = "Error reading config file";
                 log.error("Error reading config file");
+                throw new XMLStreamException(msg, e);
+
             } finally {
-                try {
-                    if (inputStream != null) {
-                        inputStream.close();
-                    }
-                } catch (IOException ignored) {
-                    log.warn("Unable to close the file input stream created for config file");
-                }
+                closeStream(inputStream);
             }
+        }
+    }
+
+    private static void closeStream(FileInputStream inputStream) throws IOException {
+        try {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+        } catch (IOException e) {
+            String msg = "Unable to close the file input stream created for config file";
+            log.warn(msg + " " + e.getMessage());
+            throw new IOException(msg, e);
         }
     }
 
@@ -106,97 +122,101 @@ public class ScenarioConfigurationParser {
      *
      * @param documentElement - OMElement of processed test configuration file.
      */
-    private void processScenarioConfigurationElements(OMElement documentElement) {
+    private static void processScenarioConfigurationElements(OMElement documentElement) {
         for (Iterator itrScenario = documentElement.getChildrenWithName(new QName(SCENARIO)); itrScenario.hasNext(); ) {
             OMElement OmClassDocument = (OMElement) itrScenario.next();
 
             OMAttribute testMethodAttr = OmClassDocument.getAttribute(new QName(TEST_NAME));
 
-            List<ProductConfig> productMapList = new ArrayList<ProductConfig>();
-            for (Iterator itrProduct = OmClassDocument.getChildrenWithName(new QName(PRODUCT)); itrProduct.hasNext(); ) {
-                OMElement omProduct = (OMElement) itrProduct.next();
-                OMAttribute omProductAttr = omProduct.getAttribute(new QName(PRODUCT_NAME));
+            for (Iterator itrProducts = OmClassDocument.getChildrenWithName(new QName(PRODUCTS)); itrProducts.hasNext(); ) {
+                OMElement omProducts = (OMElement) itrProducts.next();
 
-                ProductConfig productConfig = new ProductConfig();
-                productConfig.setProductName(omProductAttr.getAttributeValue());
+                List<ProductConfig> productMapList = new ArrayList<ProductConfig>();
+                for (Iterator itrProduct = omProducts.getChildrenWithName(new QName(PRODUCT)); itrProduct.hasNext(); ) {
+                    OMElement omProduct = (OMElement) itrProduct.next();
+                    OMAttribute omProductAttr = omProduct.getAttribute(new QName(PRODUCT_NAME));
 
-                List<Artifact> artifactMapList = new ArrayList<Artifact>();
+                    ProductConfig productConfig = new ProductConfig();
+                    productConfig.setProductName(omProductAttr.getAttributeValue());
 
-                for (Iterator itrArtifacts = omProduct.getChildrenWithName(new QName(ARTIFACTS));
-                     itrArtifacts.hasNext(); ) {
-                    OMElement omArtifacts = (OMElement) itrArtifacts.next();
-                    OMAttribute omUserIdAttr = omArtifacts.getAttribute(new QName(USER_ID));
+                    List<Artifact> artifactMapList = new ArrayList<Artifact>();
 
-                    for (Iterator itrArtifact = omArtifacts.getChildrenWithName(new QName(ARTIFACT));
-                         itrArtifact.hasNext(); ) {
-                        OMElement omArtifact = (OMElement) itrArtifact.next();
-                        OMAttribute omArtifactNameAttr = omArtifact.getAttribute(new QName(ARTIFACT_NAME));
-                        OMAttribute omArtifactTypeAttr = omArtifact.getAttribute(new QName(ARTIFACT_TYPE));
-                        OMAttribute omArtifactLocationAttr = omArtifact.getAttribute(new QName(LOCATION));
+                    for (Iterator itrArtifacts = omProduct.getChildrenWithName(new QName(ARTIFACTS));
+                         itrArtifacts.hasNext(); ) {
+                        OMElement omArtifacts = (OMElement) itrArtifacts.next();
+                        OMAttribute omUserIdAttr = omArtifacts.getAttribute(new QName(USER_ID));
 
-                        Artifact artifact = new Artifact();
+                        for (Iterator itrArtifact = omArtifacts.getChildrenWithName(new QName(ARTIFACT));
+                             itrArtifact.hasNext(); ) {
+                            OMElement omArtifact = (OMElement) itrArtifact.next();
+                            OMAttribute omArtifactNameAttr = omArtifact.getAttribute(new QName(ARTIFACT_NAME));
+                            OMAttribute omArtifactTypeAttr = omArtifact.getAttribute(new QName(ARTIFACT_TYPE));
+                            OMAttribute omArtifactLocationAttr = omArtifact.getAttribute(new QName(LOCATION));
 
-                        artifact.setArtifactName(omArtifactNameAttr.getAttributeValue());
-                        if (omArtifactLocationAttr != null) {
-                            artifact.setArtifactLocation(omArtifactLocationAttr.getAttributeValue());
-                        } else {
-                            artifact.setArtifactLocation("");
-                        }
-                        artifact.setArtifactType(ArtifactTypeFactory.getType(omArtifactTypeAttr.getAttributeValue()));
-                        artifact.setUserId(Integer.parseInt(omUserIdAttr.getAttributeValue()));
+                            Artifact artifact = new Artifact();
+
+                            artifact.setArtifactName(omArtifactNameAttr.getAttributeValue());
+                            if (omArtifactLocationAttr != null) {
+                                artifact.setArtifactLocation(omArtifactLocationAttr.getAttributeValue());
+                            } else {
+                                artifact.setArtifactLocation("");
+                            }
+                            artifact.setArtifactType(ArtifactTypeFactory.getType(omArtifactTypeAttr.getAttributeValue()));
+                            artifact.setUserId(Integer.parseInt(omUserIdAttr.getAttributeValue()));
 
 
-                        List<ArtifactDependency> depMapList = new ArrayList<ArtifactDependency>();
-                        List<ArtifactAssociation> assoMapList = new ArrayList<ArtifactAssociation>();
+                            List<ArtifactDependency> depMapList = new ArrayList<ArtifactDependency>();
+                            List<ArtifactAssociation> assoMapList = new ArrayList<ArtifactAssociation>();
 
-                        for (Iterator itrDependency = omArtifact.getChildrenWithName(new QName(DEPENDENCY));
-                             itrDependency.hasNext(); ) {
-                            OMElement omDependency = (OMElement) itrDependency.next();
-                            OMAttribute omDependencyNameAttr = omDependency.getAttribute(new QName(DEPENDENCY_NAME));
-                            OMAttribute omDependencyTypeAttr = omDependency.getAttribute(new QName(DEPENDENCY_TYPE));
-                            OMAttribute omDependencyLocationAttr = omDependency.getAttribute(new QName(LOCATION));
+                            for (Iterator itrDependency = omArtifact.getChildrenWithName(new QName(DEPENDENCY));
+                                 itrDependency.hasNext(); ) {
+                                OMElement omDependency = (OMElement) itrDependency.next();
+                                OMAttribute omDependencyNameAttr = omDependency.getAttribute(new QName(DEPENDENCY_NAME));
+                                OMAttribute omDependencyTypeAttr = omDependency.getAttribute(new QName(DEPENDENCY_TYPE));
+                                OMAttribute omDependencyLocationAttr = omDependency.getAttribute(new QName(LOCATION));
 
-                            ArtifactDependency artifactDependencies = new ArtifactDependency();
+                                ArtifactDependency artifactDependencies = new ArtifactDependency();
 
-                            if (omDependencyNameAttr != null && omDependencyTypeAttr != null) {
-                                artifactDependencies.setDepArtifactName(omDependencyNameAttr.getAttributeValue());
-                                if (omDependencyLocationAttr != null) {
-                                    artifactDependencies.setDepArtifactLocation(omDependencyLocationAttr.getAttributeValue());
+                                if (omDependencyNameAttr != null && omDependencyTypeAttr != null) {
+                                    artifactDependencies.setDepArtifactName(omDependencyNameAttr.getAttributeValue());
+                                    if (omDependencyLocationAttr != null) {
+                                        artifactDependencies.setDepArtifactLocation(omDependencyLocationAttr.getAttributeValue());
+                                    } else {
+                                        artifactDependencies.setDepArtifactLocation("");
+                                    }
+                                    artifactDependencies.setDepArtifactType(ArtifactTypeFactory.
+                                            getType(omDependencyTypeAttr.getAttributeValue()));
+                                    depMapList.add(artifactDependencies);
+                                    artifact.setDependencyArtifactList(depMapList);
                                 } else {
-                                    artifactDependencies.setDepArtifactLocation("");
+                                    artifact.setDependencyArtifactList(null);
                                 }
-                                artifactDependencies.setDepArtifactType(ArtifactTypeFactory.
-                                        getType(omDependencyTypeAttr.getAttributeValue()));
-                                depMapList.add(artifactDependencies);
-                                artifact.setDependencyArtifactList(depMapList);
-                            } else {
-                                artifact.setDependencyArtifactList(null);
                             }
-                        }
 
-                        for (Iterator itrAssociation = omArtifact.getChildrenWithName(new QName(ASSOCIATION)); itrAssociation.hasNext(); ) {
-                            OMElement omAssociation = (OMElement) itrAssociation.next();
-                            OMAttribute omAssoNameAttr = omAssociation.getAttribute(new QName(ASSOCIATION_NAME));
-                            OMAttribute omAssoValueAttr = omAssociation.getAttribute(new QName(ASSOCIATION_VALUE));
+                            for (Iterator itrAssociation = omArtifact.getChildrenWithName(new QName(ASSOCIATION)); itrAssociation.hasNext(); ) {
+                                OMElement omAssociation = (OMElement) itrAssociation.next();
+                                OMAttribute omAssoNameAttr = omAssociation.getAttribute(new QName(ASSOCIATION_NAME));
+                                OMAttribute omAssoValueAttr = omAssociation.getAttribute(new QName(ASSOCIATION_VALUE));
 
-                            ArtifactAssociation association = new ArtifactAssociation();
+                                ArtifactAssociation association = new ArtifactAssociation();
 
-                            if (omAssoNameAttr != null && omAssoValueAttr != null) {
-                                association.setAssociationName(omAssoNameAttr.getAttributeValue());
-                                association.setAssociationValue(omAssoValueAttr.getAttributeValue());
-                                assoMapList.add(association);
-                                artifact.setAssociationList(assoMapList);
-                            } else {
-                                artifact.setAssociationList(null);
+                                if (omAssoNameAttr != null && omAssoValueAttr != null) {
+                                    association.setAssociationName(omAssoNameAttr.getAttributeValue());
+                                    association.setAssociationValue(omAssoValueAttr.getAttributeValue());
+                                    assoMapList.add(association);
+                                    artifact.setAssociationList(assoMapList);
+                                } else {
+                                    artifact.setAssociationList(null);
+                                }
                             }
+                            artifactMapList.add(artifact);
                         }
-                        artifactMapList.add(artifact);
+                        productConfig.setProductArtifactList(artifactMapList);
                     }
-                    productConfig.setProductArtifactList(artifactMapList);
+                    productMapList.add(productConfig);
                 }
-                productMapList.add(productConfig);
+                testScenarioConfig.setProductConfigMap(testMethodAttr.getAttributeValue(), productMapList);
             }
-            testScenarioConfig.setProductConfigMap(testMethodAttr.getAttributeValue(), productMapList);
         }
     }
 

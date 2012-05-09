@@ -7,7 +7,7 @@ import org.wso2.platform.test.core.utils.UnknownArtifactTypeException;
 
 public class PlatformTestManager implements ITestListener {
 
-    private ArtifactManager artifactManager;
+    private static ArtifactManager artifactManager;
 
     private static final Log log = LogFactory.getLog(PlatformTestManager.class);
 
@@ -42,7 +42,7 @@ public class PlatformTestManager implements ITestListener {
      * @see org.testng.ITestResult#FAILURE
      */
     public void onTestFailure(ITestResult result) {
-        log.error("On Test Failure : " + result.getThrowable().getMessage());
+        log.error(result.getThrowable());
     }
 
     /**
@@ -72,12 +72,12 @@ public class PlatformTestManager implements ITestListener {
      * any configuration method is called.
      */
     public void onStart(ITestContext context) {
-        String currentTestClassName = ((TestRunner) context).getCurrentXmlTest().getClasses().get(0).getName();
+        String currentTestClassName =  context.getCurrentXmlTest().getClasses().get(0).getName();
         log.info("Before executing the test class :" + currentTestClassName);
         if (currentTestClassName != null) {
-            artifactManager = new ArtifactManager(((TestRunner) context).getCurrentXmlTest().getClasses().get(0).getName());
             try {
-                artifactManager.deployArtifacts();
+                artifactManager = ArtifactManager.getInstance();
+                artifactManager.deployArtifacts(context.getCurrentXmlTest().getClasses().get(0).getName());
             } catch (UnknownArtifactTypeException e) { /*cannot throw the exception */
                 log.error("Unknown Artifact type to be deployed ", e);
             } catch (Exception e) {
@@ -92,8 +92,8 @@ public class PlatformTestManager implements ITestListener {
      */
     public void onFinish(ITestContext context) {
         try {
-            assert artifactManager != null;
-            artifactManager.cleanArtifacts();
+            assert artifactManager != null : "Artifact Manger is null";
+            artifactManager.cleanArtifacts(context.getCurrentXmlTest().getClasses().get(0).getName());
         } catch (UnknownArtifactTypeException e) { /*cannot throw the exception */
             log.error("Unknown Artifact type to be cleared ", e);
         } catch (Exception e) {

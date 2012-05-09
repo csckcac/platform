@@ -60,7 +60,6 @@ public class AarServiceLoadTestClient {
         builder = new EnvironmentBuilder().as(userId);
         ManageEnvironment environment = builder.build();
         AXIS2SERVICE_EPR = environment.getAs().getServiceUrl() + "/" + serviceName;
-        System.out.println(environment.getAs().getWebAppURL());
     }
 
 
@@ -83,48 +82,54 @@ public class AarServiceLoadTestClient {
 
     @Test(groups = {"wso2.as"}, description = "Running AAR load test with c=100 n=100",
           priority = 2)
-    public void runSuccessCase() {
-        log.info("Running AAR load test with c=100 n=100. Test will take few minutes to complete, " +
+    public void runSuccessCase() throws AxisFault, InterruptedException {
+        log.info("Running AAR load test with c=50 n=10. Test will take few minutes to complete, " +
                  "please be patience");
-        TestExceptionHandler exHandler = new TestExceptionHandler();
+
         loadTestAxis2Service();
-        if (exHandler.throwable != null) {
-            exHandler.throwable.printStackTrace();
-            fail(exHandler.throwable.getMessage());
-        }
+
     }
 
-    private void loadTestAxis2Service() {
-        final int concurrencyNumber = 100;
-        final int numberOfIterations = 100;
-        Thread[] ClientThread = new Thread[concurrencyNumber];
+    private void loadTestAxis2Service() throws AxisFault, InterruptedException {
+        final int concurrencyNumber = 50;
+        final int numberOfIterations = 10   ;
+        final ServiceClient serviceclient = new ServiceClient();
+        Thread[] clientThread = new Thread[concurrencyNumber];
+        TestExceptionHandler exHandler = new TestExceptionHandler();
+
         for (int i = 0; i < concurrencyNumber; i++) {
-            ClientThread[i] = new Thread() {
+            clientThread[i] = new Thread() {
+
                 public void run() {
                     for (int i = 0; i < numberOfIterations; i++) {
-                        assertTrue(axis2ServiceTest(), "Load test on axis2service failed");
+                        try {
+                            assertTrue(axis2ServiceTest(serviceclient), "Load test on axis2service failed");
+                        } catch (Exception e) {
+                            fail("Error on service invocation ", e);
+                        }
                     }
                 }
             };
-            ClientThread[i].start();
+            clientThread[i].setUncaughtExceptionHandler(exHandler);
+            clientThread[i].start();
+            clientThread[i].join();
         }
 
-        for (int i = 0; i < concurrencyNumber; i++) {
-            try {
-                ClientThread[i].join();
-            } catch (InterruptedException e) {
-                fail("Thread join operation interrupted");
-                log.error("Thread join operation interrupted " + e.getMessage());
-            }
-        }
+//        for (int i = 0; i < concurrencyNumber; i++) {
+//            try {
+//                clientThread[i].join();
+//            } catch (InterruptedException e) {
+//                fail("Thread join operation interrupted");
+//                log.error("Thread join operation interrupted " + e.getMessage());
+//            }
+//        }
     }
 
-    private boolean axis2ServiceTest() {
+    private boolean axis2ServiceTest(ServiceClient serviceclient) throws Exception {
         boolean axis2ServiceStatus = false;
         OMElement result;
         try {
             OMElement payload = createPayLoad();
-            ServiceClient serviceclient = new ServiceClient();
             Options opts = new Options();
 
             opts.setTo(new EndpointReference(AXIS2SERVICE_EPR));
@@ -141,8 +146,9 @@ public class AarServiceLoadTestClient {
 
         } catch (AxisFault axisFault) {
             log.error("Axis2Service invocation failed :" + axisFault.getMessage());
-            fail("Axis2Service invocation failed :" + axisFault.getMessage());
+            throw new Exception("Axis2Service invocation failed :" + axisFault.getMessage());
         }
+        System.out.println(axis2ServiceStatus);
         return axis2ServiceStatus;
     }
 

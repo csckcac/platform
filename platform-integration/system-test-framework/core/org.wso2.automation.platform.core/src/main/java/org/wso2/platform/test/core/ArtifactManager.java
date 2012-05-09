@@ -35,15 +35,12 @@ import java.util.List;
  */
 public class ArtifactManager {
     private static final Log log = LogFactory.getLog(ArtifactManager.class);
+    private static ArtifactManager artifactManagerInstance;
     private ScenarioConfigurationParser scenarioConfig;
     private ArtifactDeployer deployer;
     private ArtifactCleaner cleaner;
-    public static final boolean ARTIFACT_DEPLOYMENT_STATUS = true;
-    public static final boolean ARTIFACT_CLEANER_STATUS = false;
-    private String testCaseName = null;
 
-    public ArtifactManager(String testCaseName) {
-        this.testCaseName = testCaseName;
+    private ArtifactManager() throws Exception {
         deployer = new ArtifactDeployer();
         cleaner = new ArtifactCleaner();
         scenarioConfig = ScenarioConfigurationParser.getInstance();
@@ -52,21 +49,30 @@ public class ArtifactManager {
     /**
      * deploying artifacts before executing the test case
      *
+     * @param testCaseName  test class name is being executed.
      * @throws Exception - artifact deployment exception
      */
-    public void deployArtifacts() throws Exception {
+    public void deployArtifacts(String testCaseName) throws Exception {
         log.info("Deploying Artifacts required for scenario...");
-        artifactTraverser(ARTIFACT_DEPLOYMENT_STATUS);
+        artifactTraverser(true, testCaseName);
+    }
+    
+    public static ArtifactManager getInstance() throws Exception {
+         if (artifactManagerInstance == null){
+             artifactManagerInstance = new ArtifactManager();
+         }
+        return artifactManagerInstance;
     }
 
     /**
      * Clean artifacts after each test run
      *
+     * @param testCaseName - testClass name is being executed.
      * @throws Exception - throws artifact removal exception
      */
-    public void cleanArtifacts() throws Exception {
+    public void cleanArtifacts(String testCaseName) throws Exception {
         log.info("Cleaning Artifacts...");
-        artifactTraverser(ARTIFACT_CLEANER_STATUS);
+        artifactTraverser(false, testCaseName);
     }
 
     /**
@@ -74,9 +80,10 @@ public class ArtifactManager {
      * the provided deployment status
      *
      * @param deploymentStatus true or false to check execute artifact deployer or undeployer
+     * @param testCaseName testClass name is being executed.
      * @throws Exception if artifact deployment error occurred.
      */
-    private void artifactTraverser(boolean deploymentStatus)
+    private void artifactTraverser(boolean deploymentStatus, String testCaseName)
             throws Exception {
 
         List<ProductConfig> productConfig = scenarioConfig.getProductConfigList(testCaseName);

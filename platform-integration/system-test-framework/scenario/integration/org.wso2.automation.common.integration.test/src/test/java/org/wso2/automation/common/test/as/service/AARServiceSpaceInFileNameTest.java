@@ -45,7 +45,7 @@ public class AARServiceSpaceInFileNameTest {
     @BeforeTest(alwaysRun = true)
     public void initializeProperties()
             throws LoginAuthenticationExceptionException, RemoteException {
-        int userId = 0;
+        int userId = 1;
         String serviceName = "Axis2Service";
         EnvironmentBuilder builder = new EnvironmentBuilder().as(userId);
         ManageEnvironment environment = builder.build();

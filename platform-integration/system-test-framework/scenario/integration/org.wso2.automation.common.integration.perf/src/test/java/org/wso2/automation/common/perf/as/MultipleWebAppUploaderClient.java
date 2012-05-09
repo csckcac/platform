@@ -66,7 +66,7 @@ public class MultipleWebAppUploaderClient {
                                          resourcePath + File.separator + "war"
                                          + File.separator + CALENDAR_WAR);
 
-        worker2 = new WebAppWorker(environment1.getAs().getSessionCookie(),
+        worker2 = new WebAppWorker(environment2.getAs().getSessionCookie(),
                                          environment1.getAs().getBackEndUrl(),
                                          resourcePath + File.separator + "war"
                                          + File.separator + MY_SERVLET_WAR_WAR);

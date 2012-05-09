@@ -117,11 +117,13 @@ public class WebAppUploaderClient {
     @Test(groups = "wso2.as", description = "Undeploy the webapp", priority = 2)
     public void testCleanDeployedApps() throws Exception {
         worker1.deleteWebApp(SAMPLE_WAR_FILE_NAME);
+        worker2.deleteWebApp(SAMPLE_WAR_FILE_NAME);
+        worker3.deleteWebApp(SAMPLE_WAR_FILE_NAME);
 
         WebAppUtil.waitForWebAppUnDeployment(environment1.getAs().getWebAppURL() +
                                              "/SimpleServlet/simple-servlet", "Hello");
 
-        WebAppUtil.waitForWebAppUnDeployment(environment2.getAs().getWebAppURL() +
+       WebAppUtil.waitForWebAppUnDeployment(environment2.getAs().getWebAppURL() +
                                              "/SimpleServlet/simple-servlet", "Hello");
 
         WebAppUtil.waitForWebAppUnDeployment(environment3.getAs().getWebAppURL() +

@@ -261,7 +261,7 @@
                             </filters>
                             <descriptors>
                                 <descriptor>src/main/assembly/bin.xml</descriptor>
-                                <!--<descriptor>src/main/assembly/src.xml</descriptor>-->
+                                <descriptor>src/main/assembly/src.xml</descriptor>
                                 <descriptor>src/main/assembly/docs.xml</descriptor>
                             </descriptors>
                         </configuration>

@@ -76,7 +76,7 @@
     <!--
        Webapp context root of WSO2 Carbon.
     -->
-    <WebContextRoot>/</WebContextRoot>
+    <WebContextRoot>/admin</WebContextRoot>
 
     <!-- In-order to  get the registry http Port from the back-end when the default http transport is not the same-->
     <!--RegistryHttpPort>9763</RegistryHttpPort-->

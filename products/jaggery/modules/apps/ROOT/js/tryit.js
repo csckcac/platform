@@ -1,5 +1,5 @@
 Tryit = new function () {
-    var viewurl = "/docs/tryit/tryit.jag";
+    var viewurl = "/tryit/tryit.jag";
     this.call = function () {
         var arg = editAreaLoader.getValue('codeinput');
         var qString = $('#qString').val();

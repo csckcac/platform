@@ -123,7 +123,7 @@ include('/includes/topnavi.jag');
 						</pre><br/>
                 <li>Thats it ! point to  <code>{http://localhost:9443/helloapp/helloworld.jag}</code></li>
             </ol>
-             <p>Excited ?? check out the <a href="/docs/documentation.jag">Jaggery API</a></p>
+             <p>Excited ?? check out the <a href="/documentation.jag">Jaggery API</a></p>
         </div>
     </div>
     <br/>

@@ -41,7 +41,7 @@ include('/includes/topnavi.jag');
 
      <div class="bigNum">404</div>
      <h1>Page not found.</h1>
-     <p>Sorry the page you requested cannot be found.. return <a href="/docs">home</a>, before someone misses you</p>
+     <p>Sorry the page you requested cannot be found.. return <a href="/">home</a>, before someone misses you</p>
 
    </div>
      </div>

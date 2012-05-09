@@ -30,10 +30,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Handles management of webapps when ghost deployer is enabled. This includes deployment of
+ * actual webapp from ghost form, dispatching requests to correct webapps, etc.
+ */
+public class GhostWebappDeployerValve implements CarbonTomcatValve {
 
-public class TomcatGhostValve implements CarbonTomcatValve {
-
-    private static final Log log = LogFactory.getLog(TomcatGhostValve.class);
+    private static final Log log = LogFactory.getLog(GhostWebappDeployerValve.class);
 
     @Override
     public void invoke(HttpServletRequest request,

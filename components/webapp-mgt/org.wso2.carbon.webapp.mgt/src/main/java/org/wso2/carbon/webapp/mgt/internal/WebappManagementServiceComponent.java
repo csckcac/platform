@@ -29,8 +29,8 @@ import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.ConfigurationContextService;
 import org.wso2.carbon.webapp.mgt.DataHolder;
+import org.wso2.carbon.webapp.mgt.GhostWebappDeployerValve;
 import org.wso2.carbon.webapp.mgt.TenantLazyLoaderValve;
-import org.wso2.carbon.webapp.mgt.TomcatGhostValve;
 import org.wso2.carbon.webapp.mgt.WebApplication;
 import org.wso2.carbon.webapp.mgt.WebApplicationsHolder;
 import org.wso2.carbon.webapp.mgt.WebContextParameter;
@@ -61,7 +61,7 @@ public class WebappManagementServiceComponent {
             // Register the valves with Tomcat
             ArrayList<CarbonTomcatValve> valves = new ArrayList<CarbonTomcatValve>();
             valves.add(new TenantLazyLoaderValve());
-            valves.add(new TomcatGhostValve());
+            valves.add(new GhostWebappDeployerValve());
             TomcatValveContainer.addValves(valves);
 
             // registering WebappUnloader as an OSGi service

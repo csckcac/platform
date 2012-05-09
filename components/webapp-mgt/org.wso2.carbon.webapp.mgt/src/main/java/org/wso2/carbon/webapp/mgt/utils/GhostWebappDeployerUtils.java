@@ -52,6 +52,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Utility class for handling lazy loading of webapps
+ */
 public class GhostWebappDeployerUtils {
 
     private static final Log log = LogFactory.getLog(GhostWebappDeployerUtils.class);

@@ -84,6 +84,17 @@ include('/includes/topnavi.jag');
                <a href="/freshometer/index.jag" target="_blank" class="btn primary">View Demo</a>
           </li>
 
+		  <li>
+         <img src="images/task_thumb.jpg" alt="" class="sample_thumb" />
+
+         <h3>TaskMaster</h3>
+
+         <p>
+             The TaskMaster is a task manager app which makes use of the session in Jaggery. The tasks are saved and can be viewed via the main page.
+         </p>
+               <a href="/taskmaster/index.jag" target="_blank" class="btn primary">View Demo</a>
+          </li>
+
 
       </ul>    
    </div>

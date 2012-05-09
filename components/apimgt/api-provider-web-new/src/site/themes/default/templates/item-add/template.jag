@@ -5,8 +5,6 @@
         <div class="span12">
             <form class="form-horizontal well"
               id="addAPIForm"
-              action="<%=site.context%>/site/blocks/item-add/ajax/add.jag"
-              method="get"
               enctype="multipart/form-data">
 
                 <input type="hidden" name="action" id="addAPI" value="addAPI"/>
@@ -188,4 +186,22 @@
         </div>
     </div>
 </div>
+
+ <script type="text/javascript">
+$('input#addNewAPIButton').click( function() {
+    $.ajax({
+        url: '<%=site.context%>/site/blocks/item-add/ajax/add.jag',
+        type: 'post',
+        dataType: 'json',
+        data: $('form#addAPIForm').serialize(),
+        success: function(data) {
+                  if(!data.error){
+                      location.href = "site/pages/index.jag";
+                      $("#addAPIForm")[0].reset();
+                  }
+                 }
+    });
+});
+
+ </script>
 <% }); %>

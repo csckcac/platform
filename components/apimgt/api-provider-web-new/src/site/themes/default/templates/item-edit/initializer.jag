@@ -2,7 +2,7 @@
 jagg.initializer("item-edit", {
 
     preInitialize:function () {
-        jagg.addHeaderJS("item-edit", "item-edit", "templates/item-edit/js/item-edit.js");
+        jagg.addHeaderJS("item-edit", "item-edit", "templates/item-edit/js/edit.js");
     }
 });
 %>

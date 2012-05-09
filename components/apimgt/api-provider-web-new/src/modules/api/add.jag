@@ -7,9 +7,15 @@ var addAPI = function (api) {
         if (log.isDebugEnabled()) {
             log.debug("addAPI : " + api.name + "-" + api.version);
         }
+        if(success==false){
         return {
-            error:success
+            error:true
         };
+        }else{
+
+        return {
+            error:false
+        }; }
     } catch (e) {
         log.error(e.message);
         return {

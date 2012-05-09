@@ -15,7 +15,7 @@
                 var statsMappedUrl=jagg.getMappedUrl("/site/pages/statistics.jag");
             %>
             <ul class="breadcrumb">
-                <% if(reqUrl.indexOf(listUrl)>=0 ||reqUrl.indexOf(listMappedUrl)>=0){%>
+                <% if(reqUrl.indexOf(listUrl)>=0 ||reqUrl.indexOf(listMappedUrl)>=0||reqUrl.equals(site.context)){%>
                     <li>
                     APIs <span class="divider">/</span>
                     </li>

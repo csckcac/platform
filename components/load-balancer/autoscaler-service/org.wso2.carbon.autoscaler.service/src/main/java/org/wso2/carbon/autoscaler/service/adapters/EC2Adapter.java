@@ -13,6 +13,9 @@ import org.wso2.carbon.utils.CarbonUtils;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * EC2 specific Adapter, handles spawning / terminating instances in EC2
@@ -31,6 +34,9 @@ public class EC2Adapter extends Adapter {
     // EC2Configuration which holds ec2.conf configuration;
     private EC2Configuration ec2Configuration = new EC2Configuration();
 
+    // instanceIdToEC2IdMap will keep a map between started instance Id and EC2 generated ID
+    private Map<String, String> instanceIdToEC2IdMap = new HashMap<String, String>();
+
     private IAutoscalerService autoscalerService = AutoscalerServiceDSHolder.getInstance().getAutoscalerService();
 
     /**
@@ -40,11 +46,13 @@ public class EC2Adapter extends Adapter {
         log.info("Constructing EC2 Adapter...");
 
         // Create ec2Configuration from given file
+
         String ec2ConfigFile =
                 CarbonUtils.getCarbonConfigDirPath() + File.separator + "ec2.conf";
         ec2Configuration.init(ec2ConfigFile);
 
         // Create EC2 Instance Manager
+
         ec2InstanceManager = EC2Util.createEC2InstanceManager(ec2Configuration.getEc2_access_key(),
                 ec2Configuration.getEc2_private_key(),
                 ec2Configuration.getInstance_mgt_epr());
@@ -66,12 +74,20 @@ public class EC2Adapter extends Adapter {
 
         EC2Configuration.ServiceConfiguration serviceConfig = ec2Configuration.getServiceConfig(domainName);
 
-        runInstances(serviceConfig, 1);
+        // Spawns only a single instance at a time with given instance ID
+        List<String> ec2InstanceIdList = runInstances(serviceConfig, 1);
+
+        // Store the returned EC2 instance ID. That will useful when terminating EC2 instances
+        if(ec2InstanceIdList != null && ec2InstanceIdList.size() == 1){
+            instanceIdToEC2IdMap.put(instanceId,ec2InstanceIdList.get(0));
+
+        }
 
         log.info("Started " + 1 + " new instances in domain " +
                 domainName);
 
         // At this point the the server will starts after some time (Sleep for 2 minutes)
+
         try {
             Thread.sleep(120000);
         } catch (InterruptedException e) {
@@ -80,6 +96,7 @@ public class EC2Adapter extends Adapter {
 
         // Reducing the pending instance count by one in AutoscalerService
         // Here we assumes that the server instance is successfully started
+
         autoscalerService.addPendingInstanceCount(domainName, -1);
 
         return true;
@@ -88,17 +105,26 @@ public class EC2Adapter extends Adapter {
     @Override
     public boolean terminateInstance(String instanceId) {
 
-        log.info("Trying to terminate EC2 instance " + instanceId + ".");
+        String ec2InstanceId = instanceIdToEC2IdMap.get(instanceId);
 
-        // Here we have decided to terminate the given instance
-        // This decision should make in a intelligent way for better use of ec2 resources.
-        if (ec2Configuration.getDisable_api_termination()) {
-            ec2InstanceManager.enableApiTermination(instanceId);
+        log.info("Trying to terminate EC2 instance with EC2InstanceId " + ec2InstanceId + ".");
+
+
+        if (ec2InstanceId != null) {
+
+            if (ec2Configuration.getDisable_api_termination()) {
+                ec2InstanceManager.enableApiTermination(ec2InstanceId);
+            }
+
+            ec2InstanceManager.terminateInstances(Arrays.asList(ec2InstanceId));
+
+            return true;
+
+        } else {
+            log.error("Can not find EC2InstanceId entry for the given InstanceId " + instanceId + ".");
+            return false;
         }
 
-        ec2InstanceManager.terminateInstances(Arrays.asList(instanceId));
-
-        return true;
     }
 
     @Override
@@ -122,11 +148,12 @@ public class EC2Adapter extends Adapter {
     }
 
     /**
-     * method which calls EC2 Instance Manager when starting new EC2 Instances
+     *  method which calls EC2 Instance Manager when starting new EC2 Instances
      * @param configuration : EC2 Configuration
      * @param diff : Minimum and maximum number of instances to spawn
+     * @return  List of instance IDs which are spawned
      */
-    private void runInstances(EC2Configuration.Configuration configuration, int diff) {
+    private List<String> runInstances(EC2Configuration.Configuration configuration, int diff) {
         RunInstancesRequest request = new RunInstancesRequest(configuration.getImageId(),
                                                               diff, diff);
         request.setInstanceType(configuration.getInstanceType());
@@ -138,7 +165,10 @@ public class EC2Adapter extends Adapter {
         request.setDisableApiTermination(ec2Configuration.getDisable_api_termination());
 
         log.info("Calling EC2InstanceManager to spawn new instance");
-        ec2InstanceManager.runInstances(request);
+
+        List<String> ec2InstanceIdList = ec2InstanceManager.runInstances(request);
+        return ec2InstanceIdList;
+
     }
 
 }

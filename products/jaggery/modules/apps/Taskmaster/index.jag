@@ -68,15 +68,23 @@ return dateStr;
 
 }
     $("#savebtn").click(function() {
-        var id = Math.floor(Math.random()*100000);
+        
+		if (task.textboxmain.value == "") {
+			alert("Sorry Task cannot be blank");
+			task.textboxmain.focus();
+			exit(0);
+		}
+		var id = Math.floor(Math.random()*100000);
         var curtime = getTime();
 
-        //var text = "<li> <span class='timestamp'>"+curtime+"</span><p>"+task.textboxmain.value+"</p></li>";
+       
         var textNew = encodeURI(task.textboxmain.value);
         $.get("notepad.jag", { text: textNew, time: curtime, action: "add", id:id },
    function(data){
         $(data).hide().prependTo(".feed").fadeIn("slow");
         $("#message").hide();
+		
+		$("#textboxmain").val("");
    });
 
 

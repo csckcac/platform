@@ -64,8 +64,8 @@ include('/includes/topnavi.jag');
 &lt%
 var uriMatcher = new URIMatcher(request.getRequestURI());
 
-if(uriMatcher.match('/{context}/{dir}/{page}')) {
-	print(uriMatcher.elements().context)
+if(uriMatcher.match('/{dir}/{page}')) {
+	print(uriMatcher.elements().dir)
 }
 %&gt
 </pre>
@@ -73,8 +73,8 @@ if(uriMatcher.match('/{context}/{dir}/{page}')) {
 
                 var xhrCode = '&lt%'
                 + '\n var uriMatcher = new URIMatcher(request.getRequestURI());\n'
-                + '\n if(uriMatcher.match("/{context}/{dir}/{page}")) {'
-                + '\n       print(uriMatcher.elements().context);'
+                + '\n if(uriMatcher.match("/{dir}/{page}")) {'
+                + '\n       print(uriMatcher.elements().dir);'
                 + '\n }'
                 + '\n %&gt';
 

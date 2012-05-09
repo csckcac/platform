@@ -63,7 +63,7 @@ include('/includes/topnavi.jag');
 		<img src="images/jaglogo.png" style="margin-top:20px; margin-bottom:10px;" align="right" />
 		<p align="right">The Delicious Javascript Framework. - How to set it up and how to get started.</p>
             <p align="right" style="margin-top:20px;">
-                <a class="btn success large" href="http://dist.wso2.org/products/jaggery/dl/jaggery-1.0.0-SNAPSHOT_M5.zip">Download Jaggery (M4) </a>
+                <a class="btn success large" href="http://dist.wso2.org/products/jaggery/dl/jaggery-1.0.0-SNAPSHOT_M5.zip">Download Jaggery (M5) </a>
             </p>
         </div>
 </div>

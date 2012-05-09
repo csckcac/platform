@@ -166,7 +166,7 @@ public class GRegSchemaUploaderSeleniumTest {
     private void userLogin() {
         new GregUserLogin().userLogin(driver, username, password);
         selenium.waitForPageToLoad("30000");
-        assertTrue(selenium.isTextPresent("WSO2 Governance Registry"), "G-Reg Home Page fail :");
+        assertTrue(selenium.isTextPresent("WSO2 Governance Registry Home"), "G-Reg Home Page fail :");
     }
 
     private void gotoSchemaPage() {

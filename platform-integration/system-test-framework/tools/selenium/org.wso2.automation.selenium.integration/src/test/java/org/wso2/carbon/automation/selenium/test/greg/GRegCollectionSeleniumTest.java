@@ -698,24 +698,20 @@ public class GRegCollectionSeleniumTest {
     private void userLogin() {
         new GregUserLogin().userLogin(driver, username, password);
         selenium.waitForPageToLoad("30000");
-        assertTrue(selenium.isTextPresent("WSO2 Governance Registry"), "GReg Home page not present :");
+        assertTrue(selenium.isTextPresent("WSO2 Governance Registry Home"), "GReg Home page not present :");
     }
 
     @AfterClass(alwaysRun = true)
     public void cleanup() throws Exception {
-        try {
-            userLogin();
-            gotoDetailViewTab();
-            String collectionName = "selenium_root";
-            int collectionId = getResourceId(collectionName);
+        userLogin();
+        gotoDetailViewTab();
+        String collectionName = "selenium_root";
+        int collectionId = getResourceId(collectionName);
 
-            if (collectionId != 0) {
-                deleteResourceFromBrowser(collectionId);
-            }
-        } finally {
-            driver.quit();
+        if (collectionId != 0) {
+            deleteResourceFromBrowser(collectionId);
         }
-
+        driver.quit();
     }
 
     private int getResourceId(String resourceName) {

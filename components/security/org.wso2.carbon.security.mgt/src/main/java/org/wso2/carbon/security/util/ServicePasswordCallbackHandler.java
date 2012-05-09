@@ -16,16 +16,14 @@
 
 package org.wso2.carbon.security.util;
 
-import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMAttribute;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.rampart.policy.model.KerberosConfig;
 import org.apache.ws.security.WSPasswordCallback;
 import org.wso2.carbon.core.RegistryResources;
-import org.wso2.carbon.core.Resources;
 import org.wso2.carbon.core.persistence.PersistenceException;
 import org.wso2.carbon.core.persistence.PersistenceFactory;
-import org.wso2.carbon.core.persistence.PersistenceUtils;
 import org.wso2.carbon.core.persistence.file.ServiceGroupFilePersistenceManager;
 import org.wso2.carbon.core.util.AnonymousSessionUtil;
 import org.wso2.carbon.core.util.CryptoException;
@@ -46,7 +44,6 @@ import org.wso2.carbon.utils.TenantUtils;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
-import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.security.KeyStore;
 
@@ -156,7 +153,7 @@ public class ServicePasswordCallbackHandler implements CallbackHandler {
 
     private String getServicePrincipalPassword() throws PersistenceException, SecurityConfigException {
         String kerberosPath = this.serviceXPath + "/" + RampartConfigUtil.KERBEROS_CONFIG_RESOURCE;
-        String servicePrincipalPasswordResource = kerberosPath + "/" + KerberosConfig.SERVICE_PRINCIPLE_PASSWORD;
+        String servicePrincipalPasswordResource = kerberosPath + "/@" + KerberosConfig.SERVICE_PRINCIPLE_PASSWORD;
 
         ServiceGroupFilePersistenceManager sfpm = pf.getServiceGroupFilePM();
         if (!sfpm.elementExists(serviceGroupId, servicePrincipalPasswordResource)) {
@@ -166,10 +163,10 @@ public class ServicePasswordCallbackHandler implements CallbackHandler {
             throw new SecurityConfigException(msg);
         }
 
-        org.apache.axiom.om.OMElement principalPassword = (org.apache.axiom.om.OMElement) sfpm.get(serviceGroupId,
+        OMAttribute principalPassword = sfpm.getAttribute(serviceGroupId,
                 servicePrincipalPasswordResource);
         if (principalPassword != null) {
-            String password = principalPassword.getAttributeValue(new QName(KerberosConfig.SERVICE_PRINCIPLE_PASSWORD));
+            String password = principalPassword.getAttributeValue();
             if (password != null) {
                 password = getDecryptedPassword(password);
                 return password;
@@ -181,7 +178,7 @@ public class ServicePasswordCallbackHandler implements CallbackHandler {
                 throw new SecurityConfigException(msg.toString());
             }
         } else {
-            StringBuilder msg = new StringBuilder("Retrieved principal resource is null in registry path ")
+            StringBuilder msg = new StringBuilder("Retrieved principal resource is null in service metafile")
                         .append(servicePrincipalPasswordResource).append(" for property ")
                         .append(KerberosConfig.SERVICE_PRINCIPLE_PASSWORD);
             log.error(msg.toString());

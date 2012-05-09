@@ -17,22 +17,16 @@
 */
 package org.wso2.carbon.lb.common.conf;
 
-import org.apache.axiom.om.OMElement;
 import org.apache.synapse.commons.util.PropertyHelper;
 
-import javax.xml.namespace.QName;
-import org.wso2.carbon.lb.common.LBConfigParser;
 import org.wso2.carbon.lb.common.conf.structure.Node;
 import org.wso2.carbon.lb.common.conf.structure.NodeBuilder;
 import org.wso2.carbon.lb.common.conf.util.LoadBalancerConfigUtil;
 import org.wso2.carbon.lb.common.conf.util.Constants;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Data object which hold configuration data of the load ec2 configuration
@@ -44,78 +38,78 @@ public class EC2Configuration extends LoadBalancerConfiguration{
     /**
      * The private key for ec2
      */
-    private String ec2AccessKey = "access.key";
+    private String ec2_access_key = "access.key";
     /**
      * The certificate for ec2
      */
-    private String ec2PrivateKey = "private.key";
+    private String ec2_private_key = "private.key";
     /**
      * The key pair
      */
-    private String sshKey = "stratos - 1.0.0-keypair";
+    private String ec2_ssh_key = "stratos - 1.0.0-keypair";
 
     /**
      * The EPR of the Web service which will be called for instance management
      */
-    private String instanceMgtEPR = "https://ec2.amazonaws.com/";
+    private String instance_mgt_epr = "https://ec2.amazonaws.com/";
 
     /**
      * Disable terminating instances via AWS API calls
      */
-    private boolean disableApiTermination;
+    private boolean disable_api_termination;
 
     /**
      * Enable monitoring for the instances
      */
-    private boolean enableMonitoring;
+    private boolean enable_monitoring;
 
 
-    public String getEc2AccessKey() {
-        return ec2AccessKey;
+    public String getEc2_access_key() {
+        return ec2_access_key;
     }
 
-    public void setEc2AccessKey(String ec2AccessKey) {
-        this.ec2AccessKey = LoadBalancerConfigUtil.replaceVariables(ec2AccessKey);
+    public void setEc2_access_key(String ec2_access_key) {
+        this.ec2_access_key = LoadBalancerConfigUtil.replaceVariables(ec2_access_key);
     }
 
-    public String getEc2PrivateKey() {
-        return ec2PrivateKey;
+    public String getEc2_private_key() {
+        return ec2_private_key;
     }
 
-    public void setEc2PrivateKey(String ec2PrivateKey) {
-        this.ec2PrivateKey = LoadBalancerConfigUtil.replaceVariables(ec2PrivateKey);
+    public void setEc2_private_key(String ec2_private_key) {
+        this.ec2_private_key = LoadBalancerConfigUtil.replaceVariables(ec2_private_key);
     }
 
-    public String getSshKey() {
-        return sshKey;
+    public String getEc2_ssh_key() {
+        return ec2_ssh_key;
     }
 
-    public void setSshKey(String sshKey) {
-        this.sshKey = sshKey;
+    public void setEc2_ssh_key(String ec2_ssh_key) {
+        this.ec2_ssh_key = ec2_ssh_key;
     }
 
-    public String getInstanceMgtEPR() {
-        return instanceMgtEPR;
+    public String getInstance_mgt_epr() {
+        return instance_mgt_epr;
     }
 
-    public void setInstanceMgtEPR(String instanceMgtEPR) {
-        this.instanceMgtEPR = instanceMgtEPR;
+    public void setInstance_mgt_epr(String instance_mgt_epr) {
+        this.instance_mgt_epr = instance_mgt_epr;
     }
 
-    public boolean getDisableApiTermination() {
-        return disableApiTermination;
+    public boolean getDisable_api_termination() {
+        return disable_api_termination;
     }
 
-    public void setDisableApiTermination(boolean disableApiTermination) {
-        this.disableApiTermination = disableApiTermination;
+    public void setDisable_api_termination(boolean disable_api_termination) {
+        this.disable_api_termination = disable_api_termination;
     }
 
-    public boolean getEnableMonitoring() {
-        return enableMonitoring;
+    public boolean getEnable_monitoring() {
+        return enable_monitoring;
     }
 
-    public void setEnableMonitoring(boolean enableMonitoring) {
-        this.enableMonitoring = enableMonitoring;
+    public void setEnable_monitoring(boolean enable_monitoring) {
+        this.enable_monitoring = enable_monitoring;
     }
 
 
@@ -191,6 +185,13 @@ public class EC2Configuration extends LoadBalancerConfiguration{
         rootNode.setName("root");
         rootNode = NodeBuilder.buildNode(rootNode, lbConfigString);
 
+        //Set all the properties under root node (ec2_access_key , ec2_private_key  etc... )
+        Map<String, String> rootProperties= rootNode.getProperties();
+
+        for (Map.Entry<String, String> entry : rootProperties.entrySet()) {
+            PropertyHelper.setInstanceProperty(entry.getKey(), entry.getValue(), this);
+        }
+
         // load loadbalancer node
         Node lbConfigNode = rootNode.findChildNodeByName(Constants.LOAD_BALANCER_ELEMENT);
 
@@ -216,10 +217,6 @@ public class EC2Configuration extends LoadBalancerConfiguration{
     }
 
     public void createServicesConfig(Node servicesConfigNode) {
-
-        //servicesConfigNode.setName(Constants.SERVICES_ELEMENT);
-
-        //servicesConfigNode = NodeBuilder.buildNode(servicesConfigNode, servicesEle);
 
         // Building default configuration
 
@@ -255,8 +252,7 @@ public class EC2Configuration extends LoadBalancerConfiguration{
                 for (Node domain : domainsNode.getChildNodes()) {
                     ServiceConfiguration serviceConfig = new ServiceConfiguration(domain.getName());
 
-                    //serviceNode is fully constructed hence we're sending null as the first argument
-                    createConfiguration(null, serviceConfig, domain, serviceNode );
+                    createConfiguration(serviceConfig, domain, serviceNode );
                     serviceConfigMap.put(domain.getName(), serviceConfig);
                 }
             }
@@ -264,16 +260,20 @@ public class EC2Configuration extends LoadBalancerConfiguration{
 
     }
 
-    // pass parent node to identify  default properties defined for this particular service
-    protected void createConfiguration(String configEle, Configuration config, Node node, Node parentNode) {
+    /**
+     *  Create configuration for the given node
+     * @param config: Service configuration
+     * @param node : Configuration node for this service
+     * @param parentNode: Configuration parent node for this service (This is used to drag default properties).
+     */
+    protected void createConfiguration(Configuration config, Node node, Node parentNode) {
 
-        // if the node is fully constructed, we avoid building it again.
         if(node == null){
             throw new RuntimeException("The configuration element for " +
                   config.getClass().getName() + " is null");
         }
 
-        // First set parentNode related property values for Configuration
+        // First set parentNode related property values for Configuration (these are the defaults)
         try {
             for (Map.Entry<String, String> entry : parentNode.getProperties().entrySet()) {
                 String key = entry.getKey();
@@ -285,7 +285,7 @@ public class EC2Configuration extends LoadBalancerConfiguration{
             throw new RuntimeException("Error setting values to " + config.getClass().getName(), e);
         }
 
-        // Then add node specified properties to Configuration
+        // Then add node specified properties to configuration (override defaults if exists)
         try {
             for (Map.Entry<String, String> entry : node.getProperties().entrySet()) {
                 String key = entry.getKey();

@@ -31,7 +31,13 @@ public class EC2Util {
     private EC2Util(){
     }
 
-
+    /**
+     * Utility method to create EC2InstanceManager
+     * @param accessKey : EC2 access key
+     * @param secretKey : EC2 secret key
+     * @param instanceMgtEPR: EC2 instance management epr
+     * @return
+     */
     public static EC2InstanceManager createEC2InstanceManager(String accessKey,
                                                               String secretKey,
                                                               String instanceMgtEPR) {

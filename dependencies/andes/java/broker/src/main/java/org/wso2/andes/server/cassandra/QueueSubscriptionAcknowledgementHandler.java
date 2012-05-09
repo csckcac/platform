@@ -144,7 +144,7 @@ public class QueueSubscriptionAcknowledgementHandler {
                     if(timeStampMessageIdMap.lastKey() + timeOutInMills <= currentTime) {
                         // we should handle timeout
                         SortedMap<Long,Long> tailMap =
-                                timeStampMessageIdMap.tailMap(currentTime-timeOutInMills);
+                                timeStampMessageIdMap.headMap(currentTime-timeOutInMills);
 
                         if(tailMap.size() > 0) {
                             for(Long l : tailMap.keySet()) {

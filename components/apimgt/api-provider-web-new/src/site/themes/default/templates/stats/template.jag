@@ -1,0 +1,77 @@
+<% jagg.template("stats", function(inputs, outputs, jagg) { %>
+<h2>Usage By APIs</h2>
+
+        <div class="row-fluid well">
+        <div class="span5">
+
+            <div>
+                <div id="apiChart"></div>
+            </div>
+        </div>
+            <div class="span6">
+
+                <table class="table" id="apiTable" style="display:none;">
+                      <tr>
+                        <th>API Name</th>
+                        <th>Usage</th>
+                      </tr>
+                  </table>
+            </div>
+
+
+</div>
+
+<h2>Average Service Time For APIs</h2>
+
+        <div class="row-fluid well">
+        <div class="span5">
+            <div id="serviceTimeChart"></div>
+        </div>
+        <div class="span6">
+             <table class="table" id="serviceTimeTable">
+                <tr>
+                    <th>API Name</th>
+                    <th>Average Service Time (ms)</th>
+                </tr>
+             </table>
+        </div>
+</div>
+
+<h2>Last Access Time Summary</h2>
+
+        <div class="row-fluid well">
+        <div class="span5">
+
+        </div>
+            <div class="span6">
+                <table class="table" id="lastAccessTable">
+                      <tr>
+                        <th>API Name:Version</th>
+                        <th>Subscriber</th>
+                        <th>Last Access Time</th>
+                      </tr>
+                      <tr>
+                        <td>API 1:v1.0.0</td>
+                        <td>Subscriber 1</td>
+                        <td>10/02/2012 16:53:02</td>
+                      </tr>
+                      <tr>
+                        <td>API 2:v1.0.0</td>
+                        <td>Subscriber 2</td>
+                        <td>15/02/2012 08:15:44</td>
+                      </tr>
+                      <tr>
+                        <td>API 2:v1.0.1</td>
+                        <td>Subscriber 1</td>
+                        <td>18/02/2012 21:07:24</td>
+                      </tr>
+                  </table>
+            </div>
+
+
+</div>
+
+
+<% }); %>
+
+

@@ -66,7 +66,7 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
                                   version_user_associative_array[json.usage[n].version] = new Array();
                               }
                               for (var m = 0; m < json.usage.length; m++) {
-                                  version_user_associative_array[json.usage[m].version][json..usage[m].user] = 0;
+                                  version_user_associative_array[json.usage[m].version][json.usage[m].user] = 0;
                               }
                           }
                           for (var k = 0; k < json.usage.length; k++) {

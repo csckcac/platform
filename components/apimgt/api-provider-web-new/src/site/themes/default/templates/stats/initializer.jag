@@ -1,7 +1,8 @@
 <%
-jagg.initializer("usage", {
+jagg.initializer("stats", {
 
     preInitialize:function () {
+    jagg.addHeaderJS("stats", "jagg", "templates/stats/js/stats.js");
     jagg.addHeaderCSS("utils", "jagg", "templates/utils/jqplot/jquery.jqplot.min.css");
     jagg.addHeaderJS("utils", "jagg", "templates/utils/jqplot/jquery.jqplot.min.js");
     jagg.addHeaderJS("utils", "jagg", "templates/utils/jqplot/plugins/jqplot.pieRenderer.min.js");
@@ -14,3 +15,10 @@ jagg.initializer("usage", {
     }
 });
 %>
+
+
+
+
+
+
+

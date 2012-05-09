@@ -1,0 +1,66 @@
+<%
+include("/jagg/jagg.jag");
+
+(function () {
+    var mod, obj, result, username,
+            action = request.getParameter("action"),
+            site = require("/site/conf/site.json"),
+            msg = require("/site/conf/ui-messages.jag");
+    if (action === "getProviderAPIServiceTime") {
+        mod = jagg.module("statistics");
+        var provider = jagg.getUser().username;
+        var server = request.getParameter("server");
+        result = mod.getProviderAPIServiceTime(provider,server);
+        if (result.error == "true") {
+            obj = {
+                error:result.error,
+                message:msg.error.backendError(action)
+            };
+        } else {
+            obj = {
+                error:false
+            }
+        }
+        print(obj);
+    } else if (action === "getProviderAPIUsage") {
+        mod = jagg.module("statistics");
+        var provider = jagg.getUser().username;
+        var server = request.getParameter("server");
+        result = mod.getProviderAPIUsage(provider,server);
+        if (result.error == "true") {
+            obj = {
+                error:result.error,
+                message:msg.error.backendError(action)
+            };
+        } else {
+            obj = {
+                error:false
+            }
+        }
+        print(obj);
+
+    } else if (action === "getProviderAPIVersionUserLastAccess") {
+        mod = jagg.module("statistics");
+        var provider = jagg.getUser().username;
+        var server = request.getParameter("server");
+        result = mod.getProviderAPIVersionUserLastAccess(provider,server);
+        if (result.error == "true") {
+            obj = {
+                error:result.error,
+                message:msg.error.backendError(action)
+            };
+        } else {
+            obj = {
+                error:false
+            }
+        }
+        print(obj);
+
+    } else {
+        print({
+                  error:true,
+                  message:msg.error.invalidAction(action)
+              });
+    }
+}());
+%>

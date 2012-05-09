@@ -111,58 +111,65 @@ public class DataServiceDocLitWrappedSchemaGenerator {
 		CallQuery defCallQuery = cqGroup.getDefaultCallQuery();
 		Query query = defCallQuery.getQuery();
 		AxisMessage inMessage = axisOp.getMessage(WSDLConstants.MESSAGE_LABEL_IN_VALUE);
-		if (inMessage != null && defCallQuery.getWithParams().size() > 0) {
-			inMessage.setName(requestName + Java2WSDLConstants.MESSAGE_SUFFIX);	
-			/* create input message element */
-			XmlSchemaElement inputElement = createElement(cparams, query.getInputNamespace(),
-					requestName, true);
-			/* complex type for input message element */
-			XmlSchemaComplexType inputComplexType = createComplexType(cparams, 
-					query.getInputNamespace(), requestName, false);
-			/* set element type */
-			inputElement.setType(inputComplexType);
-			/* batch requests */
-			if (request instanceof Operation && ((Operation) request).isBatchRequest()) {
-				XmlSchemaElement nestedEl = new XmlSchemaElement();
-				Operation parentOp = ((Operation) request).getParentOperation();	
-	        	if (parentOp != null) {
-	        		nestedEl.setRefName(cparams.getRequestInputElementMap().get(
-	        				parentOp.getRequestName()));
-	        		nestedEl.setMaxOccurs(Long.MAX_VALUE);
-	        		addElementToComplexTypeSequence(cparams, inputComplexType, query.getInputNamespace(), 
-	        				nestedEl, false, false);
-	        	} else {
-					throw new DataServiceFault("No parent operation for batch request: "
-							+ request.getRequestName());
-	        	}
-			} else {
-				/* normal requests */
-				XmlSchemaElement tmpEl;
-				Map<String, WithParam> withParams = defCallQuery.getWithParams();
-				WithParam tmpWithParam;
-				/* create elements for individual parameters */
-				for (QueryParam queryParam : query.getQueryParams()) {
-					if (DBConstants.QueryTypes.IN.equals(queryParam.getType())
-							|| DBConstants.QueryTypes.INOUT.equals(queryParam.getType())) {
-						tmpWithParam = withParams.get(queryParam.getName());
-						if (tmpWithParam == null) {
-							/* this query param's value must be coming from an export, not from the
-							 * operation's parameter */
-							continue;
-						}
-						tmpEl = createInputEntryElement(cparams, query, queryParam, tmpWithParam);
-						/* add to input element complex type */
-						addElementToComplexTypeSequence(cparams, inputComplexType, query.getInputNamespace(), 
-								tmpEl, false, false);
-					}
-				}				
-			}
-			/* set the input element qname in message */
-			inMessage.setElementQName(inputElement.getQName());
-			/* store request name and element qname mapping */
-			cparams.getRequestInputElementMap().put(request.getRequestName(), 
-					inMessage.getElementQName());
-		}
+		if (inMessage != null) {
+            if (defCallQuery.getWithParams().size() > 0) {
+                inMessage.setName(requestName + Java2WSDLConstants.MESSAGE_SUFFIX);
+                /* create input message element */
+                XmlSchemaElement inputElement = createElement(cparams, query.getInputNamespace(),
+                        requestName, true);
+                /* complex type for input message element */
+                XmlSchemaComplexType inputComplexType = createComplexType(cparams,
+                        query.getInputNamespace(), requestName, false);
+                /* set element type */
+                inputElement.setType(inputComplexType);
+                /* batch requests */
+                if (request instanceof Operation && ((Operation) request).isBatchRequest()) {
+                    XmlSchemaElement nestedEl = new XmlSchemaElement();
+                    Operation parentOp = ((Operation) request).getParentOperation();
+                    if (parentOp != null) {
+                        nestedEl.setRefName(cparams.getRequestInputElementMap().get(
+                                parentOp.getRequestName()));
+                        nestedEl.setMaxOccurs(Long.MAX_VALUE);
+                        addElementToComplexTypeSequence(cparams, inputComplexType, query.getInputNamespace(),
+                                nestedEl, false, false);
+                    } else {
+                        throw new DataServiceFault("No parent operation for batch request: "
+                                + request.getRequestName());
+                    }
+                } else {
+                    /* normal requests */
+                    XmlSchemaElement tmpEl;
+                    Map<String, WithParam> withParams = defCallQuery.getWithParams();
+                    WithParam tmpWithParam;
+                    /* create elements for individual parameters */
+                    for (QueryParam queryParam : query.getQueryParams()) {
+                        if (DBConstants.QueryTypes.IN.equals(queryParam.getType())
+                                || DBConstants.QueryTypes.INOUT.equals(queryParam.getType())) {
+                            tmpWithParam = withParams.get(queryParam.getName());
+                            if (tmpWithParam == null) {
+                                /* this query param's value must be coming from an export, not from the
+                                 * operation's parameter */
+                                continue;
+                            }
+                            tmpEl = createInputEntryElement(cparams, query, queryParam, tmpWithParam);
+                            /* add to input element complex type */
+                            addElementToComplexTypeSequence(cparams, inputComplexType, query.getInputNamespace(),
+                                    tmpEl, false, false);
+                        }
+                    }
+                }
+                /* set the input element qname in message */
+                inMessage.setElementQName(inputElement.getQName());
+                /* store request name and element qname mapping */
+                cparams.getRequestInputElementMap().put(request.getRequestName(),
+                        inMessage.getElementQName());
+
+            } else if (defCallQuery.getWithParams().size() == 0) {
+                 /* Adding the operation name as the payload for OUT_ONLY requests */
+                    inMessage.setName(requestName + Java2WSDLConstants.MESSAGE_SUFFIX);
+                    inMessage.setElementQName(new QName(query.getNamespace(), requestName));
+            }
+        }
 	}
 	
 	/**

@@ -100,11 +100,17 @@ public class JUDDIJAXWSDeployer extends JAXWSDeployer {
     @Override
     protected AxisServiceGroup deployClasses(String groupName, URL location, ClassLoader classLoader, List<String> classList) throws ClassNotFoundException, InstantiationException, IllegalAccessException, AxisFault {
         ArrayList<AxisService> axisServiceList = new ArrayList<AxisService>();
+        boolean flag=false;
         for (String className : classList) {
+            if(className.matches("org.apache.juddi.api.impl.*")){
+                System.out.println("***"+className);
+                flag=true;
+            }
             Class<?> pojoClass;
             try {
-                pojoClass = Loader.loadClass(classLoader, className);
+                pojoClass = Loader.loadClass(this.getClass().getClassLoader(), className);
             } catch (Exception e) {
+                //e.printStackTrace();
                 continue;
             } catch (Throwable t) {
                 continue;
@@ -131,6 +137,9 @@ public class JUDDIJAXWSDeployer extends JAXWSDeployer {
                     axisServiceList.add(axisService);
                 }
             }
+        }
+        if(flag==false){
+            System.out.println("+++++ Not a single org.apache.juddi.api.impl.* class found ++++++");
         }
         int size = axisServiceList.size();
         if (size <= 0) {
@@ -161,7 +170,8 @@ public class JUDDIJAXWSDeployer extends JAXWSDeployer {
 
     @Override
     protected AxisService createAxisService(ClassLoader classLoader, String className, URL serviceLocation) throws ClassNotFoundException, InstantiationException, IllegalAccessException, AxisFault {
-        Class<?> pojoClass = Loader.loadClass(classLoader, className);
+        ClassLoader loader = this.getClass().getClassLoader();
+        Class<?> pojoClass = Loader.loadClass(loader, className);
         AxisService axisService;
         try {
             axisService = DescriptionFactory.createAxisService(pojoClass, configurationContext);
@@ -179,8 +189,8 @@ public class JUDDIJAXWSDeployer extends JAXWSDeployer {
             }
             axisService.setElementFormDefault(false);
             axisService.setFileName(serviceLocation);
-            axisService.setClassLoader(classLoader);
-            axisService.addParameter(new Parameter(org.apache.axis2.jaxws.spi.Constants.CACHE_CLASSLOADER, classLoader));
+            axisService.setClassLoader(loader);
+            axisService.addParameter(new Parameter(org.apache.axis2.jaxws.spi.Constants.CACHE_CLASSLOADER, loader));
         }
         return axisService;
     }

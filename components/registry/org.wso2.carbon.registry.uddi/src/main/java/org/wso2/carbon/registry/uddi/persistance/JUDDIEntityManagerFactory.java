@@ -17,14 +17,20 @@ package org.wso2.carbon.registry.uddi.persistance;
 
 import org.apache.log4j.Logger;
 import org.apache.openjpa.conf.OpenJPAConfiguration;
+import org.apache.openjpa.persistence.criteria.OpenJPACriteriaBuilder;
 import org.apache.openjpa.persistence.OpenJPAEntityManager;
 import org.apache.openjpa.persistence.OpenJPAEntityManagerFactory;
+import org.apache.openjpa.persistence.query.QueryBuilder;
 import org.apache.openjpa.persistence.QueryResultCache;
 import org.apache.openjpa.persistence.StoreCache;
 
 
+import javax.persistence.Cache;
+import javax.persistence.PersistenceUnitUtil;
+import javax.persistence.metamodel.Metamodel;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 
 public class JUDDIEntityManagerFactory implements OpenJPAEntityManagerFactory {
@@ -38,8 +44,18 @@ public class JUDDIEntityManagerFactory implements OpenJPAEntityManagerFactory {
         factory = openJPAEntityManagerFactory;
     }
 
-    public Properties getProperties() {
+    public Map<String,Object> getProperties() {
         return factory.getProperties();
+    }
+
+    @Override
+    public Cache getCache() {
+        return factory.getCache();
+    }
+
+    @Override
+    public PersistenceUnitUtil getPersistenceUnitUtil() {
+        return factory.getPersistenceUnitUtil();
     }
 
     public Object putUserObject(Object o, Object o1) {
@@ -80,6 +96,23 @@ public class JUDDIEntityManagerFactory implements OpenJPAEntityManagerFactory {
 
     public boolean isOpen() {
         return factory.isOpen();
+    }
+
+    public OpenJPACriteriaBuilder getCriteriaBuilder(){
+        return factory.getCriteriaBuilder();
+    }
+
+    @Override
+    public Metamodel getMetamodel() {
+        return factory.getMetamodel();
+    }
+
+    public Set<String> getSupportedProperties() {
+        return factory.getSupportedProperties();
+    }
+
+    public QueryBuilder getDynamicQueryBuilder(){
+        return factory.getDynamicQueryBuilder();
     }
 
     /**

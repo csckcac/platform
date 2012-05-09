@@ -17,11 +17,18 @@ package org.wso2.carbon.registry.uddi.persistance;
 
 import org.apache.log4j.Logger;
 import org.apache.openjpa.conf.OpenJPAConfiguration;
+import org.apache.openjpa.persistence.criteria.OpenJPACriteriaBuilder;
+import org.apache.openjpa.persistence.query.QueryBuilder;
+import org.apache.openjpa.persistence.query.QueryDefinition;
 import org.apache.openjpa.persistence.*;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.metamodel.Metamodel;
 import java.util.Collection;
 import java.util.EnumSet;
+import java.util.Map;
+import java.util.Set;
 
 
 public class JUDDIEntityManager implements OpenJPAEntityManager {
@@ -346,9 +353,9 @@ public class JUDDIEntityManager implements OpenJPAEntityManager {
         openJPAEntityManager.evictAll(extent);
     }
 
-    public <T> T detach(T t) {
-        return openJPAEntityManager.detach(t);
-    }
+//    public <T> T detach(T t) {
+//        return openJPAEntityManager.detach(t);
+//    }
 
     public Collection detachAll(Collection collection) {
         return openJPAEntityManager.detachAll(collection);
@@ -423,6 +430,21 @@ public class JUDDIEntityManager implements OpenJPAEntityManager {
         return openJPAEntityManager.find(tClass, o);
     }
 
+    @Override
+    public <T> T find(Class<T> tClass, Object o, Map<String, Object> stringObjectMap) {
+        return openJPAEntityManager.find(tClass, o, stringObjectMap);
+    }
+
+    @Override
+    public <T> T find(Class<T> tClass, Object o, LockModeType lockModeType) {
+        return openJPAEntityManager.find(tClass, o, lockModeType);
+    }
+
+    @Override
+    public <T> T find(Class<T> tClass, Object o, LockModeType lockModeType, Map<String, Object> stringObjectMap) {
+        return openJPAEntityManager.find(tClass, o, lockModeType, stringObjectMap);
+    }
+
     public <T> T getReference(Class<T> tClass, Object o) {
         return openJPAEntityManager.getReference(tClass, o);
     }
@@ -443,12 +465,37 @@ public class JUDDIEntityManager implements OpenJPAEntityManager {
         openJPAEntityManager.lock(o, lockModeType);
     }
 
+    @Override
+    public void lock(Object o, LockModeType lockModeType, Map<String, Object> stringObjectMap) {
+        openJPAEntityManager.lock(o, lockModeType, stringObjectMap);
+    }
+
     public void refresh(Object o) {
         openJPAEntityManager.refresh(o);
     }
 
+    @Override
+    public void refresh(Object o, Map<String, Object> stringObjectMap) {
+        openJPAEntityManager.refresh(o, stringObjectMap);
+    }
+
+    @Override
+    public void refresh(Object o, LockModeType lockModeType) {
+        openJPAEntityManager.refresh(o, lockModeType);
+    }
+
+    @Override
+    public void refresh(Object o, LockModeType lockModeType, Map<String, Object> stringObjectMap) {
+        openJPAEntityManager.refresh(o, lockModeType, stringObjectMap);
+    }
+
     public void clear() {
         openJPAEntityManager.clear();
+    }
+
+    @Override
+    public void detach(Object o) {
+        openJPAEntityManager.detach(o);
     }
 
     public boolean contains(Object o) {
@@ -459,8 +506,23 @@ public class JUDDIEntityManager implements OpenJPAEntityManager {
         return openJPAEntityManager.createQuery(s);
     }
 
+    @Override
+    public <T> TypedQuery<T> createQuery(CriteriaQuery<T> tCriteriaQuery) {
+        return openJPAEntityManager.createQuery(tCriteriaQuery);
+    }
+
+    @Override
+    public <T> TypedQuery<T> createQuery(String s, Class<T> tClass) {
+        return openJPAEntityManager.createQuery(s, tClass);
+    }
+
     public OpenJPAQuery createNamedQuery(String s) {
         return openJPAEntityManager.createNamedQuery(s);
+    }
+
+    @Override
+    public <T> TypedQuery<T> createNamedQuery(String s, Class<T> tClass) {
+        return openJPAEntityManager.createNamedQuery(s, tClass);
     }
 
     public OpenJPAQuery createNativeQuery(String s) {
@@ -477,6 +539,11 @@ public class JUDDIEntityManager implements OpenJPAEntityManager {
 
     public void joinTransaction() {
         openJPAEntityManager.joinTransaction();
+    }
+
+    @Override
+    public <T> T unwrap(Class<T> tClass) {
+        return openJPAEntityManager.unwrap(tClass);
     }
 
     public Object getDelegate() {
@@ -501,6 +568,16 @@ public class JUDDIEntityManager implements OpenJPAEntityManager {
 
     public LockModeType getLockMode(Object o) {
         return openJPAEntityManager.getLockMode(o);
+    }
+
+    @Override
+    public void setProperty(String s, Object o) {
+        openJPAEntityManager.setProperty(s, o);
+    }
+
+    @Override
+    public Map<String, Object> getProperties() {
+        return openJPAEntityManager.getProperties();
     }
 
     public void lock(Object o, LockModeType lockModeType, int i) {
@@ -613,6 +690,27 @@ public class JUDDIEntityManager implements OpenJPAEntityManager {
 
     public Object getVersion(Object o) {
         return openJPAEntityManager.getVersion(o);
+    }
+
+    public Set<String> getSupportedProperties() {
+        return openJPAEntityManager.getSupportedProperties();
+    }
+
+    public OpenJPACriteriaBuilder getCriteriaBuilder(){
+        return openJPAEntityManager.getCriteriaBuilder();
+    }
+
+    @Override
+    public Metamodel getMetamodel() {
+        return openJPAEntityManager.getMetamodel();
+    }
+
+    public OpenJPAQuery createDynamicQuery(QueryDefinition dynamic){
+        return openJPAEntityManager.createDynamicQuery(dynamic);
+    }
+
+    public <T> T detachCopy(T pc){
+        return openJPAEntityManager.detachCopy(pc);
     }
 
     /**

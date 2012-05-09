@@ -55,7 +55,6 @@
                         <Import-Package>
                             org.apache.axis2.*; version="${axis2.osgi.version.range}",
                             javax.persistence.*;version="1.0",
-                            org.apache.openjpa.*;version="1.2.2",
                             org.wso2.carbon.common.*,
                             org.wso2.carbon.registry.core.*;version=1.0.1,
                             org.wso2.carbon.registry.resource.*,
@@ -114,6 +113,12 @@
             <groupId>org.apache.neethi.wso2</groupId>
             <artifactId>neethi</artifactId>
             <version>2.0.4.wso2v3</version>
+        </dependency>
+        <dependency>
+                <groupId>org.apache.openjpa</groupId>
+                <artifactId>openjpa-osgi</artifactId>
+                <version>${openjpa.version}</version>
+                <!-- We don't need an orbit bundle, since this is a bundle -->
         </dependency>
     </dependencies>
 </project>

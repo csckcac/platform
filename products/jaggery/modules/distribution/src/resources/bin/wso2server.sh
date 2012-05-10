@@ -277,6 +277,7 @@ do
     -Dwso2.server.standalone=true \
     -Dcarbon.registry.root=/ \
     -Djava.command="$JAVACMD" \
+    -Dmodule.metafiles.location="etc/modulemetafiles" \
     -Djaggery.home="$JAGGERY_HOME" \
     -Dcarbon.home="$CARBON_HOME" \
     -Djava.util.logging.config.file="$CARBON_HOME/repository/conf/log4j.properties" \

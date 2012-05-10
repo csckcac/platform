@@ -292,6 +292,7 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
                     if (!Boolean.parseBoolean(element
                             .getAttributeValue(new QName(GLOBALLY_ENGAGED_CUSTOM)))) {
                         element.addAttribute(GLOBALLY_ENGAGED_CUSTOM, Boolean.TRUE.toString(), null);
+                        mfpm.setMetaFileModification(module.getName());
                     }
                 } else {
                     OMFactory omFactory = OMAbstractFactory.getOMFactory();
@@ -714,6 +715,7 @@ public class ThrottleConfigAdminService extends AbstractAdmin {
                 if (!Boolean.parseBoolean(element
                         .getAttributeValue(new QName(GLOBALLY_ENGAGED_CUSTOM)))) {
                     element.addAttribute(GLOBALLY_ENGAGED_CUSTOM, Boolean.FALSE.toString(), null);
+                    mfpm.setMetaFileModification(module.getName());
                 }
             }
 

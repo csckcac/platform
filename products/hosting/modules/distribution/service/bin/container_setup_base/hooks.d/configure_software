@@ -508,7 +508,11 @@ template-wso2-carbon-server-esb() {
         sed -i "s#<parameter name=\"localMemberBindAddress\">*.*</parameter>#<parameter name=\"localMemberBindAddress\">$CONTAINER_IP</parameter>#" $ROOTFS/opt/$CARBON_SERVER_DIR/repository/conf/axis2.xml
         lastchr=${CONTAINER_IP#${CONTAINER_IP%?}}
         localmemberport="${lastchr}4000"
+        httpport="${lastchr}9763"
+        httpsport="${lastchr}9443"
         sed -i "s#<parameter name=\"localMemberPort\">*.*</parameter>#<parameter name=\"localMemberPort\">$localmemberport</parameter>#" $ROOTFS/opt/$CARBON_SERVER_DIR/repository/conf/axis2.xml
+        sed -i "s#<HTTP>*.*</HTTP>#<HTTP>$httpport</HTTP>#" $ROOTFS/opt/$CARBON_SERVER_DIR/repository/conf/carbon.xml
+        sed -i "s#<HTTPS>*.*</HTTPS>#<HTTPS>$httpsport</HTTPS>#" $ROOTFS/opt/$CARBON_SERVER_DIR/repository/conf/carbon.xml
     fi
 
 
@@ -570,7 +574,11 @@ template-wso2-carbon-server-as() {
         sed -i "s#<parameter name=\"localMemberBindAddress\">*.*</parameter>#<parameter name=\"localMemberBindAddress\">$CONTAINER_IP</parameter>#" $ROOTFS/opt/$CARBON_SERVER_DIR/repository/conf/axis2/axis2.xml
         lastchr=${CONTAINER_IP#${CONTAINER_IP%?}}
         localmemberport="${lastchr}4000"
+        httpport="${lastchr}9763"
+        httpsport="${lastchr}9443"
         sed -i "s#<parameter name=\"localMemberPort\">*.*</parameter>#<parameter name=\"localMemberPort\">$localmemberport</parameter>#" $ROOTFS/opt/$CARBON_SERVER_DIR/repository/conf/axis2/axis2.xml
+        sed -i "s#<HTTP>*.*</HTTP>#<HTTP>$httpport</HTTP>#" $ROOTFS/opt/$CARBON_SERVER_DIR/repository/conf/carbon.xml
+        sed -i "s#<HTTPS>*.*</HTTPS>#<HTTPS>$httpsport</HTTPS>#" $ROOTFS/opt/$CARBON_SERVER_DIR/repository/conf/carbon.xml
     fi
 
 

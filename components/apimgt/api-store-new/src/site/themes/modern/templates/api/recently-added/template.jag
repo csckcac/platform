@@ -1,0 +1,28 @@
+<% jagg.template("api/recently-added", function(inputs, outputs, jagg) { %>
+        <ul class="list-main">
+                   <li class="list-header">
+                       Recently Added
+                   </li>
+
+                    <%
+        var i, api, path, apis = outputs.apis, length = apis.length;
+        for(i = 0; i < length; i++) {
+            api = apis[i];
+            path = jagg.getMappedUrl("/site/pages/item-info.jag") + "?name=" + api.name + "&version=" + api.version + "&provider=" + api.provider;
+        %>
+                   <li>
+                       <div class="row-fluid list-item-content">
+                           <div class="span4">
+                               <img src="<%=api.thumbURL%>" width="70px"/>
+                           </div>
+                           <div class="span8">
+                               <a data-content="#tooltipcontentID1" class="title">
+                                   <%=api.name%></a>
+                               <a data-content="#tooltipcontentID1" class="item-provider">Ondango API</a>
+                           </div>
+                       </div>
+                   </li>
+        <% } %>
+        </ul>
+
+<% }); %>

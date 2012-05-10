@@ -1,0 +1,25 @@
+<% jagg.template("layout/base", function(inputs, outputs, jagg) { %>
+<%
+    var mw = 6;
+    if(!outputs.left && !outputs.right) {
+        mw = 12;
+    } else if(!outputs.left || !outputs.right) {
+        mw = 9;
+    }
+%>
+
+<% jagg.includeBlocks(outputs.top); %>
+
+<div class="row page-content">
+   <div class="span3 section-shifter-left">
+        <% jagg.includeBlocks(outputs.left); %>
+   </div>
+   <div class="span6">
+       <% if(outputs.title) { %><h2><%=outputs.title%></h2><% } %>
+        <% jagg.includeBlocks(outputs.middle); %>
+   </div>
+   <div class="span3 section-shifter-right">
+       <% jagg.includeBlocks(outputs.right); %>
+   </div>
+</div>
+<% }); %>

@@ -1,0 +1,27 @@
+<% jagg.template("user/login", function(inputs, outputs, jagg) { %>
+<% var user = outputs.user; %>
+
+
+<% if(user) { %>
+<ul class="nav actions login-sign-up">
+    <li>
+        <a id="logout-link">Logout</a>
+    </li>
+    <li>
+        <a class="link-to-user"><%=user.username%></a>
+    </li>
+</ul>
+<% } else { %>
+<ul class="nav actions login-sign-up">
+    <li>
+        <a id="login-link" data-toggle="modal" href="#login-form">Login</a>
+    </li>
+</ul>
+<% } %>
+
+<% if(!user) { %>
+
+
+
+<% } %>
+<% }); %>

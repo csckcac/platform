@@ -1,0 +1,34 @@
+<% jagg.template("api/documentation", function(inputs, outputs, jagg) { %>
+<div class="api-documentation">
+    <%
+    var i, type, length, doc, docs, empty = true, documentations = outputs.documentations;
+    for(type in documentations) {
+        if(documentations.hasOwnProperty(type)) {
+            empty = false;
+            docs = documentations[type];
+    %>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle"><%=type%></a>
+        </div>
+        <div class="accordion-body">
+            <div class="accordion-inner">
+                <%
+                length = docs.length;
+                for(i = 0; i < length; i++) {
+                    doc = docs[i];
+                %>
+                <div class="documentation">
+                    <h5><%=doc.name%></h5>
+                    <div class="documentaion-body"><%=doc.summary%></div>
+                    <hr/>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    <%  } %>
+    <% } %>
+    <% if(empty) { %><p>No documentations</p><% } %>
+</div>
+<% }); %>

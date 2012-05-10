@@ -1,0 +1,10 @@
+<% jagg.template("api/overview", function(inputs, outputs, jagg) { %>
+<% var api = outputs.api, user = outputs.user; %>
+<div id="overview">
+    <h6>Description:</h6>
+    <p><%=api.description%></p>
+    <h6>Comments:</h6>
+    <% if(user) jagg.includeBlock("comment/comment-add", null); %>
+    <% jagg.includeBlock("comment/comment-list", {api:api}); %>
+</div>
+<% }); %>

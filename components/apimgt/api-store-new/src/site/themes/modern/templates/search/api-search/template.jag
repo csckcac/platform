@@ -1,0 +1,21 @@
+<% jagg.template("search/api-search", function(inputs, outputs, jagg) { %>
+        <div class="header-section">
+        <div class="row">
+            <div class="span6 offset3">
+                <h1>APIs</h1>
+
+                <p>Use this document as a way to quick start any new project.<br> All you get is this message and a
+                    barebones HTML document.</p>
+
+            </div>
+            <div class="span3">
+                <div class="input-append pull-left">
+                    <form action="<%=jagg.getMappedUrl("/site/pages/list-apis.jag")%>">
+                    <input id="appendedInputButton" size="16" class="span2" name="query" placeholder="Search APIs" type="text"><button class="btn btn-primary search-button" type="button"><i class="icon-search icon-white"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<% }); %>

@@ -68,7 +68,7 @@ public class EC2Adapter extends Adapter {
     }
 
     @Override
-    public boolean spawnInstance(String domainName, String instanceId) throws ClassNotFoundException, SQLException {
+    public boolean spawnInstance(final String domainName, String instanceId) throws ClassNotFoundException, SQLException {
 
         log.info("Trying to spawn instance in EC2 Adapter");
 
@@ -83,23 +83,39 @@ public class EC2Adapter extends Adapter {
 
         }
 
+        // At this point the the server will starts after some time (Sleep for 3 minutes)
+        // start a new thread to reduce the pending instance count after sometime
+
+        new Thread(
+                new Runnable() {
+                    public void run() {
+                        try {
+                            log.info("Starting a new Thread to handle pending instance count");
+                            try {
+                                log.info("Thread Sleeping for 4 minutes...");
+                                Thread.sleep(240000);
+                            } catch (InterruptedException e) {
+                                log.error("InterruptedException while waiting for new instance startup", e);
+                            }
+
+                            // Reducing the pending instance count by one in AutoscalerService
+                            // Here we assumes that the server instance is successfully started
+
+                            log.info("Sleeep finished and decrementing pending count");
+                            autoscalerService.addPendingInstanceCount(domainName, -1);
+
+                        } catch (Exception e) {
+                            log.error("Error occurred inside pending instance count management Thread ", e);
+                        }
+                    }
+                }).start();
+
+
+        // Non blocking return
         log.info("Started " + 1 + " new instances in domain " +
                 domainName);
-
-        // At this point the the server will starts after some time (Sleep for 2 minutes)
-
-        try {
-            Thread.sleep(120000);
-        } catch (InterruptedException e) {
-            log.error("InterruptedException while waiting for new instance startup" , e);
-        }
-
-        // Reducing the pending instance count by one in AutoscalerService
-        // Here we assumes that the server instance is successfully started
-
-        autoscalerService.addPendingInstanceCount(domainName, -1);
-
         return true;
+
     }
 
     @Override
@@ -166,8 +182,7 @@ public class EC2Adapter extends Adapter {
 
         log.info("Calling EC2InstanceManager to spawn new instance");
 
-        List<String> ec2InstanceIdList = ec2InstanceManager.runInstances(request);
-        return ec2InstanceIdList;
+        return ec2InstanceManager.runInstances(request);
 
     }
 

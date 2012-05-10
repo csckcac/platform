@@ -11,7 +11,7 @@ import java.util.HashMap;
  *    This class is implemented for provide caching support for EC2 stuff. Uuid of ec2 instance to ec2 id mapping is kept in
  *    a in emory map.
  */
-public class Ec2DAO extends AbstractDAO{
+public class EC2DAO extends AbstractDAO{
      //protected Log log = LogFactory.getLog(ContainerDAO.class);
     private Connection con = null;
     private String url = "jdbc:mysql://localhost:3306/";
@@ -28,7 +28,7 @@ public class Ec2DAO extends AbstractDAO{
      * @return a map which include all the Uuid  to ec2 id mapping details.
      * @throws java.sql.SQLException
      */
-    public HashMap<String, String> getUuidToEc2IdMap() throws SQLException {
+    public HashMap<String, String> getUuidToEC2IdMap() throws SQLException {
             HashMap uuidToEc2IdMap = new HashMap<String, String>();
             ResultSet resultSet = null;
             try{

@@ -181,7 +181,6 @@ public class CustomXpathTest {
         outer.addChild(name);
         outer.addChild(version);
         outer.addChild(releaseDate);
-        log.debug("Payload :" + outer);
         return outer;
     }
 }

@@ -37,6 +37,7 @@ public class BrowserManager {
     private static final Log log = LogFactory.getLog(BrowserManager.class);
     public static WebDriver driver;
     static EnvironmentBuilder env = new EnvironmentBuilder();
+
     public static WebDriver getWebDriver() throws MalformedURLException {
         String driverSelection = env.getFrameworkSettings().getSelenium().getBrowserName();
         if (env.getFrameworkSettings().getSelenium().getRemoteWebDriver()) {
@@ -62,7 +63,7 @@ public class BrowserManager {
             driver = new InternetExplorerDriver();
         } else if (driverSelection.equalsIgnoreCase(ProductConstant.HTML_UNIT_DRIVER)) {
             driver = new HtmlUnitDriver(true);
-            System.setProperty("webdriver.chrome.driver",env.getFrameworkSettings().getSelenium().getChromrDriverPath());
+            System.setProperty("webdriver.chrome.driver", env.getFrameworkSettings().getSelenium().getChromrDriverPath());
         } else {
             driver = new OperaDriver();
         }
@@ -72,8 +73,10 @@ public class BrowserManager {
         URL url;
         String browserName = env.getFrameworkSettings().getSelenium().getBrowserName();
         String remoteWebDriverURL = env.getFrameworkSettings().getSelenium().getRemoteWebDriverUrl();
-        log.debug("Browser selection " + browserName);
-        log.debug("Remote WebDriverURL " + remoteWebDriverURL);
+        if (log.isDebugEnabled()) {
+            log.debug("Browser selection " + browserName);
+            log.debug("Remote WebDriverURL " + remoteWebDriverURL);
+        }
         try {
             url = new URL(remoteWebDriverURL);
         } catch (MalformedURLException e) {

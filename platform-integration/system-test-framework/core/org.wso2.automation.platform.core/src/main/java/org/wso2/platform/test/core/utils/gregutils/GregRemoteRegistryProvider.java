@@ -38,7 +38,7 @@ public class GregRemoteRegistryProvider {
                                                                                  properties.getProductVariables().getWebContextRoot());
         }
 
-        System.out.println(registryURL);
+        log.info("Remote Registry URL" + registryURL);
 
         try {
             registry = new RemoteRegistry(new URL(registryURL), username, password);

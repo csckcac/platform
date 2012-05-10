@@ -249,8 +249,9 @@ public class CarbonDataSourceTest extends DataServiceTest {
 
                 }
             }
-
-            log.debug(dbsFile);
+            if (log.isDebugEnabled()) {
+                log.debug(dbsFile);
+            }
             ByteArrayDataSource dbs = new ByteArrayDataSource(dbsFile.toString().getBytes());
             return new DataHandler(dbs);
 

@@ -67,7 +67,6 @@ public class AuthorizationCachingTest {
         userAdminStub.addUser(sessionCookie, userName, userPassword, new String[]{roleName}, null);
         userAdminStub.updateUserListOfRole(roleName, new String[]{userName}, null); //Assign admin role
         login(userName + "@" + userInfo.getDomain(), userPassword, environment.getIs().getBackEndUrl());
-        log.debug("User " + userName + " logged in successfully");
 
         //remove user from admin role
         userAdminStub.updateUserListOfRole(roleName, null, new String[]{userName});
@@ -77,7 +76,6 @@ public class AuthorizationCachingTest {
         userAdminStub.updateUserListOfRole(roleName, new String[]{userName}, null);
         //login after role update
         login(userName + "@" + userInfo.getDomain(), userPassword, environment.getIs().getBackEndUrl());
-        log.debug("User " + userName + " logged in successfully after role update");
     }
 
     private void loginAfterRoleRemoval() {

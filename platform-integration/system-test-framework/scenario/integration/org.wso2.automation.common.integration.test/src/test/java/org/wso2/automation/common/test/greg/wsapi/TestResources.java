@@ -24,7 +24,9 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 import org.testng.annotations.*;
 import org.wso2.platform.test.core.ProductConstant;
+import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
+import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.gregutils.GregUserIDEvaluator;
 import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
 
@@ -44,8 +46,16 @@ public class TestResources {
     public void init() throws RegistryException, AxisFault {
         int tenantId = new GregUserIDEvaluator().getTenantID();
         registry = new RegistryProvider().getRegistry(tenantId, ProductConstant.GREG_SERVER_NAME);
+        EnvironmentBuilder environmentBuilder = new EnvironmentBuilder();
+        UserInfo userInfo = UserListCsvReader.getUserInfo(tenantId);
         password = UserListCsvReader.getUserInfo(tenantId).getPassword();
-        userName = UserListCsvReader.getUserInfo(tenantId).getUserName();
+
+        if (environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
+            userName = userInfo.getUserName().substring(0, userInfo.getUserName().lastIndexOf('@'));
+        } else {
+            userName = userInfo.getUserName();
+        }
+
         removeResource();
     }
 

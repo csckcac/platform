@@ -25,6 +25,7 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.testng.annotations.*;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
+import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.gregutils.GregRemoteRegistryProvider;
 import org.wso2.platform.test.core.utils.gregutils.GregUserIDEvaluator;
 
@@ -37,17 +38,21 @@ import java.util.List;
 public class TestResources {
     private static final Log log = LogFactory.getLog(TestResources.class);
     public RemoteRegistry registry;
-    String username;
+    private static String username;
 
     @BeforeClass(alwaysRun = true)
     public void init() throws MalformedURLException, RegistryException {
         int tenantId = new GregUserIDEvaluator().getTenantID();
         registry = new GregRemoteRegistryProvider().getRegistry(tenantId);
+        EnvironmentBuilder environmentBuilder = new EnvironmentBuilder();
         //Tenant Details
-        UserInfo tenantDetails = UserListCsvReader.getUserInfo(tenantId);
-        username = tenantDetails.getUserName();
+        UserInfo userInfo = UserListCsvReader.getUserInfo(tenantId);
+        if (environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
+            username = userInfo.getUserName().substring(0, userInfo.getUserName().lastIndexOf('@'));
+        } else {
+            username = userInfo.getUserName();
+        }
         removeResource();
-
     }
 
 

@@ -30,6 +30,7 @@ import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionExcep
 import org.wso2.carbon.user.mgt.common.UserAdminException;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.environmentutils.EnvironmentVariables;
+import org.wso2.platform.test.core.utils.environmentutils.ManageEnvironment;
 
 import java.rmi.RemoteException;
 
@@ -47,15 +48,18 @@ public class GRegLoginPermissionServiceTestClient {
     private String roleName;
     private String userName;
     private String userPassword;
-
+    private ManageEnvironment environment;
+    private EnvironmentBuilder environmentBuilder;
 
     @BeforeClass(alwaysRun = true)
     public void init() throws RemoteException, LoginAuthenticationExceptionException {
-        EnvironmentBuilder builder = new EnvironmentBuilder().greg(0);
-        EnvironmentVariables gregServer = builder.build().getGreg();
-        sessionCookie = gregServer.getSessionCookie();
-        gregBackEndUrl = gregServer.getBackEndUrl();
-        gregHostName = gregServer.getProductVariables().getHostName();
+        EnvironmentBuilder builder = new EnvironmentBuilder().greg(3);
+        environment = builder.build();
+        environmentBuilder = new EnvironmentBuilder();
+
+        sessionCookie = environment.getGreg().getSessionCookie();
+        gregBackEndUrl = environment.getGreg().getBackEndUrl();
+        gregHostName = environment.getGreg().getProductVariables().getHostName();
         userAdminStub = new AdminServiceUserMgtService(gregBackEndUrl);
         userAuthenticationStub = new AdminServiceAuthentication(gregBackEndUrl);
         admin_service_resource_admin = new AdminServiceResourceAdmin(gregBackEndUrl);
@@ -70,8 +74,6 @@ public class GRegLoginPermissionServiceTestClient {
         if (userAdminStub.userNameExists(roleName, sessionCookie, userName)) { //delete user if exists
             userAdminStub.deleteUser(sessionCookie, userName);
         }
-
-
     }
 
 
@@ -84,34 +86,31 @@ public class GRegLoginPermissionServiceTestClient {
 
         String permission[] = {"/permission/admin/login"};
         String userList[] = {userName};
-        String sessionCookieUser;
+        String sessionCookieUser = null;
         boolean status;
-//        userAdminStub.addUser(sessionCookie,userName,userPassword,);
 
-        try {
+        if (!environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
             addRoleWithUser(permission, userList);
             sessionCookieUser = userAuthenticationStub.login(userName, userPassword, gregHostName);
-            log.info("Newly Created User Loged in :" + userName);
-            try {
-                status = false;
-                // greg_login_user does not have permission to add a Text resource
-                admin_service_resource_admin.addTextResource(sessionCookieUser, "/", "login.txt",
-                                                             "", "", "");
-            } catch (RemoteException e) {
-                status = true;
-                assertTrue(e.getMessage().indexOf("Access Denied.") > 0, "Access Denied Remote" +
-                                                                         " Exception assertion Failed :");
-                log.info("greg_login_user does not have permission to add a text resource :");
-            }
-            assertTrue(status, "Only Login user permission has uploaded a text resource ? :");
-            userAuthenticationStub.logOut();
-
-            log.info("*************Login Permission Only Test Scenario-Passed ******************");
-        } catch (UserAdminException e) {
-            log.error("Login Permission Only Test Scenario -Failed :" + e.getMessage());
-            throw new UserAdminException("Login Permission Only Test Scenario - Failed :" +
-                                         e.getMessage());
+            log.info("Newly Created User Logged in :" + userName);
         }
+
+
+        try {
+            status = false;
+            // greg_login_user does not have permission to add a Text resource
+            admin_service_resource_admin.addTextResource(sessionCookieUser, "/", "login.txt",
+                                                         "", "", "");
+        } catch (RemoteException e) {
+            status = true;
+            assertTrue(e.getMessage().indexOf("Access Denied.") > 0, "Access Denied Remote" +
+                                                                     " Exception assertion Failed :");
+            log.info("greg_login_user does not have permission to add a text resource :");
+        }
+        assertTrue(status, "Only Login user permission has uploaded a text resource ? :");
+        userAuthenticationStub.logOut();
+
+        log.info("*************Login Permission Only Test Scenario-Passed ******************");
     }
 
     private void addRoleWithUser(String[] permission, String[] userList) throws UserAdminException {

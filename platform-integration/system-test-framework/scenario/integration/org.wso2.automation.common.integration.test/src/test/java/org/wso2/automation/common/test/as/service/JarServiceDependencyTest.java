@@ -53,7 +53,6 @@ public class JarServiceDependencyTest {
         builder = new EnvironmentBuilder().as(userId);
         ManageEnvironment environment = builder.build();
         JAR_SERVICE_EPR = environment.getAs().getServiceUrl() + "/" + serviceName;
-        log.debug("ServiceURL " + JAR_SERVICE_EPR);
     }
 
     @Test(groups = {"wso2.as"}, description = "Jar service with dependencies", priority = 1)
@@ -69,7 +68,6 @@ public class JarServiceDependencyTest {
         OMElement resultJarService1 =
                 new AxisServiceClient().sendReceive(createPayLoad(operationName, expectedIntValue,
                                                                   namespaceOfService), JAR_SERVICE_EPR, operationName);
-        log.debug("Response returned " + resultJarService1);
         assertTrue((resultJarService1.toString().indexOf(expectedIntValue) >= 1));
         log.info("Test was successful.....");
     }
@@ -82,7 +80,6 @@ public class JarServiceDependencyTest {
         OMElement value = fac.createOMElement("x", omNs);
         value.addChild(fac.createOMText(value, expectedValue));
         method.addChild(value);
-        log.debug("Created payload is :" + method);
         return method;
     }
 

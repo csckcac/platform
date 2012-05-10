@@ -51,8 +51,9 @@ public class SchemaUploadServiceTestClient {
     }
 
     @Test(groups = {"wso2.greg"}, description = "test multi tenancy scenario adding a schema ", priority = 1)
-    private void testaddSchema() throws RegistryException {
-        String schema_url = "http://people.wso2.com/~evanthika/schemas/Patient.xsd";
+    public void testaddSchema() throws RegistryException {
+        String schema_url = "https://svn.wso2.org/repos/wso2/trunk/commons/qa/qa-artifacts/greg/xsd/Patient.xsd";
+
         String schema_path = "/_system/governance/trunk/schemas/org/ihc/xsd/Patient.xsd";
         String property1 = "Valid";
         String property2 = "http://ihc.org/xsd?patient";
@@ -136,11 +137,11 @@ public class SchemaUploadServiceTestClient {
     private void verifyResourceExists(String schema_path) throws RegistryException {
         try {
             //Assert admin user -admin123@wso2manualQA0006.org
-            assertTrue(registry.resourceExists(schema_path), "wsdl Exists :");
+            assertTrue(registry.resourceExists(schema_path), "schema doesn't exists:");
             // Assert Test user - testuser1@wso2manualQA0006.org
-            assertTrue(registry_testUser.resourceExists(schema_path), "wsdl exists:");
+            assertTrue(registry_testUser.resourceExists(schema_path), "schema doesn't exists:");
             // Assert differnt doamin user 1
-            assertFalse(registry_diffDomainUser1.resourceExists(schema_path), "wsdl exists:");
+            assertFalse(registry_diffDomainUser1.resourceExists(schema_path), "schema exists:");
         } catch (RegistryException e) {
             log.error("verifyResourceExists Exception thrown:" + e.getMessage());
             throw new RegistryException("verifyResourceExists Exception thrown:" + e.getMessage());

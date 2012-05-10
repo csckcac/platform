@@ -71,7 +71,6 @@ public class FullNameVerificationTest {
         setAccountInfoBean.setLastname(newLastName);
 
         //update tenant full name
-        log.debug("Update tenant full name");
         adminServiceStratosAccountMgt.updateTenantFullName(sessionCookie, setAccountInfoBean);
         assertEquals(newFirstName, adminServiceStratosAccountMgt.getTenantFullName(sessionCookie).
                 getFirstname(), "Tenant first Name does not match ");

@@ -96,9 +96,11 @@ public class PlatformSuiteManager implements ISuiteListener {
                 getEnvironmentVariables().getKeyStrorePassword());
         System.setProperty("javax.net.ssl.trustStoreType", "JKS");
 
-        log.debug("javax.net.ssl.trustStore :" + System.getProperty("javax.net.ssl.trustStore"));
-        log.debug("javax.net.ssl.trustStorePassword :" + System.getProperty("javax.net.ssl.trustStorePassword"));
-        log.debug("javax.net.ssl.trustStoreType :" + System.getProperty("javax.net.ssl.trustStoreType"));
+        if (log.isDebugEnabled()) {
+            log.debug("javax.net.ssl.trustStore :" + System.getProperty("javax.net.ssl.trustStore"));
+            log.debug("javax.net.ssl.trustStorePassword :" + System.getProperty("javax.net.ssl.trustStorePassword"));
+            log.debug("javax.net.ssl.trustStoreType :" + System.getProperty("javax.net.ssl.trustStoreType"));
+        }
     }
 
 

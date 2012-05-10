@@ -212,7 +212,10 @@ public class LifeCycleComparisonServiceTestClient {
             registry_diffDomainUser1.invokeAspect(wsdl_path_admin2, "ServiceLifeCycle", "Demote");
 //            registry_diffDomainUser1.invokeAspect(wsdl_path_admin2, "ServiceLifeCycle", "Demote");
             // assert admin 1 & admin 2 life cycle states are the same
-            assertEquals(registry.get(wsdl_path_admin1).getProperty(StateProperty_admin1), registry_diffDomainUser1.get(wsdl_path_admin2).getProperty(StateProperty_admin2), "After Demoting service Lifecycle user1 & user2 are not in development stage:");
+            assertNotSame(registry.get(wsdl_path_admin1).getProperty(StateProperty_admin1),
+                         registry_diffDomainUser1.get(wsdl_path_admin2).getProperty(StateProperty_admin2),
+                         "After Demoting service Lifecycle user1 & user2 are not in development stage:");
+
         } catch (RegistryException e) {
             log.error("promoteLifeCycle RegistryExceptio thrown:" + e.getMessage());
             throw new RegistryException("Resource has not been properly deleted :" + e.getMessage());

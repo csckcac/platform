@@ -57,7 +57,9 @@ public class WebAppUtil {
             }
             in.close();
         } else {
-            log.debug("webapp connection returned HTTP " + code + " error");
+            if (log.isDebugEnabled()) {
+                log.debug("webapp connection returned HTTP " + code + " error");
+            }
         }
 
         return webappStatus;
@@ -86,7 +88,8 @@ public class WebAppUtil {
         }
     }
 
-    public static void waitForWebAppUnDeployment(String serviceUrl, String content) throws Exception {
+    public static void waitForWebAppUnDeployment(String serviceUrl, String content)
+            throws Exception {
         int serviceTimeOut = 0;
         try {
             while (webappTest(serviceUrl, content)) {

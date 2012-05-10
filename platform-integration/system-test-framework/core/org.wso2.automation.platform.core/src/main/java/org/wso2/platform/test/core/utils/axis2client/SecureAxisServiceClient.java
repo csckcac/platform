@@ -47,30 +47,38 @@ import java.util.Properties;
 public class SecureAxisServiceClient implements CallbackHandler {
     private static final Log log = LogFactory.getLog(SecureAxisServiceClient.class);
 
-    public OMElement sendReceive(String userName, String password, String endpointReference, String operation, OMElement payload, int securityScenarioNo) throws Exception {
+    public OMElement sendReceive(String userName, String password, String endpointReference,
+                                 String operation, OMElement payload, int securityScenarioNo)
+            throws Exception {
         ServiceClient sc = getServiceClient(userName, password, endpointReference, operation, securityScenarioNo);
         OMElement result;
-        log.debug("payload :" + payload);
-        log.debug("Security Scenario No :" + securityScenarioNo);
-        log.debug("Operation :" + operation);
-        log.info("Endpoint reference :" + endpointReference);
-        log.debug("username :" + userName);
-        log.debug("password :" + password);
+        if (log.isDebugEnabled()) {
+            log.debug("payload :" + payload);
+            log.debug("Security Scenario No :" + securityScenarioNo);
+            log.debug("Operation :" + operation);
+            log.debug("username :" + userName);
+            log.debug("password :" + password);
+        }
 
+        log.info("Endpoint reference :" + endpointReference);
         try {
             result = sc.sendReceive(payload);
-            log.debug("Response :" + result);
+            if (log.isDebugEnabled()) {
+                log.debug("Response :" + result);
+            }
         } catch (AxisFault axisFault) {
             log.error("AxisFault : " + axisFault.getMessage());
             throw new AxisFault("AxisFault : " + axisFault.getMessage(), axisFault);
         }
-        Assert.assertNotNull( result);
+        Assert.assertNotNull(result);
         return result;
 
 
     }
 
-    public void sendRobust(String userName, String password, String endpointReference, String operation, OMElement payload, int securityScenarioNo) throws Exception {
+    public void sendRobust(String userName, String password, String endpointReference,
+                           String operation, OMElement payload, int securityScenarioNo)
+            throws Exception {
         ServiceClient sc = getServiceClient(userName, password, endpointReference, operation, securityScenarioNo);
         try {
             sc.sendRobust(payload);
@@ -81,7 +89,8 @@ public class SecureAxisServiceClient implements CallbackHandler {
         }
     }
 
-    private Policy loadPolicy(String userName, String securityPolicyPath, String keyPath) throws Exception {
+    private Policy loadPolicy(String userName, String securityPolicyPath, String keyPath)
+            throws Exception {
 
         Policy policy = null;
         StAXOMBuilder builder = null;
@@ -136,24 +145,29 @@ public class SecureAxisServiceClient implements CallbackHandler {
         return policy;
     }
 
-    private ServiceClient getServiceClient(String userName, String password, 
-                                           String endpointReference, String operation, 
+    private ServiceClient getServiceClient(String userName, String password,
+                                           String endpointReference, String operation,
                                            int securityScenarioNo) throws Exception {
         EnvironmentBuilder environmentBuilder = new EnvironmentBuilder();
 
-        String keyPath = 
+        String keyPath =
                 environmentBuilder.getFrameworkSettings().getEnvironmentVariables().getKeystorePath();
-        String securityPolicyPath = 
+        String securityPolicyPath =
                 ProductConstant.getSecurityScenarios() + File.separator +
-                 "scenario"+ securityScenarioNo + "-policy.xml";
-
-        log.debug("Key_Path :" + keyPath);
-        log.debug("securityPolicyPath :" + securityPolicyPath);
+                "scenario" + securityScenarioNo + "-policy.xml";
+        if (log.isDebugEnabled()) {
+            log.debug("Key_Path :" + keyPath);
+            log.debug("securityPolicyPath :" + securityPolicyPath);
+        }
 
         System.setProperty("javax.net.ssl.trustStore", keyPath);
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
-        log.debug("javax.net.ssl.trustStore :" + System.getProperty("javax.net.ssl.trustStore"));
-        log.debug("javax.net.ssl.trustStorePassword :" + System.getProperty("javax.net.ssl.trustStorePassword"));
+
+        if (log.isDebugEnabled()) {
+            log.debug("javax.net.ssl.trustStore :" + System.getProperty("javax.net.ssl.trustStore"));
+            log.debug("javax.net.ssl.trustStorePassword :" + System.getProperty("javax.net.ssl.trustStorePassword"));
+        }
+
 
         ConfigurationContext ctx;
         ServiceClient sc;
@@ -168,9 +182,9 @@ public class SecureAxisServiceClient implements CallbackHandler {
 
             Options opts = new Options();
             if (securityScenarioNo == 1) {
-                Assert.assertTrue(endpointReference.startsWith("https:"),"Endpoint reference should be https");
+                Assert.assertTrue(endpointReference.startsWith("https:"), "Endpoint reference should be https");
             } else {
-                Assert.assertTrue(endpointReference.startsWith("http:"),"Endpoint reference should be https");
+                Assert.assertTrue(endpointReference.startsWith("http:"), "Endpoint reference should be https");
             }
 
             opts.setTo(new EndpointReference(endpointReference));
@@ -180,9 +194,10 @@ public class SecureAxisServiceClient implements CallbackHandler {
             opts.setPassword(password);
 
             try {
-                if (securityScenarioNo >= 1)
+                if (securityScenarioNo >= 1) {
                     opts.setProperty(RampartMessageData.KEY_RAMPART_POLICY,
                                      loadPolicy(userName, securityPolicyPath, keyPath));
+                }
 
             } catch (Exception e) {
                 log.error(e.getMessage());

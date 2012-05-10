@@ -62,7 +62,6 @@ public class WebAppDeploymentTest {
         WebAppUtil.waitForWebAppDeployment(webAppURL, "Hello"); //wait for web app deployment
         assertTrue(adminServiceWebAppAdmin.stopWebApp(sessionCookie, webAppName + ".war"),
                    "fail to stop webapp"); //stop web app
-        log.debug("WebApp stopped");
         deleteStoppedWebApp(sessionCookie, webAppName + ".war");//delete web app
         waitForWebappDeletion();//wait for deletion
         log.info("WebApp deleted successfully");

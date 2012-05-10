@@ -73,7 +73,6 @@ public class JaxWsServiceUploaderTest {
                 new AxisServiceClient().sendReceive
                         (createPayLoad(operationName, expectedIntValue,
                                        namespaceOfService), JAXWS_SERVICE_EPR, operationName);
-        log.debug("Response returned " + resultJarService1);
         assertTrue((resultJarService1.toString().indexOf(expectedIntValue) >= 1));
     }
 

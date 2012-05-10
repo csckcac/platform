@@ -44,7 +44,7 @@ public class RolePermissionServiceTestClient {
 
     @BeforeClass(alwaysRun = true)
     public void init() throws RemoteException, LoginAuthenticationExceptionException {
-        EnvironmentBuilder builder = new EnvironmentBuilder().greg(0);
+        EnvironmentBuilder builder = new EnvironmentBuilder().greg(3);
         gregServer = builder.build().getGreg();
         sessionCookie = gregServer.getSessionCookie();
         gregBackEndUrl = gregServer.getBackEndUrl();

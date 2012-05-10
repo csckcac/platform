@@ -35,10 +35,7 @@ public class AdminServiceSecurity {
 
     public AdminServiceSecurity(String backEndUrl) throws AxisFault {
         this.endPoint = backEndUrl + securityServiceName;
-        log.debug("Endpoint : " + this.endPoint);
-
         securityAdminServiceStub = new SecurityAdminServiceStub(endPoint);
-
     }
 
     public void applySecurity(String sessionCookie, String serviceName, String policyId,

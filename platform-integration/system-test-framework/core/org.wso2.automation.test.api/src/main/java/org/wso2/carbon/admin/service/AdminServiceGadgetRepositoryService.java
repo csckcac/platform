@@ -15,7 +15,9 @@ public class AdminServiceGadgetRepositoryService {
 
     private static final Log log = LogFactory.getLog(AdminServiceGadgetRepositoryService.class);
 
-    public void addGadgetToRepo(GadgetRepoServiceStub gadgetRepoServiceStub, DataHandler dataHandler, String gadgetName, String gadgetDescription) {
+    public void addGadgetToRepo(GadgetRepoServiceStub gadgetRepoServiceStub,
+                                DataHandler dataHandler, String gadgetName,
+                                String gadgetDescription) {
 
         try {
             boolean addGadgetStatus = gadgetRepoServiceStub.addGadgetEntryToRepo(
@@ -25,7 +27,6 @@ public class AdminServiceGadgetRepositoryService {
                 Assert.fail("Failed to add gadget to repository");
             } else {
                 log.info("Successfully executed addGadgetToUser test");
-                log.debug("Gadget " + gadgetName + "added successfully");
             }
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -34,7 +35,8 @@ public class AdminServiceGadgetRepositoryService {
     }
 
     // Check the existence of added gadget and Get the path of added gadget
-    public Gadget getGadgetFromGadgetList(GadgetRepoServiceStub gadgetRepoServiceStub, String gadgetName) {
+    public Gadget getGadgetFromGadgetList(GadgetRepoServiceStub gadgetRepoServiceStub,
+                                          String gadgetName) {
 
         try {
             Gadget[] gadgets = gadgetRepoServiceStub.getGadgetData();
@@ -43,8 +45,10 @@ public class AdminServiceGadgetRepositoryService {
                 for (Gadget gadget : gadgets) {
                     if (gadget != null) {
                         if (gadgetName.equals(gadget.getGadgetName())) {
-                            log.debug("Added Gadget path is :" + gadget.getGadgetPath());
-                            log.debug("Added Gadget Url is :" + gadget.getGadgetUrl());
+                            if (log.isDebugEnabled()) {
+                                log.debug("Added Gadget path is :" + gadget.getGadgetPath());
+                                log.debug("Added Gadget Url is :" + gadget.getGadgetUrl());
+                            }
                             log.info("Successfully executed getGadgetFromGadgetList test");
                             returnGadget = gadget;
                             break;
@@ -81,7 +85,8 @@ public class AdminServiceGadgetRepositoryService {
 
     // Add gadget to user's portal
     public void addGadgetToPortal(GadgetRepoServiceStub gadgetRepoServiceStub,
-                                  String userID, String tabId, String gadgetUrl, String dashboardName,
+                                  String userID, String tabId, String gadgetUrl,
+                                  String dashboardName,
                                   String gadgetGroup, String gadgetPath) {
         try {
 
@@ -117,7 +122,8 @@ public class AdminServiceGadgetRepositoryService {
     }
 
     // Add comment on a gadget
-    public void addCommentForGadget(GadgetRepoServiceStub gadgetRepoServiceStub, String gadgetPath, Comment comment) {
+    public void addCommentForGadget(GadgetRepoServiceStub gadgetRepoServiceStub, String gadgetPath,
+                                    Comment comment) {
         try {
             boolean addCommentStatus = gadgetRepoServiceStub.addCommentForGadget(gadgetPath, comment);
             if (!addCommentStatus) {
@@ -134,7 +140,8 @@ public class AdminServiceGadgetRepositoryService {
     }
 
     // Get comment count on a gadget
-    public void getCommentCountForGadget(GadgetRepoServiceStub gadgetRepoServiceStub, String gadgetPath) {
+    public void getCommentCountForGadget(GadgetRepoServiceStub gadgetRepoServiceStub,
+                                         String gadgetPath) {
         try {
             System.out.println(gadgetPath);
             int commentCount = gadgetRepoServiceStub.getCommentsCount(gadgetPath);
@@ -174,7 +181,8 @@ public class AdminServiceGadgetRepositoryService {
     }
 
     // Delete comment on a gadget
-    public void deleteCommentOnGadget(GadgetRepoServiceStub gadgetRepoServiceStub, String gadgetPath) {
+    public void deleteCommentOnGadget(GadgetRepoServiceStub gadgetRepoServiceStub,
+                                      String gadgetPath) {
         try {
             String commentPath = gadgetPath;
             System.out.println(commentPath);
@@ -193,7 +201,8 @@ public class AdminServiceGadgetRepositoryService {
     }
 
     // Add Rating on a Gadget
-    public void addRatingForGadget(GadgetRepoServiceStub gadgetRepoServiceStub, String gadgetPath, int rating,
+    public void addRatingForGadget(GadgetRepoServiceStub gadgetRepoServiceStub, String gadgetPath,
+                                   int rating,
                                    String tabId, String gadgetGroup) {
         try {
             boolean addRatingStatus = gadgetRepoServiceStub.addRatingForGadget(gadgetPath, rating, tabId, gadgetGroup);
@@ -211,7 +220,8 @@ public class AdminServiceGadgetRepositoryService {
     }
 
     // Get user Rating on a Gadget
-    public void getRatingOnGadget(GadgetRepoServiceStub gadgetRepoServiceStub, String gadgetPath, String userId) {
+    public void getRatingOnGadget(GadgetRepoServiceStub gadgetRepoServiceStub, String gadgetPath,
+                                  String userId) {
         try {
             String userRating = gadgetRepoServiceStub.getUserRating(gadgetPath, userId);
             if (!"3".equals(userRating)) {
@@ -227,7 +237,8 @@ public class AdminServiceGadgetRepositoryService {
     }
 
     // Delete the added gadget from repository
-    public void deleteGadgetFromRepo(GadgetRepoServiceStub gadgetRepoServiceStub, String gadgetPath) {
+    public void deleteGadgetFromRepo(GadgetRepoServiceStub gadgetRepoServiceStub,
+                                     String gadgetPath) {
         try {
             boolean deleteStatus = gadgetRepoServiceStub.deleteGadget(gadgetPath);
             if (!deleteStatus) {

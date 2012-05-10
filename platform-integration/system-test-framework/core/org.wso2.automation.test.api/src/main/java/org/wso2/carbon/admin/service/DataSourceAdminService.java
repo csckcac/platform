@@ -46,10 +46,7 @@ public class DataSourceAdminService {
 
     public DataSourceAdminService(String backEndUrl) throws AxisFault {
         this.endPoint = backEndUrl + serviceName;
-        log.debug("EndPoint : " + endPoint);
         dataSourceAdminStub = new DataSourceAdminStub(endPoint);
-
-
     }
 
     public void addDataSourceInformation(String sessionCookie, String dataSourceName,
@@ -64,8 +61,6 @@ public class DataSourceAdminService {
         }
         dataSourceInfoElement = createOMElement(properties);
         dataSourceAdminStub.addDataSourceInformation(dataSourceName, dataSourceInfoElement);
-        log.debug("Data Source Added");
-
     }
 
     public void editCarbonDataSources(String sessionCookie, String name,
@@ -117,8 +112,9 @@ public class DataSourceAdminService {
     }
 
     private static Properties loadProperties(OMElement element) {
-
-        log.debug("Loading properties from : " + element);
+        if (log.isDebugEnabled()) {
+            log.debug("Loading properties from : " + element);
+        }
         String xml = "<!DOCTYPE properties   [\n" +
                      "\n" +
                      "<!ELEMENT properties ( comment?, entry* ) >\n" +

@@ -37,10 +37,7 @@ public class AdminServiceService {
     public AdminServiceService(String backEndUrl) throws AxisFault {
         String serviceName = "ServiceAdmin";
         String endPoint = backEndUrl + serviceName;
-        log.debug("EndPoint :" + endPoint);
-
         serviceAdminStub = new ServiceAdminStub(endPoint);
-
     }
 
     public void deleteService(String sessionCookie, String[] serviceGroup) throws RemoteException {

@@ -57,7 +57,6 @@ public class UpdateContactInfoTest {
         log.info("Runner tenant email update test");
         String updatedEmailAddress = "update.email.test@wso2.com";
         String tenantOldContactInfo = adminServiceStratosAccountMgt.getTenantcontact(sessionCookie);
-        log.debug("Existing tenant email " + tenantOldContactInfo);
         //update tenant email address
         adminServiceStratosAccountMgt.updateTenantContact(sessionCookie, updatedEmailAddress);
         assertEquals(adminServiceStratosAccountMgt.getTenantcontact(sessionCookie), updatedEmailAddress,

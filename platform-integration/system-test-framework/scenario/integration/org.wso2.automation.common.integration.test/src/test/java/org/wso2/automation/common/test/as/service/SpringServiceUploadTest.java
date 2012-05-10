@@ -55,7 +55,6 @@ public class SpringServiceUploadTest {
         builder = new EnvironmentBuilder().as(userId);
         ManageEnvironment environment = builder.build();
         SPRING_SERVICE_EPR = environment.getAs().getServiceUrl() + "/" + serviceName;
-        log.debug("ServiceURL " + SPRING_SERVICE_EPR);
     }
 
     @Test(groups = {"wso2.as"}, description = "Upload spring service and invoke it", priority = 1)
@@ -71,7 +70,6 @@ public class SpringServiceUploadTest {
         OMElement resultJarService1 =
                 new AxisServiceClient().sendReceive(createPayLoad(operationName, expectedIntValue,
                                                                   namespaceOfService), SPRING_SERVICE_EPR, operationName);
-        log.debug("Response returned " + resultJarService1);
         assertTrue((resultJarService1.toString().indexOf(expectedIntValue) >= 1));
         log.info("Test was successful.....");
     }
@@ -84,7 +82,6 @@ public class SpringServiceUploadTest {
         OMElement value = fac.createOMElement("arg0", omNs);
         value.addChild(fac.createOMText(value, expectedValue));
         method.addChild(value);
-        log.debug("Created payload is :" + method);
         return method;
     }
 

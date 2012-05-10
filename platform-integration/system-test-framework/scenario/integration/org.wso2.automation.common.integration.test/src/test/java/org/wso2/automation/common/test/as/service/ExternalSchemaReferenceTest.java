@@ -102,18 +102,15 @@ public class ExternalSchemaReferenceTest {
         opts.setAction("http://charitha.org/echoString");
         opts.setProperty(org.apache.axis2.transport.http.HTTPConstants.CHUNKED, Boolean.FALSE);
         serviceclient.setOptions(opts);
-        log.debug("Axis2Service EPR " + AXIS2SERVICE_EPR);
         AxisServiceClientUtils.waitForServiceDeployment(AXIS2SERVICE_EPR);
         long deploymentDelay =
                 builder.getFrameworkSettings().getEnvironmentVariables().getDeploymentDelay();
         Thread.sleep(deploymentDelay);//force wait - Even though the WSDL is available it take
         result = serviceclient.sendReceive(payload);
-        log.debug("Service response " + result);
         assertTrue((result.toString().indexOf("420")) > 0, "expected response not found");
     }
 
     private static OMElement createPayLoad() {
-        log.debug("Creating payload");
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMNamespace omNs = fac.createOMNamespace("http://charitha.org", "char");
         OMElement method = fac.createOMElement("addition", omNs);
@@ -123,7 +120,6 @@ public class ExternalSchemaReferenceTest {
         valueOfy.addChild(fac.createOMText(valueOfy, "220"));
         method.addChild(valueOfx);
         method.addChild(valueOfy);
-        log.debug("Payload is :" + method);
 
         return method;
     }

@@ -80,7 +80,7 @@ public class LifeCycleServiceTestClient {
         FrameworkProperties properties =
                 FrameworkFactory.getFrameworkProperties(ProductConstant.GREG_SERVER_NAME);
 
-        if (properties.getEnvironmentSettings().is_enableSelenium()) {
+        if (properties.getEnvironmentSettings().is_runningOnStratos()) {
             testStageState = "Tested";
         } else {
             testStageState = "Testing";

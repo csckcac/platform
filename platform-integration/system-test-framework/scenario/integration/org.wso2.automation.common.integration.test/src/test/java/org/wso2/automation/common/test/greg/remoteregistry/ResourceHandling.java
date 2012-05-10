@@ -26,6 +26,7 @@ import org.wso2.carbon.registry.core.Tag;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
+import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.gregutils.GregRemoteRegistryProvider;
 import org.wso2.platform.test.core.utils.gregutils.GregUserIDEvaluator;
 
@@ -49,8 +50,16 @@ public class ResourceHandling {
         int tenantId = new GregUserIDEvaluator().getTenantID();
         registry = new GregRemoteRegistryProvider().getRegistry(tenantId);
         //Tenant Details
-        UserInfo tenantDetails = UserListCsvReader.getUserInfo(tenantId);
-        username = tenantDetails.getUserName();
+
+        UserInfo userInfo = UserListCsvReader.getUserInfo(tenantId);
+
+        EnvironmentBuilder environmentBuilder = new EnvironmentBuilder();
+
+        if (environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
+            username = userInfo.getUserName().substring(0, userInfo.getUserName().lastIndexOf('@'));
+        } else {
+            username = userInfo.getUserName();
+        }
         removeResource();
     }
 

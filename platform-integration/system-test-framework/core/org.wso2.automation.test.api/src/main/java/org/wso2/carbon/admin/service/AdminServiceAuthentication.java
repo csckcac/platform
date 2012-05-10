@@ -88,7 +88,6 @@ public class AdminServiceAuthentication {
         return sessionCookie;
     }*/
 
-
     public Boolean unsuccessfulLogin(String userName, String password, String backEndURL)
             throws LoginAuthenticationExceptionException, RemoteException {
         return authenticationAdminStub.login(userName, password, backEndURL);

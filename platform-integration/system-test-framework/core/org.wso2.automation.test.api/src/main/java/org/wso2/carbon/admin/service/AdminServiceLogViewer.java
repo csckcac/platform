@@ -38,7 +38,6 @@ public class AdminServiceLogViewer {
             throws AxisFault {
         String serviceName = "LogViewer";
         String endPoint = backEndUrl + serviceName;
-        log.debug("admin service url = " + endPoint);
         logViewerStub = new LogViewerStub(endPoint);
         AuthenticateStub.authenticateStub(sessionCookie, logViewerStub);
     }

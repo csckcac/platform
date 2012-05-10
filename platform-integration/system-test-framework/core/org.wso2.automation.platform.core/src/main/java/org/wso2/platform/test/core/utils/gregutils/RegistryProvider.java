@@ -19,6 +19,8 @@ package org.wso2.platform.test.core.utils.gregutils;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
+import org.apache.axis2.engine.AxisConfiguration;
+import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.platform.test.core.ProductConstant;
@@ -67,6 +69,9 @@ public class RegistryProvider {
         setSystemProperties();
         try {
             configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(axis2Repo, axis2Conf);
+            int timeOutInMilliSeconds = 1000 * 60;
+            configContext.setProperty(HTTPConstants.CONNECTION_TIMEOUT, timeOutInMilliSeconds);
+            log.info("Group ConfigurationContext Timeout " + configContext.getServiceGroupContextTimeoutInterval());
             registry = new WSRegistryServiceClient(serverURL, userName, password, configContext);
             log.info("WS Registry -Login Success");
         } catch (AxisFault axisFault) {
@@ -110,7 +115,8 @@ public class RegistryProvider {
 //        if (env.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
 //            serverURL = "https://" + gregProperties.getProductVariables().getHostName() + "/t/" + tenantDomain + "/" + "services" + "/";
 //        } else {
-            serverURL = gregProperties.getProductVariables().getBackendUrl();
+        serverURL = gregProperties.getProductVariables().getBackendUrl();
+        log.info(serverURL);
 //        }
         log.info("Server URL is :" + serverURL);
         return serverURL;

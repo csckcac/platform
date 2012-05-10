@@ -47,12 +47,13 @@ public class GarFileImportServiceTestClient {
     }
 
     @Test(groups = {"wso2.greg"}, description = "GAR file uploader - Axis2Service", priority = 1)
-    private void testAddAxis2ServiceGarFile() throws org.wso2.carbon.registry.api.RegistryException, FileNotFoundException {
+        public void testAddAxis2ServiceGarFile()
+            throws org.wso2.carbon.registry.api.RegistryException, IOException {
         String filePath = resourcePath + File.separator + "artifacts" + File.separator + "GREG" + File.separator + "Axis2Service.gar";
         String service_path = "/_system/governance/trunk/services/org/wso2/carbon/service/Axis2Service";
         String wsdl_path = "/_system/governance/trunk/wsdls/org/wso2/carbon/service/Axis2Service.wsdl";
         String schema_path = "/_system/governance/trunk/schemas/org/wso2/carbon/service/axis2serviceschema.xsd";
-
+        InputStream is = null;
         try {
             // Create Collection
             Collection collection = registry.newCollection();
@@ -60,10 +61,11 @@ public class GarFileImportServiceTestClient {
             //Create Resource
             Resource r1 = registry.newResource();
             //create an Input Stream
-            InputStream is = new BufferedInputStream(new FileInputStream(filePath));
+            is = new BufferedInputStream(new FileInputStream(filePath));
             r1.setContentStream(is);
             r1.setMediaType("application/vnd.wso2.governance-archive");
             registry.put("/a1/a2/a3/r1", r1);
+
             //Assert Service exists
             assertTrue(registry.resourceExists(service_path), "Service Exists :");
             //Assert WSDL exists
@@ -82,15 +84,18 @@ public class GarFileImportServiceTestClient {
             log.info("GarFileImportServiceTestClient testAddAxis2ServiceGarFile()- Passed");
         } catch (RegistryException e) {
             log.error("Failed to add Axis2ServiceGarFile  RegistryException thrown:" + e.getMessage());
-            throw new RegistryException("Failed to add Axis2ServiceGarFile:" + e.getMessage());
+            throw new RegistryException("Failed to add Axis2ServiceGarFile: " + e);
         } catch (FileNotFoundException e) {
-            log.error("Failed to add Axis2ServiceGarFile FileNotFoundException  thrown:" + e.getMessage());
+            log.error("Failed to add Axis2ServiceGarFile FileNotFoundException  thrown: " + e);
             throw new RegistryException("Failed to add Axis2ServiceGarFile :" + e.getMessage());
+        } finally {
+            is.close();
         }
     }
 
     @Test(groups = {"wso2.greg"}, description = "GAR file uploader - SimpleStockQuoteService", priority = 2)
-    private void testAddSimpleStockQuoteServiceGarFile() throws org.wso2.carbon.registry.api.RegistryException, FileNotFoundException {
+    public void testAddSimpleStockQuoteServiceGarFile()
+            throws org.wso2.carbon.registry.api.RegistryException, FileNotFoundException {
         String filePath = resourcePath + File.separator + "artifacts" + File.separator + "GREG" + File.separator + "SimpleStockQuoteService.gar";
         String service_path = "/_system/governance/trunk/services/samples/services/SimpleStockQuoteService";
         String wsdl_path = "/_system/governance/trunk/wsdls/samples/services/SimpleStockQuoteService.wsdl";
@@ -125,7 +130,8 @@ public class GarFileImportServiceTestClient {
     }
 
     @Test(groups = {"wso2.greg"}, description = "GAR file uploader - EnterprisePersonService", priority = 3)
-    private void testAddEnterprisePersonServiceGarFile() throws FileNotFoundException, org.wso2.carbon.registry.api.RegistryException {
+    public void testAddEnterprisePersonServiceGarFile()
+            throws FileNotFoundException, org.wso2.carbon.registry.api.RegistryException {
         String filePath = resourcePath + File.separator + "artifacts" + File.separator + "GREG" + File.separator + "wsdl_arch_with_imports_folder.gar";
         String service_path = "/_system/governance/trunk/services/org/ihc/services/enterprisepersonservice/EnterprisePersonService";
         String wsdl_path = "/_system/governance/trunk/wsdls/org/ihc/services/enterprisepersonservice/EnterprisePersonService.wsdl";
@@ -160,7 +166,8 @@ public class GarFileImportServiceTestClient {
     }
 
     @Test(groups = {"wso2.greg"}, description = "GAR file uploader - RegistryGarFile", priority = 4)
-    private void testAddRegistryGarFile() throws FileNotFoundException, org.wso2.carbon.registry.api.RegistryException {
+    public void testAddRegistryGarFile()
+            throws FileNotFoundException, org.wso2.carbon.registry.api.RegistryException {
         String filePath = resourcePath + File.separator + "artifacts" + File.separator + "GREG" + File.separator + "registry.gar";
         String schema_path1 = "/_system/governance/trunk/schemas/dk/dr/www/namespaces/schemas/common/types/types.xsd";
         String schema_path2 = "/_system/governance/trunk/schemas/org/ihc/xsd/ErrorResolution.xsd";
@@ -198,7 +205,8 @@ public class GarFileImportServiceTestClient {
 
 
     @Test(groups = {"wso2.greg"}, description = "GAR file uploader - XSDAllGarFile", priority = 5)
-    private void testAddXSDAllGarFile() throws FileNotFoundException, org.wso2.carbon.registry.api.RegistryException {
+    public void testAddXSDAllGarFile()
+            throws FileNotFoundException, org.wso2.carbon.registry.api.RegistryException {
         String filePath = resourcePath + File.separator + "artifacts" + File.separator + "GREG" + File.separator + "xsdAll.gar";
         String schema_path1 = "/_system/governance/trunk/schemas/org/datacontract/schemas/_2004/_07/system/test1.xsd";
         String schema_path2 = "/_system/governance/trunk/schemas/com/microsoft/schemas/_2003/_10/serialization/test2.xsd";
@@ -240,7 +248,8 @@ public class GarFileImportServiceTestClient {
     }
 
     @Test(groups = {"wso2.greg"}, description = "GAR file uploader - HeterogeneousNamespace", priority = 6)
-    private void testAddHeterogeneousNamespaceGarFile() throws FileNotFoundException, org.wso2.carbon.registry.api.RegistryException {
+    public void testAddHeterogeneousNamespaceGarFile()
+            throws FileNotFoundException, org.wso2.carbon.registry.api.RegistryException {
         String filePath = resourcePath + File.separator + "artifacts" + File.separator + "GREG" + File.separator + "Heterogeneous_Namespace.gar";
         String schema_path1 = "/_system/governance/trunk/schemas/org/company/www/Company.xsd";
         String schema_path2 = "/_system/governance/trunk/schemas/org/person/www/Person.xsd";
@@ -278,7 +287,8 @@ public class GarFileImportServiceTestClient {
     }
 
     @Test(groups = {"wso2.greg"}, description = "GAR file uploader - ArtistRegistry", priority = 7)
-    private void testAddArtistRegistryGarFile() throws FileNotFoundException, org.wso2.carbon.registry.api.RegistryException {
+    public void testAddArtistRegistryGarFile()
+            throws FileNotFoundException, org.wso2.carbon.registry.api.RegistryException {
         String filePath = resourcePath + File.separator + "artifacts" + File.separator + "GREG" + File.separator + "artistRegistry.gar";
         String service_path = "/_system/governance/trunk/services/eu/yesso/soamoa/samples/ArtistRegistryService";
         String wsdl_path = "/_system/governance/trunk/wsdls/eu/yesso/soamoa/samples/artistRegistry.wsdl";
@@ -317,7 +327,8 @@ public class GarFileImportServiceTestClient {
 
 
     @Test(groups = {"wso2.greg"}, description = "GAR file uploader - OriginalWSDL", priority = 8)
-    private void testAddOriginalWSDLGarFile() throws FileNotFoundException, org.wso2.carbon.registry.api.RegistryException {
+    public void testAddOriginalWSDLGarFile()
+            throws FileNotFoundException, org.wso2.carbon.registry.api.RegistryException {
         String filePath = resourcePath + File.separator + "artifacts" + File.separator + "GREG" + File.separator + "original-wsdl.gar";
         String service_path1 = "/_system/governance/trunk/services/com/konakart/ws/KKWSEngIfService";
         String service_path2 = "/_system/governance/trunk/services/net/ecubicle/www/YouTubeDownloader";
@@ -359,7 +370,8 @@ public class GarFileImportServiceTestClient {
     }
 
     @Test(groups = {"wso2.greg"}, description = "GAR file uploader - HomogeneousNamespa", priority = 9)
-    private void testAddHomogeneousNamespaceGarFile() throws FileNotFoundException, org.wso2.carbon.registry.api.RegistryException {
+    public void testAddHomogeneousNamespaceGarFile()
+            throws FileNotFoundException, org.wso2.carbon.registry.api.RegistryException {
         String filePath = resourcePath + File.separator + "artifacts" + File.separator + "GREG" + File.separator + "Homogeneous-Namespace.gar";
         String schema_path1 = "/_system/governance/trunk/schemas/org/company/www/Company.xsd";
         String schema_path2 = "/_system/governance/trunk/schemas/org/company/www/Person.xsd";

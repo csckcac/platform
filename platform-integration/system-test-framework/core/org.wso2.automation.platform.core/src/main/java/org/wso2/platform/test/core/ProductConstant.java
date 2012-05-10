@@ -148,7 +148,6 @@ public class ProductConstant {
                 break;
             }
         }
-        log.debug("Product Distribution folder for " + product + ": " + deploymentHome);
         return deploymentHome;
     }
 

@@ -52,7 +52,6 @@ public class JsServiceUplodeTest {
         EnvironmentBuilder builder = new EnvironmentBuilder().ms(userId);
         environment = builder.build();
         SCHEMA_SERVICE_EPR = environment.getMs().getServiceUrl() + "/" + "admin" + "/" + serviceName;
-        log.debug("ServiceURL " + SCHEMA_SERVICE_EPR);
     }
 
     @Test(groups = {"wso2.ms"}, description = "upload Java Script service and invoke it", priority = 1)
@@ -66,7 +65,6 @@ public class JsServiceUplodeTest {
         OMElement resultJarService1 = new AxisServiceClient().
                 sendReceive(createPayLoad(operationName, expectedIntValue, namespaceOfService1),
                             SCHEMA_SERVICE_EPR, operationName);
-        log.debug("Response returned " + resultJarService1);
         assertTrue((resultJarService1.toString().indexOf(expectedIntValue) >= 1));
     }
 
@@ -78,7 +76,6 @@ public class JsServiceUplodeTest {
         OMElement value = fac.createOMElement("param", omNs);
         value.addChild(fac.createOMText(value, expectedValue));
         method.addChild(value);
-        log.debug("Created payload is :" + method);
         return method;
     }
 }

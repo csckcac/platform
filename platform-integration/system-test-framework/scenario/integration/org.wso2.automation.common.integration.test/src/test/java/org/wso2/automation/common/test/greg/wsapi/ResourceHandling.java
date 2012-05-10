@@ -23,7 +23,9 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.ws.client.registry.WSRegistryServiceClient;
 import org.wso2.platform.test.core.ProductConstant;
 import org.testng.annotations.*;
+import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
+import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.gregutils.GregUserIDEvaluator;
 import org.wso2.platform.test.core.utils.gregutils.RegistryProvider;
 
@@ -42,8 +44,17 @@ public class ResourceHandling {
     public void init() throws RegistryException, AxisFault {
         int tenantId = new GregUserIDEvaluator().getTenantID();
         registry = new RegistryProvider().getRegistry(tenantId, ProductConstant.GREG_SERVER_NAME);
-        password = UserListCsvReader.getUserInfo(tenantId).getPassword();
-        userName = UserListCsvReader.getUserInfo(tenantId).getUserName();
+        UserInfo userInfo = UserListCsvReader.getUserInfo(new GregUserIDEvaluator().getTenantID());
+        password = userInfo.getPassword();
+
+        EnvironmentBuilder environmentBuilder = new EnvironmentBuilder();
+
+        if (environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
+            userName = userInfo.getUserName().substring(0, userInfo.getUserName().lastIndexOf('@'));
+        } else {
+            userName = userInfo.getUserName();
+        }
+        
         removeResource();
     }
 

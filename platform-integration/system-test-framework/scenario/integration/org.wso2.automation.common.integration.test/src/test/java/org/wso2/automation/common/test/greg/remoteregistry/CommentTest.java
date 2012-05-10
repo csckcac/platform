@@ -26,6 +26,7 @@ import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.platform.test.core.utils.UserInfo;
 import org.wso2.platform.test.core.utils.UserListCsvReader;
+import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.gregutils.GregRemoteRegistryProvider;
 import org.wso2.platform.test.core.utils.gregutils.GregUserIDEvaluator;
 
@@ -47,8 +48,16 @@ public class CommentTest {
         int tenantId = new GregUserIDEvaluator().getTenantID();
         registry = new GregRemoteRegistryProvider().getRegistry(tenantId);
         //Tenant Details
-        UserInfo tenantDetails = UserListCsvReader.getUserInfo(tenantId);
-        username = tenantDetails.getUserName();
+        UserInfo userInfo = UserListCsvReader.getUserInfo(4);
+
+        EnvironmentBuilder environmentBuilder = new EnvironmentBuilder();
+
+        if (environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
+            username = userInfo.getUserName().substring(0, userInfo.getUserName().lastIndexOf('@'));
+        } else {
+            username = userInfo.getUserName();
+        }
+
         removeResource();
     }
 
@@ -69,7 +78,7 @@ public class CommentTest {
             c1.setText("This is default comment");
             c1.setUser(username);
 
-            registry.addComment(path, c1);
+            registry.addComment(path,new Comment(comment1));
             registry.addComment(path, new Comment(comment1));
             registry.addComment(path, new Comment(comment2));
 
@@ -154,10 +163,10 @@ public class CommentTest {
             }
 
             assertTrue(commentFound, "comment '" + comment1 +
-                    " is not associated with the artifact /d1/r3");
+                                     " is not associated with the artifact /d1/r3");
             Resource commentsResource = registry.get("/d1/r3;comments");
             assertTrue(commentsResource instanceof Collection,
-                    "Comment collection resource should be a directory.");
+                       "Comment collection resource should be a directory.");
             comments = (Comment[]) commentsResource.getContent();
 
             List commentTexts = new ArrayList();
@@ -220,11 +229,11 @@ public class CommentTest {
                 }
             }
             assertTrue(commentFound, "comment '" + comment1 +
-                    " is not associated with the artifact /d11/d12");
+                                     " is not associated with the artifact /d11/d12");
 
             Resource commentsResource = registry.get("/d11/d12;comments");
             assertTrue(commentsResource instanceof Collection,
-                    "Comment collection resource should be a directory.");
+                       "Comment collection resource should be a directory.");
             comments = (Comment[]) commentsResource.getContent();
 
             List commentTexts = new ArrayList();
@@ -282,12 +291,12 @@ public class CommentTest {
                 }
             }
             assertTrue(commentFound, "comment '" + comment1 +
-                    " is not associated with the artifact /");
+                                     " is not associated with the artifact /");
 
 
             Resource commentsResource = registry.get("/;comments");
             assertTrue(commentsResource instanceof Collection,
-                    "Comment collection resource should be a directory.");
+                       "Comment collection resource should be a directory.");
             comments = (Comment[]) commentsResource.getContent();
 
             List commentTexts = new ArrayList();
@@ -337,11 +346,11 @@ public class CommentTest {
             }
 
             assertTrue(commentFound, "comment:" + c1.getText() +
-                    " is not associated with the artifact /c101/c11/r1");
+                                     " is not associated with the artifact /c101/c11/r1");
 
             Resource commentsResource = registry.get("/c101/c11/r1;comments");
             assertTrue(commentsResource instanceof Collection,
-                    "Comment resource should be a directory.");
+                       "Comment resource should be a directory.");
             comments = (Comment[]) commentsResource.getContent();
 
             List commentTexts = new ArrayList();
@@ -351,7 +360,7 @@ public class CommentTest {
             }
 
             assertTrue(commentTexts.contains(c1.getText()),
-                    c1.getText() + " is not associated for resource /c101/c11/r1.");
+                       c1.getText() + " is not associated for resource /c101/c11/r1.");
             registry.editComment(comments[0].getPath(), "This is the edited comment");
             comments = registry.getComments(path);
             Resource resource = registry.get(comments[0].getPath());

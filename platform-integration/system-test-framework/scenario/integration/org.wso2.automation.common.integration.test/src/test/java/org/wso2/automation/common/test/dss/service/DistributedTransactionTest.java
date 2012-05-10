@@ -198,7 +198,10 @@ public class DistributedTransactionTest extends DataServiceTest {
 
     private int getAccountIdFromResponse(OMElement response) {
         Assert.assertNotNull(response, "Response Message is null");
-        log.debug(response);
+        if (log.isDebugEnabled()) {
+            log.debug(response);
+        }
+
         try {
             return Integer.parseInt(((OMElement) ((OMElement) response.getChildrenWithLocalName("Entry").next())
                     .getChildrenWithLocalName("ID").next()).getText());
@@ -451,11 +454,11 @@ public class DistributedTransactionTest extends DataServiceTest {
             return new DataHandler(dbs);
 
         } catch (XMLStreamException e) {
-            log.error("XMLStreamException when Reading Service File" , e);
-            throw new XMLStreamException("XMLStreamException when Reading Service File" , e);
+            log.error("XMLStreamException when Reading Service File", e);
+            throw new XMLStreamException("XMLStreamException when Reading Service File", e);
         } catch (IOException e) {
-            log.error("IOException when Reading Service File" , e);
-            throw new IOException("IOException  when Reading Service File" , e);
+            log.error("IOException when Reading Service File", e);
+            throw new IOException("IOException  when Reading Service File", e);
         }
     }
 

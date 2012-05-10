@@ -50,7 +50,7 @@ public class GRegWSAPITestSuite extends MasterTestSuite {
         suiteVariablesList.add(new SuiteVariables("AddWSDLTest", AddWSDLTest.class));
 
         setServerList(ProductConstant.GREG_SERVER_NAME);
-        superSuite("WSAPITestSuite", suiteVariablesList).run();
+        superSuite("WS-API-TestSuite", suiteVariablesList).run();
     }
 
 

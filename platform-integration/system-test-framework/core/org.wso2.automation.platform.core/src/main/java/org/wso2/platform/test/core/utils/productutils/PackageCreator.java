@@ -41,7 +41,6 @@ public class PackageCreator {
         Assert.assertNotNull(framework.getEnvironmentVariables().getDeploymentFrameworkPath(),"Deployment Framework path not provided");
         try {
             File wd = new File(framework.getEnvironmentVariables().getDeploymentFrameworkPath());
-            log.debug("Working Directory: " + wd);
             process = Runtime.getRuntime().exec("perl deploy.pl", null, wd);
             process.waitFor();
             if (process.exitValue() == 0) {

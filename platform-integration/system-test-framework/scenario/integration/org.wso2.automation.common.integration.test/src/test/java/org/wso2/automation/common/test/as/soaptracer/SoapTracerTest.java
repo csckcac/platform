@@ -75,9 +75,6 @@ public class SoapTracerTest {
         secondUserSoupTrackerAdmin =
                 new AdminServiceTracerAdmin(environmentUser2.getAs().getBackEndUrl(),
                                             environmentUser2.getAs().getSessionCookie());
-
-        log.debug("ServiceURL of service" + AXIS2SERVICE_EPR);
-
     }
 
     @Test(groups = "wso2.as", description = "soapTracer test with single user", priority = 1)
@@ -99,7 +96,6 @@ public class SoapTracerTest {
 
         OMElement result = new AxisServiceClient().sendReceive(createPayLoad(operation, expectedValue),
                                                                AXIS2SERVICE_EPR, operation);
-        log.debug("Response for request " + result);
         assertTrue((result.toString().indexOf(expectedValue) >= 1));
 
         MessagePayload messagePayload;
@@ -112,8 +108,10 @@ public class SoapTracerTest {
         assertTrue((messagePayload.getResponse().indexOf(expectedValue) >= 1));
 
         log.info("SOAP Tracer message assertion passed");
-        log.debug("Request Payload" + messagePayload.getRequest());
-        log.debug("Response Payload" + messagePayload.getResponse());
+        if (log.isDebugEnabled()) {
+            log.debug("Request Payload" + messagePayload.getRequest());
+            log.debug("Response Payload" + messagePayload.getResponse());
+        }
 
         firstTenantSoapTracerServiceInfo =
                 firstUserSoupTrackerAdmin.setMonitoring(SOAP_TRACKER_OFF_FLAG);
@@ -151,7 +149,6 @@ public class SoapTracerTest {
 
             OMElement result = new AxisServiceClient().sendReceive(createPayLoad(operation, expectedValue),
                                                                    AXIS2SERVICE_EPR, operation);
-            log.debug("Response for request " + result);
             assertTrue((result.toString().indexOf(expectedValue) >= 1));
 
             MessagePayload messagePayload;
@@ -165,8 +162,10 @@ public class SoapTracerTest {
             assertTrue((messagePayload.getRequest().indexOf(expectedValue) >= 1));
             assertTrue((messagePayload.getResponse().indexOf(expectedValue) >= 1));
             log.info("Soap traser message assertion passed");
-            log.debug("Request Payload" + messagePayload.getRequest());
-            log.debug("Response Payload" + messagePayload.getResponse());
+            if (log.isDebugEnabled()) {
+                log.debug("Request Payload" + messagePayload.getRequest());
+                log.debug("Response Payload" + messagePayload.getResponse());
+            }
 
             messagePayload = secondTenantSoapTracerServiceInfo.getLastMessage();
 
@@ -176,7 +175,6 @@ public class SoapTracerTest {
 
             //if last message exists then check message body for result value.
             if (secondTenantSoapTracerServiceInfo.getLastMessage() != null) {
-                log.debug("secondTenantSoapTracerServiceInfo is not null");
                 assertFalse((messagePayload.getRequest().indexOf(expectedValue) >= 1));
                 assertFalse((messagePayload.getResponse().indexOf(expectedValue) >= 1));
                 log.info("Messages do not contain expected value, hence test passed");
@@ -207,7 +205,6 @@ public class SoapTracerTest {
         OMElement value = fac.createOMElement("x", omNs);
         value.addChild(fac.createOMText(value, expectedValue));
         method.addChild(value);
-        log.debug("Created payload is :" + method);
         return method;
     }
 

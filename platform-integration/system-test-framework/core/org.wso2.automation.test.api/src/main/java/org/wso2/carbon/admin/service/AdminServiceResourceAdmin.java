@@ -49,10 +49,7 @@ public class AdminServiceResourceAdmin {
 
     public AdminServiceResourceAdmin(String backEndUrl) throws AxisFault {
         this.endPoint = backEndUrl + serviceName;
-        log.debug("Endpoint :" + endPoint);
-
         resourceAdminServiceStub = new ResourceAdminServiceStub(endPoint);
-
     }
 
     public boolean addResource(String sessionCookie, String destinationPath, String mediaType,
@@ -60,8 +57,10 @@ public class AdminServiceResourceAdmin {
             throws ResourceAdminServiceExceptionException, RemoteException {
 
         AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
-        log.debug("Destination Path :" + destinationPath);
-        log.debug("Media Type :" + mediaType);
+        if (log.isDebugEnabled()) {
+            log.debug("Destination Path :" + destinationPath);
+            log.debug("Media Type :" + mediaType);
+        }
 
         return resourceAdminServiceStub.addResource(destinationPath, mediaType, description, dh, null);
 
@@ -71,7 +70,6 @@ public class AdminServiceResourceAdmin {
             throws ResourceAdminServiceExceptionException, RemoteException {
         ResourceData[] rs;
         AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
-        log.debug("Destination Path :" + destinationPath);
 
         rs = resourceAdminServiceStub.getResourceData(new String[]{destinationPath});
 
@@ -104,9 +102,7 @@ public class AdminServiceResourceAdmin {
             throws ResourceAdminServiceExceptionException, RemoteException {
 
         AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
-        log.debug("Destination Path :" + destinationPath);
         return resourceAdminServiceStub.delete(destinationPath);
-
     }
 
     public void addWSDL(String sessionCookie, String description, DataHandler dh) {
@@ -131,7 +127,6 @@ public class AdminServiceResourceAdmin {
                         String fetchURL) {
 
         AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
-        log.debug("fetchUrl :" + fetchURL);
         try {
             Assert.assertTrue("Importing WSDL from URL failed", resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_WSDL, description, fetchURL, null));
             log.info("WSDL imported");
@@ -149,7 +144,6 @@ public class AdminServiceResourceAdmin {
         String fileName;
         AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
-        log.debug("File Name: " + fileName);
         try {
             Assert.assertTrue("Schema Adding failed", resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_SCHEMA, description, dh, null));
             log.info("Schema Added");
@@ -168,7 +162,6 @@ public class AdminServiceResourceAdmin {
                           String fetchURL) {
 
         AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
-        log.debug("fetchURL :" + fetchURL);
         try {
             Assert.assertTrue("Importing Schema from URL failed", resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_SCHEMA, description, fetchURL, null));
             log.info("Schema Imported");
@@ -186,7 +179,6 @@ public class AdminServiceResourceAdmin {
         String fileName;
         AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
-        log.debug("file name :" + fileName);
         try {
             Assert.assertTrue("Adding Policy failed", resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_POLICY, description, dh, null));
             log.info("Policy Added");
@@ -204,7 +196,6 @@ public class AdminServiceResourceAdmin {
                           String fetchURL) {
 
         AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
-        log.debug("fetchURL :" + fetchURL);
         try {
             Assert.assertTrue("Importing Policy failed", resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_POLICY, description, fetchURL, null));
             log.info("Policy imported");
@@ -223,7 +214,6 @@ public class AdminServiceResourceAdmin {
         String fileName;
         AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
-        log.debug("file name :" + fileName);
         try {
             Assert.assertTrue("uploading vnd.wso2.governance-archive failed", resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_GOVERNANCE_ARCHIVE, description, dh, null));
             log.info("Artifact Uploaded");
@@ -240,8 +230,6 @@ public class AdminServiceResourceAdmin {
     public void addCollection(String sessionCookie, String parentPath, String collectionName,
                               String mediaType, String description) {
         AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
-        log.debug("collectionName :" + collectionName);
-        log.debug("parentPath :" + parentPath);
         try {
             resourceAdminServiceStub.addCollection(parentPath, collectionName, mediaType, description);
             log.info("Collection Added");
@@ -260,8 +248,6 @@ public class AdminServiceResourceAdmin {
                              String targetPath)
             throws RemoteException, ResourceAdminServiceExceptionException {
         AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
-        log.debug("symbolink name " + name);
-
         try {
             resourceAdminServiceStub.addSymbolicLink(parentPath, name, targetPath);
             log.info("Symbolink added :");
@@ -284,8 +270,6 @@ public class AdminServiceResourceAdmin {
             throws RemoteException, ResourceAdminServiceExceptionException {
 
         AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
-        log.debug("text resource name : " + fileName);
-
         try {
             resourceAdminServiceStub.addTextResource(parentPath, fileName, mediaType, description, content);
             log.info("Text resource added :");
@@ -349,7 +333,7 @@ public class AdminServiceResourceAdmin {
         AuthenticateStub.authenticateStub(sessionCookie, resourceAdminServiceStub);
         try {
             return resourceAdminServiceStub.getContentBean(resourcePath);
-            
+
 
         } catch (RemoteException e) {
             handleException("Fail to get resource property", e);

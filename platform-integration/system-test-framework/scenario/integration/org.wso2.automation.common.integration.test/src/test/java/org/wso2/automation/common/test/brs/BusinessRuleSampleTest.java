@@ -52,7 +52,6 @@ public class BusinessRuleSampleTest {
         builder = new EnvironmentBuilder().brs(userId);
         environment = builder.build();
         BRS_SERVICE_EPR = environment.getBrs().getServiceUrl() + "/" + greetingService;
-        log.debug("ServiceURL of greetingService" + BRS_SERVICE_EPR);
     }
 
     @Test(groups = {"wso2.brs"}, description = "upload AAR rule service and invoke it", priority = 1)
@@ -67,7 +66,6 @@ public class BusinessRuleSampleTest {
         OMElement resultJarService1 =
                 new AxisServiceClient().sendReceive(createPayLoad(operationName, expectedIntValue,
                                                                   namespaceOfService1), BRS_SERVICE_EPR, operationName);
-        log.debug("Response returned " + resultJarService1);
         assertTrue((resultJarService1.toString().indexOf(expectedIntValue) >= 1));
     }
 
@@ -79,7 +77,6 @@ public class BusinessRuleSampleTest {
         OMElement value = fac.createOMElement("s", omNs);
         value.addChild(fac.createOMText(value, expectedValue));
         method.addChild(value);
-        log.debug("Created payload is :" + method);
         return method;
     }
 }

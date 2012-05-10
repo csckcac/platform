@@ -112,7 +112,9 @@ public class EditFaultyDataServiceTest extends DataServiceTest {
                     property.setText(dssUtil.getDatabasePassword());
                 }
             }
-            log.debug(dbsFile);
+            if (log.isDebugEnabled()) {
+                log.debug(dbsFile);
+            }
             newServiceContent = dbsFile.toString();
         } catch (XMLStreamException e) {
             log.error("XMLStreamException while handling data service content ", e);

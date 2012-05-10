@@ -66,7 +66,7 @@ public class ResourceHandlingServiceTestClient {
     }
 
     @Test(groups = {"wso2.greg"}, description = "test multi tenancy scenario add resource ", priority = 1)
-    private void testAddResource() throws RegistryException {
+    public void testAddResource() throws RegistryException {
         String path = "/d1/d2/d3/d4/r1";
 
         try {
@@ -223,8 +223,7 @@ public class ResourceHandlingServiceTestClient {
         try {
             comments_diffDomainUser = registry_diffDomainUser1.getComments(path);
             // assert array lenght zero
-            assertEquals(comments_diffDomainUser.length, 0, "Comments Array lenght 0 :");
-            comments_diffDomainUser[0].getText();
+            assertEquals(comments_diffDomainUser.length, 0, "Comments Array length 0 :");
         } catch (Exception e) {
             log.info("verifyComments by diffDomainUser Exception thrown:" + e.getMessage());
             //registry null exception is caught to assert resource does not exists:
@@ -247,13 +246,13 @@ public class ResourceHandlingServiceTestClient {
             TaggedResourcePath[] tagPath_admin1 = registry.getResourcePathsWithTag(tag1);
             TaggedResourcePath[] tagPath_admin2 = registry.getResourcePathsWithTag(tag2);
             //assert admin user :admin123@wso2manualQA0006.org
-            assertEquals("Tag path 1", tagPath_admin1[0].getResourcePath(), path);
-            assertEquals("Tag path 1", tagPath_admin2[0].getResourcePath(), path);
+            assertEquals(tagPath_admin1[0].getResourcePath(), path);
+            assertEquals(tagPath_admin2[0].getResourcePath(), path);
             // assrt test user :testuser1@wso2manualQA0006.org
             TaggedResourcePath[] tagPath_testuser1 = registry_testUser.getResourcePathsWithTag(tag1);
             TaggedResourcePath[] tagPath_testUser2 = registry_testUser.getResourcePathsWithTag(tag2);
-            assertEquals("Tag path 1", tagPath_testuser1[0].getResourcePath(), path);
-            assertEquals("Tag path 1", tagPath_testUser2[0].getResourcePath(), path);
+            assertEquals(tagPath_testuser1[0].getResourcePath(), path);
+            assertEquals(tagPath_testUser2[0].getResourcePath(), path);
         } catch (RegistryException e) {
             log.error("verifyTag RegistryException thrown:" + e.getMessage());
             throw new RegistryException("verifyTag RegistryException thrown:" + e.getMessage());

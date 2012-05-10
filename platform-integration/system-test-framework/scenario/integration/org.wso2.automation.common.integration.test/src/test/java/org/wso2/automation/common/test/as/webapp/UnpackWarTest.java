@@ -77,7 +77,7 @@ public class UnpackWarTest {
             }
             in.close();
         } else {
-            log.debug("webapp connection returned HTTP " + code + " error");
+            log.info("webapp connection returned HTTP " + code + " error");
         }
     }
 }

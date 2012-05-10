@@ -19,6 +19,7 @@ package org.wso2.automation.common.test.greg.remoteregistry;
 
 import org.testng.annotations.AfterSuite;
 import org.wso2.platform.test.core.ProductConstant;
+import org.wso2.platform.test.core.utils.environmentutils.EnvironmentBuilder;
 import org.wso2.platform.test.core.utils.suiteutills.MasterTestSuite;
 import org.wso2.platform.test.core.utils.suiteutills.SuiteVariables;
 
@@ -26,28 +27,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class GRegRemoteRegistryAPITestSuite extends MasterTestSuite{
+public class GRegRemoteRegistryAPITestSuite extends MasterTestSuite {
 
     @AfterSuite
     public void suiteRunner() {
         List<SuiteVariables> suiteVariablesList = new ArrayList<SuiteVariables>();
-        suiteVariablesList.add(new SuiteVariables("CommentTest", CommentTest.class));
-        suiteVariablesList.add(new SuiteVariables("ContinuousOperations", ContinuousOperations.class));
-        suiteVariablesList.add(new SuiteVariables("PropertyTest", PropertiesTest.class));
+
+
+        EnvironmentBuilder environmentBuilder = new EnvironmentBuilder();
+
         suiteVariablesList.add(new SuiteVariables("QueryTest", QueryTest.class));
-        suiteVariablesList.add(new SuiteVariables("RatingTest", RatingTest.class));
-        suiteVariablesList.add(new SuiteVariables("RenameTest", RenameTest.class));
-        suiteVariablesList.add(new SuiteVariables("ResourceHandlingTest", ResourceHandling.class));
-        suiteVariablesList.add(new SuiteVariables("TestAssociationTest", TestAssociation.class));
-        suiteVariablesList.add(new SuiteVariables("TestContentStream", TestContentStream.class));
-        suiteVariablesList.add(new SuiteVariables("TestCopy", TestCopy.class));
-        suiteVariablesList.add(new SuiteVariables("TestMove", TestMove.class));
-        suiteVariablesList.add(new SuiteVariables("TestPaths", TestPaths.class));
-        suiteVariablesList.add(new SuiteVariables("TestResources", TestResources.class));
         suiteVariablesList.add(new SuiteVariables("TestTagging", TestTagging.class));
 
+        if (!environmentBuilder.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos()) {
+            suiteVariablesList.add(new SuiteVariables("CommentTest", CommentTest.class));
+            suiteVariablesList.add(new SuiteVariables("ContinuousOperations", ContinuousOperations.class));
+            suiteVariablesList.add(new SuiteVariables("PropertyTest", PropertiesTest.class));
+            suiteVariablesList.add(new SuiteVariables("RatingTest", RatingTest.class));
+            suiteVariablesList.add(new SuiteVariables("RenameTest", RenameTest.class));
+            suiteVariablesList.add(new SuiteVariables("ResourceHandlingTest", ResourceHandling.class));
+            suiteVariablesList.add(new SuiteVariables("TestAssociationTest", TestAssociation.class));
+            suiteVariablesList.add(new SuiteVariables("TestContentStream", TestContentStream.class));
+            suiteVariablesList.add(new SuiteVariables("TestCopy", TestCopy.class));
+            suiteVariablesList.add(new SuiteVariables("TestMove", TestMove.class));
+            suiteVariablesList.add(new SuiteVariables("TestPaths", TestPaths.class));
+            suiteVariablesList.add(new SuiteVariables("TestResources", TestResources.class));
+        }
+
         setServerList(ProductConstant.GREG_SERVER_NAME);
-        superSuite("RemoteRegistryTestSuite", suiteVariablesList).run();
+        superSuite("RemoteRegistryAPITestSuite", suiteVariablesList).run();
     }
 
     public static void main(String[] args) {

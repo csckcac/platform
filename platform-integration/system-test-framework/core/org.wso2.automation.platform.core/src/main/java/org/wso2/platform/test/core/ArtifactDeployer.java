@@ -60,7 +60,6 @@ public class ArtifactDeployer {
 
         String sessionCookie = environmentVariables.getSessionCookie();
         String backendURL = environmentVariables.getBackEndUrl();
-        log.debug("Server backend URL " + backendURL);
 
         if (artifact.getDependencyArtifactList().size() == 0) {
             log.info("No dependencies found for the artifact");

@@ -59,10 +59,7 @@ public class CarFileMultitenancyTest {
         ManageEnvironment environment = builder.build();
         backEndUrl = environment.getAs().getBackEndUrl();
         AXIS2SERVICE_EPR = environment.getAs().getServiceUrl() + "/" + serviceName;
-        log.debug("backendURL" + backEndUrl);
-        log.debug("ServiceURL" + AXIS2SERVICE_EPR);
         stratosStatus = builder.getFrameworkSettings().getEnvironmentSettings().is_runningOnStratos();
-        log.debug("Stratos Status" + stratosStatus);
     }
 
     @Test(groups = {"wso2.as"}, description = "Deploy simeple axis2 service using CApp", priority = 1)
@@ -75,7 +72,6 @@ public class CarFileMultitenancyTest {
         Thread.sleep(deploymentDelay);//force wait - Even though the WSDL is available it take
         OMElement result =
                 new AxisServiceClient().sendReceive(createPayLoad(), AXIS2SERVICE_EPR, operationName);
-        log.debug("Response returned " + result);
         assertTrue((result.toString().indexOf(expectedIntValue) >= 1));
     }
 
@@ -95,7 +91,6 @@ public class CarFileMultitenancyTest {
     }
 
     private static OMElement createPayLoad() {
-        log.debug("Creating payload");
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMNamespace omNs = fac.createOMNamespace("http://test.com", "test");
         OMElement method = fac.createOMElement("add", omNs);
@@ -105,7 +100,6 @@ public class CarFileMultitenancyTest {
         valueOfb.addChild(fac.createOMText(valueOfb, "220"));
         method.addChild(valueOfa);
         method.addChild(valueOfb);
-        log.debug("Payload is :" + method);
 
         return method;
     }

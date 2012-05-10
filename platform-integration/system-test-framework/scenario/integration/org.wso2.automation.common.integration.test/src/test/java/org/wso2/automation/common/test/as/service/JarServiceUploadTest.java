@@ -56,8 +56,6 @@ public class JarServiceUploadTest {
         ManageEnvironment environment = builder.build();
         JAR_SERVICE_EPR1 = environment.getAs().getServiceUrl() + "/" + jarServiceName1;
         JAR_SERVICE_EPR2 = environment.getAs().getServiceUrl() + "/" + jarServiceName2;
-        log.debug("ServiceURL of service1" + JAR_SERVICE_EPR1);
-        log.debug("ServiceURL of service2" + JAR_SERVICE_EPR2);
     }
 
     @Test(groups = {"wso2.as"}, description =
@@ -78,13 +76,11 @@ public class JarServiceUploadTest {
         OMElement resultJarService1 = new AxisServiceClient().sendReceive
                 (createPayLoad(operationName, expectedIntValue, namespaceOfService1),
                  JAR_SERVICE_EPR1, operationName);
-        log.debug("Response returned " + resultJarService1);
         assertTrue((resultJarService1.toString().indexOf(expectedIntValue) >= 1));
 
         OMElement resultJarService2 = new AxisServiceClient().sendReceive
                 (createPayLoad(operationName, expectedIntValue, namespaceOfService2),
                  JAR_SERVICE_EPR2, operationName);
-        log.debug("Response returned " + resultJarService2);
         assertTrue((resultJarService2.toString().indexOf(expectedIntValue) >= 1));
     }
 
@@ -96,7 +92,6 @@ public class JarServiceUploadTest {
         OMElement value = fac.createOMElement("s", omNs);
         value.addChild(fac.createOMText(value, expectedValue));
         method.addChild(value);
-        log.debug("Created payload is :" + method);
         return method;
     }
 }

@@ -140,7 +140,9 @@ public class BatchRequestTest extends DataServiceTest {
             payload.addChild(batchRequest);
 
         }
-        log.debug(payload);
+        if (log.isDebugEnabled()) {
+            log.debug(payload);
+        }
         new AxisServiceClient().sendRobust(payload, serviceEndPoint, "addEmployee_batch_req");
 
 
@@ -159,7 +161,9 @@ public class BatchRequestTest extends DataServiceTest {
             payload.addChild(batchRequest);
 
         }
-        log.debug(payload);
+        if (log.isDebugEnabled()) {
+            log.debug(payload);
+        }
         new AxisServiceClient().sendRobust(payload, serviceEndPoint, "deleteEmployee_batch_req");
 
 

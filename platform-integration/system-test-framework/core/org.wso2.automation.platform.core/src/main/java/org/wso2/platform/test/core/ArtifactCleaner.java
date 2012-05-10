@@ -51,7 +51,6 @@ public class ArtifactCleaner {
         }
         String sessionCookie = environmentVariables.getSessionCookie();
         String backendURL = environmentVariables.getBackEndUrl();
-        log.debug("Server backend URL " + backendURL);
 
         if (ArtifactDependencyList.size() == 0) {
             log.info("No dependencies found for the artifact");

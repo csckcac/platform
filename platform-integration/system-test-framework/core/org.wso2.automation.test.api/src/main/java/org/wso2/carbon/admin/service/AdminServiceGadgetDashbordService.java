@@ -31,7 +31,9 @@ public class AdminServiceGadgetDashbordService {
             String[] defaultGadgetUrlSet = dashboardServiceStub.getDefaultGadgetUrlSet(userID);
             if (defaultGadgetUrlSet != null) {
                 for (String gadget : defaultGadgetUrlSet) {
-                    log.debug("DefaultGadget: " + gadget + " -available");
+                    if (log.isDebugEnabled()) {
+                        log.debug("DefaultGadget: " + gadget + " -available");
+                    }
                 }
             }
             log.info("Successfully executed getDefaultGadgetUrlSet test");
@@ -74,7 +76,8 @@ public class AdminServiceGadgetDashbordService {
 
 
     // Retrieves the stored layout
-    public void getGadgetLayout(DashboardServiceStub dashboardServiceStub, String userId, String tabId,
+    public void getGadgetLayout(DashboardServiceStub dashboardServiceStub, String userId,
+                                String tabId,
                                 String dashboardName) {
         try {
             String gadgetLayout = dashboardServiceStub.getGadgetLayout(userId, tabId, dashboardName);
@@ -129,7 +132,8 @@ public class AdminServiceGadgetDashbordService {
     }
 
     // Set a given preference value for a Gadget
-    public void setGadgetPrefs(DashboardServiceStub dashboardServiceStub, String userId, String gadgetId,
+    public void setGadgetPrefs(DashboardServiceStub dashboardServiceStub, String userId,
+                               String gadgetId,
                                String prefId, String value, String dashboardName) {
         try {
             boolean setGadgetPrefsStatus = dashboardServiceStub.setGadgetPrefs(userId, gadgetId, prefId, value, dashboardName);
@@ -147,7 +151,8 @@ public class AdminServiceGadgetDashbordService {
     }
 
     // Retrieves a given preference value for a Gadget
-    public void getGadgetPrefs(DashboardServiceStub dashboardServiceStub, String userId, String gadgetId,
+    public void getGadgetPrefs(DashboardServiceStub dashboardServiceStub, String userId,
+                               String gadgetId,
                                String prefId, String dashboardName) {
         try {
             String gadgetPerfs = dashboardServiceStub.getGadgetPrefs(userId, gadgetId, prefId, dashboardName);
@@ -165,14 +170,17 @@ public class AdminServiceGadgetDashbordService {
     }
 
     // Get gadget urls to layout
-    public void getGadgetUrlsToLayout(DashboardServiceStub dashboardServiceStub, String userID, String tabID,
+    public void getGadgetUrlsToLayout(DashboardServiceStub dashboardServiceStub, String userID,
+                                      String tabID,
                                       String dashboardName, String backendServerURL) {
         try {
             String[] gadgetUrlsToLayout = dashboardServiceStub.getGadgetUrlsToLayout(
                     userID, tabID, dashboardName, backendServerURL);
             if (gadgetUrlsToLayout != null) {
                 for (String gadget : gadgetUrlsToLayout) {
-                    log.debug("gadgetUrl: " + gadget + " -available to layout");
+                    if (log.isDebugEnabled()) {
+                        log.debug("gadgetUrl: " + gadget + " -available to layout");
+                    }
                 }
             }
             log.info("Successfully executed getGadgetUrlsToLayout test");
@@ -197,7 +205,8 @@ public class AdminServiceGadgetDashbordService {
     }
 
     // Get title of the given tab
-    public String getTabTitle(DashboardServiceStub dashboardServiceStub, String userId, String tabId,
+    public String getTabTitle(DashboardServiceStub dashboardServiceStub, String userId,
+                              String tabId,
                               String dashboardName, String addedTabName) {
         String tabTitle = null;
         try {
@@ -250,7 +259,8 @@ public class AdminServiceGadgetDashbordService {
     }
 
     // Add gadget to user
-    public void addGadgetToUser(DashboardServiceStub dashboardServiceStub, String userID, String tabID, String url,
+    public void addGadgetToUser(DashboardServiceStub dashboardServiceStub, String userID,
+                                String tabID, String url,
                                 String dashboardName, String gadgetGroup) {
         try {
             boolean addGadgetToUserStatus = dashboardServiceStub.addGadgetToUser(userID, tabID, url, dashboardName, gadgetGroup);

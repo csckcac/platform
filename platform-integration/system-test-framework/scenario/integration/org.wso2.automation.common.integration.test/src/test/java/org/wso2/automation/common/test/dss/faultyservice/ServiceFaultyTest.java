@@ -108,10 +108,12 @@ public class ServiceFaultyTest extends DataServiceTest {
                     property.setText("password");
                 }
             }
-            log.debug(dbsFile);
+            if (log.isDebugEnabled()) {
+                log.debug(dbsFile);
+            }
             newServiceContent = dbsFile.toString();
         } catch (XMLStreamException e) {
-            log.error("XMLStreamException while handling data service content " , e);
+            log.error("XMLStreamException while handling data service content ", e);
             throw new XMLStreamException("XMLStreamException while handling data service content ", e);
         }
         Assert.assertNotNull("Could not edited service content", newServiceContent);

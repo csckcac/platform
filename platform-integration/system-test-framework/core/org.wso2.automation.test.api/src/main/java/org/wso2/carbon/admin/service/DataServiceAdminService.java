@@ -36,9 +36,7 @@ public class DataServiceAdminService {
 
     public DataServiceAdminService(String backEndUrl) throws AxisFault {
         this.endPoint = backEndUrl + serviceName;
-        log.debug("Endpoint : " + endPoint);
         dataServiceAdminStub = new DataServiceAdminStub(endPoint);
-
     }
 
     public String[] getCarbonDataSources(String sessionCookie) throws RemoteException {
@@ -66,7 +64,6 @@ public class DataServiceAdminService {
         String content;
 
         content = dataServiceAdminStub.getDataServiceContentAsString(serviceName);
-        log.debug(content);
         return content;
     }
 

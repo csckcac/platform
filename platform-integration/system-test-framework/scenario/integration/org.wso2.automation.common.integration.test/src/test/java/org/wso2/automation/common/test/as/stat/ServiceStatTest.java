@@ -87,30 +87,34 @@ public class ServiceStatTest {
         for (int i = 0; i < numberOfRequests; i++) {
             OMElement result = new AxisServiceClient().sendReceive(createPayLoad(operation, expectedValue),
                                                                    AXIS2SERVICE_EPR, operation);
-            log.debug("Response for request " + i + " " + result);
             assertTrue((result.toString().indexOf(expectedValue) >= 1));
         }
         //get system stats again after 100 service runs
         ServiceStatistics serviceStatisticsAfterExecution =
                 adminServiceStatistics.getServiceStatistics(serviceName);
 
-
-        log.debug("Request count after execution: " + serviceStatisticsAfterExecution.getTotalRequestCount());
-        log.debug("Request count before execution: " + serviceStatisticsBeforeExecution.getTotalRequestCount());
+        if (log.isDebugEnabled()) {
+            log.debug("Request count after execution: " + serviceStatisticsAfterExecution.getTotalRequestCount());
+            log.debug("Request count before execution: " + serviceStatisticsBeforeExecution.getTotalRequestCount());
+        }
         assertTrue((getStatDifference(serviceStatisticsAfterExecution.getTotalRequestCount(),
                                       serviceStatisticsBeforeExecution.getTotalRequestCount())
                     < numberOfRequests), "Expected request count not available");
         log.info("Request count verification passed");
 
-        log.debug("Response count after execution: " + serviceStatisticsAfterExecution.getTotalResponseCount());
-        log.debug("Response count before execution: " + serviceStatisticsBeforeExecution.getTotalResponseCount());
+        if (log.isDebugEnabled()) {
+            log.debug("Response count after execution: " + serviceStatisticsAfterExecution.getTotalResponseCount());
+            log.debug("Response count before execution: " + serviceStatisticsBeforeExecution.getTotalResponseCount());
+        }
         assertTrue((getStatDifference(serviceStatisticsAfterExecution.getTotalResponseCount(),
                                       serviceStatisticsBeforeExecution.getTotalResponseCount())
                     < numberOfRequests), "Expected Response count not available");
         log.info("Response count verification passed");
 
-        log.debug("Fault count after execution" + serviceStatisticsAfterExecution.getTotalFaultCount());
-        log.debug("Fault count after execution " + serviceStatisticsBeforeExecution.getTotalFaultCount());
+        if (log.isDebugEnabled()) {
+            log.debug("Fault count after execution" + serviceStatisticsAfterExecution.getTotalFaultCount());
+            log.debug("Fault count after execution " + serviceStatisticsBeforeExecution.getTotalFaultCount());
+        }
         assertTrue((getStatDifference(serviceStatisticsAfterExecution.getTotalFaultCount(),
                                       serviceStatisticsBeforeExecution.getTotalFaultCount())
                     < numberOfRequests), "Expected False count not available ");
@@ -125,7 +129,6 @@ public class ServiceStatTest {
         OMElement value = fac.createOMElement("x", omNs);
         value.addChild(fac.createOMText(value, expectedValue));
         method.addChild(value);
-        log.debug("Created payload is :" + method);
         return method;
     }
 

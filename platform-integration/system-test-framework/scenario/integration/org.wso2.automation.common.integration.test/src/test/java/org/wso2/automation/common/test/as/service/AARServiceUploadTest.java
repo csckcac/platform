@@ -73,7 +73,6 @@ public class AARServiceUploadTest {
         Thread.sleep(deploymentDelay);//force wait till service deployment
         OMElement result = new AxisServiceClient().sendReceive(createPayLoad(operation, expectedValue),
                                                                AXIS2SERVICE_EPR, operation);
-        log.debug("Response returned " + result);
         assertTrue((result.toString().indexOf(expectedValue) >= 1));
     }
 
@@ -89,7 +88,6 @@ public class AARServiceUploadTest {
             OMElement response =
                     new AxisServiceClient().sendReceive(createPayLoad(operation, expectedValue),
                                                         AXIS2SERVICE_EPR, operation);
-            log.debug("Response returned " + response);
             assertTrue((response.toString().indexOf(expectedValue) >= 1));
         }
     }
@@ -101,7 +99,6 @@ public class AARServiceUploadTest {
         OMElement value = fac.createOMElement("x", omNs);
         value.addChild(fac.createOMText(value, expectedValue));
         method.addChild(value);
-        log.debug("Created payload is :" + method);
         return method;
     }
 }

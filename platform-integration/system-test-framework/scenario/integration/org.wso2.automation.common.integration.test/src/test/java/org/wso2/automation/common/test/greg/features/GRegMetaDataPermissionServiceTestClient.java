@@ -50,7 +50,7 @@ public class GRegMetaDataPermissionServiceTestClient {
 
     @BeforeClass(alwaysRun = true)
     public void init() throws RemoteException, LoginAuthenticationExceptionException {
-        EnvironmentBuilder builder = new EnvironmentBuilder().greg(0);
+        EnvironmentBuilder builder = new EnvironmentBuilder().greg(3);
         gregServer = builder.build().getGreg();
         sessionCookie = gregServer.getSessionCookie();
         gregBackEndUrl = gregServer.getBackEndUrl();
@@ -78,8 +78,8 @@ public class GRegMetaDataPermissionServiceTestClient {
                    LoginAuthenticationExceptionException, LogoutAuthenticationExceptionException {
 
         userPassword = "welcome";
-        String permission1[] = {"/permission/admin/login",
-                                "/permission/admin/manage/resources/govern/metadata"};
+        String permission1[] = {"/permission/admin/login"};
+//                                "/permission/admin/manage/resources/govern/metadata"};
         String permission2[] = {"/permission/admin/login",
                                 "/permission/admin/manage/resources"};
         String sessionCookieUser;
@@ -87,7 +87,7 @@ public class GRegMetaDataPermissionServiceTestClient {
         String resourceName = "echo.wsdl";
         String fetchUrl = "http://people.wso2.com/~evanthika/wsdls/echo.wsdl";
         addRolewithUser(permission1);
-        sessionCookieUser = userAuthenticationStub.login(userName, userPassword, gregHostName);
+        sessionCookieUser = new AdminServiceAuthentication(gregBackEndUrl).login(userName, userPassword, gregHostName);
         log.info("Newly Created User Loged in :" + userName);
 
 
@@ -102,7 +102,7 @@ public class GRegMetaDataPermissionServiceTestClient {
                                                                      " Exception assertion Failed :");
             log.info("greg_login_user does not have permission to add a text resource :");
         }
-        assertTrue(status, "Only Login user permission has uploaded a text resource ? :");
+        assertTrue(status, "Only user with write permission can put text resource");
         userAuthenticationStub.logOut();
         deleteRoleAndUsers(roleName, userName);
         addRolewithUser(permission2);

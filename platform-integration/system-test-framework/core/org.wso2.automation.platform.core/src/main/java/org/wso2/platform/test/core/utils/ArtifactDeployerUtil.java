@@ -147,7 +147,6 @@ public class ArtifactDeployerUtil {
                                Artifact artifact) throws Exception {
 
         String serviceGroupName = getJarServiceGroup(artifact.getArtifactName());
-        log.debug("Jar Service Group name is " + serviceGroupName);
         AdminServiceJARServiceUploader jarServiceUploader =
                 new AdminServiceJARServiceUploader(backEndUrl);
         List<DataHandler> dhJarList = new ArrayList<DataHandler>();
@@ -287,7 +286,6 @@ public class ArtifactDeployerUtil {
         if (!artifactAssociationList.isEmpty()) {
             assert artifactAssociationList.get(0).getAssociationName().equals("location");
             location = artifactAssociationList.get(0).getAssociationValue();
-            log.debug("Spring artifact location " + location);
             return location;
         } else {
             throw new Exception("Spring service location not found in scenario config");
@@ -300,7 +298,6 @@ public class ArtifactDeployerUtil {
         if (!artifactAssociationList.isEmpty()) {
             assert artifactAssociationList.get(0).getAssociationName().equals("location");
             location = artifactAssociationList.get(0).getAssociationValue();
-            log.debug("Spring artifact location " + location);
             return location;
         } else {
             throw new Exception("Spring service location not found in scenario config");
@@ -312,7 +309,6 @@ public class ArtifactDeployerUtil {
         String contextXML;
         if (!artifactDependencyList.isEmpty()) {
             contextXML = artifactDependencyList.get(0).getDepArtifactName();
-            log.debug("Context XML name " + contextXML);
             return contextXML;
         } else {
             throw new Exception("Context XML name not found in test scenario config");
@@ -361,16 +357,16 @@ public class ArtifactDeployerUtil {
         for (String aConfigDir : configDir) {
            copyExtenders(scenarioConfigDir, aConfigDir, productName);
             copyClassesDir(scenarioConfigDir, aConfigDir, productName);
-           // copyConfigurationDir(scenarioConfigDir, aConfigDir, productName);
+           copyConfigurationDir(scenarioConfigDir, aConfigDir, productName);
             deployProxyServices(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
-          //  deployEndPoints(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
-        //    deploySequences(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
-         //   deployLocalEntry(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
-         //   deployEventSource(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
-         //   deployPriorityExecutors(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
-          //  deployMessageStore(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
-          //  deployMessageProcessor(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
-          //  deployTaskSheduler(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
+            deployEndPoints(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
+            deploySequences(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
+            deployLocalEntry(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
+            deployEventSource(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
+            deployPriorityExecutors(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
+            deployMessageStore(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
+            deployMessageProcessor(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
+            deployTaskScheduler(sessionCookie, backendURL, scenarioConfigDir, dirTraversar, aConfigDir);
         }
         updateSynapseConfig(sessionCookie, backendURL, scenarioConfigDir);//update synapse xml
     }
@@ -582,7 +578,7 @@ public class ArtifactDeployerUtil {
         }
     }
 
-    private void deployTaskSheduler(String sessionCookie, String backendURL,
+    private void deployTaskScheduler(String sessionCookie, String backendURL,
                                     String scenarioConfigDir, FolderTraversar dirTraversar,
                                     String aConfigDir)
             throws IOException, XMLStreamException, EndpointAdminEndpointAdminException,

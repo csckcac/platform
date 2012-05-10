@@ -32,13 +32,16 @@ import javax.xml.namespace.QName;
 public class AxisServiceClient {
     private static final Log log = LogFactory.getLog(AxisServiceClient.class);
 
-    public OMElement sendReceive(OMElement payload, String endPointReference, String operation) throws AxisFault {
+    public OMElement sendReceive(OMElement payload, String endPointReference, String operation)
+            throws AxisFault {
         ServiceClient sender;
         Options options;
         OMElement response = null;
-        log.debug("Service Endpoint : " + endPointReference);
-        log.debug("Service Operation : " + operation);
-        log.debug("Payload : " + payload);
+        if (log.isDebugEnabled()) {
+            log.debug("Service Endpoint : " + endPointReference);
+            log.debug("Service Operation : " + operation);
+            log.debug("Payload : " + payload);
+        }
         try {
             sender = new ServiceClient();
             options = new Options();
@@ -49,7 +52,9 @@ public class AxisServiceClient {
             sender.setOptions(options);
 
             response = sender.sendReceive(payload);
-            log.debug("Response Message : " + response);
+            if (log.isDebugEnabled()) {
+                log.debug("Response Message : " + response);
+            }
         } catch (AxisFault axisFault) {
             log.error(axisFault.getMessage());
             throw new AxisFault("AxisFault while getting response :" + axisFault.getMessage(), axisFault);
@@ -60,13 +65,15 @@ public class AxisServiceClient {
 
     // axis2 client with header setting
     public OMElement sendReceive(OMElement payload, String endPointReference, String operation,
-                                  String localName, String ns, String value) throws AxisFault {
+                                 String localName, String ns, String value) throws AxisFault {
         ServiceClient sender;
         Options options;
         OMElement response = null;
-        log.debug("Service Endpoint : " + endPointReference);
-        log.debug("Service Operation : " + operation);
-        log.debug("Payload : " + payload);
+        if (log.isDebugEnabled()) {
+            log.debug("Service Endpoint : " + endPointReference);
+            log.debug("Service Operation : " + operation);
+            log.debug("Payload : " + payload);
+        }
         try {
             sender = new ServiceClient();
             sender.addStringHeader(new QName(ns, localName), value);  // Set headers
@@ -78,7 +85,9 @@ public class AxisServiceClient {
             sender.setOptions(options);
 
             response = sender.sendReceive(payload);
-            log.debug("Response Message : " + response);
+            if (log.isDebugEnabled()) {
+                log.debug("Response Message : " + response);
+            }
         } catch (AxisFault axisFault) {
             log.error(axisFault.getMessage());
             throw new AxisFault("AxisFault while getting response :" + axisFault.getMessage(), axisFault);
@@ -88,12 +97,15 @@ public class AxisServiceClient {
     }
 
     //one way communication
-    public void sendRobust(OMElement payload, String endPointReference, String operation) throws AxisFault {
+    public void sendRobust(OMElement payload, String endPointReference, String operation)
+            throws AxisFault {
         ServiceClient sender;
         Options options;
-        log.info("Service Endpoint : " + endPointReference);
-        log.info("Service Operation : " + operation);
-        log.debug("Payload : " + payload);
+        if (log.isDebugEnabled()) {
+            log.info("Service Endpoint : " + endPointReference);
+            log.info("Service Operation : " + operation);
+            log.debug("Payload : " + payload);
+        }
         try {
             sender = new ServiceClient();
             options = new Options();
@@ -113,12 +125,15 @@ public class AxisServiceClient {
     }
 
     //one way communication
-    public void fireAndForget(OMElement payload, String endPointReference, String operation) throws AxisFault {
+    public void fireAndForget(OMElement payload, String endPointReference, String operation)
+            throws AxisFault {
         ServiceClient sender;
         Options options;
-        log.info("Service Endpoint : " + endPointReference);
-        log.info("Service Operation : " + operation);
-        log.debug("Payload : " + payload);
+        if (log.isDebugEnabled()) {
+            log.info("Service Endpoint : " + endPointReference);
+            log.info("Service Operation : " + operation);
+            log.debug("Payload : " + payload);
+        }
         try {
             sender = new ServiceClient();
             options = new Options();

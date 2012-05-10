@@ -124,7 +124,6 @@ public class UserCountTest {
                                   roles, null);
             login(userName + userCount + "@" + tenantAdminDetails.getDomain(),
                   userPassword + userCount, environment.getIs().getBackEndUrl());
-            log.debug("User " + userName + userCount + " logged in successfully");
         }
     }
 
@@ -135,10 +134,8 @@ public class UserCountTest {
         log.info("Role " + roleName + " deleted successfully");
         for (int userCount = 0; userCount < tenantUserCount; userCount++) {
             userAdminStub.deleteUser(sessionCookie, userName + userCount);
-            log.debug("User " + userName + userCount + " deleted successfully");
             try {
                 //login after user deletion
-                log.debug("Try login after user deletion");
                 unsuccessfulLogin(userName + userCount + "@" +
                                   tenantAdminDetails.getDomain(), userPassword + userCount,
                                   environment.getIs().getBackEndUrl());

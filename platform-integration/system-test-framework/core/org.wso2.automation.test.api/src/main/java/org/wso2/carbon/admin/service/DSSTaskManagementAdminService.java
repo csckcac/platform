@@ -35,10 +35,7 @@ public class DSSTaskManagementAdminService {
 
     public DSSTaskManagementAdminService(String backEndUrl) throws AxisFault {
         this.endPoint = backEndUrl + serviceName;
-        log.debug("EndPoint : " + endPoint);
-
         taskManagementAdminServiceStub = new DSTaskAdminStub(endPoint);
-
     }
 
     public void scheduleTask(String sessionCookie, DSTaskInfo dSTaskInfo) throws RemoteException {

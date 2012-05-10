@@ -57,7 +57,6 @@ public class FaultyWebAppTest {
         backEndUrl = environment.getAs().getBackEndUrl();
         sessionCookie = environment.getAs().getSessionCookie();
         webAppURL = environment.getAs().getWebAppURL() + webappContext;
-        log.debug("backendURL" + backEndUrl);
     }
 
     @Test(groups = {"wso2.as"}, description = "Verify faulty webapp deployment", priority = 1)

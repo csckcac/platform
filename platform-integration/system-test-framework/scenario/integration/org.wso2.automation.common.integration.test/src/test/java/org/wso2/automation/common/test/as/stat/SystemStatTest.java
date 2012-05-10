@@ -88,36 +88,43 @@ public class SystemStatTest {
         for (int i = 0; i < numberOfRequests; i++) {
             OMElement result = new AxisServiceClient().sendReceive(createPayLoad(operation, expectedValue),
                                                                    AXIS2SERVICE_EPR, operation);
-            log.debug("Response for request " + i + " " + result);
             Assert.assertTrue((result.toString().indexOf(expectedValue) >= 1));
         }
         //get system stats again after 100 service runs   x
         Thread.sleep(5000);
         systemStatisticsAfterExecution = adminServiceStatistics.getSystemStatistics();
 
-        log.debug("Request count is incorrect : " +
-                  systemStatisticsAfterExecution.getTotalRequestCount());
-        log.debug("Request count before execution: " +
-                  systemStatisticsBeforeExecution.getTotalRequestCount());
+        if (log.isDebugEnabled()) {
+            log.debug("Request count is incorrect : " +
+                      systemStatisticsAfterExecution.getTotalRequestCount());
+            log.debug("Request count before execution: " +
+                      systemStatisticsBeforeExecution.getTotalRequestCount());
+        }
         assertEquals((getStatDifference(systemStatisticsAfterExecution.getTotalRequestCount(),
                                         systemStatisticsBeforeExecution.getTotalRequestCount())),
                      numberOfRequests, "Request count is incorrect  ");
         log.info("Request count verification passed");
 
-        log.debug("Response count after execution: " +
-                  systemStatisticsAfterExecution.getTotalResponseCount());
-        log.debug("Response count before execution: " +
-                  systemStatisticsBeforeExecution.getTotalResponseCount());
+        if (log.isDebugEnabled()) {
+            log.debug("Response count after execution: " +
+                      systemStatisticsAfterExecution.getTotalResponseCount());
+            log.debug("Response count before execution: " +
+                      systemStatisticsBeforeExecution.getTotalResponseCount());
+        }
+
         assertEquals(
                 (getStatDifference(systemStatisticsAfterExecution.getTotalResponseCount(),
                                    systemStatisticsBeforeExecution.getTotalResponseCount())),
                 numberOfRequests, "Response count is incorrect ");
         log.info("Response count verification passed");
 
-        log.debug("Fault count after execution" +
-                  systemStatisticsAfterExecution.getTotalFaultCount());
-        log.debug("Fault count after execution " +
-                  systemStatisticsBeforeExecution.getTotalFaultCount());
+        if (log.isDebugEnabled()) {
+            log.debug("Fault count after execution" +
+                      systemStatisticsAfterExecution.getTotalFaultCount());
+            log.debug("Fault count after execution " +
+                      systemStatisticsBeforeExecution.getTotalFaultCount());
+        }
+
         assertEquals(
                 (getStatDifference(systemStatisticsAfterExecution.getTotalFaultCount(),
                                    systemStatisticsBeforeExecution.getTotalFaultCount())),
@@ -127,7 +134,8 @@ public class SystemStatTest {
 
     @Test(groups = {"wso2.as"}, description = "Send 100 invalid request to the service and check stats",
           dependsOnMethods = "testServiceStats", priority = 2)
-    public void testInvalidRequestStats() throws RemoteException, InterruptedException {
+    public void testInvalidRequestStats()
+            throws RemoteException, InterruptedException, XMLStreamException {
         //introducing faults and verity fault count
         String operation = "echoInt";
         int numberOfRequests = 100;
@@ -138,23 +146,20 @@ public class SystemStatTest {
 
         EndpointReference epr = new EndpointReference(AXIS2SERVICE_EPR);
         for (int i = 0; i < numberOfRequests; i++) {
-            try {
-                OMElement result =
-                        AxisServiceClientUtils.sendRequest
-                                (createPayLoad(operation, invalidIntNumber).toString(), epr);
-                log.debug("Response for request " + i + " " + result);
-                Assert.assertTrue((result.toString().indexOf("Fault") >= 1));
-            } catch (XMLStreamException e) {
-                log.debug("XML Stream parser error" + e.getMessage());
-            } catch (AxisFault axisFault) {
-                log.debug(axisFault.getMessage());
-            }
+            OMElement result =
+                    AxisServiceClientUtils.sendRequest
+                            (createPayLoad(operation, invalidIntNumber).toString(), epr);
+            Assert.assertTrue((result.toString().indexOf("Fault") >= 1));
+
         }
         Thread.sleep(5000);
         systemStatisticsAfterExecution = adminServiceStatistics.getSystemStatistics();
 
-        log.debug("Fault count after execution " +
-                  systemStatisticsBeforeExecution.getTotalFaultCount());
+        if (log.isDebugEnabled()) {
+            log.debug("Fault count after execution " +
+                      systemStatisticsBeforeExecution.getTotalFaultCount());
+        }
+
         assertEquals(
                 (getStatDifference(systemStatisticsAfterExecution.getTotalFaultCount(),
                                    systemStatisticsBeforeExecution.getTotalFaultCount())),
@@ -170,7 +175,6 @@ public class SystemStatTest {
         OMElement value = fac.createOMElement("x", omNs);
         value.addChild(fac.createOMText(value, expectedValue));
         method.addChild(value);
-        log.debug("Created payload is :" + method);
         return method;
     }
 

@@ -36,17 +36,16 @@ public class AdminServiceDataServiceFileUploader {
 
     public AdminServiceDataServiceFileUploader(String backEndUrl) throws AxisFault {
         this.endPoint = backEndUrl + serviceName;
-        log.debug("EndPoint :" + endPoint);
-
         dataServiceFileUploaderStub = new DataServiceFileUploaderStub(endPoint);
-
     }
 
 
     public boolean uploadDataServiceFile(String sessionCookie, String fileName, DataHandler dh)
             throws ExceptionException, RemoteException {
         AuthenticateStub.authenticateStub(sessionCookie, dataServiceFileUploaderStub);
-        log.debug("path to file :" + dh.getName());
+        if (log.isDebugEnabled()) {
+            log.debug("path to file :" + dh.getName());
+        }
         String response = dataServiceFileUploaderStub.uploadService(fileName, "", dh);
         if ("successful".equalsIgnoreCase(response)) {
             log.info("Artifact Uploaded");

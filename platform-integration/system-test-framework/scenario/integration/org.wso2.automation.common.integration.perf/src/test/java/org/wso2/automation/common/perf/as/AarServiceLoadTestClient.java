@@ -75,7 +75,6 @@ public class AarServiceLoadTestClient {
         OMElement response =
                 new AxisServiceClient().sendReceive(createPayLoad(),
                                                     AXIS2SERVICE_EPR, operation);
-        log.debug("Response returned " + response);
         log.info("Initial request was successful");
         assertTrue((response.toString().indexOf(expectedValue) >= 1));
     }

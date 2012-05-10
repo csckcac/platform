@@ -52,7 +52,6 @@ public class AdminServiceSynapseConfigAdmin {
             throws AxisFault {
         String serviceName = "ConfigServiceAdmin";
         String endPoint = backEndUrl + serviceName;
-        log.debug("admin service url = " + endPoint);
         configServiceAdminStub = new ConfigServiceAdminStub(endPoint);
         AuthenticateStub.authenticateStub(sessionCookie, configServiceAdminStub);
     }

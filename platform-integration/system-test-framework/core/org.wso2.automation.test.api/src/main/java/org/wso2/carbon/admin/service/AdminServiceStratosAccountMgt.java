@@ -37,7 +37,6 @@ public class AdminServiceStratosAccountMgt {
     public AdminServiceStratosAccountMgt(String backEndUrl) throws AxisFault {
         String serviceName = "AccountMgtService";
         String endPoint = backEndUrl + serviceName;
-        log.debug("EndPoint :" + endPoint);
         try {
             accountMgtServiceStub = new AccountMgtServiceStub(endPoint);
         } catch (AxisFault axisFault) {

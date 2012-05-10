@@ -204,7 +204,6 @@ public class AxisServiceClientUtils {
     }
 
     private static OMElement createPayLoad() {
-        log.debug("Creating payload");
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMNamespace omNs = fac.createOMNamespace("http://test.com", "test");
         OMElement method = fac.createOMElement("add", omNs);
@@ -214,7 +213,6 @@ public class AxisServiceClientUtils {
         valueOfb.addChild(fac.createOMText(valueOfb, "220"));
         method.addChild(valueOfa);
         method.addChild(valueOfb);
-        log.debug("Payload is :" + method);
 
         return method;
     }

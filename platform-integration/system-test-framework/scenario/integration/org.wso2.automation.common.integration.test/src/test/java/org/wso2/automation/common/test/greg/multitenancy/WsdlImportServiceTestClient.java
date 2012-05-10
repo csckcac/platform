@@ -49,7 +49,8 @@ public class WsdlImportServiceTestClient {
 
 
     @BeforeClass(alwaysRun = true)
-    public void init() throws RegistryException, RemoteException, UserAdminException, LoginAuthenticationExceptionException {
+    public void init() throws RegistryException, RemoteException, UserAdminException,
+                              LoginAuthenticationExceptionException {
         int tenantId = 3;
         int diff_DomainUser = 6;
         int tenantID_testUser = 3;
@@ -111,7 +112,8 @@ public class WsdlImportServiceTestClient {
         }
     }
 
-    private void wsdlContentAssertion(String wsdl_path, String keyword1, String keyword2) throws RegistryException {
+    private void wsdlContentAssertion(String wsdl_path, String keyword1, String keyword2)
+            throws RegistryException {
         String content_adminUser;
         String content_testUser;
         String content_diffDomainUser = null;
@@ -128,31 +130,26 @@ public class WsdlImportServiceTestClient {
             content_testUser = new String((byte[]) r2.getContent());
             assertTrue(content_testUser.indexOf(keyword1) > 0, "Assert Content wsdl file - key word 1");
             assertTrue(content_testUser.indexOf(keyword2) > 0, "Assert Content wsdl file - key word 2");
-            //Assert admin user -admin123@wso2manualQA0004.org
             Resource r3 = registry.newResource();
 
             try {
                 assertNotNull(registry_diffDomainUser1.get(wsdl_path), "Cannot get WSDL resource by different tenant");
 
             } catch (RegistryException e) {
-                log.debug("Cannot get WSDL resource by different tenant:" + e.getMessage());
+                if (log.isDebugEnabled()) {
+                    log.debug("Cannot get WSDL resource by different tenant:" + e.getMessage());
+                }
             }
+            assertFalse(registry_diffDomainUser1.resourceExists(wsdl_path), "wsdl resource exits");
 
-
-            try {
-                content_diffDomainUser = new String((byte[]) r3.getContent());
-            } catch (Exception e) {
-                log.error("Registry Exception thrown from tenant because resource does not exists:" + e.getMessage());
-
-            }
-            assertEquals(content_diffDomainUser, null, "Assert content does not exists");
         } catch (org.wso2.carbon.registry.api.RegistryException e) {
             log.error("Registry Exception thrown:" + e.getMessage());
             throw new RegistryException("Registry Exception thrown:" + e.getMessage());
         }
     }
 
-    public void checkServiceExsist(String service_namespace, String service_name, String service_path) throws RegistryException {
+    public void checkServiceExsist(String service_namespace, String service_name,
+                                   String service_path) throws RegistryException {
         ServiceManager serviceManager = new ServiceManager(governance);
         Service[] services;
         try {
@@ -222,7 +219,8 @@ public class WsdlImportServiceTestClient {
     }
 
 
-    public void getAssociationPath(String wsdl_path, String association_path) throws RegistryException {
+    public void getAssociationPath(String wsdl_path, String association_path)
+            throws RegistryException {
         Association[] associations;
         Association[] associations_testuser;
         Association[] associations_diffDomainUser;

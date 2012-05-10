@@ -38,7 +38,7 @@ public class SymbolicServiceTestClient {
 
     @BeforeClass(alwaysRun = true)
     public void init() throws RemoteException, LoginAuthenticationExceptionException {
-        EnvironmentBuilder builder = new EnvironmentBuilder().greg(0);
+        EnvironmentBuilder builder = new EnvironmentBuilder().greg(3);
         EnvironmentVariables gregServer = builder.build().getGreg();
         sessionCookie = gregServer.getSessionCookie();
         String gregBackEndUrl = gregServer.getBackEndUrl();

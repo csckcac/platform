@@ -65,8 +65,11 @@ public class UpdateTenantInfoTest {
         log.info("Running update tenant info test");
         //get user credentials
         tenantInfoBeanGet = tenantStub.getTenant(sessionCookie, userInfo.getDomain());
-        log.debug("TenantID " + tenantInfoBeanGet.getTenantId());
-        log.debug("Usage plan before update" + tenantInfoBeanGet.getUsagePlan());
+
+        if (log.isDebugEnabled()) {
+            log.debug("TenantID " + tenantInfoBeanGet.getTenantId());
+            log.debug("Usage plan before update" + tenantInfoBeanGet.getUsagePlan());
+        }
 
         //create calendar object to set tenant created time
         Date date = new Date();
@@ -102,11 +105,9 @@ public class UpdateTenantInfoTest {
         tenantStub.updateTenant(sessionCookie, setTenantInfoBean);
 
 
-
         TenantInfoBean getUpdatedTenantInfoBean =
                 tenantStub.getTenant(sessionCookie, userInfo.getDomain());
 
-        log.debug("Assert tenant info values");
         assertTrue(getUpdatedTenantInfoBean.getActive(),
                    "Tenant is not active after update");
         assertEquals(tenantInfoBeanGet.getAdmin(),

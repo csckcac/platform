@@ -45,6 +45,7 @@ public class HumanTaskEngine {
      */
     private PeopleQueryEvaluator peopleQueryEvaluator;
 
+    /** The expression  */
     private Map<String, ExpressionLanguageRuntime> expressionLanguageRuntimeRegistry;
 
     /**
@@ -139,20 +140,17 @@ public class HumanTaskEngine {
         return epxLanguageRuntime;
     }
 
+    /**
+     * @return : The scheduler:
+     */
     public Scheduler getScheduler() {
         return scheduler;
     }
 
+    /**
+     * @param scheduler : The Scheduler object to set.
+     */
     public void setScheduler(Scheduler scheduler) {
         this.scheduler = scheduler;
     }
-
-    /**
-     * Implements execution of the job.
-     *
-     * @param jobInfo the job information
-     * @throws org.wso2.carbon.humantask.core.api.scheduler.Scheduler.JobProcessorException
-     *
-     */
-
 }

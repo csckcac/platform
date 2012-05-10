@@ -119,9 +119,9 @@ public final class APIConstants {
     public static final int TOP_TATE_MARGIN = 4;
     
     public static final class Permissions {
-        public static final String API_CREATE = "/permission/admin/manage/api/creation";
-        public static final String API_PUBLISH = "/permission/admin/manage/api/publishing";
-        public static final String API_SUBSCRIBE = "/permission/admin/manage/api/subscription";
+        public static final String API_CREATE = "/permission/admin/manage/api/create";
+        public static final String API_PUBLISH = "/permission/admin/manage/api/publish";
+        public static final String API_SUBSCRIBE = "/permission/admin/manage/api/subscribe";
     }
 
 }

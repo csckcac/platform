@@ -113,7 +113,7 @@
                                         <path refid="h2.classpath"/>
                                     </classpath>
                                     <fileset
-                                            file="${basedir}/sql/h2.sql"/>
+                                            file="${basedir}/resources/dbscripts/h2.sql"/>
                                 </sql>
                                 <echo
                                         message="##################### END ############################"/>
@@ -157,6 +157,7 @@
                                         <include>**/bps.xml</include>
                                         <include>**/jpadb.h2.db</include>
                                         <include>**/datasources.properties</include>
+                                        <include>**/*.sql</include>
                                         <include>p2.inf</include>
                                         <include>build.properties</include>
                                     </includes>

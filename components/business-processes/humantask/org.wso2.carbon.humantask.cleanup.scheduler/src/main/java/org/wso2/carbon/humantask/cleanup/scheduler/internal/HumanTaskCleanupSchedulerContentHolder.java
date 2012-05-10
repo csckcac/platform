@@ -29,8 +29,6 @@ public final class HumanTaskCleanupSchedulerContentHolder {
 
     private HumanTaskServer humantaskServer;
 
-//    private TenantRegistryLoader registryLoader;
-
     private TaskService taskService;
 
     private HumanTaskCleanupSchedulerContentHolder() {
@@ -55,15 +53,6 @@ public final class HumanTaskCleanupSchedulerContentHolder {
             this.humantaskServer = humantaskEngineService.getHumanTaskServer();
         }
     }
-
-//    public TenantRegistryLoader getRegistryLoader() {
-//        return registryLoader;
-//    }
-
-//    public void setRegistryLoader(TenantRegistryLoader registryLoader) {
-//        this.registryLoader = registryLoader;
-//    }
-
 
     public TaskService getTaskService() {
         return taskService;

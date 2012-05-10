@@ -45,25 +45,32 @@ public class HumanTaskServer {
 
     private static final Log log = LogFactory.getLog(HumanTaskServer.class);
 
+    /** The human task server configurations */
     private HumanTaskServerConfiguration serverConfig;
 
+    /** The task engine */
     private HumanTaskEngine taskEngine;
 
+    /** The human task database representation */
     private Database database;
 
+    /** The task store manager */
     private HumanTaskStoreManager taskStoreManager;
 
+    /** The transaction manager */
     private TransactionManager tnxManager;
 
+    /** The dao connection factory */
     private HumanTaskDAOConnectionFactory daoConnectionFactory;
 
-    private PeopleQueryEvaluator peopleQueryEvaluator;
-
+    /** Human task scheduler */
     private Scheduler scheduler;
 
-    public HumanTaskServer() {
-    }
+    /**
+     * The initialisation logic for the human task server.
 
+     * @throws HumanTaskServerException : If the server initialisation fails.
+     */
     public void init() throws HumanTaskServerException {
         loadHumanTaskServerConfiguration();
         initTransactionManager();
@@ -103,7 +110,8 @@ public class HumanTaskServer {
 
     private void initPeopleQueryEvaluator() throws HumanTaskServerException {
         try {
-            peopleQueryEvaluator = (PeopleQueryEvaluator) Class.forName(serverConfig.getPeopleQueryEvaluatorClass()).newInstance();
+            PeopleQueryEvaluator peopleQueryEvaluator = (PeopleQueryEvaluator)
+                    Class.forName(serverConfig.getPeopleQueryEvaluatorClass()).newInstance();
             taskEngine.setPeopleQueryEvaluator(peopleQueryEvaluator);
         } catch (Exception ex) {
             String errMsg = "Error instantiating the PeopleQueryEvaluator Class :" +
@@ -113,13 +121,14 @@ public class HumanTaskServer {
         }
     }
 
+    // Initialises the human task engine.
     private void initHumanTaskEngine() {
         HumanTaskEngine humanTaskEngine = new HumanTaskEngine();
         humanTaskEngine.setDaoConnectionFactory(this.daoConnectionFactory);
-        //engine.setDaoFactory(this.daoFactory);
         this.taskEngine = humanTaskEngine;
     }
 
+    // Initialises the data source with the provided configuration parameters.
     private void initDataSource() throws HumanTaskServerException {
         database = new Database(serverConfig);
         //TODO - need to handle the external transaction managers.
@@ -174,9 +183,12 @@ public class HumanTaskServer {
         }
     }
 
+    /**
+     * @return : true is the configuration file is in the file system false otherwise.
+     */
     private boolean isHumanTaskConfigurationFileAvailable() {
-        File htConf = new File(calculateHumanTaskServerConfigurationFilePath());
-        return htConf.exists();
+        File humanTaskConfigurationFile = new File(calculateHumanTaskServerConfigurationFilePath());
+        return humanTaskConfigurationFile.exists();
     }
 
     /**
@@ -248,6 +260,9 @@ public class HumanTaskServer {
         return daoConnectionFactory;
     }
 
+    /**
+     * The shutdown logic for the human task server.
+     */
     public void shutdown() {
         //TODO add shutdown hook
 

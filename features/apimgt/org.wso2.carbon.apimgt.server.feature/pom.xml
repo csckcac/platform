@@ -62,11 +62,6 @@
             <artifactId>org.wso2.carbon.apimgt.hostobjects</artifactId>
             <version>${apimgt.version}</version>
         </dependency>
-         <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.rest.api.client</artifactId>
-             <version>${apimgt.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.apimgt.handlers</artifactId>
@@ -127,7 +122,6 @@
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.apimgt.api</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.apimgt.impl</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.apimgt.hostobjects</bundleDef>
-                                <bundleDef>org.wso2.carbon:org.wso2.carbon.rest.api.client</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.apimgt.handlers</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.apimgt.keymgt</bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.apimgt.keymgt.client</bundleDef>

@@ -93,16 +93,12 @@ public class EsbEndpointSetter {
                 if (((OMElementImpl) node).getLocalName().equals("target")) {
                     Iterator nodIterator = ((OMElementImpl) node).getChildElements();
                     while (nodIterator.hasNext()) {
-                        OMNode loadbalanceNode = (OMNode) nodIterator.next();
-                        if (((OMElementImpl) loadbalanceNode).getLocalName().equals("endpoint")) {
-                            Iterator endpointnode = ((OMElementImpl) loadbalanceNode).getChildElements();
-
-                            OMNode endpoint = (OMNode) endpointnode.next();
-                            String uri = ((OMElementImpl) endpoint).getAttribute(new QName("uri")).getAttributeValue();
-                            attribute = ((OMElementImpl) endpoint).getAttribute(new QName("uri"));
-                            ((OMElementImpl) endpoint).getAttribute(new QName("uri")).setAttributeValue(getUrl(uri));
-                            attribute2 = ((OMElementImpl) endpoint).getAttribute(new QName("uri"));
-                            System.out.println("Proxy Endpoint");
+                        OMNode targetNode = (OMNode) nodIterator.next();
+                        if (((OMElementImpl) targetNode).getLocalName().equals("endpoint")) {
+                            this.replaceelement(targetNode, attribute, attribute2);
+                            break;
+                        } else {
+                            travarsrchild(targetNode, attribute, attribute2);
                         }
                     }
                 }
@@ -112,19 +108,11 @@ public class EsbEndpointSetter {
                     while (nodIterator.hasNext()) {
                         OMNode targetNode = (OMNode) nodIterator.next();
                         if (((OMElementImpl) targetNode).getLocalName().equals("endpoint")) {
-                            Iterator endpointnode = ((OMElementImpl) targetNode).getChildElements();
-
-                            OMNode endpoint = (OMNode) endpointnode.next();
-                            String uri = ((OMElementImpl) endpoint).getAttribute(new QName("uri")).getAttributeValue();
-                            attribute = ((OMElementImpl) endpoint).getAttribute(new QName("uri"));
-                            ((OMElementImpl) endpoint).getAttribute(new QName("uri")).setAttributeValue(getUrl(uri));
-                            attribute2 = ((OMElementImpl) endpoint).getAttribute(new QName("uri"));
-                            System.out.println("Proxy Endpoint");
+                            this.replaceelement(targetNode, attribute, attribute2);
                             break;
-
+                        } else {
+                            travarsrchild(targetNode, attribute, attribute2);
                         }
-                        nodIterator = ((OMElementImpl) targetNode).getChildElements();
-
                     }
                 }
 
@@ -133,22 +121,13 @@ public class EsbEndpointSetter {
                     while (nodIterator.hasNext()) {
                         OMNode targetNode = (OMNode) nodIterator.next();
                         if (((OMElementImpl) targetNode).getLocalName().equals("endpoint")) {
-                            Iterator endpointnode = ((OMElementImpl) targetNode).getChildElements();
-
-                            OMNode endpoint = (OMNode) endpointnode.next();
-                            String uri = ((OMElementImpl) endpoint).getAttribute(new QName("uri")).getAttributeValue();
-                            attribute = ((OMElementImpl) endpoint).getAttribute(new QName("uri"));
-                            ((OMElementImpl) endpoint).getAttribute(new QName("uri")).setAttributeValue(getUrl(uri));
-                            attribute2 = ((OMElementImpl) endpoint).getAttribute(new QName("uri"));
-                            System.out.println("Proxy Endpoint");
+                            this.replaceelement(targetNode, attribute, attribute2);
                             break;
-
+                        } else {
+                            travarsrchild(targetNode, attribute, attribute2);
                         }
-                        nodIterator = ((OMElementImpl) targetNode).getChildElements();
-
                     }
                 }
-
 
                 if (((OMElementImpl) node).getLocalName().equals("wsdl")) {
                     String urlValue = ((OMElementImpl) node).getAttribute(new QName("uri")).getAttributeValue();
@@ -178,6 +157,34 @@ public class EsbEndpointSetter {
         }
         return endPointElem;
     }
+
+
+    public void travarsrchild(OMNode node, OMAttribute attribute, OMAttribute attribute2)
+            throws XMLStreamException, IOException {
+        Iterator nodIterator = ((OMElementImpl) node).getChildElements();
+        while (nodIterator.hasNext()) {
+            OMNode targetNode = (OMNode) nodIterator.next();
+            if (((OMElementImpl) targetNode).getLocalName().equals("endpoint")) {
+                this.replaceelement(targetNode, attribute, attribute2);
+                break;
+            } else {
+                travarsrchild(targetNode, attribute, attribute2);
+            }
+        }
+    }
+
+
+    public void replaceelement(OMNode targetNode, OMAttribute attribute, OMAttribute attribute2)
+            throws XMLStreamException, IOException {
+        Iterator endpointnode = ((OMElementImpl) targetNode).getChildElements();
+        OMNode endpoint = (OMNode) endpointnode.next();
+        String uri = ((OMElementImpl) endpoint).getAttribute(new QName("uri")).getAttributeValue();
+        attribute = ((OMElementImpl) endpoint).getAttribute(new QName("uri"));
+        ((OMElementImpl) endpoint).getAttribute(new QName("uri")).setAttributeValue(getUrl(uri));
+        attribute2 = ((OMElementImpl) endpoint).getAttribute(new QName("uri"));
+        System.out.println("Proxy Endpoint");
+    }
+
 
     public String getUrl(String endpoint) throws IOException, XMLStreamException {
         String newEndPoint = endpoint;
@@ -248,7 +255,7 @@ public class EsbEndpointSetter {
         if (!containsHttps) {
             if (properties.getEnvironmentSettings().is_runningOnStratos()) {
                 url = productUrlGeneratorUtil.getHttpServiceURLOfStratos(properties.getProductVariables().getHttpPort(), properties.getProductVariables().getHostName(), properties, info);
-                String service = oldUrl.substring(oldUrl.indexOf("services/")+9);
+                String service = oldUrl.substring(oldUrl.indexOf("services/") + 9);
                 url = url + File.separator + service;
 
             } else {
@@ -259,7 +266,7 @@ public class EsbEndpointSetter {
         } else if (containsHttps) {
             if (properties.getEnvironmentSettings().is_runningOnStratos()) {
                 url = properties.getProductVariables().getBackendUrl();
-                String service = oldUrl.substring(oldUrl.indexOf("services/")+9);
+                String service = oldUrl.substring(oldUrl.indexOf("services/") + 9);
                 url = url + File.separator + service;
             } else {
                 url = properties.getProductVariables().getBackendUrl();
@@ -267,6 +274,7 @@ public class EsbEndpointSetter {
                 url = url + File.separator + service;
             }
         }
+
         return url;
     }
 }

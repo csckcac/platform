@@ -29,7 +29,7 @@ public final class APIMgtUsagePublisherConstants {
     public static final String API_USAGE_ENABLED = API_USAGE_TRACKING + "Enabled";
     public static final String API_USAGE_THRIFT_PORT = API_USAGE_TRACKING + "ThriftPort";
     public static final String API_USAGE_BAM_SERVER_URL = API_USAGE_TRACKING + "BAMServerURL";
-    public static final String API_USAGE_BAM_SERVER_USER = API_USAGE_TRACKING + "BAMUser";
+    public static final String API_USAGE_BAM_SERVER_USER = API_USAGE_TRACKING + "BAMUsername";
     public static final String API_USAGE_BAM_SERVER_PASSWORD = API_USAGE_TRACKING + "BAMPassword";
     public static final String  CONSUMER_KEY = "consumerKey";
     public static final String  CONTEXT = "context";

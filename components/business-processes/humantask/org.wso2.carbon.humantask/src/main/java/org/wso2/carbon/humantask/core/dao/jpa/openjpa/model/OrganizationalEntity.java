@@ -45,6 +45,7 @@ public class OrganizationalEntity extends OpenJPAEntity implements Organizationa
     @ManyToMany(targetEntity = GenericHumanRole.class, mappedBy = "orgEntities", cascade = {CascadeType.ALL})
     private List<GenericHumanRoleDAO> genericHumanRoles = new ArrayList<GenericHumanRoleDAO>();
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -53,30 +54,37 @@ public class OrganizationalEntity extends OpenJPAEntity implements Organizationa
         this.id = id;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
 
+    @Override
     public OrganizationalEntityType getOrgEntityType() {
         return orgEntityType;
     }
 
+    @Override
     public void setOrgEntityType(OrganizationalEntityType orgEntityType) {
         this.orgEntityType = orgEntityType;
     }
 
+    @Override
     public List<GenericHumanRoleDAO> getGenericHumanRoles() {
         return this.genericHumanRoles;
     }
 
+    @Override
     public void setGenericHumanRoles(List<GenericHumanRoleDAO> genericHumanRoleDAOs) {
         this.genericHumanRoles = genericHumanRoleDAOs;
     }
 
+    @Override
     public void addGenericHumanRole(GenericHumanRoleDAO genericHumanRole) {
         genericHumanRoles.add(genericHumanRole);
     }

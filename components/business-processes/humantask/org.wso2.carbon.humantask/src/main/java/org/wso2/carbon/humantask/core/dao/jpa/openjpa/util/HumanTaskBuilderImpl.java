@@ -22,18 +22,33 @@ public class HumanTaskBuilderImpl {
      */
     private static Log log = LogFactory.getLog(HumanTaskBuilderImpl.class);
 
+    /**
+     * The object holding information about task creation
+     */
     private TaskCreationContext creationContext;
 
+    /**
+     * The inputMessage of the task.
+     */
     private MessageDAO inputMessage;
 
-    public HumanTaskBuilderImpl() {
-    }
-
+    /**
+     * Add the TaskCreationContext to the builder.
+     *
+     * @param creationContext : The task creation context.
+     * @return : The HumanTaskBuilderImpl object.
+     */
     public HumanTaskBuilderImpl addTaskCreationContext(TaskCreationContext creationContext) {
         this.creationContext = creationContext;
         return this;
     }
 
+    /**
+     * Add the TaskCreationContext to the builder.
+     *
+     * @param inputMessage : The task creation context.
+     * @return : The HumanTaskBuilderImpl object.
+     */
     public HumanTaskBuilderImpl addInputMessage(MessageDAO inputMessage) {
         this.inputMessage = inputMessage;
         return this;

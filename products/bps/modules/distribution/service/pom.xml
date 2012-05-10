@@ -341,6 +341,26 @@
                             </tasks>
                         </configuration>
                     </execution>
+		    <execution>
+                        <id>clean_target</id>
+                        <phase>install</phase>
+                        <configuration>
+                            <tasks>
+                                <delete dir="target/archive-tmp"/>
+                                <delete dir="target/dependency-maven-plugin-markers"/>
+                                <delete dir="target/maven-archiver"/>
+                                <delete dir="target/wso2carbon-core-${carbon.version}"/>
+                                <delete file="target/wso2stratos-bps-${project.version}.jar"/>
+                                <delete dir="target/sources"/>
+                                <delete dir="target/site"/>
+				<delete dir="target/database"/>
+                                <delete dir="src/site"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
               </executions>
             </plugin>
 

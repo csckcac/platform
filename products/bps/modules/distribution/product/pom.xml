@@ -410,6 +410,8 @@
                                 <delete file="target/wso2bps-${project.version}.jar"/>
                                 <delete dir="target/sources"/>
                                 <delete dir="target/site"/>
+				<delete dir="target/database"/>
+				<delete dir="target/samples"/>
                                 <delete dir="src/site"/>
                             </tasks>
                         </configuration>

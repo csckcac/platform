@@ -18,8 +18,14 @@ package org.wso2.carbon.humantask.core.dao;
 
 import java.util.List;
 
+/**
+ * The Generic Human Role DAO representation.
+ */
 public interface GenericHumanRoleDAO {
 
+    /**
+     * The human role types.
+     */
     public static enum GenericHumanRoleType {
         TASK_INITIATOR,
         STAKEHOLDERS,
@@ -30,17 +36,39 @@ public interface GenericHumanRoleDAO {
         NOTIFICATION_RECIPIENTS
     }
 
+    /**
+     * @return : The role id.
+     */
     Long getId();
 
+    /**
+     * @return : the human role type.
+     */
     GenericHumanRoleType getType();
 
+    /**
+     * @return : The org entities for this human role.
+     */
     List<OrganizationalEntityDAO> getOrgEntities();
 
+    /**
+     * @param orgEntities : The orgEntities to set.
+     */
     void setOrgEntities(List<OrganizationalEntityDAO> orgEntities);
 
+    /**
+     * @param task : the task to set.
+     */
     void setTask(TaskDAO task);
 
+    /**
+     * @param type : The human role type to set.
+     */
     void setType(GenericHumanRoleType type);
 
+    /**
+     * Adds the provided org entity object to the generic human role.
+     * @param orgEntity : The org entity to add.
+     */
     void addOrgEntity(OrganizationalEntityDAO orgEntity);
 }
